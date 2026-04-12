@@ -1,7 +1,7 @@
 import { Router, type Request, type Response } from "express";
 import { db } from "@workspace/db";
-import { topicsTable, flashcardsTable, quizQuestionsTable, studyGuidesTable, practiceExamsTable } from "@workspace/db";
-import { eq, count } from "drizzle-orm";
+import { topicsTable, flashcardsTable, quizQuestionsTable, studyGuidesTable, practiceExamsTable, practiceExamQuestionsTable } from "@workspace/db";
+import { eq, count, asc } from "drizzle-orm";
 import { enforceUsageLimit } from "../middlewares/usageEnforcement";
 
 const router = Router();
@@ -105,28 +105,31 @@ router.get("/topics/:topicId/practice-exam", async (req: Request, res: Response)
       res.status(404).json({ error: "Practice exam not found" });
       return;
     }
-    const allQuestions = await db
-      .select()
-      .from(quizQuestionsTable)
-      .where(eq(quizQuestionsTable.topicId, topicId));
-    const examQs = allQuestions.slice(0, 10);
+    const linkedQuestions = await db
+      .select({
+        id: quizQuestionsTable.id,
+        topicId: quizQuestionsTable.topicId,
+        question: quizQuestionsTable.question,
+        optionA: quizQuestionsTable.optionA,
+        optionB: quizQuestionsTable.optionB,
+        optionC: quizQuestionsTable.optionC,
+        optionD: quizQuestionsTable.optionD,
+        correctAnswer: quizQuestionsTable.correctAnswer,
+        explanation: quizQuestionsTable.explanation,
+        questionOrder: practiceExamQuestionsTable.questionOrder,
+      })
+      .from(practiceExamQuestionsTable)
+      .innerJoin(quizQuestionsTable, eq(practiceExamQuestionsTable.questionId, quizQuestionsTable.id))
+      .where(eq(practiceExamQuestionsTable.examId, exam.id))
+      .orderBy(asc(practiceExamQuestionsTable.questionOrder));
+
     res.json({
       id: exam.id,
       topicId: exam.topicId,
       title: exam.title,
       timeLimit: exam.timeLimit,
       passingScore: exam.passingScore,
-      questions: examQs.map(q => ({
-        id: q.id,
-        topicId: q.topicId,
-        question: q.question,
-        optionA: q.optionA,
-        optionB: q.optionB,
-        optionC: q.optionC,
-        optionD: q.optionD,
-        correctAnswer: q.correctAnswer,
-        explanation: q.explanation,
-      })),
+      questions: linkedQuestions.map(({ questionOrder: _order, ...q }) => q),
     });
   } catch (err) {
     req.log.error({ err }, "Error getting practice exam");

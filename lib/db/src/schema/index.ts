@@ -14,6 +14,7 @@ export const usersTable = pgTable("users", {
   stripeSubscriptionId: text("stripe_subscription_id"),
   onboardingComplete: boolean("onboarding_complete").notNull().default(false),
   usageCount: integer("usage_count").notNull().default(0),
+  progressScore: integer("progress_score").notNull().default(0),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -96,3 +97,14 @@ export const practiceExamsTable = pgTable("practice_exams", {
 export const insertPracticeExamSchema = createInsertSchema(practiceExamsTable).omit({ id: true, createdAt: true });
 export type InsertPracticeExam = z.infer<typeof insertPracticeExamSchema>;
 export type PracticeExam = typeof practiceExamsTable.$inferSelect;
+
+export const practiceExamQuestionsTable = pgTable("practice_exam_questions", {
+  id: serial("id").primaryKey(),
+  examId: integer("exam_id").notNull().references(() => practiceExamsTable.id),
+  questionId: integer("question_id").notNull().references(() => quizQuestionsTable.id),
+  questionOrder: integer("question_order").notNull().default(0),
+});
+
+export const insertPracticeExamQuestionSchema = createInsertSchema(practiceExamQuestionsTable).omit({ id: true });
+export type InsertPracticeExamQuestion = z.infer<typeof insertPracticeExamQuestionSchema>;
+export type PracticeExamQuestion = typeof practiceExamQuestionsTable.$inferSelect;

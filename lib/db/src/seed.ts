@@ -1,5 +1,5 @@
 import { db } from "./index";
-import { topicsTable, flashcardsTable, quizQuestionsTable, studyGuidesTable, practiceExamsTable } from "./schema";
+import { topicsTable, flashcardsTable, quizQuestionsTable, studyGuidesTable, practiceExamsTable, practiceExamQuestionsTable } from "./schema";
 import { sql } from "drizzle-orm";
 
 function mapQuizQuestions(rawQuestions: Array<{ topicId: number; question: string; options: string; correctAnswer: string; explanation: string; difficulty?: string }>) {
@@ -21,7 +21,7 @@ function mapQuizQuestions(rawQuestions: Array<{ topicId: number; question: strin
 async function seed() {
   console.log("Seeding neuroscience content...");
 
-  await db.execute(sql`TRUNCATE practice_exams, study_guides, quiz_questions, flashcards, progress, topics RESTART IDENTITY CASCADE`);
+  await db.execute(sql`TRUNCATE practice_exam_questions, practice_exams, study_guides, quiz_questions, flashcards, progress, topics RESTART IDENTITY CASCADE`);
 
   const topics = await db.insert(topicsTable).values([
     { name: "Neuropsychology Overview", category: "Foundations", description: "Introduction to neuropsychology, brain-behavior relationships, and assessment approaches." },
@@ -2574,20 +2574,39 @@ Enduring, inflexible patterns of inner experience and behavior that deviate from
   console.log(`Inserted ${studyGuides.length} study guides`);
 
   // ---------------------------------------------------------------------------
-  // PRACTICE EXAMS — one per topic (29 total)
+  // PRACTICE EXAMS — one per topic (29 total), with explicit question linkage
   // ---------------------------------------------------------------------------
-  const practiceExams = (await db.select().from(topicsTable)).map(topic => ({
+  const allTopics = await db.select().from(topicsTable);
+  const allQuizQuestions = await db.select().from(quizQuestionsTable);
+
+  const practiceExamValues = allTopics.map(topic => ({
     topicId: topic.id,
     title: `${topic.name} Practice Exam`,
     timeLimit: 600,
     passingScore: 70,
   }));
 
-  await db.insert(practiceExamsTable).values(practiceExams);
-  console.log(`Inserted ${practiceExams.length} practice exams`);
+  const insertedExams = await db.insert(practiceExamsTable).values(practiceExamValues).returning();
+  console.log(`Inserted ${insertedExams.length} practice exams`);
+
+  // Create explicit exam-question linkage: first 10 quiz questions per topic
+  const examQuestionRows: Array<{ examId: number; questionId: number; questionOrder: number }> = [];
+  for (const exam of insertedExams) {
+    const topicQuestions = allQuizQuestions
+      .filter(q => q.topicId === exam.topicId)
+      .slice(0, 10);
+    topicQuestions.forEach((q, order) => {
+      examQuestionRows.push({ examId: exam.id, questionId: q.id, questionOrder: order + 1 });
+    });
+  }
+
+  if (examQuestionRows.length > 0) {
+    await db.insert(practiceExamQuestionsTable).values(examQuestionRows);
+    console.log(`Inserted ${examQuestionRows.length} practice exam question links`);
+  }
 
   console.log("Seeding complete!");
-  console.log(`Summary: ${flashcards.length} flashcards, ${quizQuestions.length} quiz questions, ${studyGuides.length} study guides, ${practiceExams.length} practice exams`);
+  console.log(`Summary: ${flashcards.length} flashcards, ${quizQuestions.length} quiz questions, ${studyGuides.length} study guides, ${insertedExams.length} practice exams`);
 }
 
 seed()
