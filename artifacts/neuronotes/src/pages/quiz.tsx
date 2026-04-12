@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { ChevronLeft, CheckCircle, XCircle, ChevronRight } from "lucide-react";
-import { useGetQuizzesByTopic, useIncrementUserUsage, useGetUserUsage, useUpdateTopicProgress, getGetUserUsageQueryKey } from "@workspace/api-client-react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useGetQuizzesByTopic, useUpdateTopicProgress } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -20,13 +19,11 @@ export default function QuizPage({ params }: Props) {
   const [showExplanation, setShowExplanation] = useState(false);
   const [score, setScore] = useState(0);
   const [completed, setCompleted] = useState(false);
-  const [showUpgrade, setShowUpgrade] = useState(false);
 
-  const queryClient = useQueryClient();
-  const { data: questions, isLoading } = useGetQuizzesByTopic(topicId);
-  const { data: usage } = useGetUserUsage();
-  const incrementUsage = useIncrementUserUsage();
+  const { data: questions, isLoading, error } = useGetQuizzesByTopic(topicId);
   const updateProgress = useUpdateTopicProgress();
+
+  const isOverLimit = (error as { status?: number } | null)?.status === 402;
 
   const current = questions?.[index];
   const total = questions?.length ?? 0;
@@ -40,14 +37,8 @@ export default function QuizPage({ params }: Props) {
       ]
     : [];
 
-  const handleSelect = async (key: string) => {
+  const handleSelect = (key: string) => {
     if (selected) return;
-    if (usage?.isOverLimit) {
-      setShowUpgrade(true);
-      return;
-    }
-    await incrementUsage.mutateAsync();
-    await queryClient.invalidateQueries({ queryKey: getGetUserUsageQueryKey() });
     setSelected(key);
     setShowExplanation(true);
     if (key === current?.correctAnswer) {
@@ -57,12 +48,11 @@ export default function QuizPage({ params }: Props) {
 
   const handleNext = async () => {
     if (index + 1 >= total) {
-      // score is already updated by handleSelect; do not add 1 again
       const percent = Math.round((score / total) * 100);
       try {
         await updateProgress.mutateAsync({ topicId, data: { score: percent } });
       } catch {
-        // non-blocking — progress save failure should not prevent completion UI
+        // non-blocking
       }
       setCompleted(true);
     } else {
@@ -80,8 +70,8 @@ export default function QuizPage({ params }: Props) {
     setCompleted(false);
   };
 
-  if (showUpgrade) {
-    return <UpgradePrompt onDismiss={() => setShowUpgrade(false)} />;
+  if (isOverLimit) {
+    return <UpgradePrompt onDismiss={() => navigate(`/topics/${topicId}`)} />;
   }
 
   if (completed) {

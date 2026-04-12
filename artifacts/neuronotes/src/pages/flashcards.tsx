@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
-import { useGetFlashcardsByTopic, useGetUserUsage, useIncrementUserUsage, getGetUserUsageQueryKey } from "@workspace/api-client-react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useGetFlashcardsByTopic } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
@@ -23,26 +22,16 @@ export default function FlashcardsPage({ params }: Props) {
   const topicId = parseInt(params.id);
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
-  const [showUpgrade, setShowUpgrade] = useState(false);
 
-  const queryClient = useQueryClient();
-  const { data: flashcards, isLoading } = useGetFlashcardsByTopic(topicId);
-  const { data: usage } = useGetUserUsage();
-  const incrementUsage = useIncrementUserUsage();
+  const { data: flashcards, isLoading, error } = useGetFlashcardsByTopic(topicId);
 
   const current = flashcards?.[index];
   const total = flashcards?.length ?? 0;
 
-  const handleFlip = async () => {
-    if (!flipped) {
-      if (usage?.isOverLimit) {
-        setShowUpgrade(true);
-        return;
-      }
-      await incrementUsage.mutateAsync();
-      await queryClient.invalidateQueries({ queryKey: getGetUserUsageQueryKey() });
-    }
-    setFlipped(!flipped);
+  const isOverLimit = (error as { status?: number } | null)?.status === 402;
+
+  const handleFlip = () => {
+    setFlipped(f => !f);
   };
 
   const handleNext = () => {
@@ -60,8 +49,8 @@ export default function FlashcardsPage({ params }: Props) {
     setIndex(0);
   };
 
-  if (showUpgrade) {
-    return <UpgradePrompt onDismiss={() => setShowUpgrade(false)} />;
+  if (isOverLimit) {
+    return <UpgradePrompt onDismiss={() => navigate(`/topics/${topicId}`)} />;
   }
 
   return (
@@ -110,9 +99,9 @@ export default function FlashcardsPage({ params }: Props) {
                 <div className="flashcard-front bg-card border border-border rounded-2xl p-8 flex flex-col items-center justify-center min-h-64 md:min-h-72 shadow-sm">
                   <div className="text-xs text-muted-foreground uppercase tracking-wider mb-4">Question — tap to reveal</div>
                   {current && (
-                    <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mb-4 ${difficultyColors[current.difficulty] || ""}`}>
+                    <Badge className={`mb-4 ${difficultyColors[current.difficulty] || ""}`}>
                       {current.difficulty}
-                    </div>
+                    </Badge>
                   )}
                   <p className="text-center text-lg font-medium text-foreground leading-relaxed" data-testid="text-flashcard-question">
                     {current?.question}

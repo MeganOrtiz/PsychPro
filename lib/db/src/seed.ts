@@ -1724,6 +1724,850 @@ Normal sleep involves cycling through NREM and REM sleep stages, with a full cyc
 | **Bulimia Nervosa** | Binge-purge cycles | Electrolyte imbalances, dental erosion, Mallory-Weiss tears |
 | **Binge Eating Disorder** | Binge episodes without purging | Obesity-related complications |`
     },
+    {
+      topicId: topicMap["Spinal Cord & PNS"],
+      title: "Spinal Cord & PNS Study Guide",
+      content: `# Spinal Cord & Peripheral Nervous System
+
+## Spinal Cord Organization
+The spinal cord extends from the medulla oblongata to L1-L2 (conus medullaris). It contains 31 spinal segments: 8 cervical, 12 thoracic, 5 lumbar, 5 sacral, 1 coccygeal.
+
+### Cross-sectional Anatomy
+- **Gray matter (H-shaped):** Dorsal horns (sensory), ventral horns (motor), lateral horns (T1-L2: sympathetic; S2-S4: parasympathetic)
+- **White matter:** Dorsal columns (fine touch/proprioception), lateral columns (corticospinal/spinothalamic), ventral columns (motor)
+
+## Key Tracts
+| Tract | Location | Function | Decussation |
+|-------|----------|----------|-------------|
+| Dorsal columns | Posterior | Fine touch, vibration, proprioception | Medulla |
+| Spinothalamic | Anterolateral | Pain, temperature, crude touch | Spinal cord (1-2 levels above entry) |
+| Corticospinal | Lateral | Voluntary motor | Medulla (pyramidal decussation) |
+
+## Dermatomes
+- C5: Lateral arm
+- C6: Thumb/index finger
+- C7: Middle finger
+- C8: Ring/little finger
+- T4: Nipple level
+- T10: Umbilicus
+- L1: Inguinal ligament
+- L4: Medial leg/great toe
+- S1: Lateral foot/heel
+
+## Spinal Reflexes
+- **Stretch reflex (monosynaptic):** Muscle spindle → Ia afferent → alpha motor neuron → same muscle
+- **Withdrawal reflex:** Nociceptor → interneurons → flexors contract, extensors relax
+- **Babinski reflex:** Plantar stimulation → big toe extension (abnormal in adults = UMN lesion)
+
+## Peripheral Nervous System
+### Nerve Fiber Types
+- **Aα (Ia/Ib):** Large myelinated; proprioception, muscle spindles
+- **Aβ:** Medium myelinated; touch, pressure
+- **Aδ:** Small myelinated; fast pain, temperature
+- **C fibers:** Unmyelinated; slow pain, temperature, autonomic
+
+### Common Peripheral Neuropathies
+- **Carpal tunnel syndrome:** Median nerve compression; thenar atrophy, sensory loss in 1st-3rd digits
+- **Ulnar neuropathy:** Claw hand; sensory loss in 4th-5th digits
+- **Peroneal neuropathy:** Foot drop; loss of dorsiflexion`
+    },
+    {
+      topicId: topicMap["Cerebellum"],
+      title: "Cerebellum Study Guide",
+      content: `# Cerebellum
+
+## Anatomy
+The cerebellum occupies the posterior fossa and comprises ~50% of all brain neurons. It contains the cerebellar cortex, deep cerebellar nuclei, and three lobes.
+
+### Lobes
+- **Anterior lobe:** Motor coordination (spinocerebellum)
+- **Posterior lobe (largest):** Fine motor control, learning
+- **Flocculonodular lobe (archicerebellum):** Vestibular function, balance
+
+### Functional Divisions
+| Division | Input | Function | Lesion effect |
+|----------|-------|----------|--------------|
+| Vestibulocerebellum | Vestibular | Balance, eye movements | Truncal ataxia, nystagmus |
+| Spinocerebellum | Spinal cord, visual | Limb coordination | Limb ataxia, dysmetria |
+| Cerebrocerebellum | Cerebral cortex | Motor planning, timing | Intention tremor, poor timing |
+
+## Deep Cerebellar Nuclei (Lateral to Medial)
+- **Dentate:** Largest; motor planning
+- **Emboliform + Globose (= interposed):** Limb coordination
+- **Fastigial:** Vestibular, axial/proximal control
+
+## Cerebellar Circuit
+1. Input arrives via mossy fibers (pontocerebellar) and climbing fibers (olivocerebellar)
+2. Purkinje cells (only output of cortex) → inhibit deep nuclei
+3. Deep nuclei project to thalamus → motor cortex
+
+## Clinical Signs (DENIM)
+- **D**ysmetria: past-pointing, overshoot
+- **E**xcessive rebound
+- **N**ystagmus
+- **I**ntention tremor
+- **M**uscle hypotonia, dysdiadochokinesia, dysarthria (scanning speech)
+
+## Key Principle
+Cerebellum is ipsilateral — right cerebellar lesion → right-sided signs`
+    },
+    {
+      topicId: topicMap["Basal Ganglia"],
+      title: "Basal Ganglia Study Guide",
+      content: `# Basal Ganglia
+
+## Structures
+- **Striatum:** Caudate + Putamen (input nuclei)
+- **Globus Pallidus:** Internal (GPi) and External (GPe)
+- **Subthalamic Nucleus (STN)**
+- **Substantia Nigra:** Pars compacta (SNc) and Pars reticulata (SNr)
+
+## Direct vs. Indirect Pathway
+### Direct Pathway (facilitates movement)
+Cortex → Striatum → GPi/SNr (inhibit) → Thalamus (disinhibit) → Cortex → Movement ↑
+
+### Indirect Pathway (suppresses movement)
+Cortex → Striatum → GPe (inhibit) → STN (disinhibit) → GPi/SNr (excite) → Thalamus (inhibit) → Movement ↓
+
+## Neurotransmitters
+| Neurotransmitter | Effect on Direct | Effect on Indirect |
+|-----------------|-----------------|-------------------|
+| Dopamine (D1 receptor) | ↑ (facilitates) | — |
+| Dopamine (D2 receptor) | — | ↓ (facilitates indirectly) |
+| GABA | Inhibitory throughout | |
+| Glutamate | Excitatory (STN, cortex) | |
+
+## Clinical Disorders
+### Parkinson's Disease
+- Loss of dopaminergic neurons in SNc
+- Tremor (resting, pill-rolling), rigidity, bradykinesia, postural instability
+- Treatment: Levodopa/carbidopa, dopamine agonists, MAO-B inhibitors
+
+### Huntington's Disease
+- CAG repeat expansion in HTT gene (chromosome 4)
+- Loss of striatal neurons (especially indirect pathway → excess movement)
+- Chorea, cognitive decline, psychiatric symptoms
+- Autosomal dominant, anticipation
+
+### Hemiballismus
+- STN lesion (stroke) → unilateral wild flinging movements
+- Treatment: Dopamine antagonists`
+    },
+    {
+      topicId: topicMap["Brainstem & Diencephalon"],
+      title: "Brainstem & Diencephalon Study Guide",
+      content: `# Brainstem & Diencephalon
+
+## Diencephalon
+### Thalamus
+- Relay station for sensory and motor signals to cortex
+- Key nuclei: VPL (somatosensory body), VPM (somatosensory face), LGN (vision), MGN (hearing), VL/VA (motor)
+- Reticular nucleus: modulates thalamic activity, attention
+
+### Hypothalamus
+- **4 Fs:** Feeding, Fighting, Fleeing, mating (sexual behavior)
+- Controls autonomic NS, temperature, thirst, hunger, circadian rhythms
+- Paraventricular nucleus: oxytocin, CRH
+- Suprachiasmatic nucleus: circadian pacemaker
+- Connects to pituitary via portal blood supply (anterior) and axons (posterior)
+
+## Midbrain (Mesencephalon)
+- Tectum: Superior colliculi (vision), Inferior colliculi (hearing)
+- Tegmentum: Red nucleus, PAG, CN III/IV nuclei
+- Crus cerebri: Corticospinal/corticobulbar tracts
+- Substantia nigra: Dopamine production
+
+## Pons
+- Middle cerebellar peduncle connects pons to cerebellum
+- CN V (trigeminal), VI (abducens), VII (facial), VIII (vestibulocochlear)
+- Respiratory centers (pneumotaxic, apneustic)
+
+## Medulla
+- CN IX, X, XI, XII
+- Vital centers: cardiac, respiratory, vasomotor
+- Pyramidal decussation (corticospinal tract crosses here)
+- Dorsal column nuclei (gracile, cuneate)
+
+## Brainstem Syndromes
+| Syndrome | Lesion | Features |
+|---------|--------|---------|
+| Wallenberg | PICA (lateral medulla) | Ipsilateral facial pain/numbness, contralateral body pain/temperature loss, dysphagia, Horner's |
+| Weber | Midbrain (CN III + cerebral peduncle) | Ipsilateral CN III palsy, contralateral hemiplegia |
+| Millard-Gubler | Pons (CN VI/VII + CST) | Ipsilateral CN VI/VII palsy, contralateral hemiplegia |`
+    },
+    {
+      topicId: topicMap["Cerebral Cortex"],
+      title: "Cerebral Cortex Study Guide",
+      content: `# Cerebral Cortex
+
+## Cortical Organization
+The cerebral cortex is ~3mm thick with 6 layers of cells. The human cortex has ~86 billion neurons.
+
+### Six Layers (superficial to deep)
+1. Molecular layer (sparse neurons, dendrites/axons)
+2. External granular layer
+3. External pyramidal layer (large pyramidal cells)
+4. Internal granular layer (receives thalamic input — sensory cortex)
+5. Internal pyramidal layer (Betz cells in motor cortex — corticospinal output)
+6. Multiform layer (projects to thalamus)
+
+## Lobes and Functions
+### Frontal Lobe
+- Primary motor cortex (precentral gyrus, BA4)
+- Premotor/supplementary motor cortex (motor planning)
+- Prefrontal cortex (executive function, working memory)
+- Broca's area (BA44/45, dominant hemisphere): expressive language
+- Frontal eye fields (voluntary saccades)
+
+### Parietal Lobe
+- Primary somatosensory cortex (postcentral gyrus, BA1/2/3)
+- Superior parietal lobule (spatial awareness, attention)
+- Inferior parietal lobule: angular gyrus (reading), supramarginal gyrus
+- Dominant side: apraxia, acalculia; Non-dominant: hemispatial neglect
+
+### Temporal Lobe
+- Primary auditory cortex (Heschl's gyrus, BA41/42)
+- Wernicke's area (BA22, dominant): receptive language
+- Fusiform gyrus: face recognition
+- Hippocampus/parahippocampal: memory encoding
+
+### Occipital Lobe
+- Primary visual cortex (V1, BA17): receives retinotopic input
+- V2-V5: higher visual processing
+- Dorsal stream (where/how): parietal; Ventral stream (what): temporal
+
+## Cortical Syndromes
+- **Gerstmann syndrome:** Dominant parietal — agraphia, acalculia, finger agnosia, L-R disorientation
+- **Neglect:** Non-dominant parietal — ignores contralateral hemispace
+- **Prosopagnosia:** Fusiform lesion — cannot recognize familiar faces`
+    },
+    {
+      topicId: topicMap["Sensory & Motor Pathways"],
+      title: "Sensory & Motor Pathways Study Guide",
+      content: `# Sensory & Motor Pathways
+
+## Ascending Sensory Pathways
+
+### Dorsal Column-Medial Lemniscal (DCML)
+- **Carries:** Fine touch, vibration, proprioception, 2-point discrimination
+- **1st order:** DRG → ipsilateral dorsal column → medulla (gracile/cuneate nuclei)
+- **2nd order:** Decussate in medulla → medial lemniscus → VPL thalamus
+- **3rd order:** VPL → somatosensory cortex (S1)
+
+### Spinothalamic Tract (Anterolateral System)
+- **Carries:** Pain, temperature, crude touch
+- **1st order:** DRG → dorsal horn (synapse, Rexed laminae I/II/V)
+- **2nd order:** Decussate 1-2 levels above entry → anterolateral funiculus → VPL thalamus
+- **3rd order:** VPL → somatosensory cortex
+
+## Descending Motor Pathways
+
+### Corticospinal Tract (CST)
+- **Origin:** Primary motor cortex (layer V Betz cells)
+- **Course:** Internal capsule (posterior limb) → cerebral peduncle → pons → medulla
+- **Decussation:** Pyramidal decussation (85-90%) → lateral CST; 10-15% → anterior CST
+- **Target:** Alpha motor neurons in ventral horn (Rexed laminae VII/IX)
+
+### Upper vs. Lower Motor Neuron Lesions
+| Feature | UMN (CST) | LMN (ventral horn/nerve) |
+|---------|-----------|--------------------------|
+| Weakness | Contralateral | Ipsilateral, focal |
+| Tone | Spastic (↑) | Flaccid (↓) |
+| Reflexes | Hyperreflexia | Hyporeflexia/areflexia |
+| Atrophy | Mild, disuse | Prominent, early |
+| Fasciculations | Absent | Present |
+| Babinski | Positive | Absent |
+
+## Somatotopic Organization
+Motor and sensory homunculus: face/hand overrepresented laterally; trunk/leg medially (paracentral lobule for foot/bladder/bowel)`
+    },
+    {
+      topicId: topicMap["CNS Development"],
+      title: "CNS Development Study Guide",
+      content: `# CNS Development
+
+## Embryonic Timeline
+- **Week 3:** Neural plate forms (neurulation begins), neural tube closes
+- **Week 4:** Primary brain vesicles: prosencephalon, mesencephalon, rhombencephalon
+- **Week 6:** Secondary vesicles: telencephalon, diencephalon, mesencephalon, metencephalon, myelencephalon
+- **Week 6-24:** Neurogenesis, migration, differentiation
+- **Postnatal:** Synaptogenesis, myelination, synaptic pruning
+
+## Neural Tube Defects
+- Failure of neural tube closure (day 24-28)
+- **Anencephaly:** Failure to close rostrally → fatal
+- **Spina bifida occulta:** Vertebral defect, cord intact
+- **Meningocele:** Meninges herniate through vertebral defect
+- **Myelomeningocele:** Cord + meninges herniate → most severe
+- Prevention: Folic acid 400-800 mcg daily periconceptionally
+
+## Neurogenesis
+- Neural progenitor cells in ventricular zone → differentiate into neurons and glia
+- Neurons born first, glia second
+- Peak human neurogenesis: weeks 10-20 of gestation
+- Adult neurogenesis: hippocampus (dentate gyrus), olfactory bulb
+
+## Neuronal Migration
+- Radial glia serve as scaffolding
+- Neurons migrate from ventricular zone to cortical plate (inside-out pattern)
+- Later-born neurons pass earlier ones → deep layers first, superficial last
+- Disorders: lissencephaly (smooth brain), polymicrogyria, heterotopia
+
+## Critical Periods
+- Time-sensitive windows when experience shapes neural circuits
+- Monocular deprivation (amblyopia) critical period: 0-7 years
+- Language acquisition: extends through puberty
+- Stress/trauma effects more pronounced during critical periods
+
+## Myelination
+- Begins prenatally, continues into 3rd decade
+- PNS: Schwann cells; CNS: oligodendrocytes
+- Order: caudal to rostral, sensory before motor, proximal before distal`
+    },
+    {
+      topicId: topicMap["Neuroradiology"],
+      title: "Neuroradiology Study Guide",
+      content: `# Neuroradiology
+
+## CT vs. MRI
+| Feature | CT | MRI |
+|---------|-----|-----|
+| Best for | Acute hemorrhage, bone, calcification | Soft tissue detail, white matter, posterior fossa |
+| Time | Fast (minutes) | Slow (30-60 min) |
+| Radiation | Yes | No |
+| Metal contraindication | No | Yes |
+| Cost | Lower | Higher |
+
+## CT Basics
+### Hounsfield Units (HU)
+- Air: -1000 HU (black)
+- Fat: -50 to -100 HU (dark)
+- Water/CSF: 0 HU (gray)
+- Brain parenchyma: 25-80 HU (gray)
+- Blood (acute): 50-70 HU (bright white)
+- Bone: 400-1000 HU (bright white)
+
+### What Appears Bright on CT
+- **Acute blood** (hyperdense): subarachnoid, subdural, epidural, intracerebral hemorrhage
+- Calcification, contrast enhancement, high-protein CSF
+
+## MRI Sequences
+### T1-weighted
+- Fat/blood (subacute): BRIGHT; CSF: dark; Gray matter: darker than white matter
+- Best for anatomy, gadolinium enhancement
+
+### T2-weighted
+- CSF: BRIGHT (water is bright); edema, most pathology: bright; fat: bright
+- Best for detecting lesions
+
+### FLAIR (Fluid-Attenuated Inversion Recovery)
+- Like T2 but CSF suppressed (dark)
+- Excellent for periventricular lesions (MS plaques), SAH, cortical lesions
+
+### DWI (Diffusion-Weighted Imaging)
+- Acute ischemia: BRIGHT within minutes
+- Cytotoxic edema restricts diffusion
+- Gold standard for acute stroke detection
+
+## Common Neurological Imaging Findings
+- **Epidural hematoma:** Biconvex/lenticular shape; does not cross sutures; middle meningeal artery
+- **Subdural hematoma:** Crescent shape; crosses sutures; bridging veins
+- **Subarachnoid hemorrhage:** Blood in sulci/cisterns; aneurysm rupture
+- **MS plaques:** Periventricular, ovoid, perpendicular to ventricles (Dawson fingers on sagittal MRI)
+- **Ischemic stroke:** DWI bright + ADC dark within 30 min`
+    },
+    {
+      topicId: topicMap["Pain & Nociception"],
+      title: "Pain & Nociception Study Guide",
+      content: `# Pain & Nociception
+
+## Types of Pain
+- **Nociceptive:** Tissue damage activates nociceptors (somatic or visceral)
+- **Neuropathic:** Abnormal somatosensory system processing (e.g., diabetic neuropathy, PHN)
+- **Nociplastic:** Central sensitization without clear tissue damage (e.g., fibromyalgia)
+- **Referred pain:** Visceral pain perceived at a body surface location (e.g., MI → left arm)
+
+## Nociceptors
+- Free nerve endings in skin, muscle, viscera
+- Respond to mechanical, thermal, and chemical stimuli
+- **Aδ fibers:** Fast pain (sharp, acute) — sharp discriminative quality
+- **C fibers:** Slow pain (burning, aching) — second pain, chronic
+
+## Pain Transmission (Gate Control Theory)
+1. Nociceptors → dorsal horn (lamina I, II — substantia gelatinosa)
+2. Spinothalamic tract → thalamus → somatosensory cortex (location, intensity)
+3. Spinoreticular → reticular formation → emotional/arousal aspects
+4. Limbic system: affective/emotional component
+
+## Central Sensitization
+- Chronic pain state where CNS becomes hyperexcitable
+- Wind-up phenomenon: repeated stimulation amplifies responses
+- Long-term potentiation (LTP) at synapses
+- Mechanisms: NMDA receptor activation, loss of inhibition, glial activation
+
+## Descending Modulation
+- PAG → rostral ventromedial medulla → dorsal horn
+- Releases endorphins, enkephalins, serotonin, norepinephrine
+- Inhibits nociception (endogenous analgesic system)
+- Stimulated by stress, exercise, opioids
+
+## Pain Management
+| Analgesic Class | Mechanism | Use |
+|----------------|-----------|-----|
+| NSAIDs | COX inhibition, ↓ prostaglandins | Mild-moderate nociceptive pain |
+| Opioids | μ-receptor agonist | Moderate-severe pain |
+| Gabapentinoids | Voltage-gated Ca2+ channel blockade | Neuropathic pain |
+| TCAs/SNRIs | ↑ NE/5-HT reuptake inhibition | Neuropathic, chronic pain |
+| Ketamine | NMDA antagonist | Central sensitization, opioid-refractory |`
+    },
+    {
+      topicId: topicMap["Neurogenetics"],
+      title: "Neurogenetics Study Guide",
+      content: `# Neurogenetics
+
+## Inheritance Patterns
+| Pattern | Features | Example |
+|---------|---------|---------|
+| Autosomal Dominant | 50% risk each child, one copy sufficient | Huntington's, NF1 |
+| Autosomal Recessive | 25% risk, two copies needed | PKU, Wilson's disease |
+| X-linked Recessive | Males affected, females carriers | Duchenne MD, Fragile X |
+| Mitochondrial | Maternal inheritance, variable expression | MELAS, Leber's optic neuropathy |
+
+## Trinucleotide Repeat Disorders
+| Disease | Repeat | Gene | Features |
+|---------|--------|------|---------|
+| Huntington's | CAG (HTT) | Chromosome 4 | Chorea, dementia, psychiatric sx; anticipation |
+| Fragile X | CGG (FMR1) | X chromosome | Intellectual disability, macroorchidism, autism |
+| Myotonic Dystrophy | CTG (DMPK) | Chromosome 19 | Myotonia, cataracts, cardiac; anticipation |
+| Friedreich's Ataxia | GAA (FXN) | Chromosome 9 | Ataxia, cardiomyopathy, AR |
+
+## Common Neurogenetic Disorders
+### Neurofibromatosis Type 1 (NF1)
+- NF1 gene (chromosome 17) — tumor suppressor
+- Café-au-lait spots (≥6), neurofibromas, Lisch nodules, optic gliomas
+- AD inheritance; 50% new mutations
+
+### Tuberous Sclerosis
+- TSC1 (hamartin, chr 9) or TSC2 (tuberin, chr 16)
+- Cortical tubers, subependymal nodules, cardiac rhabdomyomas, skin findings
+- Epilepsy, intellectual disability, autism spectrum
+
+### BRCA-related neurological risk
+- BRCA1/2 → breast/ovarian cancer → brain metastases
+
+## Pharmacogenomics
+- CYP2D6 variants affect metabolism of many psychotropics (poor vs. ultra-rapid metabolizers)
+- HLA-B*1502 → carbamazepine-associated SJS in Asian populations
+- APOE ε4 allele: major risk factor for late-onset Alzheimer's disease`
+    },
+    {
+      topicId: topicMap["Visual System"],
+      title: "Visual System Study Guide",
+      content: `# Visual System
+
+## Retinal Organization
+- **Photoreceptors:** Rods (dim light, peripheral, ~120M) and Cones (color, central/foveal, ~6M)
+- **Bipolar cells** → **Retinal ganglion cells** → optic nerve
+- Fovea: highest cone density, sharpest vision
+- Optic disc (blind spot): no photoreceptors, where optic nerve exits
+
+## Visual Pathways
+Retina → Optic nerve → Optic chiasm → Optic tract → LGN (thalamus) → Optic radiations → V1 (occipital cortex, BA17)
+
+### Optic Chiasm
+- Nasal fibers (from temporal visual field) decussate
+- Temporal fibers stay ipsilateral
+- Result: each optic tract carries contralateral visual field
+
+## Visual Field Defects
+| Lesion Location | Visual Field Defect |
+|----------------|-------------------|
+| Optic nerve | Monocular blindness (ipsilateral) |
+| Optic chiasm (central) | Bitemporal hemianopia |
+| Optic tract | Contralateral homonymous hemianopia |
+| Temporal lobe (Meyer's loop) | Superior contralateral quadrantanopia (pie in the sky) |
+| Parietal lobe | Inferior contralateral quadrantanopia |
+| Occipital cortex | Contralateral homonymous hemianopia (macular sparing) |
+
+## Higher Visual Processing
+### Dorsal Stream (Where/How)
+- V1 → V5 (MT) → posterior parietal cortex
+- Motion, spatial location, visuomotor control
+- Lesion: optic ataxia, neglect, motion blindness
+
+### Ventral Stream (What)
+- V1 → V4 → inferotemporal cortex → fusiform gyrus
+- Object recognition, color, face recognition
+- Lesion: prosopagnosia, color agnosia, object agnosia
+
+## Color Vision
+- Trichromatic theory: three cone types (L/M/S)
+- Opponent-process theory: red-green, blue-yellow, black-white
+- Color blindness: usually X-linked, affects red-green discrimination`
+    },
+    {
+      topicId: topicMap["Auditory System"],
+      title: "Auditory System Study Guide",
+      content: `# Auditory System
+
+## Peripheral Auditory Anatomy
+- **Outer ear:** Pinna → External auditory meatus → Tympanic membrane
+- **Middle ear:** Malleus → Incus → Stapes (ossicles) → Oval window; amplify sound ~25 dB
+- **Inner ear (cochlea):** Scala vestibuli (perilymph), Scala media (endolymph), Scala tympani (perilymph)
+
+## Cochlear Mechanics
+- **Basilar membrane:** Tonotopic organization — high frequencies at base, low at apex
+- **Hair cells:** Inner (primary transducers, 3,500) and Outer (amplification, ~12,000)
+- **Organ of Corti:** Contains hair cells on basilar membrane
+- Stereocilia deflection → mechanoelectrical transduction → K+ influx
+
+## Auditory Pathways
+Cochlear hair cells → CN VIII (spiral ganglion) → Cochlear nuclei → Superior olivary complex (binaural processing) → Inferior colliculus → MGN (thalamus) → Primary auditory cortex (A1, Heschl's gyrus, BA41/42)
+
+### Key Feature: Multiple Decussations
+- Information crosses at multiple levels → both hemispheres receive bilateral input
+- Unilateral cortical lesion rarely causes unilateral deafness
+
+## Types of Hearing Loss
+| Type | Mechanism | Weber Test | Rinne Test |
+|------|-----------|-----------|-----------|
+| Conductive | Middle ear dysfunction | Lateralizes to affected ear | Negative (BC > AC) |
+| Sensorineural | Hair cell/CN VIII damage | Lateralizes to better ear | Positive (AC > BC) |
+
+## Common Disorders
+- **Presbycusis:** Age-related sensorineural hearing loss (high frequency first)
+- **Noise-induced hearing loss:** Outer hair cell damage at 4 kHz notch
+- **Otosclerosis:** Conductive loss; stapes fixation
+- **Acoustic neuroma (vestibular schwannoma):** CN VIII tumor; unilateral sensorineural loss, tinnitus, vertigo`
+    },
+    {
+      topicId: topicMap["Somatosensory & Touch"],
+      title: "Somatosensory & Touch Study Guide",
+      content: `# Somatosensory System & Touch
+
+## Mechanoreceptors of the Skin
+| Receptor | Fiber | Adaptation | Stimulus | Location |
+|---------|-------|-----------|----------|----------|
+| Meissner's corpuscle | Aβ | Rapid | Light touch, texture | Fingertips, lips |
+| Merkel's disc | Aβ | Slow | Sustained pressure, form | Fingertips, lips |
+| Ruffini endings | Aβ | Slow | Skin stretch | Deep dermis |
+| Pacinian corpuscle | Aβ | Very rapid | Vibration | Deep dermis, joints |
+| Free nerve endings | Aδ/C | Variable | Pain, temperature | Widespread |
+
+## Somatosensory Cortex (S1)
+- Postcentral gyrus (BA1, 2, 3)
+- Somatotopic map (homunculus): hands/lips overrepresented
+- BA3a: proprioception; BA3b: touch; BA1: texture; BA2: size/shape
+- S2 (secondary somatosensory cortex): bilateral, parietal operculum
+
+## Proprioception
+- **Muscle spindles (Ia/II afferents):** Detect muscle length and rate of change
+- **Golgi tendon organs (Ib afferents):** Detect muscle tension
+- **Joint receptors:** Detect joint position
+- All carried in dorsal columns → medial lemniscus
+
+## Pain Pathways (Review)
+- Aδ: fast, sharp, epicritic pain
+- C fibers: slow, burning, poorly localized
+- Dorsal horn (laminae I/II) → spinothalamic tract → VPL thalamus → S1
+
+## Clinical Correlates
+- **Tactile agnosia (astereognosis):** Cannot recognize objects by touch — parietal lobe lesion
+- **Two-point discrimination loss:** Dorsal column or cortical lesion
+- **Thermoanaesthesia:** Loss of temperature sensation — lateral spinothalamic lesion
+- **Cortical sensory syndrome:** Contralateral hemibody loss of discriminative touch with parietal lesion`
+    },
+    {
+      topicId: topicMap["Chemical Senses"],
+      title: "Chemical Senses Study Guide",
+      content: `# Chemical Senses: Olfaction & Gustation
+
+## Olfaction (Smell)
+
+### Olfactory Anatomy
+- Olfactory epithelium (roof of nasal cavity) → Olfactory receptor neurons (bipolar)
+- Axons → Cribriform plate → Olfactory bulb → Olfactory tract
+- Only sensory system that bypasses thalamus: direct projection to piriform cortex, amygdala
+
+### Olfactory Pathways
+- Piriform cortex (primary olfactory cortex)
+- Amygdala: emotional associations with odors
+- Orbitofrontal cortex: conscious odor perception, discrimination
+
+### Clinical Aspects
+- **Anosmia:** Loss of smell; trauma (cribriform plate fracture), early Parkinson's, COVID-19
+- **Parosmia:** Distorted smell perception
+- **Olfactory hallucinations:** May indicate temporal lobe seizures
+
+## Gustation (Taste)
+
+### Five Primary Tastes
+| Taste | Stimulus | Receptor Type |
+|-------|---------|--------------|
+| Sweet | Sugars | GPCR (T1R2/T1R3) |
+| Salty | NaCl | Ion channel (ENaC) |
+| Sour | H+ (acids) | Ion channel |
+| Bitter | Alkaloids, toxins | GPCR (T2R family) |
+| Umami | Glutamate, amino acids | GPCR (T1R1/T1R3) |
+
+### Taste Pathways
+- Taste buds (fungiform, foliate, circumvallate papillae) → CN VII (anterior 2/3 tongue), CN IX (posterior 1/3), CN X (epiglottis/pharynx)
+- → Nucleus tractus solitarius → VPM thalamus → gustatory cortex (insula + operculum)
+
+### Clinical Aspects
+- **Ageusia:** Loss of taste; zinc deficiency, COVID-19, medications
+- **Dysgeusia:** Distorted taste; metal taste from some medications (metformin)
+- **Chorda tympani lesion:** Loss of taste anterior 2/3 tongue (CN VII)
+- Smell accounts for ~80% of perceived flavor (loss of smell → perceived taste loss)`
+    },
+    {
+      topicId: topicMap["Vestibular System"],
+      title: "Vestibular System Study Guide",
+      content: `# Vestibular System
+
+## Peripheral Vestibular Apparatus
+Located in inner ear (membranous labyrinth, within bony labyrinth):
+
+### Semicircular Canals (3)
+- Horizontal, anterior, posterior canals
+- Detect angular (rotational) acceleration
+- Hair cells in ampulla (cristae) respond to endolymph movement
+
+### Otolith Organs
+- **Utricle:** Horizontal linear acceleration and head tilt
+- **Saccule:** Vertical linear acceleration
+- Hair cells in macula (otoconia → otolithic membrane)
+
+## Vestibular Pathways
+Hair cells → CN VIII (vestibular nerve, Scarpa's ganglion) → Vestibular nuclei (pons/medulla) → 
+- Cerebellum (flocculonodular lobe): balance and coordination
+- Spinal cord (vestibulospinal tracts): postural control
+- Thalamus → cortex: conscious awareness of motion
+- CN III/IV/VI (MLF): vestibulo-ocular reflex (VOR)
+
+## Vestibulo-Ocular Reflex (VOR)
+- Compensatory eye movements that stabilize visual image during head movement
+- Head turns right → eyes move left (equal and opposite)
+- Mediated via medial longitudinal fasciculus (MLF)
+
+## Common Vestibular Disorders
+| Condition | Features | Key Findings |
+|-----------|---------|-------------|
+| BPPV | Brief positional vertigo | Dix-Hallpike positive; displaced otoconia |
+| Vestibular neuritis | Prolonged vertigo, no hearing loss | Unilateral canal paresis; viral |
+| Meniere's disease | Episodic vertigo + hearing loss + tinnitus + fullness | Endolymphatic hydrops |
+| Labyrinthitis | Vertigo + hearing loss | Inflammatory |
+| Acoustic neuroma | Slowly progressive unilateral vestibular loss | MRI: CP angle mass |
+
+## Nystagmus
+- Fast phase away from lesion (peripheral) or toward lesion (some central)
+- Peripheral: fatigues, suppressed by fixation, horizontal/torsional
+- Central: non-fatiguing, not suppressed by fixation, can be vertical/direction-changing`
+    },
+    {
+      topicId: topicMap["Motor Control"],
+      title: "Motor Control Study Guide",
+      content: `# Motor Control
+
+## Hierarchical Organization
+1. **Spinal cord:** Reflexes, central pattern generators (CPGs) for locomotion
+2. **Brainstem:** Postural control, head/eye movements, vestibulospinal/reticulospinal tracts
+3. **Cerebellum:** Coordination, timing, error correction
+4. **Basal ganglia:** Motor program selection, suppression of unwanted movements
+5. **Motor cortex:** Voluntary movement initiation, fine motor control
+
+## Motor Cortex
+- **Primary motor cortex (M1, BA4):** Precentral gyrus; somatotopic organization (homunculus)
+  - Hands/face disproportionately large representation
+- **Premotor cortex (BA6):** Preprogramming complex movements, mirror neurons
+- **Supplementary motor area (SMA):** Internally driven movements, bimanual coordination
+- **Cingulate motor areas:** Motivational/emotional aspects of movement
+
+## Corticospinal and Corticobulbar Tracts
+- Corticospinal: voluntary limb/trunk control → ventral horn alpha motor neurons
+- Corticobulbar: facial/bulbar muscles → cranial nerve motor nuclei
+
+## Alpha and Gamma Motor Neurons
+- **Alpha (α) motor neurons:** Directly innervate extrafusal muscle fibers → contraction
+- **Gamma (γ) motor neurons:** Innervate intrafusal fibers (muscle spindles) → maintain spindle sensitivity
+- **Beta motor neurons:** Innervate both (coactivation during movement)
+
+## Muscle Spindle & Golgi Tendon Organ
+- **Muscle spindle:** Detect length and rate of length change → Ia afferent (nuclear bag) and II afferent (nuclear chain)
+- **Golgi Tendon Organ:** Detect tension → Ib afferent → inhibitory interneuron → autogenic inhibition
+
+## Motor Unit
+- One alpha motor neuron + all muscle fibers it innervates
+- **Small motor units:** Slow-twitch, fatigue-resistant, recruited first (size principle)
+- **Large motor units:** Fast-twitch, powerful, fatigue quickly, recruited for high force
+- Henneman's Size Principle: Motor units recruited by size (small → large)`
+    },
+    {
+      topicId: topicMap["Neuroendocrinology"],
+      title: "Neuroendocrinology Study Guide",
+      content: `# Neuroendocrinology
+
+## Hypothalamic-Pituitary Axis
+The hypothalamus controls the pituitary gland via:
+1. **Hypophysiotropic hormones** → portal blood → anterior pituitary
+2. **Direct axonal projections** → posterior pituitary (neurohypophysis)
+
+### Hypothalamic Releasing Hormones
+| Hormone | Target | Effect |
+|---------|--------|--------|
+| CRH | Corticotrophs | ↑ACTH → cortisol |
+| TRH | Thyrotrophs | ↑TSH → T3/T4 |
+| GnRH | Gonadotrophs | ↑LH/FSH → sex steroids |
+| GHRH | Somatotrophs | ↑GH → IGF-1 |
+| Somatostatin | Somatotrophs | ↓GH |
+| Dopamine | Lactotrophs | ↓Prolactin |
+
+## HPA Axis & Stress Response
+- **Acute stress:** Hypothalamus → CRH → ACTH → cortisol
+- **Cortisol effects:** ↑glucose, ↓inflammation, immunosuppression, ↑arousal
+- **Negative feedback:** Cortisol → hypothalamus and pituitary (↓CRH and ACTH)
+- **Chronic stress:** HPA hyperactivation → hippocampal damage, depression, metabolic syndrome
+
+## Posterior Pituitary Hormones (Neurohypophysis)
+- **ADH (Vasopressin):** Released in response to ↑osmolality, ↓blood volume; acts on kidney collecting duct → water reabsorption
+  - Diabetes insipidus: ADH deficiency → polyuria/polydipsia
+  - SIADH: excess ADH → hyponatremia
+- **Oxytocin:** Uterine contraction, milk letdown, social bonding (paraventricular nucleus)
+
+## Thyroid Regulation
+TRH (hypothalamus) → TSH (pituitary) → T3/T4 (thyroid)
+- Hyperthyroidism: anxiety, weight loss, tremor, heat intolerance, tachycardia
+- Hypothyroidism: cognitive slowing, fatigue, weight gain, cold intolerance
+
+## Sex Hormones and Brain
+- Estrogen: neuroprotective, influences mood and cognition; ↓post-menopause → increased AD risk
+- Testosterone: promotes aggression and spatial ability
+- Both hormones modulate serotonin, dopamine, and GABA systems`
+    },
+    {
+      topicId: topicMap["Dissociative Disorders"],
+      title: "Dissociative Disorders Study Guide",
+      content: `# Dissociative Disorders
+
+## Core Concept
+Dissociation: disruption in the normal integration of consciousness, memory, identity, emotion, perception, behavior, or sense of self.
+
+## Dissociative Identity Disorder (DID)
+- Presence of ≥2 distinct personality states (alters) with own name, affect, memories
+- Inability to recall everyday events (beyond ordinary forgetting)
+- Recurrent amnesia between alters
+- Strong association with severe childhood trauma/abuse
+- Controversy regarding prevalence and diagnostic validity
+
+## Dissociative Amnesia
+- Inability to recall important autobiographical information, usually of traumatic nature
+- **Localized:** Specific time period (most common)
+- **Selective:** Some events within a period
+- **Generalized:** Complete loss of identity and autobiographical memory
+- **Dissociative fugue:** Purposeful travel/bewildered wandering + amnesia about identity
+
+## Depersonalization-Derealization Disorder
+- **Depersonalization:** Feeling detached from one's own mental processes or body ("robotic," "observer of self")
+- **Derealization:** Feeling detached from surroundings ("dreamlike," unreal)
+- Reality testing intact throughout
+- Must be persistent/recurrent and cause significant distress
+- Associated with anxiety, depression, trauma
+
+## Neurobiological Correlates
+- fMRI: reduced limbic activation during emotional processing
+- Decreased connectivity between amygdala and insula
+- HPA axis dysregulation in DID with trauma history
+- Prefrontal inhibition of emotional processing
+
+## Treatment
+- Trauma-focused psychotherapy (EMDR, phase-based approach for DID)
+- Phase model: stabilization → processing trauma → integration
+- No FDA-approved medications; treat comorbidities (depression, anxiety, PTSD)`
+    },
+    {
+      topicId: topicMap["Coping & Defense Mechanisms"],
+      title: "Coping & Defense Mechanisms Study Guide",
+      content: `# Coping & Defense Mechanisms
+
+## Coping vs. Defense Mechanisms
+- **Coping:** Conscious, deliberate strategies to manage stress
+- **Defense mechanisms:** Unconscious, automatic psychological processes that protect against anxiety/distress
+
+## Mature Defense Mechanisms (Adaptive)
+| Mechanism | Description | Example |
+|-----------|-------------|---------|
+| Sublimation | Redirect unacceptable impulse to socially acceptable activity | Aggression → competitive sports |
+| Humor | Use of comedy to diffuse distress | Joking about a serious illness |
+| Altruism | Channeling conflicts into helping others | Charity work after personal tragedy |
+| Suppression | Consciously postponing attention to distressing thoughts | "I'll deal with this later" |
+
+## Neurotic Defense Mechanisms
+| Mechanism | Description |
+|-----------|-------------|
+| Reaction formation | Convert unacceptable impulse to opposite | Hating someone → being excessively kind |
+| Rationalization | Logical explanations for unacceptable feelings | "I didn't get the job because they were unfair" |
+| Repression | Unconscious exclusion of distressing memories from awareness | Forgetting trauma |
+| Displacement | Transfer emotions to a safer target | Angry at boss → yells at family |
+| Intellectualization | Use of abstract thinking to avoid emotions | Academic discussion of personal loss |
+
+## Immature Defense Mechanisms (Maladaptive)
+| Mechanism | Description |
+|-----------|-------------|
+| Projection | Attributing own unacceptable feelings to others | "You're angry at me" (when you are angry) |
+| Denial | Refusing to acknowledge painful reality | "I don't have a drinking problem" |
+| Splitting | Viewing others as all good or all bad | Characteristic of BPD |
+| Acting out | Expressing impulses through action | Substance use under stress |
+| Regression | Reverting to earlier stage behavior | Adult becoming child-like under stress |
+
+## Coping Strategies
+- **Problem-focused:** Address the stressor directly (planning, problem-solving)
+- **Emotion-focused:** Manage emotional response (mindfulness, reframing)
+- **Maladaptive:** Avoidance, substance use, rumination
+- Resilience factors: social support, self-efficacy, optimism, meaning-making`
+    },
+    {
+      topicId: topicMap["Personality Disorders"],
+      title: "Personality Disorders Study Guide",
+      content: `# Personality Disorders
+
+## Definition
+Enduring, inflexible patterns of inner experience and behavior that deviate from cultural expectations, cause distress/impairment, and are stable across time and situations.
+
+## DSM-5 Clusters
+### Cluster A — Odd/Eccentric
+| Disorder | Core Features |
+|---------|--------------|
+| Paranoid | Pervasive distrust and suspicion of others |
+| Schizoid | Detachment from social relationships, restricted emotional range |
+| Schizotypal | Odd cognitions/perceptions, magical thinking, social anxiety |
+
+### Cluster B — Dramatic/Emotional
+| Disorder | Core Features |
+|---------|--------------|
+| Antisocial | Disregard for/violation of rights of others; deceitfulness, impulsivity |
+| Borderline (BPD) | Unstable relationships, self-image, affect; impulsivity; FearOfAbandonment; splitting |
+| Histrionic | Excessive emotionality and attention-seeking |
+| Narcissistic | Grandiosity, need for admiration, lack of empathy |
+
+### Cluster C — Anxious/Fearful
+| Disorder | Core Features |
+|---------|--------------|
+| Avoidant | Social inhibition, inferiority, hypersensitivity to criticism |
+| Dependent | Excessive need to be taken care of; submissive; clinging |
+| OCPD | Preoccupation with orderliness, perfectionism, control |
+
+## Neurobiological Findings
+- **BPD:** Reduced amygdala volume, hyperreactive amygdala, decreased prefrontal control
+- **ASPD:** Reduced prefrontal gray matter, amygdala dysfunction, low autonomic reactivity
+- **Schizotypal:** Genetic overlap with schizophrenia; structural brain abnormalities
+
+## Treatment
+- Psychotherapy is first-line for all personality disorders
+- **DBT (Dialectical Behavior Therapy):** Gold standard for BPD
+- **Schema therapy:** OCPD, cluster C
+- **MBT (Mentalization-based therapy):** BPD
+- Medications: target symptoms (SSRIs for anxiety/dysphoria, mood stabilizers for impulsivity, low-dose antipsychotics for psychotic features in cluster A/B)`
+    },
   ];
 
   await db.insert(studyGuidesTable).values(studyGuides);
