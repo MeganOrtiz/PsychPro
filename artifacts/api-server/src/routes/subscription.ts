@@ -1,11 +1,9 @@
-import { Router } from "express";
+import { Router, type Request, type Response } from "express";
 import { db } from "@workspace/db";
 import { usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { getUncachableStripeClient } from "../stripeClient";
-import type { Request } from "express";
 import { getAuth } from "@clerk/express";
-import type Stripe from "stripe";
 
 const router = Router();
 
@@ -13,7 +11,7 @@ function getUserId(req: Request): string | null {
   return getAuth(req).userId ?? null;
 }
 
-router.get("/subscription/plans", async (req, res) => {
+router.get("/subscription/plans", async (req: Request, res: Response): Promise<void> => {
   try {
     const stripe = await getUncachableStripeClient();
     const products = await stripe.products.list({ active: true, limit: 10 });
@@ -39,10 +37,13 @@ router.get("/subscription/plans", async (req, res) => {
   }
 });
 
-router.post("/subscription/checkout", async (req, res) => {
+router.post("/subscription/checkout", async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = getUserId(req);
-    if (!userId) return res.status(401).json({ error: "Unauthorized" });
+    if (!userId) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
     const { priceId } = req.body as { priceId: string };
     const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
     const stripe = await getUncachableStripeClient();
@@ -74,23 +75,30 @@ router.post("/subscription/checkout", async (req, res) => {
   }
 });
 
-router.get("/subscription/status", async (req, res) => {
+router.get("/subscription/status", async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = getUserId(req);
-    if (!userId) return res.status(401).json({ error: "Unauthorized" });
+    if (!userId) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
     const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
-    if (!user) return res.json({ status: "free", subscriptionId: null, currentPeriodEnd: null });
+    if (!user) {
+      res.json({ status: "free", subscriptionId: null, currentPeriodEnd: null });
+      return;
+    }
 
     if (user.stripeSubscriptionId) {
       try {
         const stripe = await getUncachableStripeClient();
         const sub = await stripe.subscriptions.retrieve(user.stripeSubscriptionId);
-        const periodEnd = (sub as Stripe.Subscription & { current_period_end: number }).current_period_end;
-        return res.json({
+        const periodEnd = (sub as unknown as { current_period_end: number }).current_period_end;
+        res.json({
           status: sub.status,
           subscriptionId: sub.id,
           currentPeriodEnd: periodEnd ? new Date(periodEnd * 1000).toISOString() : null,
         });
+        return;
       } catch {
         // fall through to user record
       }

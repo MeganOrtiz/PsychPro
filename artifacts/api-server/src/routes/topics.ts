@@ -1,11 +1,11 @@
-import { Router } from "express";
+import { Router, type Request, type Response } from "express";
 import { db } from "@workspace/db";
 import { topicsTable, flashcardsTable, quizQuestionsTable, studyGuidesTable } from "@workspace/db";
 import { eq, count } from "drizzle-orm";
 
 const router = Router();
 
-router.get("/topics", async (req, res) => {
+router.get("/topics", async (req: Request, res: Response): Promise<void> => {
   try {
     const topics = await db.select().from(topicsTable);
     const result = await Promise.all(
@@ -26,11 +26,14 @@ router.get("/topics", async (req, res) => {
   }
 });
 
-router.get("/topics/:topicId", async (req, res) => {
+router.get("/topics/:topicId", async (req: Request, res: Response): Promise<void> => {
   try {
-    const topicId = parseInt(req.params.topicId);
+    const topicId = parseInt(String(req.params.topicId));
     const [topic] = await db.select().from(topicsTable).where(eq(topicsTable.id, topicId));
-    if (!topic) return res.status(404).json({ error: "Topic not found" });
+    if (!topic) {
+      res.status(404).json({ error: "Topic not found" });
+      return;
+    }
     const [fc] = await db.select({ count: count() }).from(flashcardsTable).where(eq(flashcardsTable.topicId, topicId));
     const [qc] = await db.select({ count: count() }).from(quizQuestionsTable).where(eq(quizQuestionsTable.topicId, topicId));
     res.json({ ...topic, flashcardCount: Number(fc?.count ?? 0), quizCount: Number(qc?.count ?? 0) });
@@ -40,9 +43,9 @@ router.get("/topics/:topicId", async (req, res) => {
   }
 });
 
-router.get("/topics/:topicId/flashcards", async (req, res) => {
+router.get("/topics/:topicId/flashcards", async (req: Request, res: Response): Promise<void> => {
   try {
-    const topicId = parseInt(req.params.topicId);
+    const topicId = parseInt(String(req.params.topicId));
     const flashcards = await db.select().from(flashcardsTable).where(eq(flashcardsTable.topicId, topicId));
     res.json(flashcards);
   } catch (err) {
@@ -51,9 +54,9 @@ router.get("/topics/:topicId/flashcards", async (req, res) => {
   }
 });
 
-router.get("/topics/:topicId/quizzes", async (req, res) => {
+router.get("/topics/:topicId/quizzes", async (req: Request, res: Response): Promise<void> => {
   try {
-    const topicId = parseInt(req.params.topicId);
+    const topicId = parseInt(String(req.params.topicId));
     const questions = await db
       .select()
       .from(quizQuestionsTable)
@@ -78,11 +81,14 @@ router.get("/topics/:topicId/quizzes", async (req, res) => {
   }
 });
 
-router.get("/topics/:topicId/study-guide", async (req, res) => {
+router.get("/topics/:topicId/study-guide", async (req: Request, res: Response): Promise<void> => {
   try {
-    const topicId = parseInt(req.params.topicId);
+    const topicId = parseInt(String(req.params.topicId));
     const [guide] = await db.select().from(studyGuidesTable).where(eq(studyGuidesTable.topicId, topicId));
-    if (!guide) return res.status(404).json({ error: "Study guide not found" });
+    if (!guide) {
+      res.status(404).json({ error: "Study guide not found" });
+      return;
+    }
     res.json(guide);
   } catch (err) {
     req.log.error({ err }, "Error getting study guide");
@@ -90,11 +96,14 @@ router.get("/topics/:topicId/study-guide", async (req, res) => {
   }
 });
 
-router.get("/topics/:topicId/practice-exam", async (req, res) => {
+router.get("/topics/:topicId/practice-exam", async (req: Request, res: Response): Promise<void> => {
   try {
-    const topicId = parseInt(req.params.topicId);
+    const topicId = parseInt(String(req.params.topicId));
     const [topic] = await db.select().from(topicsTable).where(eq(topicsTable.id, topicId));
-    if (!topic) return res.status(404).json({ error: "Topic not found" });
+    if (!topic) {
+      res.status(404).json({ error: "Topic not found" });
+      return;
+    }
     const allQuestions = await db
       .select()
       .from(quizQuestionsTable)

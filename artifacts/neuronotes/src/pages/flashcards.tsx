@@ -37,7 +37,7 @@ export default function FlashcardsPage({ params }: Props) {
         setShowUpgrade(true);
         return;
       }
-      await incrementUsage.mutateAsync({});
+      await incrementUsage.mutateAsync();
     }
     setFlipped(!flipped);
   };

@@ -1,3 +1,4 @@
+import { type ReactElement } from "react";
 import { useLocation } from "wouter";
 import { ChevronLeft } from "lucide-react";
 import { useGetStudyGuideByTopic } from "@workspace/api-client-react";
@@ -52,7 +53,7 @@ export default function StudyGuidePage({ params }: Props) {
 
 function MarkdownRenderer({ content }: { content: string }) {
   const lines = content.split("\n");
-  const elements: JSX.Element[] = [];
+  const elements: ReactElement[] = [];
   let inTable = false;
   let tableRows: string[][] = [];
   let tableKey = 0;

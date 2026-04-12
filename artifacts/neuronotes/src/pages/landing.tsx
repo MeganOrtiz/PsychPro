@@ -27,8 +27,7 @@ export default function LandingPage() {
             ← Back
           </button>
           <SignIn
-            routing="virtual"
-            afterSignInUrl="/dashboard"
+            fallbackRedirectUrl="/dashboard"
             signUpUrl="/sign-up"
           />
         </div>
@@ -47,8 +46,7 @@ export default function LandingPage() {
             ← Back
           </button>
           <SignUp
-            routing="virtual"
-            afterSignUpUrl="/onboarding"
+            fallbackRedirectUrl="/onboarding"
             signInUrl="/sign-in"
           />
         </div>

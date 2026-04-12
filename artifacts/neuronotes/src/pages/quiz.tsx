@@ -43,7 +43,7 @@ export default function QuizPage({ params }: Props) {
       setShowUpgrade(true);
       return;
     }
-    await incrementUsage.mutateAsync({});
+    await incrementUsage.mutateAsync();
     setSelected(key);
     setShowExplanation(true);
     if (key === current?.correctAnswer) {

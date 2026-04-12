@@ -1,4 +1,4 @@
-import express, { type Express } from "express";
+import express, { type Express, type Request, type Response, type NextFunction } from "express";
 import cors from "cors";
 import pinoHttp from "pino-http";
 import router from "./routes";
@@ -35,17 +35,19 @@ app.use(cors());
 app.post(
   "/api/stripe/webhook",
   express.raw({ type: "application/json" }),
-  async (req, res) => {
+  async (req: Request, res: Response): Promise<void> => {
     const sig = req.headers["stripe-signature"];
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
     if (!webhookSecret) {
       logger.warn("STRIPE_WEBHOOK_SECRET not set; rejecting unsigned webhook");
-      return res.status(400).json({ error: "Webhook secret not configured" });
+      res.status(400).json({ error: "Webhook secret not configured" });
+      return;
     }
 
     if (!sig) {
-      return res.status(400).json({ error: "Missing stripe-signature header" });
+      res.status(400).json({ error: "Missing stripe-signature header" });
+      return;
     }
 
     try {
@@ -66,16 +68,24 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(clerkMiddleware());
 
-const publicPaths = ["/healthz", "/topics", "/topics/"];
-app.use("/api", (req, res, next) => {
-  const isPublic = publicPaths.some(p => req.path === p || req.path.startsWith("/topics/")) ||
-    req.path.startsWith("/stripe/");
-  if (isPublic) return next();
+app.use("/api", (req: Request, res: Response, next: NextFunction): void => {
+  // Public routes: health check, topic list, individual topic info, stripe webhook
+  const isPublic =
+    req.path === "/healthz" ||
+    req.path === "/topics" ||
+    req.path.startsWith("/stripe/") ||
+    // Allow unauthenticated access to topic list and individual topic detail only
+    (/^\/topics\/\d+$/.test(req.path) && req.method === "GET");
+  if (isPublic) {
+    next();
+    return;
+  }
   const { userId } = getAuth(req);
   if (!userId) {
-    return res.status(401).json({ error: "Unauthorized" });
+    res.status(401).json({ error: "Unauthorized" });
+    return;
   }
-  return next();
+  next();
 });
 
 app.use("/api", router);

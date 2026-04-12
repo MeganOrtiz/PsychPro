@@ -77,7 +77,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
         <div className="p-4 border-t border-sidebar-border">
           <div className="flex items-center gap-3">
-            <UserButton afterSignOutUrl="/" />
+            <UserButton />
             <div className="min-w-0">
               <p className="text-sidebar-foreground text-sm font-medium truncate">
                 {user?.firstName || user?.emailAddresses[0]?.emailAddress}

@@ -1,8 +1,7 @@
-import { Router } from "express";
+import { Router, type Request, type Response } from "express";
 import { db } from "@workspace/db";
 import { progressTable, topicsTable, usersTable } from "@workspace/db";
-import { eq, and, avg, desc } from "drizzle-orm";
-import type { Request } from "express";
+import { eq, and, desc } from "drizzle-orm";
 import { getAuth } from "@clerk/express";
 
 const router = Router();
@@ -11,10 +10,13 @@ function getUserId(req: Request): string | null {
   return getAuth(req).userId ?? null;
 }
 
-router.get("/progress", async (req, res) => {
+router.get("/progress", async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = getUserId(req);
-    if (!userId) return res.status(401).json({ error: "Unauthorized" });
+    if (!userId) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
     const rows = await db
       .select({
         id: progressTable.id,
@@ -35,11 +37,14 @@ router.get("/progress", async (req, res) => {
   }
 });
 
-router.get("/progress/:topicId", async (req, res) => {
+router.get("/progress/:topicId", async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = getUserId(req);
-    if (!userId) return res.status(401).json({ error: "Unauthorized" });
-    const topicId = parseInt(req.params.topicId);
+    if (!userId) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+    const topicId = parseInt(String(req.params.topicId));
     const [row] = await db
       .select({
         id: progressTable.id,
@@ -52,7 +57,10 @@ router.get("/progress/:topicId", async (req, res) => {
       .from(progressTable)
       .leftJoin(topicsTable, eq(progressTable.topicId, topicsTable.id))
       .where(and(eq(progressTable.userId, userId), eq(progressTable.topicId, topicId)));
-    if (!row) return res.status(404).json({ error: "Progress not found" });
+    if (!row) {
+      res.status(404).json({ error: "Progress not found" });
+      return;
+    }
     res.json({ ...row, topicName: row.topicName ?? "", lastAccessed: row.lastAccessed?.toISOString() });
   } catch (err) {
     req.log.error({ err }, "Error getting topic progress");
@@ -60,11 +68,14 @@ router.get("/progress/:topicId", async (req, res) => {
   }
 });
 
-router.post("/progress/:topicId", async (req, res) => {
+router.post("/progress/:topicId", async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = getUserId(req);
-    if (!userId) return res.status(401).json({ error: "Unauthorized" });
-    const topicId = parseInt(req.params.topicId);
+    if (!userId) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+    const topicId = parseInt(String(req.params.topicId));
     const { score } = req.body as { score: number };
     const [topic] = await db.select().from(topicsTable).where(eq(topicsTable.id, topicId));
     const existing = await db
@@ -88,12 +99,15 @@ router.post("/progress/:topicId", async (req, res) => {
   }
 });
 
-router.get("/dashboard/summary", async (req, res) => {
+router.get("/dashboard/summary", async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = getUserId(req);
-    if (!userId) return res.status(401).json({ error: "Unauthorized" });
-    const [allTopics] = await db.select({ count: topicsTable.id }).from(topicsTable);
-    const totalTopics = allTopics ? (await db.select().from(topicsTable)).length : 0;
+    if (!userId) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+    const allTopicsRows = await db.select().from(topicsTable);
+    const totalTopics = allTopicsRows.length;
 
     const progressRows = await db
       .select({

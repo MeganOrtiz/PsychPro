@@ -83,3 +83,16 @@ export const progressTable = pgTable("progress", {
 export const insertProgressSchema = createInsertSchema(progressTable).omit({ id: true, lastAccessed: true });
 export type InsertProgress = z.infer<typeof insertProgressSchema>;
 export type Progress = typeof progressTable.$inferSelect;
+
+export const practiceExamsTable = pgTable("practice_exams", {
+  id: serial("id").primaryKey(),
+  topicId: integer("topic_id").notNull().references(() => topicsTable.id),
+  title: text("title").notNull(),
+  timeLimit: integer("time_limit").notNull().default(600),
+  passingScore: integer("passing_score").notNull().default(70),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const insertPracticeExamSchema = createInsertSchema(practiceExamsTable).omit({ id: true, createdAt: true });
+export type InsertPracticeExam = z.infer<typeof insertPracticeExamSchema>;
+export type PracticeExam = typeof practiceExamsTable.$inferSelect;

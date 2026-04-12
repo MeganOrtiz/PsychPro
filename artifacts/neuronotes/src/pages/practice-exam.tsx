@@ -65,7 +65,7 @@ export default function PracticeExamPage({ params }: Props) {
       setShowUpgrade(true);
       return;
     }
-    await incrementUsage.mutateAsync({});
+    await incrementUsage.mutateAsync();
     setAnswers(prev => ({ ...prev, [qId]: key }));
   };
 
