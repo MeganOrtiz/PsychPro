@@ -37,7 +37,7 @@ async function getStripeKey(): Promise<string> {
 async function seedProducts() {
   console.log("Seeding Stripe products...");
   const secretKey = await getStripeKey();
-  const stripe = new Stripe(secretKey, { apiVersion: "2026-03-25.dahlia" as any });
+  const stripe = new Stripe(secretKey, { apiVersion: "2026-03-25.dahlia" });
 
   const existing = await stripe.products.list({ active: true });
   if (existing.data.length > 0) {

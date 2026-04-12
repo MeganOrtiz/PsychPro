@@ -2,7 +2,7 @@ import { type Request, type Response, type NextFunction } from "express";
 import { getAuth } from "@clerk/express";
 import { db } from "@workspace/db";
 import { usersTable } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 const FREE_LIMIT = 10;
 
@@ -14,13 +14,17 @@ export async function enforceUsageLimit(req: Request, res: Response, next: NextF
   }
 
   try {
-    const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
+    let [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
+
     if (!user) {
-      next();
-      return;
+      [user] = await db
+        .insert(usersTable)
+        .values({ id: userId, subscriptionStatus: "free", onboardingComplete: false, usageCount: 0 })
+        .returning();
     }
 
     const isSubscribed = user.subscriptionStatus === "active" || user.subscriptionStatus === "pro";
+
     if (!isSubscribed && (user.usageCount ?? 0) >= FREE_LIMIT) {
       res.status(402).json({
         error: "Free limit reached",
@@ -29,6 +33,13 @@ export async function enforceUsageLimit(req: Request, res: Response, next: NextF
         freeLimit: FREE_LIMIT,
       });
       return;
+    }
+
+    if (!isSubscribed) {
+      await db
+        .update(usersTable)
+        .set({ usageCount: sql`${usersTable.usageCount} + 1` })
+        .where(eq(usersTable.id, userId));
     }
 
     next();
