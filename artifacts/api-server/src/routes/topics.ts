@@ -82,7 +82,7 @@ router.get("/topics/:topicId/quizzes", enforceUsageLimit, async (req: Request, r
   }
 });
 
-router.get("/topics/:topicId/study-guide", enforceUsageLimit, async (req: Request, res: Response): Promise<void> => {
+router.get("/topics/:topicId/study-guide", async (req: Request, res: Response): Promise<void> => {
   try {
     const topicId = parseInt(String(req.params.topicId));
     const [guide] = await db.select().from(studyGuidesTable).where(eq(studyGuidesTable.topicId, topicId));
@@ -97,7 +97,7 @@ router.get("/topics/:topicId/study-guide", enforceUsageLimit, async (req: Reques
   }
 });
 
-router.get("/topics/:topicId/practice-exam", enforceUsageLimit, async (req: Request, res: Response): Promise<void> => {
+router.get("/topics/:topicId/practice-exam", async (req: Request, res: Response): Promise<void> => {
   try {
     const topicId = parseInt(String(req.params.topicId));
     const [exam] = await db.select().from(practiceExamsTable).where(eq(practiceExamsTable.topicId, topicId));
