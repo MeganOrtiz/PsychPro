@@ -6,6 +6,7 @@ import { logger } from "./lib/logger";
 import { clerkMiddleware, getAuth } from "@clerk/express";
 import { getUncachableStripeClient } from "./stripeClient";
 import { handleStripeWebhookEvent } from "./webhookHandlers";
+import { CLERK_PROXY_PATH, clerkProxyMiddleware } from "./middlewares/clerkProxyMiddleware";
 import type Stripe from "stripe";
 
 const app: Express = express();
@@ -31,6 +32,8 @@ app.use(
 );
 
 app.use(cors());
+
+app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
 
 app.post(
   "/api/stripe/webhook",

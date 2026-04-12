@@ -2,6 +2,7 @@ import { Router, type Request, type Response } from "express";
 import { db } from "@workspace/db";
 import { topicsTable, flashcardsTable, quizQuestionsTable, studyGuidesTable, practiceExamsTable } from "@workspace/db";
 import { eq, count } from "drizzle-orm";
+import { enforceUsageLimit } from "../middlewares/usageEnforcement";
 
 const router = Router();
 
@@ -43,7 +44,7 @@ router.get("/topics/:topicId", async (req: Request, res: Response): Promise<void
   }
 });
 
-router.get("/topics/:topicId/flashcards", async (req: Request, res: Response): Promise<void> => {
+router.get("/topics/:topicId/flashcards", enforceUsageLimit, async (req: Request, res: Response): Promise<void> => {
   try {
     const topicId = parseInt(String(req.params.topicId));
     const flashcards = await db.select().from(flashcardsTable).where(eq(flashcardsTable.topicId, topicId));
@@ -54,7 +55,7 @@ router.get("/topics/:topicId/flashcards", async (req: Request, res: Response): P
   }
 });
 
-router.get("/topics/:topicId/quizzes", async (req: Request, res: Response): Promise<void> => {
+router.get("/topics/:topicId/quizzes", enforceUsageLimit, async (req: Request, res: Response): Promise<void> => {
   try {
     const topicId = parseInt(String(req.params.topicId));
     const questions = await db
@@ -81,7 +82,7 @@ router.get("/topics/:topicId/quizzes", async (req: Request, res: Response): Prom
   }
 });
 
-router.get("/topics/:topicId/study-guide", async (req: Request, res: Response): Promise<void> => {
+router.get("/topics/:topicId/study-guide", enforceUsageLimit, async (req: Request, res: Response): Promise<void> => {
   try {
     const topicId = parseInt(String(req.params.topicId));
     const [guide] = await db.select().from(studyGuidesTable).where(eq(studyGuidesTable.topicId, topicId));
@@ -96,7 +97,7 @@ router.get("/topics/:topicId/study-guide", async (req: Request, res: Response): 
   }
 });
 
-router.get("/topics/:topicId/practice-exam", async (req: Request, res: Response): Promise<void> => {
+router.get("/topics/:topicId/practice-exam", enforceUsageLimit, async (req: Request, res: Response): Promise<void> => {
   try {
     const topicId = parseInt(String(req.params.topicId));
     const [exam] = await db.select().from(practiceExamsTable).where(eq(practiceExamsTable.topicId, topicId));
