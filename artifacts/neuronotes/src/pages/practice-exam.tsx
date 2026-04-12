@@ -226,7 +226,16 @@ export default function PracticeExamPage({ params }: Props) {
         ) : (
           <Button
             variant="outline"
-            onClick={() => {
+            onClick={async () => {
+              try {
+                await incrementUsage.mutateAsync();
+              } catch (err) {
+                const e = err as { status?: number };
+                if (e?.status === 402) {
+                  setShowUpgrade(true);
+                  return;
+                }
+              }
               setAnswers(prev => ({ ...prev, [q.id]: "" }));
               if (index + 1 >= total) handleSubmit();
               else setIndex(i => i + 1);

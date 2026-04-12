@@ -14,7 +14,7 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, log: Logger)
       if (user) {
         await db.update(usersTable).set({
           stripeSubscriptionId: sub.id,
-          subscriptionStatus: sub.status === "active" ? "active" : "free",
+          subscriptionStatus: (sub.status === "active" || sub.status === "trialing") ? "active" : "free",
         }).where(eq(usersTable.id, user.id));
         log.info({ userId: user.id, status: sub.status }, "Updated user subscription");
       }

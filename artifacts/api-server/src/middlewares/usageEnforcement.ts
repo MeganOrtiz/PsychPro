@@ -21,7 +21,7 @@ export async function enforceUsageLimit(req: Request, res: Response, next: NextF
       return;
     }
 
-    const isSubscribed = user.subscriptionStatus === "active" || user.subscriptionStatus === "pro";
+    const isSubscribed = user.subscriptionStatus === "active" || user.subscriptionStatus === "pro" || user.subscriptionStatus === "trialing";
     if (!isSubscribed && (user.usageCount ?? 0) >= FREE_LIMIT) {
       res.status(402).json({
         error: "Free limit reached",
