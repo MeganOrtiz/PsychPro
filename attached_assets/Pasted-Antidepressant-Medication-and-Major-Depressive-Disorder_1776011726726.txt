@@ -1,0 +1,184 @@
+Antidepressant Medication and Major Depressive Disorder 
+ 
+Second Generation 
+ 
+-Atypical Antidepressants 
+History 
+Didn’t last a while due to release of 3rd generation drugs 
+"Lost generation" 
+Drugs 
+Maprotiline 
+Amoxapine 
+Trazodone 
+Buproprion 
+Unicyclic 
+ 
+Third Generation 
+ 
+-Selective Serotonin Re – uptake Inhibitors (SSRIs) 
+Characteristics 
+Efficacy of about 17% of placebo  
+Popular but not super great  
+Safer and more tolerable  
+Overdose 
+Approved label extensions 
+MDD with anxiety disorders 
+OCD 
+Bulimia 
+PTSD 
+Fewer side effects 
+But had high sexual dysfunction issues 
+Side effects 
+Gastrointestinal 
+Since the gut is lined with serotonin receptors 
+Sexual dysfunction 
+Akathesia 
+Jitteriness 
+Very uncomfortable  
+Headache 
+Insomnia 
+Anedhonia 
+Drugs 
+Fluoxetine (Prozac) 
+First in class 
+Equivalent efficacy to tricyclics 
+Indicated for children 
+25/200 drugs 
+Slow onset 
+Clinical variability 
+Full benefits can be demonstrated after 4 – 8 weeks  
+Pharmacology 
+In addition to being an antagonist to serotonin receptors: 
+Effect postsynaptic receptors  
+Blocking some serotonin receptors has the consequence of releasing norepinephrine and dopamine 
+Involved in frontal lobe and higher order functions 
+Increased mental energy and focus and decreased experience of fatigue  
+Sertraline (Zoloft) 
+Second approved by the FDA 
+More selective, targeted drug 
+Serotonin specific side effects  
+Pharmacology 
+Did not show the same effects on postsynaptic receptors as ^^^ 
+Indicated for other disorders such as GAD 
+Individualized features 
+More effective for treating: 
+Atypical depression 
+Schizoaffective 
+Psychotic and delusional features 
+Pharmacology 
+Impact on sigma – 1 receptors  
+Paroxetine (Paxil) 
+Can be used for anxiety symptoms 
+Broad label 
+MDD, OCD, GAD, Social anxiety, etc 
+Differentiation of therapeutic impact 
+Citalopram (Celexa) 
+Mild antihistamine effects 
+Increased risk for cardiac arrest 
+1 whole dose 
+Escitalopram (Lexapro) 
+½ dose of ^^^ 
+Generic more expensive due to manufacturing process 
+Indicated for children 12+ and GAD 
+Vilazodone 
+Partial agonist/inhibitor 
+Related to sexual dysfunction 
+Vortioxetine (Trintellix) 
+Indicated for use in geriatric depression and cognitive symptoms 
+Complicated due to impact on other neurotransmitters  
+-Serotonin Norepinephrine Re – uptake Inhibitors (SNRIs) 
+Drugs 
+Venlafaxine (Effexor) 
+Anticholinergic and antihistamine effects 
+Side effects 
+Sexual dysfunction 
+Manic episodes 
+Agitation and aggression 
+Blood pressure elevation 
+Duloxetine(Cymbalta) 
+Indicated for MDD and GAD 
+Side effects 
+Nausea 
+Levomilnacipram (Fetzima) 
+Indicated for MDD and fibromyalgia 
+Off – label 
+Chronic pain 
+Neuropathy  
+-Norepinephrine – Dopamine Re – uptake Inhibitors (NDRIs) 
+Drugs 
+Buproprion (Welbutrin) 
+Indicated for MDD, SAD and nicotine addiction 
+May aid for individuals with fatigue and poor concentration 
+Go – to  choice for treatment of SSRI – induced sexual dysfunction and when other SSRIs fail 
+-Other drugs 
+Brexpiprazole (Rexulti) 
+Second generation antipsychotic 
+Partial agonists of serotonin and dopamine receptors 
+Indicated for MDD and agitation associated with dementia 
+-Other 
+Racemic mix and isomers 
+How to design synthetic drugs 
+Separation of isomers 
+Reason for development and naming of Citalopram and Escitalopram 
+Associated and described with their side effects  
+Partial agonists 
+Similar to autoreceptors (by analogy) 
+ 
+Fourth Generation 
+ 
+-Glutamate NMDA – Receptor Antagonists (Amino Acid Mechanisms of Action) 
+Rapid acting antidepressants 
+Drugs 
+IV Ketamine 
+Synthesized from PCP 
+Labeled as an anesthetic originally 
+Broad margin of safety 
+Used in research models for treatment of schizophrenia 
+Used for treatment resistant depression  
+Can be administered IV or nasally 
+Esketamine 
+First in class 
+Non – competitive glutamate NMDA receptor antagonist 
+Nasal administration 
+The Seige Cycle 
+Initial enthusiasm (+) 
+Subsequent negative appraisal (-) 
+Limited use (o) 
+May impact other postsynaptic receptors other than NMDA, such as opioid receptors 
+Label extended 1 month after use to individuals with S.I. 
+Phases: 
+First phase= 4 weeks 
+Maintenance phase= weeks 5 - 8 
+Auvelity (Dextromethorphan + Buproprion) 
+Faster than MAOis but not faster than esketamine 
+ 
+Next Gen Investigational Drugs 
+ 
+-Psilocybin 
+-MDMA 
+ 
+Treatment Resistant Depression 
+ 
+-1/5 - 1/3 of medication – adherent individuals do not respond to treatment 
+-Concept and not yet a diagnosis 
+Adequate treatment 
+Non – responsive 
+Correct diagnosis 
+-Treatment refractory > treatment resistant 
+-Pseudoresistance 
+Not responding to medication but doesn’t meet full criteria for treatment resistance 
+Can be due to misdiagnosis 
+-Subtypes of depression 
+-What are the next steps: 
+Question diagnosis 
+Drug options: 
+Increase dosage 
+Switch  
+Augmentation  
+With a medication labelled for adjunct treatment 
+With an off – label medication 
+-Non drug options 
+Psychotherapy 
+ECT 
+rTMS 
+VNS 

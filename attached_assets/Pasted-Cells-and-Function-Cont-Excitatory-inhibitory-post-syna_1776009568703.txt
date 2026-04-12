@@ -1,0 +1,98 @@
+Cells and Function Cont. 
+-Excitatory/inhibitory post synaptic potentials 
+Decremental 
+Can get smaller as they propagate 
+Fast 
+Passive 
+-Action potentials 
+Nondecremental 
+All or none 
+Slow 
+Active 
+-Myelination 
+Allows signal to travel very fast down the axon 
+Saltatory Conduction- jumping from node to node 
+Velocity and conduction 
+Diameter matters- larger axons allow for faster travel of signal 
+-Hodgkin-Huxley Model 
+Identified action potentials in squid cells 
+-Synapses 
+Types of synapses: 
+Axodendritic  
+Axosomatic 
+Dendrodendritic 
+Axoaxonic 
+Direct- close 
+Nondirect- far 
+Dendritic spines 
+Highly plastic and susceptible to change  
+-Neurotransmitters 
+Assembled in the cell body and then packaged into vesicles to be released into the synapse 
+Exocytosis- neurotransmitter release 
+Endocytosis/phagocytosis- bringing neurotransmitters in  
+Types: 
+Glutamate 
+Most abundant excitatory NT 
+Serotonin 
+Dopamine 
+Norepinephrine 
+Epinephrine 
+Acetylcholine 
+Anandamide 
+No 
+GABA 
+-Receptors 
+Ionotropic 
+Ionic receptors 
+Fast 
+Metabotropic 
+G-protein coupled receptors 
+Slow 
+-Reuptake 
+Taken back into the cell 
+-Enzymatic degradation 
+Neurotransmitters broken down by certain enzymes (ACh) 
+-Glia and synaptic transmission 
+Astrocytes 
+Contain receptors for neurotransmitters and influence synaptic transmission= synaptogenesis 
+Gap junctions involved 
+Monitor levels of ions in the extracellular space  
+-Neurotransmitter types: 
+Monoamines 
+Catecholamines 
+Dopamine 
+Epinephrine 
+Norepinephrine 
+Indolamines 
+Serotonin 
+Neuropeptides 
+Opioids 
+Oxytocin 
+ 
+-Drug influence of synaptic activity 
+Agonists 
+Antagonists 
+ 
+Vision 
+-Turn light signals from the external environment into electrical signals in the brain 
+-How to research vision: 
+Probing components of the visual system 
+Assess what we see 
+-Light enters through the pupil and the lens focuses light in the retina 
+Pupil changes in response to changes in illumination 
+Ciliary muscles allow the lens to accommodate to bring images into focus 
+-Blind spot 
+Gap in the fovea where the optic chiasm leaves the eye to go to the brain 
+-Convergence- bringing image from both eyes and consolidating incoming information 
+Diplopia- "double vision"- inability for eyes to use convergence to accurately perceive image 
+Distance information 
+-Binocular disparity- difference between the image on the two retinas 
+Distance information 
+-Process 
+Light  
+Particles of energy 
+Waves of electromagnetic radiation 
+Humans see light between 380-760 nanometers 
+Cannot see anything outside of this frequency 
+ 
+ 

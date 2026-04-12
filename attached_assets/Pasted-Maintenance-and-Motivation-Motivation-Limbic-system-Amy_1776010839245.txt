@@ -1,0 +1,91 @@
+Maintenance and Motivation 
+-Motivation= Limbic system 
+Amygdala, hippocampus, hypothalamus and thalamus 
+-Dopamine Pathway 
+Mesocortical- cognition, memory and attention 
+Nigrostriatal- movement and sensory information 
+Mesolimbic- pleasure and reward seeking behavior 
+Activated by both aversive and rewarding stimuli 
+More activated by predictive and motivational factors than liking 
+-3 aspects of reward 
+Liking- how much we enjoy activity 
+Wanting- wish to engage in activity 
+Learning 
+-Environmental tuning of reward circuits 
+Nucleus accumbens 
+In the basal forebrain 
+Study 
+Blocked glutamate 
+Rostral- glutamate activates appetitive response 
+Caudal- glutamate enhances avoidant behaviors 
+-Evolution and food 
+Fire- ability to get more calories from food 
+Ex: gave people raw food instead of processed food and lost wight 
+-Energy 
+Brain= glucose 
+Other cells= fatty acids 
+Types of storage: 
+Glycogen 
+Short term storage 
+Liver and muscles 
+Fats 
+Long term storage 
+Other parts of the body 
+Stores twice as much energy as glucogen 
+-Glucose in the blood 
+-Diabetes 
+Type 1- body doesn’t produce insulin 
+Type 2- body produced insulin but doesn’t use it well 
+-Storage 
+Adipose tissue 
+When short term stores are depleted, fat turns to fuel 
+-Cycle 
+Eat--> blood sugar level increases--> insulin secreted--> gets sugar into cells and store  --> blood sugar levels drop--> insulin secretion stops--> secretion of glucagon starts --> turns glucagon into sugar (glucose) 
+-Set Point Theory of Eating 
+Set Point- optimal value of the system variable in the regulatory mechanism 
+Negative Feedback- process whereby an effect produced by an action serves to diminish or terminate the action 
+-Hunger signals 
+Role of ghrelin:  
+Hormone secreted in the stomach that indicates hunger 
+Stimulates thoughts and behaviors about food and eating 
+Glucoprivation- not enough sugar 
+Metabolism  
+Cells starve when eating has not occurred in a while 
+Blood glucose levels 
+Blood glucose levels can decrease even when thinking of feed and doesn’t just act as a mechanistic cue to eat 
+Blood glucose must decrease by 50% to trigger feeding behaviors 
+Drug injected into the medulla= interference with glucose metabolism= animal eats 
+Role of the lateral hypothalamus: 
+Orexin/orexigen secretion 
+Stimulates activation of neuropeptide Y (NPY) release from the arcuate nucleus 
+Ghrelin increase, NPY increase 
+-Structures 
+Liver- contains detectors that monitor availability of nutrients 
+Brain- contain detectors that monitor availability of glucose  
+-Satiety signals 
+Short term 
+Stomach, small intestine, liver 
+Long term 
+Control intake of calories by modulating sensitivity to hunger and satiety signals 
+Role of the liver: 
+First organ to know where the food is 
+Last stage of satiety 
+Infusion of glucose and fructose into hepatic portal vein: animal stops eating 
+Role of insulin: 
+Reduces hunger 
+Permit organs to metabolize glucose 
+Promote entry of nutrients into fat cell 
+Infusion of insulin into 3rd ventricle: animal stops eating 
+Role of leptin:  
+Hormone secreted by the adipose and decreased food intake 
+Increased metabolic rate 
+In the arcuate nucleus of the hypothalamus 
+Role of the ventromedial hypothalamus 
+Leptin secretion 
+-Brain mechanisms 
+Cut between diencephalon and midbrain 
+Decreased motivation and drives toward food 
+Must be force fed 
+Medulla 
+Received taste info 
+Detect glucose level 

@@ -1,0 +1,109 @@
+Genetics 
+-Darwin 
+Natural Selection 
+Preservation of functional advantage that enables a species to compete better in their environment 
+Goodness of fit- species able to take advantage of their environment and contribute genes to next generation to continue the species 
+Functionalism: 
+Characteristics of species have useful functions 
+Need to understand what the behaviors and physical features of a species serve to accomplish 
+Physiological mechanisms have functions but not a purpose 
+Present day evolution: 
+COVID 
+Evidence for evolution 
+Fossils 
+Structural similarities of species suggest common ancestors 
+Structures 
+Homologous 
+Analogous 
+Convergent 
+Mechanism 
+Mutation- accidental changes to chromosomes that result in physical changes in the species 
+Effects: 
+Can be deleterious 
+Do not always have to be observable but impact  species in a certain way 
+-Video on skin color 
+ 
+Fundamental Genetics 
+-Mendel 
+Observes dichotomous traits on pea plants 
+"True breeding lines"- multiple generations produce very similar genes 
+Eye color 
+ 
+Cell Biology 
+-Chromosomes 
+DNA molecule that are coiled up 
+23 pairs of chromosomes 
+23rd pair- sex chromosomes 
+Genes 
+Located on the DNA in the chromosomes 
+Alleles- alternative parts of the gene 
+-Genes and chromosomes 
+Genotypes 
+Genetic make-up 
+Phenotypes 
+Physical make-up 
+Dominant and recessive genes 
+-Parts of the gene 
+Nucleotides- repeating units 
+Form the double helix 
+Made of 
+Phosphate groups, sugar and nitrogen  
+-Process: 
+Copying 
+Transcription 
+MRNA is the result 
+Translation 
+Ribosomes synthesize the protein according to the codons 
+Folding 
+-Regulation 
+Enhancers 
+Determine which portions of the DNA are to be replicated 
+Transcription factors 
+Binding influences the gene will be expressed 
+-Mitosis- replication of cells resulting in 2 daughter cells  
+-Meiosis- replication of sex cells resulting in 4 haploid cells  
+Results in zygotes 
+Female= XX 
+Male= XY 
+Sex related disorders- generally on the X chromosome 
+Can be dominant or recessive 
+Dominant disorder- woman more at risk because they have 2 X chromosomes 
+-Human Genome Project 
+Mapping of the human genome 
+Human genes: ~20,000-25,000 
+Protein coding genes- only a small portion of all genes  
+Some genes produce more than one protein 
+Junk DNA 
+Large portions of DNA 
+Once thought to be useless parts of DNA but found that they influence the expression of genes 
+-Epigenetics- heritable changes in the gene expression 
+Active VS inactive parts of the gene 
+Does actually change the structure or physicality of the DNA but changes how it is expressed or turned "on" or turned "off" 
+Change in phenotype rather than change in genotype 
+Can be caused by personal or environmental factors 
+Ex: Dutch Famine 
+-Evolution and Behavior 
+Evolution not in a straight line  
+Not all behaviors are the most optimally adaptive 
+Doesn’t result in the "perfect design" 
+Only ~1% of species still exist today 
+Human nature 
+Capacities or tendencies of humans can be shared by animals so there is really no such thing 
+Requirement of identification of traits that are uniquely human which do not exist bc they may be shared with non-human species 
+DNA is not a specific blueprint or program to make a human 
+Environment 
+Variations in the environment influence gene expression and outcomes of how a person will present  
+Genetic variations affect the brain as a whole 
+-Twin Studies 
+Monozygotic and dizygotic studies to determine impact of nature and nurture 
+MZ twins should be similar if only genetics matter and MZ and DZ twins should be similar if only the environment matters 
+Aim to measure physical and psychological traits 
+Results: genes important but environment plays a role 
+Use variability and variation to determine what % of the variance can be accounted for due to genes 
+Heredity- traits inherited by parents 
+Heritability- amount of variance in a trait that can be attributed to genetic variation 
+Estimate- relates to variance and not the mean 
+Corn EX: 
+Look at differences between and within pots 
+Environmental factors 
+Even with heritability at 100%, there are differences that can be attributed to various factors 

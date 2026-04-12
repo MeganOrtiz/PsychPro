@@ -1,0 +1,97 @@
+Movement Cont. 
+-Pathways 
+Dorsolateral tracts 
+Corticospinal- cortex--> descend through the medullary pyramids (decussation)--> motor Betz cells in spinal cord--> extremities 
+Wrist, hand, finger movements 
+Corticorubrospinal- cortex--> red nucleus in the midbrain--> medulla (decussation)--> extremities 
+Arms and legs 
+Ventromedial tracts 
+Corticospinal- cortex-->brainstem--> interneurons in the spinal cord (ipsilateral)--> innervation of bilateral structures--> body parts 
+Head, neck, trunk 
+-Muscle  
+Types: 
+Cardiac- heart 
+Involuntary 
+Smooth- organs 
+Involuntary 
+Skeletal- body 
+Voluntary  
+Neuromuscular junction- synapse between the lower motor neuron and the muscle fiber 
+Motor neuron- in the ventral horn 
+Muscle fibers- extrafusal and contract when motor neuron fires 
+Types cont: 
+Flexors- bend 
+Extensors- straighten 
+Synergistic- two muscles who contract to produce the same movement 
+Antagonistic- muscles that act in opposition 
+Proprioception  
+Golgi tendon organs 
+Embedded in the tendons and detect muscle tension 
+Muscle spindles  
+Embedded in the muscle tissue and detect changes in muscle length 
+Intrafusal and extrafusal motor neurons 
+-Sensorimotor spinal circuits 
+Reciprocal innervation- antagonistic muscles interact so that movements are smooth 
+Flexors excited while extensors inhibited and vice versa 
+Protect muscle from excessive contraction 
+Recurrent Collateral Inhibition- feedback loop through Renshaw cells that relaxes muscle fiber after every contraction 
+Reflexes: 
+Stretch reflex- monosynatic and serve to maintain limb stability 
+Withdrawal reflex- NONmonosynaptic 
+Painful stimuli produces firing of sensory neurons 
+Sensory neurons excite spinal interneurons that ) excite bicep motor neurons 2) inhibit tricep motor neurons 
+-Learning movement 
+Early learning of movement 
+Dorsolateral prefrontal cortex 
+Primary motor cortex 
+Pre-secondary motor area 
+-Cerebellum 
+Input from: 
+Primary and secondary motor cortex 
+Brainstem motor nuclei 
+Somatosensory and vestibular systems 
+Function: 
+Coordinate and modulate planned movement 
+Timing and fine tuning of motor learning 
+Rapidly responds to violations in sensory information 
+Damage: 
+Trouble with rapid movement that requires aiming and time 
+Difficulty establishing motor programs- tasks that require timing 
+Ex: clapping, high fives, etc 
+Cant engage in quick motor movement 
+-Basal Ganglia 
+Input from: 
+Frontal cortex 
+Output to: 
+Back to frontal cortex through the thalamus 
+Function:  
+Modulate motor output and cognition functions including learning 
+Structures: 
+Striatum 
+Caudate/putamen 
+Globus pallidus 
+Active when: 
+Initiating movement that is slower and not automatic 
+Damage: 
+Automatic movement implicated 
+-Extrapyramidal function 
+Tracts responsible for unconscious control of muscles from the cerebral cortex to the muscles of the body and the face 
+Location: 
+Brainstem 
+Function: 
+Unconscious, reflexive movements such as muscle tone, balance, posture and locomotion 
+Pathways 
+Reticulospinal tract--> cortex--> reticular formation (brainstem)--> pons--> medulla--> spinal cord 
+Modulated by:  
+Midbrain, basal ganglia, cerebellum, vestibular nuclei and other areas  
+-Pyramidal= conscious/voluntary control of movement 
+-Extrapyramidal= unconscious/involuntary control of movement 
+Reticulospinal tract 
+-Central motor programs 
+Patterns of motor activity- maybe but all of the highest levels of the sensorimotor system have patterns of activity programmed into them 
+Cerebellum and basal ganglia then serve to coordinate the various programs 
+Programs for many species-specific behaviors established without practice 
+Response chunking 
+Shifting control to lower levels 
+-Mirror neurons 
+ 

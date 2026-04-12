@@ -1,0 +1,84 @@
+Dementia 
+-Prevalence 
+65 yo= 1% 
+80 yo= 15% 
+90 yo= 40% 
+Over 100= 70-90% 
+Rates going up as people are living longer 
+-Alzheimer's 
+50-70% of dementia cases 
+Pathology 
+Plaques and tangles 
+-DSM-V 
+Significant cognitive decline 
+Need standard psychological testing 
+-Diagnosis 
+History 
+Neuropsychology 
+Blood tests- to rule out 
+CT/MRI- aid in etiology 
+EEG- to rule out 
+-Accuracy of testing 
+85-95%= very accurate 
+-Common encountered reversible cues 
+Depression 
+Vitamin B 
+Normal pressure hydrocephalus  
+Acute infections 
+Sleep disorders 
+Delerium 
+Can look like dementia in the moment 
+-Pathogenesis 
+Beta amyloid plaques accumulating 
+Something that invades the cell and tracer can be attached 
+Frontal and temporal regions have largest build up 
+B.A. accumulation correlated with Alzheimer's dementia 
+Generation of soluble beta amyloid fragments from amyloid precursor protein (APP) 
+Pushed out from neurons to help orientation and connect 
+If neurons don’t need to connect any longer, proteins are clipped it broken down 
+Build up of these= alzheimer's dementia 
+Progression 
+Memory first, then other cognitive decline 
+Cognitively normal 
+Mild cognitive decline 
+Dementia 
+Tau proteins build up way before symptoms 
+-Neurotransmission 
+NDMA receptors and glutamate 
+Glutamate transporter downregulated in Alzheimer's dementia 
+Beta amyloid inhibits the uptake of glutamate 
+Leads to build up  
+-Beta Amyloid Treatment 
+Semagacestat 
+Blocked enzyme 
+Failed 
+Banineuzumab 
+Lowered biomarkers for beta amyloid and tau 
+Failed 
+Flurizan 
+Isomer of non-steroidal anti-inflammatory drugs 
+Mixed results 
+Vaccines 
+Generally directed to decrease beta amyloid production via gamma and betas secretase inhibitors and modulators 
+Attached tracer to tetanus that attached to beta amyloid  
+Body thinks beta amyloid is tetanus and gets destroyed 
+Study 
+Gave people vaccine and then followed up with them later 
+Those with vaccine had significantly less beta amyloid and tau build up when autopsied 
+Vaccines vs oral dose 
+Study 
+Lecanemab 
+Current treatment  
+Oral  
+Low and higher dose 
+PET scan 
+Can see beta amyloid 
+-Tau Treatment 
+Tau is pathological folding of proteins that resist degeneration 
+Tangles  
+Tau as precursor 
+Before beta amyloid build up 
+Extracellular  
+Transgenic mice study 
+Injected mice with tau and cloned them 
+Vaccine created for humans 

@@ -1,0 +1,259 @@
+Affective 
+ 
+-Emotion- a complex reaction pattern, involving experiential, behavioral and physiological elements  
+Episodic, short – term, biologically – based patterns of perception, experience, physiology, action and communication that occur in response to specific physical and social challenges and opportunities 
+-Mood 
+Long – lasting and more vague, less specific cause  
+-Affect 
+Emotions + mood  
+-Components of emotions  
+Physiological 
+Body preparing for action 
+Activation 
+Motor responses 
+Feeling 
+Subjective experience/awareness 
+Behavior 
+Expression of emotion 
+Communication of feeling 
+Social function 
+-Recurring emotional episodes 
+Re – experiencing the eliciting event by recalling and gradually it gets less intense over time 
+GENERALLY 
+Not the case in trauma 
+Relation between emotional intensity and time  
+-Categorical approach 
+Several distinct emotions exist 
+Issues: 
+Components of emotions do not clearly combine 
+-Dimensional approach 
+Emotional categories can be measured dimensionally 
+Tried to use facial expressions 
+-Modern Dimensional approach 
+Valence 
+Positive or negative 
+Activation 
+Level of arousal or intensity 
+Unipolar and bipolar dimensions  
+-Measurement 
+Judgment method 
+Participants identify emotions displayed in facial expressions 
+Component method 
+Split emotions into components 
+Facial Action Coding System (FACS) 
+Ekman and Friesen 
+-How to elicit emotions 
+Videos 
+Music 
+Scenarios 
+Photos 
+Scripted social interaction 
+Recall of specific emotional experience  
+International Affective Picture System (IAPS) 
+ 
+Theories 
+ 
+-William James and Carl Lange 
+Foundation: evolutionary- emotions develop to solve adaptive problems 
+James – Lange Theory of Emotion 
+Emotions must produce bodily response 
+Criticism 
+Physiological reaction is slower than the conscious emotional experience  
+-Walter Cannon and Philip Bard 
+Cannon – Bard Theory of Emotion 
+Physiological reaction and emotion are happening at the same time 
+Stimulus send signal to the body 
+Emotions can occur without the brain and/or body being involved 
+Don’t influence or cause each other  
+Importance of cognitive appraisal  
+-Ekman, Levenson and Friesen 
+Facial Feedback Hypothesis 
+Different emotions evoke different patterns of bodily activity, especially if there is more to measure  
+Ex: smiling made people less stressed in the stress recovery period 
+-Schachter and Singer 
+Two Factor Theory of Emotion (Epinephrine Study) 
+Physical arousal happens first and then cognitive labeling after based on the cues from the environment must occur before the emotion is experienced 
+Physical arousal + cognitive appraisal 
+ 
+Cognitive Theories 
+ 
+-Cognitive appraisal- interpretation of the eliciting event and of our bodily reactions 
+Evaluating the situation 
+Different emotions can be elicited from the same event 
+-Magda Arnold 
+Cognitive Appraisal Theory 
+First step is appraisal of the event/situation 
+Appraisal is the personal experience of the event 
+Good – bad appraisal 
+Gut feeling evaluation of the stimulus 
+Subcortical brain structures appraise the event 
+Automatic  
+-Richard Lazarus 
+Cognitive – Motivational – Relational Theory 
+Good and bad appraisals 
+Appraisals depend on how emotion evoking the event/situation is 
+Psychobiological principle 
+2 types of appraisals: 
+Primary 
+Evaluates whether the event has personal relevance 
+Harm, threat, benefit 
+Result: 
+Irrelevant, positive – benign, stressful 
+Outcome: depends on the individuals beliefs, values, and expectations 
+Secondary  
+Evaluates whether the person can cope with the event 
+Who is accountable can influence the effort to cope with the emotion and if abilities are in place to use coping strategies 
+Will the event be favorable or unfavorable in the future 
+Re – appraisal 
+Modify ^^^ 
+-Klaus Scherer 
+Component Process Model 
+A dynamic process in which emotions are components parts 
+4 stages/checks: 
+Relevance  
+Implications  
+Causal attribution 
+Outcome probability 
+Goal conduciveness 
+Urgency  
+Coping potential 
+Controllability 
+Power of resources 
+Adjustment  
+Normative significance evaluation 
+Internal standards 
+External standards 
+-Findings 
+Support 
+Appraisal manipulations had the expected effect  
+Problems  
+No appraisal component was essential for anger 
+Hard to decide what comes first 
+Correlational, not causation 
+Appraisal judgements are slower 
+Hard to do experiments  
+-Basic emotions 
+Darwin  
+Observational 
+Facial expressions have functions 
+Communication of emotions 
+Postural changes 
+Facial expressions 
+Nonverbal sounds 
+Social function 
+Basic Emotions Theory 
+Humans have a limited number of emotions that are biologically and psychologically basic 
+Each emotion has an evolutionary adaptations 
+Emotions and facial expressions are universal 
+ 
+Social Constructivists 
+ 
+-Social constructivists views: 
+Emotions are viewed as constructs  
+Based in the culture in which we are raised  
+Eastern 
+Tend to exhibit a positive correlation between negative and positive emotions 
+Mixed emotions 
+Western 
+Tend to exhibit a negative correlation between negative and positive emotions 
+All or none 
+East Asians 
+East Asians living in westerns cultures tend to have a western view 
+East Asian participants take into consideration the context and are more aware of the situation 
+East Asians are more comfortable with both negative and positive emotions 
+Environmental causes: 
+Parenting 
+Relationship experiences 
+Gender roles  
+Media  
+-Ego – focused emotions- related to the self 
+-Socially engaged emotions- related to others and our relationships with others 
+-Strength of emotions study 
+Americans had more intense positive disengaging emotions that positive engaging 
+More intense emotions ties to the self 
+Japanese had the opposite 
+Did not vary in intensity 
+-Emotional expression 
+Differing opinions depending on the theory 
+Basic emotion- all emotions expressed the same 
+Social constructivist- differ among cultures 
+Ekman and Friedman study 
+Showed pictures of Americans to individuals in Papua New Guinea and they correctly identified the emotions 
+Lisa Feldman Barrett did the same thing with a neutral face 
+Incorporation of vocal affect  
+Bodily movement 
+Positive emotions- approach behavior 
+Negative emotions- avoidance behavior 
+Exceptions: 
+Anger- approach the one who blocked our goal 
+Guilt- approach the one we harmed to apologize  
+Facial expression 
+Facial expressions associated with certain emotions 
+Anatomy of facial muscles  
+Stimulation to see effects  
+Can me automatic or involuntary 
+Not easy to "fake" a facial expression when we don’t mean it 
+Damage 
+Volitional facial paresis 
+Damage to the primary motor cortex 
+Difficulty with voluntary facial movement  
+Emotional facial paresis 
+Damage to prefrontal cortex 
+Lack of movement of muscles to express emotions  
+Recognizing emotions 
+Effective communication of emotions depends on other individuals ability to recognize them 
+Generally automatic 
+Study demonstrated differences in where individuals were looking  
+Americans- central figure 
+Japanese- others in the background 
+Laterality 
+Right hemisphere play a more critical role in comprehension of emotion 
+No lateralization for expression  
+Amygdala 
+Emotional responses and recognition 
+Lesions: 
+Impacts an individual's ability to facial expressions of emotion, especially fear 
+Somatosensation 
+Involvement of the right somatosensory cortex 
+When we see a facial expression of emotion, we imagine ourself doing it  
+Mirror neurons 
+Locations: 
+Ventral premotor 
+Frontal lobe 
+Superior parietal lobe 
+Medial temporal cortex 
+Activated when watching someone do something rather than doing it ourself 
+Involved in social perception 
+Learning to imitate the actions of others  
+Display rules 
+Expectations regarding the emotional expression of others 
+Dependent on culture 
+Can result in incongruence between emotional experience and facial expression 
+-Emotional regulation- when trying to control or change any emotional components associated with emotional experience, either consciously or unconsciously 
+Types 
+Intrinsic- regulating our own emotions 
+Extrinsic- regulating others emotions 
+Process 
+Situation selection- avoiding certain situation 
+Situation modification- asking an individual to accompany  
+Attention deployment- focus on distracting thoughts 
+Cognitive change- reinterpretation of the situation 
+Response modulation- not acting on the emotion 
+Strategies: 
+Distraction and reappraisal 
+Cognitive >  behavioral 
+Benefits: 
+Acceptance  
+Problem – solving 
+Reappraisal of events 
+Better than reappraising the emotional response 
+Non -  benefits 
+Rumination 
+Avoidance 
+Research 
+Expressive suppression 
+Experience more unpleasant and less pleasant emotions 
+Less effective interpersonal functioning 
+Poorer well – being 
+Lack of emotional regulation 
+Associated with many mental health concerns and conditions 

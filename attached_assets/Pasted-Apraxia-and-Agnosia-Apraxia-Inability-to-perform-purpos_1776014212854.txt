@@ -1,0 +1,206 @@
+Apraxia and Agnosia 
+ 
+Apraxia 
+-Inability to perform purposeful movements 
+-Planning 
+-Dysfunction 
+Cortical association areas rather than lower motor neuron issues  
+-Cortical signs 
+Apraxia 
+Agnosia 
+Aphasia  
+-Types: 
+Kinetic- clumsiness in performing a precision act 
+Ex: picking a coin from a table  
+Lesions to: 
+Corticospinal 
+Corticobasal 
+Prefrontal  
+Testing: 
+Finger tapping  
+Grooved peg board 
+Other dexterity mediated tasks  
+Ideomotor- inability to follow verbal commands, inability to pantomime motor skills 
+Ex: hammer a nail/waving 
+Transitive 
+"tool" to hold 
+Intransitive  
+No tool  
+Error types: 
+Content- substituting another recognizable pantomime for target pantomime  
+Ex: sub screwdriver for hammer  
+Production 
+Postural- use body part as tool 
+Ex: use scissors 
+Spatial movement- trajectory errors, core movement correct but not correct movement through space 
+Ex: moving shoulder to use screwdriver  
+Spatial orientation- failure to correctly orient object 
+Ex: hammering sideways  
+Temporal/timing  
+Pathophysiology  
+Left hemisphere  
+Frontal and parietal 
+Inferior parietal 
+Supplementary motor 
+Corpus callosum  
+Ideational-  failure to perform a sequenced movement involving complex motor behaviors, inability to perform series of acts 
+Ex: write a letter, fold it, put in envelope 
+Lesions to: 
+Frontal   
+Testing: 
+Planning 
+Reasoning  
+Sequencing steps (multistep instructions) 
+Conduction- more impaired with imitation that pantomime to command 
+Ex: "copy me" 
+Disconnection syndrome  
+Lesions to: 
+Left inferior parietal lobe 
+Supramarginal gyrus 
+Superior temporal gyrus  
+Arcuate fasciculus 
+Conceptual- defect in knowledge needed to select and use tools/objects 
+Ex: measure the length of the cabinet, pick up hammer  
+Two types of knowledge: 
+Conceptual 
+Production  
+Lesions to: 
+Left parietal regions  
+Comorbid: 
+Alzheimer's 
+Dementias  
+Apraxia of speech- inability to plan motor movements to speak 
+Lesions to: 
+Broca's 
+Insula  
+Premotor  
+Supplementary motor areas 
+Automatic speech may be preserved 
+Mouth movements for non-speech sounds  
+-Other types 
+Buccofacial 
+Constructional 
+Dressing  
+Oculomotor  
+Balint Syndrome 
+Gait  
+Limb  
+-Order- pantomime, imitate, use 
+-Assessment 
+Use both limbs 
+Gesture to command 
+ 
+Agnosia 
+ 
+-Perception without recognition  
+Inability to process sensory information 
+Can impact any of the sensory senses 
+-Causes: 
+Stroke  
+TBI 
+Neurodegenerative diseases 
+Tumors  
+Encephalitis 
+Anoxia/hypoxia  
+-Visual system 
+Retina --> fovea --> optic nerve --> optic chiasm --> lateral geniculate nucleus (LGN) of the thalamus --> superior colliculi 
+-Pathways 
+Ventral 
+WHAT 
+occipitotemporal 
+Dorsal 
+WHERE 
+occipitoparietal 
+Superior Temporal Sulcus System (STS) 
+Difficulties recognizing voices  
+Social perception and social cognition 
+-Visual 
+Inability to recognize a visual perception  
+Types 
+Apperceptive 
+Inability to form a coherent visual perception from individual elements 
+Deficits 
+Visual integration 
+Object consistency 
+Shape and form 
+Recognize, copy and match objects  
+Intact 
+Object knowledge  
+Actual objects > geometric shapes 
+Tests 
+Copy letters 
+Shapes  
+Pathology 
+Diffuse posterior brain region damage  
+Occipitoparietal region 
+Associative  
+Inability to associate the visual perception with its meaning 
+Deficits 
+Object recognition  
+Reading words  
+NOT a naming deficit  
+Access to semantic content  
+Intact 
+Recognize, copy and match objects  
+Tests 
+"What is this?" 
+Pathology 
+Occipitotemporal (ventral/what) 
+Dominant inferior regions 
+Parahippocampal 
+Fusiform gyri 
+Lingual region 
+Types 
+Prosopagnosia 
+Inability to recognize faces  
+Deficits 
+Can't discriminate facial features 
+Intact 
+Identifying emotional expression 
+Identifying race, gender and age  
+Pathology 
+Fusiform face 
+Occipital face 
+Anterior temporal cortex 
+Perceptual categorization defect 
+Matching faces from different angles/perspectives  
+Attention 
+Simultagnosia 
+Inability to recognize the overall meaning of a complex visual perception  
+Description of a picture may be in a piecemeal fashion 
+May omit details  
+DORSAL 
+Attentional limitation that prevents the perception of spatial relationships  
+Difficulty shifting attention from one object to another 
+Optic ataxia 
+Inability to accurately reach for the correct object 
+Pathology 
+Bilateral parietoccipital junction 
+Angular gyrus 
+Dorsolateral occipital 
+Superior parietal 
+Watershed infarct between MCA and PCA 
+VENTRAL 
+Limitation in rapidly recognizing multiple objects 
+Low and labored process to recognize  
+Errors often  
+Test 
+Cookie theft 
+Sensory neglect or inattention 
+LEFT 
+Spatial 
+Allocentric 
+Object  
+Egocentric  
+Space  
+Personal 
+Representational 
+Visual extinction  
+Abnormal attentional bias when there are competing stimuli 
+Motor intentional 
+Failure to respond to stimuli or perform action on one side  
+Pathology 
+Inferior parietal  
+-Anosoagnosia 
+Without knowledge of the disease 
+Prevalent in alzheimer's  

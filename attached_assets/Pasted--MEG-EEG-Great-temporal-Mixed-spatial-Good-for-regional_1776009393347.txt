@@ -1,0 +1,154 @@
+-MEG/EEG 
+Great temporal 
+Mixed spatial 
+Good for regional changes 
+150 leads to provide information from whole head and locates subcortical activity 
+-SPECT 
+Poor mans PET 
+Low spatial 
+Good for regional changes 
+Pick up positron emissions 
+Radioactive material attracts to abnormalities through blood flow 
+-TCM 
+Real time 
+Poor spatial 
+-DTI 
+Can identify microstructural abnormalities through fiber tracts 
+-Use blood flow or glucose utilization to detect 
+-Temporal  
+Timing: Immediate 
+EEG 
+MEG 
+CT 
+-Spatial  
+Timing: Seconds/minutes 
+PET 
+fMRI 
+MRI 
+-Vascular methods 
+Can inject things into the blood to track flow and identify atherosclerotic plaques, arterial narrowing, aneurysms and AVMs 
+ 
+(FROM BIO BASES) 
+-EPPP 
+Want to know which methods provide: 
+Structural or functional 
+-X-Ray 
+Structural 
+Uses external radiation 
+Negative type picture produced 
+Identifies anomalies in hard matter (bone) rather than soft matter 
+-CT 
+Structural 
+X-rays taken that produce cross sectional images 
+Successive slices can be put together to create 3D image 
+Identifies anomalies in hard tissue, soft tissue and blood vessels 
+-MRI 
+Structural 
+~90 min 
+More precise than ^^^ methods 
+Takes images of all areas of the body 
+Identifies anomalies in hard tissue, soft tissue and blood vessels 
+NO METAL 
+-fMRI 
+Functional 
+Uses hydrogen ions to produce images 
+Detects differences in oxygenated and de-oxygenated brain regions 
+Uses BOLD 
+Higher oxygenated regions associated with more brain activity 
+Vasodilation in active regions 
+Good spatial resolution but poor temporal resolution 
+-PET 
+Functional 
+Combined with CT or MRI 
+Metabolic and biochemical functions detected  
+Radioactive tracer injected and collected in active brain regions or abnormal structures 
+-EEG 
+Functional 
+Measures electrical activity in the brain using ERPs 
+Low spatial resolution 
+Hard to tell where exactly in the brain the waves are being produced 
+More electrodes= higher spatial resolution 
+Main test for epilepsy but can elicit seizures with flashing lights 
+-MEG 
+Functional 
+Measures magnetic fields produced by electrical activity of neurons 
+More detailed due to nothing being attached to the head 
+EEG recordings as well 
+-Single Unit Recording 
+Functional 
+Measures activity of a single neuron 
+Can detect action potentials in real time 
+-Evoked Potential 
+Functional 
+Uses electrodes to detect electrical impulses 
+Cognitive/visual/auditory/somatosensory/motor ERP 
+-ECT 
+Electroconvulsive Therapy 
+Treatment that sends electric current through the brain 
+Electrodes attached at precise locations and signals administered 
+Evokes seizures to "reset" the brain 
+Can treat: 
+Depression 
+Mania 
+Catatonia 
+Agitation and aggression in those with dementia 
+Risks: 
+Memory loss 
+Difficulty learning after 
+Nausea/headache/fatigue/confusion 
+May be more effective than most medications 
+-TMS 
+Transcranial magnetic stimulation Therapy 
+Magnetic fields to stimulate neurons 
+Can treat: 
+Major Depressive Disorder 
+OCD 
+Cigarette smoking 
+Stimulates DL PFC 
+Repeated pulses 
+Effects neurotransmitters to stimulate and strengthen neural pathways disrupted in disorders 
+Doesn’t go super deep into the brain 
+-DBS 
+Deep Brain Stimulation Therapy 
+Electrode placed into brain that sends electrical signal to evoke activity in specific region 
+Small amount of electricity used 
+Medical procedure needed to implant and remove device 
+-DTI 
+Structural 
+Diffusion Tensor Imaging 
+Tracks water diffusion in white matter in the brain 
+Can detect specific regions of damage and deterioration 
+-Ablation 
+Therapy 
+Many modern practices developed that intentionally target specific regions of the brain 
+Can use heat or lasers to cause specified damage 
+Some methods more precise that others 
+Can treat: 
+Movement disorders 
+Psychiatric disorders 
+Chronic pain 
+Epilepsy 
+Tumors 
+-EMG 
+Functional 
+Electromyography 
+Diagnostic procedure to assess health of muscles and nerve cells 
+Sensors and electrodes to record electrical activity in muscle 
+Used to rule out muscle and movement disorders 
+ 
+-Color code to determine activity or lack thereof 
+-PET and ERP 
+Present stimuli and subtract  
+ 
+Basal Ganglia 
+ 
+-Structures 
+Caudate  
+Putamen 
+Globus Pallidus 
+Substantia nigra 
+Nucleus accumbens 
+-Above brainstem and below cerebrum 
+-Does not have direct connections 
+Integration location 
+Habit  

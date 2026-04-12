@@ -1,0 +1,104 @@
+-Practice guidelines for clinical psychologists as it relates to psychopharm 
+-4 different levels of involvement in psychopharmacological issues 
+Not involved, directly or indirectly 
+Providing information 
+Majority 
+Indirect 
+Not involved in the decision making process 
+Other 
+General 
+Education 
+Assessment (Interaction) 
+Intervention and consultation 
+Relationships 
+Collaborating 
+Indirect 
+Prescribing 
+Direct 
+ 
+Drug Intro 
+-Nomenclature for Prozac 
+Chemical Name: N-methyl-3-phenyl-3-[4-(trifluoromethyl)phenoxy]propan-1-amine 
+Generic Name: fluoxetine hydrochloride 
+Market/Brand Name: Prozac 
+-Descriptions of FDA drugs 
+Regulatory based 
+Prescribing information 
+Cant name off label use 
+Created by the drug sponsor, approved and modified by the FDA 
+"Boxed warnings" 
+All follow the same structure 
+Professionally based 
+Published information 
+Created by clinicians or societies of clinicians 
+Based on the prescribing information 
+Evidence based research 
+Commentary by the authors about the drug 
+Use, misuse, etc. 
+Can include information about the generic versions 
+-Prescribing information has a standard structure 
+Boxed warning 
+Indications and usage 
+Dosage and administration 
+Dosage forms and strengths 
+Contraindications 
+Why not to prescribe the drug 
+Warnings and precautions 
+Adverse reactions 
+Beyond the drug efficacy 
+Drug interactions 
+Use in specific populations 
+Drug use and dependence 
+Schedule labeled 
+Overdosage 
+Intended or accidental suicide 
+Beyond the therapeutic dosage 
+Descriptions 
+Archival information 
+Structure, form, etc.  
+Clinical pharmacology 
+Pharmacokinetics and pharmacodynamics 
+Animal studies 
+Nonclinical toxicology 
+Clinical studies 
+References 
+Typically blank 
+How supplied/storage and handling 
+Medications degrade over time 
+Proper storage preserves the lifespan of the drug 
+Patient counseling information 
+Pharmacist supplies when giving the patient the drug 
+-**Despite the details of the prescribing instructions required by the FDA, once a drug has been approved and made available for use, prescribers can immediately go off label and prescribe that drug for indications other than that for which the drug was approved. 
+ 
+The Biological Bases of Clinical Psychopharmacology (FIELD OF PLAY) 
+-Three core Neuronal Domains 
+Field of play  
+Cells of the brain communicate via chemical signals  
+Communicaiton between neurons 
+Efficiency of the signal being communicated  
+Frequency of action potentials 
+Also include glial cells 
+Endogenous field of play (NORTH--->SOUTH AXIS) 
+Organic 
+The backdrop that we can appreciate the influences (favorable and unfavorable) and actions of the drug intruders here 
+Presynaptic ---> postsynaptic  
+Action potentials, neurotransmitter release, postsynaptic response 
+Exogenous field of play (EAST--->WEST AXIS) 
+Medications, recreational drugs, drugs of abuse, toxins, etc. 
+Also implicated in endogenous field of play with hormones and neuromodulators 
+Can affect presynaptic and postsynaptic neurons 
+Target sites of action 
+Transporters 
+Presynaptic 
+SSRIs 
+Blocks transport mechanism allowing the drug to stay in the field of play 
+GPCR/metabotropic receptors 
+Postsynaptic  
+Enzymes 
+Presynaptic and postsynaptic 
+Break down elements 
+Ligand gated/ionotropic ion channel receptors 
+Postsynaptic  
+Voltage gated ion channel reception 
+Presynaptic  
+Epilepsy  

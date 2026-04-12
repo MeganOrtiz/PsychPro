@@ -1,0 +1,225 @@
+The Biological Bases of Psychopharmacology (NEUROTRANSMITTERS) 
+ 
+-Amino acid 
+Glutamate 
+GABA 
+-Monoamine 
+Dopamine 
+Serotonin 
+Norepinephrine 
+Histamine 
+-Other 
+Acetylcholine 
+Orexin 
+Amino Acid Neurotransmitters 
+ 
+-Glutamate 
+EXCITATORY 
+RAPID 
+Produces fast, postsynaptic responses 
+Overall modulation 
+Lowers negative charge in the neuron making it more positive  
+Precursor to GABA 
+90% of receptors in the brain have target sites for glutamate 
+Involved in protein synthesis 
+Pool of glutamate kept separate for 1)neurotransmission 2)protein synthesis 
+Needs to be converted to glutamine from glutamate by glutamine synthetase to be able to return back to the presynaptic neuron 
+Drug development 
+Movement away from the MAO to treat mood disorders  
+Esketamine (Spravato) 
+Target the NMDA receptors  
+Nasal spray 
+Prescribed for treatment resistant depression 
+Synthesis and degradation 
+Glutamine ---> glutaminase ---> glutamate 
+Glutamine ---> glutamine synthetase ---> glutamine (in glia) 
+-GABA 
+INHIBITORY 
+RAPID 
+Produces fast, postsynpatic responses 
+Role to depress, inhibit and reduce levels of activity in the brain 
+Can also shape, integrate and refine 
+Too little GABA 
+Seizures 
+Epilepsy  
+Main receptor 
+GABAa (ionotropic) 
+Autoreceptors 
+Stop the release of NT 
+GABA receptors on glutamate neurons 
+Involved with interneurons 
+Synthesis and degradation 
+Glutamate ---> glutamic acid decarboxylase ---> GABA 
+GABA ---> glutamate ---> glutamine synthetase ---> glutamine 
+ 
+Monoamine Neurotransmitters 
+ 
+-Dopamine 
+Multiple, wide and diverse 
+Receptors 
+D1-D5 
+Target metabotropic receptors 
+More slow, but wide spread action 
+Role: 
+Hormone production 
+Synthesis and degradation 
+Tyrosine ---> tyrosine hydroxylase ---> dopamine 
+Dopamine --->  
+-Serotonin 
+Receptors 
+14 and all are metabotropic except for 1 
+Location: 
+Midbrain and hindbrain 
+Raphe nuclei 
+-Norepinephrine 
+Receptors 
+5 metabotropic  
+Role: 
+Reticular activating system (RAS) 
+Location: 
+Locus coeruleus in the pons 
+-Histamine 
+Modulation 
+ 
+Other Neurotransmitters 
+ 
+-Acetylcholine 
+Receptors 
+Nicotinic (ionotropic) and muscarinic (metabotropic) 
+Location 
+Prefrontal lobe 
+High order functioning 
+Neuromuscular junction 
+Basal forebrain 
+hippocampus 
+Drugs 
+Alzheimer's medications target ACh  
+ 
+Receptors 
+ 
+-Greatest number of degrees of freedom 
+Diverse 
+-Largely impact the postsynaptic neuron 
+-Mostly true for the monoamines 
+-Factors: 
+Type 
+Subtype 
+Subunit configuration 
+-Types of receptors (Postsynaptic) 
+Ionotropic (ligand gated ion channel receptors) 
+Direct and rapid 
+Amino acid neurotransmitters + acetylcholine 
+Metabotropic (g – protein coupled receptors) 
+Indirect and slow 
+Can impact neighboring ionotropic receptors 
+Monoamine neurotransmitters 
+-Types of receptors (Presynaptic) 
+Autoreceptors 
+Serve as a negative feedback loop and 
+ON the neuron 
+Heteroreceptors 
+Sensitive to neurotransmitters and hormones 
+On OTHER neurons 
+ 
+Pharmacology 
+ 
+-Conceptual foundation 
+A drug is an intruder to the brain 
+Want to achieve balance between helping and harming effects 
+Exogenous psychotropic medication will heighten or diminish the endogenous functional neurochemistry of the brain, or can have no impact 
+-Drugs and the body (time based) 
+Pharmacokinetics (PK) 
+What the body does to the drug 
+Pharmacodynamics (PD) 
+What the drug does to the body 
+-Pharmacokinetics 
+Absorption 
+How the drug enters the body 
+Includes: 
+Route of administration 
+Enteral 
+Includes the gastrointestinal tract 
+Most common 
+Drug must be soluble and stable in stomach fluid  
+First pass metabolism 
+Must pass through the liver  
+Enzymes break drugs down 
+Oral/rectal 
+Parenteral 
+Does not involve the gastrointestinal tract, bypass 
+Injection (IV/IM/SubQ) 
+More prompt response than oral bc faster absorption 
+No loss of bioavailability 
+Rapid rate of absorption can be problematic if adverse effects are experienced 
+Can't use an oily solution 
+Inhalation 
+Mouth or nose 
+Drugs more commonly address respiratory disease than psychiatric disorders  
+Transcutaneous 
+Transdermal skin patch 
+Mucous membranes 
+Dose 
+Therapeutic range 
+Dosage form 
+Distribution 
+How the drugs finds its way throughout the body 
+Includes: 
+The blood brain barrier (BBB) 
+Active substance can be distributed to many areas of the brain, both those intended and unintended 
+Metabolism 
+How the drug is broken down 
+Includes: 
+Biotransformation 
+Into a more water – soluble agent to be less biologically active 
+Breakdown of the active substance into metabolites 
+Half life 
+The time for the plasma level f the drug to fall by 50% 
+Determines when the drug needs to be taken again 
+Most drugs are designed to be more than once 
+Need to achieve a steady state 
+Therapeutic level of medication needs to be effective  
+Elimination 
+How the drug leaves the body 
+Usually urine 
+-Pharmacodynamics 
+Concentration of the site of action 
+Contribute to desired therapeutic effects 
+2 components: 
+What is happening in the field of play? 
+Pharmacologic effect/mechanism of action 
+What is happening clinically? 
+Blocking, destroying, etc 
+Subjective in nature  
+Clinical response 
+Side effects 
+Bodily structures 
+Functional systems 
+Specific organs  
+Specific CNS regions 
+Toxicity 
+Change in nature of adverse events  
+Ex: change from attentional problems to disorientation to coma 
+Change in severity of adverse events  
+Ex: change from mild to severe headache  
+Many side effects are transient at the onset of a new medication or when the dose in changed on a current medication 
+Some can be more enduring that lead to lasting effects such as allergic reactions, etc.  
+Generic medication can have other inactive substances that impact the efficacy and side effects of the drug  
+ 
+-Pharmacovigilance 
+What happens to the drugs after the FDA approves it 
+ 
+ 
+Other Information 
+ 
+-3 types of ionotropic receptors 
+AMPA 
+NMDA 
+Kainate 
+-Tripartite Synapse 
+Components  
+Presynaptic neuron 
+Post synaptic neuron 
+Glia  
+Independent transported mechanism  
+Implicated in glutamate and GABA transmission to speed up the process 
+-Synaptic transmission disrupted when neurotransmitter stays in the synapse too long 

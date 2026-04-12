@@ -1,0 +1,110 @@
+Vision Cont. 
+-Streams 
+Ventral pathway 
+WHAT 
+Anterior 
+Conscious 
+Planning of action 
+Object recognition 
+Color and shape 
+Control of behavior 
+Damage: 
+Visual pattern recognition impairment 
+Dorsal pathway 
+WHERE 
+Posterior 
+Unconscious 
+Object perception 
+Location and movement 
+Conscious perception 
+Preparation for action 
+Damage:  
+Visual spatial perception impairment  
+-Blindsight- perception of visual stimuli outside of conscious awareness 
+-Clinical implications: 
+Akinestopia- inability to see movement progress in a normal, smooth fashion 
+Damage to medial temporal lobe 
+Prosopagnosia- inability to see faces 
+Damage to fusiform face area in the temporal lobe  
+Ventral stream implicated between temporal and occipital lobes  
+-Hawk eye 
+Large eyes with binocular vision 
+2 foveas= 5x more photoreceptors than humans 
+ 
+Hearing 
+-Sound 
+Amplitude- intensity of the sound wave 
+Frequency- number of compressions per second 
+Pitch 
+Timber- tone quality or complexity 
+Humans not adapted for pure tones 
+Sound waves can be added together to change sound  
+-Structures of the ear 
+Outer 
+Pinna- ear attachment to each side of the head 
+External auditory canal- tube extending to ear drum and tympanic membrane 
+Locates source of sound 
+Middle  
+Tympanic membrane- ear drum 
+Vibrates when struck by sounds 
+Connects to the tiny bones 
+Tiny bones- malleus, incus, stapes 
+Transform waves into stronger waves to project onto oval window 
+Inner 
+Oval window- membrane that transmits waves through the viscous fluid in the inner ear 
+Cochlea- fluid filled structure  
+Vestibular system- 3 fluid filled tubes 
+Organ of Corti 
+Basilar membrane- auditory receptors and hair cells  
+Tectorial membrane- rests on hair cells  
+Action potential when hair cells move and create electrical impulse 
+-Process 
+External sound comes in and strikes the tympanic membrane (ear drum)--> ossicles in middle ear vibrate--> cochlea--> basilar membrane 
+-Pathway 
+External stimuli coming in--> auditory nerve (VIII)--> cochlear nuclei (pons/medulla)--> superior olives (pons)--> inferior colliculi (midbrain)--> medial geniculate nucleus (MGN) (thalamus)--> primary auditory cortex (temporal lobe) 
+-Structure function 
+Medial and lateral superior olives  
+In the pons 
+Medial- arrival time information 
+Lateral- amplitude information 
+Superior colliculus 
+In the midbrain 
+Localization of sound 
+-Tonotopic map 
+Cells are more responsive to preferred or certain tones 
+Cells responsive to similar frequencies tend to group together 
+Organized by frequency 
+Detail differs from person to person 
+Respond better to pure tones 
+-Secondary and associated cortex 
+Response to speech 
+-Visual-auditory integration 
+Only in the association cortex 
+Early integration of incoming sensory information 
+ 
+Touch 
+-Somatosensory system 
+Sensations in the body 
+3 interacting systems 
+Exteroceptive- external stimuli 
+Proprioceptive- body position 
+Interoceptive- internal/visceral stimuli 
+-Cutaneous receptors 
+Pacinian corpuscles 
+Largest and deepest cells 
+Onion-like 
+Sudden displacements of skin  
+Adapt rapidly 
+Merkel's disks 
+Encode surface features of touched objects 
+Gradual skin indentation (light touch) 
+Adapt slowly 
+Meissner's corpuscles 
+Low frequency vibrations and fine touch 
+On glabrous skin surfaces and eyelids 
+Adapt rapidly 
+Ruffini endings 
+Gradual skin stretch 
+Adapt slowly 
+Free nerve endings 
+Temperature and pain 
