@@ -2,13 +2,14 @@ import { db } from "@workspace/db";
 import { usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import type { Logger } from "pino";
+import type Stripe from "stripe";
 
-export async function handleStripeWebhookEvent(event: any, log: Logger) {
+export async function handleStripeWebhookEvent(event: Stripe.Event, log: Logger) {
   switch (event.type) {
     case "customer.subscription.created":
     case "customer.subscription.updated": {
-      const sub = event.data.object;
-      const customerId = sub.customer;
+      const sub = event.data.object as Stripe.Subscription;
+      const customerId = typeof sub.customer === "string" ? sub.customer : sub.customer.id;
       const [user] = await db.select().from(usersTable).where(eq(usersTable.stripeCustomerId, customerId));
       if (user) {
         await db.update(usersTable).set({
@@ -20,8 +21,8 @@ export async function handleStripeWebhookEvent(event: any, log: Logger) {
       break;
     }
     case "customer.subscription.deleted": {
-      const sub = event.data.object;
-      const customerId = sub.customer;
+      const sub = event.data.object as Stripe.Subscription;
+      const customerId = typeof sub.customer === "string" ? sub.customer : sub.customer.id;
       const [user] = await db.select().from(usersTable).where(eq(usersTable.stripeCustomerId, customerId));
       if (user) {
         await db.update(usersTable).set({
@@ -33,12 +34,14 @@ export async function handleStripeWebhookEvent(event: any, log: Logger) {
       break;
     }
     case "checkout.session.completed": {
-      const session = event.data.object;
+      const session = event.data.object as Stripe.Checkout.Session;
       if (session.mode === "subscription" && session.customer) {
-        const [user] = await db.select().from(usersTable).where(eq(usersTable.stripeCustomerId, String(session.customer)));
+        const customerId = typeof session.customer === "string" ? session.customer : session.customer.id;
+        const [user] = await db.select().from(usersTable).where(eq(usersTable.stripeCustomerId, customerId));
         if (user && session.subscription) {
+          const subscriptionId = typeof session.subscription === "string" ? session.subscription : session.subscription.id;
           await db.update(usersTable).set({
-            stripeSubscriptionId: String(session.subscription),
+            stripeSubscriptionId: subscriptionId,
             subscriptionStatus: "active",
           }).where(eq(usersTable.id, user.id));
         }

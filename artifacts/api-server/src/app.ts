@@ -6,6 +6,7 @@ import { logger } from "./lib/logger";
 import { clerkMiddleware, getAuth } from "@clerk/express";
 import { getUncachableStripeClient } from "./stripeClient";
 import { handleStripeWebhookEvent } from "./webhookHandlers";
+import type Stripe from "stripe";
 
 const app: Express = express();
 
@@ -35,21 +36,27 @@ app.post(
   "/api/stripe/webhook",
   express.raw({ type: "application/json" }),
   async (req, res) => {
-    const sig = req.headers["stripe-signature"] as string;
+    const sig = req.headers["stripe-signature"];
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+    if (!webhookSecret) {
+      logger.warn("STRIPE_WEBHOOK_SECRET not set; rejecting unsigned webhook");
+      return res.status(400).json({ error: "Webhook secret not configured" });
+    }
+
+    if (!sig) {
+      return res.status(400).json({ error: "Missing stripe-signature header" });
+    }
+
     try {
       const stripe = await getUncachableStripeClient();
-      let event: any;
-      if (webhookSecret && sig) {
-        event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
-      } else {
-        event = JSON.parse(req.body.toString());
-      }
+      const event: Stripe.Event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
       await handleStripeWebhookEvent(event, logger);
       res.json({ received: true });
-    } catch (err: any) {
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Webhook verification failed";
       logger.error({ err }, "Stripe webhook error");
-      res.status(400).json({ error: err.message });
+      res.status(400).json({ error: message });
     }
   }
 );

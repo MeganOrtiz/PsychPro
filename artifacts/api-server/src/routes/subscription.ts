@@ -2,9 +2,10 @@ import { Router } from "express";
 import { db } from "@workspace/db";
 import { usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
-import { getUncachableStripeClient, getStripeSync } from "../stripeClient";
+import { getUncachableStripeClient } from "../stripeClient";
 import type { Request } from "express";
 import { getAuth } from "@clerk/express";
+import type Stripe from "stripe";
 
 const router = Router();
 
@@ -84,10 +85,11 @@ router.get("/subscription/status", async (req, res) => {
       try {
         const stripe = await getUncachableStripeClient();
         const sub = await stripe.subscriptions.retrieve(user.stripeSubscriptionId);
+        const periodEnd = (sub as Stripe.Subscription & { current_period_end: number }).current_period_end;
         return res.json({
           status: sub.status,
           subscriptionId: sub.id,
-          currentPeriodEnd: new Date((sub as any).current_period_end * 1000).toISOString(),
+          currentPeriodEnd: periodEnd ? new Date(periodEnd * 1000).toISOString() : null,
         });
       } catch {
         // fall through to user record

@@ -1,6 +1,11 @@
 import Stripe from 'stripe';
 
-let connectionSettings: any;
+interface ConnectionSettings {
+  settings: {
+    publishable: string;
+    secret: string;
+  };
+}
 
 async function getCredentials() {
   const hostname = process.env.REPLIT_CONNECTORS_HOSTNAME;
@@ -30,8 +35,8 @@ async function getCredentials() {
     }
   });
 
-  const data = await response.json();
-  connectionSettings = data.items?.[0];
+  const data = await response.json() as { items?: ConnectionSettings[] };
+  const connectionSettings = data.items?.[0];
 
   if (!connectionSettings || (!connectionSettings.settings.publishable || !connectionSettings.settings.secret)) {
     throw new Error(`Stripe ${targetEnvironment} connection not found`);
@@ -46,7 +51,7 @@ async function getCredentials() {
 export async function getUncachableStripeClient() {
   const { secretKey } = await getCredentials();
   return new Stripe(secretKey, {
-    apiVersion: '2026-03-25.dahlia' as any,
+    apiVersion: '2025-05-28.basil',
   });
 }
 
@@ -58,21 +63,4 @@ export async function getStripePublishableKey() {
 export async function getStripeSecretKey() {
   const { secretKey } = await getCredentials();
   return secretKey;
-}
-
-let stripeSync: any = null;
-
-export async function getStripeSync() {
-  if (!stripeSync) {
-    const { StripeSync } = await import('stripe-replit-sync');
-    const secretKey = await getStripeSecretKey();
-    stripeSync = new StripeSync({
-      poolConfig: {
-        connectionString: process.env.DATABASE_URL!,
-        max: 2,
-      },
-      stripeSecretKey: secretKey,
-    });
-  }
-  return stripeSync;
 }
