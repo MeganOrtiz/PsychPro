@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
-import { useGetFlashcardsByTopic, useGetUserUsage, useIncrementUserUsage } from "@workspace/api-client-react";
+import { useGetFlashcardsByTopic, useGetUserUsage, useIncrementUserUsage, getGetUserUsageQueryKey } from "@workspace/api-client-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
@@ -24,6 +25,7 @@ export default function FlashcardsPage({ params }: Props) {
   const [flipped, setFlipped] = useState(false);
   const [showUpgrade, setShowUpgrade] = useState(false);
 
+  const queryClient = useQueryClient();
   const { data: flashcards, isLoading } = useGetFlashcardsByTopic(topicId);
   const { data: usage } = useGetUserUsage();
   const incrementUsage = useIncrementUserUsage();
@@ -38,6 +40,7 @@ export default function FlashcardsPage({ params }: Props) {
         return;
       }
       await incrementUsage.mutateAsync();
+      await queryClient.invalidateQueries({ queryKey: getGetUserUsageQueryKey() });
     }
     setFlipped(!flipped);
   };

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { ChevronLeft, CheckCircle, XCircle, ChevronRight } from "lucide-react";
-import { useGetQuizzesByTopic, useIncrementUserUsage, useGetUserUsage, useUpdateTopicProgress } from "@workspace/api-client-react";
+import { useGetQuizzesByTopic, useIncrementUserUsage, useGetUserUsage, useUpdateTopicProgress, getGetUserUsageQueryKey } from "@workspace/api-client-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -21,6 +22,7 @@ export default function QuizPage({ params }: Props) {
   const [completed, setCompleted] = useState(false);
   const [showUpgrade, setShowUpgrade] = useState(false);
 
+  const queryClient = useQueryClient();
   const { data: questions, isLoading } = useGetQuizzesByTopic(topicId);
   const { data: usage } = useGetUserUsage();
   const incrementUsage = useIncrementUserUsage();
@@ -45,6 +47,7 @@ export default function QuizPage({ params }: Props) {
       return;
     }
     await incrementUsage.mutateAsync();
+    await queryClient.invalidateQueries({ queryKey: getGetUserUsageQueryKey() });
     setSelected(key);
     setShowExplanation(true);
     if (key === current?.correctAnswer) {
