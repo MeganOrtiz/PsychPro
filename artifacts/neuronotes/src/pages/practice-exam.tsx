@@ -34,6 +34,22 @@ export default function PracticeExamPage({ params }: Props) {
   const total = questions.length;
   const TIME_PER_QUESTION = 90;
 
+  const answersRef = useRef<Record<number, string>>({});
+  const questionsRef = useRef(questions);
+  answersRef.current = answers;
+  questionsRef.current = questions;
+
+  const submitRef = useRef<() => void>(() => {});
+  submitRef.current = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    const qs = questionsRef.current;
+    const ans = answersRef.current;
+    const correct = qs.filter(q => ans[q.id] === q.correctAnswer).length;
+    const score = qs.length > 0 ? Math.round((correct / qs.length) * 100) : 0;
+    updateProgress.mutate({ topicId, data: { score } });
+    setSubmitted(true);
+  };
+
   useEffect(() => {
     if (started && timed && !submitted) {
       setTimeLeft(total * TIME_PER_QUESTION);
@@ -41,7 +57,7 @@ export default function PracticeExamPage({ params }: Props) {
         setTimeLeft(t => {
           if (t <= 1) {
             clearInterval(timerRef.current!);
-            handleSubmit();
+            submitRef.current();
             return 0;
           }
           return t - 1;
@@ -49,14 +65,10 @@ export default function PracticeExamPage({ params }: Props) {
       }, 1000);
     }
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [started, timed, submitted]);
+  }, [started, timed, submitted, total]);
 
   const handleSubmit = () => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    const correct = questions.filter(q => answers[q.id] === q.correctAnswer).length;
-    const score = Math.round((correct / total) * 100);
-    updateProgress.mutate({ topicId, data: { score } });
-    setSubmitted(true);
+    submitRef.current();
   };
 
   const handleAnswer = async (qId: number, key: string) => {

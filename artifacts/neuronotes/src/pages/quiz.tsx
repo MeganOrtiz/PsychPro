@@ -57,7 +57,8 @@ export default function QuizPage({ params }: Props) {
 
   const handleNext = async () => {
     if (index + 1 >= total) {
-      const percent = Math.round(((score + (selected === current?.correctAnswer ? 1 : 0)) / total) * 100);
+      // score is already updated by handleSelect; do not add 1 again
+      const percent = Math.round((score / total) * 100);
       try {
         await updateProgress.mutateAsync({ topicId, data: { score: percent } });
       } catch {
