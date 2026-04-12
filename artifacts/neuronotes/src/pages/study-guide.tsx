@@ -1,0 +1,149 @@
+import { useLocation } from "wouter";
+import { ChevronLeft } from "lucide-react";
+import { useGetStudyGuideByTopic } from "@workspace/api-client-react";
+import { Skeleton } from "@/components/ui/skeleton";
+
+interface Props {
+  params: { id: string };
+}
+
+export default function StudyGuidePage({ params }: Props) {
+  const [, navigate] = useLocation();
+  const topicId = parseInt(params.id);
+  const { data: guide, isLoading, error } = useGetStudyGuideByTopic(topicId);
+
+  return (
+    <div className="p-4 md:p-6 max-w-3xl mx-auto" data-testid="study-guide-page">
+      <div className="flex items-center gap-3 mb-6">
+        <button
+          onClick={() => navigate(`/topics/${topicId}`)}
+          className="text-muted-foreground hover:text-foreground"
+          data-testid="button-back"
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+        <h1 className="text-xl font-bold text-foreground">Study Guide</h1>
+      </div>
+
+      {isLoading ? (
+        <div className="space-y-4">
+          <Skeleton className="h-8 w-1/2" />
+          {Array(8).fill(0).map((_, i) => <Skeleton key={i} className="h-4 rounded" />)}
+        </div>
+      ) : error || !guide ? (
+        <div className="text-center py-16 bg-card border border-border rounded-xl" data-testid="no-study-guide">
+          <p className="text-muted-foreground font-medium">Study guide coming soon</p>
+          <p className="text-sm text-muted-foreground mt-1">Check back later for detailed notes on this topic.</p>
+        </div>
+      ) : (
+        <div className="bg-card border border-border rounded-xl p-6 md:p-8">
+          <h2 className="text-2xl font-bold text-foreground mb-6">{guide.title}</h2>
+          <div
+            className="prose prose-sm md:prose-base dark:prose-invert max-w-none prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground prose-table:text-sm"
+            data-testid="study-guide-content"
+          >
+            <MarkdownRenderer content={guide.content} />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MarkdownRenderer({ content }: { content: string }) {
+  const lines = content.split("\n");
+  const elements: JSX.Element[] = [];
+  let inTable = false;
+  let tableRows: string[][] = [];
+  let tableKey = 0;
+
+  const flushTable = () => {
+    if (tableRows.length > 1) {
+      const headers = tableRows[0];
+      const rows = tableRows.slice(2);
+      elements.push(
+        <div key={`table-${tableKey++}`} className="overflow-x-auto my-4">
+          <table className="min-w-full border-collapse text-sm">
+            <thead>
+              <tr>
+                {headers.map((h, i) => (
+                  <th key={i} className="border border-border bg-muted px-3 py-2 text-left font-semibold text-foreground">{h.trim()}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, ri) => (
+                <tr key={ri} className={ri % 2 === 0 ? "bg-card" : "bg-muted/30"}>
+                  {row.map((cell, ci) => (
+                    <td key={ci} className="border border-border px-3 py-2 text-foreground">{cell.trim()}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    }
+    tableRows = [];
+    inTable = false;
+  };
+
+  lines.forEach((line, i) => {
+    if (line.startsWith("|")) {
+      inTable = true;
+      tableRows.push(line.split("|").filter((_, idx, arr) => idx > 0 && idx < arr.length - 1));
+      return;
+    }
+    if (inTable) {
+      flushTable();
+    }
+
+    if (line.startsWith("## ")) {
+      elements.push(<h2 key={i} className="text-xl font-bold text-foreground mt-8 mb-3">{line.slice(3)}</h2>);
+    } else if (line.startsWith("### ")) {
+      elements.push(<h3 key={i} className="text-base font-semibold text-foreground mt-5 mb-2">{line.slice(4)}</h3>);
+    } else if (line.startsWith("# ")) {
+      elements.push(<h1 key={i} className="text-2xl font-bold text-foreground mb-4">{line.slice(2)}</h1>);
+    } else if (line.startsWith("- ")) {
+      elements.push(
+        <li key={i} className="text-foreground ml-4 mb-1 text-sm leading-relaxed list-disc">
+          <InlineMarkdown text={line.slice(2)} />
+        </li>
+      );
+    } else if (/^\d+\. /.test(line)) {
+      elements.push(
+        <li key={i} className="text-foreground ml-4 mb-1 text-sm leading-relaxed list-decimal">
+          <InlineMarkdown text={line.replace(/^\d+\. /, "")} />
+        </li>
+      );
+    } else if (line.trim() === "") {
+      elements.push(<div key={i} className="h-2" />);
+    } else {
+      elements.push(
+        <p key={i} className="text-foreground text-sm leading-relaxed mb-2">
+          <InlineMarkdown text={line} />
+        </p>
+      );
+    }
+  });
+
+  if (inTable) flushTable();
+  return <div>{elements}</div>;
+}
+
+function InlineMarkdown({ text }: { text: string }) {
+  const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`)/g);
+  return (
+    <>
+      {parts.map((part, i) => {
+        if (part.startsWith("**") && part.endsWith("**")) {
+          return <strong key={i} className="font-semibold text-foreground">{part.slice(2, -2)}</strong>;
+        }
+        if (part.startsWith("`") && part.endsWith("`")) {
+          return <code key={i} className="bg-muted px-1 py-0.5 rounded text-xs font-mono">{part.slice(1, -1)}</code>;
+        }
+        return <span key={i}>{part}</span>;
+      })}
+    </>
+  );
+}

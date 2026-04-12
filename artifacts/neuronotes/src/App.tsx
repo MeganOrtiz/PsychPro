@@ -2,40 +2,108 @@ import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ClerkProvider, useUser, useAuth } from "@clerk/react";
+import { useEffect } from "react";
+import { setAuthTokenGetter } from "@workspace/api-client-react";
+import LandingPage from "@/pages/landing";
+import OnboardingPage from "@/pages/onboarding";
+import DashboardPage from "@/pages/dashboard";
+import TopicsPage from "@/pages/topics";
+import TopicDetailPage from "@/pages/topic-detail";
+import FlashcardsPage from "@/pages/flashcards";
+import QuizPage from "@/pages/quiz";
+import StudyGuidePage from "@/pages/study-guide";
+import PracticeExamPage from "@/pages/practice-exam";
+import ProgressPage from "@/pages/progress";
+import SubscriptionPage from "@/pages/subscription";
 import NotFound from "@/pages/not-found";
+import AppLayout from "@/components/layout/app-layout";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
-function Home() {
-  return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold text-gray-900">Replit Agent is building...</h1>
-        <p className="mt-2 text-sm text-gray-600">Your app will appear here once it's ready.</p>
-      </div>
-    </div>
-  );
+const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+
+function ClerkTokenSetup() {
+  const { getToken } = useAuth();
+
+  useEffect(() => {
+    setAuthTokenGetter(async () => {
+      try {
+        return await getToken();
+      } catch {
+        return null;
+      }
+    });
+    return () => {
+      setAuthTokenGetter(null);
+    };
+  }, [getToken]);
+
+  return null;
 }
 
-function Router() {
+function AuthRouter() {
+  const { isLoaded, isSignedIn } = useUser();
+
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Switch>
-      <Route path="/" component={Home} />
-      <Route component={NotFound} />
+      <Route path="/" component={LandingPage} />
+      <Route path="/sign-in" component={LandingPage} />
+      <Route path="/sign-up" component={LandingPage} />
+      {isSignedIn ? (
+        <AppLayout>
+          <Switch>
+            <Route path="/onboarding" component={OnboardingPage} />
+            <Route path="/dashboard" component={DashboardPage} />
+            <Route path="/topics" component={TopicsPage} />
+            <Route path="/topics/:id" component={TopicDetailPage} />
+            <Route path="/topics/:id/flashcards" component={FlashcardsPage} />
+            <Route path="/topics/:id/quiz" component={QuizPage} />
+            <Route path="/topics/:id/study-guide" component={StudyGuidePage} />
+            <Route path="/topics/:id/exam" component={PracticeExamPage} />
+            <Route path="/progress" component={ProgressPage} />
+            <Route path="/subscription" component={SubscriptionPage} />
+            <Route component={NotFound} />
+          </Switch>
+        </AppLayout>
+      ) : (
+        <Route component={LandingPage} />
+      )}
     </Switch>
   );
 }
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-          <Router />
-        </WouterRouter>
-        <Toaster />
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ClerkProvider publishableKey={clerkPubKey} signInUrl="/sign-in" signUpUrl="/sign-up">
+      <ClerkTokenSetup />
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+            <AuthRouter />
+          </WouterRouter>
+          <Toaster />
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ClerkProvider>
   );
 }
 

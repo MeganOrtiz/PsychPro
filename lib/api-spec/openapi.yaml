@@ -3,13 +3,32 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: NeuroNotes API specification
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: topics
+    description: Neuroscience topics
+  - name: flashcards
+    description: Flashcard study mode
+  - name: quizzes
+    description: Quiz study mode
+  - name: studyGuides
+    description: Study guides
+  - name: practiceExams
+    description: Practice exams
+  - name: progress
+    description: User progress tracking
+  - name: users
+    description: User profile and onboarding
+  - name: subscription
+    description: Subscription management
+  - name: dashboard
+    description: Dashboard summary data
+
 paths:
   /healthz:
     get:
@@ -24,6 +43,305 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /topics:
+    get:
+      operationId: getTopics
+      tags: [topics]
+      summary: List all topics
+      responses:
+        "200":
+          description: List of neuroscience topics
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Topic"
+
+  /topics/{topicId}:
+    get:
+      operationId: getTopic
+      tags: [topics]
+      summary: Get a single topic
+      parameters:
+        - name: topicId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Topic detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Topic"
+        "404":
+          description: Topic not found
+
+  /topics/{topicId}/flashcards:
+    get:
+      operationId: getFlashcardsByTopic
+      tags: [flashcards]
+      summary: Get flashcards for a topic
+      parameters:
+        - name: topicId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of flashcards
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Flashcard"
+
+  /topics/{topicId}/quizzes:
+    get:
+      operationId: getQuizzesByTopic
+      tags: [quizzes]
+      summary: Get quiz questions for a topic
+      parameters:
+        - name: topicId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of quiz questions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/QuizQuestion"
+
+  /topics/{topicId}/study-guide:
+    get:
+      operationId: getStudyGuideByTopic
+      tags: [studyGuides]
+      summary: Get the study guide for a topic
+      parameters:
+        - name: topicId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Study guide
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudyGuide"
+        "404":
+          description: Study guide not found
+
+  /topics/{topicId}/practice-exam:
+    get:
+      operationId: getPracticeExamByTopic
+      tags: [practiceExams]
+      summary: Get a practice exam for a topic
+      parameters:
+        - name: topicId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Practice exam with questions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PracticeExam"
+        "404":
+          description: Exam not found
+
+  /users/profile:
+    get:
+      operationId: getUserProfile
+      tags: [users]
+      summary: Get the current user profile
+      responses:
+        "200":
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "404":
+          description: User not found
+
+    post:
+      operationId: upsertUserProfile
+      tags: [users]
+      summary: Create or update user profile (onboarding)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpsertUserProfileBody"
+      responses:
+        "200":
+          description: Updated user profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+
+  /users/usage:
+    get:
+      operationId: getUserUsage
+      tags: [users]
+      summary: Get usage count for free trial tracking
+      responses:
+        "200":
+          description: Usage info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UsageInfo"
+
+    post:
+      operationId: incrementUserUsage
+      tags: [users]
+      summary: Increment usage count (called when viewing a flashcard or answering a quiz question)
+      responses:
+        "200":
+          description: Updated usage info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UsageInfo"
+
+  /progress:
+    get:
+      operationId: getUserProgress
+      tags: [progress]
+      summary: Get progress for all topics for the current user
+      responses:
+        "200":
+          description: List of topic progress records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TopicProgress"
+
+  /progress/{topicId}:
+    get:
+      operationId: getTopicProgress
+      tags: [progress]
+      summary: Get progress for a specific topic
+      parameters:
+        - name: topicId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Topic progress
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TopicProgress"
+        "404":
+          description: Progress not found
+
+    post:
+      operationId: updateTopicProgress
+      tags: [progress]
+      summary: Update progress for a specific topic
+      parameters:
+        - name: topicId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateTopicProgressBody"
+      responses:
+        "200":
+          description: Updated progress
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TopicProgress"
+
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get dashboard summary for the current user
+      responses:
+        "200":
+          description: Dashboard summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+  /subscription/plans:
+    get:
+      operationId: getSubscriptionPlans
+      tags: [subscription]
+      summary: Get available subscription plans from Stripe
+      responses:
+        "200":
+          description: Subscription plans
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SubscriptionPlan"
+
+  /subscription/checkout:
+    post:
+      operationId: createCheckoutSession
+      tags: [subscription]
+      summary: Create a Stripe checkout session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCheckoutSessionBody"
+      responses:
+        "200":
+          description: Checkout session URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckoutSessionResponse"
+
+  /subscription/status:
+    get:
+      operationId: getSubscriptionStatus
+      tags: [subscription]
+      summary: Get current user subscription status
+      responses:
+        "200":
+          description: Subscription status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubscriptionStatus"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +352,292 @@ components:
       required:
         - status
 
+    Topic:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        category:
+          type: string
+        description:
+          type: string
+        flashcardCount:
+          type: integer
+        quizCount:
+          type: integer
+      required:
+        - id
+        - name
+        - category
+        - description
+        - flashcardCount
+        - quizCount
+
+    Flashcard:
+      type: object
+      properties:
+        id:
+          type: integer
+        topicId:
+          type: integer
+        question:
+          type: string
+        answer:
+          type: string
+        difficulty:
+          type: string
+          enum: [easy, medium, hard]
+      required:
+        - id
+        - topicId
+        - question
+        - answer
+        - difficulty
+
+    QuizQuestion:
+      type: object
+      properties:
+        id:
+          type: integer
+        topicId:
+          type: integer
+        question:
+          type: string
+        optionA:
+          type: string
+        optionB:
+          type: string
+        optionC:
+          type: string
+        optionD:
+          type: string
+        correctAnswer:
+          type: string
+          enum: [A, B, C, D]
+        explanation:
+          type: string
+      required:
+        - id
+        - topicId
+        - question
+        - optionA
+        - optionB
+        - optionC
+        - optionD
+        - correctAnswer
+        - explanation
+
+    StudyGuide:
+      type: object
+      properties:
+        id:
+          type: integer
+        topicId:
+          type: integer
+        title:
+          type: string
+        content:
+          type: string
+      required:
+        - id
+        - topicId
+        - title
+        - content
+
+    PracticeExam:
+      type: object
+      properties:
+        id:
+          type: integer
+        topicId:
+          type: integer
+        title:
+          type: string
+        questions:
+          type: array
+          items:
+            $ref: "#/components/schemas/QuizQuestion"
+      required:
+        - id
+        - topicId
+        - title
+        - questions
+
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: ["string", "null"]
+        role:
+          type: ["string", "null"]
+        goal:
+          type: ["string", "null"]
+        degree:
+          type: ["string", "null"]
+        referralSource:
+          type: ["string", "null"]
+        subscriptionStatus:
+          type: string
+        onboardingComplete:
+          type: boolean
+        stripeCustomerId:
+          type: ["string", "null"]
+        stripeSubscriptionId:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+      required:
+        - id
+        - subscriptionStatus
+        - onboardingComplete
+
+    UpsertUserProfileBody:
+      type: object
+      properties:
+        email:
+          type: string
+        role:
+          type: string
+        goal:
+          type: string
+        degree:
+          type: string
+        referralSource:
+          type: string
+        onboardingComplete:
+          type: boolean
+
+    UsageInfo:
+      type: object
+      properties:
+        usageCount:
+          type: integer
+        freeLimit:
+          type: integer
+        isOverLimit:
+          type: boolean
+      required:
+        - usageCount
+        - freeLimit
+        - isOverLimit
+
+    TopicProgress:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: string
+        topicId:
+          type: integer
+        topicName:
+          type: string
+        score:
+          type: integer
+        lastAccessed:
+          type: string
+      required:
+        - id
+        - userId
+        - topicId
+        - topicName
+        - score
+        - lastAccessed
+
+    UpdateTopicProgressBody:
+      type: object
+      properties:
+        score:
+          type: integer
+      required:
+        - score
+
+    DashboardSummary:
+      type: object
+      properties:
+        totalTopics:
+          type: integer
+        topicsStudied:
+          type: integer
+        averageScore:
+          type: integer
+        recentTopics:
+          type: array
+          items:
+            $ref: "#/components/schemas/TopicProgress"
+        weakAreas:
+          type: array
+          items:
+            $ref: "#/components/schemas/TopicProgress"
+        subscriptionStatus:
+          type: string
+        usageCount:
+          type: integer
+        freeLimit:
+          type: integer
+      required:
+        - totalTopics
+        - topicsStudied
+        - averageScore
+        - recentTopics
+        - weakAreas
+        - subscriptionStatus
+        - usageCount
+        - freeLimit
+
+    SubscriptionPlan:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        priceId:
+          type: string
+        unitAmount:
+          type: integer
+        currency:
+          type: string
+        interval:
+          type: string
+      required:
+        - id
+        - name
+        - priceId
+        - unitAmount
+        - currency
+        - interval
+
+    CreateCheckoutSessionBody:
+      type: object
+      properties:
+        priceId:
+          type: string
+      required:
+        - priceId
+
+    CheckoutSessionResponse:
+      type: object
+      properties:
+        url:
+          type: string
+      required:
+        - url
+
+    SubscriptionStatus:
+      type: object
+      properties:
+        status:
+          type: string
+        subscriptionId:
+          type: ["string", "null"]
+        currentPeriodEnd:
+          type: ["string", "null"]
+      required:
+        - status
