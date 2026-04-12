@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
-import { useGetFlashcardsByTopic } from "@workspace/api-client-react";
+import { useGetFlashcardsByTopic, useIncrementUserUsage } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
@@ -22,16 +22,34 @@ export default function FlashcardsPage({ params }: Props) {
   const topicId = parseInt(params.id);
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   const { data: flashcards, isLoading, error } = useGetFlashcardsByTopic(topicId);
+  const incrementUsage = useIncrementUserUsage();
 
   const current = flashcards?.[index];
   const total = flashcards?.length ?? 0;
 
-  const isOverLimit = (error as { status?: number } | null)?.status === 402;
+  const fetchError = error as { status?: number } | null;
+  if (fetchError?.status === 402) {
+    return <UpgradePrompt onDismiss={() => navigate(`/topics/${topicId}`)} />;
+  }
 
-  const handleFlip = () => {
-    setFlipped(f => !f);
+  const handleFlip = async () => {
+    if (flipped) {
+      setFlipped(false);
+      return;
+    }
+    try {
+      await incrementUsage.mutateAsync();
+    } catch (err) {
+      const e = err as { status?: number };
+      if (e?.status === 402) {
+        setShowUpgrade(true);
+        return;
+      }
+    }
+    setFlipped(true);
   };
 
   const handleNext = () => {
@@ -49,8 +67,8 @@ export default function FlashcardsPage({ params }: Props) {
     setIndex(0);
   };
 
-  if (isOverLimit) {
-    return <UpgradePrompt onDismiss={() => navigate(`/topics/${topicId}`)} />;
+  if (showUpgrade) {
+    return <UpgradePrompt onDismiss={() => setShowUpgrade(false)} />;
   }
 
   return (

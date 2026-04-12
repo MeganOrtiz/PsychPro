@@ -45,7 +45,7 @@ router.post("/subscription/checkout", async (req: Request, res: Response): Promi
       return;
     }
     const { priceId } = req.body as { priceId: string };
-    const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
+    let [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
     const stripe = await getUncachableStripeClient();
 
     let customerId = user?.stripeCustomerId;
@@ -55,7 +55,14 @@ router.post("/subscription/checkout", async (req: Request, res: Response): Promi
         metadata: { userId },
       });
       customerId = customer.id;
-      await db.update(usersTable).set({ stripeCustomerId: customerId }).where(eq(usersTable.id, userId));
+      if (!user) {
+        [user] = await db
+          .insert(usersTable)
+          .values({ id: userId, subscriptionStatus: "free", onboardingComplete: false, stripeCustomerId: customerId })
+          .returning();
+      } else {
+        await db.update(usersTable).set({ stripeCustomerId: customerId }).where(eq(usersTable.id, userId));
+      }
     }
 
     const baseUrl = `https://${process.env.REPLIT_DOMAINS?.split(",")[0]}`;

@@ -118,15 +118,33 @@ router.post("/users/usage", async (req: Request, res: Response): Promise<void> =
       return;
     }
     let [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
+
     if (!user) {
-      [user] = await db.insert(usersTable).values({ id: userId, subscriptionStatus: "free", onboardingComplete: false, usageCount: 1 }).returning();
-    } else {
+      [user] = await db.insert(usersTable).values({ id: userId, subscriptionStatus: "free", onboardingComplete: false, usageCount: 0 }).returning();
+    }
+
+    const isSubscribed = user.subscriptionStatus === "active" || user.subscriptionStatus === "pro";
+    const currentCount = user.usageCount ?? 0;
+
+    if (!isSubscribed && currentCount >= FREE_LIMIT) {
+      res.status(402).json({
+        error: "Free limit reached",
+        message: `You have used all ${FREE_LIMIT} free interactions. Upgrade to continue learning.`,
+        usageCount: currentCount,
+        freeLimit: FREE_LIMIT,
+        isOverLimit: true,
+      });
+      return;
+    }
+
+    if (!isSubscribed) {
       [user] = await db
         .update(usersTable)
-        .set({ usageCount: (user.usageCount ?? 0) + 1 })
+        .set({ usageCount: currentCount + 1 })
         .where(eq(usersTable.id, userId))
         .returning();
     }
+
     res.json({
       usageCount: user.usageCount,
       freeLimit: FREE_LIMIT,

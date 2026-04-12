@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { ChevronLeft, Clock, Timer } from "lucide-react";
-import { useGetPracticeExamByTopic, useUpdateTopicProgress } from "@workspace/api-client-react";
+import { useGetPracticeExamByTopic, useUpdateTopicProgress, useIncrementUserUsage } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
@@ -22,12 +22,14 @@ export default function PracticeExamPage({ params }: Props) {
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [submitted, setSubmitted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
+  const [showUpgrade, setShowUpgrade] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const { data: exam, isLoading, error } = useGetPracticeExamByTopic(topicId);
   const updateProgress = useUpdateTopicProgress();
+  const incrementUsage = useIncrementUserUsage();
 
-  const isOverLimit = (error as { status?: number } | null)?.status === 402;
+  const fetchError = error as { status?: number } | null;
 
   const questions = exam?.questions ?? [];
   const total = questions.length;
@@ -70,8 +72,17 @@ export default function PracticeExamPage({ params }: Props) {
     submitRef.current();
   };
 
-  const handleAnswer = (qId: number, key: string) => {
+  const handleAnswer = async (qId: number, key: string) => {
     if (answers[qId]) return;
+    try {
+      await incrementUsage.mutateAsync();
+    } catch (err) {
+      const e = err as { status?: number };
+      if (e?.status === 402) {
+        setShowUpgrade(true);
+        return;
+      }
+    }
     setAnswers(prev => ({ ...prev, [qId]: key }));
   };
 
@@ -80,8 +91,11 @@ export default function PracticeExamPage({ params }: Props) {
   const correct = questions.filter(q => answers[q.id] === q.correctAnswer).length;
   const score = total > 0 ? Math.round((correct / total) * 100) : 0;
 
-  if (isOverLimit) {
-    return <UpgradePrompt onDismiss={() => navigate(`/topics/${topicId}`)} />;
+  if (fetchError?.status === 402 || showUpgrade) {
+    return <UpgradePrompt onDismiss={() => {
+      if (showUpgrade) setShowUpgrade(false);
+      else navigate(`/topics/${topicId}`);
+    }} />;
   }
 
   if (submitted) {

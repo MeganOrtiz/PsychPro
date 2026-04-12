@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { ChevronLeft, CheckCircle, XCircle, ChevronRight } from "lucide-react";
-import { useGetQuizzesByTopic, useUpdateTopicProgress } from "@workspace/api-client-react";
+import { useGetQuizzesByTopic, useUpdateTopicProgress, useIncrementUserUsage } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -19,11 +19,16 @@ export default function QuizPage({ params }: Props) {
   const [showExplanation, setShowExplanation] = useState(false);
   const [score, setScore] = useState(0);
   const [completed, setCompleted] = useState(false);
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   const { data: questions, isLoading, error } = useGetQuizzesByTopic(topicId);
   const updateProgress = useUpdateTopicProgress();
+  const incrementUsage = useIncrementUserUsage();
 
-  const isOverLimit = (error as { status?: number } | null)?.status === 402;
+  const fetchError = error as { status?: number } | null;
+  if (fetchError?.status === 402) {
+    return <UpgradePrompt onDismiss={() => navigate(`/topics/${topicId}`)} />;
+  }
 
   const current = questions?.[index];
   const total = questions?.length ?? 0;
@@ -37,8 +42,17 @@ export default function QuizPage({ params }: Props) {
       ]
     : [];
 
-  const handleSelect = (key: string) => {
+  const handleSelect = async (key: string) => {
     if (selected) return;
+    try {
+      await incrementUsage.mutateAsync();
+    } catch (err) {
+      const e = err as { status?: number };
+      if (e?.status === 402) {
+        setShowUpgrade(true);
+        return;
+      }
+    }
     setSelected(key);
     setShowExplanation(true);
     if (key === current?.correctAnswer) {
@@ -70,8 +84,8 @@ export default function QuizPage({ params }: Props) {
     setCompleted(false);
   };
 
-  if (isOverLimit) {
-    return <UpgradePrompt onDismiss={() => navigate(`/topics/${topicId}`)} />;
+  if (showUpgrade) {
+    return <UpgradePrompt onDismiss={() => setShowUpgrade(false)} />;
   }
 
   if (completed) {
