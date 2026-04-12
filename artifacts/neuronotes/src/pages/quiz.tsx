@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { ChevronLeft, CheckCircle, XCircle, ChevronRight } from "lucide-react";
-import { useGetQuizzesByTopic, useIncrementUserUsage, useGetUserUsage } from "@workspace/api-client-react";
+import { useGetQuizzesByTopic, useIncrementUserUsage, useGetUserUsage, useUpdateTopicProgress } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -24,6 +24,7 @@ export default function QuizPage({ params }: Props) {
   const { data: questions, isLoading } = useGetQuizzesByTopic(topicId);
   const { data: usage } = useGetUserUsage();
   const incrementUsage = useIncrementUserUsage();
+  const updateProgress = useUpdateTopicProgress();
 
   const current = questions?.[index];
   const total = questions?.length ?? 0;
@@ -51,8 +52,14 @@ export default function QuizPage({ params }: Props) {
     }
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (index + 1 >= total) {
+      const percent = Math.round(((score + (selected === current?.correctAnswer ? 1 : 0)) / total) * 100);
+      try {
+        await updateProgress.mutateAsync({ topicId, data: { score: percent } });
+      } catch {
+        // non-blocking — progress save failure should not prevent completion UI
+      }
       setCompleted(true);
     } else {
       setSelected(null);
