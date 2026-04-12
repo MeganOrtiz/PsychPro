@@ -1,3 +1,4 @@
+import { type ComponentType } from "react";
 import { useLocation } from "wouter";
 import { BookOpen, Brain, Trophy, Zap, ChevronRight, TrendingUp } from "lucide-react";
 import { useGetDashboardSummary, useGetUserProfile } from "@workspace/api-client-react";
@@ -131,7 +132,7 @@ export default function DashboardPage() {
   );
 }
 
-function StatCard({ label, value, icon: Icon, color }: { label: string; value: string | number; icon: any; color: string }) {
+function StatCard({ label, value, icon: Icon, color }: { label: string; value: string | number; icon: ComponentType<{ className?: string }>; color: string }) {
   return (
     <div className="bg-card border border-border rounded-xl p-4" data-testid={`stat-${label.replace(/\s/g, "-").toLowerCase()}`}>
       <Icon className={`w-5 h-5 ${color} mb-2`} />
@@ -141,7 +142,7 @@ function StatCard({ label, value, icon: Icon, color }: { label: string; value: s
   );
 }
 
-function ActionButton({ icon: Icon, label, onClick, testId }: { icon: any; label: string; onClick: () => void; testId?: string }) {
+function ActionButton({ icon: Icon, label, onClick, testId }: { icon: ComponentType<{ className?: string }>; label: string; onClick: () => void; testId?: string }) {
   return (
     <button
       onClick={onClick}

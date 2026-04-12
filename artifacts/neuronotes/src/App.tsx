@@ -6,6 +6,8 @@ import { ClerkProvider, useUser, useAuth } from "@clerk/react";
 import { useEffect } from "react";
 import { setAuthTokenGetter } from "@workspace/api-client-react";
 import LandingPage from "@/pages/landing";
+import SignInPage from "@/pages/sign-in";
+import SignUpPage from "@/pages/sign-up";
 import OnboardingPage from "@/pages/onboarding";
 import DashboardPage from "@/pages/dashboard";
 import TopicsPage from "@/pages/topics";
@@ -66,8 +68,8 @@ function AuthRouter() {
   return (
     <Switch>
       <Route path="/" component={LandingPage} />
-      <Route path="/sign-in" component={LandingPage} />
-      <Route path="/sign-up" component={LandingPage} />
+      <Route path="/sign-in" component={SignInPage} />
+      <Route path="/sign-up" component={SignUpPage} />
       {isSignedIn ? (
         <AppLayout>
           <Switch>

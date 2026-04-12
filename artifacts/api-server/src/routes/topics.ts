@@ -1,6 +1,6 @@
 import { Router, type Request, type Response } from "express";
 import { db } from "@workspace/db";
-import { topicsTable, flashcardsTable, quizQuestionsTable, studyGuidesTable } from "@workspace/db";
+import { topicsTable, flashcardsTable, quizQuestionsTable, studyGuidesTable, practiceExamsTable } from "@workspace/db";
 import { eq, count } from "drizzle-orm";
 
 const router = Router();
@@ -99,20 +99,22 @@ router.get("/topics/:topicId/study-guide", async (req: Request, res: Response): 
 router.get("/topics/:topicId/practice-exam", async (req: Request, res: Response): Promise<void> => {
   try {
     const topicId = parseInt(String(req.params.topicId));
-    const [topic] = await db.select().from(topicsTable).where(eq(topicsTable.id, topicId));
-    if (!topic) {
-      res.status(404).json({ error: "Topic not found" });
+    const [exam] = await db.select().from(practiceExamsTable).where(eq(practiceExamsTable.topicId, topicId));
+    if (!exam) {
+      res.status(404).json({ error: "Practice exam not found" });
       return;
     }
     const allQuestions = await db
       .select()
       .from(quizQuestionsTable)
       .where(eq(quizQuestionsTable.topicId, topicId));
-    const examQs = allQuestions.length >= 10 ? allQuestions.slice(0, 10) : allQuestions;
+    const examQs = allQuestions.slice(0, 10);
     res.json({
-      id: topicId,
-      topicId,
-      title: `${topic.name} Practice Exam`,
+      id: exam.id,
+      topicId: exam.topicId,
+      title: exam.title,
+      timeLimit: exam.timeLimit,
+      passingScore: exam.passingScore,
       questions: examQs.map(q => ({
         id: q.id,
         topicId: q.topicId,

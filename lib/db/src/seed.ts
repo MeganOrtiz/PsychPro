@@ -1,5 +1,5 @@
 import { db } from "./index";
-import { topicsTable, flashcardsTable, quizQuestionsTable, studyGuidesTable } from "./schema";
+import { topicsTable, flashcardsTable, quizQuestionsTable, studyGuidesTable, practiceExamsTable } from "./schema";
 import { sql } from "drizzle-orm";
 
 function mapQuizQuestions(rawQuestions: Array<{ topicId: number; question: string; options: string; correctAnswer: string; explanation: string; difficulty?: string }>) {
@@ -21,7 +21,7 @@ function mapQuizQuestions(rawQuestions: Array<{ topicId: number; question: strin
 async function seed() {
   console.log("Seeding neuroscience content...");
 
-  await db.execute(sql`TRUNCATE study_guides, quiz_questions, flashcards, progress, topics RESTART IDENTITY CASCADE`);
+  await db.execute(sql`TRUNCATE practice_exams, study_guides, quiz_questions, flashcards, progress, topics RESTART IDENTITY CASCADE`);
 
   const topics = await db.insert(topicsTable).values([
     { name: "Neuropsychology Overview", category: "Foundations", description: "Introduction to neuropsychology, brain-behavior relationships, and assessment approaches." },
@@ -1729,8 +1729,21 @@ Normal sleep involves cycling through NREM and REM sleep stages, with a full cyc
   await db.insert(studyGuidesTable).values(studyGuides);
   console.log(`Inserted ${studyGuides.length} study guides`);
 
+  // ---------------------------------------------------------------------------
+  // PRACTICE EXAMS — one per topic (29 total)
+  // ---------------------------------------------------------------------------
+  const practiceExams = (await db.select().from(topicsTable)).map(topic => ({
+    topicId: topic.id,
+    title: `${topic.name} Practice Exam`,
+    timeLimit: 600,
+    passingScore: 70,
+  }));
+
+  await db.insert(practiceExamsTable).values(practiceExams);
+  console.log(`Inserted ${practiceExams.length} practice exams`);
+
   console.log("Seeding complete!");
-  console.log(`Summary: ${flashcards.length} flashcards, ${quizQuestions.length} quiz questions, ${studyGuides.length} study guides`);
+  console.log(`Summary: ${flashcards.length} flashcards, ${quizQuestions.length} quiz questions, ${studyGuides.length} study guides, ${practiceExams.length} practice exams`);
 }
 
 seed()
