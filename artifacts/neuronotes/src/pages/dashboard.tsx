@@ -16,13 +16,13 @@ export default function DashboardPage() {
   const isOverLimit = summary && summary.usageCount >= summary.freeLimit && summary.subscriptionStatus === "free";
   const usagePercent = summary ? Math.min((summary.usageCount / summary.freeLimit) * 100, 100) : 0;
 
-  const firstName = user?.firstName || profile?.role || "Student";
+  const firstName = user?.firstName || user?.username || user?.emailAddresses?.[0]?.emailAddress?.split("@")[0] || "there";
 
   return (
     <div className="p-4 md:p-6 max-w-4xl mx-auto" data-testid="dashboard-page">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-foreground">Hello, {firstName} 👋</h1>
-        <p className="text-muted-foreground text-sm mt-1">Ready to study neuroscience today?</p>
+        <p className="text-muted-foreground text-sm mt-1">Let's get to it! 🧠</p>
       </div>
 
       {isOverLimit && (
