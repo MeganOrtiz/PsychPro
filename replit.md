@@ -57,7 +57,7 @@ A mobile-responsive neuroscience/neuropsychology study app.
 - Landing page with inline Clerk sign-in/sign-up
 - 4-step onboarding (role → goal → degree → referral)
 - Dashboard with progress summary
-- Topics browser (29 topics) with search/filter
+- Topics browser (15 consolidated topics) with search/filter
 - Flashcards with flip animation (click to reveal)
 - Multiple-choice quizzes with explanations
 - Scrollable study guides (custom Markdown renderer)
@@ -66,10 +66,29 @@ A mobile-responsive neuroscience/neuropsychology study app.
 - Subscription page with Stripe ($9.99/mo, $79.99/yr)
 - Freemium: 10 free interactions, then upgrade prompt
 
+### 15 Topics (Consolidated)
+1. Neuropsychology Overview
+2. Cell Biology & Neuron Anatomy
+3. Neurotransmitters & Synaptic Transmission
+4. Sensory Pathways
+5. **Sensory Systems** (Vision, Hearing, Touch, Smell, Taste, Vestibular, Motor Control — combined)
+6. Limbic System & Motivation
+7. Sleep & Circadian Rhythms
+8. Endocrine System & Reproduction
+9. Psychopharmacology
+10. **Psychological Disorders** (Psychopathology/Psychosis, Schizophrenia Spectrum/Bipolar/Depressive, Dissociative — combined)
+11. Personality Disorders
+12. ADHD & Medications
+13. Language Processing & Aphasia
+14. Apraxia & Agnosia
+15. **Neurocognitive Disorders** (Huntington's, Parkinson's, Lewy Body, TBI, HIV, Delirium, Cortical Pain — combined)
+
 ### DB Schema
 - `usersTable` — user profile, usage count, subscription status
-- `topicsTable` — 29 neuroscience topics
-- `flashcardsTable` — 94 flashcards across topics
-- `quizQuestionsTable` — 42 quiz questions with explanations
-- `studyGuidesTable` — 9 study guides with markdown content
+- `topicsTable` — 15 consolidated neuroscience/neuropsychology topics
+- `flashcardsTable` — 208 flashcards across topics
+- `quizQuestionsTable` — 156 quiz questions with explanations
+- `studyGuidesTable` — 15 study guides with markdown content
+- `practiceExamsTable` — 15 practice exams (one per topic)
+- `practiceExamQuestionsTable` — join table linking exams to 10 questions each
 - `progressTable` — practice exam scores per user/topic
