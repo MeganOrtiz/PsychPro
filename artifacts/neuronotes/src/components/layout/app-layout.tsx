@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useUser, UserButton } from "@clerk/react";
-import { Brain, LayoutDashboard, BookOpen, Layers, Trophy, CreditCard, Menu, X, ChevronRight } from "lucide-react";
+import { Brain, LayoutDashboard, BookOpen, Layers, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -10,7 +10,19 @@ const navItems = [
   { href: "/topics", label: "Topics", icon: BookOpen },
   { href: "/progress", label: "Progress", icon: Trophy },
   { href: "/subscription", label: "Upgrade", icon: CreditCard },
+  { href: "/feedback", label: "Feedback", icon: MessageSquare },
 ];
+
+function useIsAdmin() {
+  const [isAdmin, setIsAdmin] = useState(false);
+  useEffect(() => {
+    fetch("/api/feedback/is-admin")
+      .then((r) => r.json())
+      .then((d) => setIsAdmin(d.isAdmin ?? false))
+      .catch(() => setIsAdmin(false));
+  }, []);
+  return isAdmin;
+}
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -20,6 +32,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [location] = useLocation();
   const { user } = useUser();
+  const isAdmin = useIsAdmin();
 
   return (
     <div className="flex h-screen bg-background overflow-hidden">
@@ -73,6 +86,32 @@ export default function AppLayout({ children }: AppLayoutProps) {
               </Link>
             );
           })}
+
+          {isAdmin && (
+            <>
+              <div className="px-3 pt-3 pb-1">
+                <p className="text-xs font-semibold text-sidebar-foreground/40 uppercase tracking-wider">Admin</p>
+              </div>
+              <Link
+                href="/admin/feedback"
+                onClick={() => setSidebarOpen(false)}
+                data-testid="nav-admin-feedback"
+              >
+                <div
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors",
+                    location === "/admin/feedback"
+                      ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                      : "text-sidebar-foreground hover:bg-sidebar-accent"
+                  )}
+                >
+                  <ShieldCheck className="w-5 h-5 flex-shrink-0" />
+                  <span className="text-sm font-medium">Feedback Inbox</span>
+                  {location === "/admin/feedback" && <ChevronRight className="w-4 h-4 ml-auto" />}
+                </div>
+              </Link>
+            </>
+          )}
         </nav>
 
         <div className="p-4 border-t border-sidebar-border">

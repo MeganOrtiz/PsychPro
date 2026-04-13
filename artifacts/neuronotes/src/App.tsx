@@ -18,6 +18,8 @@ import StudyGuidePage from "@/pages/study-guide";
 import PracticeExamPage from "@/pages/practice-exam";
 import ProgressPage from "@/pages/progress";
 import SubscriptionPage from "@/pages/subscription";
+import FeedbackPage from "@/pages/feedback";
+import AdminFeedbackPage from "@/pages/admin-feedback";
 import NotFound from "@/pages/not-found";
 import AppLayout from "@/components/layout/app-layout";
 
@@ -83,6 +85,8 @@ function AuthRouter() {
             <Route path="/topics/:id/exam" component={PracticeExamPage} />
             <Route path="/progress" component={ProgressPage} />
             <Route path="/subscription" component={SubscriptionPage} />
+            <Route path="/feedback" component={FeedbackPage} />
+            <Route path="/admin/feedback" component={AdminFeedbackPage} />
             <Route component={NotFound} />
           </Switch>
         </AppLayout>

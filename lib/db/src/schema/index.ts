@@ -15,6 +15,7 @@ export const usersTable = pgTable("users", {
   onboardingComplete: boolean("onboarding_complete").notNull().default(false),
   usageCount: integer("usage_count").notNull().default(0),
   progressScore: integer("progress_score").notNull().default(0),
+  isAdmin: boolean("is_admin").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -108,3 +109,16 @@ export const practiceExamQuestionsTable = pgTable("practice_exam_questions", {
 export const insertPracticeExamQuestionSchema = createInsertSchema(practiceExamQuestionsTable).omit({ id: true });
 export type InsertPracticeExamQuestion = z.infer<typeof insertPracticeExamQuestionSchema>;
 export type PracticeExamQuestion = typeof practiceExamQuestionsTable.$inferSelect;
+
+export const feedbackTable = pgTable("feedback", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull().references(() => usersTable.id),
+  type: text("type").notNull().default("general"),
+  message: text("message").notNull(),
+  status: text("status").notNull().default("unread"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const insertFeedbackSchema = createInsertSchema(feedbackTable).omit({ id: true, createdAt: true });
+export type InsertFeedback = z.infer<typeof insertFeedbackSchema>;
+export type Feedback = typeof feedbackTable.$inferSelect;
