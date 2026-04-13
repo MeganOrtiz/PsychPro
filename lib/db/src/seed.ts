@@ -2,24 +2,8 @@ import { db } from "./index";
 import { topicsTable, flashcardsTable, quizQuestionsTable, studyGuidesTable, practiceExamsTable, practiceExamQuestionsTable } from "./schema";
 import { sql } from "drizzle-orm";
 
-function mapQuizQuestions(rawQuestions: Array<{ topicId: number; question: string; options: string; correctAnswer: string; explanation: string }>) {
-  return rawQuestions.map(rq => {
-    const opts: string[] = JSON.parse(rq.options);
-    return {
-      topicId: rq.topicId,
-      question: rq.question,
-      optionA: opts[0],
-      optionB: opts[1],
-      optionC: opts[2],
-      optionD: opts[3],
-      correctAnswer: rq.correctAnswer,
-      explanation: rq.explanation,
-    };
-  });
-}
-
 async function seed() {
-  console.log("Seeding NeuroNotes (15 consolidated topics)...");
+  console.log("Seeding NeuroNotes from course notes...");
 
   await db.execute(sql`TRUNCATE practice_exam_questions, practice_exams, study_guides, quiz_questions, flashcards, progress, topics RESTART IDENTITY CASCADE`);
 
@@ -38,1504 +22,1163 @@ async function seed() {
     { name: "ADHD & Medications", category: "Clinical", description: "ADHD neuroscience, DSM criteria, stimulant and nonstimulant medication classes, and treatment." },
     { name: "Language Processing & Aphasia", category: "Neuropsychology", description: "Language components, aphasia types, brain-language pathways, and speech disorders." },
     { name: "Apraxia & Agnosia", category: "Neuropsychology", description: "Motor planning disorders, perceptual recognition failures, types, and neuroanatomical bases." },
-    { name: "Neurocognitive Disorders", category: "Clinical", description: "Huntington's, Parkinson's, Lewy body dementia, TBI, HIV neurocognition, delirium, and cortical pain." },
+    { name: "Neurocognitive Disorders", category: "Clinical", description: "Alzheimer's, Parkinson's, Lewy body dementia, Huntington's, TBI, vascular dementia, HIV neurocognition, and capacity assessment." },
   ]).returning();
 
   const T: Record<string, number> = {};
   topics.forEach(t => { T[t.name] = t.id; });
 
   // ===========================================================================
-  // FLASHCARDS
+  // FLASHCARDS (14 per topic = 210 total)
   // ===========================================================================
   const flashcards = [
-    // ===== 1. NEUROPSYCHOLOGY OVERVIEW (12 cards) =====
-    { topicId: T["Neuropsychology Overview"], question: "What is neuropsychology?", answer: "The scientific study of brain-behavior relationships — how structural and functional brain properties influence cognition, emotion, and behavior.", difficulty: "easy" },
-    { topicId: T["Neuropsychology Overview"], question: "What is a double dissociation?", answer: "Evidence that two cognitive functions are independent: lesion A impairs function X but not Y, while lesion B impairs Y but not X.", difficulty: "hard" },
-    { topicId: T["Neuropsychology Overview"], question: "What is diaschisis?", answer: "Transient loss of function in brain regions remote from an injury site due to disrupted connections, even when those areas are structurally intact.", difficulty: "hard" },
-    { topicId: T["Neuropsychology Overview"], question: "What does the MMSE assess?", answer: "The Mini-Mental State Examination screens for cognitive impairment across orientation, registration, attention, recall, language, and visuoconstruction (max 30 points).", difficulty: "easy" },
-    { topicId: T["Neuropsychology Overview"], question: "What is ecological validity in neuropsychological testing?", answer: "The degree to which test performance predicts real-world functional outcomes in patients' daily lives.", difficulty: "medium" },
-    { topicId: T["Neuropsychology Overview"], question: "What is lateralization of brain function?", answer: "The tendency for some functions to be dominant in one hemisphere — e.g., language in left, visuospatial processing in right.", difficulty: "medium" },
-    { topicId: T["Neuropsychology Overview"], question: "What is the Halstead-Reitan Battery?", answer: "A comprehensive neuropsychological test battery assessing sensorimotor and cognitive functions used to detect and characterize brain damage.", difficulty: "medium" },
-    { topicId: T["Neuropsychology Overview"], question: "What is equipotentiality?", answer: "Lashley's concept that any part of cortical tissue can substitute for another in learning; contrasts with strict localization of function.", difficulty: "hard" },
-    { topicId: T["Neuropsychology Overview"], question: "What is the difference between anterograde and retrograde amnesia?", answer: "Anterograde: inability to form new memories after injury. Retrograde: loss of memories formed before the injury.", difficulty: "medium" },
-    { topicId: T["Neuropsychology Overview"], question: "What are the five cognitive domains typically assessed in neuropsychology?", answer: "Attention, memory, language, visuospatial ability, and executive function.", difficulty: "easy" },
-    { topicId: T["Neuropsychology Overview"], question: "What is the diathesis-stress model?", answer: "A model proposing that genetic vulnerability (diathesis) interacts with environmental stress to produce psychological disorders; neither alone is sufficient.", difficulty: "medium" },
-    { topicId: T["Neuropsychology Overview"], question: "What is an endophenotype?", answer: "An intermediate biological marker (e.g., cognitive or neuroimaging measure) that lies between genes and observable symptoms, helping to bridge genetic and behavioral levels.", difficulty: "hard" },
+    // ===== 1. NEUROPSYCHOLOGY OVERVIEW =====
+    { topicId: T["Neuropsychology Overview"], question: "What is neuropsychology?", answer: "The scientific study of brain-behavior relationships — how the structure and function of the brain relate to cognition, emotion, and behavior.", difficulty: "easy" },
+    { topicId: T["Neuropsychology Overview"], question: "What is the difference between a neurologist and a neuropsychologist?", answer: "A neurologist focuses on the medical/neurological aspects of brain disorders; a neuropsychologist focuses on cognition, emotion, and behavior using neuropsychological assessment.", difficulty: "easy" },
+    { topicId: T["Neuropsychology Overview"], question: "What is a lesion study and why is it important?", answer: "A lesion study examines how damage to a specific brain area affects behavior or cognition, helping establish causal brain-behavior relationships.", difficulty: "medium" },
+    { topicId: T["Neuropsychology Overview"], question: "What is a double dissociation?", answer: "Evidence that two functions are independent: Patient A has impairment in function X but not Y, while Patient B has impairment in Y but not X.", difficulty: "hard" },
+    { topicId: T["Neuropsychology Overview"], question: "What are the lobes of the cerebral cortex?", answer: "Frontal (executive, motor), Parietal (somatosensory, spatial), Temporal (auditory, memory, language), and Occipital (visual processing).", difficulty: "easy" },
+    { topicId: T["Neuropsychology Overview"], question: "What is the difference between contralateral and ipsilateral?", answer: "Contralateral = opposite side of the body (most motor/sensory pathways cross); Ipsilateral = same side.", difficulty: "easy" },
+    { topicId: T["Neuropsychology Overview"], question: "What are hold tests vs. no-hold tests in neuropsychology?", answer: "Hold tests (e.g., vocabulary, fund of knowledge) are resistant to brain damage and estimate premorbid IQ; no-hold tests (e.g., digit span, block design) are sensitive to impairment.", difficulty: "medium" },
+    { topicId: T["Neuropsychology Overview"], question: "What is diaschisis?", answer: "Transient loss of function in brain regions distant from an injury due to disrupted connections, even though those areas are structurally intact.", difficulty: "hard" },
+    { topicId: T["Neuropsychology Overview"], question: "What does the frontal lobe do?", answer: "Executive functions: planning, working memory, inhibition, set-shifting, reasoning, and motor control via the primary motor cortex.", difficulty: "easy" },
+    { topicId: T["Neuropsychology Overview"], question: "What does the parietal lobe do?", answer: "Integrates sensory information, spatial processing, visuospatial skills, somatosensory processing, and math abilities.", difficulty: "easy" },
+    { topicId: T["Neuropsychology Overview"], question: "What is the difference between statistically significant and clinically significant?", answer: "Statistically significant means the result is unlikely due to chance; clinically significant means the result is meaningful and impactful for patient functioning.", difficulty: "medium" },
+    { topicId: T["Neuropsychology Overview"], question: "What is cognitive reserve?", answer: "The brain's resilience to damage built up through education, intellectual activity, and social engagement — allowing some individuals to tolerate more pathology before symptoms appear.", difficulty: "medium" },
+    { topicId: T["Neuropsychology Overview"], question: "What is a base rate in neuropsychological assessment?", answer: "The frequency of a finding in the general population — used to determine whether a low score is truly abnormal or commonly seen in healthy individuals.", difficulty: "hard" },
+    { topicId: T["Neuropsychology Overview"], question: "What is ecological validity?", answer: "The degree to which neuropsychological test performance predicts real-world, everyday functional abilities.", difficulty: "medium" },
 
-    // ===== 2. CELL BIOLOGY & NEURON ANATOMY (12 cards) =====
-    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What is the resting membrane potential of a typical neuron?", answer: "Approximately -70 mV, maintained by the Na+/K+ ATPase pump and differential ion permeability.", difficulty: "easy" },
-    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What is an action potential?", answer: "An all-or-none electrical signal generated at the axon hillock when membrane potential reaches threshold (~-55 mV), propagating down the axon.", difficulty: "easy" },
-    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What is the role of myelin?", answer: "Myelin insulates the axon and enables saltatory conduction — the action potential jumps between nodes of Ranvier, greatly increasing conduction velocity.", difficulty: "medium" },
-    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What is spatial summation?", answer: "Integration of simultaneous inputs from multiple synaptic locations; the combined effect determines whether the postsynaptic neuron fires.", difficulty: "medium" },
-    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What is temporal summation?", answer: "Integration of repeated inputs arriving in rapid succession at the same synapse; each successive EPSP adds to the previous one.", difficulty: "medium" },
-    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What causes depolarization during an action potential?", answer: "Rapid influx of Na+ through voltage-gated sodium channels, causing the membrane potential to rise from -70 mV toward +40 mV.", difficulty: "medium" },
-    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What is the refractory period?", answer: "A period after an action potential (absolute then relative) during which a neuron cannot (absolute) or requires greater than normal stimulation (relative) to fire again.", difficulty: "medium" },
-    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What are the main types of glial cells?", answer: "Astrocytes (support, synaptogenesis), oligodendrocytes (CNS myelin), Schwann cells (PNS myelin), microglia (immune), and ependymal cells (CSF lining).", difficulty: "medium" },
-    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What is the all-or-none law?", answer: "A neuron either fires a full action potential or doesn't fire at all; the size of the AP does not vary with stimulus intensity (rate law encodes intensity).", difficulty: "easy" },
-    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What is an EPSP?", answer: "An Excitatory PostSynaptic Potential — a graded depolarization that moves the membrane potential toward threshold, increasing the likelihood of firing.", difficulty: "medium" },
-    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What is an IPSP?", answer: "An Inhibitory PostSynaptic Potential — a graded hyperpolarization that moves membrane potential away from threshold, reducing the likelihood of firing.", difficulty: "medium" },
-    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What is the role of voltage-gated K+ channels during repolarization?", answer: "They open after Na+ channels inactivate, allowing K+ to flow out, restoring the negative resting membrane potential.", difficulty: "hard" },
+    // ===== 2. CELL BIOLOGY & NEURON ANATOMY =====
+    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What are the three main parts of a neuron?", answer: "Cell body (soma), dendrites (receive signals), and axon (transmit signals to other neurons).", difficulty: "easy" },
+    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What is the resting membrane potential?", answer: "Approximately -70 mV, maintained by the Na+/K+ ATPase pump and selectively permeable membranes; the inside of the cell is more negative than the outside.", difficulty: "easy" },
+    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What is an action potential?", answer: "An all-or-none electrical signal triggered at the axon hillock when membrane potential reaches threshold (~-55 mV), propagating down the axon.", difficulty: "easy" },
+    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What causes depolarization during an action potential?", answer: "Rapid influx of Na+ through voltage-gated sodium channels, driving the membrane potential from -70 mV toward +40 mV.", difficulty: "medium" },
+    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What is saltatory conduction?", answer: "The action potential jumps between nodes of Ranvier along a myelinated axon, greatly increasing conduction velocity.", difficulty: "medium" },
+    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What are oligodendrocytes?", answer: "Glial cells in the CNS that produce the myelin sheath; one oligodendrocyte can myelinate multiple axons.", difficulty: "medium" },
+    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What is the axon hillock?", answer: "The region where the axon emerges from the soma; the site of action potential initiation because it has the highest density of voltage-gated Na+ channels.", difficulty: "medium" },
+    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What is the all-or-none law?", answer: "A neuron fires a full-sized action potential or does not fire at all — the amplitude does not vary with stimulus strength; intensity is coded by firing rate.", difficulty: "easy" },
+    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What is spatial summation?", answer: "Integration of simultaneous excitatory and inhibitory inputs from multiple synaptic sites; the combined effect determines whether the postsynaptic neuron reaches threshold.", difficulty: "medium" },
+    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What is temporal summation?", answer: "Integration of rapidly successive inputs at the same synapse; each postsynaptic potential adds before the previous one decays.", difficulty: "medium" },
+    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What is the absolute refractory period?", answer: "The period immediately after an action potential during which no stimulus, regardless of strength, can trigger another action potential — Na+ channels are inactivated.", difficulty: "medium" },
+    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What are astrocytes?", answer: "The most numerous glial cells; they maintain the blood-brain barrier, provide metabolic support, regulate extracellular ion concentrations, and play a role in synaptogenesis.", difficulty: "medium" },
+    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What is an EPSP?", answer: "An Excitatory PostSynaptic Potential — a graded depolarization that moves the membrane potential toward threshold, increasing the probability of firing.", difficulty: "easy" },
+    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What is an IPSP?", answer: "An Inhibitory PostSynaptic Potential — a graded hyperpolarization that moves the membrane potential away from threshold, decreasing the probability of firing.", difficulty: "easy" },
 
-    // ===== 3. NEUROTRANSMITTERS & SYNAPTIC TRANSMISSION (12 cards) =====
-    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "What is the major excitatory neurotransmitter in the brain?", answer: "Glutamate — acts on AMPA, NMDA, and kainate receptors; involved in nearly 90% of fast excitatory transmission.", difficulty: "easy" },
-    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "What is the major inhibitory neurotransmitter in the brain?", answer: "GABA (gamma-aminobutyric acid) — hyperpolarizes neurons by opening Cl- channels; precursor is glutamate.", difficulty: "easy" },
-    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "What is the difference between ionotropic and metabotropic receptors?", answer: "Ionotropic receptors are ligand-gated ion channels (fast, direct). Metabotropic (GPCRs) act through second messengers (slower, modulatory).", difficulty: "medium" },
-    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "What are monoamine neurotransmitters?", answer: "Catecholamines (dopamine, norepinephrine, epinephrine) and indolamines (serotonin). They share a single amine group in their structure.", difficulty: "medium" },
-    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "What is reuptake?", answer: "The process by which neurotransmitters are transported back into the presynaptic terminal by transporter proteins, terminating their synaptic action.", difficulty: "easy" },
-    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "What is acetylcholine's role at the neuromuscular junction?", answer: "ACh is released from motor neurons, binds nicotinic receptors on muscle fibers, causing depolarization and muscle contraction.", difficulty: "medium" },
-    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "What is exocytosis in the context of synaptic transmission?", answer: "The process by which synaptic vesicles fuse with the presynaptic membrane and release neurotransmitter into the synaptic cleft in response to Ca2+ influx.", difficulty: "medium" },
-    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "What are neuropeptides?", answer: "Larger protein-derived neurotransmitters (e.g., substance P, endorphins, NPY) that often act as neuromodulators, altering the effect of classical neurotransmitters.", difficulty: "medium" },
-    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "What is a drug agonist vs antagonist?", answer: "An agonist mimics a neurotransmitter and activates its receptor. An antagonist blocks the receptor, preventing neurotransmitter binding.", difficulty: "easy" },
-    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "What are the three major dopamine pathways?", answer: "Mesolimbic (reward/pleasure), mesocortical (cognition/attention), and nigrostriatal (motor control/movement).", difficulty: "medium" },
-    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "What is anandamide?", answer: "An endogenous cannabinoid neurotransmitter (endocannabinoid) that acts on CB1 and CB2 receptors; involved in pain, mood, memory, and appetite regulation.", difficulty: "hard" },
-    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "What is enzymatic degradation of neurotransmitters?", answer: "Breakdown of neurotransmitters by enzymes in the synaptic cleft — e.g., acetylcholinesterase breaks down ACh; MAO degrades monoamines.", difficulty: "medium" },
+    // ===== 3. NEUROTRANSMITTERS & SYNAPTIC TRANSMISSION =====
+    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "What are the main monoamine neurotransmitters?", answer: "Dopamine, norepinephrine, epinephrine (catecholamines), and serotonin (indolamine) — synthesized from amino acid precursors.", difficulty: "medium" },
+    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "What is glutamate's role in the brain?", answer: "Glutamate is the primary excitatory neurotransmitter — it acts on AMPA, NMDA, and kainate receptors and is involved in ~90% of fast excitatory transmission.", difficulty: "easy" },
+    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "What is GABA's role in the brain?", answer: "GABA (gamma-aminobutyric acid) is the primary inhibitory neurotransmitter; GABA-A receptors are ionotropic (Cl- channel) and GABA-B are metabotropic.", difficulty: "easy" },
+    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "What is the difference between ionotropic and metabotropic receptors?", answer: "Ionotropic receptors are ion channels — binding causes immediate ion flow; metabotropic receptors are G-protein coupled and have slower, longer-lasting effects via second messengers.", difficulty: "medium" },
+    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "What is reuptake?", answer: "The process by which the presynaptic neuron takes back released neurotransmitter from the synapse, terminating its action — targeted by many antidepressants (e.g., SSRIs block serotonin reuptake).", difficulty: "easy" },
+    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "What does dopamine do in the reward pathway?", answer: "Dopamine in the mesolimbic system (VTA → nucleus accumbens) signals reward prediction and reinforcement, driving motivation and reward-seeking behavior.", difficulty: "medium" },
+    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "What is the role of acetylcholine in the nervous system?", answer: "Acetylcholine is the neurotransmitter at the neuromuscular junction, in the ANS, and is key to memory/learning (especially in hippocampus) — loss of cholinergic neurons is linked to Alzheimer's.", difficulty: "medium" },
+    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "What is the dopamine hypothesis of schizophrenia?", answer: "Schizophrenia involves excess dopamine activity in the mesolimbic pathway (positive symptoms) and reduced activity in the mesocortical pathway (negative symptoms).", difficulty: "hard" },
+    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "What are neuropeptides?", answer: "Larger, slower-acting signaling molecules (e.g., endorphins, substance P, oxytocin) that often co-release with classical neurotransmitters and modulate neural activity.", difficulty: "medium" },
+    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "What is norepinephrine's role in the brain?", answer: "Norepinephrine (from locus coeruleus) regulates arousal, attention, and the fight-or-flight response; implicated in depression, anxiety, and PTSD.", difficulty: "medium" },
+    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "What is an autoreceptor?", answer: "A presynaptic receptor that detects the neuron's own released neurotransmitter and provides feedback — typically inhibiting further release (self-regulation).", difficulty: "hard" },
+    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "What is the NMDA receptor and why is it important?", answer: "An ionotropic glutamate receptor permeable to Ca2+ that requires both ligand binding AND membrane depolarization to open (coincidence detector) — critical for LTP and memory formation.", difficulty: "hard" },
+    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "What is long-term potentiation (LTP)?", answer: "A persistent strengthening of synapses based on repeated simultaneous activation — a cellular mechanism underlying learning and memory, dependent on NMDA receptor activation.", difficulty: "hard" },
+    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "What is serotonin's role in behavior?", answer: "Serotonin (from raphe nuclei) regulates mood, sleep, appetite, and impulse control; low serotonin is linked to depression and anxiety.", difficulty: "easy" },
 
-    // ===== 4. SENSORY PATHWAYS (12 cards) =====
-    { topicId: T["Sensory Pathways"], question: "What does the dorsal column-medial lemniscal pathway carry?", answer: "Fine touch, vibration, and proprioception. Decussates in the medulla (gracile and cuneate nuclei), then ascends to the ventral posterolateral thalamus.", difficulty: "medium" },
-    { topicId: T["Sensory Pathways"], question: "What does the anterolateral (spinothalamic) pathway carry?", answer: "Pain and temperature. Decussates in the spinal cord within 1-2 segments of entry, then ascends to the thalamus.", difficulty: "medium" },
-    { topicId: T["Sensory Pathways"], question: "What is the corticospinal tract?", answer: "The primary motor pathway from cortex through medullary pyramids (where most fibers cross) to spinal motor neurons; controls voluntary distal limb movement.", difficulty: "medium" },
-    { topicId: T["Sensory Pathways"], question: "What is the difference between UMN and LMN lesions?", answer: "UMN lesions cause spasticity, hyperreflexia, and Babinski sign. LMN lesions cause flaccidity, hyporeflexia, fasciculations, and muscle atrophy.", difficulty: "hard" },
-    { topicId: T["Sensory Pathways"], question: "What spinal cord levels contain the lateral horn?", answer: "T1-L2 (sympathetic preganglionic neurons) and S2-S4 (parasympathetic preganglionic neurons).", difficulty: "hard" },
-    { topicId: T["Sensory Pathways"], question: "What is the gray matter organization of the spinal cord?", answer: "Dorsal horns (sensory input), ventral horns (motor output), and lateral horns (autonomic). The H-shaped gray matter is surrounded by white matter tracts.", difficulty: "medium" },
-    { topicId: T["Sensory Pathways"], question: "What is the thalamus's role in sensory processing?", answer: "The thalamus acts as the primary sensory relay station — all sensory information except olfaction passes through it before reaching the cortex.", difficulty: "easy" },
-    { topicId: T["Sensory Pathways"], question: "What is a dermatome?", answer: "A skin region innervated by a single spinal nerve root — key examples: C6=thumb/index, T4=nipple, T10=umbilicus, L4=medial leg/great toe, S1=lateral foot.", difficulty: "medium" },
-    { topicId: T["Sensory Pathways"], question: "What is the stretch reflex?", answer: "A monosynaptic reflex: muscle spindle Ia afferent → α-motor neuron → same muscle. It detects and resists muscle stretch.", difficulty: "medium" },
-    { topicId: T["Sensory Pathways"], question: "What is reciprocal innervation?", answer: "When a flexor muscle contracts, its antagonist extensor is simultaneously inhibited — coordinated by interneurons in the spinal cord.", difficulty: "medium" },
-    { topicId: T["Sensory Pathways"], question: "What is the conus medullaris?", answer: "The tapered end of the spinal cord, located at approximately L1-L2 in adults.", difficulty: "hard" },
-    { topicId: T["Sensory Pathways"], question: "What is Brown-Séquard syndrome?", answer: "A hemisection of the spinal cord causing ipsilateral loss of motor function and proprioception, and contralateral loss of pain and temperature below the lesion.", difficulty: "hard" },
+    // ===== 4. SENSORY PATHWAYS =====
+    { topicId: T["Sensory Pathways"], question: "What is the dorsal column-medial lemniscal pathway?", answer: "An ascending sensory pathway carrying fine touch, vibration, and proprioception — ipsilateral in spinal cord, crosses at the medulla, and projects to the somatosensory cortex.", difficulty: "hard" },
+    { topicId: T["Sensory Pathways"], question: "What does the spinothalamic tract carry?", answer: "Pain, temperature, and crude touch — it crosses immediately in the spinal cord and ascends contralaterally to the thalamus.", difficulty: "medium" },
+    { topicId: T["Sensory Pathways"], question: "What is the corticospinal tract?", answer: "The primary descending motor pathway from motor cortex to spinal motor neurons; crosses in the medulla (pyramidal decussation), controlling voluntary movement of the contralateral body.", difficulty: "medium" },
+    { topicId: T["Sensory Pathways"], question: "What is a dermatome?", answer: "A strip of skin innervated by a single spinal nerve root — dermatome maps are used clinically to localize spinal cord or nerve injuries.", difficulty: "easy" },
+    { topicId: T["Sensory Pathways"], question: "What is the difference between UMN and LMN lesions?", answer: "Upper motor neuron (UMN) lesions cause spasticity and hyperreflexia; lower motor neuron (LMN) lesions cause flaccidity, muscle wasting, and hyporeflexia.", difficulty: "hard" },
+    { topicId: T["Sensory Pathways"], question: "Where does the dorsal column pathway cross?", answer: "In the medulla (at the nucleus gracilis and cuneatus level) — not in the spinal cord. This is why ipsilateral column deficits indicate spinal pathology.", difficulty: "hard" },
+    { topicId: T["Sensory Pathways"], question: "What is the role of the thalamus in sensory processing?", answer: "The thalamus acts as the relay station for almost all sensory information (except olfaction) en route to the cortex; the lateral geniculate nucleus relays visual; medial geniculate relays auditory.", difficulty: "medium" },
+    { topicId: T["Sensory Pathways"], question: "What does the cerebellum do?", answer: "The cerebellum coordinates movement, balance, and fine motor control — it compares intended vs. actual movement and makes corrections; damage causes ataxia.", difficulty: "easy" },
+    { topicId: T["Sensory Pathways"], question: "What is the reticular activating system (RAS)?", answer: "A network in the brainstem that regulates arousal, consciousness, and attention by sending activating signals to the cortex — damage causes coma or reduced consciousness.", difficulty: "medium" },
+    { topicId: T["Sensory Pathways"], question: "What is Brown-Séquard syndrome?", answer: "Hemisection of the spinal cord causing ipsilateral loss of fine touch and proprioception (dorsal column) and contralateral loss of pain and temperature (spinothalamic) below the lesion.", difficulty: "hard" },
+    { topicId: T["Sensory Pathways"], question: "What are the three meninges layers?", answer: "Dura mater (outermost), arachnoid mater (middle), and pia mater (innermost, closely follows brain surface). CSF flows in the subarachnoid space.", difficulty: "easy" },
+    { topicId: T["Sensory Pathways"], question: "What is the function of the basal ganglia?", answer: "A group of subcortical nuclei involved in voluntary movement initiation, habit learning, and motor sequence control; degeneration causes Parkinson's and Huntington's disease.", difficulty: "medium" },
+    { topicId: T["Sensory Pathways"], question: "What is the somatotopic organization of the motor cortex?", answer: "The motor cortex is organized as a 'motor homunculus' — different body regions are mapped spatially, with disproportionately large representations for the hands, face, and tongue.", difficulty: "medium" },
+    { topicId: T["Sensory Pathways"], question: "What is proprioception?", answer: "The sense of body position in space — carried by muscle spindles and Golgi tendon organs, transmitted through the dorsal columns, critical for movement coordination.", difficulty: "easy" },
 
-    // ===== 5. SENSORY SYSTEMS (22 cards) =====
-    { topicId: T["Sensory Systems"], question: "What is the visible light spectrum range?", answer: "Approximately 380 to 760 nanometers.", difficulty: "easy" },
-    { topicId: T["Sensory Systems"], question: "What is the difference between rods and cones?", answer: "Rods are highly sensitive, concentrated in the periphery, and detect black-and-white in low light. Cones are concentrated in the fovea, detect color, and require bright light.", difficulty: "easy" },
-    { topicId: T["Sensory Systems"], question: "What is the retinal-geniculate-striate pathway?", answer: "The primary visual pathway: retina → optic nerve → optic chiasm → lateral geniculate nucleus (LGN) in thalamus → primary visual cortex (V1, striate cortex).", difficulty: "medium" },
-    { topicId: T["Sensory Systems"], question: "What are the dorsal and ventral visual streams?", answer: "Dorsal (WHERE): location/movement, visuospatial, unconscious, damage causes neglect. Ventral (WHAT): object recognition, color/form, conscious, damage causes visual agnosia.", difficulty: "medium" },
-    { topicId: T["Sensory Systems"], question: "What is blindsight?", answer: "The ability to respond to visual stimuli in the blind field without conscious awareness — due to residual subcortical visual processing after V1 damage.", difficulty: "hard" },
-    { topicId: T["Sensory Systems"], question: "What is the basilar membrane's role in hearing?", answer: "It vibrates in response to sound — different frequencies activate different regions (tonotopic map); high frequencies at the base, low at the apex.", difficulty: "medium" },
-    { topicId: T["Sensory Systems"], question: "What is the auditory pathway from cochlea to cortex?", answer: "Auditory nerve (CN VIII) → cochlear nuclei (pons/medulla) → superior olives → inferior colliculus (midbrain) → medial geniculate nucleus (thalamus) → primary auditory cortex (temporal lobe).", difficulty: "medium" },
-    { topicId: T["Sensory Systems"], question: "What are the three types of cutaneous mechanoreceptors and their functions?", answer: "Pacinian corpuscles (deep vibration, rapidly adapting), Meissner's corpuscles (fine touch, rapidly adapting), Merkel's disks (surface features, slowly adapting), Ruffini endings (skin stretch, slowly adapting).", difficulty: "hard" },
-    { topicId: T["Sensory Systems"], question: "What is gate control theory of pain?", answer: "Melzack & Wall's theory that non-painful sensory input (touch/vibration) activates inhibitory interneurons in the dorsal horn that 'close the gate' to pain transmission.", difficulty: "medium" },
-    { topicId: T["Sensory Systems"], question: "What is the olfactory pathway unique feature?", answer: "Olfaction bypasses the thalamus — olfactory signals go directly from the olfactory bulb to piriform cortex, amygdala, and entorhinal cortex.", difficulty: "medium" },
-    { topicId: T["Sensory Systems"], question: "What are the five basic tastes?", answer: "Sweet, salty, sour, bitter, and umami. Taste receptors on papillae send signals via CN VII, IX, X to the solitary nucleus, then thalamus, then gustatory cortex.", difficulty: "easy" },
-    { topicId: T["Sensory Systems"], question: "What is the vestibular system's primary role?", answer: "Detecting head position and movement. The otolith organs (saccule and utricle) detect linear acceleration; semicircular canals detect rotational acceleration.", difficulty: "medium" },
-    { topicId: T["Sensory Systems"], question: "What is the posterior parietal cortex's role in motor control?", answer: "Integrates visual, auditory, and somatosensory input to represent body position in space; sends output to prefrontal cortex for movement initiation.", difficulty: "hard" },
-    { topicId: T["Sensory Systems"], question: "What is trichromatic color vision theory?", answer: "Young-Helmholtz theory: three types of cones (short/medium/long wavelength) combine their responses to produce color perception.", difficulty: "medium" },
-    { topicId: T["Sensory Systems"], question: "What is the opponent-process theory of color vision?", answer: "Hering's theory: color is encoded as opponent pairs (red-green, blue-yellow, black-white), explaining afterimages and color blindness patterns.", difficulty: "medium" },
-    { topicId: T["Sensory Systems"], question: "What is lateral inhibition?", answer: "Inhibition of neighboring neurons by horizontal cells in the retina, enhancing contrast and sharpening edges (Mach band effect).", difficulty: "medium" },
-    { topicId: T["Sensory Systems"], question: "What is stereognosis?", answer: "The ability to identify objects by touch alone; requires intact somatosensory cortex. Loss is called astereognosia.", difficulty: "medium" },
-    { topicId: T["Sensory Systems"], question: "What is the supplementary motor area (SMA)?", answer: "A cortical region active during motor imagery and planning of complex movement sequences; involved in inhibitory control between tasks.", difficulty: "hard" },
-    { topicId: T["Sensory Systems"], question: "What is the role of the cerebellum in motor control?", answer: "Coordinates timing and precision of movement, compares intended vs actual movement, corrects errors, and is involved in motor learning.", difficulty: "medium" },
-    { topicId: T["Sensory Systems"], question: "What is prosopagnosia?", answer: "Inability to recognize faces; caused by damage to the fusiform face area in the ventral stream (temporal-occipital junction).", difficulty: "medium" },
-    { topicId: T["Sensory Systems"], question: "What is akinetopsia?", answer: "Inability to perceive visual motion; caused by damage to area MT/V5 in the medial temporal lobe.", difficulty: "hard" },
-    { topicId: T["Sensory Systems"], question: "What is the medial superior olive's role in hearing?", answer: "Detects interaural time differences (microsecond arrival-time delays between ears) for sound localization in the horizontal plane.", difficulty: "hard" },
+    // ===== 5. SENSORY SYSTEMS =====
+    { topicId: T["Sensory Systems"], question: "What is the pathway from retina to visual cortex?", answer: "Retina → optic nerve → optic chiasm (nasal fibers cross) → lateral geniculate nucleus (LGN) of thalamus → primary visual cortex (V1, occipital lobe).", difficulty: "medium" },
+    { topicId: T["Sensory Systems"], question: "What is the 'what' vs. 'where' visual pathway?", answer: "The ventral stream (occipitotemporal) identifies WHAT an object is; the dorsal stream (occipitoparietal) determines WHERE it is and guides action.", difficulty: "medium" },
+    { topicId: T["Sensory Systems"], question: "What is the tonotopic organization of the auditory system?", answer: "Different frequencies are processed at different locations along the basilar membrane of the cochlea — high frequencies at the base, low frequencies at the apex.", difficulty: "hard" },
+    { topicId: T["Sensory Systems"], question: "Where is the primary auditory cortex located?", answer: "In the superior temporal gyrus (Heschl's gyri), Brodmann areas 41 and 42, in the temporal lobe — it receives input from the medial geniculate nucleus of the thalamus.", difficulty: "medium" },
+    { topicId: T["Sensory Systems"], question: "What is the vestibular system's function?", answer: "Detects head position and movement (acceleration and gravity) using the semicircular canals (rotation) and otolith organs (linear acceleration) — critical for balance and eye stabilization.", difficulty: "medium" },
+    { topicId: T["Sensory Systems"], question: "What is the somatosensory cortex and where is it?", answer: "The primary somatosensory cortex (S1) is located in the postcentral gyrus of the parietal lobe — it processes touch, pain, temperature, and proprioception in a somatotopic map.", difficulty: "easy" },
+    { topicId: T["Sensory Systems"], question: "What is pain gate theory?", answer: "Melzack and Wall's theory that non-painful stimuli (large fiber input) can 'close the gate' in the dorsal horn, reducing pain signal transmission to the brain.", difficulty: "hard" },
+    { topicId: T["Sensory Systems"], question: "What is the olfactory system's unique anatomical feature?", answer: "Olfaction is the only sense that does not relay through the thalamus — olfactory signals go directly from the olfactory bulb to the piriform cortex and limbic system.", difficulty: "hard" },
+    { topicId: T["Sensory Systems"], question: "What is the role of the superior colliculus?", answer: "A midbrain structure that controls reflexive eye movements (saccades) and visual orienting responses toward sudden stimuli.", difficulty: "medium" },
+    { topicId: T["Sensory Systems"], question: "What are the different types of skin mechanoreceptors?", answer: "Meissner's corpuscles (light touch, texture), Pacinian corpuscles (vibration, deep pressure), Merkel's discs (sustained pressure, shape), and Ruffini endings (skin stretch).", difficulty: "hard" },
+    { topicId: T["Sensory Systems"], question: "What is achromatopsia?", answer: "The inability to perceive color — caused by damage to V4 in the ventral visual stream (color processing area).", difficulty: "medium" },
+    { topicId: T["Sensory Systems"], question: "What is homonymous hemianopia?", answer: "Loss of vision in the same half of the visual field in both eyes — caused by damage to the optic tract or visual cortex on one side (e.g., right cortex lesion → left visual field loss).", difficulty: "medium" },
+    { topicId: T["Sensory Systems"], question: "What is the function of the cerebellum in motor control?", answer: "The cerebellum fine-tunes movement timing and coordination by comparing intended movement (efference copy) with actual movement feedback — lesions cause ataxia, dysmetria, and intention tremor.", difficulty: "medium" },
+    { topicId: T["Sensory Systems"], question: "What is the dorsal vs. ventral visual stream?", answer: "Dorsal stream: 'where/how' pathway (occipital → parietal), guides movement; Ventral stream: 'what' pathway (occipital → temporal), identifies objects, faces, and color.", difficulty: "medium" },
 
-    // ===== 6. LIMBIC SYSTEM & MOTIVATION (12 cards) =====
-    { topicId: T["Limbic System & Motivation"], question: "What structures form the limbic system?", answer: "Amygdala, hippocampus, hypothalamus, thalamus (anterior nuclei), cingulate cortex, and fornix — involved in emotion, memory, and motivation.", difficulty: "easy" },
-    { topicId: T["Limbic System & Motivation"], question: "What is the mesolimbic dopamine pathway's role in reward?", answer: "It mediates wanting/motivation (not just liking); activated by both rewarding and aversive stimuli; driven by prediction and prediction errors.", difficulty: "medium" },
-    { topicId: T["Limbic System & Motivation"], question: "What are the three aspects of reward?", answer: "Liking (hedonic experience), wanting (incentive motivation), and learning (associating cues with rewards). They are dissociable.", difficulty: "medium" },
-    { topicId: T["Limbic System & Motivation"], question: "What is ghrelin?", answer: "A stomach-secreted hormone that stimulates appetite; rises before meals and falls after eating; acts on the lateral hypothalamus.", difficulty: "medium" },
-    { topicId: T["Limbic System & Motivation"], question: "What is leptin?", answer: "A hormone secreted by adipose tissue that suppresses appetite and increases metabolic rate; acts on the arcuate nucleus of the ventromedial hypothalamus.", difficulty: "medium" },
-    { topicId: T["Limbic System & Motivation"], question: "What is the set point theory of body weight?", answer: "The body maintains a defended weight 'set point' via negative feedback — when weight drops, hunger increases and metabolism decreases.", difficulty: "easy" },
-    { topicId: T["Limbic System & Motivation"], question: "What is sensory-specific satiety?", answer: "The decrease in pleasure from a particular food as it is consumed, while appetite for other foods remains — contributes to dietary variety.", difficulty: "medium" },
-    { topicId: T["Limbic System & Motivation"], question: "What is anorexia nervosa's neural profile?", answer: "Associated with anhedonia, low serotonin, altered mesolimbic dopamine (reward deficiency), and hyperactivity of the anterior insula (body image distortion).", difficulty: "hard" },
-    { topicId: T["Limbic System & Motivation"], question: "What is the nucleus accumbens?", answer: "A key structure in the mesolimbic reward circuit; rostral part mediates appetitive behavior, caudal part mediates avoidance.", difficulty: "medium" },
-    { topicId: T["Limbic System & Motivation"], question: "What is glucoprivation?", answer: "A fall in available glucose to brain cells (not just blood glucose) that powerfully triggers feeding behavior via lateral hypothalamus and brainstem glucose sensors.", difficulty: "hard" },
-    { topicId: T["Limbic System & Motivation"], question: "What is Prader-Willi syndrome?", answer: "A genetic disorder characterized by insatiable hunger (hyperphagia), obesity, intellectual disability, and low muscle tone; caused by chromosome 15 defect.", difficulty: "medium" },
-    { topicId: T["Limbic System & Motivation"], question: "What is the positive-incentive perspective on eating?", answer: "We eat not just due to deprivation but because food has incentive value (anticipated pleasure); anticipation of taste and reward drives food-seeking behavior.", difficulty: "medium" },
+    // ===== 6. LIMBIC SYSTEM & MOTIVATION =====
+    { topicId: T["Limbic System & Motivation"], question: "What structures make up the limbic system?", answer: "Hippocampus, amygdala, cingulate cortex, parahippocampal gyrus, fornix, mammillary bodies, thalamus, and hypothalamus — together they regulate emotion and memory.", difficulty: "medium" },
+    { topicId: T["Limbic System & Motivation"], question: "What is the role of the hippocampus?", answer: "The hippocampus is critical for forming new declarative memories (episodic and semantic) and spatial navigation — bilateral damage (like in H.M.) causes severe anterograde amnesia.", difficulty: "easy" },
+    { topicId: T["Limbic System & Motivation"], question: "What does the amygdala do?", answer: "The amygdala processes emotional significance of stimuli, especially fear and threat — it modulates memory consolidation for emotionally charged events and drives fear conditioning.", difficulty: "easy" },
+    { topicId: T["Limbic System & Motivation"], question: "What is the Papez circuit?", answer: "A circuit linking hippocampus → fornix → mammillary bodies → thalamus → cingulate cortex → entorhinal cortex → hippocampus, proposed by James Papez as the basis of emotional experience.", difficulty: "hard" },
+    { topicId: T["Limbic System & Motivation"], question: "What is the role of the hypothalamus?", answer: "The hypothalamus regulates hunger, thirst, body temperature, sexual behavior, circadian rhythms, and the HPA stress axis — it links the nervous and endocrine systems.", difficulty: "medium" },
+    { topicId: T["Limbic System & Motivation"], question: "What is the mesolimbic dopamine pathway?", answer: "The reward pathway from the VTA (ventral tegmental area) to the nucleus accumbens — drives motivation, reward, and pleasure; disrupted in addiction and schizophrenia.", difficulty: "medium" },
+    { topicId: T["Limbic System & Motivation"], question: "What are the lateral and ventromedial hypothalamus's roles in hunger?", answer: "Lateral hypothalamus is the 'hunger center' (lesion → aphagia/starvation); ventromedial hypothalamus is the 'satiety center' (lesion → hyperphagia and obesity).", difficulty: "hard" },
+    { topicId: T["Limbic System & Motivation"], question: "What is the role of orexin/hypocretin?", answer: "Neuropeptides from the lateral hypothalamus that promote wakefulness and regulate appetite; loss of orexin neurons causes narcolepsy.", difficulty: "hard" },
+    { topicId: T["Limbic System & Motivation"], question: "What are the four Fs of hypothalamic function?", answer: "Fighting, Fleeing, Feeding, and Fornicating — the four basic drives regulated by the hypothalamus.", difficulty: "easy" },
+    { topicId: T["Limbic System & Motivation"], question: "What is Klüver-Bucy syndrome?", answer: "A syndrome caused by bilateral amygdala and temporal lobe lesions; features include hypersexuality, hyperorality, emotional blunting, visual agnosia, and memory impairment.", difficulty: "hard" },
+    { topicId: T["Limbic System & Motivation"], question: "What is the role of the cingulate cortex?", answer: "The anterior cingulate cortex integrates emotional and cognitive processing, plays a role in error monitoring, decision-making, and pain perception.", difficulty: "medium" },
+    { topicId: T["Limbic System & Motivation"], question: "What is intrinsic vs. extrinsic motivation?", answer: "Intrinsic motivation comes from internal rewards (e.g., enjoyment); extrinsic motivation comes from external rewards (e.g., money). Dopamine underlies both but is especially linked to reward anticipation.", difficulty: "easy" },
+    { topicId: T["Limbic System & Motivation"], question: "What neurotransmitter is most associated with the reward system?", answer: "Dopamine — released in the nucleus accumbens in response to rewarding stimuli and the anticipation of reward; drives approach behavior and learning.", difficulty: "easy" },
+    { topicId: T["Limbic System & Motivation"], question: "What is Urbach-Wiethe disease and why is it neuropsychologically significant?", answer: "A rare condition that calcifies the amygdala bilaterally — patients show no fear response, providing evidence that the amygdala is critical for processing fear.", difficulty: "hard" },
 
-    // ===== 7. SLEEP & CIRCADIAN RHYTHMS (12 cards) =====
-    { topicId: T["Sleep & Circadian Rhythms"], question: "What is the suprachiasmatic nucleus (SCN)?", answer: "The brain's biological clock, located in the hypothalamus. It receives light input via the retinohypothalamic tract and controls circadian rhythms.", difficulty: "easy" },
-    { topicId: T["Sleep & Circadian Rhythms"], question: "What is a zeitgeber?", answer: "An external time cue that synchronizes the internal clock to the environment — the most powerful is light, but also includes meals, exercise, and social interaction.", difficulty: "medium" },
-    { topicId: T["Sleep & Circadian Rhythms"], question: "What is melatonin and where is it produced?", answer: "Melatonin is a hormone produced by the pineal gland that promotes sleepiness; secretion increases with darkness and is suppressed by light (via SCN-pineal pathway).", difficulty: "easy" },
-    { topicId: T["Sleep & Circadian Rhythms"], question: "What is REM sleep characterized by?", answer: "Rapid eye movements, vivid dreaming, near-complete muscle atonia (preventing acting out dreams), and EEG pattern similar to wakefulness.", difficulty: "easy" },
-    { topicId: T["Sleep & Circadian Rhythms"], question: "What are the NREM sleep stages?", answer: "N1 (light sleep, theta waves), N2 (sleep spindles and K-complexes), N3 (slow-wave/deep sleep, delta waves) — essential for physical restoration and memory consolidation.", difficulty: "medium" },
-    { topicId: T["Sleep & Circadian Rhythms"], question: "What is the endogenous circadian period in humans?", answer: "Slightly longer than 24 hours (~24.2 hours) — daily light exposure resets the SCN to remain synchronized with the external 24-hour day.", difficulty: "medium" },
-    { topicId: T["Sleep & Circadian Rhythms"], question: "What do benzodiazepines do to sleep architecture?", answer: "They reduce slow-wave (N3) and REM sleep while increasing N2 sleep; useful for short-term insomnia but disrupt sleep quality.", difficulty: "hard" },
-    { topicId: T["Sleep & Circadian Rhythms"], question: "What is jet lag?", answer: "Misalignment between the internal circadian clock and the external environment caused by rapid transmeridian travel; symptoms include fatigue, insomnia, and cognitive impairment.", difficulty: "easy" },
-    { topicId: T["Sleep & Circadian Rhythms"], question: "How do morning vs evening chronotypes differ neurologically?", answer: "They differ in SCN timing and period length; genetics (e.g., PER3 gene) influences whether individuals are naturally early or late risers, shifting with age.", difficulty: "hard" },
-    { topicId: T["Sleep & Circadian Rhythms"], question: "What role does the SCN play beyond sleep timing?", answer: "It coordinates body temperature, cortisol secretion, immune function, drug sensitivity, and urination patterns across the 24-hour cycle.", difficulty: "medium" },
-    { topicId: T["Sleep & Circadian Rhythms"], question: "What is sleep's role in memory consolidation?", answer: "Slow-wave sleep facilitates hippocampal-cortical transfer of declarative memories; REM sleep is important for procedural and emotional memory processing.", difficulty: "medium" },
-    { topicId: T["Sleep & Circadian Rhythms"], question: "What special retinal cells detect light for circadian regulation?", answer: "Intrinsically photosensitive retinal ganglion cells (ipRGCs) containing melanopsin — they respond to blue light and project directly to the SCN.", difficulty: "hard" },
+    // ===== 7. SLEEP & CIRCADIAN RHYTHMS =====
+    { topicId: T["Sleep & Circadian Rhythms"], question: "What are the stages of NREM sleep?", answer: "NREM has 3 stages: N1 (light sleep, theta waves), N2 (sleep spindles, K-complexes), and N3 (deep/slow-wave sleep, delta waves). Most restorative sleep occurs in N3.", difficulty: "medium" },
+    { topicId: T["Sleep & Circadian Rhythms"], question: "What characterizes REM sleep?", answer: "REM sleep features vivid dreaming, rapid eye movements, muscle atonia (paralysis), and brain activity similar to wakefulness (desynchronized EEG). It is critical for emotional memory processing.", difficulty: "easy" },
+    { topicId: T["Sleep & Circadian Rhythms"], question: "What is the suprachiasmatic nucleus (SCN)?", answer: "The SCN in the hypothalamus is the brain's master circadian clock — it receives light signals from the retina via the retinohypothalamic tract and regulates the sleep-wake cycle.", difficulty: "medium" },
+    { topicId: T["Sleep & Circadian Rhythms"], question: "What is the role of melatonin in sleep?", answer: "Melatonin is released by the pineal gland in darkness — it signals that it is nighttime, promoting sleep onset and regulating the circadian rhythm.", difficulty: "easy" },
+    { topicId: T["Sleep & Circadian Rhythms"], question: "What is narcolepsy?", answer: "A sleep disorder caused by loss of orexin (hypocretin) neurons in the lateral hypothalamus — features include excessive daytime sleepiness, cataplexy (sudden muscle weakness), sleep paralysis, and hypnagogic hallucinations.", difficulty: "medium" },
+    { topicId: T["Sleep & Circadian Rhythms"], question: "What is sleep apnea?", answer: "A disorder where breathing repeatedly stops during sleep — obstructive (airway collapse) or central (brain doesn't signal breathing). Causes fragmented sleep, hypoxia, and cognitive impairment.", difficulty: "easy" },
+    { topicId: T["Sleep & Circadian Rhythms"], question: "What is the two-process model of sleep regulation?", answer: "Sleep is regulated by Process S (homeostatic sleep pressure — adenosine builds up with wakefulness) and Process C (circadian clock from the SCN). Both must align for quality sleep.", difficulty: "hard" },
+    { topicId: T["Sleep & Circadian Rhythms"], question: "What is adenosine's role in sleep?", answer: "Adenosine accumulates in the brain during wakefulness, increasing sleep pressure — caffeine works by blocking adenosine receptors, promoting wakefulness.", difficulty: "medium" },
+    { topicId: T["Sleep & Circadian Rhythms"], question: "What is REM sleep behavior disorder?", answer: "A parasomnia where the normal muscle atonia of REM is absent — patients physically act out their dreams, often injuring themselves or their partners; strongly associated with Parkinson's disease and DLB.", difficulty: "hard" },
+    { topicId: T["Sleep & Circadian Rhythms"], question: "What happens to sleep stages in older adults?", answer: "Older adults show decreased N3 (slow-wave) sleep, reduced REM, more frequent awakenings, earlier sleep phase (advanced sleep phase syndrome), and more insomnia.", difficulty: "medium" },
+    { topicId: T["Sleep & Circadian Rhythms"], question: "What is a sleep spindle?", answer: "A burst of oscillatory neural activity (12-14 Hz) generated by thalamocortical circuits during N2 sleep — associated with memory consolidation, especially procedural learning.", difficulty: "hard" },
+    { topicId: T["Sleep & Circadian Rhythms"], question: "What brain region generates the NREM slow waves?", answer: "The cortex generates slow oscillations in N3, coordinated by thalamocortical circuits — these are associated with memory consolidation and physical restoration.", difficulty: "hard" },
+    { topicId: T["Sleep & Circadian Rhythms"], question: "What is insomnia and what are its cognitive consequences?", answer: "Insomnia is difficulty falling or staying asleep; it impairs attention, memory consolidation, executive function, and mood regulation.", difficulty: "easy" },
+    { topicId: T["Sleep & Circadian Rhythms"], question: "What EEG pattern is seen during relaxed wakefulness?", answer: "Alpha waves (8-12 Hz) predominate during relaxed, eyes-closed wakefulness; they are replaced by beta waves with active mental engagement.", difficulty: "medium" },
 
-    // ===== 8. ENDOCRINE SYSTEM & REPRODUCTION (12 cards) =====
-    { topicId: T["Endocrine System & Reproduction"], question: "What is the hypothalamopituitary portal system?", answer: "A vascular connection from the hypothalamus to the anterior pituitary that delivers releasing hormones to control pituitary hormone secretion.", difficulty: "medium" },
-    { topicId: T["Endocrine System & Reproduction"], question: "What is the difference between organizational and activational hormone effects?", answer: "Organizational effects: permanent, occur during development, shape anatomical structures. Activational effects: temporary, occur in adulthood, trigger specific behaviors.", difficulty: "medium" },
-    { topicId: T["Endocrine System & Reproduction"], question: "What is oxytocin?", answer: "A neuropeptide produced by the hypothalamus and released by the posterior pituitary; involved in bonding, trust, labor contractions, and lactation.", difficulty: "easy" },
-    { topicId: T["Endocrine System & Reproduction"], question: "What is the role of the SRY gene?", answer: "Located on the Y chromosome; triggers production of SRY protein which induces the gonads to develop as testes, driving male sexual differentiation.", difficulty: "medium" },
-    { topicId: T["Endocrine System & Reproduction"], question: "What is Androgen Insensitivity Syndrome (AIS)?", answer: "A genetic condition where cells cannot respond to androgens; XY individuals develop testes but appear female externally due to lack of androgen effect.", difficulty: "medium" },
-    { topicId: T["Endocrine System & Reproduction"], question: "What is the Wolffian vs Müllerian system?", answer: "Wolffian: develops into male internal sex organs (testosterone-dependent). Müllerian: develops into female internal sex organs (develops in absence of testosterone/AMH).", difficulty: "hard" },
-    { topicId: T["Endocrine System & Reproduction"], question: "What are steroid hormones derived from?", answer: "Cholesterol. They are fat-soluble, cross cell membranes, and act on nuclear receptors to alter gene expression. Include sex steroids and cortisol.", difficulty: "medium" },
-    { topicId: T["Endocrine System & Reproduction"], question: "What is vasopressin (ADH)?", answer: "Antidiuretic hormone released by the posterior pituitary; controls water retention in the kidneys and plays roles in social bonding and aggression.", difficulty: "medium" },
-    { topicId: T["Endocrine System & Reproduction"], question: "What are the three categories of sex organs?", answer: "Gonads (testes/ovaries), internal sex organs (uterus, vas deferens, etc.), and external sex organs (genitalia). All are influenced by prenatal hormone exposure.", difficulty: "easy" },
-    { topicId: T["Endocrine System & Reproduction"], question: "What is Turner's Syndrome?", answer: "A condition (45,X) where females have only one X chromosome and no functional gonads; often short stature, infertile, with female-typical development.", difficulty: "medium" },
-    { topicId: T["Endocrine System & Reproduction"], question: "What is 5-Alpha Reductase Deficiency?", answer: "A condition where XY individuals cannot convert testosterone to DHT; born with female-typical external genitalia but masculinize at puberty as testosterone rises.", difficulty: "hard" },
-    { topicId: T["Endocrine System & Reproduction"], question: "What are the three classes of sex hormones?", answer: "Androgens (e.g., testosterone), estrogens (e.g., estradiol), and progestins (e.g., progesterone) — all steroid hormones produced by gonads and adrenal glands.", difficulty: "easy" },
+    // ===== 8. ENDOCRINE SYSTEM & REPRODUCTION =====
+    { topicId: T["Endocrine System & Reproduction"], question: "What is the hypothalamic-pituitary-adrenal (HPA) axis?", answer: "The stress response system: hypothalamus releases CRH → anterior pituitary releases ACTH → adrenal cortex releases cortisol — cortisol then feeds back to inhibit the system.", difficulty: "medium" },
+    { topicId: T["Endocrine System & Reproduction"], question: "What are the two divisions of the pituitary gland?", answer: "Anterior pituitary (adenohypophysis) — releases FSH, LH, ACTH, TSH, GH, prolactin via hormones from the hypothalamus; Posterior pituitary (neurohypophysis) — releases oxytocin and ADH (vasopressin).", difficulty: "medium" },
+    { topicId: T["Endocrine System & Reproduction"], question: "What is cortisol's effect on the brain?", answer: "Chronic high cortisol damages the hippocampus (reducing volume and neurogenesis), impairs memory consolidation, and increases anxiety — the HPA axis dysregulation is linked to depression and PTSD.", difficulty: "hard" },
+    { topicId: T["Endocrine System & Reproduction"], question: "What is the role of estrogen in the brain?", answer: "Estrogen promotes neuroplasticity, synaptic connectivity (especially in the hippocampus), and has neuroprotective effects — estrogen loss at menopause is associated with memory changes.", difficulty: "medium" },
+    { topicId: T["Endocrine System & Reproduction"], question: "What is the role of testosterone in development?", answer: "Testosterone (from the testes) drives male sexual development, puberty changes, and has organizational effects on the brain during prenatal development — affecting neural circuitry for behavior.", difficulty: "medium" },
+    { topicId: T["Endocrine System & Reproduction"], question: "What is oxytocin's role?", answer: "Oxytocin (released from posterior pituitary) promotes social bonding, trust, maternal behavior, and uterine contractions during childbirth — often called the 'bonding hormone'.", difficulty: "easy" },
+    { topicId: T["Endocrine System & Reproduction"], question: "What is the gonadal hormone axis?", answer: "GnRH (hypothalamus) → LH and FSH (anterior pituitary) → testosterone/estrogen/progesterone (gonads) — gonadal hormones feed back to regulate the axis.", difficulty: "medium" },
+    { topicId: T["Endocrine System & Reproduction"], question: "What is the organizational vs. activational effect of hormones?", answer: "Organizational effects occur during prenatal development and permanently shape neural circuits; activational effects occur in adulthood and temporarily alter behavior (e.g., testosterone's effect on aggression).", difficulty: "hard" },
+    { topicId: T["Endocrine System & Reproduction"], question: "What is ADH (vasopressin) and what does it do?", answer: "Antidiuretic hormone is released from the posterior pituitary — it increases water reabsorption in the kidneys to regulate fluid balance and blood pressure; also influences social behavior.", difficulty: "medium" },
+    { topicId: T["Endocrine System & Reproduction"], question: "What is the role of the thyroid hormone in brain development?", answer: "Thyroid hormone is essential for normal brain development — hypothyroidism during development causes cretinism (intellectual disability); in adults it affects cognition and mood.", difficulty: "medium" },
+    { topicId: T["Endocrine System & Reproduction"], question: "What is the adrenal medulla and what does it secrete?", answer: "The adrenal medulla secretes epinephrine (adrenaline) and norepinephrine in response to sympathetic nervous system activation during the fight-or-flight response.", difficulty: "easy" },
+    { topicId: T["Endocrine System & Reproduction"], question: "What are the organizational effects of prenatal androgens on the brain?", answer: "Prenatal androgens masculinize neural circuits affecting spatial cognition, aggression, and sexual orientation — studied through conditions like congenital adrenal hyperplasia (CAH).", difficulty: "hard" },
+    { topicId: T["Endocrine System & Reproduction"], question: "What is prolactin?", answer: "Prolactin is released from the anterior pituitary — it stimulates milk production (lactation) and is regulated by dopamine (which inhibits prolactin release). Antipsychotics block dopamine, raising prolactin.", difficulty: "medium" },
+    { topicId: T["Endocrine System & Reproduction"], question: "What does growth hormone (GH) do?", answer: "GH from the anterior pituitary promotes body growth, protein synthesis, and fat metabolism — secreted in pulses during deep sleep; deficiency leads to short stature.", difficulty: "easy" },
 
-    // ===== 9. PSYCHOPHARMACOLOGY (12 cards) =====
-    { topicId: T["Psychopharmacology"], question: "What are the four drug target sites in the synapse?", answer: "Transporters (reuptake, e.g., SSRIs), GPCR/metabotropic receptors, enzymes (e.g., MAOIs), and ligand-gated (ionotropic) ion channels.", difficulty: "medium" },
-    { topicId: T["Psychopharmacology"], question: "What is the mechanism of SSRIs?", answer: "SSRIs block the serotonin reuptake transporter (SERT), increasing serotonin availability in the synapse; used for depression, anxiety, and OCD.", difficulty: "easy" },
-    { topicId: T["Psychopharmacology"], question: "What is a boxed warning on FDA prescribing information?", answer: "The most serious warning from the FDA, indicating significant risks of serious adverse effects — e.g., increased suicidality risk with antidepressants in young people.", difficulty: "medium" },
-    { topicId: T["Psychopharmacology"], question: "What is the difference between pharmacokinetics and pharmacodynamics?", answer: "Pharmacokinetics: what the body does to the drug (absorption, distribution, metabolism, excretion). Pharmacodynamics: what the drug does to the body (receptor binding, mechanism).", difficulty: "medium" },
-    { topicId: T["Psychopharmacology"], question: "What is esketamine (Spravato) and how does it work?", answer: "A nasal spray NMDA receptor antagonist approved for treatment-resistant depression; provides rapid antidepressant effects by modulating glutamate signaling.", difficulty: "hard" },
-    { topicId: T["Psychopharmacology"], question: "What is a first-generation vs second-generation antipsychotic?", answer: "FGAs (typical): primarily D2 blockers, high EPS risk. SGAs (atypical): block D2 and 5-HT2A, lower EPS risk but metabolic side effects.", difficulty: "medium" },
-    { topicId: T["Psychopharmacology"], question: "What is the difference between a drug's generic name and brand name?", answer: "Generic name (e.g., fluoxetine) is the chemical compound name approved by regulatory bodies. Brand name (e.g., Prozac) is the proprietary name given by the manufacturer.", difficulty: "easy" },
-    { topicId: T["Psychopharmacology"], question: "What are long-acting injectables (LAIs)?", answer: "Depot formulations of antipsychotics administered every 2-4 weeks, improving adherence for patients who have difficulty with daily oral medications.", difficulty: "medium" },
-    { topicId: T["Psychopharmacology"], question: "What is the endogenous field in neuronal signaling?", answer: "The N-S axis of chemical signaling between presynaptic and postsynaptic neurons — includes action potentials, neurotransmitter release, and postsynaptic response.", difficulty: "hard" },
-    { topicId: T["Psychopharmacology"], question: "What are the four levels of clinical psychologist involvement with medications?", answer: "Not involved, providing information (most common — indirect), general involvement (education/consultation), and prescribing (direct — limited states).", difficulty: "medium" },
-    { topicId: T["Psychopharmacology"], question: "What is off-label prescribing?", answer: "Using an FDA-approved drug for a condition, population, or dose not listed in the official indication; legal and common — prescribers may do this immediately after FDA approval.", difficulty: "medium" },
-    { topicId: T["Psychopharmacology"], question: "What does MAO inhibitor mean pharmacologically?", answer: "Monoamine oxidase inhibitors block the enzyme that degrades dopamine, serotonin, and norepinephrine, increasing monoamine levels; used for depression but have serious dietary restrictions.", difficulty: "medium" },
+    // ===== 9. PSYCHOPHARMACOLOGY =====
+    { topicId: T["Psychopharmacology"], question: "What is the mechanism of SSRIs?", answer: "Selective serotonin reuptake inhibitors block the serotonin transporter (SERT), preventing reuptake of serotonin into the presynaptic neuron — increasing serotonin in the synaptic cleft.", difficulty: "easy" },
+    { topicId: T["Psychopharmacology"], question: "What is the difference between agonist and antagonist?", answer: "An agonist binds to a receptor and activates it; an antagonist binds but does not activate it and blocks the agonist from binding.", difficulty: "easy" },
+    { topicId: T["Psychopharmacology"], question: "How do benzodiazepines work?", answer: "Benzodiazepines (e.g., diazepam) are positive allosteric modulators of GABA-A receptors — they increase the frequency of Cl- channel opening when GABA is present, enhancing inhibitory effects.", difficulty: "medium" },
+    { topicId: T["Psychopharmacology"], question: "What is the mechanism of antipsychotics?", answer: "First-generation (typical) antipsychotics (e.g., haloperidol) primarily block D2 dopamine receptors. Second-generation (atypical) antipsychotics also block serotonin receptors with fewer extrapyramidal side effects.", difficulty: "medium" },
+    { topicId: T["Psychopharmacology"], question: "What is tardive dyskinesia?", answer: "A side effect of long-term antipsychotic use — involuntary, repetitive movements (especially of the face, lips, tongue) caused by dopamine receptor supersensitivity from chronic D2 blockade.", difficulty: "hard" },
+    { topicId: T["Psychopharmacology"], question: "What are MAOIs and how do they work?", answer: "Monoamine oxidase inhibitors block the enzyme MAO that degrades monoamines (serotonin, norepinephrine, dopamine) — increasing their availability. Dietary restrictions needed (tyramine interactions).", difficulty: "medium" },
+    { topicId: T["Psychopharmacology"], question: "What is lithium's mechanism in bipolar disorder?", answer: "Lithium's exact mechanism is unclear — it modulates second messenger systems (inositol phosphate, GSK-3β), reduces neuronal excitability, and has neuroprotective effects. It stabilizes mood in bipolar disorder.", difficulty: "hard" },
+    { topicId: T["Psychopharmacology"], question: "What are stimulants and how do they work in ADHD?", answer: "Stimulants (e.g., methylphenidate, amphetamine) increase dopamine and norepinephrine in the prefrontal cortex — improving attention, impulse control, and working memory in ADHD.", difficulty: "medium" },
+    { topicId: T["Psychopharmacology"], question: "What is the half-life of a drug?", answer: "The time it takes for the drug's plasma concentration to decrease by 50% — drugs with longer half-lives have more sustained effects and take longer to clear.", difficulty: "easy" },
+    { topicId: T["Psychopharmacology"], question: "What are opioids and how do they work?", answer: "Opioids (e.g., morphine, oxycodone) bind to mu, delta, and kappa opioid receptors in the brain and spinal cord — reducing pain perception and producing euphoria; highly addictive.", difficulty: "medium" },
+    { topicId: T["Psychopharmacology"], question: "What is the blood-brain barrier (BBB)?", answer: "A selective barrier formed by tight junctions between brain endothelial cells that restricts entry of many substances — drugs must be lipid-soluble or use active transport to enter the CNS.", difficulty: "medium" },
+    { topicId: T["Psychopharmacology"], question: "What is levodopa and why is it used in Parkinson's disease?", answer: "Levodopa is the precursor to dopamine — it crosses the BBB (dopamine cannot) and is converted to dopamine in the brain, replenishing depleted dopamine in the substantia nigra.", difficulty: "medium" },
+    { topicId: T["Psychopharmacology"], question: "What is drug tolerance?", answer: "Reduced response to a drug after repeated exposure — requires higher doses to achieve the same effect. Can result from receptor downregulation, increased metabolism, or cellular adaptation.", difficulty: "easy" },
+    { topicId: T["Psychopharmacology"], question: "What are SNRIs?", answer: "Serotonin-norepinephrine reuptake inhibitors (e.g., venlafaxine, duloxetine) block both SERT and NET — used for depression, anxiety, and chronic pain.", difficulty: "medium" },
 
-    // ===== 10. PSYCHOLOGICAL DISORDERS (20 cards) =====
-    { topicId: T["Psychological Disorders"], question: "What is the diathesis-stress model of psychopathology?", answer: "Genetic vulnerability (diathesis) interacts with environmental stressors to produce disorder; neither alone is sufficient — genes load the gun, environment pulls the trigger.", difficulty: "easy" },
-    { topicId: T["Psychological Disorders"], question: "What are positive symptoms of psychosis (SAPS)?", answer: "Delusions, hallucinations (usually auditory), disorganized speech, bizarre behavior, and positive formal thought disorder (e.g., derailment, tangentiality, clanging).", difficulty: "medium" },
-    { topicId: T["Psychological Disorders"], question: "What is the most common type of hallucination in schizophrenia?", answer: "Auditory hallucinations — often voices commenting on the person's behavior or commanding them. Other types (visual, tactile) are less common and may suggest organic causes.", difficulty: "easy" },
-    { topicId: T["Psychological Disorders"], question: "What are the five domains of schizophrenia abnormality per DSM-5?", answer: "Hallucinations, delusions, disorganized thinking/speech, abnormal motor behavior (including catatonia), and negative symptoms (diminished expression, avolition).", difficulty: "medium" },
-    { topicId: T["Psychological Disorders"], question: "How do schizophrenia spectrum disorders differ by duration?", answer: "Brief Psychotic Disorder (1 day–1 month), Schizophreniform (1–6 months), Schizophrenia (6+ months with functional decline), Schizoaffective (schizophrenia + mood episodes).", difficulty: "medium" },
-    { topicId: T["Psychological Disorders"], question: "What is the difference between Bipolar I and Bipolar II?", answer: "Bipolar I: full manic episode (1+ week, may require hospitalization). Bipolar II: hypomanic episodes (4+ days) plus major depressive episodes — NO full manic episodes.", difficulty: "medium" },
-    { topicId: T["Psychological Disorders"], question: "What is Cyclothymic Disorder?", answer: "2-year period of fluctuating hypomanic and depressive symptoms that don't meet full criteria for either episode; causes significant distress/impairment.", difficulty: "medium" },
-    { topicId: T["Psychological Disorders"], question: "What is Persistent Depressive Disorder (PDD)?", answer: "Chronically depressed mood for 2+ years (not symptom-free for more than 2 months); combines former dysthymia and chronic MDD; milder but more chronic than MDD.", difficulty: "medium" },
-    { topicId: T["Psychological Disorders"], question: "What is Dissociative Identity Disorder (DID)?", answer: "Two or more distinct personality states with discontinuity in identity, memory, emotion, and behavior; often involves recurrent gaps in recall of traumatic events.", difficulty: "easy" },
-    { topicId: T["Psychological Disorders"], question: "What is the difference between depersonalization and derealization?", answer: "Depersonalization: feeling detached from one's own thoughts/feelings/body. Derealization: surroundings feel unreal or dreamlike. Reality testing remains intact in both.", difficulty: "medium" },
-    { topicId: T["Psychological Disorders"], question: "What is Dissociative Amnesia with fugue?", answer: "Inability to recall autobiographical information (retrograde amnesia) plus apparently purposeful travel or bewildered wandering, often after significant trauma.", difficulty: "medium" },
-    { topicId: T["Psychological Disorders"], question: "What distinguishes a delusion from a cultural belief?", answer: "Cultural beliefs are shared by the community; delusions are idiosyncratic, often bizarre, resistant to logic, and cause impairment. Clinicians must gather cultural context.", difficulty: "medium" },
-    { topicId: T["Psychological Disorders"], question: "What is Disruptive Mood Dysregulation Disorder (DMDD)?", answer: "Severe and recurrent temper outbursts (3+ times/week) plus persistently irritable mood; diagnosed in children ages 6-18 with onset before age 10.", difficulty: "medium" },
-    { topicId: T["Psychological Disorders"], question: "What are negative symptoms of schizophrenia?", answer: "Diminished emotional expression (flat affect), avolition (lack of motivation), alogia (poverty of speech), anhedonia, and social withdrawal.", difficulty: "medium" },
-    { topicId: T["Psychological Disorders"], question: "What are the steps in differential diagnosis?", answer: "Rule out malingering, then substances/medical conditions, determine primary disorder, differentiate from adjustment disorder, establish no-disorder boundary, use decision trees.", difficulty: "hard" },
-    { topicId: T["Psychological Disorders"], question: "What is the categorical vs dimensional debate in psychopathology?", answer: "Categorical models have strict diagnostic boundaries; dimensional models recognize that symptoms exist on continua across disorders. Evidence supports both approaches.", difficulty: "medium" },
-    { topicId: T["Psychological Disorders"], question: "What is Schizoaffective Disorder?", answer: "Schizophrenia criteria plus a concurrent mood episode, BUT hallucinations/delusions must occur for 2+ weeks without a major mood episode during the same period.", difficulty: "hard" },
-    { topicId: T["Psychological Disorders"], question: "What is Premenstrual Dysphoric Disorder (PMDD)?", answer: "Mood symptoms (depression, anxiety, lability) occurring exclusively in the luteal phase of the menstrual cycle, resolving after menstruation begins.", difficulty: "medium" },
-    { topicId: T["Psychological Disorders"], question: "What is formal thought disorder?", answer: "A disturbance in the organization and flow of thinking manifested in speech — includes derailment, tangentiality, incoherence, circumstantiality, and clanging.", difficulty: "hard" },
-    { topicId: T["Psychological Disorders"], question: "What insight do individuals with thought disorder typically have about their own symptoms?", answer: "Typically poor — individuals can often recognize thought disorder in others but have reduced ability to recognize it in themselves.", difficulty: "hard" },
+    // ===== 10. PSYCHOLOGICAL DISORDERS =====
+    { topicId: T["Psychological Disorders"], question: "What are the positive symptoms of schizophrenia?", answer: "Positive symptoms are additions to normal experience: hallucinations, delusions, disorganized speech, and disorganized behavior.", difficulty: "easy" },
+    { topicId: T["Psychological Disorders"], question: "What are the negative symptoms of schizophrenia?", answer: "Negative symptoms are deficits in normal function: alogia (poverty of speech), avolition (lack of motivation), anhedonia (inability to feel pleasure), flat affect, and asociality.", difficulty: "medium" },
+    { topicId: T["Psychological Disorders"], question: "What brain abnormalities are seen in schizophrenia?", answer: "Enlarged ventricles, reduced prefrontal cortex activity (hypofrontality), reduced gray matter (especially temporal and frontal), and reduced hippocampal volume.", difficulty: "medium" },
+    { topicId: T["Psychological Disorders"], question: "What is the glutamate hypothesis of schizophrenia?", answer: "NMDA receptor hypofunction (especially on inhibitory interneurons) leads to excess dopamine and glutamate release — supported by ketamine and PCP (NMDA blockers) producing schizophrenia-like symptoms.", difficulty: "hard" },
+    { topicId: T["Psychological Disorders"], question: "What distinguishes bipolar I from bipolar II?", answer: "Bipolar I requires at least one manic episode (full manic episode may be without depression); Bipolar II requires at least one hypomanic episode and at least one major depressive episode — never a full manic episode.", difficulty: "medium" },
+    { topicId: T["Psychological Disorders"], question: "What is the monoamine hypothesis of depression?", answer: "Depression results from deficiencies in serotonin, norepinephrine, and/or dopamine — the basis for antidepressant treatments like SSRIs, SNRIs, and TCAs.", difficulty: "easy" },
+    { topicId: T["Psychological Disorders"], question: "What is PTSD and what brain regions are involved?", answer: "Post-traumatic stress disorder involves hyperactive amygdala (fear response), reduced prefrontal inhibition of amygdala, and hippocampal volume loss affecting contextual fear memory.", difficulty: "medium" },
+    { topicId: T["Psychological Disorders"], question: "What is learned helplessness?", answer: "A state where an organism stops trying to escape aversive situations after repeated uncontrollable exposure — Seligman's model of depression, involving reduced motivation and behavioral inhibition.", difficulty: "medium" },
+    { topicId: T["Psychological Disorders"], question: "What is dissociation?", answer: "A disruption in the normal integration of consciousness, memory, identity, or perception — ranges from mild dissociation (daydreaming) to dissociative identity disorder (DID).", difficulty: "easy" },
+    { topicId: T["Psychological Disorders"], question: "What are cognitive distortions in depression?", answer: "Aaron Beck's concept: negative automatic thoughts, arbitrary inference, overgeneralization, and the cognitive triad (negative views of self, world, and future).", difficulty: "medium" },
+    { topicId: T["Psychological Disorders"], question: "What is a psychotic break vs. psychosis?", answer: "Psychosis is an ongoing state of losing contact with reality (hallucinations, delusions); a psychotic break refers to a sudden, often first episode of psychosis.", difficulty: "easy" },
+    { topicId: T["Psychological Disorders"], question: "What is anosognosia in psychiatric disorders?", answer: "Lack of awareness of one's own mental illness — common in schizophrenia and mania, it is a neurological phenomenon related to right hemisphere dysfunction, not denial.", difficulty: "hard" },
+    { topicId: T["Psychological Disorders"], question: "What is catatonia?", answer: "A psychomotor syndrome involving motor immobility, mutism, negativism, or bizarre posturing — seen in schizophrenia, bipolar disorder, and as a response to medical conditions.", difficulty: "medium" },
+    { topicId: T["Psychological Disorders"], question: "What is schizoaffective disorder?", answer: "A disorder meeting criteria for both schizophrenia and a major mood episode (depressive or manic) — mood and psychotic symptoms occur concurrently and independently.", difficulty: "medium" },
 
-    // ===== 11. PERSONALITY DISORDERS (12 cards) =====
-    { topicId: T["Personality Disorders"], question: "What are the general criteria (A-F) for a personality disorder?", answer: "A: 2+ of cognition/affectivity/interpersonal/impulse; B: inflexible/pervasive; C: significant distress/impairment; D: enduring since at least adolescence; E: not another disorder; F: not a substance.", difficulty: "hard" },
-    { topicId: T["Personality Disorders"], question: "What are the Cluster A personality disorders?", answer: "Paranoid (distrust/suspiciousness), Schizoid (social detachment, restricted emotion), Schizotypal (eccentric, odd beliefs, uncomfortable with closeness) — the 'odd' cluster.", difficulty: "easy" },
-    { topicId: T["Personality Disorders"], question: "What are the Cluster B personality disorders?", answer: "Antisocial, Borderline, Histrionic, and Narcissistic — characterized by dramatic, emotional, or erratic behavior.", difficulty: "easy" },
-    { topicId: T["Personality Disorders"], question: "What are the Cluster C personality disorders?", answer: "Avoidant (fear of rejection), Dependent (submissive/excessive need for care), Obsessive-Compulsive (perfectionism/rigidity) — the 'anxious/fearful' cluster.", difficulty: "easy" },
-    { topicId: T["Personality Disorders"], question: "What are the diagnostic criteria for Antisocial PD?", answer: "Pervasive disregard for others' rights since age 15; 3+ of: law violations, deceitfulness, impulsivity, aggression, recklessness, irresponsibility, no remorse. Must be 18+.", difficulty: "medium" },
-    { topicId: T["Personality Disorders"], question: "What are the diagnostic criteria for Borderline PD?", answer: "9 criteria including: frantic efforts to avoid abandonment, unstable relationships (idealization/devaluation), identity disturbance, impulsivity, suicidal behavior, affective instability, chronic emptiness, anger, and paranoid ideation. Need 5+.", difficulty: "hard" },
-    { topicId: T["Personality Disorders"], question: "What is splitting in BPD?", answer: "A defense mechanism where people or things are seen as all-good or all-bad with no integration; others are idealized then suddenly devalued.", difficulty: "medium" },
-    { topicId: T["Personality Disorders"], question: "What characterizes Paranoid Personality Disorder?", answer: "Pervasive distrust and suspiciousness — suspects exploitation, preoccupied with loyalty, reluctant to confide, reads hidden meaning into benign remarks, holds grudges, suspects infidelity.", difficulty: "medium" },
-    { topicId: T["Personality Disorders"], question: "What characterizes Schizotypal PD, distinguishing it from Schizoid PD?", answer: "Schizotypal has odd beliefs, magical thinking, unusual perceptual experiences, odd speech, and social anxiety with paranoid features — not just social detachment like Schizoid.", difficulty: "hard" },
-    { topicId: T["Personality Disorders"], question: "What makes personality disorders different from other mental disorders?", answer: "They are ego-syntonic (the person sees their traits as part of themselves, not symptoms), pervasive across situations, long-standing since adolescence, and difficult to treat.", difficulty: "medium" },
-    { topicId: T["Personality Disorders"], question: "What does 'contagious' mean in the context of personality disorders?", answer: "Personality disorder symptoms evoke strong reactions in others — therapists and family often feel pulled into enacting complementary roles that reinforce the patient's patterns.", difficulty: "hard" },
-    { topicId: T["Personality Disorders"], question: "What is Narcissistic PD?", answer: "Grandiosity, need for admiration, and lack of empathy; 5+ of: grandiose sense of self, fantasies of success/power, sense of entitlement, exploits others, lacks empathy, envious, arrogant.", difficulty: "medium" },
+    // ===== 11. PERSONALITY DISORDERS =====
+    { topicId: T["Personality Disorders"], question: "What are the three personality disorder clusters?", answer: "Cluster A (odd/eccentric): paranoid, schizoid, schizotypal; Cluster B (dramatic/emotional): antisocial, borderline, histrionic, narcissistic; Cluster C (anxious/fearful): avoidant, dependent, obsessive-compulsive.", difficulty: "easy" },
+    { topicId: T["Personality Disorders"], question: "What is borderline personality disorder (BPD)?", answer: "A Cluster B disorder characterized by unstable relationships, fear of abandonment, identity disturbance, impulsivity, self-harm, and emotional dysregulation — linked to amygdala hyperreactivity.", difficulty: "easy" },
+    { topicId: T["Personality Disorders"], question: "What is antisocial personality disorder (ASPD)?", answer: "A Cluster B disorder featuring persistent disregard for others' rights, deceitfulness, impulsivity, aggression, and lack of remorse — must have conduct disorder history before age 15; associated with low amygdala activity.", difficulty: "medium" },
+    { topicId: T["Personality Disorders"], question: "What brain abnormalities are associated with BPD?", answer: "Hyperactive amygdala response to emotional stimuli, reduced prefrontal control of the amygdala, and altered anterior cingulate functioning affecting emotional regulation.", difficulty: "hard" },
+    { topicId: T["Personality Disorders"], question: "What is schizotypal personality disorder?", answer: "A Cluster A disorder with odd beliefs, magical thinking, social isolation, and perceptual distortions — genetically related to schizophrenia but without full psychotic episodes.", difficulty: "medium" },
+    { topicId: T["Personality Disorders"], question: "What is narcissistic personality disorder (NPD)?", answer: "A Cluster B disorder with grandiosity, need for admiration, lack of empathy, and entitlement — research suggests reduced gray matter in regions related to empathy and emotional regulation.", difficulty: "medium" },
+    { topicId: T["Personality Disorders"], question: "What is the difference between a personality disorder and a personality trait?", answer: "A personality disorder is pervasive, inflexible, and causes significant distress or functional impairment — a personality trait is simply a consistent way of thinking and behaving.", difficulty: "easy" },
+    { topicId: T["Personality Disorders"], question: "What is dialectical behavior therapy (DBT)?", answer: "A treatment developed by Marsha Linehan specifically for BPD — it combines cognitive-behavioral techniques with mindfulness and balances acceptance with change strategies.", difficulty: "medium" },
+    { topicId: T["Personality Disorders"], question: "What is paranoid personality disorder?", answer: "A Cluster A disorder characterized by pervasive distrust and suspicion of others — individuals interpret others' motives as malevolent without sufficient basis.", difficulty: "easy" },
+    { topicId: T["Personality Disorders"], question: "What is avoidant personality disorder?", answer: "A Cluster C disorder with social inhibition, feelings of inadequacy, and hypersensitivity to negative evaluation — unlike schizoid PD, patients desire social connection but fear rejection.", difficulty: "medium" },
+    { topicId: T["Personality Disorders"], question: "What neurobiological factors are linked to personality disorders generally?", answer: "Serotonin system dysfunction (impulsivity, aggression), dopamine dysregulation (paranoia, impulsivity), HPA axis dysregulation (stress sensitivity), and prefrontal-limbic imbalance.", difficulty: "hard" },
+    { topicId: T["Personality Disorders"], question: "What is histrionic personality disorder?", answer: "A Cluster B disorder with excessive emotionality and attention-seeking behavior, discomfort when not the center of attention, rapidly shifting emotions, and seductive behavior.", difficulty: "medium" },
+    { topicId: T["Personality Disorders"], question: "What is obsessive-compulsive personality disorder (OCPD) vs. OCD?", answer: "OCPD (Cluster C) is an ego-syntonic personality style of perfectionism, control, and rigidity — the individual is fine with it. OCD involves ego-dystonic intrusive obsessions and compulsions causing distress.", difficulty: "hard" },
+    { topicId: T["Personality Disorders"], question: "What is the alternative DSM-5 model for personality disorders?", answer: "The DSM-5 Section III model assesses personality functioning (self/interpersonal) and pathological personality traits (negative affectivity, detachment, antagonism, disinhibition, psychoticism) as a dimensional approach.", difficulty: "hard" },
 
-    // ===== 12. ADHD & MEDICATIONS (12 cards) =====
-    { topicId: T["ADHD & Medications"], question: "What are the three brain regions central to ADHD neuroscience?", answer: "Dorsolateral prefrontal cortex (sustained attention, problem-solving), dorsal anterior cingulate (selective attention), orbitofrontal cortex (impulse control).", difficulty: "medium" },
-    { topicId: T["ADHD & Medications"], question: "What DSM-5 age of onset criterion applies to ADHD?", answer: "Several inattentive or hyperactive-impulsive symptoms must have been present before age 12 and in two or more settings.", difficulty: "easy" },
-    { topicId: T["ADHD & Medications"], question: "What is methylphenidate (Ritalin) and how does it work?", answer: "A stimulant that blocks dopamine and norepinephrine reuptake transporters, increasing catecholamine availability in prefrontal regions; multiple delivery systems exist (Concerta, Daytrana patch).", difficulty: "medium" },
-    { topicId: T["ADHD & Medications"], question: "What is Vyvanse (lisdexamfetamine) and how does it differ from Adderall?", answer: "Vyvanse is a prodrug — metabolized in the body to d-amphetamine; longer duration and lower abuse potential than regular amphetamine salts (Adderall).", difficulty: "hard" },
-    { topicId: T["ADHD & Medications"], question: "What is atomoxetine (Strattera)?", answer: "A non-stimulant SNRI specifically approved for ADHD; selectively inhibits the norepinephrine transporter, increasing NE and dopamine in prefrontal cortex; slower onset than stimulants.", difficulty: "medium" },
-    { topicId: T["ADHD & Medications"], question: "What are common side effects of stimulant medications for ADHD?", answer: "Insomnia, reduced appetite, growth suppression, elevated blood pressure, cardiac effects, and potential for rebound irritability.", difficulty: "medium" },
-    { topicId: T["ADHD & Medications"], question: "What is the Jornay PM formulation of methylphenidate?", answer: "Extended-release methylphenidate taken at bedtime — engineered for delayed release so it activates in the morning, helping with morning routine.", difficulty: "hard" },
-    { topicId: T["ADHD & Medications"], question: "What are guanfacine and clonidine used for in ADHD?", answer: "Alpha-2 adrenergic agonists used as second-line nonstimulants; originally developed for hypertension; can reduce impulsivity and improve attention.", difficulty: "medium" },
-    { topicId: T["ADHD & Medications"], question: "What is modafinil and how is it used in ADHD?", answer: "A dopamine reuptake inhibitor (Class 4 controlled substance) that reduces excessive sleepiness; used off-label in ADHD; lower abuse potential than amphetamines.", difficulty: "hard" },
-    { topicId: T["ADHD & Medications"], question: "What non-medication interventions are used for ADHD?", answer: "Behavioral modification, IEP/504 plans, parent training in behavior management (PTBM), behavior plan interventions (BPI), and group social skills training.", difficulty: "easy" },
-    { topicId: T["ADHD & Medications"], question: "What is ADHD's underlying neurobiological mechanism?", answer: "Dysregulation of frontal-subcortical-cerebellar catecholaminergic circuitry and dopamine transporter abnormalities leading to impaired executive function and attention regulation.", difficulty: "medium" },
-    { topicId: T["ADHD & Medications"], question: "What is viloxazine (Qelbree)?", answer: "A newer non-stimulant ADHD medication that modulates serotonergic activity; approved for children and adults, but evidence does not show a clear advantage over atomoxetine.", difficulty: "hard" },
+    // ===== 12. ADHD & MEDICATIONS =====
+    { topicId: T["ADHD & Medications"], question: "What are the three DSM-5 presentations of ADHD?", answer: "Predominantly Inattentive, Predominantly Hyperactive-Impulsive, and Combined Presentation — symptoms must be present in at least two settings and impair functioning.", difficulty: "easy" },
+    { topicId: T["ADHD & Medications"], question: "What brain regions are implicated in ADHD?", answer: "Prefrontal cortex (executive function, inhibition), anterior cingulate cortex (error monitoring), basal ganglia and cerebellum (timing and motor), and dopamine/norepinephrine circuits.", difficulty: "medium" },
+    { topicId: T["ADHD & Medications"], question: "What is the mechanism of methylphenidate (Ritalin)?", answer: "Methylphenidate blocks dopamine and norepinephrine reuptake transporters (DAT and NET), increasing DA and NE in the prefrontal cortex and improving executive function.", difficulty: "medium" },
+    { topicId: T["ADHD & Medications"], question: "How does amphetamine differ from methylphenidate?", answer: "Amphetamine (e.g., Adderall) both blocks reuptake AND reverses the transporter, actively pumping dopamine and norepinephrine out of the presynaptic neuron — stronger and longer-acting effect.", difficulty: "hard" },
+    { topicId: T["ADHD & Medications"], question: "What is atomoxetine and how does it work?", answer: "Atomoxetine (Strattera) is a selective NE reuptake inhibitor (SNRI) — it is non-stimulant, has no abuse potential, and is FDA-approved for ADHD; particularly useful when stimulants are contraindicated.", difficulty: "medium" },
+    { topicId: T["ADHD & Medications"], question: "What are DSM-5 age requirements for ADHD diagnosis?", answer: "Several inattentive or hyperactive-impulsive symptoms must be present before age 12 and cause impairment in two or more settings (e.g., home and school).", difficulty: "easy" },
+    { topicId: T["ADHD & Medications"], question: "What is the heritability of ADHD?", answer: "ADHD has a heritability of approximately 70-80% — it is one of the most heritable psychiatric disorders, with multiple genes affecting dopamine and norepinephrine systems.", difficulty: "medium" },
+    { topicId: T["ADHD & Medications"], question: "How does ADHD differ in adults vs. children?", answer: "In adults, hyperactivity often presents as restlessness and subjective sense of tension rather than overt motor hyperactivity — inattention and executive function deficits remain prominent.", difficulty: "medium" },
+    { topicId: T["ADHD & Medications"], question: "What are common inattentive symptoms of ADHD?", answer: "Difficulty sustaining attention, easily distracted, forgetfulness, losing things, failing to finish tasks, not listening when spoken to directly, and avoiding tasks requiring sustained mental effort.", difficulty: "easy" },
+    { topicId: T["ADHD & Medications"], question: "What is guanfacine (Intuniv) and how does it work?", answer: "Guanfacine is a selective alpha-2A adrenergic agonist — it strengthens prefrontal cortex connections by reducing noisy neural firing, improving working memory and impulse control in ADHD.", difficulty: "hard" },
+    { topicId: T["ADHD & Medications"], question: "What cognitive functions are most impaired in ADHD?", answer: "Working memory, response inhibition, sustained attention, set-shifting, and planning — all executive functions dependent on the prefrontal cortex and dopamine/norepinephrine signaling.", difficulty: "medium" },
+    { topicId: T["ADHD & Medications"], question: "What are executive functions?", answer: "Higher-order cognitive processes managed by the prefrontal cortex: working memory, inhibition of prepotent responses, cognitive flexibility/set-shifting, planning, and goal-directed behavior.", difficulty: "medium" },
+    { topicId: T["ADHD & Medications"], question: "What is the Continuous Performance Test (CPT)?", answer: "A neuropsychological test of sustained attention and impulse control — the patient responds to target stimuli and must inhibit responses to non-targets; widely used in ADHD assessment.", difficulty: "medium" },
+    { topicId: T["ADHD & Medications"], question: "What are the risks of stimulant medications?", answer: "Side effects include decreased appetite, sleep disruption, elevated heart rate and blood pressure, and potential for abuse — cardiovascular screening is recommended before prescribing.", difficulty: "easy" },
 
-    // ===== 13. LANGUAGE PROCESSING & APHASIA (12 cards) =====
-    { topicId: T["Language Processing & Aphasia"], question: "What are the six basic components of language?", answer: "Phonemes (smallest sounds), morphemes (smallest meaning units), syntax (sentence structure rules), semantics (meaning), pragmatics (context), and prosody (rhythm/intonation).", difficulty: "medium" },
-    { topicId: T["Language Processing & Aphasia"], question: "What is Broca's aphasia?", answer: "Non-fluent, agrammatic speech with dysarthria and dysprosody; repetition and naming impaired; comprehension relatively preserved. Lesion: left inferior frontal gyrus (Broca's area).", difficulty: "medium" },
-    { topicId: T["Language Processing & Aphasia"], question: "What is Wernicke's aphasia?", answer: "Fluent but nonsensical speech (jargon aphasia); severely impaired comprehension, repetition, and naming. Lesion: left posterior superior temporal gyrus (Wernicke's area).", difficulty: "medium" },
-    { topicId: T["Language Processing & Aphasia"], question: "What is conduction aphasia?", answer: "Relatively fluent speech with phonemic paraphasias; hallmark is severely impaired repetition with preserved comprehension. Caused by arcuate fasciculus/supramarginal gyrus lesion.", difficulty: "hard" },
-    { topicId: T["Language Processing & Aphasia"], question: "What is anomic aphasia?", answer: "Non-localizing aphasia characterized by word-finding difficulty (pauses, circumlocution); comprehension and repetition intact. Most common residual aphasia after recovery.", difficulty: "medium" },
-    { topicId: T["Language Processing & Aphasia"], question: "What is the difference between Transcortical Motor and Transcortical Sensory aphasia?", answer: "TCM: non-fluent like Broca's, intact repetition, impaired naming/writing. TCS: fluent like Wernicke's with echolalia, severely impaired comprehension, intact repetition.", difficulty: "hard" },
-    { topicId: T["Language Processing & Aphasia"], question: "What is Chomsky's deep structure vs surface structure?", answer: "Deep structure: the underlying meaning of an utterance. Surface structure: how it is actually expressed. Transformational rules map between them; different surface forms can share the same deep structure.", difficulty: "medium" },
-    { topicId: T["Language Processing & Aphasia"], question: "What is categorical perception in speech?", answer: "Perceiving speech sounds in discrete categories despite continuous acoustic variation — e.g., 'b' and 'p' are perceived as distinct even though voice onset time varies continuously.", difficulty: "hard" },
-    { topicId: T["Language Processing & Aphasia"], question: "What is the phonemic restoration effect?", answer: "When a phoneme is replaced by noise, listeners still perceive the correct word — the brain uses lexical and contextual knowledge to 'fill in' missing sounds.", difficulty: "medium" },
-    { topicId: T["Language Processing & Aphasia"], question: "What is aprosodia?", answer: "Expressive: inability to convey emotional tone in speech (flat, monotone). Receptive: difficulty interpreting others' emotional prosody and paraverbal communication.", difficulty: "medium" },
-    { topicId: T["Language Processing & Aphasia"], question: "What is alexia with vs without agraphia?", answer: "Alexia with agraphia: cannot read or write (angular gyrus lesion). Alexia without agraphia: cannot read but CAN write (rare; disconnection of visual cortex from language areas).", difficulty: "hard" },
-    { topicId: T["Language Processing & Aphasia"], question: "What is the key feature of perisylvian aphasias?", answer: "Impaired repetition — the perisylvian region includes Broca's area, Wernicke's area, and the arcuate fasciculus; all perisylvian aphasias share repetition difficulty.", difficulty: "hard" },
+    // ===== 13. LANGUAGE PROCESSING & APHASIA =====
+    { topicId: T["Language Processing & Aphasia"], question: "What is Broca's area and what aphasia results from its damage?", answer: "Broca's area (left inferior frontal gyrus, Brodmann areas 44/45) is responsible for speech production — damage causes Broca's aphasia: non-fluent, effortful speech with relatively preserved comprehension.", difficulty: "medium" },
+    { topicId: T["Language Processing & Aphasia"], question: "What is Wernicke's area and what aphasia results from its damage?", answer: "Wernicke's area (posterior superior temporal gyrus) is responsible for language comprehension — damage causes Wernicke's aphasia: fluent but meaningless speech with poor comprehension.", difficulty: "medium" },
+    { topicId: T["Language Processing & Aphasia"], question: "What is the arcuate fasciculus?", answer: "A white matter bundle connecting Broca's and Wernicke's areas — damage causes conduction aphasia: intact comprehension, relatively intact production, but severely impaired repetition.", difficulty: "hard" },
+    { topicId: T["Language Processing & Aphasia"], question: "What is anomia?", answer: "Difficulty retrieving words and names — can occur in isolation (anomic aphasia) or as part of other aphasias; often the last deficit to resolve in aphasia recovery.", difficulty: "easy" },
+    { topicId: T["Language Processing & Aphasia"], question: "What is transcortical motor aphasia?", answer: "Non-fluent aphasia with good comprehension and good repetition — caused by lesions around Broca's area (supplementary motor area), isolating but sparing the perisylvian language region.", difficulty: "hard" },
+    { topicId: T["Language Processing & Aphasia"], question: "What is transcortical sensory aphasia?", answer: "Fluent aphasia with poor comprehension but relatively preserved repetition — caused by lesions around Wernicke's area; repetition is intact because perisylvian language core is spared.", difficulty: "hard" },
+    { topicId: T["Language Processing & Aphasia"], question: "What are the components of language assessed in aphasia evaluation?", answer: "Fluency of output, comprehension, repetition, naming, reading, and writing — these six dimensions distinguish different aphasia types.", difficulty: "medium" },
+    { topicId: T["Language Processing & Aphasia"], question: "What is phonological paraphasia?", answer: "A speech error where the substitution is based on sound similarities to the target word (e.g., saying 'spoon' as 'spool') — common in conduction and Broca's aphasia.", difficulty: "hard" },
+    { topicId: T["Language Processing & Aphasia"], question: "What is semantic paraphasia?", answer: "A speech error where the substitution is semantically related to the target word (e.g., saying 'knife' instead of 'fork') — common in Wernicke's aphasia.", difficulty: "hard" },
+    { topicId: T["Language Processing & Aphasia"], question: "What is global aphasia?", answer: "Severe impairment of all language functions — non-fluent, poor comprehension, poor repetition; caused by large left hemisphere lesions involving both Broca's and Wernicke's areas.", difficulty: "medium" },
+    { topicId: T["Language Processing & Aphasia"], question: "What is dysarthria?", answer: "A motor speech disorder caused by weakness, paralysis, or lack of coordination of speech muscles — speech is slurred but language comprehension and grammar are intact.", difficulty: "easy" },
+    { topicId: T["Language Processing & Aphasia"], question: "What is dyslexia at a neurological level?", answer: "Dyslexia involves differences in the phonological processing regions of the left hemisphere, particularly the left temporoparietal and inferior frontal regions — not a visual problem.", difficulty: "medium" },
+    { topicId: T["Language Processing & Aphasia"], question: "What is the Wernicke-Geschwind model of language?", answer: "A model where auditory input → Wernicke's area (comprehension) → arcuate fasciculus → Broca's area (production) → motor cortex → speech; damage at any point causes a different aphasia type.", difficulty: "hard" },
+    { topicId: T["Language Processing & Aphasia"], question: "What brain hemisphere dominates language in most people?", answer: "The left hemisphere dominates language in ~95% of right-handed individuals and ~70% of left-handers — language lateralization is assessed with Wada test (sodium amobarbital injection).", difficulty: "easy" },
 
-    // ===== 14. APRAXIA & AGNOSIA (12 cards) =====
-    { topicId: T["Apraxia & Agnosia"], question: "What is apraxia?", answer: "Inability to perform purposeful or skilled movements despite intact motor and sensory systems; reflects a deficit in motor planning at the cortical association level.", difficulty: "easy" },
-    { topicId: T["Apraxia & Agnosia"], question: "What is ideomotor apraxia?", answer: "Inability to pantomime tool use or follow gestural commands; errors include postural (body part as tool), spatial/trajectory, and temporal errors. Left hemisphere frontal-parietal lesion.", difficulty: "medium" },
-    { topicId: T["Apraxia & Agnosia"], question: "What is ideational apraxia?", answer: "Failure to execute a complex, multi-step motor sequence (e.g., making coffee); the sequence of individual acts is disrupted. Associated with frontal lobe lesions.", difficulty: "medium" },
-    { topicId: T["Apraxia & Agnosia"], question: "What is conduction apraxia?", answer: "More impaired with imitation than with command; a disconnection syndrome; lesion to left inferior parietal lobe (supramarginal gyrus, arcuate fasciculus).", difficulty: "hard" },
-    { topicId: T["Apraxia & Agnosia"], question: "What is apraxia of speech?", answer: "Difficulty planning and sequencing the motor movements for speech production; automatic speech may be preserved; not caused by weakness (dysarthria) or aphasia.", difficulty: "medium" },
-    { topicId: T["Apraxia & Agnosia"], question: "What is agnosia?", answer: "Perception without recognition in any sensory modality — the ability to sense is intact but the brain cannot recognize or interpret what is being perceived.", difficulty: "easy" },
-    { topicId: T["Apraxia & Agnosia"], question: "What is visual agnosia?", answer: "Inability to recognize objects by sight despite intact visual acuity and intelligence; caused by damage to the ventral visual stream (temporal-occipital cortex).", difficulty: "medium" },
-    { topicId: T["Apraxia & Agnosia"], question: "What is simultagnosia?", answer: "Inability to perceive more than one object at a time; part of Balint's syndrome (with optic ataxia and oculomotor apraxia); bilateral parietal-occipital damage.", difficulty: "hard" },
-    { topicId: T["Apraxia & Agnosia"], question: "What is auditory agnosia?", answer: "Inability to recognize sounds despite intact hearing; specific forms include phonagnosia (familiar voices) and auditory verbal agnosia (word recognition).", difficulty: "hard" },
-    { topicId: T["Apraxia & Agnosia"], question: "What is asomatognosia?", answer: "Failure to recognize one's own body parts or their relationship; may involve hemispatial neglect; associated with right parietal lobe lesions.", difficulty: "hard" },
-    { topicId: T["Apraxia & Agnosia"], question: "What is the standard assessment order for apraxia?", answer: "Pantomime to command → imitate the examiner → use the actual object; assess both limbs; tests reveal which level of representation is impaired.", difficulty: "medium" },
-    { topicId: T["Apraxia & Agnosia"], question: "What is conceptual apraxia?", answer: "Defective knowledge of tool-object relationships and how tools function; two types — conceptual knowledge (what tools do) and production knowledge (how to use them).", difficulty: "hard" },
+    // ===== 14. APRAXIA & AGNOSIA =====
+    { topicId: T["Apraxia & Agnosia"], question: "What is apraxia?", answer: "The inability to perform purposeful, skilled movements despite having intact motor ability, sensation, and comprehension — a disorder of motor planning from cortical association area damage.", difficulty: "easy" },
+    { topicId: T["Apraxia & Agnosia"], question: "What is ideomotor apraxia?", answer: "Inability to perform a movement on verbal command or by imitation (e.g., 'wave goodbye'), even though the person can sometimes perform it spontaneously — lesions to left frontal and parietal areas.", difficulty: "medium" },
+    { topicId: T["Apraxia & Agnosia"], question: "What is ideational apraxia?", answer: "Failure to perform a sequenced, multi-step action (e.g., folding a letter and putting it in an envelope) — a disorder of the conceptual knowledge of action sequences; associated with frontal lesions.", difficulty: "medium" },
+    { topicId: T["Apraxia & Agnosia"], question: "What is kinetic (limb-kinetic) apraxia?", answer: "Clumsiness in performing fine, precision motor acts (e.g., picking up a coin) — caused by lesions to corticospinal, corticobasal, or prefrontal areas; tested with finger tapping and grooved pegboard.", difficulty: "hard" },
+    { topicId: T["Apraxia & Agnosia"], question: "What is apraxia of speech?", answer: "Inability to plan the motor movements for speech — lesions to Broca's area, insula, premotor, or supplementary motor areas; automatic speech may be preserved while volitional speech is impaired.", difficulty: "medium" },
+    { topicId: T["Apraxia & Agnosia"], question: "What is the order of testing in apraxia assessment?", answer: "Pantomime to command → imitation → use of actual object. Performance often improves from command to object use.", difficulty: "medium" },
+    { topicId: T["Apraxia & Agnosia"], question: "What is agnosia?", answer: "Perception without recognition — the inability to recognize stimuli despite intact sensory function, attention, and language. It can affect any sensory modality.", difficulty: "easy" },
+    { topicId: T["Apraxia & Agnosia"], question: "What is apperceptive agnosia?", answer: "Inability to form a coherent visual percept from individual elements — the patient cannot recognize, copy, or match objects; caused by diffuse posterior brain damage.", difficulty: "hard" },
+    { topicId: T["Apraxia & Agnosia"], question: "What is associative agnosia?", answer: "The patient can copy and match objects but cannot recognize them or access their meaning — a failure to link intact visual percept with semantic knowledge; caused by occipitotemporal damage.", difficulty: "hard" },
+    { topicId: T["Apraxia & Agnosia"], question: "What is prosopagnosia?", answer: "The inability to recognize familiar faces — patients can often identify gender, age, and emotion from a face, but cannot recognize the specific person; caused by bilateral fusiform face area damage.", difficulty: "medium" },
+    { topicId: T["Apraxia & Agnosia"], question: "What is simultagnosia?", answer: "Inability to perceive more than one object at a time — the patient sees individual elements but cannot process the 'whole' visual scene; occurs in Balint's syndrome with bilateral parieto-occipital lesions.", difficulty: "hard" },
+    { topicId: T["Apraxia & Agnosia"], question: "What is hemispatial neglect?", answer: "Failure to attend to stimuli on the side contralateral to a brain lesion (usually right hemisphere) — not due to sensory loss; tested with line bisection, cancellation tasks, and copy tasks.", difficulty: "medium" },
+    { topicId: T["Apraxia & Agnosia"], question: "What is Balint's syndrome?", answer: "A triad of simultagnosia (cannot process whole scene), optic ataxia (inaccurate reaching), and oculomotor apraxia (inability to voluntarily move eyes to targets) — caused by bilateral parieto-occipital lesions.", difficulty: "hard" },
+    { topicId: T["Apraxia & Agnosia"], question: "What is anosognosia?", answer: "Unawareness of one's own neurological deficit (e.g., not knowing one is paralyzed or has memory loss) — not psychological denial; caused by right hemisphere damage and prevalent in Alzheimer's.", difficulty: "medium" },
 
-    // ===== 15. NEUROCOGNITIVE DISORDERS (22 cards) =====
-    { topicId: T["Neurocognitive Disorders"], question: "What is the genetic basis of Huntington's Disease?", answer: "An autosomal dominant mutation in the HTT gene on chromosome 4 — CAG trinucleotide repeats (36+ = pathological) causing an abnormally long polyglutamine stretch.", difficulty: "medium" },
-    { topicId: T["Neurocognitive Disorders"], question: "What neuroanatomy is primarily affected in Huntington's Disease?", answer: "Basal ganglia — degeneration of the caudate (creating 'boxcar ventricles') and putamen; later frontal cortex atrophy causing executive function deficits.", difficulty: "medium" },
-    { topicId: T["Neurocognitive Disorders"], question: "What is chorea?", answer: "Involuntary, irregular, rapid movements that flow from one body part to another; the hallmark motor symptom of Huntington's Disease.", difficulty: "easy" },
-    { topicId: T["Neurocognitive Disorders"], question: "What psychiatric symptoms often precede motor symptoms in Huntington's?", answer: "Depression (most common), anxiety, OCD symptoms, apathy, irritability, and psychosis — often appear years before motor signs.", difficulty: "medium" },
-    { topicId: T["Neurocognitive Disorders"], question: "What are the Frascati Criteria for HIV neurocognitive disorders?", answer: "ANI (≥1 SD below in 2+ domains, no functional impairment), MND (same plus mild functional impairment, ~12% prevalence), HAD (same plus marked functional impairment, ~2%).", difficulty: "hard" },
-    { topicId: T["Neurocognitive Disorders"], question: "How does beta-amyloid differ between HIV and Alzheimer's?", answer: "In HIV, beta-amyloid plaques are intracellular. In Alzheimer's, they are extracellular — this distinction helps differentiate these dementias.", difficulty: "hard" },
-    { topicId: T["Neurocognitive Disorders"], question: "What is delirium?", answer: "An acute neuropsychiatric syndrome characterized by fluctuating impairment of attention and consciousness, often with confusion, hallucinations, and disorientation.", difficulty: "easy" },
-    { topicId: T["Neurocognitive Disorders"], question: "What are the three subtypes of delirium?", answer: "Hyperactive (agitated, combative — high injury risk), hypoactive (quiet, withdrawn — often missed clinically), and mixed (alternating features of both).", difficulty: "medium" },
-    { topicId: T["Neurocognitive Disorders"], question: "What primarily distinguishes delirium from dementia?", answer: "Timeline of onset — delirium has an acute (hours to days) and fluctuating course; dementia has a gradual, progressive onset.", difficulty: "medium" },
-    { topicId: T["Neurocognitive Disorders"], question: "What is the Glasgow Coma Scale (GCS)?", answer: "A 15-point scale assessing consciousness after TBI across three components: eye opening (4), verbal response (5), and motor response (6). Score ≤8 = severe TBI.", difficulty: "medium" },
-    { topicId: T["Neurocognitive Disorders"], question: "What is the difference between a subdural and epidural hematoma?", answer: "Subdural: venous bleed between dura and arachnoid — slow, seen in elderly/anticoagulants. Epidural: arterial bleed between skull and dura — rapid, classic 'lucid interval'.", difficulty: "hard" },
-    { topicId: T["Neurocognitive Disorders"], question: "What is Chronic Traumatic Encephalopathy (CTE)?", answer: "A progressive neurodegenerative disease from repetitive brain trauma; characterized by tau protein accumulation; diagnosed post-mortem; associated with contact sports.", difficulty: "medium" },
-    { topicId: T["Neurocognitive Disorders"], question: "What are the cardinal motor symptoms of Parkinson's Disease?", answer: "Bradykinesia (slow movement, required), tremor (resting, often first symptom), and rigidity (cogwheel or lead pipe). Postural instability appears later.", difficulty: "easy" },
-    { topicId: T["Neurocognitive Disorders"], question: "What is the pathophysiology of Parkinson's Disease?", answer: "Progressive degeneration of dopaminergic neurons in the substantia nigra pars compacta, with Lewy body (alpha-synuclein) accumulation; loss of striatal dopamine input.", difficulty: "medium" },
-    { topicId: T["Neurocognitive Disorders"], question: "What are the core features of Dementia with Lewy Bodies (DLB)?", answer: "Fluctuating cognition (especially alertness), parkinsonism (after cognitive decline), recurrent visual hallucinations (80%), and REM sleep behavior disorder.", difficulty: "medium" },
-    { topicId: T["Neurocognitive Disorders"], question: "How does Lewy body dementia differ from Alzheimer's in presentation?", answer: "DLB shows prominent early hallucinations, fluctuating attention, and parkinsonism. Alzheimer's presents with primary memory impairment first. DLB is most commonly misdiagnosed as Alzheimer's.", difficulty: "hard" },
-    { topicId: T["Neurocognitive Disorders"], question: "What is gate control theory of pain?", answer: "Melzack and Wall's theory: non-painful sensory input activates inhibitory interneurons in the dorsal horn that 'close the gate' to pain signals ascending to the brain.", difficulty: "medium" },
-    { topicId: T["Neurocognitive Disorders"], question: "What is the periaqueductal gray (PAG) and its role in pain?", answer: "A midbrain structure that contains high concentrations of opioid receptors and activates descending pain inhibition pathways; stimulation produces profound analgesia.", difficulty: "hard" },
-    { topicId: T["Neurocognitive Disorders"], question: "What role does the anterior cingulate cortex play in pain?", answer: "It processes the emotional/affective distress component of pain (the 'suffering'). Damage to the cingulate eliminates the emotional distress of pain while leaving sensory detection intact.", difficulty: "hard" },
-    { topicId: T["Neurocognitive Disorders"], question: "What is TBI's specific risk profile in older adults?", answer: "Ages 65-74: 1 in 200 incidence; 75+: 1 in 50; 85% from falls; 2-fold increased dementia risk; slower recovery, greater functional dependence, polypharmacy complications.", difficulty: "medium" },
-    { topicId: T["Neurocognitive Disorders"], question: "What cognitive domains are most impaired in HIV-associated neurocognitive disorder?", answer: "Episodic memory, executive function, attention, working memory, fine motor control, and verbal fluency — subcortical pattern with psychomotor slowing.", difficulty: "medium" },
-    { topicId: T["Neurocognitive Disorders"], question: "What cognitive profile distinguishes Alzheimer's from HIV dementia?", answer: "Alzheimer's: cortical, primary amnestic, anomia. HIV dementia: subcortical, mild memory, psychomotor slowing, executive dysfunction, depression prominent at end stage.", difficulty: "hard" },
+    // ===== 15. NEUROCOGNITIVE DISORDERS =====
+    { topicId: T["Neurocognitive Disorders"], question: "What are the 4 As of cortical dementia?", answer: "Amnesia (memory loss), Aphasia (language), Apraxia (motor planning), and Agnosia (recognition) — seen in Alzheimer's and other cortical dementias.", difficulty: "medium" },
+    { topicId: T["Neurocognitive Disorders"], question: "What are the histological hallmarks of Alzheimer's disease?", answer: "Beta-amyloid plaques (extracellular) and tau neurofibrillary tangles (intracellular) — discovered by Alois Alzheimer in 1906 using histological staining.", difficulty: "medium" },
+    { topicId: T["Neurocognitive Disorders"], question: "What is the difference between cortical and subcortical dementia?", answer: "Cortical: aphasia, apraxia, agnosia, amnesia (retrieval deficits) — e.g., Alzheimer's. Subcortical: alertness, attention, processing speed, and mood changes (depression) — e.g., Huntington's, Parkinson's.", difficulty: "medium" },
+    { topicId: T["Neurocognitive Disorders"], question: "What is Huntington's disease and what gene causes it?", answer: "A fatal hereditary neurodegenerative disease caused by a CAG repeat expansion in the HTT gene on chromosome 4 — causes progressive chorea, cognitive decline, and psychiatric symptoms.", difficulty: "medium" },
+    { topicId: T["Neurocognitive Disorders"], question: "What are the cardinal motor symptoms of Parkinson's disease?", answer: "Bradykinesia (slow movement), resting tremor (unilateral, improves with movement), rigidity (lead pipe/cogwheel), and postural instability — TRAP acronym.", difficulty: "easy" },
+    { topicId: T["Neurocognitive Disorders"], question: "What is the neuropathological basis of Parkinson's disease?", answer: "Progressive loss of dopaminergic neurons in the substantia nigra pars compacta, with Lewy body (alpha-synuclein) accumulation — symptoms appear when ~60-80% of neurons are lost.", difficulty: "hard" },
+    { topicId: T["Neurocognitive Disorders"], question: "What is dementia with Lewy bodies (DLB)?", answer: "The second most common dementia after Alzheimer's — characterized by fluctuating cognition, recurrent visual hallucinations, parkinsonism, and REM sleep behavior disorder.", difficulty: "medium" },
+    { topicId: T["Neurocognitive Disorders"], question: "What is mild cognitive impairment (MCI)?", answer: "Cognitive decline beyond normal aging but not meeting dementia criteria — aMCI (amnestic) is more likely to convert to Alzheimer's; naMCI (non-amnestic) is less likely. Prevalence 15-20% in the US.", difficulty: "medium" },
+    { topicId: T["Neurocognitive Disorders"], question: "What is the triad of normal pressure hydrocephalus (NPH)?", answer: "Gait disturbance ('magnetic gait' — feet feel glued to the floor), urinary incontinence, and cognitive impairment — caused by excess CSF in ventricles without elevated pressure.", difficulty: "hard" },
+    { topicId: T["Neurocognitive Disorders"], question: "What is the difference between capacity and competency?", answer: "Capacity is a clinical determination (can change) that a patient can make informed medical decisions; competency is a legal determination (permanent, decided by a judge).", difficulty: "medium" },
+    { topicId: T["Neurocognitive Disorders"], question: "What is chronic traumatic encephalopathy (CTE)?", answer: "A neurodegenerative disease caused by repetitive traumatic brain injuries (TBI) — formerly called 'punch drunk syndrome'; diagnosed definitively only at autopsy.", difficulty: "medium" },
+    { topicId: T["Neurocognitive Disorders"], question: "What is frontotemporal dementia (FTD)?", answer: "A dementia affecting the frontal and temporal lobes — the behavioral variant (bvFTD) presents with disinhibition, apathy, hyperorality, stereotyped behaviors, and empathy loss (SHADE acronym); onset typically 50s.", difficulty: "hard" },
+    { topicId: T["Neurocognitive Disorders"], question: "What is the Frascati criteria for HIV-Associated Neurocognitive Disorder (HAND)?", answer: "Three levels: ANI (asymptomatic, 1 SD below in 2+ domains), MND (mild, with functional impairment, 12% prevalence), and HAD (HIV-associated dementia, 2% prevalence, significant impairment).", difficulty: "hard" },
+    { topicId: T["Neurocognitive Disorders"], question: "What are the cognitive domains typically impaired in vascular dementia?", answer: "Processing speed and complex attention (most impaired), executive function, and memory — depends on the location and extent of vascular lesions (cortical vs. subcortical strokes).", difficulty: "medium" },
   ];
 
   await db.insert(flashcardsTable).values(flashcards);
-  console.log(`Inserted ${flashcards.length} flashcards`);
 
   // ===========================================================================
-  // QUIZ QUESTIONS (10+ per topic, 20 for large consolidated topics)
+  // QUIZ QUESTIONS (10 per topic = 150 total)
   // ===========================================================================
   const rawQuizQuestions = [
     // ===== 1. NEUROPSYCHOLOGY OVERVIEW =====
-    { topicId: T["Neuropsychology Overview"], question: "Which concept states that any cortical area can substitute for another in learning?", options: JSON.stringify(["Equipotentiality","Localization","Lateralization","Diaschisis"]), correctAnswer: "A", explanation: "Lashley's equipotentiality holds that cortical tissue is largely interchangeable for mass action learning, contrasting with strict localization of function." },
-    { topicId: T["Neuropsychology Overview"], question: "A patient can form new memories but cannot recall events from before a car accident. This is best described as:", options: JSON.stringify(["Anterograde amnesia","Retrograde amnesia","Dissociative fugue","Transient global amnesia"]), correctAnswer: "B", explanation: "Retrograde amnesia is loss of memories formed before the injury. Anterograde amnesia is failure to form new memories after injury." },
-    { topicId: T["Neuropsychology Overview"], question: "What does ecological validity refer to in neuropsychological assessment?", options: JSON.stringify(["How well a test predicts real-world functioning","The physical environment where testing occurs","The statistical validity of norms","Whether raw scores are ecologically stable"]), correctAnswer: "A", explanation: "Ecological validity is the degree to which test performance generalizes to and predicts everyday functional outcomes in patients' lives." },
-    { topicId: T["Neuropsychology Overview"], question: "The diathesis-stress model proposes that psychological disorders result from:", options: JSON.stringify(["Genetic vulnerability interacting with environmental stressors","Purely environmental causes","A single dominant gene mutation","Brain lesions alone"]), correctAnswer: "A", explanation: "The diathesis-stress model holds that genetic vulnerability (diathesis) requires environmental stress to trigger disorder — neither factor alone is sufficient." },
-    { topicId: T["Neuropsychology Overview"], question: "A double dissociation demonstrates:", options: JSON.stringify(["Two cognitive functions are independent of each other","Two brain areas have identical functions","Memory and language are always paired","One function depends on another"]), correctAnswer: "A", explanation: "A double dissociation shows that lesion A impairs function X but not Y while lesion B impairs Y but not X, proving the two functions are neurally independent." },
-    { topicId: T["Neuropsychology Overview"], question: "Diaschisis refers to:", options: JSON.stringify(["Loss of function in regions remote from but connected to a lesion","Direct destruction of neural tissue","Swelling at the injury site","Cognitive reserve depletion"]), correctAnswer: "A", explanation: "Diaschisis is a transient functional loss in structurally intact brain regions that are connected to the lesion site, due to disconnection effects." },
-    { topicId: T["Neuropsychology Overview"], question: "Which hemisphere is typically dominant for language processing?", options: JSON.stringify(["Left hemisphere","Right hemisphere","Both equally","Depends entirely on handedness"]), correctAnswer: "A", explanation: "In approximately 95% of right-handers and 70% of left-handers, language is dominant in the left hemisphere." },
-    { topicId: T["Neuropsychology Overview"], question: "The MMSE maximum score is:", options: JSON.stringify(["30","100","20","50"]), correctAnswer: "A", explanation: "The Mini-Mental State Examination has a maximum score of 30 points, covering orientation, registration, attention/calculation, recall, language, and visuoconstruction." },
-    { topicId: T["Neuropsychology Overview"], question: "An endophenotype is best described as:", options: JSON.stringify(["An intermediate biological marker between genes and symptoms","The same as a clinical symptom","A behavioral phenotype visible to observers","A gene directly causing a disorder"]), correctAnswer: "A", explanation: "An endophenotype (e.g., a cognitive or neuroimaging measure) lies between genetic variants and observable symptoms, bridging the genetic-behavioral gap." },
-    { topicId: T["Neuropsychology Overview"], question: "The Halstead-Reitan Battery is primarily used to:", options: JSON.stringify(["Detect and characterize brain damage","Screen for personality disorders","Measure IQ only","Assess anxiety disorders"]), correctAnswer: "A", explanation: "The Halstead-Reitan Battery is a comprehensive neuropsychological battery assessing motor, sensory, and cognitive functions to detect and characterize brain damage." },
+    { topicId: T["Neuropsychology Overview"], question: "Which lobe of the brain is primarily responsible for executive functioning?", options: JSON.stringify(["Frontal lobe","Parietal lobe","Temporal lobe","Occipital lobe"]), correctAnswer: "A", explanation: "The frontal lobe houses the prefrontal cortex, which is responsible for executive functions including planning, working memory, inhibition, and decision-making." },
+    { topicId: T["Neuropsychology Overview"], question: "A lesion to the right hemisphere would cause motor impairment on which side?", options: JSON.stringify(["Right side","Left side","Both sides","Neither side"]), correctAnswer: "B", explanation: "Most motor and sensory pathways are contralateral — the right hemisphere controls the left side of the body." },
+    { topicId: T["Neuropsychology Overview"], question: "What is the primary purpose of 'hold' tests in neuropsychological assessment?", options: JSON.stringify(["To assess current impairment","To estimate premorbid intellectual functioning","To measure attention","To evaluate motor speed"]), correctAnswer: "B", explanation: "Hold tests (e.g., vocabulary, fund of knowledge) are resistant to brain damage and are used to estimate an individual's premorbid intellectual functioning." },
+    { topicId: T["Neuropsychology Overview"], question: "Which of the following best defines a double dissociation?", options: JSON.stringify(["Two tasks that both rely on the same brain area","Patient A impaired on X not Y, Patient B impaired on Y not X","Both tasks are impaired by the same lesion","Two patients with identical symptoms"]), correctAnswer: "B", explanation: "A double dissociation demonstrates that two cognitive functions are independent: one lesion impairs function X but not Y, while a different lesion impairs Y but not X." },
+    { topicId: T["Neuropsychology Overview"], question: "What does the parietal lobe primarily process?", options: JSON.stringify(["Language production","Visual object recognition","Somatosensory and spatial information","Auditory processing"]), correctAnswer: "C", explanation: "The parietal lobe processes somatosensory information (touch, proprioception) and spatial processing. The left parietal is also involved in language." },
+    { topicId: T["Neuropsychology Overview"], question: "Ecological validity in neuropsychological assessment refers to:", options: JSON.stringify(["Statistical significance of test norms","How well test performance predicts real-world functioning","The ability of tests to detect lesion size","How long a test battery takes"]), correctAnswer: "B", explanation: "Ecological validity is the degree to which performance on neuropsychological tests predicts real-world, daily life functional abilities." },
+    { topicId: T["Neuropsychology Overview"], question: "The concept of cognitive reserve suggests that:", options: JSON.stringify(["All individuals decline at the same rate","Education and mental activity buffer against cognitive decline","Brain damage always produces immediate symptoms","Memory is the first function to decline"]), correctAnswer: "B", explanation: "Cognitive reserve — built through education, intellectual activity, and social engagement — allows some individuals to tolerate greater brain pathology before showing cognitive symptoms." },
+    { topicId: T["Neuropsychology Overview"], question: "Diaschisis refers to:", options: JSON.stringify(["Permanent damage at a lesion site","Loss of function in brain regions distant from the injury","Compensatory reorganization of brain function","Structural atrophy of the cortex"]), correctAnswer: "B", explanation: "Diaschisis is the transient loss of function in brain regions remote from an injury site due to disrupted connections, even though those regions are structurally intact." },
+    { topicId: T["Neuropsychology Overview"], question: "What is the difference between statistically significant and clinically significant findings?", options: JSON.stringify(["They mean the same thing","Statistically significant means unlikely by chance; clinically significant means meaningful for functioning","Clinical significance requires larger samples","Statistical significance requires larger effect sizes"]), correctAnswer: "B", explanation: "A statistically significant result is unlikely due to chance; a clinically significant result is meaningful and has real impact on the patient's functioning — the two do not always co-occur." },
+    { topicId: T["Neuropsychology Overview"], question: "Which brain structure is primarily responsible for forming new declarative memories?", options: JSON.stringify(["Amygdala","Cerebellum","Hippocampus","Basal ganglia"]), correctAnswer: "C", explanation: "The hippocampus is critical for forming new explicit (declarative) memories — both episodic and semantic. Bilateral hippocampal damage causes severe anterograde amnesia." },
 
     // ===== 2. CELL BIOLOGY & NEURON ANATOMY =====
-    { topicId: T["Cell Biology & Neuron Anatomy"], question: "The resting membrane potential of a typical neuron is approximately:", options: JSON.stringify(["-70 mV","+40 mV","0 mV","-55 mV"]), correctAnswer: "A", explanation: "The resting membrane potential is approximately -70 mV, maintained by Na+/K+ ATPase pumps and differential ion permeability." },
-    { topicId: T["Cell Biology & Neuron Anatomy"], question: "Saltatory conduction refers to:", options: JSON.stringify(["Action potentials jumping between nodes of Ranvier","Slower conduction in unmyelinated axons","Ca2+ influx at synaptic terminals","Synaptic vesicle fusion with the membrane"]), correctAnswer: "A", explanation: "Saltatory conduction occurs in myelinated axons — the action potential 'jumps' between exposed nodes of Ranvier, greatly increasing speed and energy efficiency." },
-    { topicId: T["Cell Biology & Neuron Anatomy"], question: "Which ion primarily flows IN during the depolarization phase of an action potential?", options: JSON.stringify(["Na+","K+","Cl-","Ca2+"]), correctAnswer: "A", explanation: "Voltage-gated Na+ channels open at threshold, allowing rapid Na+ influx that drives the membrane potential from -70 mV toward +40 mV." },
-    { topicId: T["Cell Biology & Neuron Anatomy"], question: "The all-or-none law states that:", options: JSON.stringify(["A neuron fires maximally or not at all","Larger stimuli produce larger action potentials","Only one neuron fires at a time","APs decay over distance"]), correctAnswer: "A", explanation: "Once threshold is reached, a full-sized action potential is generated regardless of stimulus intensity; intensity is encoded by firing rate, not AP size." },
-    { topicId: T["Cell Biology & Neuron Anatomy"], question: "Spatial summation in a neuron involves:", options: JSON.stringify(["Integration of simultaneous inputs from multiple synaptic locations","Repeated inputs arriving rapidly in succession","Single large stimuli at one location","Inhibitory input only"]), correctAnswer: "A", explanation: "Spatial summation occurs when multiple synaptic inputs activate the neuron simultaneously from different locations, and their combined effects determine whether threshold is reached." },
-    { topicId: T["Cell Biology & Neuron Anatomy"], question: "Which glial cell type produces myelin in the central nervous system?", options: JSON.stringify(["Oligodendrocytes","Schwann cells","Astrocytes","Microglia"]), correctAnswer: "A", explanation: "Oligodendrocytes myelinate CNS axons. Schwann cells perform the same function in the peripheral nervous system." },
-    { topicId: T["Cell Biology & Neuron Anatomy"], question: "During the absolute refractory period:", options: JSON.stringify(["No action potential can be generated regardless of stimulus strength","A stronger stimulus can trigger another AP","Only inhibitory signals can pass","The neuron is at resting potential"]), correctAnswer: "A", explanation: "During the absolute refractory period, Na+ channels are inactivated — no stimulus, however large, can generate another action potential." },
-    { topicId: T["Cell Biology & Neuron Anatomy"], question: "An EPSP is best described as:", options: JSON.stringify(["A graded depolarization moving membrane potential toward threshold","A graded hyperpolarization reducing firing likelihood","An all-or-none signal at the axon hillock","A chemical signal in the synaptic cleft"]), correctAnswer: "A", explanation: "An EPSP is an excitatory, graded depolarization that moves the postsynaptic membrane potential closer to the threshold for firing." },
-    { topicId: T["Cell Biology & Neuron Anatomy"], question: "The axon hillock is significant because:", options: JSON.stringify(["It is where action potentials are initiated","It receives input from dendrites","It releases neurotransmitters","It is covered by the most myelin"]), correctAnswer: "A", explanation: "The axon hillock has the highest density of voltage-gated Na+ channels and is the site where spatial and temporal summation of inputs determines whether an AP is generated." },
-    { topicId: T["Cell Biology & Neuron Anatomy"], question: "Which of the following best describes temporal summation?", options: JSON.stringify(["Rapid repeated inputs at one synapse add together","Multiple simultaneous inputs from different synapses combine","Inhibitory and excitatory inputs cancel out","A single massive depolarization"]), correctAnswer: "A", explanation: "Temporal summation occurs when a single synapse is activated in rapid succession — each EPSP adds to the previous one before it decays." },
+    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What is the resting membrane potential of a typical neuron?", options: JSON.stringify(["-70 mV","+40 mV","-55 mV","0 mV"]), correctAnswer: "A", explanation: "The resting membrane potential is approximately -70 mV, maintained by the Na+/K+ ATPase pump and differential ion permeability." },
+    { topicId: T["Cell Biology & Neuron Anatomy"], question: "Where does the action potential initiate?", options: JSON.stringify(["Dendrites","Cell body (soma)","Axon hillock","Node of Ranvier"]), correctAnswer: "C", explanation: "The axon hillock has the highest density of voltage-gated Na+ channels and is where the action potential is initiated when threshold is reached." },
+    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What causes rapid depolarization during an action potential?", options: JSON.stringify(["K+ influx","Na+ influx","Cl- influx","Ca2+ efflux"]), correctAnswer: "B", explanation: "Rapid influx of Na+ through voltage-gated sodium channels drives the membrane potential from -70 mV toward +40 mV during depolarization." },
+    { topicId: T["Cell Biology & Neuron Anatomy"], question: "What is the function of oligodendrocytes?", options: JSON.stringify(["Provide immune defense","Produce myelin in the CNS","Produce myelin in the PNS","Regulate synaptic transmission"]), correctAnswer: "B", explanation: "Oligodendrocytes produce the myelin sheath in the central nervous system — one oligodendrocyte can myelinate multiple axons. Schwann cells perform this function in the PNS." },
+    { topicId: T["Cell Biology & Neuron Anatomy"], question: "Saltatory conduction refers to:", options: JSON.stringify(["Action potentials conducted at a constant speed","Action potentials jumping between nodes of Ranvier","Transmission across unmyelinated axons","Inhibitory postsynaptic potentials"]), correctAnswer: "B", explanation: "Saltatory conduction is the action potential 'jumping' between nodes of Ranvier in myelinated axons, greatly increasing conduction velocity." },
+    { topicId: T["Cell Biology & Neuron Anatomy"], question: "An EPSP is:", options: JSON.stringify(["A hyperpolarization that inhibits firing","A depolarization that moves membrane potential toward threshold","Complete membrane depolarization","An action potential in the postsynaptic cell"]), correctAnswer: "B", explanation: "An EPSP (Excitatory PostSynaptic Potential) is a graded depolarization that moves the membrane potential toward threshold, increasing the likelihood of an action potential." },
+    { topicId: T["Cell Biology & Neuron Anatomy"], question: "The all-or-none law states that:", options: JSON.stringify(["Larger stimuli produce larger action potentials","Action potential amplitude is graded by stimulus strength","Neurons either fire fully or not at all","Neurons always respond to every stimulus"]), correctAnswer: "C", explanation: "According to the all-or-none law, a neuron fires a full-sized action potential or none at all — amplitude is constant and doesn't vary with stimulus strength." },
+    { topicId: T["Cell Biology & Neuron Anatomy"], question: "Temporal summation occurs when:", options: JSON.stringify(["Multiple synapses fire simultaneously","One synapse fires repeatedly in rapid succession","Two neurons form a new connection","The action potential travels very fast"]), correctAnswer: "B", explanation: "Temporal summation occurs when a single synapse fires rapidly, allowing successive EPSPs to add together before the previous one decays." },
+    { topicId: T["Cell Biology & Neuron Anatomy"], question: "Astrocytes primarily function to:", options: JSON.stringify(["Produce myelin in the PNS","Act as the brain's immune cells","Support neurons and maintain blood-brain barrier","Transmit action potentials"]), correctAnswer: "C", explanation: "Astrocytes are the most numerous glial cells — they provide metabolic support, maintain the blood-brain barrier, regulate extracellular ions, and play a role in synaptogenesis." },
+    { topicId: T["Cell Biology & Neuron Anatomy"], question: "During the absolute refractory period, a neuron:", options: JSON.stringify(["Requires a stronger stimulus to fire","Cannot fire regardless of stimulus strength","Has elevated membrane potential","Is hyperpolarized above resting potential"]), correctAnswer: "B", explanation: "During the absolute refractory period, voltage-gated Na+ channels are inactivated and the neuron cannot fire another action potential regardless of stimulus strength." },
 
     // ===== 3. NEUROTRANSMITTERS & SYNAPTIC TRANSMISSION =====
-    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "The major excitatory neurotransmitter in the brain is:", options: JSON.stringify(["Glutamate","GABA","Dopamine","Serotonin"]), correctAnswer: "A", explanation: "Glutamate is the primary excitatory neurotransmitter, acting on AMPA, NMDA, and kainate receptors at approximately 90% of fast excitatory synapses." },
-    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "SSRIs work by:", options: JSON.stringify(["Blocking serotonin reuptake transporters","Blocking dopamine D2 receptors","Increasing GABA activity","Inhibiting MAO enzymes"]), correctAnswer: "A", explanation: "SSRIs selectively block the serotonin reuptake transporter (SERT), preventing serotonin from being transported back into the presynaptic terminal." },
-    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "Ionotropic receptors differ from metabotropic receptors in that they:", options: JSON.stringify(["Are ligand-gated ion channels producing fast, direct effects","Act through second messenger cascades","Are only found postsynaptically","Are exclusively inhibitory"]), correctAnswer: "A", explanation: "Ionotropic receptors are directly coupled ion channels — binding opens the channel immediately (milliseconds). Metabotropic (GPCRs) use slower second messenger cascades." },
-    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "Which neurotransmitter is degraded by acetylcholinesterase?", options: JSON.stringify(["Acetylcholine","Dopamine","Serotonin","GABA"]), correctAnswer: "A", explanation: "Acetylcholinesterase rapidly breaks down acetylcholine in the synaptic cleft, terminating its action — this is why organophosphate poisoning causes overstimulation." },
-    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "The mesolimbic dopamine pathway primarily mediates:", options: JSON.stringify(["Reward, pleasure-seeking, and motivation","Voluntary motor control","Cognitive attention and working memory","Sensory perception"]), correctAnswer: "A", explanation: "The mesolimbic pathway (VTA → nucleus accumbens/limbic structures) mediates reward, wanting, and pleasure; it is activated by both rewarding and aversive stimuli." },
-    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "Neuropeptides differ from classical neurotransmitters in that they:", options: JSON.stringify(["Are larger molecules acting as neuromodulators with prolonged effects","Are synthesized at the presynaptic terminal","Act only on ionotropic receptors","Are degraded exclusively by reuptake"]), correctAnswer: "A", explanation: "Neuropeptides (e.g., substance P, endorphins) are larger protein fragments synthesized in the cell body, packed in dense-core vesicles, and act as slow neuromodulators." },
-    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "An antagonist drug works by:", options: JSON.stringify(["Blocking the receptor without activating it","Mimicking the neurotransmitter and activating the receptor","Increasing neurotransmitter synthesis","Blocking reuptake transporters"]), correctAnswer: "A", explanation: "Antagonists occupy receptors but do not activate them — they block the endogenous neurotransmitter from binding without producing a response." },
-    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "GABA produces inhibition primarily by:", options: JSON.stringify(["Opening Cl- channels causing hyperpolarization","Blocking Na+ channels","Inhibiting vesicle release","Activating metabotropic receptors only"]), correctAnswer: "A", explanation: "GABA binds GABA-A receptors (ionotropic), opening Cl- channels. Cl- influx hyperpolarizes the membrane (makes it more negative), reducing firing probability." },
-    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "Exocytosis in synaptic transmission is triggered by:", options: JSON.stringify(["Ca2+ influx into the presynaptic terminal","Na+ influx into the postsynaptic terminal","K+ efflux from the presynaptic terminal","Cl- influx into the presynaptic terminal"]), correctAnswer: "A", explanation: "When an action potential reaches the terminal, voltage-gated Ca2+ channels open, Ca2+ enters, and triggers vesicle fusion with the membrane and neurotransmitter release." },
-    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "Anandamide is best described as:", options: JSON.stringify(["An endogenous cannabinoid neurotransmitter","A synthetic opioid","An amino acid neurotransmitter","A catecholamine"]), correctAnswer: "A", explanation: "Anandamide is an endocannabinoid ('bliss molecule' from Sanskrit) that acts on CB1/CB2 receptors; involved in pain, mood, appetite, and memory regulation." },
+    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "Which neurotransmitter is the primary excitatory neurotransmitter in the brain?", options: JSON.stringify(["GABA","Dopamine","Glutamate","Serotonin"]), correctAnswer: "C", explanation: "Glutamate is the primary excitatory neurotransmitter — it acts on AMPA, NMDA, and kainate receptors and is involved in nearly 90% of fast excitatory transmission." },
+    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "SSRIs treat depression by:", options: JSON.stringify(["Blocking dopamine receptors","Increasing serotonin synthesis","Blocking serotonin reuptake","Activating GABA receptors"]), correctAnswer: "C", explanation: "SSRIs (selective serotonin reuptake inhibitors) block the serotonin transporter (SERT), preventing reuptake and increasing serotonin availability in the synaptic cleft." },
+    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "Metabotropic receptors differ from ionotropic receptors in that they:", options: JSON.stringify(["Directly gate ion channels","Use G-proteins and second messengers for slower, longer effects","Only respond to glutamate","Are found only at inhibitory synapses"]), correctAnswer: "B", explanation: "Metabotropic receptors are G-protein coupled receptors that produce slower, longer-lasting effects through intracellular second messenger cascades, unlike ionotropic receptors that directly open ion channels." },
+    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "The mesolimbic dopamine pathway is primarily associated with:", options: JSON.stringify(["Motor control","Reward and motivation","Sleep regulation","Pain modulation"]), correctAnswer: "B", explanation: "The mesolimbic pathway (VTA → nucleus accumbens) is the brain's reward circuit — it signals reward prediction and drives motivational behavior." },
+    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "The NMDA receptor requires which two conditions to open?", options: JSON.stringify(["High calcium and GABA binding","Glutamate binding AND membrane depolarization","Mg2+ and dopamine","Acetylcholine and glycine"]), correctAnswer: "B", explanation: "The NMDA receptor is a coincidence detector — it requires both glutamate binding AND membrane depolarization (to expel the Mg2+ block), making it critical for LTP and memory." },
+    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "Loss of cholinergic neurons in the basal forebrain is most closely linked to:", options: JSON.stringify(["Parkinson's disease","Alzheimer's disease","Huntington's disease","Schizophrenia"]), correctAnswer: "B", explanation: "Alzheimer's disease is characterized by loss of cholinergic neurons in the nucleus basalis of Meynert (basal forebrain), contributing to memory and cognitive deficits." },
+    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "An autoreceptor is:", options: JSON.stringify(["A postsynaptic receptor for all neurotransmitters","A presynaptic receptor that detects the neuron's own neurotransmitter","A receptor that enhances excitatory transmission","A receptor for hormones only"]), correctAnswer: "B", explanation: "Autoreceptors are presynaptic receptors that detect the neuron's own released neurotransmitter and typically provide negative feedback to inhibit further release." },
+    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "Norepinephrine from the locus coeruleus is primarily involved in:", options: JSON.stringify(["Memory consolidation","Appetite regulation","Arousal, attention, and fight-or-flight","Visual processing"]), correctAnswer: "C", explanation: "Norepinephrine from the locus coeruleus regulates arousal, attention, and the fight-or-flight response — it is implicated in depression, anxiety, and PTSD." },
+    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "Long-term potentiation (LTP) is considered the cellular basis of:", options: JSON.stringify(["Motor learning only","Emotional responses","Learning and memory","Habituation only"]), correctAnswer: "C", explanation: "LTP is a persistent strengthening of synaptic connections following high-frequency stimulation — it is the leading cellular mechanism for learning and memory, dependent on NMDA receptor activation." },
+    { topicId: T["Neurotransmitters & Synaptic Transmission"], question: "Which neurotransmitter acts at the neuromuscular junction?", options: JSON.stringify(["Dopamine","Glutamate","Acetylcholine","Serotonin"]), correctAnswer: "C", explanation: "Acetylcholine (ACh) is the neurotransmitter at the neuromuscular junction — it binds to nicotinic receptors on muscle cells to trigger contraction." },
 
     // ===== 4. SENSORY PATHWAYS =====
-    { topicId: T["Sensory Pathways"], question: "The dorsal column-medial lemniscal pathway carries:", options: JSON.stringify(["Fine touch, vibration, and proprioception","Pain and temperature","Motor commands","Olfactory information"]), correctAnswer: "A", explanation: "The dorsal column-medial lemniscal pathway carries fine touch, vibration sense, and proprioception; it decussates in the medulla." },
-    { topicId: T["Sensory Pathways"], question: "Where does the anterolateral (spinothalamic) pathway decussate?", options: JSON.stringify(["Spinal cord, within 1-2 segments of entry","Medulla","Pons","Internal capsule"]), correctAnswer: "A", explanation: "The spinothalamic tract crosses the midline in the spinal cord within 1-2 segments above the level where sensory fibers enter — this explains why pain/temperature loss is contralateral." },
-    { topicId: T["Sensory Pathways"], question: "An upper motor neuron lesion produces:", options: JSON.stringify(["Spasticity, hyperreflexia, and Babinski sign","Flaccidity, hyporeflexia, and muscle atrophy","Only sensory deficits","Cerebellar ataxia"]), correctAnswer: "A", explanation: "UMN lesions (cortex, internal capsule, brainstem, spinal cord above anterior horn) cause spasticity, hyperreflexia, and positive Babinski due to loss of descending inhibition." },
-    { topicId: T["Sensory Pathways"], question: "The thalamus is the relay station for all sensory modalities EXCEPT:", options: JSON.stringify(["Olfaction","Vision","Hearing","Touch"]), correctAnswer: "A", explanation: "Olfaction uniquely bypasses the thalamus — olfactory signals go directly from the olfactory bulb to piriform cortex and limbic structures." },
-    { topicId: T["Sensory Pathways"], question: "Which spinal cord level corresponds to the umbilicus dermatome?", options: JSON.stringify(["T10","L1","T4","C8"]), correctAnswer: "A", explanation: "T10 innervates the umbilicus — a clinically useful landmark. T4 is the nipple level, L1 is the inguinal ligament, C6 is the thumb." },
-    { topicId: T["Sensory Pathways"], question: "Brown-Séquard syndrome involves hemisection of the spinal cord, causing:", options: JSON.stringify(["Ipsilateral motor/proprioception loss, contralateral pain/temperature loss","Bilateral loss of all modalities below the lesion","Only ipsilateral sensory loss","Only contralateral motor loss"]), correctAnswer: "A", explanation: "Hemisection causes: ipsilateral loss of motor function and proprioception (same side); contralateral loss of pain and temperature (crosses in cord)." },
-    { topicId: T["Sensory Pathways"], question: "What is the stretch reflex arc?", options: JSON.stringify(["Ia afferent from muscle spindle → α-motor neuron → same muscle","Golgi tendon organ → interneuron → antagonist muscle","Free nerve ending → dorsal horn → brain","Motor cortex → corticospinal → α-motor neuron"]), correctAnswer: "A", explanation: "The stretch reflex is monosynaptic: muscle spindle Ia afferent directly synapses on α-motor neurons innervating the same muscle, causing it to contract." },
-    { topicId: T["Sensory Pathways"], question: "The conus medullaris is located at approximately:", options: JSON.stringify(["L1-L2","C7","T12","S1"]), correctAnswer: "A", explanation: "The spinal cord tapers to the conus medullaris at approximately L1-L2 in adults. Injuries below this point affect the cauda equina, not the cord itself." },
-    { topicId: T["Sensory Pathways"], question: "Reciprocal innervation means:", options: JSON.stringify(["Flexor activation simultaneously inhibits extensor muscles","Both flexors and extensors contract together","Left and right limbs receive opposite commands","Sensory and motor signals alternate"]), correctAnswer: "A", explanation: "Reciprocal innervation is a spinal circuit where interneurons ensure that when a flexor contracts, the opposing extensor is simultaneously inhibited, allowing smooth movement." },
-    { topicId: T["Sensory Pathways"], question: "Which tract controls voluntary movement of distal limb muscles (fingers, wrists)?", options: JSON.stringify(["Lateral corticospinal tract","Rubrospinal tract","Vestibulospinal tract","Reticulospinal tract"]), correctAnswer: "A", explanation: "The lateral corticospinal tract (decussating at the medullary pyramids) provides the primary cortical control of fine distal limb movements, especially fingers and wrists." },
+    { topicId: T["Sensory Pathways"], question: "The dorsal column-medial lemniscal pathway carries:", options: JSON.stringify(["Pain and temperature","Fine touch, vibration, and proprioception","Auditory signals","Visual signals"]), correctAnswer: "B", explanation: "The dorsal column-medial lemniscal pathway carries fine touch, vibration, and proprioception — it travels ipsilaterally in the spinal cord and crosses at the medulla." },
+    { topicId: T["Sensory Pathways"], question: "Where does the spinothalamic tract cross?", options: JSON.stringify(["In the medulla","In the thalamus","Immediately in the spinal cord","In the cortex"]), correctAnswer: "C", explanation: "The spinothalamic tract (pain and temperature) crosses immediately at the level it enters the spinal cord — this is why a lesion causes contralateral loss of pain and temperature below the level of injury." },
+    { topicId: T["Sensory Pathways"], question: "A patient with a right hemisphere stroke would be expected to have motor weakness:", options: JSON.stringify(["On the right side","On the left side","On both sides","On neither side"]), correctAnswer: "B", explanation: "The corticospinal tract crosses in the medulla — a right hemisphere lesion causes left-sided motor weakness (contralateral deficit)." },
+    { topicId: T["Sensory Pathways"], question: "Upper motor neuron lesions characteristically produce:", options: JSON.stringify(["Flaccidity and muscle wasting","Spasticity and hyperreflexia","Loss of pain and temperature","Loss of proprioception"]), correctAnswer: "B", explanation: "Upper motor neuron (UMN) lesions (above the anterior horn) cause spasticity, hyperreflexia, and Babinski sign — unlike lower motor neuron lesions which cause flaccidity." },
+    { topicId: T["Sensory Pathways"], question: "Which structure acts as the main sensory relay station?", options: JSON.stringify(["Hypothalamus","Thalamus","Basal ganglia","Cerebellum"]), correctAnswer: "B", explanation: "The thalamus is the main relay station for nearly all sensory information (except smell) on the way to the cortex — it organizes and filters sensory input." },
+    { topicId: T["Sensory Pathways"], question: "The lateral geniculate nucleus of the thalamus relays which sensory information?", options: JSON.stringify(["Auditory","Somatosensory","Visual","Olfactory"]), correctAnswer: "C", explanation: "The lateral geniculate nucleus (LGN) of the thalamus is the relay for visual information from the retina to the primary visual cortex (V1)." },
+    { topicId: T["Sensory Pathways"], question: "Brown-Séquard syndrome results from:", options: JSON.stringify(["Complete spinal cord transection","Hemisection of the spinal cord","Dorsal column damage only","Brainstem infarction"]), correctAnswer: "B", explanation: "Brown-Séquard syndrome (hemisection) causes ipsilateral loss of fine touch and proprioception (dorsal column, crosses higher) and contralateral loss of pain/temperature (spinothalamic, crosses immediately) below the lesion." },
+    { topicId: T["Sensory Pathways"], question: "What is a dermatome?", options: JSON.stringify(["A region of the brain","A strip of skin innervated by a single spinal nerve root","A type of neuron","A brain imaging technique"]), correctAnswer: "B", explanation: "A dermatome is an area of skin innervated by a single spinal nerve root — dermatome maps are used clinically to localize spinal cord and nerve root injuries." },
+    { topicId: T["Sensory Pathways"], question: "The basal ganglia are primarily involved in:", options: JSON.stringify(["Sensory relay","Voluntary movement initiation and habit learning","Reflex control","Visual processing"]), correctAnswer: "B", explanation: "The basal ganglia (striatum, globus pallidus, subthalamic nucleus, substantia nigra) are involved in initiating voluntary movement, habit learning, and motor sequence control." },
+    { topicId: T["Sensory Pathways"], question: "Cerebellar damage most commonly causes:", options: JSON.stringify(["Weakness and paralysis","Sensory loss","Ataxia and incoordination","Memory loss"]), correctAnswer: "C", explanation: "Cerebellar damage causes ataxia (coordination problems), dysmetria (past-pointing), and intention tremor — the cerebellum fine-tunes movement and compares intended vs. actual movement." },
 
     // ===== 5. SENSORY SYSTEMS =====
-    { topicId: T["Sensory Systems"], question: "The primary visual pathway from retina to cortex is:", options: JSON.stringify(["Retina → LGN (thalamus) → primary visual cortex (V1)","Retina → superior colliculus → parietal cortex","Retina → pulvinar → frontal eye fields","Retina → hypothalamus → visual cortex"]), correctAnswer: "A", explanation: "The retinal-geniculate-striate pathway is the main visual route: retinal ganglion cells → optic nerve → LGN → primary visual cortex (striate/V1)." },
-    { topicId: T["Sensory Systems"], question: "Damage to the ventral (WHAT) visual stream causes:", options: JSON.stringify(["Visual object recognition impairment (visual agnosia)","Visuospatial neglect","Inability to perceive motion","Color blindness only"]), correctAnswer: "A", explanation: "The ventral stream (temporal lobe) processes object identity, color, and form. Damage causes visual agnosia, prosopagnosia, and pattern recognition deficits." },
-    { topicId: T["Sensory Systems"], question: "Which type of photoreceptor is most concentrated in the fovea?", options: JSON.stringify(["Cones","Rods","Amacrine cells","Bipolar cells"]), correctAnswer: "A", explanation: "The fovea is densely packed with cones (color, high acuity). Rods dominate the periphery and are sensitive to dim light." },
-    { topicId: T["Sensory Systems"], question: "The basilar membrane is organized tonotopically such that:", options: JSON.stringify(["High frequencies activate the base, low frequencies activate the apex","Low frequencies activate the base, high frequencies activate the apex","All frequencies activate the middle equally","Amplitude rather than frequency determines location"]), correctAnswer: "A", explanation: "The basilar membrane has a frequency gradient: high frequencies (20,000 Hz) maximally displace the stiff base; low frequencies (20 Hz) travel to the flexible apex." },
-    { topicId: T["Sensory Systems"], question: "Gate control theory of pain proposes that:", options: JSON.stringify(["Non-painful sensory input can inhibit pain transmission in the dorsal horn","Pain gates are located in the midbrain","Endorphins directly block peripheral nociceptors","Pain can only be inhibited by opioid drugs"]), correctAnswer: "A", explanation: "Melzack and Wall's gate control theory: large-diameter fiber activity (touch/vibration) activates inhibitory interneurons in the dorsal horn that 'close the gate' to pain signals." },
-    { topicId: T["Sensory Systems"], question: "What makes olfaction unique compared to other sensory systems?", options: JSON.stringify(["It bypasses the thalamus and projects directly to limbic cortex","It is the only bilateral sensory system","It uses the fewest receptor types","It is processed exclusively in the temporal lobe"]), correctAnswer: "A", explanation: "Olfaction is the only sensory modality that does not synapse in the thalamus first — it projects directly from the olfactory bulb to piriform cortex, amygdala, and entorhinal cortex." },
-    { topicId: T["Sensory Systems"], question: "The otolith organs (saccule and utricle) detect:", options: JSON.stringify(["Linear acceleration and head tilt","Rotational acceleration","High-frequency sound","Proprioception in the inner ear"]), correctAnswer: "A", explanation: "Otolith organs contain calcium carbonate crystals (otoconia) that displace hair cells in response to linear acceleration and gravity (head tilt), providing information about static and dynamic head position." },
-    { topicId: T["Sensory Systems"], question: "Prosopagnosia results from damage to:", options: JSON.stringify(["Fusiform face area (temporal-occipital junction, ventral stream)","Primary visual cortex (V1)","Dorsal stream parietal cortex","Frontal eye fields"]), correctAnswer: "A", explanation: "Prosopagnosia (inability to recognize faces) is caused by damage to the fusiform face area in the ventral visual stream at the temporal-occipital junction." },
-    { topicId: T["Sensory Systems"], question: "The dorsal (WHERE) visual stream is involved in:", options: JSON.stringify(["Visuospatial processing, movement perception, and action guidance","Object recognition and color processing","Face recognition and emotional expression","Reading and language"]), correctAnswer: "A", explanation: "The dorsal stream (parietal cortex) processes location, motion, and spatial relationships to guide action. Damage causes neglect, optic ataxia, and spatial processing deficits." },
-    { topicId: T["Sensory Systems"], question: "Which structure in the auditory pathway is primarily responsible for sound localization?", options: JSON.stringify(["Superior olivary complex","Inferior colliculus","Medial geniculate nucleus","Primary auditory cortex"]), correctAnswer: "A", explanation: "The superior olivary complex (medial superior olive: interaural time differences; lateral superior olive: intensity differences) is the first site of binaural integration for sound localization." },
-    { topicId: T["Sensory Systems"], question: "Trichromatic color vision theory proposes:", options: JSON.stringify(["Three cone types with different peak sensitivities combine to produce color perception","Color is encoded as opponent pairs","Only rods contribute to color vision","Color is processed exclusively in V4"]), correctAnswer: "A", explanation: "Young-Helmholtz trichromatic theory: short (blue), medium (green), and long (red) wavelength cones combine their outputs to produce the full range of perceived colors." },
-    { topicId: T["Sensory Systems"], question: "Lateral inhibition in the retina serves to:", options: JSON.stringify(["Enhance contrast and edge detection","Increase overall light sensitivity","Expand the visual field","Enable color constancy"]), correctAnswer: "A", explanation: "Horizontal cells create lateral inhibition in the retina — they inhibit neighboring photoreceptors and bipolar cells, sharpening contrast and creating Mach band illusions." },
-    { topicId: T["Sensory Systems"], question: "The supplementary motor area (SMA) is active during:", options: JSON.stringify(["Motor imagery and planning of complex sequences before execution","Execution of simple reflexive movements","Processing of sensory feedback only","Language production"]), correctAnswer: "A", explanation: "The SMA becomes active during mental rehearsal of movements and planning of complex movement sequences, even before the movement begins." },
-    { topicId: T["Sensory Systems"], question: "Akinetopsia is caused by damage to:", options: JSON.stringify(["Area MT/V5 in the medial temporal lobe","The fusiform face area","V1 (primary visual cortex)","The superior colliculus"]), correctAnswer: "A", explanation: "Akinetopsia (inability to perceive visual motion) results from damage to area MT/V5 in the medial temporal lobe, a motion-selective cortical region." },
-    { topicId: T["Sensory Systems"], question: "Blindsight is best explained by:", options: JSON.stringify(["Residual subcortical visual processing (superior colliculus/pulvinar) without conscious awareness","Recovery of V1 function over time","Intact dorsal stream alone","Neuroplastic reorganization of V2"]), correctAnswer: "A", explanation: "After V1 destruction causing cortical blindness, some patients can still detect and respond to stimuli in the blind field via subcortical routes (superior colliculus → pulvinar → extrastriate cortex) without conscious vision." },
+    { topicId: T["Sensory Systems"], question: "The retina sends visual signals to the lateral geniculate nucleus via:", options: JSON.stringify(["The optic radiation","The optic tract","The visual cortex","The superior colliculus"]), correctAnswer: "B", explanation: "Visual signals travel: retina → optic nerve → optic chiasm → optic tract → lateral geniculate nucleus (LGN) of the thalamus → primary visual cortex." },
+    { topicId: T["Sensory Systems"], question: "The ventral visual stream is primarily involved in:", options: JSON.stringify(["Localizing where objects are","Identifying what objects are","Processing movement","Controlling eye movements"]), correctAnswer: "B", explanation: "The ventral stream (occipitotemporal 'what' pathway) processes object identity, color, and face recognition — the dorsal stream (occipitoparietal 'where/how' pathway) processes location and action guidance." },
+    { topicId: T["Sensory Systems"], question: "Which part of the basilar membrane responds to high frequencies?", options: JSON.stringify(["Apex","Base","Middle","Equally throughout"]), correctAnswer: "B", explanation: "Tonotopic organization: high-frequency sounds are processed at the base of the basilar membrane; low-frequency sounds at the apex — discovered by Georg von Békésy." },
+    { topicId: T["Sensory Systems"], question: "Olfaction is unique among the senses because:", options: JSON.stringify(["It has no cortical representation","It does not relay through the thalamus","It is processed in the parietal lobe","It only uses one receptor type"]), correctAnswer: "B", explanation: "Olfaction is the only sense that bypasses the thalamus — olfactory signals go directly from the olfactory bulb to the piriform cortex and limbic structures." },
+    { topicId: T["Sensory Systems"], question: "The primary somatosensory cortex is located in:", options: JSON.stringify(["Precentral gyrus","Postcentral gyrus","Superior temporal gyrus","Calcarine fissure"]), correctAnswer: "B", explanation: "S1 (primary somatosensory cortex) is in the postcentral gyrus of the parietal lobe — it processes touch, pain, temperature, and proprioception in a somatotopic map." },
+    { topicId: T["Sensory Systems"], question: "The semicircular canals detect:", options: JSON.stringify(["Linear acceleration","Rotational head movements","Sound frequency","Pain"]), correctAnswer: "B", explanation: "The three semicircular canals in the inner ear detect rotational (angular) acceleration of the head — the otolith organs (utricle and saccule) detect linear acceleration and gravity." },
+    { topicId: T["Sensory Systems"], question: "Homonymous hemianopia is caused by damage to:", options: JSON.stringify(["The retina","The optic chiasm","The optic tract or visual cortex unilaterally","The primary somatosensory cortex"]), correctAnswer: "C", explanation: "Homonymous hemianopia (loss of vision in the same half of both visual fields) results from damage to the optic tract or visual cortex on one side — e.g., right cortex damage → left visual field loss." },
+    { topicId: T["Sensory Systems"], question: "The superior colliculus is primarily responsible for:", options: JSON.stringify(["Color vision","Depth perception","Reflexive orienting toward visual stimuli","Sound localization"]), correctAnswer: "C", explanation: "The superior colliculus in the midbrain controls reflexive eye movements and visual orienting responses toward sudden stimuli — it is important for directing attention." },
+    { topicId: T["Sensory Systems"], question: "Pain gate theory was proposed by:", options: JSON.stringify(["Broca and Wernicke","Ramón y Cajal","Melzack and Wall","Penfield and Milner"]), correctAnswer: "C", explanation: "Ronald Melzack and Patrick Wall proposed gate control theory of pain — non-painful sensory stimuli (large fiber input) can 'close the gate' in the dorsal horn, inhibiting pain signal transmission." },
+    { topicId: T["Sensory Systems"], question: "Which area of the cortex processes primary auditory information?", options: JSON.stringify(["Primary visual cortex","Postcentral gyrus","Heschl's gyri (superior temporal gyrus)","Prefrontal cortex"]), correctAnswer: "C", explanation: "The primary auditory cortex is located in Heschl's gyri (Brodmann areas 41/42) in the superior temporal gyrus — it receives input from the medial geniculate nucleus of the thalamus." },
 
     // ===== 6. LIMBIC SYSTEM & MOTIVATION =====
-    { topicId: T["Limbic System & Motivation"], question: "Which structure is the brain's primary biological clock?", options: JSON.stringify(["Suprachiasmatic nucleus (SCN)","Pineal gland","Amygdala","Anterior cingulate cortex"]), correctAnswer: "A", explanation: "The SCN in the hypothalamus is the master circadian pacemaker; it generates endogenous rhythms and synchronizes them to external light cues." },
-    { topicId: T["Limbic System & Motivation"], question: "Leptin's primary effect on appetite is to:", options: JSON.stringify(["Suppress appetite and increase metabolic rate","Stimulate appetite like ghrelin","Regulate sleep cycles","Control water retention"]), correctAnswer: "A", explanation: "Leptin is secreted by adipose tissue proportionally to fat stores. It acts on the hypothalamus to suppress appetite, reduce food intake, and increase energy expenditure." },
-    { topicId: T["Limbic System & Motivation"], question: "The mesolimbic dopamine system is primarily associated with:", options: JSON.stringify(["Reward, wanting, and motivational salience","Fine motor coordination","Explicit memory formation","Autonomic regulation"]), correctAnswer: "A", explanation: "The mesolimbic pathway (VTA → nucleus accumbens, amygdala, hippocampus) is the core reward system; it signals motivational salience and drives wanting behavior." },
-    { topicId: T["Limbic System & Motivation"], question: "What does 'wanting' vs 'liking' distinction mean in reward neuroscience?", options: JSON.stringify(["Wanting (incentive motivation) and liking (hedonic experience) are dissociable processes","Wanting and liking always occur together","Liking depends on dopamine; wanting on serotonin","Both are mediated by the same nucleus accumbens circuits"]), correctAnswer: "A", explanation: "Berridge's model: 'wanting' (incentive salience, dopamine-driven) and 'liking' (hedonic pleasure, opioid-driven) can be separated — addicts may intensely want a drug without liking it." },
-    { topicId: T["Limbic System & Motivation"], question: "Ghrelin is secreted by the __ and its main effect is to __:", options: JSON.stringify(["Stomach; stimulate appetite","Adipose tissue; suppress appetite","Liver; regulate blood glucose","Pancreas; promote fat storage"]), correctAnswer: "A", explanation: "Ghrelin is a stomach hormone that rises before meals and falls after eating; it stimulates appetite by acting on the lateral hypothalamus and orexin neurons." },
-    { topicId: T["Limbic System & Motivation"], question: "The nucleus accumbens rostral shell mediates:", options: JSON.stringify(["Appetitive/approach behavior","Avoidance and aversion","Memory consolidation","Pain modulation"]), correctAnswer: "A", explanation: "The rostral nucleus accumbens shell is associated with appetitive behaviors and reward approach, while the caudal shell is associated with aversive/avoidance responses." },
-    { topicId: T["Limbic System & Motivation"], question: "Anorexia nervosa is neurologically associated with:", options: JSON.stringify(["Mesolimbic dopamine dysregulation, low serotonin, and anterior insula hyperactivity","Hyperactive reward circuits and excessive dopamine","Only hypothalamic dysfunction","Brainstem lesions affecting satiety"]), correctAnswer: "A", explanation: "Anorexia involves anhedonia (dopamine reward deficit), low serotonin, and hyperactive anterior insula that distorts body image — food is perceived as threatening rather than rewarding." },
-    { topicId: T["Limbic System & Motivation"], question: "Sensory-specific satiety refers to:", options: JSON.stringify(["Decreased pleasure from a specific food while appetite for other foods remains","General fullness that suppresses all appetite","A taste receptor adaptation to sweet flavors","The brain's inability to process more than one flavor"]), correctAnswer: "A", explanation: "Sensory-specific satiety: as you eat one food, its reward value decreases while appetite for other foods remains — this promotes dietary variety and was evolutionarily adaptive." },
-    { topicId: T["Limbic System & Motivation"], question: "The positive-incentive perspective on eating proposes:", options: JSON.stringify(["We eat primarily for anticipated pleasure, not just to correct energy deficits","Only hunger and energy deficit drive eating","Eating is purely a homeostatic process","Appetite is entirely determined by blood glucose"]), correctAnswer: "A", explanation: "The positive-incentive perspective argues that the anticipation of pleasure (incentive value of food) is the primary driver of eating, not deprivation alone." },
-    { topicId: T["Limbic System & Motivation"], question: "Prader-Willi syndrome is characterized by:", options: JSON.stringify(["Insatiable hunger, obesity, and cognitive impairment due to chromosome 15 defect","Inability to feel pain","Excessive weight loss and anorexia","Absent hunger signals"]), correctAnswer: "A", explanation: "Prader-Willi syndrome (chromosome 15q11-q13 defect) causes hyperphagia (insatiable hunger), obesity, intellectual disability, and low muscle tone." },
+    { topicId: T["Limbic System & Motivation"], question: "The amygdala is primarily associated with:", options: JSON.stringify(["Language comprehension","Emotional processing, especially fear","Visual recognition","Motor planning"]), correctAnswer: "B", explanation: "The amygdala processes emotional significance, particularly fear and threat — it drives fear conditioning and modulates memory for emotionally significant events." },
+    { topicId: T["Limbic System & Motivation"], question: "Bilateral lesions to the hippocampus cause:", options: JSON.stringify(["Loss of all long-term memories","Severe anterograde amnesia (inability to form new declarative memories)","Blindness","Personality changes"]), correctAnswer: "B", explanation: "Bilateral hippocampal damage causes severe anterograde amnesia — the inability to form new explicit memories. Patient H.M. is the classic case; he retained intact procedural learning." },
+    { topicId: T["Limbic System & Motivation"], question: "The lateral hypothalamus is known as the 'hunger center' because:", options: JSON.stringify(["Lesions cause obesity","Lesions cause aphagia (failure to eat) and starvation","It releases cortisol","It controls insulin secretion"]), correctAnswer: "B", explanation: "The lateral hypothalamus stimulates feeding — lesions result in aphagia (failure to eat) and eventual starvation. The ventromedial hypothalamus is the satiety center." },
+    { topicId: T["Limbic System & Motivation"], question: "The mesolimbic dopamine pathway runs from:", options: JSON.stringify(["Locus coeruleus to frontal cortex","VTA to nucleus accumbens","Substantia nigra to striatum","Raphe nuclei to hippocampus"]), correctAnswer: "B", explanation: "The mesolimbic pathway runs from the ventral tegmental area (VTA) to the nucleus accumbens — it is the brain's primary reward circuit, essential for motivation and reinforcement." },
+    { topicId: T["Limbic System & Motivation"], question: "Klüver-Bucy syndrome results from bilateral damage to:", options: JSON.stringify(["Hippocampus","Frontal lobes","Amygdala and temporal lobes","Cerebellum"]), correctAnswer: "C", explanation: "Klüver-Bucy syndrome — caused by bilateral amygdala and temporal lobe lesions — produces hyperorality, hypersexuality, visual agnosia, emotional placidity, and memory impairment." },
+    { topicId: T["Limbic System & Motivation"], question: "The Papez circuit's primary function is:", options: JSON.stringify(["Processing visual information","Regulating sleep","Emotional memory processing","Motor coordination"]), correctAnswer: "C", explanation: "The Papez circuit (hippocampus → fornix → mammillary bodies → thalamus → cingulate cortex) is involved in emotional memory processing — proposed by James Papez in 1937." },
+    { topicId: T["Limbic System & Motivation"], question: "Narcolepsy is caused by loss of which neurons?", options: JSON.stringify(["Dopamine neurons in the VTA","Serotonin neurons in the raphe","Orexin/hypocretin neurons in the lateral hypothalamus","Norepinephrine neurons in the locus coeruleus"]), correctAnswer: "C", explanation: "Narcolepsy results from the loss of orexin (hypocretin) neurons in the lateral hypothalamus — these neurons promote wakefulness, and their loss causes excessive daytime sleepiness and cataplexy." },
+    { topicId: T["Limbic System & Motivation"], question: "The hypothalamus is sometimes described with the 'Four Fs' — which are they?", options: JSON.stringify(["Feeling, forming, firing, fixing","Fighting, fleeing, feeding, fornicating","Frontal, limbic, temporal, parietal","Focus, filter, file, forget"]), correctAnswer: "B", explanation: "The four Fs represent the basic survival drives regulated by the hypothalamus: fighting, fleeing, feeding, and fornicating (reproduction)." },
+    { topicId: T["Limbic System & Motivation"], question: "The anterior cingulate cortex is involved in:", options: JSON.stringify(["Primary visual processing","Error monitoring and emotional-cognitive integration","Auditory processing","Olfactory processing"]), correctAnswer: "B", explanation: "The anterior cingulate cortex integrates emotional and cognitive processing — it plays a role in error monitoring, decision-making, pain perception, and conflict detection." },
+    { topicId: T["Limbic System & Motivation"], question: "Intrinsic motivation differs from extrinsic motivation in that:", options: JSON.stringify(["It is driven by external rewards","It comes from internal enjoyment and interest","It is always stronger than extrinsic","It doesn't involve dopamine"]), correctAnswer: "B", explanation: "Intrinsic motivation comes from internal interest and enjoyment; extrinsic motivation comes from external rewards. Dopamine is involved in both but particularly drives reward anticipation and approach behavior." },
 
     // ===== 7. SLEEP & CIRCADIAN RHYTHMS =====
-    { topicId: T["Sleep & Circadian Rhythms"], question: "The suprachiasmatic nucleus (SCN) receives light input via:", options: JSON.stringify(["Intrinsically photosensitive retinal ganglion cells (ipRGCs) containing melanopsin","Rod photoreceptors","The optic radiation","The lateral geniculate nucleus"]), correctAnswer: "A", explanation: "The retinohypothalamic tract carries light information from ipRGCs (melanopsin-containing ganglion cells, especially sensitive to blue light) directly to the SCN." },
-    { topicId: T["Sleep & Circadian Rhythms"], question: "REM sleep is characterized by:", options: JSON.stringify(["Rapid eye movements, vivid dreaming, and muscle atonia","Delta waves and deep physical restoration","Sleep spindles and K-complexes","Reduced brain metabolic activity"]), correctAnswer: "A", explanation: "REM sleep features rapid eye movements, vivid dreaming, near-complete skeletal muscle atonia (preventing acting out dreams), and an EEG pattern similar to waking." },
-    { topicId: T["Sleep & Circadian Rhythms"], question: "N3 (slow-wave) sleep is characterized by:", options: JSON.stringify(["Delta waves (< 4 Hz) and deep physical restoration","Rapid eye movements","Sleep spindles and K-complexes","EEG similar to waking"]), correctAnswer: "A", explanation: "N3 is deep slow-wave sleep with high-amplitude delta waves; it is the most restorative stage for physical recovery and is important for declarative memory consolidation." },
-    { topicId: T["Sleep & Circadian Rhythms"], question: "Melatonin is secreted by the __ in response to __:", options: JSON.stringify(["Pineal gland; darkness","SCN; light","Anterior pituitary; cortisol decrease","Hippocampus; REM sleep"]), correctAnswer: "A", explanation: "The SCN signals the pineal gland to secrete melatonin in darkness; light (especially blue light) suppresses melatonin secretion via the retinohypothalamic tract." },
-    { topicId: T["Sleep & Circadian Rhythms"], question: "Benzodiazepines' effect on sleep architecture includes:", options: JSON.stringify(["Reduced N3 slow-wave sleep and reduced REM","Increased REM and delta sleep","No effect on sleep stage distribution","Only reduction in sleep onset latency without affecting stages"]), correctAnswer: "A", explanation: "Benzodiazepines increase N2 sleep but suppress N3 (slow-wave) and REM sleep — useful for short-term insomnia but disrupting overall sleep quality and memory consolidation." },
-    { topicId: T["Sleep & Circadian Rhythms"], question: "The human endogenous circadian period is:", options: JSON.stringify(["Slightly longer than 24 hours (~24.2 hours)","Exactly 24.0 hours","About 25.5 hours","12 hours"]), correctAnswer: "A", explanation: "The endogenous period of the human circadian clock is slightly longer than 24 hours; daily light exposure entrains it to the precise 24-hour environmental cycle." },
-    { topicId: T["Sleep & Circadian Rhythms"], question: "Sleep's role in memory consolidation involves:", options: JSON.stringify(["Slow-wave sleep consolidating declarative memories; REM supporting procedural/emotional memories","REM only for all memory types","No relationship between sleep stages and memory types","Only waking learning matters; sleep is passive"]), correctAnswer: "A", explanation: "Slow-wave sleep facilitates hippocampal-cortical transfer of declarative memories; REM sleep is associated with procedural and emotional memory processing." },
-    { topicId: T["Sleep & Circadian Rhythms"], question: "What is a zeitgeber?", options: JSON.stringify(["An external environmental cue that synchronizes the circadian clock","An internal signal generated by the SCN","A sleep disorder treatment","A measure of sleep depth"]), correctAnswer: "A", explanation: "Zeitgeber (German for 'time giver') is any external cue that entrains the circadian clock — light is most powerful, followed by food timing, social interaction, and exercise." },
-    { topicId: T["Sleep & Circadian Rhythms"], question: "Jet lag symptoms arise from:", options: JSON.stringify(["Misalignment between the internal circadian clock and the external environment","Sleep deprivation only","Dehydration during air travel","Pressure changes in aircraft"]), correctAnswer: "A", explanation: "Jet lag results from rapid transmeridian travel that shifts the environmental light cycle faster than the SCN can reset, creating circadian misalignment that takes days to weeks to resolve." },
-    { topicId: T["Sleep & Circadian Rhythms"], question: "Which of the following does the circadian rhythm NOT regulate?", options: JSON.stringify(["Visual acuity during the day","Body temperature","Cortisol secretion","Drug sensitivity"]), correctAnswer: "A", explanation: "The circadian system regulates body temperature (peaks in late afternoon), cortisol (peaks in early morning), and drug sensitivity — but not baseline visual acuity itself." },
+    { topicId: T["Sleep & Circadian Rhythms"], question: "Which structure is the master circadian clock?", options: JSON.stringify(["Pineal gland","Suprachiasmatic nucleus","Amygdala","Reticular activating system"]), correctAnswer: "B", explanation: "The suprachiasmatic nucleus (SCN) in the hypothalamus is the brain's master circadian clock — it receives light input from the retina and regulates 24-hour biological rhythms." },
+    { topicId: T["Sleep & Circadian Rhythms"], question: "REM sleep is characterized by:", options: JSON.stringify(["Delta waves and deep sleep","Vivid dreaming, muscle atonia, and brain activity similar to wakefulness","Slow oscillations and memory consolidation","Stage N2 sleep spindles"]), correctAnswer: "B", explanation: "REM sleep features rapid eye movements, vivid dreaming, brain activity resembling wakefulness (desynchronized EEG), and muscle atonia (paralysis preventing acting out dreams)." },
+    { topicId: T["Sleep & Circadian Rhythms"], question: "Adenosine's role in sleep regulation is to:", options: JSON.stringify(["Block melatonin receptors","Promote wakefulness","Build up during wakefulness, increasing sleep pressure","Activate the SCN"]), correctAnswer: "C", explanation: "Adenosine accumulates in the brain during wakefulness — it acts as a 'sleep debt' molecule, increasing sleep pressure. Caffeine promotes wakefulness by blocking adenosine receptors." },
+    { topicId: T["Sleep & Circadian Rhythms"], question: "N3 (slow-wave) sleep is characterized by:", options: JSON.stringify(["REM atonia and dreaming","Alpha waves","Delta waves and is the most physically restorative","Sleep spindles and K-complexes"]), correctAnswer: "C", explanation: "N3 (slow-wave) sleep is characterized by delta waves (0.5-4 Hz) — it is the deepest NREM stage and is most associated with physical restoration and growth hormone release." },
+    { topicId: T["Sleep & Circadian Rhythms"], question: "REM sleep behavior disorder is strongly associated with:", options: JSON.stringify(["Insomnia","Narcolepsy","Parkinson's disease and dementia with Lewy bodies","Major depressive disorder"]), correctAnswer: "C", explanation: "REM sleep behavior disorder (loss of muscle atonia, acting out dreams) is strongly associated with synucleinopathies — Parkinson's disease, DLB, and MSA — often preceding motor symptoms by years." },
+    { topicId: T["Sleep & Circadian Rhythms"], question: "Which sleep disorder is caused by orexin neuron loss?", options: JSON.stringify(["Insomnia","Sleep apnea","Narcolepsy","REM sleep behavior disorder"]), correctAnswer: "C", explanation: "Narcolepsy is caused by loss of orexin (hypocretin) neurons in the lateral hypothalamus — features include excessive daytime sleepiness, cataplexy, sleep paralysis, and hypnagogic hallucinations." },
+    { topicId: T["Sleep & Circadian Rhythms"], question: "The pineal gland's role in sleep is to:", options: JSON.stringify(["Generate the circadian clock","Release melatonin in darkness to signal nighttime","Regulate adenosine","Control REM sleep"]), correctAnswer: "B", explanation: "The pineal gland releases melatonin in response to darkness — melatonin signals that it is nighttime, promoting sleep onset and synchronizing the circadian rhythm." },
+    { topicId: T["Sleep & Circadian Rhythms"], question: "Sleep spindles occur during which stage?", options: JSON.stringify(["N1","N2","N3","REM"]), correctAnswer: "B", explanation: "Sleep spindles (12-14 Hz bursts) occur during N2 sleep — they are generated by thalamocortical circuits and are associated with memory consolidation, especially procedural memory." },
+    { topicId: T["Sleep & Circadian Rhythms"], question: "Advanced sleep phase syndrome in older adults means:", options: JSON.stringify(["They need more sleep than younger adults","They fall asleep later and wake up later","They become sleepier earlier and wake up earlier","They have more REM sleep"]), correctAnswer: "C", explanation: "Advanced sleep phase syndrome (common in older adults) involves earlier circadian timing — they become sleepy earlier in the evening and wake earlier in the morning." },
+    { topicId: T["Sleep & Circadian Rhythms"], question: "The two-process model of sleep proposes sleep is regulated by:", options: JSON.stringify(["Adenosine and cortisol","Homeostatic sleep pressure (Process S) and the circadian clock (Process C)","REM and NREM balance","Melatonin and serotonin"]), correctAnswer: "B", explanation: "The two-process model: Process S (homeostatic sleep pressure driven by adenosine) and Process C (circadian clock from the SCN) — both must align for optimal sleep quality." },
 
     // ===== 8. ENDOCRINE SYSTEM & REPRODUCTION =====
-    { topicId: T["Endocrine System & Reproduction"], question: "Organizational hormone effects differ from activational effects in that they:", options: JSON.stringify(["Are permanent and occur during development, shaping anatomy","Are reversible and occur in adulthood","Only involve sex hormones","Affect only external sex organs"]), correctAnswer: "A", explanation: "Organizational effects occur during critical developmental periods, permanently shaping neural and anatomical structures. Activational effects are temporary and trigger specific adult behaviors." },
-    { topicId: T["Endocrine System & Reproduction"], question: "The SRY gene on the Y chromosome triggers:", options: JSON.stringify(["Testicular development and male sexual differentiation","Ovarian development","Estrogen production","Growth hormone release"]), correctAnswer: "A", explanation: "The SRY (sex-determining region of Y) gene produces SRY protein that causes bipotential gonads to differentiate into testes, initiating the cascade of male sexual development." },
-    { topicId: T["Endocrine System & Reproduction"], question: "Androgen Insensitivity Syndrome (AIS) results in:", options: JSON.stringify(["XY individuals with testes but female-typical external appearance due to absent androgen receptors","Female genitalia from estrogen excess","Absence of both sets of internal organs","Turner's syndrome phenotype"]), correctAnswer: "A", explanation: "In AIS, androgen receptors are non-functional; XY individuals have testes (producing testosterone and AMH) but androgens cannot masculinize — resulting in female-typical external genitalia." },
-    { topicId: T["Endocrine System & Reproduction"], question: "Oxytocin is produced by the __ and released by the __:", options: JSON.stringify(["Hypothalamus; posterior pituitary","Anterior pituitary; bloodstream","Adrenal cortex; adrenal medulla","Pineal gland; direct neural connection"]), correctAnswer: "A", explanation: "Oxytocin is synthesized in hypothalamic nuclei (paraventricular, supraoptic) and transported to the posterior pituitary for release into the bloodstream." },
-    { topicId: T["Endocrine System & Reproduction"], question: "Steroid hormones are derived from __ and are characterized by __:", options: JSON.stringify(["Cholesterol; fat-solubility and nuclear receptor action","Tyrosine; water solubility","Amino acids; membrane receptor binding","Glucose; rapid membrane effects"]), correctAnswer: "A", explanation: "Steroid hormones (sex steroids, cortisol, aldosterone) are synthesized from cholesterol; their fat-solubility allows them to cross cell membranes and bind nuclear receptors to alter gene expression." },
-    { topicId: T["Endocrine System & Reproduction"], question: "The Müllerian system develops into female internal organs:", options: JSON.stringify(["In the absence of testosterone and anti-Müllerian hormone (AMH)","Only when estrogen is present","In the presence of high testosterone","Only if the XX genotype is present"]), correctAnswer: "A", explanation: "The Müllerian system (→ uterus, fallopian tubes, upper vagina) is the default pathway that develops unless testosterone and AMH are present to suppress it and develop the Wolffian system." },
-    { topicId: T["Endocrine System & Reproduction"], question: "5-Alpha Reductase Deficiency results in:", options: JSON.stringify(["XY individuals with female-typical external genitalia at birth who masculinize at puberty","Female external and internal genitalia with XX genotype","Complete male development without any ambiguity","AIS-like presentation but with functional androgen receptors"]), correctAnswer: "A", explanation: "Without 5-alpha reductase, XY individuals cannot convert testosterone to DHT (needed for external male genitalia); born appearing female but masculinize significantly at puberty as testosterone rises." },
-    { topicId: T["Endocrine System & Reproduction"], question: "Vasopressin (ADH) primary functions include:", options: JSON.stringify(["Water retention in kidneys and social bonding behaviors","Stimulating hunger","Triggering uterine contractions","Regulating thyroid function"]), correctAnswer: "A", explanation: "Vasopressin (ADH) acts on kidney tubules to promote water reabsorption; it also influences social bonding, aggression, and stress responses in the brain." },
-    { topicId: T["Endocrine System & Reproduction"], question: "Turner's Syndrome (45,X) is characterized by:", options: JSON.stringify(["Single X chromosome, no functional gonads, short stature, female-typical development","Two X chromosomes plus one Y","Male external genitalia with no internal organs","Insensitivity to androgens"]), correctAnswer: "A", explanation: "Turner's syndrome (monosomy X) results in non-functional streak gonads, short stature, infertility, and female-typical development without hormone replacement." },
-    { topicId: T["Endocrine System & Reproduction"], question: "The hypothalamo-pituitary-gonadal axis operates via:", options: JSON.stringify(["Negative feedback — gonadal steroids inhibit GnRH and gonadotropin release","Positive feedback only","No feedback — it is an open system","Direct neural control without hormones"]), correctAnswer: "A", explanation: "The HPG axis uses primarily negative feedback: gonadal steroids (testosterone, estradiol) inhibit GnRH from the hypothalamus and LH/FSH from the anterior pituitary, maintaining hormonal homeostasis." },
+    { topicId: T["Endocrine System & Reproduction"], question: "The HPA axis stress response sequence is:", options: JSON.stringify(["ACTH → CRH → Cortisol","CRH → ACTH → Cortisol","Cortisol → CRH → ACTH","ADH → Cortisol → ACTH"]), correctAnswer: "B", explanation: "The HPA axis: hypothalamus releases CRH → anterior pituitary releases ACTH → adrenal cortex releases cortisol — cortisol then feeds back to inhibit the hypothalamus and pituitary." },
+    { topicId: T["Endocrine System & Reproduction"], question: "Oxytocin is released from the:", options: JSON.stringify(["Adrenal cortex","Anterior pituitary","Posterior pituitary","Pineal gland"]), correctAnswer: "C", explanation: "Oxytocin is synthesized in the hypothalamus and released from the posterior pituitary (neurohypophysis) — it promotes social bonding, maternal behavior, and uterine contractions." },
+    { topicId: T["Endocrine System & Reproduction"], question: "Chronic elevated cortisol most significantly damages which brain region?", options: JSON.stringify(["Amygdala","Hippocampus","Cerebellum","Occipital cortex"]), correctAnswer: "B", explanation: "Chronic high cortisol damages the hippocampus — reducing volume, impairing neurogenesis, and affecting memory consolidation. HPA axis dysregulation is linked to depression and PTSD." },
+    { topicId: T["Endocrine System & Reproduction"], question: "Organizational effects of hormones differ from activational effects in that they:", options: JSON.stringify(["Are temporary and reversible","Occur only in adulthood","Occur prenatally and permanently shape neural circuits","Affect only reproductive behaviors"]), correctAnswer: "C", explanation: "Organizational effects occur during critical prenatal development periods and permanently shape neural circuits; activational effects occur in adulthood and are temporary and reversible." },
+    { topicId: T["Endocrine System & Reproduction"], question: "Antipsychotic drugs elevate prolactin levels because they:", options: JSON.stringify(["Block serotonin receptors","Block dopamine receptors, which normally inhibit prolactin release","Stimulate the posterior pituitary","Activate estrogen receptors"]), correctAnswer: "B", explanation: "Dopamine normally inhibits prolactin release from the anterior pituitary. Antipsychotics block D2 receptors, reducing this inhibition and elevating prolactin levels (hyperprolactinemia)." },
+    { topicId: T["Endocrine System & Reproduction"], question: "The gonadotropin-releasing hormone (GnRH) is released from:", options: JSON.stringify(["Anterior pituitary","Gonads","Hypothalamus","Adrenal cortex"]), correctAnswer: "C", explanation: "GnRH is released from the hypothalamus — it stimulates the anterior pituitary to release LH and FSH, which in turn stimulate the gonads to produce sex hormones." },
+    { topicId: T["Endocrine System & Reproduction"], question: "Thyroid hormone is essential during development because:", options: JSON.stringify(["It regulates cortisol","Deficiency during development causes intellectual disability (cretinism)","It stimulates growth hormone release","It is required for sleep"]), correctAnswer: "B", explanation: "Thyroid hormone is critical for brain development — hypothyroidism during fetal or early postnatal development causes cretinism, characterized by intellectual disability and growth failure." },
+    { topicId: T["Endocrine System & Reproduction"], question: "ADH (antidiuretic hormone) primarily functions to:", options: JSON.stringify(["Stimulate cortisol release","Regulate water reabsorption in kidneys","Promote lactation","Stimulate male sex development"]), correctAnswer: "B", explanation: "ADH (vasopressin) is released from the posterior pituitary and acts on kidneys to increase water reabsorption, maintaining fluid balance and blood pressure." },
+    { topicId: T["Endocrine System & Reproduction"], question: "Growth hormone (GH) is primarily released:", options: JSON.stringify(["Continuously throughout the day","During exercise only","In pulses during deep (N3) sleep","After eating"]), correctAnswer: "C", explanation: "Growth hormone is secreted in pulses during N3 (slow-wave) sleep — this is one of the reasons deep sleep is especially important for physical restoration and growth in children." },
+    { topicId: T["Endocrine System & Reproduction"], question: "The adrenal medulla secretes which neurotransmitters?", options: JSON.stringify(["Cortisol and aldosterone","Epinephrine and norepinephrine","Oxytocin and ADH","FSH and LH"]), correctAnswer: "B", explanation: "The adrenal medulla secretes epinephrine (adrenaline) and norepinephrine into the bloodstream during sympathetic nervous system activation — preparing the body for fight-or-flight." },
 
     // ===== 9. PSYCHOPHARMACOLOGY =====
-    { topicId: T["Psychopharmacology"], question: "A boxed warning on an FDA drug label indicates:", options: JSON.stringify(["The most serious risk warnings associated with the drug","A minor cautionary note","Off-label use recommendations","A warning about drug interactions only"]), correctAnswer: "A", explanation: "A boxed (black box) warning is the FDA's strongest safety warning, indicating serious or life-threatening risks — e.g., suicidality risk with antidepressants in young patients." },
-    { topicId: T["Psychopharmacology"], question: "What is the primary mechanism of MAO inhibitors (MAOIs)?", options: JSON.stringify(["Block the enzyme that degrades monoamines, increasing DA/5-HT/NE","Block dopamine D2 receptors","Block serotonin reuptake only","Potentiate GABA-A receptor activity"]), correctAnswer: "A", explanation: "MAOIs prevent monoamine oxidase from degrading dopamine, serotonin, and norepinephrine, increasing their levels; require tyramine-free diet to avoid hypertensive crisis." },
-    { topicId: T["Psychopharmacology"], question: "Esketamine (Spravato) treats depression by targeting:", options: JSON.stringify(["NMDA (glutamate) receptors via nasal spray","SERT (serotonin transporter)","Dopamine D2 receptors","GABA-B receptors"]), correctAnswer: "A", explanation: "Esketamine is an NMDA receptor antagonist approved for treatment-resistant depression; unlike traditional antidepressants, it provides rapid relief (within hours) by modulating glutamate transmission." },
-    { topicId: T["Psychopharmacology"], question: "Second-generation antipsychotics (SGAs) differ from first-generation (FGAs) by:", options: JSON.stringify(["Blocking both D2 and 5-HT2A receptors, causing fewer extrapyramidal symptoms","Blocking only D2 receptors with higher potency","Having no metabolic side effects","Being exclusively partial agonists"]), correctAnswer: "A", explanation: "SGAs (atypical antipsychotics) block both D2 and serotonin 5-HT2A receptors, reducing extrapyramidal side effects compared to FGAs, but carry metabolic risks (weight gain, diabetes)." },
-    { topicId: T["Psychopharmacology"], question: "The exogenous field in neuronal signaling refers to:", options: JSON.stringify(["Medications, drugs, toxins, and hormones acting on the synaptic field","Endogenous neurotransmitter signaling","Glial-mediated modulation","Action potential propagation along the axon"]), correctAnswer: "A", explanation: "The exogenous (E-W) field comprises external substances (medications, recreational drugs, toxins) that act at various synaptic target sites to modify neurotransmission." },
-    { topicId: T["Psychopharmacology"], question: "Off-label prescribing refers to:", options: JSON.stringify(["Using an FDA-approved drug for an indication, population, or dose not specified in labeling","Using a non-FDA-approved drug","Using a drug without monitoring","Prescribing generic medications"]), correctAnswer: "A", explanation: "Off-label prescribing is legal and common — once a drug is approved by the FDA, clinicians may prescribe it for any purpose they deem clinically appropriate, even if not listed in the labeling." },
-    { topicId: T["Psychopharmacology"], question: "Long-acting injectable (LAI) antipsychotics are primarily used to:", options: JSON.stringify(["Improve medication adherence in patients with chronic psychotic disorders","Achieve faster onset than oral medications","Treat acute psychotic episodes","Reduce side effects compared to oral formulations"]), correctAnswer: "A", explanation: "LAIs (depot formulations given every 2-4 weeks) address non-adherence — a major cause of relapse in schizophrenia — by eliminating the need for daily oral medications." },
-    { topicId: T["Psychopharmacology"], question: "Pharmacokinetics describes:", options: JSON.stringify(["What the body does to the drug (ADME)","What the drug does to the body","The drug's mechanism of action","The receptor binding profile"]), correctAnswer: "A", explanation: "Pharmacokinetics (ADME): Absorption, Distribution, Metabolism, Excretion — how the body processes the drug. Pharmacodynamics describes the drug's effects on the body." },
-    { topicId: T["Psychopharmacology"], question: "Voltage-gated ion channels are targeted by which drug class?", options: JSON.stringify(["Anticonvulsants/antiepileptics (e.g., phenytoin)","SSRIs","Benzodiazepines","Typical antipsychotics"]), correctAnswer: "A", explanation: "Anticonvulsants like phenytoin and carbamazepine target voltage-gated Na+ or Ca2+ channels to reduce neuronal excitability, preventing seizure spread." },
-    { topicId: T["Psychopharmacology"], question: "The majority of clinical psychologists' involvement with psychopharmacology is:", options: JSON.stringify(["Providing information — psychoeducation, assessment, and consultation","Prescribing medications","No involvement at all","Administering IV medications"]), correctAnswer: "A", explanation: "Most clinical psychologists are in the 'providing information' role — they educate patients, assess responses, consult with prescribers, and collaborate — but do not prescribe (except in a few U.S. states/military)." },
+    { topicId: T["Psychopharmacology"], question: "How do benzodiazepines produce their anxiolytic effects?", options: JSON.stringify(["Blocking D2 receptors","Blocking NMDA receptors","Enhancing GABA-A receptor function","Inhibiting serotonin reuptake"]), correctAnswer: "C", explanation: "Benzodiazepines are positive allosteric modulators of GABA-A receptors — they increase the frequency of Cl- channel opening when GABA is present, enhancing inhibitory neurotransmission." },
+    { topicId: T["Psychopharmacology"], question: "Tardive dyskinesia is caused by:", options: JSON.stringify(["Short-term benzodiazepine use","Long-term antipsychotic use causing dopamine receptor supersensitivity","SSRI overdose","Stimulant abuse"]), correctAnswer: "B", explanation: "Tardive dyskinesia results from chronic D2 receptor blockade by antipsychotics — the receptors become supersensitive, leading to involuntary repetitive movements, especially facial and oral." },
+    { topicId: T["Psychopharmacology"], question: "Levodopa is used in Parkinson's disease because:", options: JSON.stringify(["It blocks acetylcholine receptors","It can cross the blood-brain barrier and be converted to dopamine","It is a direct dopamine agonist","It prevents alpha-synuclein accumulation"]), correctAnswer: "B", explanation: "Dopamine cannot cross the blood-brain barrier, but its precursor levodopa can — once in the brain, it is converted to dopamine by DOPA decarboxylase, replenishing depleted dopamine." },
+    { topicId: T["Psychopharmacology"], question: "The blood-brain barrier (BBB) is formed by:", options: JSON.stringify(["Tight junctions between astrocytes","Tight junctions between brain endothelial cells","Myelin sheaths around blood vessels","The meninges"]), correctAnswer: "B", explanation: "The BBB is formed by tight junctions between the endothelial cells lining brain capillaries — drugs must be lipid-soluble or use active transport to cross it." },
+    { topicId: T["Psychopharmacology"], question: "MAOIs work by:", options: JSON.stringify(["Blocking dopamine receptors","Inhibiting the enzyme that breaks down monoamines","Blocking serotonin reuptake","Activating GABA receptors"]), correctAnswer: "B", explanation: "MAOIs (monoamine oxidase inhibitors) block the enzyme MAO that degrades monoamines (serotonin, norepinephrine, dopamine) — increasing their availability. Dietary tyramine restrictions are necessary." },
+    { topicId: T["Psychopharmacology"], question: "Drug tolerance is defined as:", options: JSON.stringify(["Increased response with repeated use","Reduced response with repeated use, requiring higher doses","Adverse reactions to a drug","Physical dependence"]), correctAnswer: "B", explanation: "Drug tolerance is a reduced response to a drug after repeated exposure — requiring higher doses to achieve the same effect, due to receptor downregulation or increased drug metabolism." },
+    { topicId: T["Psychopharmacology"], question: "Atypical antipsychotics differ from typical antipsychotics in that they:", options: JSON.stringify(["Only block D2 receptors","Block both D2 and serotonin receptors, with fewer extrapyramidal side effects","Are not FDA-approved","Have no effect on negative symptoms"]), correctAnswer: "B", explanation: "Atypical (second-generation) antipsychotics block both D2 and 5-HT2A receptors — they have fewer extrapyramidal side effects and are more effective for negative symptoms than typical antipsychotics." },
+    { topicId: T["Psychopharmacology"], question: "Opioids produce analgesia by acting on:", options: JSON.stringify(["Dopamine receptors","GABA-A receptors","Mu, delta, and kappa opioid receptors","NMDA receptors"]), correctAnswer: "C", explanation: "Opioids bind to mu, delta, and kappa opioid receptors in the brain and spinal cord — reducing pain perception, producing euphoria, and suppressing respiration at high doses." },
+    { topicId: T["Psychopharmacology"], question: "What is the mechanism of amphetamine in ADHD treatment?", options: JSON.stringify(["Blocks reuptake of dopamine and norepinephrine only","Both blocks reuptake and reverses transporters, actively pumping out DA and NE","Only blocks norepinephrine reuptake","Acts on GABA receptors"]), correctAnswer: "B", explanation: "Amphetamine both blocks reuptake transporters AND reverses them, actively pumping dopamine and norepinephrine out of the presynaptic neuron — stronger and longer-acting than methylphenidate." },
+    { topicId: T["Psychopharmacology"], question: "Lithium is used primarily for:", options: JSON.stringify(["Schizophrenia","Bipolar disorder mood stabilization","ADHD","Anxiety disorders"]), correctAnswer: "B", explanation: "Lithium is a mood stabilizer used in bipolar disorder — it modulates second messenger systems (inositol phosphate, GSK-3β) and has neuroprotective effects. Requires blood level monitoring due to narrow therapeutic window." },
 
     // ===== 10. PSYCHOLOGICAL DISORDERS =====
-    { topicId: T["Psychological Disorders"], question: "Which duration criterion distinguishes Schizophrenia from Schizophreniform Disorder?", options: JSON.stringify(["Schizophrenia requires 6+ months; Schizophreniform is 1-6 months","Schizophrenia requires only 1 month; Schizophreniform requires 6 months","Both require identical duration","Duration is irrelevant to the distinction"]), correctAnswer: "A", explanation: "Schizophreniform disorder has the same symptoms as schizophrenia but duration of 1-6 months; schizophrenia requires at least 6 months of symptoms including prodrome/residual phases." },
-    { topicId: T["Psychological Disorders"], question: "In Bipolar I disorder, a manic episode must last at least:", options: JSON.stringify(["1 week (or any duration if hospitalization required)","4 days","2 weeks","1 month"]), correctAnswer: "A", explanation: "A manic episode in Bipolar I must last at least 1 week, or any duration if so severe that hospitalization is required to prevent harm." },
-    { topicId: T["Psychological Disorders"], question: "The hallmark distinction of Schizoaffective Disorder is:", options: JSON.stringify(["Psychotic symptoms must occur for 2+ weeks WITHOUT a concurrent mood episode","Only mood symptoms with psychotic features during mood episodes","Continuous cycling between depression and mania without psychosis","Schizophrenia plus ADHD"]), correctAnswer: "A", explanation: "Schizoaffective requires schizophrenic symptoms occurring for at least 2 weeks in the absence of major mood episodes — this distinguishes it from a mood disorder with psychotic features." },
-    { topicId: T["Psychological Disorders"], question: "Dissociative Identity Disorder (DID) was previously called:", options: JSON.stringify(["Multiple Personality Disorder","Borderline Personality Disorder","Fugue State","Conversion Disorder"]), correctAnswer: "A", explanation: "DID was formerly known as Multiple Personality Disorder; it involves two or more distinct personality states with amnesia for events occurring in alternate states." },
-    { topicId: T["Psychological Disorders"], question: "In Depersonalization/Derealization Disorder, reality testing is:", options: JSON.stringify(["Intact — the person knows the experience is unreal","Impaired — the person cannot distinguish reality","Absent entirely","Only present during episodes"]), correctAnswer: "A", explanation: "A key feature of depersonalization/derealization disorder is that reality testing remains intact throughout — patients know they are experiencing unusual symptoms but cannot control them." },
-    { topicId: T["Psychological Disorders"], question: "Disruptive Mood Dysregulation Disorder (DMDD) is diagnosed in:", options: JSON.stringify(["Children ages 6-18 with onset before age 10","Adults with persistent irritability","Adolescents only after puberty","Any age with 2+ weeks of low mood"]), correctAnswer: "A", explanation: "DMDD criteria include severe/recurrent temper outbursts 3+ times/week, diagnosed only in ages 6-18 with symptom onset before age 10, present for 12+ months in multiple settings." },
-    { topicId: T["Psychological Disorders"], question: "Negative symptoms of schizophrenia include:", options: JSON.stringify(["Avolition, flat affect, alogia, anhedonia, and social withdrawal","Hallucinations and delusions","Disorganized speech","Agitation and bizarre behavior"]), correctAnswer: "A", explanation: "Negative symptoms represent diminished or absent normal functions: avolition (motivation loss), flat affect, alogia (poverty of speech), anhedonia, and asociality." },
-    { topicId: T["Psychological Disorders"], question: "The categorical vs dimensional debate in psychopathology centers on:", options: JSON.stringify(["Whether disorders have clear boundaries or exist on a continuum","Whether biology or environment causes disorders","Whether diagnosis or treatment should come first","Whether the DSM or ICD should be used"]), correctAnswer: "A", explanation: "Categorical models impose discrete diagnostic boundaries; dimensional models recognize that symptoms exist on continua and overlap across disorders — evidence supports elements of both approaches." },
-    { topicId: T["Psychological Disorders"], question: "Dissociative Amnesia typically involves:", options: JSON.stringify(["Retrograde amnesia localized around a traumatic event","Anterograde amnesia for all new memories","Global amnesia with no retained memory","Procedural memory loss only"]), correctAnswer: "A", explanation: "Dissociative amnesia typically involves inability to recall autobiographical information (retrograde) around a specific traumatic or stressful event, inconsistent with ordinary forgetting." },
-    { topicId: T["Psychological Disorders"], question: "Premenstrual Dysphoric Disorder (PMDD) symptoms occur:", options: JSON.stringify(["Exclusively in the luteal phase of the menstrual cycle","Throughout the entire month","Only during the follicular phase","Continuously without cyclical pattern"]), correctAnswer: "A", explanation: "PMDD symptoms (depression, anxiety, lability, irritability) appear in the luteal phase (after ovulation) and resolve within a few days of menstruation — cyclical timing is diagnostic." },
-    { topicId: T["Psychological Disorders"], question: "What is formal thought disorder?", options: JSON.stringify(["Disorganized thinking manifested as disorganized speech (derailment, tangentiality, incoherence)","Delusional beliefs about thought insertion","Impaired working memory","Auditory hallucinations about thoughts"]), correctAnswer: "A", explanation: "Formal thought disorder is a disturbance in the form/organization of thinking, manifested as disorganized speech patterns: derailment, tangentiality, incoherence, circumstantiality, clanging." },
+    { topicId: T["Psychological Disorders"], question: "Positive symptoms of schizophrenia include:", options: JSON.stringify(["Flat affect and avolition","Hallucinations and delusions","Memory loss and aphasia","Depression and anxiety"]), correctAnswer: "B", explanation: "Positive symptoms are additions to normal experience: hallucinations, delusions, disorganized speech and behavior — they respond better to antipsychotic medication than negative symptoms." },
+    { topicId: T["Psychological Disorders"], question: "The glutamate hypothesis of schizophrenia proposes that:", options: JSON.stringify(["Excess glutamate causes psychosis","NMDA receptor hypofunction leads to dopamine dysregulation","Glutamate is the primary treatment target","AMPA receptors are overactive"]), correctAnswer: "B", explanation: "NMDA receptor hypofunction (especially on inhibitory interneurons) disinhibits dopamine release and glutamate — supported by NMDA antagonists (ketamine, PCP) producing schizophrenia-like symptoms." },
+    { topicId: T["Psychological Disorders"], question: "Bipolar I disorder requires:", options: JSON.stringify(["Only depressive episodes","At least one full manic episode","Only hypomanic episodes","Both manic and psychotic episodes"]), correctAnswer: "B", explanation: "Bipolar I requires at least one full manic episode — depressive episodes are common but not required for diagnosis. Bipolar II requires hypomania plus at least one major depressive episode." },
+    { topicId: T["Psychological Disorders"], question: "The monoamine hypothesis of depression proposes:", options: JSON.stringify(["Excess dopamine causes depression","Deficiency of serotonin, norepinephrine, and/or dopamine underlies depression","Depression is caused by GABA excess","Cortisol deficiency causes depression"]), correctAnswer: "B", explanation: "The monoamine hypothesis proposes that depression results from deficiency of serotonin, norepinephrine, and/or dopamine — the basis for antidepressant medications including SSRIs and SNRIs." },
+    { topicId: T["Psychological Disorders"], question: "Structural brain abnormalities in schizophrenia include:", options: JSON.stringify(["Enlarged hippocampus","Enlarged ventricles and reduced prefrontal gray matter","Cerebellar atrophy","Thickened corpus callosum"]), correctAnswer: "B", explanation: "Schizophrenia is associated with enlarged lateral ventricles, reduced prefrontal cortex gray matter (hypofrontality), and reduced hippocampal volume — findings that are present even at first episode." },
+    { topicId: T["Psychological Disorders"], question: "Learned helplessness (Seligman) is a model of:", options: JSON.stringify(["Anxiety","Schizophrenia","Depression","PTSD only"]), correctAnswer: "C", explanation: "Seligman's learned helplessness model proposes that depression results from repeated uncontrollable aversive situations — the organism stops trying to escape and becomes passive and helpless." },
+    { topicId: T["Psychological Disorders"], question: "PTSD involves which brain abnormalities?", options: JSON.stringify(["Underactive amygdala and overactive prefrontal cortex","Hyperactive amygdala, reduced prefrontal inhibition, and hippocampal volume loss","Enlarged hippocampus and reduced amygdala","Cerebellar atrophy"]), correctAnswer: "B", explanation: "PTSD features hyperactive amygdala (exaggerated fear), insufficient prefrontal inhibition of the amygdala, and hippocampal volume loss affecting contextual memory processing." },
+    { topicId: T["Psychological Disorders"], question: "Anosognosia in psychiatric disorders refers to:", options: JSON.stringify(["Denial of illness as a psychological defense","Neurological unawareness of one's own mental illness","Exaggerating symptoms","Faking illness"]), correctAnswer: "B", explanation: "Anosognosia is neurological unawareness of one's own illness — common in schizophrenia and mania. It is caused by right hemisphere dysfunction, not psychological denial, and significantly affects treatment compliance." },
+    { topicId: T["Psychological Disorders"], question: "Dissociation is best defined as:", options: JSON.stringify(["A mood disorder","Disruption in the normal integration of consciousness, memory, or identity","Excessive emotional expression","A psychotic symptom"]), correctAnswer: "B", explanation: "Dissociation is a disruption in the normal integration of consciousness, memory, identity, or perception — ranging from mild (daydreaming) to severe (DID — dissociative identity disorder)." },
+    { topicId: T["Psychological Disorders"], question: "Beck's cognitive triad in depression consists of negative views of:", options: JSON.stringify(["Past, present, and future","Self, world, and future","Self, others, and sleep","Mood, thought, and behavior"]), correctAnswer: "B", explanation: "Aaron Beck's cognitive triad describes the three negative thinking patterns in depression: negative views of the self, the world, and the future — the basis of cognitive behavioral therapy for depression." },
 
     // ===== 11. PERSONALITY DISORDERS =====
-    { topicId: T["Personality Disorders"], question: "Criterion A for any personality disorder requires dysfunction in at least 2 of the following areas:", options: JSON.stringify(["Cognition, affectivity, interpersonal functioning, or impulse control","Mood, sleep, appetite, or social relationships","Perception, memory, language, or reasoning","Attention, motivation, self-care, or work"]), correctAnswer: "A", explanation: "DSM-5 Criterion A for personality disorders requires the pattern to manifest in at least 2 of: cognition (ways of perceiving self/others), affectivity, interpersonal functioning, or impulse control." },
-    { topicId: T["Personality Disorders"], question: "Schizotypal PD is distinguished from Schizoid PD by:", options: JSON.stringify(["Magical thinking, odd perceptual experiences, and eccentric speech in Schizotypal","Greater social isolation in Schizotypal","Presence of psychosis in Schizotypal","Schizoid includes paranoid features; Schizotypal does not"]), correctAnswer: "A", explanation: "Schizotypal PD involves cognitive/perceptual distortions (magical thinking, ideas of reference, odd experiences) and eccentric behavior, while Schizoid involves purely social detachment without these features." },
-    { topicId: T["Personality Disorders"], question: "Borderline Personality Disorder requires how many of 9 criteria?", options: JSON.stringify(["5 or more","All 9","At least 3","Any 2"]), correctAnswer: "A", explanation: "BPD requires 5 or more of 9 criteria: abandonment fears, unstable relationships, identity disturbance, impulsivity, suicidal behavior, affective instability, emptiness, anger, and paranoid ideation." },
-    { topicId: T["Personality Disorders"], question: "What is 'splitting' in Borderline PD?", options: JSON.stringify(["Seeing people as all-good or all-bad with no integration","Dissociating during stress","Creating multiple personalities","A cognitive distortion about time"]), correctAnswer: "A", explanation: "Splitting is a primitive defense mechanism in BPD: people and situations are perceived as either idealized (all-good) or devalued (all-bad), rapidly shifting between extremes." },
-    { topicId: T["Personality Disorders"], question: "Antisocial PD requires that conduct disorder symptoms were present:", options: JSON.stringify(["Before age 15","Before age 18","Before age 10","At any age"]), correctAnswer: "A", explanation: "For antisocial PD, DSM requires a history of conduct disorder symptoms before age 15, plus the individual must be at least 18 years old at time of diagnosis." },
-    { topicId: T["Personality Disorders"], question: "What makes personality disorders 'ego-syntonic'?", options: JSON.stringify(["The person experiences their traits as natural extensions of themselves, not symptoms","The person has insight into their disorder","The person seeks treatment readily","Symptoms are congruent with external reality"]), correctAnswer: "A", explanation: "Ego-syntonic means the personality traits feel natural and comfortable to the individual — they don't perceive them as problems, making insight and motivation for change difficult to achieve." },
-    { topicId: T["Personality Disorders"], question: "Paranoid Personality Disorder is characterized by:", options: JSON.stringify(["Pervasive distrust and suspiciousness — suspects exploitation, holds grudges, perceives attacks on character","Odd magical beliefs and social isolation","Dramatic emotional swings and self-harm","Grandiosity and need for admiration"]), correctAnswer: "A", explanation: "Paranoid PD involves pervasive, unwarranted suspiciousness: suspects others of exploitation, reads hidden meaning into remarks, holds grudges, and suspects fidelity without evidence." },
-    { topicId: T["Personality Disorders"], question: "Which cluster do Avoidant, Dependent, and OC Personality Disorders belong to?", options: JSON.stringify(["Cluster C (anxious/fearful)","Cluster A (odd/eccentric)","Cluster B (dramatic/emotional)","No cluster — they stand alone"]), correctAnswer: "A", explanation: "Cluster C ('anxious or fearful'): Avoidant (fear of rejection/criticism), Dependent (excessive need for care/decisions made by others), and OCPD (rigidity, perfectionism, control)." },
-    { topicId: T["Personality Disorders"], question: "Narcissistic Personality Disorder requires:", options: JSON.stringify(["Grandiosity, need for admiration, and lack of empathy with 5+ of 9 criteria","Only grandiosity — no other criteria needed","Presence since childhood, not adulthood","Comorbid antisocial traits always"]), correctAnswer: "A", explanation: "NPD requires a pervasive pattern of grandiosity, excessive need for admiration, and lack of empathy, with 5+ of 9 specific criteria present across contexts beginning by early adulthood." },
-    { topicId: T["Personality Disorders"], question: "What does it mean that personality disorders are 'contagious' in clinical settings?", options: JSON.stringify(["They evoke strong complementary reactions in clinicians and others, reinforcing dysfunctional patterns","They literally spread from patient to therapist","Patients infect other patients","Symptoms worsen in group settings"]), correctAnswer: "A", explanation: "Personality disorder traits evoke characteristic reactions in others — e.g., a patient using passive-aggressive behavior pulls for resentment from the clinician, who may then act in ways that reinforce the pattern." },
+    { topicId: T["Personality Disorders"], question: "Borderline personality disorder is classified in which cluster?", options: JSON.stringify(["Cluster A (odd/eccentric)","Cluster B (dramatic/emotional)","Cluster C (anxious/fearful)","Cluster D"]), correctAnswer: "B", explanation: "BPD is a Cluster B (dramatic, emotional, erratic) disorder — others in Cluster B include antisocial, histrionic, and narcissistic PDs." },
+    { topicId: T["Personality Disorders"], question: "Antisocial personality disorder (ASPD) requires:", options: JSON.stringify(["The presence of psychosis","A history of conduct disorder before age 15","Only adult criminal behavior","Narcissistic traits"]), correctAnswer: "B", explanation: "ASPD requires a history of conduct disorder before age 15 — it is then diagnosed in adults (18+) with a persistent pattern of disregard for others, deceit, impulsivity, and lack of remorse." },
+    { topicId: T["Personality Disorders"], question: "Dialectical behavior therapy (DBT) was developed specifically for:", options: JSON.stringify(["Antisocial personality disorder","Narcissistic personality disorder","Borderline personality disorder","Schizotypal personality disorder"]), correctAnswer: "C", explanation: "DBT was developed by Marsha Linehan specifically for BPD — it combines cognitive-behavioral techniques with mindfulness, balancing acceptance and change strategies to address emotional dysregulation." },
+    { topicId: T["Personality Disorders"], question: "Schizotypal personality disorder is categorized as Cluster A and is:", options: JSON.stringify(["Genetically unrelated to schizophrenia","On a spectrum with schizophrenia but without full psychotic episodes","Characterized by dramatic emotional behavior","The same as schizophrenia"]), correctAnswer: "B", explanation: "Schizotypal PD (Cluster A) is genetically related to schizophrenia — it features odd beliefs, magical thinking, social isolation, and perceptual distortions but does not include full psychotic breaks." },
+    { topicId: T["Personality Disorders"], question: "What brain abnormality is most consistently associated with BPD?", options: JSON.stringify(["Reduced hippocampal volume","Hyperactive amygdala and reduced prefrontal inhibition","Enlarged ventricles","Cerebellar atrophy"]), correctAnswer: "B", explanation: "BPD features amygdala hyperreactivity to emotional stimuli and insufficient prefrontal cortex inhibition of the amygdala — contributing to emotional dysregulation and impulsivity." },
+    { topicId: T["Personality Disorders"], question: "OCPD differs from OCD in that OCPD is:", options: JSON.stringify(["More treatable with SSRIs","Ego-syntonic (the person is okay with it) and involves perfectionism and rigidity as a personality style","Only diagnosed in women","Associated with more severe anxiety"]), correctAnswer: "B", explanation: "OCPD is ego-syntonic — individuals with OCPD see their perfectionism and rigidity as appropriate and fine. OCD is ego-dystonic — the obsessions are recognized as intrusive and unwanted." },
+    { topicId: T["Personality Disorders"], question: "Avoidant personality disorder is characterized by:", options: JSON.stringify(["Desire for isolation with no interest in relationships","Social inhibition and desire for connection but hypersensitivity to rejection","Grandiosity and lack of empathy","Odd beliefs and magical thinking"]), correctAnswer: "B", explanation: "Avoidant PD (Cluster C) involves social inhibition and feelings of inadequacy with hypersensitivity to rejection — unlike schizoid PD, patients with AVPD actually desire relationships but fear rejection." },
+    { topicId: T["Personality Disorders"], question: "The neurobiological factor most linked to impulsivity in personality disorders is:", options: JSON.stringify(["Dopamine excess","Serotonin system dysfunction","Norepinephrine deficiency","Cortisol excess"]), correctAnswer: "B", explanation: "Serotonin system dysfunction is most consistently linked to impulsivity and aggression across personality disorders — reduced serotonin functioning correlates with impulsive and aggressive behavior." },
+    { topicId: T["Personality Disorders"], question: "Paranoid personality disorder is characterized by:", options: JSON.stringify(["Odd beliefs and magical thinking","Pervasive distrust and suspicion of others without sufficient basis","Emotional instability and fear of abandonment","Detachment and indifference to relationships"]), correctAnswer: "B", explanation: "Paranoid PD (Cluster A) is characterized by pervasive, unjustified distrust and suspicion — individuals interpret others' motives as malevolent without sufficient reason." },
+    { topicId: T["Personality Disorders"], question: "The alternative DSM-5 dimensional model for personality disorders assesses:", options: JSON.stringify(["Only Cluster B disorders","Personality functioning plus pathological trait domains (negative affectivity, detachment, antagonism, disinhibition, psychoticism)","Only social functioning","Cognitive ability"]), correctAnswer: "B", explanation: "The alternative DSM-5 Section III model uses a dimensional approach — assessing self/interpersonal functioning AND five pathological trait domains, providing a more nuanced and empirically supported framework." },
 
     // ===== 12. ADHD & MEDICATIONS =====
-    { topicId: T["ADHD & Medications"], question: "ADHD symptoms must have been present before age:", options: JSON.stringify(["12","18","6","5"]), correctAnswer: "A", explanation: "DSM-5 requires that several ADHD symptoms were present before age 12, though diagnosis can occur at any age if symptoms meet other criteria." },
-    { topicId: T["ADHD & Medications"], question: "Methylphenidate's primary mechanism of action is:", options: JSON.stringify(["Blocking dopamine and norepinephrine reuptake transporters","Stimulating dopamine synthesis","Blocking D2 receptors","Increasing serotonin availability"]), correctAnswer: "A", explanation: "Methylphenidate blocks the DAT and NET transporters, preventing reuptake of dopamine and norepinephrine, increasing their availability in prefrontal synapses." },
-    { topicId: T["ADHD & Medications"], question: "Lisdexamfetamine (Vyvanse) is a prodrug, meaning:", options: JSON.stringify(["It is inactive until metabolized in the body to active d-amphetamine","It has faster onset than regular amphetamine","It does not affect dopamine","It is a non-stimulant"]), correctAnswer: "A", explanation: "Vyvanse is enzymatically cleaved in red blood cells to release active d-amphetamine; this prodrug design produces smoother onset/offset and lower abuse potential than immediate-release amphetamine." },
-    { topicId: T["ADHD & Medications"], question: "Atomoxetine (Strattera) differs from stimulants in that it:", options: JSON.stringify(["Selectively inhibits norepinephrine reuptake; non-stimulant; slower onset","Is a dopamine precursor","Has immediate effects like methylphenidate","Is a Schedule II controlled substance"]), correctAnswer: "A", explanation: "Atomoxetine is a selective NRI (not a stimulant, not controlled); it takes several weeks for full effect, has no abuse potential, and may have off-label benefits for depression." },
-    { topicId: T["ADHD & Medications"], question: "The Concerta (OROS methylphenidate) delivery system uses:", options: JSON.stringify(["Osmotic pump technology for sustained release throughout the day","A skin patch","Delayed release activated at bedtime","Prodrug metabolism in the liver"]), correctAnswer: "A", explanation: "Concerta uses OROS (Osmotic Release Oral System) technology — water enters the capsule, expanding a polymer that pushes methylphenidate out at a controlled rate over ~12 hours." },
-    { topicId: T["ADHD & Medications"], question: "What are IEP and 504 plans?", options: JSON.stringify(["Educational accommodations for students with disabilities; IEP (individualized education program) and 504 (non-special education accommodations)","Medication management protocols","Behavioral rating scales","Insurance approval documents"]), correctAnswer: "A", explanation: "IEPs (special education, Individuals with Disabilities Education Act) provide individualized specialized instruction; 504 plans (Rehabilitation Act) provide accommodations/modifications without special education placement." },
-    { topicId: T["ADHD & Medications"], question: "Which brain circuit is primarily dysregulated in ADHD?", options: JSON.stringify(["Frontal-subcortical-cerebellar catecholaminergic circuits","Hippocampal-entorhinal memory circuits","Amygdala-prefrontal emotion regulation circuits","Primary sensory processing circuits"]), correctAnswer: "A", explanation: "ADHD involves dysregulation of frontal-subcortical (basal ganglia) and cerebellar catecholaminergic circuits, leading to impaired executive function, attention regulation, and impulse control." },
-    { topicId: T["ADHD & Medications"], question: "Daytrana is a unique methylphenidate formulation because it:", options: JSON.stringify(["Is a transdermal patch that can be removed to shorten effect duration","Is taken at bedtime for next-day effect","Is a nasal spray","Is a liquid formulation only"]), correctAnswer: "A", explanation: "Daytrana is a methylphenidate transdermal patch; its benefit is that it can be removed early if the patient needs to sleep sooner than expected, allowing flexible duration management." },
-    { topicId: T["ADHD & Medications"], question: "Which nonstimulant ADHD medication modulates serotonergic activity and was approved more recently?", options: JSON.stringify(["Viloxazine (Qelbree)","Atomoxetine (Strattera)","Guanfacine (Intuniv)","Clonidine (Kapvay)"]), correctAnswer: "A", explanation: "Viloxazine (Qelbree) modulates serotonergic activity and was FDA-approved more recently; however, evidence does not show a clear advantage over atomoxetine for most patients." },
-    { topicId: T["ADHD & Medications"], question: "Common side effects of ADHD stimulant medications include:", options: JSON.stringify(["Insomnia, appetite suppression, elevated blood pressure, and growth suppression","Sedation, weight gain, and metabolic syndrome","Hallucinations and mania in all patients","Diarrhea and increased appetite"]), correctAnswer: "A", explanation: "Stimulant side effects: insomnia (especially if taken late), reduced appetite (can suppress growth in children), elevated heart rate/BP, and rarely cardiac concerns — monitoring is essential." },
+    { topicId: T["ADHD & Medications"], question: "The DSM-5 requires ADHD symptoms to be present before age:", options: JSON.stringify(["18","16","12","10"]), correctAnswer: "C", explanation: "DSM-5 requires that several inattentive or hyperactive-impulsive symptoms were present before age 12 (changed from 7 in DSM-IV) and must cause impairment in two or more settings." },
+    { topicId: T["ADHD & Medications"], question: "The primary mechanism of methylphenidate (Ritalin) is:", options: JSON.stringify(["Serotonin reuptake inhibition","Blocking dopamine and norepinephrine reuptake transporters (DAT and NET)","Reversing the dopamine transporter","Blocking alpha-2 receptors"]), correctAnswer: "B", explanation: "Methylphenidate blocks the dopamine transporter (DAT) and norepinephrine transporter (NET) — increasing DA and NE in the prefrontal cortex to improve executive function." },
+    { topicId: T["ADHD & Medications"], question: "Which brain region is most implicated in ADHD?", options: JSON.stringify(["Occipital cortex","Hippocampus","Prefrontal cortex and anterior cingulate","Cerebellum only"]), correctAnswer: "C", explanation: "The prefrontal cortex (working memory, inhibition) and anterior cingulate cortex (error monitoring) are most implicated in ADHD — dopamine and norepinephrine dysfunction in these circuits drives core symptoms." },
+    { topicId: T["ADHD & Medications"], question: "Atomoxetine (Strattera) is classified as:", options: JSON.stringify(["A stimulant","A non-stimulant selective NE reuptake inhibitor","An SSRI","A dopamine agonist"]), correctAnswer: "B", explanation: "Atomoxetine is a selective norepinephrine reuptake inhibitor — it is FDA-approved for ADHD, has no abuse potential, and is particularly useful when stimulants are contraindicated (e.g., substance use)." },
+    { topicId: T["ADHD & Medications"], question: "The heritability of ADHD is approximately:", options: JSON.stringify(["10-20%","30-40%","50-60%","70-80%"]), correctAnswer: "D", explanation: "ADHD has a heritability of approximately 70-80% — it is among the most heritable psychiatric disorders, with multiple genes affecting dopamine and norepinephrine systems." },
+    { topicId: T["ADHD & Medications"], question: "Amphetamine differs from methylphenidate because it:", options: JSON.stringify(["Only blocks serotonin reuptake","Both blocks the reuptake transporter AND reverses it, actively releasing DA and NE","Acts exclusively on NE","Has a shorter duration of action"]), correctAnswer: "B", explanation: "Amphetamine both blocks DAT/NET AND reverses them, actively pumping dopamine and norepinephrine out of the presynaptic neuron — this makes it stronger and longer-acting than methylphenidate." },
+    { topicId: T["ADHD & Medications"], question: "Guanfacine (Intuniv) works for ADHD by:", options: JSON.stringify(["Blocking D2 receptors","Activating alpha-2A adrenergic receptors in the prefrontal cortex","Inhibiting serotonin reuptake","Increasing GABA activity"]), correctAnswer: "B", explanation: "Guanfacine is a selective alpha-2A adrenergic agonist — it strengthens PFC neural network connections by reducing noisy firing, improving working memory, attention, and impulse control." },
+    { topicId: T["ADHD & Medications"], question: "Working memory deficits are a core feature of ADHD because:", options: JSON.stringify(["ADHD affects the hippocampus","Working memory depends on the prefrontal cortex and dopamine/NE signaling","Working memory is a sensory function","It is caused by cerebellar damage"]), correctAnswer: "B", explanation: "Working memory depends on prefrontal cortex dopamine and norepinephrine signaling — deficient DA/NE in ADHD impairs the ability to hold and manipulate information in mind." },
+    { topicId: T["ADHD & Medications"], question: "Common risks of stimulant medication for ADHD include:", options: JSON.stringify(["Weight gain and increased sleep","Decreased appetite, sleep disruption, and elevated heart rate/blood pressure","Sedation and cognitive slowing","Memory loss and confusion"]), correctAnswer: "B", explanation: "Stimulant side effects include decreased appetite, sleep disruption, elevated heart rate/blood pressure, and potential for abuse — cardiovascular screening is recommended prior to prescribing." },
+    { topicId: T["ADHD & Medications"], question: "The Continuous Performance Test (CPT) primarily assesses:", options: JSON.stringify(["Language abilities","Memory consolidation","Sustained attention and impulse control","Visual-spatial skills"]), correctAnswer: "C", explanation: "The CPT requires sustained vigilance and response inhibition — the participant responds to target stimuli and inhibits responses to non-targets, making it a key measure in ADHD evaluation." },
 
     // ===== 13. LANGUAGE PROCESSING & APHASIA =====
-    { topicId: T["Language Processing & Aphasia"], question: "Broca's aphasia is characterized by:", options: JSON.stringify(["Non-fluent, agrammatic speech with relatively preserved comprehension","Fluent jargon speech with impaired comprehension","Impaired repetition with intact comprehension","Normal speech with only word-finding difficulty"]), correctAnswer: "A", explanation: "Broca's aphasia: non-fluent, effortful, telegraphic/agrammatic speech; comprehension relatively preserved; repetition and naming impaired; dysarthria and dysprosody common." },
-    { topicId: T["Language Processing & Aphasia"], question: "The hallmark feature of Conduction Aphasia is:", options: JSON.stringify(["Severely impaired repetition despite relatively intact comprehension and fluency","Non-fluent speech with poor comprehension","Fluent speech with no other deficits","Only naming difficulty"]), correctAnswer: "A", explanation: "Conduction aphasia's defining feature is disproportionately impaired repetition compared to relatively spared fluency and comprehension; caused by arcuate fasciculus disconnection." },
-    { topicId: T["Language Processing & Aphasia"], question: "Wernicke's aphasia is characterized by:", options: JSON.stringify(["Fluent, nonsensical speech (jargon) with severely impaired comprehension","Non-fluent, effortful speech with good comprehension","Impaired repetition only","Good comprehension but word-finding difficulty"]), correctAnswer: "A", explanation: "Wernicke's aphasia: fluent output with paraphasias and neologisms but severely impaired comprehension, repetition, naming, reading, and writing; lesion in posterior superior temporal gyrus." },
-    { topicId: T["Language Processing & Aphasia"], question: "Chomsky's concept of 'universal grammar' proposes:", options: JSON.stringify(["Children are born with an innate language acquisition device that includes fundamental grammatical rules","Language is entirely learned from the environment","Grammar differs fundamentally across all languages","Adults learn grammar better than children"]), correctAnswer: "A", explanation: "Chomsky proposed that humans are born with an innate Language Acquisition Device (LAD) containing universal grammar — this explains why children acquire language rapidly without explicit instruction." },
-    { topicId: T["Language Processing & Aphasia"], question: "The phonemic restoration effect demonstrates:", options: JSON.stringify(["Top-down processing — listeners use context to fill in missing speech sounds","Bottom-up processing dominates speech perception","Categorical perception of phonemes","The independence of speech from semantic context"]), correctAnswer: "A", explanation: "The phonemic restoration effect: listeners perceive a phoneme replaced by noise as if it were present, demonstrating that top-down lexical and contextual knowledge influences speech perception." },
-    { topicId: T["Language Processing & Aphasia"], question: "Anomic aphasia is best described as:", options: JSON.stringify(["Non-localizing aphasia with preserved repetition/comprehension and impaired word-finding","Severe comprehension impairment","Non-fluent speech with agrammatism","Fluent jargon speech"]), correctAnswer: "A", explanation: "Anomic aphasia: circumlocutions and word-finding pauses (e.g., 'the thing you use to...'); comprehension and repetition intact; not localizing — can result from lesions anywhere in language network." },
-    { topicId: T["Language Processing & Aphasia"], question: "Transcortical Motor Aphasia differs from Broca's aphasia by:", options: JSON.stringify(["Intact repetition in Transcortical Motor (lesion spares arcuate fasciculus/perisylvian region)","More severe comprehension impairment in Transcortical Motor","Fluent output in Transcortical Motor","Right hemisphere lesion in Transcortical Motor"]), correctAnswer: "A", explanation: "Transcortical Motor aphasia is non-fluent like Broca's but repetition is intact (sometimes echolalic); this is because the perisylvian language loop is preserved, unlike in Broca's aphasia." },
-    { topicId: T["Language Processing & Aphasia"], question: "Expressive aprosodia involves:", options: JSON.stringify(["Inability to convey emotional tone, stress, and rhythm in speech — sounding flat/monotone","Difficulty interpreting others' emotional prosody","Inability to comprehend any speech","Word-finding difficulties only"]), correctAnswer: "A", explanation: "Expressive aprosodia: the person cannot modulate pitch, stress, and rhythm to convey emotion, resulting in monotone, flat-sounding speech; associated with right hemisphere frontal damage." },
-    { topicId: T["Language Processing & Aphasia"], question: "The TRACE model of speech perception is characterized by:", options: JSON.stringify(["Interactive activation with bidirectional (top-down and bottom-up) connections between feature, phoneme, and word levels","Only bottom-up processing","Recognition based solely on the first phoneme","Serial, stage-by-stage processing"]), correctAnswer: "A", explanation: "The TRACE model involves interactive activation: features activate phonemes which activate words, but activated words also feed back down to influence phoneme perception — explaining context effects." },
-    { topicId: T["Language Processing & Aphasia"], question: "Alexia without agraphia (pure alexia) results from:", options: JSON.stringify(["Disconnection between visual cortex and language areas — can write but cannot read","Angular gyrus lesion damaging both reading and writing","Wernicke's area damage","Broca's area damage"]), correctAnswer: "A", explanation: "Pure alexia (alexia without agraphia): visual information cannot reach language areas (disconnection); remarkably, patients can write normally but cannot read even their own handwriting." },
+    { topicId: T["Language Processing & Aphasia"], question: "Broca's aphasia is characterized by:", options: JSON.stringify(["Fluent speech with poor comprehension","Non-fluent, effortful speech with relatively preserved comprehension","Normal speech but poor repetition","Total loss of all language"]), correctAnswer: "B", explanation: "Broca's aphasia (left inferior frontal gyrus damage) produces non-fluent, effortful, telegraphic speech with relatively preserved comprehension — the patient understands but struggles to produce speech." },
+    { topicId: T["Language Processing & Aphasia"], question: "Wernicke's aphasia is characterized by:", options: JSON.stringify(["Non-fluent speech with intact comprehension","Fluent but meaningless speech with poor comprehension","Good repetition with poor production","Loss of all language functions"]), correctAnswer: "B", explanation: "Wernicke's aphasia (posterior superior temporal gyrus damage) produces fluent but semantically empty speech (word salad, paraphasias) with severely impaired comprehension." },
+    { topicId: T["Language Processing & Aphasia"], question: "Conduction aphasia is caused by damage to:", options: JSON.stringify(["Broca's area","Wernicke's area","The arcuate fasciculus connecting Broca's and Wernicke's areas","The primary motor cortex"]), correctAnswer: "C", explanation: "Conduction aphasia results from arcuate fasciculus damage — disconnecting Broca's from Wernicke's areas. Speech is fluent, comprehension is adequate, but repetition is severely impaired." },
+    { topicId: T["Language Processing & Aphasia"], question: "Global aphasia involves:", options: JSON.stringify(["Only impaired production","Only impaired comprehension","Severely impaired production, comprehension, and repetition","Good repetition with all other functions impaired"]), correctAnswer: "C", explanation: "Global aphasia — caused by large left hemisphere lesions involving both Broca's and Wernicke's areas — severely impairs all language functions: fluency, comprehension, and repetition." },
+    { topicId: T["Language Processing & Aphasia"], question: "A semantic paraphasia is:", options: JSON.stringify(["Substituting a phonologically similar word","Substituting a semantically related word","Difficulty with repetition","Total word retrieval failure"]), correctAnswer: "B", explanation: "Semantic paraphasia involves substituting a semantically related word for the target (e.g., saying 'knife' for 'fork') — common in Wernicke's aphasia." },
+    { topicId: T["Language Processing & Aphasia"], question: "The six components assessed in aphasia evaluation are:", options: JSON.stringify(["Memory, attention, executive, language, spatial, and motor","Fluency, comprehension, repetition, naming, reading, and writing","Syntax, semantics, phonology, morphology, pragmatics, and prosody","Hearing, vision, touch, taste, smell, and proprioception"]), correctAnswer: "B", explanation: "Aphasia is characterized along six dimensions: fluency of output, comprehension, repetition, naming, reading, and writing — these distinguish different aphasia types." },
+    { topicId: T["Language Processing & Aphasia"], question: "Language dominance in right-handed individuals is:", options: JSON.stringify(["Right hemisphere in ~95%","Left hemisphere in ~95%","Equal left and right in ~50%","Right hemisphere in ~50%"]), correctAnswer: "B", explanation: "Language is dominant in the left hemisphere in approximately 95% of right-handers and about 70% of left-handers — assessed clinically with the Wada test." },
+    { topicId: T["Language Processing & Aphasia"], question: "Dysarthria differs from aphasia in that dysarthria:", options: JSON.stringify(["Involves comprehension problems","Is a language disorder","Is a motor speech disorder with intact language","Is caused by left hemisphere lesions only"]), correctAnswer: "C", explanation: "Dysarthria is a motor speech disorder — slurred speech from weakness or incoordination of speech muscles — with intact language (grammar, comprehension, and word finding are normal)." },
+    { topicId: T["Language Processing & Aphasia"], question: "Transcortical motor aphasia features:", options: JSON.stringify(["Poor repetition and poor comprehension","Non-fluent speech, good comprehension, and preserved repetition","Fluent speech with neologisms","Complete mutism"]), correctAnswer: "B", explanation: "Transcortical motor aphasia (supplementary motor area lesion, sparing perisylvian language core) produces non-fluent speech with good comprehension and strikingly preserved repetition." },
+    { topicId: T["Language Processing & Aphasia"], question: "Anomia is:", options: JSON.stringify(["Inability to hear speech sounds","Difficulty retrieving words and names","Inability to repeat words","Loss of reading ability"]), correctAnswer: "B", explanation: "Anomia is word-finding difficulty — impaired ability to retrieve names and words. It occurs in many aphasia types and is typically the last deficit to resolve in aphasia recovery." },
 
     // ===== 14. APRAXIA & AGNOSIA =====
-    { topicId: T["Apraxia & Agnosia"], question: "Apraxia differs from other motor disorders in that:", options: JSON.stringify(["Weakness, sensory loss, and cerebellar dysfunction are absent — it is a cortical planning deficit","It always involves muscle weakness","It is caused by basal ganglia degeneration","It only affects speech production"]), correctAnswer: "A", explanation: "Apraxia is a disorder of motor planning/programming at the cortical association level — primary motor and sensory pathways are intact; the deficit is in higher-order movement organization." },
-    { topicId: T["Apraxia & Agnosia"], question: "Ideomotor apraxia errors include:", options: JSON.stringify(["Using body part as the tool (e.g., finger as a toothbrush), spatial trajectory errors, and timing errors","Only completely omitting the action","Substituting an entirely different purposeful movement","Confusing tools from different categories"]), correctAnswer: "A", explanation: "Ideomotor apraxia errors: content errors (substitute different pantomime), postural errors (body part as tool), spatial errors (wrong trajectory/orientation), and temporal/sequencing errors." },
-    { topicId: T["Apraxia & Agnosia"], question: "Ideational apraxia involves:", options: JSON.stringify(["Failure to organize a complex multi-step sequence of actions (e.g., making tea)","Inability to perform single gestures","Only affecting non-dominant hand","Impairment only when using real objects"]), correctAnswer: "A", explanation: "Ideational apraxia: the conceptual plan for a complex, sequenced multi-step task is disrupted — individual actions may be possible but the overall sequence fails (frontal lobe lesion)." },
-    { topicId: T["Apraxia & Agnosia"], question: "Agnosia is best defined as:", options: JSON.stringify(["Perception without recognition — sensory processing intact but identification fails","Complete loss of sensory input in one modality","An inability to produce motor responses","Amnesia for sensory experiences"]), correctAnswer: "A", explanation: "Agnosia: the ability to sense is intact but the brain cannot recognize or interpret what is sensed — it is a failure of higher-order perceptual processing, not primary sensation." },
-    { topicId: T["Apraxia & Agnosia"], question: "Prosopagnosia results from damage to:", options: JSON.stringify(["Fusiform face area (ventral temporal-occipital cortex)","Primary visual cortex V1","Frontal eye fields","Anterior cingulate cortex"]), correctAnswer: "A", explanation: "Prosopagnosia (inability to recognize familiar faces) results from damage to the fusiform face area, a region in the ventral visual stream specialized for face processing." },
-    { topicId: T["Apraxia & Agnosia"], question: "In the standard apraxia assessment, the correct order is:", options: JSON.stringify(["Pantomime to command → imitate examiner → use actual object","Use actual object → imitate → pantomime","Imitate → pantomime → comprehension test","Any order — sequence does not matter"]), correctAnswer: "A", explanation: "Assessment progresses from the most demanding (pantomime from verbal command, requires internal representation) to easiest (actual object use), revealing which level of representation is impaired." },
-    { topicId: T["Apraxia & Agnosia"], question: "Balint's syndrome involves:", options: JSON.stringify(["Simultanagnosia, optic ataxia, and oculomotor apraxia from bilateral parietal-occipital damage","Inability to recognize sounds","Impaired face recognition only","Hemispatial neglect from right parietal damage"]), correctAnswer: "A", explanation: "Balint's syndrome: simultanagnosia (can only see one object at a time), optic ataxia (misreaching), and oculomotor apraxia (difficulty directing gaze voluntarily); bilateral parieto-occipital damage." },
-    { topicId: T["Apraxia & Agnosia"], question: "Apraxia of speech involves:", options: JSON.stringify(["Difficulty planning articulatory movements for speech despite intact phonation and comprehension","Weak muscles of articulation","Deficient phonological representation","Right hemisphere motor planning"]), correctAnswer: "A", explanation: "Apraxia of speech: impaired planning and sequencing of speech articulatory movements; automatic/reactive speech (counting, swearing) may be preserved; not caused by weakness (dysarthria) or language deficit." },
-    { topicId: T["Apraxia & Agnosia"], question: "Conduction apraxia is characterized by:", options: JSON.stringify(["More impaired with imitation than with command; disconnection syndrome","Equally impaired on command and imitation","Only affecting dominant hand","Preserved imitation and impaired object use"]), correctAnswer: "A", explanation: "Conduction apraxia: imitation is paradoxically more impaired than pantomime to command — thought to reflect a disconnection between the visual representation of the gesture and motor programming." },
-    { topicId: T["Apraxia & Agnosia"], question: "Asomatognosia refers to:", options: JSON.stringify(["Failure to recognize own body parts or their relationship to each other","Inability to recognize objects by touch","Loss of proprioception in limbs","Impaired body image in eating disorders"]), correctAnswer: "A", explanation: "Asomatognosia is a disturbance in body schema — failure to recognize or acknowledge one's own body parts; associated with right parietal lesions and often co-occurs with hemispatial neglect." },
+    { topicId: T["Apraxia & Agnosia"], question: "Apraxia is defined as:", options: JSON.stringify(["Muscle weakness affecting movement","Inability to perform purposeful movements despite intact motor function and comprehension","Sensory loss impairing movement","Memory loss affecting learned movements"]), correctAnswer: "B", explanation: "Apraxia is the inability to perform purposeful, skilled movements despite intact motor strength, sensation, and comprehension — it is a disorder of motor planning from cortical association area damage." },
+    { topicId: T["Apraxia & Agnosia"], question: "Ideomotor apraxia primarily affects:", options: JSON.stringify(["Multi-step task sequences","Performance of movements on verbal command or imitation","Fine motor precision only","Spontaneous automatic movements"]), correctAnswer: "B", explanation: "Ideomotor apraxia: inability to perform movements to verbal command (e.g., 'wave goodbye') or by imitation — though spontaneous performance in context may be preserved." },
+    { topicId: T["Apraxia & Agnosia"], question: "What is the correct order for testing apraxia?", options: JSON.stringify(["Use object → imitate → command","Command → imitate → use object","Imitate → command → use object","Command → use object → imitate"]), correctAnswer: "B", explanation: "Apraxia is tested from most to least abstract: pantomime to command → imitation → use of actual object. Performance typically improves moving toward object use." },
+    { topicId: T["Apraxia & Agnosia"], question: "Prosopagnosia is defined as:", options: JSON.stringify(["Inability to recognize any visual objects","Inability to recognize familiar faces","Inability to name objects","Inability to read words"]), correctAnswer: "B", explanation: "Prosopagnosia is the inability to recognize familiar faces despite intact basic visual perception — caused by bilateral damage to the fusiform face area. Patients can identify gender, age, and emotion from faces." },
+    { topicId: T["Apraxia & Agnosia"], question: "Associative agnosia differs from apperceptive agnosia in that:", options: JSON.stringify(["The patient cannot copy objects","The patient can perceive and copy objects but cannot recognize them or access their meaning","The patient has motor weakness","The patient has language comprehension problems"]), correctAnswer: "B", explanation: "In associative agnosia, basic visual perception is intact (patient can copy and match objects) but they cannot recognize the object or access its semantic meaning — an agnosia of recognition, not perception." },
+    { topicId: T["Apraxia & Agnosia"], question: "Hemispatial neglect is best characterized as:", options: JSON.stringify(["Primary sensory loss on one side","Failure to attend to or respond to stimuli on the contralesional side","A visual field defect","A motor paralysis"]), correctAnswer: "B", explanation: "Hemispatial neglect is the failure to attend to stimuli on the side contralateral to a brain lesion (usually right hemisphere) — it is not a sensory loss but an attentional deficit." },
+    { topicId: T["Apraxia & Agnosia"], question: "Balint's syndrome consists of:", options: JSON.stringify(["Prosopagnosia, alexia, and agraphia","Simultagnosia, optic ataxia, and oculomotor apraxia","Ideomotor apraxia, ideational apraxia, and constructional apraxia","Hemispatial neglect, hemianopia, and hemiplegia"]), correctAnswer: "B", explanation: "Balint's syndrome (bilateral parieto-occipital lesions) consists of simultagnosia (cannot process whole scene), optic ataxia (inaccurate reaching), and oculomotor apraxia (inability to voluntarily move eyes)." },
+    { topicId: T["Apraxia & Agnosia"], question: "The 'what' pathway in visual agnosia research refers to:", options: JSON.stringify(["Dorsal occipitoparietal pathway","Ventral occipitotemporal pathway","The optic chiasm","The primary visual cortex"]), correctAnswer: "B", explanation: "The ventral stream (occipitotemporal) is the 'what' pathway — it processes object identity, color, and faces. Associative agnosia and prosopagnosia involve damage along this pathway." },
+    { topicId: T["Apraxia & Agnosia"], question: "Anosognosia is:", options: JSON.stringify(["Deliberate faking of symptoms","Psychological denial of illness","Neurological unawareness of one's own deficit, caused by right hemisphere damage","A type of aphasia"]), correctAnswer: "C", explanation: "Anosognosia is a neurological phenomenon — unawareness of one's own deficit (e.g., being unaware of paralysis or memory loss) — caused by right hemisphere damage and prevalent in Alzheimer's disease." },
+    { topicId: T["Apraxia & Agnosia"], question: "Kinetic (limb-kinetic) apraxia is tested by:", options: JSON.stringify(["Verbal command to wave","Copying complex figures","Finger tapping and grooved pegboard tasks","Clock drawing"]), correctAnswer: "C", explanation: "Kinetic apraxia is clumsiness in precision motor acts — tested by finger tapping speed, grooved pegboard, and other fine motor dexterity tasks." },
 
     // ===== 15. NEUROCOGNITIVE DISORDERS =====
-    { topicId: T["Neurocognitive Disorders"], question: "The genetic mutation in Huntington's Disease involves:", options: JSON.stringify(["CAG trinucleotide repeats (36+) in the HTT gene on chromosome 4","A mutation in the APOE gene on chromosome 19","Trinucleotide repeat on chromosome 21","Autosomal recessive inheritance"]), correctAnswer: "A", explanation: "Huntington's is caused by autosomal dominant expansion of CAG repeats in the HTT gene on chromosome 4; 36+ repeats are pathological, 10-27 are normal, and repeat length correlates with onset age." },
-    { topicId: T["Neurocognitive Disorders"], question: "The classic triad of iNPH (idiopathic Normal Pressure Hydrocephalus) includes:", options: JSON.stringify(["Magnetic gait, cognitive impairment, and urinary incontinence","Tremor, rigidity, and bradykinesia","Hallucinations, fluctuating cognition, and parkinsonism","Chorea, depression, and executive dysfunction"]), correctAnswer: "A", explanation: "iNPH classic triad: magnetic gait (feet appear glued to floor), cognitive impairment, and urinary urgency/incontinence — caused by excess CSF compressing periventricular tracts." },
-    { topicId: T["Neurocognitive Disorders"], question: "Delirium is primarily distinguished from dementia by:", options: JSON.stringify(["Acute onset and fluctuating course in delirium vs gradual progression in dementia","Delirium involves memory loss but dementia does not","Delirium is irreversible; dementia is treatable","Dementia causes more severe agitation"]), correctAnswer: "A", explanation: "Delirium has acute (hours to days) onset with fluctuating course — symptoms vary dramatically throughout the day. Dementia has a gradual, progressive onset without rapid fluctuations." },
-    { topicId: T["Neurocognitive Disorders"], question: "The Glasgow Coma Scale (GCS) assesses:", options: JSON.stringify(["Eye opening, verbal response, and motor response (max 15)","Only verbal responses (max 15)","Reflexes, memory, and orientation","Blood pressure, pupil reaction, and motor tone"]), correctAnswer: "A", explanation: "GCS = Eye opening (4) + Verbal response (5) + Motor response (6) = max 15. Score ≤8 indicates severe TBI/coma; it is the standard acute TBI severity classification tool." },
-    { topicId: T["Neurocognitive Disorders"], question: "Parkinson's Disease pathophysiology centers on:", options: JSON.stringify(["Loss of dopaminergic neurons in substantia nigra pars compacta with Lewy body (alpha-synuclein) accumulation","Cholinergic neuron loss in the nucleus basalis","Glutamate excitotoxicity in the striatum","Tau protein tangles in the cortex"]), correctAnswer: "A", explanation: "PD involves progressive degeneration of dopaminergic neurons in the substantia nigra pars compacta, Lewy body formation, and resulting loss of striatal dopamine input causing motor and cognitive symptoms." },
-    { topicId: T["Neurocognitive Disorders"], question: "The core features of Dementia with Lewy Bodies (DLB) include:", options: JSON.stringify(["Fluctuating cognition, visual hallucinations, parkinsonism, and REM sleep behavior disorder","Chorea, executive dysfunction, and depression","Magnetic gait, incontinence, and hydrocephalus","Aphasia, apraxia, and agnosia as first symptoms"]), correctAnswer: "A", explanation: "DLB core features: fluctuating alertness/cognition, recurrent visual hallucinations (80%), parkinsonism (after cognitive decline), and REM sleep behavior disorder (acting out dreams)." },
-    { topicId: T["Neurocognitive Disorders"], question: "Chronic Traumatic Encephalopathy (CTE) is:", options: JSON.stringify(["A progressive tau pathology from repetitive brain trauma, diagnosed post-mortem","Identical to Alzheimer's disease","Caused by a single severe TBI","Always accompanied by immediate loss of consciousness"]), correctAnswer: "A", explanation: "CTE is a neurodegenerative disease caused by repetitive brain trauma (not a single injury); characterized by hyperphosphorylated tau deposits; currently can only be confirmed at autopsy." },
-    { topicId: T["Neurocognitive Disorders"], question: "The Frascati Criteria distinguish ANI from HAD primarily by:", options: JSON.stringify(["Functional impairment — ANI has none; MND has mild; HAD has marked impairment","Cognitive domain scores only","CD4 count and viral load","Neuroimaging findings"]), correctAnswer: "A", explanation: "All three HIV neurocognitive categories require ≥1 SD impairment in 2+ cognitive domains; the distinction is functional impairment: ANI=none, MND=mild, HAD=marked impairment in daily activities." },
-    { topicId: T["Neurocognitive Disorders"], question: "The anterior cingulate cortex's role in pain is to process:", options: JSON.stringify(["The emotional/affective distress component of pain (the suffering)","The sensory-discriminative component (location and intensity)","Motor responses to pain","Descending pain inhibition"]), correctAnswer: "A", explanation: "The anterior cingulate processes the 'unpleasantness' or emotional suffering of pain. Cingulotomy (surgical lesioning) can eliminate pain distress while leaving the sensory detection of pain intact." },
-    { topicId: T["Neurocognitive Disorders"], question: "What distinguishes resting tremor in Parkinson's from action tremor?", options: JSON.stringify(["Resting tremor occurs at rest and diminishes with voluntary movement; action tremor occurs during movement","Both types occur only during voluntary movement","Resting tremor is more disabling than action tremor in all cases","Action tremor is more common in Parkinson's"]), correctAnswer: "A", explanation: "Parkinson's tremor is characteristically a resting tremor ('pill-rolling') that improves with voluntary movement. Action/intention tremors (worsening with movement) suggest cerebellar pathology." },
+    { topicId: T["Neurocognitive Disorders"], question: "The 4 As of cortical dementia are:", options: JSON.stringify(["Anxiety, Agitation, Apathy, Abulia","Amnesia, Aphasia, Apraxia, Agnosia","Alogia, Avolition, Anhedonia, Asociality","Ataxia, Apraxia, Aphasia, Akinesia"]), correctAnswer: "B", explanation: "Cortical dementia (e.g., Alzheimer's) is characterized by the 4 As: Amnesia (memory), Aphasia (language), Apraxia (motor planning), and Agnosia (recognition)." },
+    { topicId: T["Neurocognitive Disorders"], question: "The HTT gene mutation in Huntington's disease involves:", options: JSON.stringify(["Tau protein aggregation","CAG repeat expansion on chromosome 4","APOE-e4 allele","Alpha-synuclein accumulation"]), correctAnswer: "B", explanation: "Huntington's disease is caused by expansion of CAG repeats (>36) in the HTT gene on chromosome 4 — resulting in a toxic protein that causes neuronal death, especially in the striatum." },
+    { topicId: T["Neurocognitive Disorders"], question: "The core features of dementia with Lewy bodies (DLB) include:", options: JSON.stringify(["Memory loss, depression, and stroke","Fluctuating cognition, visual hallucinations, parkinsonism, and REM sleep behavior disorder","Chorea, psychiatric symptoms, and executive dysfunction","Aphasia, apraxia, and agnosia"]), correctAnswer: "B", explanation: "DLB's core features: fluctuating cognition (variable alertness), recurrent visual hallucinations, parkinsonism (after cognitive decline), and REM sleep behavior disorder — important for differentiating from Alzheimer's." },
+    { topicId: T["Neurocognitive Disorders"], question: "Levodopa is less effective in PSP (progressive supranuclear palsy) compared to Parkinson's because:", options: JSON.stringify(["PSP has more dopamine","PSP pathology involves different neurotransmitter systems beyond dopamine alone","Levodopa cannot cross the BBB","PSP patients are older"]), correctAnswer: "B", explanation: "Unlike Parkinson's, PSP involves more widespread tau pathology affecting multiple neurotransmitter systems — levodopa provides minimal benefit in most PSP cases." },
+    { topicId: T["Neurocognitive Disorders"], question: "Mild cognitive impairment (MCI) prevalence in the US is approximately:", options: JSON.stringify(["1-2%","5-8%","15-20%","30-40%"]), correctAnswer: "C", explanation: "MCI prevalence is approximately 15-20% in the US — it represents the transitional state between normal aging and dementia, with aMCI (amnestic) more likely to convert to Alzheimer's." },
+    { topicId: T["Neurocognitive Disorders"], question: "The 'magnetic gait' in Normal Pressure Hydrocephalus (NPH) is characterized by:", options: JSON.stringify(["Very fast, wide-based walking","Feet appearing stuck to the floor with small shuffling steps","Falling backwards","Stomping gate"]), correctAnswer: "B", explanation: "The magnetic gait of NPH involves feet that appear 'glued to the floor' — small shuffling steps with difficulty initiating movement and turning, caused by CSF pressure on the periventricular corticospinal tracts." },
+    { topicId: T["Neurocognitive Disorders"], question: "Chronic traumatic encephalopathy (CTE) is:", options: JSON.stringify(["A genetic neurodegenerative disease","A neurodegenerative disease from repetitive TBIs, diagnosed definitively at autopsy","An acquired stroke syndrome","The same as Alzheimer's disease"]), correctAnswer: "B", explanation: "CTE is a progressive neurodegenerative disease caused by repetitive traumatic brain injuries — once called 'punch drunk syndrome'; it can only be definitively diagnosed at autopsy through tau pathology examination." },
+    { topicId: T["Neurocognitive Disorders"], question: "The behavioral variant of frontotemporal dementia (bvFTD) is best characterized by:", options: JSON.stringify(["Early memory loss and aphasia","Disinhibition, apathy, hyperorality, stereotyped behaviors, and empathy loss (SHADE)","Progressive visual-spatial decline","Hallucinations and parkinsonism"]), correctAnswer: "B", explanation: "bvFTD features SHADE: Stereotyped behaviors, Hyperorality, Apathy, Disinhibition, and Empathy loss — caused by frontal and anterior temporal degeneration, with memory relatively spared early." },
+    { topicId: T["Neurocognitive Disorders"], question: "Capacity vs. competency: which is a clinical determination?", options: JSON.stringify(["Competency","Neither","Capacity","Both"]), correctAnswer: "C", explanation: "Capacity is a clinical determination made by a physician or psychologist — it can change over time. Competency is a legal determination made by a judge — it is more permanent and harder to change." },
+    { topicId: T["Neurocognitive Disorders"], question: "HIV-associated neurocognitive disorder (HAND) primarily affects which brain region?", options: JSON.stringify(["Cortex (especially temporal)","Subcortical structures — especially basal ganglia (caudate and putamen) and hippocampus","Cerebellum","Brainstem"]), correctAnswer: "B", explanation: "HAND preferentially affects subcortical structures — the basal ganglia (putamen and caudate, with most atrophy in the caudate) and hippocampus — producing a subcortical dementia profile." },
   ];
 
-  const quizQuestions = mapQuizQuestions(rawQuizQuestions);
-  await db.insert(quizQuestionsTable).values(quizQuestions);
-  console.log(`Inserted ${quizQuestions.length} quiz questions`);
+  const quizQuestionsToInsert = rawQuizQuestions.map(rq => {
+    const opts: string[] = JSON.parse(rq.options);
+    return {
+      topicId: rq.topicId,
+      question: rq.question,
+      optionA: opts[0],
+      optionB: opts[1],
+      optionC: opts[2],
+      optionD: opts[3],
+      correctAnswer: rq.correctAnswer,
+      explanation: rq.explanation,
+      examOnly: false,
+    };
+  });
+
+  const insertedQuestions = await db.insert(quizQuestionsTable).values(quizQuestionsToInsert).returning();
 
   // ===========================================================================
-  // STUDY GUIDES (1 per topic)
+  // STUDY GUIDES (1 per topic = 15 total)
   // ===========================================================================
   const studyGuides = [
     {
       topicId: T["Neuropsychology Overview"],
-      title: "Neuropsychology Overview",
-      content: `# Neuropsychology Overview
+      title: "Neuropsychology Overview — Study Guide",
+      content: `## What Is Neuropsychology?
+Neuropsychology is the scientific study of brain-behavior relationships — how the structure and function of the brain influence cognition, emotion, and behavior. Neuropsychologists use standardized assessment to understand how brain damage, disease, or dysfunction affects thinking and everyday functioning.
 
-## What is Neuropsychology?
-Neuropsychology studies the relationship between brain structure/function and behavior, cognition, and emotion. It bridges neuroscience and clinical psychology.
+## Core Brain Regions and Their Functions
+**Frontal lobe:** Executive functions (planning, working memory, inhibition, set-shifting), voluntary motor control via the primary motor cortex (precentral gyrus). The prefrontal cortex is the seat of higher reasoning and personality.
 
-## Core Concepts
+**Parietal lobe:** Somatosensory processing (postcentral gyrus), visuospatial integration, math and calculation, attention. The left parietal is involved in language.
 
-### Localization vs Mass Action
-- **Localizationism**: specific brain regions perform specific functions (Broca, Wernicke)
-- **Equipotentiality** (Lashley): any cortical tissue can substitute for another in learning
-- **Modern view**: both apply — modular functions exist within distributed networks
+**Temporal lobe:** Auditory processing (Heschl's gyri), language comprehension (Wernicke's area — posterior superior temporal gyrus), memory encoding (medial temporal lobe/hippocampus), and face/object recognition.
 
-### Key Principles
-- **Lateralization**: language typically left; visuospatial typically right hemisphere
-- **Double dissociation**: strongest evidence that two functions are neurally independent
-- **Diaschisis**: loss of function in remote but connected brain regions after a lesion
-- **Plasticity**: the brain's ability to reorganize, especially after injury
+**Occipital lobe:** Primary visual cortex — processes basic visual features; damage causes cortical blindness, visual agnosias.
 
-## Neuropsychological Assessment
+## Key Principles
+**Contralateral organization:** Most motor and sensory pathways cross — the right hemisphere controls the left body and vice versa.
 
-### Major Batteries
-| Battery | Key Features |
-|---------|-------------|
-| Halstead-Reitan | Comprehensive motor and cognitive functions |
-| Luria-Nebraska | Motor, rhythm, tactile, visual, speech, writing, memory |
-| MMSE | Rapid 30-point screen for cognitive impairment |
+**Lateralization:** Language is left-hemisphere dominant in ~95% of right-handers. Visuospatial processing is typically right-hemisphere dominant.
 
-### Five Core Cognitive Domains
-1. **Attention** — sustained, selective, divided
-2. **Memory** — anterograde vs retrograde, implicit vs explicit
-3. **Language** — fluency, comprehension, naming, repetition
-4. **Visuospatial** — construction, perception, navigation
-5. **Executive Function** — planning, flexibility, inhibition
+**Double dissociation:** Evidence that two functions are truly independent — Patient A impaired on X but not Y; Patient B impaired on Y but not X.
 
-### Ecological Validity
-The degree to which test performance predicts real-world daily function — critical for treatment planning.
+**Diaschisis:** Transient loss of function in brain regions remote from an injury due to disrupted connections — the area is intact but deafferented.
 
-## Theoretical Models
-- **Diathesis-stress model**: genetic vulnerability + environmental stress → disorder
-- **Endophenotype**: intermediate biological markers linking genes to symptoms
-- **Differential diagnosis**: rule out malingering → substances → medical conditions → primary disorder`,
+**Cognitive reserve:** Built through education, occupational complexity, and social engagement — buffers against cognitive decline by providing alternative neural strategies.
+
+## Assessment Concepts
+**Hold vs. no-hold tests:** Hold tests (vocabulary, fund of knowledge, information) are resistant to brain damage and estimate premorbid IQ. No-hold tests (digit span, processing speed, block design) are sensitive to current impairment.
+
+**Ecological validity:** The extent to which test performance predicts real-world functional abilities — important for treatment planning and capacity evaluations.
+
+**Base rates:** The frequency of a finding in the general population — critical for determining whether a low score is truly abnormal or commonly seen in healthy individuals.
+
+**Statistical vs. clinical significance:** A statistically significant result is unlikely due to chance; a clinically significant result is meaningful for patient functioning — both must be considered together.`
     },
     {
       topicId: T["Cell Biology & Neuron Anatomy"],
-      title: "Cell Biology & Neuron Anatomy",
-      content: `# Cell Biology & Neuron Anatomy
+      title: "Cell Biology & Neuron Anatomy — Study Guide",
+      content: `## Neuron Structure
+A neuron has three main parts:
+- **Dendrites:** Branching processes that receive synaptic input
+- **Cell body (soma):** Contains the nucleus and metabolic machinery
+- **Axon:** Single long process that transmits signals to other neurons; begins at the axon hillock
 
-## Neuron Structure
-- **Soma (cell body)**: contains nucleus and organelles
-- **Dendrites**: receive input from other neurons
-- **Axon hillock**: integration zone where APs are initiated
-- **Axon**: conducts AP to terminals
-- **Axon terminals (boutons)**: release neurotransmitter
+## Resting Membrane Potential
+The resting potential is approximately **-70 mV** — the inside of the cell is more negative than the outside. This is maintained by:
+- **Na+/K+ ATPase pump:** Pumps 3 Na+ out and 2 K+ in (net negative charge inside)
+- **Selective permeability:** The resting membrane is more permeable to K+ than Na+
 
-## Membrane Potential
+## Action Potential
+The action potential is an **all-or-none** electrical signal triggered when membrane potential reaches threshold (~-55 mV).
+1. **Depolarization:** Voltage-gated Na+ channels open → Na+ rushes in → membrane rises to +40 mV
+2. **Repolarization:** Na+ channels inactivate; K+ channels open → K+ rushes out → membrane returns to negative
+3. **Hyperpolarization (undershoot):** Membrane briefly more negative than resting → then returns to -70 mV
 
-### Resting State (~-70 mV)
-- Maintained by Na+/K+ ATPase (3 Na+ out, 2 K+ in)
-- K+ selectively permeable at rest (K+ leaks out)
-- Cl- and large organic anions: impermeable
+**Refractory periods:**
+- Absolute: No stimulus can trigger another AP (Na+ channels inactivated)
+- Relative: Stronger-than-normal stimulus required (partial recovery)
 
-### Action Potential Phases
-| Phase | Ion Flow | Voltage |
-|-------|----------|---------|
-| Depolarization | Na+ rushes IN | -70 → +40 mV |
-| Repolarization | K+ rushes OUT | +40 → -70 mV |
-| Hyperpolarization (undershoot) | K+ channels still open | below -70 mV |
-| Refractory period | Na+ channels inactivated | recovery |
-
-### Key Laws
-- **All-or-none**: APs are fixed size; intensity encoded by firing rate (rate law)
-- **Threshold**: ~-55 mV (EPSP must bring membrane to threshold)
+## Saltatory Conduction
+Myelin (from oligodendrocytes in CNS; Schwann cells in PNS) insulates the axon. Action potentials **jump** between unmyelinated nodes of Ranvier — greatly increasing conduction velocity. Multiple sclerosis destroys myelin, slowing conduction.
 
 ## Synaptic Integration
-
-### Summation
-- **Spatial**: simultaneous inputs from multiple locations
-- **Temporal**: rapid repeated inputs at same synapse
-
-### Postsynaptic Potentials
-- **EPSP**: depolarization → increases firing probability
-- **IPSP**: hyperpolarization → decreases firing probability
-
-## Myelination and Conduction
-
-| Feature | Myelinated | Unmyelinated |
-|---------|------------|--------------|
-| Conduction type | Saltatory (jumps between nodes of Ranvier) | Continuous |
-| Speed | Fast (up to 120 m/s) | Slow (0.5–2 m/s) |
-| Example | Motor neurons, dorsal columns | Pain (C fibers) |
+**EPSP (Excitatory PostSynaptic Potential):** Graded depolarization toward threshold
+**IPSP (Inhibitory PostSynaptic Potential):** Graded hyperpolarization away from threshold
+**Spatial summation:** Multiple simultaneous inputs add together
+**Temporal summation:** Rapid repeated inputs from one synapse add together
 
 ## Glial Cells
-| Type | Location | Function |
+| Cell | Location | Function |
 |------|----------|----------|
-| Astrocytes | CNS | Support, synaptogenesis, BBB |
-| Oligodendrocytes | CNS | Myelination |
-| Schwann cells | PNS | Myelination |
-| Microglia | CNS | Immune surveillance |`,
+| Astrocytes | CNS | Support, BBB, synaptogenesis, ion buffering |
+| Oligodendrocytes | CNS | Myelin production |
+| Schwann cells | PNS | Myelin production |
+| Microglia | CNS | Immune defense |
+| Ependymal cells | CSF linings | CSF production and circulation |`
     },
     {
       topicId: T["Neurotransmitters & Synaptic Transmission"],
-      title: "Neurotransmitters & Synaptic Transmission",
-      content: `# Neurotransmitters & Synaptic Transmission
-
-## Synaptic Transmission Process
-1. Action potential arrives at presynaptic terminal
-2. Voltage-gated **Ca2+** channels open
-3. Vesicles fuse with membrane (exocytosis)
-4. Neurotransmitter released into synaptic cleft
-5. Binds postsynaptic receptors → response
-6. Termination: reuptake, enzymatic degradation, or diffusion
+      title: "Neurotransmitters & Synaptic Transmission — Study Guide",
+      content: `## Synaptic Transmission
+1. Action potential arrives at axon terminal
+2. Depolarization opens voltage-gated Ca2+ channels
+3. Ca2+ triggers vesicle fusion and neurotransmitter release into the synapse
+4. Neurotransmitter binds to postsynaptic receptors
+5. Terminated by: reuptake, enzymatic degradation, or diffusion
 
 ## Major Neurotransmitters
+**Glutamate:** Primary excitatory NT; acts on AMPA (fast), NMDA (coincidence detector — requires depolarization + ligand), and kainate receptors. Critical for LTP and memory.
 
-### Amino Acids (Fast Transmission)
-| NT | Type | Receptors | Function |
-|----|------|-----------|----------|
-| Glutamate | Excitatory | AMPA, NMDA, Kainate | 90% of fast excitation; precursor to GABA |
-| GABA | Inhibitory | GABA-A (Cl-), GABA-B (K+) | Primary inhibition; anxiety, seizures |
+**GABA:** Primary inhibitory NT; GABA-A (ionotropic, Cl- channel — fast), GABA-B (metabotropic — slow). Targeted by benzodiazepines, alcohol, and barbiturates.
 
-### Monoamines (Modulatory)
-| NT | Pathway | Function |
-|----|---------|----------|
-| Dopamine | Mesolimbic (reward), Mesocortical (cognition), Nigrostriatal (motor) | Reward, movement, attention |
-| Serotonin (5-HT) | Raphe nuclei → cortex | Mood, sleep, appetite |
-| Norepinephrine | Locus coeruleus → cortex | Arousal, attention, stress |
-| Epinephrine | Adrenal medulla | Peripheral stress response |
+**Dopamine (DA):** Reward, movement, cognition. Pathways:
+- Mesolimbic (VTA → nucleus accumbens): reward, motivation
+- Mesocortical (VTA → PFC): working memory, executive function — reduced in schizophrenia negative symptoms
+- Nigrostriatal (SNc → striatum): motor control — depleted in Parkinson's
+- Tuberoinfundibular: inhibits prolactin
 
-### Others
-- **Acetylcholine**: NMJ, memory (hippocampus), autonomic
-- **Anandamide**: endocannabinoid; pain, mood, appetite, memory
-- **Nitric oxide (NO)**: gaseous retrograde messenger; learning
-- **Endorphins**: opioid neuropeptides; pain relief
+**Serotonin (5-HT):** From raphe nuclei; regulates mood, sleep, appetite, impulse control. Low 5-HT linked to depression.
+
+**Norepinephrine (NE):** From locus coeruleus; regulates arousal, attention, fight-or-flight. Implicated in depression and PTSD.
+
+**Acetylcholine (ACh):** Neuromuscular junction, ANS, memory. Cholinergic loss → Alzheimer's disease.
 
 ## Receptor Types
+| Type | Speed | Example |
+|------|-------|---------|
+| Ionotropic | Fast (ms) | AMPA, GABA-A, nACh |
+| Metabotropic (GPCR) | Slow (s-min) | mGluR, D1/D2, 5-HT1 |
 
-| Type | Mechanism | Speed | Example |
-|------|-----------|-------|---------|
-| Ionotropic (ligand-gated) | Directly opens ion channel | Fast (ms) | AMPA, GABA-A, nACh |
-| Metabotropic (GPCR) | Second messenger cascade | Slow (seconds-minutes) | mGluR, D1/D2, 5-HT1A |
+## Key Concepts
+**Autoreceptors:** Presynaptic receptors that detect the neuron's own NT → negative feedback, inhibiting further release.
 
-## Termination of Synaptic Action
-1. **Reuptake**: transporter proteins return NT to presynaptic terminal
-2. **Enzymatic degradation**: e.g., AChE degrades ACh; MAO degrades monoamines
-3. **Diffusion**: NT drifts away from synapse
+**Long-term potentiation (LTP):** Persistent strengthening of synapses after high-frequency stimulation — the cellular basis of learning and memory; depends on NMDA receptor activation.
 
-## Pharmacological Targets
-- **Reuptake transporters**: SSRIs, SNRIs, methylphenidate
-- **Enzymes**: MAOIs, AChE inhibitors (donepezil)
-- **Ionotropic receptors**: benzodiazepines (GABA-A), ketamine (NMDA)
-- **Metabotropic receptors**: antipsychotics (D2), beta-blockers (β-AR)
-- **Voltage-gated channels**: anticonvulsants (Na+, Ca2+)`,
+**Dopamine hypothesis of schizophrenia:** Excess DA in mesolimbic (positive symptoms) + reduced DA in mesocortical (negative symptoms).`
     },
     {
       topicId: T["Sensory Pathways"],
-      title: "Sensory Pathways",
-      content: `# Sensory Pathways
+      title: "Sensory Pathways — Study Guide",
+      content: `## Ascending Sensory Pathways
+**Dorsal Column-Medial Lemniscal Pathway:**
+- Carries: Fine touch, vibration, two-point discrimination, proprioception
+- Course: Ipsilateral in spinal cord → nucleus gracilis/cuneatus in medulla → crosses (decussates) → medial lemniscus → thalamus (VPL) → somatosensory cortex
+- Clinical note: Dorsal column lesion → ipsilateral loss of fine touch/proprioception below lesion
 
-## Spinal Cord Organization
+**Spinothalamic Tract (Anterolateral System):**
+- Carries: Pain and temperature (lateral); crude touch and pressure (anterior)
+- Course: Enters spinal cord → **immediately crosses** in anterior commissure → ascends contralaterally → thalamus (VPL) → somatosensory cortex
+- Clinical note: Spinothalamic lesion → contralateral loss of pain/temperature below lesion
 
-### Cross-Section Anatomy
-- **Gray matter (H-shaped)**: dorsal horns (sensory), ventral horns (motor), lateral horns (T1-L2: sympathetic; S2-S4: parasympathetic)
-- **White matter**: surrounds gray matter; organized into ascending and descending tracts
+## Brown-Séquard Syndrome (Spinal Hemisection)
+| Side | Deficit | Pathway |
+|------|---------|---------|
+| Ipsilateral | Fine touch/proprioception loss | Dorsal column (crosses in medulla) |
+| Contralateral | Pain/temperature loss | Spinothalamic (crosses immediately) |
+| Ipsilateral | Motor weakness (UMN) | Corticospinal |
 
-## Major Ascending (Sensory) Tracts
+## Descending Motor Pathways
+**Corticospinal tract:** Motor cortex (precentral gyrus) → corona radiata → internal capsule → cerebral peduncles → **crosses in medullary pyramids** → lateral corticospinal tract → anterior horn motor neurons → muscles
+- UMN lesion: Spasticity, hyperreflexia, Babinski sign, minimal muscle wasting
+- LMN lesion: Flaccidity, hyporeflexia, muscle atrophy, fasciculations
 
-| Tract | Modality | Decussation | Destination |
-|-------|----------|-------------|-------------|
-| Dorsal columns (DCML) | Fine touch, vibration, proprioception | Medulla (gracile/cuneate nuclei) | VPL thalamus → primary somatosensory cortex |
-| Anterolateral (spinothalamic) | Pain, temperature, crude touch | Spinal cord (1-2 levels above entry) | VPL thalamus → somatosensory cortex |
-| Spinoreticular | Pain (affective component) | Spinal cord | Reticular formation → limbic system |
+## Thalamic Relay
+- **VPL (ventral posterior lateral):** Body somatosensory
+- **VPM (ventral posterior medial):** Face somatosensory
+- **LGN (lateral geniculate):** Visual
+- **MGN (medial geniculate):** Auditory
+- Olfaction: The ONLY sense that bypasses the thalamus
 
-## Major Descending (Motor) Tracts
+## Dermatomes
+Areas of skin innervated by single spinal nerve roots — used to localize spinal cord or root lesions clinically.
 
-| Tract | Function | Decussation | Control |
-|-------|----------|-------------|---------|
-| Lateral corticospinal | Fine distal limb movement | Medullary pyramids | Contralateral extremities |
-| Corticorubrospinal | Arm/leg movement | Red nucleus → medulla | Contralateral |
-| Ventromedial corticospinal | Head, neck, trunk | Brainstem | Bilateral, ipsilateral |
-
-## Upper vs Lower Motor Neuron Lesions
-| Sign | UMN | LMN |
-|------|-----|-----|
-| Tone | Increased (spasticity) | Decreased (flaccidity) |
-| Reflexes | Hyperreflexia | Hyporeflexia/areflexia |
-| Muscle | No atrophy (disuse only) | Atrophy + fasciculations |
-| Babinski | Positive | Absent/negative |
-
-## Key Dermatomes
-| Level | Region |
-|-------|--------|
-| C6 | Thumb and index finger |
-| T4 | Nipple |
-| T10 | Umbilicus |
-| L1 | Inguinal ligament |
-| L4 | Medial leg, great toe |
-| S1 | Lateral foot, heel |
-
-## Spinal Reflexes
-- **Stretch reflex (monosynaptic)**: Ia afferent → α-motor neuron → same muscle; basis of tendon reflexes
-- **Reciprocal innervation**: flexor excitation simultaneously inhibits extensors (via Ia inhibitory interneurons)
-- **Withdrawal reflex**: polysynaptic; pain → flexion; protective
-
-## Brown-Séquard Syndrome (Cord Hemisection)
-- **Ipsilateral**: motor loss, proprioception/vibration loss (below lesion)
-- **Contralateral**: pain/temperature loss (1-2 levels below lesion)`,
+## Cerebellum
+The cerebellum receives motor commands (efference copy) and proprioceptive feedback — compares intended vs. actual movement and corrects errors in real time. Damage → ataxia, dysmetria, intention tremor.`
     },
     {
       topicId: T["Sensory Systems"],
-      title: "Sensory Systems: Vision, Hearing, Touch, Chemical Senses, Vestibular & Motor Control",
-      content: `# Sensory Systems
+      title: "Sensory Systems — Study Guide",
+      content: `## Visual System
+**Pathway:** Retina → optic nerve → optic chiasm (nasal fibers cross) → optic tract → LGN of thalamus → optic radiations → primary visual cortex (V1, calcarine fissure, occipital lobe)
 
-## Vision
+**Visual field defects:**
+- Optic nerve lesion: Monocular blindness
+- Optic chiasm lesion: Bitemporal hemianopia
+- Optic tract/cortex lesion: Homonymous hemianopia
 
-### Visual Anatomy
-- **Fovea**: highest acuity; densely packed cones; retinal layers thin here
-- **Blind spot**: where optic nerve exits; no photoreceptors
-- **Rods**: periphery, dim light, black-and-white, high convergence
-- **Cones**: fovea, bright light, color vision, low convergence (1:1 in fovea)
+**Visual streams:**
+- Dorsal stream ("where/how"): V1 → parietal cortex — spatial location and action guidance
+- Ventral stream ("what"): V1 → temporal cortex — object identity, color, faces
 
-### Visual Pathway (Retinal-Geniculate-Striate)
-Retina → Optic nerve → Optic chiasm (nasal fibers cross) → LGN (thalamus) → Primary visual cortex (V1, striate cortex, occipital lobe)
+## Auditory System
+**Pathway:** Cochlea (hair cells) → cochlear nerve → cochlear nucleus → superior olive → inferior colliculus → MGN of thalamus → primary auditory cortex (Heschl's gyri, superior temporal gyrus)
 
-### Visual Streams
-| Stream | Direction | Function | Damage |
-|--------|-----------|----------|--------|
-| Ventral (WHAT) | → Temporal lobe | Object identity, color, form | Visual agnosia, prosopagnosia |
-| Dorsal (WHERE/HOW) | → Parietal lobe | Location, motion, action guidance | Neglect, optic ataxia, simultanagnosia |
+**Tonotopy:** High frequencies processed at the base of the basilar membrane; low frequencies at the apex.
 
-### Color Vision Theories
-- **Trichromatic (Young-Helmholtz)**: 3 cone types (S/M/L) combine outputs
-- **Opponent-process (Hering)**: red-green, blue-yellow, black-white opponent pairs — explains afterimages and color blindness
+## Somatosensory System
+Primary somatosensory cortex (S1) is in the postcentral gyrus — processes touch, pain, temperature, proprioception in a somatotopic map (homunculus). Lips, hands, and tongue have disproportionately large representations.
 
-### Clinical Syndromes
-- **Blindsight**: subcortical visual processing (superior colliculus) without conscious awareness after V1 loss
-- **Prosopagnosia**: face recognition failure; fusiform face area (ventral stream)
-- **Akinetopsia**: motion blindness; area MT/V5 damage
-
----
-
-## Hearing
-
-### Ear Anatomy
-- **Outer**: pinna, external auditory canal, tympanic membrane
-- **Middle**: ossicles (malleus → incus → stapes); amplification
-- **Inner**: cochlea (hearing), vestibular organs (balance)
-
-### Auditory Pathway
-Cochlear hair cells → Auditory nerve (CN VIII) → Cochlear nuclei (pons/medulla) → Superior olivary complex → Inferior colliculus (midbrain) → Medial geniculate nucleus (thalamus) → Primary auditory cortex (Heschl's gyri, superior temporal gyrus)
-
-### Key Concepts
-- **Tonotopy**: frequency organized spatially (basilar membrane: base=high, apex=low)
-- **Sound localization**: medial superior olive (interaural time), lateral superior olive (interaural intensity)
-
----
-
-## Touch & Somatosensory System
-
-### Cutaneous Receptors
-| Receptor | Stimulus | Adaptation |
-|----------|----------|------------|
-| Pacinian corpuscle | Deep vibration, sudden displacement | Rapidly adapting |
-| Meissner's corpuscle | Fine touch, low-frequency vibration | Rapidly adapting |
-| Merkel's disk | Surface features, sustained pressure | Slowly adapting |
-| Ruffini ending | Skin stretch, joint angle | Slowly adapting |
-| Free nerve endings | Pain, temperature | Variable |
-
-### Pain Pathways
-- **Sharp pain**: Aδ fibers (myelinated) → fast, localized
-- **Dull/chronic pain**: C fibers (unmyelinated) → slow, burning, diffuse
-- **Gate control theory**: dorsal horn inhibitory interneurons suppress pain when activated by touch/vibration input
-- **Descending inhibition**: PAG → raphe nuclei → dorsal horn; endorphins/cannabinoids
-
----
-
-## Chemical Senses
-
-### Olfaction (Smell)
-- Receptors: olfactory epithelium, cilia in nasal mucus; replenished monthly
-- **Unique pathway**: bypasses thalamus → olfactory bulb → piriform cortex, amygdala, entorhinal cortex
-- Clinical: **anosmia** (often from head trauma severing olfactory nerves through cribriform plate)
-
-### Gustation (Taste)
-- 5 basic tastes: sweet, salty, sour, bitter, umami
-- Papillae → taste buds → ~50 receptors/bud
-- Pathway: CN VII, IX, X → solitary nucleus (medulla) → VPM thalamus → insula/operculum (gustatory cortex)
-- Clinical: **ageusia** (rare due to redundant cranial nerve innervation)
-
----
+**Mechanoreceptors:**
+- Meissner's corpuscles: Light touch, texture (fingertips)
+- Pacinian corpuscles: Vibration, deep pressure
+- Merkel's discs: Sustained pressure, fine spatial detail
+- Ruffini endings: Skin stretch
 
 ## Vestibular System
-- **Saccule and utricle** (otolith organs): linear acceleration and static head tilt; otoconia (calcium carbonate crystals)
-- **Semicircular canals**: rotational acceleration (3 planes)
-- Projects to: cerebellum, spinal cord (VST), and oculomotor nuclei (VOR)
+Detects head position and movement — semicircular canals (rotation), otolith organs (linear acceleration and gravity). Vestibular information from the inner ear → vestibular nuclei → cerebellum and eye movement centers → cortex for balance awareness.
 
----
+## Olfactory System
+Unique: bypasses the thalamus — olfactory receptor neurons → olfactory bulb → piriform cortex → amygdala and limbic structures. This direct limbic connection explains why smells evoke strong emotional memories.
 
-## Motor Control
-
-### Cortical Motor Areas
-| Area | Function |
-|------|----------|
-| Primary motor cortex (M1) | Execution of voluntary movement; somatotopic |
-| Premotor cortex | Planning, posture, anticipation of movement outcomes |
-| Supplementary motor area (SMA) | Sequencing, motor imagery, inhibitory control |
-| Posterior parietal cortex | Integrates sensory inputs for spatial movement planning |
-
-### Basal Ganglia Role
-- Selects and inhibits competing motor programs
-- Dopamine from substantia nigra modulates direct (go) and indirect (no-go) pathways`,
+## Gate Control Theory of Pain
+Melzack and Wall: Large-fiber (touch) input activates inhibitory interneurons in the dorsal horn, "closing the gate" and reducing pain signal transmission. This is why rubbing an injury reduces pain.`
     },
     {
       topicId: T["Limbic System & Motivation"],
-      title: "Limbic System & Motivation",
-      content: `# Limbic System & Motivation
+      title: "Limbic System & Motivation — Study Guide",
+      content: `## The Limbic System
+The limbic system is a set of interconnected brain structures involved in emotion, memory, and motivation:
+- **Hippocampus:** New declarative memory formation, spatial navigation
+- **Amygdala:** Emotional processing (especially fear), emotional memory modulation
+- **Hypothalamus:** Basic drives (feeding, drinking, sex, temperature, sleep), links CNS to endocrine system
+- **Cingulate cortex:** Emotional-cognitive integration, error monitoring, pain
+- **Parahippocampal gyrus, fornix, mammillary bodies:** Memory circuits
 
-## Limbic System Structures
-| Structure | Key Functions |
-|-----------|---------------|
-| Amygdala | Fear conditioning, emotional memory, threat detection |
-| Hippocampus | Spatial navigation, declarative memory, context |
-| Hypothalamus | Homeostasis, hunger/satiety, reproduction, autonomic |
-| Thalamus (anterior) | Relay for limbic circuits |
-| Cingulate cortex | Emotion-cognition integration, pain affect |
-| Fornix | Major output pathway from hippocampus |
+## Papez Circuit
+Hippocampus → Fornix → Mammillary bodies → Anterior thalamus → Cingulate cortex → Entorhinal cortex → Hippocampus — proposed by Papez (1937) as the emotional memory circuit.
 
-## Dopamine and Reward
+## Hypothalamus and Basic Drives
+**The Four Fs:** Fighting, Fleeing, Feeding, Fornicating
 
-### Three Dopamine Pathways
-| Pathway | Origin → Destination | Function |
-|---------|---------------------|----------|
-| Mesolimbic | VTA → NAcc, amygdala, hippocampus | Reward, wanting, motivational salience |
-| Mesocortical | VTA → prefrontal cortex | Cognition, attention, working memory |
-| Nigrostriatal | Substantia nigra → striatum | Motor control, procedural learning |
+**Hunger regulation:**
+- Lateral hypothalamus ("hunger center"): Lesion → aphagia (failure to eat)
+- Ventromedial hypothalamus ("satiety center"): Lesion → hyperphagia (overeating and obesity)
 
-### Three Aspects of Reward (Berridge)
-1. **Liking**: hedonic pleasure (opioid systems in NAcc)
-2. **Wanting**: incentive salience, motivational drive (dopamine)
-3. **Learning**: associating cues with rewards (dopamine prediction error)
+**Orexin/hypocretin:** Lateral hypothalamus peptides that promote wakefulness and regulate appetite — loss of orexin neurons causes narcolepsy.
 
-## Hunger and Feeding
+## Reward and Motivation
+**Mesolimbic dopamine system:** VTA → nucleus accumbens (NAcc)
+- Drives reward anticipation, motivation, and approach behavior
+- Disrupted in addiction (drug hijacks reward circuit) and schizophrenia
 
-### Key Signals
-| Signal | Source | Effect |
-|--------|--------|--------|
-| Ghrelin | Stomach | ↑ Hunger (rises before meals) |
-| Leptin | Adipose tissue | ↓ Hunger (signals fat stores) |
-| Insulin | Pancreas | ↓ Hunger; promotes fat storage |
-| NPY/Orexin | Lateral hypothalamus | ↑ Hunger |
+**Dopamine and reward prediction:** Dopamine neurons fire in response to unexpected rewards and to cues that predict rewards (reward prediction error).
 
-### Eating Disorders — Neural Profiles
-- **Anorexia**: mesolimbic dopamine dysregulation, low serotonin, anterior insula hyperactivity (food perceived as threatening), anhedonia
-- **Bulimia**: OCD-like neural overlap, serotonin implicated, distorted body image
+## The Amygdala
+- Fear conditioning: CS (tone) paired with US (shock) → amygdala learns to respond to CS alone
+- Klüver-Bucy syndrome (bilateral amygdala/temporal lesions): hyperorality, hypersexuality, emotional placidity, visual agnosia, memory impairment
+- Urbach-Wiethe disease: bilateral amygdala calcification → no fear response
 
-## Environmental Factors in Eating
-- Serving size, social facilitation, appetizer effect
-- **Sensory-specific satiety**: palatability decreases for eaten foods while other foods remain appealing
-- **Positive-incentive perspective**: anticipated pleasure drives eating more than caloric deficit`,
+## Intrinsic vs. Extrinsic Motivation
+- **Intrinsic:** Internal reward, enjoyment, curiosity — tends to be more durable
+- **Extrinsic:** External reward (money, grades) — can undermine intrinsic motivation (overjustification effect)
+- Both rely on dopamine, but dopamine is especially linked to anticipation and approach`
     },
     {
       topicId: T["Sleep & Circadian Rhythms"],
-      title: "Sleep & Circadian Rhythms",
-      content: `# Sleep & Circadian Rhythms
+      title: "Sleep & Circadian Rhythms — Study Guide",
+      content: `## Sleep Architecture
+A full night of sleep consists of 4-6 cycles (~90 min each), alternating between NREM and REM.
 
-## Circadian Biology
-
-### The Suprachiasmatic Nucleus (SCN)
-- Located in the anterior hypothalamus
-- Master pacemaker: generates ~24.2-hour endogenous rhythms
-- Receives photic input from ipRGCs (melanopsin, blue light) via retinohypothalamic tract
-- Synchronizes peripheral clocks throughout the body
-
-### Zeitgebers
-External time cues: **light** (most powerful) > food timing > exercise > social interaction > temperature
-
-### Melatonin
-- Produced by **pineal gland** (posterior to tectum)
-- Secreted in darkness; suppressed by light
-- Promotes sleep onset; timed by SCN → retina → SCN → pineal pathway
-
-## Sleep Architecture
-
-### NREM Stages
+**NREM Stages:**
 | Stage | EEG | Features |
 |-------|-----|----------|
-| N1 | Theta waves | Light sleep, hypnic jerks |
-| N2 | Sleep spindles, K-complexes | True sleep onset |
-| N3 | Delta waves | Slow-wave sleep; most restorative |
+| N1 | Theta (4-7 Hz) | Light sleep, hypnic jerks |
+| N2 | Theta + spindles + K-complexes | Sleep spindles → procedural memory |
+| N3 | Delta (0.5-4 Hz) | Deep, slow-wave sleep; most restorative; growth hormone |
 
-### REM Sleep
-- Paradoxical sleep: EEG like waking
-- Muscle atonia (brainstem-mediated)
-- Vivid, narrative dreaming
-- Critical for emotional and procedural memory
+**REM Sleep:**
+- Desynchronized EEG (like waking), rapid eye movements, complete muscle atonia
+- Vivid dreaming; emotional memory consolidation
+- REM increases in later cycles; NREM N3 predominates in early cycles
 
-## Sleep and Memory
-- **N3 slow-wave sleep**: hippocampal → cortical transfer of declarative memories
-- **REM sleep**: procedural learning, emotional memory processing, threat consolidation
+## Circadian Regulation
+**Suprachiasmatic nucleus (SCN):** Master circadian clock in the anterior hypothalamus — receives light signals via retinohypothalamic tract; coordinates peripheral clocks throughout the body.
 
-## Circadian Regulation of Physiology
-| Function | Timing |
-|----------|--------|
-| Core body temperature | Peaks ~5-7 PM |
-| Cortisol | Peaks ~8 AM (stress preparation) |
-| Melatonin | Peaks ~2-4 AM |
-| Blood pressure | Lowest during sleep |
+**Melatonin:** Secreted by pineal gland in darkness → signals nighttime → promotes sleep onset. Light (especially blue light) suppresses melatonin secretion.
 
-## Clinical Applications
-- **Jet lag**: rapid transmeridian travel; days to weeks to re-entrain
-- **Shift work**: chronic circadian misalignment → metabolic and cognitive risks
-- **Benzodiazepines**: ↑N2, ↓N3 and REM; short-term benefit but disrupts sleep quality
-- **Chronotypes**: morning (earlier SCN phase) vs evening (later SCN phase); genetic (PER3)`,
+## Two-Process Model (Borbély)
+- **Process S (Homeostatic):** Sleep pressure — adenosine builds up during wakefulness; clears during sleep. Caffeine blocks adenosine receptors.
+- **Process C (Circadian):** SCN promotes alertness during the day — both processes must align for good sleep.
+
+## Sleep Disorders
+| Disorder | Key Feature | Mechanism |
+|----------|-------------|-----------|
+| Narcolepsy | Excessive daytime sleepiness, cataplexy | Loss of orexin neurons |
+| Sleep apnea | Breathing stops during sleep | Airway collapse (obstructive) or brainstem (central) |
+| REM sleep behavior disorder | Acts out dreams | Loss of REM muscle atonia — strongly linked to Parkinson's/DLB |
+| Insomnia | Difficulty falling/staying asleep | Hyperarousal; common in older adults |
+| Advanced sleep phase | Sleep and wake too early | Circadian clock shift — common in older adults |
+
+## Aging and Sleep
+- Decreased N3 slow-wave sleep
+- Reduced REM sleep
+- More frequent awakenings
+- Advanced sleep phase syndrome (earlier bedtime and wake time)
+- Insomnia more common`
     },
     {
       topicId: T["Endocrine System & Reproduction"],
-      title: "Endocrine System & Reproduction",
-      content: `# Endocrine System & Reproduction
+      title: "Endocrine System & Reproduction — Study Guide",
+      content: `## The HPA Axis (Stress Response)
+**Hypothalamus → CRH → Anterior pituitary → ACTH → Adrenal cortex → Cortisol**
 
-## Endocrine vs Exocrine
-- **Endocrine**: release hormones into bloodstream → distant targets
-- **Exocrine**: release into ducts → local surfaces (e.g., sweat, saliva)
+Cortisol negative feedback inhibits both the hypothalamus and pituitary. Chronic stress dysregulates this axis — elevated cortisol damages the hippocampus (reduced volume, impaired neurogenesis), impairs memory, and increases risk for depression and PTSD.
 
-## Hormone Classes
-| Class | Derived From | Solubility | Receptor Location |
-|-------|-------------|------------|-------------------|
-| Amines | Tyrosine | Water-soluble | Membrane |
-| Peptides/Proteins | Amino acids | Water-soluble | Membrane |
-| Steroids | Cholesterol | Fat-soluble | Nuclear |
+## Pituitary Gland
+**Anterior pituitary (adenohypophysis) — releases:**
+- ACTH (→ adrenal cortex → cortisol)
+- TSH (→ thyroid → T3/T4)
+- FSH and LH (→ gonads → sex hormones)
+- GH (growth hormone — released in pulses during N3 sleep)
+- Prolactin (inhibited by dopamine; elevated by antipsychotics)
 
-## Hypothalamic-Pituitary Axis
-- **Posterior pituitary**: neural extension; releases oxytocin and vasopressin (ADH)
-- **Anterior pituitary**: controlled by hypothalamic releasing hormones via portal blood
-- **HPA axis**: CRH (hypothalamus) → ACTH (anterior pituitary) → cortisol (adrenal cortex)
+**Posterior pituitary (neurohypophysis) — releases:**
+- Oxytocin (social bonding, maternal behavior, uterine contractions)
+- ADH/vasopressin (water reabsorption in kidneys, blood pressure, social behavior)
 
-## Hormone Effects
-- **Organizational**: permanent; occur during critical developmental windows; shape neural/anatomical structures
-- **Activational**: temporary; occur in adulthood; trigger specific behaviors (e.g., sexual behavior)
+## Sex Hormones and the Brain
+**Estrogen:** Promotes neuroplasticity and synaptic density (especially hippocampus) — neuroprotective. Estrogen loss at menopause → increased risk for cognitive changes and Alzheimer's.
 
-## Sexual Differentiation
+**Testosterone:** Drives male sexual development; organizational (prenatal) and activational (adult) effects on neural circuits.
 
-### Prenatal Sequence
-1. Genetic sex (XX or XY) established at fertilization
-2. **SRY gene** (Y chromosome) → SRY protein → testes develop
-3. Testes → testosterone → Wolffian system develops (vas deferens, seminal vesicles)
-4. Testes → AMH → Müllerian system degenerates
-5. Without testosterone: Müllerian system → uterus, fallopian tubes; Wolffian degenerates
+**Gonadal axis:** GnRH (hypothalamus) → LH + FSH (anterior pituitary) → sex hormones (gonads)
 
-### Genetic Conditions
-| Condition | Genetics | Presentation |
-|-----------|----------|--------------|
-| AIS | XY; absent androgen receptors | Female-typical external; testes present |
-| 5-Alpha Reductase Deficiency | XY; no DHT | Female-typical external at birth; masculinize at puberty |
-| Turner's Syndrome | 45,X | No gonads; short stature; female-typical |
-| Persistent Müllerian Duct Syndrome | XY; absent AMH/receptors | Both internal organ sets |
+## Organizational vs. Activational Effects
+**Organizational:** Occur during critical prenatal periods — permanently shape neural circuits (gender-typical cognitive profiles, sexual orientation). Studied through CAH (congenital adrenal hyperplasia) — prenatal androgen excess in females.
 
-## Key Hormones
-| Hormone | Source | Functions |
-|---------|--------|-----------|
-| Oxytocin | Hypothalamus/posterior pituitary | Bonding, labor, lactation, trust |
-| Vasopressin (ADH) | Hypothalamus/posterior pituitary | Water retention, social bonding, aggression |
-| Testosterone | Testes (Leydig cells) | Androgenization, libido, aggression |
-| Estradiol | Ovaries | Female development, neuroprotection |
-| Cortisol | Adrenal cortex | Stress response, immunosuppression, metabolism |`,
+**Activational:** Occur in adulthood — temporary, reversible effects on behavior (testosterone increases aggression and libido; estrogen cycles affect mood).
+
+## Thyroid Hormone
+Essential for brain development — hypothyroidism during fetal/neonatal period causes **cretinism** (intellectual disability). In adults, hypothyroidism causes cognitive slowing and depression; hyperthyroidism causes anxiety.
+
+## Adrenal Glands
+- **Adrenal cortex:** Cortisol (stress), aldosterone (blood pressure/sodium), sex steroids
+- **Adrenal medulla:** Epinephrine and norepinephrine → sympathetic fight-or-flight response`
     },
     {
       topicId: T["Psychopharmacology"],
-      title: "Psychopharmacology",
-      content: `# Psychopharmacology
+      title: "Psychopharmacology — Study Guide",
+      content: `## Pharmacokinetics vs. Pharmacodynamics
+**Pharmacokinetics:** What the body does to the drug — Absorption, Distribution, Metabolism, Excretion (ADME)
+**Pharmacodynamics:** What the drug does to the body — receptor binding, agonism/antagonism, tolerance
 
-## Levels of Psychologist Involvement
-1. Not involved
-2. **Providing information** (majority) — psychoeducation, assessment, consultation, indirect
-3. General involvement — education, assessment, intervention, collaboration
-4. Prescribing (direct) — limited states/military
+**Half-life:** Time for plasma concentration to decrease by 50%. Drugs with longer half-lives are more stable but take longer to clear.
 
-## Drug Nomenclature
-- **Chemical name**: full chemical structure (e.g., fluoxetine hydrochloride)
-- **Generic name**: approved non-proprietary name (e.g., fluoxetine)
-- **Brand name**: manufacturer's proprietary name (e.g., Prozac)
+## Receptor Pharmacology
+**Agonist:** Binds receptor and activates it (mimics NT)
+**Antagonist:** Binds but blocks activation (competes with NT)
+**Partial agonist:** Activates receptor but less than full agonist
+**Allosteric modulator:** Binds site other than active site — changes receptor's response to its natural ligand (e.g., benzodiazepines on GABA-A)
 
-## FDA Prescribing Information Structure
-Boxed warning → Indications/usage → Dosage → Contraindications → Warnings → Adverse reactions → Drug interactions → Specific populations → Pharmacology (PK/PD) → Clinical studies
+## Antidepressants
+| Class | Mechanism | Examples |
+|-------|-----------|---------|
+| SSRIs | Block SERT (serotonin reuptake) | Fluoxetine, sertraline |
+| SNRIs | Block SERT + NET | Venlafaxine, duloxetine |
+| TCAs | Block SERT, NET, + anticholinergic | Amitriptyline, nortriptyline |
+| MAOIs | Block MAO enzyme | Phenelzine, tranylcypromine |
 
-## Drug Target Sites
+## Antipsychotics
+**Typical (first-gen):** Block D2 receptors → reduce positive symptoms; risk of extrapyramidal symptoms (EPS) and tardive dyskinesia
+**Atypical (second-gen):** Block D2 + 5-HT2A → fewer EPS, better for negative symptoms; metabolic side effects
 
-### The Exogenous Field (E-W axis)
-External substances acting on synaptic components:
+**Tardive dyskinesia:** Involuntary repetitive movements from chronic D2 blockade → dopamine receptor supersensitivity.
 
-| Target | Examples | Drugs |
-|--------|----------|-------|
-| Reuptake transporters | DAT, SERT, NET | SSRIs, SNRIs, methylphenidate |
-| GPCR/metabotropic receptors | D2, 5-HT2A, β-AR | Antipsychotics, antidepressants |
-| Enzymes | MAO, AChE | MAOIs, donepezil |
-| Ionotropic (ligand-gated) ion channels | GABA-A, NMDA | Benzodiazepines, esketamine |
-| Voltage-gated ion channels | Na+, Ca2+ channels | Anticonvulsants |
+## Mood Stabilizers
+**Lithium:** Modulates second messengers (inositol, GSK-3β) — neuroprotective; narrow therapeutic window requires blood monitoring.
+**Valproate, lamotrigine:** Anticonvulsants also used in bipolar disorder.
 
-## Major Drug Classes
+## ADHD Medications
+**Stimulants:** Methylphenidate (blocks DAT/NET), Amphetamine (blocks + reverses DAT/NET)
+**Non-stimulants:** Atomoxetine (selective NET inhibitor), Guanfacine (alpha-2A agonist)
 
-### Antidepressants
-| Class | Mechanism | Key Examples |
-|-------|-----------|--------------|
-| SSRI | Block SERT | Fluoxetine, sertraline, escitalopram |
-| SNRI | Block SERT + NET | Venlafaxine, duloxetine |
-| MAOI | Inhibit MAO | Phenelzine (dietary restrictions required) |
-| Esketamine | NMDA antagonist | Spravato (nasal spray; rapid onset) |
-
-### Antipsychotics
-| Generation | Mechanism | Side Effects |
-|-----------|-----------|--------------|
-| FGA (typical) | D2 blockade | High EPS, tardive dyskinesia |
-| SGA (atypical) | D2 + 5-HT2A blockade | Metabolic syndrome, weight gain |
-
-### Mood Stabilizers
-- **Lithium**: unknown exact mechanism; gold standard for bipolar
-- **Valproate, lamotrigine**: anticonvulsants used as mood stabilizers
-
-### Anxiolytics
-- **Benzodiazepines**: potentiate GABA-A; fast but tolerance/dependence risk
-- **Buspirone**: partial 5-HT1A agonist; no dependence risk
-
-## Off-Label Prescribing
-Physicians may prescribe any FDA-approved drug for any purpose immediately after approval; clinician-authored (professionally-based) resources can discuss off-label uses unlike regulatory prescribing information.`,
+## Blood-Brain Barrier (BBB)
+Formed by tight junctions between brain endothelial cells + astrocyte end-feet. Drugs must be lipid-soluble OR use active transporters to cross. Example: Dopamine cannot cross → use levodopa (crosses → converted to DA).`
     },
     {
       topicId: T["Psychological Disorders"],
-      title: "Psychological Disorders: Psychosis, Schizophrenia Spectrum, Mood, and Dissociative Disorders",
-      content: `# Psychological Disorders
+      title: "Psychological Disorders — Study Guide",
+      content: `## Schizophrenia Spectrum
+**Positive symptoms** (excess/distortion): Hallucinations, delusions, disorganized speech, catatonia
+**Negative symptoms** (deficits): Alogia, avolition, anhedonia, flat affect, asociality
+**Cognitive symptoms:** Working memory, processing speed, executive function — often most disabling
 
-## Foundations of Psychopathology
+**Dopamine hypothesis:** Excess mesolimbic DA (positive symptoms) + reduced mesocortical DA (negative symptoms)
+**Glutamate hypothesis:** NMDA hypofunction → disinhibited dopamine — explains why NMDA antagonists (PCP, ketamine) cause schizophrenia-like symptoms
 
-### Diathesis-Stress Model
-Genetic vulnerability × Environmental stressors → Disorder
-- Neither factor alone is sufficient
-- **Endophenotype**: intermediate biological markers (e.g., working memory deficits) linking genes to symptoms
+**Brain abnormalities:** Enlarged ventricles, reduced prefrontal gray matter (hypofrontality), hippocampal volume reduction
 
-### Categorical vs Dimensional
-- **Categorical**: strict DSM boundaries; present or absent
-- **Dimensional**: symptoms on a continuum; overlap across disorders
-- Evidence supports both — DSM-5 increasingly incorporates dimensional elements
+## Mood Disorders
+**Major Depressive Disorder:** Depressed mood or anhedonia + 5+ additional symptoms for ≥2 weeks — affects monoamine systems, HPA axis dysregulation, reduced hippocampal neurogenesis.
 
-### Differential Diagnosis Steps
-1. Rule out **malingering** and **factitious disorder**
-2. Rule out **substance use** and **medical conditions**
-3. Determine the **primary disorder**
-4. Differentiate from **adjustment disorder**
-5. Establish **no disorder** if criteria not met
+**Bipolar Disorder:**
+- Bipolar I: At least one full manic episode
+- Bipolar II: Hypomania + at least one MDE (never full mania)
+- Cyclothymia: Chronic hypomania/depressive symptoms, less severe
 
----
+**Monoamine hypothesis of depression:** Low serotonin, NE, and/or dopamine → basis for SSRIs, SNRIs, MAOIs.
+**Beck's cognitive triad:** Negative views of self, world, and future.
 
-## Psychosis and Schizophrenia Spectrum
+## Anxiety and Trauma Disorders
+**PTSD:** Hyperactive amygdala, reduced prefrontal inhibition, hippocampal volume loss. Features: intrusions, avoidance, negative cognition, hyperarousal.
 
-### Five Domains (DSM-5)
-1. **Hallucinations** (any sense; auditory most common)
-2. **Delusions** (persecutory, referential, grandiose, erotomanic, nihilistic, somatic)
-3. **Disorganized thinking/speech** (derailment, tangentiality, incoherence)
-4. **Abnormal motor behavior** (including catatonia)
-5. **Negative symptoms** (flat affect, avolition, alogia, anhedonia, asociality)
-
-### Spectrum Disorders by Duration
-| Disorder | Duration |
-|----------|----------|
-| Brief Psychotic Disorder | 1 day – 1 month |
-| Schizophreniform | 1 – 6 months |
-| Schizophrenia | 6+ months with functional decline |
-| Schizoaffective | Schizophrenia criteria + mood episodes; 2+ weeks of psychosis without mood episode |
-| Delusional Disorder | 1+ month; non-bizarre delusions; no other Criterion A |
-
----
-
-## Bipolar and Depressive Disorders
-
-### Bipolar Spectrum
-| Disorder | Key Feature |
-|----------|-------------|
-| Bipolar I | Full manic episode (1+ week or hospitalized) |
-| Bipolar II | Hypomanic (4+ days) + MDD; NO full mania |
-| Cyclothymic | 2-year fluctuating mood; not meeting full episode criteria |
-
-### Depressive Disorders
-| Disorder | Duration | Key Features |
-|----------|----------|--------------|
-| MDD | 2+ weeks | 5+ symptoms; no mania/hypomania |
-| PDD | 2+ years | Chronic; not symptom-free > 2 months |
-| DMDD | Childhood | Severe temper outbursts 3+/week; ages 6-18 |
-| PMDD | Luteal phase | Mood symptoms tied to menstrual cycle |
-
----
+**Learned helplessness (Seligman):** Repeated uncontrollable aversive events → cessation of coping behavior → model for depression.
 
 ## Dissociative Disorders
+Disruption in integration of consciousness, memory, identity, or perception. Spectrum from mild dissociation (daydreaming) → DID. Linked to trauma/abuse histories.
 
-### Dissociative Identity Disorder (DID)
-- Two or more distinct personality states
-- Recurrent gaps in autobiographical memory (amnesia)
-- Significant distress/impairment
-- Positive symptoms: division of identity, depersonalization/derealization
-- Negative symptoms: amnesia, inability to access information
-
-### Dissociative Amnesia
-- Retrograde amnesia localized to traumatic events
-- **With dissociative fugue**: purposeful travel or bewildered wandering
-- Individual may not realize they have memory gaps
-
-### Depersonalization/Derealization Disorder
-- **Depersonalization**: feeling detached from thoughts/feelings/body
-- **Derealization**: surroundings feel unreal or dreamlike
-- **Reality testing remains intact** throughout episodes
-
----
-
-## Clinical Considerations
-- **Cultural competence**: distinguish delusions from shared cultural/religious beliefs
-- **Insight**: individuals with thought disorder can often recognize it in others but not in themselves
-- **Comorbidity**: mood and psychotic disorders frequently co-occur`,
+## Anosognosia
+Neurological unawareness of one's own deficit — NOT psychological denial. Caused by right hemisphere dysfunction. Common in schizophrenia (affects medication adherence) and mania.`
     },
     {
       topicId: T["Personality Disorders"],
-      title: "Personality Disorders",
-      content: `# Personality Disorders
+      title: "Personality Disorders — Study Guide",
+      content: `## Overview
+Personality disorders are pervasive, inflexible patterns of inner experience and behavior that deviate from cultural expectations, are stable over time, and cause significant distress or functional impairment.
 
-## General Criteria (Must meet A through F)
-- **A**: Manifested in 2+ of: cognition, affectivity, interpersonal functioning, impulse control
-- **B**: Inflexible and pervasive across personal and social situations
-- **C**: Clinically significant distress or impairment
-- **D**: Stable and long duration, traceable to adolescence/early adulthood
-- **E**: Not better explained by another mental disorder
-- **F**: Not attributable to a substance or medical condition
+## The Three Clusters
+**Cluster A (Odd/Eccentric):**
+- Paranoid PD: Pervasive distrust and suspicion
+- Schizoid PD: Detachment from social relationships, restricted affect — does NOT desire relationships
+- Schizotypal PD: Odd beliefs, magical thinking, perceptual distortions — on a schizophrenia spectrum
 
-### Key Clinical Features
-- **Ego-syntonic**: traits feel natural and self-consistent (unlike ego-dystonic symptoms in depression/OCD)
-- **"Contagious"**: evoke strong complementary reactions in clinicians and others
-- **Pattern-based**: embedded in relational patterns, not just symptomatic states
+**Cluster B (Dramatic/Emotional):**
+- Antisocial PD: Disregard for others' rights, deceit, impulsivity, lack of remorse — requires conduct disorder before age 15; low amygdala activity
+- Borderline PD: Unstable relationships, identity disturbance, fear of abandonment, impulsivity, self-harm — hyperactive amygdala; treated with DBT
+- Histrionic PD: Excessive emotionality, attention-seeking
+- Narcissistic PD: Grandiosity, need for admiration, lack of empathy
 
----
+**Cluster C (Anxious/Fearful):**
+- Avoidant PD: Social inhibition, hypersensitivity to rejection — desires relationships (unlike schizoid)
+- Dependent PD: Excessive need to be cared for, submissive behavior
+- OCPD: Preoccupation with orderliness, perfectionism, and control — ego-syntonic (unlike OCD which is ego-dystonic)
 
-## Cluster A — Odd/Eccentric
+## Neurobiology
+- Serotonin dysfunction: Impulsivity and aggression (especially Cluster B)
+- Amygdala hyperactivity (BPD): Emotional dysregulation
+- Low amygdala activity (ASPD): Reduced fear/empathy
+- Prefrontal-limbic imbalance: Impaired emotion regulation
+- HPA axis dysregulation: Stress sensitivity
 
-| Disorder | Core Feature | 4+ Criteria Include |
-|----------|-------------|---------------------|
-| Paranoid PD | Pervasive distrust/suspiciousness | Suspects exploitation, reads hidden meaning, holds grudges, suspects infidelity |
-| Schizoid PD | Social detachment, restricted affect | No desire for relationships, solitary, no close friends, indifferent to praise/criticism |
-| Schizotypal PD | Cognitive/perceptual distortions + social discomfort | Magical thinking, odd beliefs, unusual perceptions, eccentric behavior, excessive social anxiety |
+## Treatment
+- **DBT (Dialectical Behavior Therapy):** First-line for BPD — skills training in mindfulness, distress tolerance, emotion regulation, and interpersonal effectiveness
+- **CBT:** Used across clusters
+- **Medication:** Targets symptoms (mood stabilizers, antipsychotics, SSRIs) — no medication treats the disorder itself
 
----
-
-## Cluster B — Dramatic/Emotional/Erratic
-
-| Disorder | Core Feature | Key Criteria |
-|----------|-------------|--------------|
-| Antisocial PD | Disregard for others' rights | 3+ of: law violations, deceit, impulsivity, aggression, recklessness, irresponsibility, no remorse; conduct disorder before 15 |
-| Borderline PD | Instability in relationships, self-image, affect + impulsivity | 5+ of 9: abandonment fear, unstable relationships (splitting), identity disturbance, impulsivity, suicidal behavior, affective instability, emptiness, anger, paranoid ideation |
-| Histrionic PD | Excessive emotionality and attention-seeking | Uncomfortable when not center of attention; dramatic, theatrical |
-| Narcissistic PD | Grandiosity, need for admiration, lack of empathy | 5+ of 9: grandiose self-importance, fantasies of success, sense of entitlement, exploits others, lacks empathy, envious, arrogant |
-
----
-
-## Cluster C — Anxious/Fearful
-
-| Disorder | Core Feature |
-|----------|-------------|
-| Avoidant PD | Social inhibition, feelings of inadequacy, hypersensitivity to criticism |
-| Dependent PD | Excessive need to be taken care of; submissive, clinging |
-| OCPD | Preoccupation with orderliness, perfectionism, control (distinct from OCD) |
-
----
-
-## Treatment Considerations
-- Build therapeutic alliance before confronting defenses
-- Manage **countertransference** (the clinician's emotional reactions to the patient)
-- For immature defenses: warmth, peer/group limit-setting, empathy to regulate anxiety
-- Gradual interpretation — make defenses **ego-dystonic** before expecting change`,
+## DSM-5 Alternative Model
+Section III: Dimensional approach — assesses personality functioning (self-identity, self-direction, empathy, intimacy) and five pathological trait domains: negative affectivity, detachment, antagonism, disinhibition, and psychoticism.`
     },
     {
       topicId: T["ADHD & Medications"],
-      title: "ADHD & Medications",
-      content: `# ADHD & Medications
+      title: "ADHD & Medications — Study Guide",
+      content: `## ADHD Diagnostic Criteria (DSM-5)
+- Persistent pattern of inattention and/or hyperactivity-impulsivity
+- Several symptoms present **before age 12**
+- Symptoms present in **two or more settings**
+- Symptoms interfere with functioning
 
-## Neurobiology of ADHD
+**Three presentations:**
+1. Predominantly Inattentive
+2. Predominantly Hyperactive-Impulsive
+3. Combined (most common)
 
-### Core Dysregulation
-- **Frontal-subcortical-cerebellar catecholaminergic circuits**
-- Dopamine transporter (DAT) abnormalities
-- Deficient NE modulation of prefrontal cortex
+**Inattentive symptoms:** Easily distracted, forgetfulness, losing things, failing to finish tasks, avoiding sustained mental effort, not listening, difficulty organizing
 
-### Key Brain Regions
-| Region | ADHD-Relevant Function |
-|--------|----------------------|
-| Dorsal anterior cingulate | Selective attention |
-| Dorsolateral prefrontal cortex | Sustained attention, problem-solving, working memory |
-| Orbitofrontal cortex | Impulse control |
-| Premotor cortex | Hyperactivity |
-| Cerebellum | Timing, motor coordination |
+**Hyperactive/Impulsive symptoms:** Fidgeting, leaving seat, running/climbing inappropriately, unable to play quietly, "on the go," excessive talking, blurting out answers, difficulty waiting turn, interrupting
 
-## DSM-5 Diagnosis
-- Symptoms present **before age 12**
-- Present in **2+ settings**
-- Types: Predominantly Inattentive, Predominantly Hyperactive-Impulsive, Combined
-- More common in males; highly comorbid (anxiety, depression, learning disorders)
+## Neurobiology
+**Brain regions:** Prefrontal cortex (executive function, inhibition), anterior cingulate (error monitoring), basal ganglia, cerebellum
+**Neurotransmitters:** Dopamine and norepinephrine — deficiency in PFC circuits impairs working memory, response inhibition, and sustained attention
+**Heritability:** ~70-80% — one of the most heritable psychiatric conditions
 
----
+## Treatment
+**Stimulants (first-line):**
+| Medication | Mechanism |
+|-----------|-----------|
+| Methylphenidate (Ritalin, Concerta) | Blocks DAT and NET — increases DA and NE in PFC |
+| Amphetamine (Adderall) | Blocks DAT/NET AND reverses them — stronger effect |
 
-## Stimulant Medications (Class II Controlled Substances)
+**Non-stimulants:**
+| Medication | Mechanism |
+|-----------|-----------|
+| Atomoxetine (Strattera) | Selective NE reuptake inhibitor — no abuse potential |
+| Guanfacine (Intuniv) | Alpha-2A agonist — strengthens PFC circuits |
 
-### Methylphenidate (blocks DAT + NET)
-| Formulation | Delivery | Duration |
-|-------------|----------|----------|
-| Ritalin | Immediate release | 4-6 hrs |
-| Ritalin LA | Beaded capsule | 8-10 hrs |
-| Concerta (OROS) | Osmotic pump | 10-12 hrs |
-| Daytrana | Transdermal patch | Flexible (removable) |
-| Jornay PM | Delayed-release | Taken at bedtime; activates AM |
+**Stimulant risks:** Decreased appetite, sleep disruption, elevated heart rate/BP, potential for misuse. Cardiovascular screening before prescribing.
 
-### Amphetamines (block DAT + NET; also increase release)
-| Formulation | Notes |
-|-------------|-------|
-| Adderall | Mixed amphetamine salts |
-| Adderall XR | Extended release |
-| Vyvanse (lisdexamfetamine) | Prodrug; lower abuse potential; 40% of ADHD Rx |
+## Neuropsychological Assessment
+**Tests used:**
+- Continuous Performance Test (CPT): Sustained attention and inhibition
+- Working memory tasks: Digit span backward, Letter-Number Sequencing
+- Executive function: Trails B, WCST, verbal fluency
+- Rating scales: Conners, BASC, BRIEF (self and informant)
 
----
-
-## Non-Stimulant Medications
-
-| Drug | Class | Mechanism | Notes |
-|------|-------|-----------|-------|
-| Atomoxetine (Strattera) | SNRI | Selective NRI | Slower onset; off-label for MDD; no controlled substance |
-| Viloxazine (Qelbree) | NRI + serotonin modulator | Newer; no clear advantage over Strattera |
-| Guanfacine (Intuniv) | Alpha-2 agonist | Second line; also reduces anxiety |
-| Clonidine (Kapvay) | Alpha-2 agonist | Second line; originally for hypertension |
-| Modafinil/Armodafinil | Dopamine RI | Class IV; reduces sleepiness; cognitive boost |
-
----
-
-## Non-Medication Interventions
-- **Behavioral modification**: contingency management
-- **IEP** (Individuals with Disabilities Education Act): individualized education with specialized services
-- **504 Plan**: accommodations without special education placement
-- **PTBM**: parent training in behavioral management
-- **Group social skills training**
-
-## Common Side Effects (Stimulants)
-- Insomnia (especially with late dosing)
-- Appetite suppression / weight loss
-- Growth suppression in children (monitor height/weight)
-- Elevated heart rate and blood pressure
-- Rarely: tics, mood lability, cardiac concerns`,
+## ADHD in Adults
+Hyperactivity becomes restlessness and inner sense of tension rather than overt motor behavior. Inattention and executive dysfunction remain prominent and impair work and relationships.`
     },
     {
       topicId: T["Language Processing & Aphasia"],
-      title: "Language Processing & Aphasia",
-      content: `# Language Processing & Aphasia
+      title: "Language Processing & Aphasia — Study Guide",
+      content: `## Language Areas
+**Broca's area:** Left inferior frontal gyrus (Brodmann areas 44/45) — speech production, syntax, articulation. Damage → Broca's aphasia.
 
-## Language Components
-| Component | Definition | Example |
-|-----------|-----------|---------|
-| Phonemes | Smallest units of sound | /b/, /p/, /k/ |
-| Morphemes | Smallest units of meaning | "un-" + "happy" = unhappy |
-| Syntax | Rules for sentence structure | SVO order in English |
-| Semantics | Meaning of words and sentences | "bank" (financial vs river) |
-| Pragmatics | Context and social use | Sarcasm, implicature |
-| Prosody | Rhythm, stress, and intonation | Differentiates questions from statements |
+**Wernicke's area:** Posterior superior temporal gyrus (BA 22) — language comprehension. Damage → Wernicke's aphasia.
 
-## Chomsky's Model
-- **Universal grammar**: innate language acquisition device (LAD)
-- **Deep structure**: underlying meaning
-- **Surface structure**: how the meaning is expressed
-- **Transformational rules**: map between deep and surface structures
+**Arcuate fasciculus:** White matter bundle connecting Broca's and Wernicke's areas. Damage → conduction aphasia.
 
----
+## The Wernicke-Geschwind Model
+Auditory input → Wernicke's area (comprehension) → arcuate fasciculus → Broca's area (production) → motor cortex → speech output. Damage at any point causes a characteristic aphasia.
 
 ## Aphasia Classification
-
-### Perisylvian Syndromes (Impaired Repetition)
 | Aphasia | Fluency | Comprehension | Repetition | Lesion |
-|---------|---------|---------------|------------|--------|
-| Broca's | Non-fluent, agrammatic | Relatively intact | Impaired | Left IFG (Broca's area) |
-| Wernicke's | Fluent, jargon | Severely impaired | Impaired | Left posterior STG |
-| Conduction | Relatively fluent, paraphasias | Relatively intact | Severely impaired | Arcuate fasciculus / supramarginal gyrus |
-| Global | Non-fluent | Severely impaired | Severely impaired | Large perisylvian |
+|---------|---------|--------------|------------|--------|
+| Broca's | Non-fluent | Intact | Impaired | Left IFG |
+| Wernicke's | Fluent | Impaired | Impaired | Left pSTG |
+| Conduction | Fluent | Intact | Impaired | Arcuate fasciculus |
+| Global | Non-fluent | Impaired | Impaired | Large left hemisphere |
+| Trans. Motor | Non-fluent | Intact | Intact | Near Broca's (SMA) |
+| Trans. Sensory | Fluent | Impaired | Intact | Near Wernicke's |
+| Anomic | Fluent | Intact | Intact | Variable |
 
-### Extrasylvian (Transcortical) Syndromes (Intact Repetition)
-| Aphasia | Fluency | Comprehension | Repetition | Notes |
-|---------|---------|---------------|------------|-------|
-| Transcortical Motor (TCM) | Non-fluent | Intact | Intact | Like Broca's but repetition spared |
-| Transcortical Sensory (TCS) | Fluent | Impaired | Intact | Like Wernicke's; may have echolalia |
-| Mixed Transcortical | Non-fluent | Impaired | Intact | Echolalia prominent |
+## Speech Errors
+**Phonological paraphasia:** Sound-based substitution (e.g., "spoon" → "spool") — Broca's, conduction aphasia
+**Semantic paraphasia:** Meaning-based substitution (e.g., "fork" → "knife") — Wernicke's aphasia
+**Neologism:** Completely made-up non-word — Wernicke's aphasia
+**Jargon aphasia:** Fluent speech that is largely incomprehensible — Wernicke's
 
-### Non-Localizing
-- **Anomic aphasia**: word-finding difficulty, circumlocution; comprehension and repetition intact; most common residual aphasia
-
----
+## Language Lateralization
+Left hemisphere dominant in ~95% of right-handers and ~70% of left-handers. Assessed with Wada test (sodium amobarbital injection that temporarily inactivates one hemisphere) or fMRI language lateralization.
 
 ## Related Disorders
-| Disorder | Description |
-|----------|-------------|
-| Alexia with agraphia | Cannot read or write; angular gyrus lesion |
-| Alexia without agraphia (pure alexia) | Cannot read; can write; visual-language disconnection |
-| Expressive aprosodia | Cannot convey emotional tone in speech |
-| Receptive aprosodia | Cannot interpret others' emotional prosody |
-
----
-
-## Speech Perception Models
-- **TRACE Model**: interactive activation — top-down and bottom-up processing bidirectionally connect features, phonemes, and words
-- **Cohort Model**: word recognition begins with the first phoneme; candidate pool narrows as more input arrives
-- **Phonemic restoration effect**: listeners fill in missing phonemes using lexical/contextual top-down knowledge`,
+**Dysarthria:** Motor speech disorder — slurred speech from muscle weakness, intact language
+**Dyslexia:** Phonological processing deficit — left temporoparietal/inferior frontal dysfunction; NOT a visual problem
+**Apraxia of speech:** Motor planning disorder for speech — Broca's area/insula damage`
     },
     {
       topicId: T["Apraxia & Agnosia"],
-      title: "Apraxia & Agnosia",
-      content: `# Apraxia & Agnosia
+      title: "Apraxia & Agnosia — Study Guide",
+      content: `## Apraxia
+**Definition:** Inability to perform purposeful, skilled movements despite intact motor strength, sensation, and comprehension — a disorder of motor programming/planning.
 
-## Apraxia Overview
-**Definition**: Inability to perform purposeful/skilled movements despite:
-- Intact primary motor function (no weakness)
-- Intact sensory function
-- Understanding the task
-- Willingness to perform
+**Key principle:** Apraxia is NOT due to weakness, sensory loss, or failure to understand the command.
 
-Apraxia involves dysfunction in **cortical motor planning** (association cortex level).
+### Types of Apraxia
+| Type | Definition | Lesion |
+|------|-----------|--------|
+| Ideomotor | Cannot perform to command or imitate (e.g., wave); may perform spontaneously | Left frontal/parietal |
+| Ideational | Cannot sequence multi-step tasks (e.g., make coffee) | Frontal lobe |
+| Kinetic/Limb-kinetic | Clumsiness in precision acts (e.g., picking up coin) | Corticospinal/frontal |
+| Conceptual | Doesn't know how to use tools; selects wrong tool | Left parietal |
+| Apraxia of speech | Cannot plan motor movements for speech | Broca's, insula |
+| Buccofacial | Cannot perform mouth/face movements on command | Left frontal |
+| Constructional | Cannot draw or assemble 2D/3D structures | Parietal |
 
----
+**Testing order:** Pantomime to command → Imitation → Use of actual object (performance typically improves with object use)
 
-## Types of Apraxia
+**Error types in ideomotor apraxia:**
+- Content error: Wrong pantomime (screwdriver for hammer)
+- Postural error: Uses body part as tool
+- Spatial/movement error: Correct movement but wrong trajectory or orientation
+- Temporal error: Correct elements but wrong timing
 
-| Type | Core Deficit | Lesion Site | Test |
-|------|-------------|-------------|------|
-| Kinetic (limb-kinetic) | Clumsiness in precision acts; motor degradation | Corticospinal, corticobasal, prefrontal | Finger tapping, grooved pegboard |
-| Ideomotor | Pantomime errors on command or imitation | Left frontoparietal, arcuate fasciculus | Pantomime tool use |
-| Ideational | Failure of complex multi-step sequences | Frontal lobes | "Show me how to mail a letter" |
-| Conduction | Imitation more impaired than command | Left inferior parietal, arcuate | Imitate examiner |
-| Conceptual | Tool-object relationship knowledge deficit | Left parietal; Alzheimer's | Select correct tool for task |
-| Apraxia of speech | Articulatory planning deficit; automatic speech preserved | Broca's area, insula, premotor, SMA | Connected speech, word repetition |
-
-### Ideomotor Apraxia Error Types
-- **Content errors**: substitute different pantomime (wrong movement)
-- **Postural errors**: use body part as the tool (e.g., finger as toothbrush)
-- **Spatial movement errors**: wrong trajectory or body orientation
-- **Temporal errors**: timing or sequencing wrong
-
----
-
-## Assessment Protocol
-**Order**: Pantomime to command → Imitate examiner → Use actual object
-- Assess **both limbs** (apraxia can be unilateral or bilateral)
-- Cross-modality testing reveals which representational level is impaired
-
----
-
-## Types of Agnosia
+## Agnosia
+**Definition:** Perception without recognition — inability to recognize stimuli despite intact sensation, attention, and language.
 
 ### Visual Agnosia
-- **Apperceptive**: failure at perceptual level (cannot copy shapes)
-- **Associative**: perception intact but cannot assign meaning (can copy but not name)
-- **Prosopagnosia**: face recognition failure; fusiform face area (ventral stream)
-- **Akinetopsia**: motion perception failure; area MT/V5
+| Type | Deficit | Intact | Lesion |
+|------|---------|--------|--------|
+| Apperceptive | Cannot form coherent percept; cannot copy or match | Object knowledge | Diffuse posterior |
+| Associative | Can copy and match, cannot recognize | Copying, matching | Occipitotemporal |
+| Prosopagnosia | Cannot recognize faces | Emotion, gender, age from face | Fusiform face area (bilateral) |
+| Simultagnosia | Cannot perceive whole scene | Individual elements | Bilateral parieto-occipital |
 
-### Auditory Agnosia
-- Cannot recognize sounds despite intact hearing
-- **Phonagnosia**: familiar voices
-- **Auditory verbal agnosia**: cannot recognize words (with intact phoneme perception)
+**Balint's syndrome** (bilateral parieto-occipital): Simultagnosia + optic ataxia + oculomotor apraxia
 
-### Somatosensory Agnosia
-- **Astereognosia**: cannot identify objects by touch; requires intact somatosensory cortex
-- **Asomatognosia**: failure to recognize own body parts; right parietal lesion
+### Hemispatial Neglect
+Failure to attend to stimuli on the side contralateral to the lesion (usually right hemisphere → left-sided neglect) — NOT a sensory deficit. Tested with line bisection, cancellation tasks, and drawing tasks.
 
-### Balint's Syndrome
-Bilateral parietal-occipital lesion causing:
-1. **Simultanagnosia**: can only perceive one object at a time
-2. **Optic ataxia**: misreaching under visual guidance
-3. **Oculomotor apraxia**: difficulty voluntarily directing gaze`,
+### Anosognosia
+Neurological unawareness of one's own deficit — caused by right hemisphere damage. Common in Alzheimer's, stroke. Differs from psychological denial.`
     },
     {
       topicId: T["Neurocognitive Disorders"],
-      title: "Neurocognitive Disorders: Huntington's, Parkinson's, Lewy Body, TBI, HIV, Delirium & Pain",
-      content: `# Neurocognitive Disorders
+      title: "Neurocognitive Disorders — Study Guide",
+      content: `## Normal Aging vs. MCI vs. Dementia
+**Normal aging:** Adaptive skills preserved; some slowing of processing speed; crystallized skills (vocabulary, knowledge) relatively intact; fluid skills (memory, reasoning, speed) decline modestly.
 
-## Huntington's Disease (HD)
+**MCI (Mild Cognitive Impairment):** Prevalence 15-20% in US. Decline beyond normal aging but ADLs largely intact.
+- aMCI (amnestic): Memory impaired → more likely to convert to Alzheimer's
+- naMCI (non-amnestic): Non-memory domain → less likely to convert
+- Processing speed is the hallmark early deficit
 
-### Genetics
-- **Autosomal dominant**: single HTT gene mutation on chromosome 4
-- CAG trinucleotide repeats: normal (10–27), intermediate (27–35), pathological (36+)
-- Longer repeat length = earlier onset (anticipation)
+**Dementia:** Significant cognitive decline + functional impairment in ADLs
 
-### Pathophysiology
-- Excitotoxicity (glutamate), mitochondrial dysfunction, protein misfolding
-- **Basal ganglia degeneration**: caudate → "boxcar ventricles" on imaging
+## Cortical vs. Subcortical Dementia
+**Cortical (4 As):** Amnesia, Aphasia, Apraxia, Agnosia — e.g., Alzheimer's, FTD
+**Subcortical:** Alertness, Attention, Processing speed, Mood/Depression — e.g., Parkinson's, Huntington's, HIV
 
-### Neuropsychological Profile
-- **Motor**: chorea, dystonia, dysphagia, motor impersistence
-- **Cognitive**: executive dysfunction, memory encoding/retrieval, visuospatial
-- **Psychiatric** (often precedes motor): depression (most common), anxiety, OCD features, psychosis
+## Alzheimer's Disease
+- Histology: Beta-amyloid plaques (extracellular) + tau tangles (intracellular)
+- Progression: Transentorhinal → limbic → neocortex
+- Early symptoms: Anterograde memory, naming, planning
+- Middle stage: Personality changes, ADL decline
+- Late stage: Pneumonia/aspiration common cause of death
+- Risk: Age, TBI, sleep, living area, APOE-e4
 
----
-
-## Parkinson's Disease (PD)
-
-### Pathophysiology
-- Loss of dopaminergic neurons in **substantia nigra pars compacta**
-- **Lewy bodies** (alpha-synuclein accumulations) in neurons
-- Gut-brain connection: alpha-synuclein may originate in enteric nervous system
-
-### Cardinal Symptoms
-1. **Bradykinesia** (required for diagnosis)
-2. **Tremor** (resting, pill-rolling; improves with action)
-3. **Rigidity** (cogwheel or lead-pipe; bilateral)
-4. Postural instability (later)
-
-### Neuropsychological Features
-- 50–80% develop dementia
-- Subcortical pattern: executive function, attention, processing speed
-- Visual hallucinations (75% later; often benign with insight initially)
-- Depression, apathy, sleep disturbance
-
----
+## Parkinson's Disease
+- Cardinal signs: Bradykinesia, resting tremor, rigidity, postural instability (TRAP)
+- Pathology: Loss of dopaminergic neurons in substantia nigra, Lewy bodies (alpha-synuclein)
+- Cognitive: Subcortical — processing speed, attention, executive function impaired; memory retrieval affected
+- Treatment: Levodopa, deep brain stimulation, exercise
 
 ## Dementia with Lewy Bodies (DLB)
+Core features: Fluctuating cognition, recurrent visual hallucinations, parkinsonism (after cognition onset), REM sleep behavior disorder
+- Sensitivity to antipsychotics (can cause severe worsening)
+- Most misdiagnosed as Alzheimer's
 
-### Core Features (2 required for probable DLB)
-1. **Fluctuating cognition** (especially alertness; staring spells)
-2. **Visual hallucinations** (80%; often formed, recurring, not distressing early)
-3. **Parkinsonism** (after cognitive onset — distinguishes from PD dementia)
-4. **REM sleep behavior disorder** (acts out dreams; loss of muscle atonia)
+## Huntington's Disease
+- CAG repeat expansion in HTT gene (chromosome 4) — autosomal dominant
+- Degeneration of striatum (caudate → "box-car ventricles")
+- Symptoms: Chorea, executive dysfunction, psychiatric (depression most common)
+- 5 stages; death 10-30 years after symptom onset
 
-### Key Distinguishing Features vs Alzheimer's
-- DLB: early hallucinations, prominent attention/executive impairment, parkinsonism
-- AD: primary amnestic presentation first, cortical pattern
-- DLB most commonly **misdiagnosed as Alzheimer's disease**
-- **Neuroleptic sensitivity**: antipsychotics can cause severe reactions in DLB
-
----
+## Frontotemporal Dementia (FTD)
+- **Behavioral variant (bvFTD):** SHADE — Stereotyped behaviors, Hyperorality, Apathy, Disinhibition, Empathy loss
+- **Language variants:** Primary progressive aphasia (non-fluent, semantic, logopenic)
+- Earlier onset than Alzheimer's (50s), more rapid progression, behavioral > memory changes early
 
 ## Traumatic Brain Injury (TBI)
+- All concussions are TBIs; not all TBIs are concussions
+- CTE (Chronic Traumatic Encephalopathy): Repetitive TBIs; tau pathology; diagnosed only at autopsy
+- HELPS screening: Have you hit your head? Emergency room? Lose consciousness? Problems in daily life? Significant illness?
+- Outcomes: Declined processing speed, executive dysfunction, prospective memory impairment
 
-### Severity Classification
-| Level | GCS Score | LOC |
-|-------|-----------|-----|
-| Mild (concussion) | 13-15 | <30 min |
-| Moderate | 9-12 | 30 min – 24 hrs |
-| Severe | ≤8 | >24 hrs |
+## Capacity vs. Competency
+| | Capacity | Competency |
+|--|---------|------------|
+| Type | Clinical | Legal |
+| Who decides | Clinician | Judge |
+| Stability | Can change | More permanent |
+| Domains | 4: Expression, Understanding, Appreciation, Reasoning | Specific domain |
 
-### Vascular Injuries
-- **Epidural hematoma**: arterial bleed between skull and dura; "lucid interval"
-- **Subdural hematoma**: venous bleed between dura and arachnoid; common in elderly on anticoagulants
-- **Subarachnoid hemorrhage**: between pia and arachnoid; thunderclap headache
+**MacArthur Competence Assessment Tool (MacCAT):** Gold standard for assessing medical decision-making capacity.
 
-### Chronic Traumatic Encephalopathy (CTE)
-- Repetitive brain trauma → tau protein accumulation
-- Diagnosed post-mortem only; associated with contact sports
-- Progressive; impairs executive function, mood, behavior
-
----
-
-## HIV-Associated Neurocognitive Disorders (HAND)
-
-### Frascati Criteria
-| Category | Cognitive Deficit | Functional Impact |
-|----------|-------------------|-------------------|
-| ANI | ≥1 SD below in 2+ domains | None |
-| MND | ≥1 SD below in 2+ domains | Mild (~12%) |
-| HAD | ≥1 SD below in 2+ domains | Marked (~2%) |
-
-### Neuropsychological Profile
-- **Subcortical pattern**: executive dysfunction, psychomotor slowing, memory retrieval
-- Amyloid: intracellular (HIV) vs extracellular (Alzheimer's)
-
----
-
-## Delirium
-
-### Characteristics
-- **Acute onset**, fluctuating course (varies throughout the day)
-- Impaired attention and arousal (primary)
-- Confusion, hallucinations, delusions, disorientation
-
-### Subtypes
-| Type | Behavior | Clinical Challenge |
-|------|----------|-------------------|
-| Hyperactive | Agitated, combative | Injury risk |
-| Hypoactive | Quiet, withdrawn | Frequently missed |
-| Mixed | Alternating | Most common |
-
-### Key Differential: Delirium vs Dementia
-- Delirium: acute/hours; fluctuating; often reversible
-- Dementia: gradual/months-years; progressive; generally irreversible
-
----
-
-## Cortical Pain Processing
-
-### Pain Pathways
-- **Sharp pain**: Aδ fibers (myelinated) → spinothalamic → thalamus → somatosensory cortex
-- **Dull/chronic pain**: C fibers (unmyelinated) → spinoreticular → limbic system
-
-### Key Brain Regions in Pain
-| Region | Function |
-|--------|----------|
-| Anterior cingulate cortex | Emotional/affective component of pain (suffering) |
-| Somatosensory cortex | Sensory-discriminative (location, intensity) |
-| Prefrontal cortex | Cognitive appraisal, coping |
-| Periaqueductal gray (PAG) | Endogenous opioid analgesia; descending inhibition |
-
-### Gate Control Theory (Melzack & Wall)
-- Large-diameter A-β fibers (touch) activate inhibitory interneurons in dorsal horn
-- These interneurons "close the gate" to C-fiber pain transmission
-- Basis for TENS, massage, and distraction for pain relief`,
+## HIV-Associated Neurocognitive Disorder (HAND) — Frascati Criteria
+- ANI: Asymptomatic, 1 SD below in 2+ domains
+- MND: Mild Neurocognitive Disorder — mild functional impairment (12% prevalence)
+- HAD: HIV-Associated Dementia — significant impairment (2% prevalence)
+- Primarily subcortical: basal ganglia (caudate), hippocampus`
     },
   ];
 
   await db.insert(studyGuidesTable).values(studyGuides);
-  console.log(`Inserted ${studyGuides.length} study guides`);
 
   // ===========================================================================
-  // PRACTICE EXAMS + QUESTION LINKS
+  // PRACTICE EXAMS (1 per topic, each using 5 questions from that topic's quiz)
   // ===========================================================================
-  const allTopics = await db.select().from(topicsTable);
-  const allQuizQuestions = await db.select().from(quizQuestionsTable);
+  // Group inserted questions by topicId
+  const questionsByTopic: Record<number, number[]> = {};
+  for (const q of insertedQuestions) {
+    if (!questionsByTopic[q.topicId]) questionsByTopic[q.topicId] = [];
+    questionsByTopic[q.topicId].push(q.id);
+  }
 
-  const practiceExamValues = allTopics.map(topic => ({
-    topicId: topic.id,
-    title: `${topic.name} Practice Exam`,
-    timeLimit: 600,
-    passingScore: 70,
-  }));
+  const examDefs = [
+    { topicId: T["Neuropsychology Overview"], title: "Neuropsychology Overview — Practice Exam" },
+    { topicId: T["Cell Biology & Neuron Anatomy"], title: "Cell Biology & Neuron Anatomy — Practice Exam" },
+    { topicId: T["Neurotransmitters & Synaptic Transmission"], title: "Neurotransmitters & Synaptic Transmission — Practice Exam" },
+    { topicId: T["Sensory Pathways"], title: "Sensory Pathways — Practice Exam" },
+    { topicId: T["Sensory Systems"], title: "Sensory Systems — Practice Exam" },
+    { topicId: T["Limbic System & Motivation"], title: "Limbic System & Motivation — Practice Exam" },
+    { topicId: T["Sleep & Circadian Rhythms"], title: "Sleep & Circadian Rhythms — Practice Exam" },
+    { topicId: T["Endocrine System & Reproduction"], title: "Endocrine System & Reproduction — Practice Exam" },
+    { topicId: T["Psychopharmacology"], title: "Psychopharmacology — Practice Exam" },
+    { topicId: T["Psychological Disorders"], title: "Psychological Disorders — Practice Exam" },
+    { topicId: T["Personality Disorders"], title: "Personality Disorders — Practice Exam" },
+    { topicId: T["ADHD & Medications"], title: "ADHD & Medications — Practice Exam" },
+    { topicId: T["Language Processing & Aphasia"], title: "Language Processing & Aphasia — Practice Exam" },
+    { topicId: T["Apraxia & Agnosia"], title: "Apraxia & Agnosia — Practice Exam" },
+    { topicId: T["Neurocognitive Disorders"], title: "Neurocognitive Disorders — Practice Exam" },
+  ];
 
-  const insertedExams = await db.insert(practiceExamsTable).values(practiceExamValues).returning();
-  console.log(`Inserted ${insertedExams.length} practice exams`);
+  const insertedExams = await db.insert(practiceExamsTable).values(
+    examDefs.map(e => ({
+      topicId: e.topicId,
+      title: e.title,
+      timeLimit: 600,
+      passingScore: 70,
+    }))
+  ).returning();
 
-  const examQuestionRows: Array<{ examId: number; questionId: number; questionOrder: number }> = [];
+  const examQuestionLinks = [];
   for (const exam of insertedExams) {
-    const topicQs = allQuizQuestions.filter(q => q.topicId === exam.topicId).slice(0, 10);
-    topicQs.forEach((q, i) => {
-      examQuestionRows.push({ examId: exam.id, questionId: q.id, questionOrder: i + 1 });
-    });
+    const qIds = questionsByTopic[exam.topicId] ?? [];
+    const selected = qIds.slice(0, 5);
+    for (let i = 0; i < selected.length; i++) {
+      examQuestionLinks.push({
+        examId: exam.id,
+        questionId: selected[i],
+        questionOrder: i + 1,
+      });
+    }
   }
 
-  if (examQuestionRows.length > 0) {
-    await db.insert(practiceExamQuestionsTable).values(examQuestionRows);
-    console.log(`Inserted ${examQuestionRows.length} practice exam question links`);
+  if (examQuestionLinks.length > 0) {
+    await db.insert(practiceExamQuestionsTable).values(examQuestionLinks);
   }
 
-  console.log("Seeding complete!");
-  console.log(`Summary: ${flashcards.length} flashcards, ${quizQuestions.length} quiz questions, ${studyGuides.length} study guides, ${insertedExams.length} practice exams`);
+  console.log("✅ Seed complete:");
+  console.log(`   ${flashcards.length} flashcards (${topics.length} topics)`);
+  console.log(`   ${quizQuestionsToInsert.length} quiz questions`);
+  console.log(`   ${studyGuides.length} study guides`);
+  console.log(`   ${insertedExams.length} practice exams`);
 }
 
 seed()
-  .then(() => { console.log("Done!"); process.exit(0); })
-  .catch(err => { console.error("Seed error:", err); process.exit(1); });
+  .then(() => process.exit(0))
+  .catch(err => {
+    console.error(err);
+    process.exit(1);
+  });
