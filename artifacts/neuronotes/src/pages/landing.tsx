@@ -76,7 +76,7 @@ export default function LandingPage() {
       <section className="max-w-6xl mx-auto px-4 py-16 md:py-24 text-center">
         <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-sm font-medium px-4 py-1.5 rounded-full mb-6">
           <Brain className="w-4 h-4" />
-          Built for neuroscience students
+          Built for knowledge
         </div>
         <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
           Master Neuroscience &<br />
