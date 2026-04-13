@@ -1,8 +1,9 @@
 import { Router, type Request, type Response } from "express";
 import { db } from "@workspace/db";
-import { topicsTable, flashcardsTable, quizQuestionsTable, studyGuidesTable, practiceExamsTable, practiceExamQuestionsTable } from "@workspace/db";
+import { topicsTable, flashcardsTable, quizQuestionsTable, studyGuidesTable, practiceExamsTable, practiceExamQuestionsTable, usersTable } from "@workspace/db";
 import { eq, count, asc } from "drizzle-orm";
 import { enforceUsageLimit } from "../middlewares/usageEnforcement";
+import { getAuth } from "@clerk/express";
 
 const router = Router();
 
@@ -84,6 +85,17 @@ router.get("/topics/:topicId/quizzes", enforceUsageLimit, async (req: Request, r
 
 router.get("/topics/:topicId/study-guide", async (req: Request, res: Response): Promise<void> => {
   try {
+    const { userId } = getAuth(req);
+    if (!userId) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+    const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
+    const isSubscribed = user && (user.subscriptionStatus === "active" || user.subscriptionStatus === "pro" || user.subscriptionStatus === "trialing");
+    if (!isSubscribed) {
+      res.status(402).json({ error: "Subscription required", message: "Study guides are available to subscribers only. Upgrade to unlock full access." });
+      return;
+    }
     const topicId = parseInt(String(req.params.topicId));
     const [guide] = await db.select().from(studyGuidesTable).where(eq(studyGuidesTable.topicId, topicId));
     if (!guide) {
