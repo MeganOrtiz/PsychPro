@@ -102,6 +102,7 @@ router.get("/subscription/status", async (req: Request, res: Response): Promise<
         const periodEnd = (sub as unknown as { current_period_end: number }).current_period_end;
         res.json({
           status: sub.status,
+          tier: user.subscriptionStatus,
           subscriptionId: sub.id,
           currentPeriodEnd: periodEnd ? new Date(periodEnd * 1000).toISOString() : null,
         });
@@ -110,7 +111,7 @@ router.get("/subscription/status", async (req: Request, res: Response): Promise<
         // fall through to user record
       }
     }
-    res.json({ status: user.subscriptionStatus, subscriptionId: user.stripeSubscriptionId, currentPeriodEnd: null });
+    res.json({ status: user.subscriptionStatus, tier: user.subscriptionStatus, subscriptionId: user.stripeSubscriptionId, currentPeriodEnd: null });
   } catch (err) {
     req.log.error({ err }, "Error getting subscription status");
     res.status(500).json({ error: "Internal server error" });

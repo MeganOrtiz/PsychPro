@@ -5,6 +5,7 @@ import usersRouter from "./users";
 import progressRouter from "./progress";
 import subscriptionRouter from "./subscription";
 import feedbackRouter from "./feedback";
+import customDecksRouter from "./custom-decks";
 
 const router: IRouter = Router();
 
@@ -14,5 +15,6 @@ router.use(usersRouter);
 router.use(progressRouter);
 router.use(subscriptionRouter);
 router.use(feedbackRouter);
+router.use(customDecksRouter);
 
 export default router;

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useUser, UserButton } from "@clerk/react";
-import { Brain, LayoutDashboard, BookOpen, Layers, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck } from "lucide-react";
+import { Brain, LayoutDashboard, BookOpen, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck, BookMarked, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -13,15 +13,23 @@ const navItems = [
   { href: "/feedback", label: "Feedback", icon: MessageSquare },
 ];
 
-function useIsAdmin() {
+function useUserMeta() {
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isScholar, setIsScholar] = useState(false);
+
   useEffect(() => {
     fetch("/api/feedback/is-admin")
       .then((r) => r.json())
       .then((d) => setIsAdmin(d.isAdmin ?? false))
       .catch(() => setIsAdmin(false));
+
+    fetch("/api/subscription/status")
+      .then((r) => r.json())
+      .then((d) => setIsScholar(d.status === "scholar"))
+      .catch(() => setIsScholar(false));
   }, []);
-  return isAdmin;
+
+  return { isAdmin, isScholar };
 }
 
 interface AppLayoutProps {
@@ -32,7 +40,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [location] = useLocation();
   const { user } = useUser();
-  const isAdmin = useIsAdmin();
+  const { isAdmin, isScholar } = useUserMeta();
 
   return (
     <div className="flex h-screen bg-background overflow-hidden">
@@ -86,6 +94,50 @@ export default function AppLayout({ children }: AppLayoutProps) {
               </Link>
             );
           })}
+
+          {isScholar && (
+            <>
+              <div className="px-3 pt-3 pb-1">
+                <p className="text-xs font-semibold text-sidebar-foreground/40 uppercase tracking-wider">My Decks</p>
+              </div>
+              <Link
+                href="/my-decks"
+                onClick={() => setSidebarOpen(false)}
+                data-testid="nav-my-decks"
+              >
+                <div
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors",
+                    location === "/my-decks" || location.startsWith("/my-decks/")
+                      ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                      : "text-sidebar-foreground hover:bg-sidebar-accent"
+                  )}
+                >
+                  <BookMarked className="w-5 h-5 flex-shrink-0" />
+                  <span className="text-sm font-medium">Browse Decks</span>
+                  {(location === "/my-decks" || location.startsWith("/my-decks/")) && <ChevronRight className="w-4 h-4 ml-auto" />}
+                </div>
+              </Link>
+              <Link
+                href="/my-decks/new"
+                onClick={() => setSidebarOpen(false)}
+                data-testid="nav-new-deck"
+              >
+                <div
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors",
+                    location === "/my-decks/new"
+                      ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                      : "text-sidebar-foreground hover:bg-sidebar-accent"
+                  )}
+                >
+                  <Plus className="w-5 h-5 flex-shrink-0" />
+                  <span className="text-sm font-medium">New Deck</span>
+                  {location === "/my-decks/new" && <ChevronRight className="w-4 h-4 ml-auto" />}
+                </div>
+              </Link>
+            </>
+          )}
 
           {isAdmin && (
             <>

@@ -122,3 +122,47 @@ export const feedbackTable = pgTable("feedback", {
 export const insertFeedbackSchema = createInsertSchema(feedbackTable).omit({ id: true, createdAt: true });
 export type InsertFeedback = z.infer<typeof insertFeedbackSchema>;
 export type Feedback = typeof feedbackTable.$inferSelect;
+
+export const customDecksTable = pgTable("custom_decks", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull().references(() => usersTable.id),
+  title: text("title").notNull(),
+  sourceText: text("source_text").notNull(),
+  studyGuide: text("study_guide"),
+  status: text("status").notNull().default("processing"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const insertCustomDeckSchema = createInsertSchema(customDecksTable).omit({ id: true, createdAt: true });
+export type InsertCustomDeck = z.infer<typeof insertCustomDeckSchema>;
+export type CustomDeck = typeof customDecksTable.$inferSelect;
+
+export const customFlashcardsTable = pgTable("custom_flashcards", {
+  id: serial("id").primaryKey(),
+  deckId: integer("deck_id").notNull().references(() => customDecksTable.id, { onDelete: "cascade" }),
+  front: text("front").notNull(),
+  back: text("back").notNull(),
+  difficulty: text("difficulty").notNull().default("medium"),
+  cardOrder: integer("card_order").notNull().default(0),
+});
+
+export const insertCustomFlashcardSchema = createInsertSchema(customFlashcardsTable).omit({ id: true });
+export type InsertCustomFlashcard = z.infer<typeof insertCustomFlashcardSchema>;
+export type CustomFlashcard = typeof customFlashcardsTable.$inferSelect;
+
+export const customQuizQuestionsTable = pgTable("custom_quiz_questions", {
+  id: serial("id").primaryKey(),
+  deckId: integer("deck_id").notNull().references(() => customDecksTable.id, { onDelete: "cascade" }),
+  question: text("question").notNull(),
+  optionA: text("option_a").notNull(),
+  optionB: text("option_b").notNull(),
+  optionC: text("option_c").notNull(),
+  optionD: text("option_d").notNull(),
+  correctAnswer: text("correct_answer").notNull(),
+  explanation: text("explanation"),
+  questionOrder: integer("question_order").notNull().default(0),
+});
+
+export const insertCustomQuizQuestionSchema = createInsertSchema(customQuizQuestionsTable).omit({ id: true });
+export type InsertCustomQuizQuestion = z.infer<typeof insertCustomQuizQuestionSchema>;
+export type CustomQuizQuestion = typeof customQuizQuestionsTable.$inferSelect;

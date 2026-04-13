@@ -63,8 +63,15 @@ A mobile-responsive neuroscience/neuropsychology study app.
 - Scrollable study guides (custom Markdown renderer)
 - Practice exams (timed 90s/question or untimed)
 - Progress tracker
-- Subscription page with Stripe ($9.99/mo, $79.99/yr)
+- Subscription page with Stripe ($9.99/mo, $79.99/yr Pro; $19.99/mo, $159.99/yr Scholar)
 - Freemium: 10 free interactions, then upgrade prompt
+- Feedback form (any logged-in user) + admin-only inbox (`/admin/feedback`)
+- **Scholar tier** — custom study decks from user-uploaded PDF/DOCX/TXT or pasted text:
+  - AI generates flashcards, quiz, study guide, and practice exam strictly from source content
+  - `/my-decks` list, `/my-decks/new` upload/paste, `/my-decks/:id` tabbed detail view
+  - `custom_decks`, `custom_flashcards`, `custom_quiz_questions` DB tables
+  - `isAdmin` flag on users; admin-only feedback inbox
+  - Scholar subscription status gates custom decks; Pro features work for scholar too
 
 ### 15 Topics (Consolidated)
 1. Neuropsychology Overview

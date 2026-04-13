@@ -91,7 +91,7 @@ router.get("/topics/:topicId/study-guide", async (req: Request, res: Response): 
       return;
     }
     const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
-    const isSubscribed = user && (user.subscriptionStatus === "active" || user.subscriptionStatus === "pro" || user.subscriptionStatus === "trialing");
+    const isSubscribed = user && (user.subscriptionStatus === "active" || user.subscriptionStatus === "pro" || user.subscriptionStatus === "trialing" || user.subscriptionStatus === "scholar");
     if (!isSubscribed) {
       res.status(402).json({ error: "Subscription required", message: "Study guides are available to subscribers only. Upgrade to unlock full access." });
       return;

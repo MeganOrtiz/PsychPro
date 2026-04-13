@@ -20,6 +20,9 @@ import ProgressPage from "@/pages/progress";
 import SubscriptionPage from "@/pages/subscription";
 import FeedbackPage from "@/pages/feedback";
 import AdminFeedbackPage from "@/pages/admin-feedback";
+import MyDecksPage from "@/pages/my-decks";
+import NewDeckPage from "@/pages/my-decks-new";
+import MyDeckDetailPage from "@/pages/my-decks-detail";
 import NotFound from "@/pages/not-found";
 import AppLayout from "@/components/layout/app-layout";
 
@@ -87,6 +90,9 @@ function AuthRouter() {
             <Route path="/subscription" component={SubscriptionPage} />
             <Route path="/feedback" component={FeedbackPage} />
             <Route path="/admin/feedback" component={AdminFeedbackPage} />
+            <Route path="/my-decks" component={MyDecksPage} />
+            <Route path="/my-decks/new" component={NewDeckPage} />
+            <Route path="/my-decks/:id" component={MyDeckDetailPage} />
             <Route component={NotFound} />
           </Switch>
         </AppLayout>

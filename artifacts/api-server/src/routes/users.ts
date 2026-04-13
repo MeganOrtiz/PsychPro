@@ -102,7 +102,7 @@ router.get("/users/usage", async (req: Request, res: Response): Promise<void> =>
     res.json({
       usageCount,
       freeLimit: FREE_LIMIT,
-      isOverLimit: usageCount >= FREE_LIMIT && (user?.subscriptionStatus !== "active" && user?.subscriptionStatus !== "pro" && user?.subscriptionStatus !== "trialing"),
+      isOverLimit: usageCount >= FREE_LIMIT && (user?.subscriptionStatus !== "active" && user?.subscriptionStatus !== "pro" && user?.subscriptionStatus !== "trialing" && user?.subscriptionStatus !== "scholar"),
     });
   } catch (err) {
     req.log.error({ err }, "Error getting user usage");
@@ -123,7 +123,7 @@ router.post("/users/usage", async (req: Request, res: Response): Promise<void> =
       [user] = await db.insert(usersTable).values({ id: userId, subscriptionStatus: "free", onboardingComplete: false, usageCount: 0 }).returning();
     }
 
-    const isSubscribed = user.subscriptionStatus === "active" || user.subscriptionStatus === "pro" || user.subscriptionStatus === "trialing";
+    const isSubscribed = user.subscriptionStatus === "active" || user.subscriptionStatus === "pro" || user.subscriptionStatus === "trialing" || user.subscriptionStatus === "scholar";
     const currentCount = user.usageCount ?? 0;
 
     if (!isSubscribed && currentCount >= FREE_LIMIT) {
@@ -148,7 +148,7 @@ router.post("/users/usage", async (req: Request, res: Response): Promise<void> =
     res.json({
       usageCount: user.usageCount,
       freeLimit: FREE_LIMIT,
-      isOverLimit: (user.usageCount ?? 0) >= FREE_LIMIT && (user.subscriptionStatus !== "active" && user.subscriptionStatus !== "pro" && user.subscriptionStatus !== "trialing"),
+      isOverLimit: (user.usageCount ?? 0) >= FREE_LIMIT && (user.subscriptionStatus !== "active" && user.subscriptionStatus !== "pro" && user.subscriptionStatus !== "trialing" && user.subscriptionStatus !== "scholar"),
     });
   } catch (err) {
     req.log.error({ err }, "Error incrementing usage");
