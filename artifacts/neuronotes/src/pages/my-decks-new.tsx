@@ -1,14 +1,16 @@
 import { useState, useRef } from "react";
 import { useLocation } from "wouter";
-import { Upload, FileText, X, Loader2, Sparkles, AlertCircle } from "lucide-react";
+import { Upload, FileText, X, Loader2, Sparkles, AlertCircle, BookOpen, Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 type InputMode = "text" | "file";
+type AiMode = "strict" | "enhance";
 
 export default function NewDeckPage() {
   const [, navigate] = useLocation();
   const [mode, setMode] = useState<InputMode>("text");
+  const [aiMode, setAiMode] = useState<AiMode>("enhance");
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [file, setFile] = useState<File | null>(null);
@@ -45,6 +47,7 @@ export default function NewDeckPage() {
     try {
       const formData = new FormData();
       formData.append("title", title.trim() || "My Study Deck");
+      formData.append("aiMode", aiMode);
       if (mode === "file" && file) {
         formData.append("file", file);
       } else {
@@ -79,7 +82,7 @@ export default function NewDeckPage() {
           <Sparkles className="w-5 h-5 text-primary" />
           <h1 className="text-2xl font-bold text-foreground">Create Study Deck</h1>
         </div>
-        <p className="text-muted-foreground text-sm">Upload your notes or paste text — we'll generate flashcards, quizzes, a study guide, and a practice exam from your exact content.</p>
+        <p className="text-muted-foreground text-sm">Upload your notes or paste text — we'll generate flashcards, quizzes, a study guide, and a practice exam.</p>
       </div>
 
       {generating ? (
@@ -104,6 +107,47 @@ export default function NewDeckPage() {
               placeholder="e.g. Chapter 5 Notes, Midterm Review…"
               className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
             />
+          </div>
+
+          {/* AI Mode toggle */}
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-2">AI Mode</label>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => setAiMode("strict")}
+                className={`flex flex-col items-start gap-1 p-3 rounded-xl border-2 text-left transition-all ${
+                  aiMode === "strict"
+                    ? "border-primary bg-primary/5"
+                    : "border-border bg-card hover:border-primary/40 hover:bg-muted/50"
+                }`}
+              >
+                <div className="flex items-center gap-1.5">
+                  <BookOpen className={`w-4 h-4 ${aiMode === "strict" ? "text-primary" : "text-muted-foreground"}`} />
+                  <span className={`text-sm font-semibold ${aiMode === "strict" ? "text-primary" : "text-foreground"}`}>Source Only</span>
+                </div>
+                <p className="text-xs text-muted-foreground leading-tight">Strictly from your content — no outside information added</p>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setAiMode("enhance")}
+                className={`flex flex-col items-start gap-1 p-3 rounded-xl border-2 text-left transition-all ${
+                  aiMode === "enhance"
+                    ? "border-purple-500 bg-purple-50 dark:bg-purple-950/30"
+                    : "border-border bg-card hover:border-purple-300 hover:bg-muted/50"
+                }`}
+              >
+                <div className="flex items-center gap-1.5">
+                  <Wand2 className={`w-4 h-4 ${aiMode === "enhance" ? "text-purple-600" : "text-muted-foreground"}`} />
+                  <span className={`text-sm font-semibold ${aiMode === "enhance" ? "text-purple-600" : "text-foreground"}`}>
+                    Enhance
+                    <span className="ml-1.5 text-[10px] font-medium bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 px-1.5 py-0.5 rounded-full">Recommended</span>
+                  </span>
+                </div>
+                <p className="text-xs text-muted-foreground leading-tight">AI adds examples & fills gaps using related context</p>
+              </button>
+            </div>
           </div>
 
           <div>
@@ -168,10 +212,18 @@ export default function NewDeckPage() {
             )}
           </div>
 
-          <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-3 flex gap-2">
-            <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
-            <p className="text-xs text-amber-800 dark:text-amber-300">All generated content is derived exclusively from your source material — no outside information is added.</p>
-          </div>
+          {/* Contextual info banner */}
+          {aiMode === "strict" ? (
+            <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-3 flex gap-2">
+              <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+              <p className="text-xs text-amber-800 dark:text-amber-300">All generated content is derived exclusively from your source material — no outside information is added.</p>
+            </div>
+          ) : (
+            <div className="bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-xl p-3 flex gap-2">
+              <Wand2 className="w-4 h-4 text-purple-600 dark:text-purple-400 flex-shrink-0 mt-0.5" />
+              <p className="text-xs text-purple-800 dark:text-purple-300">AI will use your content as the foundation and may add relevant examples, clarify incomplete notes, and fill gaps using related neuroscience knowledge.</p>
+            </div>
+          )}
 
           <div className="flex gap-3">
             <Button type="button" variant="outline" className="flex-1" onClick={() => navigate("/my-decks")}>

@@ -43,7 +43,24 @@ async function extractTextFromBuffer(buffer: Buffer, mimetype: string): Promise<
   return buffer.toString("utf-8");
 }
 
-function buildSystemPrompt(sourceText: string): string {
+function buildSystemPrompt(sourceText: string, aiMode: "strict" | "enhance"): string {
+  if (aiMode === "enhance") {
+    return `You are an expert neuroscience and neuropsychology study tool generator. Your primary job is to create study materials based on the provided source text. Use the source text as your foundation and primary reference. You may also:
+- Add clarifying examples that help illustrate concepts from the source
+- Fill in gaps where the notes are incomplete or shorthand, using accurate neuroscience/neuropsychology knowledge
+- Provide richer explanations and context where helpful
+- Correct any obvious factual errors in the source with accurate information
+
+Your goal is to make the study materials as useful and comprehensive as possible for the student.
+
+SOURCE TEXT:
+---
+${sourceText.slice(0, 28000)}
+---
+
+Respond ONLY with valid JSON as specified in each request. No markdown, no explanations, just JSON.`;
+  }
+
   return `You are a study tool generator. Your ONLY job is to create study materials derived STRICTLY from the provided source text below. You must NOT add any information, facts, concepts, or details that are not explicitly present in the source text. Every flashcard, question, and piece of content must be directly supported by the source text.
 
 SOURCE TEXT:
@@ -54,12 +71,12 @@ ${sourceText.slice(0, 28000)}
 Respond ONLY with valid JSON as specified in each request. No markdown, no explanations, just JSON.`;
 }
 
-async function generateFlashcards(sourceText: string): Promise<Array<{ front: string; back: string; difficulty: string }>> {
+async function generateFlashcards(sourceText: string, aiMode: "strict" | "enhance"): Promise<Array<{ front: string; back: string; difficulty: string }>> {
   const response = await openai.chat.completions.create({
     model: "gpt-5.2",
     max_completion_tokens: 8192,
     messages: [
-      { role: "system", content: buildSystemPrompt(sourceText) },
+      { role: "system", content: buildSystemPrompt(sourceText, aiMode) },
       {
         role: "user",
         content: `Generate 25-40 flashcards from the source text. Each flashcard must have a "front" (question/term) and "back" (answer/definition). Set "difficulty" to "easy", "medium", or "hard" based on the concept complexity.
@@ -75,7 +92,7 @@ Respond with a JSON object: { "flashcards": [ { "front": "...", "back": "...", "
   return parsed.flashcards ?? [];
 }
 
-async function generateQuizQuestions(sourceText: string): Promise<Array<{
+async function generateQuizQuestions(sourceText: string, aiMode: "strict" | "enhance"): Promise<Array<{
   question: string;
   optionA: string;
   optionB: string;
@@ -88,7 +105,7 @@ async function generateQuizQuestions(sourceText: string): Promise<Array<{
     model: "gpt-5.2",
     max_completion_tokens: 8192,
     messages: [
-      { role: "system", content: buildSystemPrompt(sourceText) },
+      { role: "system", content: buildSystemPrompt(sourceText, aiMode) },
       {
         role: "user",
         content: `Generate 15-25 multiple-choice quiz questions from the source text. Each question must have exactly four options (A, B, C, D) with only one correct answer. Include a brief explanation citing the source material.
@@ -104,12 +121,12 @@ Respond with a JSON object: { "questions": [ { "question": "...", "optionA": "..
   return parsed.questions ?? [];
 }
 
-async function generateStudyGuide(sourceText: string): Promise<string> {
+async function generateStudyGuide(sourceText: string, aiMode: "strict" | "enhance"): Promise<string> {
   const response = await openai.chat.completions.create({
     model: "gpt-5.2",
     max_completion_tokens: 8192,
     messages: [
-      { role: "system", content: buildSystemPrompt(sourceText) },
+      { role: "system", content: buildSystemPrompt(sourceText, aiMode) },
       {
         role: "user",
         content: `Create a comprehensive, well-structured study guide from the source text. Organize the content with clear headings and subheadings. Include all key concepts, definitions, and important details found in the source. Use only information from the source text.
@@ -143,6 +160,8 @@ router.post(
       }
 
       const title: string = req.body?.title?.trim() || "My Study Deck";
+      const rawAiMode = req.body?.aiMode;
+      const aiMode: "strict" | "enhance" = rawAiMode === "strict" ? "strict" : "enhance";
       let sourceText: string = "";
 
       if (req.file) {
@@ -163,9 +182,9 @@ router.post(
 
       try {
         const [flashcards, quizQuestions, studyGuide] = await Promise.all([
-          generateFlashcards(sourceText),
-          generateQuizQuestions(sourceText),
-          generateStudyGuide(sourceText),
+          generateFlashcards(sourceText, aiMode),
+          generateQuizQuestions(sourceText, aiMode),
+          generateStudyGuide(sourceText, aiMode),
         ]);
 
         if (flashcards.length > 0) {
