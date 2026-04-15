@@ -9,17 +9,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function TopicsPage() {
   const [, navigate] = useLocation();
   const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
   const { data: topics, isLoading } = useGetTopics();
 
-  const categories = ["All", ...Array.from(new Set(topics?.map(t => t.category) ?? []))];
-
-  const filtered = (topics ?? []).filter(topic => {
-    const matchesSearch = topic.name.toLowerCase().includes(search.toLowerCase()) ||
-      topic.description.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = selectedCategory === "All" || topic.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  const filtered = (topics ?? []).filter(topic =>
+    topic.name.toLowerCase().includes(search.toLowerCase()) ||
+    topic.description.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <div className="p-4 md:p-6 max-w-4xl mx-auto" data-testid="topics-page">
@@ -28,7 +23,7 @@ export default function TopicsPage() {
         <p className="text-muted-foreground text-sm mt-1">Browse all neuroscience topics</p>
       </div>
 
-      <div className="relative mb-4">
+      <div className="relative mb-6">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <Input
           placeholder="Search topics..."
@@ -37,23 +32,6 @@ export default function TopicsPage() {
           className="pl-9"
           data-testid="input-search-topics"
         />
-      </div>
-
-      <div className="flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide">
-        {categories.map(cat => (
-          <button
-            key={cat}
-            onClick={() => setSelectedCategory(cat)}
-            data-testid={`filter-${cat.toLowerCase().replace(/\s/g, "-")}`}
-            className={`flex-shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-              selectedCategory === cat
-                ? "bg-primary text-primary-foreground"
-                : "bg-muted text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
       </div>
 
       {isLoading ? (
