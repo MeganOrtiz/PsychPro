@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
-import { ChevronLeft, Clock, Timer } from "lucide-react";
+import { ChevronLeft, Clock, Timer, BookOpen, FileText } from "lucide-react";
 import { useGetPracticeExamByTopic, useUpdateTopicProgress, useIncrementUserUsage } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -13,9 +13,12 @@ interface Props {
   params: { id: string };
 }
 
+type QuestionCount = 25 | 50;
+
 export default function PracticeExamPage({ params }: Props) {
   const [, navigate] = useLocation();
   const topicId = parseInt(params.id);
+  const [questionCount, setQuestionCount] = useState<QuestionCount | null>(null);
   const [started, setStarted] = useState(false);
   const [timed, setTimed] = useState(true);
   const [index, setIndex] = useState(0);
@@ -25,7 +28,7 @@ export default function PracticeExamPage({ params }: Props) {
   const [showUpgrade, setShowUpgrade] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const { data: exam, isLoading, error } = useGetPracticeExamByTopic(topicId);
+  const { data: exam, isLoading, error } = useGetPracticeExamByTopic(topicId, questionCount ?? undefined);
   const updateProgress = useUpdateTopicProgress();
   const incrementUsage = useIncrementUserUsage();
 
@@ -68,9 +71,7 @@ export default function PracticeExamPage({ params }: Props) {
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [started, timed, submitted, total]);
 
-  const handleSubmit = () => {
-    submitRef.current();
-  };
+  const handleSubmit = () => { submitRef.current(); };
 
   const handleAnswer = async (qId: number, key: string) => {
     if (answers[qId]) return;
@@ -78,10 +79,7 @@ export default function PracticeExamPage({ params }: Props) {
       await incrementUsage.mutateAsync();
     } catch (err) {
       const e = err as { status?: number };
-      if (e?.status === 402) {
-        setShowUpgrade(true);
-        return;
-      }
+      if (e?.status === 402) { setShowUpgrade(true); return; }
     }
     setAnswers(prev => ({ ...prev, [qId]: key }));
   };
@@ -123,7 +121,7 @@ export default function PracticeExamPage({ params }: Props) {
         </div>
         <div className="flex gap-3">
           <Button variant="outline" onClick={() => navigate(`/topics/${topicId}`)} data-testid="button-back-to-topic">Back to Topic</Button>
-          <Button onClick={() => { setSubmitted(false); setStarted(false); setAnswers({}); setIndex(0); }} data-testid="button-retake">Retake</Button>
+          <Button onClick={() => { setSubmitted(false); setStarted(false); setAnswers({}); setIndex(0); setQuestionCount(null); }} data-testid="button-retake">Retake</Button>
         </div>
       </div>
     );
@@ -136,22 +134,60 @@ export default function PracticeExamPage({ params }: Props) {
           <ChevronLeft className="w-4 h-4" /> Back
         </button>
         <h1 className="text-2xl font-bold text-foreground mb-2">Practice Exam</h1>
-        {isLoading ? (
+        <p className="text-muted-foreground mb-8">Choose your exam length to get started</p>
+
+        {/* Question count selector */}
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          {([25, 50] as QuestionCount[]).map(n => (
+            <button
+              key={n}
+              onClick={() => setQuestionCount(n)}
+              data-testid={`button-count-${n}`}
+              className={cn(
+                "rounded-xl border p-5 text-left transition-all",
+                questionCount === n
+                  ? "border-primary bg-primary/5 ring-2 ring-primary/30"
+                  : "border-border bg-card hover:border-primary/40 hover:bg-muted/40"
+              )}
+            >
+              <div className="flex items-center gap-2.5 mb-2">
+                {n === 25 ? <BookOpen className="w-5 h-5 text-primary" /> : <FileText className="w-5 h-5 text-primary" />}
+                <span className="text-xl font-bold text-foreground">{n} Questions</span>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {n === 25 ? "Standard exam • ~37 minutes" : "Full exam • ~75 minutes"}
+              </p>
+            </button>
+          ))}
+        </div>
+
+        {isLoading && questionCount !== null ? (
           <Skeleton className="h-32 rounded-xl mt-4" />
         ) : (
           <>
-            <p className="text-muted-foreground mb-8">{total} questions • {TIME_PER_QUESTION}s per question</p>
-            <div className="bg-card border border-border rounded-xl p-5 mb-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="timed-switch" className="text-base font-semibold text-foreground">Timed Mode</Label>
-                  <p className="text-sm text-muted-foreground">Race against the clock</p>
+            {questionCount !== null && (
+              <div className="bg-card border border-border rounded-xl p-5 mb-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label htmlFor="timed-switch" className="text-base font-semibold text-foreground">Timed Mode</Label>
+                    <p className="text-sm text-muted-foreground">Race against the clock</p>
+                  </div>
+                  <Switch id="timed-switch" checked={timed} onCheckedChange={setTimed} data-testid="switch-timed" />
                 </div>
-                <Switch id="timed-switch" checked={timed} onCheckedChange={setTimed} data-testid="switch-timed" />
               </div>
-            </div>
-            <Button size="lg" className="w-full" onClick={() => setStarted(true)} data-testid="button-start-exam">
-              {timed ? <><Timer className="w-4 h-4 mr-2" />Start Timed Exam</> : "Start Exam"}
+            )}
+            <Button
+              size="lg"
+              className="w-full"
+              disabled={questionCount === null}
+              onClick={() => setStarted(true)}
+              data-testid="button-start-exam"
+            >
+              {questionCount === null
+                ? "Select exam length above"
+                : timed
+                ? <><Timer className="w-4 h-4 mr-2" />Start {questionCount}-Question Timed Exam</>
+                : `Start ${questionCount}-Question Exam`}
             </Button>
           </>
         )}
@@ -227,14 +263,9 @@ export default function PracticeExamPage({ params }: Props) {
           <Button
             variant="outline"
             onClick={async () => {
-              try {
-                await incrementUsage.mutateAsync();
-              } catch (err) {
+              try { await incrementUsage.mutateAsync(); } catch (err) {
                 const e = err as { status?: number };
-                if (e?.status === 402) {
-                  setShowUpgrade(true);
-                  return;
-                }
+                if (e?.status === 402) { setShowUpgrade(true); return; }
               }
               setAnswers(prev => ({ ...prev, [q.id]: "" }));
               if (index + 1 >= total) handleSubmit();

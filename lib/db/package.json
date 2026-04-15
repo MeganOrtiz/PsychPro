@@ -13,7 +13,8 @@
     "seed": "tsx src/seed.ts",
     "add-foundation-topics": "tsx src/add-foundation-topics.ts",
     "add-neurodevelopmental": "tsx src/add-neurodevelopmental-topic.ts",
-    "expand-practice-exams": "tsx src/expand-practice-exams.ts"
+    "expand-practice-exams": "tsx src/expand-practice-exams.ts",
+    "expand-exam-questions": "tsx src/expand-exam-questions.ts"
   },
   "dependencies": {
     "drizzle-orm": "catalog:",

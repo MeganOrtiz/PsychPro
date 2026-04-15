@@ -112,6 +112,9 @@ router.get("/topics/:topicId/study-guide", async (req: Request, res: Response): 
 router.get("/topics/:topicId/practice-exam", async (req: Request, res: Response): Promise<void> => {
   try {
     const topicId = parseInt(String(req.params.topicId));
+    const requestedCount = parseInt(String(req.query.count ?? "25")) || 25;
+    const count = Math.min(Math.max(requestedCount, 1), 50);
+
     const [exam] = await db.select().from(practiceExamsTable).where(eq(practiceExamsTable.topicId, topicId));
     if (!exam) {
       res.status(404).json({ error: "Practice exam not found" });
@@ -135,13 +138,16 @@ router.get("/topics/:topicId/practice-exam", async (req: Request, res: Response)
       .where(eq(practiceExamQuestionsTable.examId, exam.id))
       .orderBy(asc(practiceExamQuestionsTable.questionOrder));
 
+    // Shuffle and return requested count
+    const shuffled = linkedQuestions.sort(() => Math.random() - 0.5).slice(0, count);
+
     res.json({
       id: exam.id,
       topicId: exam.topicId,
       title: exam.title,
       timeLimit: exam.timeLimit,
       passingScore: exam.passingScore,
-      questions: linkedQuestions.map(({ questionOrder: _order, ...q }) => q),
+      questions: shuffled.map(({ questionOrder: _order, ...q }) => q),
     });
   } catch (err) {
     req.log.error({ err }, "Error getting practice exam");
