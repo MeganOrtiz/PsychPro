@@ -1,4 +1,5 @@
 import { db } from "./index";
+import { eq } from "drizzle-orm";
 import {
   topicsTable,
   flashcardsTable,
@@ -7,7 +8,6 @@ import {
   practiceExamsTable,
   practiceExamQuestionsTable,
 } from "./schema";
-import { eq } from "drizzle-orm";
 
 async function addFoundationsStatsTopic() {
   console.log("Seeding Foundations in Statistics topic...");
@@ -16,9 +16,9 @@ async function addFoundationsStatsTopic() {
     .insert(topicsTable)
     .values({
       name: "Foundations in Statistics",
-      category: "Statistics & Research",
+      category: "Research & Statistics",
       description:
-        "Core statistical concepts including variable types, distributions, central tendency, variability, hypothesis testing, effect sizes, t-tests, ANOVA, correlations, regression, and chi-square.",
+        "Core statistical concepts including variable types, distributions, central tendency, variability, hypothesis testing, t-tests, ANOVA, correlation, regression, and chi-square.",
     })
     .returning();
 
@@ -29,346 +29,304 @@ async function addFoundationsStatsTopic() {
   // FLASHCARDS (55)
   // ============================================================
   const flashcards = [
-    // --- Fundamentals ---
+    // Foundations
     {
-      question: "What is statistics, and what is its core purpose?",
-      answer:
-        "Statistics is the study of variation — it determines how values differ across observations, identifies patterns versus random chance, and makes inferences about populations from samples.",
+      question: "What is statistics?",
+      answer: "The study of variation — determining what makes A different from B using numbers/data that represent variation observed through measurement.",
       difficulty: "easy",
     },
     {
-      question: "What is the difference between a population and a sample?",
-      answer:
-        "A population includes everyone and represents the 'truth' (unknown, untestable in full). A sample is a subset used to make a best guess about the population via inferential statistics.",
-      difficulty: "easy",
-    },
-    {
-      question: "What are the three goals of statistics?",
-      answer:
-        "1) Description — summarize data. 2) Comparison — determine when values differ (pattern vs. error). 3) Estimation — use samples to infer population parameters.",
+      question: "What is the core structure of any statistical comparison?",
+      answer: "A ratio comparing a pattern (prediction) versus error (random chance). We want the pattern to be large relative to the error.",
       difficulty: "easy",
     },
     {
       question: "What is a population parameter?",
-      answer:
-        "A characteristic of a variable to be discovered in the population, described using mean, SD, or frequency counts. It is unknown and estimated from samples.",
+      answer: "A characteristic of a variable that is to be discovered. It is the true value for the entire population, which is unknown and described by mean, SD, or frequency count.",
       difficulty: "easy",
     },
     {
-      question: "What is the difference between a discontinuous and a continuous variable?",
-      answer:
-        "Discontinuous (nominal/categorical) variables do not vary by level (e.g., gender). Continuous variables vary by level (e.g., height, test scores) and include ordinal, interval, and ratio types.",
+      question: "What is the difference between a population and a sample?",
+      answer: "A population is everyone — the 'truth' that is unknown. A sample is the 'guess' (biopsy of the population) used in inferential statistics to estimate the population.",
       difficulty: "easy",
     },
     {
-      question: "What distinguishes ordinal, interval, and ratio variables?",
-      answer:
-        "Ordinal: ranked order, unequal intervals, no true zero. Interval: equal intervals but no true zero (e.g., Likert scale). Ratio: equal intervals AND a true zero (e.g., height, weight).",
+      question: "What determines which statistical analysis is used?",
+      answer: "The types of variables (independent and dependent) determine which statistical analysis is appropriate.",
+      difficulty: "easy",
+    },
+    // Variable Types
+    {
+      question: "What is a discontinuous/nominal/categorical variable?",
+      answer: "A variable that does NOT vary by level — it represents distinct categories with no inherent order or numeric meaning (e.g., gender, ethnicity).",
+      difficulty: "easy",
+    },
+    {
+      question: "What is a continuous variable?",
+      answer: "A variable that varies by level, expressed as frequency (number count/amount) or intensity (mild–severe). Types include ordinal, interval, and ratio.",
+      difficulty: "easy",
+    },
+    {
+      question: "What distinguishes an ordinal variable?",
+      answer: "Ordinal variables are ranked (e.g., 1st, 2nd, 3rd place) with unequal intervals between values, no set zero, and require additional information to interpret meaning.",
       difficulty: "medium",
     },
     {
-      question: "What is a normal distribution, and why is it important?",
-      answer:
-        "A bell-shaped curve representing random chance. It establishes a baseline to compare data against and determines what is 'significant' (unexpected) versus expected.",
+      question: "What distinguishes an interval variable from ordinal?",
+      answer: "Interval variables have equal distance between values (e.g., Likert scale) but still lack a definitive zero point, making ratios meaningless.",
+      difficulty: "medium",
+    },
+    {
+      question: "What distinguishes a ratio variable?",
+      answer: "Ratio variables have equal intervals AND a definitive zero point (e.g., height, weight, distance), so no additional information is needed to interpret variation.",
+      difficulty: "medium",
+    },
+    // Distributions
+    {
+      question: "What does a normal distribution represent statistically?",
+      answer: "Random chance. It establishes what is expected vs. unexpected and serves as the baseline for determining significance in continuous variables.",
       difficulty: "easy",
     },
     {
-      question: "What is a positive skew, and how does it affect the mean?",
-      answer:
-        "Positive skew has more values to the right (high end). Mean > Mode; order is Mode-Median-Mean from left to right. The mean is pulled toward the outlier.",
+      question: "What is a positive skew?",
+      answer: "A distribution where more values fall to the right (long tail on right), with Mean > Mode. Order: Mode–Median–Mean.",
       difficulty: "medium",
     },
     {
       question: "What is a negative skew?",
-      answer:
-        "Negative skew has more values to the left (low end). Mode > Mean; order is Mean-Median-Mode from left to right.",
+      answer: "A distribution where more values fall to the left (long tail on left), with Mode > Mean. Order: Mean–Median–Mode.",
       difficulty: "medium",
     },
-    // --- Central Tendency ---
     {
-      question: "Define mean, median, and mode.",
-      answer:
-        "Mean: sum of all values ÷ n; influenced by outliers. Median: middle value; NOT influenced by outliers. Mode: most frequent value. Median is preferred when outliers are present.",
+      question: "What is a key rule about SD and skewness?",
+      answer: "The SD should never be greater than the mean. Skewness >5.0 indicates a problematic distribution.",
+      difficulty: "medium",
+    },
+    // Central Tendency
+    {
+      question: "What is central tendency?",
+      answer: "A statistic (value) that tells where scores of a sample are converging — it shows the center of a distribution.",
       difficulty: "easy",
     },
     {
-      question: "When should the median be used instead of the mean?",
-      answer:
-        "When ignoring extreme scores or when the distribution is skewed — the median is not influenced by outliers, while the mean is pulled toward them.",
+      question: "What is the mean and when is it problematic?",
+      answer: "The mean is the sum of all values divided by the number of values. It is influenced by outliers, which pull it toward the extreme value and misrepresent overall performance.",
       difficulty: "easy",
     },
-    // --- Variability & Standard Scores ---
     {
-      question: "What are deviation scores, and what is their sum?",
-      answer:
-        "Deviation scores show how much each score differs from the mean. The sum of all deviation scores always equals 0.",
+      question: "What is the median and when is it preferred?",
+      answer: "The median has equal numbers of scores above and below it. It is NOT influenced by outliers and is preferred when ignoring extreme scores, though it may not detect skewness.",
+      difficulty: "easy",
+    },
+    {
+      question: "What is the mode?",
+      answer: "The most frequent number in the distribution. It is the only measure of central tendency that can be used with nominal data.",
+      difficulty: "easy",
+    },
+    // Variability
+    {
+      question: "What is variability?",
+      answer: "The spread of scores — the distance from the mean and from what you expect to happen. It describes how spread out the distribution is.",
+      difficulty: "easy",
+    },
+    {
+      question: "What are deviation scores?",
+      answer: "A set of values that indicate how much each score spreads above or below the mean. The sum of all deviation scores always equals 0.",
       difficulty: "medium",
     },
     {
       question: "What is variance?",
-      answer:
-        "Variance is the mean sum of squares (SS) — the average of squared deviation scores. It represents the area under the curve and the spread of scores.",
+      answer: "The mean sum of squares (SS) — the average of the squared deviation scores. It represents the area underneath the curve.",
       difficulty: "medium",
     },
     {
-      question: "What is standard deviation, and what does 1 SD represent?",
-      answer:
-        "SD is the square root of variance — the average deviation of scores from the mean. 1 SD from the mean encompasses ~34% of scores; 2 SD = ~14%; 3 SD = ~2%.",
-      difficulty: "medium",
-    },
-    {
-      question: "What are the three parts of a standard deviation value?",
-      answer:
-        "1) Sign (+/–): direction from the mean. 2) Actual SD value: where the score falls relative to the SD. 3) Number of SDs in the distribution (usually 3).",
-      difficulty: "medium",
-    },
-    {
-      question: "What is the difference between homogeneity and heterogeneity of variance?",
-      answer:
-        "Homogeneity = low variability, scores clustered near the mean. Heterogeneity = high variability, scores spread widely from the mean.",
+      question: "What is standard deviation?",
+      answer: "The square root of the variance — the average deviation of scores from the mean. Taking the square root makes units equidistant regardless of area size.",
       difficulty: "easy",
     },
+    {
+      question: "What percentages of scores fall within each SD of the mean?",
+      answer: "1 SD = 34% of scores; 2 SD = 14% of scores; 3 SD = 2% of scores (on each side of the mean).",
+      difficulty: "medium",
+    },
+    {
+      question: "What is homogeneity vs. heterogeneity of variance?",
+      answer: "Homogeneity = low variability (scores clustered close together). Heterogeneity = high variability (scores spread widely apart).",
+      difficulty: "medium",
+    },
+    // Standard Scores
     {
       question: "What is a z-score?",
-      answer:
-        "z = (x − µ) / σ. A population-based score expressing how far a raw score is from the population mean in standard deviation units. Allows comparison across different measurement scales.",
+      answer: "A population-based standard score: z = (x − μ) / σ. It describes how far a score is from the mean in SD units and allows comparison across different measurement systems.",
       difficulty: "medium",
     },
     {
-      question: "What is a T-score (not t-test)?",
-      answer:
-        "T = (x − µ) / (σ / √n). Sample-based standardized score on a scale with mean = 50 and SD = 10. Used in specific clinical/assessment contexts.",
+      question: "What is a T-score?",
+      answer: "A sample-based standard score: T = (x − μ) / (σ/√n). It is localized to the current sample context, with a mean of 50 and SD of 10.",
       difficulty: "medium",
     },
     {
-      question: "What do percentiles tell you?",
-      answer:
-        "Percentiles indicate a score's location in a distribution and how many scores fall above and below it (e.g., 90th percentile = 90% of scores fall below).",
+      question: "What do percentiles communicate?",
+      answer: "Percentiles show the location of a score and how many scores fall above and below it in the distribution.",
       difficulty: "easy",
     },
-    // --- Sampling & Standard Error ---
+    // Sampling & Standard Error
     {
-      question: "What is the Standard Error of the Mean (SEM)?",
-      answer:
-        "SEM measures the discrepancy between a sample mean and the population mean. It should be small (close to 0 but never 0) and decreases as sample size increases.",
+      question: "What is the standard error of the mean?",
+      answer: "The amount of discrepancy between the sample mean and the population mean. It should be small (close to 0) and decreases as sample size increases.",
       difficulty: "medium",
     },
     {
-      question: "What does the Central Limit Theorem state?",
-      answer:
-        "As sample size grows, the sampling distribution of sample means approaches a normal distribution. With large random samples, the sample mean approximates the population mean.",
+      question: "What is the Central Limit Theorem?",
+      answer: "If you sample randomly and repeatedly, the sampling distribution of sample means approaches a normal distribution as sample size grows, and the sample mean approaches the population mean.",
       difficulty: "medium",
     },
     {
-      question: "What is the Standard Error of Measurement (SEM in psychometrics)?",
-      answer:
-        "An index of error around an obtained score due to test unreliability. Used to construct confidence intervals: 95% CI = score ± 2(SEM).",
+      question: "What is the standard error of measurement (SEM)?",
+      answer: "An index of the amount of error expected around an obtained score due to test unreliability. Used to construct confidence intervals: 95% CI = score ± 2(SEM).",
       difficulty: "medium",
     },
-    // --- Probability & Hypothesis Testing ---
+    // Hypothesis Testing
     {
-      question: "What is a p-value?",
-      answer:
-        "The probability that an observed result could have occurred by chance alone. A p-value < .05 indicates the result is statistically significant (unlikely due to chance).",
-      difficulty: "easy",
-    },
-    {
-      question: "What is the null hypothesis (H₀)?",
-      answer:
-        "The null hypothesis states there is no significant difference or relationship. Accepting H₀ = no effect found.",
+      question: "What is a null hypothesis?",
+      answer: "The hypothesis of no significant difference (Ho). Accepting the null means concluding that results are due to random chance.",
       difficulty: "easy",
     },
     {
       question: "What is a Type I error?",
-      answer:
-        "Rejecting the null hypothesis when it is actually true — a false positive. It is more likely with multiple tests (experimenter-wise error) and results below p < .05.",
+      answer: "A false positive — rejecting the null hypothesis when it is true. Caused by experimenter-wise error (testing too many things). Results that fall under p<.05 can automatically be Type I.",
       difficulty: "medium",
     },
     {
       question: "What is a Type II error?",
-      answer:
-        "Accepting the null hypothesis when it is actually false — a false negative. Results above p > .05. Fixed by increasing statistical power (larger sample size).",
+      answer: "A false negative — accepting the null hypothesis when it is false. Caused by insufficient sample size (underpowered study). Results over p>.05 can automatically be Type II.",
       difficulty: "medium",
     },
     {
-      question: "What is experimenter-wise error?",
-      answer:
-        "The inflation of Type I error that occurs when running multiple statistical tests — the more tests run, the more likely you will find significance by chance alone.",
-      difficulty: "medium",
-    },
-    {
-      question: "What is a confidence interval, and what does it mean if it includes 0?",
-      answer:
-        "A range of values within which the true parameter likely falls. If CI includes 0 → NOT significant. If CI does NOT include 0 → significant.",
+      question: "How are Type I and Type II errors fixed?",
+      answer: "Through replication — redoing the entire experiment to confirm or disconfirm the original finding.",
       difficulty: "easy",
     },
-    // --- Effect Size & Power ---
+    {
+      question: "What does a confidence interval tell you about significance?",
+      answer: "If the CI includes 0 → not significant. If the CI does NOT include 0 → significant.",
+      difficulty: "medium",
+    },
+    // Effect Size & Power
     {
       question: "What is effect size?",
-      answer:
-        "The magnitude of the difference between groups or the strength of a relationship, measured in standard deviation units. Does NOT depend on sample size.",
+      answer: "The magnitude of difference between groups or strength of relationship between two variables. Measured in standard deviation units. Small=.2, Medium=.5, Large=.8 (Cohen's benchmarks).",
       difficulty: "medium",
     },
     {
-      question: "What are small, medium, and large effect sizes (Cohen's conventions)?",
-      answer:
-        "Small = .2, Medium = .5, Large = .8. These apply to Cohen's d, Hedges' g, and standardized beta coefficients.",
-      difficulty: "medium",
-    },
-    {
-      question: "What is the difference between p-value and effect size?",
-      answer:
-        "p-value answers 'Was there an effect?' (yes/no). Effect size answers 'By how much?' (magnitude). Both should be reported; p-value alone is insufficient.",
-      difficulty: "medium",
-    },
-    {
-      question: "What is statistical power?",
-      answer:
-        "The probability of detecting a real effect when one exists (correctly rejecting the null). Standard target = .80 (80%). Low power → Type II error.",
-      difficulty: "medium",
-    },
-    {
-      question: "What are three ways to increase statistical power?",
-      answer:
-        "1) Increase sample size. 2) Increase alpha level (e.g., .05 → .10). 3) Increase effect size ('stack the deck').",
-      difficulty: "medium",
-    },
-    {
-      question: "What is the difference between Cohen's d and Hedges' g?",
-      answer:
-        "Both measure effect size in SD units. Cohen's d is population-based; Hedges' g adjusts for estimated population SD — preferred for smaller samples.",
+      question: "What do Cohen's d and Hedges' g measure?",
+      answer: "Both measure group effect size in SD units. Cohen's d is population-based; Hedges' g adjusts for estimated population SD (better for smaller samples).",
       difficulty: "hard",
     },
-    // --- t-tests ---
     {
-      question: "What are the three types of t-tests?",
-      answer:
-        "1) Single-sample t-test: 1 group vs. normative mean (df = n−1). 2) Independent samples t-test: 2 independent groups (df = n−2). 3) Paired/correlated t-test: 1 group at 2 time points (df = n−1).",
+      question: "What does statistical power mean?",
+      answer: "The likelihood of detecting an effect if one truly exists. Standard power = .80. Power addresses the Type II error. Addresses whether you have enough chances to find what you're looking for.",
       difficulty: "medium",
     },
     {
-      question: "What variables does an independent t-test require?",
-      answer:
-        "IV: 2 discrete/categorical groups. DV: continuous (ordinal, interval, or ratio). Tests whether the means of two groups significantly differ.",
+      question: "How can statistical power be increased?",
+      answer: "1) Increase sample size, 2) Increase the alpha level (e.g., .05 → .10), or 3) Increase the effect size ('stack the deck').",
+      difficulty: "medium",
+    },
+    {
+      question: "What is the difference between significance and effect size?",
+      answer: "Significance (p-value) only answers yes/no — did something happen? Effect size answers 'by how much?' — how large is the impact of the IV on the DV?",
+      difficulty: "medium",
+    },
+    // T-tests
+    {
+      question: "What does a t-test measure?",
+      answer: "Whether the means of two groups are statistically different from each other. The IV is categorical (2 groups) and the DV is always continuous.",
       difficulty: "easy",
     },
     {
-      question: "What is Levene's test, and when is it used?",
-      answer:
-        "Levene's test checks the assumption of homogeneity of variance for t-tests. If Levene's IS significant → variances are NOT equal → adjust the t-test.",
+      question: "What are the three main types of t-tests?",
+      answer: "1) Single-sample t-test (one group vs. normative mean, df=n−1), 2) Independent samples t-test (two separate groups, df=n−2), 3) Paired/correlated t-test (one group at 2 time points, df=n−1).",
+      difficulty: "medium",
+    },
+    {
+      question: "What is Levene's test used for?",
+      answer: "To check for equality/homogeneity of variance between groups. If significant → NO homogeneity of variance → the t-test result cannot be trusted and must be adjusted.",
       difficulty: "hard",
     },
     {
-      question: "What is the t-test formula conceptually?",
-      answer:
-        "t = (pattern) / (error) = signal / noise. A larger t-value means a larger difference relative to random variation, increasing the likelihood of significance.",
+      question: "What are degrees of freedom?",
+      answer: "The number of observations that are free to vary — calculated as sample size minus the number of parameters being estimated. Larger samples = more df.",
       difficulty: "medium",
     },
-    // --- ANOVA ---
+    // ANOVA
     {
       question: "When is ANOVA used instead of a t-test?",
-      answer:
-        "ANOVA is used when the IV has 3 or more categorical groups. A t-test is limited to 2 groups. ANOVA also controls for Type I error inflation.",
+      answer: "When the IV has three or more categorical groups (and the DV is continuous). ANOVA avoids inflating Type I error that multiple t-tests would cause.",
       difficulty: "easy",
     },
     {
       question: "What is the F-ratio in ANOVA?",
-      answer:
-        "F = between-groups variation / within-groups variation = signal / error. A larger F (between > within) indicates more likely significance.",
+      answer: "Between-groups variation (signal/numerator) divided by within-groups variation (error/denominator). Want between > within for significance.",
       difficulty: "medium",
     },
     {
-      question: "Why are post-hoc tests needed after ANOVA?",
-      answer:
-        "The F-test only tells something is significant; post-hoc tests (Tukey, Bonferroni, Sidak) identify WHICH specific groups differ and correct for Type I error.",
+      question: "What are post-hoc comparisons in ANOVA?",
+      answer: "Tests run after a significant F-test to identify WHICH specific groups differ. Types include Tukey, Sidak, and Bonferroni — all adjust for Type I error inflation.",
       difficulty: "medium",
     },
     {
       question: "What is ANCOVA?",
-      answer:
-        "Analysis of Covariance — an ANOVA that statistically controls for one or more covariates (variables related to the DV but not the primary IV of interest).",
-      difficulty: "medium",
+      answer: "Analysis of Covariance — an ANOVA that includes covariates (variables related to the DV but not the main IV). It statistically removes their effect to isolate the IV's impact.",
+      difficulty: "hard",
     },
     {
       question: "What is MANOVA?",
-      answer:
-        "Multivariate Analysis of Variance — tests multiple IVs and multiple DVs simultaneously, avoiding Type I error inflation from running many separate ANOVAs.",
-      difficulty: "medium",
+      answer: "Multiple Analysis of Variance — used when there are multiple DVs. It avoids multiple-experimentwise error that running many ANOVAs would create.",
+      difficulty: "hard",
     },
-    // --- Correlations ---
+    // Correlations
     {
       question: "What does a correlation coefficient (r) tell you?",
-      answer:
-        "r ranges from −1 to +1. It describes the direction (positive/negative) and strength of association between two continuous variables. Both variables are continuous; no IV/DV required.",
+      answer: "The degree of association between two continuous variables. Ranges from −1 (perfect negative) to +1 (perfect positive). r = 0 means no relationship.",
       difficulty: "easy",
     },
     {
       question: "What is the coefficient of determination (r²)?",
-      answer:
-        "r² is the square of the correlation coefficient — the proportion of shared variance between two variables. E.g., r = .44 → r² = .19 → 19% shared variance.",
+      answer: "The squared correlation coefficient — the proportion of shared variance between two variables. For example, r=.44 → r²=.19, meaning 19% of variance in Y is explained by X.",
       difficulty: "medium",
     },
     {
       question: "What is the difference between Pearson and Spearman correlations?",
-      answer:
-        "Pearson: parametric, for interval/ratio data (e.g., test scores). Spearman: non-parametric, for ordinal data (e.g., rankings). Spearman uses ranked values.",
+      answer: "Pearson: parametric, for interval/ratio data. Spearman: nonparametric, for ordinal/ranked data.",
       difficulty: "medium",
     },
     {
-      question: "What is homoscedasticity vs. heteroscedasticity in correlations?",
-      answer:
-        "Homoscedasticity: values equally spread around the best-fit line (rectangular shape) → strong correlation. Heteroscedasticity: 'fanning out' at ends → weak/distorted correlation.",
+      question: "What is homoscedasticity in correlations?",
+      answer: "All values around the best-fit line are the same distance from it (rectangular shape) — indicates a strong, consistent correlation.",
       difficulty: "hard",
     },
+    // Regression
     {
-      question: "What are phi and tetrachoric correlations?",
-      answer:
-        "Phi: used when both IV and DV are TRUE dichotomies (e.g., gender and handedness). Tetrachoric: used when both are ARTIFICIAL dichotomies (e.g., positive/negative school climate).",
-      difficulty: "hard",
-    },
-    // --- Regression ---
-    {
-      question: "What is the regression equation?",
-      answer:
-        "Y' = a + bX₁ + bX₂ + ... + e. Y' = predicted outcome, a = y-intercept, b = slope (unstandardized or standardized beta), e = error term.",
+      question: "What is regression?",
+      answer: "A statistical method examining the relationship between multiple IVs and one continuous outcome variable. Uses the equation: Y' = a + bX₁ + bX₂ ... + e.",
       difficulty: "medium",
     },
     {
       question: "What is hierarchical regression?",
-      answer:
-        "A regression approach where predictors are entered in theoretically motivated blocks: Block 1 = known demographics, Block 2 = established predictors, Block 3 = new predictors of interest.",
-      difficulty: "medium",
-    },
-    {
-      question: "What is stepwise regression?",
-      answer:
-        "A data-driven regression method. Forward: add variables one at a time. Backward: include all variables then remove based on p-value. Stepwise is always forward OR backward.",
-      difficulty: "medium",
-    },
-    {
-      question: "What is multicollinearity?",
-      answer:
-        "A problem in regression when predictor variables (IVs) are highly correlated with each other, making it difficult to determine each predictor's unique contribution.",
+      answer: "A regression approach where variables are entered in predetermined blocks: Block 1 = known demographics, Block 2 = known important predictors, Block 3 = predictors of interest.",
       difficulty: "hard",
     },
-    // --- Chi-Square ---
+    // Chi-Square
     {
-      question: "What is chi-square and when is it used?",
-      answer:
-        "Chi-square (χ²) is a non-parametric test comparing observed vs. expected proportions across categorical groups. Used when both IV and DV are categorical — no assumptions required.",
-      difficulty: "easy",
-    },
-    {
-      question: "What are effect size measures for chi-square?",
-      answer:
-        "Phi coefficient (for 2×2 tables with two dichotomous variables) and Cramer's V (for tables larger than 2×2).",
-      difficulty: "hard",
-    },
-    {
-      question: "What is sensitivity vs. specificity?",
-      answer:
-        "Sensitivity: true positive rate — how often a test correctly identifies those WITH a condition. Specificity: true negative rate — how often it correctly identifies those WITHOUT.",
+      question: "When is chi-square used?",
+      answer: "Chi-square is a nonparametric test used to compare observed vs. expected proportions/frequencies across categorical groups. It has no assumptions about distribution.",
       difficulty: "medium",
+    },
+    {
+      question: "What are sensitivity and specificity?",
+      answer: "Sensitivity = true positive rate (correctly identifies those who HAVE the condition). Specificity = true negative rate (correctly identifies those who do NOT have the condition).",
+      difficulty: "hard",
     },
   ];
 
@@ -379,603 +337,523 @@ async function addFoundationsStatsTopic() {
   console.log(`✓ Inserted ${insertedFlashcards.length} flashcards`);
 
   // ============================================================
-  // QUIZ QUESTIONS (10 regular + 40 exam-only = 50 total)
+  // QUIZ QUESTIONS — Regular (10)
   // ============================================================
   const regularQuestions = [
     {
-      question: "Which measure of central tendency is MOST resistant to outliers?",
+      question: "Which measure of central tendency is NOT influenced by outliers?",
       optionA: "Mean",
-      optionB: "Mode",
-      optionC: "Median",
+      optionB: "Median",
+      optionC: "Mode",
       optionD: "Variance",
-      correctAnswer: "C",
-      explanation:
-        "The median is not influenced by extreme scores because it only depends on rank order. The mean is pulled in the direction of outliers.",
-      examOnly: false,
-    },
-    {
-      question: "A study finds p = .03. What does this indicate?",
-      optionA: "There is a 3% chance the hypothesis is true",
-      optionB: "There is a 3% chance the result occurred by chance alone",
-      optionC: "The effect size is small",
-      optionD: "The null hypothesis is proven correct",
       correctAnswer: "B",
-      explanation:
-        "p = .03 means there is a 3% probability the observed result would occur by chance alone, indicating statistical significance (p < .05).",
+      explanation: "The median is not influenced by outliers because it only depends on the middle value, not the magnitude of extreme scores.",
       examOnly: false,
     },
     {
-      question: "A researcher concludes there is a significant effect when in fact there is none. This is a:",
-      optionA: "Type II error",
-      optionB: "Sampling error",
-      optionC: "Type I error",
-      optionD: "Power failure",
-      correctAnswer: "C",
-      explanation:
-        "Type I error (false positive) = rejecting the null hypothesis when it is actually true. The researcher found 'significance' that doesn't exist.",
+      question: "What does a p-value of .03 indicate?",
+      optionA: "There is a 3% chance the effect is real",
+      optionB: "There is a 3% probability this result occurred by random chance",
+      optionC: "The effect size is small",
+      optionD: "The null hypothesis is definitely false",
+      correctAnswer: "B",
+      explanation: "A p-value of .03 means there is a 3% probability of observing these results by random chance alone, which is below the conventional .05 threshold.",
       examOnly: false,
     },
     {
-      question: "Which level of variable measurement has a true zero and equal intervals?",
-      optionA: "Nominal",
-      optionB: "Ordinal",
+      question: "Which variable type has equal intervals AND a true zero point?",
+      optionA: "Ordinal",
+      optionB: "Nominal",
       optionC: "Interval",
       optionD: "Ratio",
       correctAnswer: "D",
-      explanation:
-        "Ratio variables have equal intervals AND a true zero (e.g., height, weight), allowing meaningful comparisons of absolute magnitude.",
+      explanation: "Ratio variables have equal intervals between values AND a definitive zero point (e.g., height, weight). This allows meaningful ratio comparisons.",
       examOnly: false,
     },
     {
-      question: "Effect size differs from p-value in that effect size:",
-      optionA: "Determines whether results are statistically significant",
-      optionB: "Indicates the magnitude of a finding regardless of sample size",
-      optionC: "Is always larger than the p-value",
-      optionD: "Only applies to non-parametric tests",
+      question: "A researcher finds p = .04 but the effect size is d = .12. What is the best interpretation?",
+      optionA: "The finding is practically significant and important",
+      optionB: "The finding is statistically significant but practically trivial",
+      optionC: "The study has a Type II error",
+      optionD: "The finding is not significant at all",
       correctAnswer: "B",
-      explanation:
-        "Effect size measures HOW LARGE an effect is (magnitude), while p-value only answers whether an effect exists. Effect size is not influenced by sample size.",
+      explanation: "p < .05 means statistical significance, but d = .12 is well below the small effect threshold (.2), indicating the actual impact is practically trivial — often a sign of an overpowered study.",
       examOnly: false,
     },
     {
-      question: "When is ANOVA preferred over multiple t-tests?",
-      optionA: "When the DV is categorical",
-      optionB: "When there are 3 or more groups, to control for Type I error",
-      optionC: "When the sample size is less than 30",
-      optionD: "When the IV is continuous",
+      question: "Which type of error occurs when you reject the null hypothesis but it is actually true?",
+      optionA: "Type II error",
+      optionB: "Sampling error",
+      optionC: "Type I error",
+      optionD: "Standard error",
+      correctAnswer: "C",
+      explanation: "A Type I error is a false positive — rejecting the null when it is true. It is related to alpha level and experimenter-wise error from testing too many hypotheses.",
+      examOnly: false,
+    },
+    {
+      question: "In a positively skewed distribution, which is true?",
+      optionA: "Mean < Mode",
+      optionB: "The tail extends to the left",
+      optionC: "Mean > Median > Mode",
+      optionD: "Mode > Mean",
+      correctAnswer: "C",
+      explanation: "In a positive skew, the tail extends to the right. The order is Mode–Median–Mean, meaning the mean is pulled highest by extreme high values.",
+      examOnly: false,
+    },
+    {
+      question: "What is the ANOVA threshold for significance when N ≥ 30?",
+      optionA: "t = 2.00",
+      optionB: "F = 1.96",
+      optionC: "χ² = 3.84",
+      optionD: "z = 1.645",
       correctAnswer: "B",
-      explanation:
-        "ANOVA handles 3+ groups while controlling for the inflation of Type I error (experimenter-wise error) that results from running multiple separate t-tests.",
+      explanation: "The ANOVA significance threshold is F = 1.96 when N ≥ 30 and α = .05.",
       examOnly: false,
     },
     {
-      question: "Which correlation type is appropriate for two ordinal (ranked) variables?",
+      question: "What does the Central Limit Theorem state?",
+      optionA: "The population is always normally distributed",
+      optionB: "As sample size increases, the sampling distribution of means approaches normal",
+      optionC: "Random sampling eliminates all error",
+      optionD: "The mean always equals the median in a large sample",
+      correctAnswer: "B",
+      explanation: "The CLT states that the distribution of sample means approaches a normal distribution as sample size grows, regardless of the original population's shape.",
+      examOnly: false,
+    },
+    {
+      question: "Which correlation type is used for ordinal (ranked) data?",
       optionA: "Pearson",
       optionB: "Phi",
       optionC: "Spearman",
-      optionD: "Tetrachoric",
+      optionD: "Eta",
       correctAnswer: "C",
-      explanation:
-        "Spearman correlation is non-parametric and designed for ordinal (ranked) data. Pearson is for interval/ratio (parametric) data.",
+      explanation: "Spearman correlation is a nonparametric alternative to Pearson, designed for ordinal/ranked data where equal intervals cannot be assumed.",
       examOnly: false,
     },
     {
-      question: "The Central Limit Theorem states that as sample size increases:",
-      optionA: "Effect size decreases",
-      optionB: "The sampling distribution of means approaches a normal distribution",
-      optionC: "Type II errors become more frequent",
-      optionD: "The population variance doubles",
-      correctAnswer: "B",
-      explanation:
-        "The Central Limit Theorem ensures that with sufficient random sampling, the distribution of sample means will be approximately normal, regardless of population shape.",
-      examOnly: false,
-    },
-    {
-      question: "In a regression equation (Y' = a + bX + e), what does 'b' represent?",
-      optionA: "The y-intercept",
-      optionB: "The error term",
-      optionC: "The slope (regression coefficient)",
-      optionD: "The correlation coefficient",
+      question: "What does r² (coefficient of determination) indicate?",
+      optionA: "The significance of the correlation",
+      optionB: "The direction of the relationship",
+      optionC: "The proportion of shared variance between two variables",
+      optionD: "The standard deviation of residuals",
       correctAnswer: "C",
-      explanation:
-        "'b' is the slope (regression coefficient), indicating how much Y changes for each one-unit change in X. It can be unstandardized or standardized (beta).",
-      examOnly: false,
-    },
-    {
-      question: "Chi-square is most appropriate when:",
-      optionA: "Both IV and DV are continuous",
-      optionB: "The DV is ratio-level",
-      optionC: "Comparing proportions across categorical groups",
-      optionD: "Testing mean differences between two groups",
-      correctAnswer: "C",
-      explanation:
-        "Chi-square is a non-parametric test comparing observed vs. expected frequencies/proportions across categorical variables. No parametric assumptions are required.",
+      explanation: "r² is the squared correlation coefficient and indicates what proportion of variance in Y is accounted for by variance in X (shared variance).",
       examOnly: false,
     },
   ];
 
+  // ============================================================
+  // EXAM-ONLY QUESTIONS (40)
+  // ============================================================
   const examOnlyQuestions = [
     {
-      question: "A distribution where Mean > Mode is BEST described as:",
-      optionA: "Negatively skewed",
-      optionB: "Positively skewed",
-      optionC: "Normally distributed",
-      optionD: "Bimodal",
-      correctAnswer: "B",
-      explanation:
-        "In a positive skew, the mean is pulled to the right by high-value outliers, making Mean > Mode. Order from left to right: Mode-Median-Mean.",
+      question: "The sum of all deviation scores in a distribution always equals:",
+      optionA: "1",
+      optionB: "The mean",
+      optionC: "0",
+      optionD: "The standard deviation",
+      correctAnswer: "C",
+      explanation: "Deviation scores are distances from the mean, and by definition they always sum to zero because the mean is their balance point.",
       examOnly: true,
     },
     {
-      question: "Which statement about standard deviation is TRUE?",
-      optionA: "The SD should never be greater than the mean",
-      optionB: "SD is the square of variance",
-      optionC: "SD is unaffected by outliers",
-      optionD: "SD is the same as the standard error",
-      correctAnswer: "A",
-      explanation:
-        "A general rule is that SD should never exceed the mean — if it does, it is a red flag suggesting extreme outliers or a non-normal distribution.",
-      examOnly: true,
-    },
-    {
-      question: "A z-score of +2.0 indicates that a raw score is:",
-      optionA: "Two points above the mean",
-      optionB: "Two standard deviations above the mean",
-      optionC: "At the 50th percentile",
-      optionD: "Below the population mean",
-      correctAnswer: "B",
-      explanation:
-        "z-scores are expressed in standard deviation units from the population mean. z = +2.0 means 2 SDs above the mean, encompassing approximately 97.7% of scores below it.",
-      examOnly: true,
-    },
-    {
-      question: "Standard Error of the Mean (SEM) is BEST described as:",
-      optionA: "The reliability coefficient of a test",
-      optionB: "The discrepancy between sample mean and population mean",
-      optionC: "The average distance between data points",
-      optionD: "A measure of skewness",
-      correctAnswer: "B",
-      explanation:
-        "SEM quantifies how much the sample mean is likely to deviate from the true population mean. It decreases as sample size increases.",
-      examOnly: true,
-    },
-    {
-      question: "Which of the following would INCREASE statistical power?",
-      optionA: "Decreasing the alpha level from .05 to .01",
-      optionB: "Reducing the sample size",
-      optionC: "Using a one-tailed instead of two-tailed test",
-      optionD: "Increasing the sample size",
+      question: "Which standard score is population-based and allows comparison across different measurement systems?",
+      optionA: "T-score",
+      optionB: "Percentile",
+      optionC: "Stanine",
+      optionD: "z-score",
       correctAnswer: "D",
-      explanation:
-        "Increasing sample size is the primary way to increase statistical power. Power = P(detecting real effect). More data = more precision = less Type II error.",
+      explanation: "The z-score is population-based (uses μ and σ) and can be used to compare scores across different measurement systems by converting to a common SD unit.",
       examOnly: true,
     },
     {
-      question: "A researcher wants to test if three different therapy types differ in effectiveness. The MOST appropriate test is:",
-      optionA: "Independent t-test",
-      optionB: "Chi-square",
-      optionC: "One-way ANOVA",
-      optionD: "Pearson correlation",
-      correctAnswer: "C",
-      explanation:
-        "One-way ANOVA compares the means of 3 or more groups (categorical IV) on a continuous DV, controlling for Type I error across multiple comparisons.",
-      examOnly: true,
-    },
-    {
-      question: "What is the purpose of post-hoc tests in ANOVA?",
-      optionA: "To check normality assumptions",
-      optionB: "To identify which specific group pairs differ after a significant F-test",
-      optionC: "To calculate the effect size",
-      optionD: "To test homogeneity of variance",
-      correctAnswer: "B",
-      explanation:
-        "The omnibus F-test tells you SOMETHING is significant but not where. Post-hoc tests (Tukey, Bonferroni, Sidak) locate the specific group differences while correcting for multiple comparisons.",
-      examOnly: true,
-    },
-    {
-      question: "r² = .25 in a correlation study. What does this mean?",
-      optionA: "There is no significant correlation",
-      optionB: "25% of the variance in Y is accounted for by X",
-      optionC: "The p-value is .25",
-      optionD: "The correlation coefficient is .625",
-      correctAnswer: "B",
-      explanation:
-        "r² (coefficient of determination) = shared variance. r² = .25 means 25% of the variability in Y is explained by X; 75% is unexplained (error).",
-      examOnly: true,
-    },
-    {
-      question: "When the confidence interval for a mean difference INCLUDES zero, this indicates:",
-      optionA: "A large effect size",
-      optionB: "High statistical power",
-      optionC: "No statistically significant difference",
-      optionD: "A Type II error has occurred",
-      correctAnswer: "C",
-      explanation:
-        "If the CI includes 0, zero is a plausible value for the true effect — meaning the difference may not exist. This corresponds to a non-significant result.",
-      examOnly: true,
-    },
-    {
-      question: "A paired t-test (correlated samples) differs from an independent t-test because it:",
-      optionA: "Uses three or more groups",
-      optionB: "Tests the same participants at two time points",
-      optionC: "Requires a categorical DV",
-      optionD: "Has df = n − 2",
-      correctAnswer: "B",
-      explanation:
-        "A paired t-test tests one group at two time points (pre/post). Each participant serves as their own control. df = n − 1 (not n − 2, which is for independent samples).",
-      examOnly: true,
-    },
-    {
-      question: "A Likert scale (e.g., 1–5) is BEST classified as which variable type?",
-      optionA: "Ratio",
-      optionB: "Nominal",
-      optionC: "Interval",
-      optionD: "Dichotomous",
-      correctAnswer: "C",
-      explanation:
-        "Likert scales have equal intervals between values but no true zero, making them interval-level. They are NOT ratio because 0 doesn't mean 'none of the construct.'",
-      examOnly: true,
-    },
-    {
-      question: "Which test is NON-parametric and requires NO distributional assumptions?",
-      optionA: "Independent t-test",
-      optionB: "One-way ANOVA",
-      optionC: "Pearson correlation",
-      optionD: "Chi-square",
-      correctAnswer: "D",
-      explanation:
-        "Chi-square is non-parametric — it makes no assumptions about the population distribution (normality, homogeneity of variance). It compares observed vs. expected frequencies.",
-      examOnly: true,
-    },
-    {
-      question: "In regression, what does the error term 'e' represent?",
-      optionA: "The mean of Y",
-      optionB: "The y-intercept",
-      optionC: "Variance in Y not explained by the predictors",
-      optionD: "The standardized beta coefficient",
-      correctAnswer: "C",
-      explanation:
-        "The error term (e or residual) captures all variability in the outcome (Y) that the predictors (IVs) fail to explain. Minimizing residuals improves model fit.",
-      examOnly: true,
-    },
-    {
-      question: "Which scenario BEST illustrates a Type II error?",
-      optionA: "Concluding a drug works when it actually doesn't",
-      optionB: "Failing to detect an effective drug because the study was underpowered",
-      optionC: "Running too many statistical tests",
-      optionD: "Reporting a confidence interval that includes zero",
-      correctAnswer: "B",
-      explanation:
-        "Type II error (false negative) = failing to detect a real effect. Underpowered studies (too small n) are the most common cause — not enough data to find what's there.",
-      examOnly: true,
-    },
-    {
-      question: "Cohen's d of .8 indicates a:",
-      optionA: "Small effect",
-      optionB: "Medium effect",
-      optionC: "Large effect",
-      optionD: "Trivial effect",
-      correctAnswer: "C",
-      explanation:
-        "By Cohen's conventions: small = .2, medium = .5, large = .8. d = .8 means the groups differ by nearly one full standard deviation.",
-      examOnly: true,
-    },
-    {
-      question: "Levene's test is significant in an independent t-test. What should the researcher do?",
-      optionA: "Reject the null hypothesis",
-      optionB: "Accept the finding as valid",
-      optionC: "Adjust the t-test because the homogeneity of variance assumption is violated",
-      optionD: "Use a chi-square instead",
-      correctAnswer: "C",
-      explanation:
-        "Significant Levene's test = unequal variances between groups. The t-test must be adjusted (e.g., Welch's t-test) because the standard t-test assumes equal variances.",
-      examOnly: true,
-    },
-    {
-      question: "What does multicollinearity in regression refer to?",
-      optionA: "Having too many DVs",
-      optionB: "Predictor variables that are highly correlated with each other",
-      optionC: "Non-normal residual distribution",
-      optionD: "A curvilinear relationship between X and Y",
-      correctAnswer: "B",
-      explanation:
-        "Multicollinearity occurs when IVs are highly inter-correlated, making it impossible to determine each predictor's unique contribution to the outcome.",
-      examOnly: true,
-    },
-    {
-      question: "Degrees of freedom in a single-sample t-test equals:",
-      optionA: "n − 2",
-      optionB: "n + 1",
-      optionC: "n − 1",
-      optionD: "2n − 1",
-      correctAnswer: "C",
-      explanation:
-        "For a single-sample t-test, df = n − 1 (sample size minus 1 parameter estimated). For independent samples t-test, df = n − 2.",
-      examOnly: true,
-    },
-    {
-      question: "In ANOVA, the 'within-groups' variation represents:",
-      optionA: "The signal to be detected",
-      optionB: "Random error within each group",
-      optionC: "The effect of the IV on the DV",
-      optionD: "Between-group mean differences",
-      correctAnswer: "B",
-      explanation:
-        "Within-groups variation = error (random noise within each group around its mean). Between-groups variation = signal (mean differences across groups). F = signal/error.",
-      examOnly: true,
-    },
-    {
-      question: "Phi coefficient is used when:",
-      optionA: "Both variables are continuous",
-      optionB: "Both variables are true dichotomies",
-      optionC: "One variable is ordinal and one is interval",
-      optionD: "Three or more groups are being compared",
-      correctAnswer: "B",
-      explanation:
-        "Phi is the effect size/correlation for chi-square with a 2×2 table — two true dichotomous variables (e.g., gender × handedness). For larger tables, use Cramer's V.",
-      examOnly: true,
-    },
-    {
-      question: "A standardized beta coefficient in regression is BEST interpreted as:",
-      optionA: "The same as Cohen's d",
-      optionB: "The effect size for that predictor's unique contribution",
-      optionC: "The y-intercept of the regression line",
-      optionD: "The correlation between residuals",
-      correctAnswer: "B",
-      explanation:
-        "Standardized beta IS the effect size in regression — it converts coefficients to a −1 to +1 scale, allowing direct comparison of predictor strength.",
-      examOnly: true,
-    },
-    {
-      question: "Sampling bias differs from sampling error in that:",
-      optionA: "Sampling bias is random; sampling error is systematic",
-      optionB: "Sampling error is random; sampling bias is systematic",
-      optionC: "Both are equally unavoidable",
-      optionD: "Sampling error only occurs with large samples",
-      correctAnswer: "B",
-      explanation:
-        "Sampling error = random, unavoidable chance variation. Sampling bias = systematic distortion that consistently misrepresents the population in a particular direction.",
-      examOnly: true,
-    },
-    {
-      question: "A researcher squares the correlation coefficient. The resulting value indicates:",
-      optionA: "The probability the correlation is significant",
-      optionB: "The proportion of shared variance between the two variables",
-      optionC: "The direction of the relationship",
-      optionD: "Whether to use Pearson or Spearman",
-      correctAnswer: "B",
-      explanation:
-        "r² = coefficient of determination = proportion of shared/explained variance. E.g., r = .50 → r² = .25 → X explains 25% of Y's variance.",
-      examOnly: true,
-    },
-    {
-      question: "Which type of t-test requires independence (participants cannot be in both groups)?",
-      optionA: "Single-sample t-test",
-      optionB: "Paired t-test",
-      optionC: "Independent samples t-test",
-      optionD: "Point biserial correlation",
-      correctAnswer: "C",
-      explanation:
-        "Independent samples t-test requires that each participant belongs to only ONE group. Violation of this assumption (participants in both groups) invalidates the test.",
-      examOnly: true,
-    },
-    {
-      question: "The T-score (assessment scale) has a mean of ___ and SD of ___.",
+      question: "A T-score has a mean of ___ and a standard deviation of ___.",
       optionA: "100 and 15",
       optionB: "50 and 10",
       optionC: "0 and 1",
       optionD: "10 and 3",
       correctAnswer: "B",
-      explanation:
-        "T-scores (used in clinical assessment, not to be confused with t-tests) have a mean of 50 and SD of 10. A score of 70 = 2 SDs above the mean.",
+      explanation: "T-scores are sample-based standard scores with a mean of 50 and SD of 10, used in psychological assessment contexts.",
       examOnly: true,
     },
     {
-      question: "Experimenter-wise error inflation is addressed by using:",
-      optionA: "A single t-test instead of ANOVA",
-      optionB: "ANOVA or post-hoc corrections (Bonferroni, Tukey, Sidak)",
-      optionC: "Increasing the sample size",
-      optionD: "Lowering the effect size",
-      correctAnswer: "B",
-      explanation:
-        "Running multiple t-tests inflates Type I error. ANOVA and post-hoc correction methods control for this by adjusting the alpha threshold across comparisons.",
-      examOnly: true,
-    },
-    {
-      question: "In a positively skewed distribution, the correct order of central tendency measures from left to right is:",
-      optionA: "Mean - Median - Mode",
-      optionB: "Mode - Median - Mean",
-      optionC: "Median - Mode - Mean",
-      optionD: "Mode - Mean - Median",
-      correctAnswer: "B",
-      explanation:
-        "In positive skew, extreme values pull the mean rightward. Order: Mode (leftmost peak) → Median → Mean (rightmost, most affected by outliers).",
-      examOnly: true,
-    },
-    {
-      question: "What is 'regression toward the mean'?",
-      optionA: "A bias that increases effect size over time",
-      optionB: "The statistical phenomenon where extreme scores move closer to the average on retesting",
-      optionC: "A method for handling missing data",
-      optionD: "The y-intercept of a regression equation",
-      correctAnswer: "B",
-      explanation:
-        "Regression toward the mean: extremely high or low scores on first measurement tend to be less extreme on second measurement — a natural statistical artifact, not a real effect.",
-      examOnly: true,
-    },
-    {
-      question: "Heteroscedasticity in a correlation scatter plot appears as:",
-      optionA: "A rectangular cloud of points around the regression line",
-      optionB: "A fan-shaped pattern where spread increases at extreme values",
-      optionC: "A perfect diagonal line",
-      optionD: "Points clustered only near the origin",
-      correctAnswer: "B",
-      explanation:
-        "Heteroscedasticity = unequal variance around the regression line. It looks like a 'fan' or 'cone,' violating the assumption of homoscedasticity and weakening correlation estimates.",
-      examOnly: true,
-    },
-    {
-      question: "Which statistic would you report alongside a p-value to provide a complete picture of your findings?",
-      optionA: "Sample size only",
-      optionB: "Degrees of freedom only",
-      optionC: "Effect size and confidence interval",
-      optionD: "Standard deviation only",
+      question: "Variance is mathematically defined as the:",
+      optionA: "Square root of the standard deviation",
+      optionB: "Sum of raw scores divided by N",
+      optionC: "Mean sum of squares",
+      optionD: "Range divided by 6",
       correctAnswer: "C",
-      explanation:
-        "Best practice is to report p-value (significance), effect size (magnitude), and confidence interval (precision). This gives a complete picture beyond just yes/no significance.",
+      explanation: "Variance is the mean sum of squares (SS) — the average of the squared deviation scores from the mean.",
       examOnly: true,
     },
     {
-      question: "A point biserial correlation is used when:",
-      optionA: "Both variables are continuous",
-      optionB: "IV is a true dichotomy and DV is continuous",
-      optionC: "Both variables are dichotomous",
-      optionD: "IV is continuous and DV is categorical",
+      question: "What does the standard error of the mean represent?",
+      optionA: "The reliability of individual test scores",
+      optionB: "The discrepancy between the sample mean and population mean",
+      optionC: "The spread of scores within one group",
+      optionD: "The correlation between IV and DV",
       correctAnswer: "B",
-      explanation:
-        "Point biserial correlation: IV is a TRUE dichotomy (e.g., male/female) and DV is continuous. Biserial correlation is for an ARTIFICIAL dichotomy (e.g., clinical/non-clinical).",
+      explanation: "The standard error of the mean quantifies how much the sample mean is likely to deviate from the true population mean. It decreases as sample size increases.",
       examOnly: true,
     },
     {
-      question: "If χ² = 0, what does this indicate?",
-      optionA: "Maximum deviation from expectations",
-      optionB: "Expected frequencies equal observed frequencies",
-      optionC: "A significant result",
-      optionD: "A Type I error occurred",
+      question: "Which interval on the bell curve contains approximately 68% of scores?",
+      optionA: "Within 2 SDs of the mean",
+      optionB: "Within 1 SD of the mean (both sides)",
+      optionC: "Within 3 SDs of the mean",
+      optionD: "Between the mean and median",
       correctAnswer: "B",
-      explanation:
-        "χ² = 0 means observed frequencies perfectly match expected frequencies — no deviation from what was predicted. There is no significant difference.",
+      explanation: "1 SD on each side of the mean = 34% × 2 = 68% of scores. This is the core of the empirical rule (68-95-99.7).",
       examOnly: true,
     },
     {
-      question: "ANCOVA differs from standard ANOVA in that it:",
-      optionA: "Uses multiple DVs",
-      optionB: "Only compares two groups",
-      optionC: "Statistically controls for covariate variables",
-      optionD: "Requires non-parametric data",
+      question: "An outlier in a dataset primarily affects which measure of central tendency?",
+      optionA: "Median",
+      optionB: "Mode",
+      optionC: "Mean",
+      optionD: "Percentile rank",
       correctAnswer: "C",
-      explanation:
-        "ANCOVA adds covariates — variables correlated with the DV but not of primary interest — and statistically removes their influence before testing the IV effect.",
+      explanation: "The mean is pulled in the direction of the outlier because it uses all values in its calculation, distorting the overall representation.",
       examOnly: true,
     },
     {
-      question: "Which regression method enters predictors in a theoretically driven sequence?",
-      optionA: "Stepwise regression",
-      optionB: "Forward regression",
-      optionC: "Hierarchical regression",
-      optionD: "Backward regression",
+      question: "The standard error of the estimate involves:",
+      optionA: "Only the dependent variable",
+      optionB: "Both the IV and DV, determining how one score relates to another",
+      optionC: "Only measurement error from test unreliability",
+      optionD: "The distance between sample and population means",
+      correctAnswer: "B",
+      explanation: "The standard error of the estimate involves both IV and DV and describes how accurately the IV predicts the DV (the error in regression predictions).",
+      examOnly: true,
+    },
+    {
+      question: "What is experimenter-wise error?",
+      optionA: "Error due to equipment malfunction",
+      optionB: "The inflation of Type II error by running too few analyses",
+      optionC: "Increased likelihood of finding significance when testing many hypotheses",
+      optionD: "Error introduced by biased sampling",
       correctAnswer: "C",
-      explanation:
-        "Hierarchical regression enters predictors in researcher-specified blocks based on theory (demographics first, then known predictors, then novel predictors). Stepwise is data-driven.",
+      explanation: "Experimenter-wise (or familywise) error is the increased probability of a Type I error when multiple tests are conducted — the more you test, the more likely you'll find something by chance.",
       examOnly: true,
     },
     {
-      question: "Sensitivity in diagnostic testing is the equivalent of:",
-      optionA: "Avoiding Type I errors",
-      optionB: "True positive rate — correctly identifying those WITH the condition",
-      optionC: "Specificity of diagnosis",
-      optionD: "Effect size of the test",
+      question: "If a confidence interval for a mean difference is [−3.2, 8.5], what can you conclude?",
+      optionA: "The result is significant at p < .05",
+      optionB: "The result is not significant because the CI includes 0",
+      optionC: "The effect size is large",
+      optionD: "The sample is too large",
       correctAnswer: "B",
-      explanation:
-        "Sensitivity = true positive rate = how often the test correctly says 'yes' when the condition IS present. High sensitivity minimizes false negatives (opposite of Type II error).",
+      explanation: "When a confidence interval includes 0, the difference could be zero — meaning there is no statistically significant difference.",
       examOnly: true,
     },
     {
-      question: "In an F-ratio, you want the between-groups variance to be ___ relative to within-groups variance.",
-      optionA: "Equal",
-      optionB: "Smaller",
-      optionC: "Larger",
-      optionD: "At zero",
+      question: "Effect size is independent of which factor?",
+      optionA: "The magnitude of the difference",
+      optionB: "Standard deviation",
+      optionC: "Sample size",
+      optionD: "The measurement instrument",
       correctAnswer: "C",
-      explanation:
-        "F = between-groups variation / within-groups variation. A large F (between > within) means the signal exceeds the noise, indicating significant group differences.",
+      explanation: "Effect size is NOT influenced by sample size — it reflects the true magnitude of the effect regardless of how many participants were studied.",
       examOnly: true,
     },
     {
-      question: "What is an ordinal variable?",
-      optionA: "A variable with equal intervals and a true zero",
-      optionB: "A variable that is ranked but with unequal intervals between ranks",
-      optionC: "A categorical variable with no order",
-      optionD: "A continuous variable with a Gaussian distribution",
+      question: "Cohen's benchmarks for effect sizes are: Small = ___, Medium = ___, Large = ___",
+      optionA: ".1, .3, .5",
+      optionB: ".2, .5, .8",
+      optionC: ".3, .6, .9",
+      optionD: ".5, 1.0, 1.5",
       correctAnswer: "B",
-      explanation:
-        "Ordinal variables have rank order (1st, 2nd, 3rd) but unequal/unknown intervals between ranks. You know the order but not HOW MUCH better one rank is than another.",
+      explanation: "Cohen's conventional benchmarks are: small = .2, medium = .5, large = .8 — measured in standard deviation units.",
       examOnly: true,
     },
     {
-      question: "In regression, the x-intercept represents:",
-      optionA: "The effect size",
-      optionB: "The grand mean of X",
-      optionC: "The error term",
-      optionD: "The standardized beta",
-      correctAnswer: "B",
-      explanation:
-        "The x-intercept (where the regression line crosses the x-axis) represents the grand mean of X. The y-intercept (a) = predicted Y when all predictors are 0.",
-      examOnly: true,
-    },
-    {
-      question: "Which of the following is TRUE about the sum of deviation scores?",
-      optionA: "It always equals the variance",
-      optionB: "It is always positive",
-      optionC: "It always equals zero",
-      optionD: "It equals the SD",
+      question: "How is shared variance calculated from a correlation?",
+      optionA: "r × 2",
+      optionB: "√r",
+      optionC: "r²",
+      optionD: "r / SD",
       correctAnswer: "C",
-      explanation:
-        "The sum of deviation scores (Σ(x − mean)) always equals 0 because positive and negative deviations cancel out. This is why variance is computed using squared deviations.",
+      explanation: "Shared variance = r² (coefficient of determination). For example, r = .50 → r² = .25, meaning 25% of variance in Y is explained by X.",
       examOnly: true,
     },
     {
-      question: "A Spearman correlation would be most appropriate for:",
-      optionA: "Comparing exam scores (continuous) to age (continuous)",
-      optionB: "Comparing ranked class standing to ranked GRE scores",
-      optionC: "Comparing gender to income",
-      optionD: "Predicting depression from anxiety",
+      question: "The degrees of freedom for an independent samples t-test with n total participants is:",
+      optionA: "n − 1",
+      optionB: "n − 2",
+      optionC: "n − 3",
+      optionD: "2n − 1",
       correctAnswer: "B",
-      explanation:
-        "Spearman is for ordinal (ranked) data. Ranked class standing and ranked GRE scores are ordinal — Spearman is the non-parametric alternative to Pearson.",
+      explanation: "For an independent samples t-test comparing two groups, df = n − 2 (one parameter estimated per group).",
       examOnly: true,
     },
     {
-      question: "Which of the following would most likely INFLATE Type I error?",
-      optionA: "Using a paired t-test",
-      optionB: "Running 10 separate t-tests across the same dataset",
-      optionC: "Increasing statistical power",
-      optionD: "Using a Bonferroni correction",
-      correctAnswer: "B",
-      explanation:
-        "Multiple testing (fishing) inflates Type I error — the experimenter-wise error rate. Each additional test adds another chance of a spurious 'significant' finding.",
+      question: "Which t-test compares one group to a normative mean?",
+      optionA: "Paired t-test",
+      optionB: "Independent samples t-test",
+      optionC: "Single-sample t-test",
+      optionD: "Point biserial",
+      correctAnswer: "C",
+      explanation: "The single-sample t-test compares one group's mean to a known or normative population mean, with df = n − 1.",
       examOnly: true,
     },
     {
-      question: "What does the 'best fit line' in a correlation represent?",
-      optionA: "The mode of the distribution",
-      optionB: "A line with equal numbers of values above and below it",
-      optionC: "The regression line connecting only the highest scores",
-      optionD: "The standard deviation of the sample",
-      correctAnswer: "B",
-      explanation:
-        "The best fit line (regression line) is placed so that equal numbers of data points are above and below it, minimizing the total sum of squared residuals (OLS method).",
+      question: "A paired (correlated) t-test is used when:",
+      optionA: "Two different independent groups are compared",
+      optionB: "One group is compared to a normative mean",
+      optionC: "One group is measured at two different time points",
+      optionD: "Three or more groups are compared",
+      correctAnswer: "C",
+      explanation: "The paired t-test (correlated samples t-test) measures the same group at two time points — each participant serves as their own control.",
       examOnly: true,
     },
     {
-      question: "A Cramer's V statistic would be used when:",
-      optionA: "Both variables are continuous",
-      optionB: "Measuring effect size in a chi-square with a table larger than 2×2",
-      optionC: "Running a paired t-test",
-      optionD: "Controlling for covariates in ANOVA",
+      question: "What is the primary purpose of post-hoc comparisons after a significant ANOVA F-test?",
+      optionA: "To determine effect sizes",
+      optionB: "To identify WHICH specific groups are different",
+      optionC: "To check for normality",
+      optionD: "To calculate degrees of freedom",
       correctAnswer: "B",
-      explanation:
-        "Cramer's V is the effect size measure for chi-square tests involving tables larger than 2×2 (more than two groups per variable). Phi is used only for 2×2 tables.",
+      explanation: "The F-test tells us that SOME group difference exists. Post-hoc tests (Tukey, Bonferroni, Sidak) identify the specific group pairs that differ while controlling for Type I error.",
+      examOnly: true,
+    },
+    {
+      question: "A 2-factor ANOVA examines:",
+      optionA: "Two DVs with one IV",
+      optionB: "Two IVs and their main effects plus interaction",
+      optionC: "Two groups on one IV",
+      optionD: "Two time points with one group",
+      correctAnswer: "B",
+      explanation: "A 2-factor (factorial) ANOVA has 2 IVs and examines both main effects (each IV independently) plus the interaction effect between them.",
+      examOnly: true,
+    },
+    {
+      question: "In ANOVA, between-groups variation represents the:",
+      optionA: "Error / denominator",
+      optionB: "Random chance variation",
+      optionC: "Signal / numerator — the pattern we want to detect",
+      optionD: "Variation of individual scores around their group mean",
+      correctAnswer: "C",
+      explanation: "Between-groups variation is the numerator of the F-ratio, representing the signal (differences among group means) that we want to be large relative to error.",
+      examOnly: true,
+    },
+    {
+      question: "Why is MANOVA used instead of multiple ANOVAs?",
+      optionA: "It has fewer assumptions",
+      optionB: "It handles ordinal data better",
+      optionC: "It avoids inflating Type I error across multiple DVs",
+      optionD: "It requires less statistical power",
+      correctAnswer: "C",
+      explanation: "Running multiple ANOVAs inflates the experimentwise Type I error rate. MANOVA simultaneously analyzes multiple DVs and controls that error inflation.",
+      examOnly: true,
+    },
+    {
+      question: "A strong correlation on a scatterplot is indicated by:",
+      optionA: "A wide, fan-shaped spread of points",
+      optionB: "Points clustered closely around the best-fit line",
+      optionC: "Points forming a curved pattern",
+      optionD: "Equally distributed points across all quadrants",
+      correctAnswer: "B",
+      explanation: "Strong correlations show homoscedasticity — a rectangular shape with values close to the best-fit line. Wide fans indicate heteroscedasticity and weak correlation.",
+      examOnly: true,
+    },
+    {
+      question: "Which correlation type is used when BOTH variables are artificially dichotomous?",
+      optionA: "Phi",
+      optionB: "Point biserial",
+      optionC: "Tetrachoric",
+      optionD: "Biserial",
+      correctAnswer: "C",
+      explanation: "Tetrachoric correlation is used when both the IV and DV are artificial dichotomies (e.g., positive/negative school climate for each variable).",
+      examOnly: true,
+    },
+    {
+      question: "In regression, what does the standardized beta coefficient represent?",
+      optionA: "The y-intercept",
+      optionB: "The unstandardized slope",
+      optionC: "The effect size for predictor relationships",
+      optionD: "The error term",
+      correctAnswer: "C",
+      explanation: "The standardized beta is the effect size for the relationship between a predictor and the outcome — it IS the effect size, just standardized on a −1 to +1 scale.",
+      examOnly: true,
+    },
+    {
+      question: "Multicollinearity in regression occurs when:",
+      optionA: "The DV has multiple categories",
+      optionB: "Predictor variables are highly correlated with each other",
+      optionC: "Sample size is too small",
+      optionD: "The regression residuals are non-normal",
+      correctAnswer: "B",
+      explanation: "Multicollinearity is a problem in regression when predictor (IV) variables are highly correlated with each other, making it difficult to isolate each IV's unique contribution.",
+      examOnly: true,
+    },
+    {
+      question: "In hierarchical regression, the THIRD block typically contains:",
+      optionA: "Known demographic covariates",
+      optionB: "Established important predictors",
+      optionC: "The predictors of primary interest to the researcher",
+      optionD: "All variables simultaneously",
+      correctAnswer: "C",
+      explanation: "Hierarchical regression organizes predictors by theory: Block 1 = known demographics, Block 2 = established predictors, Block 3 = the researcher's new predictors of interest.",
+      examOnly: true,
+    },
+    {
+      question: "Chi-square is used to compare:",
+      optionA: "Means of three or more continuous groups",
+      optionB: "Observed vs. expected proportions/frequencies across categorical groups",
+      optionC: "Correlations between two interval variables",
+      optionD: "A sample mean against a population mean",
+      correctAnswer: "B",
+      explanation: "Chi-square is a nonparametric test for comparing observed frequencies against expected proportions across categorical groups — it has no distributional assumptions.",
+      examOnly: true,
+    },
+    {
+      question: "What is Cramer's V used for?",
+      optionA: "Effect size for 2×2 chi-square tables only",
+      optionB: "Effect size for chi-square tables larger than 2×2",
+      optionC: "Testing homogeneity of variance",
+      optionD: "Adjusting t-test results for unequal variances",
+      correctAnswer: "B",
+      explanation: "Cramer's V is the effect size measure for chi-square tables with more than 2 categories per variable. Phi coefficient is used for 2×2 tables.",
+      examOnly: true,
+    },
+    {
+      question: "Sensitivity in diagnostic testing refers to:",
+      optionA: "Correctly identifying those who do NOT have the condition",
+      optionB: "The probability of a false positive",
+      optionC: "Correctly identifying those who DO have the condition (true positive rate)",
+      optionD: "The correlation between test scores and diagnosis",
+      correctAnswer: "C",
+      explanation: "Sensitivity = true positive rate — how well a test correctly identifies people who have the condition. High sensitivity means few false negatives.",
+      examOnly: true,
+    },
+    {
+      question: "Specificity in diagnostic testing refers to:",
+      optionA: "True positive rate",
+      optionB: "Correctly identifying those who do NOT have the condition (true negative rate)",
+      optionC: "The probability of a Type I error",
+      optionD: "The percentage of correct diagnoses overall",
+      correctAnswer: "B",
+      explanation: "Specificity = true negative rate — how well a test correctly identifies people who do NOT have the condition. High specificity means few false positives.",
+      examOnly: true,
+    },
+    {
+      question: "A researcher uses Levene's test and finds p = .02. What does this mean?",
+      optionA: "The groups have equal variance — proceed normally",
+      optionB: "The groups do NOT have equal variance — the t-test result must be adjusted",
+      optionC: "The means are significantly different",
+      optionD: "The sample is large enough to proceed",
+      correctAnswer: "B",
+      explanation: "A significant Levene's test (p < .05) indicates heterogeneity of variance — the groups differ in spread, so standard t-test results cannot be trusted without adjustment.",
+      examOnly: true,
+    },
+    {
+      question: "Which property of chi-square is always true?",
+      optionA: "It can be negative",
+      optionB: "It ranges from −1 to +1",
+      optionC: "It is always positive; if χ² = 0, expected = observed",
+      optionD: "It follows a normal distribution",
+      correctAnswer: "C",
+      explanation: "Chi-square (χ²) is always positive because it is based on squared differences. A χ² of 0 means the observed data perfectly match expected proportions.",
+      examOnly: true,
+    },
+    {
+      question: "What is an omnibus test?",
+      optionA: "A test that identifies exactly where group differences lie",
+      optionB: "A test of multiple DVs simultaneously",
+      optionC: "A general test that indicates significance exists but not where",
+      optionD: "A nonparametric alternative to t-tests",
+      correctAnswer: "C",
+      explanation: "An omnibus test (like ANOVA's F-test or chi-square) indicates that SOMETHING is significant overall but does not specify which groups or categories differ.",
+      examOnly: true,
+    },
+    {
+      question: "Which of the following INCREASES statistical power?",
+      optionA: "Decreasing sample size",
+      optionB: "Lowering the alpha from .10 to .05",
+      optionC: "Increasing sample size",
+      optionD: "Using a one-tailed test instead of two-tailed",
+      correctAnswer: "C",
+      explanation: "The most direct way to increase power is to increase sample size. More observations = more ability to detect a true effect.",
+      examOnly: true,
+    },
+    {
+      question: "The formula Y' = a + bX₁ + bX₂ + e represents:",
+      optionA: "ANOVA",
+      optionB: "Multiple regression",
+      optionC: "Chi-square",
+      optionD: "Factor analysis",
+      correctAnswer: "B",
+      explanation: "This is the multiple regression equation: Y' = predicted outcome, a = y-intercept, b = slope for each predictor, e = error term.",
+      examOnly: true,
+    },
+    {
+      question: "Kappa chi-square is designed to:",
+      optionA: "Test correlation between two continuous variables",
+      optionB: "Adjust hit rates for correct outcomes due to chance",
+      optionC: "Compare means across three groups",
+      optionD: "Test for multicollinearity",
+      correctAnswer: "B",
+      explanation: "Kappa chi-square adjusts observed hit rates by removing the proportion expected by chance alone — often used in diagnostic accuracy and inter-rater agreement.",
+      examOnly: true,
+    },
+    {
+      question: "What is the point biserial correlation used for?",
+      optionA: "Two continuously measured variables",
+      optionB: "An artificial dichotomy IV and continuous DV",
+      optionC: "A true dichotomy IV (e.g., male vs. female) and continuous DV",
+      optionD: "Both variables being ordinal",
+      correctAnswer: "C",
+      explanation: "Point biserial correlation is used when the IV is a TRUE dichotomy (e.g., biological sex) and the DV is continuous. It is mathematically equivalent to Pearson r.",
+      examOnly: true,
+    },
+    {
+      question: "The standard deviation is the square root of variance because:",
+      optionA: "It converts the scale back to normal curve percentages",
+      optionB: "It makes units equidistant regardless of area size",
+      optionC: "It removes the influence of outliers",
+      optionD: "It standardizes scores to a mean of 0",
+      correctAnswer: "B",
+      explanation: "Taking the square root of variance makes the unit of measurement equidistant — each SD unit represents the same distance from the mean regardless of the distribution's total spread.",
+      examOnly: true,
+    },
+    {
+      question: "A distribution where SD is greater than the mean indicates:",
+      optionA: "High reliability",
+      optionB: "A perfectly normal distribution",
+      optionC: "A problematic, likely non-normal distribution",
+      optionD: "A large effect size",
+      correctAnswer: "C",
+      explanation: "A basic diagnostic rule: the SD should never exceed the mean. When it does, it signals a skewed or otherwise non-normal distribution that may invalidate parametric analyses.",
+      examOnly: true,
+    },
+    {
+      question: "In a regression, the 'b' coefficient (unstandardized slope) is interpreted as:",
+      optionA: "The y-intercept when all IVs = 0",
+      optionB: "The change in Y for a one-unit change in X, in the original metric of X",
+      optionC: "The shared variance between X and Y",
+      optionD: "The correlation between X and Y",
+      correctAnswer: "B",
+      explanation: "The unstandardized slope (b) tells you how many units Y changes per one-unit change in X, on the original scale of measurement.",
+      examOnly: true,
+    },
+    {
+      question: "Which measure of effect size is used for nonparametric chi-square when the table is 2×2?",
+      optionA: "Cohen's d",
+      optionB: "Hedges' g",
+      optionC: "Cramer's V",
+      optionD: "Phi coefficient",
+      correctAnswer: "D",
+      explanation: "The Phi coefficient is the effect size measure for a 2×2 chi-square table. Cramer's V is used for larger tables.",
       examOnly: true,
     },
   ];
 
-  const allQs = [...regularQuestions, ...examOnlyQuestions].map((q) => ({
+  const allQuestions = [...regularQuestions, ...examOnlyQuestions].map((q) => ({
     ...q,
     topicId,
   }));
 
-  const insertedQs = await db.insert(quizQuestionsTable).values(allQs).returning();
+  const insertedQs = await db.insert(quizQuestionsTable).values(allQuestions).returning();
   console.log(
     `✓ Inserted ${insertedQs.length} quiz questions (${regularQuestions.length} regular + ${examOnlyQuestions.length} exam-only)`
   );
@@ -987,245 +865,248 @@ async function addFoundationsStatsTopic() {
 
 ## 1. What Is Statistics?
 
-Statistics is the **study of variation** — what makes values differ across observations. The three goals of statistics are:
+**Statistics** = the study of variation. The core question: *What makes A different from B?*
 
-1. **Description** — summarize what the data look like
-2. **Comparison** — determine when values differ (pattern vs. random error)
-3. **Estimation** — use samples to make inferences about the population
+Numbers and data represent variation, determined through observation.
 
-**Key distinction:**
-- **Population** = everyone / the "truth" (unknown and untestable in full)
-- **Sample** = a subset used to make the best guess about the population (inferential statistics)
-- **Population parameter** = a characteristic to be estimated (e.g., mean, SD, frequency count)
+The structure of all statistical reasoning:
+- **Comparison**: always a ratio — **Pattern vs. Error (random chance)**
+- We want to find patterns and distinguish them from random chance
+- Three types of comparisons: correlations (relationships), group comparisons (one group higher/lower), and significance tests
 
 ---
 
-## 2. Variables and Measurement Levels
+## 2. Key Terms
 
-| Level | Key Feature | Example |
+| Term | Definition |
+|---|---|
+| **Population** | Everyone — the "truth" that is unknown |
+| **Sample** | A "biopsy" of the population — our best guess |
+| **Population Parameter** | The true characteristic to be discovered (mean, SD, frequency) |
+| **Inferential Statistics** | Using samples to estimate population parameters |
+
+**Challenge:** What sample is representative of the entire population?
+
+---
+
+## 3. Variable Types
+
+### Step 1: Identify Your Variables
+- **Independent (IV):** Manipulated — the cause
+- **Dependent (DV):** Outcome — the effect
+- Variable type determines the correct statistical analysis
+
+### Step 2: Classify by Type
+
+| Type | Properties | Example |
 |---|---|---|
-| **Nominal/Categorical** | No order; groups only | Gender, diagnosis |
-| **Ordinal** | Ranked, but unequal intervals | Class rank, Likert (sometimes) |
-| **Interval** | Equal intervals, NO true zero | Temperature (°F), Likert scale |
-| **Ratio** | Equal intervals AND true zero | Height, weight, reaction time |
+| **Nominal/Categorical** | No levels, no order | Gender, ethnicity |
+| **Ordinal/Rank** | Ordered, unequal intervals, no true 0 | Class rank |
+| **Interval** | Equal intervals, NO true 0 | Likert scale |
+| **Ratio** | Equal intervals, TRUE 0 | Height, weight |
 
-**Rule:** As you move from nominal → ratio, you gain more information and can use more powerful statistics.
-
----
-
-## 3. Normal Distribution
-
-- Bell-shaped curve representing **random chance**
-- Establishes the baseline for determining what is "significant" (unexpected)
-- Applies to continuous variables (ordinal, interval, ratio)
-- **Skewness:**
-  - Positive skew: tail to the right; Mean > Mode; order = Mode-Median-Mean
-  - Negative skew: tail to the left; Mode > Mean; order = Mean-Median-Mode
+**Memory tip:** NOIR (Nominal → Ordinal → Interval → Ratio) — precision increases along this scale.
 
 ---
 
-## 4. Central Tendency
+## 4. Distributions
 
-| Measure | Description | When to Use |
+### Normal Distribution
+- Represents random chance
+- Sets the baseline for significance testing
+- Used with continuous variables (ordinal, interval, ratio)
+- X-axis = nominal variable; Y-axis = frequency
+
+### Skewed Distributions
+
+| Type | Tail Direction | Order of Central Tendency |
 |---|---|---|
-| **Mean** | Sum ÷ n; influenced by outliers | Normal distribution, prediction |
-| **Median** | Middle value; NOT influenced by outliers | Skewed data; extreme scores |
-| **Mode** | Most frequent value | Categorical data; bimodal detection |
+| **Positive skew** | Right | Mode – Median – **Mean** |
+| **Negative skew** | Left | **Mean** – Median – Mode |
+
+**Rule:** SD should never be greater than the mean. Skewness > 5.0 = problematic.
 
 ---
 
-## 5. Variability and Standard Deviation
+## 5. Central Tendency
 
-- **Deviation scores:** distance of each score from the mean. **Sum always = 0**
-- **Variance:** mean of squared deviations (mean SS). Represents spread
-- **Standard deviation (SD):** √variance; average deviation from the mean
+| Measure | Definition | Influenced by Outliers? |
+|---|---|---|
+| **Mean** | Sum ÷ N | YES — pulled toward outlier |
+| **Median** | Middle value | No |
+| **Mode** | Most frequent value | No |
 
-### Key percentages under the normal curve:
-- ±1 SD = 34% on each side (68% total)
-- ±2 SD = 14% more on each side (~95% total)
-- ±3 SD = 2% more on each side (~99.7% total)
-
-**Red flag:** SD should never be greater than the mean.
-
-### Homogeneity vs. Heterogeneity:
-- **Homogeneity:** low variability, scores clustered near the mean
-- **Heterogeneity:** high variability, scores spread widely
+Use median when extreme scores exist. Mean is best for normal distributions.
 
 ---
 
-## 6. Standard Scores
+## 6. Variability
 
-| Score | Formula | Scale | Use |
+**Variability** = spread of scores; distance from the mean.
+
+| Concept | Formula/Description |
+|---|---|
+| **Deviation score** | Each score minus the mean; always sum to 0 |
+| **Variance** | Mean sum of squares (SS) |
+| **Standard deviation** | √Variance — average distance from mean |
+
+### Bell Curve Percentages
+- ±1 SD = **34%** on each side (68% total)
+- ±2 SD = **14%** on each side (95% total)
+- ±3 SD = **2%** on each side (99.7% total)
+
+**Homogeneity** = low variability | **Heterogeneity** = high variability
+
+---
+
+## 7. Standard Scores
+
+| Score | Formula | Basis | Mean | SD |
+|---|---|---|---|---|
+| **z-score** | (x − μ) / σ | Population | 0 | 1 |
+| **T-score** | (x − μ) / (σ/√n) | Sample | 50 | 10 |
+| **Percentile** | Rank position | — | 50th | — |
+
+z-scores allow comparison across different measurement systems.
+
+---
+
+## 8. Sampling and Standard Error
+
+| Concept | Definition |
+|---|---|
+| **Sampling distribution** | Distribution of sample means |
+| **Standard error of the mean** | Discrepancy between sample mean and population mean |
+| **SEM** | SD × √(1 − rxx); used for confidence intervals |
+| **Standard error of the estimate** | Error in regression predictions |
+
+**Central Limit Theorem:** With random sampling, the distribution of sample means approaches normal as N increases, and sample mean approaches population mean.
+
+---
+
+## 9. Hypothesis Testing
+
+| Hypothesis | Statement |
+|---|---|
+| **Null (Ho)** | No significant difference — results are due to chance |
+| **Alternative (Ha)** | Significant difference exists |
+
+### Error Types
+
+| Error | Type | Cause | Fix |
 |---|---|---|---|
-| **z-score** | (x − µ) / σ | Population-based | Comparing across different measurement systems |
-| **T-score** | (x − µ) / (σ/√n) | Sample-based; M=50, SD=10 | Clinical assessment contexts |
-| **Percentile** | Rank in distribution | 0–100 | Location relative to peers |
+| **Type I** | False positive | Too many tests (experimenter-wise error) | Replication |
+| **Type II** | False negative | Sample too small (underpowered) | Replication |
+
+**Confidence intervals:** CI includes 0 → not significant. CI excludes 0 → significant.
 
 ---
 
-## 7. Sampling and Standard Error
+## 10. Effect Sizes and Power
 
-- **Sampling distribution:** distribution of many possible sample means
-- **Standard Error of the Mean (SEM):** discrepancy between sample mean and population mean. Should be small (never 0). Decreases as n increases
-- **Central Limit Theorem:** As n grows, the sampling distribution of means approaches normal — regardless of the population's shape. With large n, sample mean ≈ population mean
+| Concept | Description |
+|---|---|
+| **Effect size** | Magnitude of difference in SD units |
+| **Small** | .2 |
+| **Medium** | .5 |
+| **Large** | .8 |
+| **Cohen's d** | Population-based group effect |
+| **Hedges' g** | Adjusted for sample size |
+| **Power** | Probability of detecting a true effect (target: .80) |
+
+**Effect size is NOT influenced by sample size.**
+
+To increase power: increase N | increase alpha | increase effect size
 
 ---
 
-## 8. Hypothesis Testing and Errors
+## 11. Inferential Statistics
 
-| | **H₀ True** | **H₀ False** |
+### T-tests
+
+| Type | Use | df |
 |---|---|---|
-| **Reject H₀** | Type I Error (false positive) | Correct (power) |
-| **Accept H₀** | Correct | Type II Error (false negative) |
+| Single-sample | 1 group vs. normative mean | n − 1 |
+| Independent | 2 separate groups | n − 2 |
+| Paired/correlated | 1 group, 2 time points | n − 1 |
 
-- **Type I (α):** false positive; p < .05; experimenter-wise error from multiple testing
-- **Type II (β):** false negative; p > .05; caused by insufficient power/sample size
-- **Fix:** Replication and adequate sample sizes
+**Levene's test:** If significant → unequal variances → adjust t-test.
 
-### Confidence Intervals:
-- CI **includes 0** → NOT significant
-- CI **excludes 0** → Significant
+### ANOVA (3+ groups, continuous DV)
 
----
+- F-ratio = Between-groups (signal) ÷ Within-groups (error)
+- Want between > within for significance
+- F = 1.96 threshold when N ≥ 30, α = .05
+- **Post-hoc tests** (Tukey, Bonferroni, Sidak): identify specific group differences
 
-## 9. Effect Size and Power
-
-| Concept | What it answers |
+| Variant | Extra Feature |
 |---|---|
-| **p-value** | Was there an effect? (yes/no) |
-| **Effect size** | How big was the effect? (magnitude) |
-| **Power** | Could we detect the effect if it existed? |
-
-**Always report: p-value + confidence interval + effect size**
-
-### Effect size levels (Cohen):
-| Category | d / β |
-|---|---|
-| Small | .2 |
-| Medium | .5 |
-| Large | .8 |
-
-- **Cohen's d:** population-based
-- **Hedges' g:** sample-adjusted (preferred for small n)
-
-### Power (.80 is standard target):
-Increasing power requires:
-1. Larger sample size ✓ (most common fix)
-2. Higher alpha (e.g., .05 → .10)
-3. Larger effect size ("stack the deck")
-
----
-
-## 10. t-Tests
-
-| Type | IV | DV | df |
-|---|---|---|---|
-| Single-sample | 1 group vs. normative mean | Continuous | n − 1 |
-| Independent samples | 2 independent groups | Continuous | n − 2 |
-| Paired (correlated) | 1 group × 2 time points | Continuous | n − 1 |
-
-**Assumptions:** Homogeneity of variance (checked with Levene's test), independence.
-- **Levene's IS significant** → unequal variances → must adjust the t-test.
-- Robust with n > 20.
-
----
-
-## 11. ANOVA (Analysis of Variance)
-
-- Used for **3 or more groups** (extends t-test, controls Type I error)
-- **F = between-groups variation / within-groups variation = signal / error**
-- Significance: p < .05, F-threshold ~1.96, n ≥ 30
-
-**Post-hoc tests** (identify WHERE differences are): Tukey, Bonferroni, Sidak
-
-| Variant | Purpose |
-|---|---|
-| **One-way ANOVA** | One IV with 3+ groups |
-| **Factorial ANOVA** | Multiple IVs (main effects + interactions) |
-| **ANCOVA** | Adds covariates to statistically control extraneous variables |
-| **MANOVA** | Multiple IVs and multiple DVs simultaneously |
+| Factorial ANOVA | Multiple IVs + interaction effects |
+| ANCOVA | Adds covariates to statistically control extraneous variables |
+| MANOVA | Multiple DVs — avoids Type I error inflation |
 
 ---
 
 ## 12. Correlations
 
-- Measures association between **two continuous variables** (no IV/DV required)
-- **r** ranges from −1 to +1
-- **r² (coefficient of determination)** = shared variance (e.g., r = .44 → r² = .19 → 19% shared)
-- **Correlation = effect size**
+- Both variables continuous (ordinal, interval, ratio)
+- r ranges from −1 to +1
+- **r² (coefficient of determination)** = shared variance
+- r = .44 → r² = .19 → 19% shared variance; .20 considered good
+
+### Correlation Types
 
 | Type | Data | Parametric? |
 |---|---|---|
 | Pearson | Interval/Ratio | Yes |
-| Spearman | Ordinal/Ranked | No |
-| Phi | 2 true dichotomies | — |
-| Tetrachoric | 2 artificial dichotomies | — |
-| Point biserial | TRUE dichotomy IV + continuous DV | — |
-| Biserial | ARTIFICIAL dichotomy IV + continuous DV | — |
-| Cramer's V / Contingency | 3+ category variables | — |
+| Spearman | Ordinal | No |
+| Tetrachoric | Both artificially dichotomous | — |
+| Phi | Both truly dichotomous | — |
+| Biserial | IV artificially dichotomous, DV continuous | — |
+| Point Biserial | IV truly dichotomous, DV continuous | — |
 
-**Assumptions:**
-- Relationship must be LINEAR (curvilinear → no valid correlation)
-- **Homoscedasticity:** equal spread around the regression line (rectangular shape)
-- **Heteroscedasticity:** fanning pattern → weak, distorted correlation
+**Homoscedasticity** (rectangular scatter) = strong correlation  
+**Heteroscedasticity** (fanning out) = weak correlation
 
 ---
 
 ## 13. Regression
 
-**Equation:** Y' = a + bX₁ + bX₂ + ... + e
+**Equation:** Y' = a + bX₁ + bX₂ + … + e
 
-| Symbol | Meaning |
+| Term | Meaning |
 |---|---|
 | Y' | Predicted outcome |
 | a | y-intercept |
-| b | Slope (unstandardized) or β (standardized, −1 to +1) |
-| e | Error/residual |
+| b | Slope (unstandardized: original metric; standardized: −1 to +1) |
+| e | Error term |
 
-**Types:**
-- **Hierarchical:** theory-driven blocks (Block 1: demographics; Block 2: known predictors; Block 3: new predictors)
-- **Stepwise:** data-driven; Forward (add one at a time) or Backward (remove based on p-value)
+**Hierarchical regression blocks:**  
+1 → Demographics | 2 → Known predictors | 3 → New predictors of interest
 
-**Problems:**
-- Multicollinearity: IVs too highly correlated with each other
-- Curvilinear X–Y relationship
-- Multiple DVs (use MANOVA instead)
+**Stepwise:** Forward (add one at a time) or Backward (remove based on p-value)
 
-**Mediation vs. Moderation:**
-- **Mediation:** X → M → Y (third variable EXPLAINS the relationship)
-- **Moderation:** X × moderator → Y (third variable CHANGES the relationship)
+**Key issue:** Multicollinearity — predictor variables that are highly correlated with each other.
 
 ---
 
-## 14. Chi-Square (Non-Parametric)
+## 14. Chi-Square (Nonparametric)
 
-- Compares **observed vs. expected proportions** across categorical groups
-- **No distributional assumptions** required
-- χ² is always positive; χ² = 0 → perfect match (expected = observed)
-- Larger χ² → more likely significant
+- Tests observed vs. expected proportions across categorical groups
+- **No distributional assumptions**
+- χ² is always positive; χ² = 0 means expected = observed
+- Larger χ² → higher likelihood of significance
 
-**Effect sizes:**
-- **Phi coefficient:** 2×2 table (two true dichotomies)
-- **Cramer's V:** tables larger than 2×2
+### Effect Sizes for Chi-Square
+- 2×2 table → **Phi coefficient**
+- Larger tables → **Cramer's V**
 
-### Sensitivity vs. Specificity:
-| Concept | Description |
-|---|---|
-| Sensitivity | True positive rate — correctly identifies those WITH condition |
-| Specificity | True negative rate — correctly identifies those WITHOUT condition |
+### Sensitivity vs. Specificity
 
----
-
-## Key Formulas Summary
-
-| Formula | Description |
-|---|---|
-| z = (x − µ) / σ | z-score (population) |
-| Y' = a + bX + e | Regression equation |
-| F = MS_between / MS_within | ANOVA F-ratio |
-| r² = (correlation)² | Coefficient of determination |
-| SEM = SD × √(1 − rxx) | Standard error of measurement |
-| df = n − 1 or n − 2 | Degrees of freedom |`;
+| Concept | Meaning | Error Opposite |
+|---|---|---|
+| Sensitivity | True positive rate | Opposite of Type I |
+| Specificity | True negative rate | Opposite of Type II |`;
 
   const [studyGuide] = await db
     .insert(studyGuidesTable)
@@ -1251,21 +1132,21 @@ Increasing power requires:
     .returning();
   console.log(`✓ Practice exam created id=${practiceExam.id}`);
 
-  const allInsertedQs = await db
+  const allQsFromDb = await db
     .select({ id: quizQuestionsTable.id })
     .from(quizQuestionsTable)
     .where(eq(quizQuestionsTable.topicId, topicId));
 
-  await db.insert(practiceExamQuestionsTable).values(
-    allInsertedQs.map((q, i) => ({
-      examId: practiceExam.id,
-      questionId: q.id,
-      questionOrder: i + 1,
-    }))
-  );
-  console.log(`✓ Linked ${allInsertedQs.length} questions to practice exam`);
+  const examQRows = allQsFromDb.map((q, i) => ({
+    examId: practiceExam.id,
+    questionId: q.id,
+    questionOrder: i + 1,
+  }));
 
-  console.log(`\n✅ Foundations in Statistics (id=${topicId}) fully seeded!`);
+  await db.insert(practiceExamQuestionsTable).values(examQRows);
+  console.log(`✓ Linked ${examQRows.length} questions to practice exam`);
+
+  console.log(`\n✅ Foundations in Statistics (topic ${topicId}) fully seeded!`);
 }
 
 addFoundationsStatsTopic()

@@ -16,7 +16,8 @@
     "expand-practice-exams": "tsx src/expand-practice-exams.ts",
     "expand-exam-questions": "tsx src/expand-exam-questions.ts",
     "add-stats-topic": "tsx src/add-stats-topic.ts",
-    "complete-stats-topic": "tsx src/complete-stats-topic.ts"
+    "complete-stats-topic": "tsx src/complete-stats-topic.ts",
+    "add-foundations-stats": "tsx src/add-foundations-stats-topic.ts"
   },
   "dependencies": {
     "drizzle-orm": "catalog:",
