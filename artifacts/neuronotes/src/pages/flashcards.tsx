@@ -114,16 +114,17 @@ export default function FlashcardsPage({ params }: Props) {
               data-testid="flashcard"
             >
               <div className={`flashcard-inner min-h-64 md:min-h-72 ${flipped ? "flipped" : ""}`}>
-                <div className="flashcard-front bg-card border border-border rounded-2xl p-8 flex flex-col items-center justify-center min-h-64 md:min-h-72 shadow-sm relative">
+                <div className="flashcard-front bg-card border border-border rounded-2xl p-8 flex flex-col items-start min-h-64 md:min-h-72 shadow-sm">
                   {current && (
-                    <Badge className={`absolute top-3 right-3 ${difficultyColors[current.difficulty] || ""}`}>
+                    <Badge className={`mb-4 ${difficultyColors[current.difficulty] || ""}`}>
                       {current.difficulty}
                     </Badge>
                   )}
-                  <div className="text-xs text-muted-foreground uppercase tracking-wider mb-4">Question — tap to reveal</div>
-                  <p className="text-center text-lg font-medium text-foreground leading-relaxed" data-testid="text-flashcard-question">
-                    {current?.question}
-                  </p>
+                  <div className="flex-1 flex items-center justify-center w-full">
+                    <p className="text-center text-lg font-medium text-foreground leading-relaxed" data-testid="text-flashcard-question">
+                      {current?.question}
+                    </p>
+                  </div>
                 </div>
                 <div className="flashcard-back bg-primary rounded-2xl p-8 flex flex-col items-center justify-center min-h-64 md:min-h-72 shadow-sm">
                   <div className="text-xs text-primary-foreground/70 uppercase tracking-wider mb-4">Answer</div>
