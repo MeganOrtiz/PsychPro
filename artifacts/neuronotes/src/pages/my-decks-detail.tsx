@@ -43,7 +43,6 @@ function FlashcardsView({ cards }: { cards: Flashcard[] }) {
     <div className="space-y-4">
       <div className="flex items-center justify-between text-sm text-muted-foreground">
         <span>{index + 1} / {cards.length}</span>
-        <DifficultyBadge difficulty={card.difficulty} />
       </div>
       <div
         className="relative w-full cursor-pointer select-none"
@@ -51,10 +50,13 @@ function FlashcardsView({ cards }: { cards: Flashcard[] }) {
         onClick={() => setFlipped(!flipped)}
       >
         <div className={`w-full rounded-2xl border-2 p-6 text-center transition-all duration-300 ${flipped ? "border-primary bg-primary/5" : "border-border bg-card"}`} style={{ minHeight: 200 }}>
-          <div className="flex flex-col items-center justify-center h-full gap-3" style={{ minHeight: 164 }}>
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{flipped ? "Answer" : "Question"}</p>
-            <p className="text-foreground font-medium text-base leading-relaxed">{flipped ? card.back : card.front}</p>
-            <p className="text-xs text-muted-foreground mt-2">{flipped ? "Tap to flip back" : "Tap to reveal answer"}</p>
+          <div className="flex flex-col items-center h-full gap-3" style={{ minHeight: 164 }}>
+            <div className="w-full flex justify-start">
+              <DifficultyBadge difficulty={card.difficulty} />
+            </div>
+            <div className="flex-1 flex items-center justify-center">
+              <p className="text-foreground font-medium text-base leading-relaxed">{flipped ? card.back : card.front}</p>
+            </div>
           </div>
         </div>
       </div>
