@@ -3,7 +3,6 @@ import { useLocation } from "wouter";
 import { Search, BookOpen, Layers, Brain, ChevronRight } from "lucide-react";
 import { useGetTopics } from "@workspace/api-client-react";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function TopicsPage() {
@@ -52,8 +51,7 @@ export default function TopicsPage() {
               data-testid={`card-topic-${topic.id}`}
               className="bg-card border border-border rounded-xl p-5 cursor-pointer hover:border-primary/40 hover:shadow-md transition-all"
             >
-              <div className="flex items-start justify-between mb-2">
-                <Badge variant="secondary" className="text-xs">{topic.category}</Badge>
+              <div className="flex items-start justify-end mb-2">
                 <ChevronRight className="w-4 h-4 text-muted-foreground" />
               </div>
               <h3 className="font-semibold text-foreground mb-1.5">{topic.name}</h3>
