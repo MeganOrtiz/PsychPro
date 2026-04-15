@@ -12,7 +12,8 @@
     "push-force": "drizzle-kit push --force --config ./drizzle.config.ts",
     "seed": "tsx src/seed.ts",
     "add-foundation-topics": "tsx src/add-foundation-topics.ts",
-    "add-neurodevelopmental": "tsx src/add-neurodevelopmental-topic.ts"
+    "add-neurodevelopmental": "tsx src/add-neurodevelopmental-topic.ts",
+    "expand-practice-exams": "tsx src/expand-practice-exams.ts"
   },
   "dependencies": {
     "drizzle-orm": "catalog:",
