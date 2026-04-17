@@ -19,7 +19,9 @@
     "complete-stats-topic": "tsx src/complete-stats-topic.ts",
     "add-foundations-stats": "tsx src/add-foundations-stats-topic.ts",
     "add-qualitative": "tsx src/add-qualitative-topic.ts",
-    "add-validity-effort": "tsx src/add-validity-effort-topic.ts"
+    "add-validity-effort": "tsx src/add-validity-effort-topic.ts",
+    "add-executive-function": "tsx src/add-executive-function-topic.ts",
+    "add-forensic-neuropsychology": "tsx src/add-forensic-neuropsychology-topic.ts"
   },
   "dependencies": {
     "drizzle-orm": "catalog:",
