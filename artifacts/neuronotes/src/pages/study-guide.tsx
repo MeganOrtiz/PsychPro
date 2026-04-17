@@ -13,7 +13,7 @@ export default function StudyGuidePage({ params }: Props) {
   const [, navigate] = useLocation();
   const topicId = parseInt(params.id);
   const { data: profile } = useGetUserProfile();
-  const isSubscribed = profile?.subscriptionStatus === "active" || profile?.subscriptionStatus === "pro" || profile?.subscriptionStatus === "trialing";
+  const isSubscribed = profile?.subscriptionStatus === "active" || profile?.subscriptionStatus === "pro" || profile?.subscriptionStatus === "trialing" || profile?.subscriptionStatus === "scholar";
 
   const { data: guide, isLoading, error } = useGetStudyGuideByTopic(topicId);
 
