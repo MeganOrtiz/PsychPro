@@ -84,32 +84,151 @@ export default function StudyGuidePage({ params }: Props) {
   );
 }
 
-function MarkdownRenderer({ content }: { content: string }) {
-  const lines = content.split("\n");
-  const elements: ReactElement[] = [];
-  let inTable = false;
-  let tableRows: string[][] = [];
-  let tableKey = 0;
+type Block =
+  | { type: "h1"; text: string }
+  | { type: "h2"; text: string }
+  | { type: "h3"; text: string }
+  | { type: "hr" }
+  | { type: "blank" }
+  | { type: "bullet"; text: string }
+  | { type: "numbered"; text: string }
+  | { type: "table"; rows: string[][] }
+  | { type: "paragraph"; text: string };
 
-  const flushTable = () => {
-    if (tableRows.length > 1) {
-      const headers = tableRows[0];
-      const rows = tableRows.slice(2);
+function parseBlocks(content: string): Block[] {
+  const lines = content.split("\n");
+  const blocks: Block[] = [];
+  let i = 0;
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    if (line.startsWith("|")) {
+      const tableRows: string[][] = [];
+      while (i < lines.length && lines[i].startsWith("|")) {
+        tableRows.push(
+          lines[i].split("|").filter((_, idx, arr) => idx > 0 && idx < arr.length - 1).map(c => c.trim())
+        );
+        i++;
+      }
+      blocks.push({ type: "table", rows: tableRows });
+      continue;
+    }
+
+    if (line.startsWith("# ") && !line.startsWith("## ") && !line.startsWith("### ")) {
+      blocks.push({ type: "h1", text: line.slice(2) });
+    } else if (line.startsWith("## ") && !line.startsWith("### ")) {
+      blocks.push({ type: "h2", text: line.slice(3) });
+    } else if (line.startsWith("### ")) {
+      blocks.push({ type: "h3", text: line.slice(4) });
+    } else if (line.trim() === "---" || line.trim() === "***" || line.trim() === "___") {
+      blocks.push({ type: "hr" });
+    } else if (line.startsWith("- ")) {
+      blocks.push({ type: "bullet", text: line.slice(2) });
+    } else if (/^\d+\. /.test(line)) {
+      blocks.push({ type: "numbered", text: line.replace(/^\d+\. /, "") });
+    } else if (line.trim() === "") {
+      blocks.push({ type: "blank" });
+    } else {
+      blocks.push({ type: "paragraph", text: line });
+    }
+
+    i++;
+  }
+
+  return blocks;
+}
+
+function MarkdownRenderer({ content }: { content: string }) {
+  const blocks = parseBlocks(content);
+  const elements: ReactElement[] = [];
+  let key = 0;
+  let bi = 0;
+
+  while (bi < blocks.length) {
+    const block = blocks[bi];
+
+    if (block.type === "h1") {
       elements.push(
-        <div key={`table-${tableKey++}`} className="overflow-x-auto my-4">
+        <h1 key={key++} className="text-2xl font-bold text-foreground mt-2 mb-5 pb-2 border-b border-border">
+          <InlineMarkdown text={block.text} />
+        </h1>
+      );
+    } else if (block.type === "h2") {
+      elements.push(
+        <h2 key={key++} className="text-lg font-bold text-foreground mt-8 mb-3 pb-1 border-b border-border/50">
+          <InlineMarkdown text={block.text} />
+        </h2>
+      );
+    } else if (block.type === "h3") {
+      elements.push(
+        <h3 key={key++} className="text-base font-semibold text-foreground mt-5 mb-2">
+          <InlineMarkdown text={block.text} />
+        </h3>
+      );
+    } else if (block.type === "hr") {
+      // Suppress — headings already provide visual separation
+    } else if (block.type === "blank") {
+      // Accumulate consecutive blanks into a single small gap
+      let count = 0;
+      while (bi < blocks.length && blocks[bi].type === "blank") { count++; bi++; }
+      elements.push(<div key={key++} className={count > 1 ? "h-4" : "h-1"} />);
+      continue;
+    } else if (block.type === "bullet") {
+      const items: string[] = [];
+      while (bi < blocks.length && blocks[bi].type === "bullet") {
+        items.push((blocks[bi] as { type: "bullet"; text: string }).text);
+        bi++;
+      }
+      elements.push(
+        <ul key={key++} className="list-disc pl-5 mb-3 space-y-1">
+          {items.map((item, j) => (
+            <li key={j} className="text-foreground text-sm leading-relaxed">
+              <InlineMarkdown text={item} />
+            </li>
+          ))}
+        </ul>
+      );
+      continue;
+    } else if (block.type === "numbered") {
+      const items: string[] = [];
+      while (bi < blocks.length && blocks[bi].type === "numbered") {
+        items.push((blocks[bi] as { type: "numbered"; text: string }).text);
+        bi++;
+      }
+      elements.push(
+        <ol key={key++} className="list-decimal pl-5 mb-3 space-y-1">
+          {items.map((item, j) => (
+            <li key={j} className="text-foreground text-sm leading-relaxed">
+              <InlineMarkdown text={item} />
+            </li>
+          ))}
+        </ol>
+      );
+      continue;
+    } else if (block.type === "table") {
+      const { rows } = block;
+      const headers = rows[0] ?? [];
+      const bodyRows = rows.length > 2 ? rows.slice(2) : [];
+      elements.push(
+        <div key={key++} className="overflow-x-auto my-4 rounded-lg border border-border">
           <table className="min-w-full border-collapse text-sm">
             <thead>
-              <tr>
-                {headers.map((h, i) => (
-                  <th key={i} className="border border-border bg-muted px-3 py-2 text-left font-semibold text-foreground">{h.trim()}</th>
+              <tr className="bg-muted">
+                {headers.map((h, ci) => (
+                  <th key={ci} className="px-4 py-2.5 text-left font-semibold text-foreground border-b border-border">
+                    <InlineMarkdown text={h} />
+                  </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {rows.map((row, ri) => (
-                <tr key={ri} className={ri % 2 === 0 ? "bg-card" : "bg-muted/30"}>
+              {bodyRows.map((row, ri) => (
+                <tr key={ri} className={ri % 2 === 0 ? "bg-card" : "bg-muted/20"}>
                   {row.map((cell, ci) => (
-                    <td key={ci} className="border border-border px-3 py-2 text-foreground">{cell.trim()}</td>
+                    <td key={ci} className="px-4 py-2.5 text-foreground border-b border-border/50 align-top">
+                      <InlineMarkdown text={cell} />
+                    </td>
                   ))}
                 </tr>
               ))}
@@ -117,51 +236,17 @@ function MarkdownRenderer({ content }: { content: string }) {
           </table>
         </div>
       );
-    }
-    tableRows = [];
-    inTable = false;
-  };
-
-  lines.forEach((line, i) => {
-    if (line.startsWith("|")) {
-      inTable = true;
-      tableRows.push(line.split("|").filter((_, idx, arr) => idx > 0 && idx < arr.length - 1));
-      return;
-    }
-    if (inTable) {
-      flushTable();
-    }
-
-    if (line.startsWith("## ")) {
-      elements.push(<h2 key={i} className="text-xl font-bold text-foreground mt-8 mb-3">{line.slice(3)}</h2>);
-    } else if (line.startsWith("### ")) {
-      elements.push(<h3 key={i} className="text-base font-semibold text-foreground mt-5 mb-2">{line.slice(4)}</h3>);
-    } else if (line.startsWith("# ")) {
-      elements.push(<h1 key={i} className="text-2xl font-bold text-foreground mb-4">{line.slice(2)}</h1>);
-    } else if (line.startsWith("- ")) {
+    } else if (block.type === "paragraph") {
       elements.push(
-        <li key={i} className="text-foreground ml-4 mb-1 text-sm leading-relaxed list-disc">
-          <InlineMarkdown text={line.slice(2)} />
-        </li>
-      );
-    } else if (/^\d+\. /.test(line)) {
-      elements.push(
-        <li key={i} className="text-foreground ml-4 mb-1 text-sm leading-relaxed list-decimal">
-          <InlineMarkdown text={line.replace(/^\d+\. /, "")} />
-        </li>
-      );
-    } else if (line.trim() === "") {
-      elements.push(<div key={i} className="h-2" />);
-    } else {
-      elements.push(
-        <p key={i} className="text-foreground text-sm leading-relaxed mb-2">
-          <InlineMarkdown text={line} />
+        <p key={key++} className="text-foreground text-sm leading-relaxed mb-3">
+          <InlineMarkdown text={block.text} />
         </p>
       );
     }
-  });
 
-  if (inTable) flushTable();
+    bi++;
+  }
+
   return <div>{elements}</div>;
 }
 
