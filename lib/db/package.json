@@ -28,6 +28,7 @@
     "remove-sensory-pathways": "tsx src/remove-sensory-pathways-topic.ts",
     "rework-neurocognitive": "tsx src/rework-neurocognitive-disorders.ts",
     "rework-neurocognitive-v2": "tsx src/rework-neurocognitive-v2.ts",
+    "update-ncd-formatting": "tsx src/update-ncd-guide-formatting.ts",
     "reformat-ns-guides": "tsx src/reformat-nervous-system-guides.ts",
     "rework-brain-structures": "tsx src/rework-brain-structures.ts",
     "reorganize-cns": "tsx src/reorganize-cns-guide.ts"
