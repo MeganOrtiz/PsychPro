@@ -113,7 +113,7 @@ export default function LandingPage() {
         <div className="max-w-4xl mx-auto px-4">
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
-              <div className="text-3xl font-bold text-primary">25+</div>
+              <div className="text-3xl font-bold text-primary">27+</div>
               <div className="text-sm text-muted-foreground mt-1">Topics covered</div>
             </div>
             <div>
@@ -121,7 +121,7 @@ export default function LandingPage() {
               <div className="text-sm text-muted-foreground mt-1">Practice questions</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-primary">25+</div>
+              <div className="text-3xl font-bold text-primary">27+</div>
               <div className="text-sm text-muted-foreground mt-1">Study guides</div>
             </div>
           </div>
