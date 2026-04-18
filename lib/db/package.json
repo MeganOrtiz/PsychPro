@@ -31,7 +31,12 @@
     "update-ncd-formatting": "tsx src/update-ncd-guide-formatting.ts",
     "reformat-ns-guides": "tsx src/reformat-nervous-system-guides.ts",
     "rework-brain-structures": "tsx src/rework-brain-structures.ts",
-    "reorganize-cns": "tsx src/reorganize-cns-guide.ts"
+    "reorganize-cns": "tsx src/reorganize-cns-guide.ts",
+    "update-cns-v2": "tsx src/update-cns-guide-v2.ts",
+    "update-pns-v2": "tsx src/update-pns-guide-v2.ts",
+    "update-ens-v2": "tsx src/update-ens-guide-v2.ts",
+    "update-neuroanatomy": "tsx src/update-neuroanatomy-guide-v2.ts",
+    "update-ncd-v3": "tsx src/update-ncd-guide-v3.ts"
   },
   "dependencies": {
     "drizzle-orm": "catalog:",
