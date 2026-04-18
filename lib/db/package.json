@@ -25,7 +25,8 @@
     "add-cns": "tsx src/add-cns-topic.ts",
     "add-pns": "tsx src/add-pns-topic.ts",
     "add-ens": "tsx src/add-ens-topic.ts",
-    "remove-sensory-pathways": "tsx src/remove-sensory-pathways-topic.ts"
+    "remove-sensory-pathways": "tsx src/remove-sensory-pathways-topic.ts",
+    "rework-neurocognitive": "tsx src/rework-neurocognitive-disorders.ts"
   },
   "dependencies": {
     "drizzle-orm": "catalog:",
