@@ -71,7 +71,17 @@ export default function StudyGuidePage({ params }: Props) {
         </div>
       ) : (
         <div className="bg-card border border-border rounded-xl p-6 md:p-8">
-          <h2 className="text-2xl font-bold text-foreground mb-6">{guide.title}</h2>
+          <div className="text-center mb-8 pb-6 border-b border-border">
+            <p className="text-xs font-semibold tracking-[0.2em] uppercase text-primary/80 mb-2">Study Guide</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight leading-tight">
+              {guide.title.replace(/\s*[—–-]\s*Study Guide\s*$/i, "")}
+            </h2>
+            <div className="mt-4 flex items-center justify-center gap-2" aria-hidden="true">
+              <span className="h-px w-8 bg-border" />
+              <span className="h-1.5 w-1.5 rounded-full bg-primary/60" />
+              <span className="h-px w-8 bg-border" />
+            </div>
+          </div>
           <div
             className="prose prose-sm md:prose-base dark:prose-invert max-w-none prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground prose-table:text-sm"
             data-testid="study-guide-content"
