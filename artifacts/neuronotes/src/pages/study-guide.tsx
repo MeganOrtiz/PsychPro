@@ -86,7 +86,7 @@ export default function StudyGuidePage({ params }: Props) {
             className="prose prose-sm md:prose-base dark:prose-invert max-w-none prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground prose-table:text-sm"
             data-testid="study-guide-content"
           >
-            <MarkdownRenderer content={guide.content} />
+            <MarkdownRenderer content={guide.content.replace(/^\s*#\s+.*\n+/, "")} />
           </div>
         </div>
       )}
