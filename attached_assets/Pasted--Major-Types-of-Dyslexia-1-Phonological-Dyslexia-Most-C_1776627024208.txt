@@ -1,0 +1,87 @@
+🔑 Major Types of Dyslexia
+1. Phonological Dyslexia (Most Common)
+Core deficit: Phonological processing (sound structure of language)
+🧩 Neurocognitive Profile
+Weak phonemic awareness (blending, segmenting)
+Difficulty mapping letters → sounds
+Impaired decoding of unfamiliar words
+Reliance on memorization rather than rules
+📚 Reading Pattern
+Poor decoding of nonwords (e.g., “lat,” “mip”)
+Slow, effortful reading
+Frequent phonetic errors (e.g., “ship” → “sip”)
+🧠 Neural Correlates
+Left temporoparietal dysfunction (phonological network)
+Reduced activation in inferior frontal and posterior regions
+⚠️ Functional Impact
+Early reading delays
+Difficulty learning phonics-based instruction
+Avoidance of reading-intensive tasks
+2. Surface Dyslexia (Orthographic Dyslexia)
+Core deficit: Orthographic processing (visual word recognition)
+🧩 Neurocognitive Profile
+Difficulty storing and retrieving whole-word representations
+Weak sight word recognition
+Over-reliance on phonological decoding
+📚 Reading Pattern
+Difficulty with irregular words (e.g., “yacht,” “colonel”)
+Regularization errors (e.g., “pint” → pronounced like “mint”)
+Slow reading despite intact decoding
+🧠 Neural Correlates
+Left occipitotemporal region (Visual Word Form Area)
+⚠️ Functional Impact
+Reduced reading fluency
+Struggles with spelling irregular words
+Labor-intensive reading even with age
+3. Rapid Naming Deficit (RAN Dyslexia)
+Core deficit: Processing speed / automaticity of retrieval
+🧩 Neurocognitive Profile
+Slow rapid automatized naming (letters, numbers, colors)
+Inefficient access to phonological representations
+Reduced automaticity
+📚 Reading Pattern
+Slow, labored reading
+Difficulty with reading fluency (not accuracy per se)
+Trouble keeping pace with peers
+🧠 Neural Correlates
+Distributed network inefficiency (frontal + occipitotemporal connectivity)
+⚠️ Functional Impact
+Reading is accurate but not automatic
+Fatigue with sustained reading
+Impaired comprehension due to slowed rate
+4. Double Deficit Dyslexia
+Core deficit: Combined phonological + rapid naming deficits
+🧩 Neurocognitive Profile
+Impairments in both phonological processing AND naming speed
+📚 Reading Pattern
+Poor decoding + slow fluency
+Most severe and persistent presentation
+🧠 Clinical Significance
+Associated with poorer prognosis
+Requires intensive, multi-component intervention
+5. Visual (or Visual-Attentional) Dyslexia
+Core deficit: Visual attention span / orthographic processing efficiency
+🧩 Neurocognitive Profile
+Difficulty processing multiple letters simultaneously
+Reduced visual attention span
+Letter position errors
+📚 Reading Pattern
+Skipping words/lines
+Reversals or transpositions (e.g., “form” → “from”)
+Difficulty tracking text
+🧠 Neural Correlates
+Parietal-occipital regions (visual attention networks)
+⚠️ Clinical Note
+Less universally accepted as a “core” dyslexia subtype
+Often overlaps with attentional/executive weaknesses (e.g., ADHD)
+6. Deep Dyslexia (Rare; Acquired > Developmental)
+Core deficit: Semantic processing disruption
+🧩 Neurocognitive Profile
+Breakdown in mapping orthography → semantics
+📚 Reading Pattern
+Semantic errors (e.g., “dog” → “cat”)
+Difficulty reading abstract words
+Better performance on concrete words
+🧠 Clinical Note
+More common in acquired dyslexia (brain injury)
+Rare in developmental presentations
