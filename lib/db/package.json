@@ -40,7 +40,8 @@
     "update-neuroanatomy-v3": "tsx src/update-neuroanatomy-guide-v3.ts",
     "fix-italic-labels": "tsx src/fix-italic-labels.ts",
     "fix-italic-labels-v2": "tsx src/fix-italic-labels-v2.ts",
-    "fix-italic-labels-v3": "tsx src/fix-italic-labels-v3.ts"
+    "fix-italic-labels-v3": "tsx src/fix-italic-labels-v3.ts",
+    "add-imaging-topic": "tsx src/add-imaging-topic.ts"
   },
   "dependencies": {
     "drizzle-orm": "catalog:",
