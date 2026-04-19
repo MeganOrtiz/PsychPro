@@ -44,7 +44,8 @@
     "add-imaging-topic": "tsx src/add-imaging-topic.ts",
     "add-brain-networks-topic": "tsx src/add-brain-networks-topic.ts",
     "add-imaging-cards-quizzes": "tsx src/add-imaging-cards-quizzes.ts",
-    "add-brain-networks-cards-quizzes": "tsx src/add-brain-networks-cards-quizzes.ts"
+    "add-brain-networks-cards-quizzes": "tsx src/add-brain-networks-cards-quizzes.ts",
+    "update-adhd-presentations": "tsx src/update-adhd-presentations.ts"
   },
   "dependencies": {
     "drizzle-orm": "catalog:",
