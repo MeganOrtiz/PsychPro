@@ -42,7 +42,9 @@
     "fix-italic-labels-v2": "tsx src/fix-italic-labels-v2.ts",
     "fix-italic-labels-v3": "tsx src/fix-italic-labels-v3.ts",
     "add-imaging-topic": "tsx src/add-imaging-topic.ts",
-    "add-brain-networks-topic": "tsx src/add-brain-networks-topic.ts"
+    "add-brain-networks-topic": "tsx src/add-brain-networks-topic.ts",
+    "add-imaging-cards-quizzes": "tsx src/add-imaging-cards-quizzes.ts",
+    "add-brain-networks-cards-quizzes": "tsx src/add-brain-networks-cards-quizzes.ts"
   },
   "dependencies": {
     "drizzle-orm": "catalog:",
