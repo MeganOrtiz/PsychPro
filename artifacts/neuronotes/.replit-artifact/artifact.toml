@@ -1,6 +1,6 @@
 kind = "web"
 previewPath = "/"
-title = "NeuroNotes"
+title = "PsychPro"
 version = "1.0.0"
 id = "artifacts/neuronotes"
 router = "path"
