@@ -19,6 +19,7 @@ import PracticeExamPage from "@/pages/practice-exam";
 import ProgressPage from "@/pages/progress";
 import SubscriptionPage from "@/pages/subscription";
 import FeedbackPage from "@/pages/feedback";
+import ResourcesPage from "@/pages/resources";
 import AdminFeedbackPage from "@/pages/admin-feedback";
 import MyDecksPage from "@/pages/my-decks";
 import NewDeckPage from "@/pages/my-decks-new";
@@ -89,6 +90,7 @@ function AuthRouter() {
             <Route path="/progress" component={ProgressPage} />
             <Route path="/subscription" component={SubscriptionPage} />
             <Route path="/feedback" component={FeedbackPage} />
+            <Route path="/resources" component={ResourcesPage} />
             <Route path="/admin/feedback" component={AdminFeedbackPage} />
             <Route path="/my-decks" component={MyDecksPage} />
             <Route path="/my-decks/new" component={NewDeckPage} />

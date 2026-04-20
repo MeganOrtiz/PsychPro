@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useUser, UserButton } from "@clerk/react";
-import { Brain, LayoutDashboard, BookOpen, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck, BookMarked, Plus } from "lucide-react";
+import { Brain, LayoutDashboard, BookOpen, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck, BookMarked, Plus, Library } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -9,6 +9,7 @@ const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/topics", label: "Topics", icon: BookOpen },
   { href: "/progress", label: "Progress", icon: Trophy },
+  { href: "/resources", label: "Resources", icon: Library },
   { href: "/subscription", label: "Upgrade", icon: CreditCard },
   { href: "/feedback", label: "Feedback", icon: MessageSquare },
 ];
