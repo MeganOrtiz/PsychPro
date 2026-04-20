@@ -46,7 +46,8 @@
     "add-imaging-cards-quizzes": "tsx src/add-imaging-cards-quizzes.ts",
     "add-brain-networks-cards-quizzes": "tsx src/add-brain-networks-cards-quizzes.ts",
     "update-adhd-presentations": "tsx src/update-adhd-presentations.ts",
-    "add-dyslexia-types": "tsx src/add-dyslexia-types.ts"
+    "add-dyslexia-types": "tsx src/add-dyslexia-types.ts",
+    "clean-dyslexia-headings": "tsx src/clean-dyslexia-headings.ts"
   },
   "dependencies": {
     "drizzle-orm": "catalog:",
