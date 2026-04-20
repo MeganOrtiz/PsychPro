@@ -114,7 +114,7 @@ export default function OnboardingPage() {
       <div className="w-full max-w-lg">
         <div className="flex items-center gap-2 mb-8 justify-center">
           <Brain className="w-7 h-7 text-primary" />
-          <span className="font-bold text-xl text-foreground">NeuroNotes</span>
+          <span className="font-bold text-xl text-foreground">PsychPro</span>
         </div>
 
         <div className="flex gap-1.5 mb-8">

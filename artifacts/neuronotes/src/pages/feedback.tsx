@@ -43,7 +43,7 @@ export default function FeedbackPage() {
             <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
           </div>
           <h2 className="text-xl font-bold text-foreground">Thanks for your feedback!</h2>
-          <p className="text-muted-foreground text-sm">Your message has been received. We appreciate you helping improve NeuroNotes.</p>
+          <p className="text-muted-foreground text-sm">Your message has been received. We appreciate you helping improve PsychPro.</p>
           <Button
             variant="outline"
             className="mt-2"

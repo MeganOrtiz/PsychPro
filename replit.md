@@ -30,13 +30,13 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 
 See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details.
 
-## NeuroNotes App
+## PsychPro App
 
 A mobile-responsive neuroscience/neuropsychology study app.
 
 ### Artifacts
 - **API Server** (`artifacts/api-server`) — Express server on port 8080
-- **NeuroNotes Web** (`artifacts/neuronotes`) — React/Vite SPA (teal/navy theme)
+- **PsychPro Web** (`artifacts/neuronotes`) — React/Vite SPA (teal/navy theme)
 
 ### Key Files
 - `artifacts/api-server/src/app.ts` — Express app with Clerk middleware + Stripe webhook

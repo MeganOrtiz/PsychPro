@@ -46,7 +46,7 @@ async function seedProducts() {
   }
 
   const product = await stripe.products.create({
-    name: "NeuroNotes Pro",
+    name: "PsychPro Pro",
     description: "Unlimited access to all flashcards, quizzes, study guides, and practice exams across 20+ neuroscience topics.",
   });
 

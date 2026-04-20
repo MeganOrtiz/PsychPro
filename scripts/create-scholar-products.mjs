@@ -40,7 +40,7 @@ if (existing.data.length > 0) {
 }
 
 const product = await stripe.products.create({
-  name: "NeuroNotes Scholar",
+  name: "PsychPro Scholar",
   description: "Upload your own study materials and generate custom flashcards, quizzes, study guides & exams — built exclusively from your content.",
   metadata: { neuronotes_tier: "scholar" },
 });

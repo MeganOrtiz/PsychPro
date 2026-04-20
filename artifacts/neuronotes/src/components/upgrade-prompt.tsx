@@ -16,7 +16,7 @@ export default function UpgradePrompt({ onDismiss }: UpgradePromptProps) {
       </div>
       <h2 className="text-2xl font-bold text-foreground mb-3">Free Limit Reached</h2>
       <p className="text-muted-foreground mb-8 leading-relaxed">
-        You've used all 10 free interactions. Upgrade to NeuroNotes Pro for unlimited flashcards, quizzes, and exams.
+        You've used all 10 free interactions. Upgrade to PsychPro Pro for unlimited flashcards, quizzes, and exams.
       </p>
       <div className="flex flex-col sm:flex-row gap-3 w-full max-w-xs">
         <Button

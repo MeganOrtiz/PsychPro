@@ -71,7 +71,7 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Brain className="w-7 h-7 text-primary" />
-            <span className="font-bold text-xl text-foreground">NeuroNotes</span>
+            <span className="font-bold text-xl text-foreground">PsychPro</span>
           </div>
           <div className="flex gap-2">
             <Button variant="ghost" size="sm" onClick={() => setShowSignIn(true)} data-testid="button-sign-in">

@@ -61,7 +61,7 @@ export default function SubscriptionPage() {
   useEffect(() => {
     const params = new URLSearchParams(search);
     if (params.get("success") === "true") {
-      toast.success("Subscription activated! Welcome to NeuroNotes.");
+      toast.success("Subscription activated! Welcome to PsychPro.");
     }
     if (params.get("canceled") === "true") {
       toast("Checkout canceled. Your plan has not changed.");
@@ -116,7 +116,7 @@ export default function SubscriptionPage() {
         <div className="bg-card border border-border rounded-2xl p-6">
           <div className="flex items-center gap-2 mb-4">
             <Crown className="w-5 h-5 text-primary" />
-            <span className="font-bold text-foreground text-lg">NeuroNotes Pro</span>
+            <span className="font-bold text-foreground text-lg">PsychPro Pro</span>
             <Badge variant="secondary" className="ml-auto">Most Popular</Badge>
           </div>
 
@@ -175,7 +175,7 @@ export default function SubscriptionPage() {
           </div>
           <div className="flex items-center gap-2 mb-4">
             <BookMarked className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-            <span className="font-bold text-foreground text-lg">NeuroNotes Scholar</span>
+            <span className="font-bold text-foreground text-lg">PsychPro Scholar</span>
             <Badge className="ml-auto bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 border-0">Best Value</Badge>
           </div>
 

@@ -60,7 +60,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
       >
         <div className="flex items-center gap-2 p-4 border-b border-sidebar-border">
           <Brain className="w-7 h-7 text-sidebar-primary flex-shrink-0" />
-          <span className="text-sidebar-foreground font-bold text-lg">NeuroNotes</span>
+          <span className="text-sidebar-foreground font-bold text-lg">PsychPro</span>
           <button
             className="ml-auto md:hidden text-sidebar-foreground"
             onClick={() => setSidebarOpen(false)}
@@ -189,7 +189,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
             <Menu className="w-5 h-5" />
           </Button>
           <Brain className="w-6 h-6 text-primary" />
-          <span className="font-bold text-foreground">NeuroNotes</span>
+          <span className="font-bold text-foreground">PsychPro</span>
         </header>
 
         <main className="flex-1 overflow-y-auto" data-testid="main-content">

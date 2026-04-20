@@ -3,7 +3,7 @@ import { topicsTable, flashcardsTable, quizQuestionsTable, studyGuidesTable, pra
 import { sql } from "drizzle-orm";
 
 async function seed() {
-  console.log("Seeding NeuroNotes from course notes...");
+  console.log("Seeding PsychPro from course notes...");
 
   await db.execute(sql`TRUNCATE practice_exam_questions, practice_exams, study_guides, quiz_questions, flashcards, progress, topics RESTART IDENTITY CASCADE`);
 
