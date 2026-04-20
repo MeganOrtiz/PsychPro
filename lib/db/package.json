@@ -49,7 +49,8 @@
     "add-dyslexia-types": "tsx src/add-dyslexia-types.ts",
     "clean-dyslexia-headings": "tsx src/clean-dyslexia-headings.ts",
     "normalize-nervous-ncd-format": "tsx src/normalize-nervous-ncd-format.ts",
-    "expand-psychiatric-disorders": "tsx src/expand-psychiatric-disorders.ts"
+    "expand-psychiatric-disorders": "tsx src/expand-psychiatric-disorders.ts",
+    "bullet-specifiers-topic-10": "tsx src/bullet-specifiers-topic-10.ts"
   },
   "dependencies": {
     "drizzle-orm": "catalog:",
