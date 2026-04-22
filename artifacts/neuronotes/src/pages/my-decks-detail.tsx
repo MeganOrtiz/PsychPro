@@ -7,21 +7,24 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 
-type Deck = { id: number; title: string; studyGuide: string | null; status: string; examQuestionCount?: number; examTimed?: boolean };
+type Deck = { id: number; title: string; studyGuide: string | null; status: string; tier?: "standard" | "pro"; examQuestionCount?: number; examTimed?: boolean };
 type Flashcard = { id: number; front: string; back: string; difficulty: string; cardOrder: number };
 type QuizQuestion = { id: number; question: string; optionA: string; optionB: string; optionC: string; optionD: string; correctAnswer: string; explanation: string | null; questionOrder: number };
 type ClozeItem = { id: number; sentence: string; answer: string; hint: string | null; itemOrder: number };
 
 type Tab = "flashcards" | "quiz" | "cloze" | "match" | "review" | "study-guide" | "exam";
 
-const TAB_CONFIG: { id: Tab; label: string; icon: React.ElementType }[] = [
+const STANDARD_TABS: { id: Tab; label: string; icon: React.ElementType }[] = [
   { id: "flashcards", label: "Flashcards", icon: Layers },
   { id: "quiz", label: "Quiz", icon: BookMarked },
-  { id: "cloze", label: "Fill-in-Blank", icon: Pencil },
-  { id: "match", label: "Matching", icon: Shuffle },
-  { id: "review", label: "Review", icon: Repeat },
   { id: "study-guide", label: "Study Guide", icon: FileText },
   { id: "exam", label: "Practice Exam", icon: GraduationCap },
+];
+
+const PRO_TABS: { id: Tab; label: string; icon: React.ElementType }[] = [
+  { id: "match", label: "Matching", icon: Shuffle },
+  { id: "cloze", label: "Fill-in-Blank", icon: Pencil },
+  { id: "review", label: "Spaced Review", icon: Repeat },
 ];
 
 function DifficultyBadge({ difficulty }: { difficulty: string }) {
@@ -307,19 +310,19 @@ function MatchingView({ cards }: { cards: Flashcard[] }) {
   const [wrongFlash, setWrongFlash] = useState<{ front: number; back: number } | null>(null);
 
   useEffect(() => {
-    if (selectedFront == null || selectedBack == null) return;
+    if (selectedFront == null || selectedBack == null) return undefined;
     if (selectedFront === selectedBack) {
       setMatched((m) => new Set([...m, selectedFront]));
       setSelectedFront(null); setSelectedBack(null);
-    } else {
-      setWrongFlash({ front: selectedFront, back: selectedBack });
-      const t = setTimeout(() => {
-        setWrongFlash(null);
-        setSelectedFront(null);
-        setSelectedBack(null);
-      }, 600);
-      return () => clearTimeout(t);
+      return undefined;
     }
+    setWrongFlash({ front: selectedFront, back: selectedBack });
+    const t = setTimeout(() => {
+      setWrongFlash(null);
+      setSelectedFront(null);
+      setSelectedBack(null);
+    }, 600);
+    return () => clearTimeout(t);
   }, [selectedFront, selectedBack]);
 
   const allMatched = matched.size === round.pairs.length && round.pairs.length > 0;
@@ -516,8 +519,17 @@ export default function MyDeckDetailPage() {
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [quizQuestions, setQuizQuestions] = useState<QuizQuestion[]>([]);
   const [clozeItems, setClozeItems] = useState<ClozeItem[]>([]);
-  const [tab, setTab] = useState<Tab>("flashcards");
+  const [tab, setTab] = useState<Tab | null>(null);
   const [loading, setLoading] = useState(true);
+  const tabs = deck?.tier === "pro" ? PRO_TABS : STANDARD_TABS;
+  const activeTab: Tab = tab ?? (deck?.tier === "pro" ? "match" : "flashcards");
+
+  useEffect(() => {
+    if (!deck) return;
+    if (tab && !tabs.some((t) => t.id === tab)) {
+      setTab(deck.tier === "pro" ? "match" : "flashcards");
+    }
+  }, [deck, tab, tabs]);
 
   const loadDeck = useCallback(async () => {
     try {
@@ -572,20 +584,37 @@ export default function MyDeckDetailPage() {
       </button>
 
       <div className="mb-5">
-        <h1 className="text-2xl font-bold text-foreground">{deck.title}</h1>
+        <div className="flex items-center gap-2 flex-wrap">
+          <h1 className="text-2xl font-bold text-foreground">{deck.title}</h1>
+          {deck.tier === "pro" ? (
+            <Badge className="bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 border-purple-200">Pro Tools</Badge>
+          ) : (
+            <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border-blue-200">Standard Tools</Badge>
+          )}
+        </div>
         <div className="flex gap-3 mt-1 text-sm text-muted-foreground">
-          <span>{flashcards.length} flashcards</span>
-          <span>·</span>
-          <span>{quizQuestions.length} quiz questions</span>
+          {deck.tier === "pro" ? (
+            <>
+              <span>{flashcards.length} cards</span>
+              <span>·</span>
+              <span>{clozeItems.length} fill-in items</span>
+            </>
+          ) : (
+            <>
+              <span>{flashcards.length} flashcards</span>
+              <span>·</span>
+              <span>{quizQuestions.length} quiz questions</span>
+            </>
+          )}
         </div>
       </div>
 
       <div className="flex gap-1 bg-muted/60 rounded-xl p-1 mb-5 overflow-x-auto">
-        {TAB_CONFIG.map((t) => (
+        {tabs.map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`flex-1 min-w-0 flex items-center justify-center gap-1.5 px-2 py-2 rounded-lg text-xs font-medium transition-colors whitespace-nowrap ${tab === t.id ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+            className={`flex-1 min-w-0 flex items-center justify-center gap-1.5 px-2 py-2 rounded-lg text-xs font-medium transition-colors whitespace-nowrap ${activeTab === t.id ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
           >
             <t.icon className="w-3.5 h-3.5 flex-shrink-0" />
             <span className="hidden sm:inline">{t.label}</span>
@@ -595,10 +624,13 @@ export default function MyDeckDetailPage() {
       </div>
 
       <div>
-        {tab === "flashcards" && <FlashcardsView cards={flashcards} />}
-        {tab === "quiz" && <QuizView questions={quizQuestions} />}
-        {tab === "study-guide" && <StudyGuideView content={deck.studyGuide ?? ""} />}
-        {tab === "exam" && (
+        {activeTab === "flashcards" && <FlashcardsView cards={flashcards} />}
+        {activeTab === "quiz" && <QuizView questions={quizQuestions} />}
+        {activeTab === "cloze" && <ClozeView items={clozeItems} />}
+        {activeTab === "match" && <MatchingView cards={flashcards} />}
+        {activeTab === "review" && <ReviewView deckId={deck.id} cards={flashcards} />}
+        {activeTab === "study-guide" && <StudyGuideView content={deck.studyGuide ?? ""} />}
+        {activeTab === "exam" && (
           <QuizView
             questions={quizQuestions}
             isExam

@@ -130,6 +130,7 @@ export const customDecksTable = pgTable("custom_decks", {
   sourceText: text("source_text").notNull(),
   studyGuide: text("study_guide"),
   status: text("status").notNull().default("processing"),
+  tier: text("tier").notNull().default("standard"),
   examQuestionCount: integer("exam_question_count").notNull().default(15),
   examTimed: boolean("exam_timed").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),

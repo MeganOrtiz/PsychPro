@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useUser, UserButton } from "@clerk/react";
-import { Brain, LayoutDashboard, BookOpen, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck, BookMarked, Plus, Library } from "lucide-react";
+import { Brain, LayoutDashboard, BookOpen, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck, BookMarked, Library, Wrench, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -99,7 +99,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           {isScholar && (
             <>
               <div className="px-3 pt-3 pb-1">
-                <p className="text-xs font-semibold text-sidebar-foreground/40 uppercase tracking-wider">My Decks</p>
+                <p className="text-xs font-semibold text-sidebar-foreground/40 uppercase tracking-wider">Toolkit</p>
               </div>
               <Link
                 href="/my-decks"
@@ -109,32 +109,48 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 <div
                   className={cn(
                     "flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors",
-                    location === "/my-decks" || location.startsWith("/my-decks/")
+                    location === "/my-decks" || (location.startsWith("/my-decks/") && location !== "/my-decks/new")
                       ? "bg-sidebar-primary text-sidebar-primary-foreground"
                       : "text-sidebar-foreground hover:bg-sidebar-accent"
                   )}
                 >
                   <BookMarked className="w-5 h-5 flex-shrink-0" />
-                  <span className="text-sm font-medium">Browse Decks</span>
-                  {(location === "/my-decks" || location.startsWith("/my-decks/")) && <ChevronRight className="w-4 h-4 ml-auto" />}
+                  <span className="text-sm font-medium">My Toolkits</span>
+                  {(location === "/my-decks" || (location.startsWith("/my-decks/") && location !== "/my-decks/new")) && <ChevronRight className="w-4 h-4 ml-auto" />}
                 </div>
               </Link>
               <Link
-                href="/my-decks/new"
+                href="/my-decks/new?tier=standard"
                 onClick={() => setSidebarOpen(false)}
-                data-testid="nav-new-deck"
+                data-testid="nav-new-standard"
               >
                 <div
                   className={cn(
                     "flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors",
-                    location === "/my-decks/new"
+                    location === "/my-decks/new" && typeof window !== "undefined" && window.location.search.includes("tier=standard")
                       ? "bg-sidebar-primary text-sidebar-primary-foreground"
                       : "text-sidebar-foreground hover:bg-sidebar-accent"
                   )}
                 >
-                  <Plus className="w-5 h-5 flex-shrink-0" />
-                  <span className="text-sm font-medium">New Deck</span>
-                  {location === "/my-decks/new" && <ChevronRight className="w-4 h-4 ml-auto" />}
+                  <Wrench className="w-5 h-5 flex-shrink-0" />
+                  <span className="text-sm font-medium">Standard Tools</span>
+                </div>
+              </Link>
+              <Link
+                href="/my-decks/new?tier=pro"
+                onClick={() => setSidebarOpen(false)}
+                data-testid="nav-new-pro"
+              >
+                <div
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors",
+                    location === "/my-decks/new" && typeof window !== "undefined" && window.location.search.includes("tier=pro")
+                      ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                      : "text-sidebar-foreground hover:bg-sidebar-accent"
+                  )}
+                >
+                  <Sparkles className="w-5 h-5 flex-shrink-0" />
+                  <span className="text-sm font-medium">Pro Tools</span>
                 </div>
               </Link>
             </>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { BookMarked, Plus, Trash2, Clock, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+import { BookMarked, Trash2, Clock, CheckCircle, AlertCircle, Loader2, Wrench, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
@@ -9,6 +9,7 @@ type DeckSummary = {
   id: number;
   title: string;
   status: string;
+  tier?: "standard" | "pro";
   createdAt: string;
 };
 
@@ -60,7 +61,8 @@ export default function MyDecksPage() {
     if (!confirm("Delete this deck? This cannot be undone.")) return;
     setDeleting(id);
     try {
-      await fetch(`/api/custom-decks/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/custom-decks/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Delete failed");
       setDecks((prev) => prev.filter((d) => d.id !== id));
       toast.success("Deck deleted");
     } catch {
@@ -72,20 +74,24 @@ export default function MyDecksPage() {
 
   return (
     <div className="p-4 md:p-6 max-w-2xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <BookMarked className="w-5 h-5 text-primary" />
-            <h1 className="text-2xl font-bold text-foreground">My Decks</h1>
-          </div>
-          <p className="text-muted-foreground text-sm">Study tools generated from your own materials</p>
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-1">
+          <BookMarked className="w-5 h-5 text-primary" />
+          <h1 className="text-2xl font-bold text-foreground">My Toolkits</h1>
         </div>
-        <Link href="/my-decks/new">
-          <Button className="gap-2">
-            <Plus className="w-4 h-4" />
-            New Deck
-          </Button>
-        </Link>
+        <p className="text-muted-foreground text-sm mb-4">Tools generated from your own materials</p>
+        <div className="grid grid-cols-2 gap-2">
+          <Link href="/my-decks/new?tier=standard">
+            <Button variant="outline" className="w-full gap-2 justify-center">
+              <Wrench className="w-4 h-4" /> Standard Tools
+            </Button>
+          </Link>
+          <Link href="/my-decks/new?tier=pro">
+            <Button className="w-full gap-2 justify-center bg-purple-600 hover:bg-purple-700 text-white">
+              <Sparkles className="w-4 h-4" /> Pro Tools
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {loading ? (
@@ -95,14 +101,8 @@ export default function MyDecksPage() {
       ) : decks.length === 0 ? (
         <div className="text-center py-16 border-2 border-dashed border-border rounded-2xl">
           <BookMarked className="w-12 h-12 mx-auto mb-3 text-muted-foreground opacity-40" />
-          <p className="font-semibold text-foreground mb-1">No decks yet</p>
-          <p className="text-sm text-muted-foreground mb-5">Upload your notes or paste text to create your first custom study deck.</p>
-          <Link href="/my-decks/new">
-            <Button className="gap-2">
-              <Plus className="w-4 h-4" />
-              Create Your First Deck
-            </Button>
-          </Link>
+          <p className="font-semibold text-foreground mb-1">No toolkits yet</p>
+          <p className="text-sm text-muted-foreground mb-5">Choose Standard or Pro Tools above to upload your study materials and generate your first toolkit.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -110,7 +110,14 @@ export default function MyDecksPage() {
             <Link key={deck.id} href={deck.status === "ready" ? `/my-decks/${deck.id}` : "#"}>
               <div className={`bg-card border border-border rounded-xl p-4 flex items-center justify-between gap-3 transition-colors ${deck.status === "ready" ? "hover:border-primary/40 cursor-pointer" : "opacity-70"}`}>
                 <div className="min-w-0">
-                  <p className="font-medium text-foreground truncate">{deck.title}</p>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <p className="font-medium text-foreground truncate">{deck.title}</p>
+                    {deck.tier === "pro" ? (
+                      <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 inline-flex items-center gap-1"><Sparkles className="w-2.5 h-2.5" />Pro</span>
+                    ) : (
+                      <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 inline-flex items-center gap-1"><Wrench className="w-2.5 h-2.5" />Standard</span>
+                    )}
+                  </div>
                   <div className="flex items-center gap-3 mt-1">
                     <StatusBadge status={deck.status} />
                     <span className="text-xs text-muted-foreground flex items-center gap-1">

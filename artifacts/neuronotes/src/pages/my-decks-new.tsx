@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
-import { useLocation } from "wouter";
-import { Upload, FileText, X, Loader2, Sparkles, AlertCircle, BookOpen, Wand2, Layers, BookMarked, GraduationCap, Timer, Pencil } from "lucide-react";
+import { useLocation, useSearch } from "wouter";
+import { Upload, FileText, X, Loader2, Sparkles, AlertCircle, BookOpen, Wand2, Layers, BookMarked, GraduationCap, Timer, Pencil, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -14,6 +14,9 @@ const CLOZE_OPTIONS = [0, 10, 20] as const;
 
 export default function NewDeckPage() {
   const [, navigate] = useLocation();
+  const search = useSearch();
+  const tier: "standard" | "pro" = new URLSearchParams(search).get("tier") === "pro" ? "pro" : "standard";
+  const isPro = tier === "pro";
   const [mode, setMode] = useState<InputMode>("text");
   const [aiMode, setAiMode] = useState<AiMode>("enhance");
   const [title, setTitle] = useState("");
@@ -56,8 +59,9 @@ export default function NewDeckPage() {
     setGenerating(true);
     try {
       const formData = new FormData();
-      formData.append("title", title.trim() || "My Study Deck");
+      formData.append("title", title.trim() || (isPro ? "My Pro Toolkit" : "My Study Toolkit"));
       formData.append("aiMode", aiMode);
+      formData.append("tier", tier);
       formData.append("flashcardCount", String(flashcardCount));
       formData.append("quizCount", String(quizCount));
       formData.append("examQuestionCount", String(examQuestionCount));
@@ -94,10 +98,16 @@ export default function NewDeckPage() {
     <div className="p-4 md:p-6 max-w-lg mx-auto">
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-1">
-          <Sparkles className="w-5 h-5 text-primary" />
-          <h1 className="text-2xl font-bold text-foreground">Create Study Deck</h1>
+          {isPro ? <Sparkles className="w-5 h-5 text-purple-600" /> : <Wrench className="w-5 h-5 text-primary" />}
+          <h1 className="text-2xl font-bold text-foreground">
+            {isPro ? "Create Pro Tools" : "Create Standard Tools"}
+          </h1>
         </div>
-        <p className="text-muted-foreground text-sm">Upload your notes or paste text — we'll generate flashcards, quizzes, a study guide, and a practice exam.</p>
+        <p className="text-muted-foreground text-sm">
+          {isPro
+            ? "Upload your notes or paste text — we'll generate matching games, fill-in-the-blank items, and a spaced-repetition review deck."
+            : "Upload your notes or paste text — we'll generate flashcards, quizzes, a study guide, and a practice exam."}
+        </p>
       </div>
 
       {generating ? (
@@ -168,13 +178,13 @@ export default function NewDeckPage() {
           {/* Tool customization */}
           <div className="space-y-4 rounded-xl border border-border bg-card/50 p-4">
             <div>
-              <p className="text-sm font-medium text-foreground mb-1">Customize your study tools</p>
+              <p className="text-sm font-medium text-foreground mb-1">Customize your tools</p>
               <p className="text-xs text-muted-foreground">Choose how much content the AI generates for each tool.</p>
             </div>
 
             <div>
               <label className="flex items-center gap-1.5 text-xs font-medium text-foreground mb-1.5">
-                <Layers className="w-3.5 h-3.5 text-muted-foreground" /> Flashcards
+                <Layers className="w-3.5 h-3.5 text-muted-foreground" /> {isPro ? "Card pool (powers matching & review)" : "Flashcards"}
               </label>
               <div className="grid grid-cols-3 gap-2">
                 {FLASHCARD_OPTIONS.map((n) => (
@@ -194,6 +204,7 @@ export default function NewDeckPage() {
               </div>
             </div>
 
+            {!isPro && (
             <div>
               <label className="flex items-center gap-1.5 text-xs font-medium text-foreground mb-1.5">
                 <BookMarked className="w-3.5 h-3.5 text-muted-foreground" /> Quiz questions
@@ -215,7 +226,9 @@ export default function NewDeckPage() {
                 ))}
               </div>
             </div>
+            )}
 
+            {!isPro && (
             <div>
               <label className="flex items-center gap-1.5 text-xs font-medium text-foreground mb-1.5">
                 <GraduationCap className="w-3.5 h-3.5 text-muted-foreground" /> Practice exam length
@@ -238,7 +251,9 @@ export default function NewDeckPage() {
               </div>
               <p className="text-[11px] text-muted-foreground mt-1.5">Exam pulls from your quiz questions. Pick a length up to your quiz size.</p>
             </div>
+            )}
 
+            {isPro && (
             <div>
               <label className="flex items-center gap-1.5 text-xs font-medium text-foreground mb-1.5">
                 <Pencil className="w-3.5 h-3.5 text-muted-foreground" /> Fill-in-the-blank
@@ -261,7 +276,9 @@ export default function NewDeckPage() {
               </div>
               <p className="text-[11px] text-muted-foreground mt-1.5">Cloze sentences with key terms blanked out for active recall.</p>
             </div>
+            )}
 
+            {!isPro && (
             <button
               type="button"
               onClick={() => setExamTimed(!examTimed)}
@@ -275,6 +292,7 @@ export default function NewDeckPage() {
               </span>
               <span className="text-xs">{examTimed ? "On (90s/q)" : "Off"}</span>
             </button>
+            )}
           </div>
 
           <div>

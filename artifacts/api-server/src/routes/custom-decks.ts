@@ -190,6 +190,7 @@ router.post(
       const title: string = req.body?.title?.trim() || "My Study Deck";
       const rawAiMode = req.body?.aiMode;
       const aiMode: "strict" | "enhance" = rawAiMode === "strict" ? "strict" : "enhance";
+      const tier: "standard" | "pro" = req.body?.tier === "pro" ? "pro" : "standard";
 
       const ALLOWED_FLASHCARDS = [15, 25, 40];
       const ALLOWED_QUIZ = [10, 15, 25];
@@ -220,15 +221,16 @@ router.post(
 
       const [deck] = await db
         .insert(customDecksTable)
-        .values({ userId, title, sourceText, status: "processing", examQuestionCount, examTimed })
+        .values({ userId, title, sourceText, status: "processing", tier, examQuestionCount, examTimed })
         .returning();
 
       try {
+        const proTier = tier === "pro";
         const [flashcards, quizQuestions, studyGuide, clozeItems] = await Promise.all([
           generateFlashcards(sourceText, aiMode, flashcardCount),
-          generateQuizQuestions(sourceText, aiMode, quizCount),
-          generateStudyGuide(sourceText, aiMode),
-          clozeCount > 0 ? generateClozeItems(sourceText, aiMode, clozeCount) : Promise.resolve([] as Array<{ sentence: string; answer: string; hint?: string }>),
+          proTier ? Promise.resolve([] as Array<{ question: string; optionA: string; optionB: string; optionC: string; optionD: string; correctAnswer: string; explanation: string }>) : generateQuizQuestions(sourceText, aiMode, quizCount),
+          proTier ? Promise.resolve("") : generateStudyGuide(sourceText, aiMode),
+          proTier && clozeCount > 0 ? generateClozeItems(sourceText, aiMode, clozeCount) : Promise.resolve([] as Array<{ sentence: string; answer: string; hint?: string }>),
         ]);
 
         if (flashcards.length > 0) {
@@ -300,7 +302,7 @@ router.get("/custom-decks", async (req: Request, res: Response): Promise<void> =
     if (!userId) { res.status(401).json({ error: "Unauthorized" }); return; }
 
     const decks = await db
-      .select({ id: customDecksTable.id, title: customDecksTable.title, status: customDecksTable.status, createdAt: customDecksTable.createdAt })
+      .select({ id: customDecksTable.id, title: customDecksTable.title, status: customDecksTable.status, tier: customDecksTable.tier, createdAt: customDecksTable.createdAt })
       .from(customDecksTable)
       .where(eq(customDecksTable.userId, userId))
       .orderBy(desc(customDecksTable.createdAt));
