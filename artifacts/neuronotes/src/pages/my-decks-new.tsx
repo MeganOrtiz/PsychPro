@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { useLocation } from "wouter";
-import { Upload, FileText, X, Loader2, Sparkles, AlertCircle, BookOpen, Wand2, Layers, BookMarked, GraduationCap, Timer } from "lucide-react";
+import { Upload, FileText, X, Loader2, Sparkles, AlertCircle, BookOpen, Wand2, Layers, BookMarked, GraduationCap, Timer, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -10,6 +10,7 @@ type AiMode = "strict" | "enhance";
 const FLASHCARD_OPTIONS = [15, 25, 40] as const;
 const QUIZ_OPTIONS = [10, 15, 25] as const;
 const EXAM_OPTIONS = [15, 25, 50] as const;
+const CLOZE_OPTIONS = [0, 10, 20] as const;
 
 export default function NewDeckPage() {
   const [, navigate] = useLocation();
@@ -22,6 +23,7 @@ export default function NewDeckPage() {
   const [quizCount, setQuizCount] = useState<number>(15);
   const [examQuestionCount, setExamQuestionCount] = useState<number>(15);
   const [examTimed, setExamTimed] = useState<boolean>(false);
+  const [clozeCount, setClozeCount] = useState<number>(10);
   const [generating, setGenerating] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -60,6 +62,7 @@ export default function NewDeckPage() {
       formData.append("quizCount", String(quizCount));
       formData.append("examQuestionCount", String(examQuestionCount));
       formData.append("examTimed", String(examTimed));
+      formData.append("clozeCount", String(clozeCount));
       if (mode === "file" && file) {
         formData.append("file", file);
       } else {
@@ -234,6 +237,29 @@ export default function NewDeckPage() {
                 ))}
               </div>
               <p className="text-[11px] text-muted-foreground mt-1.5">Exam pulls from your quiz questions. Pick a length up to your quiz size.</p>
+            </div>
+
+            <div>
+              <label className="flex items-center gap-1.5 text-xs font-medium text-foreground mb-1.5">
+                <Pencil className="w-3.5 h-3.5 text-muted-foreground" /> Fill-in-the-blank
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                {CLOZE_OPTIONS.map((n) => (
+                  <button
+                    key={n}
+                    type="button"
+                    onClick={() => setClozeCount(n)}
+                    className={`py-2 rounded-lg border text-sm font-medium transition-colors ${
+                      clozeCount === n
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border bg-card text-muted-foreground hover:bg-muted"
+                    }`}
+                  >
+                    {n === 0 ? "Off" : `${n} items`}
+                  </button>
+                ))}
+              </div>
+              <p className="text-[11px] text-muted-foreground mt-1.5">Cloze sentences with key terms blanked out for active recall.</p>
             </div>
 
             <button

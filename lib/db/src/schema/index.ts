@@ -168,3 +168,16 @@ export const customQuizQuestionsTable = pgTable("custom_quiz_questions", {
 export const insertCustomQuizQuestionSchema = createInsertSchema(customQuizQuestionsTable).omit({ id: true });
 export type InsertCustomQuizQuestion = z.infer<typeof insertCustomQuizQuestionSchema>;
 export type CustomQuizQuestion = typeof customQuizQuestionsTable.$inferSelect;
+
+export const customClozeItemsTable = pgTable("custom_cloze_items", {
+  id: serial("id").primaryKey(),
+  deckId: integer("deck_id").notNull().references(() => customDecksTable.id, { onDelete: "cascade" }),
+  sentence: text("sentence").notNull(),
+  answer: text("answer").notNull(),
+  hint: text("hint"),
+  itemOrder: integer("item_order").notNull().default(0),
+});
+
+export const insertCustomClozeItemSchema = createInsertSchema(customClozeItemsTable).omit({ id: true });
+export type InsertCustomClozeItem = z.infer<typeof insertCustomClozeItemSchema>;
+export type CustomClozeItem = typeof customClozeItemsTable.$inferSelect;

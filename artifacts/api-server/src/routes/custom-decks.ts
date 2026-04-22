@@ -6,6 +6,7 @@ import {
   customDecksTable,
   customFlashcardsTable,
   customQuizQuestionsTable,
+  customClozeItemsTable,
 } from "@workspace/db";
 import { eq, desc } from "drizzle-orm";
 import { getAuth } from "@clerk/express";
@@ -121,6 +122,33 @@ Respond with a JSON object: { "questions": [ { "question": "...", "optionA": "..
   return parsed.questions ?? [];
 }
 
+async function generateClozeItems(sourceText: string, aiMode: "strict" | "enhance", count: number): Promise<Array<{ sentence: string; answer: string; hint?: string }>> {
+  const response = await openai.chat.completions.create({
+    model: "gpt-5.2",
+    max_completion_tokens: 6144,
+    messages: [
+      { role: "system", content: buildSystemPrompt(sourceText, aiMode) },
+      {
+        role: "user",
+        content: `Generate exactly ${count} fill-in-the-blank (cloze) study items from the source text. Each item is a single sentence with one important keyword or short phrase replaced by exactly three underscores: ___. The "answer" is the exact word/phrase that fills the blank. Provide a brief "hint" (a category, first letter, or definition fragment) — keep it useful but not a giveaway.
+
+Rules:
+- Exactly one ___ blank per sentence
+- The blank must be a meaningful term, not a function word
+- Sentences should be self-contained and clear
+- Vary which terms you blank across items
+
+Respond with a JSON object: { "items": [ { "sentence": "...___...", "answer": "...", "hint": "..." }, ... ] }`,
+      },
+    ],
+    response_format: { type: "json_object" },
+  });
+
+  const content = response.choices[0]?.message?.content ?? "{}";
+  const parsed = JSON.parse(content);
+  return parsed.items ?? [];
+}
+
 async function generateStudyGuide(sourceText: string, aiMode: "strict" | "enhance"): Promise<string> {
   const response = await openai.chat.completions.create({
     model: "gpt-5.2",
@@ -166,6 +194,7 @@ router.post(
       const ALLOWED_FLASHCARDS = [15, 25, 40];
       const ALLOWED_QUIZ = [10, 15, 25];
       const ALLOWED_EXAM = [15, 25, 50];
+      const ALLOWED_CLOZE = [0, 10, 20];
       const parseChoice = (raw: unknown, allowed: number[], fallback: number): number => {
         const n = parseInt(String(raw ?? ""), 10);
         return allowed.includes(n) ? n : fallback;
@@ -173,6 +202,7 @@ router.post(
       const flashcardCount = parseChoice(req.body?.flashcardCount, ALLOWED_FLASHCARDS, 25);
       const quizCount = parseChoice(req.body?.quizCount, ALLOWED_QUIZ, 15);
       const examQuestionCount = parseChoice(req.body?.examQuestionCount, ALLOWED_EXAM, 15);
+      const clozeCount = parseChoice(req.body?.clozeCount, ALLOWED_CLOZE, 10);
       const examTimed = req.body?.examTimed === "true" || req.body?.examTimed === true;
 
       let sourceText: string = "";
@@ -194,10 +224,11 @@ router.post(
         .returning();
 
       try {
-        const [flashcards, quizQuestions, studyGuide] = await Promise.all([
+        const [flashcards, quizQuestions, studyGuide, clozeItems] = await Promise.all([
           generateFlashcards(sourceText, aiMode, flashcardCount),
           generateQuizQuestions(sourceText, aiMode, quizCount),
           generateStudyGuide(sourceText, aiMode),
+          clozeCount > 0 ? generateClozeItems(sourceText, aiMode, clozeCount) : Promise.resolve([] as Array<{ sentence: string; answer: string; hint?: string }>),
         ]);
 
         if (flashcards.length > 0) {
@@ -225,6 +256,20 @@ router.post(
               explanation: q.explanation || "",
               questionOrder: i,
             }))
+          );
+        }
+
+        if (clozeItems.length > 0) {
+          await db.insert(customClozeItemsTable).values(
+            clozeItems
+              .filter((c) => c.sentence && c.answer)
+              .map((c, i) => ({
+                deckId: deck.id,
+                sentence: c.sentence,
+                answer: c.answer,
+                hint: c.hint ?? null,
+                itemOrder: i,
+              }))
           );
         }
 
@@ -313,6 +358,23 @@ router.get("/custom-decks/:id/quiz", async (req: Request, res: Response): Promis
     res.json(questions.sort((a, b) => a.questionOrder - b.questionOrder));
   } catch (err) {
     req.log.error({ err }, "Error fetching custom quiz questions");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get("/custom-decks/:id/cloze", async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = getUserId(req);
+    if (!userId) { res.status(401).json({ error: "Unauthorized" }); return; }
+
+    const deckId = parseInt(req.params.id, 10);
+    const [deck] = await db.select({ userId: customDecksTable.userId }).from(customDecksTable).where(eq(customDecksTable.id, deckId));
+    if (!deck || deck.userId !== userId) { res.status(404).json({ error: "Not found" }); return; }
+
+    const items = await db.select().from(customClozeItemsTable).where(eq(customClozeItemsTable.deckId, deckId));
+    res.json(items.sort((a, b) => a.itemOrder - b.itemOrder));
+  } catch (err) {
+    req.log.error({ err }, "Error fetching custom cloze items");
     res.status(500).json({ error: "Internal server error" });
   }
 });

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useLocation } from "wouter";
-import { BookMarked, Layers, FileText, GraduationCap, ChevronLeft, ChevronRight, RotateCcw, CheckCircle, XCircle, AlertCircle, Timer } from "lucide-react";
+import { BookMarked, Layers, FileText, GraduationCap, ChevronLeft, ChevronRight, RotateCcw, CheckCircle, XCircle, AlertCircle, Timer, Pencil, Shuffle, Repeat } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -10,12 +10,16 @@ import ReactMarkdown from "react-markdown";
 type Deck = { id: number; title: string; studyGuide: string | null; status: string; examQuestionCount?: number; examTimed?: boolean };
 type Flashcard = { id: number; front: string; back: string; difficulty: string; cardOrder: number };
 type QuizQuestion = { id: number; question: string; optionA: string; optionB: string; optionC: string; optionD: string; correctAnswer: string; explanation: string | null; questionOrder: number };
+type ClozeItem = { id: number; sentence: string; answer: string; hint: string | null; itemOrder: number };
 
-type Tab = "flashcards" | "quiz" | "study-guide" | "exam";
+type Tab = "flashcards" | "quiz" | "cloze" | "match" | "review" | "study-guide" | "exam";
 
 const TAB_CONFIG: { id: Tab; label: string; icon: React.ElementType }[] = [
   { id: "flashcards", label: "Flashcards", icon: Layers },
   { id: "quiz", label: "Quiz", icon: BookMarked },
+  { id: "cloze", label: "Fill-in-Blank", icon: Pencil },
+  { id: "match", label: "Matching", icon: Shuffle },
+  { id: "review", label: "Review", icon: Repeat },
   { id: "study-guide", label: "Study Guide", icon: FileText },
   { id: "exam", label: "Practice Exam", icon: GraduationCap },
 ];
@@ -208,6 +212,294 @@ function QuizView({ questions, isExam, examLength, timed }: { questions: QuizQue
   );
 }
 
+function ClozeView({ items }: { items: ClozeItem[] }) {
+  const [index, setIndex] = useState(0);
+  const [guess, setGuess] = useState("");
+  const [revealed, setRevealed] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+
+  const item = items[index];
+
+  function next() {
+    setIndex((i) => (i + 1) % items.length);
+    setGuess(""); setRevealed(false); setShowHint(false);
+  }
+  function check() {
+    setRevealed(true);
+  }
+
+  if (!item) return <p className="text-muted-foreground text-center py-8">No fill-in-the-blank items were generated for this deck.</p>;
+
+  const correct = revealed && guess.trim().toLowerCase() === item.answer.trim().toLowerCase();
+  const parts = item.sentence.split("___");
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between text-sm text-muted-foreground">
+        <span>{index + 1} / {items.length}</span>
+        {item.hint && (
+          <button onClick={() => setShowHint(!showHint)} className="text-xs text-primary hover:underline">
+            {showHint ? "Hide hint" : "Show hint"}
+          </button>
+        )}
+      </div>
+
+      <div className="bg-card border border-border rounded-xl p-5 space-y-3">
+        <p className="text-foreground leading-relaxed">
+          {parts[0]}
+          <span className={`inline-block min-w-[80px] px-2 py-0.5 mx-1 rounded border-b-2 font-semibold ${
+            revealed ? (correct ? "border-green-500 text-green-700 dark:text-green-400" : "border-red-400 text-red-600") : "border-primary text-primary"
+          }`}>
+            {revealed ? item.answer : (guess || "______")}
+          </span>
+          {parts[1] ?? ""}
+        </p>
+        {showHint && item.hint && (
+          <p className="text-xs text-muted-foreground italic">Hint: {item.hint}</p>
+        )}
+      </div>
+
+      {!revealed ? (
+        <input
+          type="text"
+          value={guess}
+          onChange={(e) => setGuess(e.target.value)}
+          onKeyDown={(e) => { if (e.key === "Enter") check(); }}
+          placeholder="Type your answer…"
+          className="w-full rounded-lg border border-border bg-card px-3 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+          autoFocus
+        />
+      ) : (
+        <div className={`rounded-xl p-3 text-sm ${correct ? "bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-300" : "bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-300"}`}>
+          {correct ? <><CheckCircle className="w-4 h-4 inline mr-1" />Correct!</> : <>The answer was <strong>{item.answer}</strong></>}
+        </div>
+      )}
+
+      <div className="flex gap-3">
+        {!revealed ? (
+          <Button className="flex-1" onClick={check} disabled={!guess.trim()}>Check answer</Button>
+        ) : (
+          <Button className="flex-1 gap-2" onClick={next}>Next<ChevronRight className="w-4 h-4" /></Button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function MatchingView({ cards }: { cards: Flashcard[] }) {
+  const PAIR_COUNT = Math.min(6, cards.length);
+
+  type Pair = { id: number; front: string; back: string };
+  const buildRound = useCallback((): { pairs: Pair[]; shuffledFronts: Pair[]; shuffledBacks: Pair[] } => {
+    const shuffled = [...cards].sort(() => Math.random() - 0.5).slice(0, PAIR_COUNT);
+    const pairs = shuffled.map((c) => ({ id: c.id, front: c.front, back: c.back }));
+    return {
+      pairs,
+      shuffledFronts: [...pairs].sort(() => Math.random() - 0.5),
+      shuffledBacks: [...pairs].sort(() => Math.random() - 0.5),
+    };
+  }, [cards, PAIR_COUNT]);
+
+  const [round, setRound] = useState(buildRound);
+  const [selectedFront, setSelectedFront] = useState<number | null>(null);
+  const [selectedBack, setSelectedBack] = useState<number | null>(null);
+  const [matched, setMatched] = useState<Set<number>>(new Set());
+  const [wrongFlash, setWrongFlash] = useState<{ front: number; back: number } | null>(null);
+
+  useEffect(() => {
+    if (selectedFront == null || selectedBack == null) return;
+    if (selectedFront === selectedBack) {
+      setMatched((m) => new Set([...m, selectedFront]));
+      setSelectedFront(null); setSelectedBack(null);
+    } else {
+      setWrongFlash({ front: selectedFront, back: selectedBack });
+      const t = setTimeout(() => {
+        setWrongFlash(null);
+        setSelectedFront(null);
+        setSelectedBack(null);
+      }, 600);
+      return () => clearTimeout(t);
+    }
+  }, [selectedFront, selectedBack]);
+
+  const allMatched = matched.size === round.pairs.length && round.pairs.length > 0;
+
+  function newRound() {
+    setRound(buildRound());
+    setSelectedFront(null); setSelectedBack(null); setMatched(new Set()); setWrongFlash(null);
+  }
+
+  if (cards.length === 0) return <p className="text-muted-foreground text-center py-8">Add some flashcards to play matching.</p>;
+
+  function tileClass(id: number, side: "front" | "back") {
+    if (matched.has(id)) return "border-green-500 bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-300 opacity-60";
+    const selected = side === "front" ? selectedFront === id : selectedBack === id;
+    if (wrongFlash && ((side === "front" && wrongFlash.front === id) || (side === "back" && wrongFlash.back === id))) {
+      return "border-red-400 bg-red-50 dark:bg-red-900/20 text-red-700";
+    }
+    if (selected) return "border-primary bg-primary/10 text-primary";
+    return "border-border bg-card text-foreground hover:border-primary/40";
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between text-sm text-muted-foreground">
+        <span>Matched {matched.size} / {round.pairs.length}</span>
+        <button onClick={newRound} className="flex items-center gap-1 text-xs text-primary hover:underline">
+          <RotateCcw className="w-3 h-3" /> New round
+        </button>
+      </div>
+
+      {allMatched ? (
+        <div className="text-center py-8 space-y-3">
+          <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/30 mx-auto flex items-center justify-center">
+            <CheckCircle className="w-8 h-8 text-green-600" />
+          </div>
+          <p className="font-semibold text-foreground">All pairs matched!</p>
+          <Button onClick={newRound} className="gap-2"><RotateCcw className="w-4 h-4" />Play again</Button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 gap-2">
+          <div className="space-y-2">
+            {round.shuffledFronts.map((p) => (
+              <button
+                key={`f-${p.id}`}
+                disabled={matched.has(p.id)}
+                onClick={() => setSelectedFront(p.id)}
+                className={`w-full rounded-xl px-3 py-3 text-xs text-left border-2 transition-colors ${tileClass(p.id, "front")}`}
+              >
+                {p.front}
+              </button>
+            ))}
+          </div>
+          <div className="space-y-2">
+            {round.shuffledBacks.map((p) => (
+              <button
+                key={`b-${p.id}`}
+                disabled={matched.has(p.id)}
+                onClick={() => setSelectedBack(p.id)}
+                className={`w-full rounded-xl px-3 py-3 text-xs text-left border-2 transition-colors ${tileClass(p.id, "back")}`}
+              >
+                {p.back}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+type Rating = "again" | "hard" | "good" | "easy";
+type ReviewState = { ease: number; intervalDays: number; due: number; reps: number };
+
+function ReviewView({ deckId, cards }: { deckId: number; cards: Flashcard[] }) {
+  const storageKey = `psychpro:srs:${deckId}`;
+  const [progress, setProgress] = useState<Record<number, ReviewState>>({});
+  const [flipped, setFlipped] = useState(false);
+  const [sessionDone, setSessionDone] = useState(false);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(storageKey);
+      if (raw) setProgress(JSON.parse(raw));
+    } catch { /* ignore */ }
+  }, [storageKey]);
+
+  function saveProgress(p: Record<number, ReviewState>) {
+    setProgress(p);
+    try { localStorage.setItem(storageKey, JSON.stringify(p)); } catch { /* ignore */ }
+  }
+
+  const now = Date.now();
+  const due = cards.filter((c) => {
+    const s = progress[c.id];
+    return !s || s.due <= now;
+  });
+
+  const card = due[0];
+
+  function rate(r: Rating) {
+    if (!card) return;
+    const prev = progress[card.id] ?? { ease: 2.5, intervalDays: 0, due: 0, reps: 0 };
+    let { ease, intervalDays, reps } = prev;
+    if (r === "again") {
+      reps = 0;
+      intervalDays = 0;
+      ease = Math.max(1.3, ease - 0.2);
+    } else {
+      reps += 1;
+      const factor = r === "hard" ? 1.2 : r === "good" ? ease : ease * 1.3;
+      intervalDays = reps === 1 ? (r === "easy" ? 3 : 1) : Math.max(1, Math.round(intervalDays * factor));
+      if (r === "hard") ease = Math.max(1.3, ease - 0.15);
+      if (r === "easy") ease = ease + 0.15;
+    }
+    const dueAt = r === "again" ? now + 60_000 : now + intervalDays * 24 * 60 * 60 * 1000;
+    const next = { ...progress, [card.id]: { ease, intervalDays, due: dueAt, reps } };
+    saveProgress(next);
+    setFlipped(false);
+    if (due.length === 1) setSessionDone(true);
+  }
+
+  function resetProgress() {
+    saveProgress({});
+    setSessionDone(false);
+  }
+
+  if (cards.length === 0) return <p className="text-muted-foreground text-center py-8">No flashcards available.</p>;
+
+  if (sessionDone || !card) {
+    const nextDueMs = Object.values(progress).reduce<number | null>((acc, s) => acc === null || s.due < acc ? s.due : acc, null);
+    const nextLabel = nextDueMs ? new Date(nextDueMs).toLocaleString() : "—";
+    return (
+      <div className="text-center py-10 space-y-4">
+        <div className="w-16 h-16 rounded-full bg-primary/10 mx-auto flex items-center justify-center">
+          <CheckCircle className="w-8 h-8 text-primary" />
+        </div>
+        <div>
+          <p className="font-semibold text-foreground">No cards due right now.</p>
+          <p className="text-xs text-muted-foreground mt-1">Next review: {nextLabel}</p>
+        </div>
+        <Button variant="outline" onClick={resetProgress} className="gap-2">
+          <RotateCcw className="w-4 h-4" />Reset progress
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between text-sm text-muted-foreground">
+        <span>{due.length} due</span>
+        <span className="text-xs">Rep {(progress[card.id]?.reps ?? 0) + 1}</span>
+      </div>
+
+      <div
+        className="cursor-pointer select-none rounded-2xl border-2 border-border bg-card p-6 text-center"
+        style={{ minHeight: 200 }}
+        onClick={() => setFlipped(!flipped)}
+      >
+        <div className="flex items-center justify-center" style={{ minHeight: 164 }}>
+          <p className="text-foreground font-medium leading-relaxed">{flipped ? card.back : card.front}</p>
+        </div>
+      </div>
+
+      {!flipped ? (
+        <Button className="w-full gap-2" onClick={() => setFlipped(true)}>
+          <RotateCcw className="w-4 h-4" />Show answer
+        </Button>
+      ) : (
+        <div className="grid grid-cols-4 gap-2">
+          <button onClick={() => rate("again")} className="py-2 rounded-lg text-xs font-medium border border-red-400 bg-red-50 dark:bg-red-900/20 text-red-700 hover:bg-red-100">Again</button>
+          <button onClick={() => rate("hard")} className="py-2 rounded-lg text-xs font-medium border border-amber-400 bg-amber-50 dark:bg-amber-900/20 text-amber-700 hover:bg-amber-100">Hard</button>
+          <button onClick={() => rate("good")} className="py-2 rounded-lg text-xs font-medium border border-blue-400 bg-blue-50 dark:bg-blue-900/20 text-blue-700 hover:bg-blue-100">Good</button>
+          <button onClick={() => rate("easy")} className="py-2 rounded-lg text-xs font-medium border border-green-500 bg-green-50 dark:bg-green-900/20 text-green-700 hover:bg-green-100">Easy</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function StudyGuideView({ content }: { content: string }) {
   if (!content) return <p className="text-muted-foreground text-center py-8">No study guide generated.</p>;
   return (
@@ -223,21 +515,24 @@ export default function MyDeckDetailPage() {
   const [deck, setDeck] = useState<Deck | null>(null);
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [quizQuestions, setQuizQuestions] = useState<QuizQuestion[]>([]);
+  const [clozeItems, setClozeItems] = useState<ClozeItem[]>([]);
   const [tab, setTab] = useState<Tab>("flashcards");
   const [loading, setLoading] = useState(true);
 
   const loadDeck = useCallback(async () => {
     try {
-      const [deckRes, cardsRes, quizRes] = await Promise.all([
+      const [deckRes, cardsRes, quizRes, clozeRes] = await Promise.all([
         fetch(`/api/custom-decks/${id}`),
         fetch(`/api/custom-decks/${id}/flashcards`),
         fetch(`/api/custom-decks/${id}/quiz`),
+        fetch(`/api/custom-decks/${id}/cloze`),
       ]);
       if (deckRes.status === 404) { navigate("/my-decks"); return; }
       if (!deckRes.ok) throw new Error("Failed");
       setDeck(await deckRes.json());
       if (cardsRes.ok) setFlashcards(await cardsRes.json());
       if (quizRes.ok) setQuizQuestions(await quizRes.json());
+      if (clozeRes.ok) setClozeItems(await clozeRes.json());
     } catch {
       toast.error("Failed to load deck");
     } finally {
