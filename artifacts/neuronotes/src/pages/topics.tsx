@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { useLocation } from "wouter";
+import { useMemo } from "react";
+import { useLocation, useSearch } from "wouter";
 import { Search, BookOpen, Layers, Brain, ChevronRight, ChevronLeft, FolderOpen } from "lucide-react";
 import { useGetTopics } from "@workspace/api-client-react";
 import { Input } from "@/components/ui/input";
@@ -18,8 +18,26 @@ const CATEGORY_ORDER = [
 
 export default function TopicsPage() {
   const [, navigate] = useLocation();
-  const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const searchString = useSearch();
+  const params = new URLSearchParams(searchString);
+  const selectedCategory = params.get("category");
+  const search = params.get("q") ?? "";
+
+  const setSelectedCategory = (cat: string | null) => {
+    const next = new URLSearchParams();
+    if (cat) next.set("category", cat);
+    const qs = next.toString();
+    navigate(qs ? `/topics?${qs}` : "/topics");
+  };
+
+  const setSearch = (value: string) => {
+    const next = new URLSearchParams();
+    if (value) next.set("q", value);
+    else if (selectedCategory) next.set("category", selectedCategory);
+    const qs = next.toString();
+    navigate(qs ? `/topics?${qs}` : "/topics");
+  };
+
   const { data: topics, isLoading } = useGetTopics();
 
   const allTopics = topics ?? [];
