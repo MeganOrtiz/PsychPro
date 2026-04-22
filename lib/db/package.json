@@ -51,7 +51,8 @@
     "normalize-nervous-ncd-format": "tsx src/normalize-nervous-ncd-format.ts",
     "expand-psychiatric-disorders": "tsx src/expand-psychiatric-disorders.ts",
     "bullet-specifiers-topic-10": "tsx src/bullet-specifiers-topic-10.ts",
-    "rename-red-flag": "tsx src/rename-red-flag.ts"
+    "rename-red-flag": "tsx src/rename-red-flag.ts",
+    "fix-substance-table": "tsx src/fix-substance-table.ts"
   },
   "dependencies": {
     "drizzle-orm": "catalog:",
