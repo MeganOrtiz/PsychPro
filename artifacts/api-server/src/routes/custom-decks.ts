@@ -71,7 +71,7 @@ ${sourceText.slice(0, 28000)}
 Respond ONLY with valid JSON as specified in each request. No markdown, no explanations, just JSON.`;
 }
 
-async function generateFlashcards(sourceText: string, aiMode: "strict" | "enhance"): Promise<Array<{ front: string; back: string; difficulty: string }>> {
+async function generateFlashcards(sourceText: string, aiMode: "strict" | "enhance", count: number): Promise<Array<{ front: string; back: string; difficulty: string }>> {
   const response = await openai.chat.completions.create({
     model: "gpt-5.2",
     max_completion_tokens: 8192,
@@ -79,7 +79,7 @@ async function generateFlashcards(sourceText: string, aiMode: "strict" | "enhanc
       { role: "system", content: buildSystemPrompt(sourceText, aiMode) },
       {
         role: "user",
-        content: `Generate 25-40 flashcards from the source text. Each flashcard must have a "front" (question/term) and "back" (answer/definition). Set "difficulty" to "easy", "medium", or "hard" based on the concept complexity.
+        content: `Generate exactly ${count} flashcards from the source text. Each flashcard must have a "front" (question/term) and "back" (answer/definition). Set "difficulty" to "easy", "medium", or "hard" based on the concept complexity. Aim for a mix of difficulties.
 
 Respond with a JSON object: { "flashcards": [ { "front": "...", "back": "...", "difficulty": "..." }, ... ] }`,
       },
@@ -92,7 +92,7 @@ Respond with a JSON object: { "flashcards": [ { "front": "...", "back": "...", "
   return parsed.flashcards ?? [];
 }
 
-async function generateQuizQuestions(sourceText: string, aiMode: "strict" | "enhance"): Promise<Array<{
+async function generateQuizQuestions(sourceText: string, aiMode: "strict" | "enhance", count: number): Promise<Array<{
   question: string;
   optionA: string;
   optionB: string;
@@ -108,7 +108,7 @@ async function generateQuizQuestions(sourceText: string, aiMode: "strict" | "enh
       { role: "system", content: buildSystemPrompt(sourceText, aiMode) },
       {
         role: "user",
-        content: `Generate 15-25 multiple-choice quiz questions from the source text. Each question must have exactly four options (A, B, C, D) with only one correct answer. Include a brief explanation citing the source material.
+        content: `Generate exactly ${count} multiple-choice quiz questions from the source text. Each question must have exactly four options (A, B, C, D) with only one correct answer. Include a brief explanation citing the source material.
 
 Respond with a JSON object: { "questions": [ { "question": "...", "optionA": "...", "optionB": "...", "optionC": "...", "optionD": "...", "correctAnswer": "A" | "B" | "C" | "D", "explanation": "..." }, ... ] }`,
       },
@@ -162,6 +162,19 @@ router.post(
       const title: string = req.body?.title?.trim() || "My Study Deck";
       const rawAiMode = req.body?.aiMode;
       const aiMode: "strict" | "enhance" = rawAiMode === "strict" ? "strict" : "enhance";
+
+      const ALLOWED_FLASHCARDS = [15, 25, 40];
+      const ALLOWED_QUIZ = [10, 15, 25];
+      const ALLOWED_EXAM = [15, 25, 50];
+      const parseChoice = (raw: unknown, allowed: number[], fallback: number): number => {
+        const n = parseInt(String(raw ?? ""), 10);
+        return allowed.includes(n) ? n : fallback;
+      };
+      const flashcardCount = parseChoice(req.body?.flashcardCount, ALLOWED_FLASHCARDS, 25);
+      const quizCount = parseChoice(req.body?.quizCount, ALLOWED_QUIZ, 15);
+      const examQuestionCount = parseChoice(req.body?.examQuestionCount, ALLOWED_EXAM, 15);
+      const examTimed = req.body?.examTimed === "true" || req.body?.examTimed === true;
+
       let sourceText: string = "";
 
       if (req.file) {
@@ -177,13 +190,13 @@ router.post(
 
       const [deck] = await db
         .insert(customDecksTable)
-        .values({ userId, title, sourceText, status: "processing" })
+        .values({ userId, title, sourceText, status: "processing", examQuestionCount, examTimed })
         .returning();
 
       try {
         const [flashcards, quizQuestions, studyGuide] = await Promise.all([
-          generateFlashcards(sourceText, aiMode),
-          generateQuizQuestions(sourceText, aiMode),
+          generateFlashcards(sourceText, aiMode, flashcardCount),
+          generateQuizQuestions(sourceText, aiMode, quizCount),
           generateStudyGuide(sourceText, aiMode),
         ]);
 

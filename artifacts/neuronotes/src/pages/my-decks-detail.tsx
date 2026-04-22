@@ -1,13 +1,13 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useLocation } from "wouter";
-import { BookMarked, Layers, FileText, GraduationCap, ChevronLeft, ChevronRight, RotateCcw, CheckCircle, XCircle, Loader2, AlertCircle } from "lucide-react";
+import { BookMarked, Layers, FileText, GraduationCap, ChevronLeft, ChevronRight, RotateCcw, CheckCircle, XCircle, AlertCircle, Timer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 
-type Deck = { id: number; title: string; studyGuide: string | null; status: string };
+type Deck = { id: number; title: string; studyGuide: string | null; status: string; examQuestionCount?: number; examTimed?: boolean };
 type Flashcard = { id: number; front: string; back: string; difficulty: string; cardOrder: number };
 type QuizQuestion = { id: number; question: string; optionA: string; optionB: string; optionC: string; optionD: string; correctAnswer: string; explanation: string | null; questionOrder: number };
 
@@ -69,20 +69,45 @@ function FlashcardsView({ cards }: { cards: Flashcard[] }) {
   );
 }
 
-function QuizView({ questions, isExam }: { questions: QuizQuestion[]; isExam?: boolean }) {
-  const examQuestions = isExam ? questions.slice(0, 15) : questions;
+function QuizView({ questions, isExam, examLength, timed }: { questions: QuizQuestion[]; isExam?: boolean; examLength?: number; timed?: boolean }) {
+  const targetLen = isExam ? Math.min(examLength ?? 15, questions.length) : questions.length;
+  const examQuestions = isExam ? questions.slice(0, targetLen) : questions;
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [submitted, setSubmitted] = useState(false);
   const [index, setIndex] = useState(0);
+  const totalSeconds = (isExam && timed) ? examQuestions.length * 90 : 0;
+  const [secondsLeft, setSecondsLeft] = useState<number>(totalSeconds);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const q = examQuestions[index];
   const score = submitted ? examQuestions.filter((q) => answers[q.id] === q.correctAnswer).length : 0;
 
   const OPTIONS: [string, string][] = q ? [["A", q.optionA], ["B", q.optionB], ["C", q.optionC], ["D", q.optionD]] : [];
 
-  function reset() { setAnswers({}); setSubmitted(false); setIndex(0); }
+  useEffect(() => {
+    if (!isExam || !timed || submitted) return;
+    timerRef.current = setInterval(() => {
+      setSecondsLeft((s) => {
+        if (s <= 1) {
+          if (timerRef.current) clearInterval(timerRef.current);
+          setSubmitted(true);
+          setIndex(examQuestions.length);
+          return 0;
+        }
+        return s - 1;
+      });
+    }, 1000);
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, [isExam, timed, submitted, examQuestions.length]);
 
-  if (!q) return <p className="text-muted-foreground text-center py-8">No questions generated.</p>;
+  function reset() {
+    setAnswers({}); setSubmitted(false); setIndex(0);
+    setSecondsLeft(totalSeconds);
+  }
+
+  const fmtTime = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+
+  if (examQuestions.length === 0) return <p className="text-muted-foreground text-center py-8">No questions generated.</p>;
 
   if (submitted && index >= examQuestions.length) {
     const pct = Math.round((score / examQuestions.length) * 100);
@@ -104,7 +129,13 @@ function QuizView({ questions, isExam }: { questions: QuizQuestion[]; isExam?: b
     <div className="space-y-4">
       <div className="flex items-center justify-between text-sm text-muted-foreground">
         <span>Question {index + 1} / {examQuestions.length}</span>
-        {!isExam && <span className="text-xs">{Object.keys(answers).length} answered</span>}
+        {isExam && timed ? (
+          <span className={`flex items-center gap-1 text-xs font-medium ${secondsLeft < 60 ? "text-red-600" : "text-foreground"}`}>
+            <Timer className="w-3.5 h-3.5" />{fmtTime(secondsLeft)}
+          </span>
+        ) : !isExam ? (
+          <span className="text-xs">{Object.keys(answers).length} answered</span>
+        ) : null}
       </div>
 
       <div className="bg-card border border-border rounded-xl p-4">
@@ -272,7 +303,14 @@ export default function MyDeckDetailPage() {
         {tab === "flashcards" && <FlashcardsView cards={flashcards} />}
         {tab === "quiz" && <QuizView questions={quizQuestions} />}
         {tab === "study-guide" && <StudyGuideView content={deck.studyGuide ?? ""} />}
-        {tab === "exam" && <QuizView questions={quizQuestions} isExam />}
+        {tab === "exam" && (
+          <QuizView
+            questions={quizQuestions}
+            isExam
+            examLength={deck.examQuestionCount ?? 15}
+            timed={deck.examTimed ?? false}
+          />
+        )}
       </div>
     </div>
   );

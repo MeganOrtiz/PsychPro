@@ -1,11 +1,15 @@
 import { useState, useRef } from "react";
 import { useLocation } from "wouter";
-import { Upload, FileText, X, Loader2, Sparkles, AlertCircle, BookOpen, Wand2 } from "lucide-react";
+import { Upload, FileText, X, Loader2, Sparkles, AlertCircle, BookOpen, Wand2, Layers, BookMarked, GraduationCap, Timer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 type InputMode = "text" | "file";
 type AiMode = "strict" | "enhance";
+
+const FLASHCARD_OPTIONS = [15, 25, 40] as const;
+const QUIZ_OPTIONS = [10, 15, 25] as const;
+const EXAM_OPTIONS = [15, 25, 50] as const;
 
 export default function NewDeckPage() {
   const [, navigate] = useLocation();
@@ -14,6 +18,10 @@ export default function NewDeckPage() {
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const [flashcardCount, setFlashcardCount] = useState<number>(25);
+  const [quizCount, setQuizCount] = useState<number>(15);
+  const [examQuestionCount, setExamQuestionCount] = useState<number>(15);
+  const [examTimed, setExamTimed] = useState<boolean>(false);
   const [generating, setGenerating] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -48,6 +56,10 @@ export default function NewDeckPage() {
       const formData = new FormData();
       formData.append("title", title.trim() || "My Study Deck");
       formData.append("aiMode", aiMode);
+      formData.append("flashcardCount", String(flashcardCount));
+      formData.append("quizCount", String(quizCount));
+      formData.append("examQuestionCount", String(examQuestionCount));
+      formData.append("examTimed", String(examTimed));
       if (mode === "file" && file) {
         formData.append("file", file);
       } else {
@@ -148,6 +160,95 @@ export default function NewDeckPage() {
                 <p className="text-xs text-muted-foreground leading-tight">AI adds examples & fills gaps using related context</p>
               </button>
             </div>
+          </div>
+
+          {/* Tool customization */}
+          <div className="space-y-4 rounded-xl border border-border bg-card/50 p-4">
+            <div>
+              <p className="text-sm font-medium text-foreground mb-1">Customize your study tools</p>
+              <p className="text-xs text-muted-foreground">Choose how much content the AI generates for each tool.</p>
+            </div>
+
+            <div>
+              <label className="flex items-center gap-1.5 text-xs font-medium text-foreground mb-1.5">
+                <Layers className="w-3.5 h-3.5 text-muted-foreground" /> Flashcards
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                {FLASHCARD_OPTIONS.map((n) => (
+                  <button
+                    key={n}
+                    type="button"
+                    onClick={() => setFlashcardCount(n)}
+                    className={`py-2 rounded-lg border text-sm font-medium transition-colors ${
+                      flashcardCount === n
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border bg-card text-muted-foreground hover:bg-muted"
+                    }`}
+                  >
+                    {n} cards
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="flex items-center gap-1.5 text-xs font-medium text-foreground mb-1.5">
+                <BookMarked className="w-3.5 h-3.5 text-muted-foreground" /> Quiz questions
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                {QUIZ_OPTIONS.map((n) => (
+                  <button
+                    key={n}
+                    type="button"
+                    onClick={() => setQuizCount(n)}
+                    className={`py-2 rounded-lg border text-sm font-medium transition-colors ${
+                      quizCount === n
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border bg-card text-muted-foreground hover:bg-muted"
+                    }`}
+                  >
+                    {n}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="flex items-center gap-1.5 text-xs font-medium text-foreground mb-1.5">
+                <GraduationCap className="w-3.5 h-3.5 text-muted-foreground" /> Practice exam length
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                {EXAM_OPTIONS.map((n) => (
+                  <button
+                    key={n}
+                    type="button"
+                    onClick={() => setExamQuestionCount(n)}
+                    className={`py-2 rounded-lg border text-sm font-medium transition-colors ${
+                      examQuestionCount === n
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border bg-card text-muted-foreground hover:bg-muted"
+                    }`}
+                  >
+                    {n} q
+                  </button>
+                ))}
+              </div>
+              <p className="text-[11px] text-muted-foreground mt-1.5">Exam pulls from your quiz questions. Pick a length up to your quiz size.</p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setExamTimed(!examTimed)}
+              className={`w-full flex items-center justify-between gap-2 rounded-lg border px-3 py-2.5 text-sm transition-colors ${
+                examTimed ? "border-primary bg-primary/10 text-primary" : "border-border bg-card text-foreground hover:bg-muted"
+              }`}
+            >
+              <span className="flex items-center gap-2">
+                <Timer className="w-4 h-4" />
+                <span className="font-medium">Timed exam mode</span>
+              </span>
+              <span className="text-xs">{examTimed ? "On (90s/q)" : "Off"}</span>
+            </button>
           </div>
 
           <div>
