@@ -245,7 +245,14 @@ Unconscious strategies the ego uses to manage anxiety. First catalogued by Freud
 
 ## Psychosexual Stages (Freud)
 
-Oral (0–18 mo: dependency, trust), Anal (18 mo–3 y: control, autonomy), Phallic (3–6 y: Oedipus complex; gender identity), Latency (6–12 y), Genital (12+ y). Fixation produces characteristic personality traits. Empirical support is limited; the framework remains historically and clinically important.
+**Stages**
+- **Oral** (0–18 months): dependency, trust
+- **Anal** (18 months–3 years): control, autonomy
+- **Phallic** (3–6 years): Oedipus complex, gender identity
+- **Latency** (6–12 years)
+- **Genital** (12+ years)
+
+Fixation at any stage produces characteristic personality traits. Empirical support is limited; the framework remains historically and clinically important.
 
 ## Ego Psychology
 
