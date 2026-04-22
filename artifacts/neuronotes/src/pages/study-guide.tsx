@@ -98,6 +98,7 @@ type Block =
   | { type: "h1"; text: string }
   | { type: "h2"; text: string }
   | { type: "h3"; text: string }
+  | { type: "h4"; text: string }
   | { type: "hr" }
   | { type: "blank" }
   | { type: "bullet"; text: string }
@@ -125,12 +126,14 @@ function parseBlocks(content: string): Block[] {
       continue;
     }
 
-    if (line.startsWith("# ") && !line.startsWith("## ") && !line.startsWith("### ")) {
-      blocks.push({ type: "h1", text: line.slice(2) });
-    } else if (line.startsWith("## ") && !line.startsWith("### ")) {
-      blocks.push({ type: "h2", text: line.slice(3) });
+    if (line.startsWith("#### ")) {
+      blocks.push({ type: "h4", text: line.slice(5) });
     } else if (line.startsWith("### ")) {
       blocks.push({ type: "h3", text: line.slice(4) });
+    } else if (line.startsWith("## ")) {
+      blocks.push({ type: "h2", text: line.slice(3) });
+    } else if (line.startsWith("# ")) {
+      blocks.push({ type: "h1", text: line.slice(2) });
     } else if (line.trim() === "---" || line.trim() === "***" || line.trim() === "___") {
       blocks.push({ type: "hr" });
     } else if (line.startsWith("- ")) {
@@ -175,6 +178,12 @@ function MarkdownRenderer({ content }: { content: string }) {
         <h3 key={key++} className="text-base font-semibold text-foreground mt-5 mb-2">
           <InlineMarkdown text={block.text} />
         </h3>
+      );
+    } else if (block.type === "h4") {
+      elements.push(
+        <h4 key={key++} className="text-sm font-semibold text-foreground mt-4 mb-1.5 uppercase tracking-wide text-muted-foreground">
+          <InlineMarkdown text={block.text} />
+        </h4>
       );
     } else if (block.type === "hr") {
       // Suppress — headings already provide visual separation
