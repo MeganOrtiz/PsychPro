@@ -1,25 +1,80 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useLocation } from "wouter";
-import { Search, BookOpen, Layers, Brain, ChevronRight } from "lucide-react";
+import { Search, BookOpen, Layers, Brain, ChevronRight, ChevronLeft, FolderOpen } from "lucide-react";
 import { useGetTopics } from "@workspace/api-client-react";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 
+const CATEGORY_ORDER = [
+  "Neuroscience",
+  "Psychology",
+  "Neuropsychology",
+  "Assessment",
+  "Psychotherapy",
+  "Research Methods",
+  "Special Topics",
+  "Clinical Cases",
+];
+
 export default function TopicsPage() {
   const [, navigate] = useLocation();
   const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { data: topics, isLoading } = useGetTopics();
 
-  const filtered = (topics ?? []).filter(topic =>
-    topic.name.toLowerCase().includes(search.toLowerCase()) ||
-    topic.description.toLowerCase().includes(search.toLowerCase())
-  );
+  const allTopics = topics ?? [];
+
+  const categories = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const t of allTopics) {
+      counts.set(t.category, (counts.get(t.category) ?? 0) + 1);
+    }
+    const known = CATEGORY_ORDER.filter(c => counts.has(c));
+    const extras = Array.from(counts.keys()).filter(c => !CATEGORY_ORDER.includes(c)).sort();
+    const ordered = [...known, ...extras];
+    // Include reserved (empty) categories from CATEGORY_ORDER too, so user sees the full taxonomy.
+    const all = Array.from(new Set([...CATEGORY_ORDER, ...ordered]));
+    return all.map(name => ({ name, count: counts.get(name) ?? 0 }));
+  }, [allTopics]);
+
+  const searchedTopics = useMemo(() => {
+    if (!search) return [];
+    const q = search.toLowerCase();
+    return allTopics.filter(
+      t => t.name.toLowerCase().includes(q) || t.description.toLowerCase().includes(q),
+    );
+  }, [allTopics, search]);
+
+  const categoryTopics = useMemo(() => {
+    if (!selectedCategory) return [];
+    return allTopics.filter(t => t.category === selectedCategory);
+  }, [allTopics, selectedCategory]);
+
+  const showSearchResults = search.trim().length > 0;
+  const showCategoryView = !showSearchResults && selectedCategory !== null;
+  const showCategoriesGrid = !showSearchResults && selectedCategory === null;
 
   return (
     <div className="p-4 md:p-6 max-w-4xl mx-auto" data-testid="topics-page">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Topics</h1>
-        <p className="text-muted-foreground text-sm mt-1">Browse all neuroscience topics</p>
+        {showCategoryView ? (
+          <button
+            onClick={() => setSelectedCategory(null)}
+            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-2"
+            data-testid="button-back-to-categories"
+          >
+            <ChevronLeft className="w-4 h-4" />
+            All categories
+          </button>
+        ) : null}
+        <h1 className="text-2xl font-bold text-foreground">
+          {showCategoryView ? selectedCategory : "Categories"}
+        </h1>
+        <p className="text-muted-foreground text-sm mt-1">
+          {showCategoryView
+            ? `Browse ${categoryTopics.length} ${categoryTopics.length === 1 ? "topic" : "topics"}`
+            : "Choose a category to browse topics"}
+        </p>
       </div>
 
       <div className="relative mb-6">
@@ -37,39 +92,97 @@ export default function TopicsPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {Array(8).fill(0).map((_, i) => <Skeleton key={i} className="h-36 rounded-xl" />)}
         </div>
-      ) : filtered.length === 0 ? (
-        <div className="text-center py-16">
-          <Brain className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
-          <p className="text-muted-foreground">No topics found</p>
+      ) : showSearchResults ? (
+        searchedTopics.length === 0 ? (
+          <div className="text-center py-16">
+            <Brain className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+            <p className="text-muted-foreground">No topics found</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {searchedTopics.map(topic => (
+              <TopicCard key={topic.id} topic={topic} onClick={() => navigate(`/topics/${topic.id}`)} showCategory />
+            ))}
+          </div>
+        )
+      ) : showCategoriesGrid ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {categories.map(cat => {
+            const isEmpty = cat.count === 0;
+            return (
+              <div
+                key={cat.name}
+                onClick={() => !isEmpty && setSelectedCategory(cat.name)}
+                data-testid={`card-category-${cat.name.toLowerCase().replace(/\s+/g, "-")}`}
+                className={`bg-card border border-border rounded-xl p-5 transition-all ${
+                  isEmpty
+                    ? "opacity-60 cursor-not-allowed"
+                    : "cursor-pointer hover:border-primary/40 hover:shadow-md"
+                }`}
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <FolderOpen className="w-5 h-5 text-primary" />
+                  </div>
+                  {!isEmpty && <ChevronRight className="w-4 h-4 text-muted-foreground" />}
+                </div>
+                <h3 className="font-semibold text-foreground mb-1">{cat.name}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {isEmpty ? "Coming soon" : `${cat.count} ${cat.count === 1 ? "topic" : "topics"}`}
+                </p>
+              </div>
+            );
+          })}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {filtered.map(topic => (
-            <div
-              key={topic.id}
-              onClick={() => navigate(`/topics/${topic.id}`)}
-              data-testid={`card-topic-${topic.id}`}
-              className="bg-card border border-border rounded-xl p-5 cursor-pointer hover:border-primary/40 hover:shadow-md transition-all"
-            >
-              <div className="flex items-start justify-end mb-2">
-                <ChevronRight className="w-4 h-4 text-muted-foreground" />
-              </div>
-              <h3 className="font-semibold text-foreground mb-1.5">{topic.name}</h3>
-              <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{topic.description}</p>
-              <div className="flex gap-4 text-xs text-muted-foreground">
-                <span className="flex items-center gap-1">
-                  <Layers className="w-3.5 h-3.5" />
-                  {topic.flashcardCount} flashcards
-                </span>
-                <span className="flex items-center gap-1">
-                  <BookOpen className="w-3.5 h-3.5" />
-                  {topic.quizCount} quiz Qs
-                </span>
-              </div>
-            </div>
+          {categoryTopics.map(topic => (
+            <TopicCard key={topic.id} topic={topic} onClick={() => navigate(`/topics/${topic.id}`)} />
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+interface TopicCardProps {
+  topic: {
+    id: number;
+    name: string;
+    description: string;
+    category: string;
+    flashcardCount: number;
+    quizCount: number;
+  };
+  onClick: () => void;
+  showCategory?: boolean;
+}
+
+function TopicCard({ topic, onClick, showCategory }: TopicCardProps) {
+  return (
+    <div
+      onClick={onClick}
+      data-testid={`card-topic-${topic.id}`}
+      className="bg-card border border-border rounded-xl p-5 cursor-pointer hover:border-primary/40 hover:shadow-md transition-all"
+    >
+      <div className="flex items-start justify-between mb-2">
+        {showCategory ? (
+          <span className="text-xs text-muted-foreground">{topic.category}</span>
+        ) : <span />}
+        <ChevronRight className="w-4 h-4 text-muted-foreground" />
+      </div>
+      <h3 className="font-semibold text-foreground mb-1.5">{topic.name}</h3>
+      <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{topic.description}</p>
+      <div className="flex gap-4 text-xs text-muted-foreground">
+        <span className="flex items-center gap-1">
+          <Layers className="w-3.5 h-3.5" />
+          {topic.flashcardCount} flashcards
+        </span>
+        <span className="flex items-center gap-1">
+          <BookOpen className="w-3.5 h-3.5" />
+          {topic.quizCount} quiz Qs
+        </span>
+      </div>
     </div>
   );
 }
