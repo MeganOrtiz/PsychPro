@@ -6,7 +6,6 @@ import { toast } from "sonner";
 const FEEDBACK_TYPES = [
   { value: "bug", label: "🐛 Bug Report" },
   { value: "content", label: "📚 Content Suggestion" },
-  { value: "feature", label: "💡 Feature Request" },
   { value: "general", label: "💬 General Feedback" },
 ];
 
