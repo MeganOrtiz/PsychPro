@@ -28,6 +28,8 @@ tags:
     description: Subscription management
   - name: dashboard
     description: Dashboard summary data
+  - name: leaderboard
+    description: Leaderboard rankings
 
 paths:
   /healthz:
@@ -294,6 +296,19 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/DashboardSummary"
+
+  /leaderboard:
+    get:
+      operationId: getLeaderboard
+      tags: [leaderboard]
+      summary: Get top users by topics completed and streak
+      responses:
+        "200":
+          description: Leaderboard rankings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Leaderboard"
 
   /subscription/plans:
     get:
@@ -588,6 +603,46 @@ components:
         - subscriptionStatus
         - usageCount
         - freeLimit
+
+    LeaderboardEntry:
+      type: object
+      properties:
+        rank:
+          type: integer
+        userId:
+          type: string
+        displayName:
+          type: string
+        streak:
+          type: integer
+        topicsCompleted:
+          type: integer
+        isCurrentUser:
+          type: boolean
+      required:
+        - rank
+        - userId
+        - displayName
+        - streak
+        - topicsCompleted
+        - isCurrentUser
+
+    Leaderboard:
+      type: object
+      properties:
+        entries:
+          type: array
+          items:
+            $ref: "#/components/schemas/LeaderboardEntry"
+        currentUser:
+          oneOf:
+            - $ref: "#/components/schemas/LeaderboardEntry"
+            - type: "null"
+        totalParticipants:
+          type: integer
+      required:
+        - entries
+        - totalParticipants
 
     SubscriptionPlan:
       type: object

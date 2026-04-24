@@ -22,6 +22,7 @@ import type {
   DashboardSummary,
   Flashcard,
   HealthStatus,
+  Leaderboard,
   PracticeExam,
   QuizQuestion,
   StudyGuide,
@@ -539,24 +540,22 @@ export function useGetStudyGuideByTopic<
 /**
  * @summary Get a practice exam for a topic
  */
-export const getGetPracticeExamByTopicUrl = (topicId: number, count?: number) => {
-  const params = count !== undefined ? `?count=${count}` : "";
-  return `/api/topics/${topicId}/practice-exam${params}`;
+export const getGetPracticeExamByTopicUrl = (topicId: number) => {
+  return `/api/topics/${topicId}/practice-exam`;
 };
 
 export const getPracticeExamByTopic = async (
   topicId: number,
-  count?: number,
   options?: RequestInit,
 ): Promise<PracticeExam> => {
-  return customFetch<PracticeExam>(getGetPracticeExamByTopicUrl(topicId, count), {
+  return customFetch<PracticeExam>(getGetPracticeExamByTopicUrl(topicId), {
     ...options,
     method: "GET",
   });
 };
 
-export const getGetPracticeExamByTopicQueryKey = (topicId: number, count?: number) => {
-  return [`/api/topics/${topicId}/practice-exam`, count] as const;
+export const getGetPracticeExamByTopicQueryKey = (topicId: number) => {
+  return [`/api/topics/${topicId}/practice-exam`] as const;
 };
 
 export const getGetPracticeExamByTopicQueryOptions = <
@@ -564,7 +563,6 @@ export const getGetPracticeExamByTopicQueryOptions = <
   TError = ErrorType<void>,
 >(
   topicId: number,
-  count?: number,
   options?: {
     query?: UseQueryOptions<
       Awaited<ReturnType<typeof getPracticeExamByTopic>>,
@@ -577,17 +575,17 @@ export const getGetPracticeExamByTopicQueryOptions = <
   const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey =
-    queryOptions?.queryKey ?? getGetPracticeExamByTopicQueryKey(topicId, count);
+    queryOptions?.queryKey ?? getGetPracticeExamByTopicQueryKey(topicId);
 
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof getPracticeExamByTopic>>
   > = ({ signal }) =>
-    getPracticeExamByTopic(topicId, count, { signal, ...requestOptions });
+    getPracticeExamByTopic(topicId, { signal, ...requestOptions });
 
   return {
     queryKey,
     queryFn,
-    enabled: !!topicId && count !== undefined,
+    enabled: !!topicId,
     ...queryOptions,
   } as UseQueryOptions<
     Awaited<ReturnType<typeof getPracticeExamByTopic>>,
@@ -610,7 +608,6 @@ export function useGetPracticeExamByTopic<
   TError = ErrorType<void>,
 >(
   topicId: number,
-  count?: number,
   options?: {
     query?: UseQueryOptions<
       Awaited<ReturnType<typeof getPracticeExamByTopic>>,
@@ -620,7 +617,7 @@ export function useGetPracticeExamByTopic<
     request?: SecondParameter<typeof customFetch>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getGetPracticeExamByTopicQueryOptions(topicId, count, options);
+  const queryOptions = getGetPracticeExamByTopicQueryOptions(topicId, options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;
@@ -1263,6 +1260,81 @@ export function useGetDashboardSummary<
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetDashboardSummaryQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Get top users by topics completed and streak
+ */
+export const getGetLeaderboardUrl = () => {
+  return `/api/leaderboard`;
+};
+
+export const getLeaderboard = async (
+  options?: RequestInit,
+): Promise<Leaderboard> => {
+  return customFetch<Leaderboard>(getGetLeaderboardUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetLeaderboardQueryKey = () => {
+  return [`/api/leaderboard`] as const;
+};
+
+export const getGetLeaderboardQueryOptions = <
+  TData = Awaited<ReturnType<typeof getLeaderboard>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getLeaderboard>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetLeaderboardQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getLeaderboard>>> = ({
+    signal,
+  }) => getLeaderboard({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getLeaderboard>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetLeaderboardQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getLeaderboard>>
+>;
+export type GetLeaderboardQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Get top users by topics completed and streak
+ */
+
+export function useGetLeaderboard<
+  TData = Awaited<ReturnType<typeof getLeaderboard>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getLeaderboard>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetLeaderboardQueryOptions(options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;

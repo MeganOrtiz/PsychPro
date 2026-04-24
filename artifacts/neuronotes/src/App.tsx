@@ -17,6 +17,7 @@ import QuizPage from "@/pages/quiz";
 import StudyGuidePage from "@/pages/study-guide";
 import PracticeExamPage from "@/pages/practice-exam";
 import ProgressPage from "@/pages/progress";
+import LeaderboardPage from "@/pages/leaderboard";
 import SubscriptionPage from "@/pages/subscription";
 import FeedbackPage from "@/pages/feedback";
 import FeatureRequestPage from "@/pages/feature-request";
@@ -89,6 +90,7 @@ function AuthRouter() {
             <Route path="/topics/:id/study-guide" component={StudyGuidePage} />
             <Route path="/topics/:id/exam" component={PracticeExamPage} />
             <Route path="/progress" component={ProgressPage} />
+            <Route path="/leaderboard" component={LeaderboardPage} />
             <Route path="/subscription" component={SubscriptionPage} />
             <Route path="/feedback" component={FeedbackPage} />
             <Route path="/feature-request" component={FeatureRequestPage} />

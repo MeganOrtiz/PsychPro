@@ -267,6 +267,36 @@ export const GetDashboardSummaryResponse = zod.object({
 });
 
 /**
+ * @summary Get top users by topics completed and streak
+ */
+export const GetLeaderboardResponse = zod.object({
+  entries: zod.array(
+    zod.object({
+      rank: zod.number(),
+      userId: zod.string(),
+      displayName: zod.string(),
+      streak: zod.number(),
+      topicsCompleted: zod.number(),
+      isCurrentUser: zod.boolean(),
+    }),
+  ),
+  currentUser: zod
+    .union([
+      zod.object({
+        rank: zod.number(),
+        userId: zod.string(),
+        displayName: zod.string(),
+        streak: zod.number(),
+        topicsCompleted: zod.number(),
+        isCurrentUser: zod.boolean(),
+      }),
+      zod.null(),
+    ])
+    .optional(),
+  totalParticipants: zod.number(),
+});
+
+/**
  * @summary Get available subscription plans from Stripe
  */
 export const GetSubscriptionPlansResponseItem = zod.object({

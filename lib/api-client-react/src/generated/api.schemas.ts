@@ -131,6 +131,21 @@ export interface DashboardSummary {
   freeLimit: number;
 }
 
+export interface LeaderboardEntry {
+  rank: number;
+  userId: string;
+  displayName: string;
+  streak: number;
+  topicsCompleted: number;
+  isCurrentUser: boolean;
+}
+
+export interface Leaderboard {
+  entries: LeaderboardEntry[];
+  currentUser?: LeaderboardEntry | null;
+  totalParticipants: number;
+}
+
 export interface SubscriptionPlan {
   id: string;
   name: string;

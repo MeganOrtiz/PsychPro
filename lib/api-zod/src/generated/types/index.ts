@@ -12,6 +12,8 @@ export * from "./dashboardSummary";
 export * from "./flashcard";
 export * from "./flashcardDifficulty";
 export * from "./healthStatus";
+export * from "./leaderboard";
+export * from "./leaderboardEntry";
 export * from "./practiceExam";
 export * from "./quizQuestion";
 export * from "./quizQuestionCorrectAnswer";
