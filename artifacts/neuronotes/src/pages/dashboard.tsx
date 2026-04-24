@@ -293,7 +293,81 @@ export default function DashboardPage() {
                 )}
               </div>
 
-              <DailyGoalCard completed={todaysTopics} goal={dailyGoal} />
+              <div className="bg-card border border-border rounded-xl p-5 flex flex-col">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <Trophy className="w-4 h-4 text-primary" />
+                    <h2 className="font-semibold text-foreground">Leaderboard</h2>
+                  </div>
+                  <span className="text-xs text-muted-foreground">Top 5</span>
+                </div>
+                {!leaderboard ? (
+                  <div className="space-y-2">
+                    <Skeleton className="h-8 rounded-lg" />
+                    <Skeleton className="h-8 rounded-lg" />
+                    <Skeleton className="h-8 rounded-lg" />
+                  </div>
+                ) : leaderboard.entries.length === 0 ? (
+                  <p className="text-xs text-muted-foreground text-center py-4">
+                    Be the first to land on the board.
+                  </p>
+                ) : (
+                  <div className="space-y-1 flex-1">
+                    {leaderboard.entries.slice(0, 5).map((e) => (
+                      <div
+                        key={e.userId}
+                        className={cn(
+                          "flex items-center gap-2 px-2 py-1.5 rounded-lg",
+                          e.isCurrentUser ? "bg-primary/5" : ""
+                        )}
+                        data-testid={`hero-leaderboard-row-${e.rank}`}
+                      >
+                        <div
+                          className={cn(
+                            "w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0",
+                            e.rank === 1
+                              ? "bg-yellow-500/15 text-yellow-600"
+                              : e.rank === 2
+                              ? "bg-slate-400/15 text-slate-500"
+                              : e.rank === 3
+                              ? "bg-amber-700/15 text-amber-700"
+                              : "bg-muted text-muted-foreground"
+                          )}
+                        >
+                          {e.rank}
+                        </div>
+                        <p className="text-sm font-medium text-foreground truncate flex-1 min-w-0">
+                          {e.displayName}
+                          {e.isCurrentUser && (
+                            <span className="ml-1.5 text-xs text-primary font-semibold">
+                              You
+                            </span>
+                          )}
+                        </p>
+                        <div className="flex items-center gap-1 flex-shrink-0" title="Topics completed">
+                          <BookOpen className="w-3 h-3 text-muted-foreground" />
+                          <span className="text-xs font-semibold text-foreground tabular-nums">
+                            {e.topicsCompleted}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1 flex-shrink-0" title="Streak">
+                          <Flame
+                            className={cn(
+                              "w-3 h-3",
+                              e.streak > 0
+                                ? "text-orange-500 fill-orange-500"
+                                : "text-muted-foreground/40"
+                            )}
+                          />
+                          <span className="text-xs font-semibold text-foreground tabular-nums">
+                            {e.streak}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Recommended for You */}
@@ -426,141 +500,8 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* Leaderboard */}
-            <div className="bg-card border border-border rounded-xl p-5">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <Trophy className="w-4 h-4 text-primary" />
-                  <h2 className="font-semibold text-foreground">Leaderboard</h2>
-                </div>
-                <span className="text-xs text-muted-foreground">
-                  Top scholars
-                </span>
-              </div>
-              {!leaderboard ? (
-                <div className="space-y-2">
-                  <Skeleton className="h-10 rounded-lg" />
-                  <Skeleton className="h-10 rounded-lg" />
-                  <Skeleton className="h-10 rounded-lg" />
-                </div>
-              ) : leaderboard.entries.length === 0 ? (
-                <p className="text-sm text-muted-foreground text-center py-6">
-                  Be the first to land on the board — complete a topic to claim the top spot.
-                </p>
-              ) : (
-                <div className="space-y-1">
-                  <div className="grid grid-cols-12 gap-2 px-2 pb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    <div className="col-span-1 text-center">#</div>
-                    <div className="col-span-7">Scholar</div>
-                    <div className="col-span-2 text-right">Topics</div>
-                    <div className="col-span-2 text-right">Streak</div>
-                  </div>
-                  {leaderboard.entries.slice(0, 5).map((e) => (
-                    <div
-                      key={e.userId}
-                      className={cn(
-                        "grid grid-cols-12 gap-2 items-center px-2 py-2 rounded-lg",
-                        e.isCurrentUser ? "bg-primary/5" : ""
-                      )}
-                      data-testid={`dashboard-leaderboard-row-${e.rank}`}
-                    >
-                      <div className="col-span-1 flex justify-center">
-                        <div
-                          className={cn(
-                            "w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold",
-                            e.rank === 1
-                              ? "bg-yellow-500/15 text-yellow-600"
-                              : e.rank === 2
-                              ? "bg-slate-400/15 text-slate-500"
-                              : e.rank === 3
-                              ? "bg-amber-700/15 text-amber-700"
-                              : "bg-muted text-muted-foreground"
-                          )}
-                        >
-                          {e.rank}
-                        </div>
-                      </div>
-                      <div className="col-span-7 min-w-0">
-                        <p className="text-sm font-medium text-foreground truncate">
-                          {e.displayName}
-                          {e.isCurrentUser && (
-                            <span className="ml-2 text-xs text-primary font-semibold">
-                              You
-                            </span>
-                          )}
-                        </p>
-                      </div>
-                      <div className="col-span-2 flex items-center justify-end gap-1">
-                        <BookOpen className="w-3 h-3 text-muted-foreground" />
-                        <span className="text-sm font-semibold text-foreground tabular-nums">
-                          {e.topicsCompleted}
-                        </span>
-                      </div>
-                      <div className="col-span-2 flex items-center justify-end gap-1">
-                        <Flame
-                          className={cn(
-                            "w-3 h-3",
-                            e.streak > 0
-                              ? "text-orange-500 fill-orange-500"
-                              : "text-muted-foreground/40"
-                          )}
-                        />
-                        <span className="text-sm font-semibold text-foreground tabular-nums">
-                          {e.streak}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                  {leaderboard.currentUser &&
-                    !leaderboard.entries
-                      .slice(0, 5)
-                      .some((e) => e.userId === leaderboard.currentUser!.userId) && (
-                      <>
-                        <div className="px-2 py-1 text-center text-xs text-muted-foreground">
-                          ···
-                        </div>
-                        <div
-                          className="grid grid-cols-12 gap-2 items-center px-2 py-2 rounded-lg bg-primary/5"
-                          data-testid="dashboard-leaderboard-current-user"
-                        >
-                          <div className="col-span-1 flex justify-center">
-                            <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">
-                              {leaderboard.currentUser.rank}
-                            </div>
-                          </div>
-                          <div className="col-span-7 min-w-0">
-                            <p className="text-sm font-medium text-foreground truncate">
-                              {leaderboard.currentUser.displayName}
-                              <span className="ml-2 text-xs text-primary font-semibold">
-                                You
-                              </span>
-                            </p>
-                          </div>
-                          <div className="col-span-2 flex items-center justify-end gap-1">
-                            <BookOpen className="w-3 h-3 text-muted-foreground" />
-                            <span className="text-sm font-semibold text-foreground tabular-nums">
-                              {leaderboard.currentUser.topicsCompleted}
-                            </span>
-                          </div>
-                          <div className="col-span-2 flex items-center justify-end gap-1">
-                            <Flame
-                              className={cn(
-                                "w-3 h-3",
-                                leaderboard.currentUser.streak > 0
-                                  ? "text-orange-500 fill-orange-500"
-                                  : "text-muted-foreground/40"
-                              )}
-                            />
-                            <span className="text-sm font-semibold text-foreground tabular-nums">
-                              {leaderboard.currentUser.streak}
-                            </span>
-                          </div>
-                        </div>
-                      </>
-                    )}
-                </div>
-              )}
-            </div>
+            {/* Daily Goal */}
+            <DailyGoalCard completed={todaysTopics} goal={dailyGoal} />
 
             {/* Achievements (full-width horizontal) */}
             <div className="bg-card border border-border rounded-xl p-5">
