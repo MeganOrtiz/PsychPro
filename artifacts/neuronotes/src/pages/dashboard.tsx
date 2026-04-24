@@ -148,7 +148,7 @@ export default function DashboardPage() {
 
   const dailyGoal = 3;
   const continueTopic = recent[0];
-  const recommended = (weak.length > 0 ? weak : recent).slice(0, 2);
+  const recommended = (weak.length > 0 ? weak : recent).slice(0, 4);
 
   const hasFirstTopic = (summary?.topicsStudied ?? 0) >= 1;
   const hasStreak = streak >= 3;
@@ -281,13 +281,15 @@ export default function DashboardPage() {
 
             {/* Recommended for You */}
             <div className="bg-card border border-border rounded-xl p-5">
-              <div className="flex items-center gap-2 mb-1">
-                <Sparkles className="w-4 h-4 text-primary" />
-                <h2 className="font-semibold text-foreground">Recommended for You</h2>
+              <div className="flex flex-col items-center text-center mb-4">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-primary" />
+                  <h2 className="font-semibold text-foreground">Recommended for You</h2>
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Based on your goals and progress
+                </p>
               </div>
-              <p className="text-xs text-muted-foreground mb-4">
-                Based on your goals and progress
-              </p>
               {isLoading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                   <Skeleton className="h-14 rounded-lg" />
