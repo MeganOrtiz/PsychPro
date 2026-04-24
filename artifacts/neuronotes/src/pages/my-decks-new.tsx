@@ -45,15 +45,13 @@ export default function NewDeckPage() {
   const [examQuestionCount, setExamQuestionCount] = useState<number>(15);
   const [examTimed, setExamTimed] = useState<boolean>(false);
   const [clozeCount, setClozeCount] = useState<number>(10);
-  const [selectedTools, setSelectedTools] = useState<Set<ToolId>>(
-    () => new Set<ToolId>(toolCatalog.map((t) => t.id))
-  );
+  const [selectedTools, setSelectedTools] = useState<Set<ToolId>>(() => new Set<ToolId>());
   const [generating, setGenerating] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setSelectedTools(new Set<ToolId>(toolCatalog.map((t) => t.id)));
-  }, [tier]); // eslint-disable-line react-hooks/exhaustive-deps
+    setSelectedTools(new Set<ToolId>());
+  }, [tier]);
 
   const allSelected = selectedTools.size === toolCatalog.length;
   const toggleTool = (id: ToolId) => {
