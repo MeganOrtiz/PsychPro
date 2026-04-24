@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useUser, UserButton } from "@clerk/react";
-import { Brain, LayoutDashboard, BookOpen, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck, BookMarked, Library, Wrench, Sparkles, Lightbulb } from "lucide-react";
+import { Brain, LayoutDashboard, BookOpen, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck, BookMarked, Library, Wrench, Sparkles, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -12,7 +12,7 @@ const navItems = [
   { href: "/resources", label: "Resources", icon: Library },
   { href: "/subscription", label: "Upgrade", icon: CreditCard },
   { href: "/feedback", label: "Feedback", icon: MessageSquare },
-  { href: "/feature-request", label: "Feature Request", icon: Lightbulb },
+  { href: "/feature-request", label: "Be Featured", icon: Star },
 ];
 
 function useUserMeta() {
