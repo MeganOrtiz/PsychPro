@@ -127,7 +127,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   )}
                 >
                   <BookMarked className="w-5 h-5 flex-shrink-0" />
-                  <span className="text-sm font-medium">My Toolkits</span>
+                  <span className="text-sm font-medium">My Tools</span>
                   {(location === "/my-decks" || (location.startsWith("/my-decks/") && location !== "/my-decks/new")) && <ChevronRight className="w-4 h-4 ml-auto" />}
                 </div>
               </Link>

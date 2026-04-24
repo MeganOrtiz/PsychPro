@@ -77,7 +77,7 @@ export default function MyDecksPage() {
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-1">
           <BookMarked className="w-5 h-5 text-primary" />
-          <h1 className="text-2xl font-bold text-foreground">My Toolkits</h1>
+          <h1 className="text-2xl font-bold text-foreground">My Tools</h1>
         </div>
         <p className="text-muted-foreground text-sm mb-4">Tools generated from your own materials</p>
         <div className="grid grid-cols-2 gap-2">
