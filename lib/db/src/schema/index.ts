@@ -1,4 +1,5 @@
 import { pgTable, text, serial, integer, timestamp, boolean } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
@@ -131,6 +132,7 @@ export const customDecksTable = pgTable("custom_decks", {
   studyGuide: text("study_guide"),
   status: text("status").notNull().default("processing"),
   tier: text("tier").notNull().default("standard"),
+  tools: text("tools").array().notNull().default(sql`ARRAY[]::text[]`),
   examQuestionCount: integer("exam_question_count").notNull().default(15),
   examTimed: boolean("exam_timed").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),

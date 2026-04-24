@@ -7,24 +7,24 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 
-type Deck = { id: number; title: string; studyGuide: string | null; status: string; tier?: "standard" | "pro"; examQuestionCount?: number; examTimed?: boolean };
+type Deck = { id: number; title: string; studyGuide: string | null; status: string; tier?: "standard" | "pro"; tools?: string[]; examQuestionCount?: number; examTimed?: boolean };
 type Flashcard = { id: number; front: string; back: string; difficulty: string; cardOrder: number };
 type QuizQuestion = { id: number; question: string; optionA: string; optionB: string; optionC: string; optionD: string; correctAnswer: string; explanation: string | null; questionOrder: number };
 type ClozeItem = { id: number; sentence: string; answer: string; hint: string | null; itemOrder: number };
 
 type Tab = "flashcards" | "quiz" | "cloze" | "match" | "review" | "study-guide" | "exam";
 
-const STANDARD_TABS: { id: Tab; label: string; icon: React.ElementType }[] = [
-  { id: "flashcards", label: "Flashcards", icon: Layers },
-  { id: "quiz", label: "Quiz", icon: BookMarked },
-  { id: "study-guide", label: "Study Guide", icon: FileText },
-  { id: "exam", label: "Practice Exam", icon: GraduationCap },
+const STANDARD_TABS: { id: Tab; label: string; icon: React.ElementType; toolId: string }[] = [
+  { id: "flashcards", label: "Flashcards", icon: Layers, toolId: "flashcards" },
+  { id: "quiz", label: "Quiz", icon: BookMarked, toolId: "quiz" },
+  { id: "study-guide", label: "Study Guide", icon: FileText, toolId: "studyGuide" },
+  { id: "exam", label: "Practice Exam", icon: GraduationCap, toolId: "exam" },
 ];
 
-const PRO_TABS: { id: Tab; label: string; icon: React.ElementType }[] = [
-  { id: "match", label: "Matching", icon: Shuffle },
-  { id: "cloze", label: "Fill-in-Blank", icon: Pencil },
-  { id: "review", label: "Spaced Review", icon: Repeat },
+const PRO_TABS: { id: Tab; label: string; icon: React.ElementType; toolId: string }[] = [
+  { id: "match", label: "Matching", icon: Shuffle, toolId: "match" },
+  { id: "cloze", label: "Fill-in-Blank", icon: Pencil, toolId: "cloze" },
+  { id: "review", label: "Spaced Review", icon: Repeat, toolId: "review" },
 ];
 
 function DifficultyBadge({ difficulty }: { difficulty: string }) {
@@ -521,13 +521,18 @@ export default function MyDeckDetailPage() {
   const [clozeItems, setClozeItems] = useState<ClozeItem[]>([]);
   const [tab, setTab] = useState<Tab | null>(null);
   const [loading, setLoading] = useState(true);
-  const tabs = deck?.tier === "pro" ? PRO_TABS : STANDARD_TABS;
-  const activeTab: Tab = tab ?? (deck?.tier === "pro" ? "match" : "flashcards");
+  const baseTabs = deck?.tier === "pro" ? PRO_TABS : STANDARD_TABS;
+  const selectedToolIds = deck?.tools && deck.tools.length > 0 ? deck.tools : null;
+  const tabs = selectedToolIds
+    ? baseTabs.filter((t) => selectedToolIds.includes(t.toolId))
+    : baseTabs;
+  const fallbackTab: Tab = tabs[0]?.id ?? (deck?.tier === "pro" ? "match" : "flashcards");
+  const activeTab: Tab = tab ?? fallbackTab;
 
   useEffect(() => {
     if (!deck) return;
     if (tab && !tabs.some((t) => t.id === tab)) {
-      setTab(deck.tier === "pro" ? "match" : "flashcards");
+      setTab(tabs[0]?.id ?? null);
     }
   }, [deck, tab, tabs]);
 

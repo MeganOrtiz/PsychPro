@@ -192,6 +192,25 @@ router.post(
       const aiMode: "strict" | "enhance" = rawAiMode === "strict" ? "strict" : "enhance";
       const tier: "standard" | "pro" = req.body?.tier === "pro" ? "pro" : "standard";
 
+      const STANDARD_TOOL_IDS = ["flashcards", "quiz", "studyGuide", "exam"] as const;
+      const PRO_TOOL_IDS = ["match", "cloze", "review"] as const;
+      const validToolIds: readonly string[] = tier === "pro" ? PRO_TOOL_IDS : STANDARD_TOOL_IDS;
+      let tools: string[] = [];
+      const rawTools = req.body?.tools;
+      if (typeof rawTools === "string" && rawTools.length > 0) {
+        try {
+          const parsed = JSON.parse(rawTools);
+          if (Array.isArray(parsed)) {
+            tools = parsed.filter((t): t is string => typeof t === "string" && validToolIds.includes(t));
+          }
+        } catch {
+          tools = [];
+        }
+      }
+      if (tools.length === 0) {
+        tools = [...validToolIds];
+      }
+
       const ALLOWED_FLASHCARDS = [15, 25, 40];
       const ALLOWED_QUIZ = [10, 15, 25];
       const ALLOWED_EXAM = [15, 25, 50];
@@ -205,6 +224,13 @@ router.post(
       const examQuestionCount = parseChoice(req.body?.examQuestionCount, ALLOWED_EXAM, 15);
       const clozeCount = parseChoice(req.body?.clozeCount, ALLOWED_CLOZE, 10);
       const examTimed = req.body?.examTimed === "true" || req.body?.examTimed === true;
+
+      const wantsFlashcards = tier === "standard"
+        ? tools.includes("flashcards")
+        : tools.includes("match") || tools.includes("review");
+      const wantsQuiz = tier === "standard" && (tools.includes("quiz") || tools.includes("exam"));
+      const wantsStudyGuide = tier === "standard" && tools.includes("studyGuide");
+      const wantsCloze = tier === "pro" && tools.includes("cloze");
 
       let sourceText: string = "";
 
@@ -221,16 +247,23 @@ router.post(
 
       const [deck] = await db
         .insert(customDecksTable)
-        .values({ userId, title, sourceText, status: "processing", tier, examQuestionCount, examTimed })
+        .values({ userId, title, sourceText, status: "processing", tier, tools, examQuestionCount, examTimed })
         .returning();
 
       try {
-        const proTier = tier === "pro";
         const [flashcards, quizQuestions, studyGuide, clozeItems] = await Promise.all([
-          generateFlashcards(sourceText, aiMode, flashcardCount),
-          proTier ? Promise.resolve([] as Array<{ question: string; optionA: string; optionB: string; optionC: string; optionD: string; correctAnswer: string; explanation: string }>) : generateQuizQuestions(sourceText, aiMode, quizCount),
-          proTier ? Promise.resolve("") : generateStudyGuide(sourceText, aiMode),
-          proTier && clozeCount > 0 ? generateClozeItems(sourceText, aiMode, clozeCount) : Promise.resolve([] as Array<{ sentence: string; answer: string; hint?: string }>),
+          wantsFlashcards
+            ? generateFlashcards(sourceText, aiMode, flashcardCount)
+            : Promise.resolve([] as Array<{ front: string; back: string; difficulty: string }>),
+          wantsQuiz
+            ? generateQuizQuestions(sourceText, aiMode, quizCount)
+            : Promise.resolve([] as Array<{ question: string; optionA: string; optionB: string; optionC: string; optionD: string; correctAnswer: string; explanation: string }>),
+          wantsStudyGuide
+            ? generateStudyGuide(sourceText, aiMode)
+            : Promise.resolve(""),
+          wantsCloze && clozeCount > 0
+            ? generateClozeItems(sourceText, aiMode, clozeCount)
+            : Promise.resolve([] as Array<{ sentence: string; answer: string; hint?: string }>),
         ]);
 
         if (flashcards.length > 0) {
@@ -302,7 +335,7 @@ router.get("/custom-decks", async (req: Request, res: Response): Promise<void> =
     if (!userId) { res.status(401).json({ error: "Unauthorized" }); return; }
 
     const decks = await db
-      .select({ id: customDecksTable.id, title: customDecksTable.title, status: customDecksTable.status, tier: customDecksTable.tier, createdAt: customDecksTable.createdAt })
+      .select({ id: customDecksTable.id, title: customDecksTable.title, status: customDecksTable.status, tier: customDecksTable.tier, tools: customDecksTable.tools, createdAt: customDecksTable.createdAt })
       .from(customDecksTable)
       .where(eq(customDecksTable.userId, userId))
       .orderBy(desc(customDecksTable.createdAt));

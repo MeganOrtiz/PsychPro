@@ -1,11 +1,28 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useLocation, useSearch } from "wouter";
-import { Upload, FileText, X, Loader2, Sparkles, AlertCircle, BookOpen, Wand2, Layers, BookMarked, GraduationCap, Timer, Pencil, Wrench } from "lucide-react";
+import { Upload, FileText, X, Loader2, Sparkles, AlertCircle, BookOpen, Wand2, Layers, BookMarked, GraduationCap, Timer, Pencil, Wrench, Shuffle, Repeat, CheckSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 type InputMode = "text" | "file";
 type AiMode = "strict" | "enhance";
+
+type StandardTool = "flashcards" | "quiz" | "studyGuide" | "exam";
+type ProTool = "match" | "cloze" | "review";
+type ToolId = StandardTool | ProTool;
+
+const STANDARD_TOOLS: { id: StandardTool; label: string; description: string; icon: React.ElementType }[] = [
+  { id: "flashcards", label: "Flashcards", description: "Card pool for active recall", icon: Layers },
+  { id: "quiz", label: "Quiz", description: "Multiple-choice questions", icon: BookMarked },
+  { id: "studyGuide", label: "Study Guide", description: "Organized markdown summary", icon: BookOpen },
+  { id: "exam", label: "Practice Exam", description: "Timed test pulled from quiz pool", icon: GraduationCap },
+];
+
+const PRO_TOOLS: { id: ProTool; label: string; description: string; icon: React.ElementType }[] = [
+  { id: "match", label: "Matching Game", description: "Pair terms with definitions", icon: Shuffle },
+  { id: "cloze", label: "Fill-in-the-Blank", description: "Cloze sentences for active recall", icon: Pencil },
+  { id: "review", label: "Spaced Review", description: "SM-2 spaced repetition", icon: Repeat },
+];
 
 const FLASHCARD_OPTIONS = [15, 25, 40] as const;
 const QUIZ_OPTIONS = [10, 15, 25] as const;
@@ -17,6 +34,7 @@ export default function NewDeckPage() {
   const search = useSearch();
   const tier: "standard" | "pro" = new URLSearchParams(search).get("tier") === "pro" ? "pro" : "standard";
   const isPro = tier === "pro";
+  const toolCatalog = isPro ? PRO_TOOLS : STANDARD_TOOLS;
   const [mode, setMode] = useState<InputMode>("text");
   const [aiMode, setAiMode] = useState<AiMode>("enhance");
   const [title, setTitle] = useState("");
@@ -27,8 +45,35 @@ export default function NewDeckPage() {
   const [examQuestionCount, setExamQuestionCount] = useState<number>(15);
   const [examTimed, setExamTimed] = useState<boolean>(false);
   const [clozeCount, setClozeCount] = useState<number>(10);
+  const [selectedTools, setSelectedTools] = useState<Set<ToolId>>(
+    () => new Set<ToolId>(toolCatalog.map((t) => t.id))
+  );
   const [generating, setGenerating] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setSelectedTools(new Set<ToolId>(toolCatalog.map((t) => t.id)));
+  }, [tier]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const allSelected = selectedTools.size === toolCatalog.length;
+  const toggleTool = (id: ToolId) => {
+    setSelectedTools((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
+  const selectAll = () => {
+    setSelectedTools(new Set<ToolId>(toolCatalog.map((t) => t.id)));
+  };
+
+  const showFlashcards = isPro
+    ? selectedTools.has("match") || selectedTools.has("review")
+    : selectedTools.has("flashcards");
+  const showQuizCount = !isPro && (selectedTools.has("quiz") || selectedTools.has("exam"));
+  const showExamControls = !isPro && selectedTools.has("exam");
+  const showClozeCount = isPro && selectedTools.has("cloze");
+  const showCustomization = showFlashcards || showQuizCount || showExamControls || showClozeCount;
 
   const ACCEPTED = ".pdf,.docx,.doc,.txt";
 
@@ -47,6 +92,10 @@ export default function NewDeckPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (selectedTools.size === 0) {
+      toast.error("Please choose at least one tool to generate.");
+      return;
+    }
     if (mode === "text" && text.trim().length < 50) {
       toast.error("Please paste at least a few paragraphs of study material.");
       return;
@@ -62,6 +111,7 @@ export default function NewDeckPage() {
       formData.append("title", title.trim() || (isPro ? "My Pro Toolkit" : "My Study Toolkit"));
       formData.append("aiMode", aiMode);
       formData.append("tier", tier);
+      formData.append("tools", JSON.stringify(Array.from(selectedTools)));
       formData.append("flashcardCount", String(flashcardCount));
       formData.append("quizCount", String(quizCount));
       formData.append("examQuestionCount", String(examQuestionCount));
@@ -175,13 +225,64 @@ export default function NewDeckPage() {
             </div>
           </div>
 
+          {/* Tool selection */}
+          <div className="space-y-3 rounded-xl border border-border bg-card/50 p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-sm font-medium text-foreground mb-1">Choose your tools</p>
+                <p className="text-xs text-muted-foreground">Pick which tools the AI should generate.</p>
+              </div>
+              <button
+                type="button"
+                onClick={selectAll}
+                disabled={allSelected}
+                className={`flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 rounded-lg border transition-colors ${
+                  allSelected
+                    ? "border-border bg-muted text-muted-foreground cursor-not-allowed"
+                    : "border-primary/30 bg-primary/5 text-primary hover:bg-primary/10"
+                }`}
+              >
+                <CheckSquare className="w-3.5 h-3.5" />
+                All
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {toolCatalog.map((t) => {
+                const checked = selectedTools.has(t.id);
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => toggleTool(t.id)}
+                    className={`flex items-start gap-2 p-3 rounded-lg border-2 text-left transition-all ${
+                      checked
+                        ? "border-primary bg-primary/5"
+                        : "border-border bg-card hover:border-primary/40 hover:bg-muted/40"
+                    }`}
+                  >
+                    <t.icon className={`w-4 h-4 flex-shrink-0 mt-0.5 ${checked ? "text-primary" : "text-muted-foreground"}`} />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5">
+                        <span className={`text-sm font-semibold ${checked ? "text-primary" : "text-foreground"}`}>{t.label}</span>
+                      </div>
+                      <p className="text-[11px] text-muted-foreground leading-snug mt-0.5">{t.description}</p>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Tool customization */}
+          {showCustomization && (
           <div className="space-y-4 rounded-xl border border-border bg-card/50 p-4">
             <div>
               <p className="text-sm font-medium text-foreground mb-1">Customize your tools</p>
               <p className="text-xs text-muted-foreground">Choose how much content the AI generates for each tool.</p>
             </div>
 
+            {showFlashcards && (
             <div>
               <label className="flex items-center gap-1.5 text-xs font-medium text-foreground mb-1.5">
                 <Layers className="w-3.5 h-3.5 text-muted-foreground" /> {isPro ? "Card pool (powers matching & review)" : "Flashcards"}
@@ -203,8 +304,9 @@ export default function NewDeckPage() {
                 ))}
               </div>
             </div>
+            )}
 
-            {!isPro && (
+            {showQuizCount && (
             <div>
               <label className="flex items-center gap-1.5 text-xs font-medium text-foreground mb-1.5">
                 <BookMarked className="w-3.5 h-3.5 text-muted-foreground" /> Quiz questions
@@ -225,10 +327,13 @@ export default function NewDeckPage() {
                   </button>
                 ))}
               </div>
+              {!selectedTools.has("quiz") && selectedTools.has("exam") && (
+                <p className="text-[11px] text-muted-foreground mt-1.5">Used as the question pool for your practice exam.</p>
+              )}
             </div>
             )}
 
-            {!isPro && (
+            {showExamControls && (
             <div>
               <label className="flex items-center gap-1.5 text-xs font-medium text-foreground mb-1.5">
                 <GraduationCap className="w-3.5 h-3.5 text-muted-foreground" /> Practice exam length
@@ -253,7 +358,7 @@ export default function NewDeckPage() {
             </div>
             )}
 
-            {isPro && (
+            {showClozeCount && (
             <div>
               <label className="flex items-center gap-1.5 text-xs font-medium text-foreground mb-1.5">
                 <Pencil className="w-3.5 h-3.5 text-muted-foreground" /> Fill-in-the-blank
@@ -278,7 +383,7 @@ export default function NewDeckPage() {
             </div>
             )}
 
-            {!isPro && (
+            {showExamControls && (
             <button
               type="button"
               onClick={() => setExamTimed(!examTimed)}
@@ -294,6 +399,7 @@ export default function NewDeckPage() {
             </button>
             )}
           </div>
+          )}
 
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">Study Material</label>
