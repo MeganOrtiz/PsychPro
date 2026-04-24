@@ -205,6 +205,32 @@ export default function DashboardPage() {
         {/* Two-column: main + spotlight rail */}
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-6">
           <div className="min-w-0 space-y-6">
+            {/* Stats: 2 centered cards */}
+            <div className="grid grid-cols-2 gap-4">
+              {isLoading ? (
+                Array(2)
+                  .fill(0)
+                  .map((_, i) => <Skeleton key={i} className="h-32 rounded-xl" />)
+              ) : (
+                <>
+                  <StatCard
+                    icon={Brain}
+                    iconBg="bg-violet-100 dark:bg-violet-950/40"
+                    iconColor="text-violet-600 dark:text-violet-400"
+                    value={summary?.topicsStudied ?? 0}
+                    label="Topics Studied"
+                  />
+                  <StatCard
+                    icon={Trophy}
+                    iconBg="bg-amber-100 dark:bg-amber-950/40"
+                    iconColor="text-amber-600 dark:text-amber-400"
+                    value={`${summary?.averageScore ?? 0}%`}
+                    label="Average Score"
+                  />
+                </>
+              )}
+            </div>
+
             {/* Hero: Continue + Daily Goal */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="md:col-span-2 bg-card border border-border rounded-xl p-5">
@@ -251,32 +277,6 @@ export default function DashboardPage() {
               </div>
 
               <DailyGoalCard completed={todaysTopics} goal={dailyGoal} />
-            </div>
-
-            {/* Stats: 2 centered cards */}
-            <div className="grid grid-cols-2 gap-4">
-              {isLoading ? (
-                Array(2)
-                  .fill(0)
-                  .map((_, i) => <Skeleton key={i} className="h-32 rounded-xl" />)
-              ) : (
-                <>
-                  <StatCard
-                    icon={Brain}
-                    iconBg="bg-violet-100 dark:bg-violet-950/40"
-                    iconColor="text-violet-600 dark:text-violet-400"
-                    value={summary?.topicsStudied ?? 0}
-                    label="Topics Studied"
-                  />
-                  <StatCard
-                    icon={Trophy}
-                    iconBg="bg-amber-100 dark:bg-amber-950/40"
-                    iconColor="text-amber-600 dark:text-amber-400"
-                    value={`${summary?.averageScore ?? 0}%`}
-                    label="Average Score"
-                  />
-                </>
-              )}
             </div>
 
             {/* Streak + Recommended */}
