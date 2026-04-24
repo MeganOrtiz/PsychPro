@@ -205,55 +205,7 @@ export default function DashboardPage() {
         {/* Two-column: main + spotlight rail */}
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-6">
           <div className="min-w-0 space-y-6">
-            {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {isLoading ? (
-                Array(4)
-                  .fill(0)
-                  .map((_, i) => <Skeleton key={i} className="h-28 rounded-xl" />)
-              ) : (
-                <>
-                  <StatCard
-                    icon={BookOpen}
-                    iconBg="bg-sky-100 dark:bg-sky-950/40"
-                    iconColor="text-sky-600 dark:text-sky-400"
-                    value={summary?.totalTopics ?? 0}
-                    label="Topics Available"
-                    sub="Explore the library"
-                  />
-                  <StatCard
-                    icon={Brain}
-                    iconBg="bg-violet-100 dark:bg-violet-950/40"
-                    iconColor="text-violet-600 dark:text-violet-400"
-                    value={summary?.topicsStudied ?? 0}
-                    label="Topics Studied"
-                    sub={(summary?.topicsStudied ?? 0) > 0 ? "Keep going" : "Start your first"}
-                  />
-                  <StatCard
-                    icon={Trophy}
-                    iconBg="bg-amber-100 dark:bg-amber-950/40"
-                    iconColor="text-amber-600 dark:text-amber-400"
-                    value={`${summary?.averageScore ?? 0}%`}
-                    label="Average Score"
-                    sub={(summary?.averageScore ?? 0) > 0 ? "Across your sessions" : "No scores yet"}
-                  />
-                  <StatCard
-                    icon={Zap}
-                    iconBg="bg-emerald-100 dark:bg-emerald-950/40"
-                    iconColor="text-emerald-600 dark:text-emerald-400"
-                    value={`${summary?.usageCount ?? 0}/${summary?.freeLimit ?? 10}`}
-                    label="Interactions"
-                    sub={
-                      summary?.subscriptionStatus === "scholar"
-                        ? "Unlimited on Scholar"
-                        : "Free tier usage"
-                    }
-                  />
-                </>
-              )}
-            </div>
-
-            {/* Continue + Daily Goal */}
+            {/* Hero: Continue + Daily Goal */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="md:col-span-2 bg-card border border-border rounded-xl p-5">
                 <div className="flex items-center gap-2 mb-4">
@@ -301,8 +253,72 @@ export default function DashboardPage() {
               <DailyGoalCard completed={todaysTopics} goal={dailyGoal} />
             </div>
 
-            {/* Recommended + Streak */}
+            {/* Stats: 2 centered cards */}
+            <div className="grid grid-cols-2 gap-4">
+              {isLoading ? (
+                Array(2)
+                  .fill(0)
+                  .map((_, i) => <Skeleton key={i} className="h-32 rounded-xl" />)
+              ) : (
+                <>
+                  <StatCard
+                    icon={Brain}
+                    iconBg="bg-violet-100 dark:bg-violet-950/40"
+                    iconColor="text-violet-600 dark:text-violet-400"
+                    value={summary?.topicsStudied ?? 0}
+                    label="Topics Studied"
+                  />
+                  <StatCard
+                    icon={Trophy}
+                    iconBg="bg-amber-100 dark:bg-amber-950/40"
+                    iconColor="text-amber-600 dark:text-amber-400"
+                    value={`${summary?.averageScore ?? 0}%`}
+                    label="Average Score"
+                  />
+                </>
+              )}
+            </div>
+
+            {/* Streak + Recommended */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-card border border-border rounded-xl p-5">
+                <div className="flex items-center gap-2 mb-4">
+                  <Flame className="w-4 h-4 text-orange-500" />
+                  <h2 className="font-semibold text-foreground">Your Streak</h2>
+                </div>
+                <div className="flex flex-col items-center text-center mb-4">
+                  <span className="text-4xl font-bold text-foreground leading-none">{streak}</span>
+                  <span className="text-sm text-muted-foreground mt-1">day streak</span>
+                </div>
+                <div className="grid grid-cols-7 gap-1 mb-3">
+                  {weeklyFlames.map((d, i) => (
+                    <div key={i} className="flex flex-col items-center gap-1">
+                      <Flame
+                        className={cn(
+                          "w-5 h-5 transition-colors",
+                          d.lit ? "text-orange-500 fill-orange-500" : "text-muted-foreground/30"
+                        )}
+                      />
+                      <span
+                        className={cn(
+                          "text-xs",
+                          d.isToday ? "text-foreground font-semibold" : "text-muted-foreground"
+                        )}
+                      >
+                        {d.label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-xs text-muted-foreground text-center">
+                  {streak === 0
+                    ? "Study today to start a streak."
+                    : streak < 3
+                    ? "You're building momentum."
+                    : "Great consistency this week."}
+                </p>
+              </div>
+
               <div className="bg-card border border-border rounded-xl p-5">
                 <div className="flex items-center gap-2 mb-1">
                   <Sparkles className="w-4 h-4 text-primary" />
@@ -346,54 +362,16 @@ export default function DashboardPage() {
                   </p>
                 )}
               </div>
-
-              <div className="bg-card border border-border rounded-xl p-5">
-                <div className="flex items-center gap-2 mb-4">
-                  <Flame className="w-4 h-4 text-orange-500" />
-                  <h2 className="font-semibold text-foreground">Your Streak</h2>
-                </div>
-                <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-4xl font-bold text-foreground">{streak}</span>
-                  <span className="text-sm text-muted-foreground">day streak</span>
-                </div>
-                <div className="grid grid-cols-7 gap-1 mb-3">
-                  {weeklyFlames.map((d, i) => (
-                    <div key={i} className="flex flex-col items-center gap-1">
-                      <Flame
-                        className={cn(
-                          "w-5 h-5 transition-colors",
-                          d.lit ? "text-orange-500 fill-orange-500" : "text-muted-foreground/30"
-                        )}
-                      />
-                      <span
-                        className={cn(
-                          "text-xs",
-                          d.isToday ? "text-foreground font-semibold" : "text-muted-foreground"
-                        )}
-                      >
-                        {d.label}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  {streak === 0
-                    ? "Study today to start a streak."
-                    : streak < 3
-                    ? "You're building momentum."
-                    : "Great consistency this week."}
-                </p>
-              </div>
             </div>
 
-            {/* Analytics + Recent Activity + Achievements */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            {/* Analytics + Recent Activity */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-card border border-border rounded-xl p-5">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="font-semibold text-foreground">Study Analytics</h2>
                   <span className="text-xs text-muted-foreground">This Week</span>
                 </div>
-                <div className="h-32">
+                <div className="h-40">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={activitySeries} margin={{ top: 5, right: 5, bottom: 5, left: -25 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
@@ -427,20 +405,6 @@ export default function DashboardPage() {
                       />
                     </LineChart>
                   </ResponsiveContainer>
-                </div>
-                <div className="grid grid-cols-2 gap-2 mt-4 pt-4 border-t border-border">
-                  <div>
-                    <p className="text-xs text-muted-foreground">Average Score</p>
-                    <p className="text-lg font-semibold text-foreground">
-                      {summary?.averageScore ?? 0}%
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">Topics Studied</p>
-                    <p className="text-lg font-semibold text-foreground">
-                      {summary?.topicsStudied ?? 0}
-                    </p>
-                  </div>
                 </div>
               </div>
 
@@ -489,31 +453,33 @@ export default function DashboardPage() {
                 )}
               </div>
 
-              <div className="bg-card border border-border rounded-xl p-5">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="font-semibold text-foreground">Achievements</h2>
-                  <span className="text-xs text-muted-foreground">{unlockedCount}/3 unlocked</span>
-                </div>
-                <div className="space-y-2">
-                  <AchievementRow
-                    icon={Star}
-                    title="First Steps"
-                    sub="Complete your first topic"
-                    unlocked={hasFirstTopic}
-                  />
-                  <AchievementRow
-                    icon={Flame}
-                    title="Streak Starter"
-                    sub="Study 3 days in a row"
-                    unlocked={hasStreak}
-                  />
-                  <AchievementRow
-                    icon={Award}
-                    title="Score Master"
-                    sub="Get 80% or higher"
-                    unlocked={hasHighScore}
-                  />
-                </div>
+            </div>
+
+            {/* Achievements (full-width horizontal) */}
+            <div className="bg-card border border-border rounded-xl p-5">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="font-semibold text-foreground">Achievements</h2>
+                <span className="text-xs text-muted-foreground">{unlockedCount}/3 unlocked</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <AchievementCard
+                  icon={Star}
+                  title="First Steps"
+                  sub="Complete your first topic"
+                  unlocked={hasFirstTopic}
+                />
+                <AchievementCard
+                  icon={Flame}
+                  title="Streak Starter"
+                  sub="Study 3 days in a row"
+                  unlocked={hasStreak}
+                />
+                <AchievementCard
+                  icon={Award}
+                  title="Score Master"
+                  sub="Get 80% or higher"
+                  unlocked={hasHighScore}
+                />
               </div>
             </div>
           </div>
@@ -534,28 +500,23 @@ function StatCard({
   iconColor,
   value,
   label,
-  sub,
 }: {
   icon: ComponentType<{ className?: string }>;
   iconBg: string;
   iconColor: string;
   value: string | number;
   label: string;
-  sub: string;
 }) {
   return (
     <div
-      className="bg-card border border-border rounded-xl p-4 flex items-start gap-3"
+      className="bg-card border border-border rounded-xl p-5 flex flex-col items-center text-center"
       data-testid={`stat-${label.replace(/\s/g, "-").toLowerCase()}`}
     >
-      <div className={cn("w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0", iconBg)}>
+      <div className={cn("w-11 h-11 rounded-full flex items-center justify-center mb-3", iconBg)}>
         <Icon className={cn("w-5 h-5", iconColor)} />
       </div>
-      <div className="min-w-0">
-        <div className="text-2xl font-bold text-foreground leading-tight">{value}</div>
-        <div className="text-xs font-medium text-foreground mt-0.5">{label}</div>
-        <div className="text-[11px] text-muted-foreground mt-0.5 truncate">{sub}</div>
-      </div>
+      <div className="text-3xl font-bold text-foreground leading-none">{value}</div>
+      <div className="text-sm text-muted-foreground mt-2">{label}</div>
     </div>
   );
 }
@@ -612,7 +573,7 @@ function DailyGoalCard({ completed, goal }: { completed: number; goal: number })
   );
 }
 
-function AchievementRow({
+function AchievementCard({
   icon: Icon,
   title,
   sub,
@@ -626,22 +587,22 @@ function AchievementRow({
   return (
     <div
       className={cn(
-        "flex items-center gap-3 p-2 rounded-lg",
-        unlocked ? "bg-primary/5" : "opacity-60"
+        "flex flex-col items-center text-center p-4 rounded-lg border",
+        unlocked
+          ? "bg-primary/5 border-primary/20"
+          : "bg-muted/30 border-border opacity-70"
       )}
     >
       <div
         className={cn(
-          "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0",
+          "w-10 h-10 rounded-full flex items-center justify-center mb-2",
           unlocked ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
         )}
       >
-        <Icon className="w-4 h-4" />
+        <Icon className="w-5 h-5" />
       </div>
-      <div className="min-w-0">
-        <p className="text-sm font-medium text-foreground truncate">{title}</p>
-        <p className="text-xs text-muted-foreground truncate">{sub}</p>
-      </div>
+      <p className="text-sm font-semibold text-foreground">{title}</p>
+      <p className="text-xs text-muted-foreground mt-0.5">{sub}</p>
     </div>
   );
 }
