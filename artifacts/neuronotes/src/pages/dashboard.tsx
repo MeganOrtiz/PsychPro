@@ -15,7 +15,7 @@ import {
   Sparkles,
   ArrowUpRight,
 } from "lucide-react";
-import { useGetDashboardSummary } from "@workspace/api-client-react";
+import { useGetDashboardSummary, useGetTopics } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUser, UserButton } from "@clerk/react";
@@ -114,6 +114,7 @@ export default function DashboardPage() {
   const [, navigate] = useLocation();
   const { user } = useUser();
   const { data: summary, isLoading } = useGetDashboardSummary();
+  const { data: allTopics } = useGetTopics();
 
   const isOverLimit =
     summary &&
@@ -148,7 +149,22 @@ export default function DashboardPage() {
 
   const dailyGoal = 3;
   const continueTopic = recent[0];
-  const recommended = (weak.length > 0 ? weak : recent).slice(0, 4);
+  const recommended = useMemo(() => {
+    const seen = new Set<number>();
+    const out: RecentTopic[] = [];
+    const push = (t: RecentTopic) => {
+      if (out.length >= 4 || seen.has(t.topicId)) return;
+      seen.add(t.topicId);
+      out.push(t);
+    };
+    weak.forEach(push);
+    recent.filter((r) => r.score < 80).forEach(push);
+    (allTopics ?? []).forEach((t) => {
+      push({ id: t.id, topicId: t.id, topicName: t.name, score: 0, lastAccessed: null });
+    });
+    recent.forEach(push);
+    return out;
+  }, [weak, recent, allTopics]);
 
   const hasFirstTopic = (summary?.topicsStudied ?? 0) >= 1;
   const hasStreak = streak >= 3;
