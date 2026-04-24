@@ -7,7 +7,6 @@ import {
   Zap,
   ChevronRight,
   Bell,
-  Search,
   Flame,
   Star,
   Award,
@@ -19,7 +18,6 @@ import {
 import { useGetDashboardSummary } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Input } from "@/components/ui/input";
 import { useUser, UserButton } from "@clerk/react";
 import { cn } from "@/lib/utils";
 import {
@@ -171,20 +169,6 @@ export default function DashboardPage() {
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <div className="relative flex-1 md:flex-initial md:w-72">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
-              <Input
-                placeholder="Search topics, decks, resources..."
-                className="pl-9 bg-card"
-                data-testid="dashboard-search"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    const q = (e.target as HTMLInputElement).value.trim();
-                    if (q) navigate(`/topics?q=${encodeURIComponent(q)}`);
-                  }
-                }}
-              />
-            </div>
             <button
               className="relative w-10 h-10 rounded-full bg-card border border-border flex items-center justify-center hover:bg-muted transition-colors"
               data-testid="dashboard-notifications"
