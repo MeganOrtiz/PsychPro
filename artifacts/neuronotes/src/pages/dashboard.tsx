@@ -279,7 +279,52 @@ export default function DashboardPage() {
               <DailyGoalCard completed={todaysTopics} goal={dailyGoal} />
             </div>
 
-            {/* Streak + Recommended */}
+            {/* Recommended for You */}
+            <div className="bg-card border border-border rounded-xl p-5">
+              <div className="flex items-center gap-2 mb-1">
+                <Sparkles className="w-4 h-4 text-primary" />
+                <h2 className="font-semibold text-foreground">Recommended for You</h2>
+              </div>
+              <p className="text-xs text-muted-foreground mb-4">
+                Based on your goals and progress
+              </p>
+              {isLoading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  <Skeleton className="h-14 rounded-lg" />
+                  <Skeleton className="h-14 rounded-lg" />
+                </div>
+              ) : recommended.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  {recommended.map((t) => (
+                    <button
+                      key={t.id}
+                      onClick={() => navigate(`/topics/${t.topicId}`)}
+                      className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-muted transition-colors text-left border border-border"
+                      data-testid={`recommended-${t.topicId}`}
+                    >
+                      <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <BookOpen className="w-4 h-4 text-primary" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-foreground truncate">
+                          {t.topicName}
+                        </p>
+                        <p className="text-xs text-muted-foreground truncate">
+                          {t.score < 70 ? "Strengthen your foundation" : "Expand your knowledge"}
+                        </p>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground text-center py-6">
+                  Study a few topics and we'll suggest what to tackle next.
+                </p>
+              )}
+            </div>
+
+            {/* Streak + Recent Activity */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-card border border-border rounded-xl p-5">
                 <div className="flex items-center gap-2 mb-4">
@@ -317,95 +362,6 @@ export default function DashboardPage() {
                     ? "You're building momentum."
                     : "Great consistency this week."}
                 </p>
-              </div>
-
-              <div className="bg-card border border-border rounded-xl p-5">
-                <div className="flex items-center gap-2 mb-1">
-                  <Sparkles className="w-4 h-4 text-primary" />
-                  <h2 className="font-semibold text-foreground">Recommended for You</h2>
-                </div>
-                <p className="text-xs text-muted-foreground mb-4">
-                  Based on your goals and progress
-                </p>
-                {isLoading ? (
-                  <div className="space-y-2">
-                    <Skeleton className="h-14 rounded-lg" />
-                    <Skeleton className="h-14 rounded-lg" />
-                  </div>
-                ) : recommended.length > 0 ? (
-                  <div className="space-y-2">
-                    {recommended.map((t) => (
-                      <button
-                        key={t.id}
-                        onClick={() => navigate(`/topics/${t.topicId}`)}
-                        className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-muted transition-colors text-left"
-                        data-testid={`recommended-${t.topicId}`}
-                      >
-                        <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                          <BookOpen className="w-4 h-4 text-primary" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-foreground truncate">
-                            {t.topicName}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            {t.score < 70 ? "Strengthen your foundation" : "Expand your knowledge"}
-                          </p>
-                        </div>
-                        <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                      </button>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground text-center py-6">
-                    Study a few topics and we'll suggest what to tackle next.
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* Analytics + Recent Activity */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-card border border-border rounded-xl p-5">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="font-semibold text-foreground">Study Analytics</h2>
-                  <span className="text-xs text-muted-foreground">This Week</span>
-                </div>
-                <div className="h-40">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={activitySeries} margin={{ top: 5, right: 5, bottom: 5, left: -25 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
-                      <XAxis
-                        dataKey="day"
-                        tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
-                        axisLine={false}
-                        tickLine={false}
-                      />
-                      <YAxis
-                        tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
-                        axisLine={false}
-                        tickLine={false}
-                        width={30}
-                      />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: "hsl(var(--card))",
-                          border: "1px solid hsl(var(--border))",
-                          borderRadius: 8,
-                          fontSize: 12,
-                        }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="score"
-                        stroke="hsl(var(--primary))"
-                        strokeWidth={2}
-                        dot={{ r: 3, fill: "hsl(var(--primary))" }}
-                        activeDot={{ r: 5 }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
               </div>
 
               <div className="bg-card border border-border rounded-xl p-5">
@@ -452,7 +408,6 @@ export default function DashboardPage() {
                   </p>
                 )}
               </div>
-
             </div>
 
             {/* Achievements (full-width horizontal) */}
