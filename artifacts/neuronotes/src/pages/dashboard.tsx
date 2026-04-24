@@ -327,9 +327,6 @@ export default function DashboardPage() {
                         <p className="text-sm font-medium text-foreground truncate">
                           {t.topicName}
                         </p>
-                        <p className="text-xs text-muted-foreground truncate">
-                          {t.score < 70 ? "Strengthen your foundation" : "Expand your knowledge"}
-                        </p>
                       </div>
                       <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                     </button>
