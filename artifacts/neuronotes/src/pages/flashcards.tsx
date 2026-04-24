@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
+import { ChevronLeft, ChevronRight, RotateCcw, Layers } from "lucide-react";
 import { useGetFlashcardsByTopic, useIncrementUserUsage } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -72,7 +72,8 @@ export default function FlashcardsPage({ params }: Props) {
   }
 
   return (
-    <div className="p-4 md:p-6 max-w-2xl mx-auto" data-testid="flashcards-page">
+    <div className="min-h-full bg-background" data-testid="flashcards-page">
+      <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
       <div className="flex items-center gap-3 mb-6">
         <button
           onClick={() => navigate(`/topics/${topicId}`)}
@@ -81,11 +82,14 @@ export default function FlashcardsPage({ params }: Props) {
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
+        <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+          <Layers className="w-5 h-5 text-blue-500" />
+        </div>
         <div>
-          <h1 className="text-xl font-bold text-foreground">Flashcards</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Flashcards</h1>
           {!isLoading && <p className="text-sm text-muted-foreground">{total} cards</p>}
         </div>
-        <button onClick={handleRestart} className="ml-auto text-muted-foreground hover:text-foreground" data-testid="button-restart">
+        <button onClick={handleRestart} className="ml-auto text-muted-foreground hover:text-foreground" data-testid="button-restart" aria-label="Restart">
           <RotateCcw className="w-4 h-4" />
         </button>
       </div>
@@ -148,6 +152,7 @@ export default function FlashcardsPage({ params }: Props) {
           </div>
         </>
       )}
+      </div>
     </div>
   );
 }

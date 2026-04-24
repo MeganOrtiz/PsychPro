@@ -1,4 +1,4 @@
-import { ExternalLink, BookOpen, Stethoscope, Brain, Microscope, Scale, Pill } from "lucide-react";
+import { ExternalLink, BookOpen, Stethoscope, Brain, Microscope, Scale, Pill, Library } from "lucide-react";
 
 type Resource = {
   name: string;
@@ -150,10 +150,16 @@ const SECTIONS: Section[] = [
 
 export default function ResourcesPage() {
   return (
-    <div className="max-w-5xl mx-auto p-4 md:p-8" data-testid="resources-page">
+    <div className="min-h-full bg-background" data-testid="resources-page">
+      <div className="max-w-5xl mx-auto p-4 md:p-6 lg:p-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground mb-2">Resources & References</h1>
-        <p className="text-muted-foreground">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+            <Library className="w-5 h-5 text-primary" />
+          </div>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Resources & References</h1>
+        </div>
+        <p className="text-sm text-muted-foreground">
           The primary sources, clinical frameworks, and research databases that inform PsychPro's study content. All links open in a new tab.
         </p>
       </div>
@@ -163,13 +169,11 @@ export default function ResourcesPage() {
           const Icon = section.icon;
           return (
             <section key={section.title} data-testid={`section-${section.title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <Icon className="w-5 h-5 text-primary" />
-                </div>
-                <h2 className="text-xl font-bold text-foreground">{section.title}</h2>
+              <div className="flex items-center gap-2 mb-2">
+                <Icon className="w-4 h-4 text-primary" />
+                <h2 className="font-semibold text-foreground">{section.title}</h2>
               </div>
-              <p className="text-sm text-muted-foreground mb-4 ml-13 pl-0 md:pl-13">{section.blurb}</p>
+              <p className="text-sm text-muted-foreground mb-4">{section.blurb}</p>
 
               <div className="grid gap-3 sm:grid-cols-2">
                 {section.resources.map((r) => (
@@ -196,10 +200,11 @@ export default function ResourcesPage() {
         })}
       </div>
 
-      <div className="mt-10 p-5 bg-muted/40 border border-border rounded-xl">
+      <div className="mt-10 p-5 bg-card border border-border rounded-xl">
         <p className="text-sm text-muted-foreground leading-relaxed">
           <span className="font-semibold text-foreground">A note on scope.</span> PsychPro's content is built from publicly available diagnostic frameworks, peer-reviewed neuroscience, and clinical practice references. It is intended as an educational study aid for students and clinicians — not a substitute for clinical judgment, supervision, or the original source materials. Always consult primary sources and current guidelines for clinical decision-making.
         </p>
+      </div>
       </div>
     </div>
   );

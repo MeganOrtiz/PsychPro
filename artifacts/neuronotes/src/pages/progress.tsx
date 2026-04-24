@@ -1,5 +1,5 @@
 import { useLocation } from "wouter";
-import { Brain, ChevronRight, TrendingUp, AlertCircle, CheckCircle2, Circle } from "lucide-react";
+import { Brain, ChevronRight, TrendingUp, AlertCircle, CheckCircle2, Circle, BarChart3 } from "lucide-react";
 import { useGetUserProgress, useGetTopics } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -29,21 +29,29 @@ export default function ProgressPage() {
 
   if (isLoading) {
     return (
-      <div className="p-4 md:p-6 max-w-4xl mx-auto space-y-4">
-        <Skeleton className="h-8 w-48" />
-        <div className="grid grid-cols-3 gap-4">
-          {Array(3).fill(0).map((_, i) => <Skeleton key={i} className="h-24 rounded-xl" />)}
+      <div className="min-h-full bg-background">
+        <div className="max-w-4xl mx-auto p-4 md:p-6 lg:p-8 space-y-4">
+          <Skeleton className="h-10 w-48" />
+          <div className="grid grid-cols-3 gap-4">
+            {Array(3).fill(0).map((_, i) => <Skeleton key={i} className="h-24 rounded-xl" />)}
+          </div>
+          <Skeleton className="h-64 rounded-xl" />
         </div>
-        <Skeleton className="h-64 rounded-xl" />
       </div>
     );
   }
 
   return (
-    <div className="p-4 md:p-6 max-w-4xl mx-auto" data-testid="progress-page">
+    <div className="min-h-full bg-background" data-testid="progress-page">
+      <div className="max-w-4xl mx-auto p-4 md:p-6 lg:p-8">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">My Progress</h1>
-        <p className="text-muted-foreground text-sm mt-1">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+            <BarChart3 className="w-5 h-5 text-primary" />
+          </div>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">My Progress</h1>
+        </div>
+        <p className="text-sm text-muted-foreground">
           {studied.length} of {topicsWithProgress.length} topics studied
         </p>
       </div>
@@ -188,6 +196,7 @@ export default function ProgressPage() {
           </button>
         </div>
       )}
+      </div>
     </div>
   );
 }

@@ -87,10 +87,16 @@ export default function SubscriptionPage() {
   const loading = plansLoading || statusLoading;
 
   return (
-    <div className="p-4 md:p-6 max-w-2xl mx-auto" data-testid="subscription-page">
+    <div className="min-h-full bg-background" data-testid="subscription-page">
+      <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Upgrade</h1>
-        <p className="text-muted-foreground text-sm mt-1">Choose the plan that fits your study goals</p>
+        <div className="flex items-center gap-3 mb-2">
+          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+            <Crown className="w-5 h-5 text-primary" />
+          </div>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Upgrade</h1>
+        </div>
+        <p className="text-sm text-muted-foreground">Choose the plan that fits your study goals</p>
       </div>
 
       {(isPro || isScholar) && (
@@ -113,10 +119,10 @@ export default function SubscriptionPage() {
       )}
 
       <div className="space-y-5">
-        <div className="bg-card border border-border rounded-2xl p-6">
+        <div className="bg-card border border-border rounded-xl p-5">
           <div className="flex items-center gap-2 mb-4">
-            <Crown className="w-5 h-5 text-primary" />
-            <span className="font-bold text-foreground text-lg">PsychPro Pro</span>
+            <Crown className="w-4 h-4 text-primary" />
+            <span className="font-semibold text-foreground text-lg">PsychPro Pro</span>
             <Badge variant="secondary" className="ml-auto">Most Popular</Badge>
           </div>
 
@@ -169,13 +175,13 @@ export default function SubscriptionPage() {
           )}
         </div>
 
-        <div className="bg-card border-2 border-purple-200 dark:border-purple-800 rounded-2xl p-6 relative">
-          <div className="absolute -top-3 left-6">
+        <div className="bg-card border-2 border-purple-200 dark:border-purple-800 rounded-xl p-5 relative">
+          <div className="absolute -top-3 left-5">
             <span className="bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full">NEW</span>
           </div>
           <div className="flex items-center gap-2 mb-4">
-            <BookMarked className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-            <span className="font-bold text-foreground text-lg">PsychPro Scholar</span>
+            <BookMarked className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+            <span className="font-semibold text-foreground text-lg">PsychPro Scholar</span>
             <Badge className="ml-auto bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 border-0">Best Value</Badge>
           </div>
 
@@ -229,10 +235,11 @@ export default function SubscriptionPage() {
         </div>
       </div>
 
-      <div className="bg-muted/50 rounded-xl p-4 text-center mt-5">
+      <div className="bg-card border border-border rounded-xl p-4 text-center mt-5">
         <p className="text-sm text-muted-foreground">
           Start with <strong className="text-foreground">10 free interactions</strong> — no credit card required.
         </p>
+      </div>
       </div>
     </div>
   );

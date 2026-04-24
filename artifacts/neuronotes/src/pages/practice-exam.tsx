@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
-import { ChevronLeft, Clock, Timer, BookOpen, FileText } from "lucide-react";
+import { ChevronLeft, Clock, Timer, BookOpen, FileText, GraduationCap } from "lucide-react";
 import { useGetPracticeExamByTopic, useUpdateTopicProgress, useIncrementUserUsage } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -98,7 +98,8 @@ export default function PracticeExamPage({ params }: Props) {
 
   if (submitted) {
     return (
-      <div className="p-4 md:p-6 max-w-2xl mx-auto" data-testid="exam-results">
+      <div className="min-h-full bg-background" data-testid="exam-results">
+        <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
         <div className="text-center mb-8">
           <div className={`w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 ${score >= 70 ? "bg-green-100 dark:bg-green-900/30" : "bg-amber-100 dark:bg-amber-900/30"}`}>
             <span className="text-3xl font-bold text-foreground">{score}%</span>
@@ -123,18 +124,25 @@ export default function PracticeExamPage({ params }: Props) {
           <Button variant="outline" onClick={() => navigate(`/topics/${topicId}`)} data-testid="button-back-to-topic">Back to Topic</Button>
           <Button onClick={() => { setSubmitted(false); setStarted(false); setAnswers({}); setIndex(0); setQuestionCount(null); }} data-testid="button-retake">Retake</Button>
         </div>
+        </div>
       </div>
     );
   }
 
   if (!started) {
     return (
-      <div className="p-4 md:p-6 max-w-lg mx-auto" data-testid="exam-setup">
+      <div className="min-h-full bg-background" data-testid="exam-setup">
+        <div className="max-w-lg mx-auto p-4 md:p-6 lg:p-8">
         <button onClick={() => navigate(`/topics/${topicId}`)} className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6">
           <ChevronLeft className="w-4 h-4" /> Back
         </button>
-        <h1 className="text-2xl font-bold text-foreground mb-2">Practice Exam</h1>
-        <p className="text-muted-foreground mb-8">Choose your exam length to get started</p>
+        <div className="flex items-center gap-3 mb-2">
+          <div className="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center">
+            <GraduationCap className="w-5 h-5 text-amber-500" />
+          </div>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Practice Exam</h1>
+        </div>
+        <p className="text-sm text-muted-foreground mb-8">Choose your exam length to get started</p>
 
         {/* Question count selector */}
         <div className="grid grid-cols-2 gap-3 mb-6">
@@ -191,6 +199,7 @@ export default function PracticeExamPage({ params }: Props) {
             </Button>
           </>
         )}
+        </div>
       </div>
     );
   }
@@ -198,7 +207,8 @@ export default function PracticeExamPage({ params }: Props) {
   const q = questions[index];
 
   return (
-    <div className="p-4 md:p-6 max-w-2xl mx-auto" data-testid="exam-page">
+    <div className="min-h-full bg-background" data-testid="exam-page">
+      <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
       <div className="flex items-center justify-between mb-6">
         <span className="text-sm font-medium text-muted-foreground">{index + 1}/{total}</span>
         {timed && (
@@ -277,6 +287,7 @@ export default function PracticeExamPage({ params }: Props) {
             Skip
           </Button>
         )}
+      </div>
       </div>
     </div>
   );

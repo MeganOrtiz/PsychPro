@@ -143,15 +143,18 @@ export default function NewDeckPage() {
   }
 
   return (
-    <div className="p-4 md:p-6 max-w-lg mx-auto">
+    <div className="min-h-full bg-background" data-testid="my-decks-new-page">
+      <div className="max-w-lg mx-auto p-4 md:p-6 lg:p-8">
       <div className="mb-6">
-        <div className="flex items-center gap-2 mb-1">
-          {isPro ? <Sparkles className="w-5 h-5 text-purple-600" /> : <Wrench className="w-5 h-5 text-primary" />}
-          <h1 className="text-2xl font-bold text-foreground">
+        <div className="flex items-center gap-3 mb-2">
+          <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isPro ? "bg-purple-500/10" : "bg-primary/10"}`}>
+            {isPro ? <Sparkles className="w-5 h-5 text-purple-600" /> : <Wrench className="w-5 h-5 text-primary" />}
+          </div>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
             {isPro ? "Create Pro Tools" : "Create Standard Tools"}
           </h1>
         </div>
-        <p className="text-muted-foreground text-sm">
+        <p className="text-sm text-muted-foreground">
           {isPro
             ? "Upload your notes or paste text — we'll generate matching games, fill-in-the-blank items, and a spaced-repetition review deck."
             : "Upload your notes or paste text — we'll generate flashcards, quizzes, a study guide, and a practice exam."}
@@ -485,6 +488,7 @@ export default function NewDeckPage() {
           </div>
         </form>
       )}
+      </div>
     </div>
   );
 }

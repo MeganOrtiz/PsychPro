@@ -36,33 +36,38 @@ export default function FeedbackPage() {
 
   if (submitted) {
     return (
-      <div className="p-6 max-w-lg mx-auto">
-        <div className="flex flex-col items-center text-center py-16 gap-4">
-          <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-            <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
+      <div className="min-h-full bg-background">
+        <div className="max-w-lg mx-auto p-4 md:p-6 lg:p-8">
+          <div className="flex flex-col items-center text-center py-16 gap-4">
+            <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+              <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
+            </div>
+            <h2 className="text-xl font-bold text-foreground">Thanks for your feedback!</h2>
+            <p className="text-muted-foreground text-sm">Your message has been received. We appreciate you helping improve PsychPro.</p>
+            <Button
+              variant="outline"
+              className="mt-2"
+              onClick={() => { setSubmitted(false); setMessage(""); setType("general"); }}
+            >
+              Send another
+            </Button>
           </div>
-          <h2 className="text-xl font-bold text-foreground">Thanks for your feedback!</h2>
-          <p className="text-muted-foreground text-sm">Your message has been received. We appreciate you helping improve PsychPro.</p>
-          <Button
-            variant="outline"
-            className="mt-2"
-            onClick={() => { setSubmitted(false); setMessage(""); setType("general"); }}
-          >
-            Send another
-          </Button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-4 md:p-6 max-w-lg mx-auto">
+    <div className="min-h-full bg-background" data-testid="feedback-page">
+      <div className="max-w-lg mx-auto p-4 md:p-6 lg:p-8">
       <div className="mb-6">
-        <div className="flex items-center gap-2 mb-1">
-          <MessageSquare className="w-5 h-5 text-primary" />
-          <h1 className="text-2xl font-bold text-foreground">Feedback</h1>
+        <div className="flex items-center gap-3 mb-2">
+          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+            <MessageSquare className="w-5 h-5 text-primary" />
+          </div>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Feedback</h1>
         </div>
-        <p className="text-muted-foreground text-sm">Found a bug? Have a suggestion? We want to hear it.</p>
+        <p className="text-sm text-muted-foreground">Found a bug? Have a suggestion? We want to hear it.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
@@ -103,6 +108,7 @@ export default function FeedbackPage() {
           {submitting ? "Sending..." : "Send Feedback"}
         </Button>
       </form>
+      </div>
     </div>
   );
 }

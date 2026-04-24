@@ -58,59 +58,64 @@ export default function TopicDetailPage({ params }: Props) {
   ];
 
   return (
-    <div className="p-4 md:p-6 max-w-2xl mx-auto" data-testid="topic-detail-page">
-      <button
-        onClick={() => navigate("/topics")}
-        className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-4 transition-colors"
-        data-testid="button-back"
-      >
-        <ChevronLeft className="w-4 h-4" />
-        Back to Topics
-      </button>
+    <div className="min-h-full bg-background" data-testid="topic-detail-page">
+      <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
+        <button
+          onClick={() => navigate("/topics")}
+          className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-4 transition-colors"
+          data-testid="button-back"
+        >
+          <ChevronLeft className="w-4 h-4" />
+          Back to Topics
+        </button>
 
-      {isLoading ? (
-        <div>
-          <Skeleton className="h-8 w-2/3 mb-3" />
-          <Skeleton className="h-16 mb-6" />
-          <div className="grid grid-cols-1 gap-4">
-            {Array(4).fill(0).map((_, i) => <Skeleton key={i} className="h-28 rounded-xl" />)}
+        {isLoading ? (
+          <div>
+            <Skeleton className="h-8 w-2/3 mb-3" />
+            <Skeleton className="h-16 mb-6" />
+            <div className="grid grid-cols-1 gap-4">
+              {Array(4).fill(0).map((_, i) => <Skeleton key={i} className="h-28 rounded-xl" />)}
+            </div>
           </div>
-        </div>
-      ) : !topic ? (
-        <div className="text-center py-16 text-muted-foreground">Topic not found.</div>
-      ) : (
-        <>
-          <Badge variant="secondary" className="mb-2">{topic.category}</Badge>
-          <h1 className="text-2xl font-bold text-foreground mb-2">{topic.name}</h1>
-          <p className="text-muted-foreground mb-6">{topic.description}</p>
+        ) : !topic ? (
+          <div className="text-center py-16 text-muted-foreground">Topic not found.</div>
+        ) : (
+          <>
+            <Badge variant="secondary" className="mb-3">{topic.category}</Badge>
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">{topic.name}</h1>
+            <p className="text-muted-foreground mb-4">{topic.description}</p>
 
-          <div className="flex gap-4 mb-6 text-sm text-muted-foreground">
-            <span className="flex items-center gap-1.5"><Layers className="w-4 h-4" />{topic.flashcardCount} flashcards</span>
-            <span className="flex items-center gap-1.5"><BookOpen className="w-4 h-4" />{topic.quizCount} questions</span>
-          </div>
+            <div className="flex gap-4 mb-6 text-sm text-muted-foreground">
+              <span className="flex items-center gap-1.5"><Layers className="w-4 h-4" />{topic.flashcardCount} flashcards</span>
+              <span className="flex items-center gap-1.5"><BookOpen className="w-4 h-4" />{topic.quizCount} questions</span>
+            </div>
 
-          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">Study Modes</h2>
-          <div className="grid grid-cols-1 gap-3">
-            {studyModes.map(mode => (
-              <button
-                key={mode.title}
-                onClick={mode.onClick}
-                data-testid={mode.testId}
-                className={`flex items-center gap-4 p-4 rounded-xl border ${mode.border} ${mode.bg} text-left hover:shadow-sm transition-all`}
-              >
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center bg-white dark:bg-background ${mode.border} border`}>
-                  <mode.icon className={`w-5 h-5 ${mode.color}`} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-foreground">{mode.title}</p>
-                  <p className="text-sm text-muted-foreground">{mode.description}</p>
-                </div>
-                <ChevronLeft className={`w-4 h-4 text-muted-foreground rotate-180`} />
-              </button>
-            ))}
-          </div>
-        </>
-      )}
+            <div className="flex items-center gap-2 mb-3">
+              <GraduationCap className="w-4 h-4 text-primary" />
+              <h2 className="font-semibold text-foreground">Study Modes</h2>
+            </div>
+            <div className="grid grid-cols-1 gap-3">
+              {studyModes.map(mode => (
+                <button
+                  key={mode.title}
+                  onClick={mode.onClick}
+                  data-testid={mode.testId}
+                  className="flex items-center gap-4 p-5 rounded-xl border border-border bg-card text-left hover:border-primary/40 hover:shadow-sm transition-all"
+                >
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${mode.bg}`}>
+                    <mode.icon className={`w-5 h-5 ${mode.color}`} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-foreground">{mode.title}</p>
+                    <p className="text-sm text-muted-foreground">{mode.description}</p>
+                  </div>
+                  <ChevronLeft className="w-4 h-4 text-muted-foreground rotate-180" />
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }

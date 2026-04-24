@@ -73,13 +73,16 @@ export default function MyDecksPage() {
   }
 
   return (
-    <div className="p-4 md:p-6 max-w-2xl mx-auto">
+    <div className="min-h-full bg-background" data-testid="my-decks-page">
+      <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
       <div className="mb-6">
-        <div className="flex items-center gap-2 mb-1">
-          <BookMarked className="w-5 h-5 text-primary" />
-          <h1 className="text-2xl font-bold text-foreground">My Tools</h1>
+        <div className="flex items-center gap-3 mb-2">
+          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+            <BookMarked className="w-5 h-5 text-primary" />
+          </div>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">My Tools</h1>
         </div>
-        <p className="text-muted-foreground text-sm mb-4">Tools generated from your own materials</p>
+        <p className="text-sm text-muted-foreground mb-4">Tools generated from your own materials</p>
         <div className="grid grid-cols-2 gap-2">
           <Link href="/my-decks/new?tier=standard">
             <Button variant="outline" className="w-full gap-2 justify-center">
@@ -99,8 +102,8 @@ export default function MyDecksPage() {
           {Array(3).fill(0).map((_, i) => <Skeleton key={i} className="h-20 rounded-xl" />)}
         </div>
       ) : decks.length === 0 ? (
-        <div className="text-center py-16 border-2 border-dashed border-border rounded-2xl">
-          <BookMarked className="w-12 h-12 mx-auto mb-3 text-muted-foreground opacity-40" />
+        <div className="text-center py-16 bg-card border border-border rounded-xl">
+          <BookMarked className="w-10 h-10 mx-auto mb-3 text-muted-foreground opacity-50" />
           <p className="font-semibold text-foreground mb-1">No toolkits yet</p>
           <p className="text-sm text-muted-foreground mb-5">Choose Standard or Pro Tools above to upload your study materials and generate your first toolkit.</p>
         </div>
@@ -108,7 +111,7 @@ export default function MyDecksPage() {
         <div className="space-y-3">
           {decks.map((deck) => (
             <Link key={deck.id} href={deck.status === "ready" ? `/my-decks/${deck.id}` : "#"}>
-              <div className={`bg-card border border-border rounded-xl p-4 flex items-center justify-between gap-3 transition-colors ${deck.status === "ready" ? "hover:border-primary/40 cursor-pointer" : "opacity-70"}`}>
+              <div className={`bg-card border border-border rounded-xl p-5 flex items-center justify-between gap-3 transition-all ${deck.status === "ready" ? "hover:border-primary/40 hover:shadow-sm cursor-pointer" : "opacity-70"}`}>
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <p className="font-medium text-foreground truncate">{deck.title}</p>
@@ -138,6 +141,7 @@ export default function MyDecksPage() {
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }

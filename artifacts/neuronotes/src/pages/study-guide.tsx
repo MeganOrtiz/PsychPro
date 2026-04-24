@@ -1,6 +1,6 @@
 import { type ReactElement } from "react";
 import { useLocation } from "wouter";
-import { ChevronLeft, BookOpen, Lock } from "lucide-react";
+import { ChevronLeft, BookOpen, Lock, FileText } from "lucide-react";
 import { useGetStudyGuideByTopic, useGetUserProfile } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,8 @@ export default function StudyGuidePage({ params }: Props) {
   const is402 = (error as any)?.status === 402 || (error as any)?.response?.status === 402 || (!isSubscribed && profile !== undefined);
 
   return (
-    <div className="p-4 md:p-6 max-w-3xl mx-auto" data-testid="study-guide-page">
+    <div className="min-h-full bg-background" data-testid="study-guide-page">
+      <div className="max-w-3xl mx-auto p-4 md:p-6 lg:p-8">
       <div className="flex items-center gap-3 mb-6">
         <button
           onClick={() => navigate(`/topics/${topicId}`)}
@@ -29,7 +30,10 @@ export default function StudyGuidePage({ params }: Props) {
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
-        <h1 className="text-xl font-bold text-foreground">Study Guide</h1>
+        <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
+          <FileText className="w-5 h-5 text-purple-500" />
+        </div>
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground">Study Guide</h1>
       </div>
 
       {isLoading && profile === undefined ? (
@@ -90,6 +94,7 @@ export default function StudyGuidePage({ params }: Props) {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }

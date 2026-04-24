@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useLocation, useSearch } from "wouter";
-import { Search, BookOpen, Layers, Brain, ChevronRight, ChevronLeft, FolderOpen } from "lucide-react";
+import { Search, BookOpen, Layers, Brain, ChevronRight, ChevronLeft, FolderOpen, LibraryBig } from "lucide-react";
 import { useGetTopics } from "@workspace/api-client-react";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -73,22 +73,28 @@ export default function TopicsPage() {
   const showCategoriesGrid = !showSearchResults && selectedCategory === null;
 
   return (
-    <div className="p-4 md:p-6 max-w-4xl mx-auto" data-testid="topics-page">
+    <div className="min-h-full bg-background" data-testid="topics-page">
+      <div className="max-w-4xl mx-auto p-4 md:p-6 lg:p-8">
       <div className="mb-6">
         {showCategoryView ? (
           <button
             onClick={() => setSelectedCategory(null)}
-            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-2"
+            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-3"
             data-testid="button-back-to-categories"
           >
             <ChevronLeft className="w-4 h-4" />
             All categories
           </button>
         ) : null}
-        <h1 className="text-2xl font-bold text-foreground">
-          {showCategoryView ? selectedCategory : "Categories"}
-        </h1>
-        <p className="text-muted-foreground text-sm mt-1">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+            <LibraryBig className="w-5 h-5 text-primary" />
+          </div>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+            {showCategoryView ? selectedCategory : "Categories"}
+          </h1>
+        </div>
+        <p className="text-sm text-muted-foreground">
           {showCategoryView
             ? `Browse ${categoryTopics.length} ${categoryTopics.length === 1 ? "topic" : "topics"}`
             : "Choose a category to browse topics"}
@@ -159,6 +165,7 @@ export default function TopicsPage() {
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }

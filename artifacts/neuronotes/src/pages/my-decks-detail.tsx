@@ -561,10 +561,12 @@ export default function MyDeckDetailPage() {
 
   if (loading) {
     return (
-      <div className="p-4 md:p-6 max-w-2xl mx-auto space-y-4">
-        <Skeleton className="h-8 w-48 rounded-xl" />
-        <Skeleton className="h-12 rounded-xl" />
-        <Skeleton className="h-64 rounded-2xl" />
+      <div className="min-h-full bg-background">
+        <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8 space-y-4">
+          <Skeleton className="h-10 w-48 rounded-xl" />
+          <Skeleton className="h-12 rounded-xl" />
+          <Skeleton className="h-64 rounded-xl" />
+        </div>
       </div>
     );
   }
@@ -573,24 +575,27 @@ export default function MyDeckDetailPage() {
 
   if (deck.status !== "ready") {
     return (
-      <div className="p-6 max-w-lg mx-auto text-center py-16">
-        <AlertCircle className="w-12 h-12 mx-auto mb-3 text-muted-foreground opacity-40" />
-        <p className="font-semibold text-foreground mb-1">This deck is not ready yet.</p>
-        <p className="text-sm text-muted-foreground mb-5">Status: {deck.status}</p>
-        <Button variant="outline" onClick={() => navigate("/my-decks")}>Back to My Decks</Button>
+      <div className="min-h-full bg-background">
+        <div className="max-w-lg mx-auto p-4 md:p-6 lg:p-8 text-center py-16">
+          <AlertCircle className="w-10 h-10 mx-auto mb-3 text-muted-foreground opacity-50" />
+          <p className="font-semibold text-foreground mb-1">This deck is not ready yet.</p>
+          <p className="text-sm text-muted-foreground mb-5">Status: {deck.status}</p>
+          <Button variant="outline" onClick={() => navigate("/my-decks")}>Back to My Decks</Button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="p-4 md:p-6 max-w-2xl mx-auto">
+    <div className="min-h-full bg-background" data-testid="my-decks-detail-page">
+      <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
       <button onClick={() => navigate("/my-decks")} className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-4 transition-colors">
         <ChevronLeft className="w-4 h-4" /> My Decks
       </button>
 
       <div className="mb-5">
         <div className="flex items-center gap-2 flex-wrap">
-          <h1 className="text-2xl font-bold text-foreground">{deck.title}</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">{deck.title}</h1>
           {deck.tier === "pro" ? (
             <Badge className="bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 border-purple-200">Pro Tools</Badge>
           ) : (
@@ -643,6 +648,7 @@ export default function MyDeckDetailPage() {
             timed={deck.examTimed ?? false}
           />
         )}
+      </div>
       </div>
     </div>
   );
