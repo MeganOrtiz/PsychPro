@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useUser, UserButton } from "@clerk/react";
-import { Brain, LayoutDashboard, BookOpen, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck, BookMarked, Library, Wrench, Sparkles, Star, Medal } from "lucide-react";
+import { Brain, LayoutDashboard, BookOpen, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck, BookMarked, Library, Wrench, Sparkles, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -15,7 +15,6 @@ const studyNav: NavItem[] = [
 ];
 
 const communityNav: NavItem[] = [
-  { href: "/leaderboard", label: "Leaderboard", icon: Medal },
   { href: "/feature-request", label: "Be Featured", icon: Star },
   { href: "/feedback", label: "Feedback", icon: MessageSquare },
 ];
