@@ -9,13 +9,13 @@ import {
   Bell,
   Flame,
   Star,
-  Award,
   Target,
   TrendingUp,
   Sparkles,
   ArrowUpRight,
+  Map as MapIcon,
 } from "lucide-react";
-import { useGetDashboardSummary, useGetTopics, useGetLeaderboard } from "@workspace/api-client-react";
+import { useGetDashboardSummary, useGetTopics, useGetLeaderboard, useGetUserProgress } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUser, UserButton } from "@clerk/react";
@@ -116,6 +116,7 @@ export default function DashboardPage() {
   const { data: summary, isLoading } = useGetDashboardSummary();
   const { data: allTopics } = useGetTopics();
   const { data: leaderboard } = useGetLeaderboard();
+  const { data: progress } = useGetUserProgress();
 
   const isOverLimit =
     summary &&
@@ -167,10 +168,31 @@ export default function DashboardPage() {
     return out;
   }, [weak, recent, allTopics]);
 
-  const hasFirstTopic = (summary?.topicsStudied ?? 0) >= 1;
-  const hasStreak = streak >= 3;
-  const hasHighScore = recent.some((r) => r.score >= 80);
-  const unlockedCount = [hasFirstTopic, hasStreak, hasHighScore].filter(Boolean).length;
+  const masteryByCategory = useMemo(() => {
+    const scoreByTopic = new Map<number, number>();
+    (progress ?? []).forEach((p) => {
+      const cur = scoreByTopic.get(p.topicId);
+      if (cur === undefined || p.score > cur) scoreByTopic.set(p.topicId, p.score);
+    });
+    const groups = new Map<string, Array<{ id: number; name: string; score: number | null }>>();
+    (allTopics ?? []).forEach((t) => {
+      const cat = t.category ?? "Other";
+      const score = scoreByTopic.has(t.id) ? scoreByTopic.get(t.id)! : null;
+      if (!groups.has(cat)) groups.set(cat, []);
+      groups.get(cat)!.push({ id: t.id, name: t.name, score });
+    });
+    return Array.from(groups.entries()).map(([category, items]) => ({
+      category,
+      items: items.sort((a, b) => a.name.localeCompare(b.name)),
+    }));
+  }, [allTopics, progress]);
+
+  const masteryStats = useMemo(() => {
+    const all = masteryByCategory.flatMap((g) => g.items);
+    const studied = all.filter((t) => t.score !== null);
+    const strong = studied.filter((t) => (t.score ?? 0) >= 85).length;
+    return { total: all.length, studied: studied.length, strong };
+  }, [masteryByCategory]);
 
   return (
     <div className="min-h-full bg-background" data-testid="dashboard-page">
@@ -426,32 +448,49 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* Achievements (full-width horizontal) */}
+            {/* Mastery Map (full-width) */}
             <div className="bg-card border border-border rounded-xl p-5">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="font-semibold text-foreground">Achievements</h2>
-                <span className="text-xs text-muted-foreground">{unlockedCount}/3 unlocked</span>
+              <div className="flex items-start justify-between gap-3 mb-4 flex-wrap">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <MapIcon className="w-4 h-4 text-primary" />
+                    <h2 className="font-semibold text-foreground">Mastery Map</h2>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {masteryStats.studied}/{masteryStats.total} topics started · {masteryStats.strong} strong
+                  </p>
+                </div>
+                <MasteryLegend />
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <AchievementCard
-                  icon={Star}
-                  title="First Steps"
-                  sub="Complete your first topic"
-                  unlocked={hasFirstTopic}
-                />
-                <AchievementCard
-                  icon={Flame}
-                  title="Streak Starter"
-                  sub="Study 3 days in a row"
-                  unlocked={hasStreak}
-                />
-                <AchievementCard
-                  icon={Award}
-                  title="Score Master"
-                  sub="Get 80% or higher"
-                  unlocked={hasHighScore}
-                />
-              </div>
+
+              {masteryByCategory.length === 0 ? (
+                <div className="space-y-3">
+                  <Skeleton className="h-4 w-32" />
+                  <div className="flex flex-wrap gap-1.5">
+                    {Array(12).fill(0).map((_, i) => <Skeleton key={i} className="w-9 h-9 rounded-lg" />)}
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {masteryByCategory.map((group) => (
+                    <div key={group.category}>
+                      <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
+                        {group.category}
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {group.items.map((t) => (
+                          <MasteryTile
+                            key={t.id}
+                            name={t.name}
+                            score={t.score}
+                            onClick={() => navigate(`/topics/${t.id}`)}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
@@ -620,36 +659,73 @@ function DailyGoalCard({ completed, goal }: { completed: number; goal: number })
   );
 }
 
-function AchievementCard({
-  icon: Icon,
-  title,
-  sub,
-  unlocked,
+function masteryColors(score: number | null) {
+  if (score === null) {
+    return "bg-muted/60 text-muted-foreground hover:bg-muted border-transparent";
+  }
+  if (score >= 85) {
+    return "bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-950/50 dark:text-green-300 dark:hover:bg-green-950/70 border-transparent";
+  }
+  if (score >= 70) {
+    return "bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-950/50 dark:text-blue-300 dark:hover:bg-blue-950/70 border-transparent";
+  }
+  if (score >= 50) {
+    return "bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-950/50 dark:text-amber-300 dark:hover:bg-amber-950/70 border-transparent";
+  }
+  return "bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-950/50 dark:text-red-300 dark:hover:bg-red-950/70 border-transparent";
+}
+
+function topicInitials(name: string) {
+  const cleaned = name.replace(/[^A-Za-z0-9 ]/g, "").trim();
+  const words = cleaned.split(/\s+/).filter(Boolean);
+  if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
+  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+  return "?";
+}
+
+function MasteryTile({
+  name,
+  score,
+  onClick,
 }: {
-  icon: ComponentType<{ className?: string }>;
-  title: string;
-  sub: string;
-  unlocked: boolean;
+  name: string;
+  score: number | null;
+  onClick: () => void;
 }) {
+  const label = score === null ? `${name} — Not started` : `${name} — ${score}%`;
   return (
-    <div
+    <button
+      type="button"
+      onClick={onClick}
+      title={label}
+      aria-label={label}
+      data-testid={`mastery-tile-${name.replace(/\s+/g, "-").toLowerCase()}`}
       className={cn(
-        "flex flex-col items-center text-center p-4 rounded-lg border",
-        unlocked
-          ? "bg-primary/5 border-primary/20"
-          : "bg-muted/30 border-border opacity-70"
+        "w-9 h-9 rounded-lg border flex items-center justify-center text-[11px] font-semibold transition-colors",
+        masteryColors(score)
       )}
     >
-      <div
-        className={cn(
-          "w-10 h-10 rounded-full flex items-center justify-center mb-2",
-          unlocked ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
-        )}
-      >
-        <Icon className="w-5 h-5" />
-      </div>
-      <p className="text-sm font-semibold text-foreground">{title}</p>
-      <p className="text-xs text-muted-foreground mt-0.5">{sub}</p>
+      {topicInitials(name)}
+    </button>
+  );
+}
+
+function MasteryLegend() {
+  const items: Array<{ label: string; cls: string }> = [
+    { label: "New", cls: "bg-muted/60" },
+    { label: "<50", cls: "bg-red-200 dark:bg-red-950/70" },
+    { label: "50-69", cls: "bg-amber-200 dark:bg-amber-950/70" },
+    { label: "70-84", cls: "bg-blue-200 dark:bg-blue-950/70" },
+    { label: "85+", cls: "bg-green-200 dark:bg-green-950/70" },
+  ];
+  return (
+    <div className="flex items-center gap-2 flex-wrap">
+      {items.map((it) => (
+        <div key={it.label} className="flex items-center gap-1">
+          <span className={cn("w-3 h-3 rounded", it.cls)} aria-hidden />
+          <span className="text-[11px] text-muted-foreground">{it.label}</span>
+        </div>
+      ))}
     </div>
   );
 }
