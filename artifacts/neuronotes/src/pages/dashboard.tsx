@@ -466,8 +466,8 @@ export default function DashboardPage() {
               {masteryByCategory.length === 0 ? (
                 <div className="space-y-3">
                   <Skeleton className="h-4 w-32" />
-                  <div className="flex flex-wrap gap-1.5">
-                    {Array(12).fill(0).map((_, i) => <Skeleton key={i} className="w-9 h-9 rounded-lg" />)}
+                  <div className="flex gap-2">
+                    {Array(6).fill(0).map((_, i) => <Skeleton key={i} className="w-40 h-20 rounded-lg shrink-0" />)}
                   </div>
                 </div>
               ) : (
@@ -482,20 +482,23 @@ export default function DashboardPage() {
                           {group.items.filter((t) => t.score !== null).length}/{group.items.length}
                         </p>
                       </div>
-                      <div
-                        className="relative -mx-1 px-1 overflow-x-auto scrollbar-thin"
-                        data-testid={`mastery-strip-${group.category.toLowerCase().replace(/\s+/g, "-")}`}
-                      >
-                        <div className="flex gap-2 pb-1 min-w-max">
-                          {group.items.map((t) => (
-                            <MasteryTile
-                              key={t.id}
-                              name={t.name}
-                              score={t.score}
-                              onClick={() => navigate(`/topics/${t.id}`)}
-                            />
-                          ))}
+                      <div className="relative">
+                        <div
+                          className="-mx-1 px-1 overflow-x-auto pb-2 [scrollbar-width:thin]"
+                          data-testid={`mastery-strip-${group.category.toLowerCase().replace(/\s+/g, "-")}`}
+                        >
+                          <div className="flex gap-2 min-w-max">
+                            {group.items.map((t) => (
+                              <MasteryTile
+                                key={t.id}
+                                name={t.name}
+                                score={t.score}
+                                onClick={() => navigate(`/topics/${t.id}`)}
+                              />
+                            ))}
+                          </div>
                         </div>
+                        <div className="pointer-events-none absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-card to-transparent" />
                       </div>
                     </div>
                   ))}
@@ -703,6 +706,7 @@ function MasteryTile({
   onClick: () => void;
 }) {
   const label = score === null ? `${name} — Not started` : `${name} — ${score}%`;
+  const badge = score === null ? "New" : `${score}%`;
   return (
     <button
       type="button"
@@ -711,11 +715,12 @@ function MasteryTile({
       aria-label={label}
       data-testid={`mastery-tile-${name.replace(/\s+/g, "-").toLowerCase()}`}
       className={cn(
-        "w-9 h-9 rounded-lg border flex items-center justify-center text-[11px] font-semibold transition-colors",
+        "shrink-0 w-40 h-20 rounded-lg border flex flex-col justify-between p-2.5 text-left transition-colors",
         masteryColors(score)
       )}
     >
-      {topicInitials(name)}
+      <span className="text-[12px] font-medium leading-tight line-clamp-2">{name}</span>
+      <span className="text-[11px] font-semibold opacity-80">{badge}</span>
     </button>
   );
 }
