@@ -474,18 +474,28 @@ export default function DashboardPage() {
                 <div className="space-y-4">
                   {masteryByCategory.map((group) => (
                     <div key={group.category}>
-                      <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
-                        {group.category}
-                      </p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {group.items.map((t) => (
-                          <MasteryTile
-                            key={t.id}
-                            name={t.name}
-                            score={t.score}
-                            onClick={() => navigate(`/topics/${t.id}`)}
-                          />
-                        ))}
+                      <div className="flex items-baseline justify-between mb-2">
+                        <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                          {group.category}
+                        </p>
+                        <p className="text-[11px] text-muted-foreground">
+                          {group.items.filter((t) => t.score !== null).length}/{group.items.length}
+                        </p>
+                      </div>
+                      <div
+                        className="relative -mx-1 px-1 overflow-x-auto scrollbar-thin"
+                        data-testid={`mastery-strip-${group.category.toLowerCase().replace(/\s+/g, "-")}`}
+                      >
+                        <div className="flex gap-2 pb-1 min-w-max">
+                          {group.items.map((t) => (
+                            <MasteryTile
+                              key={t.id}
+                              name={t.name}
+                              score={t.score}
+                              onClick={() => navigate(`/topics/${t.id}`)}
+                            />
+                          ))}
+                        </div>
                       </div>
                     </div>
                   ))}
