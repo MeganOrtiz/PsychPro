@@ -453,25 +453,27 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* Study Analytics + Recent Activity + Achievements (3-col row) */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Study Analytics (full width) + Recent Activity / Achievements (2-col) */}
+            <div className="space-y-4">
               <StudyAnalyticsCard
                 series={activitySeries}
                 averageScore={summary?.averageScore ?? 0}
                 topicsStudied={summary?.topicsStudied ?? 0}
               />
-              <RecentActivityCard
-                isLoading={isLoading}
-                recent={recent}
-                onItemClick={(topicId) => navigate(`/topics/${topicId}`)}
-                onViewAll={() => navigate("/progress")}
-              />
-              <AchievementsCard
-                streak={streak}
-                topicsStudied={summary?.topicsStudied ?? 0}
-                averageScore={summary?.averageScore ?? 0}
-                onViewAll={() => navigate("/progress")}
-              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <RecentActivityCard
+                  isLoading={isLoading}
+                  recent={recent}
+                  onItemClick={(topicId) => navigate(`/topics/${topicId}`)}
+                  onViewAll={() => navigate("/progress")}
+                />
+                <AchievementsCard
+                  streak={streak}
+                  topicsStudied={summary?.topicsStudied ?? 0}
+                  averageScore={summary?.averageScore ?? 0}
+                  onViewAll={() => navigate("/progress")}
+                />
+              </div>
             </div>
 
           </div>
@@ -790,11 +792,19 @@ function StudyAnalyticsCard({
   topicsStudied: number;
 }) {
   return (
-    <div className="bg-card border border-border rounded-xl p-5 flex flex-col">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="font-semibold text-foreground">Study Analytics</h2>
+    <div
+      className="border border-sky-100 rounded-xl p-5 flex flex-col shadow-sm"
+      style={{
+        background:
+          "linear-gradient(135deg, #FFFFFF 0%, #F4F9FC 60%, #EAF3FA 100%)",
+      }}
+    >
+      <div className="flex items-center justify-between mb-4 gap-3">
+        <h2 className="font-semibold text-slate-900 text-base whitespace-nowrap">
+          Study Analytics
+        </h2>
         <button
-          className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+          className="flex items-center gap-1 text-xs text-sky-700 bg-white/70 border border-sky-100 rounded-full px-3 py-1 hover:bg-white transition-colors whitespace-nowrap"
           data-testid="button-analytics-period"
         >
           This Week
@@ -802,30 +812,31 @@ function StudyAnalyticsCard({
         </button>
       </div>
 
-      <div className="h-32 -mx-2">
+      <div className="h-40">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={series} margin={{ top: 4, right: 8, bottom: 4, left: 0 }}>
-            <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" vertical={false} />
+          <LineChart data={series} margin={{ top: 8, right: 12, bottom: 4, left: 0 }}>
+            <CartesianGrid stroke="#DCEAF4" strokeDasharray="3 3" vertical={false} />
             <XAxis
               dataKey="day"
               tickLine={false}
               axisLine={false}
-              tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+              tick={{ fontSize: 11, fill: "#64748B" }}
               interval={0}
+              padding={{ left: 8, right: 8 }}
             />
             <YAxis
               tickLine={false}
               axisLine={false}
-              tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+              tick={{ fontSize: 11, fill: "#64748B" }}
               domain={[0, 100]}
               ticks={[0, 25, 50, 75, 100]}
-              width={28}
+              width={32}
             />
             <Tooltip
-              cursor={{ stroke: "hsl(var(--border))", strokeWidth: 1 }}
+              cursor={{ stroke: "#BAE0F2", strokeWidth: 1 }}
               contentStyle={{
-                background: "hsl(var(--card))",
-                border: "1px solid hsl(var(--border))",
+                background: "#FFFFFF",
+                border: "1px solid #BAE0F2",
                 borderRadius: 8,
                 fontSize: 12,
               }}
@@ -833,35 +844,35 @@ function StudyAnalyticsCard({
             <Line
               type="monotone"
               dataKey="score"
-              stroke="hsl(var(--primary))"
-              strokeWidth={2}
-              dot={{ r: 3, fill: "hsl(var(--primary))" }}
-              activeDot={{ r: 5 }}
+              stroke="#0EA5E9"
+              strokeWidth={2.5}
+              dot={{ r: 3.5, fill: "#0EA5E9", strokeWidth: 0 }}
+              activeDot={{ r: 5, fill: "#0284C7" }}
             />
           </LineChart>
         </ResponsiveContainer>
       </div>
 
-      <div className="border-t border-border mt-4 pt-4">
-        <p className="text-xs font-semibold text-foreground mb-2">
+      <div className="border-t border-sky-100 mt-4 pt-4">
+        <p className="text-xs font-semibold text-slate-900 mb-3">
           Performance Overview
         </p>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-4">
           <div>
-            <p className="text-2xl font-bold text-foreground leading-none">
+            <p className="text-3xl font-bold text-slate-900 leading-none">
               {averageScore}%
             </p>
-            <p className="text-xs text-muted-foreground mt-1">Average Score</p>
-            <p className="text-[10px] text-emerald-600 mt-0.5">
+            <p className="text-xs text-slate-600 mt-1.5">Average Score</p>
+            <p className="text-[11px] text-emerald-600 mt-0.5">
               ↑ 8% vs last week
             </p>
           </div>
           <div>
-            <p className="text-2xl font-bold text-foreground leading-none">
+            <p className="text-3xl font-bold text-slate-900 leading-none">
               {topicsStudied}
             </p>
-            <p className="text-xs text-muted-foreground mt-1">Total Topics</p>
-            <p className="text-[10px] text-muted-foreground mt-0.5">
+            <p className="text-xs text-slate-600 mt-1.5">Total Topics</p>
+            <p className="text-[11px] text-slate-500 mt-0.5">
               Keep learning!
             </p>
           </div>
@@ -883,9 +894,9 @@ function RecentActivityCard({
   onViewAll: () => void;
 }) {
   const palettes = [
-    { bg: "bg-sky-100 dark:bg-sky-500/15", color: "text-sky-600 dark:text-sky-300" },
-    { bg: "bg-emerald-100 dark:bg-emerald-500/15", color: "text-emerald-600 dark:text-emerald-300" },
-    { bg: "bg-rose-100 dark:bg-rose-500/15", color: "text-rose-600 dark:text-rose-300" },
+    { bg: "bg-sky-100", color: "text-sky-600" },
+    { bg: "bg-cyan-100", color: "text-cyan-700" },
+    { bg: "bg-blue-100", color: "text-blue-600" },
   ];
 
   function timeAgo(iso?: string | null) {
@@ -899,8 +910,16 @@ function RecentActivityCard({
   }
 
   return (
-    <div className="bg-card border border-border rounded-xl p-5 flex flex-col">
-      <h2 className="font-semibold text-foreground mb-4">Recent Activity</h2>
+    <div
+      className="border border-sky-100 rounded-xl p-5 flex flex-col shadow-sm"
+      style={{
+        background:
+          "linear-gradient(135deg, #FFFFFF 0%, #F4F9FC 60%, #EAF3FA 100%)",
+      }}
+    >
+      <h2 className="font-semibold text-slate-900 text-base mb-4">
+        Recent Activity
+      </h2>
       {isLoading ? (
         <div className="space-y-3 flex-1">
           <Skeleton className="h-12 rounded-lg" />
@@ -908,24 +927,29 @@ function RecentActivityCard({
           <Skeleton className="h-12 rounded-lg" />
         </div>
       ) : recent.length > 0 ? (
-        <div className="flex-1 space-y-2">
+        <div className="flex-1 space-y-1.5">
           {recent.slice(0, 3).map((t, idx) => {
             const p = palettes[idx % palettes.length];
             return (
               <button
                 key={t.id}
                 onClick={() => onItemClick(t.topicId)}
-                className="w-full flex items-center gap-3 hover:bg-muted -mx-2 px-2 py-2 rounded-lg transition-colors text-left"
+                className="w-full flex items-center gap-3 hover:bg-white/70 px-2 py-2.5 rounded-lg transition-colors text-left"
                 data-testid={`recent-${t.topicId}`}
               >
-                <div className={cn("w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0", p.bg)}>
+                <div
+                  className={cn(
+                    "w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0",
+                    p.bg,
+                  )}
+                >
                   <Brain className={cn("w-4 h-4", p.color)} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-foreground truncate">
-                    {t.topicName}
+                  <p className="text-sm font-medium text-slate-900 truncate">
+                    {t.topicName || "Topic"}
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-slate-500 truncate">
                     {t.score >= 80
                       ? `Completed · ${t.score}%`
                       : t.score > 0
@@ -933,7 +957,7 @@ function RecentActivityCard({
                       : "Started"}
                   </p>
                 </div>
-                <span className="text-[11px] text-muted-foreground flex-shrink-0">
+                <span className="text-[11px] text-slate-500 flex-shrink-0 ml-2">
                   {timeAgo(t.lastAccessed)}
                 </span>
               </button>
@@ -941,13 +965,13 @@ function RecentActivityCard({
           })}
         </div>
       ) : (
-        <p className="text-sm text-muted-foreground text-center py-6 flex-1">
+        <p className="text-sm text-slate-500 text-center py-6 flex-1">
           Your study history will appear here.
         </p>
       )}
       <button
         onClick={onViewAll}
-        className="text-xs text-primary hover:underline pt-3 text-center border-t border-border mt-3"
+        className="text-xs text-sky-700 hover:text-sky-800 hover:underline pt-3 text-center border-t border-sky-100 mt-3 font-medium"
         data-testid="button-view-all-activity"
       >
         View all activity →
@@ -973,62 +997,79 @@ function AchievementsCard({
       label: "First Steps",
       hint: "Complete your first topic",
       unlocked: topicsStudied >= 1,
-      bg: "bg-emerald-100 dark:bg-emerald-500/15",
-      color: "text-emerald-600 dark:text-emerald-300",
+      bg: "bg-sky-100",
+      color: "text-sky-600",
     },
     {
       icon: Award,
       label: "Streak Starter",
       hint: "Study 3 days in a row",
       unlocked: streak >= 3,
-      bg: "bg-rose-100 dark:bg-rose-500/15",
-      color: "text-rose-600 dark:text-rose-300",
+      bg: "bg-cyan-100",
+      color: "text-cyan-700",
     },
     {
       icon: ShieldCheck,
       label: "Score Master",
       hint: "Get 80% or higher",
       unlocked: averageScore >= 80,
-      bg: "bg-amber-100 dark:bg-amber-500/15",
-      color: "text-amber-600 dark:text-amber-300",
+      bg: "bg-blue-100",
+      color: "text-blue-600",
     },
   ];
   const unlockedCount = achievements.filter((a) => a.unlocked).length;
 
   return (
-    <div className="bg-card border border-border rounded-xl p-5 flex flex-col">
-      <div className="flex items-start justify-between mb-4">
-        <div>
-          <h2 className="font-semibold text-foreground">Achievements</h2>
-          <p className="text-xs text-muted-foreground mt-0.5">
+    <div
+      className="border border-sky-100 rounded-xl p-5 flex flex-col shadow-sm"
+      style={{
+        background:
+          "linear-gradient(135deg, #FFFFFF 0%, #F4F9FC 60%, #EAF3FA 100%)",
+      }}
+    >
+      <div className="flex items-start justify-between mb-4 gap-3">
+        <div className="min-w-0">
+          <h2 className="font-semibold text-slate-900 text-base">
+            Achievements
+          </h2>
+          <p className="text-xs text-slate-500 mt-0.5">
             {unlockedCount}/6 unlocked
           </p>
         </div>
-        <div className="flex items-center gap-1 text-muted-foreground">
-          <ArrowDownUp className="w-3.5 h-3.5" />
-        </div>
+        <button
+          className="flex items-center gap-1 text-xs text-sky-700 bg-white/70 border border-sky-100 rounded-full px-3 py-1 hover:bg-white transition-colors whitespace-nowrap"
+          data-testid="button-achievements-sort"
+        >
+          Sort
+          <ArrowDownUp className="w-3 h-3" />
+        </button>
       </div>
 
-      <div className="flex-1 space-y-2">
+      <div className="flex-1 space-y-1.5">
         {achievements.map((a) => {
           const Icon = a.icon;
           return (
             <div
               key={a.label}
               className={cn(
-                "flex items-center gap-3 p-2 rounded-lg",
-                a.unlocked ? "" : "opacity-60",
+                "flex items-center gap-3 px-2 py-2.5 rounded-lg",
+                a.unlocked ? "" : "opacity-55",
               )}
               data-testid={`achievement-${a.label.replace(/\s+/g, "-").toLowerCase()}`}
             >
-              <div className={cn("w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0", a.bg)}>
+              <div
+                className={cn(
+                  "w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0",
+                  a.bg,
+                )}
+              >
                 <Icon className={cn("w-4 h-4", a.color)} />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-foreground truncate">
+                <p className="text-sm font-semibold text-slate-900 truncate">
                   {a.label}
                 </p>
-                <p className="text-[11px] text-muted-foreground truncate">
+                <p className="text-xs text-slate-500 truncate">
                   {a.hint}
                 </p>
               </div>
@@ -1039,7 +1080,7 @@ function AchievementsCard({
 
       <button
         onClick={onViewAll}
-        className="text-xs text-primary hover:underline pt-3 text-center border-t border-border mt-3"
+        className="text-xs text-sky-700 hover:text-sky-800 hover:underline pt-3 text-center border-t border-sky-100 mt-3 font-medium"
         data-testid="button-view-all-achievements"
       >
         View achievements →
