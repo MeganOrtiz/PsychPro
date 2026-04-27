@@ -14,6 +14,12 @@ import {
   Sparkles,
   ArrowUpRight,
   Map as MapIcon,
+  Award,
+  Medal,
+  ShieldCheck,
+  Share2,
+  ChevronDown,
+  ArrowDownUp,
 } from "lucide-react";
 import { useGetDashboardSummary, useGetTopics, useGetLeaderboard, useGetUserProgress } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
@@ -349,60 +355,72 @@ export default function DashboardPage() {
               <DailyGoalCard completed={todaysTopics} goal={dailyGoal} />
             </div>
 
-            {/* Recommended for You */}
-            <div className="bg-card border border-border rounded-xl p-5">
-              <div className="flex flex-col items-center text-center mb-4">
-                <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-primary" />
-                  <h2 className="font-semibold text-foreground">Recommended for You</h2>
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Based on your goals and progress
-                </p>
-              </div>
-              {isLoading ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <Skeleton className="h-14 rounded-lg" />
-                  <Skeleton className="h-14 rounded-lg" />
-                </div>
-              ) : recommended.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  {recommended.map((t) => (
-                    <button
-                      key={t.id}
-                      onClick={() => navigate(`/topics/${t.topicId}`)}
-                      className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-muted transition-colors text-left border border-border"
-                      data-testid={`recommended-${t.topicId}`}
-                    >
-                      <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                        <BookOpen className="w-4 h-4 text-primary" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-foreground truncate">
-                          {t.topicName}
-                        </p>
-                      </div>
-                      <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground text-center py-6">
-                  Study a few topics and we'll suggest what to tackle next.
-                </p>
-              )}
-            </div>
-
-            {/* Streak + Recent Activity */}
+            {/* Recommended + Streak (split row) */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Recommended for You */}
               <div className="bg-card border border-border rounded-xl p-5">
-                <div className="flex items-center gap-2 mb-4">
-                  <Flame className="w-4 h-4 text-orange-500" />
-                  <h2 className="font-semibold text-foreground">Your Streak</h2>
+                <div className="mb-4">
+                  <h2 className="font-semibold text-foreground">Recommended for You</h2>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Based on your goals and progress
+                  </p>
                 </div>
-                <div className="flex flex-col items-center text-center mb-4">
-                  <span className="text-4xl font-bold text-foreground leading-none">{streak}</span>
-                  <span className="text-sm text-muted-foreground mt-1">day streak</span>
+                {isLoading ? (
+                  <div className="space-y-2">
+                    <Skeleton className="h-14 rounded-lg" />
+                    <Skeleton className="h-14 rounded-lg" />
+                  </div>
+                ) : recommended.length > 0 ? (
+                  <div className="space-y-2">
+                    {recommended.slice(0, 2).map((t, idx) => {
+                      const palette = idx % 2 === 0
+                        ? { bg: "bg-sky-100 dark:bg-sky-500/15", color: "text-sky-600 dark:text-sky-300" }
+                        : { bg: "bg-emerald-100 dark:bg-emerald-500/15", color: "text-emerald-600 dark:text-emerald-300" };
+                      return (
+                        <button
+                          key={t.id}
+                          onClick={() => navigate(`/topics/${t.topicId}`)}
+                          className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-muted transition-colors text-left border border-border"
+                          data-testid={`recommended-${t.topicId}`}
+                        >
+                          <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0", palette.bg)}>
+                            {idx % 2 === 0 ? (
+                              <Sparkles className={cn("w-5 h-5", palette.color)} />
+                            ) : (
+                              <BookOpen className={cn("w-5 h-5", palette.color)} />
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold text-foreground truncate">
+                              {t.topicName}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {idx % 2 === 0 ? "Expand your knowledge" : "Strengthen your foundation"}
+                            </p>
+                          </div>
+                          <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground text-center py-6">
+                    Study a few topics and we'll suggest what to tackle next.
+                  </p>
+                )}
+              </div>
+
+              {/* Your Streak */}
+              <div className="bg-card border border-border rounded-xl p-5">
+                <div className="flex items-center gap-2 mb-3">
+                  <h2 className="font-semibold text-foreground">Your Streak</h2>
+                  <span aria-hidden>🔥</span>
+                </div>
+                <div className="mb-4">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-4xl font-bold text-foreground leading-none">{streak}</span>
+                    <span className="text-sm text-muted-foreground">day streak</span>
+                  </div>
                 </div>
                 <div className="grid grid-cols-7 gap-1 mb-3">
                   {weeklyFlames.map((d, i) => (
@@ -424,199 +442,43 @@ export default function DashboardPage() {
                     </div>
                   ))}
                 </div>
-                <p className="text-xs text-muted-foreground text-center">
+                <p className="text-xs text-muted-foreground">
                   {streak === 0
                     ? "Study today to start a streak."
                     : streak < 3
-                    ? "You're building momentum."
+                    ? "You're building momentum!"
                     : "Great consistency this week."}
                 </p>
               </div>
-
-              <div className="bg-card border border-border rounded-xl p-5">
-                <h2 className="font-semibold text-foreground mb-4">Recent Activity</h2>
-                {isLoading ? (
-                  <div className="space-y-3">
-                    <Skeleton className="h-12 rounded-lg" />
-                    <Skeleton className="h-12 rounded-lg" />
-                    <Skeleton className="h-12 rounded-lg" />
-                  </div>
-                ) : recent.length > 0 ? (
-                  <div className="space-y-3">
-                    {recent.slice(0, 3).map((t) => (
-                      <button
-                        key={t.id}
-                        onClick={() => navigate(`/topics/${t.topicId}`)}
-                        className="w-full flex items-center gap-3 hover:bg-muted -mx-2 px-2 py-1.5 rounded-lg transition-colors text-left"
-                        data-testid={`recent-${t.topicId}`}
-                      >
-                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                          <Brain className="w-4 h-4 text-primary" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-foreground truncate">
-                            {t.topicName}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            {t.score >= 80 ? "Strong performance" : t.score > 0 ? `Score ${t.score}%` : "Started"}
-                          </p>
-                        </div>
-                      </button>
-                    ))}
-                    <button
-                      onClick={() => navigate("/progress")}
-                      className="w-full text-xs text-primary hover:underline pt-2"
-                      data-testid="button-view-all-activity"
-                    >
-                      View all activity →
-                    </button>
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground text-center py-6">
-                    Your study history will appear here.
-                  </p>
-                )}
-              </div>
             </div>
 
-            {/* Mastery Map (full-width) */}
-            <div className="bg-card border border-border rounded-xl p-5">
-              <div className="flex items-start justify-between gap-3 mb-4 flex-wrap">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <MapIcon className="w-4 h-4 text-primary" />
-                    <h2 className="font-semibold text-foreground">Mastery Map</h2>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {masteryStats.studied}/{masteryStats.total} topics started · {masteryStats.strong} strong
-                  </p>
-                </div>
-                <MasteryLegend />
-              </div>
-
-              {masteryByCategory.length === 0 ? (
-                <div className="space-y-3">
-                  <Skeleton className="h-4 w-32" />
-                  <div className="flex gap-2">
-                    {Array(6).fill(0).map((_, i) => <Skeleton key={i} className="w-40 h-20 rounded-lg shrink-0" />)}
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {masteryByCategory.map((group) => (
-                    <div key={group.category}>
-                      <div className="flex items-baseline justify-between mb-2">
-                        <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                          {group.category}
-                        </p>
-                        <p className="text-[11px] text-muted-foreground">
-                          {group.items.filter((t) => t.score !== null).length}/{group.items.length}
-                        </p>
-                      </div>
-                      <div className="relative">
-                        <div
-                          className="-mx-1 px-1 overflow-x-auto pb-2 [scrollbar-width:thin]"
-                          data-testid={`mastery-strip-${group.category.toLowerCase().replace(/\s+/g, "-")}`}
-                        >
-                          <div className="flex gap-2 min-w-max">
-                            {group.items.map((t) => (
-                              <MasteryTile
-                                key={t.id}
-                                name={t.name}
-                                score={t.score}
-                                onClick={() => navigate(`/topics/${t.id}`)}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                        <div className="pointer-events-none absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-card to-transparent" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+            {/* Study Analytics + Recent Activity + Achievements (3-col row) */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <StudyAnalyticsCard
+                series={activitySeries}
+                averageScore={summary?.averageScore ?? 0}
+                topicsStudied={summary?.topicsStudied ?? 0}
+              />
+              <RecentActivityCard
+                isLoading={isLoading}
+                recent={recent}
+                onItemClick={(topicId) => navigate(`/topics/${topicId}`)}
+                onViewAll={() => navigate("/progress")}
+              />
+              <AchievementsCard
+                streak={streak}
+                topicsStudied={summary?.topicsStudied ?? 0}
+                averageScore={summary?.averageScore ?? 0}
+                onViewAll={() => navigate("/progress")}
+              />
             </div>
+
           </div>
 
           {/* Spotlight rail */}
           <aside className="lg:sticky lg:top-6 self-start space-y-4">
             <SpotlightCard onCta={() => navigate("/feature-request")} />
 
-            <div className="bg-card border border-border rounded-xl p-5 flex flex-col">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <Trophy className="w-4 h-4 text-primary" />
-                  <h2 className="font-semibold text-foreground">Leaderboard</h2>
-                </div>
-                <span className="text-xs text-muted-foreground">Top 5</span>
-              </div>
-              {!leaderboard ? (
-                <div className="space-y-2">
-                  <Skeleton className="h-8 rounded-lg" />
-                  <Skeleton className="h-8 rounded-lg" />
-                  <Skeleton className="h-8 rounded-lg" />
-                </div>
-              ) : leaderboard.entries.length === 0 ? (
-                <p className="text-xs text-muted-foreground text-center py-4">
-                  Be the first to land on the board.
-                </p>
-              ) : (
-                <div className="space-y-1 flex-1">
-                  {leaderboard.entries.slice(0, 5).map((e) => (
-                    <div
-                      key={e.userId}
-                      className={cn(
-                        "flex items-center gap-2 px-2 py-1.5 rounded-lg",
-                        e.isCurrentUser ? "bg-primary/5" : ""
-                      )}
-                      data-testid={`rail-leaderboard-row-${e.rank}`}
-                    >
-                      <div
-                        className={cn(
-                          "w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0",
-                          e.rank === 1
-                            ? "bg-yellow-500/15 text-yellow-600"
-                            : e.rank === 2
-                            ? "bg-slate-400/15 text-slate-500"
-                            : e.rank === 3
-                            ? "bg-amber-700/15 text-amber-700"
-                            : "bg-muted text-muted-foreground"
-                        )}
-                      >
-                        {e.rank}
-                      </div>
-                      <p className="text-sm font-medium text-foreground truncate flex-1 min-w-0">
-                        {e.displayName}
-                        {e.isCurrentUser && (
-                          <span className="ml-1.5 text-xs text-primary font-semibold">
-                            You
-                          </span>
-                        )}
-                      </p>
-                      <div className="flex items-center gap-1 flex-shrink-0" title="Topics completed">
-                        <BookOpen className="w-3 h-3 text-muted-foreground" />
-                        <span className="text-xs font-semibold text-foreground tabular-nums">
-                          {e.topicsCompleted}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1 flex-shrink-0" title="Streak">
-                        <Flame
-                          className={cn(
-                            "w-3 h-3",
-                            e.streak > 0
-                              ? "text-orange-500 fill-orange-500"
-                              : "text-muted-foreground/40"
-                          )}
-                        />
-                        <span className="text-xs font-semibold text-foreground tabular-nums">
-                          {e.streak}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
           </aside>
         </div>
       </div>
@@ -801,39 +663,360 @@ function MasteryLegend() {
 
 function SpotlightCard({ onCta }: { onCta: () => void }) {
   return (
-    <div className="bg-gradient-to-b from-slate-800 to-slate-900 dark:from-slate-900 dark:to-slate-950 text-white rounded-2xl p-6 overflow-hidden relative">
-      <div className="absolute top-0 right-0 w-40 h-40 bg-primary/20 rounded-full blur-3xl pointer-events-none" />
+    <div className="relative overflow-hidden rounded-2xl p-6 text-white bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-950 min-h-[560px]">
+      {/* Starry shimmer */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-70"
+        style={{
+          backgroundImage:
+            "radial-gradient(1px 1px at 18% 12%, rgba(255,255,255,.7), transparent 60%), radial-gradient(1.2px 1.2px at 65% 8%, rgba(255,255,255,.6), transparent 60%), radial-gradient(1px 1px at 82% 28%, rgba(255,255,255,.55), transparent 60%), radial-gradient(1.4px 1.4px at 32% 52%, rgba(255,255,255,.4), transparent 60%), radial-gradient(1px 1px at 75% 68%, rgba(255,255,255,.45), transparent 60%), radial-gradient(1px 1px at 12% 76%, rgba(255,255,255,.4), transparent 60%), radial-gradient(1.2px 1.2px at 88% 90%, rgba(255,255,255,.5), transparent 60%)",
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-12 -right-12 w-48 h-48 rounded-full blur-3xl"
+        style={{ background: "radial-gradient(closest-side, rgba(56,189,248,.35), transparent)" }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -bottom-10 -left-10 w-44 h-44 rounded-full blur-3xl"
+        style={{ background: "radial-gradient(closest-side, rgba(168,85,247,.25), transparent)" }}
+      />
+
       <div className="relative">
         <div className="flex items-center justify-center mb-2">
-          <Star className="w-5 h-5 text-amber-300" />
+          <Star className="w-5 h-5 text-amber-300 fill-amber-300/40" />
         </div>
         <h3 className="text-lg font-bold text-center">PsychPro Spotlight</h3>
-        <p className="text-sm text-slate-300 text-center mt-1 mb-6">
-          Highlighting the next generation of clinicians and researchers.
+        <p className="text-xs text-slate-300 text-center mt-1 mb-5 leading-relaxed">
+          Highlighting the next generation
+          <br />
+          of clinicians and researchers.
         </p>
 
-        <div className="bg-white/5 border border-white/10 rounded-xl p-5 mb-4">
-          <div className="flex flex-col items-center text-center">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-sky-700 flex items-center justify-center mb-3">
-              <Sparkles className="w-8 h-8 text-white/80" />
+        {/* Featured person */}
+        <div className="flex flex-col items-center mb-4">
+          <div className="relative w-28 h-28 rounded-full overflow-hidden ring-4 ring-white/10 shadow-xl mb-3">
+            <div className="absolute inset-0 bg-gradient-to-br from-rose-300 via-amber-200 to-sky-300" />
+            <div className="absolute inset-0 flex items-center justify-center text-3xl font-bold text-slate-700">
+              SK
             </div>
-            <p className="text-sm font-semibold">A space for your work</p>
-            <p className="text-xs text-slate-300 mt-1">
-              Dissertations, research, and clinical milestones from the PsychPro
-              community will be featured here.
-            </p>
           </div>
+          <p className="text-base font-bold">Sarah K.</p>
+          <p className="text-xs text-slate-300 mt-0.5">PsyD Candidate</p>
+          <p className="text-xs text-slate-300">Clinical Neuropsychology</p>
+        </div>
+
+        {/* Featured work */}
+        <div className="border-t border-white/10 pt-4 mb-4">
+          <p className="text-[10px] font-bold tracking-widest text-slate-400 uppercase mb-2">
+            Featured Work
+          </p>
+          <p className="text-sm font-semibold leading-snug mb-2">
+            Dissertation: Cognitive Resilience and Outcomes in Concussion
+            Recovery
+          </p>
+          <p className="text-xs text-slate-300 leading-relaxed">
+            Investigating the relationship between cognitive flexibility and
+            long-term functional recovery in collegiate athletes.
+          </p>
         </div>
 
         <Button
           onClick={onCta}
-          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+          className="w-full bg-white/10 hover:bg-white/20 border border-white/15 text-white backdrop-blur-sm"
           data-testid="button-spotlight-cta"
         >
-          Submit your work
+          View Feature
           <ArrowUpRight className="w-4 h-4 ml-1" />
         </Button>
+
+        {/* Pagination dots */}
+        <div className="flex items-center justify-center gap-1.5 mt-4">
+          <span className="w-1.5 h-1.5 rounded-full bg-white" />
+          <span className="w-1.5 h-1.5 rounded-full bg-white/30" />
+          <span className="w-1.5 h-1.5 rounded-full bg-white/30" />
+          <span className="w-1.5 h-1.5 rounded-full bg-white/30" />
+        </div>
+
+        {/* Share button */}
+        <button
+          aria-label="Share spotlight"
+          className="absolute -bottom-2 right-0 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center backdrop-blur-sm transition-colors"
+          data-testid="button-spotlight-share"
+        >
+          <Share2 className="w-4 h-4 text-white" />
+        </button>
       </div>
+    </div>
+  );
+}
+
+function StudyAnalyticsCard({
+  series,
+  averageScore,
+  topicsStudied,
+}: {
+  series: { day: string; score: number }[];
+  averageScore: number;
+  topicsStudied: number;
+}) {
+  return (
+    <div className="bg-card border border-border rounded-xl p-5 flex flex-col">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="font-semibold text-foreground">Study Analytics</h2>
+        <button
+          className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+          data-testid="button-analytics-period"
+        >
+          This Week
+          <ChevronDown className="w-3 h-3" />
+        </button>
+      </div>
+
+      <div className="h-32 -mx-2">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={series} margin={{ top: 4, right: 8, bottom: 4, left: 0 }}>
+            <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" vertical={false} />
+            <XAxis
+              dataKey="day"
+              tickLine={false}
+              axisLine={false}
+              tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+              interval={0}
+            />
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+              domain={[0, 100]}
+              ticks={[0, 25, 50, 75, 100]}
+              width={28}
+            />
+            <Tooltip
+              cursor={{ stroke: "hsl(var(--border))", strokeWidth: 1 }}
+              contentStyle={{
+                background: "hsl(var(--card))",
+                border: "1px solid hsl(var(--border))",
+                borderRadius: 8,
+                fontSize: 12,
+              }}
+            />
+            <Line
+              type="monotone"
+              dataKey="score"
+              stroke="hsl(var(--primary))"
+              strokeWidth={2}
+              dot={{ r: 3, fill: "hsl(var(--primary))" }}
+              activeDot={{ r: 5 }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+
+      <div className="border-t border-border mt-4 pt-4">
+        <p className="text-xs font-semibold text-foreground mb-2">
+          Performance Overview
+        </p>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <p className="text-2xl font-bold text-foreground leading-none">
+              {averageScore}%
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">Average Score</p>
+            <p className="text-[10px] text-emerald-600 mt-0.5">
+              ↑ 8% vs last week
+            </p>
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-foreground leading-none">
+              {topicsStudied}
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">Total Topics</p>
+            <p className="text-[10px] text-muted-foreground mt-0.5">
+              Keep learning!
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RecentActivityCard({
+  isLoading,
+  recent,
+  onItemClick,
+  onViewAll,
+}: {
+  isLoading: boolean;
+  recent: RecentTopic[];
+  onItemClick: (topicId: number) => void;
+  onViewAll: () => void;
+}) {
+  const palettes = [
+    { bg: "bg-sky-100 dark:bg-sky-500/15", color: "text-sky-600 dark:text-sky-300" },
+    { bg: "bg-emerald-100 dark:bg-emerald-500/15", color: "text-emerald-600 dark:text-emerald-300" },
+    { bg: "bg-rose-100 dark:bg-rose-500/15", color: "text-rose-600 dark:text-rose-300" },
+  ];
+
+  function timeAgo(iso?: string | null) {
+    if (!iso) return "";
+    const diff = Date.now() - new Date(iso).getTime();
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    if (hours < 1) return "just now";
+    if (hours < 24) return `${hours}h ago`;
+    const days = Math.floor(hours / 24);
+    return `${days}d ago`;
+  }
+
+  return (
+    <div className="bg-card border border-border rounded-xl p-5 flex flex-col">
+      <h2 className="font-semibold text-foreground mb-4">Recent Activity</h2>
+      {isLoading ? (
+        <div className="space-y-3 flex-1">
+          <Skeleton className="h-12 rounded-lg" />
+          <Skeleton className="h-12 rounded-lg" />
+          <Skeleton className="h-12 rounded-lg" />
+        </div>
+      ) : recent.length > 0 ? (
+        <div className="flex-1 space-y-2">
+          {recent.slice(0, 3).map((t, idx) => {
+            const p = palettes[idx % palettes.length];
+            return (
+              <button
+                key={t.id}
+                onClick={() => onItemClick(t.topicId)}
+                className="w-full flex items-center gap-3 hover:bg-muted -mx-2 px-2 py-2 rounded-lg transition-colors text-left"
+                data-testid={`recent-${t.topicId}`}
+              >
+                <div className={cn("w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0", p.bg)}>
+                  <Brain className={cn("w-4 h-4", p.color)} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-foreground truncate">
+                    {t.topicName}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {t.score >= 80
+                      ? `Completed · ${t.score}%`
+                      : t.score > 0
+                      ? `Started · ${t.score}%`
+                      : "Started"}
+                  </p>
+                </div>
+                <span className="text-[11px] text-muted-foreground flex-shrink-0">
+                  {timeAgo(t.lastAccessed)}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      ) : (
+        <p className="text-sm text-muted-foreground text-center py-6 flex-1">
+          Your study history will appear here.
+        </p>
+      )}
+      <button
+        onClick={onViewAll}
+        className="text-xs text-primary hover:underline pt-3 text-center border-t border-border mt-3"
+        data-testid="button-view-all-activity"
+      >
+        View all activity →
+      </button>
+    </div>
+  );
+}
+
+function AchievementsCard({
+  streak,
+  topicsStudied,
+  averageScore,
+  onViewAll,
+}: {
+  streak: number;
+  topicsStudied: number;
+  averageScore: number;
+  onViewAll: () => void;
+}) {
+  const achievements = [
+    {
+      icon: Medal,
+      label: "First Steps",
+      hint: "Complete your first topic",
+      unlocked: topicsStudied >= 1,
+      bg: "bg-emerald-100 dark:bg-emerald-500/15",
+      color: "text-emerald-600 dark:text-emerald-300",
+    },
+    {
+      icon: Award,
+      label: "Streak Starter",
+      hint: "Study 3 days in a row",
+      unlocked: streak >= 3,
+      bg: "bg-rose-100 dark:bg-rose-500/15",
+      color: "text-rose-600 dark:text-rose-300",
+    },
+    {
+      icon: ShieldCheck,
+      label: "Score Master",
+      hint: "Get 80% or higher",
+      unlocked: averageScore >= 80,
+      bg: "bg-amber-100 dark:bg-amber-500/15",
+      color: "text-amber-600 dark:text-amber-300",
+    },
+  ];
+  const unlockedCount = achievements.filter((a) => a.unlocked).length;
+
+  return (
+    <div className="bg-card border border-border rounded-xl p-5 flex flex-col">
+      <div className="flex items-start justify-between mb-4">
+        <div>
+          <h2 className="font-semibold text-foreground">Achievements</h2>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            {unlockedCount}/6 unlocked
+          </p>
+        </div>
+        <div className="flex items-center gap-1 text-muted-foreground">
+          <ArrowDownUp className="w-3.5 h-3.5" />
+        </div>
+      </div>
+
+      <div className="flex-1 space-y-2">
+        {achievements.map((a) => {
+          const Icon = a.icon;
+          return (
+            <div
+              key={a.label}
+              className={cn(
+                "flex items-center gap-3 p-2 rounded-lg",
+                a.unlocked ? "" : "opacity-60",
+              )}
+              data-testid={`achievement-${a.label.replace(/\s+/g, "-").toLowerCase()}`}
+            >
+              <div className={cn("w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0", a.bg)}>
+                <Icon className={cn("w-4 h-4", a.color)} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-foreground truncate">
+                  {a.label}
+                </p>
+                <p className="text-[11px] text-muted-foreground truncate">
+                  {a.hint}
+                </p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <button
+        onClick={onViewAll}
+        className="text-xs text-primary hover:underline pt-3 text-center border-t border-border mt-3"
+        data-testid="button-view-all-achievements"
+      >
+        View achievements →
+      </button>
     </div>
   );
 }
