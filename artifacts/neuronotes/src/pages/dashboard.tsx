@@ -194,8 +194,16 @@ export default function DashboardPage() {
     return { total: all.length, studied: studied.length, strong };
   }, [masteryByCategory]);
 
+  const totalTopics = (allTopics ?? []).length;
+  const usageCount = summary?.usageCount ?? 0;
+  const freeLimit = summary?.freeLimit ?? 10;
+  const isPaid = summary?.subscriptionStatus && summary.subscriptionStatus !== "free";
+
   return (
-    <div className="min-h-full bg-background" data-testid="dashboard-page">
+    <div
+      className="min-h-full bg-gradient-to-br from-sky-50/60 via-background to-rose-50/40 dark:from-slate-950 dark:via-background dark:to-slate-950"
+      data-testid="dashboard-page"
+    >
       <div className="max-w-[1400px] mx-auto p-4 md:p-6 lg:p-8">
         {/* Top header */}
         <header className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
@@ -244,27 +252,53 @@ export default function DashboardPage() {
         {/* Two-column: main + spotlight rail */}
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-6">
           <div className="min-w-0 space-y-6">
-            {/* Stats: 2 centered cards */}
-            <div className="grid grid-cols-2 gap-4">
+            {/* Stats: 4 pastel cards */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {isLoading ? (
-                Array(2)
+                Array(4)
                   .fill(0)
-                  .map((_, i) => <Skeleton key={i} className="h-32 rounded-xl" />)
+                  .map((_, i) => <Skeleton key={i} className="h-32 rounded-2xl" />)
               ) : (
                 <>
                   <StatCard
+                    icon={BookOpen}
+                    iconBg="bg-sky-100 dark:bg-sky-500/15"
+                    iconColor="text-sky-600 dark:text-sky-400"
+                    cardBg="from-sky-50 to-sky-100/40 dark:from-sky-950/30 dark:to-sky-900/10 border-sky-100 dark:border-sky-900/40"
+                    value={totalTopics}
+                    label="Topics Available"
+                    caption="Browse the library"
+                  />
+                  <StatCard
                     icon={Brain}
-                    iconBg="bg-violet-100 dark:bg-violet-950/40"
-                    iconColor="text-violet-600 dark:text-violet-400"
+                    iconBg="bg-rose-100 dark:bg-rose-500/15"
+                    iconColor="text-rose-600 dark:text-rose-400"
+                    cardBg="from-rose-50 to-rose-100/40 dark:from-rose-950/30 dark:to-rose-900/10 border-rose-100 dark:border-rose-900/40"
                     value={summary?.topicsStudied ?? 0}
                     label="Topics Studied"
+                    caption={
+                      (summary?.topicsStudied ?? 0) === 0
+                        ? "Pick one to begin"
+                        : "Keep going!"
+                    }
                   />
                   <StatCard
                     icon={Trophy}
-                    iconBg="bg-amber-100 dark:bg-amber-950/40"
+                    iconBg="bg-amber-100 dark:bg-amber-500/15"
                     iconColor="text-amber-600 dark:text-amber-400"
+                    cardBg="from-amber-50 to-amber-100/40 dark:from-amber-950/30 dark:to-amber-900/10 border-amber-100 dark:border-amber-900/40"
                     value={`${summary?.averageScore ?? 0}%`}
                     label="Average Score"
+                    caption="Across all topics"
+                  />
+                  <StatCard
+                    icon={Zap}
+                    iconBg="bg-indigo-100 dark:bg-indigo-500/15"
+                    iconColor="text-indigo-600 dark:text-indigo-400"
+                    cardBg="from-indigo-50 to-indigo-100/40 dark:from-indigo-950/30 dark:to-indigo-900/10 border-indigo-100 dark:border-indigo-900/40"
+                    value={isPaid ? "Pro" : `${usageCount}/${freeLimit}`}
+                    label="Interactions"
+                    caption={isPaid ? "Unlimited access" : "Start a session!"}
                   />
                 </>
               )}
@@ -597,25 +631,37 @@ function StatCard({
   icon: Icon,
   iconBg,
   iconColor,
+  cardBg,
   value,
   label,
+  caption,
 }: {
   icon: ComponentType<{ className?: string }>;
   iconBg: string;
   iconColor: string;
+  cardBg?: string;
   value: string | number;
   label: string;
+  caption?: string;
 }) {
   return (
     <div
-      className="bg-card border border-border rounded-xl p-5 flex flex-col items-center text-center"
+      className={cn(
+        "rounded-2xl p-4 flex items-center gap-3 border bg-gradient-to-br shadow-sm",
+        cardBg ?? "from-card to-card border-border",
+      )}
       data-testid={`stat-${label.replace(/\s/g, "-").toLowerCase()}`}
     >
-      <div className={cn("w-11 h-11 rounded-full flex items-center justify-center mb-3", iconBg)}>
-        <Icon className={cn("w-5 h-5", iconColor)} />
+      <div className={cn("w-12 h-12 shrink-0 rounded-xl flex items-center justify-center", iconBg)}>
+        <Icon className={cn("w-6 h-6", iconColor)} />
       </div>
-      <div className="text-3xl font-bold text-foreground leading-none">{value}</div>
-      <div className="text-sm text-muted-foreground mt-2">{label}</div>
+      <div className="min-w-0 flex-1">
+        <div className="text-2xl font-bold text-foreground leading-none">{value}</div>
+        <div className="text-xs font-medium text-foreground/80 mt-1.5 truncate">{label}</div>
+        {caption && (
+          <div className="text-[11px] text-muted-foreground mt-0.5 truncate">{caption}</div>
+        )}
+      </div>
     </div>
   );
 }
@@ -747,21 +793,41 @@ function MasteryLegend() {
 
 function SpotlightCard({ onCta }: { onCta: () => void }) {
   return (
-    <div className="bg-gradient-to-b from-slate-800 to-slate-900 dark:from-slate-900 dark:to-slate-950 text-white rounded-2xl p-6 overflow-hidden relative">
-      <div className="absolute top-0 right-0 w-40 h-40 bg-primary/20 rounded-full blur-3xl pointer-events-none" />
+    <div className="relative overflow-hidden rounded-2xl p-6 text-white bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-950">
+      {/* Starry shimmer */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-60"
+        style={{
+          backgroundImage:
+            "radial-gradient(1px 1px at 18% 22%, rgba(255,255,255,.7), transparent 60%), radial-gradient(1.2px 1.2px at 65% 14%, rgba(255,255,255,.6), transparent 60%), radial-gradient(1px 1px at 82% 38%, rgba(255,255,255,.55), transparent 60%), radial-gradient(1.4px 1.4px at 32% 62%, rgba(255,255,255,.45), transparent 60%), radial-gradient(1px 1px at 75% 78%, rgba(255,255,255,.5), transparent 60%), radial-gradient(1px 1px at 12% 86%, rgba(255,255,255,.4), transparent 60%)",
+        }}
+      />
+      {/* Soft accent glow */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-12 -right-12 w-48 h-48 rounded-full blur-3xl"
+        style={{ background: "radial-gradient(closest-side, rgba(56,189,248,.45), transparent)" }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -bottom-10 -left-10 w-44 h-44 rounded-full blur-3xl"
+        style={{ background: "radial-gradient(closest-side, rgba(168,85,247,.35), transparent)" }}
+      />
+
       <div className="relative">
         <div className="flex items-center justify-center mb-2">
-          <Star className="w-5 h-5 text-amber-300" />
+          <Star className="w-5 h-5 text-amber-300 fill-amber-300/40" />
         </div>
         <h3 className="text-lg font-bold text-center">PsychPro Spotlight</h3>
         <p className="text-sm text-slate-300 text-center mt-1 mb-6">
           Highlighting the next generation of clinicians and researchers.
         </p>
 
-        <div className="bg-white/5 border border-white/10 rounded-xl p-5 mb-4">
+        <div className="bg-white/5 border border-white/10 rounded-xl p-5 mb-4 backdrop-blur-sm">
           <div className="flex flex-col items-center text-center">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-sky-700 flex items-center justify-center mb-3">
-              <Sparkles className="w-8 h-8 text-white/80" />
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-sky-400 via-indigo-500 to-purple-600 flex items-center justify-center mb-3 shadow-lg shadow-indigo-500/30">
+              <Sparkles className="w-8 h-8 text-white" />
             </div>
             <p className="text-sm font-semibold">A space for your work</p>
             <p className="text-xs text-slate-300 mt-1">
@@ -773,7 +839,7 @@ function SpotlightCard({ onCta }: { onCta: () => void }) {
 
         <Button
           onClick={onCta}
-          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+          className="w-full bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-400 hover:to-indigo-400 text-white border-0 shadow-md shadow-indigo-500/30"
           data-testid="button-spotlight-cta"
         >
           Submit your work
