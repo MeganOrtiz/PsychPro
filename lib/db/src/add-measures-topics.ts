@@ -103,33 +103,115 @@ const subjectiveMeasures: MeasureRow[] = [
   { test: "ABCL", fullName: "Adult Behavior Checklist (ASEBA)", usedFor: "Behavioral, emotional, and social problems in adults; observer / collateral report form", domains: "Internalizing Problems; Externalizing Problems; Total Problems; DSM-Oriented Scales; Adaptive Functioning", indices: "Total Problems Score; Internalizing Composite (Anxious/Depressed, Withdrawn, Somatic Complaints); Externalizing Composite (Aggressive Behavior, Rule-Breaking Behavior, Intrusive); Syndrome Scales (8); DSM-Oriented Scales: Depressive Problems, Anxiety Problems, Somatic Problems, Avoidant Personality, ADHD Problems, Antisocial Personality; Adaptive Functioning: Friends, Spouse/Partner, Family, Job. Observer / collateral-report; pairs with ASR (self-report); for ages 60+ use OABCL", ageRange: "18:0 – 59:11" },
 ];
 
-function buildStudyGuide(title: string, intro: string, measures: MeasureRow[]): string {
-  const sections = measures
-    .map((m) => {
-      return [
-        `## ${m.test} — ${m.fullName}`,
-        ``,
-        `**Used to assess:** ${m.usedFor}`,
-        ``,
-        `**Domains:** ${m.domains}`,
-        ``,
-        `**Indices / scores:** ${m.indices}`,
-        ``,
-        `**Age range:** ${m.ageRange}`,
-        ``,
-      ].join("\n");
-    })
-    .join("\n");
+type MeasureGroup = {
+  name: string;
+  blurb: string;
+  tests: string[];
+};
 
-  return [
-    `# ${title}`,
-    ``,
-    intro,
-    ``,
-    `---`,
-    ``,
-    sections,
-  ].join("\n");
+function smartSplit(s: string): string[] {
+  const parts: string[] = [];
+  let depth = 0;
+  let buf = "";
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i];
+    if (ch === "(" || ch === "[") depth++;
+    else if (ch === ")" || ch === "]") depth = Math.max(0, depth - 1);
+    if (ch === ";" && depth === 0) {
+      const t = buf.trim();
+      if (t) parts.push(t);
+      buf = "";
+    } else {
+      buf += ch;
+    }
+  }
+  const last = buf.trim();
+  if (last) parts.push(last);
+  return parts;
+}
+
+function escapeTableCell(s: string): string {
+  return s.replace(/\|/g, "\\|").replace(/\n/g, " ");
+}
+
+function buildStudyGuide(
+  title: string,
+  intro: string,
+  measures: MeasureRow[],
+  groups: MeasureGroup[],
+): string {
+  const byTest = new Map(measures.map((m) => [m.test, m]));
+  const out: string[] = [];
+
+  out.push(`# ${title}`);
+  out.push("");
+  out.push(intro);
+  out.push("");
+
+  // Master at-a-glance index
+  out.push(`## Master index`);
+  out.push("");
+  out.push(`Each instrument is grouped below by what it primarily measures. Use this index to jump to the right section.`);
+  out.push("");
+  out.push(`| Group | Instruments |`);
+  out.push(`|---|---|`);
+  for (const g of groups) {
+    out.push(`| **${escapeTableCell(g.name)}** | ${escapeTableCell(g.tests.join(", "))} |`);
+  }
+  out.push("");
+
+  // Per-group sections
+  for (const g of groups) {
+    out.push(`## ${g.name}`);
+    out.push("");
+    out.push(g.blurb);
+    out.push("");
+
+    // Quick reference table for the group
+    out.push(`| Test | Full name | What it assesses | Ages |`);
+    out.push(`|---|---|---|---|`);
+    for (const t of g.tests) {
+      const m = byTest.get(t);
+      if (!m) continue;
+      out.push(
+        `| **${escapeTableCell(m.test)}** | ${escapeTableCell(m.fullName)} | ${escapeTableCell(m.usedFor)} | ${escapeTableCell(m.ageRange)} |`,
+      );
+    }
+    out.push("");
+
+    // Detailed per-measure cards
+    for (const t of g.tests) {
+      const m = byTest.get(t);
+      if (!m) continue;
+      out.push(`### ${m.test} — ${m.fullName}`);
+      out.push("");
+      out.push(m.usedFor + ".");
+      out.push("");
+
+      out.push(`#### Domains`);
+      const domainItems = smartSplit(m.domains);
+      if (domainItems.length <= 1) {
+        out.push(`- ${m.domains}`);
+      } else {
+        for (const d of domainItems) out.push(`- ${d}`);
+      }
+      out.push("");
+
+      out.push(`#### Key indices and scores`);
+      const indexItems = smartSplit(m.indices);
+      if (indexItems.length <= 1) {
+        out.push(`- ${m.indices}`);
+      } else {
+        for (const x of indexItems) out.push(`- ${x}`);
+      }
+      out.push("");
+
+      out.push(`**Ages:** ${m.ageRange}`);
+      out.push("");
+    }
+  }
+
+  return out.join("\n");
 }
 
 async function ensureTopic(name: string, description: string): Promise<number> {
@@ -196,6 +278,97 @@ async function replaceQuizQuestions(
   }
 }
 
+const objectiveGroups: MeasureGroup[] = [
+  {
+    name: "Broadband cognitive and intellectual batteries",
+    blurb: "General-ability batteries used to characterize overall intellectual functioning across verbal, nonverbal, working memory, processing speed, and reasoning domains. Most yield a global composite (e.g., Full Scale IQ) plus index-level scores.",
+    tests: ["WAIS-5", "WISC-V", "WPPSI-IV", "WASI-II", "KABC-II", "RBANS", "NAB", "NEPSY-II", "WJ V", "BAYLEY-III", "BSRA", "ACS"],
+  },
+  {
+    name: "Memory",
+    blurb: "Standardized verbal and visual memory measures used to evaluate encoding, storage, retrieval, learning curves, and recognition.",
+    tests: ["CVLT-3", "ChAMP", "TOMAL-2"],
+  },
+  {
+    name: "Academic achievement and learning disabilities",
+    blurb: "Performance-based achievement batteries and dyslexia / dyscalculia / dysgraphia screeners. Use these for educational planning, eligibility decisions, and characterizing specific learning disorders.",
+    tests: ["KTEA-3", "WIAT-III", "WRAT5", "FAR", "FAM", "FAW", "TOD", "CTOPP-2", "DEST-II", "DST-J", "DST-II"],
+  },
+  {
+    name: "Language and communication",
+    blurb: "Receptive and expressive language batteries plus pragmatic and auditory-processing measures across the lifespan.",
+    tests: ["CELF-5 / CELF-P2", "CASL / CASL-II", "PPVT-5", "EVT-3", "PVAT", "CAPs", "SCAN-3"],
+  },
+  {
+    name: "Attention and executive function",
+    blurb: "Performance-based measures of attention, processing speed, working memory, set-shifting, inhibition, planning, and abstract reasoning.",
+    tests: ["D-KEFS", "WCST", "CPT-III", "PASAT", "TEA", "TEA-Ch"],
+  },
+  {
+    name: "Motor and visual-motor",
+    blurb: "Tests of fine motor control, visual perception, and the integration between visual input and motor output.",
+    tests: ["BEERY (VMI)", "WRAVMA", "FTT"],
+  },
+  {
+    name: "Autism and developmental diagnostic measures",
+    blurb: "Semi-structured observations and interviews used to support diagnosis of autism spectrum disorder and related developmental presentations, plus a brief delirium screen for completeness.",
+    tests: ["ADOS-2", "MIGDAS-2", "KADI", "CAM"],
+  },
+  {
+    name: "Projective and performance-based personality",
+    blurb: "Open-response measures used to characterize social-emotional functioning, perceptual organization, thought process, and interpersonal themes.",
+    tests: ["R-PAS", "TAT", "Roberts-2", "Sentence Completion"],
+  },
+  {
+    name: "Performance validity and premorbid functioning",
+    blurb: "Standalone and embedded measures of cognitive effort and symptom validity, plus instruments used to estimate pre-injury intellectual ability.",
+    tests: ["TOMM", "MSVT", "MVP", "REY-15 (FIT)", "PdPVTS", "ToPF"],
+  },
+];
+
+const subjectiveGroups: MeasureGroup[] = [
+  {
+    name: "Mood, anxiety, and depression",
+    blurb: "Self-report (and parent / teacher) symptom scales used to quantify severity and track change in depression and anxiety across the lifespan.",
+    tests: ["BAI", "BDI-II", "BYI", "CDI-2"],
+  },
+  {
+    name: "Broadband personality inventories",
+    blurb: "Multi-scale personality and psychopathology inventories with validity scales and clinical / personality-pattern scales. Used to characterize symptom presentation, personality structure, and response style.",
+    tests: ["MMPI-3", "PAI", "MCMI-IV", "MACI-II", "M-PACI"],
+  },
+  {
+    name: "ADHD rating scales and structured interviews",
+    blurb: "Multi-informant rating scales and clinician interviews used to assess ADHD symptoms, associated impairments, and common co-occurring problems across childhood and adulthood.",
+    tests: ["Conners-4", "BAARS-IV", "DIVA", "KSADS"],
+  },
+  {
+    name: "Broad behavior rating scales (BASC and ASEBA)",
+    blurb: "Multi-informant rating scales that capture internalizing, externalizing, and adaptive behaviors across childhood and adulthood. Includes the ASEBA family (CBCL, ABCL, and companion forms) and the BASC-3.",
+    tests: ["BASC-3", "CBCL (Child)", "CBCL (Preschool)", "ABCL"],
+  },
+  {
+    name: "Executive function rating scales",
+    blurb: "Behavioral ratings of everyday executive functioning at home, school, and work — complements performance-based EF tasks.",
+    tests: ["BRIEF-2", "BRIEF-A"],
+  },
+  {
+    name: "Adaptive behavior",
+    blurb: "Caregiver / teacher-report measures of conceptual, social, and practical daily-living skills. Often required for intellectual disability and autism diagnoses.",
+    tests: ["ABAS-3", "SIB-R"],
+  },
+  {
+    name: "Autism, trauma, and resilience",
+    blurb: "Targeted rating scales for social impairment in autism, trauma-related belief structures, and protective / resiliency factors.",
+    tests: ["SRS-2", "TABS", "RSCA"],
+  },
+  {
+    name: "Structured diagnostic interview",
+    blurb: "Clinician-administered structured interview producing categorical diagnostic determinations.",
+    tests: ["SCID-5"],
+  },
+];
+
 async function main() {
   console.log("Seeding Assessment measure topics...");
 
@@ -210,8 +383,9 @@ async function main() {
     "Objective Measures — Reference Guide",
     buildStudyGuide(
       "Objective Measures",
-      "Objective measures are standardized, performance-based instruments where the examinee actively completes tasks under controlled conditions, and responses are scored against normative data. They include broadband cognitive batteries, academic achievement tests, language and memory measures, executive function tasks, motor and visual-motor tests, projective measures, and performance validity tests. Use the entries below as a quick reference for what each instrument assesses, the domains it covers, the indices it produces, and the age range for which it is normed.",
+      "Objective measures are standardized, performance-based instruments where the examinee actively completes tasks under controlled conditions and responses are scored against normative data. The instruments below are grouped by what they primarily assess. Each group opens with a quick-reference table; below the table, every measure has its own card listing domains, key indices and scores, and the age range for which it is normed.",
       objectiveMeasures,
+      objectiveGroups,
     ),
   );
 
@@ -298,8 +472,9 @@ async function main() {
     "Subjective Measures & Rating Scales — Reference Guide",
     buildStudyGuide(
       "Subjective Measures & Rating Scales",
-      "Subjective measures rely on the examinee, a caregiver, teacher, or other informant to report symptoms, behaviors, and functioning. They include broadband personality inventories, mood and anxiety scales, behavior rating scales, adaptive behavior measures, and structured diagnostic interviews. Use the entries below as a quick reference for what each instrument assesses, the domains it covers, the indices it produces, and the age range for which it is normed.",
+      "Subjective measures rely on the examinee, a caregiver, teacher, or other informant to report symptoms, behaviors, and functioning. The instruments below are grouped by what they primarily assess. Each group opens with a quick-reference table; below the table, every measure has its own card listing domains, key indices and scores, and the age range for which it is normed.",
       subjectiveMeasures,
+      subjectiveGroups,
     ),
   );
 
