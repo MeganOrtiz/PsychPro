@@ -130,7 +130,7 @@ export default function TopicsPage() {
           </div>
         )
       ) : showCategoriesGrid ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="flex flex-col gap-3">
           {categories.map(cat => {
             const isEmpty = cat.count === 0;
             return (
@@ -138,22 +138,22 @@ export default function TopicsPage() {
                 key={cat.name}
                 onClick={() => !isEmpty && setSelectedCategory(cat.name)}
                 data-testid={`card-category-${cat.name.toLowerCase().replace(/\s+/g, "-")}`}
-                className={`bg-card border border-border rounded-xl p-5 transition-all ${
+                className={`bg-card border border-border rounded-xl px-4 py-3 flex items-center gap-4 transition-all ${
                   isEmpty
                     ? "opacity-60 cursor-not-allowed"
-                    : "cursor-pointer hover:border-primary/40 hover:shadow-md"
+                    : "cursor-pointer hover:border-primary/40 hover:shadow-sm"
                 }`}
               >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <FolderOpen className="w-5 h-5 text-primary" />
-                  </div>
-                  {!isEmpty && <ChevronRight className="w-4 h-4 text-muted-foreground" />}
+                <div className="w-10 h-10 shrink-0 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <FolderOpen className="w-5 h-5 text-primary" />
                 </div>
-                <h3 className="font-semibold text-foreground mb-1">{cat.name}</h3>
-                <p className="text-sm text-muted-foreground">
-                  {isEmpty ? "Coming soon" : `${cat.count} ${cat.count === 1 ? "topic" : "topics"}`}
-                </p>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-foreground leading-tight truncate">{cat.name}</h3>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {isEmpty ? "Coming soon" : `${cat.count} ${cat.count === 1 ? "topic" : "topics"}`}
+                  </p>
+                </div>
+                {!isEmpty && <ChevronRight className="w-5 h-5 text-muted-foreground shrink-0" />}
               </div>
             );
           })}
