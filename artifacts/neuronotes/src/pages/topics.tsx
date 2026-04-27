@@ -47,11 +47,10 @@ export default function TopicsPage() {
     for (const t of allTopics) {
       counts.set(t.category, (counts.get(t.category) ?? 0) + 1);
     }
-    const known = CATEGORY_ORDER.filter(c => counts.has(c));
-    const extras = Array.from(counts.keys()).filter(c => !CATEGORY_ORDER.includes(c)).sort();
-    const ordered = [...known, ...extras];
     // Include reserved (empty) categories from CATEGORY_ORDER too, so user sees the full taxonomy.
-    const all = Array.from(new Set([...CATEGORY_ORDER, ...ordered]));
+    const all = Array.from(new Set([...CATEGORY_ORDER, ...counts.keys()])).sort((a, b) =>
+      a.localeCompare(b),
+    );
     return all.map(name => ({ name, count: counts.get(name) ?? 0 }));
   }, [allTopics]);
 
