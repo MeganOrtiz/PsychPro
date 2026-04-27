@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { ChevronLeft, Clock, Timer, BookOpen, FileText, GraduationCap } from "lucide-react";
-import { useGetPracticeExamByTopic, useUpdateTopicProgress, useIncrementUserUsage } from "@workspace/api-client-react";
+import { useGetPracticeExamByTopic, useUpdateTopicProgress, useIncrementUserUsage, useRecordExamAttempt } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
@@ -31,6 +31,7 @@ export default function PracticeExamPage({ params }: Props) {
   const { data: exam, isLoading, error } = useGetPracticeExamByTopic(topicId, questionCount ?? undefined);
   const updateProgress = useUpdateTopicProgress();
   const incrementUsage = useIncrementUserUsage();
+  const recordAttempt = useRecordExamAttempt();
 
   const fetchError = error as { status?: number } | null;
 
@@ -43,14 +44,20 @@ export default function PracticeExamPage({ params }: Props) {
   answersRef.current = answers;
   questionsRef.current = questions;
 
+  const submittedRef = useRef(false);
   const submitRef = useRef<() => void>(() => {});
   submitRef.current = () => {
+    if (submittedRef.current) return;
+    submittedRef.current = true;
     if (timerRef.current) clearInterval(timerRef.current);
     const qs = questionsRef.current;
     const ans = answersRef.current;
     const correct = qs.filter(q => ans[q.id] === q.correctAnswer).length;
     const score = qs.length > 0 ? Math.round((correct / qs.length) * 100) : 0;
     updateProgress.mutate({ topicId, data: { score } });
+    if (qs.length > 0) {
+      recordAttempt.mutate({ data: { topicId, score: correct, total: qs.length } });
+    }
     setSubmitted(true);
   };
 

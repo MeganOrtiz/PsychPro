@@ -20,6 +20,9 @@ import {
   Share2,
   ChevronDown,
   ArrowDownUp,
+  CheckCircle2,
+  HelpCircle,
+  GraduationCap,
 } from "lucide-react";
 import { useGetDashboardSummary, useGetTopics, useGetLeaderboard, useGetUserProgress } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
@@ -260,31 +263,49 @@ export default function DashboardPage() {
         {/* Two-column: main + spotlight rail */}
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-6">
           <div className="min-w-0 space-y-6">
-            {/* Stats: 2 blue-themed cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {/* Stats: 4 cards — streak, topics completed, quizzes completed, exams completed */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
               {isLoading ? (
-                Array(2)
+                Array(4)
                   .fill(0)
                   .map((_, i) => <Skeleton key={i} className="h-24 rounded-2xl" />)
               ) : (
                 <>
                   <StatCard
-                    icon={Brain}
+                    icon={Flame}
+                    iconBg="bg-orange-100 dark:bg-orange-500/15"
+                    iconColor="text-orange-600 dark:text-orange-300"
+                    cardBg="bg-orange-50 dark:bg-orange-950/20 border-orange-100 dark:border-orange-900/40"
+                    value={summary?.currentStreak ?? streak}
+                    label="Day Streak"
+                    caption={(summary?.currentStreak ?? streak) > 0 ? "Keep it going!" : "Study today to start"}
+                  />
+                  <StatCard
+                    icon={CheckCircle2}
                     iconBg="bg-[#DEEAF2] dark:bg-sky-500/15"
                     iconColor="text-[#1E3A5F] dark:text-sky-300"
                     cardBg="bg-[#EEF4F8] dark:bg-sky-950/20 border-[#E1EBF2] dark:border-sky-900/40"
-                    value={summary?.topicsStudied ?? 0}
-                    label="Topics Studied"
-                    caption="Keep going!"
+                    value={summary?.topicsCompleted ?? 0}
+                    label="Topics Completed"
+                    caption={`of ${summary?.totalTopics ?? 0} total`}
                   />
                   <StatCard
-                    icon={Trophy}
+                    icon={HelpCircle}
+                    iconBg="bg-emerald-100 dark:bg-emerald-500/15"
+                    iconColor="text-emerald-700 dark:text-emerald-300"
+                    cardBg="bg-emerald-50 dark:bg-emerald-950/20 border-emerald-100 dark:border-emerald-900/40"
+                    value={summary?.quizzesCompleted ?? 0}
+                    label="Quizzes Completed"
+                    caption={`Avg ${summary?.averageScore ?? 0}%`}
+                  />
+                  <StatCard
+                    icon={GraduationCap}
                     iconBg="bg-[#D6E6F2] dark:bg-blue-500/15"
                     iconColor="text-[#0369A1] dark:text-blue-300"
                     cardBg="bg-[#E8F1F8] dark:bg-blue-950/20 border-[#D6E4EF] dark:border-blue-900/40"
-                    value={`${summary?.averageScore ?? 0}%`}
-                    label="Average Score"
-                    caption="↑ 8% improvement"
+                    value={summary?.examsCompleted ?? 0}
+                    label="Exams Completed"
+                    caption="Practice makes mastery"
                   />
                 </>
               )}
@@ -464,6 +485,88 @@ export default function DashboardPage() {
           <aside className="lg:sticky lg:top-6 self-start space-y-4">
             <SpotlightCard onCta={() => navigate("/feature-request")} />
 
+            {/* Leaderboard widget */}
+            <div className="bg-card border border-border rounded-xl p-5">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <Trophy className="w-4 h-4 text-primary" />
+                  <h2 className="font-semibold text-foreground">Leaderboard</h2>
+                </div>
+                <button
+                  onClick={() => navigate("/leaderboard")}
+                  className="text-xs text-primary hover:underline"
+                  data-testid="button-view-leaderboard"
+                >
+                  View all
+                </button>
+              </div>
+              {!leaderboard ? (
+                <div className="space-y-2">
+                  <Skeleton className="h-8 rounded-lg" />
+                  <Skeleton className="h-8 rounded-lg" />
+                  <Skeleton className="h-8 rounded-lg" />
+                </div>
+              ) : leaderboard.entries.length === 0 ? (
+                <p className="text-xs text-muted-foreground text-center py-4">
+                  Be the first to land on the board.
+                </p>
+              ) : (
+                <div className="space-y-1">
+                  {leaderboard.entries.slice(0, 5).map((e) => (
+                    <div
+                      key={e.userId}
+                      className={cn(
+                        "flex items-center gap-2 px-2 py-1.5 rounded-lg",
+                        e.isCurrentUser ? "bg-primary/5" : ""
+                      )}
+                      data-testid={`leaderboard-row-${e.rank}`}
+                    >
+                      <div
+                        className={cn(
+                          "w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0",
+                          e.rank === 1
+                            ? "bg-yellow-500/15 text-yellow-600"
+                            : e.rank === 2
+                            ? "bg-slate-400/15 text-slate-500"
+                            : e.rank === 3
+                            ? "bg-amber-700/15 text-amber-700"
+                            : "bg-muted text-muted-foreground"
+                        )}
+                      >
+                        {e.rank}
+                      </div>
+                      <p className="text-sm font-medium text-foreground truncate flex-1 min-w-0">
+                        {e.displayName}
+                        {e.isCurrentUser && (
+                          <span className="ml-1.5 text-xs text-primary font-semibold">
+                            You
+                          </span>
+                        )}
+                      </p>
+                      <div className="flex items-center gap-1 flex-shrink-0" title="Topics completed">
+                        <BookOpen className="w-3 h-3 text-muted-foreground" />
+                        <span className="text-xs font-semibold text-foreground tabular-nums">
+                          {e.topicsCompleted}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1 flex-shrink-0" title="Streak">
+                        <Flame
+                          className={cn(
+                            "w-3 h-3",
+                            e.streak > 0
+                              ? "text-orange-500 fill-orange-500"
+                              : "text-muted-foreground/40"
+                          )}
+                        />
+                        <span className="text-xs font-semibold text-foreground tabular-nums">
+                          {e.streak}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </aside>
         </div>
       </div>

@@ -240,6 +240,10 @@ export const UpdateTopicProgressResponse = zod.object({
 export const GetDashboardSummaryResponse = zod.object({
   totalTopics: zod.number(),
   topicsStudied: zod.number(),
+  topicsCompleted: zod.number(),
+  quizzesCompleted: zod.number(),
+  examsCompleted: zod.number(),
+  currentStreak: zod.number(),
   averageScore: zod.number(),
   recentTopics: zod.array(
     zod.object({
@@ -294,6 +298,40 @@ export const GetLeaderboardResponse = zod.object({
     ])
     .optional(),
   totalParticipants: zod.number(),
+});
+
+/**
+ * @summary Record a completed quiz attempt for the current user
+ */
+export const RecordQuizAttemptBody = zod.object({
+  topicId: zod.number(),
+  score: zod.number(),
+  total: zod.number(),
+});
+
+export const RecordQuizAttemptResponse = zod.object({
+  id: zod.number(),
+  topicId: zod.number(),
+  score: zod.number(),
+  total: zod.number(),
+  completedAt: zod.string(),
+});
+
+/**
+ * @summary Record a completed practice exam attempt for the current user
+ */
+export const RecordExamAttemptBody = zod.object({
+  topicId: zod.number(),
+  score: zod.number(),
+  total: zod.number(),
+});
+
+export const RecordExamAttemptResponse = zod.object({
+  id: zod.number(),
+  topicId: zod.number(),
+  score: zod.number(),
+  total: zod.number(),
+  completedAt: zod.string(),
 });
 
 /**

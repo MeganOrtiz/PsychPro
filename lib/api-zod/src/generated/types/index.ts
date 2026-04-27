@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from "./attemptRecord";
 export * from "./checkoutSessionResponse";
 export * from "./createCheckoutSessionBody";
 export * from "./dashboardSummary";
@@ -17,6 +18,7 @@ export * from "./leaderboardEntry";
 export * from "./practiceExam";
 export * from "./quizQuestion";
 export * from "./quizQuestionCorrectAnswer";
+export * from "./recordAttemptBody";
 export * from "./studyGuide";
 export * from "./subscriptionPlan";
 export * from "./subscriptionStatus";

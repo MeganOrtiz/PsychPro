@@ -184,3 +184,29 @@ export const customClozeItemsTable = pgTable("custom_cloze_items", {
 export const insertCustomClozeItemSchema = createInsertSchema(customClozeItemsTable).omit({ id: true });
 export type InsertCustomClozeItem = z.infer<typeof insertCustomClozeItemSchema>;
 export type CustomClozeItem = typeof customClozeItemsTable.$inferSelect;
+
+export const quizAttemptsTable = pgTable("quiz_attempts", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull().references(() => usersTable.id),
+  topicId: integer("topic_id").notNull().references(() => topicsTable.id),
+  score: integer("score").notNull(),
+  total: integer("total").notNull(),
+  completedAt: timestamp("completed_at").notNull().defaultNow(),
+});
+
+export const insertQuizAttemptSchema = createInsertSchema(quizAttemptsTable).omit({ id: true, completedAt: true });
+export type InsertQuizAttempt = z.infer<typeof insertQuizAttemptSchema>;
+export type QuizAttempt = typeof quizAttemptsTable.$inferSelect;
+
+export const examAttemptsTable = pgTable("exam_attempts", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull().references(() => usersTable.id),
+  topicId: integer("topic_id").notNull().references(() => topicsTable.id),
+  score: integer("score").notNull(),
+  total: integer("total").notNull(),
+  completedAt: timestamp("completed_at").notNull().defaultNow(),
+});
+
+export const insertExamAttemptSchema = createInsertSchema(examAttemptsTable).omit({ id: true, completedAt: true });
+export type InsertExamAttempt = z.infer<typeof insertExamAttemptSchema>;
+export type ExamAttempt = typeof examAttemptsTable.$inferSelect;

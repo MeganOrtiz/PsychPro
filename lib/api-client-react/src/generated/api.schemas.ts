@@ -123,12 +123,30 @@ export interface UpdateTopicProgressBody {
 export interface DashboardSummary {
   totalTopics: number;
   topicsStudied: number;
+  topicsCompleted: number;
+  quizzesCompleted: number;
+  examsCompleted: number;
+  currentStreak: number;
   averageScore: number;
   recentTopics: TopicProgress[];
   weakAreas: TopicProgress[];
   subscriptionStatus: string;
   usageCount: number;
   freeLimit: number;
+}
+
+export interface RecordAttemptBody {
+  topicId: number;
+  score: number;
+  total: number;
+}
+
+export interface AttemptRecord {
+  id: number;
+  topicId: number;
+  score: number;
+  total: number;
+  completedAt: string;
 }
 
 export interface LeaderboardEntry {

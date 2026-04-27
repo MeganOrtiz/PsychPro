@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { ChevronLeft, CheckCircle, XCircle, ChevronRight, BookOpen } from "lucide-react";
-import { useGetQuizzesByTopic, useUpdateTopicProgress, useIncrementUserUsage } from "@workspace/api-client-react";
+import { useGetQuizzesByTopic, useUpdateTopicProgress, useIncrementUserUsage, useRecordQuizAttempt } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -24,6 +24,7 @@ export default function QuizPage({ params }: Props) {
   const { data: questions, isLoading, error } = useGetQuizzesByTopic(topicId);
   const updateProgress = useUpdateTopicProgress();
   const incrementUsage = useIncrementUserUsage();
+  const recordAttempt = useRecordQuizAttempt();
 
   const fetchError = error as { status?: number } | null;
   if (fetchError?.status === 402) {
@@ -61,14 +62,22 @@ export default function QuizPage({ params }: Props) {
   };
 
   const handleNext = async () => {
+    if (completed) return;
     if (index + 1 >= total) {
-      const percent = Math.round((score / total) * 100);
+      setCompleted(true);
+      const percent = total > 0 ? Math.round((score / total) * 100) : 0;
       try {
         await updateProgress.mutateAsync({ topicId, data: { score: percent } });
       } catch {
         // non-blocking
       }
-      setCompleted(true);
+      if (total > 0) {
+        try {
+          await recordAttempt.mutateAsync({ data: { topicId, score, total } });
+        } catch {
+          // non-blocking
+        }
+      }
     } else {
       setSelected(null);
       setShowExplanation(false);

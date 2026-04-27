@@ -10,6 +10,10 @@ import type { TopicProgress } from "./topicProgress";
 export interface DashboardSummary {
   totalTopics: number;
   topicsStudied: number;
+  topicsCompleted: number;
+  quizzesCompleted: number;
+  examsCompleted: number;
+  currentStreak: number;
   averageScore: number;
   recentTopics: TopicProgress[];
   weakAreas: TopicProgress[];

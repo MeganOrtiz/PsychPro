@@ -310,6 +310,44 @@ paths:
               schema:
                 $ref: "#/components/schemas/Leaderboard"
 
+  /quiz-attempts:
+    post:
+      operationId: recordQuizAttempt
+      tags: [progress]
+      summary: Record a completed quiz attempt for the current user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RecordAttemptBody"
+      responses:
+        "200":
+          description: Recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AttemptRecord"
+
+  /exam-attempts:
+    post:
+      operationId: recordExamAttempt
+      tags: [progress]
+      summary: Record a completed practice exam attempt for the current user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RecordAttemptBody"
+      responses:
+        "200":
+          description: Recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AttemptRecord"
+
   /subscription/plans:
     get:
       operationId: getSubscriptionPlans
@@ -578,6 +616,14 @@ components:
           type: integer
         topicsStudied:
           type: integer
+        topicsCompleted:
+          type: integer
+        quizzesCompleted:
+          type: integer
+        examsCompleted:
+          type: integer
+        currentStreak:
+          type: integer
         averageScore:
           type: integer
         recentTopics:
@@ -597,12 +643,50 @@ components:
       required:
         - totalTopics
         - topicsStudied
+        - topicsCompleted
+        - quizzesCompleted
+        - examsCompleted
+        - currentStreak
         - averageScore
         - recentTopics
         - weakAreas
         - subscriptionStatus
         - usageCount
         - freeLimit
+
+    RecordAttemptBody:
+      type: object
+      properties:
+        topicId:
+          type: integer
+        score:
+          type: integer
+        total:
+          type: integer
+      required:
+        - topicId
+        - score
+        - total
+
+    AttemptRecord:
+      type: object
+      properties:
+        id:
+          type: integer
+        topicId:
+          type: integer
+        score:
+          type: integer
+        total:
+          type: integer
+        completedAt:
+          type: string
+      required:
+        - id
+        - topicId
+        - score
+        - total
+        - completedAt
 
     LeaderboardEntry:
       type: object

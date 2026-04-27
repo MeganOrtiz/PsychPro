@@ -17,6 +17,7 @@ import type {
 } from "@tanstack/react-query";
 
 import type {
+  AttemptRecord,
   CheckoutSessionResponse,
   CreateCheckoutSessionBody,
   DashboardSummary,
@@ -25,6 +26,7 @@ import type {
   Leaderboard,
   PracticeExam,
   QuizQuestion,
+  RecordAttemptBody,
   StudyGuide,
   SubscriptionPlan,
   SubscriptionStatus,
@@ -1342,6 +1344,178 @@ export function useGetLeaderboard<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+/**
+ * @summary Record a completed quiz attempt for the current user
+ */
+export const getRecordQuizAttemptUrl = () => {
+  return `/api/quiz-attempts`;
+};
+
+export const recordQuizAttempt = async (
+  recordAttemptBody: RecordAttemptBody,
+  options?: RequestInit,
+): Promise<AttemptRecord> => {
+  return customFetch<AttemptRecord>(getRecordQuizAttemptUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(recordAttemptBody),
+  });
+};
+
+export const getRecordQuizAttemptMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof recordQuizAttempt>>,
+    TError,
+    { data: BodyType<RecordAttemptBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof recordQuizAttempt>>,
+  TError,
+  { data: BodyType<RecordAttemptBody> },
+  TContext
+> => {
+  const mutationKey = ["recordQuizAttempt"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof recordQuizAttempt>>,
+    { data: BodyType<RecordAttemptBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return recordQuizAttempt(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type RecordQuizAttemptMutationResult = NonNullable<
+  Awaited<ReturnType<typeof recordQuizAttempt>>
+>;
+export type RecordQuizAttemptMutationBody = BodyType<RecordAttemptBody>;
+export type RecordQuizAttemptMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Record a completed quiz attempt for the current user
+ */
+export const useRecordQuizAttempt = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof recordQuizAttempt>>,
+    TError,
+    { data: BodyType<RecordAttemptBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof recordQuizAttempt>>,
+  TError,
+  { data: BodyType<RecordAttemptBody> },
+  TContext
+> => {
+  return useMutation(getRecordQuizAttemptMutationOptions(options));
+};
+
+/**
+ * @summary Record a completed practice exam attempt for the current user
+ */
+export const getRecordExamAttemptUrl = () => {
+  return `/api/exam-attempts`;
+};
+
+export const recordExamAttempt = async (
+  recordAttemptBody: RecordAttemptBody,
+  options?: RequestInit,
+): Promise<AttemptRecord> => {
+  return customFetch<AttemptRecord>(getRecordExamAttemptUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(recordAttemptBody),
+  });
+};
+
+export const getRecordExamAttemptMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof recordExamAttempt>>,
+    TError,
+    { data: BodyType<RecordAttemptBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof recordExamAttempt>>,
+  TError,
+  { data: BodyType<RecordAttemptBody> },
+  TContext
+> => {
+  const mutationKey = ["recordExamAttempt"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof recordExamAttempt>>,
+    { data: BodyType<RecordAttemptBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return recordExamAttempt(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type RecordExamAttemptMutationResult = NonNullable<
+  Awaited<ReturnType<typeof recordExamAttempt>>
+>;
+export type RecordExamAttemptMutationBody = BodyType<RecordAttemptBody>;
+export type RecordExamAttemptMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Record a completed practice exam attempt for the current user
+ */
+export const useRecordExamAttempt = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof recordExamAttempt>>,
+    TError,
+    { data: BodyType<RecordAttemptBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof recordExamAttempt>>,
+  TError,
+  { data: BodyType<RecordAttemptBody> },
+  TContext
+> => {
+  return useMutation(getRecordExamAttemptMutationOptions(options));
+};
 
 /**
  * @summary Get available subscription plans from Stripe

@@ -1,13 +1,46 @@
 import { Router, type Request, type Response } from "express";
 import { db } from "@workspace/db";
-import { progressTable, topicsTable, usersTable } from "@workspace/db";
-import { eq, and, desc } from "drizzle-orm";
+import {
+  progressTable,
+  topicsTable,
+  usersTable,
+  quizAttemptsTable,
+  examAttemptsTable,
+} from "@workspace/db";
+import { eq, and, desc, sql } from "drizzle-orm";
 import { getAuth } from "@clerk/express";
 
 const router = Router();
 
+const COMPLETION_THRESHOLD = 70;
+
 function getUserId(req: Request): string | null {
   return getAuth(req).userId ?? null;
+}
+
+function startOfDay(d: Date) {
+  const c = new Date(d);
+  c.setHours(0, 0, 0, 0);
+  return c;
+}
+
+function dayKey(d: Date) {
+  return startOfDay(d).toISOString();
+}
+
+function computeStreakFromDates(dates: (Date | null | undefined)[]) {
+  const days = new Set(
+    dates
+      .filter((d): d is Date => d != null)
+      .map((d) => dayKey(d))
+  );
+  let streak = 0;
+  const cursor = startOfDay(new Date());
+  while (days.has(cursor.toISOString())) {
+    streak += 1;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+  return streak;
 }
 
 router.get("/progress", async (req: Request, res: Response): Promise<void> => {
@@ -131,12 +164,36 @@ router.get("/dashboard/summary", async (req: Request, res: Response): Promise<vo
     const recentTopics = progressRows.slice(0, 5).map(r => ({ ...r, topicName: r.topicName ?? "", lastAccessed: r.lastAccessed?.toISOString() }));
     const weakAreas = [...progressRows].sort((a, b) => a.score - b.score).slice(0, 5).map(r => ({ ...r, topicName: r.topicName ?? "", lastAccessed: r.lastAccessed?.toISOString() }));
 
+    const topicsCompleted = new Set(
+      progressRows.filter((r) => r.score >= COMPLETION_THRESHOLD).map((r) => r.topicId),
+    ).size;
+
+    const quizAttempts = await db
+      .select({ id: quizAttemptsTable.id, completedAt: quizAttemptsTable.completedAt })
+      .from(quizAttemptsTable)
+      .where(eq(quizAttemptsTable.userId, userId));
+    const examAttempts = await db
+      .select({ id: examAttemptsTable.id, completedAt: examAttemptsTable.completedAt })
+      .from(examAttemptsTable)
+      .where(eq(examAttemptsTable.userId, userId));
+
+    const allDates: (Date | null | undefined)[] = [
+      ...progressRows.map((r) => r.lastAccessed),
+      ...quizAttempts.map((a) => a.completedAt),
+      ...examAttempts.map((a) => a.completedAt),
+    ];
+    const currentStreak = computeStreakFromDates(allDates);
+
     const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
     const FREE_LIMIT = 10;
 
     res.json({
       totalTopics,
       topicsStudied,
+      topicsCompleted,
+      quizzesCompleted: quizAttempts.length,
+      examsCompleted: examAttempts.length,
+      currentStreak,
       averageScore: avgScore,
       recentTopics,
       weakAreas,
@@ -149,5 +206,50 @@ router.get("/dashboard/summary", async (req: Request, res: Response): Promise<vo
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+async function recordAttempt(
+  req: Request,
+  res: Response,
+  table: typeof quizAttemptsTable | typeof examAttemptsTable,
+): Promise<void> {
+  try {
+    const userId = getUserId(req);
+    if (!userId) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+    const body = req.body as { topicId?: number; score?: number; total?: number };
+    const topicId = Number(body.topicId);
+    const score = Number(body.score);
+    const total = Number(body.total);
+    if (
+      !Number.isInteger(topicId) || topicId <= 0 ||
+      !Number.isInteger(total) || total <= 0 ||
+      !Number.isInteger(score) || score < 0 || score > total
+    ) {
+      res.status(400).json({
+        error: "topicId must be a positive integer, total must be a positive integer, and score must be an integer between 0 and total",
+      });
+      return;
+    }
+    const [row] = await db
+      .insert(table)
+      .values({ userId, topicId, score, total })
+      .returning();
+    res.json({
+      id: row.id,
+      topicId: row.topicId,
+      score: row.score,
+      total: row.total,
+      completedAt: row.completedAt.toISOString(),
+    });
+  } catch (err) {
+    req.log.error({ err }, "Error recording attempt");
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+router.post("/quiz-attempts", (req, res) => recordAttempt(req, res, quizAttemptsTable));
+router.post("/exam-attempts", (req, res) => recordAttempt(req, res, examAttemptsTable));
 
 export default router;
