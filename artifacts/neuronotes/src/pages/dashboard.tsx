@@ -664,7 +664,7 @@ function MasteryLegend() {
 
 function SpotlightCard({ onCta }: { onCta: () => void }) {
   return (
-    <div className="relative overflow-hidden rounded-2xl p-6 text-white bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-950 min-h-[560px]">
+    <div className="relative overflow-hidden rounded-2xl p-6 text-white bg-gradient-to-br from-[#0B1B2E] via-[#0E2A4A] to-[#091627] min-h-[560px]">
       {/* Starry shimmer */}
       <div
         aria-hidden
@@ -682,7 +682,7 @@ function SpotlightCard({ onCta }: { onCta: () => void }) {
       <div
         aria-hidden
         className="pointer-events-none absolute -bottom-10 -left-10 w-44 h-44 rounded-full blur-3xl"
-        style={{ background: "radial-gradient(closest-side, rgba(168,85,247,.25), transparent)" }}
+        style={{ background: "radial-gradient(closest-side, rgba(14,165,233,.30), transparent)" }}
       />
 
       <div className="relative">
