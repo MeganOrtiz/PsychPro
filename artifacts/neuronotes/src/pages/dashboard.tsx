@@ -260,49 +260,31 @@ export default function DashboardPage() {
         {/* Two-column: main + spotlight rail */}
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-6">
           <div className="min-w-0 space-y-6">
-            {/* Stats: 4 subtly tinted cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            {/* Stats: 2 blue-themed cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {isLoading ? (
-                Array(4)
+                Array(2)
                   .fill(0)
                   .map((_, i) => <Skeleton key={i} className="h-24 rounded-2xl" />)
               ) : (
                 <>
                   <StatCard
-                    icon={BookOpen}
+                    icon={Brain}
                     iconBg="bg-[#DEEAF2] dark:bg-sky-500/15"
                     iconColor="text-[#1E3A5F] dark:text-sky-300"
                     cardBg="bg-[#EEF4F8] dark:bg-sky-950/20 border-[#E1EBF2] dark:border-sky-900/40"
-                    value={totalTopics}
-                    label="Topics Available"
-                    caption="+3 new this week"
-                  />
-                  <StatCard
-                    icon={Brain}
-                    iconBg="bg-[#F1E6E6] dark:bg-rose-500/15"
-                    iconColor="text-[#B86A6A] dark:text-rose-300"
-                    cardBg="bg-[#F2EEEB] dark:bg-rose-950/20 border-[#E8E2DD] dark:border-rose-900/40"
                     value={summary?.topicsStudied ?? 0}
                     label="Topics Studied"
                     caption="Keep going!"
                   />
                   <StatCard
                     icon={Trophy}
-                    iconBg="bg-[#F5E9C9] dark:bg-amber-500/15"
-                    iconColor="text-[#C99A2E] dark:text-amber-300"
-                    cardBg="bg-[#FAF3E4] dark:bg-amber-950/20 border-[#F0E6CE] dark:border-amber-900/40"
+                    iconBg="bg-[#D6E6F2] dark:bg-blue-500/15"
+                    iconColor="text-[#0369A1] dark:text-blue-300"
+                    cardBg="bg-[#E8F1F8] dark:bg-blue-950/20 border-[#D6E4EF] dark:border-blue-900/40"
                     value={`${summary?.averageScore ?? 0}%`}
                     label="Average Score"
                     caption="↑ 8% improvement"
-                  />
-                  <StatCard
-                    icon={Zap}
-                    iconBg="bg-[#DEEAF2] dark:bg-indigo-500/15"
-                    iconColor="text-[#2563EB] dark:text-indigo-300"
-                    cardBg="bg-[#EEF4F8] dark:bg-indigo-950/20 border-[#E1EBF2] dark:border-indigo-900/40"
-                    value={isPaid ? "Pro" : `${usageCount}/${freeLimit}`}
-                    label="Interactions"
-                    caption={isPaid ? "Unlimited" : "Start a session!"}
                   />
                 </>
               )}
