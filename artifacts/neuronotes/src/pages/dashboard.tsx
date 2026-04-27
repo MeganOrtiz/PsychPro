@@ -26,6 +26,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUser, UserButton } from "@clerk/react";
 import { cn } from "@/lib/utils";
+import featuredWorkImage from "@assets/Screenshot_2026-04-26_at_11.05.53_PM_1777262767317.png";
 import {
   ResponsiveContainer,
   LineChart,
@@ -697,11 +698,12 @@ function SpotlightCard({ onCta }: { onCta: () => void }) {
 
         {/* Featured person */}
         <div className="flex flex-col items-center mb-4">
-          <div className="relative w-28 h-28 rounded-full overflow-hidden ring-4 ring-white/10 shadow-xl mb-3">
-            <div className="absolute inset-0 bg-gradient-to-br from-rose-300 via-amber-200 to-sky-300" />
-            <div className="absolute inset-0 flex items-center justify-center text-3xl font-bold text-slate-700">
-              SK
-            </div>
+          <div className="relative w-28 h-28 rounded-full overflow-hidden ring-4 ring-white/10 shadow-xl shadow-indigo-500/20 mb-3">
+            <img
+              src={featuredWorkImage}
+              alt="Featured neuron imagery"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
           </div>
           <p className="text-base font-bold">Sarah K.</p>
           <p className="text-xs text-slate-300 mt-0.5">PsyD Candidate</p>
@@ -713,6 +715,14 @@ function SpotlightCard({ onCta }: { onCta: () => void }) {
           <p className="text-[10px] font-bold tracking-widest text-slate-400 uppercase mb-2">
             Featured Work
           </p>
+          <div className="relative w-full aspect-[16/10] rounded-lg overflow-hidden mb-3 ring-1 ring-white/10">
+            <img
+              src={featuredWorkImage}
+              alt="Neural network — featured dissertation imagery"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
+          </div>
           <p className="text-sm font-semibold leading-snug mb-2">
             Dissertation: Cognitive Resilience and Outcomes in Concussion
             Recovery
