@@ -1,4 +1,4 @@
-import { useMemo, useState, type ComponentType } from "react";
+import { useMemo, type ComponentType } from "react";
 import { useLocation } from "wouter";
 import {
   BookOpen,
@@ -17,22 +17,16 @@ import {
   Award,
   Medal,
   ShieldCheck,
+  Share2,
   ChevronDown,
   ArrowDownUp,
 } from "lucide-react";
 import { useGetDashboardSummary, useGetTopics, useGetLeaderboard, useGetUserProgress } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { useUser, UserButton } from "@clerk/react";
 import { cn } from "@/lib/utils";
-import spotlightBgImage from "@assets/Ebook_Cover_Page_1777271551529.jpg";
+import featuredWorkImage from "@assets/Screenshot_2026-04-26_at_11.05.53_PM_1777262767317.png";
 import {
   ResponsiveContainer,
   LineChart,
@@ -652,162 +646,121 @@ function MasteryLegend() {
   );
 }
 
-function SpotlightCard({ onCta: _onCta }: { onCta: () => void }) {
-  const [readMoreOpen, setReadMoreOpen] = useState(false);
-
+function SpotlightCard({ onCta }: { onCta: () => void }) {
   return (
-    <>
-      <div className="relative overflow-hidden rounded-2xl text-white shadow-lg min-h-[380px]">
-        {/* Background ice image */}
-        <img
-          src={spotlightBgImage}
-          alt=""
-          aria-hidden
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        {/* Dark gradient overlay for text legibility */}
-        <div
-          aria-hidden
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to bottom, rgba(2,12,28,0.55) 0%, rgba(2,12,28,0.35) 35%, rgba(2,12,28,0.75) 75%, rgba(2,12,28,0.92) 100%)",
-          }}
-        />
+    <div className="relative overflow-hidden rounded-2xl p-6 text-white bg-gradient-to-br from-[#0B1B2E] via-[#0E2A4A] to-[#091627] min-h-[560px]">
+      {/* Starry shimmer */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-70"
+        style={{
+          backgroundImage:
+            "radial-gradient(1px 1px at 18% 12%, rgba(255,255,255,.7), transparent 60%), radial-gradient(1.2px 1.2px at 65% 8%, rgba(255,255,255,.6), transparent 60%), radial-gradient(1px 1px at 82% 28%, rgba(255,255,255,.55), transparent 60%), radial-gradient(1.4px 1.4px at 32% 52%, rgba(255,255,255,.4), transparent 60%), radial-gradient(1px 1px at 75% 68%, rgba(255,255,255,.45), transparent 60%), radial-gradient(1px 1px at 12% 76%, rgba(255,255,255,.4), transparent 60%), radial-gradient(1.2px 1.2px at 88% 90%, rgba(255,255,255,.5), transparent 60%)",
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-12 -right-12 w-48 h-48 rounded-full blur-3xl"
+        style={{ background: "radial-gradient(closest-side, rgba(56,189,248,.35), transparent)" }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -bottom-10 -left-10 w-44 h-44 rounded-full blur-3xl"
+        style={{ background: "radial-gradient(closest-side, rgba(14,165,233,.30), transparent)" }}
+      />
 
-        {/* Content */}
-        <div className="relative p-5 flex flex-col h-full min-h-[380px]">
-          <div className="flex items-center justify-center gap-1.5 mb-1">
-            <Star className="w-4 h-4 text-amber-300 fill-amber-300/40" />
-            <h3
-              className="text-sm font-bold tracking-wide"
+      <div className="relative">
+        <div className="flex items-center justify-center mb-2">
+          <Star className="w-5 h-5 text-amber-300 fill-amber-300/40" />
+        </div>
+        <h3 className="text-lg font-bold text-center">PsychPro Spotlight</h3>
+        <p className="text-xs text-slate-300 text-center mt-1 mb-5 leading-relaxed">
+          Highlighting the next generation
+          <br />
+          of clinicians and researchers.
+        </p>
+
+        {/* Featured person */}
+        <div className="flex flex-col items-center mb-4">
+          <div className="relative w-28 h-28 rounded-full overflow-hidden ring-4 ring-white/10 shadow-xl shadow-indigo-500/20 mb-3">
+            <img
+              src={featuredWorkImage}
+              alt="Featured neuron imagery"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          </div>
+          <p className="text-base font-bold">Sarah K.</p>
+          <p className="text-xs text-slate-300 mt-0.5">PsyD Candidate</p>
+          <p className="text-xs text-slate-300">Clinical Neuropsychology</p>
+        </div>
+
+        {/* Featured work — neuron image as prominent background */}
+        <div className="relative overflow-hidden rounded-xl mb-4 ring-1 ring-white/15 shadow-xl">
+          <img
+            src={featuredWorkImage}
+            alt="Neural network — featured dissertation imagery"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          {/* Subtle bottom-weighted gradient — image stays visible, text remains legible */}
+          <div
+            aria-hidden
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(to top, rgba(2,6,23,0.85) 0%, rgba(2,6,23,0.55) 40%, rgba(2,6,23,0.15) 75%, rgba(2,6,23,0) 100%)",
+            }}
+          />
+          <div className="relative p-4 pt-24">
+            <p
+              className="text-[10px] font-bold tracking-widest text-sky-300 uppercase mb-2"
               style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}
-            >
-              PsychPro Spotlight
-            </h3>
-          </div>
-          <p
-            className="text-[11px] text-slate-200 text-center leading-relaxed mb-4"
-            style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}
-          >
-            Highlighting the next generation of clinicians and researchers.
-          </p>
-
-          {/* Avatar — frosted glass monogram */}
-          <div className="flex flex-col items-center mb-3">
-            <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md ring-2 ring-white/30 flex items-center justify-center mb-2 shadow-lg">
-              <span
-                className="text-lg font-bold text-white"
-                style={{ textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}
-              >
-                SK
-              </span>
-            </div>
-            <p
-              className="text-base font-bold"
-              style={{ textShadow: "0 1px 4px rgba(0,0,0,0.85)" }}
-            >
-              Sarah K.
-            </p>
-            <p
-              className="text-[11px] text-slate-200"
-              style={{ textShadow: "0 1px 3px rgba(0,0,0,0.85)" }}
-            >
-              PsyD Candidate · Clinical Neuropsychology
-            </p>
-          </div>
-
-          {/* Bottom: featured work tag + dissertation title */}
-          <div className="mt-auto">
-            <p
-              className="text-[10px] font-bold tracking-widest text-sky-300 uppercase mb-1.5"
-              style={{ textShadow: "0 1px 4px rgba(0,0,0,0.85)" }}
             >
               Featured Work
             </p>
             <p
-              className="text-sm font-semibold text-white leading-snug mb-3"
+              className="text-sm font-semibold text-white leading-snug mb-2"
               style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}
             >
-              Cognitive Resilience and Outcomes in Concussion Recovery
+              Dissertation: Cognitive Resilience and Outcomes in Concussion
+              Recovery
             </p>
-
-            <button
-              onClick={() => setReadMoreOpen(true)}
-              className="w-full flex items-center justify-center gap-1.5 bg-white/15 hover:bg-white/25 border border-white/25 text-white text-sm font-medium rounded-lg py-2.5 backdrop-blur-sm transition-colors"
-              data-testid="button-spotlight-read-more"
+            <p
+              className="text-xs text-slate-100 leading-relaxed"
+              style={{ textShadow: "0 1px 4px rgba(0,0,0,0.85)" }}
             >
-              Read more
-              <ArrowUpRight className="w-3.5 h-3.5" />
-            </button>
+              Investigating the relationship between cognitive flexibility and
+              long-term functional recovery in collegiate athletes.
+            </p>
           </div>
         </div>
+
+        <Button
+          onClick={onCta}
+          className="w-full bg-white/10 hover:bg-white/20 border border-white/15 text-white backdrop-blur-sm"
+          data-testid="button-spotlight-cta"
+        >
+          View Feature
+          <ArrowUpRight className="w-4 h-4 ml-1" />
+        </Button>
+
+        {/* Pagination dots */}
+        <div className="flex items-center justify-center gap-1.5 mt-4">
+          <span className="w-1.5 h-1.5 rounded-full bg-white" />
+          <span className="w-1.5 h-1.5 rounded-full bg-white/30" />
+          <span className="w-1.5 h-1.5 rounded-full bg-white/30" />
+          <span className="w-1.5 h-1.5 rounded-full bg-white/30" />
+        </div>
+
+        {/* Share button */}
+        <button
+          aria-label="Share spotlight"
+          className="absolute -bottom-2 right-0 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center backdrop-blur-sm transition-colors"
+          data-testid="button-spotlight-share"
+        >
+          <Share2 className="w-4 h-4 text-white" />
+        </button>
       </div>
-
-      {/* Read more dialog */}
-      <Dialog open={readMoreOpen} onOpenChange={setReadMoreOpen}>
-        <DialogContent className="max-w-lg" data-testid="dialog-spotlight-read-more">
-          <DialogHeader>
-            <div className="flex items-center gap-3 mb-1">
-              <div className="w-12 h-12 rounded-full bg-sky-100 flex items-center justify-center flex-shrink-0">
-                <span className="text-base font-bold text-sky-700">SK</span>
-              </div>
-              <div className="min-w-0">
-                <DialogTitle className="text-left">Sarah K.</DialogTitle>
-                <DialogDescription className="text-left">
-                  PsyD Candidate · Clinical Neuropsychology
-                </DialogDescription>
-              </div>
-            </div>
-          </DialogHeader>
-
-          <div className="space-y-4 pt-2">
-            <div>
-              <p className="text-[10px] font-bold tracking-widest text-sky-700 uppercase mb-1.5">
-                Featured Work
-              </p>
-              <h4 className="text-base font-semibold text-slate-900 leading-snug">
-                Cognitive Resilience and Outcomes in Concussion Recovery
-              </h4>
-            </div>
-
-            <div>
-              <p className="text-xs font-semibold text-slate-900 mb-1.5">
-                Abstract
-              </p>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                Sarah's dissertation investigates the relationship between
-                cognitive flexibility and long-term functional recovery in
-                collegiate athletes following sport-related head injuries. Her
-                mixed-methods study follows a cohort over 18 months, combining
-                neuropsychological assessment with structured interviews to map
-                how individual differences in executive function shape return-to-play
-                and academic outcomes.
-              </p>
-            </div>
-
-            <div>
-              <p className="text-xs font-semibold text-slate-900 mb-1.5">
-                Research Interests
-              </p>
-              <ul className="text-sm text-slate-600 leading-relaxed list-disc list-inside space-y-1">
-                <li>Recovery trajectories after mild traumatic brain injury</li>
-                <li>Executive function and cognitive flexibility</li>
-                <li>Sport neuropsychology and athlete mental health</li>
-                <li>Equitable access to neuropsychological care</li>
-              </ul>
-            </div>
-
-            <div className="pt-2 border-t border-slate-100">
-              <p className="text-xs text-slate-500 italic">
-                "I want clinicians to think about resilience as something we can
-                measure, support, and build — not just observe."
-              </p>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </>
+    </div>
   );
 }
 
