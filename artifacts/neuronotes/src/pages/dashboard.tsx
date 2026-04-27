@@ -710,27 +710,28 @@ function SpotlightCard({ onCta }: { onCta: () => void }) {
           <p className="text-xs text-slate-300">Clinical Neuropsychology</p>
         </div>
 
-        {/* Featured work */}
-        <div className="border-t border-white/10 pt-4 mb-4">
-          <p className="text-[10px] font-bold tracking-widest text-slate-400 uppercase mb-2">
-            Featured Work
-          </p>
-          <div className="relative w-full aspect-[16/10] rounded-lg overflow-hidden mb-3 ring-1 ring-white/10">
-            <img
-              src={featuredWorkImage}
-              alt="Neural network — featured dissertation imagery"
-              className="absolute inset-0 w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
+        {/* Featured work — neuron image as background */}
+        <div className="relative overflow-hidden rounded-xl mb-4 ring-1 ring-white/10 shadow-lg">
+          <img
+            src={featuredWorkImage}
+            alt="Neural network — featured dissertation imagery"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          {/* Dark gradient overlay for text legibility */}
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/70 to-slate-950/30" />
+          <div className="relative p-4">
+            <p className="text-[10px] font-bold tracking-widest text-sky-300 uppercase mb-2">
+              Featured Work
+            </p>
+            <p className="text-sm font-semibold text-white leading-snug mb-2">
+              Dissertation: Cognitive Resilience and Outcomes in Concussion
+              Recovery
+            </p>
+            <p className="text-xs text-slate-200 leading-relaxed">
+              Investigating the relationship between cognitive flexibility and
+              long-term functional recovery in collegiate athletes.
+            </p>
           </div>
-          <p className="text-sm font-semibold leading-snug mb-2">
-            Dissertation: Cognitive Resilience and Outcomes in Concussion
-            Recovery
-          </p>
-          <p className="text-xs text-slate-300 leading-relaxed">
-            Investigating the relationship between cognitive flexibility and
-            long-term functional recovery in collegiate athletes.
-          </p>
         </div>
 
         <Button
