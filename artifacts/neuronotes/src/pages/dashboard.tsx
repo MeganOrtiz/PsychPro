@@ -1,4 +1,4 @@
-import { useMemo, type ComponentType } from "react";
+import { useMemo } from "react";
 import { useLocation } from "wouter";
 import {
   BookOpen,
@@ -19,9 +19,6 @@ import {
   Share2,
   ChevronDown,
   ArrowDownUp,
-  CheckCircle2,
-  HelpCircle,
-  GraduationCap,
 } from "lucide-react";
 import { useGetDashboardSummary, useGetTopics, useGetLeaderboard, useGetUserProgress } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
@@ -248,151 +245,111 @@ export default function DashboardPage() {
         {/* Two-column: main + spotlight rail */}
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-6">
           <div className="min-w-0 space-y-6">
-            {/* Stats: 4 cards — streak, topics completed, quizzes completed, exams completed */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            {/* Begin/Continue Your Journey (full width, top) */}
+            <div className="bg-card border border-border rounded-xl p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <TrendingUp className="w-4 h-4 text-primary" />
+                <h2 className="font-semibold text-foreground">
+                  {continueTopic ? "Continue Your Journey" : "Begin Your Journey"}
+                </h2>
+              </div>
               {isLoading ? (
-                Array(4)
-                  .fill(0)
-                  .map((_, i) => <Skeleton key={i} className="h-24 rounded-2xl" />)
+                <Skeleton className="h-24 rounded-lg" />
+              ) : continueTopic ? (
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="font-medium text-foreground truncate">
+                      {continueTopic.topicName}
+                    </p>
+                    <span className="text-sm text-muted-foreground">
+                      {continueTopic.score}%
+                    </span>
+                  </div>
+                  <div className="h-2 bg-muted rounded-full overflow-hidden mb-4">
+                    <div
+                      className="h-full bg-primary transition-all"
+                      style={{ width: `${continueTopic.score}%` }}
+                    />
+                  </div>
+                  <Button
+                    onClick={() => navigate(`/topics/${continueTopic.topicId}`)}
+                    data-testid="button-continue-studying"
+                  >
+                    Continue Studying
+                    <ArrowUpRight className="w-4 h-4 ml-1" />
+                  </Button>
+                </div>
               ) : (
-                <>
-                  <StatCard
-                    icon={Flame}
-                    iconBg="bg-orange-100 dark:bg-orange-500/15"
-                    iconColor="text-orange-600 dark:text-orange-300"
-                    cardBg="bg-orange-50 dark:bg-orange-950/20 border-orange-100 dark:border-orange-900/40"
-                    value={summary?.currentStreak ?? streak}
-                    label="Day Streak"
-                    caption={(summary?.currentStreak ?? streak) > 0 ? "Keep it going!" : "Study today to start"}
-                  />
-                  <StatCard
-                    icon={CheckCircle2}
-                    iconBg="bg-[#DEEAF2] dark:bg-sky-500/15"
-                    iconColor="text-[#1E3A5F] dark:text-sky-300"
-                    cardBg="bg-[#EEF4F8] dark:bg-sky-950/20 border-[#E1EBF2] dark:border-sky-900/40"
-                    value={summary?.topicsCompleted ?? 0}
-                    label="Topics Completed"
-                    caption={`of ${summary?.totalTopics ?? 0} total`}
-                  />
-                  <StatCard
-                    icon={HelpCircle}
-                    iconBg="bg-emerald-100 dark:bg-emerald-500/15"
-                    iconColor="text-emerald-700 dark:text-emerald-300"
-                    cardBg="bg-emerald-50 dark:bg-emerald-950/20 border-emerald-100 dark:border-emerald-900/40"
-                    value={summary?.quizzesCompleted ?? 0}
-                    label="Quizzes Completed"
-                    caption={`Avg ${summary?.averageScore ?? 0}%`}
-                  />
-                  <StatCard
-                    icon={GraduationCap}
-                    iconBg="bg-[#D6E6F2] dark:bg-blue-500/15"
-                    iconColor="text-[#0369A1] dark:text-blue-300"
-                    cardBg="bg-[#E8F1F8] dark:bg-blue-950/20 border-[#D6E4EF] dark:border-blue-900/40"
-                    value={summary?.examsCompleted ?? 0}
-                    label="Exams Completed"
-                    caption="Practice makes mastery"
-                  />
-                </>
+                <div>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Pick a topic to start your first study session. We'll keep
+                    track of your progress from here.
+                  </p>
+                  <Button
+                    onClick={() => navigate("/topics")}
+                    data-testid="button-begin-journey"
+                  >
+                    Browse Topics
+                    <ArrowUpRight className="w-4 h-4 ml-1" />
+                  </Button>
+                </div>
               )}
             </div>
 
-            {/* Hero: Continue + Recommended for You */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="md:col-span-2 bg-card border border-border rounded-xl p-5">
-                <div className="flex items-center gap-2 mb-4">
-                  <TrendingUp className="w-4 h-4 text-primary" />
-                  <h2 className="font-semibold text-foreground">Continue Your Journey</h2>
-                </div>
-                {isLoading ? (
-                  <Skeleton className="h-24 rounded-lg" />
-                ) : continueTopic ? (
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="font-medium text-foreground truncate">
-                        {continueTopic.topicName}
-                      </p>
-                      <span className="text-sm text-muted-foreground">
-                        {continueTopic.score}%
-                      </span>
-                    </div>
-                    <div className="h-2 bg-muted rounded-full overflow-hidden mb-4">
-                      <div
-                        className="h-full bg-primary transition-all"
-                        style={{ width: `${continueTopic.score}%` }}
-                      />
-                    </div>
-                    <Button
-                      onClick={() => navigate(`/topics/${continueTopic.topicId}`)}
-                      data-testid="button-continue-studying"
-                    >
-                      Continue Studying
-                      <ArrowUpRight className="w-4 h-4 ml-1" />
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="text-center py-4">
-                    <p className="text-sm text-muted-foreground mb-3">
-                      No active topic yet. Browse the library to begin.
-                    </p>
-                    <Button onClick={() => navigate("/topics")} data-testid="button-browse-empty">
-                      Browse Categories
-                    </Button>
-                  </div>
-                )}
+            {/* Recommended for You — 2x2 grid of 4 topics */}
+            <div className="bg-card border border-border rounded-xl p-5">
+              <div className="mb-4">
+                <h2 className="font-semibold text-foreground">Recommended for You</h2>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Based on your goals and progress
+                </p>
               </div>
-
-              {/* Recommended for You (replaces Daily Goal) */}
-              <div className="bg-card border border-border rounded-xl p-5">
-                <div className="mb-4">
-                  <h2 className="font-semibold text-foreground">Recommended for You</h2>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Based on your goals and progress
-                  </p>
+              {isLoading ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <Skeleton className="h-16 rounded-lg" />
+                  <Skeleton className="h-16 rounded-lg" />
+                  <Skeleton className="h-16 rounded-lg" />
+                  <Skeleton className="h-16 rounded-lg" />
                 </div>
-                {isLoading ? (
-                  <div className="space-y-2">
-                    <Skeleton className="h-14 rounded-lg" />
-                    <Skeleton className="h-14 rounded-lg" />
-                  </div>
-                ) : recommended.length > 0 ? (
-                  <div className="space-y-2">
-                    {recommended.slice(0, 2).map((t, idx) => {
-                      const palette = idx % 2 === 0
-                        ? { bg: "bg-sky-100 dark:bg-sky-500/15", color: "text-sky-600 dark:text-sky-300" }
-                        : { bg: "bg-emerald-100 dark:bg-emerald-500/15", color: "text-emerald-600 dark:text-emerald-300" };
-                      return (
-                        <button
-                          key={t.id}
-                          onClick={() => navigate(`/topics/${t.topicId}`)}
-                          className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-muted transition-colors text-left border border-border"
-                          data-testid={`recommended-${t.topicId}`}
-                        >
-                          <div className={cn("w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0", palette.bg)}>
-                            {idx % 2 === 0 ? (
-                              <Sparkles className={cn("w-4 h-4", palette.color)} />
-                            ) : (
-                              <BookOpen className={cn("w-4 h-4", palette.color)} />
-                            )}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-semibold text-foreground truncate">
-                              {t.topicName}
-                            </p>
-                            <p className="text-xs text-muted-foreground truncate">
-                              {idx % 2 === 0 ? "Expand your knowledge" : "Strengthen your foundation"}
-                            </p>
-                          </div>
-                          <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                        </button>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground text-center py-6">
-                    Study a few topics and we'll suggest what to tackle next.
-                  </p>
-                )}
-              </div>
+              ) : recommended.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {recommended.slice(0, 4).map((t, idx) => {
+                    const palettes = [
+                      { bg: "bg-sky-100 dark:bg-sky-500/15", color: "text-sky-600 dark:text-sky-300", icon: Sparkles, hint: "Expand your knowledge" },
+                      { bg: "bg-emerald-100 dark:bg-emerald-500/15", color: "text-emerald-600 dark:text-emerald-300", icon: BookOpen, hint: "Strengthen your foundation" },
+                      { bg: "bg-amber-100 dark:bg-amber-500/15", color: "text-amber-600 dark:text-amber-300", icon: Brain, hint: "Sharpen your skills" },
+                      { bg: "bg-violet-100 dark:bg-violet-500/15", color: "text-violet-600 dark:text-violet-300", icon: TrendingUp, hint: "Level up next" },
+                    ];
+                    const p = palettes[idx % palettes.length];
+                    const Icon = p.icon;
+                    return (
+                      <button
+                        key={t.id}
+                        onClick={() => navigate(`/topics/${t.topicId}`)}
+                        className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-muted transition-colors text-left border border-border"
+                        data-testid={`recommended-${t.topicId}`}
+                      >
+                        <div className={cn("w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0", p.bg)}>
+                          <Icon className={cn("w-4 h-4", p.color)} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-foreground truncate">
+                            {t.topicName}
+                          </p>
+                          <p className="text-xs text-muted-foreground truncate">
+                            {p.hint}
+                          </p>
+                        </div>
+                        <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground text-center py-6">
+                  Study a few topics and we'll suggest what to tackle next.
+                </p>
+              )}
             </div>
 
             {/* Streak (left) + Leaderboard (right) */}
@@ -552,56 +509,6 @@ export default function DashboardPage() {
             <SpotlightCard onCta={() => navigate("/feature-request")} />
           </aside>
         </div>
-      </div>
-    </div>
-  );
-}
-
-function StatCard({
-  icon: Icon,
-  iconBg,
-  iconColor,
-  cardBg,
-  value,
-  label,
-  caption,
-}: {
-  icon: ComponentType<{ className?: string }>;
-  iconBg: string;
-  iconColor: string;
-  cardBg?: string;
-  value: string | number;
-  label: string;
-  caption?: string;
-}) {
-  return (
-    <div
-      className={cn(
-        "rounded-2xl p-4 flex items-center gap-3 border",
-        cardBg ?? "bg-card border-border",
-      )}
-      data-testid={`stat-${label.replace(/\s/g, "-").toLowerCase()}`}
-    >
-      <div
-        className={cn(
-          "w-11 h-11 shrink-0 rounded-xl flex items-center justify-center",
-          iconBg,
-        )}
-      >
-        <Icon className={cn("w-5 h-5", iconColor)} />
-      </div>
-      <div className="min-w-0 flex-1">
-        <div className="text-2xl font-bold text-foreground leading-none">
-          {value}
-        </div>
-        <div className="text-xs font-medium text-foreground/80 mt-1.5 truncate">
-          {label}
-        </div>
-        {caption && (
-          <div className="text-[11px] text-muted-foreground mt-0.5 truncate">
-            {caption}
-          </div>
-        )}
       </div>
     </div>
   );
