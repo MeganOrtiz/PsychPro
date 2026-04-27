@@ -9,7 +9,6 @@ import {
   Bell,
   Flame,
   Star,
-  Target,
   TrendingUp,
   Sparkles,
   ArrowUpRight,
@@ -146,20 +145,6 @@ export default function DashboardPage() {
   const weeklyFlames = useMemo(() => computeWeeklyFlames(recent), [recent]);
   const activitySeries = useMemo(() => buildActivitySeries(recent), [recent]);
 
-  const todaysTopics = useMemo(() => {
-    const today = startOfDay(new Date()).toISOString();
-    const ids = new Set(
-      recent
-        .filter(
-          (r) =>
-            r.lastAccessed && dayKey(new Date(r.lastAccessed)) === today
-        )
-        .map((r) => r.topicId)
-    );
-    return ids.size;
-  }, [recent]);
-
-  const dailyGoal = 3;
   const continueTopic = recent[0];
   const recommended = useMemo(() => {
     const seen = new Set<number>();
@@ -311,7 +296,7 @@ export default function DashboardPage() {
               )}
             </div>
 
-            {/* Hero: Continue + Daily Goal */}
+            {/* Hero: Continue + Recommended for You */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="md:col-span-2 bg-card border border-border rounded-xl p-5">
                 <div className="flex items-center gap-2 mb-4">
@@ -356,12 +341,7 @@ export default function DashboardPage() {
                 )}
               </div>
 
-              <DailyGoalCard completed={todaysTopics} goal={dailyGoal} />
-            </div>
-
-            {/* Recommended + Streak (split row) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Recommended for You */}
+              {/* Recommended for You (replaces Daily Goal) */}
               <div className="bg-card border border-border rounded-xl p-5">
                 <div className="mb-4">
                   <h2 className="font-semibold text-foreground">Recommended for You</h2>
@@ -387,18 +367,18 @@ export default function DashboardPage() {
                           className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-muted transition-colors text-left border border-border"
                           data-testid={`recommended-${t.topicId}`}
                         >
-                          <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0", palette.bg)}>
+                          <div className={cn("w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0", palette.bg)}>
                             {idx % 2 === 0 ? (
-                              <Sparkles className={cn("w-5 h-5", palette.color)} />
+                              <Sparkles className={cn("w-4 h-4", palette.color)} />
                             ) : (
-                              <BookOpen className={cn("w-5 h-5", palette.color)} />
+                              <BookOpen className={cn("w-4 h-4", palette.color)} />
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-semibold text-foreground truncate">
                               {t.topicName}
                             </p>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-xs text-muted-foreground truncate">
                               {idx % 2 === 0 ? "Expand your knowledge" : "Strengthen your foundation"}
                             </p>
                           </div>
@@ -413,7 +393,10 @@ export default function DashboardPage() {
                   </p>
                 )}
               </div>
+            </div>
 
+            {/* Streak (left) + Leaderboard (right) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Your Streak */}
               <div className="bg-card border border-border rounded-xl p-5">
                 <div className="flex items-center gap-2 mb-3">
@@ -454,6 +437,89 @@ export default function DashboardPage() {
                     : "Great consistency this week."}
                 </p>
               </div>
+
+              {/* Leaderboard (moved from right rail) */}
+              <div className="bg-card border border-border rounded-xl p-5">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <Trophy className="w-4 h-4 text-primary" />
+                    <h2 className="font-semibold text-foreground">Leaderboard</h2>
+                  </div>
+                  <button
+                    onClick={() => navigate("/leaderboard")}
+                    className="text-xs text-primary hover:underline"
+                    data-testid="button-view-leaderboard"
+                  >
+                    View all
+                  </button>
+                </div>
+                {!leaderboard ? (
+                  <div className="space-y-2">
+                    <Skeleton className="h-8 rounded-lg" />
+                    <Skeleton className="h-8 rounded-lg" />
+                    <Skeleton className="h-8 rounded-lg" />
+                  </div>
+                ) : leaderboard.entries.length === 0 ? (
+                  <p className="text-xs text-muted-foreground text-center py-4">
+                    Be the first to land on the board.
+                  </p>
+                ) : (
+                  <div className="space-y-1">
+                    {leaderboard.entries.slice(0, 5).map((e) => (
+                      <div
+                        key={e.userId}
+                        className={cn(
+                          "flex items-center gap-2 px-2 py-1.5 rounded-lg",
+                          e.isCurrentUser ? "bg-primary/5" : ""
+                        )}
+                        data-testid={`leaderboard-row-${e.rank}`}
+                      >
+                        <div
+                          className={cn(
+                            "w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0",
+                            e.rank === 1
+                              ? "bg-yellow-500/15 text-yellow-600"
+                              : e.rank === 2
+                              ? "bg-slate-400/15 text-slate-500"
+                              : e.rank === 3
+                              ? "bg-amber-700/15 text-amber-700"
+                              : "bg-muted text-muted-foreground"
+                          )}
+                        >
+                          {e.rank}
+                        </div>
+                        <p className="text-sm font-medium text-foreground truncate flex-1 min-w-0">
+                          {e.displayName}
+                          {e.isCurrentUser && (
+                            <span className="ml-1.5 text-xs text-primary font-semibold">
+                              You
+                            </span>
+                          )}
+                        </p>
+                        <div className="flex items-center gap-1 flex-shrink-0" title="Topics completed">
+                          <BookOpen className="w-3 h-3 text-muted-foreground" />
+                          <span className="text-xs font-semibold text-foreground tabular-nums">
+                            {e.topicsCompleted}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1 flex-shrink-0" title="Streak">
+                          <Flame
+                            className={cn(
+                              "w-3 h-3",
+                              e.streak > 0
+                                ? "text-orange-500 fill-orange-500"
+                                : "text-muted-foreground/40"
+                            )}
+                          />
+                          <span className="text-xs font-semibold text-foreground tabular-nums">
+                            {e.streak}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Study Analytics (full width) + Recent Activity / Achievements (2-col) */}
@@ -484,89 +550,6 @@ export default function DashboardPage() {
           {/* Spotlight rail */}
           <aside className="lg:sticky lg:top-6 self-start space-y-4">
             <SpotlightCard onCta={() => navigate("/feature-request")} />
-
-            {/* Leaderboard widget */}
-            <div className="bg-card border border-border rounded-xl p-5">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <Trophy className="w-4 h-4 text-primary" />
-                  <h2 className="font-semibold text-foreground">Leaderboard</h2>
-                </div>
-                <button
-                  onClick={() => navigate("/leaderboard")}
-                  className="text-xs text-primary hover:underline"
-                  data-testid="button-view-leaderboard"
-                >
-                  View all
-                </button>
-              </div>
-              {!leaderboard ? (
-                <div className="space-y-2">
-                  <Skeleton className="h-8 rounded-lg" />
-                  <Skeleton className="h-8 rounded-lg" />
-                  <Skeleton className="h-8 rounded-lg" />
-                </div>
-              ) : leaderboard.entries.length === 0 ? (
-                <p className="text-xs text-muted-foreground text-center py-4">
-                  Be the first to land on the board.
-                </p>
-              ) : (
-                <div className="space-y-1">
-                  {leaderboard.entries.slice(0, 5).map((e) => (
-                    <div
-                      key={e.userId}
-                      className={cn(
-                        "flex items-center gap-2 px-2 py-1.5 rounded-lg",
-                        e.isCurrentUser ? "bg-primary/5" : ""
-                      )}
-                      data-testid={`leaderboard-row-${e.rank}`}
-                    >
-                      <div
-                        className={cn(
-                          "w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0",
-                          e.rank === 1
-                            ? "bg-yellow-500/15 text-yellow-600"
-                            : e.rank === 2
-                            ? "bg-slate-400/15 text-slate-500"
-                            : e.rank === 3
-                            ? "bg-amber-700/15 text-amber-700"
-                            : "bg-muted text-muted-foreground"
-                        )}
-                      >
-                        {e.rank}
-                      </div>
-                      <p className="text-sm font-medium text-foreground truncate flex-1 min-w-0">
-                        {e.displayName}
-                        {e.isCurrentUser && (
-                          <span className="ml-1.5 text-xs text-primary font-semibold">
-                            You
-                          </span>
-                        )}
-                      </p>
-                      <div className="flex items-center gap-1 flex-shrink-0" title="Topics completed">
-                        <BookOpen className="w-3 h-3 text-muted-foreground" />
-                        <span className="text-xs font-semibold text-foreground tabular-nums">
-                          {e.topicsCompleted}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1 flex-shrink-0" title="Streak">
-                        <Flame
-                          className={cn(
-                            "w-3 h-3",
-                            e.streak > 0
-                              ? "text-orange-500 fill-orange-500"
-                              : "text-muted-foreground/40"
-                          )}
-                        />
-                        <span className="text-xs font-semibold text-foreground tabular-nums">
-                          {e.streak}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
           </aside>
         </div>
       </div>
@@ -619,58 +602,6 @@ function StatCard({
             {caption}
           </div>
         )}
-      </div>
-    </div>
-  );
-}
-
-function DailyGoalCard({ completed, goal }: { completed: number; goal: number }) {
-  const pct = Math.min((completed / goal) * 100, 100);
-  const radius = 42;
-  const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (pct / 100) * circumference;
-
-  return (
-    <div className="bg-card border border-border rounded-xl p-5">
-      <div className="flex items-center gap-2 mb-4">
-        <Target className="w-4 h-4 text-primary" />
-        <h2 className="font-semibold text-foreground">Daily Goal</h2>
-      </div>
-      <div className="flex flex-col items-center">
-        <div className="relative w-28 h-28">
-          <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-            <circle
-              cx="50"
-              cy="50"
-              r={radius}
-              stroke="hsl(var(--muted))"
-              strokeWidth="8"
-              fill="none"
-            />
-            <circle
-              cx="50"
-              cy="50"
-              r={radius}
-              stroke="hsl(var(--primary))"
-              strokeWidth="8"
-              fill="none"
-              strokeDasharray={circumference}
-              strokeDashoffset={offset}
-              strokeLinecap="round"
-              className="transition-all duration-500"
-            />
-          </svg>
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-xl font-bold text-foreground">
-              {completed}/{goal}
-            </span>
-            <span className="text-[10px] text-muted-foreground">topics</span>
-          </div>
-        </div>
-        <p className="text-xs text-muted-foreground mt-3 flex items-center gap-1">
-          <Flame className="w-3 h-3 text-orange-500" />
-          {completed >= goal ? "Goal reached" : "Keep it up"}
-        </p>
       </div>
     </div>
   );
