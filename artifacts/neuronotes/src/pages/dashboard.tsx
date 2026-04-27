@@ -710,24 +710,40 @@ function SpotlightCard({ onCta }: { onCta: () => void }) {
           <p className="text-xs text-slate-300">Clinical Neuropsychology</p>
         </div>
 
-        {/* Featured work — neuron image as background */}
-        <div className="relative overflow-hidden rounded-xl mb-4 ring-1 ring-white/10 shadow-lg">
+        {/* Featured work — neuron image as prominent background */}
+        <div className="relative overflow-hidden rounded-xl mb-4 ring-1 ring-white/15 shadow-xl">
           <img
             src={featuredWorkImage}
             alt="Neural network — featured dissertation imagery"
             className="absolute inset-0 w-full h-full object-cover"
           />
-          {/* Dark gradient overlay for text legibility */}
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/70 to-slate-950/30" />
-          <div className="relative p-4">
-            <p className="text-[10px] font-bold tracking-widest text-sky-300 uppercase mb-2">
+          {/* Subtle bottom-weighted gradient — image stays visible, text remains legible */}
+          <div
+            aria-hidden
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(to top, rgba(2,6,23,0.85) 0%, rgba(2,6,23,0.55) 40%, rgba(2,6,23,0.15) 75%, rgba(2,6,23,0) 100%)",
+            }}
+          />
+          <div className="relative p-4 pt-24">
+            <p
+              className="text-[10px] font-bold tracking-widest text-sky-300 uppercase mb-2"
+              style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}
+            >
               Featured Work
             </p>
-            <p className="text-sm font-semibold text-white leading-snug mb-2">
+            <p
+              className="text-sm font-semibold text-white leading-snug mb-2"
+              style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}
+            >
               Dissertation: Cognitive Resilience and Outcomes in Concussion
               Recovery
             </p>
-            <p className="text-xs text-slate-200 leading-relaxed">
+            <p
+              className="text-xs text-slate-100 leading-relaxed"
+              style={{ textShadow: "0 1px 4px rgba(0,0,0,0.85)" }}
+            >
               Investigating the relationship between cognitive flexibility and
               long-term functional recovery in collegiate athletes.
             </p>
