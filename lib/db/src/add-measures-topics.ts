@@ -1650,15 +1650,11 @@ function buildStudyGuide(
 
       out.push(`### ${m.test} — ${m.fullName}`);
       out.push("");
+      out.push(`Age range: ${m.ages}`);
+      out.push("");
       out.push(m.oneLine);
       out.push("");
-      out.push(`**At a glance**`);
-      out.push(`- **Age range:** ${m.ages}`);
-      out.push("");
-      out.push(`**What you'll see**`);
-      for (const d of m.whatYoullSee) out.push(`- ${d}`);
-      out.push("");
-      out.push(`**Scores to know**`);
+      out.push(`**Indices**`);
       for (const s of m.scoresToKnow) out.push(`- ${s}`);
       out.push("");
       if (m.rememberThis) {
