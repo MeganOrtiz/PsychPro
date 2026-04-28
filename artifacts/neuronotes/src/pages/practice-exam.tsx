@@ -103,6 +103,25 @@ export default function PracticeExamPage({ params }: Props) {
     }} />;
   }
 
+  if (started && !isLoading && total === 0) {
+    return (
+      <div className="min-h-full bg-background" data-testid="exam-empty">
+        <div className="max-w-lg mx-auto p-4 md:p-6 lg:p-8 text-center">
+          <div className="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center mx-auto mb-4">
+            <GraduationCap className="w-6 h-6 text-amber-500" />
+          </div>
+          <h2 className="text-xl font-semibold text-foreground mb-2">No exam questions available</h2>
+          <p className="text-sm text-muted-foreground mb-6">
+            This topic doesn't have a practice exam set up yet. Please try again later or pick another topic.
+          </p>
+          <Button onClick={() => navigate(`/topics/${topicId}`)} data-testid="button-back-empty">
+            Back to Topic
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   if (submitted) {
     return (
       <div className="min-h-full bg-background" data-testid="exam-results">

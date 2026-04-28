@@ -5,6 +5,8 @@ import {
   flashcardsTable,
   quizQuestionsTable,
   studyGuidesTable,
+  practiceExamsTable,
+  practiceExamQuestionsTable,
 } from "./schema";
 
 type MeasureRow = {
@@ -1905,12 +1907,56 @@ async function replaceQuizQuestions(
     explanation: string;
   }[],
 ) {
+  // Remove existing exam links first so we can safely delete the underlying questions.
+  const existingExams = await db
+    .select({ id: practiceExamsTable.id })
+    .from(practiceExamsTable)
+    .where(eq(practiceExamsTable.topicId, topicId));
+  for (const e of existingExams) {
+    await db
+      .delete(practiceExamQuestionsTable)
+      .where(eq(practiceExamQuestionsTable.examId, e.id));
+  }
   await db
     .delete(quizQuestionsTable)
     .where(eq(quizQuestionsTable.topicId, topicId));
   if (questions.length > 0) {
     await db.insert(quizQuestionsTable).values(
       questions.map((q) => ({ topicId, ...q })),
+    );
+  }
+}
+
+async function ensurePracticeExam(
+  topicId: number,
+  title: string,
+) {
+  // Make sure exactly one practice exam row exists for this topic, then link
+  // every quiz question for the topic to it (in deterministic order).
+  let [exam] = await db
+    .select()
+    .from(practiceExamsTable)
+    .where(eq(practiceExamsTable.topicId, topicId));
+  if (!exam) {
+    [exam] = await db
+      .insert(practiceExamsTable)
+      .values({ topicId, title, timeLimit: 4500, passingScore: 70 })
+      .returning();
+  }
+  await db
+    .delete(practiceExamQuestionsTable)
+    .where(eq(practiceExamQuestionsTable.examId, exam.id));
+  const qs = await db
+    .select({ id: quizQuestionsTable.id })
+    .from(quizQuestionsTable)
+    .where(eq(quizQuestionsTable.topicId, topicId));
+  if (qs.length > 0) {
+    await db.insert(practiceExamQuestionsTable).values(
+      qs.map((q, i) => ({
+        examId: exam.id,
+        questionId: q.id,
+        questionOrder: i,
+      })),
     );
   }
 }
@@ -2495,6 +2541,9 @@ async function main() {
       explanation: "BRIEF-A is the adult rating scale (BRI + MI). BRIEF-2 is the child/adolescent rating scale (BRI + ERI + CRI). Both are rating scales — not performance-based — administered as self- and informant-report.",
     },
   ]);
+
+  await ensurePracticeExam(objectiveId, "Objective Measures — Practice Exam");
+  await ensurePracticeExam(subjectiveId, "Subjective Measures & Rating Scales — Practice Exam");
 
   console.log("✓ Done seeding Assessment measure topics.");
 }
