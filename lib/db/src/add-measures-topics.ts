@@ -1632,13 +1632,13 @@ function buildStudyGuide(
     out.push("");
 
     // Quick reference table
-    out.push(`| Test | Format | Ages | What it does |`);
-    out.push(`|---|---|---|---|`);
+    out.push(`| Test | Age range | Measures |`);
+    out.push(`|---|---|---|`);
     for (const t of g.tests) {
       const m = byTest.get(t);
       if (!m) continue;
       out.push(
-        `| **${escapeTableCell(m.test)}** | ${escapeTableCell(m.format)} | ${escapeTableCell(m.ages)} | ${escapeTableCell(m.oneLine)} |`,
+        `| **${escapeTableCell(m.test)}** | ${escapeTableCell(m.ages)} | ${escapeTableCell(m.whatYoullSee.join(", "))} |`,
       );
     }
     out.push("");
@@ -1653,8 +1653,7 @@ function buildStudyGuide(
       out.push(m.oneLine);
       out.push("");
       out.push(`**At a glance**`);
-      out.push(`- **Format:** ${m.format}`);
-      out.push(`- **Ages:** ${m.ages}`);
+      out.push(`- **Age range:** ${m.ages}`);
       out.push("");
       out.push(`**What you'll see**`);
       for (const d of m.whatYoullSee) out.push(`- ${d}`);
