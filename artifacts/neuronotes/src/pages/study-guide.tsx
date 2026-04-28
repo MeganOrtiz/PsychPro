@@ -234,13 +234,31 @@ function MarkdownRenderer({ content }: { content: string }) {
       const { rows } = block;
       const headers = rows[0] ?? [];
       const bodyRows = rows.length > 2 ? rows.slice(2) : [];
+      const nowrapCols = new Set<number>();
+      headers.forEach((h, ci) => {
+        const label = h.trim().toLowerCase();
+        if (
+          label === "test" ||
+          label === "age" ||
+          label === "age range" ||
+          label === "ages" ||
+          label === "group"
+        ) {
+          nowrapCols.add(ci);
+        }
+      });
       elements.push(
         <div key={key++} className="overflow-x-auto my-4 rounded-lg border border-border">
           <table className="min-w-full border-collapse text-sm">
             <thead>
               <tr className="bg-muted">
                 {headers.map((h, ci) => (
-                  <th key={ci} className="px-4 py-2.5 text-left font-semibold text-foreground border-b border-border">
+                  <th
+                    key={ci}
+                    className={`px-4 py-2.5 text-left font-semibold text-foreground border-b border-border ${
+                      nowrapCols.has(ci) ? "whitespace-nowrap w-px" : ""
+                    }`}
+                  >
                     <InlineMarkdown text={h} />
                   </th>
                 ))}
@@ -250,7 +268,12 @@ function MarkdownRenderer({ content }: { content: string }) {
               {bodyRows.map((row, ri) => (
                 <tr key={ri} className={ri % 2 === 0 ? "bg-card" : "bg-muted/20"}>
                   {row.map((cell, ci) => (
-                    <td key={ci} className="px-4 py-2.5 text-foreground border-b border-border/50 align-top">
+                    <td
+                      key={ci}
+                      className={`px-4 py-2.5 text-foreground border-b border-border/50 align-top ${
+                        nowrapCols.has(ci) ? "whitespace-nowrap w-px" : ""
+                      }`}
+                    >
                       <InlineMarkdown text={cell} />
                     </td>
                   ))}
