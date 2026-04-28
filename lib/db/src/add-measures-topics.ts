@@ -39,7 +39,7 @@ const objectiveMeasures: MeasureRow[] = [
       "Processing Speed",
     ],
     scoresToKnow: [
-      "**Full Scale IQ (FSIQ)** — overall intellectual ability derived from seven primary subtests; the headline summary score",
+      "**Full Scale IQ (FSIQ)** — overall intellectual ability across the five primary indices; the headline summary score",
       "**Verbal Comprehension Index (VCI)** — verbal reasoning, vocabulary, and acquired word knowledge",
       "**Visual Spatial Index (VSI)** — visual perception, spatial reasoning, and the ability to construct or manipulate visual designs",
       "**Fluid Reasoning Index (FRI)** — novel problem-solving and inductive / quantitative reasoning with minimal reliance on prior knowledge",
@@ -47,10 +47,10 @@ const objectiveMeasures: MeasureRow[] = [
       "**Processing Speed Index (PSI)** — speed and efficiency of simple visual scanning and graphomotor responding",
       "**General Ability Index (GAI)** — VCI + VSI + FRI; an estimate of overall ability that pulls less from working memory and processing speed",
       "**Cognitive Proficiency Index (CPI)** — WMI + PSI; reflects the efficiency with which cognitive material is registered and acted on",
-      "**Nonverbal Index (NVI)** — overall ability estimate based on subtests with reduced verbal demands; useful when language is a confound",
+      "**Nonverbal Index (NVI)** — overall ability estimate with reduced verbal demands; useful when language is a confound",
       "**Nonmotor Index (NMI)** — overall ability with minimal motor and graphomotor demands",
       "**Verbal Expanded Crystallized Index (VECI)** — broader sample of acquired verbal knowledge than VCI alone",
-      "**Expanded Fluid Index (EFI)** — broader fluid-reasoning composite drawing on additional reasoning subtests",
+      "**Expanded Fluid Index (EFI)** — broader sample of fluid-reasoning performance",
       "**Quantitative Reasoning Index (QRI)** — numerical and quantitative reasoning",
       "**Expanded Processing Speed Index (EPSI)** — broader sample of processing-speed performance",
       "**Multidomain Reasoning Plus Speed Index (MRPSI)** — reasoning under speeded conditions",
@@ -83,10 +83,10 @@ const objectiveMeasures: MeasureRow[] = [
       "**Fluid Reasoning Index (FRI)** — abstract problem-solving and inductive reasoning with novel material",
       "**Working Memory Index (WMI)** — short-term storage and mental manipulation of auditory information",
       "**Processing Speed Index (PSI)** — speed and accuracy of simple visual processing under time limits",
-      "**General Ability Index (GAI)** — overall ability estimate using only verbal and reasoning subtests; less affected by working memory and processing speed",
+      "**General Ability Index (GAI)** — overall ability estimate from the verbal and reasoning indices; less affected by working memory and processing speed",
       "**Cognitive Proficiency Index (CPI)** — efficiency composite combining working memory and processing speed",
       "**Nonverbal Index (NVI)** — overall ability with reduced verbal demands",
-      "**Expanded Fluid Index (EFI)** — broader fluid-reasoning composite drawing on additional reasoning subtests",
+      "**Expanded Fluid Index (EFI)** — broader sample of fluid-reasoning performance",
       "**Quantitative Reasoning Index (QRI)** — numerical and quantitative reasoning",
     ],
   },
@@ -104,7 +104,7 @@ const objectiveMeasures: MeasureRow[] = [
       "Processing Speed",
     ],
     scoresToKnow: [
-      "**Full Scale IQ (FSIQ)** — overall intellectual ability across the available age-appropriate subtests",
+      "**Full Scale IQ (FSIQ)** — overall intellectual ability across the available age-appropriate indices",
       "**General Ability Index (GAI)** — verbal and visual-spatial composite, less affected by working memory and processing speed",
       "**Verbal Comprehension Index (VCI)** — early vocabulary, word knowledge, and verbal reasoning (all ages)",
       "**Visual Spatial Index (VSI)** — visual perception and basic spatial reasoning (all ages)",
@@ -122,10 +122,10 @@ const objectiveMeasures: MeasureRow[] = [
     ages: "6:0 – 90:11",
     whatYoullSee: ["Verbal Comprehension", "Perceptual Reasoning"],
     scoresToKnow: [
-      "**Full Scale IQ — 2 subtests (FSIQ-2)** — quickest estimate of overall ability (Vocabulary + Matrix Reasoning)",
-      "**Full Scale IQ — 4 subtests (FSIQ-4)** — more reliable estimate adding Similarities and Block Design",
-      "**Verbal Comprehension Index (VCI)** — verbal reasoning and word knowledge (Vocabulary, Similarities)",
-      "**Perceptual Reasoning Index (PRI)** — visual-spatial and fluid reasoning (Block Design, Matrix Reasoning)",
+      "**Full Scale IQ — 2 (FSIQ-2)** — quickest estimate of overall ability",
+      "**Full Scale IQ — 4 (FSIQ-4)** — more reliable estimate of overall ability",
+      "**Verbal Comprehension Index (VCI)** — verbal reasoning and word knowledge",
+      "**Perceptual Reasoning Index (PRI)** — visual-spatial and fluid reasoning",
     ],
     rememberThis: "Pick FSIQ-2 for a fast screen; FSIQ-4 when you need a more dependable estimate.",
   },
@@ -220,7 +220,7 @@ const objectiveMeasures: MeasureRow[] = [
       "**Visuospatial Processing domain** — visual discrimination, geometric reasoning, and route finding",
       "**Social Perception domain** — recognition of facial affect and theory of mind",
     ],
-    rememberThis: "There is no global IQ-equivalent — interpret at the domain and subtest level.",
+    rememberThis: "There is no global IQ-equivalent — interpret at the domain level.",
   },
   {
     test: "WJ V",
@@ -234,7 +234,7 @@ const objectiveMeasures: MeasureRow[] = [
     ],
     scoresToKnow: [
       "**General Intellectual Ability (GIA)** — overall cognitive estimate from the cognitive battery",
-      "**Brief Intellectual Ability (BIA)** — quick three-subtest estimate of overall ability",
+      "**Brief Intellectual Ability (BIA)** — quick estimate of overall ability",
       "**Comprehension-Knowledge cluster** — vocabulary, general knowledge, and verbal reasoning",
       "**Fluid Reasoning cluster** — novel problem solving and inductive / deductive reasoning",
       "**Short-Term Working Memory cluster** — short-term storage and mental manipulation",
@@ -293,7 +293,7 @@ const objectiveMeasures: MeasureRow[] = [
     ],
     scoresToKnow: [
       "**School Readiness Composite (SRC)** — overall readiness across the early-concept domains assessed",
-      "**Subtest scores** — Colors, Letters / Sounds, Numbers / Counting, Sizes / Comparisons, and Shapes",
+      "**Domain scores** — Colors, Letters / Sounds, Numbers / Counting, Sizes / Comparisons, and Shapes",
     ],
   },
   {
@@ -366,7 +366,7 @@ const objectiveMeasures: MeasureRow[] = [
       "Attention / Concentration",
     ],
     scoresToKnow: [
-      "**Composite Memory Index (CMI)** — overall memory composite across verbal and nonverbal subtests",
+      "**Composite Memory Index (CMI)** — overall memory composite across verbal and nonverbal material",
       "**Verbal Memory Index (VMI)** — list, story, and paired-associate verbal learning",
       "**Nonverbal Memory Index (NMI)** — recall of visual designs, locations, and faces",
       "**Delayed Recall Index (DRI)** — retention of learned material after a delay",
@@ -466,7 +466,7 @@ const objectiveMeasures: MeasureRow[] = [
       "**Phonological Index** — decoding, sound blending, and other sound-based reading processes (phonological dyslexia profile)",
       "**Surface Index** — orthographic / sight-word recognition and spelling (surface dyslexia profile)",
       "**Mixed Index** — combined breakdown across phonological and orthographic systems",
-      "**Subtest scores** — pinpoint specific reading processes for intervention planning",
+      "**Process scores** — finer-grained scores that pinpoint specific reading processes for intervention planning",
     ],
   },
   {
@@ -485,7 +485,7 @@ const objectiveMeasures: MeasureRow[] = [
       "**Procedural Index** — calculation, computation, and execution of math procedures",
       "**Verbal Index** — verbal mathematical reasoning, word problems, and language demands of math",
       "**Semantic Index** — number sense, magnitude estimation, and mathematical concepts",
-      "**Subtest scores** — pinpoint specific math processes for intervention planning",
+      "**Process scores** — finer-grained scores that pinpoint specific math processes for intervention planning",
     ],
   },
   {
@@ -565,7 +565,6 @@ const objectiveMeasures: MeasureRow[] = [
     ],
     scoresToKnow: [
       "**At-Risk Quotient (ARQ)** — overall risk indicator for early reading difficulty",
-      "**Subtest scores** — Rapid Naming, Bead Threading, Phonological Discrimination, Postural Stability, Rhyme, Sound Order, and Letter Knowledge",
     ],
   },
   {
@@ -584,7 +583,6 @@ const objectiveMeasures: MeasureRow[] = [
     ],
     scoresToKnow: [
       "**Screening Score** — overall At-Risk / Not At-Risk classification",
-      "**Subtest scores** — Rapid Naming, Bead Threading, Phonemic Segmentation, Backwards Digit Span, Nonsense Passage Reading, and Spoonerisms",
     ],
   },
   {
@@ -603,7 +601,6 @@ const objectiveMeasures: MeasureRow[] = [
     ],
     scoresToKnow: [
       "**Screening Score** — overall At-Risk / Not At-Risk classification",
-      "**Subtest scores** — Rapid Naming, Bead Threading, Phonemic Segmentation, Backwards Digit Span, Nonsense Passage Reading, and Spoonerisms",
     ],
   },
   {
@@ -645,7 +642,7 @@ const objectiveMeasures: MeasureRow[] = [
     ],
     scoresToKnow: [
       "**Oral Language Index (OLI)** — overall composite of spoken-language ability",
-      "**Core Language Index** — primary composite from the core subtests",
+      "**Core Language Index** — primary composite of core spoken-language ability",
       "**Lexical / Semantic Index** — word knowledge and meaning",
       "**Syntactic Index** — sentence structure and grammar",
       "**Supralinguistic Index** — higher-order language including inference, ambiguity, and figurative language",
@@ -705,7 +702,7 @@ const objectiveMeasures: MeasureRow[] = [
     ],
     scoresToKnow: [
       "**Pragmatic Language Index** — overall composite of functional and social language use",
-      "**Subtest scores** — Utterance, Discourse, Nonliteral Language, Nonverbal Communication, and Social Relations",
+      "**Domain scores** — Utterance, Discourse, Nonliteral Language, Nonverbal Communication, and Social Relations",
     ],
   },
   {
@@ -756,7 +753,7 @@ const objectiveMeasures: MeasureRow[] = [
       "**Verbal Fluency** — generating words by letter or category, including switching; measures generative fluency",
       "**Word Context** — inferring word meanings from sentence clues; measures verbal abstraction",
     ],
-    rememberThis: "There is no global summary score — interpret each subtest's scaled scores individually and look at the pattern across tasks.",
+    rememberThis: "There is no global summary score — interpret each task's scaled scores individually and look at the pattern across tasks.",
   },
   {
     test: "WCST",
@@ -837,7 +834,7 @@ const objectiveMeasures: MeasureRow[] = [
       "**Selective Attention** — focusing on a target while ignoring distractors",
       "**Sustained Attention** — maintaining attention over time on a low-stimulation task",
       "**Attentional Switching** — flexibility in shifting attention between targets",
-      "**Subtest scores** — derived from everyday-style tasks like map searches, telephone search, and elevator counting",
+      "**Task scores** — derived from everyday-style tasks tapping each attention domain",
     ],
   },
   {
@@ -853,18 +850,18 @@ const objectiveMeasures: MeasureRow[] = [
       "Response Inhibition",
     ],
     scoresToKnow: [
-      "**Overall Attention Score** — composite estimate across the attention subtests",
-      "**Selective Attention** — Sky Search and similar tasks tapping focused attention",
-      "**Sustained Attention** — Score!, Walk/Don't Walk, and Code Transmission tasks",
-      "**Attentional Control / Switching** — Creature Counting and Opposite Worlds tasks",
-      "**Response Inhibition** — Walk/Don't Walk taps the ability to withhold a prepotent response",
+      "**Overall Attention Score** — composite estimate across the attention domains",
+      "**Selective Attention** — focusing on a target while ignoring competing visual information",
+      "**Sustained Attention** — maintaining attention over time on a low-stimulation task",
+      "**Attentional Control / Switching** — flexibly shifting attention between rules or targets",
+      "**Response Inhibition** — withholding a prepotent motor response on cue",
     ],
   },
   {
     test: "BEERY (VMI)",
     fullName: "Beery-Buktenica Developmental Test of Visual-Motor Integration",
     format: "Performance",
-    oneLine: "Copy-the-design test of visual-motor integration with two supplemental subtests.",
+    oneLine: "Copy-the-design test of visual-motor integration with supplemental visual perception and motor coordination components.",
     ages: "2:0 – 18:11; 19:0 – 100:11",
     whatYoullSee: [
       "Visual-Motor Integration (copy designs)",
@@ -876,13 +873,13 @@ const objectiveMeasures: MeasureRow[] = [
       "**Visual Perception Standard Score** — discrimination of forms without a motor component",
       "**Motor Coordination Standard Score** — tracing precision without a perceptual judgment component",
     ],
-    rememberThis: "Comparing VMI to its supplemental subtests helps tell whether a low VMI is driven by visual perception, motor control, or the integration of the two.",
+    rememberThis: "Comparing the VMI score to the supplemental Visual Perception and Motor Coordination scores helps tell whether a low VMI is driven by perception, motor control, or the integration of the two.",
   },
   {
     test: "WRAVMA",
     fullName: "Wide Range Assessment of Visual Motor Abilities",
     format: "Performance",
-    oneLine: "Visual-motor battery with separate drawing, matching, and pegboard subtests.",
+    oneLine: "Visual-motor battery with separate drawing, matching, and pegboard tasks.",
     ages: "3:0 – 17:11",
     whatYoullSee: ["Drawing", "Matching", "Pegboard"],
     scoresToKnow: [
@@ -1844,7 +1841,7 @@ function buildStudyGuide(
       for (const s of m.scoresToKnow) out.push(`- ${s}`);
       out.push("");
       if (m.rememberThis) {
-        out.push(`**Remember this**`);
+        out.push(`**Key notes**`);
         out.push(`- ${m.rememberThis}`);
         out.push("");
       }
@@ -1946,8 +1943,8 @@ async function main() {
 
   await replaceFlashcards(objectiveId, [
     { question: "What does the WAIS-5 measure and for what age range?", answer: "The Wechsler Adult Intelligence Scale, Fifth Edition is a broadband cognitive ability measure for adolescents and adults (16:0 – 90:11). It is co-normed with the WMS-5 and yields a Full Scale IQ plus five primary indices: VCI, VSI, FRI, WMI, and PSI.", difficulty: "easy" },
-    { question: "What are the five primary index scores on the WISC-V?", answer: "Verbal Comprehension Index (VCI), Visual Spatial Index (VSI), Fluid Reasoning Index (FRI), Working Memory Index (WMI), and Processing Speed Index (PSI). Together with seven primary subtests they generate the Full Scale IQ.", difficulty: "easy" },
-    { question: "How does the D-KEFS Color-Word Interference subtest assess executive function?", answer: "It is a Stroop-style task that measures inhibition of automatic responses — the examinee must suppress reading the color word and instead name the ink color, indexing prepotent response inhibition.", difficulty: "medium" },
+    { question: "What are the five primary index scores on the WISC-V?", answer: "Verbal Comprehension Index (VCI), Visual Spatial Index (VSI), Fluid Reasoning Index (FRI), Working Memory Index (WMI), and Processing Speed Index (PSI). Together they combine into the Full Scale IQ.", difficulty: "easy" },
+    { question: "How does the D-KEFS Color-Word Interference task assess executive function?", answer: "It is a Stroop-style task that measures inhibition of automatic responses — the examinee must suppress reading the color word and instead name the ink color, indexing prepotent response inhibition.", difficulty: "medium" },
     { question: "What is the ADOS-2 used for and how is severity quantified?", answer: "The Autism Diagnostic Observation Schedule, Second Edition is a semi-structured observation for autism spectrum disorder. Severity is quantified with the Calibrated Severity Score (CSS) for Social Affect and for Restricted / Repetitive Behaviors. It includes a Toddler Module plus Modules 1–4. Module choice is driven by language level, not age.", difficulty: "medium" },
     { question: "What is the Test of Premorbid Functioning (ToPF) used for?", answer: "It estimates pre-injury intellectual functioning by combining word reading performance with demographic variables to generate a Predicted FSIQ and Predicted GAI with confidence intervals — useful for benchmarking current performance against expected baseline.", difficulty: "medium" },
     { question: "What is the RBANS designed for?", answer: "The Repeatable Battery for the Assessment of Neuropsychological Status is a brief broadband cognitive measure (12:0 – 89:11), often used with older adults. It yields a Total Scale Index plus domain indices for Immediate Memory, Visuospatial / Constructional, Language, Attention, and Delayed Memory. Parallel forms make it the go-to for serial assessment.", difficulty: "easy" },
@@ -1956,7 +1953,7 @@ async function main() {
     { question: "What broad cognitive abilities does the WJ V Cognitive Battery measure?", answer: "Comprehension-Knowledge (vocabulary and general knowledge), Fluid Reasoning (novel problem-solving), Short-Term Working Memory, Processing Speed, Auditory Processing (analyzing speech sounds), Long-Term Storage (encoding new information), Retrieval Fluency (speed of retrieving stored information), and Visual Processing.", difficulty: "hard" },
     { question: "What is the WCST used to assess?", answer: "The Wisconsin Card Sorting Task assesses executive functioning — particularly abstract reasoning and cognitive shifting. Key scores include Categories Completed, Perseverative Responses, Perseverative Errors, Failure to Maintain Set, and Conceptual Level Responses.", difficulty: "medium" },
     { question: "What do the WIAT-III and KTEA-3 measure?", answer: "Both are comprehensive academic achievement batteries. The WIAT-III (4:0 – 50:11) covers Oral Language, Reading, Written Expression, and Mathematics with a Total Achievement Composite. The KTEA-3 (4:6 – 25:11) yields an Academic Skills Battery composite plus Reading, Math, Written Language, and Oral Language composites.", difficulty: "medium" },
-    { question: "What does the BEERY VMI measure and what subtests are included?", answer: "The Beery-Buktenica Developmental Test of Visual-Motor Integration measures visual-motor abilities and includes three subtests: Visual-Motor Integration (integration of visual and motor skills), Visual Perception (visual perceptual skills), and Motor Coordination (motor control).", difficulty: "easy" },
+    { question: "What does the BEERY VMI measure?", answer: "The Beery-Buktenica Developmental Test of Visual-Motor Integration measures visual-motor abilities. The main score reflects integration of visual perception with motor control, and supplemental Visual Perception and Motor Coordination scores help isolate which component is driving any difficulty.", difficulty: "easy" },
   ]);
 
   await replaceQuizQuestions(objectiveId, [
@@ -1970,7 +1967,7 @@ async function main() {
       explanation: "The Wechsler Adult Intelligence Scale, Fifth Edition (WAIS-5) is co-normed with the WMS-5 and covers ages 16:0 – 90:11. WISC-V covers children, WPPSI-IV covers preschoolers, and WASI-II is a brief screen.",
     },
     {
-      question: "Which D-KEFS subtest most directly measures inhibition of automatic responses?",
+      question: "Which D-KEFS task most directly measures inhibition of automatic responses?",
       optionA: "Tower",
       optionB: "Trail Making",
       optionC: "Color-Word Interference",
