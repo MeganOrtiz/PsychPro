@@ -11,6 +11,18 @@ import type Stripe from "stripe";
 
 const app: Express = express();
 
+// Deployment assumption: this server runs behind exactly ONE trusted reverse
+// proxy (the Replit front-end proxy in development and in `replit deploy`).
+// With `trust proxy = 1`, Express derives `req.ip` from the X-Forwarded-For
+// chain by trusting only the rightmost (proxy-appended) entry, so client-
+// supplied X-Forwarded-For values cannot spoof the source IP. This is
+// required for per-IP rate limiting on /api/client-errors to be
+// tamper-resistant. If this service is ever placed behind additional proxies
+// (e.g. a CDN in front of Replit), bump this number to match the new hop
+// count, otherwise the rate limiter and any other req.ip-based logic will
+// see the wrong client address.
+app.set("trust proxy", 1);
+
 app.use(
   pinoHttp({
     logger,

@@ -1,5 +1,6 @@
 import { Router, type Request, type Response, type IRouter } from "express";
 import { getAuth } from "@clerk/express";
+import { clientErrorsRateLimit } from "../middlewares/clientErrorsRateLimit";
 
 const router: IRouter = Router();
 
@@ -12,7 +13,7 @@ function asString(value: unknown, max = MAX_FIELD_LENGTH): string | undefined {
   return trimmed.length > max ? trimmed.slice(0, max) : trimmed;
 }
 
-router.post("/client-errors", (req: Request, res: Response): void => {
+router.post("/client-errors", clientErrorsRateLimit, (req: Request, res: Response): void => {
   const body = (req.body ?? {}) as Record<string, unknown>;
 
   const message = asString(body.message) ?? "Unknown client error";
