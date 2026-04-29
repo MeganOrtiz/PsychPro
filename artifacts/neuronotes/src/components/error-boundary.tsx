@@ -1,6 +1,7 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { reportClientError } from "@/lib/error-reporter";
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -11,35 +12,14 @@ interface ErrorBoundaryState {
   error: Error | null;
 }
 
-const REPORT_ENDPOINT = "/api/client-errors";
-
-function reportError(error: Error, info: ErrorInfo): void {
-  const payload = {
+function reportBoundaryError(error: Error, info: ErrorInfo): void {
+  reportClientError({
     message: error.message || String(error),
     stack: error.stack,
-    componentStack: info.componentStack,
+    componentStack: info.componentStack ?? undefined,
     url: typeof window !== "undefined" ? window.location.href : undefined,
     userAgent: typeof navigator !== "undefined" ? navigator.userAgent : undefined,
-  };
-
-  try {
-    const body = JSON.stringify(payload);
-    if (typeof navigator !== "undefined" && typeof navigator.sendBeacon === "function") {
-      const blob = new Blob([body], { type: "application/json" });
-      const ok = navigator.sendBeacon(REPORT_ENDPOINT, blob);
-      if (ok) return;
-    }
-    void fetch(REPORT_ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body,
-      keepalive: true,
-    }).catch(() => {
-      // Swallow — we already crashed, nothing more to do.
-    });
-  } catch {
-    // Reporting must never throw.
-  }
+  });
 }
 
 export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
@@ -53,7 +33,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     if (typeof console !== "undefined") {
       console.error("ErrorBoundary caught an error:", error, info);
     }
-    reportError(error, info);
+    reportBoundaryError(error, info);
   }
 
   reset = (): void => {
