@@ -395,21 +395,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/SubscriptionStatus"
 
-  /subscription/invoices:
-    get:
-      operationId: getSubscriptionInvoices
-      tags: [subscription]
-      summary: Get the user's recent Stripe invoices
-      responses:
-        "200":
-          description: List of recent invoices (most recent first)
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Invoice"
-
   /subscription/portal:
     post:
       operationId: createPortalSession
@@ -817,31 +802,3 @@ components:
       required:
         - status
 
-    Invoice:
-      type: object
-      properties:
-        id:
-          type: string
-        number:
-          type: ["string", "null"]
-        created:
-          type: string
-        amountPaid:
-          type: integer
-        amountDue:
-          type: integer
-        currency:
-          type: string
-        status:
-          type: string
-        hostedInvoiceUrl:
-          type: ["string", "null"]
-        invoicePdf:
-          type: ["string", "null"]
-      required:
-        - id
-        - created
-        - amountPaid
-        - amountDue
-        - currency
-        - status

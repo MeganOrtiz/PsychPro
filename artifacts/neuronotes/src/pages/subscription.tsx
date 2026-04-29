@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useSearch } from "wouter";
-import { Check, Zap, Crown, Loader2, BookMarked, Sparkles, Settings, FileText, Download, Receipt } from "lucide-react";
-import { useGetSubscriptionPlans, useGetSubscriptionStatus, useCreateCheckoutSession, useCreatePortalSession, useGetSubscriptionInvoices, type Invoice } from "@workspace/api-client-react";
+import { Check, Zap, Crown, Loader2, BookMarked, Sparkles, Settings } from "lucide-react";
+import { useGetSubscriptionPlans, useGetSubscriptionStatus, useCreateCheckoutSession, useCreatePortalSession } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
@@ -40,86 +40,6 @@ function formatPrice(amount: number, currency: string) {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: currency.toUpperCase() }).format(amount / 100);
 }
 
-const INVOICE_STATUS_STYLES: Record<string, string> = {
-  paid: "bg-green-100 text-green-800 dark:bg-green-950/40 dark:text-green-300",
-  open: "bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300",
-  uncollectible: "bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300",
-  void: "bg-muted text-muted-foreground",
-  draft: "bg-muted text-muted-foreground",
-};
-
-function InvoiceHistory({ invoices, loading, hasActiveSub }: { invoices: Invoice[] | undefined; loading: boolean; hasActiveSub: boolean }) {
-  // Don't show the section to users who have never had a subscription and
-  // therefore have no payment history to surface.
-  if (!loading && (!invoices || invoices.length === 0)) {
-    return null;
-  }
-
-  return (
-    <div className="bg-card border border-border rounded-xl p-5 mb-6" data-testid="invoice-history">
-      <div className="flex items-center gap-2 mb-4">
-        <Receipt className="w-4 h-4 text-primary" />
-        <span className="font-semibold text-foreground">Payment history</span>
-      </div>
-
-      {loading ? (
-        <div className="space-y-2">
-          <Skeleton className="h-12 rounded-lg" />
-          <Skeleton className="h-12 rounded-lg" />
-          <Skeleton className="h-12 rounded-lg" />
-        </div>
-      ) : (
-        <ul className="divide-y divide-border">
-          {invoices!.map((inv) => {
-            const amount = inv.status === "paid" ? inv.amountPaid : inv.amountDue;
-            const statusClass = INVOICE_STATUS_STYLES[inv.status] ?? "bg-muted text-muted-foreground";
-            return (
-              <li key={inv.id} className="flex items-center justify-between gap-3 py-3" data-testid={`invoice-row-${inv.id}`}>
-                <div className="flex items-center gap-3 min-w-0">
-                  <FileText className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium text-foreground truncate">
-                      {new Date(inv.created).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" })}
-                    </p>
-                    {inv.number && (
-                      <p className="text-xs text-muted-foreground truncate">#{inv.number}</p>
-                    )}
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 flex-shrink-0">
-                  <span className="text-sm font-semibold text-foreground tabular-nums">
-                    {formatPrice(amount, inv.currency)}
-                  </span>
-                  <Badge variant="secondary" className={`capitalize ${statusClass}`}>
-                    {inv.status}
-                  </Badge>
-                  {inv.invoicePdf || inv.hostedInvoiceUrl ? (
-                    <a
-                      href={(inv.invoicePdf ?? inv.hostedInvoiceUrl) as string}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center text-primary hover:text-primary/80 p-1.5 rounded-md hover:bg-muted"
-                      aria-label="Download invoice PDF"
-                      data-testid={`invoice-download-${inv.id}`}
-                    >
-                      <Download className="w-4 h-4" />
-                    </a>
-                  ) : null}
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-      )}
-      {!hasActiveSub && invoices && invoices.length > 0 && (
-        <p className="text-xs text-muted-foreground mt-3">
-          Showing your most recent invoices.
-        </p>
-      )}
-    </div>
-  );
-}
-
 type StatusData = { status: string; tier?: string; subscriptionId?: string; currentPeriodEnd?: string };
 
 export default function SubscriptionPage() {
@@ -127,9 +47,6 @@ export default function SubscriptionPage() {
   const search = useSearch();
   const { data: plans, isLoading: plansLoading } = useGetSubscriptionPlans();
   const { data: status, isLoading: statusLoading } = useGetSubscriptionStatus();
-  // The Stripe Customer Portal opens in a full-page redirect, so returning
-  // to /subscription remounts this page and the query refetches on mount.
-  const { data: invoices, isLoading: invoicesLoading } = useGetSubscriptionInvoices();
   const createCheckout = useCreateCheckoutSession();
   const createPortal = useCreatePortalSession();
 
@@ -226,8 +143,6 @@ export default function SubscriptionPage() {
           </Button>
         </div>
       )}
-
-      <InvoiceHistory invoices={invoices} loading={invoicesLoading} hasActiveSub={isPro || isScholar} />
 
       <div className="space-y-5">
         <div className="bg-card border border-border rounded-xl p-5">

@@ -23,7 +23,6 @@ import type {
   DashboardSummary,
   Flashcard,
   HealthStatus,
-  Invoice,
   Leaderboard,
   PortalSessionResponse,
   PracticeExam,
@@ -1748,82 +1747,6 @@ export function useGetSubscriptionStatus<
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetSubscriptionStatusQueryOptions(options);
-
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
-
-  return { ...query, queryKey: queryOptions.queryKey };
-}
-
-/**
- * @summary Get the user's recent Stripe invoices
- */
-export const getGetSubscriptionInvoicesUrl = () => {
-  return `/api/subscription/invoices`;
-};
-
-export const getSubscriptionInvoices = async (
-  options?: RequestInit,
-): Promise<Invoice[]> => {
-  return customFetch<Invoice[]>(getGetSubscriptionInvoicesUrl(), {
-    ...options,
-    method: "GET",
-  });
-};
-
-export const getGetSubscriptionInvoicesQueryKey = () => {
-  return [`/api/subscription/invoices`] as const;
-};
-
-export const getGetSubscriptionInvoicesQueryOptions = <
-  TData = Awaited<ReturnType<typeof getSubscriptionInvoices>>,
-  TError = ErrorType<unknown>,
->(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof getSubscriptionInvoices>>,
-    TError,
-    TData
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
-
-  const queryKey =
-    queryOptions?.queryKey ?? getGetSubscriptionInvoicesQueryKey();
-
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof getSubscriptionInvoices>>
-  > = ({ signal }) => getSubscriptionInvoices({ signal, ...requestOptions });
-
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof getSubscriptionInvoices>>,
-    TError,
-    TData
-  > & { queryKey: QueryKey };
-};
-
-export type GetSubscriptionInvoicesQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getSubscriptionInvoices>>
->;
-export type GetSubscriptionInvoicesQueryError = ErrorType<unknown>;
-
-/**
- * @summary Get the user's recent Stripe invoices
- */
-
-export function useGetSubscriptionInvoices<
-  TData = Awaited<ReturnType<typeof getSubscriptionInvoices>>,
-  TError = ErrorType<unknown>,
->(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof getSubscriptionInvoices>>,
-    TError,
-    TData
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getGetSubscriptionInvoicesQueryOptions(options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;

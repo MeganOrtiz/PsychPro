@@ -13,7 +13,6 @@ export * from "./dashboardSummary";
 export * from "./flashcard";
 export * from "./flashcardDifficulty";
 export * from "./healthStatus";
-export * from "./invoice";
 export * from "./leaderboard";
 export * from "./leaderboardEntry";
 export * from "./portalSessionResponse";
