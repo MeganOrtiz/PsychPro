@@ -5,16 +5,29 @@ import { sql } from "drizzle-orm";
 async function seed() {
   console.log("Seeding PsychPro from course notes...");
 
-  // Idempotent re-seed: TRUNCATE clears content tables (topics, flashcards,
-  // quiz_questions, study_guides, practice_exams, practice_exam_questions)
-  // so re-running won't duplicate rows. CASCADE will also clear `progress`
-  // rows because progress.topic_id has a FK to topics — this wipes user
-  // progress, so do NOT re-run this against a production DB that already has
-  // active users without warning. For initial production seeding (empty DB),
-  // this is safe. The `users` table is never touched.
-  await db.execute(sql`TRUNCATE practice_exam_questions, practice_exams, study_guides, quiz_questions, flashcards, progress, topics RESTART IDENTITY CASCADE`);
+  // Safe re-seed: this script is fully idempotent and preserves user data
+  // (users, progress, quiz_attempts, exam_attempts, custom_decks, feedback).
+  //
+  // Strategy:
+  //  1. Topics are upserted by their unique `name`. Existing topic rows keep
+  //     their `id`, so foreign keys from `progress`, `quiz_attempts`, and
+  //     `exam_attempts` remain valid after a content refresh.
+  //  2. Child content tables (flashcards, quiz_questions, study_guides,
+  //     practice_exams, practice_exam_questions) are wiped and re-inserted.
+  //     None of these are referenced by user-data tables, so it is safe to
+  //     replace them wholesale on every run. We TRUNCATE the set together
+  //     (without CASCADE) so any unexpected new FK from user data would fail
+  //     loudly instead of silently destroying data.
+  //
+  // Caveat: changing the `name` of an existing topic in this file is treated
+  // as a brand-new topic (the old row will become orphaned, and any progress
+  // on it stays attached to the old `id`). Renames should be performed with a
+  // dedicated migration script, not by editing this file in place.
+  await db.execute(
+    sql`TRUNCATE practice_exam_questions, practice_exams, study_guides, quiz_questions, flashcards RESTART IDENTITY`,
+  );
 
-  const topics = await db.insert(topicsTable).values([
+  const topicSeed = [
     { name: "Neuropsychology Overview", category: "Foundations", description: "Introduction to neuropsychology, brain-behavior relationships, and neuropsychological assessment." },
     { name: "Cell Biology & Neuron Anatomy", category: "Foundations", description: "Neuronal structure, membrane potential, action potentials, ion channels, and basic cellular neuroscience." },
     { name: "Neurotransmitters & Synaptic Transmission", category: "Foundations", description: "Neurotransmitter types, synaptic mechanisms, receptor classes, and pharmacological targets." },
@@ -30,7 +43,22 @@ async function seed() {
     { name: "Language Processing & Aphasia", category: "Neuropsychology", description: "Language components, aphasia types, brain-language pathways, and speech disorders." },
     { name: "Apraxia & Agnosia", category: "Neuropsychology", description: "Motor planning disorders, perceptual recognition failures, types, and neuroanatomical bases." },
     { name: "Neurocognitive Disorders", category: "Clinical", description: "Alzheimer's, Parkinson's, Lewy body dementia, Huntington's, TBI, vascular dementia, HIV neurocognition, and capacity assessment." },
-  ]).returning();
+  ];
+
+  // Upsert each topic by `name` (the unique key). Existing rows keep their
+  // `id`, so user `progress` rows still point at the correct topic after a
+  // content refresh. New names get inserted as fresh rows.
+  const topics = await db
+    .insert(topicsTable)
+    .values(topicSeed)
+    .onConflictDoUpdate({
+      target: topicsTable.name,
+      set: {
+        category: sql`excluded.category`,
+        description: sql`excluded.description`,
+      },
+    })
+    .returning();
 
   const T: Record<string, number> = {};
   topics.forEach(t => { T[t.name] = t.id; });

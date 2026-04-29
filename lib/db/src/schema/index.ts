@@ -26,7 +26,7 @@ export type User = typeof usersTable.$inferSelect;
 
 export const topicsTable = pgTable("topics", {
   id: serial("id").primaryKey(),
-  name: text("name").notNull(),
+  name: text("name").notNull().unique(),
   category: text("category").notNull(),
   description: text("description").notNull(),
 });

@@ -115,11 +115,43 @@ pnpm --filter @workspace/db run push     # creates all tables
 pnpm --filter @workspace/db run seed     # inserts all study content
 ```
 
-The seed is idempotent for content tables — re-running won't create duplicate
-rows because it `TRUNCATE`s and re-inserts. **It does not touch the `users`
-table**, so user accounts survive a re-seed. ⚠️ It *does* `TRUNCATE` the
-`progress` table because `progress.topic_id` cascades from `topics`. Avoid
-re-seeding once real users have started using the live site.
+The seed is fully idempotent and **safe to re-run on a live database**. It
+preserves all user data:
+
+- **`users`**, **`progress`**, **`quiz_attempts`**, **`exam_attempts`**,
+  **`custom_decks`** (and their child custom-content tables), and **`feedback`**
+  are never touched.
+- **`topics`** are upserted by their unique `name`, so existing topic IDs are
+  preserved. That means rows in `progress`, `quiz_attempts`, and `exam_attempts`
+  (which reference `topics.id`) stay valid across re-seeds.
+- **`flashcards`**, **`quiz_questions`**, **`study_guides`**, **`practice_exams`**,
+  and **`practice_exam_questions`** are wiped (`TRUNCATE … RESTART IDENTITY`,
+  no `CASCADE`) and re-inserted. No user-data table references these IDs, so a
+  full replacement is safe.
+
+⚠️ **Always run `pnpm --filter @workspace/db run push` before reseeding.**
+Topic upserts depend on the `topics.name` unique constraint; against an older
+schema that doesn't have it yet, the seed will fail with `there is no unique or
+exclusion constraint matching the ON CONFLICT specification`. The push step in
+the commands above takes care of this on a fresh deployment, but is also
+required the first time you reseed an environment that pre-dates this change.
+
+**Two operations to avoid doing through this script:**
+
+- **Renaming an existing topic.** Because upserts key on `name`, changing the
+  value of `name` for a topic that already exists in production is treated as
+  a brand-new topic. The old row is left orphaned and any user `progress` on it
+  stays attached to the old `id`.
+- **Deleting / removing a topic from `seed.ts`.** The seed never deletes from
+  `topics` (that would cascade and wipe user `progress`). Removing a topic from
+  this file leaves the topic row in the database with no flashcards, quiz
+  questions, or study guides attached — users will still see the empty topic
+  card in the UI.
+
+For either case, write a one-off migration script (under `lib/db/src/`) that
+does the rename or removal explicitly (`UPDATE topics SET name = …` or, after
+manually moving / deleting any user `progress` for that topic, `DELETE FROM
+topics WHERE id = …`) instead of editing `seed.ts`.
 
 ---
 
@@ -172,8 +204,10 @@ If a publish goes wrong:
   open **Deployments** → pick the last good build → **Promote**. Traffic moves
   back instantly.
 - **Bad data in the production DB** → re-run `pnpm --filter @workspace/db run
-  seed` against `DATABASE_URL` to restore content tables to a known-good state
-  (this won't touch `users`, but will wipe `progress` — see step 4).
+  seed` against `DATABASE_URL` to restore content tables to a known-good state.
+  This is safe to do on a live database — `users`, `progress`, `quiz_attempts`,
+  `exam_attempts`, `custom_decks`, and `feedback` are all preserved. See step 4
+  for the one caveat (topic renames).
 - **Stripe charged a real customer in error** → issue refunds from the Stripe
   Dashboard; subscription state is reconciled automatically by the webhook on
   next subscription change event.
