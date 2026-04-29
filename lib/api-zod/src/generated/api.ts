@@ -371,6 +371,24 @@ export const GetSubscriptionStatusResponse = zod.object({
 });
 
 /**
+ * @summary Get the user's recent Stripe invoices
+ */
+export const GetSubscriptionInvoicesResponseItem = zod.object({
+  id: zod.string(),
+  number: zod.string().nullish(),
+  created: zod.string(),
+  amountPaid: zod.number(),
+  amountDue: zod.number(),
+  currency: zod.string(),
+  status: zod.string(),
+  hostedInvoiceUrl: zod.string().nullish(),
+  invoicePdf: zod.string().nullish(),
+});
+export const GetSubscriptionInvoicesResponse = zod.array(
+  GetSubscriptionInvoicesResponseItem,
+);
+
+/**
  * @summary Create a Stripe Customer Portal session
  */
 export const CreatePortalSessionResponse = zod.object({

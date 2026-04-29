@@ -194,3 +194,18 @@ export interface SubscriptionStatus {
   /** @nullable */
   currentPeriodEnd?: string | null;
 }
+
+export interface Invoice {
+  id: string;
+  /** @nullable */
+  number?: string | null;
+  created: string;
+  amountPaid: number;
+  amountDue: number;
+  currency: string;
+  status: string;
+  /** @nullable */
+  hostedInvoiceUrl?: string | null;
+  /** @nullable */
+  invoicePdf?: string | null;
+}

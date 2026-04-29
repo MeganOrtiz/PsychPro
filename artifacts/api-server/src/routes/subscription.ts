@@ -121,6 +121,41 @@ router.post("/subscription/portal", async (req: Request, res: Response): Promise
   }
 });
 
+router.get("/subscription/invoices", async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = getUserId(req);
+    if (!userId) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+    const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
+    if (!user?.stripeCustomerId) {
+      res.json([]);
+      return;
+    }
+
+    const stripe = await getUncachableStripeClient();
+    const invoices = await stripe.invoices.list({ customer: user.stripeCustomerId, limit: 10 });
+
+    const items = invoices.data.map((inv) => ({
+      id: inv.id ?? "",
+      number: inv.number ?? null,
+      created: new Date(inv.created * 1000).toISOString(),
+      amountPaid: inv.amount_paid ?? 0,
+      amountDue: inv.amount_due ?? 0,
+      currency: inv.currency,
+      status: inv.status ?? "draft",
+      hostedInvoiceUrl: inv.hosted_invoice_url ?? null,
+      invoicePdf: inv.invoice_pdf ?? null,
+    }));
+
+    res.json(items);
+  } catch (err) {
+    req.log.error({ err }, "Error listing invoices");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 router.get("/subscription/status", async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = getUserId(req);
