@@ -108,65 +108,76 @@ export default function AppLayout({ children }: AppLayoutProps) {
             );
           })}
 
-          {isScholar && (
-            <>
-              <div className="px-3 pt-3 pb-1">
-                <p className="text-xs font-semibold text-sidebar-foreground/40 uppercase tracking-wider">Toolkit</p>
-              </div>
-              <Link
-                href="/my-decks"
-                onClick={() => setSidebarOpen(false)}
-                data-testid="nav-my-decks"
-              >
-                <div
-                  className={cn(
-                    "flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors",
-                    location === "/my-decks" || (location.startsWith("/my-decks/") && location !== "/my-decks/new")
-                      ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                      : "text-sidebar-foreground hover:bg-sidebar-accent"
-                  )}
-                >
-                  <BookMarked className="w-5 h-5 flex-shrink-0" />
-                  <span className="text-sm font-medium">My Tools</span>
-                  {(location === "/my-decks" || (location.startsWith("/my-decks/") && location !== "/my-decks/new")) && <ChevronRight className="w-4 h-4 ml-auto" />}
-                </div>
-              </Link>
-              <Link
-                href="/my-decks/new?tier=standard"
-                onClick={() => setSidebarOpen(false)}
-                data-testid="nav-new-standard"
-              >
-                <div
-                  className={cn(
-                    "flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors",
-                    location === "/my-decks/new" && typeof window !== "undefined" && window.location.search.includes("tier=standard")
-                      ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                      : "text-sidebar-foreground hover:bg-sidebar-accent"
-                  )}
-                >
-                  <Wrench className="w-5 h-5 flex-shrink-0" />
-                  <span className="text-sm font-medium">Standard Tools</span>
-                </div>
-              </Link>
-              <Link
-                href="/my-decks/new?tier=pro"
-                onClick={() => setSidebarOpen(false)}
-                data-testid="nav-new-pro"
-              >
-                <div
-                  className={cn(
-                    "flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors",
-                    location === "/my-decks/new" && typeof window !== "undefined" && window.location.search.includes("tier=pro")
-                      ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                      : "text-sidebar-foreground hover:bg-sidebar-accent"
-                  )}
-                >
-                  <Sparkles className="w-5 h-5 flex-shrink-0" />
-                  <span className="text-sm font-medium">Pro Tools</span>
-                </div>
-              </Link>
-            </>
-          )}
+          <div className="px-3 pt-3 pb-1">
+            <p className="text-xs font-semibold text-sidebar-foreground/40 uppercase tracking-wider">Toolkit</p>
+          </div>
+          <Link
+            href="/my-decks"
+            onClick={() => setSidebarOpen(false)}
+            data-testid="nav-my-decks"
+          >
+            <div
+              className={cn(
+                "flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors",
+                location === "/my-decks" || (location.startsWith("/my-decks/") && location !== "/my-decks/new")
+                  ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                  : "text-sidebar-foreground hover:bg-sidebar-accent"
+              )}
+            >
+              <BookMarked className="w-5 h-5 flex-shrink-0" />
+              <span className="text-sm font-medium">My Tools</span>
+              {!isScholar && (
+                <span className="ml-auto text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded bg-sidebar-foreground/10 text-sidebar-foreground/60">
+                  Pro
+                </span>
+              )}
+              {isScholar && (location === "/my-decks" || (location.startsWith("/my-decks/") && location !== "/my-decks/new")) && <ChevronRight className="w-4 h-4 ml-auto" />}
+            </div>
+          </Link>
+          <Link
+            href="/my-decks/new?tier=standard"
+            onClick={() => setSidebarOpen(false)}
+            data-testid="nav-new-standard"
+          >
+            <div
+              className={cn(
+                "flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors",
+                location === "/my-decks/new" && typeof window !== "undefined" && window.location.search.includes("tier=standard")
+                  ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                  : "text-sidebar-foreground hover:bg-sidebar-accent"
+              )}
+            >
+              <Wrench className="w-5 h-5 flex-shrink-0" />
+              <span className="text-sm font-medium">Standard Tools</span>
+              {!isScholar && (
+                <span className="ml-auto text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded bg-sidebar-foreground/10 text-sidebar-foreground/60">
+                  Pro
+                </span>
+              )}
+            </div>
+          </Link>
+          <Link
+            href="/my-decks/new?tier=pro"
+            onClick={() => setSidebarOpen(false)}
+            data-testid="nav-new-pro"
+          >
+            <div
+              className={cn(
+                "flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors",
+                location === "/my-decks/new" && typeof window !== "undefined" && window.location.search.includes("tier=pro")
+                  ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                  : "text-sidebar-foreground hover:bg-sidebar-accent"
+              )}
+            >
+              <Sparkles className="w-5 h-5 flex-shrink-0" />
+              <span className="text-sm font-medium">Pro Tools</span>
+              {!isScholar && (
+                <span className="ml-auto text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded bg-sidebar-foreground/10 text-sidebar-foreground/60">
+                  Pro
+                </span>
+              )}
+            </div>
+          </Link>
 
           <div className="px-3 pt-3 pb-1">
             <p className="text-xs font-semibold text-sidebar-foreground/40 uppercase tracking-wider">Community</p>
