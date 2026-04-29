@@ -4,7 +4,10 @@ import { clientErrorsRateLimit } from "../middlewares/clientErrorsRateLimit";
 
 const router: IRouter = Router();
 
-const MAX_FIELD_LENGTH = 4000;
+export const MAX_FIELD_LENGTH = 4000;
+export const MAX_URL_LENGTH = 1000;
+export const MAX_USER_AGENT_LENGTH = 500;
+export const MAX_RELEASE_ID_LENGTH = 200;
 
 function asString(value: unknown, max = MAX_FIELD_LENGTH): string | undefined {
   if (typeof value !== "string") return undefined;
@@ -19,9 +22,9 @@ router.post("/client-errors", clientErrorsRateLimit, (req: Request, res: Respons
   const message = asString(body.message) ?? "Unknown client error";
   const stack = asString(body.stack);
   const componentStack = asString(body.componentStack);
-  const url = asString(body.url, 1000);
-  const userAgent = asString(body.userAgent, 500);
-  const releaseId = asString(body.releaseId, 200);
+  const url = asString(body.url, MAX_URL_LENGTH);
+  const userAgent = asString(body.userAgent, MAX_USER_AGENT_LENGTH);
+  const releaseId = asString(body.releaseId, MAX_RELEASE_ID_LENGTH);
 
   const userId = getAuth(req).userId ?? null;
 

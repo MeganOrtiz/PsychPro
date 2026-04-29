@@ -1,12 +1,12 @@
 import { randomUUID } from "node:crypto";
 import { pool } from "@workspace/db";
 import type { Request, RequestHandler, Response } from "express";
-import clientErrorsRouter from "../src/routes/client-errors";
-
-const MAX_FIELD_LENGTH = 4000;
-const MAX_URL_LENGTH = 1000;
-const MAX_USER_AGENT_LENGTH = 500;
-const MAX_RELEASE_ID_LENGTH = 200;
+import clientErrorsRouter, {
+  MAX_FIELD_LENGTH,
+  MAX_RELEASE_ID_LENGTH,
+  MAX_URL_LENGTH,
+  MAX_USER_AGENT_LENGTH,
+} from "../src/routes/client-errors";
 
 class AssertionError extends Error {}
 
