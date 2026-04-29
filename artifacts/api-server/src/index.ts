@@ -1,15 +1,8 @@
 import app from "./app";
 import { logger } from "./lib/logger";
-import { clientErrorsRateLimitConfig } from "./middlewares/clientErrorsRateLimit";
+import { logResolvedClientErrorsRateLimit } from "./startup";
 
-// Log resolved tunables once at startup so an operator who set
-// CLIENT_ERRORS_RATE_LIMIT_{WINDOW_MS,MAX} can confirm the override took
-// effect without exhausting the limit and watching for 429s. The same values
-// are also returned from `GET /api/healthz` for remote verification.
-logger.info(
-  { clientErrorsRateLimit: clientErrorsRateLimitConfig },
-  "Resolved client-error rate limit",
-);
+logResolvedClientErrorsRateLimit(logger);
 
 const rawPort = process.env["PORT"];
 
