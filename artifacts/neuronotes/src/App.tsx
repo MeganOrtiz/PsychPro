@@ -29,6 +29,8 @@ import NewDeckPage from "@/pages/my-decks-new";
 import MyDeckDetailPage from "@/pages/my-decks-detail";
 import NotFound from "@/pages/not-found";
 import AppLayout from "@/components/layout/app-layout";
+import { ErrorBoundary } from "@/components/error-boundary";
+import CrashTestPage from "@/pages/crash-test";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -79,6 +81,7 @@ function AuthRouter() {
       <Route path="/" component={LandingPage} />
       <Route path="/sign-in" component={SignInPage} />
       <Route path="/sign-up" component={SignUpPage} />
+      {import.meta.env.DEV ? <Route path="/__crash-test" component={CrashTestPage} /> : null}
       {isSignedIn ? (
         <AppLayout>
           <Switch>
@@ -112,18 +115,20 @@ function AuthRouter() {
 
 function App() {
   return (
-    <ClerkProvider publishableKey={clerkPubKey} signInUrl="/sign-in" signUpUrl="/sign-up">
-      <ClerkTokenSetup />
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-            <AuthRouter />
-          </WouterRouter>
-          <Toaster />
-          <SonnerToaster />
-        </TooltipProvider>
-      </QueryClientProvider>
-    </ClerkProvider>
+    <ErrorBoundary>
+      <ClerkProvider publishableKey={clerkPubKey} signInUrl="/sign-in" signUpUrl="/sign-up">
+        <ClerkTokenSetup />
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
+            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+              <AuthRouter />
+            </WouterRouter>
+            <Toaster />
+            <SonnerToaster />
+          </TooltipProvider>
+        </QueryClientProvider>
+      </ClerkProvider>
+    </ErrorBoundary>
   );
 }
 

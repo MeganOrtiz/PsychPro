@@ -77,6 +77,8 @@ app.use("/api", (req: Request, res: Response, next: NextFunction): void => {
     req.path === "/healthz" ||
     req.path === "/topics" ||
     req.path.startsWith("/stripe/") ||
+    // Client-side error reports may originate before sign-in or after auth fails
+    (req.path === "/client-errors" && req.method === "POST") ||
     // Allow unauthenticated access to topic list and individual topic detail only
     (/^\/topics\/\d+$/.test(req.path) && req.method === "GET");
   if (isPublic) {

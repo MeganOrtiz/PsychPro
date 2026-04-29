@@ -7,6 +7,7 @@ import subscriptionRouter from "./subscription";
 import feedbackRouter from "./feedback";
 import customDecksRouter from "./custom-decks";
 import leaderboardRouter from "./leaderboard";
+import clientErrorsRouter from "./client-errors";
 
 const router: IRouter = Router();
 
@@ -18,5 +19,6 @@ router.use(subscriptionRouter);
 router.use(feedbackRouter);
 router.use(customDecksRouter);
 router.use(leaderboardRouter);
+router.use(clientErrorsRouter);
 
 export default router;
