@@ -7,8 +7,32 @@ import {
 } from "@workspace/db";
 import { and, asc, eq, lte, sql } from "drizzle-orm";
 
-const WINDOW_MS = 60_000;
-const MAX_REQUESTS_PER_WINDOW = 30;
+function readPositiveIntEnv(name: string, defaultValue: number): number {
+  const raw = process.env[name];
+  if (raw === undefined || raw.trim() === "") return defaultValue;
+  const trimmed = raw.trim();
+  const n = Number(trimmed);
+  if (!Number.isFinite(n) || !Number.isInteger(n) || n <= 0) {
+    throw new Error(
+      `Invalid ${name} env value: ${JSON.stringify(raw)} (must be a positive integer)`,
+    );
+  }
+  return n;
+}
+
+// Per-IP throttle for POST /api/client-errors. Defaults preserve the original
+// hard-coded behaviour (60s window, 30 requests). Operators can override per
+// environment via CLIENT_ERRORS_RATE_LIMIT_WINDOW_MS and
+// CLIENT_ERRORS_RATE_LIMIT_MAX (see PUBLISHING.md). Invalid values throw at
+// module load → the API server fails fast at startup with a clear message.
+const WINDOW_MS = readPositiveIntEnv(
+  "CLIENT_ERRORS_RATE_LIMIT_WINDOW_MS",
+  60_000,
+);
+const MAX_REQUESTS_PER_WINDOW = readPositiveIntEnv(
+  "CLIENT_ERRORS_RATE_LIMIT_MAX",
+  30,
+);
 const GLOBAL_CLEANUP_EVERY_REQUESTS = 100;
 
 let requestsSinceLastCleanup = 0;

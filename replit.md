@@ -110,3 +110,9 @@ once to seed Pro + Scholar products in live Stripe.
 - `practiceExamQuestionsTable` — join table linking exams to 10 questions each
 - `progressTable` — practice exam scores per user/topic
 - `clientErrorRateHitsTable` / `clientErrorRateWarningsTable` — back the per-IP rate limit on `POST /api/client-errors` so the limit is enforced globally and survives restarts/scale-out
+
+### Operator tuning knobs
+- `CLIENT_ERRORS_RATE_LIMIT_WINDOW_MS` (default `60000`) and
+  `CLIENT_ERRORS_RATE_LIMIT_MAX` (default `30`) override the per-IP throttle on
+  `POST /api/client-errors` without a code change. Read at API server startup;
+  invalid values fail fast with a clear error. See PUBLISHING.md for details.

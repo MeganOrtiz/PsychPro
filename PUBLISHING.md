@@ -35,6 +35,21 @@ Auto-injected by Replit (you do **not** set these manually):
 Stripe API keys are **not** stored as plain secrets — they come from the Replit
 Stripe connector (see step 3).
 
+### Optional tuning knobs
+
+These are read at API server startup. They are **not required** — defaults
+preserve the values previously hard-coded in the code. Set them in the
+deployment Secrets panel (or in dev `.env`) to override per environment.
+Invalid values (non-integer, zero, or negative) make the server fail fast at
+startup with a clear error.
+
+| Env var | Used by | Default | Notes |
+| --- | --- | --- | --- |
+| `CLIENT_ERRORS_RATE_LIMIT_WINDOW_MS` | API server (`POST /api/client-errors`) | `60000` (60s) | Sliding window length, in milliseconds, for the per-IP throttle on client error reports. |
+| `CLIENT_ERRORS_RATE_LIMIT_MAX` | API server (`POST /api/client-errors`) | `30` | Max requests per IP per window before responding `429 Too Many Requests`. Lower it during an incident to clamp down on noisy clients without a redeploy. |
+
+Changes to these values take effect on the next deploy / API server restart.
+
 ---
 
 ## 2. Switch Clerk to production mode
