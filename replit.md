@@ -109,3 +109,4 @@ once to seed Pro + Scholar products in live Stripe.
 - `practiceExamsTable` — 15 practice exams (one per topic)
 - `practiceExamQuestionsTable` — join table linking exams to 10 questions each
 - `progressTable` — practice exam scores per user/topic
+- `clientErrorRateHitsTable` / `clientErrorRateWarningsTable` — back the per-IP rate limit on `POST /api/client-errors` so the limit is enforced globally and survives restarts/scale-out

@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, timestamp, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, timestamp, boolean, bigserial, index } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
@@ -210,3 +210,29 @@ export const examAttemptsTable = pgTable("exam_attempts", {
 export const insertExamAttemptSchema = createInsertSchema(examAttemptsTable).omit({ id: true, completedAt: true });
 export type InsertExamAttempt = z.infer<typeof insertExamAttemptSchema>;
 export type ExamAttempt = typeof examAttemptsTable.$inferSelect;
+
+export const clientErrorRateHitsTable = pgTable(
+  "client_error_rate_hits",
+  {
+    id: bigserial("id", { mode: "number" }).primaryKey(),
+    clientKey: text("client_key").notNull(),
+    hitAt: timestamp("hit_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index("client_error_rate_hits_key_time_idx").on(table.clientKey, table.hitAt),
+    index("client_error_rate_hits_hit_at_idx").on(table.hitAt),
+  ],
+);
+
+export type ClientErrorRateHit = typeof clientErrorRateHitsTable.$inferSelect;
+
+export const clientErrorRateWarningsTable = pgTable(
+  "client_error_rate_warnings",
+  {
+    clientKey: text("client_key").primaryKey(),
+    warnedAt: timestamp("warned_at", { withTimezone: true }).notNull(),
+  },
+  (table) => [index("client_error_rate_warnings_warned_at_idx").on(table.warnedAt)],
+);
+
+export type ClientErrorRateWarning = typeof clientErrorRateWarningsTable.$inferSelect;
