@@ -26,6 +26,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useUser, UserButton } from "@clerk/react";
 import { cn } from "@/lib/utils";
 import featuredWorkImage from "@assets/Screenshot_2026-04-26_at_11.05.53_PM_1777262767317.png";
+import TodayReviews from "@/components/learning/today-reviews";
 import {
   ResponsiveContainer,
   LineChart,
@@ -506,6 +507,7 @@ export default function DashboardPage() {
 
           {/* Spotlight rail */}
           <aside className="lg:sticky lg:top-6 self-start space-y-4">
+            <TodayReviews topics={allTopics} />
             <SpotlightCard onCta={() => navigate("/feature-request")} />
           </aside>
         </div>

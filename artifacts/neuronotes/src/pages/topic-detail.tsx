@@ -2,8 +2,8 @@ import { Link, useLocation } from "wouter";
 import { Layers, BookOpen, FileText, GraduationCap, ChevronLeft, Beaker } from "lucide-react";
 import { useGetTopic } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Badge } from "@/components/ui/badge";
 import SpacedRepetitionScheduler from "@/components/learning/spaced-repetition";
+import CategoryHero from "@/components/learning/category-hero";
 
 interface Props {
   params: { id: string };
@@ -81,8 +81,7 @@ export default function TopicDetailPage({ params }: Props) {
           <div className="text-center py-16 text-muted-foreground">Topic not found.</div>
         ) : (
           <>
-            <Badge variant="secondary" className="mb-3">{topic.category}</Badge>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">{topic.name}</h1>
+            <CategoryHero category={topic.category} topicName={topic.name} />
             <p className="text-muted-foreground mb-4">{topic.description}</p>
 
             <div className="flex gap-4 mb-6 text-sm text-muted-foreground">

@@ -1,13 +1,17 @@
 import { useState, useEffect, useRef } from "react";
-import { useLocation } from "wouter";
-import { ChevronLeft, Clock, Timer, BookOpen, FileText, GraduationCap } from "lucide-react";
-import { useGetPracticeExamByTopic, useUpdateTopicProgress, useIncrementUserUsage, useRecordExamAttempt } from "@workspace/api-client-react";
+import { Link, useLocation } from "wouter";
+import { ChevronLeft, Clock, Timer, BookOpen, FileText, GraduationCap, Beaker, Lightbulb, Brain, ArrowRight } from "lucide-react";
+import { useGetPracticeExamByTopic, useGetTopic, useUpdateTopicProgress, useIncrementUserUsage, useRecordExamAttempt } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import UpgradePrompt from "@/components/upgrade-prompt";
+import ElaborationPanel from "@/components/learning/elaboration-panel";
 
 interface Props {
   params: { id: string };
@@ -21,6 +25,9 @@ export default function PracticeExamPage({ params }: Props) {
   const [questionCount, setQuestionCount] = useState<QuestionCount | null>(null);
   const [started, setStarted] = useState(false);
   const [timed, setTimed] = useState(true);
+  const [warmupEnabled, setWarmupEnabled] = useState(true);
+  const [warmupActive, setWarmupActive] = useState(false);
+  const [warmupText, setWarmupText] = useState("");
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [submitted, setSubmitted] = useState(false);
@@ -29,6 +36,7 @@ export default function PracticeExamPage({ params }: Props) {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const { data: exam, isLoading, error } = useGetPracticeExamByTopic(topicId, questionCount ?? undefined);
+  const { data: topic } = useGetTopic(topicId);
   const updateProgress = useUpdateTopicProgress();
   const incrementUsage = useIncrementUserUsage();
   const recordAttempt = useRecordExamAttempt();
@@ -62,7 +70,7 @@ export default function PracticeExamPage({ params }: Props) {
   };
 
   useEffect(() => {
-    if (started && timed && !submitted) {
+    if (started && !warmupActive && timed && !submitted) {
       setTimeLeft(total * TIME_PER_QUESTION);
       timerRef.current = setInterval(() => {
         setTimeLeft(t => {
@@ -76,7 +84,7 @@ export default function PracticeExamPage({ params }: Props) {
       }, 1000);
     }
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [started, timed, submitted, total]);
+  }, [started, warmupActive, timed, submitted, total]);
 
   const handleSubmit = () => { submitRef.current(); };
 
@@ -148,7 +156,7 @@ export default function PracticeExamPage({ params }: Props) {
         </div>
         <div className="flex gap-3">
           <Button variant="outline" onClick={() => navigate(`/topics/${topicId}`)} data-testid="button-back-to-topic">Back to Topic</Button>
-          <Button onClick={() => { setSubmitted(false); setStarted(false); setAnswers({}); setIndex(0); setQuestionCount(null); }} data-testid="button-retake">Retake</Button>
+          <Button onClick={() => { submittedRef.current = false; setSubmitted(false); setStarted(false); setAnswers({}); setIndex(0); setQuestionCount(null); setWarmupActive(false); setWarmupText(""); setTimeLeft(0); }} data-testid="button-retake">Retake</Button>
         </div>
         </div>
       </div>
@@ -200,13 +208,27 @@ export default function PracticeExamPage({ params }: Props) {
         ) : (
           <>
             {questionCount !== null && (
-              <div className="bg-card border border-border rounded-xl p-5 mb-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label htmlFor="timed-switch" className="text-base font-semibold text-foreground">Timed Mode</Label>
-                    <p className="text-sm text-muted-foreground">Race against the clock</p>
+              <div className="space-y-3 mb-6">
+                <div className="bg-card border border-border rounded-xl p-5">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label htmlFor="timed-switch" className="text-base font-semibold text-foreground">Timed Mode</Label>
+                      <p className="text-sm text-muted-foreground">Race against the clock</p>
+                    </div>
+                    <Switch id="timed-switch" checked={timed} onCheckedChange={setTimed} data-testid="switch-timed" />
                   </div>
-                  <Switch id="timed-switch" checked={timed} onCheckedChange={setTimed} data-testid="switch-timed" />
+                </div>
+                <div className="bg-card border border-border rounded-xl p-5">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1 min-w-0 pr-3">
+                      <Label htmlFor="warmup-switch" className="text-base font-semibold text-foreground flex items-center gap-1.5">
+                        <Brain className="w-4 h-4 text-amber-500" />
+                        Active Recall warm-up
+                      </Label>
+                      <p className="text-sm text-muted-foreground">Brain-dump before you start (~60 seconds, recommended)</p>
+                    </div>
+                    <Switch id="warmup-switch" checked={warmupEnabled} onCheckedChange={setWarmupEnabled} data-testid="switch-warmup" />
+                  </div>
                 </div>
               </div>
             )}
@@ -214,17 +236,92 @@ export default function PracticeExamPage({ params }: Props) {
               size="lg"
               className="w-full"
               disabled={questionCount === null}
-              onClick={() => setStarted(true)}
+              onClick={() => {
+                if (warmupEnabled) setWarmupActive(true);
+                setStarted(true);
+              }}
               data-testid="button-start-exam"
             >
               {questionCount === null
                 ? "Select exam length above"
+                : warmupEnabled
+                ? <><Brain className="w-4 h-4 mr-2" />Begin with warm-up</>
                 : timed
                 ? <><Timer className="w-4 h-4 mr-2" />Start {questionCount}-Question Timed Exam</>
                 : `Start ${questionCount}-Question Exam`}
             </Button>
           </>
         )}
+        </div>
+      </div>
+    );
+  }
+
+  if (warmupActive) {
+    const wordCount = warmupText.trim().split(/\s+/).filter(Boolean).length;
+    const ready = wordCount >= 10;
+    return (
+      <div className="min-h-full bg-background" data-testid="exam-warmup">
+        <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
+          <button onClick={() => { setWarmupActive(false); setStarted(false); }} className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6">
+            <ChevronLeft className="w-4 h-4" /> Back to setup
+          </button>
+          <section className="rounded-2xl border border-amber-200/60 dark:border-amber-900/40 bg-gradient-to-br from-amber-50/80 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/10 p-6 shadow-sm">
+            <header className="flex items-start gap-3 mb-3">
+              <div className="w-10 h-10 rounded-lg bg-amber-500/15 flex items-center justify-center shrink-0">
+                <Brain className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h2 className="text-lg font-semibold text-foreground">Warm up your recall</h2>
+                <p className="text-xs text-muted-foreground italic">
+                  A 60-second brain-dump before a test reliably raises your score — even when you don't peek at notes.
+                </p>
+              </div>
+              <Link href="/study-lab">
+                <span className="text-[11px] text-amber-700 dark:text-amber-400 hover:underline cursor-pointer whitespace-nowrap">
+                  Why →
+                </span>
+              </Link>
+            </header>
+            <p className="text-base font-medium text-foreground mb-4 leading-relaxed">
+              List everything you remember about <span className="font-semibold">{topic?.name ?? "this topic"}</span> — key terms, definitions, mechanisms, examples. Don't worry about being neat.
+            </p>
+            <Textarea
+              value={warmupText}
+              onChange={(e) => setWarmupText(e.target.value)}
+              placeholder="Start typing whatever comes to mind…"
+              rows={8}
+              className="bg-background/80 border-amber-200 dark:border-amber-900/40 focus-visible:ring-amber-400/40 mb-3 resize-y"
+              data-testid="warmup-textarea"
+              autoFocus
+            />
+            <div className="flex flex-wrap items-center gap-3 justify-between">
+              <span className="text-xs text-muted-foreground">
+                {wordCount === 0
+                  ? "Aim for at least 10 words to prime your memory."
+                  : `${wordCount} word${wordCount === 1 ? "" : "s"} ${ready ? "— nice." : "— keep going."}`}
+              </span>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => { setWarmupActive(false); setWarmupText(""); }}
+                  data-testid="button-skip-warmup"
+                >
+                  Skip
+                </Button>
+                <Button
+                  onClick={() => { setWarmupActive(false); setWarmupText(""); }}
+                  disabled={!ready}
+                  className="bg-amber-500 hover:bg-amber-600 text-white"
+                  data-testid="button-begin-exam"
+                >
+                  Begin Exam
+                  <ArrowRight className="w-4 h-4 ml-1" />
+                </Button>
+              </div>
+            </div>
+          </section>
         </div>
       </div>
     );
@@ -237,12 +334,59 @@ export default function PracticeExamPage({ params }: Props) {
       <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
       <div className="flex items-center justify-between mb-6">
         <span className="text-sm font-medium text-muted-foreground">{index + 1}/{total}</span>
-        {timed && (
-          <div className={`flex items-center gap-1.5 text-sm font-semibold ${timeLeft < 60 ? "text-red-500" : "text-foreground"}`} data-testid="timer">
-            <Clock className="w-4 h-4" />
-            {formatTime(timeLeft)}
-          </div>
-        )}
+        <div className="flex items-center gap-1">
+          {timed && (
+            <div className={`flex items-center gap-1.5 text-sm font-semibold mr-2 ${timeLeft < 60 ? "text-red-500" : "text-foreground"}`} data-testid="timer">
+              <Clock className="w-4 h-4" />
+              {formatTime(timeLeft)}
+            </div>
+          )}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={() => navigate("/study-lab")}
+                className="text-muted-foreground hover:text-foreground p-1.5 rounded-md hover:bg-accent transition-colors"
+                data-testid="button-study-lab"
+                aria-label="Open Study Lab"
+              >
+                <Beaker className="w-4 h-4" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="text-xs">Open Study Lab</p>
+            </TooltipContent>
+          </Tooltip>
+          <Sheet>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <SheetTrigger asChild>
+                  <button
+                    className="text-muted-foreground hover:text-foreground p-1.5 rounded-md hover:bg-accent transition-colors"
+                    data-testid="button-reflect"
+                    aria-label="Open reflection panel"
+                  >
+                    <Lightbulb className="w-4 h-4" />
+                  </button>
+                </SheetTrigger>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="text-xs">Reflect — elaboration prompts</p>
+              </TooltipContent>
+            </Tooltip>
+            <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
+              <SheetHeader className="mb-4">
+                <SheetTitle>Reflect on this question</SheetTitle>
+                <SheetDescription>
+                  A quick elaboration prompt to deepen processing. Notes save to this device.
+                </SheetDescription>
+              </SheetHeader>
+              <ElaborationPanel
+                storageKey={`exam-topic-${topicId}`}
+                context={q ? `Q${index + 1}: ${q.question}` : undefined}
+              />
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
 
       <div className="w-full bg-muted rounded-full h-1.5 mb-6">

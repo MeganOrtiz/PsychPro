@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useLocation } from "wouter";
-import { ChevronLeft, CheckCircle, XCircle, ChevronRight, BookOpen } from "lucide-react";
+import { Link, useLocation } from "wouter";
+import { ChevronLeft, CheckCircle, XCircle, ChevronRight, BookOpen, Lightbulb } from "lucide-react";
 import { useGetQuizzesByTopic, useUpdateTopicProgress, useIncrementUserUsage, useRecordQuizAttempt } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -20,6 +20,8 @@ export default function QuizPage({ params }: Props) {
   const [score, setScore] = useState(0);
   const [completed, setCompleted] = useState(false);
   const [showUpgrade, setShowUpgrade] = useState(false);
+  const [reflection, setReflection] = useState("");
+  const [reflectionSaved, setReflectionSaved] = useState(false);
 
   const { data: questions, isLoading, error } = useGetQuizzesByTopic(topicId);
   const updateProgress = useUpdateTopicProgress();
@@ -81,6 +83,8 @@ export default function QuizPage({ params }: Props) {
     } else {
       setSelected(null);
       setShowExplanation(false);
+      setReflection("");
+      setReflectionSaved(false);
       setIndex(i => i + 1);
     }
   };
@@ -200,9 +204,51 @@ export default function QuizPage({ params }: Props) {
           </div>
 
           {showExplanation && (
-            <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-6" data-testid="explanation-box">
+            <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-4" data-testid="explanation-box">
               <p className="text-xs font-semibold text-blue-700 dark:text-blue-300 uppercase tracking-wider mb-1">Explanation</p>
               <p className="text-sm text-blue-900 dark:text-blue-200 leading-relaxed">{current.explanation}</p>
+            </div>
+          )}
+
+          {showExplanation && selected && selected !== current.correctAnswer && (
+            <div
+              className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-4 mb-6"
+              data-testid="reflect-prompt"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <Lightbulb className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                <p className="text-xs font-semibold text-amber-800 dark:text-amber-300 uppercase tracking-wider">Reflect</p>
+                <Link href="/study-lab">
+                  <span className="ml-auto text-[11px] text-amber-700 dark:text-amber-400 hover:underline cursor-pointer">
+                    Why this works →
+                  </span>
+                </Link>
+              </div>
+              <p className="text-xs text-amber-800/80 dark:text-amber-300/80 mb-2 leading-relaxed">
+                Explain in one sentence why <span className="font-semibold">{current.correctAnswer}</span> was correct (and what tripped you up). Writing it out, even briefly, locks the correction into memory.
+              </p>
+              <textarea
+                value={reflection}
+                onChange={(e) => { setReflection(e.target.value); setReflectionSaved(false); }}
+                placeholder="In your own words…"
+                rows={2}
+                className="w-full text-sm rounded-lg border border-amber-300/60 dark:border-amber-800/60 bg-white/60 dark:bg-background/40 px-3 py-2 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-amber-400/40 resize-none"
+                data-testid="textarea-reflection"
+              />
+              <div className="flex items-center justify-between mt-2">
+                <p className="text-[11px] text-muted-foreground">
+                  Stays on this device — for your eyes only.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setReflectionSaved(true)}
+                  disabled={reflection.trim().length === 0 || reflectionSaved}
+                  className="text-xs font-medium px-2.5 py-1 rounded-md bg-amber-500 text-white hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  data-testid="button-save-reflection"
+                >
+                  {reflectionSaved ? "Saved ✓" : "Lock it in"}
+                </button>
+              </div>
             </div>
           )}
 

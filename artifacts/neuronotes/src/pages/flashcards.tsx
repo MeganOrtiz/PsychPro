@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "wouter";
+import { useLocation } from "wouter";
 import { ChevronLeft, ChevronRight, RotateCcw, Layers, Lightbulb, Beaker } from "lucide-react";
 import { useGetFlashcardsByTopic, useIncrementUserUsage } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
@@ -95,15 +95,14 @@ export default function FlashcardsPage({ params }: Props) {
         <div className="ml-auto flex items-center gap-1">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link href="/study-lab">
-                <button
-                  className="text-muted-foreground hover:text-foreground p-1.5 rounded-md hover:bg-accent transition-colors"
-                  data-testid="button-study-lab"
-                  aria-label="Open Study Lab"
-                >
-                  <Beaker className="w-4 h-4" />
-                </button>
-              </Link>
+              <button
+                onClick={() => navigate("/study-lab")}
+                className="text-muted-foreground hover:text-foreground p-1.5 rounded-md hover:bg-accent transition-colors"
+                data-testid="button-study-lab"
+                aria-label="Open Study Lab"
+              >
+                <Beaker className="w-4 h-4" />
+              </button>
             </TooltipTrigger>
             <TooltipContent>
               <p className="text-xs">Open Study Lab — evidence-based techniques</p>
