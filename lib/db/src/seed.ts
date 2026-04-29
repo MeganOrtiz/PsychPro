@@ -5,6 +5,13 @@ import { sql } from "drizzle-orm";
 async function seed() {
   console.log("Seeding PsychPro from course notes...");
 
+  // Idempotent re-seed: TRUNCATE clears content tables (topics, flashcards,
+  // quiz_questions, study_guides, practice_exams, practice_exam_questions)
+  // so re-running won't duplicate rows. CASCADE will also clear `progress`
+  // rows because progress.topic_id has a FK to topics — this wipes user
+  // progress, so do NOT re-run this against a production DB that already has
+  // active users without warning. For initial production seeding (empty DB),
+  // this is safe. The `users` table is never touched.
   await db.execute(sql`TRUNCATE practice_exam_questions, practice_exams, study_guides, quiz_questions, flashcards, progress, topics RESTART IDENTITY CASCADE`);
 
   const topics = await db.insert(topicsTable).values([

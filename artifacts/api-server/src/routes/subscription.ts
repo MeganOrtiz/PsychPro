@@ -14,11 +14,23 @@ function getUserId(req: Request): string | null {
 router.get("/subscription/plans", async (req: Request, res: Response): Promise<void> => {
   try {
     const stripe = await getUncachableStripeClient();
-    const products = await stripe.products.list({ active: true, limit: 10 });
+    const products = await stripe.products.list({ active: true, limit: 100 });
     const plans = [];
     for (const product of products.data) {
+      // Only surface products tagged as PsychPro tiers — this prevents any
+      // unrelated products living in the same Stripe account (test artifacts,
+      // future SKUs, etc.) from appearing on the pricing page.
+      const tier = product.metadata?.neuronotes_tier;
+      if (tier !== "pro" && tier !== "scholar") continue;
+
       const prices = await stripe.prices.list({ product: product.id, active: true, limit: 10 });
       for (const price of prices.data) {
+        // Only surface recurring monthly/yearly prices — skip one-off prices
+        // and any non-standard recurring intervals so atypical SKUs don't
+        // leak into the pricing page.
+        const interval = price.recurring?.interval;
+        if (interval !== "month" && interval !== "year") continue;
+
         plans.push({
           id: product.id,
           name: product.name,
@@ -26,7 +38,7 @@ router.get("/subscription/plans", async (req: Request, res: Response): Promise<v
           priceId: price.id,
           unitAmount: price.unit_amount ?? 0,
           currency: price.currency,
-          interval: (price.recurring?.interval ?? "month"),
+          interval,
         });
       }
     }

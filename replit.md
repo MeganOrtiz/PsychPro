@@ -90,6 +90,15 @@ A mobile-responsive neuroscience/neuropsychology study app.
 14. Apraxia & Agnosia
 15. **Neurocognitive Disorders** (Huntington's, Parkinson's, Lewy Body, TBI, HIV, Delirium, Cortical Pain — combined)
 
+### Production Publishing
+See `PUBLISHING.md` at the repo root for the full checklist (production secrets,
+Clerk live keys, Stripe live mode + connector, DB seeding, smoke test, rollback).
+Stripe credentials come from the Replit Stripe **connector** — the API server
+auto-selects the `production` connector when `REPLIT_DEPLOYMENT=1`. Price IDs are
+fetched dynamically (no hard-coded IDs). Run
+`STRIPE_ENV=production pnpm --filter @workspace/db exec tsx ../../scripts/seed-stripe-products.ts`
+once to seed Pro + Scholar products in live Stripe.
+
 ### DB Schema
 - `usersTable` — user profile, usage count, subscription status
 - `topicsTable` — 15 consolidated neuroscience/neuropsychology topics
