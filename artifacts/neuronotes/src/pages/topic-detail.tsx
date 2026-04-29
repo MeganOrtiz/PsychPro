@@ -1,9 +1,9 @@
-import { useLocation } from "wouter";
-import { Layers, BookOpen, FileText, GraduationCap, ChevronLeft, Clock } from "lucide-react";
+import { Link, useLocation } from "wouter";
+import { Layers, BookOpen, FileText, GraduationCap, ChevronLeft, Beaker } from "lucide-react";
 import { useGetTopic } from "@workspace/api-client-react";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import SpacedRepetitionScheduler from "@/components/learning/spaced-repetition";
 
 interface Props {
   params: { id: string };
@@ -113,6 +113,23 @@ export default function TopicDetailPage({ params }: Props) {
                 </button>
               ))}
             </div>
+
+            <div className="flex items-center justify-between mt-8 mb-3">
+              <div className="flex items-center gap-2">
+                <Beaker className="w-4 h-4 text-primary" />
+                <h2 className="font-semibold text-foreground">Retention Plan</h2>
+              </div>
+              <Link href="/study-lab">
+                <span className="text-xs text-primary hover:underline cursor-pointer">
+                  Why this works →
+                </span>
+              </Link>
+            </div>
+            <SpacedRepetitionScheduler
+              storageKey={`topic-${topicId}`}
+              cardTitle={topic.name}
+              cardSummary="Mark this topic as reviewed each time you finish a study session. Hitting all four checkpoints typically moves material into durable long-term memory."
+            />
           </>
         )}
       </div>

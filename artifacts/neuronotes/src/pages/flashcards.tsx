@@ -1,11 +1,14 @@
 import { useState } from "react";
-import { useLocation } from "wouter";
-import { ChevronLeft, ChevronRight, RotateCcw, Layers } from "lucide-react";
+import { Link, useLocation } from "wouter";
+import { ChevronLeft, ChevronRight, RotateCcw, Layers, Lightbulb, Beaker } from "lucide-react";
 import { useGetFlashcardsByTopic, useIncrementUserUsage } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import UpgradePrompt from "@/components/upgrade-prompt";
+import ElaborationPanel from "@/components/learning/elaboration-panel";
 
 interface Props {
   params: { id: string };
@@ -89,9 +92,64 @@ export default function FlashcardsPage({ params }: Props) {
           <h1 className="text-2xl md:text-3xl font-bold text-foreground">Flashcards</h1>
           {!isLoading && <p className="text-sm text-muted-foreground">{total} cards</p>}
         </div>
-        <button onClick={handleRestart} className="ml-auto text-muted-foreground hover:text-foreground" data-testid="button-restart" aria-label="Restart">
-          <RotateCcw className="w-4 h-4" />
-        </button>
+        <div className="ml-auto flex items-center gap-1">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link href="/study-lab">
+                <button
+                  className="text-muted-foreground hover:text-foreground p-1.5 rounded-md hover:bg-accent transition-colors"
+                  data-testid="button-study-lab"
+                  aria-label="Open Study Lab"
+                >
+                  <Beaker className="w-4 h-4" />
+                </button>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="text-xs">Open Study Lab — evidence-based techniques</p>
+            </TooltipContent>
+          </Tooltip>
+          <Sheet>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <SheetTrigger asChild>
+                  <button
+                    className="text-muted-foreground hover:text-foreground p-1.5 rounded-md hover:bg-accent transition-colors"
+                    data-testid="button-reflect"
+                    aria-label="Open elaboration panel"
+                  >
+                    <Lightbulb className="w-4 h-4" />
+                  </button>
+                </SheetTrigger>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="text-xs">Reflect — elaboration prompts to deepen learning</p>
+              </TooltipContent>
+            </Tooltip>
+            <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
+              <SheetHeader className="mb-4">
+                <SheetTitle>Reflect on this card</SheetTitle>
+                <SheetDescription>
+                  Use a prompt to elaborate on what you just studied. Notes save to this device.
+                </SheetDescription>
+              </SheetHeader>
+              <ElaborationPanel
+                storageKey={`flashcards-topic-${topicId}`}
+                context={current ? `Card ${index + 1} of ${total}: ${current.question}` : undefined}
+              />
+            </SheetContent>
+          </Sheet>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button onClick={handleRestart} className="text-muted-foreground hover:text-foreground p-1.5 rounded-md hover:bg-accent transition-colors" data-testid="button-restart" aria-label="Restart">
+                <RotateCcw className="w-4 h-4" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="text-xs">Restart deck</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
       </div>
 
       {isLoading ? (
