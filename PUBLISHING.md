@@ -50,6 +50,13 @@ startup with a clear error.
 
 Changes to these values take effect on the next deploy / API server restart.
 
+To verify an override took effect:
+- The API server logs the resolved values exactly once at boot, e.g.
+  `INFO: Resolved client-error rate limit { clientErrorsRateLimit: { windowMs: 60000, limit: 30 } }`.
+- `GET /api/healthz` returns the same numbers under `config.clientErrorsRateLimit`,
+  so you can `curl https://<your-app>.replit.app/api/healthz` to check a
+  deployed instance without exhausting the limit and watching for 429s.
+
 ---
 
 ## 2. Switch Clerk to production mode

@@ -5,7 +5,9 @@
  * NeuroNotes API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { HealthConfig } from "./healthConfig";
 
 export interface HealthStatus {
   status: string;
+  config: HealthConfig;
 }

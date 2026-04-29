@@ -35,6 +35,18 @@ const MAX_REQUESTS_PER_WINDOW = readPositiveIntEnv(
 );
 const GLOBAL_CLEANUP_EVERY_REQUESTS = 100;
 
+// Resolved values in effect for this process. Exported so the startup logger
+// and `GET /api/healthz` can surface them to operators — a typo in the env
+// var name (or a value that whitespace-trims back to the default) would
+// otherwise silently ship the old behaviour.
+export const clientErrorsRateLimitConfig: Readonly<{
+  windowMs: number;
+  limit: number;
+}> = Object.freeze({
+  windowMs: WINDOW_MS,
+  limit: MAX_REQUESTS_PER_WINDOW,
+});
+
 let requestsSinceLastCleanup = 0;
 
 function getClientKey(req: Request): string {

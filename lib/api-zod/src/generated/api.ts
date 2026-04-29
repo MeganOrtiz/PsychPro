@@ -13,6 +13,26 @@ import * as zod from "zod";
  */
 export const HealthCheckResponse = zod.object({
   status: zod.string(),
+  config: zod
+    .object({
+      clientErrorsRateLimit: zod
+        .object({
+          windowMs: zod
+            .number()
+            .describe("Sliding window length, in milliseconds."),
+          limit: zod
+            .number()
+            .describe(
+              "Max requests per IP per window before responding with 429.",
+            ),
+        })
+        .describe(
+          "Per-IP throttle applied to POST \/api\/client-errors. Defaults to a 60 000 ms window with 30 requests; overridable via CLIENT_ERRORS_RATE_LIMIT_WINDOW_MS and CLIENT_ERRORS_RATE_LIMIT_MAX.",
+        ),
+    })
+    .describe(
+      "Resolved tunables in effect for this process. Lets operators verify that environment overrides took effect without having to trigger the relevant code path.",
+    ),
 });
 
 /**

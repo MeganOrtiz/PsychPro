@@ -8,10 +8,12 @@
 
 export * from "./attemptRecord";
 export * from "./checkoutSessionResponse";
+export * from "./clientErrorsRateLimitConfig";
 export * from "./createCheckoutSessionBody";
 export * from "./dashboardSummary";
 export * from "./flashcard";
 export * from "./flashcardDifficulty";
+export * from "./healthConfig";
 export * from "./healthStatus";
 export * from "./leaderboard";
 export * from "./leaderboardEntry";

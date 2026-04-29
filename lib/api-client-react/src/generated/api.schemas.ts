@@ -5,8 +5,26 @@
  * NeuroNotes API specification
  * OpenAPI spec version: 0.1.0
  */
+/**
+ * Per-IP throttle applied to POST /api/client-errors. Defaults to a 60 000 ms window with 30 requests; overridable via CLIENT_ERRORS_RATE_LIMIT_WINDOW_MS and CLIENT_ERRORS_RATE_LIMIT_MAX.
+ */
+export interface ClientErrorsRateLimitConfig {
+  /** Sliding window length, in milliseconds. */
+  windowMs: number;
+  /** Max requests per IP per window before responding with 429. */
+  limit: number;
+}
+
+/**
+ * Resolved tunables in effect for this process. Lets operators verify that environment overrides took effect without having to trigger the relevant code path.
+ */
+export interface HealthConfig {
+  clientErrorsRateLimit: ClientErrorsRateLimitConfig;
+}
+
 export interface HealthStatus {
   status: string;
+  config: HealthConfig;
 }
 
 export interface Topic {

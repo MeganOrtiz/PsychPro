@@ -115,4 +115,8 @@ once to seed Pro + Scholar products in live Stripe.
 - `CLIENT_ERRORS_RATE_LIMIT_WINDOW_MS` (default `60000`) and
   `CLIENT_ERRORS_RATE_LIMIT_MAX` (default `30`) override the per-IP throttle on
   `POST /api/client-errors` without a code change. Read at API server startup;
-  invalid values fail fast with a clear error. See PUBLISHING.md for details.
+  invalid values fail fast with a clear error. The resolved values are logged
+  once at boot (`"Resolved client-error rate limit"`) and returned in the
+  `config.clientErrorsRateLimit` field of `GET /api/healthz`, so operators can
+  confirm an override took effect without triggering 429s. See PUBLISHING.md
+  for details.
