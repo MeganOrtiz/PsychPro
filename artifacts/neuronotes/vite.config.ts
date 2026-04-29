@@ -2,7 +2,28 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
+import { execSync } from "child_process";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
+
+function resolveReleaseId(): string {
+  const fromEnv = process.env.VITE_RELEASE_ID;
+  if (typeof fromEnv === "string" && fromEnv.trim()) {
+    return fromEnv.trim();
+  }
+  try {
+    const sha = execSync("git rev-parse --short HEAD", {
+      stdio: ["ignore", "pipe", "ignore"],
+    })
+      .toString()
+      .trim();
+    if (sha) return sha;
+  } catch {
+    // git not available or not a git checkout — fall through to timestamp
+  }
+  return `build-${new Date().toISOString().replace(/[:.]/g, "-")}`;
+}
+
+process.env.VITE_RELEASE_ID = resolveReleaseId();
 
 const rawPort = process.env.PORT;
 

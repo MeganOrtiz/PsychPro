@@ -4,10 +4,18 @@ export interface ClientErrorPayload {
   componentStack?: string;
   url?: string;
   userAgent?: string;
+  releaseId?: string;
 }
 
 const REPORT_ENDPOINT = "/api/client-errors";
 const DEDUPE_WINDOW_MS = 5000;
+
+const RELEASE_ID: string | undefined = (() => {
+  const value = import.meta.env.VITE_RELEASE_ID;
+  if (typeof value !== "string") return undefined;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : undefined;
+})();
 
 const recentErrors = new Map<string, number>();
 
@@ -33,8 +41,13 @@ function dedupeKey(payload: ClientErrorPayload): string {
 export function reportClientError(payload: ClientErrorPayload): void {
   if (!shouldReport(dedupeKey(payload))) return;
 
+  const enriched: ClientErrorPayload =
+    payload.releaseId === undefined && RELEASE_ID !== undefined
+      ? { ...payload, releaseId: RELEASE_ID }
+      : payload;
+
   try {
-    const body = JSON.stringify(payload);
+    const body = JSON.stringify(enriched);
     if (typeof navigator !== "undefined" && typeof navigator.sendBeacon === "function") {
       const blob = new Blob([body], { type: "application/json" });
       const ok = navigator.sendBeacon(REPORT_ENDPOINT, blob);
