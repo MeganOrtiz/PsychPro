@@ -15,6 +15,7 @@ export * from "./flashcardDifficulty";
 export * from "./healthStatus";
 export * from "./leaderboard";
 export * from "./leaderboardEntry";
+export * from "./portalSessionResponse";
 export * from "./practiceExam";
 export * from "./quizQuestion";
 export * from "./quizQuestionCorrectAnswer";

@@ -183,6 +183,10 @@ export interface CheckoutSessionResponse {
   url: string;
 }
 
+export interface PortalSessionResponse {
+  url: string;
+}
+
 export interface SubscriptionStatus {
   status: string;
   /** @nullable */

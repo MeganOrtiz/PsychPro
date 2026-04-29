@@ -369,3 +369,10 @@ export const GetSubscriptionStatusResponse = zod.object({
   subscriptionId: zod.string().nullish(),
   currentPeriodEnd: zod.string().nullish(),
 });
+
+/**
+ * @summary Create a Stripe Customer Portal session
+ */
+export const CreatePortalSessionResponse = zod.object({
+  url: zod.string(),
+});

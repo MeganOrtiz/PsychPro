@@ -24,6 +24,7 @@ import type {
   Flashcard,
   HealthStatus,
   Leaderboard,
+  PortalSessionResponse,
   PracticeExam,
   QuizQuestion,
   RecordAttemptBody,
@@ -1753,3 +1754,84 @@ export function useGetSubscriptionStatus<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+/**
+ * @summary Create a Stripe Customer Portal session
+ */
+export const getCreatePortalSessionUrl = () => {
+  return `/api/subscription/portal`;
+};
+
+export const createPortalSession = async (
+  options?: RequestInit,
+): Promise<PortalSessionResponse> => {
+  return customFetch<PortalSessionResponse>(getCreatePortalSessionUrl(), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getCreatePortalSessionMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createPortalSession>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createPortalSession>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationKey = ["createPortalSession"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createPortalSession>>,
+    void
+  > = () => {
+    return createPortalSession(requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreatePortalSessionMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createPortalSession>>
+>;
+
+export type CreatePortalSessionMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Create a Stripe Customer Portal session
+ */
+export const useCreatePortalSession = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createPortalSession>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createPortalSession>>,
+  TError,
+  void,
+  TContext
+> => {
+  return useMutation(getCreatePortalSessionMutationOptions(options));
+};

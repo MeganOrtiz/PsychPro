@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useSearch } from "wouter";
-import { Check, Zap, Crown, Loader2, BookMarked, Sparkles } from "lucide-react";
-import { useGetSubscriptionPlans, useGetSubscriptionStatus, useCreateCheckoutSession } from "@workspace/api-client-react";
+import { Check, Zap, Crown, Loader2, BookMarked, Sparkles, Settings } from "lucide-react";
+import { useGetSubscriptionPlans, useGetSubscriptionStatus, useCreateCheckoutSession, useCreatePortalSession } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
@@ -48,6 +48,7 @@ export default function SubscriptionPage() {
   const { data: plans, isLoading: plansLoading } = useGetSubscriptionPlans();
   const { data: status, isLoading: statusLoading } = useGetSubscriptionStatus();
   const createCheckout = useCreateCheckoutSession();
+  const createPortal = useCreatePortalSession();
 
   const [statusData, setStatusData] = useState<StatusData | null>(null);
 
@@ -70,7 +71,7 @@ export default function SubscriptionPage() {
 
   const isActive = status?.status === "active";
   const isPro = isActive && statusData?.tier !== "scholar";
-  const isScholar = statusData?.tier === "scholar";
+  const isScholar = isActive && statusData?.tier === "scholar";
 
   const proPlans = (plans as Plan[] | undefined)?.filter((p) => !p.name.toLowerCase().includes("scholar")) ?? [];
   const scholarPlans = (plans as Plan[] | undefined)?.filter((p) => p.name.toLowerCase().includes("scholar")) ?? [];
@@ -81,6 +82,15 @@ export default function SubscriptionPage() {
       if (result.url) window.location.href = result.url;
     } catch {
       toast.error("Could not start checkout. Please try again.");
+    }
+  }
+
+  async function handleManageSubscription() {
+    try {
+      const result = await createPortal.mutateAsync();
+      if (result.url) window.location.href = result.url;
+    } catch {
+      toast.error("Could not open the billing portal. Please try again.");
     }
   }
 
@@ -100,21 +110,37 @@ export default function SubscriptionPage() {
       </div>
 
       {(isPro || isScholar) && (
-        <div className={`border rounded-xl p-4 mb-6 flex items-center gap-3 ${isScholar ? "bg-purple-50 dark:bg-purple-950/30 border-purple-200 dark:border-purple-800" : "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800"}`} data-testid="active-subscription-banner">
-          {isScholar ? <Sparkles className="w-5 h-5 text-purple-600 dark:text-purple-400" /> : <Crown className="w-5 h-5 text-green-600 dark:text-green-400" />}
-          <div>
-            <p className={`font-semibold ${isScholar ? "text-purple-900 dark:text-purple-300" : "text-green-900 dark:text-green-300"}`}>
-              {isScholar ? "You're on Scholar!" : "You're on Pro!"}
-            </p>
-            <p className={`text-sm ${isScholar ? "text-purple-700 dark:text-purple-400" : "text-green-700 dark:text-green-400"}`}>
-              {isScholar ? "You have full access including custom study decks." : "Enjoy unlimited access to all built-in content."}
-            </p>
-            {statusData?.currentPeriodEnd && (
-              <p className={`text-xs mt-0.5 ${isScholar ? "text-purple-600 dark:text-purple-500" : "text-green-600 dark:text-green-500"}`}>
-                Renews: {new Date(statusData.currentPeriodEnd).toLocaleDateString()}
+        <div className={`border rounded-xl p-4 mb-6 flex flex-col sm:flex-row sm:items-center gap-3 ${isScholar ? "bg-purple-50 dark:bg-purple-950/30 border-purple-200 dark:border-purple-800" : "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800"}`} data-testid="active-subscription-banner">
+          <div className="flex items-center gap-3 flex-1">
+            {isScholar ? <Sparkles className="w-5 h-5 text-purple-600 dark:text-purple-400 flex-shrink-0" /> : <Crown className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" />}
+            <div>
+              <p className={`font-semibold ${isScholar ? "text-purple-900 dark:text-purple-300" : "text-green-900 dark:text-green-300"}`}>
+                {isScholar ? "You're on Scholar!" : "You're on Pro!"}
               </p>
-            )}
+              <p className={`text-sm ${isScholar ? "text-purple-700 dark:text-purple-400" : "text-green-700 dark:text-green-400"}`}>
+                {isScholar ? "You have full access including custom study decks." : "Enjoy unlimited access to all built-in content."}
+              </p>
+              {statusData?.currentPeriodEnd && (
+                <p className={`text-xs mt-0.5 ${isScholar ? "text-purple-600 dark:text-purple-500" : "text-green-600 dark:text-green-500"}`}>
+                  Renews: {new Date(statusData.currentPeriodEnd).toLocaleDateString()}
+                </p>
+              )}
+            </div>
           </div>
+          <Button
+            variant="outline"
+            size="sm"
+            className="sm:flex-shrink-0"
+            onClick={handleManageSubscription}
+            disabled={createPortal.isPending}
+            data-testid="button-manage-subscription"
+          >
+            {createPortal.isPending ? (
+              <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Opening...</>
+            ) : (
+              <><Settings className="w-4 h-4 mr-2" />Manage subscription</>
+            )}
+          </Button>
         </div>
       )}
 

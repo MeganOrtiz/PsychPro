@@ -94,6 +94,33 @@ router.post("/subscription/checkout", async (req: Request, res: Response): Promi
   }
 });
 
+router.post("/subscription/portal", async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = getUserId(req);
+    if (!userId) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+    const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
+    if (!user?.stripeCustomerId) {
+      res.status(400).json({ error: "No Stripe customer on file" });
+      return;
+    }
+
+    const stripe = await getUncachableStripeClient();
+    const baseUrl = `https://${process.env.REPLIT_DOMAINS?.split(",")[0]}`;
+    const session = await stripe.billingPortal.sessions.create({
+      customer: user.stripeCustomerId,
+      return_url: `${baseUrl}/subscription`,
+    });
+
+    res.json({ url: session.url });
+  } catch (err) {
+    req.log.error({ err }, "Error creating customer portal session");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 router.get("/subscription/status", async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = getUserId(req);
