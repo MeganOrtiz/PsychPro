@@ -9,10 +9,14 @@ async function seed() {
   // (users, progress, quiz_attempts, exam_attempts, custom_decks, feedback).
   //
   // Strategy:
-  //  1. Topics are upserted by their unique `name`. Existing topic rows keep
+  //  1. The entire refresh runs inside a single `db.transaction(...)`. Either
+  //     every step commits together or the database is rolled back to its
+  //     prior state — a crash partway through will never leave the live app
+  //     with empty flashcard / quiz / study-guide tables.
+  //  2. Topics are upserted by their unique `name`. Existing topic rows keep
   //     their `id`, so foreign keys from `progress`, `quiz_attempts`, and
   //     `exam_attempts` remain valid after a content refresh.
-  //  2. Child content tables (flashcards, quiz_questions, study_guides,
+  //  3. Child content tables (flashcards, quiz_questions, study_guides,
   //     practice_exams, practice_exam_questions) are wiped and re-inserted.
   //     None of these are referenced by user-data tables, so it is safe to
   //     replace them wholesale on every run. We TRUNCATE the set together
@@ -23,7 +27,8 @@ async function seed() {
   // as a brand-new topic (the old row will become orphaned, and any progress
   // on it stays attached to the old `id`). Renames should be performed with a
   // dedicated migration script, not by editing this file in place.
-  await db.execute(
+  await db.transaction(async (tx) => {
+  await tx.execute(
     sql`TRUNCATE practice_exam_questions, practice_exams, study_guides, quiz_questions, flashcards RESTART IDENTITY`,
   );
 
@@ -48,7 +53,7 @@ async function seed() {
   // Upsert each topic by `name` (the unique key). Existing rows keep their
   // `id`, so user `progress` rows still point at the correct topic after a
   // content refresh. New names get inserted as fresh rows.
-  const topics = await db
+  const topics = await tx
     .insert(topicsTable)
     .values(topicSeed)
     .onConflictDoUpdate({
@@ -908,7 +913,7 @@ async function seed() {
     { topicId: T["Neurocognitive Disorders"], question: "What is the 'islands of memory' phenomenon in dementia?", answer: "Some patients with advanced dementia retain patches of well-preserved memory (often remote autobiographical memories or highly over-learned skills) amid otherwise severe cognitive decline — reflects relative preservation of posterior cortical regions and emotional memory networks.", difficulty: "hard" },
   ];
 
-  await db.insert(flashcardsTable).values(flashcards);
+  await tx.insert(flashcardsTable).values(flashcards);
 
   // ===========================================================================
   // QUIZ QUESTIONS (10 per topic = 150 total)
@@ -1215,7 +1220,7 @@ async function seed() {
     };
   });
 
-  const insertedQuestions = await db.insert(quizQuestionsTable).values(quizQuestionsToInsert).returning();
+  const insertedQuestions = await tx.insert(quizQuestionsTable).values(quizQuestionsToInsert).returning();
 
   // ===========================================================================
   // STUDY GUIDES (1 per topic = 15 total)
@@ -3673,7 +3678,7 @@ The classic triad: Gait disturbance (magnetic/apraxic gait — first and most pr
 **Treatment:** Ventriculoperitoneal (VP) shunt — gait improves most (and quickly), incontinence improves next, cognitive symptoms least reliably. Most successful in patients identified early.`
     },
   ];
-  await db.insert(studyGuidesTable).values(studyGuides);
+  await tx.insert(studyGuidesTable).values(studyGuides);
 
   // ===========================================================================
   // PRACTICE EXAMS (1 per topic, each using 5 questions from that topic's quiz)
@@ -3703,7 +3708,7 @@ The classic triad: Gait disturbance (magnetic/apraxic gait — first and most pr
     { topicId: T["Neurocognitive Disorders"], title: "Neurocognitive Disorders — Practice Exam" },
   ];
 
-  const insertedExams = await db.insert(practiceExamsTable).values(
+  const insertedExams = await tx.insert(practiceExamsTable).values(
     examDefs.map(e => ({
       topicId: e.topicId,
       title: e.title,
@@ -3726,7 +3731,7 @@ The classic triad: Gait disturbance (magnetic/apraxic gait — first and most pr
   }
 
   if (examQuestionLinks.length > 0) {
-    await db.insert(practiceExamQuestionsTable).values(examQuestionLinks);
+    await tx.insert(practiceExamQuestionsTable).values(examQuestionLinks);
   }
 
   console.log("✅ Seed complete (course notes + supplementary content):");
@@ -3734,6 +3739,7 @@ The classic triad: Gait disturbance (magnetic/apraxic gait — first and most pr
   console.log(`   ${quizQuestionsToInsert.length} quiz questions`);
   console.log(`   ${studyGuides.length} study guides`);
   console.log(`   ${insertedExams.length} practice exams`);
+  });
 }
 
 seed()
