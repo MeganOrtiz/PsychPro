@@ -1,0 +1,61 @@
+Add four interactive learning science components to the existing study app. These should feel cohesive with the current UI. Here are the specs:
+
+1. Active Recall Module
+Build a "Brain Dump" card component that:
+
+Shows a topic/concept title
+Has a large open text area where the user types everything they remember before seeing the answer
+Has a "Reveal Answer" button that slides/fades in the full content beneath
+Tracks whether the user attempted recall before revealing (simple boolean state)
+Displays a motivational micro-label: "Retrieval strengthens memory pathways far more than re-exposure"
+
+Visual recommendation: Add a brain icon (lucide-react Brain) next to the section header. Consider a subtle pulsing glow animation on the "Reveal" button to signal it's the key interaction. Use a warm amber or coral accent color to distinguish this zone from passive reading areas.
+
+2. Spaced Repetition Scheduler
+Build a review schedule tracker that:
+
+Displays a card's review timeline: Day 1 → Day 3 → Day 7 → Day 14
+Visually marks which intervals are completed vs. upcoming (checkmarks / grayed out dots)
+Shows a "Next Review" countdown badge (e.g., "Review in 3 days")
+Has a "Mark as Reviewed" button that advances the card to the next interval
+Stores state in localStorage so progress persists across sessions
+
+Visual recommendation: Use a horizontal timeline with connected nodes (circles + lines). Completed nodes filled/colored, future nodes hollow. Add a small calendar icon (CalendarDays from lucide-react) in the section header. A progress bar above the timeline showing overall retention stage (e.g., 2 of 4 intervals complete) would be impactful.
+
+3. Interleaving Study Mode
+Build a "Mixed Mode" session feature that:
+
+Takes a set of topics (e.g., ADHD, Mood Disorders, ASD, Anxiety) as input
+Automatically shuffles and interleaves flashcards/questions across topics rather than grouping them
+Shows a small topic tag/badge on each card so users know which domain they're in
+Has a toggle: "Blocked Mode" vs. "Interleaved Mode" (so users can compare)
+Displays a session summary at the end showing how many topics were covered
+
+Visual recommendation: Use color-coded topic badges (each disorder category gets a distinct pill color). Add a shuffle icon (Shuffle from lucide-react) on the mode toggle button with a rotation animation when switching modes. A small heat-map or bar at the top showing topic distribution across the session would make the interleaving visually tangible.
+
+4. Elaboration Prompt Panel
+Build a sidebar or expandable drawer that:
+
+Appears alongside any flashcard or study content
+Shows 3 rotating elaboration prompts, such as:
+
+"Why does this make sense clinically?"
+"How would you explain this to a patient's parent?"
+"What case or client does this remind you of?"
+"How does this connect to what you studied yesterday?"
+
+
+Has a "New Prompt" button that cycles to the next question
+Includes a small text field for the user to jot a quick elaboration note (saved locally)
+Displays a static label: "Deep processing = stronger, more accessible memory"
+
+Visual recommendation: Use a lightbulb icon (Lightbulb from lucide-react) with a yellow/gold accent for this entire panel — it signals "insight." The prompts should appear with a subtle fade-in transition on each cycle. Consider a soft left-border accent line (like a blockquote style) to visually separate elaboration notes from the main card content.
+
+General Design Notes for All Four Components:
+
+Keep all four visually consistent with the existing app's color palette and font choices
+Each component should have a clearly labeled header with an icon and a one-line "why it works" explanation in muted/secondary text
+All four should be mobile-responsive
+Use lucide-react for all icons
+Animations should be subtle — fade-ins, slide-reveals, and smooth transitions only (no jarring effects)
+If the app uses Tailwind, use utility classes; if it uses CSS modules or styled-components, match that pattern

@@ -255,6 +255,31 @@
   height: 100%;
 }
 
+/* Learning-tools shared animations */
+@keyframes learning-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: learning-fade-in 260ms ease-out both;
+}
+
+@keyframes learning-pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.45); }
+  50%      { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0); }
+}
+.animate-pulse-glow {
+  animation: learning-pulse-glow 1.6s ease-in-out infinite;
+}
+
+@keyframes learning-spin-once {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.animate-spin-once {
+  animation: learning-spin-once 500ms ease-in-out 1;
+}
+
 @layer utilities {
   input[type="search"]::-webkit-search-cancel-button {
     @apply hidden;

@@ -60,6 +60,12 @@ A mobile-responsive neuroscience/neuropsychology study app.
 - Dashboard with progress summary
 - Topics browser (15 consolidated topics) with search/filter
 - Flashcards with flip animation (click to reveal)
+- **Study Lab** (`/study-lab`) — four evidence-based learning components:
+  - `BrainDump` (active recall, amber)
+  - `SpacedRepetitionScheduler` (1/3/7/14-day timeline, localStorage)
+  - `InterleavingMode` (mixed vs blocked toggle, color-coded topic pills)
+  - `ElaborationPanel` (rotating prompts, local notes)
+  - Components live in `src/components/learning/` and are reusable in any page
 - Multiple-choice quizzes with explanations
 - Scrollable study guides (custom Markdown renderer)
 - Practice exams (timed 90s/question or untimed)
