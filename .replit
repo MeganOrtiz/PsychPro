@@ -54,3 +54,8 @@ externalPort = 4200
 
 [nix]
 channel = "stable-25_05"
+
+[userenv]
+
+[userenv.shared]
+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 = "Stripe"
