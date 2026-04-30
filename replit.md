@@ -31,6 +31,10 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 
 See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details.
 
+### TypeScript references
+
+Artifact tsconfigs (`artifacts/*/tsconfig.json`) intentionally do **not** list `lib/*` packages in `references`. Lib packages publish their `exports` field directly to source (`./src/index.ts`), so artifact typechecks resolve types from source via the package `exports`. Listing them as references would tie typechecking to each lib's `dist/` declarations and cause `TS6305` whenever a sibling lib hadn't been rebuilt. Lib build orchestration still happens at the root tsconfig via `tsc --build` (`pnpm run typecheck:libs`).
+
 ## PsychPro App
 
 A mobile-responsive neuroscience/neuropsychology study app.
