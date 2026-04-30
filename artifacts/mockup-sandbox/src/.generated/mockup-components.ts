@@ -4,5 +4,8 @@ export const modules: ModuleMap = {
   "./components/mockups/dashboard-hero-slot/QuickStart.tsx": () => import("../components/mockups/dashboard-hero-slot/QuickStart.tsx"),
   "./components/mockups/dashboard-hero-slot/StreakFocus.tsx": () => import("../components/mockups/dashboard-hero-slot/StreakFocus.tsx"),
   "./components/mockups/dashboard-hero-slot/TopicOfTheDay.tsx": () => import("../components/mockups/dashboard-hero-slot/TopicOfTheDay.tsx"),
-  "./components/mockups/dashboard-hero-slot/WeeklySummary.tsx": () => import("../components/mockups/dashboard-hero-slot/WeeklySummary.tsx")
+  "./components/mockups/dashboard-hero-slot/WeeklySummary.tsx": () => import("../components/mockups/dashboard-hero-slot/WeeklySummary.tsx"),
+  "./components/mockups/topic-page-visual/ConceptMap.tsx": () => import("../components/mockups/topic-page-visual/ConceptMap.tsx"),
+  "./components/mockups/topic-page-visual/InlineAnatomy.tsx": () => import("../components/mockups/topic-page-visual/InlineAnatomy.tsx"),
+  "./components/mockups/topic-page-visual/ShowMeDrawer.tsx": () => import("../components/mockups/topic-page-visual/ShowMeDrawer.tsx")
 };
