@@ -12,6 +12,7 @@
     "push-force": "tsx scripts/push.ts",
     "seed": "tsx src/seed.ts",
     "test:seed-idempotency": "tsx test/seed-idempotency.test.ts",
+    "test:push-fresh-db": "tsx test/push-fresh-db.test.ts",
     "add-foundation-topics": "tsx src/add-foundation-topics.ts",
     "add-neurodevelopmental": "tsx src/add-neurodevelopmental-topic.ts",
     "expand-practice-exams": "tsx src/expand-practice-exams.ts",

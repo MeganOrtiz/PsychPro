@@ -171,6 +171,22 @@ If duplicate `topics.name` rows already exist, the backfill aborts with a
 list of the offending names — resolve the duplicates first, then re-run
 `pnpm --filter @workspace/db run push`.
 
+To verify the fresh-provisioning contract above (every table, index, and the
+`topics_name_unique` constraint really do come up from an empty database with
+no manual intervention), run the one-shot integration test:
+
+```bash
+pnpm --filter @workspace/db run test:push-fresh-db
+```
+
+It provisions a temporary database next to the current `DATABASE_URL`, runs
+`push` against it twice (once for fresh-create, once for idempotency), snapshots
+`information_schema`, and drops the temporary database when done. Useful before
+the first publish on a brand-new project, or after editing
+`lib/db/scripts/push.ts` or `lib/db/src/schema/index.ts`. Requires `CREATE
+DATABASE` privilege on the connection (the default Replit Postgres user has
+this).
+
 The seed is fully idempotent and **safe to re-run on a live database**. It
 preserves all user data:
 
