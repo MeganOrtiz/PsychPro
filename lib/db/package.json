@@ -8,8 +8,8 @@
     "./schema": "./src/schema/index.ts"
   },
   "scripts": {
-    "push": "drizzle-kit push --config ./drizzle.config.ts",
-    "push-force": "drizzle-kit push --force --config ./drizzle.config.ts",
+    "push": "tsx scripts/push.ts",
+    "push-force": "tsx scripts/push.ts",
     "seed": "tsx src/seed.ts",
     "test:seed-idempotency": "tsx test/seed-idempotency.test.ts",
     "add-foundation-topics": "tsx src/add-foundation-topics.ts",

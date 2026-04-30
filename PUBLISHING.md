@@ -133,9 +133,37 @@ questions, 15 study guides, 15 practice exams):
 # Run these against the production DATABASE_URL (from the deployment shell, or
 # locally with the production DATABASE_URL exported).
 
-pnpm --filter @workspace/db run push     # creates all tables
+pnpm --filter @workspace/db run push     # creates all tables (non-interactive)
 pnpm --filter @workspace/db run seed     # inserts all study content
 ```
+
+The `push` script is a thin wrapper around `drizzle-kit push --force`
+(`lib/db/scripts/push.ts`) that:
+
+- Requires `DATABASE_URL` to be set and exits with a clear error otherwise.
+- Runs a one-time backfill on existing databases that pre-date the
+  `topics.name` unique constraint: it adds `topics_name_unique` directly via
+  SQL when the `topics` table exists but the constraint is missing. This is
+  what lets `push` complete without the interactive
+  *"do you want to truncate `topics`?"* prompt that `drizzle-kit` would
+  otherwise show on a drifted database. On a fresh database (no `topics`
+  table yet) the backfill is a no-op and `drizzle-kit` creates everything
+  from the schema, including the `client_error_rate_hits` and
+  `client_error_rate_warnings` rate-limit tables.
+- Then invokes `drizzle-kit push --force --config ./drizzle.config.ts` so any
+  remaining data-loss prompts are auto-approved. Re-running the script is
+  idempotent.
+
+> **Both `push` and `push-force` now imply `--force`.** They go through the
+> same wrapper and auto-approve drizzle-kit's data-loss prompts. There is no
+> longer a "ask-before-destructive" mode in this repo — if you need to inspect
+> a destructive change before applying it, run `pnpm --filter @workspace/db
+> exec drizzle-kit push --config ./drizzle.config.ts` directly (interactive)
+> against a scratch database first.
+
+If duplicate `topics.name` rows already exist, the backfill aborts with a
+list of the offending names — resolve the duplicates first, then re-run
+`pnpm --filter @workspace/db run push`.
 
 The seed is fully idempotent and **safe to re-run on a live database**. It
 preserves all user data:
