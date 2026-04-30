@@ -6,7 +6,10 @@ import {
   clientErrorRateHitsTable,
   clientErrorRateWarningsTable,
 } from "@workspace/db";
-import { clientErrorsRateLimit } from "../src/middlewares/clientErrorsRateLimit";
+import {
+  clientErrorsRateLimit,
+  pruneExpiredClientErrorRateRows,
+} from "../src/middlewares/clientErrorsRateLimit";
 
 const WINDOW_MS = 60_000;
 const LIMIT = 30;
@@ -329,6 +332,75 @@ test("once the window elapses, the next overflow logs again", async () => {
     await cleanupForKey(ip);
   }
 });
+
+test(
+  "pruneExpiredClientErrorRateRows deletes hit/warning rows older than the window",
+  async () => {
+    const ip = `test-cleanup-expired-${randomUUID()}`;
+    const freshIp = `test-cleanup-fresh-${randomUUID()}`;
+    try {
+      // Seed an expired hit + warning for `ip` and a fresh hit + warning
+      // for `freshIp`. After the prune, only the expired rows should be
+      // gone — the fresh ones must survive (otherwise the sweeper would
+      // also wipe live rate-limit state for active clients).
+      const aged = new Date(Date.now() - (WINDOW_MS + 5_000));
+      const fresh = new Date();
+
+      await db
+        .insert(clientErrorRateHitsTable)
+        .values({ clientKey: ip, hitAt: aged });
+      await db
+        .insert(clientErrorRateWarningsTable)
+        .values({ clientKey: ip, warnedAt: aged });
+
+      await db
+        .insert(clientErrorRateHitsTable)
+        .values({ clientKey: freshIp, hitAt: fresh });
+      await db
+        .insert(clientErrorRateWarningsTable)
+        .values({ clientKey: freshIp, warnedAt: fresh });
+
+      await pruneExpiredClientErrorRateRows();
+
+      const expiredHits = await db
+        .select()
+        .from(clientErrorRateHitsTable)
+        .where(eq(clientErrorRateHitsTable.clientKey, ip));
+      assert(
+        expiredHits.length === 0,
+        `expected expired hit row for ${ip} to be deleted, found ${expiredHits.length}`,
+      );
+      const expiredWarnings = await db
+        .select()
+        .from(clientErrorRateWarningsTable)
+        .where(eq(clientErrorRateWarningsTable.clientKey, ip));
+      assert(
+        expiredWarnings.length === 0,
+        `expected expired warning row for ${ip} to be deleted, found ${expiredWarnings.length}`,
+      );
+
+      const freshHits = await db
+        .select()
+        .from(clientErrorRateHitsTable)
+        .where(eq(clientErrorRateHitsTable.clientKey, freshIp));
+      assert(
+        freshHits.length === 1,
+        `expected fresh hit row for ${freshIp} to survive, found ${freshHits.length}`,
+      );
+      const freshWarnings = await db
+        .select()
+        .from(clientErrorRateWarningsTable)
+        .where(eq(clientErrorRateWarningsTable.clientKey, freshIp));
+      assert(
+        freshWarnings.length === 1,
+        `expected fresh warning row for ${freshIp} to survive, found ${freshWarnings.length}`,
+      );
+    } finally {
+      await cleanupForKey(ip);
+      await cleanupForKey(freshIp);
+    }
+  },
+);
 
 async function main(): Promise<void> {
   let failures = 0;

@@ -47,15 +47,21 @@ startup with a clear error.
 | --- | --- | --- | --- |
 | `CLIENT_ERRORS_RATE_LIMIT_WINDOW_MS` | API server (`POST /api/client-errors`) | `60000` (60s) | Sliding window length, in milliseconds, for the per-IP throttle on client error reports. |
 | `CLIENT_ERRORS_RATE_LIMIT_MAX` | API server (`POST /api/client-errors`) | `30` | Max requests per IP per window before responding `429 Too Many Requests`. Lower it during an incident to clamp down on noisy clients without a redeploy. |
+| `CLIENT_ERRORS_RATE_LIMIT_CLEANUP_INTERVAL_MS` | API server (background sweeper) | same value as `CLIENT_ERRORS_RATE_LIMIT_WINDOW_MS` | How often the API server sweeps `client_error_rate_hits` / `client_error_rate_warnings` for rows older than the sliding window. The sweep runs in-process on every API instance and is `unref()`ed, so it never blocks process shutdown. With the default an expired row sticks around at most ~2× the window length before being collected; raise it on quiet deployments to cut DB writes, lower it during an incident to keep the tables tighter. Setting it to a value larger than the window is supported (rows simply linger longer); zero or negative values are rejected at startup. |
 
 Changes to these values take effect on the next deploy / API server restart.
 
 To verify an override took effect:
 - The API server logs the resolved values exactly once at boot, e.g.
-  `INFO: Resolved client-error rate limit { clientErrorsRateLimit: { windowMs: 60000, limit: 30 } }`.
-- `GET /api/healthz` returns the same numbers under `config.clientErrorsRateLimit`,
-  so you can `curl https://<your-app>.replit.app/api/healthz` to check a
-  deployed instance without exhausting the limit and watching for 429s.
+  `INFO: Resolved client-error rate limit { clientErrorsRateLimit: { windowMs: 60000, limit: 30 } }`,
+  followed by
+  `INFO: Started client-error rate-limit cleanup sweeper { clientErrorsRateLimitCleanup: { intervalMs: 60000 } }`.
+- `GET /api/healthz` returns the window/limit numbers under
+  `config.clientErrorsRateLimit`, so you can
+  `curl https://<your-app>.replit.app/api/healthz` to check a deployed
+  instance without exhausting the limit and watching for 429s. (The cleanup
+  interval is verified via the boot log only — it is not surfaced on
+  `/healthz`.)
 
 ---
 
