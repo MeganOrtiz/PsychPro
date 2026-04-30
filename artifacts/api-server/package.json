@@ -8,7 +8,7 @@
     "build": "node ./build.mjs",
     "start": "node --enable-source-maps ./dist/index.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "pnpm run test:client-errors-rate-limit && pnpm run test:client-errors-handler && pnpm run test:healthz",
+    "test": "node ./scripts/run-tests.mjs",
     "test:client-errors-rate-limit": "tsx test/clientErrorsRateLimit.test.ts",
     "test:client-errors-handler": "tsx test/clientErrorsHandler.test.ts",
     "test:healthz": "tsx test/healthz.test.ts"
