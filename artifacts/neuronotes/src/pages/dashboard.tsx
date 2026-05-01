@@ -39,6 +39,27 @@ import {
 
 const DAY_LABELS = ["S", "M", "T", "W", "T", "F", "S"];
 
+const PALETTE = {
+  bg: "#061826",
+  surface: "#0c2538",
+  surfaceElev: "#11324d",
+  steel: "#1C4E75",
+  teal: "#2FA0C6",
+  surf: "#58C9F3",
+  mist: "#BDE5FF",
+};
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <p
+      className="text-[11px] font-semibold tracking-[0.18em] uppercase mb-2 ml-1"
+      style={{ color: `${PALETTE.steel}cc` }}
+    >
+      {children}
+    </p>
+  );
+}
+
 type RecentTopic = {
   id: number;
   topicId: number;
@@ -195,7 +216,11 @@ export default function DashboardPage() {
 
   return (
     <div
-      className="min-h-full bg-[#FAF7F2] dark:bg-background"
+      className="min-h-full dark:bg-background"
+      style={{
+        background:
+          "linear-gradient(180deg, #F5FAFD 0%, #EAF3F9 60%, #DEEBF4 100%)",
+      }}
       data-testid="dashboard-page"
     >
       <div className="max-w-[1400px] mx-auto p-4 md:p-6 lg:p-8">
@@ -247,10 +272,17 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-6">
           <div className="min-w-0 space-y-6">
             {/* Begin/Continue Your Journey (full width, top) */}
-            <div className="bg-card border border-border rounded-xl p-5">
+            <div>
+              <SectionLabel>
+                {continueTopic ? "Continue Your Journey" : "Begin Your Journey"}
+              </SectionLabel>
+            <div
+              className="bg-white border rounded-2xl p-5 shadow-sm"
+              style={{ borderColor: `${PALETTE.steel}26` }}
+            >
               <div className="flex items-center gap-2 mb-4">
-                <TrendingUp className="w-4 h-4 text-primary" />
-                <h2 className="font-semibold text-foreground">
+                <TrendingUp className="w-4 h-4" style={{ color: PALETTE.teal }} />
+                <h2 className="font-semibold text-slate-900">
                   {continueTopic ? "Continue Your Journey" : "Begin Your Journey"}
                 </h2>
               </div>
@@ -296,12 +328,18 @@ export default function DashboardPage() {
                 </div>
               )}
             </div>
+            </div>
 
             {/* Recommended for You — 2x2 grid of 4 topics */}
-            <div className="bg-card border border-border rounded-xl p-5">
+            <div>
+              <SectionLabel>Recommended for You</SectionLabel>
+            <div
+              className="bg-white border rounded-2xl p-5 shadow-sm"
+              style={{ borderColor: `${PALETTE.steel}26` }}
+            >
               <div className="mb-4">
-                <h2 className="font-semibold text-foreground">Recommended for You</h2>
-                <p className="text-xs text-muted-foreground mt-1">
+                <h2 className="font-semibold text-slate-900">Recommended for You</h2>
+                <p className="text-xs text-slate-500 mt-1">
                   Based on your goals and progress
                 </p>
               </div>
@@ -347,24 +385,30 @@ export default function DashboardPage() {
                   })}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground text-center py-6">
+                <p className="text-sm text-slate-500 text-center py-6">
                   Study a few topics and we'll suggest what to tackle next.
                 </p>
               )}
             </div>
+            </div>
 
             {/* Streak (left) + Leaderboard (right) */}
+            <div>
+              <SectionLabel>Streak · Leaderboard</SectionLabel>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Your Streak */}
-              <div className="bg-card border border-border rounded-xl p-5">
+              <div
+                className="bg-white border rounded-2xl p-5 shadow-sm"
+                style={{ borderColor: `${PALETTE.steel}26` }}
+              >
                 <div className="flex items-center gap-2 mb-3">
-                  <h2 className="font-semibold text-foreground">Your Streak</h2>
+                  <h2 className="font-semibold text-slate-900">Your Streak</h2>
                   <span aria-hidden>🔥</span>
                 </div>
                 <div className="mb-4">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-4xl font-bold text-foreground leading-none">{streak}</span>
-                    <span className="text-sm text-muted-foreground">day streak</span>
+                    <span className="text-4xl font-bold text-slate-900 leading-none">{streak}</span>
+                    <span className="text-sm text-slate-500">day streak</span>
                   </div>
                 </div>
                 <div className="grid grid-cols-7 gap-1 mb-3">
@@ -373,13 +417,13 @@ export default function DashboardPage() {
                       <Flame
                         className={cn(
                           "w-5 h-5 transition-colors",
-                          d.lit ? "text-orange-500 fill-orange-500" : "text-muted-foreground/30"
+                          d.lit ? "text-orange-500 fill-orange-500" : "text-slate-300"
                         )}
                       />
                       <span
                         className={cn(
                           "text-xs",
-                          d.isToday ? "text-foreground font-semibold" : "text-muted-foreground"
+                          d.isToday ? "text-slate-900 font-semibold" : "text-slate-500"
                         )}
                       >
                         {d.label}
@@ -387,7 +431,7 @@ export default function DashboardPage() {
                     </div>
                   ))}
                 </div>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-slate-500">
                   {streak === 0
                     ? "Study today to start a streak."
                     : streak < 3
@@ -397,15 +441,19 @@ export default function DashboardPage() {
               </div>
 
               {/* Leaderboard (moved from right rail) */}
-              <div className="bg-card border border-border rounded-xl p-5">
+              <div
+                className="bg-white border rounded-2xl p-5 shadow-sm"
+                style={{ borderColor: `${PALETTE.steel}26` }}
+              >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <Trophy className="w-4 h-4 text-primary" />
-                    <h2 className="font-semibold text-foreground">Leaderboard</h2>
+                    <Trophy className="w-4 h-4" style={{ color: PALETTE.teal }} />
+                    <h2 className="font-semibold text-slate-900">Leaderboard</h2>
                   </div>
                   <button
                     onClick={() => navigate("/leaderboard")}
-                    className="text-xs text-primary hover:underline"
+                    className="text-xs hover:underline"
+                    style={{ color: PALETTE.teal }}
                     data-testid="button-view-leaderboard"
                   >
                     View all
@@ -418,7 +466,7 @@ export default function DashboardPage() {
                     <Skeleton className="h-8 rounded-lg" />
                   </div>
                 ) : leaderboard.entries.length === 0 ? (
-                  <p className="text-xs text-muted-foreground text-center py-4">
+                  <p className="text-xs text-slate-500 text-center py-4">
                     Be the first to land on the board.
                   </p>
                 ) : (
@@ -428,8 +476,12 @@ export default function DashboardPage() {
                         key={e.userId}
                         className={cn(
                           "flex items-center gap-2 px-2 py-1.5 rounded-lg",
-                          e.isCurrentUser ? "bg-primary/5" : ""
                         )}
+                        style={
+                          e.isCurrentUser
+                            ? { background: `${PALETTE.teal}14` }
+                            : undefined
+                        }
                         data-testid={`leaderboard-row-${e.rank}`}
                       >
                         <div
@@ -441,22 +493,25 @@ export default function DashboardPage() {
                               ? "bg-slate-400/15 text-slate-500"
                               : e.rank === 3
                               ? "bg-amber-700/15 text-amber-700"
-                              : "bg-muted text-muted-foreground"
+                              : "bg-slate-100 text-slate-500"
                           )}
                         >
                           {e.rank}
                         </div>
-                        <p className="text-sm font-medium text-foreground truncate flex-1 min-w-0">
+                        <p className="text-sm font-medium text-slate-900 truncate flex-1 min-w-0">
                           {e.displayName}
                           {e.isCurrentUser && (
-                            <span className="ml-1.5 text-xs text-primary font-semibold">
+                            <span
+                              className="ml-1.5 text-xs font-semibold"
+                              style={{ color: PALETTE.teal }}
+                            >
                               You
                             </span>
                           )}
                         </p>
                         <div className="flex items-center gap-1 flex-shrink-0" title="Topics completed">
-                          <BookOpen className="w-3 h-3 text-muted-foreground" />
-                          <span className="text-xs font-semibold text-foreground tabular-nums">
+                          <BookOpen className="w-3 h-3 text-slate-400" />
+                          <span className="text-xs font-semibold text-slate-900 tabular-nums">
                             {e.topicsCompleted}
                           </span>
                         </div>
@@ -466,10 +521,10 @@ export default function DashboardPage() {
                               "w-3 h-3",
                               e.streak > 0
                                 ? "text-orange-500 fill-orange-500"
-                                : "text-muted-foreground/40"
+                                : "text-slate-300"
                             )}
                           />
-                          <span className="text-xs font-semibold text-foreground tabular-nums">
+                          <span className="text-xs font-semibold text-slate-900 tabular-nums">
                             {e.streak}
                           </span>
                         </div>
@@ -479,8 +534,11 @@ export default function DashboardPage() {
                 )}
               </div>
             </div>
+            </div>
 
             {/* Study Analytics (full width) + Recent Activity / Achievements (2-col) */}
+            <div>
+              <SectionLabel>Study Analytics</SectionLabel>
             <div className="space-y-4">
               <StudyAnalyticsCard
                 series={activitySeries}
@@ -502,13 +560,17 @@ export default function DashboardPage() {
                 />
               </div>
             </div>
+            </div>
 
           </div>
 
           {/* Spotlight rail */}
           <aside className="lg:sticky lg:top-6 self-start space-y-4">
             <TodayReviews topics={allTopics} />
-            <SpotlightCard onCta={() => navigate("/feature-request")} />
+            <div>
+              <SectionLabel>PsychPro Spotlight</SectionLabel>
+              <SpotlightCard onCta={() => navigate("/feature-request")} />
+            </div>
           </aside>
         </div>
       </div>
@@ -591,50 +653,75 @@ function MasteryLegend() {
 
 function SpotlightCard({ onCta }: { onCta: () => void }) {
   return (
-    <div className="relative overflow-hidden rounded-2xl p-6 text-white bg-gradient-to-br from-[#0B1B2E] via-[#0E2A4A] to-[#091627] min-h-[560px]">
+    <div
+      className="relative overflow-hidden rounded-2xl p-6 text-white shadow-xl"
+      style={{
+        background: `radial-gradient(120% 80% at 30% 10%, ${PALETTE.surfaceElev} 0%, ${PALETTE.surface} 45%, ${PALETTE.bg} 100%)`,
+      }}
+    >
       {/* Starry shimmer */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-70"
+        className="pointer-events-none absolute inset-0 opacity-80"
         style={{
           backgroundImage:
-            "radial-gradient(1px 1px at 18% 12%, rgba(255,255,255,.7), transparent 60%), radial-gradient(1.2px 1.2px at 65% 8%, rgba(255,255,255,.6), transparent 60%), radial-gradient(1px 1px at 82% 28%, rgba(255,255,255,.55), transparent 60%), radial-gradient(1.4px 1.4px at 32% 52%, rgba(255,255,255,.4), transparent 60%), radial-gradient(1px 1px at 75% 68%, rgba(255,255,255,.45), transparent 60%), radial-gradient(1px 1px at 12% 76%, rgba(255,255,255,.4), transparent 60%), radial-gradient(1.2px 1.2px at 88% 90%, rgba(255,255,255,.5), transparent 60%)",
+            "radial-gradient(1px 1px at 18% 12%, rgba(255,255,255,.85), transparent 60%), radial-gradient(1.2px 1.2px at 65% 8%, rgba(255,255,255,.7), transparent 60%), radial-gradient(1px 1px at 82% 28%, rgba(255,255,255,.6), transparent 60%), radial-gradient(1.4px 1.4px at 32% 52%, rgba(255,255,255,.45), transparent 60%), radial-gradient(1px 1px at 75% 68%, rgba(255,255,255,.5), transparent 60%), radial-gradient(1px 1px at 12% 76%, rgba(255,255,255,.45), transparent 60%), radial-gradient(1.2px 1.2px at 88% 90%, rgba(255,255,255,.55), transparent 60%), radial-gradient(0.8px 0.8px at 45% 22%, rgba(255,255,255,.5), transparent 60%), radial-gradient(0.8px 0.8px at 25% 38%, rgba(255,255,255,.4), transparent 60%), radial-gradient(1px 1px at 60% 80%, rgba(255,255,255,.4), transparent 60%)",
         }}
       />
+      {/* Soft nebula glows */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-12 -right-12 w-48 h-48 rounded-full blur-3xl"
-        style={{ background: "radial-gradient(closest-side, rgba(56,189,248,.35), transparent)" }}
+        className="pointer-events-none absolute -top-16 -right-12 w-56 h-56 rounded-full blur-3xl"
+        style={{ background: `radial-gradient(closest-side, ${PALETTE.surf}55, transparent)` }}
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -bottom-10 -left-10 w-44 h-44 rounded-full blur-3xl"
-        style={{ background: "radial-gradient(closest-side, rgba(14,165,233,.30), transparent)" }}
+        className="pointer-events-none absolute -bottom-10 -left-10 w-48 h-48 rounded-full blur-3xl"
+        style={{ background: `radial-gradient(closest-side, ${PALETTE.teal}40, transparent)` }}
       />
 
       <div className="relative">
-        <div className="flex items-center justify-center mb-2">
-          <Star className="w-5 h-5 text-amber-300 fill-amber-300/40" />
+        {/* Outlined star (no fill) */}
+        <div className="flex items-center justify-center mb-3">
+          <Star className="w-7 h-7 text-white" strokeWidth={1.5} />
         </div>
-        <h3 className="text-lg font-bold text-center">PsychPro Spotlight</h3>
-        <p className="text-xs text-slate-300 text-center mt-1 mb-5 leading-relaxed">
-          Highlighting the next generation
-          <br />
-          of clinicians and researchers.
+        <h3 className="text-2xl font-bold text-center tracking-tight">
+          PsychPro Spotlight
+        </h3>
+        <p
+          className="text-sm text-center mt-2 mb-6 leading-relaxed px-2"
+          style={{ color: `${PALETTE.mist}dd` }}
+        >
+          Highlighting the next generation of clinicians and researchers.
         </p>
 
-        {/* Featured person */}
-        <div className="flex flex-col items-center mb-4">
-          <div className="relative w-28 h-28 rounded-full overflow-hidden ring-4 ring-white/10 shadow-xl shadow-indigo-500/20 mb-3">
+        {/* Featured person — circular avatar with glow ring */}
+        <div className="flex flex-col items-center mb-5">
+          <div
+            className="relative w-32 h-32 rounded-full overflow-hidden mb-4"
+            style={{
+              boxShadow: `0 0 0 3px ${PALETTE.surf}aa, 0 0 28px 4px ${PALETTE.surf}55, inset 0 0 0 1px rgba(255,255,255,0.15)`,
+            }}
+          >
             <img
               src={featuredWorkImage}
-              alt="Featured neuron imagery"
+              alt="Featured spotlight"
               className="absolute inset-0 w-full h-full object-cover"
             />
           </div>
-          <p className="text-base font-bold">Sarah K.</p>
-          <p className="text-xs text-slate-300 mt-0.5">PsyD Candidate</p>
-          <p className="text-xs text-slate-300">Clinical Neuropsychology</p>
+          <p className="text-xl font-bold tracking-tight">Sarah K.</p>
+          <p
+            className="text-sm mt-1"
+            style={{ color: `${PALETTE.mist}cc` }}
+          >
+            PsyD Candidate
+          </p>
+          <p
+            className="text-sm"
+            style={{ color: `${PALETTE.mist}cc` }}
+          >
+            Clinical Neuropsychology
+          </p>
         </div>
 
         {/* Featured work — neuron image as prominent background */}
@@ -655,8 +742,8 @@ function SpotlightCard({ onCta }: { onCta: () => void }) {
           />
           <div className="relative p-4 pt-24">
             <p
-              className="text-[10px] font-bold tracking-widest text-sky-300 uppercase mb-2"
-              style={{ textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}
+              className="text-[10px] font-bold tracking-widest uppercase mb-2"
+              style={{ color: PALETTE.surf, textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}
             >
               Featured Work
             </p>
@@ -677,18 +764,24 @@ function SpotlightCard({ onCta }: { onCta: () => void }) {
           </div>
         </div>
 
-        <Button
+        <button
           onClick={onCta}
-          className="w-full bg-white/10 hover:bg-white/20 border border-white/15 text-white backdrop-blur-sm"
+          className="w-full rounded-lg px-4 py-2.5 text-sm font-semibold flex items-center justify-center gap-1.5 transition-all backdrop-blur-sm border"
+          style={{
+            background: `${PALETTE.teal}33`,
+            borderColor: `${PALETTE.surf}66`,
+            color: "#fff",
+            boxShadow: `0 4px 18px -6px ${PALETTE.teal}aa`,
+          }}
           data-testid="button-spotlight-cta"
         >
           View Feature
-          <ArrowUpRight className="w-4 h-4 ml-1" />
-        </Button>
+          <ArrowUpRight className="w-4 h-4" />
+        </button>
 
         {/* Pagination dots */}
         <div className="flex items-center justify-center gap-1.5 mt-4">
-          <span className="w-1.5 h-1.5 rounded-full bg-white" />
+          <span className="w-4 h-1.5 rounded-full" style={{ background: PALETTE.surf }} />
           <span className="w-1.5 h-1.5 rounded-full bg-white/30" />
           <span className="w-1.5 h-1.5 rounded-full bg-white/30" />
           <span className="w-1.5 h-1.5 rounded-full bg-white/30" />
