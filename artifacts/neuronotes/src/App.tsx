@@ -42,9 +42,7 @@ const queryClient = new QueryClient({
   },
 });
 
-const clerkPubKey = import.meta.env.DEV
-  ? (import.meta.env.VITE_CLERK_PUBLISHABLE_KEY_DEV || import.meta.env.VITE_CLERK_PUBLISHABLE_KEY)
-  : import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
 function ClerkTokenSetup() {
   const { getToken } = useAuth();
