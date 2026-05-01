@@ -13,11 +13,8 @@ import {
   Target,
   ArrowRight,
   FileText,
-  Users,
-  Sprout,
-  Star,
 } from "lucide-react";
-import brainHero from "@/assets/brand/brain-only.png";
+import psychproMark from "@/assets/brand/psychpro-mark.png";
 
 const REAL_TOPICS = [
   "Psychological Disorders", "Personality Disorders", "Neurodevelopmental Disorders",
@@ -220,100 +217,22 @@ export default function LandingPage() {
 
         <div className="max-w-5xl mx-auto px-4 pt-12 md:pt-16 pb-16 md:pb-20 relative">
           <div className="flex flex-col items-center text-center">
-            {/* Brain image — actual brand asset */}
-            <div className="relative w-full max-w-md md:max-w-lg lg:max-w-xl -mb-2 md:-mb-4">
+            {/* Brand mark — full asset, untouched */}
+            <div
+              className="relative w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl mb-8 md:mb-10"
+              style={{
+                filter: `drop-shadow(0 40px 100px ${PALETTE.teal}55)`,
+              }}
+            >
               <img
-                src={brainHero}
-                alt="Glowing neural brain — PsychPro"
-                className="w-full h-auto select-none pointer-events-none"
+                src={psychproMark}
+                alt="PsychPro — Learn. Connect. Grow."
+                className="w-full h-auto select-none pointer-events-none rounded-2xl"
                 style={{
-                  mixBlendMode: "lighten",
-                  filter: `drop-shadow(0 30px 80px ${PALETTE.teal}55)`,
+                  border: `1px solid ${PALETTE.surf}22`,
                 }}
                 draggable={false}
               />
-            </div>
-
-            {/* Eyebrow pill */}
-            <div
-              className="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 mb-5 text-xs font-medium border"
-              style={{
-                background: `${PALETTE.steel}55`,
-                borderColor: `${PALETTE.surf}55`,
-                color: PALETTE.mist,
-              }}
-            >
-              <Sparkles className="w-3.5 h-3.5" style={{ color: PALETTE.surf }} />
-              Built for psychology students &amp; clinicians
-            </div>
-
-            {/* Centered title */}
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.02] tracking-tight text-white mb-4">
-              Psych
-              <span
-                className="bg-clip-text text-transparent"
-                style={{
-                  backgroundImage: `linear-gradient(135deg, ${PALETTE.surf}, ${PALETTE.mist})`,
-                }}
-              >
-                Pro
-              </span>
-            </h1>
-
-            {/* New tagline format — matches brand asset */}
-            <p
-              className="text-sm md:text-base font-semibold tracking-[0.32em] uppercase mb-8"
-              style={{ color: PALETTE.mist }}
-            >
-              Learn<span style={{ color: PALETTE.surf }}>.</span> Connect
-              <span style={{ color: PALETTE.surf }}>.</span> Grow
-              <span style={{ color: PALETTE.surf }}>.</span> Evolve
-              <span style={{ color: PALETTE.surf }}>.</span>
-            </p>
-
-            {/* Pillar pills — Learn / Connect / Grow / Evolve */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl w-full mb-9">
-              {[
-                { icon: BookOpen, label: "Learn", caption: "Active recall" },
-                { icon: Users, label: "Connect", caption: "Shared decks" },
-                { icon: Sprout, label: "Grow", caption: "Daily practice" },
-                { icon: Star, label: "Evolve", caption: "Mastery tracking" },
-              ].map((p) => {
-                const Icon = p.icon;
-                return (
-                  <div
-                    key={p.label}
-                    className="flex flex-col items-center gap-1.5 rounded-2xl px-3 py-3 border backdrop-blur-md"
-                    style={{
-                      background: `${PALETTE.surface}aa`,
-                      borderColor: `${PALETTE.surf}33`,
-                    }}
-                    data-testid={`pillar-${p.label.toLowerCase()}`}
-                  >
-                    <div
-                      className="w-9 h-9 rounded-xl flex items-center justify-center"
-                      style={{
-                        background: `linear-gradient(135deg, ${PALETTE.teal}33, ${PALETTE.surf}22)`,
-                        border: `1px solid ${PALETTE.surf}55`,
-                      }}
-                    >
-                      <Icon className="w-4 h-4" style={{ color: PALETTE.surf }} />
-                    </div>
-                    <span
-                      className="text-[11px] font-bold tracking-[0.18em] uppercase"
-                      style={{ color: PALETTE.mist }}
-                    >
-                      {p.label}
-                    </span>
-                    <span
-                      className="text-[11px] leading-tight"
-                      style={{ color: `${PALETTE.mist}88` }}
-                    >
-                      {p.caption}
-                    </span>
-                  </div>
-                );
-              })}
             </div>
 
             {/* CTAs */}
