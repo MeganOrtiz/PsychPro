@@ -45,16 +45,39 @@ const queryClient = new QueryClient({
 const PROD_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined;
 const DEV_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY_DEV as string | undefined;
 
+const VERIFIED_CLERK_FAPI = "clerk.auth.psychprosuite.com";
+
 function isLiveProductionHost(): boolean {
   if (typeof window === "undefined") return true;
   const h = window.location.hostname;
   return h === "psychprosuite.com" || h === "www.psychprosuite.com";
 }
 
+function decodeClerkFapi(key: string | undefined): string | null {
+  if (!key) return null;
+  const m = key.match(/^pk_(?:live|test)_(.+)$/);
+  if (!m) return null;
+  try {
+    const decoded = atob(m[1]);
+    return decoded.replace(/\$+$/, "");
+  } catch {
+    return null;
+  }
+}
+
 function pickClerkKey(): string | null {
   const onProd = isLiveProductionHost();
+  if (onProd) {
+    const liveCandidates = [PROD_KEY, DEV_KEY].filter(
+      (k): k is string => !!k && k.startsWith("pk_live_"),
+    );
+    const verified = liveCandidates.find(
+      (k) => decodeClerkFapi(k) === VERIFIED_CLERK_FAPI,
+    );
+    if (verified) return verified;
+    return PROD_KEY ?? liveCandidates[0] ?? null;
+  }
   const hasUsableDevKey = !!DEV_KEY && DEV_KEY.startsWith("pk_test_");
-  if (onProd) return PROD_KEY ?? null;
   if (hasUsableDevKey) return DEV_KEY!;
   return null;
 }
