@@ -2,7 +2,6 @@ import { useLocation } from "wouter";
 import { SignIn, SignUp, useUser } from "@clerk/react";
 import { useState, useEffect } from "react";
 import {
-  Brain,
   BookOpen,
   Layers,
   Trophy,
@@ -12,8 +11,9 @@ import {
   GraduationCap,
   Clock,
   Target,
+  ArrowRight,
+  FileText,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 const REAL_TOPICS = [
   "Psychological Disorders", "Personality Disorders", "Neurodevelopmental Disorders",
@@ -31,12 +31,144 @@ const SAMPLE_FLASHCARD = {
   back: "Type I error (α) is rejecting a true null hypothesis — a false positive. Type II error (β) is failing to reject a false null hypothesis — a false negative. Power (1 − β) reflects the ability to detect a real effect when one exists.",
 };
 
+function usePrefersReducedMotion(): boolean {
+  const [prefers, setPrefers] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefers(mq.matches);
+    const onChange = () => setPrefers(mq.matches);
+    mq.addEventListener?.("change", onChange);
+    return () => mq.removeEventListener?.("change", onChange);
+  }, []);
+  return prefers;
+}
+
+function NeuralBrain({ className = "", animate = true }: { className?: string; animate?: boolean }) {
+  const nodes = [
+    { x: 200, y: 110, r: 3.5 }, { x: 240, y: 90, r: 2.5 }, { x: 280, y: 110, r: 3 },
+    { x: 320, y: 95, r: 2.5 }, { x: 360, y: 120, r: 3.5 }, { x: 175, y: 150, r: 2.5 },
+    { x: 220, y: 145, r: 3 }, { x: 265, y: 155, r: 2.5 }, { x: 305, y: 145, r: 3.5 },
+    { x: 350, y: 165, r: 2.5 }, { x: 390, y: 155, r: 3 }, { x: 165, y: 195, r: 3 },
+    { x: 210, y: 200, r: 2.5 }, { x: 255, y: 205, r: 3.5 }, { x: 300, y: 195, r: 2.5 },
+    { x: 345, y: 210, r: 3 }, { x: 390, y: 205, r: 2.5 }, { x: 175, y: 245, r: 2.5 },
+    { x: 220, y: 250, r: 3 }, { x: 265, y: 255, r: 2.5 }, { x: 310, y: 250, r: 3.5 },
+    { x: 355, y: 245, r: 2.5 }, { x: 200, y: 290, r: 3 }, { x: 245, y: 300, r: 2.5 },
+    { x: 295, y: 295, r: 3.5 }, { x: 340, y: 290, r: 2.5 }, { x: 230, y: 330, r: 2.5 },
+    { x: 280, y: 340, r: 3 }, { x: 325, y: 325, r: 2.5 },
+  ];
+  const edges: [number, number][] = [
+    [0,1],[1,2],[2,3],[3,4],[0,5],[1,6],[2,7],[3,8],[4,9],[4,10],
+    [5,6],[6,7],[7,8],[8,9],[9,10],[5,11],[6,12],[7,13],[8,14],[9,15],[10,16],
+    [11,12],[12,13],[13,14],[14,15],[15,16],[11,17],[12,18],[13,19],[14,20],[15,21],
+    [17,18],[18,19],[19,20],[20,21],[18,22],[19,23],[20,24],[21,25],
+    [22,23],[23,24],[24,25],[23,26],[24,27],[25,28],[26,27],[27,28],
+    [6,13],[8,14],[12,19],[14,20],[19,24],[7,14],[13,20],[20,25],
+  ];
+  return (
+    <svg viewBox="0 0 560 440" className={className} aria-hidden="true">
+      <defs>
+        <radialGradient id="brainGlow" cx="50%" cy="45%" r="55%">
+          <stop offset="0%" stopColor="#58C9F3" stopOpacity="0.55" />
+          <stop offset="55%" stopColor="#2FA0C6" stopOpacity="0.18" />
+          <stop offset="100%" stopColor="#061826" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="edgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#58C9F3" stopOpacity="0.7" />
+          <stop offset="100%" stopColor="#2FA0C6" stopOpacity="0.35" />
+        </linearGradient>
+        <filter id="nodeGlow" x="-200%" y="-200%" width="500%" height="500%">
+          <feGaussianBlur stdDeviation="2.5" result="b" />
+          <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
+      </defs>
+      <ellipse cx="280" cy="220" rx="240" ry="200" fill="url(#brainGlow)" />
+      {edges.map(([a, b], i) => {
+        const na = nodes[a]; const nb = nodes[b];
+        return (
+          <line
+            key={i}
+            x1={na.x} y1={na.y} x2={nb.x} y2={nb.y}
+            stroke="url(#edgeGrad)"
+            strokeWidth={0.7}
+            strokeLinecap="round"
+          />
+        );
+      })}
+      {nodes.map((n, i) => (
+        <circle
+          key={i}
+          cx={n.x} cy={n.y} r={n.r}
+          fill="#BDE5FF"
+          filter="url(#nodeGlow)"
+          opacity={0.9}
+        >
+          {animate && (
+            <animate
+              attributeName="opacity"
+              values="0.4;1;0.4"
+              dur={`${2 + (i % 5) * 0.4}s`}
+              begin={`${(i % 7) * 0.3}s`}
+              repeatCount="indefinite"
+            />
+          )}
+        </circle>
+      ))}
+    </svg>
+  );
+}
+
+function Starfield({ animate = true, count = 60 }: { animate?: boolean; count?: number }) {
+  const stars = Array.from({ length: count }, (_, i) => ({
+    x: (i * 73) % 100,
+    y: (i * 41) % 100,
+    s: 0.5 + ((i * 13) % 18) / 10,
+    d: 2 + (i % 5),
+  }));
+  return (
+    <svg className="absolute inset-0 w-full h-full -z-10 pointer-events-none" aria-hidden="true">
+      {stars.map((st, i) => (
+        <circle
+          key={i}
+          cx={`${st.x}%`}
+          cy={`${st.y}%`}
+          r={st.s}
+          fill="#BDE5FF"
+          opacity={0.35}
+        >
+          {animate && (
+            <animate
+              attributeName="opacity"
+              values="0.05;0.5;0.05"
+              dur={`${st.d}s`}
+              begin={`${(i % 6) * 0.4}s`}
+              repeatCount="indefinite"
+            />
+          )}
+        </circle>
+      ))}
+    </svg>
+  );
+}
+
+const PALETTE = {
+  bg: "#061826",
+  surface: "#0c2538",
+  surfaceElev: "#11324d",
+  steel: "#1C4E75",
+  teal: "#2FA0C6",
+  surf: "#58C9F3",
+  mist: "#BDE5FF",
+};
+
 export default function LandingPage() {
   const { isSignedIn, isLoaded } = useUser();
   const [, navigate] = useLocation();
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
   const [flipped, setFlipped] = useState(false);
+  const reduceMotion = usePrefersReducedMotion();
+  const animateBg = !reduceMotion;
 
   useEffect(() => {
     if (isLoaded && isSignedIn) {
@@ -44,110 +176,226 @@ export default function LandingPage() {
     }
   }, [isSignedIn, isLoaded, navigate]);
 
-  if (showSignIn) {
+  if (showSignIn || showSignUp) {
+    const isUp = showSignUp;
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background p-4">
-        <div className="w-full max-w-md">
+      <div
+        className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
+        style={{ background: `radial-gradient(circle at 50% 0%, ${PALETTE.steel}55, ${PALETTE.bg} 60%)` }}
+      >
+        <Starfield animate={animateBg} count={40} />
+        <div className="w-full max-w-md relative">
           <button
-            className="text-muted-foreground hover:text-foreground mb-4 text-sm flex items-center gap-1"
-            onClick={() => setShowSignIn(false)}
+            className="text-[color:var(--mist)]/70 hover:text-white mb-4 text-sm flex items-center gap-1 transition-colors"
+            style={{ ["--mist" as any]: PALETTE.mist }}
+            onClick={() => { setShowSignIn(false); setShowSignUp(false); }}
           >
             ← Back
           </button>
-          <SignIn fallbackRedirectUrl="/dashboard" signUpUrl="/sign-up" />
+          <div
+            className="rounded-2xl p-1"
+            style={{
+              background: `linear-gradient(135deg, ${PALETTE.teal}55, ${PALETTE.surf}22, transparent)`,
+            }}
+          >
+            <div className="rounded-2xl p-2" style={{ background: PALETTE.surface }}>
+              {isUp ? (
+                <SignUp fallbackRedirectUrl="/onboarding" signInUrl="/sign-in" />
+              ) : (
+                <SignIn fallbackRedirectUrl="/dashboard" signUpUrl="/sign-up" />
+              )}
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
-  if (showSignUp) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background p-4">
-        <div className="w-full max-w-md">
-          <button
-            className="text-muted-foreground hover:text-foreground mb-4 text-sm flex items-center gap-1"
-            onClick={() => setShowSignUp(false)}
-          >
-            ← Back
-          </button>
-          <SignUp fallbackRedirectUrl="/onboarding" signInUrl="/sign-in" />
-        </div>
-      </div>
-    );
-  }
+  const ctaBtn = `inline-flex items-center justify-center gap-2 rounded-xl text-base font-semibold px-7 h-12 transition-all`;
 
   return (
-    <div className="min-h-screen bg-background overflow-hidden" data-testid="landing-page">
-      {/* Nav */}
-      <header className="border-b border-border/60 bg-card/70 backdrop-blur sticky top-0 z-20">
+    <div
+      className="min-h-screen overflow-hidden text-white"
+      data-testid="landing-page"
+      style={{ background: PALETTE.bg, color: PALETTE.mist }}
+    >
+      {/* NAV */}
+      <header
+        className="sticky top-0 z-30 backdrop-blur-md border-b"
+        style={{ background: `${PALETTE.bg}cc`, borderColor: `${PALETTE.steel}66` }}
+      >
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Brain className="w-7 h-7 text-primary" />
-            <span className="font-bold text-xl text-foreground">PsychPro</span>
+          <div className="flex items-center gap-2.5">
+            <div
+              className="w-8 h-8 rounded-lg flex items-center justify-center"
+              style={{ background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})` }}
+            >
+              <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="6" cy="12" r="2" /><circle cx="18" cy="12" r="2" />
+                <circle cx="12" cy="6" r="2" /><circle cx="12" cy="18" r="2" />
+                <path d="M8 12h8M12 8v8M7.5 7.5l9 9M16.5 7.5l-9 9" />
+              </svg>
+            </div>
+            <span className="font-bold text-xl tracking-tight text-white">PsychPro</span>
           </div>
-          <a
-            href="#pricing"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:inline"
-          >
-            Pricing
-          </a>
+          <div className="flex items-center gap-5">
+            <a
+              href="#pricing"
+              className="text-sm hidden sm:inline transition-colors"
+              style={{ color: `${PALETTE.mist}cc` }}
+            >
+              Pricing
+            </a>
+            <button
+              onClick={() => setShowSignIn(true)}
+              className="text-sm transition-colors hidden sm:inline"
+              style={{ color: `${PALETTE.mist}cc` }}
+            >
+              Sign In
+            </button>
+            <button
+              onClick={() => setShowSignUp(true)}
+              className="text-sm font-semibold rounded-lg px-3.5 h-9 transition-all"
+              style={{
+                background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
+                color: PALETTE.bg,
+                boxShadow: `0 4px 18px -4px ${PALETTE.teal}aa`,
+              }}
+            >
+              Start Free
+            </button>
+          </div>
         </div>
       </header>
 
-      {/* Hero */}
+      {/* HERO */}
       <section className="relative overflow-hidden">
-        {/* Decorative gradient backdrop */}
-        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/5 via-background to-background" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 -z-10 w-[800px] h-[600px] bg-primary/10 rounded-full blur-3xl opacity-60" aria-hidden />
-        <div className="absolute top-40 right-10 -z-10 w-72 h-72 bg-blue-400/10 rounded-full blur-3xl" aria-hidden />
-        <div className="absolute top-20 left-10 -z-10 w-72 h-72 bg-purple-400/10 rounded-full blur-3xl" aria-hidden />
+        <Starfield animate={animateBg} />
+        {/* nebula glows */}
+        <div
+          className="absolute top-[-200px] left-1/2 -translate-x-1/2 w-[1100px] h-[700px] rounded-full blur-[140px] -z-10"
+          style={{ background: `radial-gradient(circle, ${PALETTE.teal}55, transparent 60%)` }}
+          aria-hidden
+        />
+        <div
+          className="absolute top-40 right-[-100px] w-[400px] h-[400px] rounded-full blur-[110px] -z-10"
+          style={{ background: `${PALETTE.surf}33` }}
+          aria-hidden
+        />
+        <div
+          className="absolute top-20 left-[-100px] w-[350px] h-[350px] rounded-full blur-[110px] -z-10"
+          style={{ background: `${PALETTE.steel}55` }}
+          aria-hidden
+        />
 
-        <div className="max-w-6xl mx-auto px-4 py-20 md:py-28 text-center">
-          <div className="inline-flex items-center gap-2 bg-card/80 backdrop-blur border border-primary/20 text-primary text-sm font-medium px-4 py-1.5 rounded-full mb-6 shadow-sm">
-            <Sparkles className="w-4 h-4" />
-            Built for psychology students & clinicians
+        <div className="max-w-6xl mx-auto px-4 pt-16 md:pt-24 pb-16 md:pb-20 relative">
+          <div className="grid md:grid-cols-2 gap-10 lg:gap-16 items-center">
+            <div className="text-center md:text-left">
+              <div
+                className="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 mb-6 text-xs font-medium border"
+                style={{
+                  background: `${PALETTE.steel}55`,
+                  borderColor: `${PALETTE.surf}55`,
+                  color: PALETTE.mist,
+                }}
+              >
+                <Sparkles className="w-3.5 h-3.5" style={{ color: PALETTE.surf }} />
+                Built for psychology students &amp; clinicians
+              </div>
+
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.05] tracking-tight text-white mb-5">
+                Master clinical psychology,
+                <br />
+                <span
+                  className="bg-clip-text text-transparent"
+                  style={{
+                    backgroundImage: `linear-gradient(135deg, ${PALETTE.surf}, ${PALETTE.mist})`,
+                  }}
+                >
+                  one neuron at a time.
+                </span>
+              </h1>
+
+              <p
+                className="text-base md:text-lg leading-relaxed mb-8 max-w-xl mx-auto md:mx-0"
+                style={{ color: `${PALETTE.mist}cc` }}
+              >
+                Adaptive flashcards, quizzes, study guides, and timed exams — engineered
+                for the breadth of clinical psychology, from foundations to specialty topics.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start items-center">
+                <button
+                  onClick={() => setShowSignUp(true)}
+                  data-testid="button-start-free"
+                  className={ctaBtn}
+                  style={{
+                    background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
+                    color: PALETTE.bg,
+                    boxShadow: `0 14px 40px -10px ${PALETTE.teal}cc, 0 0 0 1px ${PALETTE.surf}55 inset`,
+                  }}
+                >
+                  Start for Free <ArrowRight className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setShowSignIn(true)}
+                  data-testid="button-sign-in-hero"
+                  className={`${ctaBtn} border`}
+                  style={{
+                    background: "transparent",
+                    color: PALETTE.mist,
+                    borderColor: `${PALETTE.surf}55`,
+                  }}
+                >
+                  Sign In
+                </button>
+              </div>
+
+              <p
+                className="text-sm mt-5 flex items-center justify-center md:justify-start gap-1.5"
+                style={{ color: `${PALETTE.mist}99` }}
+              >
+                <CheckCircle className="w-3.5 h-3.5" style={{ color: PALETTE.surf }} />
+                10 free interactions — no credit card required
+              </p>
+            </div>
+
+            {/* Brain visual */}
+            <div className="relative">
+              <div className="relative aspect-[5/4]">
+                <NeuralBrain className="w-full h-full" animate={animateBg} />
+                {/* floating tag chips */}
+                <div
+                  className="absolute top-4 right-2 md:right-6 hidden sm:flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium backdrop-blur-md border"
+                  style={{
+                    background: `${PALETTE.surface}aa`,
+                    borderColor: `${PALETTE.surf}55`,
+                    color: PALETTE.mist,
+                  }}
+                >
+                  <span
+                    className="w-1.5 h-1.5 rounded-full animate-pulse"
+                    style={{ background: PALETTE.surf }}
+                  />
+                  Adaptive recall
+                </div>
+                <div
+                  className="absolute bottom-8 left-0 hidden sm:flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium backdrop-blur-md border"
+                  style={{
+                    background: `${PALETTE.surface}aa`,
+                    borderColor: `${PALETTE.surf}55`,
+                    color: PALETTE.mist,
+                  }}
+                >
+                  <Sparkles className="w-3 h-3" style={{ color: PALETTE.surf }} />
+                  Built on real coursework
+                </div>
+              </div>
+            </div>
           </div>
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6 leading-[1.05] tracking-tight">
-            Study smarter.
-            <br />
-            <span className="bg-gradient-to-r from-primary via-blue-500 to-purple-500 bg-clip-text text-transparent">
-              Practice with purpose.
-            </span>
-          </h1>
-
-          <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
-            Adaptive flashcards, quizzes, study guides, and timed practice exams —
-            covering the breadth of clinical psychology, from foundations to specialty topics.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-            <Button
-              size="lg"
-              onClick={() => setShowSignUp(true)}
-              data-testid="button-start-free"
-              className="text-base px-8 h-12 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-shadow"
-            >
-              Start for Free
-            </Button>
-            <Button
-              size="lg"
-              variant="ghost"
-              onClick={() => setShowSignIn(true)}
-              data-testid="button-sign-in-hero"
-              className="text-base px-8 h-12"
-            >
-              Sign In
-            </Button>
-          </div>
-
-          <p className="text-sm text-muted-foreground mt-5 flex items-center justify-center gap-1.5">
-            <CheckCircle className="w-3.5 h-3.5 text-primary" />
-            10 free interactions — no credit card required
-          </p>
-
-          {/* Floating mini value props */}
-          <div className="mt-14 flex flex-wrap justify-center gap-2.5 max-w-3xl mx-auto">
+          {/* value chips */}
+          <div className="mt-10 md:mt-14 flex flex-wrap justify-center gap-2.5 max-w-3xl mx-auto">
             {[
               { icon: GraduationCap, label: "Real coursework" },
               { icon: Target, label: "Exam-ready" },
@@ -156,9 +404,14 @@ export default function LandingPage() {
             ].map((item) => (
               <div
                 key={item.label}
-                className="flex items-center gap-2 bg-card/70 backdrop-blur border border-border/60 rounded-full px-4 py-2 text-sm text-foreground/80 shadow-sm"
+                className="flex items-center gap-2 rounded-full px-4 py-2 text-sm backdrop-blur-md border"
+                style={{
+                  background: `${PALETTE.surface}aa`,
+                  borderColor: `${PALETTE.steel}99`,
+                  color: PALETTE.mist,
+                }}
               >
-                <item.icon className="w-4 h-4 text-primary flex-shrink-0" />
+                <item.icon className="w-4 h-4 flex-shrink-0" style={{ color: PALETTE.surf }} />
                 <span>{item.label}</span>
               </div>
             ))}
@@ -166,104 +419,215 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Live Stats Bar */}
-      <section className="border-y border-border bg-muted/30 py-10">
+      {/* STATS */}
+      <section
+        className="py-12 border-y"
+        style={{
+          background: `linear-gradient(180deg, ${PALETTE.surface}, ${PALETTE.bg})`,
+          borderColor: `${PALETTE.steel}55`,
+        }}
+      >
         <div className="max-w-4xl mx-auto px-4">
           <div className="grid grid-cols-3 gap-4 text-center">
-            <div>
-              <div className="text-3xl md:text-4xl font-bold text-primary">27+</div>
-              <div className="text-sm text-muted-foreground mt-1">Topics covered</div>
-            </div>
-            <div>
-              <div className="text-3xl md:text-4xl font-bold text-primary">1,200+</div>
-              <div className="text-sm text-muted-foreground mt-1">Practice questions</div>
-            </div>
-            <div>
-              <div className="text-3xl md:text-4xl font-bold text-primary">27+</div>
-              <div className="text-sm text-muted-foreground mt-1">Study guides</div>
-            </div>
+            {[
+              { n: "27+", l: "Topics covered" },
+              { n: "1,200+", l: "Practice questions" },
+              { n: "27+", l: "Study guides" },
+            ].map((s) => (
+              <div key={s.l}>
+                <div
+                  className="text-3xl md:text-5xl font-bold bg-clip-text text-transparent"
+                  style={{ backgroundImage: `linear-gradient(135deg, ${PALETTE.surf}, ${PALETTE.mist})` }}
+                >
+                  {s.n}
+                </div>
+                <div className="text-sm mt-1" style={{ color: `${PALETTE.mist}99` }}>
+                  {s.l}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Features */}
+      {/* FEATURES */}
       <section className="max-w-6xl mx-auto px-4 py-20">
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">Everything you need to study</h2>
-          <p className="text-muted-foreground">Four study modes designed to reinforce learning and prepare you for exams.</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
+            Four ways to study. One system.
+          </h2>
+          <p style={{ color: `${PALETTE.mist}99` }}>
+            Each mode reinforces the others — built to move information from short-term to long-term recall.
+          </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {[
-            { icon: Layers, title: "Flashcards", description: "Flip through hundreds of high-yield cards, sorted by difficulty.", color: "text-blue-500", bg: "bg-blue-500/10" },
-            { icon: BookOpen, title: "Quizzes", description: "10-question multiple-choice quizzes with detailed clinical explanations.", color: "text-green-500", bg: "bg-green-500/10" },
-            { icon: Brain, title: "Study Guides", description: "Comprehensive notes with tables and frameworks for every topic.", color: "text-purple-500", bg: "bg-purple-500/10" },
-            { icon: Trophy, title: "Practice Exams", description: "25 or 50-question timed exams to prepare for boards and finals.", color: "text-amber-500", bg: "bg-amber-500/10" },
-          ].map((feature) => (
+            { icon: Layers, title: "Flashcards", description: "High-yield decks sorted by difficulty, with spaced review." },
+            { icon: BookOpen, title: "Quizzes", description: "10-question multiple-choice sets with detailed clinical rationale." },
+            { icon: FileText, title: "Study Guides", description: "Comprehensive notes with tables and frameworks for every topic." },
+            { icon: Trophy, title: "Practice Exams", description: "25 or 50-question timed exams to prepare for boards and finals." },
+          ].map((feature, i) => (
             <div
               key={feature.title}
-              className="bg-card rounded-xl p-6 border border-border hover:border-primary/30 hover:shadow-md transition-all"
+              className="group relative rounded-2xl p-6 border transition-all hover:-translate-y-1"
+              style={{
+                background: `linear-gradient(180deg, ${PALETTE.surface}, ${PALETTE.bg})`,
+                borderColor: `${PALETTE.steel}99`,
+              }}
             >
-              <div className={`w-11 h-11 rounded-lg ${feature.bg} flex items-center justify-center mb-4`}>
-                <feature.icon className={`w-5 h-5 ${feature.color}`} />
+              <div
+                className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                style={{
+                  background: `radial-gradient(circle at 50% 0%, ${PALETTE.teal}33, transparent 70%)`,
+                }}
+              />
+              <div
+                className="relative w-11 h-11 rounded-xl flex items-center justify-center mb-4"
+                style={{
+                  background: `linear-gradient(135deg, ${PALETTE.teal}33, ${PALETTE.surf}22)`,
+                  border: `1px solid ${PALETTE.surf}44`,
+                }}
+              >
+                <feature.icon className="w-5 h-5" style={{ color: PALETTE.surf }} />
               </div>
-              <h3 className="font-semibold text-foreground mb-2">{feature.title}</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
+              <h3 className="relative font-semibold text-white mb-2">{feature.title}</h3>
+              <p className="relative text-sm leading-relaxed" style={{ color: `${PALETTE.mist}aa` }}>
+                {feature.description}
+              </p>
+              <div
+                className="relative mt-3 text-[11px] font-mono uppercase tracking-wider opacity-50"
+                style={{ color: PALETTE.surf }}
+              >
+                0{i + 1}
+              </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Sample Flashcard */}
+      {/* SAMPLE FLASHCARD */}
       <section className="max-w-6xl mx-auto px-4 pb-20">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <div className="inline-flex items-center gap-2 text-xs font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full mb-3">
+            <div
+              className="inline-flex items-center gap-2 text-xs font-semibold rounded-full px-3 py-1 mb-3 border"
+              style={{
+                background: `${PALETTE.steel}66`,
+                color: PALETTE.surf,
+                borderColor: `${PALETTE.surf}55`,
+              }}
+            >
               <Layers className="w-3.5 h-3.5" /> Try it now
             </div>
-            <h2 className="text-3xl font-bold text-foreground mb-3">A real flashcard, on the house</h2>
-            <p className="text-muted-foreground mb-5 leading-relaxed">
-              Tap the card to flip it. Every topic has 55+ cards covering key concepts,
-              clinical reasoning, and exam-ready content.
+            <h2 className="text-3xl font-bold text-white mb-3">
+              A real flashcard, on the house.
+            </h2>
+            <p className="mb-6 leading-relaxed" style={{ color: `${PALETTE.mist}aa` }}>
+              Tap the card to flip. Every topic ships with 55+ cards covering core
+              concepts, clinical reasoning, and exam-ready content.
             </p>
-            <Button onClick={() => setShowSignUp(true)} size="lg" className="mt-2" data-testid="button-try-now">
-              Get Full Access Free
-            </Button>
+            <button
+              onClick={() => setShowSignUp(true)}
+              data-testid="button-try-now"
+              className={`${ctaBtn}`}
+              style={{
+                background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
+                color: PALETTE.bg,
+                boxShadow: `0 14px 40px -10px ${PALETTE.teal}cc`,
+              }}
+            >
+              Get full access free <ArrowRight className="w-4 h-4" />
+            </button>
           </div>
-          <div
-            className="cursor-pointer select-none group"
-            onClick={() => setFlipped(f => !f)}
+
+          <button
+            type="button"
+            className="select-none group relative w-full text-left rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+            style={{
+              ["--tw-ring-color" as any]: PALETTE.surf,
+              ["--tw-ring-offset-color" as any]: PALETTE.bg,
+            }}
+            onClick={() => setFlipped((f) => !f)}
+            aria-pressed={flipped}
+            aria-label={
+              flipped
+                ? "Showing answer — press to show question"
+                : "Showing question — press to show answer"
+            }
             data-testid="sample-flashcard"
           >
-            <div className="relative bg-gradient-to-br from-card to-card/60 border-2 border-primary/20 rounded-2xl p-8 min-h-44 flex flex-col justify-center shadow-lg group-hover:shadow-xl group-hover:border-primary/40 group-hover:-translate-y-0.5 transition-all">
-              <div className="absolute top-3 right-3 text-xs text-muted-foreground bg-muted px-2.5 py-0.5 rounded-full">
+            <div
+              className="absolute -inset-4 rounded-3xl opacity-50 group-hover:opacity-90 transition-opacity blur-2xl pointer-events-none"
+              style={{ background: `radial-gradient(circle at 50% 50%, ${PALETTE.teal}, transparent 65%)` }}
+              aria-hidden
+            />
+            <div
+              className="relative rounded-2xl p-8 min-h-44 flex flex-col justify-center border transition-all group-hover:-translate-y-1"
+              style={{
+                background: `linear-gradient(180deg, ${PALETTE.surfaceElev}, ${PALETTE.surface})`,
+                borderColor: `${PALETTE.surf}55`,
+                boxShadow: `0 20px 60px -20px ${PALETTE.teal}77`,
+              }}
+            >
+              <div
+                className="absolute top-3 right-3 text-[11px] font-medium px-2.5 py-0.5 rounded-full border"
+                style={{
+                  background: `${PALETTE.bg}99`,
+                  color: PALETTE.mist,
+                  borderColor: `${PALETTE.surf}44`,
+                }}
+              >
                 {flipped ? "Answer" : "Question — tap to flip"}
               </div>
-              <p className="text-foreground text-center leading-relaxed font-medium">
+              <p className="text-white text-center leading-relaxed font-medium">
                 {flipped ? SAMPLE_FLASHCARD.back : SAMPLE_FLASHCARD.front}
               </p>
             </div>
-          </div>
+          </button>
         </div>
       </section>
 
-      {/* Topics */}
-      <section className="bg-muted/30 border-y border-border py-20">
+      {/* TOPICS */}
+      <section
+        className="py-20 border-y"
+        style={{
+          background: `linear-gradient(180deg, ${PALETTE.bg}, ${PALETTE.surface}, ${PALETTE.bg})`,
+          borderColor: `${PALETTE.steel}55`,
+        }}
+      >
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center max-w-2xl mx-auto mb-10">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">Topics covered</h2>
-            <p className="text-muted-foreground">Foundations, assessment, intervention, research methods, and clinical specialties — all in one place.</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
+              The full clinical map.
+            </h2>
+            <p style={{ color: `${PALETTE.mist}99` }}>
+              Foundations, assessment, intervention, research methods, and clinical
+              specialties — all in one place.
+            </p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
             {REAL_TOPICS.map((topic) => (
               <div
                 key={topic}
-                className="flex items-center gap-2 text-sm text-muted-foreground bg-card border border-border rounded-lg px-3 py-2 hover:border-primary/30 hover:text-foreground transition-colors"
+                className="flex items-center gap-2 text-sm rounded-lg px-3 py-2.5 border transition-all hover:-translate-y-0.5"
+                style={{
+                  background: `${PALETTE.surface}cc`,
+                  borderColor: `${PALETTE.steel}99`,
+                  color: PALETTE.mist,
+                }}
               >
-                <CheckCircle className="w-3.5 h-3.5 text-primary flex-shrink-0" />
+                <CheckCircle className="w-3.5 h-3.5 flex-shrink-0" style={{ color: PALETTE.surf }} />
                 <span className="truncate">{topic}</span>
               </div>
             ))}
-            <div className="flex items-center gap-2 text-sm text-primary font-medium bg-primary/5 border border-primary/20 rounded-lg px-3 py-2">
+            <div
+              className="flex items-center gap-2 text-sm font-medium rounded-lg px-3 py-2.5 border"
+              style={{
+                background: `${PALETTE.teal}1a`,
+                borderColor: `${PALETTE.surf}55`,
+                color: PALETTE.surf,
+              }}
+            >
               <Zap className="w-3.5 h-3.5 flex-shrink-0" />
               <span>+ More being added</span>
             </div>
@@ -271,73 +635,98 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Pricing */}
+      {/* PRICING */}
       <section id="pricing" className="max-w-5xl mx-auto px-4 py-20 scroll-mt-20">
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">Simple, transparent pricing</h2>
-          <p className="text-muted-foreground">Start free. Upgrade when you're ready for more.</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
+            Simple, transparent pricing.
+          </h2>
+          <p style={{ color: `${PALETTE.mist}99` }}>
+            Start free. Upgrade when you're ready for more.
+          </p>
         </div>
         <div className="grid md:grid-cols-3 gap-5">
           {[
             {
-              name: "Free",
-              price: "$0",
-              period: "forever",
+              name: "Free", price: "$0", period: "forever",
               features: ["10 free interactions", "All topics accessible", "Flashcards & quizzes"],
-              cta: "Get Started",
-              highlight: false,
+              cta: "Get Started", highlight: false,
             },
             {
-              name: "Pro",
-              price: "$9.99",
-              period: "/ month",
+              name: "Pro", price: "$9.99", period: "/ month",
               features: ["Unlimited interactions", "All study guides", "Practice exams", "Progress tracking"],
-              cta: "Start Free Trial",
-              highlight: true,
+              cta: "Start Free Trial", highlight: true,
             },
             {
-              name: "Scholar",
-              price: "$19.99",
-              period: "/ month",
+              name: "Scholar", price: "$19.99", period: "/ month",
               features: ["Everything in Pro", "AI-generated custom decks", "Upload your own notes", "Priority access to new content"],
-              cta: "Go Scholar",
-              highlight: false,
+              cta: "Go Scholar", highlight: false,
             },
-          ].map(plan => (
+          ].map((plan) => (
             <div
               key={plan.name}
-              className={`rounded-2xl border p-6 flex flex-col transition-shadow ${
-                plan.highlight
-                  ? "border-primary bg-gradient-to-b from-primary/5 to-card shadow-lg shadow-primary/10 md:-translate-y-2"
-                  : "border-border bg-card hover:shadow-md"
+              className={`relative rounded-2xl p-6 flex flex-col border transition-all ${
+                plan.highlight ? "md:-translate-y-3" : "hover:-translate-y-1"
               }`}
+              style={
+                plan.highlight
+                  ? {
+                      background: `linear-gradient(180deg, ${PALETTE.surfaceElev}, ${PALETTE.surface})`,
+                      borderColor: PALETTE.surf,
+                      boxShadow: `0 30px 70px -25px ${PALETTE.teal}cc, 0 0 0 1px ${PALETTE.surf}55`,
+                    }
+                  : {
+                      background: `${PALETTE.surface}cc`,
+                      borderColor: `${PALETTE.steel}99`,
+                    }
+              }
             >
               {plan.highlight && (
-                <div className="text-xs font-semibold text-primary bg-primary/10 rounded-full px-3 py-0.5 self-start mb-3">
+                <div
+                  className="absolute -top-3 left-1/2 -translate-x-1/2 text-[11px] font-bold uppercase tracking-wider rounded-full px-3 py-1"
+                  style={{
+                    background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
+                    color: PALETTE.bg,
+                  }}
+                >
                   Most Popular
                 </div>
               )}
-              <h3 className="font-bold text-lg text-foreground">{plan.name}</h3>
+              <h3 className="font-bold text-lg text-white">{plan.name}</h3>
               <div className="mt-1 mb-4">
-                <span className="text-3xl font-bold text-foreground">{plan.price}</span>
-                <span className="text-muted-foreground text-sm ml-1">{plan.period}</span>
+                <span className="text-3xl font-bold text-white">{plan.price}</span>
+                <span className="text-sm ml-1" style={{ color: `${PALETTE.mist}99` }}>
+                  {plan.period}
+                </span>
               </div>
               <ul className="space-y-2 mb-6 flex-1">
-                {plan.features.map(f => (
-                  <li key={f} className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <CheckCircle className="w-3.5 h-3.5 text-primary flex-shrink-0 mt-0.5" />
+                {plan.features.map((f) => (
+                  <li key={f} className="flex items-start gap-2 text-sm" style={{ color: `${PALETTE.mist}cc` }}>
+                    <CheckCircle className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" style={{ color: PALETTE.surf }} />
                     <span>{f}</span>
                   </li>
                 ))}
               </ul>
-              <Button
-                variant={plan.highlight ? "default" : "outline"}
-                className="w-full"
+              <button
                 onClick={() => setShowSignUp(true)}
                 data-testid={`button-plan-${plan.name.toLowerCase()}`}
+                className="w-full rounded-xl h-11 font-semibold transition-all"
+                style={
+                  plan.highlight
+                    ? {
+                        background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
+                        color: PALETTE.bg,
+                        boxShadow: `0 10px 30px -10px ${PALETTE.teal}cc`,
+                      }
+                    : {
+                        background: "transparent",
+                        color: PALETTE.mist,
+                        border: `1px solid ${PALETTE.surf}66`,
+                      }
+                }
               >
                 {plan.cta}
-              </Button>
+              </button>
             </div>
           ))}
         </div>
@@ -345,25 +734,67 @@ export default function LandingPage() {
 
       {/* CTA */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-primary via-primary to-blue-600" />
-        <div className="absolute top-0 right-0 -z-10 w-96 h-96 bg-white/10 rounded-full blur-3xl" aria-hidden />
-        <div className="absolute bottom-0 left-0 -z-10 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl" aria-hidden />
-        <div className="max-w-2xl mx-auto text-center px-4 py-20 text-primary-foreground">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to start studying?</h2>
-          <p className="text-primary-foreground/85 mb-8 text-lg">
+        <div
+          className="absolute inset-0 -z-10"
+          style={{
+            background: `linear-gradient(135deg, ${PALETTE.steel}, ${PALETTE.bg} 70%)`,
+          }}
+        />
+        <div
+          className="absolute top-0 right-0 -z-10 w-[500px] h-[500px] rounded-full blur-[120px]"
+          style={{ background: `${PALETTE.surf}33` }}
+          aria-hidden
+        />
+        <div
+          className="absolute bottom-0 left-0 -z-10 w-[500px] h-[500px] rounded-full blur-[120px]"
+          style={{ background: `${PALETTE.teal}55` }}
+          aria-hidden
+        />
+        <div className="max-w-2xl mx-auto text-center px-4 py-24">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
+            Ready to start studying?
+          </h2>
+          <p className="mb-8 text-lg" style={{ color: `${PALETTE.mist}cc` }}>
             Join now and get 10 free interactions — no credit card required.
           </p>
-          <Button
-            size="lg"
-            variant="secondary"
+          <button
             onClick={() => setShowSignUp(true)}
             data-testid="button-cta"
-            className="text-base px-8 h-12 shadow-lg"
+            className={`${ctaBtn} text-base px-8`}
+            style={{
+              background: PALETTE.mist,
+              color: PALETTE.bg,
+              boxShadow: `0 20px 50px -15px ${PALETTE.surf}cc`,
+            }}
           >
-            Create Free Account
-          </Button>
+            Create free account <ArrowRight className="w-4 h-4" />
+          </button>
         </div>
       </section>
+
+      {/* FOOTER */}
+      <footer
+        className="border-t py-8"
+        style={{ borderColor: `${PALETTE.steel}55`, background: PALETTE.bg }}
+      >
+        <div
+          className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm"
+          style={{ color: PALETTE.mist }}
+        >
+          <div className="flex items-center gap-2">
+            <div
+              className="w-5 h-5 rounded-md"
+              style={{ background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})` }}
+            />
+            <span>© {new Date().getFullYear()} PsychPro. All rights reserved.</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
+            <button onClick={() => setShowSignIn(true)} className="hover:text-white transition-colors">Sign In</button>
+            <button onClick={() => setShowSignUp(true)} className="hover:text-white transition-colors">Start Free</button>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
