@@ -42,7 +42,54 @@ const queryClient = new QueryClient({
   },
 });
 
-const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+const PROD_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined;
+const DEV_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY_DEV as string | undefined;
+
+function isLiveProductionHost(): boolean {
+  if (typeof window === "undefined") return true;
+  const h = window.location.hostname;
+  return h === "psychprosuite.com" || h === "www.psychprosuite.com";
+}
+
+function pickClerkKey(): string | null {
+  const onProd = isLiveProductionHost();
+  const hasUsableDevKey = !!DEV_KEY && DEV_KEY.startsWith("pk_test_");
+  if (onProd) return PROD_KEY ?? null;
+  if (hasUsableDevKey) return DEV_KEY!;
+  return null;
+}
+
+const clerkPubKey = pickClerkKey();
+
+function PreviewUnavailable() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background p-6">
+      <div className="max-w-md text-center space-y-5">
+        <div className="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto text-2xl font-semibold">
+          PP
+        </div>
+        <h1 className="text-2xl font-semibold tracking-tight">PsychPro preview</h1>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          Sign-in is locked to the live domain, so the in-workspace preview can't load
+          the full app here. Open the live site to use everything.
+        </p>
+        <a
+          href="https://psychprosuite.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-5 py-2.5 text-sm font-medium hover:bg-primary/90 transition-colors"
+        >
+          Open psychprosuite.com
+        </a>
+        <p className="text-xs text-muted-foreground/80 pt-2">
+          To enable the in-workspace preview, add a Clerk Development publishable key
+          (starts with <code className="font-mono">pk_test_</code>) as the secret
+          <code className="font-mono"> VITE_CLERK_PUBLISHABLE_KEY_DEV</code>.
+        </p>
+      </div>
+    </div>
+  );
+}
 
 function ClerkTokenSetup() {
   const { getToken } = useAuth();
@@ -116,6 +163,13 @@ function AuthRouter() {
 }
 
 function App() {
+  if (!clerkPubKey) {
+    return (
+      <ErrorBoundary>
+        <PreviewUnavailable />
+      </ErrorBoundary>
+    );
+  }
   return (
     <ErrorBoundary>
       <ClerkProvider publishableKey={clerkPubKey} signInUrl="/sign-in" signUpUrl="/sign-up">
