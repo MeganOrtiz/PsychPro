@@ -165,18 +165,12 @@ export default function LandingPage() {
             </div>
             <span className="font-bold text-xl tracking-tight text-white">PsychPro</span>
           </div>
-          <div className="flex items-center gap-5">
-            <a
-              href="#pricing"
-              className="text-sm hidden sm:inline transition-colors"
-              style={{ color: `${PALETTE.mist}cc` }}
-            >
-              Pricing
-            </a>
+          <div className="flex items-center gap-3">
             <button
               onClick={() => setShowSignIn(true)}
-              className="text-sm transition-colors hidden sm:inline"
+              className="text-sm transition-colors"
               style={{ color: `${PALETTE.mist}cc` }}
+              data-testid="header-sign-in"
             >
               Sign In
             </button>
@@ -188,8 +182,9 @@ export default function LandingPage() {
                 color: PALETTE.bg,
                 boxShadow: `0 4px 18px -4px ${PALETTE.teal}aa`,
               }}
+              data-testid="header-sign-up"
             >
-              Start Free
+              Sign Up
             </button>
           </div>
         </div>
