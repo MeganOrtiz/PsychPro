@@ -11,6 +11,7 @@ import {
 import { eq, desc } from "drizzle-orm";
 import { getAuth } from "@clerk/express";
 import { openai } from "@workspace/integrations-openai-ai-server";
+import { parseIntParam } from "../lib/params";
 
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 20 * 1024 * 1024 } });
@@ -352,7 +353,8 @@ router.get("/custom-decks/:id", async (req: Request, res: Response): Promise<voi
     const userId = getUserId(req);
     if (!userId) { res.status(401).json({ error: "Unauthorized" }); return; }
 
-    const deckId = parseInt(req.params.id, 10);
+    const deckId = parseIntParam(req, res, "id");
+    if (deckId === null) return;
     const [deck] = await db.select().from(customDecksTable).where(eq(customDecksTable.id, deckId));
     if (!deck || deck.userId !== userId) { res.status(404).json({ error: "Not found" }); return; }
 
@@ -368,7 +370,8 @@ router.get("/custom-decks/:id/flashcards", async (req: Request, res: Response): 
     const userId = getUserId(req);
     if (!userId) { res.status(401).json({ error: "Unauthorized" }); return; }
 
-    const deckId = parseInt(req.params.id, 10);
+    const deckId = parseIntParam(req, res, "id");
+    if (deckId === null) return;
     const [deck] = await db.select({ userId: customDecksTable.userId }).from(customDecksTable).where(eq(customDecksTable.id, deckId));
     if (!deck || deck.userId !== userId) { res.status(404).json({ error: "Not found" }); return; }
 
@@ -385,7 +388,8 @@ router.get("/custom-decks/:id/quiz", async (req: Request, res: Response): Promis
     const userId = getUserId(req);
     if (!userId) { res.status(401).json({ error: "Unauthorized" }); return; }
 
-    const deckId = parseInt(req.params.id, 10);
+    const deckId = parseIntParam(req, res, "id");
+    if (deckId === null) return;
     const [deck] = await db.select({ userId: customDecksTable.userId }).from(customDecksTable).where(eq(customDecksTable.id, deckId));
     if (!deck || deck.userId !== userId) { res.status(404).json({ error: "Not found" }); return; }
 
@@ -402,7 +406,8 @@ router.get("/custom-decks/:id/cloze", async (req: Request, res: Response): Promi
     const userId = getUserId(req);
     if (!userId) { res.status(401).json({ error: "Unauthorized" }); return; }
 
-    const deckId = parseInt(req.params.id, 10);
+    const deckId = parseIntParam(req, res, "id");
+    if (deckId === null) return;
     const [deck] = await db.select({ userId: customDecksTable.userId }).from(customDecksTable).where(eq(customDecksTable.id, deckId));
     if (!deck || deck.userId !== userId) { res.status(404).json({ error: "Not found" }); return; }
 
@@ -419,7 +424,8 @@ router.delete("/custom-decks/:id", async (req: Request, res: Response): Promise<
     const userId = getUserId(req);
     if (!userId) { res.status(401).json({ error: "Unauthorized" }); return; }
 
-    const deckId = parseInt(req.params.id, 10);
+    const deckId = parseIntParam(req, res, "id");
+    if (deckId === null) return;
     const [deck] = await db.select({ userId: customDecksTable.userId }).from(customDecksTable).where(eq(customDecksTable.id, deckId));
     if (!deck || deck.userId !== userId) { res.status(404).json({ error: "Not found" }); return; }
 

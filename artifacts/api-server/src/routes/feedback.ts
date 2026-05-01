@@ -3,6 +3,7 @@ import { db } from "@workspace/db";
 import { feedbackTable, usersTable } from "@workspace/db";
 import { eq, desc } from "drizzle-orm";
 import { getAuth } from "@clerk/express";
+import { parseIntParam } from "../lib/params";
 
 const router = Router();
 
@@ -95,7 +96,8 @@ router.patch("/feedback/:id/status", async (req: Request, res: Response): Promis
     const isAdmin = await requireAdmin(req, res);
     if (!isAdmin) return;
 
-    const id = parseInt(req.params.id, 10);
+    const id = parseIntParam(req, res, "id");
+    if (id === null) return;
     const { status } = req.body;
     if (!["unread", "read", "resolved"].includes(status)) {
       res.status(400).json({ error: "Invalid status" });
