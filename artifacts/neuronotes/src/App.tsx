@@ -24,6 +24,7 @@ import FeedbackPage from "@/pages/feedback";
 import FeatureRequestPage from "@/pages/feature-request";
 import ResourcesPage from "@/pages/resources";
 import StudyLabPage from "@/pages/study-lab";
+import BrainLabPage from "@/pages/brain-lab";
 import AdminFeedbackPage from "@/pages/admin-feedback";
 import MyDecksPage from "@/pages/my-decks";
 import NewDeckPage from "@/pages/my-decks-new";
@@ -171,6 +172,7 @@ function AuthRouter() {
             <Route path="/feature-request" component={FeatureRequestPage} />
             <Route path="/resources" component={ResourcesPage} />
             <Route path="/study-lab" component={StudyLabPage} />
+            <Route path="/brain-lab" component={BrainLabPage} />
             <Route path="/admin/feedback" component={AdminFeedbackPage} />
             <Route path="/my-decks" component={MyDecksPage} />
             <Route path="/my-decks/new" component={NewDeckPage} />

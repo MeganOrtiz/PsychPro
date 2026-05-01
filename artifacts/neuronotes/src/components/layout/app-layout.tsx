@@ -11,6 +11,7 @@ const studyNav: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/topics", label: "Categories", icon: BookOpen },
   { href: "/study-lab", label: "Study Lab", icon: Beaker },
+  { href: "/brain-lab", label: "Brain Lab", icon: Brain },
   { href: "/progress", label: "Progress", icon: Trophy },
   { href: "/resources", label: "Resources", icon: Library },
 ];

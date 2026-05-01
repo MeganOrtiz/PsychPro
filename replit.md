@@ -71,6 +71,13 @@ A mobile-responsive neuroscience/neuropsychology study app.
   - `InterleavingMode` (mixed vs blocked toggle, color-coded topic pills)
   - `ElaborationPanel` (rotating prompts, local notes)
   - Components live in `src/components/learning/` and are reusable in any page
+- **Brain Lab** (`/brain-lab`) — interactive 3D brain explorer
+  - React Three Fiber + drei + three.js
+  - 8 anatomical regions as separate clickable meshes (frontal, parietal, temporal L/R, occipital, cerebellum, brainstem, limbic) — built procedurally from displaced IcosahedronGeometry, no external GLB
+  - OrbitControls (rotate + zoom, no pan), gentle auto-spin until a region is selected
+  - Click a region → side panel with summary, key functions, common clinical findings, related topic hints, and CTA to `/topics`
+  - Aqua Nebula palette (matches landing); reduced-motion gating via `prefers-reduced-motion`
+  - Page: `src/pages/brain-lab.tsx`; nav added in `src/components/layout/app-layout.tsx` (Brain icon)
 - Multiple-choice quizzes with explanations
 - Scrollable study guides (custom Markdown renderer)
 - Practice exams (timed 90s/question or untimed)
