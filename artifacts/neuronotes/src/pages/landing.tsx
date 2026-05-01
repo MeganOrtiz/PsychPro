@@ -13,7 +13,11 @@ import {
   Target,
   ArrowRight,
   FileText,
+  Users,
+  Sprout,
+  Star,
 } from "lucide-react";
+import brainHero from "@/assets/brand/brain-only.png";
 
 const REAL_TOPICS = [
   "Psychological Disorders", "Personality Disorders", "Neurodevelopmental Disorders",
@@ -42,80 +46,6 @@ function usePrefersReducedMotion(): boolean {
     return () => mq.removeEventListener?.("change", onChange);
   }, []);
   return prefers;
-}
-
-function NeuralBrain({ className = "", animate = true }: { className?: string; animate?: boolean }) {
-  const nodes = [
-    { x: 200, y: 110, r: 3.5 }, { x: 240, y: 90, r: 2.5 }, { x: 280, y: 110, r: 3 },
-    { x: 320, y: 95, r: 2.5 }, { x: 360, y: 120, r: 3.5 }, { x: 175, y: 150, r: 2.5 },
-    { x: 220, y: 145, r: 3 }, { x: 265, y: 155, r: 2.5 }, { x: 305, y: 145, r: 3.5 },
-    { x: 350, y: 165, r: 2.5 }, { x: 390, y: 155, r: 3 }, { x: 165, y: 195, r: 3 },
-    { x: 210, y: 200, r: 2.5 }, { x: 255, y: 205, r: 3.5 }, { x: 300, y: 195, r: 2.5 },
-    { x: 345, y: 210, r: 3 }, { x: 390, y: 205, r: 2.5 }, { x: 175, y: 245, r: 2.5 },
-    { x: 220, y: 250, r: 3 }, { x: 265, y: 255, r: 2.5 }, { x: 310, y: 250, r: 3.5 },
-    { x: 355, y: 245, r: 2.5 }, { x: 200, y: 290, r: 3 }, { x: 245, y: 300, r: 2.5 },
-    { x: 295, y: 295, r: 3.5 }, { x: 340, y: 290, r: 2.5 }, { x: 230, y: 330, r: 2.5 },
-    { x: 280, y: 340, r: 3 }, { x: 325, y: 325, r: 2.5 },
-  ];
-  const edges: [number, number][] = [
-    [0,1],[1,2],[2,3],[3,4],[0,5],[1,6],[2,7],[3,8],[4,9],[4,10],
-    [5,6],[6,7],[7,8],[8,9],[9,10],[5,11],[6,12],[7,13],[8,14],[9,15],[10,16],
-    [11,12],[12,13],[13,14],[14,15],[15,16],[11,17],[12,18],[13,19],[14,20],[15,21],
-    [17,18],[18,19],[19,20],[20,21],[18,22],[19,23],[20,24],[21,25],
-    [22,23],[23,24],[24,25],[23,26],[24,27],[25,28],[26,27],[27,28],
-    [6,13],[8,14],[12,19],[14,20],[19,24],[7,14],[13,20],[20,25],
-  ];
-  return (
-    <svg viewBox="0 0 560 440" className={className} aria-hidden="true">
-      <defs>
-        <radialGradient id="brainGlow" cx="50%" cy="45%" r="55%">
-          <stop offset="0%" stopColor="#58C9F3" stopOpacity="0.55" />
-          <stop offset="55%" stopColor="#2FA0C6" stopOpacity="0.18" />
-          <stop offset="100%" stopColor="#061826" stopOpacity="0" />
-        </radialGradient>
-        <linearGradient id="edgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#58C9F3" stopOpacity="0.7" />
-          <stop offset="100%" stopColor="#2FA0C6" stopOpacity="0.35" />
-        </linearGradient>
-        <filter id="nodeGlow" x="-200%" y="-200%" width="500%" height="500%">
-          <feGaussianBlur stdDeviation="2.5" result="b" />
-          <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
-        </filter>
-      </defs>
-      <ellipse cx="280" cy="220" rx="240" ry="200" fill="url(#brainGlow)" />
-      {edges.map(([a, b], i) => {
-        const na = nodes[a]; const nb = nodes[b];
-        return (
-          <line
-            key={i}
-            x1={na.x} y1={na.y} x2={nb.x} y2={nb.y}
-            stroke="url(#edgeGrad)"
-            strokeWidth={0.7}
-            strokeLinecap="round"
-          />
-        );
-      })}
-      {nodes.map((n, i) => (
-        <circle
-          key={i}
-          cx={n.x} cy={n.y} r={n.r}
-          fill="#BDE5FF"
-          filter="url(#nodeGlow)"
-          opacity={0.9}
-        >
-          {animate && (
-            <animate
-              attributeName="opacity"
-              values="0.4;1;0.4"
-              dur={`${2 + (i % 5) * 0.4}s`}
-              begin={`${(i % 7) * 0.3}s`}
-              repeatCount="indefinite"
-            />
-          )}
-        </circle>
-      ))}
-    </svg>
-  );
 }
 
 function Starfield({ animate = true, count = 60 }: { animate?: boolean; count?: number }) {
@@ -288,114 +218,143 @@ export default function LandingPage() {
           aria-hidden
         />
 
-        <div className="max-w-6xl mx-auto px-4 pt-16 md:pt-24 pb-16 md:pb-20 relative">
-          <div className="grid md:grid-cols-2 gap-10 lg:gap-16 items-center">
-            <div className="text-center md:text-left">
-              <div
-                className="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 mb-6 text-xs font-medium border"
+        <div className="max-w-5xl mx-auto px-4 pt-12 md:pt-16 pb-16 md:pb-20 relative">
+          <div className="flex flex-col items-center text-center">
+            {/* Brain image — actual brand asset */}
+            <div className="relative w-full max-w-md md:max-w-lg lg:max-w-xl -mb-2 md:-mb-4">
+              <img
+                src={brainHero}
+                alt="Glowing neural brain — PsychPro"
+                className="w-full h-auto select-none pointer-events-none"
                 style={{
-                  background: `${PALETTE.steel}55`,
-                  borderColor: `${PALETTE.surf}55`,
-                  color: PALETTE.mist,
+                  mixBlendMode: "lighten",
+                  filter: `drop-shadow(0 30px 80px ${PALETTE.teal}55)`,
+                }}
+                draggable={false}
+              />
+            </div>
+
+            {/* Eyebrow pill */}
+            <div
+              className="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 mb-5 text-xs font-medium border"
+              style={{
+                background: `${PALETTE.steel}55`,
+                borderColor: `${PALETTE.surf}55`,
+                color: PALETTE.mist,
+              }}
+            >
+              <Sparkles className="w-3.5 h-3.5" style={{ color: PALETTE.surf }} />
+              Built for psychology students &amp; clinicians
+            </div>
+
+            {/* Centered title */}
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.02] tracking-tight text-white mb-4">
+              Psych
+              <span
+                className="bg-clip-text text-transparent"
+                style={{
+                  backgroundImage: `linear-gradient(135deg, ${PALETTE.surf}, ${PALETTE.mist})`,
                 }}
               >
-                <Sparkles className="w-3.5 h-3.5" style={{ color: PALETTE.surf }} />
-                Built for psychology students &amp; clinicians
-              </div>
+                Pro
+              </span>
+            </h1>
 
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.05] tracking-tight text-white mb-5">
-                Master clinical psychology,
-                <br />
-                <span
-                  className="bg-clip-text text-transparent"
-                  style={{
-                    backgroundImage: `linear-gradient(135deg, ${PALETTE.surf}, ${PALETTE.mist})`,
-                  }}
-                >
-                  one neuron at a time.
-                </span>
-              </h1>
+            {/* New tagline format — matches brand asset */}
+            <p
+              className="text-sm md:text-base font-semibold tracking-[0.32em] uppercase mb-8"
+              style={{ color: PALETTE.mist }}
+            >
+              Learn<span style={{ color: PALETTE.surf }}>.</span> Connect
+              <span style={{ color: PALETTE.surf }}>.</span> Grow
+              <span style={{ color: PALETTE.surf }}>.</span> Evolve
+              <span style={{ color: PALETTE.surf }}>.</span>
+            </p>
 
-              <p
-                className="text-base md:text-lg leading-relaxed mb-8 max-w-xl mx-auto md:mx-0"
-                style={{ color: `${PALETTE.mist}cc` }}
-              >
-                Adaptive flashcards, quizzes, study guides, and timed exams — engineered
-                for the breadth of clinical psychology, from foundations to specialty topics.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start items-center">
-                <button
-                  onClick={() => setShowSignUp(true)}
-                  data-testid="button-start-free"
-                  className={ctaBtn}
-                  style={{
-                    background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
-                    color: PALETTE.bg,
-                    boxShadow: `0 14px 40px -10px ${PALETTE.teal}cc, 0 0 0 1px ${PALETTE.surf}55 inset`,
-                  }}
-                >
-                  Start for Free <ArrowRight className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setShowSignIn(true)}
-                  data-testid="button-sign-in-hero"
-                  className={`${ctaBtn} border`}
-                  style={{
-                    background: "transparent",
-                    color: PALETTE.mist,
-                    borderColor: `${PALETTE.surf}55`,
-                  }}
-                >
-                  Sign In
-                </button>
-              </div>
-
-              <p
-                className="text-sm mt-5 flex items-center justify-center md:justify-start gap-1.5"
-                style={{ color: `${PALETTE.mist}99` }}
-              >
-                <CheckCircle className="w-3.5 h-3.5" style={{ color: PALETTE.surf }} />
-                10 free interactions — no credit card required
-              </p>
+            {/* Pillar pills — Learn / Connect / Grow / Evolve */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl w-full mb-9">
+              {[
+                { icon: BookOpen, label: "Learn", caption: "Active recall" },
+                { icon: Users, label: "Connect", caption: "Shared decks" },
+                { icon: Sprout, label: "Grow", caption: "Daily practice" },
+                { icon: Star, label: "Evolve", caption: "Mastery tracking" },
+              ].map((p) => {
+                const Icon = p.icon;
+                return (
+                  <div
+                    key={p.label}
+                    className="flex flex-col items-center gap-1.5 rounded-2xl px-3 py-3 border backdrop-blur-md"
+                    style={{
+                      background: `${PALETTE.surface}aa`,
+                      borderColor: `${PALETTE.surf}33`,
+                    }}
+                    data-testid={`pillar-${p.label.toLowerCase()}`}
+                  >
+                    <div
+                      className="w-9 h-9 rounded-xl flex items-center justify-center"
+                      style={{
+                        background: `linear-gradient(135deg, ${PALETTE.teal}33, ${PALETTE.surf}22)`,
+                        border: `1px solid ${PALETTE.surf}55`,
+                      }}
+                    >
+                      <Icon className="w-4 h-4" style={{ color: PALETTE.surf }} />
+                    </div>
+                    <span
+                      className="text-[11px] font-bold tracking-[0.18em] uppercase"
+                      style={{ color: PALETTE.mist }}
+                    >
+                      {p.label}
+                    </span>
+                    <span
+                      className="text-[11px] leading-tight"
+                      style={{ color: `${PALETTE.mist}88` }}
+                    >
+                      {p.caption}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
 
-            {/* Brain visual */}
-            <div className="relative">
-              <div className="relative aspect-[5/4]">
-                <NeuralBrain className="w-full h-full" animate={animateBg} />
-                {/* floating tag chips */}
-                <div
-                  className="absolute top-4 right-2 md:right-6 hidden sm:flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium backdrop-blur-md border"
-                  style={{
-                    background: `${PALETTE.surface}aa`,
-                    borderColor: `${PALETTE.surf}55`,
-                    color: PALETTE.mist,
-                  }}
-                >
-                  <span
-                    className="w-1.5 h-1.5 rounded-full animate-pulse"
-                    style={{ background: PALETTE.surf }}
-                  />
-                  Adaptive recall
-                </div>
-                <div
-                  className="absolute bottom-8 left-0 hidden sm:flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium backdrop-blur-md border"
-                  style={{
-                    background: `${PALETTE.surface}aa`,
-                    borderColor: `${PALETTE.surf}55`,
-                    color: PALETTE.mist,
-                  }}
-                >
-                  <Sparkles className="w-3 h-3" style={{ color: PALETTE.surf }} />
-                  Built on real coursework
-                </div>
-              </div>
+            {/* CTAs */}
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+              <button
+                onClick={() => setShowSignUp(true)}
+                data-testid="button-start-free"
+                className={ctaBtn}
+                style={{
+                  background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
+                  color: PALETTE.bg,
+                  boxShadow: `0 14px 40px -10px ${PALETTE.teal}cc, 0 0 0 1px ${PALETTE.surf}55 inset`,
+                }}
+              >
+                Start for Free <ArrowRight className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setShowSignIn(true)}
+                data-testid="button-sign-in-hero"
+                className={`${ctaBtn} border`}
+                style={{
+                  background: "transparent",
+                  color: PALETTE.mist,
+                  borderColor: `${PALETTE.surf}55`,
+                }}
+              >
+                Sign In
+              </button>
             </div>
+
+            <p
+              className="text-sm mt-5 flex items-center justify-center gap-1.5"
+              style={{ color: `${PALETTE.mist}99` }}
+            >
+              <CheckCircle className="w-3.5 h-3.5" style={{ color: PALETTE.surf }} />
+              10 free interactions — no credit card required
+            </p>
           </div>
 
           {/* value chips */}
-          <div className="mt-10 md:mt-14 flex flex-wrap justify-center gap-2.5 max-w-3xl mx-auto">
+          <div className="mt-12 md:mt-16 flex flex-wrap justify-center gap-2.5 max-w-3xl mx-auto">
             {[
               { icon: GraduationCap, label: "Real coursework" },
               { icon: Target, label: "Exam-ready" },
