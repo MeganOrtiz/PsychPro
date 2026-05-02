@@ -97,11 +97,29 @@ function describeKey(k: string | undefined): string {
   return m ? `${m[0]}…(${k.length} chars)` : `present(${k.length} chars)`;
 }
 
+// Decode the FAPI domain encoded in a Clerk publishable key. The base64
+// payload after `pk_(live|test)_` is the Clerk Frontend API host with one or
+// more trailing `$` chars. Logging the decoded host lets an operator confirm
+// the API server's publishable key belongs to the same Clerk instance as the
+// one the frontend ships with — a length mismatch between the two would
+// otherwise silently cause every JWT verification to fail with 401.
+function decodeClerkFapi(k: string | undefined): string | null {
+  if (!k) return null;
+  const m = k.match(/^pk_(?:live|test)_(.+)$/);
+  if (!m) return null;
+  try {
+    return Buffer.from(m[1], "base64").toString("utf8").replace(/\$+$/, "");
+  } catch {
+    return null;
+  }
+}
+
 logger.info(
   {
     clerk: {
       secretKey: describeKey(clerkSecretKey),
       publishableKey: describeKey(clerkPublishableKey),
+      publishableFapi: decodeClerkFapi(clerkPublishableKey) ?? "n/a",
       sourceSecret: process.env.CLERK_SECRET_KEY
         ? "CLERK_SECRET_KEY"
         : process.env.clerk_backend
