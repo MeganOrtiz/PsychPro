@@ -187,6 +187,22 @@ the first publish on a brand-new project, or after editing
 DATABASE` privilege on the connection (the default Replit Postgres user has
 this).
 
+To verify the chained "first publish" sequence end-to-end (push then seed
+against a brand-new database, with content tables populated and no orphan FK
+rows), run:
+
+```bash
+pnpm --filter @workspace/db run test:push-then-seed-fresh-db
+```
+
+It provisions a temporary database, runs `push` then `seed` against it, asserts
+every content table (`topics`, `flashcards`, `quiz_questions`, `study_guides`,
+`practice_exams`, `practice_exam_questions`) meets the documented row-count
+minimums above, and drops the temporary database when done. Catches regressions
+where a seed insert assumes a constraint or column that `push` doesn't create
+on a fresh database — issues that would otherwise only surface on a real
+production publish. Requires `CREATE DATABASE` privilege.
+
 The seed is fully idempotent and **safe to re-run on a live database**. It
 preserves all user data:
 
