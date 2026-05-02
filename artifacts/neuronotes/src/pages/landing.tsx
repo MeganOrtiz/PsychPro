@@ -324,7 +324,7 @@ export default function LandingPage() {
             ].map((item, idx) => (
               <div
                 key={item.label}
-                className={`flex flex-col items-center justify-center py-6 md:py-8 ${
+                className={`group relative flex flex-col items-center justify-center py-6 md:py-8 cursor-pointer transition-all duration-300 hover:bg-[#58C9F3]/5 hover:shadow-[inset_0_0_30px_-8px_rgba(88,201,243,0.45)] ${
                   idx > 0 ? "md:border-l" : ""
                 } ${idx === 1 ? "border-l md:border-l" : ""} ${
                   idx === 2 || idx === 3 ? "border-t md:border-t-0" : ""
@@ -332,12 +332,11 @@ export default function LandingPage() {
                 style={{ borderColor: `${PALETTE.steel}55` }}
               >
                 <item.icon
-                  className="w-7 h-7 md:w-8 md:h-8 mb-2.5"
-                  style={{ color: PALETTE.surf }}
+                  className="w-7 h-7 md:w-8 md:h-8 mb-2.5 text-[#58C9F3] transition-all duration-300 group-hover:-translate-y-0.5 group-hover:text-[#BDE5FF] group-hover:drop-shadow-[0_0_10px_rgba(88,201,243,0.85)]"
                   strokeWidth={1.5}
                 />
                 <span
-                  className="text-xs md:text-sm font-semibold uppercase"
+                  className="text-xs md:text-sm font-semibold uppercase transition-colors duration-300 group-hover:text-white"
                   style={{ color: `${PALETTE.mist}cc`, letterSpacing: "0.22em" }}
                 >
                   {item.label}
@@ -631,19 +630,10 @@ export default function LandingPage() {
               <button
                 onClick={() => setShowSignUp(true)}
                 data-testid={`button-plan-${plan.name.toLowerCase()}`}
-                className="w-full rounded-xl h-11 font-semibold transition-all"
-                style={
+                className={
                   plan.highlight
-                    ? {
-                        background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
-                        color: PALETTE.bg,
-                        boxShadow: `0 10px 30px -10px ${PALETTE.teal}cc`,
-                      }
-                    : {
-                        background: "transparent",
-                        color: PALETTE.mist,
-                        border: `1px solid ${PALETTE.surf}66`,
-                      }
+                    ? "w-full rounded-xl h-11 font-semibold transition-all duration-300 bg-gradient-to-br from-[#2FA0C6] to-[#58C9F3] text-[#061826] shadow-[0_10px_30px_-10px_rgba(47,160,198,0.8)] hover:-translate-y-0.5 hover:shadow-[0_0_0_1px_rgba(189,229,255,0.55),0_14px_40px_-8px_rgba(88,201,243,0.85),0_0_44px_-6px_rgba(88,201,243,0.7)] hover:brightness-110"
+                    : "w-full rounded-xl h-11 font-semibold transition-all duration-300 bg-transparent text-[#BDE5FF] border border-[#58C9F3]/40 hover:-translate-y-0.5 hover:bg-[#58C9F3]/10 hover:border-[#58C9F3] hover:text-white hover:shadow-[0_0_0_1px_rgba(88,201,243,0.45),0_0_28px_-4px_rgba(88,201,243,0.65)]"
                 }
               >
                 {plan.cta}
