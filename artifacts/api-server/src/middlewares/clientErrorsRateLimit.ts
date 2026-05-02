@@ -232,7 +232,22 @@ export interface ClientErrorsRateLimitCleanupHandle {
 // for tests that import this module and for short-lived CLI tools.
 export function startClientErrorsRateLimitCleanup(
   logger: Logger,
+  // Override the recurring sweep interval. Defaults to the resolved
+  // `CLEANUP_INTERVAL_MS` so production keeps its current cadence; tests pass
+  // a tiny value to assert one sweep's log shape without waiting a full
+  // window. Validated to be a positive finite integer so a misuse here can't
+  // silently disable the sweeper (setInterval(fn, 0) would also pin a CPU).
+  intervalMs: number = CLEANUP_INTERVAL_MS,
 ): ClientErrorsRateLimitCleanupHandle {
+  if (
+    !Number.isFinite(intervalMs) ||
+    !Number.isInteger(intervalMs) ||
+    intervalMs <= 0
+  ) {
+    throw new Error(
+      `startClientErrorsRateLimitCleanup: intervalMs must be a positive integer, got ${String(intervalMs)}`,
+    );
+  }
   const handle = setInterval(() => {
     const startedAt = Date.now();
     pruneExpiredClientErrorRateRows()
@@ -261,7 +276,7 @@ export function startClientErrorsRateLimitCleanup(
           "scheduled client-errors rate-limit cleanup failed",
         );
       });
-  }, CLEANUP_INTERVAL_MS);
+  }, intervalMs);
   if (typeof handle.unref === "function") handle.unref();
 
   logger.info(

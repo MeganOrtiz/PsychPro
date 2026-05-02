@@ -9,7 +9,10 @@ import {
 import {
   clientErrorsRateLimit,
   pruneExpiredClientErrorRateRows,
+  startClientErrorsRateLimitCleanup,
+  CLIENT_ERRORS_RATE_LIMIT_CLEANUP_STARTED_LOG_MSG,
 } from "../src/middlewares/clientErrorsRateLimit";
+import type { Logger } from "pino";
 
 const WINDOW_MS = 60_000;
 const LIMIT = 30;
@@ -413,6 +416,182 @@ test(
     } finally {
       await cleanupForKey(ip);
       await cleanupForKey(freshIp);
+    }
+  },
+);
+
+interface FakeLoggerCalls {
+  info: CapturedLog[];
+  warn: CapturedLog[];
+  error: CapturedLog[];
+}
+
+// Build a fake pino-shaped logger that records `info`/`warn`/`error` calls.
+// We only need to exercise the methods `startClientErrorsRateLimitCleanup`
+// touches (`info` for the startup line + the per-sweep line, `warn` for the
+// failure path). Other Logger methods are stubbed as no-ops so the cast to
+// `Logger` is sound for the function under test.
+function makeFakeLogger(): { logger: Logger; calls: FakeLoggerCalls } {
+  const calls: FakeLoggerCalls = { info: [], warn: [], error: [] };
+  const noop = (): void => {};
+  const fake = {
+    info: (obj: Record<string, unknown>, msg: string) => {
+      calls.info.push({ obj, msg });
+    },
+    warn: (obj: Record<string, unknown>, msg: string) => {
+      calls.warn.push({ obj, msg });
+    },
+    error: (obj: Record<string, unknown>, msg: string) => {
+      calls.error.push({ obj, msg });
+    },
+    debug: noop,
+    trace: noop,
+    fatal: noop,
+    silent: noop,
+    child: () => fake,
+    level: "info",
+  };
+  return { logger: fake as unknown as Logger, calls };
+}
+
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+test(
+  "sweeper logs one info line with cleanup payload when rows are pruned",
+  async () => {
+    const ip = `test-sweeper-payload-${randomUUID()}`;
+    const aged = new Date(Date.now() - (WINDOW_MS + 5_000));
+
+    // Pre-prune so any leftover expired rows from earlier suites don't get
+    // swept by our sweeper before our seeded rows do — we want the seeded
+    // rows to be the (or part of the) reason the per-sweep info line fires.
+    await pruneExpiredClientErrorRateRows();
+
+    let handle: { stop(): void } | null = null;
+    try {
+      await db
+        .insert(clientErrorRateHitsTable)
+        .values({ clientKey: ip, hitAt: aged });
+      await db
+        .insert(clientErrorRateWarningsTable)
+        .values({ clientKey: ip, warnedAt: aged });
+
+      const { logger, calls } = makeFakeLogger();
+      const intervalMs = 25;
+      handle = startClientErrorsRateLimitCleanup(logger, intervalMs);
+
+      // The startup info line fires synchronously inside
+      // `startClientErrorsRateLimitCleanup`.
+      assert(
+        calls.info.length === 1,
+        `expected exactly 1 startup info line, got ${calls.info.length}`,
+      );
+      assert(
+        calls.info[0].msg === CLIENT_ERRORS_RATE_LIMIT_CLEANUP_STARTED_LOG_MSG,
+        `expected startup info msg "${CLIENT_ERRORS_RATE_LIMIT_CLEANUP_STARTED_LOG_MSG}", got ${JSON.stringify(calls.info[0].msg)}`,
+      );
+
+      // Wait long enough for at least one sweep to run AND for its async
+      // DELETE + .then() to settle. A single interval may fire before the
+      // delete resolves, so we give it several intervals of headroom.
+      const deadline = Date.now() + 2_000;
+      while (calls.info.length < 2 && Date.now() < deadline) {
+        await delay(intervalMs);
+      }
+
+      assert(
+        calls.info.length >= 2,
+        `expected a per-sweep info line within 2s, only saw startup line (info.length=${calls.info.length})`,
+      );
+      // We assert *exactly* one per-sweep line. The seeded rows go away on
+      // the first sweep, so subsequent sweeps must stay silent (the no-op
+      // rule). If the sweeper started spamming on idle DBs we'd see >1 here.
+      // Give a bit more time so a buggy implementation has room to spam.
+      await delay(intervalMs * 4);
+      const sweepLines = calls.info.slice(1);
+      assert(
+        sweepLines.length === 1,
+        `expected exactly 1 per-sweep info line, got ${sweepLines.length} (msgs=${JSON.stringify(sweepLines.map((l) => l.msg))})`,
+      );
+
+      const [sweep] = sweepLines;
+      const payload = sweep.obj.clientErrorsRateLimitCleanup as
+        | Record<string, unknown>
+        | undefined;
+      assert(
+        payload !== undefined && typeof payload === "object",
+        "per-sweep info log must carry a `clientErrorsRateLimitCleanup` object",
+      );
+      const { hitsDeleted, warningsDeleted, durationMs } = payload as {
+        hitsDeleted: unknown;
+        warningsDeleted: unknown;
+        durationMs: unknown;
+      };
+      assert(
+        typeof hitsDeleted === "number" &&
+          Number.isFinite(hitsDeleted) &&
+          hitsDeleted >= 1,
+        `per-sweep payload.hitsDeleted must be a finite number >= 1, got ${JSON.stringify(hitsDeleted)}`,
+      );
+      assert(
+        typeof warningsDeleted === "number" &&
+          Number.isFinite(warningsDeleted) &&
+          warningsDeleted >= 1,
+        `per-sweep payload.warningsDeleted must be a finite number >= 1, got ${JSON.stringify(warningsDeleted)}`,
+      );
+      assert(
+        typeof durationMs === "number" &&
+          Number.isFinite(durationMs) &&
+          durationMs >= 0,
+        `per-sweep payload.durationMs must be a finite number >= 0, got ${JSON.stringify(durationMs)}`,
+      );
+      assert(
+        calls.warn.length === 0,
+        `sweeper must not warn on a successful sweep, got ${calls.warn.length} warn line(s)`,
+      );
+    } finally {
+      handle?.stop();
+      await cleanupForKey(ip);
+    }
+  },
+);
+
+test(
+  "sweeper stays silent on a no-op sweep (no per-sweep info line emitted)",
+  async () => {
+    // Drain any expired rows left over from prior tests so the sweeper has
+    // genuinely nothing to do during this test's window.
+    await pruneExpiredClientErrorRateRows();
+
+    let handle: { stop(): void } | null = null;
+    try {
+      const { logger, calls } = makeFakeLogger();
+      const intervalMs = 25;
+      handle = startClientErrorsRateLimitCleanup(logger, intervalMs);
+
+      // Startup line is the only info call we should ever see in this test.
+      assert(
+        calls.info.length === 1,
+        `expected exactly 1 startup info line, got ${calls.info.length}`,
+      );
+
+      // Let several sweep intervals elapse. Each one queries the DB, finds
+      // 0 expired rows, and must NOT emit a per-sweep info line.
+      const sweeps = 5;
+      await delay(intervalMs * sweeps + 200);
+
+      assert(
+        calls.info.length === 1,
+        `expected no additional info lines on idle sweeps, got ${calls.info.length} total (extra msgs=${JSON.stringify(calls.info.slice(1).map((l) => l.msg))})`,
+      );
+      assert(
+        calls.warn.length === 0,
+        `idle sweeps must not warn, got ${calls.warn.length} warn line(s)`,
+      );
+    } finally {
+      handle?.stop();
     }
   },
 );
