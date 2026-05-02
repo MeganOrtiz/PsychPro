@@ -10,12 +10,8 @@ import {
   Sparkles,
   GraduationCap,
   Clock,
-  Target,
   ArrowRight,
   FileText,
-  Users,
-  TrendingUp,
-  Star,
 } from "lucide-react";
 import psychproMark from "@/assets/brand/psychpro-mark.png";
 
@@ -249,14 +245,14 @@ export default function LandingPage() {
                 }}
               />
 
-              {/* PsychPro wordmark in serif */}
+              {/* PsychPro wordmark — thin geometric sans */}
               <h1
-                className="relative z-10 leading-none tracking-tight select-none"
+                className="relative z-10 leading-none select-none"
                 style={{
-                  fontFamily: '"Playfair Display", "Times New Roman", serif',
-                  fontWeight: 700,
+                  fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
+                  fontWeight: 300,
                   fontSize: "clamp(64px, 14vw, 168px)",
-                  letterSpacing: "-0.02em",
+                  letterSpacing: "-0.01em",
                   textShadow: `0 8px 40px ${PALETTE.bg}cc`,
                 }}
               >
@@ -294,6 +290,17 @@ export default function LandingPage() {
               </a>
             </div>
 
+            {/* Benefit line */}
+            <p
+              className="relative z-10 text-base md:text-lg mt-8 md:mt-10 max-w-2xl mx-auto leading-relaxed"
+              style={{ color: `${PALETTE.mist}cc` }}
+            >
+              Cut your study time in half — and engage in the kind of{" "}
+              <span style={{ color: PALETTE.surf }}>deep processing</span> and
+              learning that actually sticks.
+            </p>
+
+            {/* Trust line */}
             <p
               className="relative z-10 text-sm mt-5 flex items-center justify-center gap-1.5"
               style={{ color: `${PALETTE.mist}99` }}
@@ -301,40 +308,6 @@ export default function LandingPage() {
               <CheckCircle className="w-3.5 h-3.5" style={{ color: PALETTE.surf }} />
               10 free interactions — no credit card required
             </p>
-          </div>
-
-          {/* 4 pillars: Assess / Support / Grow / Evolve */}
-          <div
-            className="mt-14 md:mt-20 grid grid-cols-2 md:grid-cols-4 border-t"
-            style={{ borderColor: `${PALETTE.steel}55` }}
-          >
-            {[
-              { icon: Target, label: "Assess" },
-              { icon: Users, label: "Support" },
-              { icon: TrendingUp, label: "Grow" },
-              { icon: Star, label: "Evolve" },
-            ].map((item, idx) => (
-              <div
-                key={item.label}
-                className={`group relative flex flex-col items-center justify-center py-6 md:py-8 cursor-pointer transition-all duration-300 hover:bg-[#58C9F3]/5 hover:shadow-[inset_0_0_30px_-8px_rgba(88,201,243,0.45)] ${
-                  idx > 0 ? "md:border-l" : ""
-                } ${idx === 1 ? "border-l md:border-l" : ""} ${
-                  idx === 2 || idx === 3 ? "border-t md:border-t-0" : ""
-                } ${idx === 3 ? "border-l" : ""}`}
-                style={{ borderColor: `${PALETTE.steel}55` }}
-              >
-                <item.icon
-                  className="w-7 h-7 md:w-8 md:h-8 mb-2.5 text-[#58C9F3] transition-all duration-300 group-hover:-translate-y-0.5 group-hover:text-[#BDE5FF] group-hover:drop-shadow-[0_0_10px_rgba(88,201,243,0.85)]"
-                  strokeWidth={1.5}
-                />
-                <span
-                  className="text-xs md:text-sm font-semibold uppercase transition-colors duration-300 group-hover:text-white"
-                  style={{ color: `${PALETTE.mist}cc`, letterSpacing: "0.22em" }}
-                >
-                  {item.label}
-                </span>
-              </div>
-            ))}
           </div>
         </div>
       </section>
