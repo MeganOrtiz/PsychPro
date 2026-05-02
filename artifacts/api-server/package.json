@@ -8,6 +8,7 @@
     "build": "node ./build.mjs",
     "start": "node --enable-source-maps ./dist/index.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
+    "//test": "Run all suites: `pnpm --filter @workspace/api-server test`. Run a single suite by name fragment: `pnpm --filter @workspace/api-server test healthz` (also honors TEST_FILTER env).",
     "test": "node ./scripts/run-tests.mjs"
   },
   "dependencies": {

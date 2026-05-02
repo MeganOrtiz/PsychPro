@@ -1,4 +1,18 @@
 #!/usr/bin/env node
+// Auto-discovers and runs every test/**/*.test.ts suite sequentially.
+//
+// Filter usage:
+//   pnpm --filter @workspace/api-server test                 → runs every suite
+//   pnpm --filter @workspace/api-server test healthz         → runs only suites
+//                                                              whose discovered
+//                                                              name contains
+//                                                              "healthz" (case-
+//                                                              insensitive)
+//   TEST_FILTER=healthz pnpm --filter @workspace/api-server test
+//                                                            → same as above,
+//                                                              via env var
+// Multiple positional args are OR'd together. If no suites match the filter,
+// the runner prints a clear error and exits non-zero.
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { readdir } from "node:fs/promises";
@@ -31,6 +45,25 @@ async function discoverSuites() {
   });
 }
 
+function collectFilters() {
+  const filters = [];
+  for (const arg of process.argv.slice(2)) {
+    if (arg && arg.trim()) filters.push(arg.trim());
+  }
+  const envFilter = process.env.TEST_FILTER;
+  if (envFilter && envFilter.trim()) filters.push(envFilter.trim());
+  return filters;
+}
+
+function applyFilters(suites, filters) {
+  if (filters.length === 0) return suites;
+  const needles = filters.map((f) => f.toLowerCase());
+  return suites.filter((s) => {
+    const haystack = s.name.toLowerCase();
+    return needles.some((n) => haystack.includes(n));
+  });
+}
+
 function runSuite(suite) {
   return new Promise((resolve) => {
     const start = Date.now();
@@ -57,14 +90,32 @@ function header(text) {
   return `\n${bar}\n  ${text}\n${bar}`;
 }
 
-const suites = await discoverSuites();
+const allSuites = await discoverSuites();
 
-if (suites.length === 0) {
+if (allSuites.length === 0) {
   console.log("[run-tests] No test files found under test/**/*.test.ts");
   process.exit(0);
 }
 
-console.log(`[run-tests] Discovered ${suites.length} suite(s):`);
+const filters = collectFilters();
+const suites = applyFilters(allSuites, filters);
+
+if (filters.length > 0 && suites.length === 0) {
+  console.error(
+    `[run-tests] No suites matched filter(s): ${filters.map((f) => JSON.stringify(f)).join(", ")}`,
+  );
+  console.error(`[run-tests] Available suites:`);
+  for (const s of allSuites) console.error(`  - ${s.name}  (${s.file})`);
+  process.exit(1);
+}
+
+if (filters.length > 0) {
+  console.log(
+    `[run-tests] Filter(s) active: ${filters.map((f) => JSON.stringify(f)).join(", ")} → ${suites.length}/${allSuites.length} suite(s) selected:`,
+  );
+} else {
+  console.log(`[run-tests] Discovered ${suites.length} suite(s):`);
+}
 for (const s of suites) console.log(`  - ${s.name}  (${s.file})`);
 
 const results = [];
