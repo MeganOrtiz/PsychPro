@@ -360,7 +360,22 @@ test(
         .insert(clientErrorRateWarningsTable)
         .values({ clientKey: freshIp, warnedAt: fresh });
 
-      await pruneExpiredClientErrorRateRows();
+      // The prune deletes ALL rows older than the window, not just the
+      // seeded ones — a shared dev DB could legitimately carry leftover
+      // expired rows from earlier runs. So assert that the counts cover at
+      // least the rows we just seeded (and are real numbers, not undefined
+      // from a missing rowCount). This still catches the "silent no-op"
+      // regression that motivated the task: a 0 here means the sweeper
+      // isn't actually deleting anything.
+      const counts = await pruneExpiredClientErrorRateRows();
+      assert(
+        Number.isInteger(counts.hitsDeleted) && counts.hitsDeleted >= 1,
+        `expected pruneExpiredClientErrorRateRows to report >=1 hit deleted, got ${counts.hitsDeleted}`,
+      );
+      assert(
+        Number.isInteger(counts.warningsDeleted) && counts.warningsDeleted >= 1,
+        `expected pruneExpiredClientErrorRateRows to report >=1 warning deleted, got ${counts.warningsDeleted}`,
+      );
 
       const expiredHits = await db
         .select()

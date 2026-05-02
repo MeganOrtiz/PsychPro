@@ -157,6 +157,16 @@ async function evaluateRateLimit(
   });
 }
 
+// Counts of rows pruned by `pruneExpiredClientErrorRateRows`. Returned to the
+// caller (the recurring background sweeper, the opportunistic per-request
+// sweep, tests) so operators can confirm the sweeper is doing real work and
+// spot anomalies — a silent no-op (e.g. wrong column or wrong window math)
+// would otherwise let the tables grow without anyone noticing.
+export interface PrunedClientErrorRateRowCounts {
+  hitsDeleted: number;
+  warningsDeleted: number;
+}
+
 // Delete every hit/warning row whose timestamp is older than the sliding
 // window. Shared by:
 //   - the per-request opportunistic sweep (every Nth request),
@@ -165,16 +175,25 @@ async function evaluateRateLimit(
 //   - tests that want to trigger a single sweep without scheduling.
 // `now` is parameterised so tests can supply a fixed clock if needed; in
 // production it defaults to the real wall clock.
+// Returns the number of rows deleted from each table so callers can log /
+// assert on observable cleanup work.
 export async function pruneExpiredClientErrorRateRows(
   now: Date = new Date(),
-): Promise<void> {
+): Promise<PrunedClientErrorRateRowCounts> {
   const windowStart = new Date(now.getTime() - WINDOW_MS);
-  await db
+  const hitsResult = await db
     .delete(clientErrorRateHitsTable)
     .where(lte(clientErrorRateHitsTable.hitAt, windowStart));
-  await db
+  const warningsResult = await db
     .delete(clientErrorRateWarningsTable)
     .where(lte(clientErrorRateWarningsTable.warnedAt, windowStart));
+  // node-postgres reports `rowCount: number | null`; null only occurs for
+  // statements that don't affect rows (not the case for DELETE), but coerce
+  // defensively so callers always get a finite count.
+  return {
+    hitsDeleted: hitsResult.rowCount ?? 0,
+    warningsDeleted: warningsResult.rowCount ?? 0,
+  };
 }
 
 async function runOpportunisticCleanup(windowStart: Date): Promise<void> {
@@ -215,12 +234,33 @@ export function startClientErrorsRateLimitCleanup(
   logger: Logger,
 ): ClientErrorsRateLimitCleanupHandle {
   const handle = setInterval(() => {
-    pruneExpiredClientErrorRateRows().catch((err: unknown) => {
-      logger.warn(
-        { err },
-        "scheduled client-errors rate-limit cleanup failed",
-      );
-    });
+    const startedAt = Date.now();
+    pruneExpiredClientErrorRateRows()
+      .then(({ hitsDeleted, warningsDeleted }) => {
+        // Only log when the sweep actually removed something. A fully idle
+        // database would otherwise produce one log line per interval forever
+        // and drown out the signal that matters: how much work the sweeper
+        // is doing. Operators who want quiet sweeps in their logs still get
+        // a hit when retention behaviour changes.
+        if (hitsDeleted === 0 && warningsDeleted === 0) return;
+        const durationMs = Date.now() - startedAt;
+        logger.info(
+          {
+            clientErrorsRateLimitCleanup: {
+              hitsDeleted,
+              warningsDeleted,
+              durationMs,
+            },
+          },
+          "client-error rate-limit cleanup pruned expired rows",
+        );
+      })
+      .catch((err: unknown) => {
+        logger.warn(
+          { err },
+          "scheduled client-errors rate-limit cleanup failed",
+        );
+      });
   }, CLEANUP_INTERVAL_MS);
   if (typeof handle.unref === "function") handle.unref();
 
