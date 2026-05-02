@@ -603,46 +603,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="relative overflow-hidden">
-        <div
-          className="absolute inset-0 -z-10"
-          style={{
-            background: `linear-gradient(135deg, ${PALETTE.steel}, ${PALETTE.bg} 70%)`,
-          }}
-        />
-        <div
-          className="absolute top-0 right-0 -z-10 w-[500px] h-[500px] rounded-full blur-[120px]"
-          style={{ background: `${PALETTE.surf}33` }}
-          aria-hidden
-        />
-        <div
-          className="absolute bottom-0 left-0 -z-10 w-[500px] h-[500px] rounded-full blur-[120px]"
-          style={{ background: `${PALETTE.teal}55` }}
-          aria-hidden
-        />
-        <div className="max-w-2xl mx-auto text-center px-4 py-24">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
-            Ready to start studying?
-          </h2>
-          <p className="mb-8 text-lg" style={{ color: `${PALETTE.mist}cc` }}>
-            Join now and get 10 free interactions — no credit card required.
-          </p>
-          <button
-            onClick={() => setShowSignUp(true)}
-            data-testid="button-cta"
-            className={`${ctaBtn} text-base px-8`}
-            style={{
-              background: PALETTE.mist,
-              color: PALETTE.bg,
-              boxShadow: `0 20px 50px -15px ${PALETTE.surf}cc`,
-            }}
-          >
-            Create free account <ArrowRight className="w-4 h-4" />
-          </button>
-        </div>
-      </section>
-
       {/* FOOTER */}
       <footer
         className="border-t py-8"
