@@ -81,7 +81,55 @@ app.post(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(clerkMiddleware());
+// Resolve Clerk credentials from a list of env-var aliases so the API works
+// whether the operator stored them as the canonical CLERK_* names or the
+// lowercase Replit integration aliases (clerk_backend / clerk_frontend).
+// We also log presence + key prefix at boot so an operator can tell from the
+// production logs whether keys are loaded WITHOUT exposing the secret value.
+const clerkSecretKey =
+  process.env.CLERK_SECRET_KEY || process.env.clerk_backend || undefined;
+const clerkPublishableKey =
+  process.env.CLERK_PUBLISHABLE_KEY || process.env.clerk_frontend || undefined;
+
+function describeKey(k: string | undefined): string {
+  if (!k) return "MISSING";
+  const m = k.match(/^(pk|sk)_(live|test)_/);
+  return m ? `${m[0]}…(${k.length} chars)` : `present(${k.length} chars)`;
+}
+
+logger.info(
+  {
+    clerk: {
+      secretKey: describeKey(clerkSecretKey),
+      publishableKey: describeKey(clerkPublishableKey),
+      sourceSecret: process.env.CLERK_SECRET_KEY
+        ? "CLERK_SECRET_KEY"
+        : process.env.clerk_backend
+        ? "clerk_backend"
+        : "none",
+      sourcePublishable: process.env.CLERK_PUBLISHABLE_KEY
+        ? "CLERK_PUBLISHABLE_KEY"
+        : process.env.clerk_frontend
+        ? "clerk_frontend"
+        : "none",
+    },
+  },
+  "Clerk credentials resolved",
+);
+
+if (!clerkSecretKey) {
+  logger.error(
+    "CLERK_SECRET_KEY is missing — every authenticated request will return 401. " +
+      "Set CLERK_SECRET_KEY (sk_live_…) in the deployment Secrets panel.",
+  );
+}
+
+app.use(
+  clerkMiddleware({
+    secretKey: clerkSecretKey,
+    publishableKey: clerkPublishableKey,
+  }),
+);
 
 app.use("/api", (req: Request, res: Response, next: NextFunction): void => {
   // Public routes: health check, topic list, individual topic info, stripe webhook
