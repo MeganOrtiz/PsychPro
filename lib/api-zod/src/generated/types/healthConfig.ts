@@ -5,6 +5,7 @@
  * NeuroNotes API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { ClientErrorsRateLimitCleanupConfig } from "./clientErrorsRateLimitCleanupConfig";
 import type { ClientErrorsRateLimitConfig } from "./clientErrorsRateLimitConfig";
 
 /**
@@ -12,4 +13,5 @@ import type { ClientErrorsRateLimitConfig } from "./clientErrorsRateLimitConfig"
  */
 export interface HealthConfig {
   clientErrorsRateLimit: ClientErrorsRateLimitConfig;
+  clientErrorsRateLimitCleanup: ClientErrorsRateLimitCleanupConfig;
 }

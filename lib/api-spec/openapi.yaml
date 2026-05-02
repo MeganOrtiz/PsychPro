@@ -429,8 +429,11 @@ components:
       properties:
         clientErrorsRateLimit:
           $ref: "#/components/schemas/ClientErrorsRateLimitConfig"
+        clientErrorsRateLimitCleanup:
+          $ref: "#/components/schemas/ClientErrorsRateLimitCleanupConfig"
       required:
         - clientErrorsRateLimit
+        - clientErrorsRateLimitCleanup
 
     ClientErrorsRateLimitConfig:
       type: object
@@ -447,6 +450,19 @@ components:
       required:
         - windowMs
         - limit
+
+    ClientErrorsRateLimitCleanupConfig:
+      type: object
+      description: Background sweeper that prunes expired rows from
+        client_error_rate_hits / client_error_rate_warnings. Defaults to one
+        sliding-window length; overridable via
+        CLIENT_ERRORS_RATE_LIMIT_CLEANUP_INTERVAL_MS.
+      properties:
+        intervalMs:
+          type: integer
+          description: How often the background sweeper runs, in milliseconds.
+      required:
+        - intervalMs
 
     Topic:
       type: object

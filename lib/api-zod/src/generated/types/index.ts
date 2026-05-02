@@ -8,6 +8,7 @@
 
 export * from "./attemptRecord";
 export * from "./checkoutSessionResponse";
+export * from "./clientErrorsRateLimitCleanupConfig";
 export * from "./clientErrorsRateLimitConfig";
 export * from "./createCheckoutSessionBody";
 export * from "./dashboardSummary";

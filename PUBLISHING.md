@@ -57,11 +57,11 @@ To verify an override took effect:
   followed by
   `INFO: Started client-error rate-limit cleanup sweeper { clientErrorsRateLimitCleanup: { intervalMs: 60000 } }`.
 - `GET /api/healthz` returns the window/limit numbers under
-  `config.clientErrorsRateLimit`, so you can
+  `config.clientErrorsRateLimit` and the resolved cleanup interval under
+  `config.clientErrorsRateLimitCleanup.intervalMs`, so you can
   `curl https://<your-app>.replit.app/api/healthz` to check a deployed
-  instance without exhausting the limit and watching for 429s. (The cleanup
-  interval is verified via the boot log only — it is not surfaced on
-  `/healthz`.)
+  instance without exhausting the limit and watching for 429s — and without
+  having to grep the boot log for the cleanup interval.
 
 ---
 

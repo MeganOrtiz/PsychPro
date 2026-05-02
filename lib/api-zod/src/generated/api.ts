@@ -29,6 +29,17 @@ export const HealthCheckResponse = zod.object({
         .describe(
           "Per-IP throttle applied to POST \/api\/client-errors. Defaults to a 60 000 ms window with 30 requests; overridable via CLIENT_ERRORS_RATE_LIMIT_WINDOW_MS and CLIENT_ERRORS_RATE_LIMIT_MAX.",
         ),
+      clientErrorsRateLimitCleanup: zod
+        .object({
+          intervalMs: zod
+            .number()
+            .describe(
+              "How often the background sweeper runs, in milliseconds.",
+            ),
+        })
+        .describe(
+          "Background sweeper that prunes expired rows from client_error_rate_hits \/ client_error_rate_warnings. Defaults to one sliding-window length; overridable via CLIENT_ERRORS_RATE_LIMIT_CLEANUP_INTERVAL_MS.",
+        ),
     })
     .describe(
       "Resolved tunables in effect for this process. Lets operators verify that environment overrides took effect without having to trigger the relevant code path.",

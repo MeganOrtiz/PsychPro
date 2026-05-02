@@ -7,9 +7,13 @@
 // `src/middlewares/clientErrorsRateLimit`.
 const OVERRIDE_WINDOW_MS = 12_345;
 const OVERRIDE_LIMIT = 7;
+const OVERRIDE_CLEANUP_INTERVAL_MS = 23_456;
 
 process.env["CLIENT_ERRORS_RATE_LIMIT_WINDOW_MS"] = String(OVERRIDE_WINDOW_MS);
 process.env["CLIENT_ERRORS_RATE_LIMIT_MAX"] = String(OVERRIDE_LIMIT);
+process.env["CLIENT_ERRORS_RATE_LIMIT_CLEANUP_INTERVAL_MS"] = String(
+  OVERRIDE_CLEANUP_INTERVAL_MS,
+);
 
 import pino, { type DestinationStream, type Logger } from "pino";
 import type { IRouter, RequestHandler } from "express";
@@ -109,6 +113,7 @@ test(
       status?: unknown;
       config?: {
         clientErrorsRateLimit?: { windowMs?: unknown; limit?: unknown };
+        clientErrorsRateLimitCleanup?: { intervalMs?: unknown };
       };
     };
     assert(
@@ -131,6 +136,19 @@ test(
     assert(
       cfg.limit === OVERRIDE_LIMIT,
       `expected limit=${OVERRIDE_LIMIT}, got ${JSON.stringify(cfg.limit)}`,
+    );
+    const cleanupCfg = body.config?.clientErrorsRateLimitCleanup;
+    assert(
+      cleanupCfg !== undefined,
+      `expected body.config.clientErrorsRateLimitCleanup to be present, got ${JSON.stringify(
+        body,
+      )}`,
+    );
+    assert(
+      cleanupCfg.intervalMs === OVERRIDE_CLEANUP_INTERVAL_MS,
+      `expected intervalMs=${OVERRIDE_CLEANUP_INTERVAL_MS}, got ${JSON.stringify(
+        cleanupCfg.intervalMs,
+      )}`,
     );
   },
 );
@@ -236,6 +254,19 @@ test(
     assert(
       cfg.limit === OVERRIDE_LIMIT,
       `expected clientErrorsRateLimitConfig.limit=${OVERRIDE_LIMIT}, got ${cfg.limit}`,
+    );
+
+    // Same belt-and-braces guard for the cleanup config: the health route
+    // and the startup sweeper both import this exported symbol, so a rename
+    // or drop would silently regress the operator-facing verification path.
+    const cleanupCfg = mod.clientErrorsRateLimitCleanupConfig;
+    assert(
+      cleanupCfg !== undefined && typeof cleanupCfg === "object",
+      "expected clientErrorsRateLimitCleanupConfig to be exported as an object",
+    );
+    assert(
+      cleanupCfg.intervalMs === OVERRIDE_CLEANUP_INTERVAL_MS,
+      `expected clientErrorsRateLimitCleanupConfig.intervalMs=${OVERRIDE_CLEANUP_INTERVAL_MS}, got ${cleanupCfg.intervalMs}`,
     );
   },
 );

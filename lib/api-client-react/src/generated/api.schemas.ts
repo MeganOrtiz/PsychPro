@@ -16,10 +16,19 @@ export interface ClientErrorsRateLimitConfig {
 }
 
 /**
+ * Background sweeper that prunes expired rows from client_error_rate_hits / client_error_rate_warnings. Defaults to one sliding-window length; overridable via CLIENT_ERRORS_RATE_LIMIT_CLEANUP_INTERVAL_MS.
+ */
+export interface ClientErrorsRateLimitCleanupConfig {
+  /** How often the background sweeper runs, in milliseconds. */
+  intervalMs: number;
+}
+
+/**
  * Resolved tunables in effect for this process. Lets operators verify that environment overrides took effect without having to trigger the relevant code path.
  */
 export interface HealthConfig {
   clientErrorsRateLimit: ClientErrorsRateLimitConfig;
+  clientErrorsRateLimitCleanup: ClientErrorsRateLimitCleanupConfig;
 }
 
 export interface HealthStatus {
