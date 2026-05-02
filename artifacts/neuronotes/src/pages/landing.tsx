@@ -13,6 +13,9 @@ import {
   Target,
   ArrowRight,
   FileText,
+  Users,
+  TrendingUp,
+  Star,
 } from "lucide-react";
 import psychproMark from "@/assets/brand/psychpro-mark.png";
 
@@ -210,31 +213,72 @@ export default function LandingPage() {
           aria-hidden
         />
 
-        <div className="max-w-5xl mx-auto px-4 pt-12 md:pt-16 pb-16 md:pb-20 relative">
-          <div className="flex flex-col items-center text-center">
-            {/* Brand mark — full asset, untouched */}
+        <div className="max-w-5xl mx-auto px-4 pt-12 md:pt-16 pb-12 md:pb-16 relative">
+          <div className="relative flex flex-col items-center text-center">
+            {/* Eyebrow pill */}
             <div
-              className="relative w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl mb-8 md:mb-10"
+              className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm backdrop-blur-md border mb-10 md:mb-12 z-10"
               style={{
-                filter: `drop-shadow(0 40px 100px ${PALETTE.teal}55)`,
+                background: `${PALETTE.surface}cc`,
+                borderColor: `${PALETTE.surf}55`,
+                color: PALETTE.mist,
               }}
             >
-              <img
-                src={psychproMark}
-                alt="PsychPro — Learn. Connect. Grow."
-                className="w-full h-auto select-none pointer-events-none rounded-2xl"
+              <Sparkles className="w-3.5 h-3.5" style={{ color: PALETTE.surf }} />
+              Built for the next generation of psychologists
+            </div>
+
+            {/* Wordmark with ghosted brain behind */}
+            <div className="relative w-full flex flex-col items-center">
+              {/* Brain ghost layer */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(720px,90vw)] aspect-square opacity-50"
                 style={{
-                  border: `1px solid ${PALETTE.surf}22`,
+                  backgroundImage: `url(${psychproMark})`,
+                  backgroundSize: "180% auto",
+                  backgroundPosition: "center 18%",
+                  backgroundRepeat: "no-repeat",
+                  filter: "blur(2px) saturate(140%)",
+                  maskImage:
+                    "radial-gradient(closest-side, #000 35%, transparent 78%)",
+                  WebkitMaskImage:
+                    "radial-gradient(closest-side, #000 35%, transparent 78%)",
                 }}
-                draggable={false}
               />
+
+              {/* PsychPro wordmark in serif */}
+              <h1
+                className="relative z-10 leading-none tracking-tight select-none"
+                style={{
+                  fontFamily: '"Playfair Display", "Times New Roman", serif',
+                  fontWeight: 700,
+                  fontSize: "clamp(64px, 14vw, 168px)",
+                  letterSpacing: "-0.02em",
+                  textShadow: `0 8px 40px ${PALETTE.bg}cc`,
+                }}
+              >
+                <span style={{ color: "#FFFFFF" }}>Psych</span>
+                <span style={{ color: PALETTE.surf }}>Pro</span>
+              </h1>
+
+              {/* Tagline */}
+              <p
+                className="relative z-10 mt-3 md:mt-4 text-xs sm:text-sm md:text-base font-medium"
+                style={{
+                  color: `${PALETTE.mist}cc`,
+                  letterSpacing: "0.32em",
+                }}
+              >
+                LEARN.&nbsp;&nbsp;EXPAND.&nbsp;&nbsp;CONNECT.
+              </p>
             </div>
 
             {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+            <div className="relative z-10 flex flex-col sm:flex-row gap-3 justify-center items-center mt-10 md:mt-12">
               <button
                 onClick={() => setShowSignUp(true)}
-                data-testid="button-start-free"
+                data-testid="button-start-learning"
                 className={ctaBtn}
                 style={{
                   background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
@@ -242,11 +286,11 @@ export default function LandingPage() {
                   boxShadow: `0 14px 40px -10px ${PALETTE.teal}cc, 0 0 0 1px ${PALETTE.surf}55 inset`,
                 }}
               >
-                Start for Free <ArrowRight className="w-4 h-4" />
+                Start Learning <ArrowRight className="w-4 h-4" />
               </button>
-              <button
-                onClick={() => setShowSignIn(true)}
-                data-testid="button-sign-in-hero"
+              <a
+                href="#features"
+                data-testid="button-explore-methods"
                 className={`${ctaBtn} border`}
                 style={{
                   background: "transparent",
@@ -254,12 +298,12 @@ export default function LandingPage() {
                   borderColor: `${PALETTE.surf}55`,
                 }}
               >
-                Sign In
-              </button>
+                Explore Methods
+              </a>
             </div>
 
             <p
-              className="text-sm mt-5 flex items-center justify-center gap-1.5"
+              className="relative z-10 text-sm mt-5 flex items-center justify-center gap-1.5"
               style={{ color: `${PALETTE.mist}99` }}
             >
               <CheckCircle className="w-3.5 h-3.5" style={{ color: PALETTE.surf }} />
@@ -267,25 +311,37 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* value chips */}
-          <div className="mt-12 md:mt-16 flex flex-wrap justify-center gap-2.5 max-w-3xl mx-auto">
+          {/* 4 pillars: Assess / Support / Grow / Evolve */}
+          <div
+            className="mt-14 md:mt-20 grid grid-cols-2 md:grid-cols-4 border-t"
+            style={{ borderColor: `${PALETTE.steel}55` }}
+          >
             {[
-              { icon: GraduationCap, label: "Real coursework" },
-              { icon: Target, label: "Exam-ready" },
-              { icon: Clock, label: "Minutes a day" },
-              { icon: Sparkles, label: "AI custom decks" },
-            ].map((item) => (
+              { icon: Target, label: "Assess" },
+              { icon: Users, label: "Support" },
+              { icon: TrendingUp, label: "Grow" },
+              { icon: Star, label: "Evolve" },
+            ].map((item, idx) => (
               <div
                 key={item.label}
-                className="flex items-center gap-2 rounded-full px-4 py-2 text-sm backdrop-blur-md border"
-                style={{
-                  background: `${PALETTE.surface}aa`,
-                  borderColor: `${PALETTE.steel}99`,
-                  color: PALETTE.mist,
-                }}
+                className={`flex flex-col items-center justify-center py-6 md:py-8 ${
+                  idx > 0 ? "md:border-l" : ""
+                } ${idx === 1 ? "border-l md:border-l" : ""} ${
+                  idx === 2 || idx === 3 ? "border-t md:border-t-0" : ""
+                } ${idx === 3 ? "border-l" : ""}`}
+                style={{ borderColor: `${PALETTE.steel}55` }}
               >
-                <item.icon className="w-4 h-4 flex-shrink-0" style={{ color: PALETTE.surf }} />
-                <span>{item.label}</span>
+                <item.icon
+                  className="w-7 h-7 md:w-8 md:h-8 mb-2.5"
+                  style={{ color: PALETTE.surf }}
+                  strokeWidth={1.5}
+                />
+                <span
+                  className="text-xs md:text-sm font-semibold uppercase"
+                  style={{ color: `${PALETTE.mist}cc`, letterSpacing: "0.22em" }}
+                >
+                  {item.label}
+                </span>
               </div>
             ))}
           </div>
@@ -324,7 +380,7 @@ export default function LandingPage() {
       </section>
 
       {/* FEATURES */}
-      <section className="max-w-6xl mx-auto px-4 py-20">
+      <section id="features" className="max-w-6xl mx-auto px-4 py-20 scroll-mt-20">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
             Four ways to study. One system.
