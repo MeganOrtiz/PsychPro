@@ -527,7 +527,7 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center max-w-2xl mx-auto mb-10">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
-              The full clinical map.
+              Every topic. Mapped.
             </h2>
             <p style={{ color: `${PALETTE.mist}99` }}>
               Foundations, assessment, intervention, research methods, and clinical
@@ -538,26 +538,18 @@ export default function LandingPage() {
             {REAL_TOPICS.map((topic) => (
               <div
                 key={topic}
-                className="flex items-center gap-2 text-sm rounded-lg px-3 py-2.5 border transition-all hover:-translate-y-0.5"
-                style={{
-                  background: `${PALETTE.surface}cc`,
-                  borderColor: `${PALETTE.steel}99`,
-                  color: PALETTE.mist,
-                }}
+                className="group flex items-center gap-2 text-sm rounded-lg px-3 py-2.5 border bg-[#0c2538]/80 border-[#1C4E75]/60 text-[#BDE5FF] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#11324d]/90 hover:border-[#58C9F3]/80 hover:shadow-[0_0_0_1px_rgba(88,201,243,0.35),0_0_28px_-4px_rgba(88,201,243,0.55)] cursor-pointer"
               >
-                <CheckCircle className="w-3.5 h-3.5 flex-shrink-0" style={{ color: PALETTE.surf }} />
-                <span className="truncate">{topic}</span>
+                <CheckCircle
+                  className="w-3.5 h-3.5 flex-shrink-0 transition-all duration-200 text-[#58C9F3] group-hover:text-[#BDE5FF] group-hover:drop-shadow-[0_0_6px_rgba(88,201,243,0.9)]"
+                />
+                <span className="truncate transition-colors duration-200 group-hover:text-white">{topic}</span>
               </div>
             ))}
             <div
-              className="flex items-center gap-2 text-sm font-medium rounded-lg px-3 py-2.5 border"
-              style={{
-                background: `${PALETTE.teal}1a`,
-                borderColor: `${PALETTE.surf}55`,
-                color: PALETTE.surf,
-              }}
+              className="group flex items-center gap-2 text-sm font-medium rounded-lg px-3 py-2.5 border bg-[#2FA0C6]/10 border-[#58C9F3]/40 text-[#58C9F3] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#2FA0C6]/20 hover:border-[#58C9F3] hover:shadow-[0_0_0_1px_rgba(88,201,243,0.45),0_0_28px_-4px_rgba(88,201,243,0.7)] cursor-pointer"
             >
-              <Zap className="w-3.5 h-3.5 flex-shrink-0" />
+              <Zap className="w-3.5 h-3.5 flex-shrink-0 transition-all duration-200 group-hover:drop-shadow-[0_0_6px_rgba(88,201,243,0.9)]" />
               <span>+ More being added</span>
             </div>
           </div>
