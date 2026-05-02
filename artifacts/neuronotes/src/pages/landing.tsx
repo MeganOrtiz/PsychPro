@@ -31,8 +31,8 @@ const REAL_TOPICS = [
 ];
 
 const SAMPLE_FLASHCARD = {
-  front: "What is the difference between Type I and Type II error in hypothesis testing?",
-  back: "Type I error (α) is rejecting a true null hypothesis — a false positive. Type II error (β) is failing to reject a false null hypothesis — a false negative. Power (1 − β) reflects the ability to detect a real effect when one exists.",
+  front: "What is the core difference between Broca's and Wernicke's aphasia?",
+  back: "Broca's aphasia (left inferior frontal lobe) impairs speech production while comprehension stays largely intact — output is effortful, non-fluent, and agrammatic. Wernicke's aphasia (left posterior superior temporal lobe) preserves fluency but disrupts comprehension — speech flows but is semantically empty, often with paraphasic errors.",
 };
 
 function usePrefersReducedMotion(): boolean {
@@ -141,7 +141,9 @@ export default function LandingPage() {
     );
   }
 
-  const ctaBtn = `inline-flex items-center justify-center gap-2 rounded-xl text-base font-semibold px-7 h-12 transition-all`;
+  const ctaBtn = `inline-flex items-center justify-center gap-2 rounded-xl text-base font-semibold px-7 h-12 transition-all duration-300`;
+  const ctaBtnGradient = `${ctaBtn} bg-gradient-to-br from-[#2FA0C6] to-[#58C9F3] text-[#061826] shadow-[0_14px_40px_-10px_rgba(47,160,198,0.8)] hover:-translate-y-0.5 hover:brightness-110 hover:shadow-[0_0_0_1px_rgba(189,229,255,0.55),0_18px_50px_-8px_rgba(88,201,243,0.85),0_0_50px_-6px_rgba(88,201,243,0.7)]`;
+  const ctaBtnOutline = `${ctaBtn} bg-transparent text-[#BDE5FF] border border-[#58C9F3]/40 hover:-translate-y-0.5 hover:bg-[#58C9F3]/10 hover:border-[#58C9F3] hover:text-white hover:shadow-[0_0_0_1px_rgba(88,201,243,0.45),0_0_28px_-4px_rgba(88,201,243,0.65)]`;
 
   return (
     <div
@@ -279,24 +281,14 @@ export default function LandingPage() {
               <button
                 onClick={() => setShowSignUp(true)}
                 data-testid="button-start-learning"
-                className={ctaBtn}
-                style={{
-                  background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
-                  color: PALETTE.bg,
-                  boxShadow: `0 14px 40px -10px ${PALETTE.teal}cc, 0 0 0 1px ${PALETTE.surf}55 inset`,
-                }}
+                className={ctaBtnGradient}
               >
                 Start Learning <ArrowRight className="w-4 h-4" />
               </button>
               <a
                 href="#features"
                 data-testid="button-explore-methods"
-                className={`${ctaBtn} border`}
-                style={{
-                  background: "transparent",
-                  color: PALETTE.mist,
-                  borderColor: `${PALETTE.surf}55`,
-                }}
+                className={ctaBtnOutline}
               >
                 Explore Methods
               </a>
@@ -457,12 +449,7 @@ export default function LandingPage() {
             <button
               onClick={() => setShowSignUp(true)}
               data-testid="button-try-now"
-              className={`${ctaBtn}`}
-              style={{
-                background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
-                color: PALETTE.bg,
-                boxShadow: `0 14px 40px -10px ${PALETTE.teal}cc`,
-              }}
+              className={ctaBtnGradient}
             >
               Get full access free <ArrowRight className="w-4 h-4" />
             </button>
