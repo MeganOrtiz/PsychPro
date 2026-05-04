@@ -178,7 +178,7 @@ function App() {
   }
   return (
     <ErrorBoundary>
-      <ClerkProvider publishableKey={clerkPubKey} signInUrl="/sign-in" signUpUrl="/sign-up">
+      <ClerkProvider publishableKey={clerkPubKey}>
         <ClerkTokenSetup />
         <QueryClientProvider client={queryClient}>
           <TooltipProvider>
