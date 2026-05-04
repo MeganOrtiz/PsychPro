@@ -752,8 +752,6 @@ components:
       properties:
         rank:
           type: integer
-        userId:
-          type: string
         displayName:
           type: string
         streak:
@@ -764,7 +762,6 @@ components:
           type: boolean
       required:
         - rank
-        - userId
         - displayName
         - streak
         - topicsCompleted

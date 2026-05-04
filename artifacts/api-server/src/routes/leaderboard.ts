@@ -1,7 +1,7 @@
+import { createHash } from "crypto";
 import { Router, type Request, type Response } from "express";
 import { db } from "@workspace/db";
-import { progressTable, usersTable } from "@workspace/db";
-import { inArray } from "drizzle-orm";
+import { progressTable } from "@workspace/db";
 import { getAuth } from "@clerk/express";
 
 const router = Router();
@@ -32,12 +32,10 @@ function computeStreakFromDates(dates: (Date | null)[]) {
   return streak;
 }
 
-function deriveDisplayName(email: string | null, userId: string): string {
-  if (email && email.includes("@")) {
-    const prefix = email.split("@")[0];
-    if (prefix.length > 0) return prefix;
-  }
-  return `Scholar ${userId.slice(-4)}`;
+function deriveDisplayName(userId: string): string {
+  const hash = createHash("sha256").update(userId).digest("hex");
+  const num = parseInt(hash.slice(0, 4), 16) % 10000;
+  return `Scholar ${String(num).padStart(4, "0")}`;
 }
 
 router.get("/leaderboard", async (req: Request, res: Response): Promise<void> => {
@@ -68,17 +66,10 @@ router.get("/leaderboard", async (req: Request, res: Response): Promise<void> =>
       if (r.lastAccessed) entry.dates.push(r.lastAccessed);
     }
 
-    const userIds = Array.from(byUser.keys());
-    const users = userIds.length
-      ? await db.select().from(usersTable).where(inArray(usersTable.id, userIds))
-      : [];
-    const usersById = new Map(users.map((u) => [u.id, u]));
-
     const entries = Array.from(byUser.entries()).map(([userId, agg]) => {
-      const u = usersById.get(userId);
       return {
         userId,
-        displayName: deriveDisplayName(u?.email ?? null, userId),
+        displayName: deriveDisplayName(userId),
         streak: computeStreakFromDates(agg.dates),
         topicsCompleted: agg.completed.size,
       };
@@ -91,28 +82,28 @@ router.get("/leaderboard", async (req: Request, res: Response): Promise<void> =>
       return a.displayName.localeCompare(b.displayName);
     });
 
-    const ranked = entries.slice(0, LEADERBOARD_LIMIT).map((e, i) => ({
-      ...e,
-      rank: i + 1,
-      isCurrentUser: e.userId === currentUserId,
-    }));
+    const ranked = entries.slice(0, LEADERBOARD_LIMIT).map((e, i) => {
+      const { userId, ...rest } = e;
+      return {
+        ...rest,
+        rank: i + 1,
+        isCurrentUser: userId === currentUserId,
+      };
+    });
 
     let currentUserEntry: typeof ranked[number] | null = null;
-    if (currentUserId && !ranked.some((r) => r.userId === currentUserId)) {
+    if (currentUserId && !ranked.some((r) => r.isCurrentUser)) {
       const idx = entries.findIndex((e) => e.userId === currentUserId);
       if (idx >= 0) {
+        const { userId, ...rest } = entries[idx];
         currentUserEntry = {
-          ...entries[idx],
+          ...rest,
           rank: idx + 1,
           isCurrentUser: true,
         };
       } else {
         currentUserEntry = {
-          userId: currentUserId,
-          displayName: deriveDisplayName(
-            usersById.get(currentUserId)?.email ?? null,
-            currentUserId
-          ),
+          displayName: deriveDisplayName(currentUserId),
           streak: 0,
           topicsCompleted: 0,
           rank: entries.length + 1,

@@ -473,7 +473,7 @@ export default function DashboardPage() {
                   <div className="space-y-1">
                     {leaderboard.entries.slice(0, 5).map((e) => (
                       <div
-                        key={e.userId}
+                        key={e.rank}
                         className={cn(
                           "flex items-center gap-2 px-2 py-1.5 rounded-lg",
                         )}

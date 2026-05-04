@@ -308,7 +308,6 @@ export const GetLeaderboardResponse = zod.object({
   entries: zod.array(
     zod.object({
       rank: zod.number(),
-      userId: zod.string(),
       displayName: zod.string(),
       streak: zod.number(),
       topicsCompleted: zod.number(),
@@ -319,7 +318,6 @@ export const GetLeaderboardResponse = zod.object({
     .union([
       zod.object({
         rank: zod.number(),
-        userId: zod.string(),
         displayName: zod.string(),
         streak: zod.number(),
         topicsCompleted: zod.number(),

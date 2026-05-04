@@ -63,7 +63,7 @@ export default function LeaderboardPage() {
                 const badge = rankBadge(e.rank);
                 return (
                   <div
-                    key={e.userId}
+                    key={e.rank}
                     className={cn(
                       "grid grid-cols-12 gap-2 items-center px-4 py-3 transition-colors",
                       e.isCurrentUser

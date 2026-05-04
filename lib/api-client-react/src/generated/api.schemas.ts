@@ -178,7 +178,6 @@ export interface AttemptRecord {
 
 export interface LeaderboardEntry {
   rank: number;
-  userId: string;
   displayName: string;
   streak: number;
   topicsCompleted: number;
