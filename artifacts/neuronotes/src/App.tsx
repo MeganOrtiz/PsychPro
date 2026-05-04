@@ -43,28 +43,7 @@ const queryClient = new QueryClient({
   },
 });
 
-const PROD_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined;
-const DEV_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY_DEV as string | undefined;
-
-const HARDCODED_PROD_PK = "pk_live_Y2xlcmsuYXV0aC5wc3ljaHByb3N1aXRlLmNvbSQ";
-
-function isLiveProductionHost(): boolean {
-  if (typeof window === "undefined") return true;
-  const h = window.location.hostname;
-  return h === "psychprosuite.com" || h === "www.psychprosuite.com";
-}
-
-function pickClerkKey(): string | null {
-  const onProd = isLiveProductionHost();
-  if (onProd) {
-    if (PROD_KEY?.startsWith("pk_live_")) return PROD_KEY;
-    return HARDCODED_PROD_PK;
-  }
-  if (DEV_KEY?.startsWith("pk_test_")) return DEV_KEY;
-  return null;
-}
-
-const clerkPubKey = pickClerkKey();
+const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined;
 
 function PreviewUnavailable() {
   return (
@@ -86,11 +65,6 @@ function PreviewUnavailable() {
         >
           Open psychprosuite.com
         </a>
-        <p className="text-xs text-muted-foreground/80 pt-2">
-          To enable the in-workspace preview, add a Clerk Development publishable key
-          (starts with <code className="font-mono">pk_test_</code>) as the secret
-          <code className="font-mono"> VITE_CLERK_PUBLISHABLE_KEY_DEV</code>.
-        </p>
       </div>
     </div>
   );

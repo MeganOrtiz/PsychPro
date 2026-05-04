@@ -82,8 +82,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const clerkSecretKey = process.env.CLERK_SECRET_KEY || undefined;
-const clerkPublishableKey = process.env.CLERK_PUBLISHABLE_KEY || undefined;
-const clerkProxyUrl = process.env.CLERK_PROXY_URL || undefined;
 
 function describeKey(k: string | undefined): string {
   if (!k) return "MISSING";
@@ -91,26 +89,8 @@ function describeKey(k: string | undefined): string {
   return m ? `${m[0]}…(${k.length} chars)` : `present(${k.length} chars)`;
 }
 
-function decodeFapi(k: string | undefined): string | null {
-  if (!k) return null;
-  const m = k.match(/^pk_(?:live|test)_(.+)$/);
-  if (!m) return null;
-  try {
-    return Buffer.from(m[1], "base64").toString("utf8").replace(/\$+$/, "");
-  } catch {
-    return null;
-  }
-}
-
 logger.info(
-  {
-    clerk: {
-      secretKey: describeKey(clerkSecretKey),
-      publishableKey: describeKey(clerkPublishableKey),
-      publishableFapi: decodeFapi(clerkPublishableKey) ?? "n/a",
-      proxyUrl: clerkProxyUrl ?? "none",
-    },
-  },
+  { clerk: { secretKey: describeKey(clerkSecretKey) } },
   "Clerk credentials resolved",
 );
 
@@ -120,15 +100,7 @@ if (!clerkSecretKey) {
   );
 }
 
-const clerkOpts: Parameters<typeof clerkMiddleware>[0] = {
-  secretKey: clerkSecretKey,
-  publishableKey: clerkPublishableKey,
-};
-if (clerkProxyUrl) {
-  clerkOpts.proxyUrl = clerkProxyUrl;
-}
-
-app.use(clerkMiddleware(clerkOpts));
+app.use(clerkMiddleware({ secretKey: clerkSecretKey }));
 
 app.use("/api", (req: Request, res: Response, next: NextFunction): void => {
   const isPublic =
