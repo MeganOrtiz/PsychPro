@@ -43,6 +43,7 @@ const queryClient = new QueryClient({
   },
 });
 
+const PK_OVERRIDE = import.meta.env.VITE_CLERK_PK_OVERRIDE as string | undefined;
 const PROD_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined;
 const DEV_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY_DEV as string | undefined;
 
@@ -69,14 +70,14 @@ function decodeClerkFapi(key: string | undefined): string | null {
 function pickClerkKey(): string | null {
   const onProd = isLiveProductionHost();
   if (onProd) {
-    const liveCandidates = [PROD_KEY, DEV_KEY].filter(
+    const liveCandidates = [PK_OVERRIDE, PROD_KEY, DEV_KEY].filter(
       (k): k is string => !!k && k.startsWith("pk_live_"),
     );
     const verified = liveCandidates.find(
       (k) => decodeClerkFapi(k) === VERIFIED_CLERK_FAPI,
     );
     if (verified) return verified;
-    return PROD_KEY ?? liveCandidates[0] ?? null;
+    return PK_OVERRIDE ?? PROD_KEY ?? liveCandidates[0] ?? null;
   }
   const hasUsableDevKey = !!DEV_KEY && DEV_KEY.startsWith("pk_test_");
   if (hasUsableDevKey) return DEV_KEY!;

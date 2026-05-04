@@ -25,6 +25,10 @@ function resolveReleaseId(): string {
 
 process.env.VITE_RELEASE_ID = resolveReleaseId();
 
+if (process.env.CLERK_PK_OVERRIDE && !process.env.VITE_CLERK_PK_OVERRIDE) {
+  process.env.VITE_CLERK_PK_OVERRIDE = process.env.CLERK_PK_OVERRIDE;
+}
+
 const rawPort = process.env.PORT;
 
 if (!rawPort) {
