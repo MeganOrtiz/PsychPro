@@ -5,16 +5,24 @@ import type { Logger } from "pino";
 import type Stripe from "stripe";
 import { getUncachableStripeClient } from "./stripeClient";
 
-async function getSubscriptionTier(stripe: Stripe, sub: Stripe.Subscription): Promise<string> {
+const APPROVED_TIERS = new Set(["pro", "scholar"]);
+
+// Returns the PsychPro tier string for an approved subscription, or null if
+// the underlying Stripe product is not an approved PsychPro plan. Callers
+// must treat null as "free" — this prevents arbitrary Stripe subscriptions
+// from the same account from granting paid entitlements.
+async function getSubscriptionTier(stripe: Stripe, sub: Stripe.Subscription): Promise<string | null> {
   try {
     const priceId = sub.items.data[0]?.price?.id;
-    if (!priceId) return "active";
+    if (!priceId) return null;
     const price = await stripe.prices.retrieve(priceId, { expand: ["product"] });
     const product = price.product as Stripe.Product;
-    if (product?.metadata?.neuronotes_tier === "scholar") return "scholar";
+    const tier = product?.metadata?.neuronotes_tier;
+    if (!APPROVED_TIERS.has(tier)) return null;
+    if (tier === "scholar") return "scholar";
     return "active";
   } catch {
-    return "active";
+    return null;
   }
 }
 
@@ -29,7 +37,7 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, log: Logger)
         let newStatus: string;
         if (sub.status === "active" || sub.status === "trialing") {
           const stripe = await getUncachableStripeClient();
-          newStatus = await getSubscriptionTier(stripe, sub);
+          newStatus = (await getSubscriptionTier(stripe, sub)) ?? "free";
         } else {
           newStatus = "free";
         }
@@ -63,7 +71,7 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, log: Logger)
           const subscriptionId = typeof session.subscription === "string" ? session.subscription : session.subscription.id;
           const stripe = await getUncachableStripeClient();
           const sub = await stripe.subscriptions.retrieve(subscriptionId, { expand: ["items.data.price.product"] });
-          const tier = await getSubscriptionTier(stripe, sub);
+          const tier = (await getSubscriptionTier(stripe, sub)) ?? "free";
           await db.update(usersTable).set({
             stripeSubscriptionId: subscriptionId,
             subscriptionStatus: tier,

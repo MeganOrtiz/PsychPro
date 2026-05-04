@@ -57,8 +57,32 @@ router.post("/subscription/checkout", async (req: Request, res: Response): Promi
       return;
     }
     const { priceId } = req.body as { priceId: string };
+    if (!priceId || typeof priceId !== "string") {
+      res.status(400).json({ error: "Missing priceId" });
+      return;
+    }
     let [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
     const stripe = await getUncachableStripeClient();
+
+    // Validate that the submitted priceId belongs to an approved PsychPro plan.
+    // This prevents a user from supplying an arbitrary Stripe price from the
+    // same account (hidden SKUs, legacy prices, test artifacts, etc.) and
+    // receiving paid entitlements at the wrong price.
+    try {
+      const price = await stripe.prices.retrieve(priceId, { expand: ["product"] });
+      const product = price.product as import("stripe").default.Product;
+      const tier = product?.metadata?.neuronotes_tier;
+      const interval = price.recurring?.interval;
+      const isApprovedTier = tier === "pro" || tier === "scholar";
+      const isApprovedInterval = interval === "month" || interval === "year";
+      if (!isApprovedTier || !isApprovedInterval || !price.active || product.deleted) {
+        res.status(400).json({ error: "Invalid plan selected" });
+        return;
+      }
+    } catch {
+      res.status(400).json({ error: "Invalid plan selected" });
+      return;
+    }
 
     let customerId = user?.stripeCustomerId;
     if (!customerId) {
