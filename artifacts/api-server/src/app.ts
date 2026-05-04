@@ -81,29 +81,9 @@ app.post(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Resolve Clerk credentials from a list of env-var aliases so the API works
-// whether the operator stored them as the canonical CLERK_* names or the
-// lowercase Replit integration aliases (clerk_backend / clerk_frontend).
-// We also log presence + key prefix at boot so an operator can tell from the
-// production logs whether keys are loaded WITHOUT exposing the secret value.
-const clerkSecretKey =
-  process.env.CLERK_SECRET_KEY || process.env.clerk_backend || undefined;
-const clerkPublishableKey =
-  process.env.CLERK_PUBLISHABLE_KEY || process.env.clerk_frontend || undefined;
+const EXPECTED_FAPI = "clerk.auth.psychprosuite.com";
 
-function describeKey(k: string | undefined): string {
-  if (!k) return "MISSING";
-  const m = k.match(/^(pk|sk)_(live|test)_/);
-  return m ? `${m[0]}…(${k.length} chars)` : `present(${k.length} chars)`;
-}
-
-// Decode the FAPI domain encoded in a Clerk publishable key. The base64
-// payload after `pk_(live|test)_` is the Clerk Frontend API host with one or
-// more trailing `$` chars. Logging the decoded host lets an operator confirm
-// the API server's publishable key belongs to the same Clerk instance as the
-// one the frontend ships with — a length mismatch between the two would
-// otherwise silently cause every JWT verification to fail with 401.
-function decodeClerkFapi(k: string | undefined): string | null {
+function decodeFapi(k: string | undefined): string | null {
   if (!k) return null;
   const m = k.match(/^pk_(?:live|test)_(.+)$/);
   if (!m) return null;
@@ -114,22 +94,53 @@ function decodeClerkFapi(k: string | undefined): string | null {
   }
 }
 
+function pickPublishableKey(): { key: string | undefined; source: string } {
+  const candidates = [
+    { name: "CLERK_PK_OVERRIDE", val: process.env.CLERK_PK_OVERRIDE },
+    { name: "CLERK_PUBLISHABLE_KEY", val: process.env.CLERK_PUBLISHABLE_KEY },
+    { name: "VITE_CLERK_PUBLISHABLE_KEY", val: process.env.VITE_CLERK_PUBLISHABLE_KEY },
+    { name: "clerk_frontend", val: process.env.clerk_frontend },
+  ];
+  for (const c of candidates) {
+    if (c.val && decodeFapi(c.val) === EXPECTED_FAPI) {
+      return { key: c.val, source: c.name };
+    }
+  }
+  const first = candidates.find((c) => c.val);
+  return first
+    ? { key: first.val, source: first.name + " (fapi_mismatch)" }
+    : { key: undefined, source: "none" };
+}
+
+function pickSecretKey(): { key: string | undefined; source: string } {
+  const candidates = [
+    { name: "CLERK_SK_OVERRIDE", val: process.env.CLERK_SK_OVERRIDE },
+    { name: "CLERK_SECRET_KEY", val: process.env.CLERK_SECRET_KEY },
+    { name: "clerk_backend", val: process.env.clerk_backend },
+  ];
+  const first = candidates.find((c) => c.val);
+  return first
+    ? { key: first.val, source: first.name }
+    : { key: undefined, source: "none" };
+}
+
+const { key: clerkPublishableKey, source: pkSource } = pickPublishableKey();
+const { key: clerkSecretKey, source: skSource } = pickSecretKey();
+
+function describeKey(k: string | undefined): string {
+  if (!k) return "MISSING";
+  const m = k.match(/^(pk|sk)_(live|test)_/);
+  return m ? `${m[0]}…(${k.length} chars)` : `present(${k.length} chars)`;
+}
+
 logger.info(
   {
     clerk: {
       secretKey: describeKey(clerkSecretKey),
       publishableKey: describeKey(clerkPublishableKey),
-      publishableFapi: decodeClerkFapi(clerkPublishableKey) ?? "n/a",
-      sourceSecret: process.env.CLERK_SECRET_KEY
-        ? "CLERK_SECRET_KEY"
-        : process.env.clerk_backend
-        ? "clerk_backend"
-        : "none",
-      sourcePublishable: process.env.CLERK_PUBLISHABLE_KEY
-        ? "CLERK_PUBLISHABLE_KEY"
-        : process.env.clerk_frontend
-        ? "clerk_frontend"
-        : "none",
+      publishableFapi: decodeFapi(clerkPublishableKey) ?? "n/a",
+      sourceSecret: skSource,
+      sourcePublishable: pkSource,
     },
   },
   "Clerk credentials resolved",
