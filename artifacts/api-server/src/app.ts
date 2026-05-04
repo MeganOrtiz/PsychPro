@@ -175,13 +175,26 @@ app.use("/api", (req: Request, res: Response, next: NextFunction): void => {
   const auth = getAuth(req);
   const { userId } = auth;
   if (!userId) {
+    let jwtIssuer = "n/a";
+    let jwtAzp = "n/a";
+    if (authHeader?.startsWith("Bearer ")) {
+      try {
+        const parts = authHeader.slice(7).split(".");
+        if (parts.length >= 2) {
+          const payload = JSON.parse(Buffer.from(parts[1], "base64url").toString("utf8"));
+          jwtIssuer = payload.iss ?? "missing";
+          jwtAzp = payload.azp ?? "missing";
+        }
+      } catch {}
+    }
     logger.warn(
       {
         path: req.path,
         hasAuthHeader: !!authHeader,
-        authHeaderPrefix: authHeader ? authHeader.substring(0, 15) + "…" : "none",
+        jwtIssuer,
+        jwtAzp,
+        expectedFapi: EXPECTED_FAPI,
         sessionId: auth.sessionId ?? "none",
-        reason: (auth as any).reason ?? "unknown",
       },
       "Auth rejected — no userId",
     );
