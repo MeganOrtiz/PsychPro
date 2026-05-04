@@ -62,3 +62,6 @@ channel = "stable-25_05"
 [userenv]
 
 [userenv.shared]
+CLERK_PK_OVERRIDE = "pk_live_Y2xlcmsuYXV0aC5wc3ljaHByb3N1aXRlLmNvbSQ"
+CLERK_PUBLISHABLE_KEY = "pk_live_Y2xlcmsuYXV0aC5wc3ljaHByb3N1aXRlLmNvbSQ"
+VITE_CLERK_PUBLISHABLE_KEY = "pk_live_Y2xlcmsuYXV0aC5wc3ljaHByb3N1aXRlLmNvbSQ"
