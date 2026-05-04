@@ -43,11 +43,10 @@ const queryClient = new QueryClient({
   },
 });
 
-const PK_OVERRIDE = import.meta.env.VITE_CLERK_PK_OVERRIDE as string | undefined;
 const PROD_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined;
 const DEV_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY_DEV as string | undefined;
+const CLERK_PROXY_URL = import.meta.env.VITE_CLERK_PROXY_URL as string | undefined;
 
-const VERIFIED_CLERK_FAPI = "clerk.auth.psychprosuite.com";
 const HARDCODED_PROD_PK = "pk_live_Y2xlcmsuYXV0aC5wc3ljaHByb3N1aXRlLmNvbSQ";
 
 function isLiveProductionHost(): boolean {
@@ -56,32 +55,13 @@ function isLiveProductionHost(): boolean {
   return h === "psychprosuite.com" || h === "www.psychprosuite.com";
 }
 
-function decodeClerkFapi(key: string | undefined): string | null {
-  if (!key) return null;
-  const m = key.match(/^pk_(?:live|test)_(.+)$/);
-  if (!m) return null;
-  try {
-    const decoded = atob(m[1]);
-    return decoded.replace(/\$+$/, "");
-  } catch {
-    return null;
-  }
-}
-
 function pickClerkKey(): string | null {
   const onProd = isLiveProductionHost();
   if (onProd) {
-    const liveCandidates = [PK_OVERRIDE, PROD_KEY, DEV_KEY].filter(
-      (k): k is string => !!k && k.startsWith("pk_live_"),
-    );
-    const verified = liveCandidates.find(
-      (k) => decodeClerkFapi(k) === VERIFIED_CLERK_FAPI,
-    );
-    if (verified) return verified;
+    if (PROD_KEY?.startsWith("pk_live_")) return PROD_KEY;
     return HARDCODED_PROD_PK;
   }
-  const hasUsableDevKey = !!DEV_KEY && DEV_KEY.startsWith("pk_test_");
-  if (hasUsableDevKey) return DEV_KEY!;
+  if (DEV_KEY?.startsWith("pk_test_")) return DEV_KEY;
   return null;
 }
 
@@ -199,7 +179,7 @@ function App() {
   }
   return (
     <ErrorBoundary>
-      <ClerkProvider publishableKey={clerkPubKey} signInUrl="/sign-in" signUpUrl="/sign-up">
+      <ClerkProvider publishableKey={clerkPubKey} proxyUrl={CLERK_PROXY_URL} signInUrl="/sign-in" signUpUrl="/sign-up">
         <ClerkTokenSetup />
         <QueryClientProvider client={queryClient}>
           <TooltipProvider>

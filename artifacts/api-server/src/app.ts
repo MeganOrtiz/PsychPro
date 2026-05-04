@@ -81,7 +81,15 @@ app.post(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const EXPECTED_FAPI = "clerk.auth.psychprosuite.com";
+const clerkSecretKey = process.env.CLERK_SECRET_KEY || undefined;
+const clerkPublishableKey = process.env.CLERK_PUBLISHABLE_KEY || undefined;
+const clerkProxyUrl = process.env.CLERK_PROXY_URL || undefined;
+
+function describeKey(k: string | undefined): string {
+  if (!k) return "MISSING";
+  const m = k.match(/^(pk|sk)_(live|test)_/);
+  return m ? `${m[0]}…(${k.length} chars)` : `present(${k.length} chars)`;
+}
 
 function decodeFapi(k: string | undefined): string | null {
   if (!k) return null;
@@ -94,53 +102,13 @@ function decodeFapi(k: string | undefined): string | null {
   }
 }
 
-function pickPublishableKey(): { key: string | undefined; source: string } {
-  const candidates = [
-    { name: "CLERK_PK_OVERRIDE", val: process.env.CLERK_PK_OVERRIDE },
-    { name: "CLERK_PUBLISHABLE_KEY", val: process.env.CLERK_PUBLISHABLE_KEY },
-    { name: "VITE_CLERK_PUBLISHABLE_KEY", val: process.env.VITE_CLERK_PUBLISHABLE_KEY },
-    { name: "clerk_frontend", val: process.env.clerk_frontend },
-  ];
-  for (const c of candidates) {
-    if (c.val && decodeFapi(c.val) === EXPECTED_FAPI) {
-      return { key: c.val, source: c.name };
-    }
-  }
-  const first = candidates.find((c) => c.val);
-  return first
-    ? { key: first.val, source: first.name + " (fapi_mismatch)" }
-    : { key: undefined, source: "none" };
-}
-
-function pickSecretKey(): { key: string | undefined; source: string } {
-  const candidates = [
-    { name: "CLERK_SK_OVERRIDE", val: process.env.CLERK_SK_OVERRIDE },
-    { name: "CLERK_SECRET_KEY", val: process.env.CLERK_SECRET_KEY },
-    { name: "clerk_backend", val: process.env.clerk_backend },
-  ];
-  const first = candidates.find((c) => c.val);
-  return first
-    ? { key: first.val, source: first.name }
-    : { key: undefined, source: "none" };
-}
-
-const { key: clerkPublishableKey, source: pkSource } = pickPublishableKey();
-const { key: clerkSecretKey, source: skSource } = pickSecretKey();
-
-function describeKey(k: string | undefined): string {
-  if (!k) return "MISSING";
-  const m = k.match(/^(pk|sk)_(live|test)_/);
-  return m ? `${m[0]}…(${k.length} chars)` : `present(${k.length} chars)`;
-}
-
 logger.info(
   {
     clerk: {
       secretKey: describeKey(clerkSecretKey),
       publishableKey: describeKey(clerkPublishableKey),
       publishableFapi: decodeFapi(clerkPublishableKey) ?? "n/a",
-      sourceSecret: skSource,
-      sourcePublishable: pkSource,
+      proxyUrl: clerkProxyUrl ?? "none",
     },
   },
   "Clerk credentials resolved",
@@ -148,17 +116,19 @@ logger.info(
 
 if (!clerkSecretKey) {
   logger.error(
-    "CLERK_SECRET_KEY is missing — every authenticated request will return 401. " +
-      "Set CLERK_SECRET_KEY (sk_live_…) in the deployment Secrets panel.",
+    "CLERK_SECRET_KEY is missing — every authenticated request will return 401.",
   );
 }
 
-app.use(
-  clerkMiddleware({
-    secretKey: clerkSecretKey,
-    publishableKey: clerkPublishableKey,
-  }),
-);
+const clerkOpts: Parameters<typeof clerkMiddleware>[0] = {
+  secretKey: clerkSecretKey,
+  publishableKey: clerkPublishableKey,
+};
+if (clerkProxyUrl) {
+  clerkOpts.proxyUrl = clerkProxyUrl;
+}
+
+app.use(clerkMiddleware(clerkOpts));
 
 app.use("/api", (req: Request, res: Response, next: NextFunction): void => {
   const isPublic =
