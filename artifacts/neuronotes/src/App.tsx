@@ -48,6 +48,7 @@ const PROD_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefine
 const DEV_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY_DEV as string | undefined;
 
 const VERIFIED_CLERK_FAPI = "clerk.auth.psychprosuite.com";
+const HARDCODED_PROD_PK = "pk_live_Y2xlcmsuYXV0aC5wc3ljaHByb3N1aXRlLmNvbSQ";
 
 function isLiveProductionHost(): boolean {
   if (typeof window === "undefined") return true;
@@ -77,7 +78,7 @@ function pickClerkKey(): string | null {
       (k) => decodeClerkFapi(k) === VERIFIED_CLERK_FAPI,
     );
     if (verified) return verified;
-    return PK_OVERRIDE ?? PROD_KEY ?? liveCandidates[0] ?? null;
+    return HARDCODED_PROD_PK;
   }
   const hasUsableDevKey = !!DEV_KEY && DEV_KEY.startsWith("pk_test_");
   if (hasUsableDevKey) return DEV_KEY!;
