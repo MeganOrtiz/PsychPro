@@ -45,7 +45,6 @@ const queryClient = new QueryClient({
 
 const PROD_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined;
 const DEV_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY_DEV as string | undefined;
-const CLERK_PROXY_URL = import.meta.env.VITE_CLERK_PROXY_URL as string | undefined;
 
 const HARDCODED_PROD_PK = "pk_live_Y2xlcmsuYXV0aC5wc3ljaHByb3N1aXRlLmNvbSQ";
 
@@ -179,7 +178,7 @@ function App() {
   }
   return (
     <ErrorBoundary>
-      <ClerkProvider publishableKey={clerkPubKey} proxyUrl={CLERK_PROXY_URL} signInUrl="/sign-in" signUpUrl="/sign-up">
+      <ClerkProvider publishableKey={clerkPubKey} signInUrl="/sign-in" signUpUrl="/sign-up">
         <ClerkTokenSetup />
         <QueryClientProvider client={queryClient}>
           <TooltipProvider>
