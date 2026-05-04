@@ -1,4 +1,4 @@
-import { Router, type Request, type Response } from "express";
+import { Router, type Request, type Response, type NextFunction } from "express";
 import multer from "multer";
 import { db } from "@workspace/db";
 import {
@@ -8,13 +8,19 @@ import {
   customQuizQuestionsTable,
   customClozeItemsTable,
 } from "@workspace/db";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and, gte, count } from "drizzle-orm";
 import { getAuth } from "@clerk/express";
 import { openai } from "@workspace/integrations-openai-ai-server";
 import { parseIntParam } from "../lib/params";
 
 const router = Router();
-const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 20 * 1024 * 1024 } });
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 20 * 1024 * 1024, fields: 20, parts: 22 },
+});
+
+const MAX_CONCURRENT_JOBS_PER_USER = 2;
+const MAX_DECKS_PER_DAY = 10;
 
 function getUserId(req: Request): string | null {
   return getAuth(req).userId ?? null;
@@ -25,6 +31,21 @@ const PAID_STATUSES = ["active", "trialing", "pro", "scholar"];
 async function getUser(userId: string) {
   const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
   return user ?? null;
+}
+
+async function requireScholar(req: Request, res: Response, next: NextFunction): Promise<void> {
+  const userId = getUserId(req);
+  if (!userId) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+  const user = await getUser(userId);
+  if (!user || user.subscriptionStatus !== "scholar") {
+    res.status(403).json({ error: "Scholar subscription required" });
+    return;
+  }
+  (req as Request & { scholarUser: typeof user }).scholarUser = user;
+  next();
 }
 
 async function extractTextFromBuffer(buffer: Buffer, mimetype: string): Promise<string> {
@@ -73,7 +94,7 @@ ${sourceText.slice(0, 28000)}
 Respond ONLY with valid JSON as specified in each request. No markdown, no explanations, just JSON.`;
 }
 
-async function generateFlashcards(sourceText: string, aiMode: "strict" | "enhance", count: number): Promise<Array<{ front: string; back: string; difficulty: string }>> {
+async function generateFlashcards(sourceText: string, aiMode: "strict" | "enhance", cardCount: number, signal?: AbortSignal): Promise<Array<{ front: string; back: string; difficulty: string }>> {
   const response = await openai.chat.completions.create({
     model: "gpt-5.2",
     max_completion_tokens: 8192,
@@ -81,20 +102,20 @@ async function generateFlashcards(sourceText: string, aiMode: "strict" | "enhanc
       { role: "system", content: buildSystemPrompt(sourceText, aiMode) },
       {
         role: "user",
-        content: `Generate exactly ${count} flashcards from the source text. Each flashcard must have a "front" (question/term) and "back" (answer/definition). Set "difficulty" to "easy", "medium", or "hard" based on the concept complexity. Aim for a mix of difficulties.
+        content: `Generate exactly ${cardCount} flashcards from the source text. Each flashcard must have a "front" (question/term) and "back" (answer/definition). Set "difficulty" to "easy", "medium", or "hard" based on the concept complexity. Aim for a mix of difficulties.
 
 Respond with a JSON object: { "flashcards": [ { "front": "...", "back": "...", "difficulty": "..." }, ... ] }`,
       },
     ],
     response_format: { type: "json_object" },
-  });
+  }, { signal });
 
   const content = response.choices[0]?.message?.content ?? "{}";
   const parsed = JSON.parse(content);
   return parsed.flashcards ?? [];
 }
 
-async function generateQuizQuestions(sourceText: string, aiMode: "strict" | "enhance", count: number): Promise<Array<{
+async function generateQuizQuestions(sourceText: string, aiMode: "strict" | "enhance", questionCount: number, signal?: AbortSignal): Promise<Array<{
   question: string;
   optionA: string;
   optionB: string;
@@ -110,20 +131,20 @@ async function generateQuizQuestions(sourceText: string, aiMode: "strict" | "enh
       { role: "system", content: buildSystemPrompt(sourceText, aiMode) },
       {
         role: "user",
-        content: `Generate exactly ${count} multiple-choice quiz questions from the source text. Each question must have exactly four options (A, B, C, D) with only one correct answer. Include a brief explanation citing the source material.
+        content: `Generate exactly ${questionCount} multiple-choice quiz questions from the source text. Each question must have exactly four options (A, B, C, D) with only one correct answer. Include a brief explanation citing the source material.
 
 Respond with a JSON object: { "questions": [ { "question": "...", "optionA": "...", "optionB": "...", "optionC": "...", "optionD": "...", "correctAnswer": "A" | "B" | "C" | "D", "explanation": "..." }, ... ] }`,
       },
     ],
     response_format: { type: "json_object" },
-  });
+  }, { signal });
 
   const content = response.choices[0]?.message?.content ?? "{}";
   const parsed = JSON.parse(content);
   return parsed.questions ?? [];
 }
 
-async function generateClozeItems(sourceText: string, aiMode: "strict" | "enhance", count: number): Promise<Array<{ sentence: string; answer: string; hint?: string }>> {
+async function generateClozeItems(sourceText: string, aiMode: "strict" | "enhance", itemCount: number, signal?: AbortSignal): Promise<Array<{ sentence: string; answer: string; hint?: string }>> {
   const response = await openai.chat.completions.create({
     model: "gpt-5.2",
     max_completion_tokens: 6144,
@@ -131,7 +152,7 @@ async function generateClozeItems(sourceText: string, aiMode: "strict" | "enhanc
       { role: "system", content: buildSystemPrompt(sourceText, aiMode) },
       {
         role: "user",
-        content: `Generate exactly ${count} fill-in-the-blank (cloze) study items from the source text. Each item is a single sentence with one important keyword or short phrase replaced by exactly three underscores: ___. The "answer" is the exact word/phrase that fills the blank. Provide a brief "hint" (a category, first letter, or definition fragment) — keep it useful but not a giveaway.
+        content: `Generate exactly ${itemCount} fill-in-the-blank (cloze) study items from the source text. Each item is a single sentence with one important keyword or short phrase replaced by exactly three underscores: ___. The "answer" is the exact word/phrase that fills the blank. Provide a brief "hint" (a category, first letter, or definition fragment) — keep it useful but not a giveaway.
 
 Rules:
 - Exactly one ___ blank per sentence
@@ -143,14 +164,14 @@ Respond with a JSON object: { "items": [ { "sentence": "...___...", "answer": ".
       },
     ],
     response_format: { type: "json_object" },
-  });
+  }, { signal });
 
   const content = response.choices[0]?.message?.content ?? "{}";
   const parsed = JSON.parse(content);
   return parsed.items ?? [];
 }
 
-async function generateStudyGuide(sourceText: string, aiMode: "strict" | "enhance"): Promise<string> {
+async function generateStudyGuide(sourceText: string, aiMode: "strict" | "enhance", signal?: AbortSignal): Promise<string> {
   const response = await openai.chat.completions.create({
     model: "gpt-5.2",
     max_completion_tokens: 8192,
@@ -164,7 +185,7 @@ Respond with a JSON object: { "studyGuide": "markdown formatted study guide here
       },
     ],
     response_format: { type: "json_object" },
-  });
+  }, { signal });
 
   const content = response.choices[0]?.message?.content ?? "{}";
   const parsed = JSON.parse(content);
@@ -173,158 +194,178 @@ Respond with a JSON object: { "studyGuide": "markdown formatted study guide here
 
 router.post(
   "/custom-decks",
+  requireScholar,
   upload.single("file"),
   async (req: Request, res: Response): Promise<void> => {
+    const userId = (req as Request & { scholarUser: { id: string } }).scholarUser.id;
+
     try {
-      const userId = getUserId(req);
-      if (!userId) {
-        res.status(401).json({ error: "Unauthorized" });
+      const [concurrencyRow] = await db
+        .select({ value: count() })
+        .from(customDecksTable)
+        .where(and(eq(customDecksTable.userId, userId), eq(customDecksTable.status, "processing")));
+      if ((concurrencyRow?.value ?? 0) >= MAX_CONCURRENT_JOBS_PER_USER) {
+        res.status(429).json({ error: "Too many active generation jobs. Please wait for your current job to finish." });
         return;
       }
 
-      const user = await getUser(userId);
-      if (!user || user.subscriptionStatus !== "scholar") {
-        res.status(403).json({ error: "Scholar subscription required" });
+      const startOfDay = new Date();
+      startOfDay.setUTCHours(0, 0, 0, 0);
+      const [dailyRow] = await db
+        .select({ value: count() })
+        .from(customDecksTable)
+        .where(and(eq(customDecksTable.userId, userId), gte(customDecksTable.createdAt, startOfDay)));
+      if ((dailyRow?.value ?? 0) >= MAX_DECKS_PER_DAY) {
+        res.status(429).json({ error: "Daily deck generation limit reached. Please try again tomorrow." });
         return;
       }
 
-      const title: string = req.body?.title?.trim() || "My Study Deck";
-      const rawAiMode = req.body?.aiMode;
-      const aiMode: "strict" | "enhance" = rawAiMode === "strict" ? "strict" : "enhance";
-      const tier: "standard" | "pro" = req.body?.tier === "pro" ? "pro" : "standard";
-
-      const STANDARD_TOOL_IDS = ["flashcards", "quiz", "studyGuide", "exam"] as const;
-      const PRO_TOOL_IDS = ["match", "cloze", "review"] as const;
-      const validToolIds: readonly string[] = tier === "pro" ? PRO_TOOL_IDS : STANDARD_TOOL_IDS;
-      let tools: string[] = [];
-      const rawTools = req.body?.tools;
-      if (typeof rawTools === "string" && rawTools.length > 0) {
-        try {
-          const parsed = JSON.parse(rawTools);
-          if (Array.isArray(parsed)) {
-            tools = parsed.filter((t): t is string => typeof t === "string" && validToolIds.includes(t));
-          }
-        } catch {
-          tools = [];
-        }
-      }
-      if (tools.length === 0) {
-        tools = [...validToolIds];
-      }
-
-      const ALLOWED_FLASHCARDS = [15, 25, 40];
-      const ALLOWED_QUIZ = [10, 15, 25];
-      const ALLOWED_EXAM = [15, 25, 50];
-      const ALLOWED_CLOZE = [0, 10, 20];
-      const parseChoice = (raw: unknown, allowed: number[], fallback: number): number => {
-        const n = parseInt(String(raw ?? ""), 10);
-        return allowed.includes(n) ? n : fallback;
-      };
-      const flashcardCount = parseChoice(req.body?.flashcardCount, ALLOWED_FLASHCARDS, 25);
-      const quizCount = parseChoice(req.body?.quizCount, ALLOWED_QUIZ, 15);
-      const examQuestionCount = parseChoice(req.body?.examQuestionCount, ALLOWED_EXAM, 15);
-      const clozeCount = parseChoice(req.body?.clozeCount, ALLOWED_CLOZE, 10);
-      const examTimed = req.body?.examTimed === "true" || req.body?.examTimed === true;
-
-      const wantsFlashcards = tier === "standard"
-        ? tools.includes("flashcards")
-        : tools.includes("match") || tools.includes("review");
-      const wantsQuiz = tier === "standard" && (tools.includes("quiz") || tools.includes("exam"));
-      const wantsStudyGuide = tier === "standard" && tools.includes("studyGuide");
-      const wantsCloze = tier === "pro" && tools.includes("cloze");
-
-      let sourceText: string = "";
-
-      if (req.file) {
-        sourceText = await extractTextFromBuffer(req.file.buffer, req.file.mimetype);
-      } else if (req.body?.text) {
-        sourceText = (req.body.text as string).trim();
-      }
-
-      if (!sourceText || sourceText.length < 50) {
-        res.status(400).json({ error: "Please provide more content — at least a few paragraphs of study material." });
-        return;
-      }
-
-      const [deck] = await db
-        .insert(customDecksTable)
-        .values({ userId, title, sourceText, status: "processing", tier, tools, examQuestionCount, examTimed })
-        .returning();
+      const abort = new AbortController();
+      const { signal } = abort;
+      req.on("close", () => abort.abort());
 
       try {
-        const [flashcards, quizQuestions, studyGuide, clozeItems] = await Promise.all([
-          wantsFlashcards
-            ? generateFlashcards(sourceText, aiMode, flashcardCount)
-            : Promise.resolve([] as Array<{ front: string; back: string; difficulty: string }>),
-          wantsQuiz
-            ? generateQuizQuestions(sourceText, aiMode, quizCount)
-            : Promise.resolve([] as Array<{ question: string; optionA: string; optionB: string; optionC: string; optionD: string; correctAnswer: string; explanation: string }>),
-          wantsStudyGuide
-            ? generateStudyGuide(sourceText, aiMode)
-            : Promise.resolve(""),
-          wantsCloze && clozeCount > 0
-            ? generateClozeItems(sourceText, aiMode, clozeCount)
-            : Promise.resolve([] as Array<{ sentence: string; answer: string; hint?: string }>),
-        ]);
+        const title: string = req.body?.title?.trim() || "My Study Deck";
+        const rawAiMode = req.body?.aiMode;
+        const aiMode: "strict" | "enhance" = rawAiMode === "strict" ? "strict" : "enhance";
+        const tier: "standard" | "pro" = req.body?.tier === "pro" ? "pro" : "standard";
 
-        if (flashcards.length > 0) {
-          await db.insert(customFlashcardsTable).values(
-            flashcards.map((f, i) => ({
-              deckId: deck.id,
-              front: f.front,
-              back: f.back,
-              difficulty: f.difficulty || "medium",
-              cardOrder: i,
-            }))
-          );
+        const STANDARD_TOOL_IDS = ["flashcards", "quiz", "studyGuide", "exam"] as const;
+        const PRO_TOOL_IDS = ["match", "cloze", "review"] as const;
+        const validToolIds: readonly string[] = tier === "pro" ? PRO_TOOL_IDS : STANDARD_TOOL_IDS;
+        let tools: string[] = [];
+        const rawTools = req.body?.tools;
+        if (typeof rawTools === "string" && rawTools.length > 0) {
+          try {
+            const parsed = JSON.parse(rawTools);
+            if (Array.isArray(parsed)) {
+              tools = parsed.filter((t): t is string => typeof t === "string" && validToolIds.includes(t));
+            }
+          } catch {
+            tools = [];
+          }
+        }
+        if (tools.length === 0) {
+          tools = [...validToolIds];
         }
 
-        if (quizQuestions.length > 0) {
-          await db.insert(customQuizQuestionsTable).values(
-            quizQuestions.map((q, i) => ({
-              deckId: deck.id,
-              question: q.question,
-              optionA: q.optionA,
-              optionB: q.optionB,
-              optionC: q.optionC,
-              optionD: q.optionD,
-              correctAnswer: q.correctAnswer,
-              explanation: q.explanation || "",
-              questionOrder: i,
-            }))
-          );
+        const ALLOWED_FLASHCARDS = [15, 25, 40];
+        const ALLOWED_QUIZ = [10, 15, 25];
+        const ALLOWED_EXAM = [15, 25, 50];
+        const ALLOWED_CLOZE = [0, 10, 20];
+        const parseChoice = (raw: unknown, allowed: number[], fallback: number): number => {
+          const n = parseInt(String(raw ?? ""), 10);
+          return allowed.includes(n) ? n : fallback;
+        };
+        const flashcardCount = parseChoice(req.body?.flashcardCount, ALLOWED_FLASHCARDS, 25);
+        const quizCount = parseChoice(req.body?.quizCount, ALLOWED_QUIZ, 15);
+        const examQuestionCount = parseChoice(req.body?.examQuestionCount, ALLOWED_EXAM, 15);
+        const clozeCount = parseChoice(req.body?.clozeCount, ALLOWED_CLOZE, 10);
+        const examTimed = req.body?.examTimed === "true" || req.body?.examTimed === true;
+
+        const wantsFlashcards = tier === "standard"
+          ? tools.includes("flashcards")
+          : tools.includes("match") || tools.includes("review");
+        const wantsQuiz = tier === "standard" && (tools.includes("quiz") || tools.includes("exam"));
+        const wantsStudyGuide = tier === "standard" && tools.includes("studyGuide");
+        const wantsCloze = tier === "pro" && tools.includes("cloze");
+
+        let sourceText: string = "";
+
+        if (req.file) {
+          sourceText = await extractTextFromBuffer(req.file.buffer, req.file.mimetype);
+        } else if (req.body?.text) {
+          sourceText = (req.body.text as string).trim();
         }
 
-        if (clozeItems.length > 0) {
-          await db.insert(customClozeItemsTable).values(
-            clozeItems
-              .filter((c) => c.sentence && c.answer)
-              .map((c, i) => ({
-                deckId: deck.id,
-                sentence: c.sentence,
-                answer: c.answer,
-                hint: c.hint ?? null,
-                itemOrder: i,
-              }))
-          );
+        if (!sourceText || sourceText.length < 50) {
+          res.status(400).json({ error: "Please provide more content — at least a few paragraphs of study material." });
+          return;
         }
 
-        const [updated] = await db
-          .update(customDecksTable)
-          .set({ studyGuide, status: "ready" })
-          .where(eq(customDecksTable.id, deck.id))
+        const [deck] = await db
+          .insert(customDecksTable)
+          .values({ userId, title, sourceText, status: "processing", tier, tools, examQuestionCount, examTimed })
           .returning();
 
-        res.status(201).json(updated);
-      } catch (genErr) {
-        await db
-          .update(customDecksTable)
-          .set({ status: "error" })
-          .where(eq(customDecksTable.id, deck.id));
-        throw genErr;
+        try {
+          const [flashcards, quizQuestions, studyGuide, clozeItems] = await Promise.all([
+            wantsFlashcards
+              ? generateFlashcards(sourceText, aiMode, flashcardCount, signal)
+              : Promise.resolve([] as Array<{ front: string; back: string; difficulty: string }>),
+            wantsQuiz
+              ? generateQuizQuestions(sourceText, aiMode, quizCount, signal)
+              : Promise.resolve([] as Array<{ question: string; optionA: string; optionB: string; optionC: string; optionD: string; correctAnswer: string; explanation: string }>),
+            wantsStudyGuide
+              ? generateStudyGuide(sourceText, aiMode, signal)
+              : Promise.resolve(""),
+            wantsCloze && clozeCount > 0
+              ? generateClozeItems(sourceText, aiMode, clozeCount, signal)
+              : Promise.resolve([] as Array<{ sentence: string; answer: string; hint?: string }>),
+          ]);
+
+          if (flashcards.length > 0) {
+            await db.insert(customFlashcardsTable).values(
+              flashcards.map((f, i) => ({
+                deckId: deck.id,
+                front: f.front,
+                back: f.back,
+                difficulty: f.difficulty || "medium",
+                cardOrder: i,
+              }))
+            );
+          }
+
+          if (quizQuestions.length > 0) {
+            await db.insert(customQuizQuestionsTable).values(
+              quizQuestions.map((q, i) => ({
+                deckId: deck.id,
+                question: q.question,
+                optionA: q.optionA,
+                optionB: q.optionB,
+                optionC: q.optionC,
+                optionD: q.optionD,
+                correctAnswer: q.correctAnswer,
+                explanation: q.explanation || "",
+                questionOrder: i,
+              }))
+            );
+          }
+
+          if (clozeItems.length > 0) {
+            await db.insert(customClozeItemsTable).values(
+              clozeItems
+                .filter((c) => c.sentence && c.answer)
+                .map((c, i) => ({
+                  deckId: deck.id,
+                  sentence: c.sentence,
+                  answer: c.answer,
+                  hint: c.hint ?? null,
+                  itemOrder: i,
+                }))
+            );
+          }
+
+          const [updated] = await db
+            .update(customDecksTable)
+            .set({ studyGuide, status: "ready" })
+            .where(eq(customDecksTable.id, deck.id))
+            .returning();
+
+          res.status(201).json(updated);
+        } catch (genErr) {
+          await db
+            .update(customDecksTable)
+            .set({ status: "error" })
+            .where(eq(customDecksTable.id, deck.id));
+          throw genErr;
+        }
+      } catch (err) {
+        req.log.error({ err }, "Error creating custom deck");
+        res.status(500).json({ error: "Failed to generate study materials. Please try again." });
       }
     } catch (err) {
-      req.log.error({ err }, "Error creating custom deck");
+      req.log.error({ err }, "Error checking quota");
       res.status(500).json({ error: "Failed to generate study materials. Please try again." });
     }
   }
