@@ -161,21 +161,30 @@ app.use(
 );
 
 app.use("/api", (req: Request, res: Response, next: NextFunction): void => {
-  // Public routes: health check, topic list, individual topic info, stripe webhook
   const isPublic =
     req.path === "/healthz" ||
     req.path === "/topics" ||
     req.path.startsWith("/stripe/") ||
-    // Client-side error reports may originate before sign-in or after auth fails
     (req.path === "/client-errors" && req.method === "POST") ||
-    // Allow unauthenticated access to topic list and individual topic detail only
     (/^\/topics\/\d+$/.test(req.path) && req.method === "GET");
   if (isPublic) {
     next();
     return;
   }
-  const { userId } = getAuth(req);
+  const authHeader = req.headers.authorization;
+  const auth = getAuth(req);
+  const { userId } = auth;
   if (!userId) {
+    logger.warn(
+      {
+        path: req.path,
+        hasAuthHeader: !!authHeader,
+        authHeaderPrefix: authHeader ? authHeader.substring(0, 15) + "…" : "none",
+        sessionId: auth.sessionId ?? "none",
+        reason: (auth as any).reason ?? "unknown",
+      },
+      "Auth rejected — no userId",
+    );
     res.status(401).json({ error: "Unauthorized" });
     return;
   }
