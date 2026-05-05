@@ -77,13 +77,6 @@ app.post(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// NOTE: Clerk middleware and all server-side authentication checks have been
-// removed. Routes that previously identified the caller via `getAuth(req)`
-// now read a plain `X-User-Id` request header instead — no token validation,
-// no session lookup. The server trusts whatever the client sends. Re-add a
-// real auth layer (validating tokens, sessions, or signatures) before
-// exposing this server to untrusted clients.
-
 app.use("/api", router);
 
 export default app;
