@@ -247,9 +247,9 @@
 
 .study-page-bg {
   background:
-    radial-gradient(circle at 8% 0%, rgba(47, 160, 198, 0.10), transparent 42%),
-    radial-gradient(circle at 92% 100%, rgba(88, 201, 243, 0.08), transparent 45%),
-    linear-gradient(180deg, #F2F8FC 0%, #EAF3FA 100%);
+    radial-gradient(circle at 8% 0%, rgba(47, 160, 198, 0.16), transparent 45%),
+    radial-gradient(circle at 92% 100%, rgba(88, 201, 243, 0.12), transparent 48%),
+    linear-gradient(180deg, #C6D4E2 0%, #AEC0D2 100%);
 }
 
 .study-page-aurora {

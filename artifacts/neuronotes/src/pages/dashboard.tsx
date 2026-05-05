@@ -268,9 +268,6 @@ export default function DashboardPage() {
           <div className="min-w-0 space-y-6">
             {/* Begin/Continue Your Journey (full width, top) */}
             <div>
-              <SectionLabel>
-                {continueTopic ? "Continue Your Journey" : "Begin Your Journey"}
-              </SectionLabel>
             <StudySurface tone="light" glow innerClassName="p-5">
               <div className="flex items-center gap-2 mb-4">
                 <TrendingUp className="w-4 h-4" style={{ color: PALETTE.tealDeep }} />
@@ -327,7 +324,6 @@ export default function DashboardPage() {
 
             {/* Recommended for You — 2x2 grid of 4 topics */}
             <div>
-              <SectionLabel>Recommended for You</SectionLabel>
             <StudySurface tone="light" innerClassName="p-5">
               <div className="mb-4">
                 <h2 className="font-semibold" style={{ color: PALETTE.ink }}>Recommended for You</h2>
@@ -393,7 +389,6 @@ export default function DashboardPage() {
 
             {/* Streak (left) + Leaderboard (right) */}
             <div>
-              <SectionLabel>Streak · Leaderboard</SectionLabel>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Your Streak */}
               <StudySurface tone="light" innerClassName="p-5">
@@ -532,7 +527,6 @@ export default function DashboardPage() {
 
             {/* Study Analytics (full width) + Recent Activity / Achievements (2-col) */}
             <div>
-              <SectionLabel>Study Analytics</SectionLabel>
             <div className="space-y-4">
               <StudyAnalyticsCard
                 series={activitySeries}
@@ -560,11 +554,8 @@ export default function DashboardPage() {
 
           {/* Spotlight rail */}
           <aside className="lg:sticky lg:top-6 self-start space-y-4">
+            <SpotlightCard onCta={() => navigate("/feature-request")} />
             <TodayReviews topics={allTopics} />
-            <div>
-              <SectionLabel>PsychPro Spotlight</SectionLabel>
-              <SpotlightCard onCta={() => navigate("/feature-request")} />
-            </div>
           </aside>
         </div>
       </div>
