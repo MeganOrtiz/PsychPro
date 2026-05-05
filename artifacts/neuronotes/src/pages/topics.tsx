@@ -4,6 +4,7 @@ import { Search, BookOpen, Layers, Brain, ChevronRight, ChevronLeft, LibraryBig 
 import { useGetTopics } from "@workspace/api-client-react";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { STUDY_PALETTE } from "@/lib/study-theme";
 import assessmentImg from "@/assets/topics/assessment.png";
 import clinicalCasesImg from "@/assets/topics/clinical-cases.png";
 import neuropsychologyImg from "@/assets/topics/neuropsychology.png";
@@ -91,13 +92,21 @@ export default function TopicsPage() {
   const showCategoriesGrid = !showSearchResults && selectedCategory === null;
 
   return (
-    <div className="min-h-full bg-background" data-testid="topics-page">
+    <div
+      className="min-h-full"
+      data-testid="topics-page"
+      style={{
+        // A few shades lighter than the sidebar gradient so the page reads
+        // as part of the same family but lifts forward.
+        background: `radial-gradient(120% 80% at 30% -10%, #2A4761 0%, #1F374C 55%, #182C3F 100%)`,
+      }}
+    >
       <div className="max-w-4xl mx-auto p-4 md:p-6 lg:p-8">
       <div className="mb-6">
         {showCategoryView ? (
           <button
             onClick={() => setSelectedCategory(null)}
-            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-3"
+            className="flex items-center gap-1 text-sm text-white/70 hover:text-white mb-3"
             data-testid="button-back-to-categories"
           >
             <ChevronLeft className="w-4 h-4" />
@@ -105,14 +114,20 @@ export default function TopicsPage() {
           </button>
         ) : null}
         <div className="flex items-center gap-3 mb-2">
-          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-            <LibraryBig className="w-5 h-5 text-primary" />
+          <div
+            className="w-10 h-10 rounded-lg flex items-center justify-center border"
+            style={{
+              background: "rgba(88,201,243,0.14)",
+              borderColor: "rgba(88,201,243,0.35)",
+            }}
+          >
+            <LibraryBig className="w-5 h-5" style={{ color: STUDY_PALETTE.surf }} />
           </div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+          <h1 className="text-2xl md:text-3xl font-bold text-white">
             {showCategoryView ? selectedCategory : "Topics"}
           </h1>
         </div>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-white/70">
           {showCategoryView
             ? `Browse ${categoryTopics.length} ${categoryTopics.length === 1 ? "topic" : "topics"}`
             : "Choose a topic area to start exploring"}
@@ -120,12 +135,13 @@ export default function TopicsPage() {
       </div>
 
       <div className="relative mb-6">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/60" />
         <Input
           placeholder="Search topics..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="pl-9"
+          className="pl-9 bg-white/[0.06] border-white/10 text-white placeholder:text-white/50 focus-visible:ring-[color:var(--surf,#58C9F3)]/40"
+          style={{ ["--surf" as never]: STUDY_PALETTE.surf }}
           data-testid="input-search-topics"
         />
       </div>
@@ -149,53 +165,15 @@ export default function TopicsPage() {
         )
       ) : showCategoriesGrid ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {categories.map(cat => {
-            const isEmpty = cat.count === 0;
-            const image = CATEGORY_IMAGES[cat.name];
-            return (
-              <button
-                key={cat.name}
-                type="button"
-                onClick={() => !isEmpty && setSelectedCategory(cat.name)}
-                disabled={isEmpty}
-                data-testid={`card-category-${cat.name.toLowerCase().replace(/\s+/g, "-")}`}
-                className={`group relative overflow-hidden rounded-2xl text-left border border-border bg-card aspect-[16/10] transition-all ${
-                  isEmpty
-                    ? "opacity-60 cursor-not-allowed"
-                    : "cursor-pointer hover:border-primary/50 hover:shadow-lg hover:-translate-y-0.5"
-                }`}
-              >
-                {image ? (
-                  <img
-                    src={image}
-                    alt=""
-                    aria-hidden
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-primary/5" />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/10" />
-                <div className="relative h-full w-full p-4 flex flex-col justify-end text-white">
-                  <h3 className="font-semibold leading-tight text-lg drop-shadow-md">
-                    {cat.name}
-                  </h3>
-                  <div className="mt-1 flex items-center justify-between">
-                    <p className="text-xs text-white/85">
-                      {isEmpty ? "Coming soon" : `${cat.count} ${cat.count === 1 ? "topic" : "topics"}`}
-                    </p>
-                    {!isEmpty && (
-                      <span className="inline-flex items-center gap-1 text-xs font-medium text-white/90 group-hover:text-white">
-                        Explore
-                        <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </button>
-            );
-          })}
+          {categories.map(cat => (
+            <CategoryCard
+              key={cat.name}
+              name={cat.name}
+              topics={allTopics.filter(t => t.category === cat.name)}
+              onOpenCategory={() => setSelectedCategory(cat.name)}
+              onOpenTopic={(id) => navigate(`/topics/${id}`)}
+            />
+          ))}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -247,6 +225,126 @@ function TopicCard({ topic, onClick, showCategory }: TopicCardProps) {
           {topic.quizCount} quiz Qs
         </span>
       </div>
+    </div>
+  );
+}
+
+interface CategoryCardProps {
+  name: string;
+  topics: Array<{ id: number; name: string }>;
+  onOpenCategory: () => void;
+  onOpenTopic: (id: number) => void;
+}
+
+function CategoryCard({ name, topics, onOpenCategory, onOpenTopic }: CategoryCardProps) {
+  const isEmpty = topics.length === 0;
+  const image = CATEGORY_IMAGES[name];
+  const slug = name.toLowerCase().replace(/\s+/g, "-");
+
+  return (
+    <div
+      onClick={() => !isEmpty && onOpenCategory()}
+      data-testid={`card-category-${slug}`}
+      className={`group relative overflow-hidden rounded-2xl border border-white/10 aspect-[16/10] transition-all ${
+        isEmpty
+          ? "opacity-60 cursor-not-allowed"
+          : "cursor-pointer hover:-translate-y-0.5 hover:border-[color:var(--surf,#58C9F3)]/55"
+      }`}
+      style={{
+        ["--surf" as never]: STUDY_PALETTE.surf,
+        background: STUDY_PALETTE.surface,
+        boxShadow: "0 4px 14px -8px rgba(0,0,0,0.4)",
+        // Glow on hover via box-shadow transition.
+        transition: "transform .3s ease, border-color .3s ease, box-shadow .3s ease",
+      }}
+      onMouseEnter={(e) => {
+        if (!isEmpty) {
+          e.currentTarget.style.boxShadow = `0 14px 34px -10px ${STUDY_PALETTE.surf}66, 0 0 0 1px ${STUDY_PALETTE.surf}33`;
+        }
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.boxShadow = "0 4px 14px -8px rgba(0,0,0,0.4)";
+      }}
+    >
+      {/* Hero image — desaturated to a neutral white/gray look so the
+          deep navy page color carries the color story instead. */}
+      {image ? (
+        <img
+          src={image}
+          alt=""
+          aria-hidden
+          className="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:opacity-25"
+          loading="lazy"
+          style={{ filter: "grayscale(0.95) contrast(1.05) brightness(0.95)" }}
+        />
+      ) : (
+        <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/0" />
+      )}
+      {/* Bottom-up overlay so the title remains readable on the image. */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/50 to-black/15 transition-opacity duration-300 group-hover:opacity-0" />
+      {/* Hover overlay — solid dark backdrop for the topic list. */}
+      <div
+        aria-hidden={isEmpty}
+        className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        style={{
+          background: `linear-gradient(180deg, ${STUDY_PALETTE.surfaceElev}f0 0%, ${STUDY_PALETTE.surface}f5 100%)`,
+        }}
+      />
+
+      {/* Default label (visible when not hovered) */}
+      <div className="relative h-full w-full p-4 flex flex-col justify-end text-white pointer-events-none transition-opacity duration-300 group-hover:opacity-0">
+        <h3 className="font-semibold leading-tight text-lg drop-shadow-md">{name}</h3>
+        <div className="mt-1 flex items-center justify-between">
+          <p className="text-xs text-white/85">
+            {isEmpty ? "Coming soon" : `${topics.length} ${topics.length === 1 ? "topic" : "topics"}`}
+          </p>
+          {!isEmpty && (
+            <span className="inline-flex items-center gap-1 text-xs font-medium text-white/90">
+              Hover to preview
+              <ChevronRight className="w-3.5 h-3.5" />
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Hover state — topic list overlaid on top of the dark backdrop */}
+      {!isEmpty && (
+        <div className="absolute inset-0 p-4 flex flex-col opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto">
+          <div className="flex items-center justify-between mb-2 shrink-0">
+            <h3 className="font-semibold leading-tight text-white">{name}</h3>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onOpenCategory();
+              }}
+              className="inline-flex items-center gap-1 text-[11px] font-medium text-white/80 hover:text-white"
+              data-testid={`button-view-all-${slug}`}
+            >
+              View all
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+          <ul className="flex-1 min-h-0 overflow-y-auto pr-1 space-y-1 text-sm">
+            {topics.map((t) => (
+              <li key={t.id}>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onOpenTopic(t.id);
+                  }}
+                  data-testid={`button-topic-${t.id}`}
+                  className="w-full text-left px-2 py-1.5 rounded-md text-white/90 hover:bg-white/[0.08] hover:text-white flex items-center gap-2 transition-colors"
+                >
+                  <ChevronRight className="w-3 h-3 shrink-0 text-white/50" />
+                  <span className="truncate">{t.name}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
