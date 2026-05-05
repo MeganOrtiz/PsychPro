@@ -96,9 +96,10 @@ export default function TopicsPage() {
       className="min-h-full"
       data-testid="topics-page"
       style={{
-        // A few shades lighter than the sidebar gradient so the page reads
-        // as part of the same family but lifts forward.
-        background: `radial-gradient(120% 80% at 30% -10%, #2A4761 0%, #1F374C 55%, #182C3F 100%)`,
+        // Same navy family as the sidebar, with a radial vignette: lighter
+        // at the outer edges, darker toward the middle so the colored
+        // category cards in the center pop forward.
+        background: `radial-gradient(ellipse 90% 75% at 50% 50%, ${STUDY_PALETTE.bg} 0%, ${STUDY_PALETTE.surface} 65%, ${STUDY_PALETTE.surfaceElev} 100%)`,
       }}
     >
       <div className="max-w-4xl mx-auto p-4 md:p-6 lg:p-8">
@@ -266,8 +267,8 @@ function CategoryCard({ name, topics, onOpenCategory, onOpenTopic }: CategoryCar
         e.currentTarget.style.boxShadow = "0 4px 14px -8px rgba(0,0,0,0.4)";
       }}
     >
-      {/* Hero image — desaturated to a neutral white/gray look so the
-          deep navy page color carries the color story instead. */}
+      {/* Hero image — full color, lightly toned down so it sits naturally
+          on the dark navy page without out-shouting it. */}
       {image ? (
         <img
           src={image}
@@ -275,7 +276,7 @@ function CategoryCard({ name, topics, onOpenCategory, onOpenTopic }: CategoryCar
           aria-hidden
           className="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:opacity-25"
           loading="lazy"
-          style={{ filter: "grayscale(0.95) contrast(1.05) brightness(0.95)" }}
+          style={{ filter: "saturate(0.92) brightness(0.96)" }}
         />
       ) : (
         <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/0" />
