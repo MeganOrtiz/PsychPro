@@ -2,8 +2,7 @@ import { Router, type Request, type Response } from "express";
 import { db } from "@workspace/db";
 import { topicsTable, flashcardsTable, quizQuestionsTable, studyGuidesTable, practiceExamsTable, practiceExamQuestionsTable, usersTable } from "@workspace/db";
 import { eq, count, asc } from "drizzle-orm";
-import { enforceUsageLimit } from "../middlewares/usageEnforcement";
-import { getAuth } from "@clerk/express";
+import { getUserId } from "../lib/userId";
 
 const router = Router();
 
@@ -45,7 +44,7 @@ router.get("/topics/:topicId", async (req: Request, res: Response): Promise<void
   }
 });
 
-router.get("/topics/:topicId/flashcards", enforceUsageLimit, async (req: Request, res: Response): Promise<void> => {
+router.get("/topics/:topicId/flashcards", async (req: Request, res: Response): Promise<void> => {
   try {
     const topicId = parseInt(String(req.params.topicId));
     const flashcards = await db.select().from(flashcardsTable).where(eq(flashcardsTable.topicId, topicId));
@@ -56,7 +55,7 @@ router.get("/topics/:topicId/flashcards", enforceUsageLimit, async (req: Request
   }
 });
 
-router.get("/topics/:topicId/quizzes", enforceUsageLimit, async (req: Request, res: Response): Promise<void> => {
+router.get("/topics/:topicId/quizzes", async (req: Request, res: Response): Promise<void> => {
   try {
     const topicId = parseInt(String(req.params.topicId));
     const questions = await db
@@ -85,9 +84,9 @@ router.get("/topics/:topicId/quizzes", enforceUsageLimit, async (req: Request, r
 
 router.get("/topics/:topicId/study-guide", async (req: Request, res: Response): Promise<void> => {
   try {
-    const { userId } = getAuth(req);
+    const userId = getUserId(req);
     if (!userId) {
-      res.status(401).json({ error: "Unauthorized" });
+      res.status(400).json({ error: "Missing x-user-id header" });
       return;
     }
     const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));

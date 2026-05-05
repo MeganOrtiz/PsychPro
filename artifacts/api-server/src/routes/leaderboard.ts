@@ -2,7 +2,7 @@ import { createHash } from "crypto";
 import { Router, type Request, type Response } from "express";
 import { db } from "@workspace/db";
 import { progressTable } from "@workspace/db";
-import { getAuth } from "@clerk/express";
+import { getUserId } from "../lib/userId";
 
 const router = Router();
 
@@ -40,7 +40,7 @@ function deriveDisplayName(userId: string): string {
 
 router.get("/leaderboard", async (req: Request, res: Response): Promise<void> => {
   try {
-    const currentUserId = getAuth(req).userId ?? null;
+    const currentUserId = getUserId(req);
 
     const rows = await db
       .select({

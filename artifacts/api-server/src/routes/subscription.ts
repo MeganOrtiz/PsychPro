@@ -3,13 +3,9 @@ import { db } from "@workspace/db";
 import { usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { getUncachableStripeClient } from "../stripeClient";
-import { getAuth } from "@clerk/express";
+import { requireUserId } from "../lib/userId";
 
 const router = Router();
-
-function getUserId(req: Request): string | null {
-  return getAuth(req).userId ?? null;
-}
 
 router.get("/subscription/plans", async (req: Request, res: Response): Promise<void> => {
   try {
@@ -51,11 +47,8 @@ router.get("/subscription/plans", async (req: Request, res: Response): Promise<v
 
 router.post("/subscription/checkout", async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = getUserId(req);
-    if (!userId) {
-      res.status(401).json({ error: "Unauthorized" });
-      return;
-    }
+    const userId = requireUserId(req, res);
+    if (!userId) return;
     const { priceId } = req.body as { priceId: string };
     if (!priceId || typeof priceId !== "string") {
       res.status(400).json({ error: "Missing priceId" });
@@ -120,11 +113,8 @@ router.post("/subscription/checkout", async (req: Request, res: Response): Promi
 
 router.post("/subscription/portal", async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = getUserId(req);
-    if (!userId) {
-      res.status(401).json({ error: "Unauthorized" });
-      return;
-    }
+    const userId = requireUserId(req, res);
+    if (!userId) return;
     const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
     if (!user?.stripeCustomerId) {
       res.status(400).json({ error: "No Stripe customer on file" });
@@ -147,11 +137,8 @@ router.post("/subscription/portal", async (req: Request, res: Response): Promise
 
 router.get("/subscription/status", async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = getUserId(req);
-    if (!userId) {
-      res.status(401).json({ error: "Unauthorized" });
-      return;
-    }
+    const userId = requireUserId(req, res);
+    if (!userId) return;
     const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
     if (!user) {
       res.json({ status: "free", subscriptionId: null, currentPeriodEnd: null });

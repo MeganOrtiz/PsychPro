@@ -15,7 +15,7 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 - **Validation**: Zod (`zod/v4`), `drizzle-zod`
 - **API codegen**: Orval (from OpenAPI spec)
 - **Build**: esbuild (CJS bundle)
-- **Auth**: Clerk (frontend: @clerk/react, backend: @clerk/express)
+- **Auth**: Frontend uses Clerk (@clerk/react) for sign-in UI. **Server-side auth is REMOVED** — the API server has no Clerk middleware, no token validation, no session checks. Routes that need a user identifier read it verbatim from the `X-User-Id` request header (pass-through, no validation). Re-add a real auth layer before exposing this server to untrusted clients.
 - **Payments**: Stripe (API version: 2026-03-25.dahlia)
 
 ## Key Commands
@@ -46,7 +46,8 @@ A mobile-responsive neuroscience/neuropsychology study app.
 - **PsychPro Web** (`artifacts/neuronotes`) — React/Vite SPA (teal/navy theme)
 
 ### Key Files
-- `artifacts/api-server/src/app.ts` — Express app with Clerk middleware + Stripe webhook
+- `artifacts/api-server/src/app.ts` — Express app with Stripe webhook (NO Clerk, NO auth middleware)
+- `artifacts/api-server/src/lib/userId.ts` — `getUserId(req)` / `requireUserId(req,res)` — reads `X-User-Id` header (pass-through identifier, NOT auth)
 - `artifacts/api-server/src/routes/` — Route handlers (topics, flashcards, quizzes, study guides, practice exams, users, progress, subscription)
 - `artifacts/api-server/src/stripeClient.ts` — Stripe client (API version: 2026-03-25.dahlia)
 - `artifacts/neuronotes/src/App.tsx` — ClerkProvider + wouter routes + ClerkTokenSetup
@@ -55,10 +56,9 @@ A mobile-responsive neuroscience/neuropsychology study app.
 - `lib/db/src/seed.ts` — Neuroscience content seed (94 flashcards, 42 quiz questions, 9 study guides, 29 topics)
 
 ### Auth Pattern
-- Frontend: `ClerkTokenSetup` component sets `setAuthTokenGetter` from `@clerk/react`'s `useAuth().getToken()`
-- API calls automatically include `Authorization: Bearer <clerk-jwt>` header via custom-fetch
-- Backend: uses `getAuth(req)` from `@clerk/express` (NOT `req.auth`)
-- Public routes: `/api/healthz`, `/api/topics/**`, `/api/stripe/**`
+- **Server-side authentication has been removed.** No Clerk middleware, no token verification, no session checks. The API server trusts whatever `X-User-Id` header the client supplies. This is intentionally insecure and must be replaced before going public.
+- Frontend still uses `@clerk/react` for the sign-in UI and currently sends `Authorization: Bearer <jwt>` via `custom-fetch` — the server ignores it. To make the existing routes work end-to-end again, add an `X-User-Id` header attach in `lib/api-client-react/src/custom-fetch.ts` or wire up a new auth source.
+- Public routes (no identifier needed): `/api/healthz`, `/api/topics/**`, `/api/stripe/**`, `/api/subscription/plans`, `/api/leaderboard`, `/api/client-errors`, `/api/feedback/is-admin`
 
 ### Features
 - Landing page with inline Clerk sign-in/sign-up

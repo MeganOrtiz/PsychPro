@@ -75,16 +75,13 @@ function makeRes(): MockRes {
 
 interface InvokeOptions {
   body: unknown;
-  // `userId` mirrors what `clerkMiddleware()` would have attached to the
-  // request before our handler runs:
-  //   - omitted (undefined) → simulate the unauthenticated case (signed-out
-  //     session, `req.auth().userId === null`). This is the production
-  //     default when no Clerk session cookie is present.
-  //   - string → simulate an authenticated request (the typical signed-in
-  //     case).
-  //   - explicit null → also simulate signed-out, identical to omitting.
-  // In production `clerkMiddleware()` is always installed at the app level,
-  // so `req.auth` is always a function — we always attach it here too.
+  // `userId` mirrors the value the client supplies in the unauthenticated
+  // `X-User-Id` request header. Server-side authentication has been removed,
+  // so the handler now reads this header verbatim via `getUserId` with no
+  // validation. Cases:
+  //   - omitted (undefined) → no header set, handler logs userId=null.
+  //   - string → simulate the client passing a user identifier.
+  //   - explicit null → identical to omitting.
   userId?: string | null;
 }
 
@@ -98,14 +95,19 @@ function invokeHandler({ body, userId }: InvokeOptions): InvokeResult {
 
   // Mock just the bits of express's Request that the handler reads:
   // - `req.body` is what the handler trims/normalizes.
-  // - `req.auth` is what `@clerk/express`'s `getAuth` reads. `getAuth` calls
-  //   `req.auth(options)` and gates the result on `tokenType ===
-  //   "session_token"`. Mirror that here so the userId survives.
+  // - `req.header("x-user-id")` is what `getUserId` reads. Server-side auth
+  //   has been removed; the value is taken verbatim from the request header.
   // - `req.log.error` is the pino-http per-request logger we capture.
-  const resolvedUserId = userId ?? null;
+  const headers: Record<string, string> = {};
+  if (typeof userId === "string" && userId.length > 0) {
+    headers["x-user-id"] = userId;
+  }
   const req = {
     body,
-    auth: () => ({ userId: resolvedUserId, tokenType: "session_token" }),
+    headers,
+    header(name: string): string | undefined {
+      return headers[name.toLowerCase()];
+    },
     log: {
       error: (obj: Record<string, unknown>, msg: string) => {
         errorLogs.push({ obj, msg });
@@ -385,10 +387,10 @@ test("missing/null body is tolerated and yields a fallback-message log", () => {
   }
 });
 
-test("authenticated request includes Clerk userId in payload", () => {
+test("request with x-user-id header includes that userId in payload", () => {
   const userId = `user_${randomUUID()}`;
   const { res, errorLogs } = invokeHandler({
-    body: { message: "auth'd error" },
+    body: { message: "client-supplied id error" },
     userId,
   });
   assert(res.statusCode === 204, `expected 204, got ${res.statusCode}`);
@@ -398,15 +400,14 @@ test("authenticated request includes Clerk userId in payload", () => {
     `expected userId=${userId}, got ${JSON.stringify(payload.userId)}`,
   );
   assert(
-    payload.message === "auth'd error",
+    payload.message === "client-supplied id error",
     `expected message preserved, got ${JSON.stringify(payload.message)}`,
   );
 });
 
-test("unauthenticated request (signed-out clerk session) yields userId=null", () => {
-  // No `userId` provided → invokeHandler attaches a `req.auth` that returns
-  // `userId: null`, mirroring what `clerkMiddleware()` produces when no
-  // session cookie is present. The handler's `?? null` keeps it null.
+test("request without x-user-id header yields userId=null", () => {
+  // No `userId` provided → invokeHandler omits the `x-user-id` header. The
+  // handler's `getUserId` returns null and the log carries null.
   const { res, errorLogs } = invokeHandler({ body: { message: "anon error" } });
   assert(res.statusCode === 204, `expected 204, got ${res.statusCode}`);
   const payload = getClientErrorPayload(errorLogs[0]);

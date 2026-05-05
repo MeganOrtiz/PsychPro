@@ -2,22 +2,15 @@ import { Router, type Request, type Response } from "express";
 import { db } from "@workspace/db";
 import { usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
-import { getAuth } from "@clerk/express";
+import { requireUserId } from "../lib/userId";
 
 const router = Router();
 const FREE_LIMIT = 10;
 
-function getUserId(req: Request): string | null {
-  return getAuth(req).userId ?? null;
-}
-
 router.get("/users/profile", async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = getUserId(req);
-    if (!userId) {
-      res.status(401).json({ error: "Unauthorized" });
-      return;
-    }
+    const userId = requireUserId(req, res);
+    if (!userId) return;
     const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
     if (!user) {
       res.status(404).json({ error: "User not found" });
@@ -44,11 +37,8 @@ router.get("/users/profile", async (req: Request, res: Response): Promise<void> 
 
 router.post("/users/profile", async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = getUserId(req);
-    if (!userId) {
-      res.status(401).json({ error: "Unauthorized" });
-      return;
-    }
+    const userId = requireUserId(req, res);
+    if (!userId) return;
     const { email, role, goal, degree, referralSource, onboardingComplete } = req.body;
     const existing = await db.select().from(usersTable).where(eq(usersTable.id, userId));
     let user;
@@ -92,11 +82,8 @@ router.post("/users/profile", async (req: Request, res: Response): Promise<void>
 
 router.get("/users/usage", async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = getUserId(req);
-    if (!userId) {
-      res.status(401).json({ error: "Unauthorized" });
-      return;
-    }
+    const userId = requireUserId(req, res);
+    if (!userId) return;
     const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
     const usageCount = user?.usageCount ?? 0;
     res.json({
@@ -112,11 +99,8 @@ router.get("/users/usage", async (req: Request, res: Response): Promise<void> =>
 
 router.post("/users/usage", async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = getUserId(req);
-    if (!userId) {
-      res.status(401).json({ error: "Unauthorized" });
-      return;
-    }
+    const userId = requireUserId(req, res);
+    if (!userId) return;
     let [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
 
     if (!user) {

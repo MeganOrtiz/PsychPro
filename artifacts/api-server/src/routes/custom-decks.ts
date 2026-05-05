@@ -9,8 +9,8 @@ import {
   customClozeItemsTable,
 } from "@workspace/db";
 import { eq, desc, and, gte, count } from "drizzle-orm";
-import { getAuth } from "@clerk/express";
 import { openai } from "@workspace/integrations-openai-ai-server";
+import { getUserId, requireUserId } from "../lib/userId";
 import { parseIntParam } from "../lib/params";
 
 const router = Router();
@@ -22,12 +22,6 @@ const upload = multer({
 const MAX_CONCURRENT_JOBS_PER_USER = 2;
 const MAX_DECKS_PER_DAY = 10;
 
-function getUserId(req: Request): string | null {
-  return getAuth(req).userId ?? null;
-}
-
-const PAID_STATUSES = ["active", "trialing", "pro", "scholar"];
-
 async function getUser(userId: string) {
   const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
   return user ?? null;
@@ -36,7 +30,7 @@ async function getUser(userId: string) {
 async function requireScholar(req: Request, res: Response, next: NextFunction): Promise<void> {
   const userId = getUserId(req);
   if (!userId) {
-    res.status(401).json({ error: "Unauthorized" });
+    res.status(400).json({ error: "Missing x-user-id header" });
     return;
   }
   const user = await getUser(userId);
@@ -373,8 +367,8 @@ router.post(
 
 router.get("/custom-decks", async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = getUserId(req);
-    if (!userId) { res.status(401).json({ error: "Unauthorized" }); return; }
+    const userId = requireUserId(req, res);
+    if (!userId) return;
 
     const decks = await db
       .select({ id: customDecksTable.id, title: customDecksTable.title, status: customDecksTable.status, tier: customDecksTable.tier, tools: customDecksTable.tools, createdAt: customDecksTable.createdAt })
@@ -391,8 +385,8 @@ router.get("/custom-decks", async (req: Request, res: Response): Promise<void> =
 
 router.get("/custom-decks/:id", async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = getUserId(req);
-    if (!userId) { res.status(401).json({ error: "Unauthorized" }); return; }
+    const userId = requireUserId(req, res);
+    if (!userId) return;
 
     const deckId = parseIntParam(req, res, "id");
     if (deckId === null) return;
@@ -408,8 +402,8 @@ router.get("/custom-decks/:id", async (req: Request, res: Response): Promise<voi
 
 router.get("/custom-decks/:id/flashcards", async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = getUserId(req);
-    if (!userId) { res.status(401).json({ error: "Unauthorized" }); return; }
+    const userId = requireUserId(req, res);
+    if (!userId) return;
 
     const deckId = parseIntParam(req, res, "id");
     if (deckId === null) return;
@@ -426,8 +420,8 @@ router.get("/custom-decks/:id/flashcards", async (req: Request, res: Response): 
 
 router.get("/custom-decks/:id/quiz", async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = getUserId(req);
-    if (!userId) { res.status(401).json({ error: "Unauthorized" }); return; }
+    const userId = requireUserId(req, res);
+    if (!userId) return;
 
     const deckId = parseIntParam(req, res, "id");
     if (deckId === null) return;
@@ -444,8 +438,8 @@ router.get("/custom-decks/:id/quiz", async (req: Request, res: Response): Promis
 
 router.get("/custom-decks/:id/cloze", async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = getUserId(req);
-    if (!userId) { res.status(401).json({ error: "Unauthorized" }); return; }
+    const userId = requireUserId(req, res);
+    if (!userId) return;
 
     const deckId = parseIntParam(req, res, "id");
     if (deckId === null) return;
@@ -462,8 +456,8 @@ router.get("/custom-decks/:id/cloze", async (req: Request, res: Response): Promi
 
 router.delete("/custom-decks/:id", async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = getUserId(req);
-    if (!userId) { res.status(401).json({ error: "Unauthorized" }); return; }
+    const userId = requireUserId(req, res);
+    if (!userId) return;
 
     const deckId = parseIntParam(req, res, "id");
     if (deckId === null) return;

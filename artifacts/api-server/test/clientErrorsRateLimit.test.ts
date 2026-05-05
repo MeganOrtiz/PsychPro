@@ -81,14 +81,25 @@ async function runOnce({ ip, userAgent, userId }: RunOptions): Promise<RunResult
   // Mock the bare minimum of express's Request that the middleware touches.
   // - `req.ip` is read for the per-IP key.
   // - `req.headers["user-agent"]` is included in the warn payload.
-  // - `req.auth` (when present) is what `@clerk/express`'s `getAuth` reads to
-  //   produce the `userId` field. When absent, `getAuth` throws and the
-  //   middleware's `getAuthUserIdSafe` swallows the error → userId = null.
+  // - `req.headers["x-user-id"]` is the unauthenticated user identifier the
+  //   middleware reads via `getUserId`. Server-side authentication has been
+  //   removed: the value is whatever the client sent, with no validation.
+  // - `req.header(name)` is the express helper used by `getUserId` — back it
+  //   with a case-insensitive lookup over our headers map.
   // - `req.log.warn` is the pino-http per-request logger we capture.
+  const headers: Record<string, string> = {
+    "user-agent": userAgent ?? "test-agent/1.0",
+  };
+  if (typeof userId === "string" && userId.length > 0) {
+    headers["x-user-id"] = userId;
+  }
   const req = {
     ip,
     socket: { remoteAddress: ip },
-    headers: { "user-agent": userAgent ?? "test-agent/1.0" },
+    headers,
+    header(name: string): string | undefined {
+      return headers[name.toLowerCase()];
+    },
     log: {
       warn: (obj: Record<string, unknown>, msg: string) => {
         warnLogs.push({ obj, msg });
@@ -97,16 +108,6 @@ async function runOnce({ ip, userAgent, userId }: RunOptions): Promise<RunResult
         errorLogs.push({ obj, msg });
       },
     },
-    ...(userId !== undefined
-      ? {
-          // `getAuth` calls `req.auth(options)` and then passes the result
-          // through `getAuthObjectForAcceptedToken`, which defaults to the
-          // `session_token` token type. Set `tokenType` so it matches and the
-          // userId survives the type check (otherwise it'd be replaced with a
-          // signed-out object whose userId is null).
-          auth: () => ({ userId, tokenType: "session_token" }),
-        }
-      : {}),
   } as unknown as Parameters<typeof clientErrorsRateLimit>[0];
 
   const res = makeRes();

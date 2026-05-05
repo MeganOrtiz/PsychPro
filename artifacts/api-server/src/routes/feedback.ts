@@ -2,21 +2,14 @@ import { Router, type Request, type Response } from "express";
 import { db } from "@workspace/db";
 import { feedbackTable, usersTable } from "@workspace/db";
 import { eq, desc } from "drizzle-orm";
-import { getAuth } from "@clerk/express";
+import { getUserId, requireUserId } from "../lib/userId";
 import { parseIntParam } from "../lib/params";
 
 const router = Router();
 
-function getUserId(req: Request): string | null {
-  return getAuth(req).userId ?? null;
-}
-
 async function requireAdmin(req: Request, res: Response): Promise<boolean> {
-  const userId = getUserId(req);
-  if (!userId) {
-    res.status(401).json({ error: "Unauthorized" });
-    return false;
-  }
+  const userId = requireUserId(req, res);
+  if (!userId) return false;
   const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
   if (!user?.isAdmin) {
     res.status(403).json({ error: "Forbidden" });
@@ -41,11 +34,8 @@ router.get("/feedback/is-admin", async (req: Request, res: Response): Promise<vo
 
 router.post("/feedback", async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = getUserId(req);
-    if (!userId) {
-      res.status(401).json({ error: "Unauthorized" });
-      return;
-    }
+    const userId = requireUserId(req, res);
+    if (!userId) return;
     const { type, message } = req.body;
     if (!message || typeof message !== "string" || message.trim().length === 0) {
       res.status(400).json({ error: "Message is required" });

@@ -1,6 +1,6 @@
 import { type Request, type Response, type NextFunction } from "express";
-import { getAuth } from "@clerk/express";
 import type { Logger } from "pino";
+import { getUserId } from "../lib/userId";
 import { db } from "@workspace/db";
 import {
   clientErrorRateHitsTable,
@@ -75,14 +75,6 @@ function getClientKey(req: Request): string {
   // which clients cannot forge by sending their own X-Forwarded-For header.
   // We deliberately do NOT read X-Forwarded-For directly from headers here.
   return req.ip ?? req.socket.remoteAddress ?? "unknown";
-}
-
-function getAuthUserIdSafe(req: Request): string | null {
-  try {
-    return getAuth(req).userId ?? null;
-  } catch {
-    return null;
-  }
 }
 
 interface RateLimitDecision {
@@ -329,7 +321,7 @@ export async function clientErrorsRateLimit(
 
     if (decision.shouldWarn) {
       const userAgent = req.headers["user-agent"] ?? null;
-      const userId = getAuthUserIdSafe(req);
+      const userId = getUserId(req);
       req.log.warn(
         {
           clientErrorsRateLimit: {

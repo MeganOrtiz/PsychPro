@@ -1,12 +1,10 @@
-import express, { type Express, type Request, type Response, type NextFunction } from "express";
+import express, { type Express, type Request, type Response } from "express";
 import cors from "cors";
 import pinoHttp from "pino-http";
 import router from "./routes";
 import { logger } from "./lib/logger";
-import { clerkMiddleware, getAuth } from "@clerk/express";
 import { getUncachableStripeClient } from "./stripeClient";
 import { handleStripeWebhookEvent } from "./webhookHandlers";
-import { CLERK_PROXY_PATH, clerkProxyMiddleware } from "./middlewares/clerkProxyMiddleware";
 import type Stripe from "stripe";
 
 const app: Express = express();
@@ -45,8 +43,6 @@ app.use(
 
 app.use(cors());
 
-app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
-
 app.post(
   "/api/stripe/webhook",
   express.raw({ type: "application/json" }),
@@ -81,70 +77,12 @@ app.post(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const clerkSecretKey = process.env.CLERK_SECRET_KEY || undefined;
-
-function describeKey(k: string | undefined): string {
-  if (!k) return "MISSING";
-  const m = k.match(/^(pk|sk)_(live|test)_/);
-  return m ? `${m[0]}…(${k.length} chars)` : `present(${k.length} chars)`;
-}
-
-logger.info(
-  { clerk: { secretKey: describeKey(clerkSecretKey) } },
-  "Clerk credentials resolved",
-);
-
-if (!clerkSecretKey) {
-  logger.error(
-    "CLERK_SECRET_KEY is missing — every authenticated request will return 401.",
-  );
-}
-
-app.use(clerkMiddleware({ secretKey: clerkSecretKey }));
-
-app.use("/api", (req: Request, res: Response, next: NextFunction): void => {
-  const isPublic =
-    req.path === "/healthz" ||
-    req.path === "/topics" ||
-    req.path.startsWith("/stripe/") ||
-    (req.path === "/client-errors" && req.method === "POST") ||
-    (/^\/topics\/\d+$/.test(req.path) && req.method === "GET");
-  if (isPublic) {
-    next();
-    return;
-  }
-  const authHeader = req.headers.authorization;
-  const auth = getAuth(req);
-  const { userId } = auth;
-  if (!userId) {
-    let jwtIssuer = "n/a";
-    let jwtAzp = "n/a";
-    if (authHeader?.startsWith("Bearer ")) {
-      try {
-        const parts = authHeader.slice(7).split(".");
-        if (parts.length >= 2) {
-          const payload = JSON.parse(Buffer.from(parts[1], "base64url").toString("utf8"));
-          jwtIssuer = payload.iss ?? "missing";
-          jwtAzp = payload.azp ?? "missing";
-        }
-      } catch {}
-    }
-    logger.warn(
-      {
-        path: req.path,
-        hasAuthHeader: !!authHeader,
-        jwtIssuer,
-        jwtAzp,
-        expectedFapi: EXPECTED_FAPI,
-        sessionId: auth.sessionId ?? "none",
-      },
-      "Auth rejected — no userId",
-    );
-    res.status(401).json({ error: "Unauthorized" });
-    return;
-  }
-  next();
-});
+// NOTE: Clerk middleware and all server-side authentication checks have been
+// removed. Routes that previously identified the caller via `getAuth(req)`
+// now read a plain `X-User-Id` request header instead — no token validation,
+// no session lookup. The server trusts whatever the client sends. Re-add a
+// real auth layer (validating tokens, sessions, or signatures) before
+// exposing this server to untrusted clients.
 
 app.use("/api", router);
 

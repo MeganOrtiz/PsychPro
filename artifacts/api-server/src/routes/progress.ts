@@ -7,16 +7,12 @@ import {
   quizAttemptsTable,
   examAttemptsTable,
 } from "@workspace/db";
-import { eq, and, desc, sql } from "drizzle-orm";
-import { getAuth } from "@clerk/express";
+import { eq, and, desc } from "drizzle-orm";
+import { requireUserId } from "../lib/userId";
 
 const router = Router();
 
 const COMPLETION_THRESHOLD = 70;
-
-function getUserId(req: Request): string | null {
-  return getAuth(req).userId ?? null;
-}
 
 function startOfDay(d: Date) {
   const c = new Date(d);
@@ -45,11 +41,8 @@ function computeStreakFromDates(dates: (Date | null | undefined)[]) {
 
 router.get("/progress", async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = getUserId(req);
-    if (!userId) {
-      res.status(401).json({ error: "Unauthorized" });
-      return;
-    }
+    const userId = requireUserId(req, res);
+    if (!userId) return;
     const rows = await db
       .select({
         id: progressTable.id,
@@ -72,11 +65,8 @@ router.get("/progress", async (req: Request, res: Response): Promise<void> => {
 
 router.get("/progress/:topicId", async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = getUserId(req);
-    if (!userId) {
-      res.status(401).json({ error: "Unauthorized" });
-      return;
-    }
+    const userId = requireUserId(req, res);
+    if (!userId) return;
     const topicId = parseInt(String(req.params.topicId));
     const [row] = await db
       .select({
@@ -103,11 +93,8 @@ router.get("/progress/:topicId", async (req: Request, res: Response): Promise<vo
 
 router.post("/progress/:topicId", async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = getUserId(req);
-    if (!userId) {
-      res.status(401).json({ error: "Unauthorized" });
-      return;
-    }
+    const userId = requireUserId(req, res);
+    if (!userId) return;
     const topicId = parseInt(String(req.params.topicId));
     const { score } = req.body as { score: number };
     const [topic] = await db.select().from(topicsTable).where(eq(topicsTable.id, topicId));
@@ -134,11 +121,8 @@ router.post("/progress/:topicId", async (req: Request, res: Response): Promise<v
 
 router.get("/dashboard/summary", async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = getUserId(req);
-    if (!userId) {
-      res.status(401).json({ error: "Unauthorized" });
-      return;
-    }
+    const userId = requireUserId(req, res);
+    if (!userId) return;
     const allTopicsRows = await db.select().from(topicsTable);
     const totalTopics = allTopicsRows.length;
 
@@ -213,11 +197,8 @@ async function recordAttempt(
   table: typeof quizAttemptsTable | typeof examAttemptsTable,
 ): Promise<void> {
   try {
-    const userId = getUserId(req);
-    if (!userId) {
-      res.status(401).json({ error: "Unauthorized" });
-      return;
-    }
+    const userId = requireUserId(req, res);
+    if (!userId) return;
     const body = req.body as { topicId?: number; score?: number; total?: number };
     const topicId = Number(body.topicId);
     const score = Number(body.score);
