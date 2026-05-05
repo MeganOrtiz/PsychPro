@@ -93,14 +93,8 @@ export default function TopicsPage() {
 
   return (
     <div
-      className="min-h-full"
+      className="min-h-full study-page-bg"
       data-testid="topics-page"
-      style={{
-        // Same navy family as the sidebar, with a radial vignette: lighter
-        // at the outer edges, darker toward the middle so the colored
-        // category cards in the center pop forward.
-        background: `radial-gradient(ellipse 90% 75% at 50% 50%, ${STUDY_PALETTE.bg} 0%, ${STUDY_PALETTE.surface} 65%, ${STUDY_PALETTE.surfaceElev} 100%)`,
-      }}
     >
       <div className="max-w-4xl mx-auto p-4 md:p-6 lg:p-8">
       <div className="mb-6">

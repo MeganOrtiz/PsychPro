@@ -150,7 +150,7 @@ const SECTIONS: Section[] = [
 
 export default function ResourcesPage() {
   return (
-    <div className="min-h-full bg-background" data-testid="resources-page">
+    <div className="min-h-full study-page-bg" data-testid="resources-page">
       <div className="max-w-5xl mx-auto p-4 md:p-6 lg:p-8">
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-2">

@@ -225,37 +225,45 @@
   }
 }
 
-/* Study page backgrounds — mist-tinted, brand-aligned with the landing palette.
-   Scoped variable overrides force the light study palette regardless of the global
-   .dark theme, so tokenized utilities like text-foreground / bg-card resolve correctly
-   on top of our hardcoded light surfaces. */
+/* Study page backgrounds — deep navy, brand-aligned with the sidebar.
+   Scoped variable overrides retone the shadcn tokens to a dark navy palette
+   so tokenized utilities (text-foreground / bg-card / text-muted-foreground)
+   resolve correctly on the dark surface. White StudySurface cards use raw
+   palette colors directly and remain unaffected. */
 .study-page-bg,
 .study-page-aurora {
-  --background: 205 30% 96%;
-  --foreground: 210 73% 9%;
-  --card: 0 0% 100%;
-  --card-foreground: 210 73% 9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 210 73% 9%;
-  --muted: 207 30% 94%;
-  --muted-foreground: 207 22% 42%;
-  --border: 199 70% 88%;
-  --input: 199 70% 88%;
-  --primary: 197 73% 40%;
+  --background: 209 73% 9%;       /* STUDY_PALETTE.bg #061826 */
+  --foreground: 0 0% 100%;        /* white */
+  --card: 207 50% 17%;            /* STUDY_PALETTE.surface #152F40 */
+  --card-foreground: 0 0% 100%;
+  --popover: 207 50% 17%;
+  --popover-foreground: 0 0% 100%;
+  --muted: 207 35% 22%;
+  --muted-foreground: 207 25% 78%;
+  --border: 207 35% 28%;
+  --input: 207 35% 22%;
+  --primary: 197 60% 48%;         /* STUDY_PALETTE.teal */
   --primary-foreground: 0 0% 100%;
 }
 
 .study-page-bg {
-  background:
-    radial-gradient(circle at 8% 0%, rgba(47, 160, 198, 0.16), transparent 45%),
-    radial-gradient(circle at 92% 100%, rgba(88, 201, 243, 0.12), transparent 48%),
-    linear-gradient(180deg, #C6D4E2 0%, #AEC0D2 100%);
+  /* Same navy family as the sidebar with a radial vignette: lighter at the
+     outer edges, darker toward the middle so cards pop forward. */
+  background: radial-gradient(
+    ellipse 90% 75% at 50% 50%,
+    #061826 0%,
+    #152F40 65%,
+    #1A3C50 100%
+  );
 }
 
 .study-page-aurora {
-  background:
-    radial-gradient(ellipse at 50% -10%, rgba(47, 160, 198, 0.14), transparent 55%),
-    linear-gradient(180deg, #F4FAFD 0%, #E6F1F8 100%);
+  background: radial-gradient(
+    ellipse 90% 75% at 50% 50%,
+    #061826 0%,
+    #152F40 65%,
+    #1A3C50 100%
+  );
 }
 
 /* Flashcard flip animation */

@@ -73,7 +73,7 @@ export default function MyDecksPage() {
   }
 
   return (
-    <div className="min-h-full bg-background" data-testid="my-decks-page">
+    <div className="min-h-full study-page-bg" data-testid="my-decks-page">
       <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-2">

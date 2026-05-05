@@ -53,7 +53,7 @@ export default function FeatureRequestPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-full bg-background">
+      <div className="min-h-full study-page-bg">
         <div className="max-w-lg mx-auto p-4 md:p-6 lg:p-8">
           <div className="flex flex-col items-center text-center py-16 gap-4">
             <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
@@ -82,7 +82,7 @@ export default function FeatureRequestPage() {
   }
 
   return (
-    <div className="min-h-full bg-background" data-testid="feature-request-page">
+    <div className="min-h-full study-page-bg" data-testid="feature-request-page">
       <div className="max-w-lg mx-auto p-4 md:p-6 lg:p-8">
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-2">

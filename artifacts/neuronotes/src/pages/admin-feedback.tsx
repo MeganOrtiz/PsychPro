@@ -73,7 +73,7 @@ export default function AdminFeedbackPage() {
   const unreadCount = entries.filter((e) => e.status === "unread").length;
 
   return (
-    <div className="min-h-full bg-background" data-testid="admin-feedback-page">
+    <div className="min-h-full study-page-bg" data-testid="admin-feedback-page">
       <div className="max-w-3xl mx-auto p-4 md:p-6 lg:p-8">
       <div className="flex items-start justify-between gap-3 mb-6">
         <div>

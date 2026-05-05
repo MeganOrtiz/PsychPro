@@ -106,7 +106,7 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4" data-testid="onboarding-page">
+    <div className="min-h-screen study-page-bg flex items-center justify-center p-4" data-testid="onboarding-page">
       <div className="w-full max-w-lg">
         <div className="flex items-center gap-2 mb-8 justify-center">
           <Brain className="w-7 h-7 text-primary" />

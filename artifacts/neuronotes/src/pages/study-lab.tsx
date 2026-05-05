@@ -62,7 +62,7 @@ const SAMPLE_CARDS: InterleaveCard[] = [
 
 export default function StudyLabPage() {
   return (
-    <div className="min-h-full bg-background" data-testid="study-lab-page">
+    <div className="min-h-full study-page-bg" data-testid="study-lab-page">
       <div className="max-w-5xl mx-auto p-4 md:p-6 lg:p-8">
         <header className="mb-6">
           <div className="flex items-center gap-3 mb-2">

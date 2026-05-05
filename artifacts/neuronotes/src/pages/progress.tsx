@@ -29,7 +29,7 @@ export default function ProgressPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-full bg-background">
+      <div className="min-h-full study-page-bg">
         <div className="max-w-4xl mx-auto p-4 md:p-6 lg:p-8 space-y-4">
           <Skeleton className="h-10 w-48" />
           <div className="grid grid-cols-3 gap-4">
@@ -42,7 +42,7 @@ export default function ProgressPage() {
   }
 
   return (
-    <div className="min-h-full bg-background" data-testid="progress-page">
+    <div className="min-h-full study-page-bg" data-testid="progress-page">
       <div className="max-w-4xl mx-auto p-4 md:p-6 lg:p-8">
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-2">
