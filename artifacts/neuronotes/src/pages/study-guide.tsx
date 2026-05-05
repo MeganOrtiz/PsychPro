@@ -4,6 +4,8 @@ import { ChevronLeft, BookOpen, Lock, FileText } from "lucide-react";
 import { useGetStudyGuideByTopic, useGetUserProfile } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { StudySurface } from "@/components/study/study-surface";
+import { STUDY_PALETTE as P } from "@/lib/study-theme";
 
 interface Props {
   params: { id: string };
@@ -20,7 +22,7 @@ export default function StudyGuidePage({ params }: Props) {
   const is402 = (error as any)?.status === 402 || (error as any)?.response?.status === 402 || (!isSubscribed && profile !== undefined);
 
   return (
-    <div className="min-h-full bg-background" data-testid="study-guide-page">
+    <div className="min-h-full study-page-bg" data-testid="study-guide-page">
       <div className="max-w-3xl mx-auto p-4 md:p-6 lg:p-8">
       <div className="flex items-center gap-3 mb-6">
         <button
@@ -30,8 +32,11 @@ export default function StudyGuidePage({ params }: Props) {
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
-        <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
-          <FileText className="w-5 h-5 text-purple-500" />
+        <div
+          className="w-10 h-10 rounded-lg flex items-center justify-center border"
+          style={{ background: `linear-gradient(135deg, ${P.teal}, ${P.surf})`, borderColor: P.tealDeep }}
+        >
+          <FileText className="w-5 h-5 text-white" />
         </div>
         <h1 className="text-2xl md:text-3xl font-bold text-foreground">Study Guide</h1>
       </div>
@@ -42,9 +47,12 @@ export default function StudyGuidePage({ params }: Props) {
           {Array(8).fill(0).map((_, i) => <Skeleton key={i} className="h-4 rounded" />)}
         </div>
       ) : is402 ? (
-        <div className="text-center py-16 bg-card border border-border rounded-xl px-6" data-testid="study-guide-paywall">
-          <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Lock className="w-8 h-8 text-primary" />
+        <StudySurface tone="light" glow innerClassName="text-center py-16 px-6" testId="study-guide-paywall">
+          <div
+            className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 border"
+            style={{ background: "rgba(189,229,255,0.55)", borderColor: `${P.surf}66` }}
+          >
+            <Lock className="w-8 h-8" style={{ color: P.tealDeep }} />
           </div>
           <h2 className="text-xl font-bold text-foreground mb-2">Study Guides are a Premium Feature</h2>
           <p className="text-muted-foreground mb-6 max-w-sm mx-auto">
@@ -67,23 +75,23 @@ export default function StudyGuidePage({ params }: Props) {
             </Button>
           </div>
           <p className="text-xs text-muted-foreground mt-4">Starting at $9.99/month · Cancel anytime</p>
-        </div>
+        </StudySurface>
       ) : error || !guide ? (
-        <div className="text-center py-16 bg-card border border-border rounded-xl" data-testid="no-study-guide">
+        <StudySurface tone="light" innerClassName="text-center py-16" testId="no-study-guide">
           <p className="text-muted-foreground font-medium">Study guide coming soon</p>
           <p className="text-sm text-muted-foreground mt-1">Check back later for detailed notes on this topic.</p>
-        </div>
+        </StudySurface>
       ) : (
-        <div className="bg-card border border-border rounded-xl p-6 md:p-8">
-          <div className="text-center mb-8 pb-6 border-b border-border">
-            <p className="text-xs font-semibold tracking-[0.2em] uppercase text-primary/80 mb-2">Study Guide</p>
+        <StudySurface tone="light" glow innerClassName="p-6 md:p-10">
+          <div className="text-center mb-8 pb-6" style={{ borderBottom: `1px solid ${P.surf}44` }}>
+            <p className="text-xs font-semibold tracking-[0.2em] uppercase mb-2" style={{ color: P.tealDeep }}>Study Guide</p>
             <h2 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight leading-tight">
               {guide.title.replace(/\s*[—–-]\s*Study Guide\s*$/i, "")}
             </h2>
             <div className="mt-4 flex items-center justify-center gap-2" aria-hidden="true">
-              <span className="h-px w-8 bg-border" />
-              <span className="h-1.5 w-1.5 rounded-full bg-primary/60" />
-              <span className="h-px w-8 bg-border" />
+              <span className="h-px w-8" style={{ background: `${P.surf}66` }} />
+              <span className="h-1.5 w-1.5 rounded-full" style={{ background: P.teal }} />
+              <span className="h-px w-8" style={{ background: `${P.surf}66` }} />
             </div>
           </div>
           <div
@@ -92,7 +100,7 @@ export default function StudyGuidePage({ params }: Props) {
           >
             <MarkdownRenderer content={guide.content.replace(/^\s*#\s+.*\n+/, "")} />
           </div>
-        </div>
+        </StudySurface>
       )}
       </div>
     </div>

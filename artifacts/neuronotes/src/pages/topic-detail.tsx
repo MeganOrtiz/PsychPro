@@ -1,9 +1,10 @@
 import { Link, useLocation } from "wouter";
-import { Layers, BookOpen, FileText, GraduationCap, ChevronLeft, Beaker } from "lucide-react";
+import { Layers, BookOpen, FileText, GraduationCap, ChevronLeft, Beaker, ArrowRight } from "lucide-react";
 import { useGetTopic } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import SpacedRepetitionScheduler from "@/components/learning/spaced-repetition";
 import CategoryHero from "@/components/learning/category-hero";
+import { STUDY_PALETTE as P } from "@/lib/study-theme";
 
 interface Props {
   params: { id: string };
@@ -19,9 +20,7 @@ export default function TopicDetailPage({ params }: Props) {
       icon: Layers,
       title: "Flashcards",
       description: "Tap to flip and test your recall",
-      color: "text-blue-500",
-      bg: "bg-blue-50 dark:bg-blue-950/30",
-      border: "border-blue-200 dark:border-blue-800",
+      gradient: `linear-gradient(135deg, ${P.teal}, ${P.surf})`,
       onClick: () => navigate(`/topics/${topicId}/flashcards`),
       testId: "button-flashcards",
     },
@@ -29,9 +28,7 @@ export default function TopicDetailPage({ params }: Props) {
       icon: BookOpen,
       title: "Quiz",
       description: "Multiple-choice with explanations",
-      color: "text-green-500",
-      bg: "bg-green-50 dark:bg-green-950/30",
-      border: "border-green-200 dark:border-green-800",
+      gradient: `linear-gradient(135deg, ${P.surf}, ${P.mist})`,
       onClick: () => navigate(`/topics/${topicId}/quiz`),
       testId: "button-quiz",
     },
@@ -39,9 +36,7 @@ export default function TopicDetailPage({ params }: Props) {
       icon: FileText,
       title: "Study Guide",
       description: "Comprehensive scrollable notes",
-      color: "text-purple-500",
-      bg: "bg-purple-50 dark:bg-purple-950/30",
-      border: "border-purple-200 dark:border-purple-800",
+      gradient: `linear-gradient(135deg, ${P.tealDeep}, ${P.teal})`,
       onClick: () => navigate(`/topics/${topicId}/study-guide`),
       testId: "button-study-guide",
     },
@@ -49,16 +44,14 @@ export default function TopicDetailPage({ params }: Props) {
       icon: GraduationCap,
       title: "Practice Exam",
       description: "Timed or untimed full exam",
-      color: "text-amber-500",
-      bg: "bg-amber-50 dark:bg-amber-950/30",
-      border: "border-amber-200 dark:border-amber-800",
+      gradient: `linear-gradient(135deg, #1F4F66, ${P.tealDeep})`,
       onClick: () => navigate(`/topics/${topicId}/exam`),
       testId: "button-practice-exam",
     },
   ];
 
   return (
-    <div className="min-h-full bg-background" data-testid="topic-detail-page">
+    <div className="min-h-full study-page-bg" data-testid="topic-detail-page">
       <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
         <button
           onClick={() => navigate("/topics")}
@@ -90,7 +83,7 @@ export default function TopicDetailPage({ params }: Props) {
             </div>
 
             <div className="flex items-center gap-2 mb-3">
-              <GraduationCap className="w-4 h-4 text-primary" />
+              <GraduationCap className="w-4 h-4" style={{ color: P.tealDeep }} />
               <h2 className="font-semibold text-foreground">Study Modes</h2>
             </div>
             <div className="grid grid-cols-1 gap-3">
@@ -99,27 +92,34 @@ export default function TopicDetailPage({ params }: Props) {
                   key={mode.title}
                   onClick={mode.onClick}
                   data-testid={mode.testId}
-                  className="flex items-center gap-4 p-5 rounded-xl border border-border bg-card text-left hover:border-primary/40 hover:shadow-sm transition-all"
+                  className="group flex items-center gap-4 p-5 rounded-xl border bg-white text-left transition-all hover:-translate-y-0.5"
+                  style={{
+                    borderColor: `${P.surf}55`,
+                    boxShadow: `0 10px 28px -16px ${P.teal}66`,
+                  }}
                 >
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${mode.bg}`}>
-                    <mode.icon className={`w-5 h-5 ${mode.color}`} />
+                  <div
+                    className="w-11 h-11 rounded-xl flex items-center justify-center border shrink-0 transition-transform group-hover:scale-105"
+                    style={{ background: mode.gradient, borderColor: P.tealDeep }}
+                  >
+                    <mode.icon className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-foreground">{mode.title}</p>
                     <p className="text-sm text-muted-foreground">{mode.description}</p>
                   </div>
-                  <ChevronLeft className="w-4 h-4 text-muted-foreground rotate-180" />
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" style={{ color: P.tealDeep }} />
                 </button>
               ))}
             </div>
 
             <div className="flex items-center justify-between mt-8 mb-3">
               <div className="flex items-center gap-2">
-                <Beaker className="w-4 h-4 text-primary" />
+                <Beaker className="w-4 h-4" style={{ color: P.tealDeep }} />
                 <h2 className="font-semibold text-foreground">Retention Plan</h2>
               </div>
               <Link href="/study-lab">
-                <span className="text-xs text-primary hover:underline cursor-pointer">
+                <span className="text-xs hover:underline cursor-pointer" style={{ color: P.tealDeep }}>
                   Why this works →
                 </span>
               </Link>

@@ -4,20 +4,21 @@ import { ChevronLeft, ChevronRight, RotateCcw, Layers, Lightbulb, Beaker } from 
 import { useGetFlashcardsByTopic, useIncrementUserUsage } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import UpgradePrompt from "@/components/upgrade-prompt";
 import ElaborationPanel from "@/components/learning/elaboration-panel";
+import { StudySurface } from "@/components/study/study-surface";
+import { STUDY_PALETTE as P } from "@/lib/study-theme";
 
 interface Props {
   params: { id: string };
 }
 
-const difficultyColors: Record<string, string> = {
-  easy: "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400",
-  medium: "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400",
-  hard: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400",
+const difficultyStyles: Record<string, { bg: string; color: string; border: string; label: string }> = {
+  easy:   { bg: "rgba(189,229,255,0.55)", color: P.tealDeep, border: `${P.surf}66`, label: "Easy" },
+  medium: { bg: "rgba(88,201,243,0.20)",  color: P.tealDeep, border: `${P.teal}55`, label: "Medium" },
+  hard:   { bg: "rgba(244,114,98,0.16)",  color: "#B8453A",  border: "rgba(244,114,98,0.45)", label: "Hard" },
 };
 
 export default function FlashcardsPage({ params }: Props) {
@@ -75,7 +76,7 @@ export default function FlashcardsPage({ params }: Props) {
   }
 
   return (
-    <div className="min-h-full bg-background" data-testid="flashcards-page">
+    <div className="min-h-full study-page-bg" data-testid="flashcards-page">
       <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
       <div className="flex items-center gap-3 mb-6">
         <button
@@ -85,8 +86,11 @@ export default function FlashcardsPage({ params }: Props) {
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
-        <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
-          <Layers className="w-5 h-5 text-blue-500" />
+        <div
+          className="w-10 h-10 rounded-lg flex items-center justify-center border"
+          style={{ background: `linear-gradient(135deg, ${P.teal}, ${P.surf})`, borderColor: `${P.tealDeep}` }}
+        >
+          <Layers className="w-5 h-5 text-white" />
         </div>
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-foreground">Flashcards</h1>
@@ -157,15 +161,18 @@ export default function FlashcardsPage({ params }: Props) {
         <div className="text-center py-16 text-muted-foreground">No flashcards for this topic.</div>
       ) : (
         <>
-          <div className="text-center text-sm text-muted-foreground mb-4">
-            {index + 1} / {total}
+          <div className="text-center text-xs font-semibold tracking-wider uppercase mb-3" style={{ color: P.tealDeep }}>
+            Card {index + 1} of {total}
           </div>
 
           <div className="relative mb-4">
-            <div className="w-full bg-muted rounded-full h-1.5 mb-6">
+            <div className="w-full rounded-full h-1.5 mb-8 overflow-hidden" style={{ background: "rgba(47,160,198,0.12)" }}>
               <div
-                className="bg-primary h-1.5 rounded-full transition-all"
-                style={{ width: `${((index + 1) / total) * 100}%` }}
+                className="h-1.5 rounded-full transition-all"
+                style={{
+                  width: `${((index + 1) / total) * 100}%`,
+                  background: `linear-gradient(90deg, ${P.teal}, ${P.surf})`,
+                }}
               />
             </div>
 
@@ -174,24 +181,43 @@ export default function FlashcardsPage({ params }: Props) {
               onClick={handleFlip}
               data-testid="flashcard"
             >
-              <div className={`flashcard-inner min-h-64 md:min-h-72 ${flipped ? "flipped" : ""}`}>
-                <div className="flashcard-front bg-card border border-border rounded-2xl p-8 flex flex-col items-start min-h-64 md:min-h-72 shadow-sm">
-                  {current && (
-                    <Badge className={`mb-4 ${difficultyColors[current.difficulty] || ""}`}>
-                      {current.difficulty}
-                    </Badge>
-                  )}
-                  <div className="flex-1 flex items-center justify-center w-full">
-                    <p className="text-center text-lg font-medium text-foreground leading-relaxed" data-testid="text-flashcard-question">
-                      {current?.question}
+              <div className={`flashcard-inner min-h-64 md:min-h-80 ${flipped ? "flipped" : ""}`}>
+                <div className="flashcard-front">
+                  <StudySurface
+                    tone="light"
+                    glow
+                    pill={current ? { text: difficultyStyles[current.difficulty]?.label ?? current.difficulty } : undefined}
+                    fillHeight
+                    innerClassName="p-8 md:p-10 min-h-64 md:min-h-80 flex flex-col justify-center items-center"
+                  >
+                    <div className="flex-1 flex items-center justify-center w-full">
+                      <p
+                        className="text-center text-lg md:text-xl font-medium leading-relaxed"
+                        style={{ color: P.ink }}
+                        data-testid="text-flashcard-question"
+                      >
+                        {current?.question}
+                      </p>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground/80 mt-4 tracking-wide uppercase">
+                      Tap to reveal answer
                     </p>
-                  </div>
+                  </StudySurface>
                 </div>
-                <div className="flashcard-back bg-primary rounded-2xl p-8 flex flex-col items-center justify-center min-h-64 md:min-h-72 shadow-sm">
-                  <div className="text-xs text-primary-foreground/70 uppercase tracking-wider mb-4">Answer</div>
-                  <p className="text-center text-base text-primary-foreground leading-relaxed" data-testid="text-flashcard-answer">
-                    {current?.answer}
-                  </p>
+                <div className="flashcard-back">
+                  <StudySurface
+                    tone="accent"
+                    pill={{ text: "Answer" }}
+                    fillHeight
+                    innerClassName="p-8 md:p-10 min-h-64 md:min-h-80 flex flex-col items-center justify-center"
+                  >
+                    <p
+                      className="text-center text-base md:text-lg leading-relaxed text-white font-medium"
+                      data-testid="text-flashcard-answer"
+                    >
+                      {current?.answer}
+                    </p>
+                  </StudySurface>
                 </div>
               </div>
             </div>

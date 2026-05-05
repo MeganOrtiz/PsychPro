@@ -12,6 +12,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import UpgradePrompt from "@/components/upgrade-prompt";
 import ElaborationPanel from "@/components/learning/elaboration-panel";
+import { StudySurface } from "@/components/study/study-surface";
+import { STUDY_PALETTE as P } from "@/lib/study-theme";
 
 interface Props {
   params: { id: string };
@@ -113,10 +115,13 @@ export default function PracticeExamPage({ params }: Props) {
 
   if (started && !isLoading && total === 0) {
     return (
-      <div className="min-h-full bg-background" data-testid="exam-empty">
+      <div className="min-h-full study-page-bg" data-testid="exam-empty">
         <div className="max-w-lg mx-auto p-4 md:p-6 lg:p-8 text-center">
-          <div className="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center mx-auto mb-4">
-            <GraduationCap className="w-6 h-6 text-amber-500" />
+          <div
+            className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 border"
+            style={{ background: `linear-gradient(135deg, ${P.tealDeep}, ${P.teal})`, borderColor: P.tealDeep }}
+          >
+            <GraduationCap className="w-6 h-6 text-white" />
           </div>
           <h2 className="text-xl font-semibold text-foreground mb-2">No exam questions available</h2>
           <p className="text-sm text-muted-foreground mb-6">
@@ -131,25 +136,58 @@ export default function PracticeExamPage({ params }: Props) {
   }
 
   if (submitted) {
+    const passed = score >= 70;
     return (
-      <div className="min-h-full bg-background" data-testid="exam-results">
+      <div className="min-h-full study-page-bg" data-testid="exam-results">
         <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
         <div className="text-center mb-8">
-          <div className={`w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 ${score >= 70 ? "bg-green-100 dark:bg-green-900/30" : "bg-amber-100 dark:bg-amber-900/30"}`}>
-            <span className="text-3xl font-bold text-foreground">{score}%</span>
+          <div
+            className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 border"
+            style={{
+              background: passed ? `linear-gradient(135deg, #1F4F66, ${P.tealDeep})` : "rgba(244,180,98,0.18)",
+              borderColor: passed ? P.tealDeep : "rgba(244,180,98,0.55)",
+              boxShadow: passed ? `0 18px 40px -18px ${P.tealDeep}cc` : "none",
+            }}
+          >
+            <span className={cn("text-3xl font-bold", passed ? "text-white" : "text-amber-700")}>{score}%</span>
           </div>
           <h2 className="text-2xl font-bold text-foreground mb-2">Exam Complete</h2>
           <p className="text-muted-foreground">{correct}/{total} correct</p>
         </div>
-        <div className="space-y-4 mb-8">
+        <div className="space-y-3 mb-8">
           {questions.map((q, i) => {
             const yourAnswer = answers[q.id];
             const isCorrect = yourAnswer === q.correctAnswer;
             return (
-              <div key={q.id} className={`rounded-xl border p-4 ${isCorrect ? "border-green-300 bg-green-50 dark:bg-green-950/20" : "border-red-300 bg-red-50 dark:bg-red-950/20"}`}>
-                <p className="text-sm font-medium text-foreground mb-2">{i + 1}. {q.question}</p>
-                <p className="text-xs text-muted-foreground">Your answer: {yourAnswer || "Not answered"} | Correct: {q.correctAnswer}</p>
-                <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">{q.explanation}</p>
+              <div
+                key={q.id}
+                className="rounded-xl border p-4 bg-white"
+                style={{
+                  borderColor: isCorrect ? `${P.surf}66` : "rgba(224,114,96,0.45)",
+                  boxShadow: isCorrect
+                    ? `0 6px 16px -10px ${P.teal}55`
+                    : "0 6px 16px -10px rgba(224,114,96,0.55)",
+                }}
+              >
+                <div className="flex items-start gap-3">
+                  <span
+                    className="mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-full text-[11px] font-bold flex-shrink-0"
+                    style={
+                      isCorrect
+                        ? { background: P.teal, color: "#FFFFFF" }
+                        : { background: "rgba(224,114,96,0.85)", color: "#FFFFFF" }
+                    }
+                  >
+                    {i + 1}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground mb-1.5">{q.question}</p>
+                    <p className="text-xs text-muted-foreground">
+                      Your answer: <span className="font-semibold text-foreground">{yourAnswer || "—"}</span> · Correct: <span className="font-semibold" style={{ color: P.tealDeep }}>{q.correctAnswer}</span>
+                    </p>
+                    <p className="text-xs leading-relaxed mt-1.5" style={{ color: P.inkSoft }}>{q.explanation}</p>
+                  </div>
+                </div>
               </div>
             );
           })}
@@ -165,14 +203,17 @@ export default function PracticeExamPage({ params }: Props) {
 
   if (!started) {
     return (
-      <div className="min-h-full bg-background" data-testid="exam-setup">
+      <div className="min-h-full study-page-bg" data-testid="exam-setup">
         <div className="max-w-lg mx-auto p-4 md:p-6 lg:p-8">
         <button onClick={() => navigate(`/topics/${topicId}`)} className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6">
           <ChevronLeft className="w-4 h-4" /> Back
         </button>
         <div className="flex items-center gap-3 mb-2">
-          <div className="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center">
-            <GraduationCap className="w-5 h-5 text-amber-500" />
+          <div
+            className="w-10 h-10 rounded-lg flex items-center justify-center border"
+            style={{ background: `linear-gradient(135deg, #1F4F66, ${P.tealDeep})`, borderColor: P.tealDeep }}
+          >
+            <GraduationCap className="w-5 h-5 text-white" />
           </div>
           <h1 className="text-2xl md:text-3xl font-bold text-foreground">Practice Exam</h1>
         </div>
@@ -185,15 +226,24 @@ export default function PracticeExamPage({ params }: Props) {
               key={n}
               onClick={() => setQuestionCount(n)}
               data-testid={`button-count-${n}`}
-              className={cn(
-                "rounded-xl border p-5 text-left transition-all",
+              className="rounded-xl border p-5 text-left transition-all bg-white hover:-translate-y-0.5"
+              style={
                 questionCount === n
-                  ? "border-primary bg-primary/5 ring-2 ring-primary/30"
-                  : "border-border bg-card hover:border-primary/40 hover:bg-muted/40"
-              )}
+                  ? {
+                      borderColor: P.teal,
+                      boxShadow: `0 0 0 3px rgba(47,160,198,0.18), 0 14px 32px -16px ${P.teal}88`,
+                      background: `linear-gradient(180deg, #FFFFFF, ${P.paperSoft})`,
+                    }
+                  : {
+                      borderColor: `${P.surf}55`,
+                      boxShadow: `0 6px 18px -10px ${P.teal}44`,
+                    }
+              }
             >
               <div className="flex items-center gap-2.5 mb-2">
-                {n === 25 ? <BookOpen className="w-5 h-5 text-primary" /> : <FileText className="w-5 h-5 text-primary" />}
+                {n === 25
+                  ? <BookOpen className="w-5 h-5" style={{ color: P.tealDeep }} />
+                  : <FileText className="w-5 h-5" style={{ color: P.tealDeep }} />}
                 <span className="text-xl font-bold text-foreground">{n} Questions</span>
               </div>
               <p className="text-xs text-muted-foreground">
@@ -209,7 +259,7 @@ export default function PracticeExamPage({ params }: Props) {
           <>
             {questionCount !== null && (
               <div className="space-y-3 mb-6">
-                <div className="bg-card border border-border rounded-xl p-5">
+                <StudySurface tone="light" innerClassName="p-5">
                   <div className="flex items-center justify-between">
                     <div>
                       <Label htmlFor="timed-switch" className="text-base font-semibold text-foreground">Timed Mode</Label>
@@ -217,19 +267,19 @@ export default function PracticeExamPage({ params }: Props) {
                     </div>
                     <Switch id="timed-switch" checked={timed} onCheckedChange={setTimed} data-testid="switch-timed" />
                   </div>
-                </div>
-                <div className="bg-card border border-border rounded-xl p-5">
+                </StudySurface>
+                <StudySurface tone="light" innerClassName="p-5">
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0 pr-3">
                       <Label htmlFor="warmup-switch" className="text-base font-semibold text-foreground flex items-center gap-1.5">
-                        <Brain className="w-4 h-4 text-amber-500" />
+                        <Brain className="w-4 h-4" style={{ color: P.teal }} />
                         Active Recall warm-up
                       </Label>
                       <p className="text-sm text-muted-foreground">Brain-dump before you start (~60 seconds, recommended)</p>
                     </div>
                     <Switch id="warmup-switch" checked={warmupEnabled} onCheckedChange={setWarmupEnabled} data-testid="switch-warmup" />
                   </div>
-                </div>
+                </StudySurface>
               </div>
             )}
             <Button
@@ -261,7 +311,7 @@ export default function PracticeExamPage({ params }: Props) {
     const wordCount = warmupText.trim().split(/\s+/).filter(Boolean).length;
     const ready = wordCount >= 10;
     return (
-      <div className="min-h-full bg-background" data-testid="exam-warmup">
+      <div className="min-h-full study-page-bg" data-testid="exam-warmup">
         <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
           <button onClick={() => { setWarmupActive(false); setStarted(false); }} className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6">
             <ChevronLeft className="w-4 h-4" /> Back to setup
@@ -330,10 +380,10 @@ export default function PracticeExamPage({ params }: Props) {
   const q = questions[index];
 
   return (
-    <div className="min-h-full bg-background" data-testid="exam-page">
+    <div className="min-h-full study-page-bg" data-testid="exam-page">
       <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
       <div className="flex items-center justify-between mb-6">
-        <span className="text-sm font-medium text-muted-foreground">{index + 1}/{total}</span>
+        <span className="text-xs font-semibold tracking-wider uppercase" style={{ color: P.tealDeep }}>{index + 1}/{total}</span>
         <div className="flex items-center gap-1">
           {timed && (
             <div className={`flex items-center gap-1.5 text-sm font-semibold mr-2 ${timeLeft < 60 ? "text-red-500" : "text-foreground"}`} data-testid="timer">
@@ -389,42 +439,68 @@ export default function PracticeExamPage({ params }: Props) {
         </div>
       </div>
 
-      <div className="w-full bg-muted rounded-full h-1.5 mb-6">
-        <div className="bg-primary h-1.5 rounded-full transition-all" style={{ width: `${((index + 1) / total) * 100}%` }} />
+      <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "rgba(47,160,198,0.12)" }}>
+        <div
+          className="h-1.5 rounded-full transition-all"
+          style={{
+            width: `${((index + 1) / total) * 100}%`,
+            background: `linear-gradient(90deg, ${P.teal}, ${P.surf})`,
+          }}
+        />
       </div>
 
-      <div className="bg-card border border-border rounded-xl p-5 mb-6">
-        <p className="font-medium text-foreground leading-relaxed" data-testid="text-exam-question">{q.question}</p>
-      </div>
+      <StudySurface tone="light" glow pill={{ text: "Question" }} innerClassName="p-6 md:p-7 mb-6">
+        <p className="text-base md:text-lg font-medium leading-relaxed pr-20" style={{ color: P.ink }} data-testid="text-exam-question">{q.question}</p>
+      </StudySurface>
 
-      <div className="space-y-3 mb-6">
+      <div className="space-y-2.5 mb-6">
         {[
           { key: "A", text: q.optionA },
           { key: "B", text: q.optionB },
           { key: "C", text: q.optionC },
           { key: "D", text: q.optionD },
-        ].map(({ key, text }) => (
-          <button
-            key={key}
-            onClick={() => handleAnswer(q.id, key)}
-            disabled={!!answers[q.id]}
-            data-testid={`exam-option-${key}`}
-            className={cn(
-              "w-full text-left px-4 py-3.5 rounded-xl border text-sm transition-all flex items-center gap-3",
-              !answers[q.id]
-                ? "border-border bg-card hover:border-primary/40 hover:bg-muted/50 text-foreground"
-                : answers[q.id] === key
-                ? "border-primary/60 bg-primary/10 text-primary font-medium"
-                : "border-border bg-card text-muted-foreground opacity-60"
-            )}
-          >
-            <span className={cn(
-              "w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0",
-              answers[q.id] === key ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"
-            )}>{key}</span>
-            {text}
-          </button>
-        ))}
+        ].map(({ key, text }) => {
+          const isSelected = answers[q.id] === key;
+          const isAnswered = !!answers[q.id];
+          let style: React.CSSProperties = {};
+          let cls = "w-full text-left px-4 py-3.5 rounded-xl border text-sm transition-all flex items-center gap-3 bg-white";
+          if (!isAnswered) {
+            cls += " text-foreground hover:-translate-y-0.5";
+            style = { borderColor: `${P.surf}55`, boxShadow: `0 6px 18px -10px ${P.teal}55` };
+          } else if (isSelected) {
+            cls += " text-white font-medium";
+            style = {
+              background: `linear-gradient(135deg, #1F4F66, ${P.tealDeep})`,
+              borderColor: P.tealDeep,
+              boxShadow: `0 14px 32px -16px ${P.tealDeep}cc`,
+            };
+          } else {
+            cls += " text-muted-foreground opacity-65";
+            style = { borderColor: `${P.surf}33` };
+          }
+          return (
+            <button
+              key={key}
+              onClick={() => handleAnswer(q.id, key)}
+              disabled={isAnswered}
+              data-testid={`exam-option-${key}`}
+              className={cls}
+              style={style}
+            >
+              <span
+                className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 border"
+                style={
+                  !isAnswered
+                    ? { background: "rgba(189,229,255,0.55)", color: P.tealDeep, borderColor: `${P.surf}66` }
+                    : isSelected
+                      ? { background: "rgba(255,255,255,0.22)", color: "#FFFFFF", borderColor: "rgba(255,255,255,0.4)" }
+                      : { background: "rgba(189,229,255,0.35)", color: P.tealDeep, borderColor: `${P.surf}33` }
+                }
+              >{key}</span>
+              {text}
+            </button>
+          );
+        })}
       </div>
 
       <div className="flex justify-between">

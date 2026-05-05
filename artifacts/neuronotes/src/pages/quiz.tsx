@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import UpgradePrompt from "@/components/upgrade-prompt";
+import { StudySurface } from "@/components/study/study-surface";
+import { STUDY_PALETTE as P } from "@/lib/study-theme";
 
 interface Props {
   params: { id: string };
@@ -103,11 +105,21 @@ export default function QuizPage({ params }: Props) {
 
   if (completed) {
     const percent = Math.round((score / total) * 100);
+    const passed = percent >= 70;
     return (
-      <div className="min-h-full bg-background" data-testid="quiz-complete">
+      <div className="min-h-full study-page-bg" data-testid="quiz-complete">
         <div className="max-w-lg mx-auto p-4 md:p-6 lg:p-8 text-center">
-          <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 ${percent >= 70 ? "bg-green-100 dark:bg-green-900/30" : "bg-amber-100 dark:bg-amber-900/30"}`}>
-            <span className="text-3xl font-bold text-foreground">{percent}%</span>
+          <div
+            className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 border"
+            style={{
+              background: passed
+                ? `linear-gradient(135deg, #1F4F66, ${P.tealDeep})`
+                : "rgba(244,180,98,0.18)",
+              borderColor: passed ? P.tealDeep : "rgba(244,180,98,0.55)",
+              boxShadow: passed ? `0 18px 40px -18px ${P.tealDeep}cc` : "none",
+            }}
+          >
+            <span className={cn("text-3xl font-bold", passed ? "text-white" : "text-amber-700")}>{percent}%</span>
           </div>
           <h2 className="text-2xl font-bold text-foreground mb-2">Quiz Complete!</h2>
           <p className="text-muted-foreground mb-8">You scored {score} out of {total} questions.</p>
@@ -125,25 +137,31 @@ export default function QuizPage({ params }: Props) {
   }
 
   return (
-    <div className="min-h-full bg-background" data-testid="quiz-page">
+    <div className="min-h-full study-page-bg" data-testid="quiz-page">
       <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
       <div className="flex items-center gap-3 mb-6">
         <button onClick={() => navigate(`/topics/${topicId}`)} className="text-muted-foreground hover:text-foreground" data-testid="button-back">
           <ChevronLeft className="w-5 h-5" />
         </button>
-        <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
-          <BookOpen className="w-5 h-5 text-green-500" />
+        <div
+          className="w-10 h-10 rounded-lg flex items-center justify-center border"
+          style={{ background: `linear-gradient(135deg, ${P.teal}, ${P.surf})`, borderColor: P.tealDeep }}
+        >
+          <BookOpen className="w-5 h-5 text-white" />
         </div>
         <div className="flex-1">
           <h1 className="text-2xl md:text-3xl font-bold text-foreground">Quiz</h1>
         </div>
-        <span className="text-sm text-muted-foreground font-medium">{index + 1}/{total}</span>
+        <span className="text-xs font-semibold tracking-wider uppercase" style={{ color: P.tealDeep }}>{index + 1}/{total}</span>
       </div>
 
-      <div className="w-full bg-muted rounded-full h-1.5 mb-6">
+      <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "rgba(47,160,198,0.12)" }}>
         <div
-          className="bg-primary h-1.5 rounded-full transition-all"
-          style={{ width: `${((index + 1) / total) * 100}%` }}
+          className="h-1.5 rounded-full transition-all"
+          style={{
+            width: `${((index + 1) / total) * 100}%`,
+            background: `linear-gradient(90deg, ${P.teal}, ${P.surf})`,
+          }}
         />
       </div>
 
@@ -156,26 +174,55 @@ export default function QuizPage({ params }: Props) {
         <div className="text-center py-16 text-muted-foreground">No questions for this topic.</div>
       ) : (
         <>
-          <div className="bg-card border border-border rounded-xl p-5 mb-6" data-testid="quiz-question-card">
-            <p className="text-foreground font-medium leading-relaxed" data-testid="text-question">
+          <StudySurface
+            tone="light"
+            glow
+            pill={{ text: "Question" }}
+            innerClassName="p-6 md:p-7 mb-6"
+            testId="quiz-question-card"
+          >
+            <p
+              className="text-base md:text-lg font-medium leading-relaxed pr-20"
+              style={{ color: P.ink }}
+              data-testid="text-question"
+            >
               {current.question}
             </p>
-          </div>
+          </StudySurface>
 
-          <div className="space-y-3 mb-6">
+          <div className="space-y-2.5 mb-6">
             {options.map(({ key, text }) => {
               const isSelected = selected === key;
               const isCorrect = key === current.correctAnswer;
-              let className = "w-full text-left px-4 py-3.5 rounded-xl border text-sm transition-all flex items-center gap-3";
+
+              const baseClass = "w-full text-left px-4 py-3.5 rounded-xl border text-sm transition-all flex items-center gap-3";
+
+              let style: React.CSSProperties = {};
+              let cls = baseClass;
 
               if (!selected) {
-                className += " border-border bg-card hover:border-primary/40 hover:bg-muted/50 text-foreground";
+                cls += " bg-white text-foreground hover:-translate-y-0.5";
+                style = {
+                  borderColor: `${P.surf}55`,
+                  boxShadow: `0 6px 18px -10px ${P.teal}55`,
+                };
               } else if (isCorrect) {
-                className += " border-green-400 bg-green-50 dark:bg-green-950/30 text-green-800 dark:text-green-300";
+                cls += " text-white";
+                style = {
+                  background: `linear-gradient(135deg, #1F4F66, ${P.tealDeep})`,
+                  borderColor: P.tealDeep,
+                  boxShadow: `0 14px 32px -16px ${P.tealDeep}cc`,
+                };
               } else if (isSelected && !isCorrect) {
-                className += " border-red-400 bg-red-50 dark:bg-red-950/30 text-red-800 dark:text-red-300";
+                cls += " text-white";
+                style = {
+                  background: "linear-gradient(135deg, #9C3A30, #B8453A)",
+                  borderColor: "#7A2C24",
+                  boxShadow: "0 14px 32px -16px rgba(122,44,36,0.65)",
+                };
               } else {
-                className += " border-border bg-card text-muted-foreground opacity-70";
+                cls += " bg-white text-muted-foreground opacity-65";
+                style = { borderColor: `${P.surf}33` };
               }
 
               return (
@@ -184,30 +231,41 @@ export default function QuizPage({ params }: Props) {
                   onClick={() => handleSelect(key)}
                   disabled={!!selected}
                   data-testid={`option-${key}`}
-                  className={className}
+                  className={cls}
+                  style={style}
                 >
-                  <span className={cn(
-                    "w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0",
-                    !selected ? "bg-muted text-foreground" :
-                    isCorrect ? "bg-green-500 text-white" :
-                    isSelected ? "bg-red-500 text-white" :
-                    "bg-muted text-muted-foreground"
-                  )}>
+                  <span
+                    className={cn(
+                      "w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 border",
+                      !selected ? "" : "border-white/40",
+                    )}
+                    style={
+                      !selected
+                        ? { background: "rgba(189,229,255,0.55)", color: P.tealDeep, borderColor: `${P.surf}66` }
+                        : isSelected || isCorrect
+                          ? { background: "rgba(255,255,255,0.22)", color: "#FFFFFF" }
+                          : { background: "rgba(189,229,255,0.35)", color: P.tealDeep, borderColor: `${P.surf}33` }
+                    }
+                  >
                     {key}
                   </span>
                   <span className="flex-1">{text}</span>
-                  {selected && isCorrect && <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />}
-                  {selected && isSelected && !isCorrect && <XCircle className="w-4 h-4 text-red-500 flex-shrink-0" />}
+                  {selected && isCorrect && <CheckCircle className="w-4 h-4 text-white flex-shrink-0" />}
+                  {selected && isSelected && !isCorrect && <XCircle className="w-4 h-4 text-white flex-shrink-0" />}
                 </button>
               );
             })}
           </div>
 
           {showExplanation && (
-            <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-4" data-testid="explanation-box">
-              <p className="text-xs font-semibold text-blue-700 dark:text-blue-300 uppercase tracking-wider mb-1">Explanation</p>
-              <p className="text-sm text-blue-900 dark:text-blue-200 leading-relaxed">{current.explanation}</p>
-            </div>
+            <StudySurface
+              tone="light"
+              pill={{ text: "Why" }}
+              innerClassName="p-4 md:p-5 mb-4"
+              testId="explanation-box"
+            >
+              <p className="text-sm leading-relaxed pr-16" style={{ color: P.ink }}>{current.explanation}</p>
+            </StudySurface>
           )}
 
           {showExplanation && selected && selected !== current.correctAnswer && (
