@@ -23,7 +23,6 @@ import {
 import { useGetDashboardSummary, useGetTopics, useGetLeaderboard, useGetUserProgress } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useUser, UserButton } from "@clerk/react";
 import { cn } from "@/lib/utils";
 import featuredWorkImage from "@assets/Screenshot_2026-04-26_at_11.05.53_PM_1777262767317.png";
 import TodayReviews from "@/components/learning/today-reviews";
@@ -140,7 +139,6 @@ function buildActivitySeries(recent: RecentTopic[]) {
 
 export default function DashboardPage() {
   const [, navigate] = useLocation();
-  const { user } = useUser();
   const { data: summary, isLoading } = useGetDashboardSummary();
   const { data: allTopics } = useGetTopics();
   const { data: leaderboard } = useGetLeaderboard();
@@ -151,11 +149,7 @@ export default function DashboardPage() {
     summary.usageCount >= summary.freeLimit &&
     summary.subscriptionStatus === "free";
 
-  const firstName =
-    user?.firstName ||
-    user?.username ||
-    user?.emailAddresses?.[0]?.emailAddress?.split("@")[0] ||
-    "there";
+  const firstName = "there";
 
   const recent = (summary?.recentTopics ?? []) as RecentTopic[];
   const weak = (summary?.weakAreas ?? []) as RecentTopic[];
@@ -242,7 +236,6 @@ export default function DashboardPage() {
             >
               <Bell className="w-4 h-4 text-foreground" />
             </button>
-            <UserButton />
           </div>
         </header>
 

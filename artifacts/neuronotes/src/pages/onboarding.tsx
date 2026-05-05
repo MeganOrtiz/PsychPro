@@ -3,7 +3,6 @@ import { useLocation } from "wouter";
 import { Brain, ChevronRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useUpsertUserProfile } from "@workspace/api-client-react";
-import { useUser } from "@clerk/react";
 import { useToast } from "@/hooks/use-toast";
 
 const steps = [
@@ -60,7 +59,6 @@ export default function OnboardingPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [selections, setSelections] = useState<Record<string, string>>({});
   const [, navigate] = useLocation();
-  const { user } = useUser();
   const { toast } = useToast();
   const upsertProfile = useUpsertUserProfile();
 
@@ -78,7 +76,6 @@ export default function OnboardingPage() {
       try {
         await upsertProfile.mutateAsync({
           data: {
-            email: user?.emailAddresses[0]?.emailAddress,
             role: selections["role"],
             goal: selections["goal"],
             degree: selections["degree"],
@@ -99,7 +96,6 @@ export default function OnboardingPage() {
     try {
       await upsertProfile.mutateAsync({
         data: {
-          email: user?.emailAddresses[0]?.emailAddress,
           onboardingComplete: true,
         },
       });

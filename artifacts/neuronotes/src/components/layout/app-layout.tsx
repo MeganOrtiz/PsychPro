@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { useUser, UserButton } from "@clerk/react";
 import { Brain, LayoutDashboard, BookOpen, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck, BookMarked, Library, Wrench, Sparkles, Star, Beaker } from "lucide-react";
+import { getOrCreateAnonymousUserId } from "@/lib/anonymous-user";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -30,12 +30,14 @@ function useUserMeta() {
   const [isScholar, setIsScholar] = useState(false);
 
   useEffect(() => {
-    fetch("/api/feedback/is-admin")
+    const headers = { "X-User-Id": getOrCreateAnonymousUserId() };
+
+    fetch("/api/feedback/is-admin", { headers })
       .then((r) => r.json())
       .then((d) => setIsAdmin(d.isAdmin ?? false))
       .catch(() => setIsAdmin(false));
 
-    fetch("/api/subscription/status")
+    fetch("/api/subscription/status", { headers })
       .then((r) => r.json())
       .then((d) => setIsScholar(d.status === "scholar"))
       .catch(() => setIsScholar(false));
@@ -51,7 +53,6 @@ interface AppLayoutProps {
 export default function AppLayout({ children }: AppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [location] = useLocation();
-  const { user } = useUser();
   const { isAdmin, isScholar } = useUserMeta();
 
   return (
@@ -270,10 +271,12 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
         <div className="p-4 border-t border-sidebar-border">
           <div className="flex items-center gap-3">
-            <UserButton />
+            <div className="w-9 h-9 rounded-full bg-sidebar-accent flex items-center justify-center text-sidebar-foreground text-sm font-semibold">
+              G
+            </div>
             <div className="min-w-0">
               <p className="text-sidebar-foreground text-sm font-medium truncate">
-                {user?.firstName || user?.emailAddresses[0]?.emailAddress}
+                Guest
               </p>
             </div>
           </div>

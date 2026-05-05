@@ -6,7 +6,7 @@ export type ErrorType<T = unknown> = ApiError<T>;
 
 export type BodyType<T> = T;
 
-export type AuthTokenGetter = () => Promise<string | null> | string | null;
+export type UserIdProvider = () => Promise<string | null> | string | null;
 
 const NO_BODY_STATUS = new Set([204, 205, 304]);
 const DEFAULT_JSON_ACCEPT = "application/json, application/problem+json";
@@ -16,7 +16,7 @@ const DEFAULT_JSON_ACCEPT = "application/json, application/problem+json";
 // ---------------------------------------------------------------------------
 
 let _baseUrl: string | null = null;
-let _authTokenGetter: AuthTokenGetter | null = null;
+let _userIdProvider: UserIdProvider | null = null;
 
 /**
  * Set a base URL that is prepended to every relative request URL
@@ -30,18 +30,15 @@ export function setBaseUrl(url: string | null): void {
 }
 
 /**
- * Register a getter that supplies a bearer auth token.  Before every fetch
- * the getter is invoked; when it returns a non-null string, an
- * `Authorization: Bearer <token>` header is attached to the request.
+ * Register a provider that supplies the current user identifier. Before every
+ * fetch the provider is invoked; when it returns a non-null string, an
+ * `X-User-Id` header is attached to the request.
  *
- * Useful for Expo bundles making token-gated API calls.
- * Pass `null` to clear the getter.
- *
- * NOTE: This function should never be used in web applications where session
- * token cookies are automatically associated with API calls by the browser.
+ * The API server trusts this header verbatim — there is intentionally no
+ * server-side authentication. Pass `null` to clear the provider.
  */
-export function setAuthTokenGetter(getter: AuthTokenGetter | null): void {
-  _authTokenGetter = getter;
+export function setUserIdProvider(provider: UserIdProvider | null): void {
+  _userIdProvider = provider;
 }
 
 function isRequest(input: RequestInfo | URL): input is Request {
@@ -349,12 +346,12 @@ export async function customFetch<T = unknown>(
     headers.set("accept", DEFAULT_JSON_ACCEPT);
   }
 
-  // Attach bearer token when an auth getter is configured and no
-  // Authorization header has been explicitly provided.
-  if (_authTokenGetter && !headers.has("authorization")) {
-    const token = await _authTokenGetter();
-    if (token) {
-      headers.set("authorization", `Bearer ${token}`);
+  // Attach X-User-Id from the registered provider when no explicit header
+  // has been set by the caller.
+  if (_userIdProvider && !headers.has("x-user-id")) {
+    const userId = await _userIdProvider();
+    if (userId) {
+      headers.set("x-user-id", userId);
     }
   }
 

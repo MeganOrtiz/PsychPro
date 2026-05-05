@@ -1,5 +1,4 @@
 import { useLocation } from "wouter";
-import { SignIn, SignUp, useUser } from "@clerk/react";
 import { useState, useEffect } from "react";
 import {
   BookOpen,
@@ -88,54 +87,12 @@ const PALETTE = {
 };
 
 export default function LandingPage() {
-  const { isSignedIn, isLoaded } = useUser();
   const [, navigate] = useLocation();
-  const [showSignIn, setShowSignIn] = useState(false);
-  const [showSignUp, setShowSignUp] = useState(false);
   const [flipped, setFlipped] = useState(false);
   const reduceMotion = usePrefersReducedMotion();
   const animateBg = !reduceMotion;
 
-  useEffect(() => {
-    if (isLoaded && isSignedIn) {
-      navigate("/dashboard");
-    }
-  }, [isSignedIn, isLoaded, navigate]);
-
-  if (showSignIn || showSignUp) {
-    const isUp = showSignUp;
-    return (
-      <div
-        className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
-        style={{ background: `radial-gradient(circle at 50% 0%, ${PALETTE.steel}55, ${PALETTE.bg} 60%)` }}
-      >
-        <Starfield animate={animateBg} count={40} />
-        <div className="w-full max-w-md relative">
-          <button
-            className="text-[color:var(--mist)]/70 hover:text-white mb-4 text-sm flex items-center gap-1 transition-colors"
-            style={{ ["--mist" as any]: PALETTE.mist }}
-            onClick={() => { setShowSignIn(false); setShowSignUp(false); }}
-          >
-            ← Back
-          </button>
-          <div
-            className="rounded-2xl p-1"
-            style={{
-              background: `linear-gradient(135deg, ${PALETTE.teal}55, ${PALETTE.surf}22, transparent)`,
-            }}
-          >
-            <div className="rounded-2xl p-2" style={{ background: PALETTE.surface }}>
-              {isUp ? (
-                <SignUp fallbackRedirectUrl="/onboarding" signInUrl="/sign-in" />
-              ) : (
-                <SignIn fallbackRedirectUrl="/dashboard" signUpUrl="/sign-up" />
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const goToApp = () => navigate("/dashboard");
 
   const ctaBtn = `inline-flex items-center justify-center gap-2 rounded-xl text-base font-semibold px-7 h-12 transition-all duration-300`;
   const ctaBtnGradient = `${ctaBtn} bg-gradient-to-br from-[#2FA0C6] to-[#58C9F3] text-[#061826] shadow-[0_14px_40px_-10px_rgba(47,160,198,0.8)] hover:-translate-y-0.5 hover:brightness-110 hover:shadow-[0_0_0_1px_rgba(189,229,255,0.55),0_18px_50px_-8px_rgba(88,201,243,0.85),0_0_50px_-6px_rgba(88,201,243,0.7)]`;
@@ -168,7 +125,7 @@ export default function LandingPage() {
           </div>
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setShowSignIn(true)}
+              onClick={() => goToApp()}
               className="text-sm transition-colors"
               style={{ color: `${PALETTE.mist}cc` }}
               data-testid="header-sign-in"
@@ -176,7 +133,7 @@ export default function LandingPage() {
               Sign In
             </button>
             <button
-              onClick={() => setShowSignUp(true)}
+              onClick={() => goToApp()}
               className="text-sm font-semibold rounded-lg px-3.5 h-9 transition-all"
               style={{
                 background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
@@ -275,7 +232,7 @@ export default function LandingPage() {
             {/* CTAs */}
             <div className="relative z-10 flex flex-col sm:flex-row gap-3 justify-center items-center mt-10 md:mt-12">
               <button
-                onClick={() => setShowSignUp(true)}
+                onClick={() => goToApp()}
                 data-testid="button-start-learning"
                 className={ctaBtnGradient}
               >
@@ -420,7 +377,7 @@ export default function LandingPage() {
               concepts, clinical reasoning, and exam-ready content.
             </p>
             <button
-              onClick={() => setShowSignUp(true)}
+              onClick={() => goToApp()}
               data-testid="button-try-now"
               className={ctaBtnGradient}
             >
@@ -588,7 +545,7 @@ export default function LandingPage() {
                 ))}
               </ul>
               <button
-                onClick={() => setShowSignUp(true)}
+                onClick={() => goToApp()}
                 data-testid={`button-plan-${plan.name.toLowerCase()}`}
                 className={
                   plan.highlight
@@ -621,8 +578,8 @@ export default function LandingPage() {
           </div>
           <div className="flex items-center gap-4">
             <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
-            <button onClick={() => setShowSignIn(true)} className="hover:text-white transition-colors">Sign In</button>
-            <button onClick={() => setShowSignUp(true)} className="hover:text-white transition-colors">Start Free</button>
+            <button onClick={() => goToApp()} className="hover:text-white transition-colors">Sign In</button>
+            <button onClick={() => goToApp()} className="hover:text-white transition-colors">Start Free</button>
           </div>
         </div>
       </footer>

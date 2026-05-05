@@ -15,7 +15,7 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 - **Validation**: Zod (`zod/v4`), `drizzle-zod`
 - **API codegen**: Orval (from OpenAPI spec)
 - **Build**: esbuild (CJS bundle)
-- **Auth**: Frontend uses Clerk (@clerk/react) for sign-in UI. **Server-side auth is REMOVED** — the API server has no Clerk middleware, no token validation, no session checks. Routes that need a user identifier read it verbatim from the `X-User-Id` request header (pass-through, no validation). Re-add a real auth layer before exposing this server to untrusted clients.
+- **Auth**: **Fully removed — front and back.** No Clerk, no login screen, no token validation, no session checks. The API server reads a `X-User-Id` header verbatim (pass-through, no validation). The frontend generates an anonymous user ID per browser via `localStorage` (`artifacts/neuronotes/src/lib/anonymous-user.ts`) and attaches it as `X-User-Id` on every API call through `setUserIdProvider` in `lib/api-client-react/src/custom-fetch.ts`. Re-add a real auth layer before exposing this server to untrusted clients.
 - **Payments**: Stripe (API version: 2026-03-25.dahlia)
 
 ## Key Commands
@@ -50,18 +50,20 @@ A mobile-responsive neuroscience/neuropsychology study app.
 - `artifacts/api-server/src/lib/userId.ts` — `getUserId(req)` / `requireUserId(req,res)` — reads `X-User-Id` header (pass-through identifier, NOT auth)
 - `artifacts/api-server/src/routes/` — Route handlers (topics, flashcards, quizzes, study guides, practice exams, users, progress, subscription)
 - `artifacts/api-server/src/stripeClient.ts` — Stripe client (API version: 2026-03-25.dahlia)
-- `artifacts/neuronotes/src/App.tsx` — ClerkProvider + wouter routes + ClerkTokenSetup
+- `artifacts/neuronotes/src/App.tsx` — wouter routes (no auth gating); calls `setUserIdProvider(getOrCreateAnonymousUserId)` at module load
+- `artifacts/neuronotes/src/lib/anonymous-user.ts` — `getOrCreateAnonymousUserId()` localStorage-backed UUID
 - `artifacts/neuronotes/src/pages/` — All 11 pages
 - `lib/db/src/schema/index.ts` — DB schema (users, topics, flashcards, quiz_questions, study_guides, progress)
 - `lib/db/src/seed.ts` — Neuroscience content seed (94 flashcards, 42 quiz questions, 9 study guides, 29 topics)
 
 ### Auth Pattern
-- **Server-side authentication has been removed.** No Clerk middleware, no token verification, no session checks. The API server trusts whatever `X-User-Id` header the client supplies. This is intentionally insecure and must be replaced before going public.
-- Frontend still uses `@clerk/react` for the sign-in UI and currently sends `Authorization: Bearer <jwt>` via `custom-fetch` — the server ignores it. To make the existing routes work end-to-end again, add an `X-User-Id` header attach in `lib/api-client-react/src/custom-fetch.ts` or wire up a new auth source.
+- **Authentication has been removed end-to-end.** No Clerk middleware, no token verification, no session checks, no login screen. The API server trusts whatever `X-User-Id` header the client supplies. This is intentionally insecure and must be replaced before exposing the server to untrusted clients.
+- The frontend mints an anonymous browser-scoped UUID at first visit (stored in `localStorage` under key `psychpro.anonymous-user-id`). `App.tsx` registers it as the user-id provider, so every API call made through `@workspace/api-client-react` automatically carries `X-User-Id: <uuid>`. Per-user data (progress, custom decks, subscription, feedback) is keyed off that UUID — clearing browser storage = new user.
+- Sidebar and dashboard show "Guest" / "Hello, there" (no real identity). Sign In / Sign Up buttons on the landing page route straight to `/dashboard`.
 - Public routes (no identifier needed): `/api/healthz`, `/api/topics/**`, `/api/stripe/**`, `/api/subscription/plans`, `/api/leaderboard`, `/api/client-errors`, `/api/feedback/is-admin`
 
 ### Features
-- Landing page with inline Clerk sign-in/sign-up
+- Landing page with CTAs that go straight to the dashboard (no sign-up gate)
 - 4-step onboarding (role → goal → degree → referral)
 - Dashboard with progress summary
 - Topics browser (15 consolidated topics) with search/filter
@@ -112,7 +114,8 @@ A mobile-responsive neuroscience/neuropsychology study app.
 
 ### Production Publishing
 See `PUBLISHING.md` at the repo root for the full checklist (production secrets,
-Clerk live keys, Stripe live mode + connector, DB seeding, smoke test, rollback).
+Stripe live mode + connector, DB seeding, smoke test, rollback). Auth keys are
+no longer needed — auth was removed in May 2026.
 Stripe credentials come from the Replit Stripe **connector** — the API server
 auto-selects the `production` connector when `REPLIT_DEPLOYMENT=1`. Price IDs are
 fetched dynamically (no hard-coded IDs). Run
