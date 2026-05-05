@@ -20,8 +20,7 @@ the live/production value — not the dev value used in this project.
 | --- | --- | --- |
 | `DATABASE_URL` | API server, seed scripts | Provisioned automatically when you add a Postgres database to the deployment. |
 | `CLERK_SECRET_KEY` | API server (Clerk middleware) | **production** — `sk_live_…` from Clerk's production instance. |
-| `CLERK_PUBLISHABLE_KEY` | API server (proxy) | **production** — `pk_live_…` from Clerk's production instance. |
-| `VITE_CLERK_PUBLISHABLE_KEY` | Web frontend (build-time) | **production** — same `pk_live_…` value. The Vite build inlines this, so it must be present *before* the build runs. |
+| `VITE_CLERK_PUBLISHABLE_KEY` | Web frontend (build-time) | **production** — `pk_live_…` from Clerk's production instance. The Vite build inlines this, so it must be present *before* the build runs. |
 | `STRIPE_WEBHOOK_SECRET` | API server (`/api/stripe/webhook`) | **production** — `whsec_…` from the Stripe Dashboard's *Live mode* webhook endpoint pointed at `https://<your-app>.replit.app/api/stripe/webhook`. |
 | `AI_INTEGRATIONS_OPENAI_API_KEY` | Custom-deck generation (Scholar tier) | Auto-managed by the Replit AI integration; copy the value from your dev secrets if it isn't auto-provisioned in production. |
 | `AI_INTEGRATIONS_OPENAI_BASE_URL` | Custom-deck generation | Same — copy from dev. |
@@ -71,8 +70,8 @@ To verify an override took effect:
    app.
 2. Add `https://<your-app>.replit.app` as an allowed origin and as the
    application home / sign-in URL.
-3. Copy `pk_live_…` → set both `VITE_CLERK_PUBLISHABLE_KEY` and
-   `CLERK_PUBLISHABLE_KEY` in the deployment Secrets panel.
+3. Copy `pk_live_…` → set `VITE_CLERK_PUBLISHABLE_KEY` in the deployment
+   Secrets panel.
 4. Copy `sk_live_…` → set `CLERK_SECRET_KEY`.
 5. The dev banner (`@replit/vite-plugin-dev-banner`) is already gated on
    `NODE_ENV !== "production"`, so it disappears automatically in the live
