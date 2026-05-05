@@ -12,7 +12,6 @@ import {
   TrendingUp,
   Sparkles,
   ArrowUpRight,
-  Map as MapIcon,
   Award,
   Medal,
   ShieldCheck,
@@ -26,6 +25,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import featuredWorkImage from "@assets/Screenshot_2026-04-26_at_11.05.53_PM_1777262767317.png";
 import TodayReviews from "@/components/learning/today-reviews";
+import { StudySurface } from "@/components/study/study-surface";
+import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
 import {
   ResponsiveContainer,
   LineChart,
@@ -38,21 +39,20 @@ import {
 
 const DAY_LABELS = ["S", "M", "T", "W", "T", "F", "S"];
 
-const PALETTE = {
-  bg: "#061826",
-  surface: "#0c2538",
-  surfaceElev: "#11324d",
-  steel: "#1C4E75",
-  teal: "#2FA0C6",
-  surf: "#58C9F3",
-  mist: "#BDE5FF",
-};
+// Brand-family icon palettes — each tile gets a slightly different teal/surf gradient
+// so the recommended/recent/achievement rows feel cohesive instead of rainbow.
+const BRAND_TILES = [
+  { bg: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`, border: PALETTE.tealDeep },
+  { bg: `linear-gradient(135deg, ${PALETTE.tealDeep}, ${PALETTE.teal})`, border: PALETTE.tealDeep },
+  { bg: `linear-gradient(135deg, #1F4F66, ${PALETTE.tealDeep})`, border: "#1F4F66" },
+  { bg: `linear-gradient(135deg, ${PALETTE.surf}, ${PALETTE.mist})`, border: PALETTE.teal },
+] as const;
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <p
       className="text-[11px] font-semibold tracking-[0.18em] uppercase mb-2 ml-1"
-      style={{ color: `${PALETTE.steel}cc` }}
+      style={{ color: PALETTE.tealDeep }}
     >
       {children}
     </p>
@@ -210,11 +210,7 @@ export default function DashboardPage() {
 
   return (
     <div
-      className="min-h-full dark:bg-background"
-      style={{
-        background:
-          "linear-gradient(180deg, #F5FAFD 0%, #EAF3F9 60%, #DEEBF4 100%)",
-      }}
+      className="min-h-full study-page-bg"
       data-testid="dashboard-page"
     >
       <div className="max-w-[1400px] mx-auto p-4 md:p-6 lg:p-8">
@@ -240,13 +236,19 @@ export default function DashboardPage() {
         </header>
 
         {isOverLimit && (
-          <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-4 mb-6 flex items-start gap-3">
-            <Zap className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+          <div
+            className="rounded-xl p-4 mb-6 flex items-start gap-3 border"
+            style={{
+              background: "rgba(244,180,98,0.14)",
+              borderColor: "rgba(244,180,98,0.55)",
+            }}
+          >
+            <Zap className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-amber-900 dark:text-amber-300 text-sm">
+              <p className="font-semibold text-amber-900 text-sm">
                 Free limit reached
               </p>
-              <p className="text-amber-700 dark:text-amber-400 text-sm mt-1">
+              <p className="text-amber-800 text-sm mt-1">
                 You've used all 10 free interactions. Upgrade to continue
                 studying.
               </p>
@@ -269,13 +271,10 @@ export default function DashboardPage() {
               <SectionLabel>
                 {continueTopic ? "Continue Your Journey" : "Begin Your Journey"}
               </SectionLabel>
-            <div
-              className="bg-white border rounded-2xl p-5 shadow-sm"
-              style={{ borderColor: `${PALETTE.steel}26` }}
-            >
+            <StudySurface tone="light" glow innerClassName="p-5">
               <div className="flex items-center gap-2 mb-4">
-                <TrendingUp className="w-4 h-4" style={{ color: PALETTE.teal }} />
-                <h2 className="font-semibold text-slate-900">
+                <TrendingUp className="w-4 h-4" style={{ color: PALETTE.tealDeep }} />
+                <h2 className="font-semibold" style={{ color: PALETTE.ink }}>
                   {continueTopic ? "Continue Your Journey" : "Begin Your Journey"}
                 </h2>
               </div>
@@ -287,14 +286,17 @@ export default function DashboardPage() {
                     <p className="font-medium text-foreground truncate">
                       {continueTopic.topicName}
                     </p>
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-sm font-semibold" style={{ color: PALETTE.tealDeep }}>
                       {continueTopic.score}%
                     </span>
                   </div>
-                  <div className="h-2 bg-muted rounded-full overflow-hidden mb-4">
+                  <div className="h-2 rounded-full overflow-hidden mb-4" style={{ background: "rgba(47,160,198,0.14)" }}>
                     <div
-                      className="h-full bg-primary transition-all"
-                      style={{ width: `${continueTopic.score}%` }}
+                      className="h-full transition-all"
+                      style={{
+                        width: `${continueTopic.score}%`,
+                        background: `linear-gradient(90deg, ${PALETTE.teal}, ${PALETTE.surf})`,
+                      }}
                     />
                   </div>
                   <Button
@@ -320,19 +322,16 @@ export default function DashboardPage() {
                   </Button>
                 </div>
               )}
-            </div>
+            </StudySurface>
             </div>
 
             {/* Recommended for You — 2x2 grid of 4 topics */}
             <div>
               <SectionLabel>Recommended for You</SectionLabel>
-            <div
-              className="bg-white border rounded-2xl p-5 shadow-sm"
-              style={{ borderColor: `${PALETTE.steel}26` }}
-            >
+            <StudySurface tone="light" innerClassName="p-5">
               <div className="mb-4">
-                <h2 className="font-semibold text-slate-900">Recommended for You</h2>
-                <p className="text-xs text-slate-500 mt-1">
+                <h2 className="font-semibold" style={{ color: PALETTE.ink }}>Recommended for You</h2>
+                <p className="text-xs mt-1" style={{ color: PALETTE.inkSoft }}>
                   Based on your goals and progress
                 </p>
               </div>
@@ -346,43 +345,50 @@ export default function DashboardPage() {
               ) : recommended.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {recommended.slice(0, 4).map((t, idx) => {
-                    const palettes = [
-                      { bg: "bg-sky-100 dark:bg-sky-500/15", color: "text-sky-600 dark:text-sky-300", icon: Sparkles, hint: "Expand your knowledge" },
-                      { bg: "bg-emerald-100 dark:bg-emerald-500/15", color: "text-emerald-600 dark:text-emerald-300", icon: BookOpen, hint: "Strengthen your foundation" },
-                      { bg: "bg-amber-100 dark:bg-amber-500/15", color: "text-amber-600 dark:text-amber-300", icon: Brain, hint: "Sharpen your skills" },
-                      { bg: "bg-violet-100 dark:bg-violet-500/15", color: "text-violet-600 dark:text-violet-300", icon: TrendingUp, hint: "Level up next" },
-                    ];
-                    const p = palettes[idx % palettes.length];
-                    const Icon = p.icon;
+                    const tile = BRAND_TILES[idx % BRAND_TILES.length];
+                    const meta = [
+                      { icon: Sparkles, hint: "Expand your knowledge" },
+                      { icon: BookOpen, hint: "Strengthen your foundation" },
+                      { icon: Brain, hint: "Sharpen your skills" },
+                      { icon: TrendingUp, hint: "Level up next" },
+                    ][idx % 4];
+                    const Icon = meta.icon;
                     return (
                       <button
                         key={t.id}
                         onClick={() => navigate(`/topics/${t.topicId}`)}
-                        className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-muted transition-colors text-left border border-border"
+                        className="group w-full flex items-center gap-3 p-3 rounded-lg text-left border bg-white transition-all hover:-translate-y-0.5"
+                        style={{
+                          borderColor: `${PALETTE.surf}55`,
+                          boxShadow: `0 6px 18px -12px ${PALETTE.teal}66`,
+                        }}
                         data-testid={`recommended-${t.topicId}`}
                       >
-                        <div className={cn("w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0", p.bg)}>
-                          <Icon className={cn("w-4 h-4", p.color)} />
+                        <div
+                          className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 border transition-transform group-hover:scale-105"
+                          style={{ background: tile.bg, borderColor: tile.border }}
+                        >
+                          <Icon className="w-4 h-4 text-white" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold text-foreground truncate">
+                          <p className="text-sm font-semibold truncate" style={{ color: PALETTE.ink }}>
                             {t.topicName}
                           </p>
-                          <p className="text-xs text-muted-foreground truncate">
-                            {p.hint}
+                          <p className="text-xs truncate" style={{ color: PALETTE.inkSoft }}>
+                            {meta.hint}
                           </p>
                         </div>
-                        <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                        <ChevronRight className="w-4 h-4 flex-shrink-0 transition-transform group-hover:translate-x-0.5" style={{ color: PALETTE.tealDeep }} />
                       </button>
                     );
                   })}
                 </div>
               ) : (
-                <p className="text-sm text-slate-500 text-center py-6">
+                <p className="text-sm text-center py-6" style={{ color: PALETTE.inkSoft }}>
                   Study a few topics and we'll suggest what to tackle next.
                 </p>
               )}
-            </div>
+            </StudySurface>
             </div>
 
             {/* Streak (left) + Leaderboard (right) */}
@@ -390,18 +396,15 @@ export default function DashboardPage() {
               <SectionLabel>Streak · Leaderboard</SectionLabel>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Your Streak */}
-              <div
-                className="bg-white border rounded-2xl p-5 shadow-sm"
-                style={{ borderColor: `${PALETTE.steel}26` }}
-              >
+              <StudySurface tone="light" innerClassName="p-5">
                 <div className="flex items-center gap-2 mb-3">
-                  <h2 className="font-semibold text-slate-900">Your Streak</h2>
+                  <h2 className="font-semibold" style={{ color: PALETTE.ink }}>Your Streak</h2>
                   <span aria-hidden>🔥</span>
                 </div>
                 <div className="mb-4">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-4xl font-bold text-slate-900 leading-none">{streak}</span>
-                    <span className="text-sm text-slate-500">day streak</span>
+                    <span className="text-4xl font-bold leading-none" style={{ color: PALETTE.ink }}>{streak}</span>
+                    <span className="text-sm" style={{ color: PALETTE.inkSoft }}>day streak</span>
                   </div>
                 </div>
                 <div className="grid grid-cols-7 gap-1 mb-3">
@@ -414,39 +417,37 @@ export default function DashboardPage() {
                         )}
                       />
                       <span
-                        className={cn(
-                          "text-xs",
-                          d.isToday ? "text-slate-900 font-semibold" : "text-slate-500"
-                        )}
+                        className="text-xs"
+                        style={{
+                          color: d.isToday ? PALETTE.ink : PALETTE.inkSoft,
+                          fontWeight: d.isToday ? 600 : 400,
+                        }}
                       >
                         {d.label}
                       </span>
                     </div>
                   ))}
                 </div>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs" style={{ color: PALETTE.inkSoft }}>
                   {streak === 0
                     ? "Study today to start a streak."
                     : streak < 3
                     ? "You're building momentum!"
                     : "Great consistency this week."}
                 </p>
-              </div>
+              </StudySurface>
 
               {/* Leaderboard (moved from right rail) */}
-              <div
-                className="bg-white border rounded-2xl p-5 shadow-sm"
-                style={{ borderColor: `${PALETTE.steel}26` }}
-              >
+              <StudySurface tone="light" innerClassName="p-5">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <Trophy className="w-4 h-4" style={{ color: PALETTE.teal }} />
-                    <h2 className="font-semibold text-slate-900">Leaderboard</h2>
+                    <Trophy className="w-4 h-4" style={{ color: PALETTE.tealDeep }} />
+                    <h2 className="font-semibold" style={{ color: PALETTE.ink }}>Leaderboard</h2>
                   </div>
                   <button
                     onClick={() => navigate("/leaderboard")}
                     className="text-xs hover:underline"
-                    style={{ color: PALETTE.teal }}
+                    style={{ color: PALETTE.tealDeep }}
                     data-testid="button-view-leaderboard"
                   >
                     View all
@@ -472,7 +473,7 @@ export default function DashboardPage() {
                         )}
                         style={
                           e.isCurrentUser
-                            ? { background: `${PALETTE.teal}14` }
+                            ? { background: `${PALETTE.teal}1f` }
                             : undefined
                         }
                         data-testid={`leaderboard-row-${e.rank}`}
@@ -491,20 +492,20 @@ export default function DashboardPage() {
                         >
                           {e.rank}
                         </div>
-                        <p className="text-sm font-medium text-slate-900 truncate flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate flex-1 min-w-0" style={{ color: PALETTE.ink }}>
                           {e.displayName}
                           {e.isCurrentUser && (
                             <span
                               className="ml-1.5 text-xs font-semibold"
-                              style={{ color: PALETTE.teal }}
+                              style={{ color: PALETTE.tealDeep }}
                             >
                               You
                             </span>
                           )}
                         </p>
                         <div className="flex items-center gap-1 flex-shrink-0" title="Topics completed">
-                          <BookOpen className="w-3 h-3 text-slate-400" />
-                          <span className="text-xs font-semibold text-slate-900 tabular-nums">
+                          <BookOpen className="w-3 h-3" style={{ color: PALETTE.inkSoft }} />
+                          <span className="text-xs font-semibold tabular-nums" style={{ color: PALETTE.ink }}>
                             {e.topicsCompleted}
                           </span>
                         </div>
@@ -517,7 +518,7 @@ export default function DashboardPage() {
                                 : "text-slate-300"
                             )}
                           />
-                          <span className="text-xs font-semibold text-slate-900 tabular-nums">
+                          <span className="text-xs font-semibold tabular-nums" style={{ color: PALETTE.ink }}>
                             {e.streak}
                           </span>
                         </div>
@@ -525,7 +526,7 @@ export default function DashboardPage() {
                     ))}
                   </div>
                 )}
-              </div>
+              </StudySurface>
             </div>
             </div>
 
@@ -803,19 +804,18 @@ function StudyAnalyticsCard({
   topicsStudied: number;
 }) {
   return (
-    <div
-      className="border border-sky-100 rounded-xl p-5 flex flex-col shadow-sm"
-      style={{
-        background:
-          "linear-gradient(135deg, #FFFFFF 0%, #F4F9FC 60%, #EAF3FA 100%)",
-      }}
-    >
+    <StudySurface tone="light" innerClassName="p-5 flex flex-col">
       <div className="flex items-center justify-between mb-4 gap-3">
-        <h2 className="font-semibold text-slate-900 text-base whitespace-nowrap">
+        <h2 className="font-semibold text-base whitespace-nowrap" style={{ color: PALETTE.ink }}>
           Study Analytics
         </h2>
         <button
-          className="flex items-center gap-1 text-xs text-sky-700 bg-white/70 border border-sky-100 rounded-full px-3 py-1 hover:bg-white transition-colors whitespace-nowrap"
+          className="flex items-center gap-1 text-xs rounded-full px-3 py-1 transition-colors whitespace-nowrap border"
+          style={{
+            color: PALETTE.tealDeep,
+            background: "rgba(255,255,255,0.7)",
+            borderColor: `${PALETTE.surf}55`,
+          }}
           data-testid="button-analytics-period"
         >
           This Week
@@ -826,28 +826,34 @@ function StudyAnalyticsCard({
       <div className="h-40">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={series} margin={{ top: 8, right: 12, bottom: 4, left: 0 }}>
-            <CartesianGrid stroke="#DCEAF4" strokeDasharray="3 3" vertical={false} />
+            <defs>
+              <linearGradient id="studyAnalyticsLine" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor={PALETTE.tealDeep} />
+                <stop offset="100%" stopColor={PALETTE.surf} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid stroke={`${PALETTE.surf}40`} strokeDasharray="3 3" vertical={false} />
             <XAxis
               dataKey="day"
               tickLine={false}
               axisLine={false}
-              tick={{ fontSize: 11, fill: "#64748B" }}
+              tick={{ fontSize: 11, fill: PALETTE.inkSoft }}
               interval={0}
               padding={{ left: 8, right: 8 }}
             />
             <YAxis
               tickLine={false}
               axisLine={false}
-              tick={{ fontSize: 11, fill: "#64748B" }}
+              tick={{ fontSize: 11, fill: PALETTE.inkSoft }}
               domain={[0, 100]}
               ticks={[0, 25, 50, 75, 100]}
               width={32}
             />
             <Tooltip
-              cursor={{ stroke: "#BAE0F2", strokeWidth: 1 }}
+              cursor={{ stroke: PALETTE.surf, strokeWidth: 1 }}
               contentStyle={{
                 background: "#FFFFFF",
-                border: "1px solid #BAE0F2",
+                border: `1px solid ${PALETTE.surf}80`,
                 borderRadius: 8,
                 fontSize: 12,
               }}
@@ -855,41 +861,41 @@ function StudyAnalyticsCard({
             <Line
               type="monotone"
               dataKey="score"
-              stroke="#0EA5E9"
+              stroke="url(#studyAnalyticsLine)"
               strokeWidth={2.5}
-              dot={{ r: 3.5, fill: "#0EA5E9", strokeWidth: 0 }}
-              activeDot={{ r: 5, fill: "#0284C7" }}
+              dot={{ r: 3.5, fill: PALETTE.teal, strokeWidth: 0 }}
+              activeDot={{ r: 5, fill: PALETTE.tealDeep }}
             />
           </LineChart>
         </ResponsiveContainer>
       </div>
 
-      <div className="border-t border-sky-100 mt-4 pt-4">
-        <p className="text-xs font-semibold text-slate-900 mb-3">
+      <div className="mt-4 pt-4 border-t" style={{ borderColor: `${PALETTE.surf}40` }}>
+        <p className="text-xs font-semibold mb-3" style={{ color: PALETTE.ink }}>
           Performance Overview
         </p>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <p className="text-3xl font-bold text-slate-900 leading-none">
+            <p className="text-3xl font-bold leading-none" style={{ color: PALETTE.ink }}>
               {averageScore}%
             </p>
-            <p className="text-xs text-slate-600 mt-1.5">Average Score</p>
-            <p className="text-[11px] text-emerald-600 mt-0.5">
+            <p className="text-xs mt-1.5" style={{ color: PALETTE.inkSoft }}>Average Score</p>
+            <p className="text-[11px] mt-0.5" style={{ color: PALETTE.tealDeep }}>
               ↑ 8% vs last week
             </p>
           </div>
           <div>
-            <p className="text-3xl font-bold text-slate-900 leading-none">
+            <p className="text-3xl font-bold leading-none" style={{ color: PALETTE.ink }}>
               {topicsStudied}
             </p>
-            <p className="text-xs text-slate-600 mt-1.5">Total Topics</p>
-            <p className="text-[11px] text-slate-500 mt-0.5">
+            <p className="text-xs mt-1.5" style={{ color: PALETTE.inkSoft }}>Total Topics</p>
+            <p className="text-[11px] mt-0.5" style={{ color: PALETTE.inkSoft }}>
               Keep learning!
             </p>
           </div>
         </div>
       </div>
-    </div>
+    </StudySurface>
   );
 }
 
@@ -904,12 +910,6 @@ function RecentActivityCard({
   onItemClick: (topicId: number) => void;
   onViewAll: () => void;
 }) {
-  const palettes = [
-    { bg: "bg-sky-100", color: "text-sky-600" },
-    { bg: "bg-cyan-100", color: "text-cyan-700" },
-    { bg: "bg-blue-100", color: "text-blue-600" },
-  ];
-
   function timeAgo(iso?: string | null) {
     if (!iso) return "";
     const diff = Date.now() - new Date(iso).getTime();
@@ -921,14 +921,8 @@ function RecentActivityCard({
   }
 
   return (
-    <div
-      className="border border-sky-100 rounded-xl p-5 flex flex-col shadow-sm"
-      style={{
-        background:
-          "linear-gradient(135deg, #FFFFFF 0%, #F4F9FC 60%, #EAF3FA 100%)",
-      }}
-    >
-      <h2 className="font-semibold text-slate-900 text-base mb-4">
+    <StudySurface tone="light" innerClassName="p-5 flex flex-col">
+      <h2 className="font-semibold text-base mb-4" style={{ color: PALETTE.ink }}>
         Recent Activity
       </h2>
       {isLoading ? (
@@ -940,7 +934,7 @@ function RecentActivityCard({
       ) : recent.length > 0 ? (
         <div className="flex-1 space-y-1.5">
           {recent.slice(0, 3).map((t, idx) => {
-            const p = palettes[idx % palettes.length];
+            const tile = BRAND_TILES[idx % BRAND_TILES.length];
             return (
               <button
                 key={t.id}
@@ -949,18 +943,16 @@ function RecentActivityCard({
                 data-testid={`recent-${t.topicId}`}
               >
                 <div
-                  className={cn(
-                    "w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0",
-                    p.bg,
-                  )}
+                  className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 border"
+                  style={{ background: tile.bg, borderColor: tile.border }}
                 >
-                  <Brain className={cn("w-4 h-4", p.color)} />
+                  <Brain className="w-4 h-4 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-slate-900 truncate">
+                  <p className="text-sm font-medium truncate" style={{ color: PALETTE.ink }}>
                     {t.topicName || "Topic"}
                   </p>
-                  <p className="text-xs text-slate-500 truncate">
+                  <p className="text-xs truncate" style={{ color: PALETTE.inkSoft }}>
                     {t.score >= 80
                       ? `Completed · ${t.score}%`
                       : t.score > 0
@@ -968,7 +960,7 @@ function RecentActivityCard({
                       : "Started"}
                   </p>
                 </div>
-                <span className="text-[11px] text-slate-500 flex-shrink-0 ml-2">
+                <span className="text-[11px] flex-shrink-0 ml-2" style={{ color: PALETTE.inkSoft }}>
                   {timeAgo(t.lastAccessed)}
                 </span>
               </button>
@@ -976,18 +968,19 @@ function RecentActivityCard({
           })}
         </div>
       ) : (
-        <p className="text-sm text-slate-500 text-center py-6 flex-1">
+        <p className="text-sm text-center py-6 flex-1" style={{ color: PALETTE.inkSoft }}>
           Your study history will appear here.
         </p>
       )}
       <button
         onClick={onViewAll}
-        className="text-xs text-sky-700 hover:text-sky-800 hover:underline pt-3 text-center border-t border-sky-100 mt-3 font-medium"
+        className="text-xs hover:underline pt-3 text-center mt-3 font-medium border-t"
+        style={{ color: PALETTE.tealDeep, borderColor: `${PALETTE.surf}40` }}
         data-testid="button-view-all-activity"
       >
         View all activity →
       </button>
-    </div>
+    </StudySurface>
   );
 }
 
@@ -1008,47 +1001,40 @@ function AchievementsCard({
       label: "First Steps",
       hint: "Complete your first topic",
       unlocked: topicsStudied >= 1,
-      bg: "bg-sky-100",
-      color: "text-sky-600",
     },
     {
       icon: Award,
       label: "Streak Starter",
       hint: "Study 3 days in a row",
       unlocked: streak >= 3,
-      bg: "bg-cyan-100",
-      color: "text-cyan-700",
     },
     {
       icon: ShieldCheck,
       label: "Score Master",
       hint: "Get 80% or higher",
       unlocked: averageScore >= 80,
-      bg: "bg-blue-100",
-      color: "text-blue-600",
     },
   ];
   const unlockedCount = achievements.filter((a) => a.unlocked).length;
 
   return (
-    <div
-      className="border border-sky-100 rounded-xl p-5 flex flex-col shadow-sm"
-      style={{
-        background:
-          "linear-gradient(135deg, #FFFFFF 0%, #F4F9FC 60%, #EAF3FA 100%)",
-      }}
-    >
+    <StudySurface tone="light" innerClassName="p-5 flex flex-col">
       <div className="flex items-start justify-between mb-4 gap-3">
         <div className="min-w-0">
-          <h2 className="font-semibold text-slate-900 text-base">
+          <h2 className="font-semibold text-base" style={{ color: PALETTE.ink }}>
             Achievements
           </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs mt-0.5" style={{ color: PALETTE.inkSoft }}>
             {unlockedCount}/6 unlocked
           </p>
         </div>
         <button
-          className="flex items-center gap-1 text-xs text-sky-700 bg-white/70 border border-sky-100 rounded-full px-3 py-1 hover:bg-white transition-colors whitespace-nowrap"
+          className="flex items-center gap-1 text-xs rounded-full px-3 py-1 transition-colors whitespace-nowrap border"
+          style={{
+            color: PALETTE.tealDeep,
+            background: "rgba(255,255,255,0.7)",
+            borderColor: `${PALETTE.surf}55`,
+          }}
           data-testid="button-achievements-sort"
         >
           Sort
@@ -1057,8 +1043,9 @@ function AchievementsCard({
       </div>
 
       <div className="flex-1 space-y-1.5">
-        {achievements.map((a) => {
+        {achievements.map((a, idx) => {
           const Icon = a.icon;
+          const tile = BRAND_TILES[idx % BRAND_TILES.length];
           return (
             <div
               key={a.label}
@@ -1069,18 +1056,19 @@ function AchievementsCard({
               data-testid={`achievement-${a.label.replace(/\s+/g, "-").toLowerCase()}`}
             >
               <div
-                className={cn(
-                  "w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0",
-                  a.bg,
-                )}
+                className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 border"
+                style={{
+                  background: a.unlocked ? tile.bg : "rgba(148,163,184,0.18)",
+                  borderColor: a.unlocked ? tile.border : "transparent",
+                }}
               >
-                <Icon className={cn("w-4 h-4", a.color)} />
+                <Icon className={cn("w-4 h-4", a.unlocked ? "text-white" : "text-slate-400")} />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-slate-900 truncate">
+                <p className="text-sm font-semibold truncate" style={{ color: PALETTE.ink }}>
                   {a.label}
                 </p>
-                <p className="text-xs text-slate-500 truncate">
+                <p className="text-xs truncate" style={{ color: PALETTE.inkSoft }}>
                   {a.hint}
                 </p>
               </div>
@@ -1091,11 +1079,12 @@ function AchievementsCard({
 
       <button
         onClick={onViewAll}
-        className="text-xs text-sky-700 hover:text-sky-800 hover:underline pt-3 text-center border-t border-sky-100 mt-3 font-medium"
+        className="text-xs hover:underline pt-3 text-center mt-3 font-medium border-t"
+        style={{ color: PALETTE.tealDeep, borderColor: `${PALETTE.surf}40` }}
         data-testid="button-view-all-achievements"
       >
         View achievements →
       </button>
-    </div>
+    </StudySurface>
   );
 }
