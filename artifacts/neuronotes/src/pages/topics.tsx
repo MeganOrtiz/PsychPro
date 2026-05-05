@@ -1,9 +1,17 @@
 import { useMemo } from "react";
 import { useLocation, useSearch } from "wouter";
-import { Search, BookOpen, Layers, Brain, ChevronRight, ChevronLeft, FolderOpen, LibraryBig } from "lucide-react";
+import { Search, BookOpen, Layers, Brain, ChevronRight, ChevronLeft, LibraryBig } from "lucide-react";
 import { useGetTopics } from "@workspace/api-client-react";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import assessmentImg from "@/assets/topics/assessment.png";
+import clinicalCasesImg from "@/assets/topics/clinical-cases.png";
+import neuropsychologyImg from "@/assets/topics/neuropsychology.png";
+import neuroscienceImg from "@/assets/topics/neuroscience.png";
+import psychologyImg from "@/assets/topics/psychology.png";
+import psychotherapyImg from "@/assets/topics/psychotherapy.png";
+import researchMethodsImg from "@/assets/topics/research-methods.png";
+import specialTopicsImg from "@/assets/topics/special-topics.png";
 
 const CATEGORY_ORDER = [
   "Neuroscience",
@@ -15,6 +23,17 @@ const CATEGORY_ORDER = [
   "Special Topics",
   "Clinical Cases",
 ];
+
+const CATEGORY_IMAGES: Record<string, string> = {
+  Assessment: assessmentImg,
+  "Clinical Cases": clinicalCasesImg,
+  Neuropsychology: neuropsychologyImg,
+  Neuroscience: neuroscienceImg,
+  Psychology: psychologyImg,
+  Psychotherapy: psychotherapyImg,
+  "Research Methods": researchMethodsImg,
+  "Special Topics": specialTopicsImg,
+};
 
 export default function TopicsPage() {
   const [, navigate] = useLocation();
@@ -90,13 +109,13 @@ export default function TopicsPage() {
             <LibraryBig className="w-5 h-5 text-primary" />
           </div>
           <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-            {showCategoryView ? selectedCategory : "Categories"}
+            {showCategoryView ? selectedCategory : "Topics"}
           </h1>
         </div>
         <p className="text-sm text-muted-foreground">
           {showCategoryView
             ? `Browse ${categoryTopics.length} ${categoryTopics.length === 1 ? "topic" : "topics"}`
-            : "Choose a category to browse topics"}
+            : "Choose a topic area to start exploring"}
         </p>
       </div>
 
@@ -129,31 +148,52 @@ export default function TopicsPage() {
           </div>
         )
       ) : showCategoriesGrid ? (
-        <div className="flex flex-col gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {categories.map(cat => {
             const isEmpty = cat.count === 0;
+            const image = CATEGORY_IMAGES[cat.name];
             return (
-              <div
+              <button
                 key={cat.name}
+                type="button"
                 onClick={() => !isEmpty && setSelectedCategory(cat.name)}
+                disabled={isEmpty}
                 data-testid={`card-category-${cat.name.toLowerCase().replace(/\s+/g, "-")}`}
-                className={`bg-card border border-border rounded-xl px-4 py-3 flex items-center gap-4 transition-all ${
+                className={`group relative overflow-hidden rounded-2xl text-left border border-border bg-card aspect-[16/10] transition-all ${
                   isEmpty
                     ? "opacity-60 cursor-not-allowed"
-                    : "cursor-pointer hover:border-primary/40 hover:shadow-sm"
+                    : "cursor-pointer hover:border-primary/50 hover:shadow-lg hover:-translate-y-0.5"
                 }`}
               >
-                <div className="w-10 h-10 shrink-0 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <FolderOpen className="w-5 h-5 text-primary" />
+                {image ? (
+                  <img
+                    src={image}
+                    alt=""
+                    aria-hidden
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-primary/5" />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/10" />
+                <div className="relative h-full w-full p-4 flex flex-col justify-end text-white">
+                  <h3 className="font-semibold leading-tight text-lg drop-shadow-md">
+                    {cat.name}
+                  </h3>
+                  <div className="mt-1 flex items-center justify-between">
+                    <p className="text-xs text-white/85">
+                      {isEmpty ? "Coming soon" : `${cat.count} ${cat.count === 1 ? "topic" : "topics"}`}
+                    </p>
+                    {!isEmpty && (
+                      <span className="inline-flex items-center gap-1 text-xs font-medium text-white/90 group-hover:text-white">
+                        Explore
+                        <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+                      </span>
+                    )}
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground leading-tight truncate">{cat.name}</h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    {isEmpty ? "Coming soon" : `${cat.count} ${cat.count === 1 ? "topic" : "topics"}`}
-                  </p>
-                </div>
-                {!isEmpty && <ChevronRight className="w-5 h-5 text-muted-foreground shrink-0" />}
-              </div>
+              </button>
             );
           })}
         </div>
