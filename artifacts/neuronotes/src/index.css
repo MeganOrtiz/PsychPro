@@ -266,6 +266,32 @@
   );
 }
 
+/* Landing hero motion — gentle, brand-aligned ambient animation. */
+@keyframes brain-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -14px, 0); }
+}
+@keyframes glow-breathe {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 0.95; transform: scale(1.06); }
+}
+@keyframes ink-drift {
+  0% { transform: translate3d(-2%, 1%, 0) scale(1.06); }
+  50% { transform: translate3d(2%, -1%, 0) scale(1.1); }
+  100% { transform: translate3d(-2%, 1%, 0) scale(1.06); }
+}
+@keyframes wave-shift {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.brain-float { animation: brain-float 7s ease-in-out infinite; will-change: transform; }
+.glow-breathe { animation: glow-breathe 5s ease-in-out infinite; will-change: opacity, transform; }
+.ink-drift { animation: ink-drift 32s ease-in-out infinite; will-change: transform; }
+.wave-shift { animation: wave-shift 28s linear infinite; will-change: transform; }
+@media (prefers-reduced-motion: reduce) {
+  .brain-float, .glow-breathe, .ink-drift, .wave-shift { animation: none; }
+}
+
 /* Flashcard flip animation */
 .flashcard-container {
   perspective: 1000px;
