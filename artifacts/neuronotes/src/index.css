@@ -124,7 +124,7 @@
   --chart-4: 280 75% 60%;
   --chart-5: 0 84% 60%;
 
-  --app-font-sans: 'Inter', sans-serif;
+  --app-font-sans: 'Proxima Nova', 'Inter', 'SF Pro Display', sans-serif;
   --app-font-serif: 'Merriweather', Georgia, serif;
   --app-font-mono: Menlo, monospace;
   --radius: .625rem;
