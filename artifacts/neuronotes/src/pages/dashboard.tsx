@@ -23,7 +23,7 @@ import { useGetDashboardSummary, useGetTopics, useGetLeaderboard, useGetUserProg
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import featuredWorkImage from "@assets/Screenshot_2026-05-02_at_5.03.40_PM_1778027850822.png";
+import featuredWorkImage from "@assets/generated_images/spotlight_neuron_teal.png";
 import spotlightAvatarImage from "@assets/Screenshot_2026-04-28_at_8.01.18_PM_1778027668124.png";
 import TodayReviews from "@/components/learning/today-reviews";
 import { StudySurface } from "@/components/study/study-surface";
@@ -640,9 +640,10 @@ function MasteryLegend() {
 function SpotlightCard({ onCta }: { onCta: () => void }) {
   return (
     <div
-      className="relative overflow-hidden rounded-2xl p-6 text-white shadow-xl"
+      className="relative overflow-hidden rounded-2xl p-6 text-white shadow-xl border border-white/10"
       style={{
-        background: `radial-gradient(120% 80% at 30% 10%, ${PALETTE.surfaceElev} 0%, ${PALETTE.surface} 45%, ${PALETTE.bg} 100%)`,
+        background: `radial-gradient(130% 90% at 30% 0%, ${PALETTE.tealDeep}55 0%, ${PALETTE.surfaceElev}cc 35%, ${PALETTE.surface}f5 70%, ${PALETTE.steel} 100%)`,
+        boxShadow: `0 24px 60px -28px ${PALETTE.teal}aa, 0 0 0 1px ${PALETTE.surf}22 inset`,
       }}
     >
       {/* Starry shimmer */}

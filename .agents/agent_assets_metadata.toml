@@ -48,3 +48,9 @@ id = "xVQ0oMZ5dec9VXou_6RHa"
 uri = "file://artifacts/neuronotes/src/assets/topics/special-topics.png"
 type = "image"
 title = "special-topics-cover"
+
+[[generated]]
+id = "cWLeYvfRYDRqpec3PnmdS"
+uri = "file://attached_assets/generated_images/spotlight_neuron_teal.png"
+type = "image"
+title = "spotlight neuron teal"

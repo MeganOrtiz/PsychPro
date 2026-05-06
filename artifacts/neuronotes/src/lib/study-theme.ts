@@ -9,8 +9,8 @@ export const STUDY_PALETTE = {
   mist: "#BDE5FF",
   ink: "#061826",
   inkSoft: "#3D5A6E",
-  paper: "#FFFFFF",
-  paperSoft: "#F4FAFD",
+  paper: "#D8E4EE",
+  paperSoft: "#C4D4E0",
   cloud: "#EAF3FA",
 } as const;
 
