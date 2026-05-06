@@ -38,11 +38,17 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
       };
     case "light":
     default:
+      // "light" tone now uses the user-supplied .study-card recipe so
+      // dashboard tiles match every other shadcn Card on the dark theme.
+      // Diagonal dark-teal gradient, cerulean hairline border, deep drop
+      // shadow with faint outer cerulean glow, Frost-White text.
       return {
-        background: `linear-gradient(180deg, ${P.paper}, ${P.paperSoft})`,
-        borderColor: `${P.surf}55`,
-        boxShadow: `0 18px 48px -22px ${P.teal}55, 0 2px 6px -2px rgba(6,24,38,0.06)`,
-        color: P.ink,
+        background:
+          "linear-gradient(145deg, rgba(10,45,61,0.95), rgba(6,32,44,0.98))",
+        borderColor: "rgba(94,176,200,0.15)",
+        boxShadow:
+          "0 0 0 1px rgba(94,176,200,0.06), 0 20px 40px rgba(0,0,0,0.35), 0 0 30px rgba(94,176,200,0.06)",
+        color: P.mist,
       };
   }
 }
@@ -65,9 +71,9 @@ function pillStyles(tone: StudyTone, brand?: boolean): CSSProperties {
   return brand
     ? { background: P.teal, color: "#FFFFFF", borderColor: P.tealDeep }
     : {
-        background: "rgba(189,229,255,0.55)",
-        color: P.tealDeep,
-        borderColor: `${P.surf}66`,
+        background: "rgba(94,176,200,0.14)",
+        color: P.surf,
+        borderColor: "rgba(94,176,200,0.30)",
       };
 }
 

@@ -272,7 +272,7 @@ export default function DashboardPage() {
             <StudySurface tone="light" glow innerClassName="p-5">
               <div className="flex items-center gap-2 mb-4">
                 <TrendingUp className="w-4 h-4" style={{ color: PALETTE.tealDeep }} />
-                <h2 className="font-semibold" style={{ color: PALETTE.ink }}>
+                <h2 className="font-semibold" style={{ color: PALETTE.mist }}>
                   {continueTopic ? "Continue Your Journey" : "Begin Your Journey"}
                 </h2>
               </div>
@@ -327,8 +327,8 @@ export default function DashboardPage() {
             <div>
             <StudySurface tone="light" innerClassName="p-5">
               <div className="mb-4">
-                <h2 className="font-semibold" style={{ color: PALETTE.ink }}>Recommended for You</h2>
-                <p className="text-xs mt-1" style={{ color: PALETTE.inkSoft }}>
+                <h2 className="font-semibold" style={{ color: PALETTE.mist }}>Recommended for You</h2>
+                <p className="text-xs mt-1" style={{ color: PALETTE.mistSoft }}>
                   Based on your goals and progress
                 </p>
               </div>
@@ -354,9 +354,10 @@ export default function DashboardPage() {
                       <button
                         key={t.id}
                         onClick={() => navigate(`/topics/${t.topicId}`)}
-                        className="group w-full flex items-center gap-3 p-3 rounded-lg text-left border bg-white transition-all hover:-translate-y-0.5"
+                        className="group w-full flex items-center gap-3 p-3 rounded-lg text-left border transition-all hover:-translate-y-0.5"
                         style={{
-                          borderColor: `${PALETTE.surf}55`,
+                          background: "rgba(8,43,58,0.55)",
+                          borderColor: "rgba(94,176,200,0.18)",
                           boxShadow: `0 6px 18px -12px ${PALETTE.teal}66`,
                         }}
                         data-testid={`recommended-${t.topicId}`}
@@ -368,10 +369,10 @@ export default function DashboardPage() {
                           <Icon className="w-4 h-4 text-white" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold truncate" style={{ color: PALETTE.ink }}>
+                          <p className="text-sm font-semibold truncate" style={{ color: PALETTE.mist }}>
                             {t.topicName}
                           </p>
-                          <p className="text-xs truncate" style={{ color: PALETTE.inkSoft }}>
+                          <p className="text-xs truncate" style={{ color: PALETTE.mistSoft }}>
                             {meta.hint}
                           </p>
                         </div>
@@ -381,7 +382,7 @@ export default function DashboardPage() {
                   })}
                 </div>
               ) : (
-                <p className="text-sm text-center py-6" style={{ color: PALETTE.inkSoft }}>
+                <p className="text-sm text-center py-6" style={{ color: PALETTE.mistSoft }}>
                   Study a few topics and we'll suggest what to tackle next.
                 </p>
               )}
@@ -394,13 +395,13 @@ export default function DashboardPage() {
               {/* Your Streak */}
               <StudySurface tone="light" innerClassName="p-5">
                 <div className="flex items-center gap-2 mb-3">
-                  <h2 className="font-semibold" style={{ color: PALETTE.ink }}>Your Streak</h2>
+                  <h2 className="font-semibold" style={{ color: PALETTE.mist }}>Your Streak</h2>
                   <span aria-hidden>🔥</span>
                 </div>
                 <div className="mb-4">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-4xl font-bold leading-none" style={{ color: PALETTE.ink }}>{streak}</span>
-                    <span className="text-sm" style={{ color: PALETTE.inkSoft }}>day streak</span>
+                    <span className="text-4xl font-bold leading-none" style={{ color: PALETTE.mist }}>{streak}</span>
+                    <span className="text-sm" style={{ color: PALETTE.mistSoft }}>day streak</span>
                   </div>
                 </div>
                 <div className="grid grid-cols-7 gap-1 mb-3">
@@ -415,7 +416,7 @@ export default function DashboardPage() {
                       <span
                         className="text-xs"
                         style={{
-                          color: d.isToday ? PALETTE.ink : PALETTE.inkSoft,
+                          color: d.isToday ? PALETTE.mist : PALETTE.mistSoft,
                           fontWeight: d.isToday ? 600 : 400,
                         }}
                       >
@@ -424,7 +425,7 @@ export default function DashboardPage() {
                     </div>
                   ))}
                 </div>
-                <p className="text-xs" style={{ color: PALETTE.inkSoft }}>
+                <p className="text-xs" style={{ color: PALETTE.mistSoft }}>
                   {streak === 0
                     ? "Study today to start a streak."
                     : streak < 3
@@ -438,7 +439,7 @@ export default function DashboardPage() {
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <Trophy className="w-4 h-4" style={{ color: PALETTE.tealDeep }} />
-                    <h2 className="font-semibold" style={{ color: PALETTE.ink }}>Leaderboard</h2>
+                    <h2 className="font-semibold" style={{ color: PALETTE.mist }}>Leaderboard</h2>
                   </div>
                   <button
                     onClick={() => navigate("/leaderboard")}
@@ -488,7 +489,7 @@ export default function DashboardPage() {
                         >
                           {e.rank}
                         </div>
-                        <p className="text-sm font-medium truncate flex-1 min-w-0" style={{ color: PALETTE.ink }}>
+                        <p className="text-sm font-medium truncate flex-1 min-w-0" style={{ color: PALETTE.mist }}>
                           {e.displayName}
                           {e.isCurrentUser && (
                             <span
@@ -500,8 +501,8 @@ export default function DashboardPage() {
                           )}
                         </p>
                         <div className="flex items-center gap-1 flex-shrink-0" title="Topics completed">
-                          <BookOpen className="w-3 h-3" style={{ color: PALETTE.inkSoft }} />
-                          <span className="text-xs font-semibold tabular-nums" style={{ color: PALETTE.ink }}>
+                          <BookOpen className="w-3 h-3" style={{ color: PALETTE.mistSoft }} />
+                          <span className="text-xs font-semibold tabular-nums" style={{ color: PALETTE.mist }}>
                             {e.topicsCompleted}
                           </span>
                         </div>
@@ -514,7 +515,7 @@ export default function DashboardPage() {
                                 : "text-slate-300"
                             )}
                           />
-                          <span className="text-xs font-semibold tabular-nums" style={{ color: PALETTE.ink }}>
+                          <span className="text-xs font-semibold tabular-nums" style={{ color: PALETTE.mist }}>
                             {e.streak}
                           </span>
                         </div>
@@ -793,7 +794,7 @@ function StudyAnalyticsCard({
   return (
     <StudySurface tone="light" innerClassName="p-5 flex flex-col">
       <div className="flex items-center justify-between mb-4 gap-3">
-        <h2 className="font-semibold text-base whitespace-nowrap" style={{ color: PALETTE.ink }}>
+        <h2 className="font-semibold text-base whitespace-nowrap" style={{ color: PALETTE.mist }}>
           Study Analytics
         </h2>
         <button
@@ -824,14 +825,14 @@ function StudyAnalyticsCard({
               dataKey="day"
               tickLine={false}
               axisLine={false}
-              tick={{ fontSize: 11, fill: PALETTE.inkSoft }}
+              tick={{ fontSize: 11, fill: PALETTE.mistSoft }}
               interval={0}
               padding={{ left: 8, right: 8 }}
             />
             <YAxis
               tickLine={false}
               axisLine={false}
-              tick={{ fontSize: 11, fill: PALETTE.inkSoft }}
+              tick={{ fontSize: 11, fill: PALETTE.mistSoft }}
               domain={[0, 100]}
               ticks={[0, 25, 50, 75, 100]}
               width={32}
@@ -858,25 +859,25 @@ function StudyAnalyticsCard({
       </div>
 
       <div className="mt-4 pt-4 border-t" style={{ borderColor: `${PALETTE.surf}40` }}>
-        <p className="text-xs font-semibold mb-3" style={{ color: PALETTE.ink }}>
+        <p className="text-xs font-semibold mb-3" style={{ color: PALETTE.mist }}>
           Performance Overview
         </p>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <p className="text-3xl font-bold leading-none" style={{ color: PALETTE.ink }}>
+            <p className="text-3xl font-bold leading-none" style={{ color: PALETTE.mist }}>
               {averageScore}%
             </p>
-            <p className="text-xs mt-1.5" style={{ color: PALETTE.inkSoft }}>Average Score</p>
+            <p className="text-xs mt-1.5" style={{ color: PALETTE.mistSoft }}>Average Score</p>
             <p className="text-[11px] mt-0.5" style={{ color: PALETTE.tealDeep }}>
               ↑ 8% vs last week
             </p>
           </div>
           <div>
-            <p className="text-3xl font-bold leading-none" style={{ color: PALETTE.ink }}>
+            <p className="text-3xl font-bold leading-none" style={{ color: PALETTE.mist }}>
               {topicsStudied}
             </p>
-            <p className="text-xs mt-1.5" style={{ color: PALETTE.inkSoft }}>Total Topics</p>
-            <p className="text-[11px] mt-0.5" style={{ color: PALETTE.inkSoft }}>
+            <p className="text-xs mt-1.5" style={{ color: PALETTE.mistSoft }}>Total Topics</p>
+            <p className="text-[11px] mt-0.5" style={{ color: PALETTE.mistSoft }}>
               Keep learning!
             </p>
           </div>
@@ -909,7 +910,7 @@ function RecentActivityCard({
 
   return (
     <StudySurface tone="light" innerClassName="p-5 flex flex-col">
-      <h2 className="font-semibold text-base mb-4" style={{ color: PALETTE.ink }}>
+      <h2 className="font-semibold text-base mb-4" style={{ color: PALETTE.mist }}>
         Recent Activity
       </h2>
       {isLoading ? (
@@ -926,7 +927,7 @@ function RecentActivityCard({
               <button
                 key={t.id}
                 onClick={() => onItemClick(t.topicId)}
-                className="w-full flex items-center gap-3 hover:bg-white/70 px-2 py-2.5 rounded-lg transition-colors text-left"
+                className="w-full flex items-center gap-3 hover:bg-white/5 px-2 py-2.5 rounded-lg transition-colors text-left"
                 data-testid={`recent-${t.topicId}`}
               >
                 <div
@@ -936,10 +937,10 @@ function RecentActivityCard({
                   <Brain className="w-4 h-4 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate" style={{ color: PALETTE.ink }}>
+                  <p className="text-sm font-medium truncate" style={{ color: PALETTE.mist }}>
                     {t.topicName || "Topic"}
                   </p>
-                  <p className="text-xs truncate" style={{ color: PALETTE.inkSoft }}>
+                  <p className="text-xs truncate" style={{ color: PALETTE.mistSoft }}>
                     {t.score >= 80
                       ? `Completed · ${t.score}%`
                       : t.score > 0
@@ -947,7 +948,7 @@ function RecentActivityCard({
                       : "Started"}
                   </p>
                 </div>
-                <span className="text-[11px] flex-shrink-0 ml-2" style={{ color: PALETTE.inkSoft }}>
+                <span className="text-[11px] flex-shrink-0 ml-2" style={{ color: PALETTE.mistSoft }}>
                   {timeAgo(t.lastAccessed)}
                 </span>
               </button>
@@ -955,7 +956,7 @@ function RecentActivityCard({
           })}
         </div>
       ) : (
-        <p className="text-sm text-center py-6 flex-1" style={{ color: PALETTE.inkSoft }}>
+        <p className="text-sm text-center py-6 flex-1" style={{ color: PALETTE.mistSoft }}>
           Your study history will appear here.
         </p>
       )}
@@ -1008,10 +1009,10 @@ function AchievementsCard({
     <StudySurface tone="light" innerClassName="p-5 flex flex-col">
       <div className="flex items-start justify-between mb-4 gap-3">
         <div className="min-w-0">
-          <h2 className="font-semibold text-base" style={{ color: PALETTE.ink }}>
+          <h2 className="font-semibold text-base" style={{ color: PALETTE.mist }}>
             Achievements
           </h2>
-          <p className="text-xs mt-0.5" style={{ color: PALETTE.inkSoft }}>
+          <p className="text-xs mt-0.5" style={{ color: PALETTE.mistSoft }}>
             {unlockedCount}/6 unlocked
           </p>
         </div>
@@ -1052,10 +1053,10 @@ function AchievementsCard({
                 <Icon className={cn("w-4 h-4", a.unlocked ? "text-white" : "text-slate-400")} />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold truncate" style={{ color: PALETTE.ink }}>
+                <p className="text-sm font-semibold truncate" style={{ color: PALETTE.mist }}>
                   {a.label}
                 </p>
-                <p className="text-xs truncate" style={{ color: PALETTE.inkSoft }}>
+                <p className="text-xs truncate" style={{ color: PALETTE.mistSoft }}>
                   {a.hint}
                 </p>
               </div>
