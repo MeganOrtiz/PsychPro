@@ -232,37 +232,37 @@
    palette colors directly and remain unaffected. */
 .study-page-bg,
 .study-page-aurora {
-  --background: 192 64% 12%;      /* STUDY_PALETTE.bg #0B2A33 — deep cerulean */
+  --background: 209 65% 15%;      /* STUDY_PALETTE.bg #0D2A40 — deep ocean blue */
   --foreground: 0 0% 100%;        /* white */
-  --card: 190 62% 23%;            /* STUDY_PALETTE.surface #16505F — mid cerulean */
+  --card: 207 62% 27%;            /* STUDY_PALETTE.surface #1A4D70 — mid ocean blue */
   --card-foreground: 0 0% 100%;
-  --popover: 190 62% 23%;
+  --popover: 207 62% 27%;
   --popover-foreground: 0 0% 100%;
-  --muted: 192 60% 31%;
-  --muted-foreground: 192 30% 82%;
-  --border: 192 50% 38%;
-  --input: 192 60% 31%;
-  --primary: 197 60% 48%;         /* STUDY_PALETTE.teal — Tidepool Teal */
+  --muted: 207 61% 36%;
+  --muted-foreground: 207 30% 82%;
+  --border: 207 55% 42%;
+  --input: 207 61% 36%;
+  --primary: 197 60% 48%;         /* STUDY_PALETTE.teal — Tidepool Teal accent */
   --primary-foreground: 0 0% 100%;
 }
 
 .study-page-bg {
-  /* Cerulean ink-cloud gradient: layered shades of cerulean from deep at
-     the edges to a lifted mid-cerulean toward the center. */
+  /* Ocean-blue gradient: deep at the edges to a lifted mid-blue toward
+     the center. True blue with just a hint of teal warmth — not green. */
   background: radial-gradient(
     ellipse 90% 75% at 50% 50%,
-    #0B2A33 0%,
-    #16505F 65%,
-    #1F6B7D 100%
+    #0D2A40 0%,
+    #1A4D70 65%,
+    #246A95 100%
   );
 }
 
 .study-page-aurora {
   background: radial-gradient(
     ellipse 90% 75% at 50% 50%,
-    #0B2A33 0%,
-    #16505F 65%,
-    #1F6B7D 100%
+    #0D2A40 0%,
+    #1A4D70 65%,
+    #246A95 100%
   );
 }
 
