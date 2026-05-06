@@ -260,18 +260,14 @@
   --ring: 194 49% 58%;
 }
 
-.study-page-bg {
-  background:
-    radial-gradient(ellipse 80% 60% at 20% 0%, hsl(198 76% 11%) 0%, transparent 60%),
-    radial-gradient(ellipse 70% 60% at 100% 100%, hsl(194 55% 16%) 0%, transparent 60%),
-    linear-gradient(180deg, hsl(199 84% 6%) 0%, hsl(199 84% 8%) 100%);
-}
-
+.study-page-bg,
 .study-page-aurora {
-  background:
-    radial-gradient(ellipse 80% 60% at 20% 0%, hsl(198 76% 11%) 0%, transparent 60%),
-    radial-gradient(ellipse 70% 60% at 100% 100%, hsl(194 55% 16%) 0%, transparent 60%),
-    linear-gradient(180deg, hsl(199 84% 6%) 0%, hsl(199 84% 8%) 100%);
+  background: linear-gradient(
+    180deg,
+    #031923 0%,
+    #041D29 35%,
+    #062634 100%
+  );
 }
 
 /* Flashcard flip animation */
