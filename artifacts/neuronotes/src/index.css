@@ -232,64 +232,38 @@
    palette colors directly and remain unaffected. */
 .study-page-bg,
 .study-page-aurora {
-  --background: 209 73% 9%;       /* STUDY_PALETTE.bg #061826 */
+  --background: 207 61% 15%;      /* STUDY_PALETTE.bg #0F2A3F */
   --foreground: 0 0% 100%;        /* white */
-  --card: 207 50% 17%;            /* STUDY_PALETTE.surface #152F40 */
+  --card: 208 62% 29%;            /* STUDY_PALETTE.surface #1C4E75 — Atlantic Steel */
   --card-foreground: 0 0% 100%;
-  --popover: 207 50% 17%;
+  --popover: 208 62% 29%;
   --popover-foreground: 0 0% 100%;
-  --muted: 207 35% 22%;
-  --muted-foreground: 207 25% 78%;
-  --border: 207 35% 28%;
-  --input: 207 35% 22%;
+  --muted: 208 52% 35%;
+  --muted-foreground: 207 30% 82%;
+  --border: 208 50% 42%;
+  --input: 208 52% 35%;
   --primary: 197 60% 48%;         /* STUDY_PALETTE.teal */
   --primary-foreground: 0 0% 100%;
 }
 
 .study-page-bg {
-  /* Same navy family as the sidebar with a radial vignette: lighter at the
-     outer edges, darker toward the middle so cards pop forward. */
+  /* Atlantic Steel family with a radial vignette — lighter outer edges,
+     deeper at the center so cards pop forward without feeling cave-dark. */
   background: radial-gradient(
     ellipse 90% 75% at 50% 50%,
-    #061826 0%,
-    #152F40 65%,
-    #1A3C50 100%
+    #0F2A3F 0%,
+    #1C4E75 65%,
+    #2A6188 100%
   );
 }
 
 .study-page-aurora {
   background: radial-gradient(
     ellipse 90% 75% at 50% 50%,
-    #061826 0%,
-    #152F40 65%,
-    #1A3C50 100%
+    #0F2A3F 0%,
+    #1C4E75 65%,
+    #2A6188 100%
   );
-}
-
-/* Landing hero motion — gentle, brand-aligned ambient animation. */
-@keyframes brain-float {
-  0%, 100% { transform: translate3d(0, 0, 0); }
-  50% { transform: translate3d(0, -14px, 0); }
-}
-@keyframes glow-breathe {
-  0%, 100% { opacity: 0.55; transform: scale(1); }
-  50% { opacity: 0.95; transform: scale(1.06); }
-}
-@keyframes ink-drift {
-  0% { transform: translate3d(-2%, 1%, 0) scale(1.06); }
-  50% { transform: translate3d(2%, -1%, 0) scale(1.1); }
-  100% { transform: translate3d(-2%, 1%, 0) scale(1.06); }
-}
-@keyframes wave-shift {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-.brain-float { animation: brain-float 7s ease-in-out infinite; will-change: transform; }
-.glow-breathe { animation: glow-breathe 5s ease-in-out infinite; will-change: opacity, transform; }
-.ink-drift { animation: ink-drift 32s ease-in-out infinite; will-change: transform; }
-.wave-shift { animation: wave-shift 28s linear infinite; will-change: transform; }
-@media (prefers-reduced-motion: reduce) {
-  .brain-float, .glow-breathe, .ink-drift, .wave-shift { animation: none; }
 }
 
 /* Flashcard flip animation */

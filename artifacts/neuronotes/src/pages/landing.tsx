@@ -11,14 +11,8 @@ import {
   Clock,
   ArrowRight,
   FileText,
-  Activity,
-  HeartHandshake,
-  TrendingUp,
-  Award,
 } from "lucide-react";
 import psychproMark from "@/assets/brand/psychpro-mark.png";
-import heroBrain from "@assets/Screenshot_2026-04-28_at_8.41.01_PM_1778029287499.png";
-import tealInk from "@assets/Screenshot_2026-04-27_at_1.40.17_AM_1778029326071.png";
 
 const REAL_TOPICS = [
   "Psychological Disorders", "Personality Disorders", "Neurodevelopmental Disorders",
@@ -157,68 +151,28 @@ export default function LandingPage() {
       {/* HERO */}
       <section className="relative overflow-hidden">
         <Starfield animate={animateBg} />
-
-        {/* Teal ink ambient backdrop — drifts slowly, blended into our palette */}
+        {/* nebula glows */}
         <div
-          aria-hidden
-          className={`absolute inset-0 -z-10 ${animateBg ? "ink-drift" : ""}`}
-          style={{
-            backgroundImage: `url(${tealInk})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            opacity: 0.22,
-            mixBlendMode: "screen",
-            maskImage:
-              "radial-gradient(ellipse 80% 65% at 50% 45%, #000 0%, transparent 75%)",
-            WebkitMaskImage:
-              "radial-gradient(ellipse 80% 65% at 50% 45%, #000 0%, transparent 75%)",
-          }}
-        />
-
-        {/* Centered nebula glow */}
-        <div
-          aria-hidden
-          className={`absolute top-[-180px] left-1/2 -translate-x-1/2 w-[1100px] h-[700px] rounded-full blur-[140px] -z-10 ${animateBg ? "glow-breathe" : ""}`}
+          className="absolute top-[-200px] left-1/2 -translate-x-1/2 w-[1100px] h-[700px] rounded-full blur-[140px] -z-10"
           style={{ background: `radial-gradient(circle, ${PALETTE.teal}55, transparent 60%)` }}
+          aria-hidden
         />
         <div
-          aria-hidden
           className="absolute top-40 right-[-100px] w-[400px] h-[400px] rounded-full blur-[110px] -z-10"
           style={{ background: `${PALETTE.surf}33` }}
+          aria-hidden
         />
         <div
-          aria-hidden
           className="absolute top-20 left-[-100px] w-[350px] h-[350px] rounded-full blur-[110px] -z-10"
           style={{ background: `${PALETTE.steel}55` }}
+          aria-hidden
         />
 
-        {/* Animated horizontal sound-wave ribbons (subtle, behind brain) */}
-        <div aria-hidden className="absolute inset-x-0 top-[36%] -z-10 h-px overflow-hidden opacity-50">
-          <div
-            className={`h-px w-[200%] ${animateBg ? "wave-shift" : ""}`}
-            style={{
-              background: `linear-gradient(90deg, transparent, ${PALETTE.surf}88, transparent, ${PALETTE.teal}66, transparent)`,
-              filter: `blur(0.5px) drop-shadow(0 0 6px ${PALETTE.surf}66)`,
-            }}
-          />
-        </div>
-        <div aria-hidden className="absolute inset-x-0 top-[44%] -z-10 h-px overflow-hidden opacity-30">
-          <div
-            className={`h-px w-[200%] ${animateBg ? "wave-shift" : ""}`}
-            style={{
-              animationDuration: "44s",
-              animationDirection: "reverse",
-              background: `linear-gradient(90deg, transparent, ${PALETTE.mist}66, transparent)`,
-              filter: `blur(0.5px) drop-shadow(0 0 5px ${PALETTE.surf}55)`,
-            }}
-          />
-        </div>
-
-        <div className="max-w-5xl mx-auto px-4 pt-10 md:pt-14 pb-14 md:pb-20 relative">
+        <div className="max-w-5xl mx-auto px-4 pt-12 md:pt-16 pb-12 md:pb-16 relative">
           <div className="relative flex flex-col items-center text-center">
             {/* Eyebrow pill */}
             <div
-              className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm backdrop-blur-md border mb-6 md:mb-8 z-10"
+              className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm backdrop-blur-md border mb-10 md:mb-12 z-10"
               style={{
                 background: `${PALETTE.surface}cc`,
                 borderColor: `${PALETTE.surf}55`,
@@ -229,119 +183,54 @@ export default function LandingPage() {
               Built for the next generation of psychologists
             </div>
 
-            {/* Hero brain — crops to just the glowing brain (no circle, no
-                baked-in wordmark from the source screenshot), floats gently.
-                Source image is 904x612 with the brain in roughly the upper
-                third (x ~38–62%, y ~10–55%). We zoom in to that region using
-                background-size + background-position. */}
-            <div className="relative w-full flex justify-center">
+            {/* Wordmark with ghosted brain behind */}
+            <div className="relative w-full flex flex-col items-center">
+              {/* Brain ghost layer */}
               <div
                 aria-hidden
-                className={`pointer-events-none w-[min(540px,92vw)] h-[200px] sm:h-[260px] md:h-[320px] -mb-2 sm:-mb-4 md:-mb-6 ${animateBg ? "brain-float" : ""}`}
+                className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(720px,90vw)] aspect-square opacity-50"
                 style={{
-                  backgroundImage: `url(${heroBrain})`,
-                  backgroundSize: "260% auto",
-                  backgroundPosition: "50% 18%",
+                  backgroundImage: `url(${psychproMark})`,
+                  backgroundSize: "180% auto",
+                  backgroundPosition: "center 18%",
                   backgroundRepeat: "no-repeat",
+                  filter: "blur(2px) saturate(140%)",
                   maskImage:
-                    "radial-gradient(ellipse 55% 75% at 50% 45%, #000 55%, transparent 85%)",
+                    "radial-gradient(closest-side, #000 35%, transparent 78%)",
                   WebkitMaskImage:
-                    "radial-gradient(ellipse 55% 75% at 50% 45%, #000 55%, transparent 85%)",
-                  filter: "saturate(1.1) brightness(1.05)",
+                    "radial-gradient(closest-side, #000 35%, transparent 78%)",
                 }}
               />
-            </div>
 
-            {/* PsychPro wordmark */}
-            <h1
-              className="relative z-10 leading-none select-none"
-              style={{
-                fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
-                fontWeight: 300,
-                fontSize: "clamp(56px, 12vw, 148px)",
-                letterSpacing: "-0.01em",
-                textShadow: `0 8px 40px ${PALETTE.bg}cc, 0 0 60px ${PALETTE.teal}33`,
-              }}
-            >
-              <span style={{ color: "#FFFFFF" }}>Psych</span>
-              <span style={{ color: PALETTE.surf }}>Pro</span>
-            </h1>
-
-            {/* Tagline */}
-            <p
-              className="relative z-10 mt-4 md:mt-5 text-[11px] sm:text-xs md:text-sm font-medium"
-              style={{
-                color: `${PALETTE.mist}dd`,
-                letterSpacing: "0.4em",
-              }}
-            >
-              UNDERSTAND.&nbsp;&nbsp;EMPOWER.&nbsp;&nbsp;EVOLVE.
-            </p>
-
-            {/* Thin divider line with center sparkle */}
-            <div className="relative z-10 mt-6 md:mt-8 flex items-center justify-center gap-3 w-full max-w-md">
-              <div
-                className="h-px flex-1"
+              {/* PsychPro wordmark — thin geometric sans */}
+              <h1
+                className="relative z-10 leading-none select-none"
                 style={{
-                  background: `linear-gradient(90deg, transparent, ${PALETTE.surf}88, transparent)`,
+                  fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
+                  fontWeight: 300,
+                  fontSize: "clamp(64px, 14vw, 168px)",
+                  letterSpacing: "-0.01em",
+                  textShadow: `0 8px 40px ${PALETTE.bg}cc`,
                 }}
-              />
-              <div
-                className="w-1.5 h-1.5 rotate-45"
-                style={{
-                  background: PALETTE.surf,
-                  boxShadow: `0 0 12px ${PALETTE.surf}`,
-                }}
-              />
-              <div
-                className="h-px flex-1"
-                style={{
-                  background: `linear-gradient(90deg, transparent, ${PALETTE.surf}88, transparent)`,
-                }}
-              />
-            </div>
+              >
+                <span style={{ color: "#FFFFFF" }}>Psych</span>
+                <span style={{ color: PALETTE.surf }}>Pro</span>
+              </h1>
 
-            {/* Four brand pillars */}
-            <div className="relative z-10 mt-7 md:mt-9 grid grid-cols-4 gap-3 sm:gap-6 md:gap-10 w-full max-w-xl">
-              {[
-                { icon: Activity, label: "ASSESS" },
-                { icon: HeartHandshake, label: "SUPPORT" },
-                { icon: TrendingUp, label: "GROW" },
-                { icon: Award, label: "EVOLVE" },
-              ].map((p) => {
-                const Icon = p.icon;
-                return (
-                  <div
-                    key={p.label}
-                    className="group flex flex-col items-center gap-2"
-                  >
-                    <div
-                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center border transition-all group-hover:-translate-y-0.5"
-                      style={{
-                        background: `${PALETTE.surface}aa`,
-                        borderColor: `${PALETTE.surf}44`,
-                        boxShadow: `inset 0 0 18px ${PALETTE.teal}22, 0 8px 24px -10px ${PALETTE.teal}88`,
-                      }}
-                    >
-                      <Icon
-                        className="w-4 h-4 sm:w-5 sm:h-5"
-                        style={{ color: PALETTE.surf }}
-                        strokeWidth={1.6}
-                      />
-                    </div>
-                    <span
-                      className="text-[10px] sm:text-[11px] font-semibold tracking-[0.18em]"
-                      style={{ color: `${PALETTE.mist}cc` }}
-                    >
-                      {p.label}
-                    </span>
-                  </div>
-                );
-              })}
+              {/* Tagline */}
+              <p
+                className="relative z-10 mt-3 md:mt-4 text-xs sm:text-sm md:text-base font-medium"
+                style={{
+                  color: `${PALETTE.mist}cc`,
+                  letterSpacing: "0.32em",
+                }}
+              >
+                LEARN.&nbsp;&nbsp;EXPAND.&nbsp;&nbsp;CONNECT.
+              </p>
             </div>
 
             {/* CTAs */}
-            <div className="relative z-10 flex flex-col sm:flex-row gap-3 justify-center items-center mt-9 md:mt-11">
+            <div className="relative z-10 flex flex-col sm:flex-row gap-3 justify-center items-center mt-10 md:mt-12">
               <button
                 onClick={() => goToApp()}
                 data-testid="button-start-learning"
