@@ -270,6 +270,32 @@
   );
 }
 
+/* User-supplied card surface: diagonal dark-teal gradient with cerulean
+   ring, deep drop shadow, and faint cerulean glow. Applied to every
+   shadcn Card (.bg-card) inside any .study-page-bg page. */
+.study-page-bg .bg-card,
+.study-page-aurora .bg-card {
+  background-image: linear-gradient(
+    145deg,
+    rgba(10, 45, 61, 0.95),
+    rgba(6, 32, 44, 0.98)
+  );
+  box-shadow:
+    0 0 0 1px rgba(94, 176, 200, 0.12),
+    0 10px 30px rgba(0, 0, 0, 0.35),
+    0 0 24px rgba(94, 176, 200, 0.10);
+}
+
+/* User-supplied primary button: bright cerulean → arctic ocean diagonal. */
+.study-page-bg .bg-primary,
+.study-page-aurora .bg-primary {
+  background-image: linear-gradient(
+    135deg,
+    #5EB0C8 0%,
+    #2A7387 100%
+  );
+}
+
 /* Flashcard flip animation */
 .flashcard-container {
   perspective: 1000px;
