@@ -23,7 +23,8 @@ import { useGetDashboardSummary, useGetTopics, useGetLeaderboard, useGetUserProg
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import featuredWorkImage from "@assets/Screenshot_2026-04-26_at_11.05.53_PM_1777262767317.png";
+import featuredWorkImage from "@assets/Screenshot_2026-05-02_at_5.03.40_PM_1778027850822.png";
+import spotlightAvatarImage from "@assets/Screenshot_2026-04-28_at_8.01.18_PM_1778027668124.png";
 import TodayReviews from "@/components/learning/today-reviews";
 import { StudySurface } from "@/components/study/study-surface";
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
@@ -689,7 +690,7 @@ function SpotlightCard({ onCta }: { onCta: () => void }) {
             }}
           >
             <img
-              src={featuredWorkImage}
+              src={spotlightAvatarImage}
               alt="Featured spotlight"
               className="absolute inset-0 w-full h-full object-cover"
             />
@@ -736,15 +737,9 @@ function SpotlightCard({ onCta }: { onCta: () => void }) {
               className="text-sm font-semibold text-white leading-snug mb-2"
               style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}
             >
-              Dissertation: Cognitive Resilience and Outcomes in Concussion
-              Recovery
-            </p>
-            <p
-              className="text-xs text-slate-100 leading-relaxed"
-              style={{ textShadow: "0 1px 4px rgba(0,0,0,0.85)" }}
-            >
-              Investigating the relationship between cognitive flexibility and
-              long-term functional recovery in collegiate athletes.
+              Dissertation work: SOCIAL COGNITION IN CHILDREN WITH AUTISM
+              SPECTRUM DISORDER: EXPLORING CORRELATES BETWEEN OBJECTIVE
+              NEUROPSYCHOLOGICAL MEASURES AND PARENT REPORTS
             </p>
           </div>
         </div>
