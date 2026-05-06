@@ -248,15 +248,15 @@
   --popover: 198 76% 13%;
   --popover-foreground: 187 50% 93%;
   --muted: 199 72% 14%;              /* #0A2D3D bg-input */
-  --muted-foreground: 191 35% 79%;   /* #B7D5DC text-secondary */
+  --muted-foreground: 192 22% 59%;   /* #7FA4AD muted text */
   --border: 194 40% 25%;             /* cerulean-tinted border */
   --input: 199 72% 14%;              /* #0A2D3D bg-input */
   --primary: 194 49% 58%;            /* #5EB0C8 cerulean-primary */
   --primary-foreground: 199 84% 7%;
-  --secondary: 199 71% 16%;          /* #0C3446 bg-card-hover */
+  --secondary: 193 53% 35%;          /* #2A7387 Arctic Ocean Blue */
   --secondary-foreground: 187 50% 93%;
-  --accent: 199 71% 16%;
-  --accent-foreground: 187 50% 93%;
+  --accent: 194 55% 76%;             /* #9FD3E3 Icy Glaze */
+  --accent-foreground: 199 84% 7%;
   --ring: 194 49% 58%;
 }
 
