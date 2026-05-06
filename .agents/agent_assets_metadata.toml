@@ -5,49 +5,49 @@ outputs = []
 id = "FMks-xeRNNMwnstQfLwtA"
 uri = "file://artifacts/neuronotes/src/assets/topics/assessment.png"
 type = "image"
-title = "assessment-cover"
+title = "topic assessment cerulean"
 
 [[generated]]
 id = "XJXuwg5-YTwF-RRS9sS0L"
 uri = "file://artifacts/neuronotes/src/assets/topics/clinical-cases.png"
 type = "image"
-title = "clinical-cases-cover"
+title = "topic clinical-cases cerulean"
 
 [[generated]]
 id = "Ced58g2cig6WbekxULeM_"
 uri = "file://artifacts/neuronotes/src/assets/topics/neuropsychology.png"
 type = "image"
-title = "neuropsychology-cover"
+title = "topic neuropsychology cerulean"
 
 [[generated]]
 id = "OLIOVKYff3cBmblAClIdu"
 uri = "file://artifacts/neuronotes/src/assets/topics/neuroscience.png"
 type = "image"
-title = "neuroscience-cover"
+title = "topic neuroscience cerulean"
 
 [[generated]]
 id = "QhNa2in6Bdy_QnyOguKwZ"
 uri = "file://artifacts/neuronotes/src/assets/topics/psychology.png"
 type = "image"
-title = "psychology-cover"
+title = "topic psychology cerulean"
 
 [[generated]]
 id = "rDh6sI8M93iUZvvulBDgl"
 uri = "file://artifacts/neuronotes/src/assets/topics/psychotherapy.png"
 type = "image"
-title = "psychotherapy-cover"
+title = "topic psychotherapy cerulean"
 
 [[generated]]
 id = "dYTsO43rTViDvmgJKqe0K"
 uri = "file://artifacts/neuronotes/src/assets/topics/research-methods.png"
 type = "image"
-title = "research-methods-cover"
+title = "topic research-methods cerulean"
 
 [[generated]]
 id = "xVQ0oMZ5dec9VXou_6RHa"
 uri = "file://artifacts/neuronotes/src/assets/topics/special-topics.png"
 type = "image"
-title = "special-topics-cover"
+title = "topic special-topics cerulean"
 
 [[generated]]
 id = "cWLeYvfRYDRqpec3PnmdS"
