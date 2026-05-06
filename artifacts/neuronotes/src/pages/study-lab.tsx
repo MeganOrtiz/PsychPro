@@ -79,18 +79,18 @@ export default function StudyLabPage() {
 
         <nav className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-8">
           {[
-            { href: "#active-recall", icon: Brain, label: "Active Recall", color: "text-amber-600 dark:text-amber-400 bg-amber-500/10" },
-            { href: "#spaced", icon: CalendarDays, label: "Spaced Repetition", color: "text-primary bg-primary/10" },
-            { href: "#interleaving", icon: Shuffle, label: "Mixed Mode", color: "text-violet-600 dark:text-violet-400 bg-violet-500/15" },
-            { href: "#elaboration", icon: Lightbulb, label: "Elaboration", color: "text-yellow-600 dark:text-yellow-400 bg-yellow-400/20" },
+            { href: "#active-recall", icon: Brain, label: "Active Recall" },
+            { href: "#spaced", icon: CalendarDays, label: "Spaced Repetition" },
+            { href: "#interleaving", icon: Shuffle, label: "Mixed Mode" },
+            { href: "#elaboration", icon: Lightbulb, label: "Elaboration" },
           ].map((item) => (
             <a
               key={item.href}
               href={item.href}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-card hover:bg-accent transition-colors text-sm font-medium"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg border border-white/10 bg-white/[0.06] backdrop-blur-sm hover:bg-white/[0.10] hover:border-white/20 transition-colors text-sm font-medium text-white"
               data-testid={`jump-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
             >
-              <span className={`w-7 h-7 rounded-md flex items-center justify-center ${item.color}`}>
+              <span className="w-7 h-7 rounded-md flex items-center justify-center bg-white/10 text-white/80 border border-white/10">
                 <item.icon className="w-4 h-4" />
               </span>
               <span className="truncate">{item.label}</span>
@@ -128,7 +128,7 @@ export default function StudyLabPage() {
           </div>
         </div>
 
-        <div className="mt-10 rounded-2xl border border-border bg-gradient-to-br from-primary/5 to-primary/10 p-6 text-center">
+        <div className="mt-10 rounded-2xl border border-white/10 bg-white/[0.05] backdrop-blur-md p-6 text-center shadow-xl">
           <h2 className="text-lg md:text-xl font-semibold text-foreground mb-2">
             Apply these to a real topic
           </h2>

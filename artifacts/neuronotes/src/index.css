@@ -332,8 +332,8 @@
 }
 
 @keyframes learning-pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.45); }
-  50%      { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.35); }
+  50%      { box-shadow: 0 0 0 8px rgba(255, 255, 255, 0); }
 }
 .animate-pulse-glow {
   animation: learning-pulse-glow 1.6s ease-in-out infinite;

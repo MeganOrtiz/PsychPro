@@ -15,12 +15,12 @@ export interface InterleavingModeProps {
 }
 
 const TOPIC_PALETTE: Record<string, string> = {
-  default0: "bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-300",
-  default1: "bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300",
-  default2: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300",
-  default3: "bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300",
-  default4: "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300",
-  default5: "bg-cyan-100 text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-300",
+  default0: "bg-white/15 text-white border border-white/15",
+  default1: "bg-white/10 text-white/90 border border-white/15",
+  default2: "bg-white/20 text-white border border-white/20",
+  default3: "bg-white/[0.07] text-white/85 border border-white/10",
+  default4: "bg-white/25 text-white border border-white/25",
+  default5: "bg-white/[0.05] text-white/80 border border-white/10",
 };
 
 function seededShuffle<T>(arr: T[], seed: number): T[] {
@@ -100,15 +100,15 @@ export default function InterleavingMode({ cards }: InterleavingModeProps) {
 
   return (
     <section
-      className="rounded-2xl border border-border bg-card p-5 md:p-6 shadow-sm"
+      className="rounded-2xl border border-white/10 bg-white/[0.05] backdrop-blur-md p-5 md:p-6 shadow-2xl"
       data-testid="interleaving-mode"
     >
       <header className="flex items-start gap-3 mb-4">
-        <div className="w-10 h-10 rounded-lg bg-violet-500/15 flex items-center justify-center shrink-0">
+        <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center shrink-0">
           <Shuffle
             key={shuffleAnimKey}
             className={cn(
-              "w-5 h-5 text-violet-600 dark:text-violet-400 transition-transform duration-500",
+              "w-5 h-5 text-white/85 transition-transform duration-500",
               "animate-spin-once"
             )}
           />
@@ -175,8 +175,8 @@ export default function InterleavingMode({ cards }: InterleavingModeProps) {
       </div>
 
       {finished ? (
-        <div className="rounded-xl border border-border bg-background p-6 text-center animate-fade-in" data-testid="interleaving-summary">
-          <Trophy className="w-8 h-8 text-amber-500 mx-auto mb-2" />
+        <div className="rounded-xl border border-white/10 bg-white/[0.04] p-6 text-center animate-fade-in" data-testid="interleaving-summary">
+          <Trophy className="w-8 h-8 text-white/80 mx-auto mb-2" />
           <h4 className="text-base font-semibold text-foreground mb-1">Session complete</h4>
           <p className="text-sm text-muted-foreground mb-4">
             You worked through {total} cards across {topics.length} topic{topics.length === 1 ? "" : "s"}.
@@ -186,7 +186,7 @@ export default function InterleavingMode({ cards }: InterleavingModeProps) {
           </Button>
         </div>
       ) : current ? (
-        <div className="rounded-xl border border-border bg-background p-5 min-h-[12rem] flex flex-col">
+        <div className="rounded-xl border border-white/10 bg-white/[0.04] p-5 min-h-[12rem] flex flex-col">
           <span
             className={cn("self-start text-[11px] font-medium px-2 py-0.5 rounded-full mb-3", topicColor[current.topic])}
             data-testid="interleaving-card-topic"

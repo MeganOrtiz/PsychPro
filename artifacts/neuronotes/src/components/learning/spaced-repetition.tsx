@@ -86,12 +86,12 @@ export default function SpacedRepetitionScheduler({ storageKey, cardTitle, cardS
 
   return (
     <section
-      className="rounded-2xl border border-border bg-card p-5 md:p-6 shadow-sm"
+      className="rounded-2xl border border-white/10 bg-white/[0.05] backdrop-blur-md p-5 md:p-6 shadow-2xl"
       data-testid="srs-scheduler"
     >
       <header className="flex items-start gap-3 mb-4">
-        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-          <CalendarDays className="w-5 h-5 text-primary" />
+        <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center shrink-0">
+          <CalendarDays className="w-5 h-5 text-white/85" />
         </div>
         <div className="flex-1 min-w-0">
           <h3 className="text-lg font-semibold text-foreground">Spaced Repetition</h3>
