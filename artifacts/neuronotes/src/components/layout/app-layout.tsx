@@ -5,6 +5,7 @@ import { getOrCreateAnonymousUserId } from "@/lib/anonymous-user";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { STUDY_PALETTE } from "@/lib/study-theme";
+import { CrystalCluster } from "@/components/decoration/crystal-cluster";
 
 type NavItem = { href: string; label: string; icon: React.ElementType };
 
@@ -273,7 +274,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
           )}
         </nav>
 
-        <div className="relative p-4 border-t border-white/10">
+        {/* Crystal cluster — sidebar base, mirrors the reference mockup. */}
+        <CrystalCluster
+          className="pointer-events-none absolute -bottom-2 -left-4 w-[120%] h-auto z-0"
+          opacity={0.42}
+        />
+
+        <div className="relative p-4 border-t border-white/10 z-10">
           <div className="flex items-center gap-3">
             <div
               className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-semibold border"
@@ -293,7 +300,20 @@ export default function AppLayout({ children }: AppLayoutProps) {
         </div>
       </aside>
 
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
+        {/* Ambient page-level crystal accents — fixed in the corners of the
+            main content area so every page picks them up automatically. */}
+        <CrystalCluster
+          variant="spire"
+          className="pointer-events-none fixed bottom-0 right-0 w-[420px] h-auto z-0 hidden md:block"
+          opacity={0.18}
+        />
+        <CrystalCluster
+          variant="shard"
+          className="pointer-events-none fixed top-24 right-8 w-24 h-auto z-0 hidden lg:block"
+          opacity={0.14}
+        />
+
         <header className="flex items-center gap-3 px-4 py-3 border-b border-border bg-card md:hidden">
           <Button
             variant="ghost"
@@ -307,7 +327,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           <span className="font-bold text-foreground">PsychPro</span>
         </header>
 
-        <main className="flex-1 overflow-y-auto" data-testid="main-content">
+        <main className="flex-1 overflow-y-auto relative z-10" data-testid="main-content">
           {children}
         </main>
       </div>
