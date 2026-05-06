@@ -232,40 +232,40 @@
    palette colors directly and remain unaffected. */
 .study-page-bg,
 .study-page-aurora {
-  --background: 213 70% 9%;       /* STUDY_PALETTE.bg #081628 — deep midnight navy */
+  --background: 207 51% 13%;      /* STUDY_PALETTE.bg #0C2438 — deep cerulean navy */
   --foreground: 0 0% 100%;        /* white */
-  --card: 217 57% 20%;            /* STUDY_PALETTE.surface #152F4F — mid midnight */
+  --card: 207 55% 27%;            /* STUDY_PALETTE.surface #1F4769 — lifted cerulean */
   --card-foreground: 0 0% 100%;
-  --popover: 217 57% 20%;
+  --popover: 207 55% 27%;
   --popover-foreground: 0 0% 100%;
-  --muted: 218 53% 26%;
-  --muted-foreground: 215 30% 82%;
-  --border: 217 45% 32%;
-  --input: 218 53% 26%;
-  --primary: 204 79% 58%;         /* STUDY_PALETTE.teal #3DA9E8 — electric cyan-blue */
+  --muted: 205 52% 35%;
+  --muted-foreground: 200 40% 88%;
+  --border: 203 45% 42%;
+  --input: 205 52% 35%;
+  --primary: 200 67% 62%;         /* STUDY_PALETTE.teal #5EB8E0 — cerulean cyan */
   --primary-foreground: 0 0% 100%;
 }
 
 .study-page-bg {
-  /* Midnight navy gradient: nearly-black at the edges to a lifted midnight
-     blue toward the center. True navy with cyan glow undertone — like the
-     spotlight watery-navy / particle-nebula references. */
+  /* Cerulean cyan gradient — Deep Sea Teal -> Arctic Ocean Blue, lifted
+     toward the center with cerulean ripple. Matches the ice / city /
+     swatch references: bright cerulean glow on deep blue, no green-teal. */
   background: radial-gradient(
     ellipse 90% 75% at 50% 50%,
-    #050E1B 0%,
-    #081628 35%,
-    #152F4F 80%,
-    #1F3F65 100%
+    #0A1F30 0%,
+    #0C2438 30%,
+    #1F4769 75%,
+    #2A6087 100%
   );
 }
 
 .study-page-aurora {
   background: radial-gradient(
     ellipse 90% 75% at 50% 50%,
-    #050E1B 0%,
-    #081628 35%,
-    #152F4F 80%,
-    #1F3F65 100%
+    #0A1F30 0%,
+    #0C2438 30%,
+    #1F4769 75%,
+    #2A6087 100%
   );
 }
 
