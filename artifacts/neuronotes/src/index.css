@@ -232,39 +232,37 @@
    palette colors directly and remain unaffected. */
 .study-page-bg,
 .study-page-aurora {
-  --background: 195 82% 9%;       /* STUDY_PALETTE.bg #04212C — deep petrol teal */
+  --background: 192 64% 12%;      /* STUDY_PALETTE.bg #0B2A33 — deep cerulean */
   --foreground: 0 0% 100%;        /* white */
-  --card: 192 87% 18%;            /* STUDY_PALETTE.surface #054455 — mid petrol */
+  --card: 190 62% 23%;            /* STUDY_PALETTE.surface #16505F — mid cerulean */
   --card-foreground: 0 0% 100%;
-  --popover: 192 87% 18%;
+  --popover: 190 62% 23%;
   --popover-foreground: 0 0% 100%;
-  --muted: 189 84% 24%;
-  --muted-foreground: 188 30% 82%;
-  --border: 189 70% 30%;
-  --input: 189 84% 24%;
-  --primary: 190 94% 40%;         /* STUDY_PALETTE.teal #06AAC5 — bright petrol accent */
+  --muted: 192 60% 31%;
+  --muted-foreground: 192 30% 82%;
+  --border: 192 50% 38%;
+  --input: 192 60% 31%;
+  --primary: 197 60% 48%;         /* STUDY_PALETTE.teal — Tidepool Teal */
   --primary-foreground: 0 0% 100%;
 }
 
 .study-page-bg {
-  /* Petrol-teal silk gradient — deepest petrol at the edges fading to a
-     lifted teal toward the center, like the reference fabric. */
+  /* Cerulean ink-cloud gradient: layered shades of cerulean from deep at
+     the edges to a lifted mid-cerulean toward the center. */
   background: radial-gradient(
     ellipse 90% 75% at 50% 50%,
-    #081818 0%,
-    #04212C 30%,
-    #054455 75%,
-    #0A6373 100%
+    #0B2A33 0%,
+    #16505F 65%,
+    #1F6B7D 100%
   );
 }
 
 .study-page-aurora {
   background: radial-gradient(
     ellipse 90% 75% at 50% 50%,
-    #081818 0%,
-    #04212C 30%,
-    #054455 75%,
-    #0A6373 100%
+    #0B2A33 0%,
+    #16505F 65%,
+    #1F6B7D 100%
   );
 }
 
