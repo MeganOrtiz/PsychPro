@@ -101,7 +101,7 @@ export default function TopicsPage() {
         {showCategoryView ? (
           <button
             onClick={() => setSelectedCategory(null)}
-            className="flex items-center gap-1 text-sm text-white/70 hover:text-white mb-3"
+            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-3"
             data-testid="button-back-to-categories"
           >
             <ChevronLeft className="w-4 h-4" />
@@ -118,11 +118,11 @@ export default function TopicsPage() {
           >
             <LibraryBig className="w-5 h-5" style={{ color: STUDY_PALETTE.surf }} />
           </div>
-          <h1 className="text-2xl md:text-3xl font-bold text-white">
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
             {showCategoryView ? selectedCategory : "Topics"}
           </h1>
         </div>
-        <p className="text-sm text-white/70">
+        <p className="text-sm text-muted-foreground">
           {showCategoryView
             ? `Browse ${categoryTopics.length} ${categoryTopics.length === 1 ? "topic" : "topics"}`
             : "Choose a topic area to start exploring"}
@@ -130,13 +130,12 @@ export default function TopicsPage() {
       </div>
 
       <div className="relative mb-6">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/60" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <Input
           placeholder="Search topics..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="pl-9 bg-white/[0.06] border-white/10 text-white placeholder:text-white/50 focus-visible:ring-[color:var(--surf,#58C9F3)]/40"
-          style={{ ["--surf" as never]: STUDY_PALETTE.surf }}
+          className="pl-9 bg-card border-border text-foreground placeholder:text-muted-foreground focus-visible:ring-primary/40"
           data-testid="input-search-topics"
         />
       </div>

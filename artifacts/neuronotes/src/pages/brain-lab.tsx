@@ -732,8 +732,7 @@ export default function BrainLabPage() {
 
   return (
     <div
-      className="h-full overflow-hidden study-page-bg"
-      style={{ color: PALETTE.mist }}
+      className="h-full overflow-hidden study-page-bg text-foreground"
       data-testid="brain-lab-page"
     >
       <div className="h-full flex flex-col">
@@ -751,10 +750,10 @@ export default function BrainLabPage() {
               <Sparkles className="w-3 h-3" style={{ color: PALETTE.surf }} />
               Interactive 3D
             </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">
               Brain Lab
             </h1>
-            <p className="text-sm mt-1" style={{ color: `${PALETTE.mist}99` }}>
+            <p className="text-sm mt-1 text-muted-foreground">
               Rotate, zoom, and click any region to study its functions and clinical correlates.
             </p>
           </div>

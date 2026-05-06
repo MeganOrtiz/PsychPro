@@ -15,12 +15,21 @@ export interface InterleavingModeProps {
 }
 
 const TOPIC_PALETTE: Record<string, string> = {
-  default0: "bg-white/15 text-white border border-white/15",
-  default1: "bg-white/10 text-white/90 border border-white/15",
-  default2: "bg-white/20 text-white border border-white/20",
-  default3: "bg-white/[0.07] text-white/85 border border-white/10",
-  default4: "bg-white/25 text-white border border-white/25",
-  default5: "bg-white/[0.05] text-white/80 border border-white/10",
+  default0: "bg-sky-100 text-sky-800 border border-sky-200",
+  default1: "bg-cyan-100 text-cyan-800 border border-cyan-200",
+  default2: "bg-blue-100 text-blue-800 border border-blue-200",
+  default3: "bg-teal-100 text-teal-800 border border-teal-200",
+  default4: "bg-indigo-100 text-indigo-800 border border-indigo-200",
+  default5: "bg-slate-100 text-slate-700 border border-slate-200",
+};
+
+const TOPIC_BAR_BG: Record<string, string> = {
+  default0: "bg-sky-400",
+  default1: "bg-cyan-400",
+  default2: "bg-blue-400",
+  default3: "bg-teal-400",
+  default4: "bg-indigo-400",
+  default5: "bg-slate-400",
 };
 
 function seededShuffle<T>(arr: T[], seed: number): T[] {
@@ -42,10 +51,17 @@ export default function InterleavingMode({ cards }: InterleavingModeProps) {
   const [shuffleAnimKey, setShuffleAnimKey] = useState(0);
 
   const topics = useMemo(() => Array.from(new Set(cards.map((c) => c.topic))), [cards]);
-  const topicColor = useMemo(() => {
+  const topicChip = useMemo(() => {
     const map: Record<string, string> = {};
     topics.forEach((t, i) => {
       map[t] = TOPIC_PALETTE[`default${i % 6}`];
+    });
+    return map;
+  }, [topics]);
+  const topicBar = useMemo(() => {
+    const map: Record<string, string> = {};
+    topics.forEach((t, i) => {
+      map[t] = TOPIC_BAR_BG[`default${i % 6}`];
     });
     return map;
   }, [topics]);
@@ -100,15 +116,15 @@ export default function InterleavingMode({ cards }: InterleavingModeProps) {
 
   return (
     <section
-      className="rounded-2xl border border-white/10 bg-white/[0.05] backdrop-blur-md p-5 md:p-6 shadow-2xl"
+      className="rounded-2xl border border-border bg-card p-5 md:p-6 shadow-sm"
       data-testid="interleaving-mode"
     >
       <header className="flex items-start gap-3 mb-4">
-        <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center shrink-0">
+        <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
           <Shuffle
             key={shuffleAnimKey}
             className={cn(
-              "w-5 h-5 text-white/85 transition-transform duration-500",
+              "w-5 h-5 text-primary transition-transform duration-500",
               "animate-spin-once"
             )}
           />
@@ -121,7 +137,7 @@ export default function InterleavingMode({ cards }: InterleavingModeProps) {
         </div>
       </header>
 
-      <div className="flex items-center justify-between gap-4 mb-4 p-3 rounded-lg bg-muted/40 border border-border">
+      <div className="flex items-center justify-between gap-4 mb-4 p-3 rounded-lg bg-muted/60 border border-border">
         <div className="flex items-center gap-2 text-sm">
           <Layers className="w-4 h-4 text-muted-foreground" />
           <span className={cn("font-medium", mode === "blocked" ? "text-foreground" : "text-muted-foreground")}>
@@ -155,7 +171,7 @@ export default function InterleavingMode({ cards }: InterleavingModeProps) {
             return (
               <div
                 key={t}
-                className={cn("transition-all", topicColor[t].split(" ")[0])}
+                className={cn("transition-all", topicBar[t])}
                 style={{ width: `${pct}%` }}
                 title={`${t}: ${counts[t]}`}
               />
@@ -166,7 +182,7 @@ export default function InterleavingMode({ cards }: InterleavingModeProps) {
           {topics.map((t) => (
             <span
               key={t}
-              className={cn("text-[11px] font-medium px-2 py-0.5 rounded-full", topicColor[t])}
+              className={cn("text-[11px] font-medium px-2 py-0.5 rounded-full", topicChip[t])}
             >
               {t} · {counts[t]}
             </span>
@@ -175,8 +191,8 @@ export default function InterleavingMode({ cards }: InterleavingModeProps) {
       </div>
 
       {finished ? (
-        <div className="rounded-xl border border-white/10 bg-white/[0.04] p-6 text-center animate-fade-in" data-testid="interleaving-summary">
-          <Trophy className="w-8 h-8 text-white/80 mx-auto mb-2" />
+        <div className="rounded-xl border border-border bg-muted/40 p-6 text-center animate-fade-in" data-testid="interleaving-summary">
+          <Trophy className="w-8 h-8 text-primary mx-auto mb-2" />
           <h4 className="text-base font-semibold text-foreground mb-1">Session complete</h4>
           <p className="text-sm text-muted-foreground mb-4">
             You worked through {total} cards across {topics.length} topic{topics.length === 1 ? "" : "s"}.
@@ -186,9 +202,9 @@ export default function InterleavingMode({ cards }: InterleavingModeProps) {
           </Button>
         </div>
       ) : current ? (
-        <div className="rounded-xl border border-white/10 bg-white/[0.04] p-5 min-h-[12rem] flex flex-col">
+        <div className="rounded-xl border border-border bg-muted/40 p-5 min-h-[12rem] flex flex-col">
           <span
-            className={cn("self-start text-[11px] font-medium px-2 py-0.5 rounded-full mb-3", topicColor[current.topic])}
+            className={cn("self-start text-[11px] font-medium px-2 py-0.5 rounded-full mb-3", topicChip[current.topic])}
             data-testid="interleaving-card-topic"
           >
             {current.topic}

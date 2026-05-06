@@ -45,12 +45,12 @@ export default function ElaborationPanel({ storageKey, prompts = DEFAULT_PROMPTS
 
   return (
     <aside
-      className="rounded-2xl border border-white/10 bg-white/[0.05] backdrop-blur-md p-5 md:p-6 shadow-2xl"
+      className="rounded-2xl border border-border bg-card p-5 md:p-6 shadow-sm"
       data-testid="elaboration-panel"
     >
       <header className="flex items-start gap-3 mb-3">
-        <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center shrink-0">
-          <Lightbulb className="w-5 h-5 text-white/85" />
+        <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+          <Lightbulb className="w-5 h-5 text-primary" />
         </div>
         <div className="flex-1 min-w-0">
           <h3 className="text-lg font-semibold text-foreground">Elaboration</h3>
@@ -61,13 +61,13 @@ export default function ElaborationPanel({ storageKey, prompts = DEFAULT_PROMPTS
       </header>
 
       {context && (
-        <div className="mb-4 text-xs text-muted-foreground border-l-4 border-white/20 pl-3 py-1">
+        <div className="mb-4 text-xs text-muted-foreground border-l-4 border-border pl-3 py-1">
           {context}
         </div>
       )}
 
-      <div className="border-l-4 border-white/30 pl-4 mb-4 min-h-[3rem]">
-        <div className="text-[10px] uppercase tracking-wider text-white/55 font-semibold mb-1">
+      <div className="border-l-4 border-primary/40 pl-4 mb-4 min-h-[3rem]">
+        <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-1">
           Prompt
         </div>
         <p
@@ -84,7 +84,7 @@ export default function ElaborationPanel({ storageKey, prompts = DEFAULT_PROMPTS
         onChange={(e) => setNote(e.target.value)}
         placeholder="Jot a quick elaboration — even one sentence helps consolidate it."
         rows={4}
-        className="bg-white/[0.04] border-white/15 text-foreground placeholder:text-white/40 focus-visible:ring-white/30 mb-3 resize-y"
+        className="bg-background border-input text-foreground placeholder:text-muted-foreground focus-visible:ring-primary/40 mb-3 resize-y"
         data-testid="elaboration-note"
       />
 
@@ -93,7 +93,6 @@ export default function ElaborationPanel({ storageKey, prompts = DEFAULT_PROMPTS
           variant="outline"
           size="sm"
           onClick={nextPrompt}
-          className="border-white/20 bg-white/5 text-white hover:bg-white/10"
           data-testid="elaboration-new-prompt"
         >
           <Shuffle className="w-3.5 h-3.5 mr-1.5" />
@@ -102,7 +101,6 @@ export default function ElaborationPanel({ storageKey, prompts = DEFAULT_PROMPTS
         <Button
           size="sm"
           onClick={() => setSaved(true)}
-          className="bg-white/10 hover:bg-white/15 text-white border border-white/20"
           data-testid="elaboration-save"
         >
           {saved ? (
