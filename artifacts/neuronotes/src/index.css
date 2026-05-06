@@ -232,37 +232,40 @@
    palette colors directly and remain unaffected. */
 .study-page-bg,
 .study-page-aurora {
-  --background: 209 65% 15%;      /* STUDY_PALETTE.bg #0D2A40 — deep ocean blue */
+  --background: 213 70% 9%;       /* STUDY_PALETTE.bg #081628 — deep midnight navy */
   --foreground: 0 0% 100%;        /* white */
-  --card: 207 62% 27%;            /* STUDY_PALETTE.surface #1A4D70 — mid ocean blue */
+  --card: 217 57% 20%;            /* STUDY_PALETTE.surface #152F4F — mid midnight */
   --card-foreground: 0 0% 100%;
-  --popover: 207 62% 27%;
+  --popover: 217 57% 20%;
   --popover-foreground: 0 0% 100%;
-  --muted: 207 61% 36%;
-  --muted-foreground: 207 30% 82%;
-  --border: 207 55% 42%;
-  --input: 207 61% 36%;
-  --primary: 197 60% 48%;         /* STUDY_PALETTE.teal — Tidepool Teal accent */
+  --muted: 218 53% 26%;
+  --muted-foreground: 215 30% 82%;
+  --border: 217 45% 32%;
+  --input: 218 53% 26%;
+  --primary: 204 79% 58%;         /* STUDY_PALETTE.teal #3DA9E8 — electric cyan-blue */
   --primary-foreground: 0 0% 100%;
 }
 
 .study-page-bg {
-  /* Ocean-blue gradient: deep at the edges to a lifted mid-blue toward
-     the center. True blue with just a hint of teal warmth — not green. */
+  /* Midnight navy gradient: nearly-black at the edges to a lifted midnight
+     blue toward the center. True navy with cyan glow undertone — like the
+     spotlight watery-navy / particle-nebula references. */
   background: radial-gradient(
     ellipse 90% 75% at 50% 50%,
-    #0D2A40 0%,
-    #1A4D70 65%,
-    #246A95 100%
+    #050E1B 0%,
+    #081628 35%,
+    #152F4F 80%,
+    #1F3F65 100%
   );
 }
 
 .study-page-aurora {
   background: radial-gradient(
     ellipse 90% 75% at 50% 50%,
-    #0D2A40 0%,
-    #1A4D70 65%,
-    #246A95 100%
+    #050E1B 0%,
+    #081628 35%,
+    #152F4F 80%,
+    #1F3F65 100%
   );
 }
 
