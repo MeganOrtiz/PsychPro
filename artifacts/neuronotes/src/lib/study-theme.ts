@@ -1,8 +1,8 @@
 export const STUDY_PALETTE = {
-  bg: "#0F2A3F",
-  steel: "#1C4E75",
-  surface: "#1C4E75",
-  surfaceElev: "#2A6188",
+  bg: "#0B2A33",
+  steel: "#134552",
+  surface: "#16505F",
+  surfaceElev: "#1F6B7D",
   teal: "#2FA0C6",
   tealDeep: "#1F8AAD",
   surf: "#58C9F3",
