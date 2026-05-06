@@ -86,7 +86,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
         style={{
           // CSS var consumed by NAV_ITEM_* tokens for the teal hover glow.
           ["--nav-glow" as never]: STUDY_PALETTE.surf,
-          background: `radial-gradient(120% 80% at 30% 8%, ${STUDY_PALETTE.surfaceElev} 0%, ${STUDY_PALETTE.surface} 45%, ${STUDY_PALETTE.bg} 100%)`,
+          background: "linear-gradient(180deg, #041A24 0%, #031923 100%)",
+          borderRight: "1px solid rgba(94, 176, 200, 0.08)",
         }}
         data-testid="sidebar"
       >
