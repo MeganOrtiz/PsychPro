@@ -233,16 +233,44 @@
    so tokenized utilities (text-foreground / bg-card / text-muted-foreground)
    resolve correctly on the dark surface. White StudySurface cards use raw
    palette colors directly and remain unaffected. */
-/* Light cerulean page surface — matches the Frost-White-on-cerulean
-   reference. Uses :root tokens directly so cards default to white,
-   text defaults to Deep Sea Teal, and the sidebar (which uses inline
-   STUDY_PALETTE styles) remains the dark cerulean anchor. */
+/* Dark cerulean page surface — matches the landing-page reference exactly.
+   Page-scoped token overrides retone shadcn variables to the Deep Sea Teal /
+   Arctic Ocean Blue / Cerulean Ripple / Icy Glaze / Frost White palette so
+   tokenized utilities (bg-card, text-foreground, text-muted-foreground, etc.)
+   automatically resolve to dark-theme values inside any .study-page-bg page. */
 .study-page-bg,
 .study-page-aurora {
+  --background: 195 75% 10%;        /* deep navy-teal page bg */
+  --foreground: 192 53% 93%;        /* Frost White */
+  --card: 195 71% 16%;              /* Deep Sea Teal */
+  --card-foreground: 192 53% 93%;
+  --popover: 195 71% 16%;
+  --popover-foreground: 192 53% 93%;
+  --muted: 195 55% 22%;
+  --muted-foreground: 192 56% 76%;  /* Icy Glaze */
+  --border: 195 45% 30%;
+  --input: 195 55% 22%;
+  --primary: 192 49% 58%;           /* Cerulean Ripple */
+  --primary-foreground: 195 75% 10%;
+  --secondary: 195 55% 22%;
+  --secondary-foreground: 192 53% 93%;
+  --accent: 192 49% 58%;
+  --accent-foreground: 195 75% 10%;
+  --ring: 192 49% 58%;
+}
+
+.study-page-bg {
   background:
-    radial-gradient(ellipse 60% 50% at 20% 0%, hsl(195 50% 90%) 0%, transparent 60%),
-    radial-gradient(ellipse 70% 60% at 100% 100%, hsl(198 55% 88%) 0%, transparent 60%),
-    linear-gradient(180deg, hsl(198 45% 96%) 0%, hsl(198 40% 93%) 100%);
+    radial-gradient(ellipse 80% 60% at 20% 0%, hsl(195 60% 14%) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 60% at 100% 100%, hsl(192 50% 20%) 0%, transparent 60%),
+    linear-gradient(180deg, hsl(195 75% 9%) 0%, hsl(195 75% 11%) 100%);
+}
+
+.study-page-aurora {
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 0%, hsl(195 60% 14%) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 60% at 100% 100%, hsl(192 50% 20%) 0%, transparent 60%),
+    linear-gradient(180deg, hsl(195 75% 9%) 0%, hsl(195 75% 11%) 100%);
 }
 
 /* Flashcard flip animation */

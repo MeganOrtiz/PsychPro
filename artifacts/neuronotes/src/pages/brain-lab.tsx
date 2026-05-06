@@ -732,7 +732,8 @@ export default function BrainLabPage() {
 
   return (
     <div
-      className="h-full overflow-hidden study-page-bg text-foreground"
+      className="h-full overflow-hidden study-page-bg"
+      style={{ color: PALETTE.mist }}
       data-testid="brain-lab-page"
     >
       <div className="h-full flex flex-col">

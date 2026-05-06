@@ -1,17 +1,23 @@
+// Reference palette (from landing page swatches):
+//   Deep Sea Teal   #0C3846  — primary card surface
+//   Arctic Ocean    #2A7387  — mid accent / lifted surface
+//   Cerulean Ripple #5EB0C8  — cerulean accent
+//   Icy Glaze       #9FD3E3  — light text / muted
+//   Frost White     #E4F4F8  — pure light text
 export const STUDY_PALETTE = {
-  bg: "#0C2438",
-  steel: "#143654",
-  surface: "#1F4769",
-  surfaceElev: "#2A6087",
-  teal: "#5EB8E0",
-  tealDeep: "#3E97C4",
-  surf: "#9FD3E3",
-  mist: "#C8E8F2",
-  ink: "#061826",
+  bg: "#08252F",         // page bg — slightly deeper than Deep Sea Teal
+  steel: "#0C3846",      // Deep Sea Teal
+  surface: "#0C3846",    // Deep Sea Teal — card surface
+  surfaceElev: "#2A7387", // Arctic Ocean Blue — lifted/hover
+  teal: "#5EB0C8",       // Cerulean Ripple
+  tealDeep: "#2A7387",   // Arctic Ocean Blue
+  surf: "#9FD3E3",       // Icy Glaze
+  mist: "#E4F4F8",       // Frost White
+  ink: "#06202A",        // darkest navy text on light surfaces
   inkSoft: "#3D5A6E",
-  paper: "#D8E4EE",
-  paperSoft: "#C4D4E0",
-  cloud: "#EAF3FA",
+  paper: "#E4F4F8",      // Frost White
+  paperSoft: "#9FD3E3",  // Icy Glaze
+  cloud: "#E4F4F8",
 } as const;
 
 export type StudyTone = "light" | "dark" | "accent";
