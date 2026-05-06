@@ -240,37 +240,38 @@
    automatically resolve to dark-theme values inside any .study-page-bg page. */
 .study-page-bg,
 .study-page-aurora {
-  --background: 195 75% 10%;        /* deep navy-teal page bg */
-  --foreground: 192 53% 93%;        /* Frost White */
-  --card: 195 71% 16%;              /* Deep Sea Teal */
-  --card-foreground: 192 53% 93%;
-  --popover: 195 71% 16%;
-  --popover-foreground: 192 53% 93%;
-  --muted: 195 55% 22%;
-  --muted-foreground: 192 56% 76%;  /* Icy Glaze */
-  --border: 195 45% 30%;
-  --input: 195 55% 22%;
-  --primary: 192 49% 58%;           /* Cerulean Ripple */
-  --primary-foreground: 195 75% 10%;
-  --secondary: 195 55% 22%;
-  --secondary-foreground: 192 53% 93%;
-  --accent: 192 49% 58%;
-  --accent-foreground: 195 75% 10%;
-  --ring: 192 49% 58%;
+  /* Exact palette from user spec — hex → HSL */
+  --background: 199 84% 7%;          /* #031923 bg-primary */
+  --foreground: 187 50% 93%;         /* #E4F4F6 text-primary */
+  --card: 198 76% 13%;               /* #082B3A bg-card */
+  --card-foreground: 187 50% 93%;
+  --popover: 198 76% 13%;
+  --popover-foreground: 187 50% 93%;
+  --muted: 199 72% 14%;              /* #0A2D3D bg-input */
+  --muted-foreground: 191 35% 79%;   /* #B7D5DC text-secondary */
+  --border: 194 40% 25%;             /* cerulean-tinted border */
+  --input: 199 72% 14%;              /* #0A2D3D bg-input */
+  --primary: 194 49% 58%;            /* #5EB0C8 cerulean-primary */
+  --primary-foreground: 199 84% 7%;
+  --secondary: 199 71% 16%;          /* #0C3446 bg-card-hover */
+  --secondary-foreground: 187 50% 93%;
+  --accent: 199 71% 16%;
+  --accent-foreground: 187 50% 93%;
+  --ring: 194 49% 58%;
 }
 
 .study-page-bg {
   background:
-    radial-gradient(ellipse 80% 60% at 20% 0%, hsl(195 60% 14%) 0%, transparent 60%),
-    radial-gradient(ellipse 70% 60% at 100% 100%, hsl(192 50% 20%) 0%, transparent 60%),
-    linear-gradient(180deg, hsl(195 75% 9%) 0%, hsl(195 75% 11%) 100%);
+    radial-gradient(ellipse 80% 60% at 20% 0%, hsl(198 76% 11%) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 60% at 100% 100%, hsl(194 55% 16%) 0%, transparent 60%),
+    linear-gradient(180deg, hsl(199 84% 6%) 0%, hsl(199 84% 8%) 100%);
 }
 
 .study-page-aurora {
   background:
-    radial-gradient(ellipse 80% 60% at 20% 0%, hsl(195 60% 14%) 0%, transparent 60%),
-    radial-gradient(ellipse 70% 60% at 100% 100%, hsl(192 50% 20%) 0%, transparent 60%),
-    linear-gradient(180deg, hsl(195 75% 9%) 0%, hsl(195 75% 11%) 100%);
+    radial-gradient(ellipse 80% 60% at 20% 0%, hsl(198 76% 11%) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 60% at 100% 100%, hsl(194 55% 16%) 0%, transparent 60%),
+    linear-gradient(180deg, hsl(199 84% 6%) 0%, hsl(199 84% 8%) 100%);
 }
 
 /* Flashcard flip animation */
