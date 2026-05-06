@@ -1,6 +1,10 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useLocation, useSearch } from "wouter";
-import { Upload, FileText, X, Loader2, Sparkles, AlertCircle, BookOpen, Wand2, Layers, BookMarked, GraduationCap, Timer, Pencil, Wrench, Shuffle, Repeat, CheckSquare } from "lucide-react";
+import {
+  Upload, FileText, X, Loader2, Sparkles, AlertCircle, BookOpen, Wand2,
+  Layers, BookMarked, GraduationCap, Timer, Pencil, Wrench, Shuffle, Repeat,
+  ArrowRight, ChevronLeft,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -11,23 +15,73 @@ type StandardTool = "flashcards" | "quiz" | "studyGuide" | "exam";
 type ProTool = "match" | "cloze" | "review";
 type ToolId = StandardTool | ProTool;
 
-const STANDARD_TOOLS: { id: StandardTool; label: string; description: string; icon: React.ElementType }[] = [
-  { id: "flashcards", label: "Flashcards", description: "Card pool for active recall", icon: Layers },
-  { id: "quiz", label: "Quiz", description: "Multiple-choice questions", icon: BookMarked },
-  { id: "studyGuide", label: "Study Guide", description: "Organized markdown summary", icon: BookOpen },
-  { id: "exam", label: "Practice Exam", description: "Timed test pulled from quiz pool", icon: GraduationCap },
+type ToolDef = {
+  id: ToolId;
+  label: string;
+  blurb: string;
+  longBlurb: string;
+  icon: React.ElementType;
+};
+
+const STANDARD_TOOLS: ToolDef[] = [
+  {
+    id: "flashcards",
+    label: "Flashcards",
+    blurb: "Card pool for active recall.",
+    longBlurb: "Generate a set of front/back cards from your material so you can drill yourself, retrieve, and reinforce — the highest-yield study move there is.",
+    icon: Layers,
+  },
+  {
+    id: "quiz",
+    label: "Quiz",
+    blurb: "Multiple-choice questions to test understanding.",
+    longBlurb: "AI-generated multiple-choice items with plausible distractors. Great for self-testing and identifying weak spots before a real exam.",
+    icon: BookMarked,
+  },
+  {
+    id: "studyGuide",
+    label: "Study Guide",
+    blurb: "Organized markdown summary of the material.",
+    longBlurb: "A clean, structured rundown of the source material — headings, key terms, and bullet summaries you can scan or print.",
+    icon: BookOpen,
+  },
+  {
+    id: "exam",
+    label: "Practice Exam",
+    blurb: "Timed test pulled from the quiz pool.",
+    longBlurb: "A longer, exam-style assessment drawn from your quiz items. Optional timer mimics test conditions for realistic prep.",
+    icon: GraduationCap,
+  },
 ];
 
-const PRO_TOOLS: { id: ProTool; label: string; description: string; icon: React.ElementType }[] = [
-  { id: "match", label: "Matching Game", description: "Pair terms with definitions", icon: Shuffle },
-  { id: "cloze", label: "Fill-in-the-Blank", description: "Cloze sentences for active recall", icon: Pencil },
-  { id: "review", label: "Spaced Review", description: "SM-2 spaced repetition", icon: Repeat },
+const PRO_TOOLS: ToolDef[] = [
+  {
+    id: "match",
+    label: "Matching Game",
+    blurb: "Pair terms with their definitions.",
+    longBlurb: "A timed pairing game built from your card pool — strengthens recognition and term-definition links through retrieval and play.",
+    icon: Shuffle,
+  },
+  {
+    id: "cloze",
+    label: "Fill-in-the-Blank",
+    blurb: "Cloze sentences for active recall.",
+    longBlurb: "Sentences with key terms blanked out. Forces production rather than recognition — one of the strongest active-recall formats.",
+    icon: Pencil,
+  },
+  {
+    id: "review",
+    label: "Spaced Review",
+    blurb: "SM-2 spaced repetition deck.",
+    longBlurb: "An adaptive review deck that schedules each card based on how well you recalled it — the gold standard for long-term retention.",
+    icon: Repeat,
+  },
 ];
 
 const FLASHCARD_OPTIONS = [15, 25, 40] as const;
 const QUIZ_OPTIONS = [10, 15, 25] as const;
 const EXAM_OPTIONS = [15, 25, 50] as const;
-const CLOZE_OPTIONS = [0, 10, 20] as const;
+const CLOZE_OPTIONS = [10, 20, 30] as const;
 
 export default function NewDeckPage() {
   const [, navigate] = useLocation();
@@ -35,6 +89,8 @@ export default function NewDeckPage() {
   const tier: "standard" | "pro" = new URLSearchParams(search).get("tier") === "pro" ? "pro" : "standard";
   const isPro = tier === "pro";
   const toolCatalog = isPro ? PRO_TOOLS : STANDARD_TOOLS;
+
+  const [active, setActive] = useState<ToolId | null>(null);
   const [mode, setMode] = useState<InputMode>("text");
   const [aiMode, setAiMode] = useState<AiMode>("enhance");
   const [title, setTitle] = useState("");
@@ -45,33 +101,8 @@ export default function NewDeckPage() {
   const [examQuestionCount, setExamQuestionCount] = useState<number>(15);
   const [examTimed, setExamTimed] = useState<boolean>(false);
   const [clozeCount, setClozeCount] = useState<number>(10);
-  const [selectedTools, setSelectedTools] = useState<Set<ToolId>>(() => new Set<ToolId>());
   const [generating, setGenerating] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    setSelectedTools(new Set<ToolId>());
-  }, [tier]);
-
-  const allSelected = selectedTools.size === toolCatalog.length;
-  const toggleTool = (id: ToolId) => {
-    setSelectedTools((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id); else next.add(id);
-      return next;
-    });
-  };
-  const selectAll = () => {
-    setSelectedTools(new Set<ToolId>(toolCatalog.map((t) => t.id)));
-  };
-
-  const showFlashcards = isPro
-    ? selectedTools.has("match") || selectedTools.has("review")
-    : selectedTools.has("flashcards");
-  const showQuizCount = !isPro && (selectedTools.has("quiz") || selectedTools.has("exam"));
-  const showExamControls = !isPro && selectedTools.has("exam");
-  const showClozeCount = isPro && selectedTools.has("cloze");
-  const showCustomization = showFlashcards || showQuizCount || showExamControls || showClozeCount;
 
   const ACCEPTED = ".pdf,.docx,.doc,.txt";
 
@@ -90,10 +121,7 @@ export default function NewDeckPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (selectedTools.size === 0) {
-      toast.error("Please choose at least one tool to generate.");
-      return;
-    }
+    if (!active) return;
     if (mode === "text" && text.trim().length < 50) {
       toast.error("Please paste at least a few paragraphs of study material.");
       return;
@@ -106,10 +134,11 @@ export default function NewDeckPage() {
     setGenerating(true);
     try {
       const formData = new FormData();
-      formData.append("title", title.trim() || (isPro ? "My Pro Toolkit" : "My Study Toolkit"));
+      const tool = toolCatalog.find((t) => t.id === active)!;
+      formData.append("title", title.trim() || `My ${tool.label}`);
       formData.append("aiMode", aiMode);
       formData.append("tier", tier);
-      formData.append("tools", JSON.stringify(Array.from(selectedTools)));
+      formData.append("tools", JSON.stringify([active]));
       formData.append("flashcardCount", String(flashcardCount));
       formData.append("quizCount", String(quizCount));
       formData.append("examQuestionCount", String(examQuestionCount));
@@ -142,352 +171,387 @@ export default function NewDeckPage() {
     }
   }
 
-  return (
-    <div className="min-h-full study-page-bg" data-testid="my-decks-new-page">
-      <div className="max-w-lg mx-auto p-4 md:p-6 lg:p-8">
-      <div className="mb-6">
-        <div className="flex items-center gap-3 mb-2">
-          <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isPro ? "bg-purple-500/10" : "bg-primary/10"}`}>
-            {isPro ? <Sparkles className="w-5 h-5 text-purple-600" /> : <Wrench className="w-5 h-5 text-primary" />}
-          </div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-            {isPro ? "Create Pro Tools" : "Create Standard Tools"}
-          </h1>
-        </div>
-        <p className="text-sm text-muted-foreground">
-          {isPro
-            ? "Upload your notes or paste text — we'll generate matching games, fill-in-the-blank items, and a spaced-repetition review deck."
-            : "Upload your notes or paste text — we'll generate flashcards, quizzes, a study guide, and a practice exam."}
-        </p>
-      </div>
+  // ─────────────────────────────────────────────────────────────────────────
+  // Detail view — single-tool config + generate (mirrors Study Lab detail)
+  // ─────────────────────────────────────────────────────────────────────────
+  if (active) {
+    const tool = toolCatalog.find((t) => t.id === active)!;
+    const showFlashcardCount =
+      active === "flashcards" || active === "match" || active === "review";
+    const showQuizCount = active === "quiz" || active === "exam";
+    const showExamControls = active === "exam";
+    const showClozeCount = active === "cloze";
+    const showCustomization =
+      showFlashcardCount || showQuizCount || showExamControls || showClozeCount;
 
-      {generating ? (
-        <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
-          <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-            <Sparkles className="w-8 h-8 text-primary animate-pulse" />
-          </div>
-          <div>
-            <p className="font-semibold text-foreground text-lg">Generating your study materials…</p>
-            <p className="text-muted-foreground text-sm mt-1">This takes 20–40 seconds. Please don't close this page.</p>
-          </div>
-          <Loader2 className="w-6 h-6 text-primary animate-spin mt-2" />
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">Deck Title</label>
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g. Chapter 5 Notes, Midterm Review…"
-              className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-          </div>
+    return (
+      <div className="min-h-full study-page-bg" data-testid={`tools-detail-${active}`}>
+        <div className="max-w-3xl mx-auto p-4 md:p-6 lg:p-8">
+          <button
+            onClick={() => setActive(null)}
+            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-4 font-medium"
+            data-testid="back-to-tools"
+          >
+            <ChevronLeft className="w-4 h-4" />
+            Back to Tools
+          </button>
 
-          {/* AI Mode toggle */}
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">AI Mode</label>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => setAiMode("strict")}
-                className={`flex flex-col items-start gap-1 p-3 rounded-xl border-2 text-left transition-all ${
-                  aiMode === "strict"
-                    ? "border-primary bg-primary/5"
-                    : "border-border bg-card hover:border-primary/40 hover:bg-muted/50"
-                }`}
-              >
-                <div className="flex items-center gap-1.5">
-                  <BookOpen className={`w-4 h-4 ${aiMode === "strict" ? "text-primary" : "text-muted-foreground"}`} />
-                  <span className={`text-sm font-semibold ${aiMode === "strict" ? "text-primary" : "text-foreground"}`}>Source Only</span>
-                </div>
-                <p className="text-xs text-muted-foreground leading-tight">Strictly from your content — no outside information added</p>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setAiMode("enhance")}
-                className={`flex flex-col items-start gap-1 p-3 rounded-xl border-2 text-left transition-all ${
-                  aiMode === "enhance"
-                    ? "border-purple-500 bg-purple-50 dark:bg-purple-950/30"
-                    : "border-border bg-card hover:border-purple-300 hover:bg-muted/50"
-                }`}
-              >
-                <div className="flex items-center gap-1.5">
-                  <Wand2 className={`w-4 h-4 ${aiMode === "enhance" ? "text-purple-600" : "text-muted-foreground"}`} />
-                  <span className={`text-sm font-semibold ${aiMode === "enhance" ? "text-purple-600" : "text-foreground"}`}>
-                    Enhance
-                    <span className="ml-1.5 text-[10px] font-medium bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 px-1.5 py-0.5 rounded-full">Recommended</span>
-                  </span>
-                </div>
-                <p className="text-xs text-muted-foreground leading-tight">AI adds examples & fills gaps using related context</p>
-              </button>
+          <header className="mb-6 flex items-start gap-4">
+            <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+              <tool.icon className="w-6 h-6 text-primary" />
             </div>
-          </div>
+            <div className="min-w-0">
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">{tool.label}</h1>
+              <p className="text-sm text-muted-foreground mt-1">{tool.longBlurb}</p>
+            </div>
+          </header>
 
-          {/* Tool selection */}
-          <div className="space-y-3 rounded-xl border border-border bg-card/50 p-4">
-            <div className="flex items-start justify-between gap-3">
+          {generating ? (
+            <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
+              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                <Sparkles className="w-8 h-8 text-primary animate-pulse" />
+              </div>
               <div>
-                <p className="text-sm font-medium text-foreground mb-1">Choose your tools</p>
-                <p className="text-xs text-muted-foreground">Pick which tools the AI should generate.</p>
+                <p className="font-semibold text-foreground text-lg">Generating your {tool.label.toLowerCase()}…</p>
+                <p className="text-muted-foreground text-sm mt-1">This takes 20–40 seconds. Please don't close this page.</p>
               </div>
-              <button
-                type="button"
-                onClick={selectAll}
-                disabled={allSelected}
-                className={`flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 rounded-lg border transition-colors ${
-                  allSelected
-                    ? "border-border bg-muted text-muted-foreground cursor-not-allowed"
-                    : "border-primary/30 bg-primary/5 text-primary hover:bg-primary/10"
-                }`}
-              >
-                <CheckSquare className="w-3.5 h-3.5" />
-                All
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {toolCatalog.map((t) => {
-                const checked = selectedTools.has(t.id);
-                return (
-                  <button
-                    key={t.id}
-                    type="button"
-                    onClick={() => toggleTool(t.id)}
-                    className={`flex items-start gap-2 p-3 rounded-lg border-2 text-left transition-all ${
-                      checked
-                        ? "border-primary bg-primary/5"
-                        : "border-border bg-card hover:border-primary/40 hover:bg-muted/40"
-                    }`}
-                  >
-                    <t.icon className={`w-4 h-4 flex-shrink-0 mt-0.5 ${checked ? "text-primary" : "text-muted-foreground"}`} />
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5">
-                        <span className={`text-sm font-semibold ${checked ? "text-primary" : "text-foreground"}`}>{t.label}</span>
-                      </div>
-                      <p className="text-[11px] text-muted-foreground leading-snug mt-0.5">{t.description}</p>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Tool customization */}
-          {showCustomization && (
-          <div className="space-y-4 rounded-xl border border-border bg-card/50 p-4">
-            <div>
-              <p className="text-sm font-medium text-foreground mb-1">Customize your tools</p>
-              <p className="text-xs text-muted-foreground">Choose how much content the AI generates for each tool.</p>
-            </div>
-
-            {showFlashcards && (
-            <div>
-              <label className="flex items-center gap-1.5 text-xs font-medium text-foreground mb-1.5">
-                <Layers className="w-3.5 h-3.5 text-muted-foreground" /> {isPro ? "Card pool (powers matching & review)" : "Flashcards"}
-              </label>
-              <div className="grid grid-cols-3 gap-2">
-                {FLASHCARD_OPTIONS.map((n) => (
-                  <button
-                    key={n}
-                    type="button"
-                    onClick={() => setFlashcardCount(n)}
-                    className={`py-2 rounded-lg border text-sm font-medium transition-colors ${
-                      flashcardCount === n
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border bg-card text-muted-foreground hover:bg-muted"
-                    }`}
-                  >
-                    {n} cards
-                  </button>
-                ))}
-              </div>
-            </div>
-            )}
-
-            {showQuizCount && (
-            <div>
-              <label className="flex items-center gap-1.5 text-xs font-medium text-foreground mb-1.5">
-                <BookMarked className="w-3.5 h-3.5 text-muted-foreground" /> Quiz questions
-              </label>
-              <div className="grid grid-cols-3 gap-2">
-                {QUIZ_OPTIONS.map((n) => (
-                  <button
-                    key={n}
-                    type="button"
-                    onClick={() => setQuizCount(n)}
-                    className={`py-2 rounded-lg border text-sm font-medium transition-colors ${
-                      quizCount === n
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border bg-card text-muted-foreground hover:bg-muted"
-                    }`}
-                  >
-                    {n}
-                  </button>
-                ))}
-              </div>
-              {!selectedTools.has("quiz") && selectedTools.has("exam") && (
-                <p className="text-[11px] text-muted-foreground mt-1.5">Used as the question pool for your practice exam.</p>
-              )}
-            </div>
-            )}
-
-            {showExamControls && (
-            <div>
-              <label className="flex items-center gap-1.5 text-xs font-medium text-foreground mb-1.5">
-                <GraduationCap className="w-3.5 h-3.5 text-muted-foreground" /> Practice exam length
-              </label>
-              <div className="grid grid-cols-3 gap-2">
-                {EXAM_OPTIONS.map((n) => (
-                  <button
-                    key={n}
-                    type="button"
-                    onClick={() => setExamQuestionCount(n)}
-                    className={`py-2 rounded-lg border text-sm font-medium transition-colors ${
-                      examQuestionCount === n
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border bg-card text-muted-foreground hover:bg-muted"
-                    }`}
-                  >
-                    {n} q
-                  </button>
-                ))}
-              </div>
-              <p className="text-[11px] text-muted-foreground mt-1.5">Exam pulls from your quiz questions. Pick a length up to your quiz size.</p>
-            </div>
-            )}
-
-            {showClozeCount && (
-            <div>
-              <label className="flex items-center gap-1.5 text-xs font-medium text-foreground mb-1.5">
-                <Pencil className="w-3.5 h-3.5 text-muted-foreground" /> Fill-in-the-blank
-              </label>
-              <div className="grid grid-cols-3 gap-2">
-                {CLOZE_OPTIONS.map((n) => (
-                  <button
-                    key={n}
-                    type="button"
-                    onClick={() => setClozeCount(n)}
-                    className={`py-2 rounded-lg border text-sm font-medium transition-colors ${
-                      clozeCount === n
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border bg-card text-muted-foreground hover:bg-muted"
-                    }`}
-                  >
-                    {n === 0 ? "Off" : `${n} items`}
-                  </button>
-                ))}
-              </div>
-              <p className="text-[11px] text-muted-foreground mt-1.5">Cloze sentences with key terms blanked out for active recall.</p>
-            </div>
-            )}
-
-            {showExamControls && (
-            <button
-              type="button"
-              onClick={() => setExamTimed(!examTimed)}
-              className={`w-full flex items-center justify-between gap-2 rounded-lg border px-3 py-2.5 text-sm transition-colors ${
-                examTimed ? "border-primary bg-primary/10 text-primary" : "border-border bg-card text-foreground hover:bg-muted"
-              }`}
-            >
-              <span className="flex items-center gap-2">
-                <Timer className="w-4 h-4" />
-                <span className="font-medium">Timed exam mode</span>
-              </span>
-              <span className="text-xs">{examTimed ? "On (90s/q)" : "Off"}</span>
-            </button>
-            )}
-          </div>
-          )}
-
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">Study Material</label>
-            <div className="flex rounded-lg border border-border overflow-hidden mb-3">
-              <button
-                type="button"
-                onClick={() => setMode("text")}
-                className={`flex-1 py-2 text-sm font-medium transition-colors ${mode === "text" ? "bg-primary text-primary-foreground" : "bg-card text-muted-foreground hover:bg-muted"}`}
-              >
-                <FileText className="w-4 h-4 inline mr-1.5" />
-                Paste Text
-              </button>
-              <button
-                type="button"
-                onClick={() => setMode("file")}
-                className={`flex-1 py-2 text-sm font-medium transition-colors ${mode === "file" ? "bg-primary text-primary-foreground" : "bg-card text-muted-foreground hover:bg-muted"}`}
-              >
-                <Upload className="w-4 h-4 inline mr-1.5" />
-                Upload File
-              </button>
-            </div>
-
-            {mode === "text" ? (
-              <textarea
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                placeholder="Paste your lecture notes, textbook sections, or any study material here…"
-                rows={10}
-                className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            ) : (
-              <div>
-                {file ? (
-                  <div className="flex items-center gap-3 p-4 bg-primary/5 border border-primary/20 rounded-xl">
-                    <FileText className="w-8 h-8 text-primary flex-shrink-0" />
-                    <div className="min-w-0 flex-1">
-                      <p className="font-medium text-foreground text-sm truncate">{file.name}</p>
-                      <p className="text-xs text-muted-foreground">{(file.size / 1024).toFixed(0)} KB</p>
-                    </div>
-                    <button type="button" onClick={removeFile} className="p-1 rounded-lg hover:bg-muted transition-colors">
-                      <X className="w-4 h-4 text-muted-foreground" />
-                    </button>
-                  </div>
-                ) : (
-                  <label className="flex flex-col items-center justify-center gap-3 p-8 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary/40 hover:bg-primary/5 transition-colors">
-                    <Upload className="w-10 h-10 text-muted-foreground opacity-60" />
-                    <div className="text-center">
-                      <p className="text-sm font-medium text-foreground">Click to upload or drag & drop</p>
-                      <p className="text-xs text-muted-foreground mt-1">PDF, DOCX, or TXT — up to 20 MB</p>
-                    </div>
-                    <input
-                      ref={fileRef}
-                      type="file"
-                      accept={ACCEPTED}
-                      onChange={onFileChange}
-                      className="hidden"
-                    />
-                  </label>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* Contextual info banner */}
-          {aiMode === "strict" ? (
-            <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-3 flex gap-2">
-              <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
-              <p className="text-xs text-amber-800 dark:text-amber-300">All generated content is derived exclusively from your source material — no outside information is added.</p>
+              <Loader2 className="w-6 h-6 text-primary animate-spin mt-2" />
             </div>
           ) : (
-            <div className="bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-xl p-3 flex gap-2">
-              <Wand2 className="w-4 h-4 text-purple-600 dark:text-purple-400 flex-shrink-0 mt-0.5" />
-              <p className="text-xs text-purple-800 dark:text-purple-300">AI will use your content as the foundation and may add relevant examples, clarify incomplete notes, and fill gaps using related neuroscience knowledge.</p>
-            </div>
-          )}
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Deck Title</label>
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="e.g. Chapter 5 Notes, Midterm Review…"
+                  className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+              </div>
 
-          <div className="flex gap-3">
-            <Button type="button" variant="outline" className="flex-1" onClick={() => navigate("/my-decks")}>
-              Cancel
-            </Button>
-            <Button type="submit" className="flex-1 gap-2">
-              <Sparkles className="w-4 h-4" />
-              Generate Study Materials
-            </Button>
+              {/* AI Mode toggle */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">AI Mode</label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setAiMode("strict")}
+                    className={`flex flex-col items-start gap-1 p-3 rounded-xl border-2 text-left transition-all ${
+                      aiMode === "strict"
+                        ? "border-primary bg-primary/5"
+                        : "border-border bg-card hover:border-primary/40"
+                    }`}
+                  >
+                    <div className="flex items-center gap-1.5">
+                      <BookOpen className={`w-4 h-4 ${aiMode === "strict" ? "text-primary" : "text-muted-foreground"}`} />
+                      <span className={`text-sm font-semibold ${aiMode === "strict" ? "text-primary" : "text-foreground"}`}>Source Only</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground leading-tight">Strictly from your content — no outside information added</p>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setAiMode("enhance")}
+                    className={`flex flex-col items-start gap-1 p-3 rounded-xl border-2 text-left transition-all ${
+                      aiMode === "enhance"
+                        ? "border-primary bg-primary/5"
+                        : "border-border bg-card hover:border-primary/40"
+                    }`}
+                  >
+                    <div className="flex items-center gap-1.5">
+                      <Wand2 className={`w-4 h-4 ${aiMode === "enhance" ? "text-primary" : "text-muted-foreground"}`} />
+                      <span className={`text-sm font-semibold ${aiMode === "enhance" ? "text-primary" : "text-foreground"}`}>
+                        Enhance
+                        <span className="ml-1.5 text-[10px] font-medium bg-primary/15 text-primary px-1.5 py-0.5 rounded-full">Recommended</span>
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted-foreground leading-tight">AI adds examples & fills gaps using related context</p>
+                  </button>
+                </div>
+              </div>
+
+              {/* Tool customization */}
+              {showCustomization && (
+                <div className="space-y-4 rounded-xl border border-border bg-card p-4">
+                  <div>
+                    <p className="text-sm font-medium text-foreground mb-1">Customize</p>
+                    <p className="text-xs text-muted-foreground">Choose how much content the AI generates.</p>
+                  </div>
+
+                  {showFlashcardCount && (
+                    <div>
+                      <label className="flex items-center gap-1.5 text-xs font-medium text-foreground mb-1.5">
+                        <Layers className="w-3.5 h-3.5 text-muted-foreground" />
+                        {active === "flashcards" ? "Flashcards" : "Card pool size"}
+                      </label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {FLASHCARD_OPTIONS.map((n) => (
+                          <button
+                            key={n}
+                            type="button"
+                            onClick={() => setFlashcardCount(n)}
+                            className={`py-2 rounded-lg border text-sm font-medium transition-colors ${
+                              flashcardCount === n
+                                ? "border-primary bg-primary/10 text-primary"
+                                : "border-border bg-card text-muted-foreground hover:bg-muted"
+                            }`}
+                          >
+                            {n} cards
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {showQuizCount && (
+                    <div>
+                      <label className="flex items-center gap-1.5 text-xs font-medium text-foreground mb-1.5">
+                        <BookMarked className="w-3.5 h-3.5 text-muted-foreground" /> Quiz pool size
+                      </label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {QUIZ_OPTIONS.map((n) => (
+                          <button
+                            key={n}
+                            type="button"
+                            onClick={() => setQuizCount(n)}
+                            className={`py-2 rounded-lg border text-sm font-medium transition-colors ${
+                              quizCount === n
+                                ? "border-primary bg-primary/10 text-primary"
+                                : "border-border bg-card text-muted-foreground hover:bg-muted"
+                            }`}
+                          >
+                            {n} q
+                          </button>
+                        ))}
+                      </div>
+                      {active === "exam" && (
+                        <p className="text-[11px] text-muted-foreground mt-1.5">Exam pulls from this quiz pool.</p>
+                      )}
+                    </div>
+                  )}
+
+                  {showExamControls && (
+                    <>
+                      <div>
+                        <label className="flex items-center gap-1.5 text-xs font-medium text-foreground mb-1.5">
+                          <GraduationCap className="w-3.5 h-3.5 text-muted-foreground" /> Practice exam length
+                        </label>
+                        <div className="grid grid-cols-3 gap-2">
+                          {EXAM_OPTIONS.map((n) => (
+                            <button
+                              key={n}
+                              type="button"
+                              onClick={() => setExamQuestionCount(n)}
+                              className={`py-2 rounded-lg border text-sm font-medium transition-colors ${
+                                examQuestionCount === n
+                                  ? "border-primary bg-primary/10 text-primary"
+                                  : "border-border bg-card text-muted-foreground hover:bg-muted"
+                              }`}
+                            >
+                              {n} q
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setExamTimed(!examTimed)}
+                        className={`w-full flex items-center justify-between gap-2 rounded-lg border px-3 py-2.5 text-sm transition-colors ${
+                          examTimed ? "border-primary bg-primary/10 text-primary" : "border-border bg-card text-foreground hover:bg-muted"
+                        }`}
+                      >
+                        <span className="flex items-center gap-2">
+                          <Timer className="w-4 h-4" />
+                          <span className="font-medium">Timed exam mode</span>
+                        </span>
+                        <span className="text-xs">{examTimed ? "On (90s/q)" : "Off"}</span>
+                      </button>
+                    </>
+                  )}
+
+                  {showClozeCount && (
+                    <div>
+                      <label className="flex items-center gap-1.5 text-xs font-medium text-foreground mb-1.5">
+                        <Pencil className="w-3.5 h-3.5 text-muted-foreground" /> Number of cloze items
+                      </label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {CLOZE_OPTIONS.map((n) => (
+                          <button
+                            key={n}
+                            type="button"
+                            onClick={() => setClozeCount(n)}
+                            className={`py-2 rounded-lg border text-sm font-medium transition-colors ${
+                              clozeCount === n
+                                ? "border-primary bg-primary/10 text-primary"
+                                : "border-border bg-card text-muted-foreground hover:bg-muted"
+                            }`}
+                          >
+                            {n} items
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Study material */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Study Material</label>
+                <div className="flex rounded-lg border border-border overflow-hidden mb-3">
+                  <button
+                    type="button"
+                    onClick={() => setMode("text")}
+                    className={`flex-1 py-2 text-sm font-medium transition-colors ${mode === "text" ? "bg-primary text-primary-foreground" : "bg-card text-muted-foreground hover:bg-muted"}`}
+                  >
+                    <FileText className="w-4 h-4 inline mr-1.5" />
+                    Paste Text
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setMode("file")}
+                    className={`flex-1 py-2 text-sm font-medium transition-colors ${mode === "file" ? "bg-primary text-primary-foreground" : "bg-card text-muted-foreground hover:bg-muted"}`}
+                  >
+                    <Upload className="w-4 h-4 inline mr-1.5" />
+                    Upload File
+                  </button>
+                </div>
+
+                {mode === "text" ? (
+                  <textarea
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    placeholder="Paste your lecture notes, textbook sections, or any study material here…"
+                    rows={10}
+                    className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                ) : (
+                  <div>
+                    {file ? (
+                      <div className="flex items-center gap-3 p-4 bg-primary/5 border border-primary/20 rounded-xl">
+                        <FileText className="w-8 h-8 text-primary flex-shrink-0" />
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium text-foreground text-sm truncate">{file.name}</p>
+                          <p className="text-xs text-muted-foreground">{(file.size / 1024).toFixed(0)} KB</p>
+                        </div>
+                        <button type="button" onClick={removeFile} className="p-1 rounded-lg hover:bg-muted transition-colors">
+                          <X className="w-4 h-4 text-muted-foreground" />
+                        </button>
+                      </div>
+                    ) : (
+                      <label className="flex flex-col items-center justify-center gap-3 p-8 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary/40 hover:bg-primary/5 transition-colors">
+                        <Upload className="w-10 h-10 text-muted-foreground opacity-60" />
+                        <div className="text-center">
+                          <p className="text-sm font-medium text-foreground">Click to upload or drag & drop</p>
+                          <p className="text-xs text-muted-foreground mt-1">PDF, DOCX, or TXT — up to 20 MB</p>
+                        </div>
+                        <input
+                          ref={fileRef}
+                          type="file"
+                          accept={ACCEPTED}
+                          onChange={onFileChange}
+                          className="hidden"
+                        />
+                      </label>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Contextual info banner */}
+              {aiMode === "strict" ? (
+                <div className="border border-primary/30 bg-primary/5 rounded-xl p-3 flex gap-2">
+                  <AlertCircle className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                  <p className="text-xs text-foreground/80">All generated content is derived exclusively from your source material — no outside information is added.</p>
+                </div>
+              ) : (
+                <div className="border border-primary/30 bg-primary/5 rounded-xl p-3 flex gap-2">
+                  <Wand2 className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                  <p className="text-xs text-foreground/80">AI uses your content as the foundation and may add relevant examples, clarify incomplete notes, and fill gaps using related neuroscience knowledge.</p>
+                </div>
+              )}
+
+              <div className="flex gap-3">
+                <Button type="button" variant="outline" className="flex-1" onClick={() => setActive(null)}>
+                  Back
+                </Button>
+                <Button type="submit" className="flex-1 gap-2" data-testid="generate-tool">
+                  <Sparkles className="w-4 h-4" />
+                  Generate
+                </Button>
+              </div>
+            </form>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Landing — Study Lab style 4-card grid
+  // ─────────────────────────────────────────────────────────────────────────
+  return (
+    <div className="min-h-full study-page-bg" data-testid="my-decks-new-page">
+      <div className="max-w-6xl mx-auto p-4 md:p-6 lg:p-8">
+        <header className="mb-8">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
+              {isPro
+                ? <Sparkles className="w-5 h-5 text-primary" />
+                : <Wrench className="w-5 h-5 text-primary" />}
+            </div>
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+              {isPro ? "Pro Tools" : "Standard Tools"}
+            </h1>
           </div>
-        </form>
-      )}
+          <p className="text-sm md:text-base text-muted-foreground max-w-3xl">
+            {isPro
+              ? "Three advanced tools to deepen mastery. Choose one to generate from your notes."
+              : "Four core tools to study any material in PsychPro. Choose one to generate from your notes."}
+          </p>
+        </header>
+
+        <div
+          className={`grid grid-cols-1 sm:grid-cols-2 ${isPro ? "lg:grid-cols-3" : "lg:grid-cols-4"} gap-4 mb-8`}
+        >
+          {toolCatalog.map((t) => (
+            <button
+              key={t.id}
+              onClick={() => setActive(t.id)}
+              data-testid={`tool-card-${t.id}`}
+              className="group text-left rounded-2xl border border-border bg-card p-5 shadow-sm hover:shadow-md hover:border-primary/40 hover:-translate-y-0.5 transition-all"
+            >
+              <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-4 group-hover:bg-primary/15 transition-colors">
+                <t.icon className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="text-base font-semibold text-foreground mb-1.5">{t.label}</h3>
+              <p className="text-sm text-muted-foreground mb-4 leading-snug">{t.blurb}</p>
+              <span className="inline-flex items-center gap-1 text-sm font-medium text-primary">
+                Start <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+              </span>
+            </button>
+          ))}
+        </div>
+
+        <div className="rounded-2xl border border-border bg-card p-6 text-center shadow-sm">
+          <h2 className="text-lg md:text-xl font-semibold text-foreground mb-2">
+            Looking for the other side?
+          </h2>
+          <p className="text-sm text-muted-foreground mb-4 max-w-xl mx-auto">
+            {isPro
+              ? "Standard Tools cover flashcards, quizzes, study guides, and practice exams — the everyday essentials."
+              : "Pro Tools add matching games, fill-in-the-blank items, and an SM-2 spaced-review deck for long-term retention."}
+          </p>
+          <Button
+            variant="outline"
+            onClick={() => navigate(isPro ? "/my-decks/new?tier=standard" : "/my-decks/new?tier=pro")}
+            data-testid="switch-tier-cta"
+          >
+            {isPro ? "View Standard Tools" : "View Pro Tools"}
+            <ArrowRight className="w-4 h-4 ml-1.5" />
+          </Button>
+        </div>
       </div>
     </div>
   );
