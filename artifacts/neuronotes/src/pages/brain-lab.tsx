@@ -1,6 +1,6 @@
 import { Suspense, useMemo, useRef, useState, useEffect, useCallback } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Environment } from "@react-three/drei";
+import { OrbitControls, Environment, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { Link } from "wouter";
 import {
@@ -148,20 +148,31 @@ function StructureMesh({
   let baseOpacity = 0.7;
   let visible = true;
 
+  // The GLB brain shell is the visual cortex/brainstem/cerebellum.
+  // We hide procedural blobs for those structures except when selected
+  // (then they re-appear as a glowing accent overlay on top of the shell).
+  const shellCovers =
+    isCortex ||
+    struct.system === "brainstem" ||
+    struct.system === "cerebellum";
+
   if (viewMode === "external") {
-    if (isCortex) baseOpacity = 0.78;
-    else if (struct.system === "brainstem" || struct.system === "cerebellum")
-      baseOpacity = 0.82;
-    else {
-      // subcortical/deep/ventricles — hidden behind cortex
+    if (shellCovers) {
+      // The GLB shell already shows this region — hide the blob unless picked.
+      visible = false;
+      baseOpacity = 0.0;
+    } else {
+      // subcortical/deep/ventricles — hidden behind cortex shell
       visible = false;
     }
   } else if (viewMode === "cutaway") {
-    if (isCortex) baseOpacity = 0.16;
-    else if (isVentricle) baseOpacity = 0.35;
+    if (shellCovers) {
+      // Hide cortex blobs; the shell itself fades to reveal interior.
+      visible = false;
+    } else if (isVentricle) baseOpacity = 0.35;
     else baseOpacity = 0.92;
   } else {
-    // exploded
+    // exploded — every structure spreads out and is visible
     baseOpacity = isCortex ? 0.55 : 0.9;
   }
 
@@ -272,6 +283,146 @@ function StructureGroup(props: Omit<MeshProps, "mirror" | "seed"> & { index: num
   );
 }
 
+// ──────────────────────────── brain shell (GLB) ────────────────────────────
+
+const BRAIN_GLB_URL = `${import.meta.env.BASE_URL}models/brain.glb`;
+useGLTF.preload(BRAIN_GLB_URL);
+
+function BrainShell({
+  viewMode,
+  selectedId,
+  hoveredId,
+  onSelect,
+  onHover,
+}: {
+  viewMode: ViewMode;
+  selectedId: string | null;
+  hoveredId: string | null;
+  onSelect: (id: string) => void;
+  onHover: (id: string | null) => void;
+}) {
+  const { scene } = useGLTF(BRAIN_GLB_URL);
+  const matRef = useRef<THREE.MeshPhysicalMaterial | null>(null);
+  const groupRef = useRef<THREE.Group>(null);
+
+  // Build a fitted, cerulean-tinted clone once. Box3-based normalization
+  // means swapping the GLB later "just works" without manual tuning.
+  const fitted = useMemo(() => {
+    const obj = scene.clone(true);
+    const box = new THREE.Box3().setFromObject(obj);
+    const size = new THREE.Vector3();
+    const center = new THREE.Vector3();
+    box.getSize(size);
+    box.getCenter(center);
+    const maxDim = Math.max(size.x, size.y, size.z) || 1;
+    const targetSize = 3.4; // matches the procedural structure extents
+    const s = targetSize / maxDim;
+
+    const wrapper = new THREE.Group();
+    wrapper.add(obj);
+    obj.position.sub(center);
+    wrapper.scale.setScalar(s);
+
+    // Apply a single cerulean material so the brain reads as part of the UI.
+    const mat = new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color("#5BB7DA"),
+      emissive: new THREE.Color("#1F6B91"),
+      emissiveIntensity: 0.18,
+      roughness: 0.45,
+      metalness: 0.08,
+      clearcoat: 0.5,
+      clearcoatRoughness: 0.35,
+      transmission: 0.0,
+      transparent: true,
+      opacity: 0.9,
+      side: THREE.DoubleSide,
+      depthWrite: true,
+    });
+    matRef.current = mat;
+    obj.traverse((child) => {
+      const m = child as THREE.Mesh;
+      if (m.isMesh) {
+        m.material = mat;
+        m.castShadow = true;
+        m.receiveShadow = true;
+      }
+    });
+    return wrapper;
+  }, [scene]);
+
+  // Treat the shell as a single clickable surface that maps clicks to
+  // whatever cortical region is closest to the click point in world space.
+  const handlePointerDown = useCallback(
+    (e: any) => {
+      e.stopPropagation();
+      const p = e.point as THREE.Vector3;
+      // Find the cortex/brainstem/cerebellum structure whose anatomical
+      // position is closest to the click point.
+      let best: { id: string; d: number } | null = null;
+      for (const s of BRAIN_STRUCTURES) {
+        if (
+          s.layer !== "cortex" &&
+          s.system !== "brainstem" &&
+          s.system !== "cerebellum"
+        )
+          continue;
+        // Mirror-aware: compare against both sides for paired structures.
+        const candidates: [number, number, number][] = s.paired
+          ? [s.position, [-s.position[0], s.position[1], s.position[2]]]
+          : [s.position];
+        for (const c of candidates) {
+          const dx = p.x - c[0];
+          const dy = p.y - c[1];
+          const dz = p.z - c[2];
+          const d = dx * dx + dy * dy + dz * dz;
+          if (best === null || d < best.d) best = { id: s.id, d };
+        }
+      }
+      if (best) onSelect(best.id);
+    },
+    [onSelect],
+  );
+
+  // Animate opacity by view mode and selection state.
+  // External: solid. Cutaway: see-through. Exploded: hidden.
+  useFrame((_, dt) => {
+    if (!matRef.current) return;
+    const targetOpacity =
+      viewMode === "exploded"
+        ? 0.0
+        : viewMode === "cutaway"
+          ? 0.18
+          : selectedId
+            ? 0.55 // dim shell when a structure is selected so the accent reads
+            : 0.9;
+    matRef.current.opacity +=
+      (targetOpacity - matRef.current.opacity) * Math.min(1, dt * 5);
+    matRef.current.depthWrite = matRef.current.opacity > 0.5;
+    const targetEmissive = hoveredId === "__shell__" ? 0.35 : 0.18;
+    matRef.current.emissiveIntensity +=
+      (targetEmissive - matRef.current.emissiveIntensity) * Math.min(1, dt * 5);
+    if (groupRef.current) {
+      groupRef.current.visible = matRef.current.opacity > 0.02;
+    }
+  });
+
+  return (
+    <group ref={groupRef}>
+      <primitive
+        object={fitted}
+        onPointerDown={handlePointerDown}
+        onPointerOver={(e: any) => {
+          e.stopPropagation();
+          document.body.style.cursor = "pointer";
+        }}
+        onPointerOut={() => {
+          document.body.style.cursor = "";
+        }}
+      />
+    </group>
+  );
+}
+
 // ──────────────────────────── scene ────────────────────────────
 
 function GentleSpin({
@@ -321,6 +472,15 @@ function BrainScene({
       )}
       <GentleSpin enabled={autoSpin && selectedId === null}>
         <group rotation={[0, -0.3, 0]} position={[0, 0.1, 0]}>
+          <Suspense fallback={null}>
+            <BrainShell
+              viewMode={viewMode}
+              selectedId={selectedId}
+              hoveredId={hoveredId}
+              onSelect={onSelect}
+              onHover={onHover}
+            />
+          </Suspense>
           {BRAIN_STRUCTURES.map((s, i) => (
             <StructureGroup
               key={s.id}
