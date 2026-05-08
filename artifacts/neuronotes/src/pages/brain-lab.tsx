@@ -1249,6 +1249,43 @@ export default function BrainLabPage() {
           {searchOpen && (
             <StructureSearch onSelect={handleSelect} onClose={() => setSearchOpen(false)} />
           )}
+
+          {/* Model attribution (CC-BY-4.0 requires visible credit) */}
+          {webglOk && (
+            <div
+              className="absolute bottom-2 right-3 text-[10px] pointer-events-auto"
+              style={{ color: `${PALETTE.mist}55` }}
+              data-testid="brain-model-attribution"
+            >
+              Brain model:{" "}
+              <a
+                href="https://sketchfab.com/3d-models/brain-cadd2bde67404c43b2359a6a3281d84a"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-white"
+              >
+                "Brain"
+              </a>{" "}
+              by{" "}
+              <a
+                href="https://sketchfab.com/dgallichan"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-white"
+              >
+                dgallichan
+              </a>{" "}
+              ·{" "}
+              <a
+                href="https://creativecommons.org/licenses/by/4.0/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-white"
+              >
+                CC BY 4.0
+              </a>
+            </div>
+          )}
         </div>
 
         {/* Right: detail panel (desktop) */}
