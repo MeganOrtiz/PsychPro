@@ -1,4 +1,4 @@
-import { Suspense, useMemo, useRef, useState, useEffect } from "react";
+import { Suspense, useMemo, useRef, useState, useEffect, useCallback } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Environment } from "@react-three/drei";
 import * as THREE from "three";
@@ -7,16 +7,23 @@ import {
   Brain,
   ArrowRight,
   X,
-  Activity,
-  Eye,
-  Headphones,
-  MessageSquare,
-  Sparkles,
+  Search,
   Layers,
+  Eye,
+  Maximize2,
+  ChevronRight,
+  BookOpen,
+  Sparkles,
+  Target,
   RotateCcw,
-  Hand,
-  AlertCircle,
 } from "lucide-react";
+import {
+  BRAIN_STRUCTURES,
+  STRUCTURE_INDEX,
+  SYSTEM_META,
+  type BrainStructure,
+  type BrainSystem,
+} from "../data/brain-structures";
 
 const PALETTE = {
   bg: "#061826",
@@ -28,332 +35,186 @@ const PALETTE = {
   mist: "#BDE5FF",
 };
 
-type RegionId =
-  | "frontal"
-  | "parietal"
-  | "temporal-l"
-  | "temporal-r"
-  | "occipital"
-  | "cerebellum"
-  | "brainstem"
-  | "limbic";
+type ViewMode = "external" | "cutaway" | "exploded";
 
-interface RegionInfo {
-  id: RegionId;
-  name: string;
-  shortName: string;
-  icon: React.ElementType;
-  color: string;
-  position: [number, number, number];
-  scale: [number, number, number];
-  rotation?: [number, number, number];
-  displacement: number;
-  segments: number;
-  summary: string;
-  keyFunctions: string[];
-  clinical: string[];
-  topicHints: string[];
-}
-
-const REGIONS: RegionInfo[] = [
-  {
-    id: "frontal",
-    name: "Frontal Lobe",
-    shortName: "Frontal",
-    icon: Activity,
-    color: "#58C9F3",
-    position: [0, 0.45, 1.05],
-    scale: [1.5, 1.15, 1.25],
-    displacement: 0.18,
-    segments: 5,
-    summary:
-      "The largest lobe of the cortex — seat of executive function, planning, voluntary movement, and personality.",
-    keyFunctions: [
-      "Executive function & planning",
-      "Voluntary motor control (precentral gyrus)",
-      "Expressive language (Broca's area)",
-      "Personality, judgment, impulse control",
-      "Working memory",
-    ],
-    clinical: [
-      "Disinhibition / personality change after injury",
-      "Expressive aphasia",
-      "Contralateral motor weakness",
-      "Executive dysfunction in dementias",
-    ],
-    topicHints: ["Neuropsychology Overview", "Language Processing & Aphasia"],
-  },
-  {
-    id: "parietal",
-    name: "Parietal Lobe",
-    shortName: "Parietal",
-    icon: Hand,
-    color: "#BDE5FF",
-    position: [0, 0.85, -0.4],
-    scale: [1.55, 1.0, 1.25],
-    displacement: 0.16,
-    segments: 5,
-    summary:
-      "Integrates sensory information — touch, proprioception, spatial awareness, and number processing.",
-    keyFunctions: [
-      "Somatosensory processing (postcentral gyrus)",
-      "Spatial awareness & navigation",
-      "Numerical & arithmetic processing",
-      "Body schema integration",
-      "Attention to contralateral space",
-    ],
-    clinical: [
-      "Hemispatial neglect (often right parietal)",
-      "Apraxia",
-      "Agnosia (failure to recognize objects)",
-      "Gerstmann syndrome",
-    ],
-    topicHints: ["Apraxia & Agnosia", "Sensory Pathways"],
-  },
-  {
-    id: "temporal-l",
-    name: "Left Temporal Lobe",
-    shortName: "Temporal (L)",
-    icon: MessageSquare,
-    color: "#2FA0C6",
-    position: [-1.25, 0.0, 0.15],
-    scale: [0.9, 0.85, 1.4],
-    rotation: [0, 0, -0.15],
-    displacement: 0.14,
-    segments: 5,
-    summary:
-      "Auditory processing and — in most people — receptive language. Hippocampus sits medially for episodic memory.",
-    keyFunctions: [
-      "Receptive language (Wernicke's area)",
-      "Auditory processing",
-      "Verbal memory encoding",
-      "Hippocampal episodic memory",
-    ],
-    clinical: [
-      "Receptive aphasia",
-      "Anterograde amnesia after bilateral hippocampal injury",
-      "Temporal-lobe seizures",
-      "Verbal memory deficits",
-    ],
-    topicHints: ["Language Processing & Aphasia", "Limbic System & Motivation"],
-  },
-  {
-    id: "temporal-r",
-    name: "Right Temporal Lobe",
-    shortName: "Temporal (R)",
-    icon: Headphones,
-    color: "#2FA0C6",
-    position: [1.25, 0.0, 0.15],
-    scale: [0.9, 0.85, 1.4],
-    rotation: [0, 0, 0.15],
-    displacement: 0.14,
-    segments: 5,
-    summary:
-      "Non-verbal auditory and visual recognition — faces, prosody, music, and visual memory.",
-    keyFunctions: [
-      "Face recognition (fusiform area)",
-      "Prosody & music processing",
-      "Non-verbal memory",
-      "Visual scene recognition",
-    ],
-    clinical: [
-      "Prosopagnosia",
-      "Loss of musical perception (amusia)",
-      "Visual memory deficits",
-    ],
-    topicHints: ["Sensory Pathways", "Limbic System & Motivation"],
-  },
-  {
-    id: "occipital",
-    name: "Occipital Lobe",
-    shortName: "Occipital",
-    icon: Eye,
-    color: "#58C9F3",
-    position: [0, 0.55, -1.4],
-    scale: [1.2, 1.0, 0.85],
-    displacement: 0.13,
-    segments: 5,
-    summary:
-      "Primary visual cortex and visual association areas. All conscious vision routes through here.",
-    keyFunctions: [
-      "Primary visual processing (V1)",
-      "Visual feature detection (motion, color, form)",
-      "Visual association & object recognition",
-    ],
-    clinical: [
-      "Cortical blindness",
-      "Visual field cuts (homonymous hemianopia)",
-      "Visual agnosia",
-      "Anton syndrome",
-    ],
-    topicHints: ["Sensory Pathways", "Vascular System of the Brain"],
-  },
-  {
-    id: "cerebellum",
-    name: "Cerebellum",
-    shortName: "Cerebellum",
-    icon: RotateCcw,
-    color: "#1C4E75",
-    position: [0, -0.65, -1.0],
-    scale: [1.35, 0.7, 0.9],
-    displacement: 0.06,
-    segments: 6,
-    summary:
-      "Coordinates voluntary movement, balance, posture, and contributes to motor learning and cognition.",
-    keyFunctions: [
-      "Motor coordination & timing",
-      "Balance & postural control",
-      "Motor learning",
-      "Cognitive & affective regulation",
-    ],
-    clinical: [
-      "Ataxia (gait, limb)",
-      "Dysmetria & intention tremor",
-      "Cerebellar cognitive-affective syndrome",
-      "Nystagmus",
-    ],
-    topicHints: ["Neuropsychology Overview", "Sensory Pathways"],
-  },
-  {
-    id: "brainstem",
-    name: "Brain Stem",
-    shortName: "Brain Stem",
-    icon: AlertCircle,
-    color: "#BDE5FF",
-    position: [0, -1.35, -0.15],
-    scale: [0.45, 0.95, 0.45],
-    displacement: 0.05,
-    segments: 4,
-    summary:
-      "Midbrain, pons, and medulla — origin of most cranial nerves and home to vital autonomic centers.",
-    keyFunctions: [
-      "Cardiorespiratory regulation",
-      "Sleep–wake cycle (reticular activating system)",
-      "Most cranial nerve nuclei",
-      "Conduit for ascending & descending tracts",
-    ],
-    clinical: [
-      "Locked-in syndrome",
-      "Cranial nerve palsies",
-      "Coma & disorders of consciousness",
-      "Crossed motor/sensory deficits",
-    ],
-    topicHints: ["Cranial Nerves", "Sleep & Circadian Rhythms"],
-  },
-  {
-    id: "limbic",
-    name: "Limbic System",
-    shortName: "Limbic",
-    icon: Sparkles,
-    color: "#58C9F3",
-    position: [0, -0.05, -0.05],
-    scale: [0.7, 0.55, 0.95],
-    displacement: 0.08,
-    segments: 5,
-    summary:
-      "Deep structures — hippocampus, amygdala, hypothalamus, cingulate — driving emotion, memory, and motivation.",
-    keyFunctions: [
-      "Episodic memory encoding (hippocampus)",
-      "Emotional salience (amygdala)",
-      "Homeostasis & drive (hypothalamus)",
-      "Reward & motivation (nucleus accumbens)",
-    ],
-    clinical: [
-      "Anterograde amnesia",
-      "Anxiety & fear-conditioning disorders",
-      "Mood dysregulation",
-      "Addiction circuitry",
-    ],
-    topicHints: ["Limbic System & Motivation", "Neurotransmitters & Synaptic Transmission"],
-  },
-];
+// ──────────────────────────── procedural geometry ────────────────────────────
 
 function noise(x: number, y: number, z: number, seed = 0) {
   const a = Math.sin(x * 1.7 + y * 2.3 + z * 0.9 + seed);
   const b = Math.sin(y * 3.1 - z * 1.7 + seed * 1.3);
   const c = Math.sin(z * 2.4 + x * 1.1 + seed * 2.1);
   const d = Math.sin((x + y) * 4.2 - z * 0.7 + seed * 0.5);
-  return (a + b + c + d) / 4;
+  const e = Math.sin(x * 8.0 + y * 6.0 + seed * 3.7) * 0.4;
+  const f = Math.sin(y * 9.0 - z * 7.0 + seed * 4.3) * 0.4;
+  return (a + b + c + d + e + f) / 5.6;
 }
 
-function useDisplacedGeometry(
-  segments: number,
-  displacement: number,
+function useStructureGeometry(
+  struct: BrainStructure,
+  lite: boolean,
   seed: number,
-  scale: [number, number, number],
-) {
+): THREE.BufferGeometry {
   return useMemo(() => {
-    const geom = new THREE.IcosahedronGeometry(1, segments);
+    const segments = lite ? Math.max(2, struct.segments - 2) : struct.segments;
+    let geom: THREE.BufferGeometry;
+
+    switch (struct.shape) {
+      case "arch":
+        geom = new THREE.TorusGeometry(0.9, 0.18, 8, Math.max(20, segments * 6), Math.PI);
+        geom.rotateY(Math.PI / 2);
+        break;
+      case "crescent":
+        geom = new THREE.TorusGeometry(
+          0.85,
+          0.32,
+          6,
+          Math.max(18, segments * 5),
+          Math.PI * 0.65,
+        );
+        geom.rotateZ(Math.PI / 2);
+        break;
+      case "tube":
+        geom = new THREE.CylinderGeometry(0.5, 0.5, 1.6, Math.max(10, segments * 3));
+        break;
+      case "lobe":
+      case "ellipsoid":
+      default:
+        geom = new THREE.IcosahedronGeometry(1, segments);
+    }
+
+    // Displace + scale
     const pos = geom.attributes.position;
     const v = new THREE.Vector3();
     for (let i = 0; i < pos.count; i++) {
       v.fromBufferAttribute(pos, i);
       const n = noise(v.x * 2, v.y * 2, v.z * 2, seed);
-      const offset = 1 + n * displacement;
+      const offset = 1 + n * struct.displacement;
       v.multiplyScalar(offset);
-      v.x *= scale[0];
-      v.y *= scale[1];
-      v.z *= scale[2];
+      v.x *= struct.scale[0];
+      v.y *= struct.scale[1];
+      v.z *= struct.scale[2];
       pos.setXYZ(i, v.x, v.y, v.z);
     }
     geom.computeVertexNormals();
     return geom;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [segments, displacement, seed, scale[0], scale[1], scale[2]]);
+  }, [struct.shape, struct.segments, struct.displacement, struct.scale, lite, seed]);
 }
 
-interface BrainRegionProps {
-  region: RegionInfo;
-  selectedId: RegionId | null;
-  hoveredId: RegionId | null;
-  onSelect: (id: RegionId) => void;
-  onHover: (id: RegionId | null) => void;
-  index: number;
+// ──────────────────────────── 3D mesh ────────────────────────────
+
+interface MeshProps {
+  struct: BrainStructure;
+  mirror: boolean;
+  seed: number;
+  selectedId: string | null;
+  hoveredId: string | null;
+  onSelect: (id: string) => void;
+  onHover: (id: string | null) => void;
+  viewMode: ViewMode;
   lite: boolean;
 }
 
-function BrainRegion({
-  region,
+function StructureMesh({
+  struct,
+  mirror,
+  seed,
   selectedId,
   hoveredId,
   onSelect,
   onHover,
-  index,
+  viewMode,
   lite,
-}: BrainRegionProps) {
-  const meshRef = useRef<THREE.Mesh>(null);
+}: MeshProps) {
   const matRef = useRef<THREE.MeshStandardMaterial | THREE.MeshPhysicalMaterial>(null);
-  const segments = lite ? Math.max(2, region.segments - 2) : region.segments;
-  const geometry = useDisplacedGeometry(
-    segments,
-    region.displacement,
-    index * 7.31,
-    region.scale,
-  );
+  const geometry = useStructureGeometry(struct, lite, seed);
 
-  const isSelected = selectedId === region.id;
-  const isHovered = hoveredId === region.id;
+  const isSelected = selectedId === struct.id;
+  const isHovered = hoveredId === struct.id;
   const anySelected = selectedId !== null;
+
+  // Cursor cleanup safety — if mesh unmounts while hovered, reset cursor
+  useEffect(() => {
+    return () => {
+      if (isHovered) document.body.style.cursor = "";
+    };
+  }, [isHovered]);
+
+  // Visibility logic by view mode + layer.
+  // External view: cortex + brainstem + cerebellum visible (anatomy you'd see
+  // looking at a real brain from outside). Subcortical/deep/ventricles hidden.
+  const isCortex = struct.layer === "cortex";
+  const isVentricle = struct.layer === "ventricle";
+
+  let baseOpacity = 0.7;
+  let visible = true;
+
+  if (viewMode === "external") {
+    if (isCortex) baseOpacity = 0.78;
+    else if (struct.system === "brainstem" || struct.system === "cerebellum")
+      baseOpacity = 0.82;
+    else {
+      // subcortical/deep/ventricles — hidden behind cortex
+      visible = false;
+    }
+  } else if (viewMode === "cutaway") {
+    if (isCortex) baseOpacity = 0.16;
+    else if (isVentricle) baseOpacity = 0.35;
+    else baseOpacity = 0.92;
+  } else {
+    // exploded
+    baseOpacity = isCortex ? 0.55 : 0.9;
+  }
+
+  // Always show the selected structure regardless of view mode
+  if (isSelected) {
+    visible = true;
+    baseOpacity = 0.95;
+  }
+
   const dimmed = anySelected && !isSelected;
+
+  // Position: mirror flips across X
+  const pos: [number, number, number] = mirror
+    ? [-struct.position[0], struct.position[1], struct.position[2]]
+    : struct.position;
+
+  // Exploded mode: push outward from center
+  const explodedPos: [number, number, number] =
+    viewMode === "exploded"
+      ? [pos[0] * 1.6, pos[1] * 1.3, pos[2] * 1.4]
+      : pos;
+
+  const rot: [number, number, number] = struct.rotation
+    ? mirror
+      ? [struct.rotation[0], -struct.rotation[1], -struct.rotation[2]]
+      : struct.rotation
+    : [0, 0, 0];
 
   useFrame((_, dt) => {
     if (!matRef.current) return;
-    const target = isSelected ? 0.85 : isHovered ? 0.55 : dimmed ? 0.25 : 0.7;
+    const target = isSelected
+      ? 0.95
+      : isHovered
+        ? Math.min(0.85, baseOpacity + 0.2)
+        : dimmed
+          ? baseOpacity * 0.4
+          : baseOpacity;
     matRef.current.opacity += (target - matRef.current.opacity) * Math.min(1, dt * 6);
-    const emissiveTarget = isSelected ? 0.6 : isHovered ? 0.3 : 0.05;
+    const emissiveTarget = isSelected ? 0.7 : isHovered ? 0.35 : 0.05;
     matRef.current.emissiveIntensity +=
       (emissiveTarget - matRef.current.emissiveIntensity) * Math.min(1, dt * 6);
   });
 
+  if (!visible) return null;
+
   return (
     <mesh
-      ref={meshRef}
       geometry={geometry}
-      position={region.position}
-      rotation={region.rotation ?? [0, 0, 0]}
+      position={explodedPos}
+      rotation={rot}
       onPointerOver={(e) => {
         e.stopPropagation();
-        onHover(region.id);
+        onHover(struct.id);
         document.body.style.cursor = "pointer";
       }}
       onPointerOut={() => {
@@ -362,7 +223,7 @@ function BrainRegion({
       }}
       onClick={(e) => {
         e.stopPropagation();
-        onSelect(region.id);
+        onSelect(struct.id);
       }}
       castShadow
       receiveShadow
@@ -370,33 +231,48 @@ function BrainRegion({
       {lite ? (
         <meshStandardMaterial
           ref={matRef as React.RefObject<THREE.MeshStandardMaterial>}
-          color={region.color}
-          emissive={region.color}
+          color={struct.color}
+          emissive={struct.color}
           emissiveIntensity={0.05}
           roughness={0.55}
           metalness={0.05}
           transparent
-          opacity={0.75}
+          opacity={baseOpacity}
+          depthWrite={baseOpacity > 0.5}
         />
       ) : (
         <meshPhysicalMaterial
           ref={matRef as React.RefObject<THREE.MeshPhysicalMaterial>}
-          color={region.color}
-          emissive={region.color}
+          color={struct.color}
+          emissive={struct.color}
           emissiveIntensity={0.05}
-          roughness={0.45}
+          roughness={0.42}
           metalness={0.1}
-          clearcoat={0.6}
+          clearcoat={0.55}
           clearcoatRoughness={0.3}
-          transmission={0.15}
+          transmission={isVentricle ? 0.4 : 0.1}
           thickness={1}
           transparent
-          opacity={0.7}
+          opacity={baseOpacity}
+          depthWrite={baseOpacity > 0.5}
         />
       )}
     </mesh>
   );
 }
+
+function StructureGroup(props: Omit<MeshProps, "mirror" | "seed"> & { index: number }) {
+  return (
+    <>
+      <StructureMesh {...props} mirror={false} seed={props.index * 7.31} />
+      {props.struct.paired && (
+        <StructureMesh {...props} mirror={true} seed={props.index * 7.31 + 100} />
+      )}
+    </>
+  );
+}
+
+// ──────────────────────────── scene ────────────────────────────
 
 function GentleSpin({
   children,
@@ -408,7 +284,7 @@ function GentleSpin({
   const ref = useRef<THREE.Group>(null);
   useFrame((_, dt) => {
     if (!ref.current || !enabled) return;
-    ref.current.rotation.y += dt * 0.12;
+    ref.current.rotation.y += dt * 0.1;
   });
   return <group ref={ref}>{children}</group>;
 }
@@ -419,23 +295,25 @@ function BrainScene({
   onSelect,
   onHover,
   autoSpin,
+  viewMode,
   lite,
 }: {
-  selectedId: RegionId | null;
-  hoveredId: RegionId | null;
-  onSelect: (id: RegionId) => void;
-  onHover: (id: RegionId | null) => void;
+  selectedId: string | null;
+  hoveredId: string | null;
+  onSelect: (id: string) => void;
+  onHover: (id: string | null) => void;
   autoSpin: boolean;
+  viewMode: ViewMode;
   lite: boolean;
 }) {
   return (
     <>
       <color attach="background" args={[PALETTE.bg]} />
-      <fog attach="fog" args={[PALETTE.bg, 6, 14]} />
-      <ambientLight intensity={lite ? 0.7 : 0.45} />
-      <directionalLight position={[4, 6, 5]} intensity={1.1} color={PALETTE.mist} />
+      <fog attach="fog" args={[PALETTE.bg, 7, 16]} />
+      <ambientLight intensity={lite ? 0.7 : 0.5} />
+      <directionalLight position={[4, 6, 5]} intensity={1.05} color={PALETTE.mist} />
       <directionalLight position={[-5, 3, -2]} intensity={0.5} color={PALETTE.surf} />
-      <pointLight position={[0, -3, 4]} intensity={0.6} color={PALETTE.teal} />
+      <pointLight position={[0, -3, 4]} intensity={0.55} color={PALETTE.teal} />
       {!lite && (
         <Suspense fallback={null}>
           <Environment preset="night" />
@@ -443,15 +321,16 @@ function BrainScene({
       )}
       <GentleSpin enabled={autoSpin && selectedId === null}>
         <group rotation={[0, -0.3, 0]} position={[0, 0.1, 0]}>
-          {REGIONS.map((r, i) => (
-            <BrainRegion
-              key={r.id}
-              region={r}
+          {BRAIN_STRUCTURES.map((s, i) => (
+            <StructureGroup
+              key={s.id}
+              struct={s}
+              index={i}
               selectedId={selectedId}
               hoveredId={hoveredId}
               onSelect={onSelect}
               onHover={onHover}
-              index={i}
+              viewMode={viewMode}
               lite={lite}
             />
           ))}
@@ -461,7 +340,7 @@ function BrainScene({
         enablePan={false}
         enableZoom
         minDistance={3.5}
-        maxDistance={9}
+        maxDistance={10}
         autoRotate={false}
         rotateSpeed={0.7}
         zoomSpeed={0.6}
@@ -470,87 +349,347 @@ function BrainScene({
   );
 }
 
-function RegionPill({
-  region,
-  active,
-  onClick,
+// ──────────────────────────── UI: search ────────────────────────────
+
+function StructureSearch({
+  onSelect,
+  onClose,
 }: {
-  region: RegionInfo;
-  active: boolean;
-  onClick: () => void;
+  onSelect: (id: string) => void;
+  onClose: () => void;
 }) {
-  const Icon = region.icon;
+  const [q, setQ] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  const matches = useMemo(() => {
+    const term = q.trim().toLowerCase();
+    if (!term) return BRAIN_STRUCTURES.slice(0, 12);
+    return BRAIN_STRUCTURES.filter(
+      (s) =>
+        s.name.toLowerCase().includes(term) ||
+        s.shortName.toLowerCase().includes(term) ||
+        s.system.toLowerCase().includes(term) ||
+        s.functions.some((f) => f.toLowerCase().includes(term)) ||
+        s.conditions.some((c) => c.toLowerCase().includes(term)),
+    ).slice(0, 12);
+  }, [q]);
+
   return (
-    <button
-      onClick={onClick}
-      data-testid={`region-pill-${region.id}`}
-      aria-pressed={active}
-      aria-label={`Open ${region.name} details`}
-      className="flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium border transition-all hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-cyan-300"
-      style={
-        active
-          ? {
-              background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
-              borderColor: PALETTE.surf,
-              color: PALETTE.bg,
-              boxShadow: `0 8px 24px -10px ${PALETTE.teal}`,
-            }
-          : {
-              background: `${PALETTE.surface}cc`,
-              borderColor: `${PALETTE.steel}99`,
-              color: PALETTE.mist,
-            }
-      }
+    <div
+      className="absolute inset-0 z-30 flex items-start justify-center pt-16 px-4"
+      style={{ background: `${PALETTE.bg}cc`, backdropFilter: "blur(8px)" }}
+      onClick={onClose}
+      data-testid="structure-search-overlay"
+      role="presentation"
     >
-      <Icon className="w-3.5 h-3.5" />
-      {region.shortName}
-    </button>
+      <div
+        className="w-full max-w-xl rounded-2xl border overflow-hidden"
+        style={{
+          background: `linear-gradient(180deg, ${PALETTE.surfaceElev}, ${PALETTE.surface})`,
+          borderColor: `${PALETTE.surf}55`,
+          boxShadow: `0 30px 80px -30px ${PALETTE.teal}aa`,
+        }}
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Search brain structures"
+      >
+        <div
+          className="flex items-center gap-3 px-4 py-3 border-b"
+          style={{ borderColor: `${PALETTE.steel}66` }}
+        >
+          <Search className="w-4 h-4" style={{ color: PALETTE.surf }} />
+          <input
+            ref={inputRef}
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Search structures, functions, conditions…"
+            className="flex-1 bg-transparent outline-none text-sm"
+            style={{ color: PALETTE.mist }}
+            data-testid="input-structure-search"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && matches[0]) {
+                onSelect(matches[0].id);
+              } else if (e.key === "Escape") {
+                onClose();
+              }
+            }}
+          />
+          <button
+            onClick={onClose}
+            className="p-1 rounded hover:bg-white/5"
+            style={{ color: PALETTE.mist }}
+            aria-label="Close search"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+        <ul className="max-h-96 overflow-y-auto py-1">
+          {matches.map((s) => {
+            const meta = SYSTEM_META[s.system];
+            return (
+              <li key={s.id}>
+                <button
+                  onClick={() => onSelect(s.id)}
+                  className="w-full text-left px-4 py-2.5 flex items-center gap-3 hover:bg-white/5 transition-colors"
+                  data-testid={`search-result-${s.id}`}
+                >
+                  <span
+                    className="w-2 h-2 rounded-full flex-shrink-0"
+                    style={{ background: s.color, boxShadow: `0 0 8px ${s.color}` }}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-semibold truncate" style={{ color: PALETTE.mist }}>
+                      {s.name}
+                    </div>
+                    <div className="text-xs truncate" style={{ color: `${PALETTE.mist}88` }}>
+                      {meta.label}
+                    </div>
+                  </div>
+                  <ChevronRight className="w-4 h-4 flex-shrink-0" style={{ color: `${PALETTE.surf}99` }} />
+                </button>
+              </li>
+            );
+          })}
+          {matches.length === 0 && (
+            <li className="px-4 py-6 text-center text-sm" style={{ color: `${PALETTE.mist}88` }}>
+              No structures match "{q}"
+            </li>
+          )}
+        </ul>
+      </div>
+    </div>
   );
 }
 
-function RegionDetail({
-  region,
+// ──────────────────────────── UI: view-mode toggle ────────────────────────────
+
+function ViewModeToggle({
+  mode,
+  setMode,
+}: {
+  mode: ViewMode;
+  setMode: (m: ViewMode) => void;
+}) {
+  const items: { value: ViewMode; label: string; Icon: React.ElementType }[] = [
+    { value: "external", label: "External", Icon: Eye },
+    { value: "cutaway", label: "Cutaway", Icon: Layers },
+    { value: "exploded", label: "Exploded", Icon: Maximize2 },
+  ];
+  return (
+    <div
+      className="inline-flex rounded-xl p-1 border"
+      style={{
+        background: `${PALETTE.surface}cc`,
+        borderColor: `${PALETTE.steel}99`,
+      }}
+      role="group"
+      aria-label="View mode"
+    >
+      {items.map(({ value, label, Icon }) => {
+        const active = mode === value;
+        return (
+          <button
+            key={value}
+            onClick={() => setMode(value)}
+            className="px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all"
+            style={{
+              background: active
+                ? `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`
+                : "transparent",
+              color: active ? PALETTE.bg : PALETTE.mist,
+            }}
+            aria-pressed={active}
+            data-testid={`view-mode-${value}`}
+          >
+            <Icon className="w-3.5 h-3.5" />
+            {label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+// ──────────────────────────── UI: system filter ────────────────────────────
+
+function SystemFilter({
+  active,
+  setActive,
+  onPickStructure,
+}: {
+  active: BrainSystem | "all";
+  setActive: (s: BrainSystem | "all") => void;
+  onPickStructure: (id: string) => void;
+}) {
+  const systems: (BrainSystem | "all")[] = [
+    "all",
+    "cortex",
+    "limbic",
+    "diencephalon",
+    "basal-ganglia",
+    "white-matter",
+    "brainstem",
+    "cerebellum",
+    "ventricle",
+  ];
+
+  const filtered =
+    active === "all"
+      ? BRAIN_STRUCTURES
+      : BRAIN_STRUCTURES.filter((s) => s.system === active);
+
+  return (
+    <div className="flex flex-col h-full">
+      <div className="flex flex-wrap gap-1.5 mb-3">
+        {systems.map((s) => {
+          const isActive = active === s;
+          const label = s === "all" ? "All Systems" : SYSTEM_META[s].label;
+          const color = s === "all" ? PALETTE.surf : SYSTEM_META[s].color;
+          return (
+            <button
+              key={s}
+              onClick={() => setActive(s)}
+              className="px-2.5 py-1 rounded-full text-[11px] font-medium border transition-all"
+              style={
+                isActive
+                  ? {
+                      background: `linear-gradient(135deg, ${color}, ${PALETTE.surf})`,
+                      borderColor: color,
+                      color: PALETTE.bg,
+                    }
+                  : {
+                      background: `${PALETTE.surface}aa`,
+                      borderColor: `${PALETTE.steel}99`,
+                      color: PALETTE.mist,
+                    }
+              }
+              data-testid={`system-filter-${s}`}
+            >
+              {label}
+            </button>
+          );
+        })}
+      </div>
+      <div className="flex-1 overflow-y-auto -mx-1 px-1">
+        <ul className="space-y-1">
+          {filtered.map((s) => (
+            <li key={s.id}>
+              <button
+                onClick={() => onPickStructure(s.id)}
+                className="w-full text-left px-2.5 py-1.5 rounded-lg flex items-center gap-2 hover:bg-white/5 transition-colors"
+                data-testid={`structure-list-${s.id}`}
+              >
+                <span
+                  className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                  style={{ background: s.color, boxShadow: `0 0 6px ${s.color}` }}
+                />
+                <span className="text-xs truncate" style={{ color: PALETTE.mist }}>
+                  {s.name}
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+// ──────────────────────────── UI: detail panel ────────────────────────────
+
+function DetailSection({
+  title,
+  items,
+  bullet,
+}: {
+  title: string;
+  items: string[];
+  bullet: string;
+}) {
+  return (
+    <div>
+      <h4
+        className="text-[11px] font-semibold uppercase tracking-wider mb-2"
+        style={{ color: PALETTE.surf }}
+      >
+        {title}
+      </h4>
+      <ul className="space-y-1.5">
+        {items.map((item, i) => (
+          <li
+            key={i}
+            className="flex items-start gap-2 text-sm leading-relaxed"
+            style={{ color: `${PALETTE.mist}dd` }}
+          >
+            <span
+              className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0"
+              style={{ background: bullet }}
+            />
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function StructureDetail({
+  struct,
   onClose,
 }: {
-  region: RegionInfo;
+  struct: BrainStructure;
   onClose: () => void;
 }) {
-  const Icon = region.icon;
+  const meta = SYSTEM_META[struct.system];
+
   return (
     <div
       className="rounded-2xl border overflow-hidden flex flex-col h-full"
       style={{
         background: `linear-gradient(180deg, ${PALETTE.surfaceElev}, ${PALETTE.surface})`,
-        borderColor: `${PALETTE.surf}55`,
-        boxShadow: `0 30px 80px -30px ${PALETTE.teal}aa`,
+        borderColor: `${struct.color}66`,
+        boxShadow: `0 30px 80px -30px ${struct.color}aa`,
       }}
-      data-testid="region-detail"
+      data-testid="structure-detail"
     >
       <div
         className="px-5 py-4 flex items-start justify-between gap-3 border-b"
         style={{ borderColor: `${PALETTE.steel}66` }}
       >
-        <div className="flex items-center gap-3 min-w-0">
+        <div className="flex items-start gap-3 min-w-0 flex-1">
           <div
             className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
             style={{
-              background: `linear-gradient(135deg, ${region.color}, ${PALETTE.surf})`,
+              background: `linear-gradient(135deg, ${struct.color}, ${PALETTE.surf})`,
               color: PALETTE.bg,
             }}
           >
-            <Icon className="w-5 h-5" />
+            <Brain className="w-5 h-5" />
           </div>
-          <div className="min-w-0">
-            <h3 className="text-lg font-bold text-white truncate">{region.name}</h3>
-            <p className="text-xs" style={{ color: `${PALETTE.mist}99` }}>
-              Anatomical region
-            </p>
+          <div className="min-w-0 flex-1">
+            <div
+              className="text-[10px] font-semibold uppercase tracking-wider mb-0.5"
+              style={{ color: `${PALETTE.surf}cc` }}
+            >
+              {meta.label}
+            </div>
+            <h3 className="text-lg font-bold text-white leading-tight">{struct.name}</h3>
+            {struct.paired && (
+              <div className="text-[11px] mt-0.5" style={{ color: `${PALETTE.mist}99` }}>
+                Bilateral · paired structure
+              </div>
+            )}
           </div>
         </div>
         <button
           onClick={onClose}
-          aria-label="Close region detail"
-          className="p-1.5 rounded-lg transition-colors"
+          aria-label="Close detail"
+          className="p-1.5 rounded-lg transition-colors hover:bg-white/5"
           style={{ color: PALETTE.mist }}
           data-testid="button-close-detail"
         >
@@ -559,50 +698,31 @@ function RegionDetail({
       </div>
 
       <div className="px-5 py-4 overflow-y-auto flex-1 space-y-5">
-        <p className="text-sm leading-relaxed" style={{ color: PALETTE.mist }}>
-          {region.summary}
-        </p>
-
         <div>
-          <h4 className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: PALETTE.surf }}>
-            Key functions
+          <h4
+            className="text-[11px] font-semibold uppercase tracking-wider mb-2"
+            style={{ color: PALETTE.surf }}
+          >
+            Overview
           </h4>
-          <ul className="space-y-1.5">
-            {region.keyFunctions.map((f) => (
-              <li key={f} className="flex items-start gap-2 text-sm" style={{ color: `${PALETTE.mist}dd` }}>
-                <span
-                  className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0"
-                  style={{ background: PALETTE.surf }}
-                />
-                <span>{f}</span>
-              </li>
-            ))}
-          </ul>
+          <p className="text-sm leading-relaxed" style={{ color: PALETTE.mist }}>
+            {struct.overview}
+          </p>
         </div>
 
-        <div>
-          <h4 className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: PALETTE.surf }}>
-            Common clinical findings
-          </h4>
-          <ul className="space-y-1.5">
-            {region.clinical.map((c) => (
-              <li key={c} className="flex items-start gap-2 text-sm" style={{ color: `${PALETTE.mist}dd` }}>
-                <span
-                  className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0"
-                  style={{ background: PALETTE.mist }}
-                />
-                <span>{c}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <DetailSection title="Primary Functions" items={struct.functions} bullet={PALETTE.surf} />
+        <DetailSection title="Role in Neuropsychology" items={struct.neuropsych} bullet={struct.color} />
+        <DetailSection title="Clinical Conditions" items={struct.conditions} bullet={PALETTE.mist} />
 
         <div>
-          <h4 className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: PALETTE.surf }}>
-            Related study topics
+          <h4
+            className="text-[11px] font-semibold uppercase tracking-wider mb-2"
+            style={{ color: PALETTE.surf }}
+          >
+            Related Study Topics
           </h4>
-          <div className="flex flex-wrap gap-2">
-            {region.topicHints.map((t) => (
+          <div className="flex flex-wrap gap-1.5">
+            {struct.topicHints.map((t) => (
               <span
                 key={t}
                 className="text-xs px-2.5 py-1 rounded-full border"
@@ -619,18 +739,37 @@ function RegionDetail({
         </div>
       </div>
 
-      <div className="px-5 py-4 border-t" style={{ borderColor: `${PALETTE.steel}66` }}>
-        <Link href="/topics">
+      <div
+        className="px-5 py-3 border-t flex flex-col gap-2"
+        style={{ borderColor: `${PALETTE.steel}66` }}
+      >
+        <Link href={`/study-lab?seed=${encodeURIComponent(struct.name)}`}>
           <a
-            className="w-full inline-flex items-center justify-center gap-2 rounded-xl h-11 font-semibold transition-all"
+            className="w-full inline-flex items-center justify-center gap-2 rounded-xl h-10 text-sm font-semibold transition-all"
             style={{
-              background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
+              background: `linear-gradient(135deg, ${struct.color}, ${PALETTE.surf})`,
               color: PALETTE.bg,
-              boxShadow: `0 10px 30px -10px ${PALETTE.teal}cc`,
+              boxShadow: `0 8px 24px -10px ${struct.color}cc`,
+            }}
+            data-testid="button-study-this"
+          >
+            <Sparkles className="w-4 h-4" />
+            Study this structure
+          </a>
+        </Link>
+        <Link href={`/topics`}>
+          <a
+            className="w-full inline-flex items-center justify-center gap-2 rounded-xl h-9 text-xs font-medium transition-all border"
+            style={{
+              background: `${PALETTE.surface}cc`,
+              borderColor: `${PALETTE.steel}99`,
+              color: PALETTE.mist,
             }}
             data-testid="button-explore-topics"
           >
-            Explore matching topics <ArrowRight className="w-4 h-4" />
+            <BookOpen className="w-3.5 h-3.5" />
+            Explore matching topics
+            <ArrowRight className="w-3.5 h-3.5" />
           </a>
         </Link>
       </div>
@@ -654,18 +793,19 @@ function EmptyDetail() {
           border: `1px solid ${PALETTE.surf}44`,
         }}
       >
-        <Brain className="w-7 h-7" style={{ color: PALETTE.surf }} />
+        <Target className="w-7 h-7" style={{ color: PALETTE.surf }} />
       </div>
-      <h3 className="text-base font-semibold text-white mb-1.5">
-        Click any region of the brain
-      </h3>
+      <h3 className="text-base font-semibold text-white mb-1.5">Pick a structure</h3>
       <p className="text-sm leading-relaxed max-w-xs" style={{ color: `${PALETTE.mist}99` }}>
-        Drag to rotate. Scroll to zoom. Each region opens its functions, clinical findings,
-        and matching study topics.
+        Click any region of the brain, search by name or symptom, or browse from the system list.
+        Each structure opens an overview, its primary functions, neuropsychology role, and the
+        clinical conditions it's tied to.
       </p>
     </div>
   );
 }
+
+// ──────────────────────────── helpers ────────────────────────────
 
 function detectWebGL(): boolean {
   if (typeof window === "undefined") return false;
@@ -696,183 +836,288 @@ function WebGLFallback() {
       >
         <Brain className="w-7 h-7" style={{ color: PALETTE.surf }} />
       </div>
-      <h3 className="text-base font-semibold text-white mb-1.5">
-        3D view not available
-      </h3>
-      <p className="text-sm leading-relaxed max-w-sm mb-4" style={{ color: `${PALETTE.mist}99` }}>
-        Your browser or device doesn't support WebGL. You can still browse every region
-        using the buttons above — each one opens the same study panel.
+      <h3 className="text-base font-semibold text-white mb-1.5">3D view not available</h3>
+      <p className="text-sm leading-relaxed max-w-sm" style={{ color: `${PALETTE.mist}99` }}>
+        Your browser or device doesn't support WebGL. You can still browse every structure from
+        the list on the left.
       </p>
     </div>
   );
 }
 
+// URL hash sync — `#focus=structure-id`
+function readFocusFromHash(): string | null {
+  if (typeof window === "undefined") return null;
+  const hash = window.location.hash.replace(/^#/, "");
+  if (!hash) return null;
+  const params = new URLSearchParams(hash);
+  const focus = params.get("focus");
+  return focus && STRUCTURE_INDEX[focus] ? focus : null;
+}
+
+function writeFocusToHash(id: string | null) {
+  if (typeof window === "undefined") return;
+  const url = new URL(window.location.href);
+  if (id) {
+    url.hash = `focus=${id}`;
+  } else {
+    url.hash = "";
+  }
+  window.history.replaceState(null, "", url.toString());
+}
+
+// ──────────────────────────── page ────────────────────────────
+
 export default function BrainLabPage() {
-  const [selectedId, setSelectedId] = useState<RegionId | null>(null);
-  const [hoveredId, setHoveredId] = useState<RegionId | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>("external");
+  const [systemFilter, setSystemFilter] = useState<BrainSystem | "all">("all");
   const [autoSpin, setAutoSpin] = useState(true);
-  const [reduceMotion, setReduceMotion] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [webglOk, setWebglOk] = useState(true);
+  const [showMobileDetail, setShowMobileDetail] = useState(false);
 
+  // Init from media queries + URL hash
   useEffect(() => {
     if (typeof window === "undefined" || !window.matchMedia) return;
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduceMotion(mq.matches);
     if (mq.matches) setAutoSpin(false);
     const mqMobile = window.matchMedia("(max-width: 768px), (pointer: coarse)");
     setIsMobile(mqMobile.matches);
     setWebglOk(detectWebGL());
+
+    const initial = readFocusFromHash();
+    if (initial) {
+      setSelectedId(initial);
+      const struct = STRUCTURE_INDEX[initial];
+      if (struct && struct.layer !== "cortex") setViewMode("cutaway");
+    }
+
+    const onHash = () => {
+      const f = readFocusFromHash();
+      setSelectedId(f);
+    };
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
   }, []);
 
-  const selected = useMemo(
-    () => REGIONS.find((r) => r.id === selectedId) ?? null,
-    [selectedId],
-  );
+  // Selection handler — auto-switches view mode + writes hash
+  const handleSelect = useCallback((id: string) => {
+    setSelectedId(id);
+    setSearchOpen(false);
+    writeFocusToHash(id);
+    setShowMobileDetail(true);
+    const struct = STRUCTURE_INDEX[id];
+    if (struct && struct.layer !== "cortex" && struct.layer !== "ventricle") {
+      setViewMode((m) => (m === "external" ? "cutaway" : m));
+    }
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setSelectedId(null);
+    writeFocusToHash(null);
+    setShowMobileDetail(false);
+  }, []);
+
+  const selected = selectedId ? STRUCTURE_INDEX[selectedId] ?? null : null;
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "/" && !searchOpen) {
+        const target = e.target as HTMLElement;
+        if (target.tagName === "INPUT" || target.tagName === "TEXTAREA") return;
+        e.preventDefault();
+        setSearchOpen(true);
+      } else if (e.key === "Escape") {
+        if (searchOpen) setSearchOpen(false);
+        else if (selectedId) handleClose();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [searchOpen, selectedId, handleClose]);
 
   return (
-    <div
-      className="h-full overflow-hidden study-page-bg"
-      style={{ color: PALETTE.mist }}
-      data-testid="brain-lab-page"
-    >
-      <div className="h-full flex flex-col">
-        {/* Header */}
-        <div className="px-4 md:px-8 pt-6 pb-3 flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <div
-              className="inline-flex items-center gap-2 rounded-full px-3 py-1 mb-2 text-[11px] font-medium border"
-              style={{
-                background: `${PALETTE.steel}55`,
-                borderColor: `${PALETTE.surf}55`,
-                color: PALETTE.mist,
-              }}
-            >
-              <Sparkles className="w-3 h-3" style={{ color: PALETTE.surf }} />
-              Interactive 3D
-            </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">
-              Brain Lab
-            </h1>
-            <p className="text-sm mt-1 text-muted-foreground">
-              Rotate, zoom, and click any region to study its functions and clinical correlates.
+    <div className="h-full overflow-hidden study-page-bg flex flex-col">
+      {/* Header */}
+      <div
+        className="flex-shrink-0 px-4 md:px-6 py-3 flex items-center justify-between gap-3 border-b"
+        style={{
+          borderColor: `${PALETTE.steel}66`,
+          background: `linear-gradient(180deg, ${PALETTE.surface}cc, transparent)`,
+        }}
+      >
+        <div className="flex items-center gap-3 min-w-0">
+          <div
+            className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+            style={{
+              background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
+              color: PALETTE.bg,
+            }}
+          >
+            <Brain className="w-5 h-5" />
+          </div>
+          <div className="min-w-0">
+            <h1 className="text-base md:text-lg font-bold text-white truncate">Brain Lab</h1>
+            <p className="text-xs hidden sm:block" style={{ color: `${PALETTE.mist}99` }}>
+              {BRAIN_STRUCTURES.length} interactive structures · clinical neuropsychology focus
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setAutoSpin((s) => !s)}
-              disabled={reduceMotion}
-              className="text-xs px-3 py-1.5 rounded-full border transition-colors disabled:opacity-40"
-              style={{
-                background: `${PALETTE.surface}cc`,
-                borderColor: `${PALETTE.steel}99`,
-                color: PALETTE.mist,
-              }}
-              data-testid="button-toggle-spin"
-            >
-              {autoSpin ? "Pause spin" : "Auto-spin"}
-            </button>
-            <button
-              onClick={() => setSelectedId(null)}
-              className="text-xs px-3 py-1.5 rounded-full border transition-colors"
-              style={{
-                background: `${PALETTE.surface}cc`,
-                borderColor: `${PALETTE.steel}99`,
-                color: PALETTE.mist,
-              }}
-              data-testid="button-reset-view"
-            >
-              Reset
-            </button>
-          </div>
         </div>
-
-        {/* Region quick-pills */}
-        <div
-          className="px-4 md:px-8 pb-4 flex gap-2 overflow-x-auto"
-          style={{ scrollbarWidth: "thin" }}
-        >
-          {REGIONS.map((r) => (
-            <RegionPill
-              key={r.id}
-              region={r}
-              active={selectedId === r.id}
-              onClick={() => setSelectedId(r.id)}
-            />
-          ))}
-        </div>
-
-        {/* Main split */}
-        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-4 px-4 md:px-8 pb-4">
-          {/* Canvas */}
-          <div
-            className="relative rounded-2xl overflow-hidden border"
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="px-3 py-1.5 rounded-xl text-xs font-medium border flex items-center gap-2 transition-all hover:-translate-y-0.5"
             style={{
+              background: `${PALETTE.surface}cc`,
               borderColor: `${PALETTE.steel}99`,
-              minHeight: 360,
+              color: PALETTE.mist,
             }}
-            role="region"
-            aria-label="Interactive 3D brain. Use the region buttons above for keyboard navigation."
+            data-testid="button-open-search"
           >
-            {webglOk ? (
-              <Canvas
-                dpr={isMobile ? [1, 1.5] : [1, 2]}
-                camera={{ position: [0, 0.4, 6], fov: 42 }}
-                gl={{ antialias: !isMobile, alpha: false, powerPreference: "high-performance" }}
-                data-testid="brain-canvas"
-              >
-                <Suspense fallback={null}>
-                  <BrainScene
-                    selectedId={selectedId}
-                    hoveredId={hoveredId}
-                    onSelect={setSelectedId}
-                    onHover={setHoveredId}
-                    autoSpin={autoSpin && !reduceMotion}
-                    lite={isMobile}
-                  />
-                </Suspense>
-              </Canvas>
-            ) : (
-              <WebGLFallback />
-            )}
-
-            {/* Hover label */}
-            {hoveredId && hoveredId !== selectedId && (
-              <div
-                className="absolute top-3 left-3 text-xs font-medium px-2.5 py-1 rounded-full border backdrop-blur-md pointer-events-none"
-                style={{
-                  background: `${PALETTE.bg}cc`,
-                  borderColor: `${PALETTE.surf}55`,
-                  color: PALETTE.mist,
-                }}
-              >
-                {REGIONS.find((r) => r.id === hoveredId)?.name}
-              </div>
-            )}
-
-            {/* Hint */}
-            <div
-              className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-[11px] pointer-events-none"
-              style={{ color: `${PALETTE.mist}99` }}
+            <Search className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Search structures</span>
+            <span className="sm:hidden">Search</span>
+            <kbd
+              className="hidden md:inline px-1.5 py-0.5 rounded text-[10px] font-mono"
+              style={{ background: `${PALETTE.steel}99`, color: PALETTE.mist }}
             >
-              <span className="flex items-center gap-1.5">
-                <Layers className="w-3 h-3" />
-                Drag to rotate · scroll to zoom · click a region
-              </span>
-              <span className="hidden sm:inline">8 regions</span>
-            </div>
-          </div>
+              /
+            </kbd>
+          </button>
+          {!isMobile && <ViewModeToggle mode={viewMode} setMode={setViewMode} />}
+          {selectedId && (
+            <button
+              onClick={handleClose}
+              className="px-2.5 py-1.5 rounded-xl text-xs font-medium border flex items-center gap-1.5"
+              style={{
+                background: `${PALETTE.surface}cc`,
+                borderColor: `${PALETTE.steel}99`,
+                color: PALETTE.mist,
+              }}
+              data-testid="button-reset-focus"
+              title="Clear selection"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span className="hidden md:inline">Reset</span>
+            </button>
+          )}
+        </div>
+      </div>
 
-          {/* Side panel */}
-          <div className="min-h-[360px] lg:min-h-0">
+      {/* Body — 3-pane layout: filter / 3D / detail */}
+      <div className="flex-1 min-h-0 grid gap-3 p-3 md:p-4"
+        style={{
+          gridTemplateColumns: isMobile ? "1fr" : "minmax(180px, 220px) 1fr minmax(320px, 420px)",
+        }}
+      >
+        {/* Left: system filter + structure list (desktop only) */}
+        {!isMobile && (
+          <aside
+            className="rounded-2xl border p-3 overflow-hidden"
+            style={{
+              background: `linear-gradient(180deg, ${PALETTE.surface}, ${PALETTE.bg})`,
+              borderColor: `${PALETTE.steel}99`,
+            }}
+            data-testid="system-sidebar"
+          >
+            <SystemFilter
+              active={systemFilter}
+              setActive={setSystemFilter}
+              onPickStructure={handleSelect}
+            />
+          </aside>
+        )}
+
+        {/* Center: 3D canvas */}
+        <div
+          className="relative rounded-2xl border overflow-hidden"
+          style={{
+            background: PALETTE.bg,
+            borderColor: `${PALETTE.steel}99`,
+            boxShadow: `0 20px 60px -30px ${PALETTE.teal}aa`,
+          }}
+          data-testid="brain-canvas-wrap"
+        >
+          {webglOk ? (
+            <Canvas
+              camera={{ position: [0, 0.5, 6], fov: 45 }}
+              dpr={[1, isMobile ? 1.5 : 2]}
+              shadows={!isMobile}
+              gl={{ antialias: true, powerPreference: "high-performance" }}
+            >
+              <BrainScene
+                selectedId={selectedId}
+                hoveredId={hoveredId}
+                onSelect={handleSelect}
+                onHover={setHoveredId}
+                autoSpin={autoSpin}
+                viewMode={viewMode}
+                lite={isMobile}
+              />
+            </Canvas>
+          ) : (
+            <WebGLFallback />
+          )}
+
+          {/* Mobile view-mode toggle (overlay) */}
+          {isMobile && webglOk && (
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2">
+              <ViewModeToggle mode={viewMode} setMode={setViewMode} />
+            </div>
+          )}
+
+          {/* Hover hint */}
+          {hoveredId && !selectedId && (
+            <div
+              className="absolute top-3 left-3 px-3 py-1.5 rounded-lg text-xs font-medium pointer-events-none"
+              style={{
+                background: `${PALETTE.surfaceElev}ee`,
+                color: PALETTE.mist,
+                border: `1px solid ${STRUCTURE_INDEX[hoveredId]?.color}66`,
+                boxShadow: `0 8px 24px -10px ${STRUCTURE_INDEX[hoveredId]?.color}aa`,
+              }}
+            >
+              {STRUCTURE_INDEX[hoveredId]?.name}
+            </div>
+          )}
+
+          {/* Search overlay */}
+          {searchOpen && (
+            <StructureSearch onSelect={handleSelect} onClose={() => setSearchOpen(false)} />
+          )}
+        </div>
+
+        {/* Right: detail panel (desktop) */}
+        {!isMobile && (
+          <aside className="overflow-hidden">
             {selected ? (
-              <RegionDetail region={selected} onClose={() => setSelectedId(null)} />
+              <StructureDetail struct={selected} onClose={handleClose} />
             ) : (
               <EmptyDetail />
             )}
+          </aside>
+        )}
+      </div>
+
+      {/* Mobile detail drawer */}
+      {isMobile && selected && showMobileDetail && (
+        <div
+          className="fixed inset-0 z-40 flex items-end"
+          style={{ background: `${PALETTE.bg}cc`, backdropFilter: "blur(6px)" }}
+          onClick={() => setShowMobileDetail(false)}
+        >
+          <div
+            className="w-full max-h-[85vh] rounded-t-3xl overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <StructureDetail struct={selected} onClose={handleClose} />
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
