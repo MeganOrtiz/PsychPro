@@ -16,6 +16,11 @@ import {
   Sparkles,
   Target,
   RotateCcw,
+  Heart,
+  Boxes,
+  Activity,
+  Network,
+  Compass,
 } from "lucide-react";
 import {
   BRAIN_STRUCTURES,
@@ -36,6 +41,52 @@ const PALETTE = {
 };
 
 type ViewMode = "external" | "cutaway" | "exploded";
+
+// 5 high-level tab groups that consolidate the 8 anatomical systems —
+// matches how clinicians actually think about regions vs. the granular
+// data model.
+const TAB_GROUPS = {
+  cortex: {
+    label: "Cortex",
+    icon: Brain,
+    systems: ["cortex"] as BrainSystem[],
+  },
+  limbic: {
+    label: "Limbic",
+    icon: Heart,
+    systems: ["limbic"] as BrainSystem[],
+  },
+  subcortical: {
+    label: "Subcortical",
+    icon: Boxes,
+    systems: ["diencephalon", "basal-ganglia", "ventricle"] as BrainSystem[],
+  },
+  brainstem: {
+    label: "Brainstem",
+    icon: Activity,
+    systems: ["brainstem", "cerebellum"] as BrainSystem[],
+  },
+  whitematter: {
+    label: "White Matter",
+    icon: Network,
+    systems: ["white-matter"] as BrainSystem[],
+  },
+} as const;
+type TabGroup = keyof typeof TAB_GROUPS;
+const TAB_KEYS: TabGroup[] = [
+  "cortex",
+  "limbic",
+  "subcortical",
+  "brainstem",
+  "whitematter",
+];
+
+function tabForSystem(system: BrainSystem): TabGroup {
+  for (const key of TAB_KEYS) {
+    if (TAB_GROUPS[key].systems.includes(system)) return key;
+  }
+  return "cortex";
+}
 
 // ──────────────────────────── procedural geometry ────────────────────────────
 
@@ -291,15 +342,11 @@ useGLTF.preload(BRAIN_GLB_URL);
 function BrainShell({
   viewMode,
   selectedId,
-  hoveredId,
   onSelect,
-  onHover,
 }: {
   viewMode: ViewMode;
   selectedId: string | null;
-  hoveredId: string | null;
   onSelect: (id: string) => void;
-  onHover: (id: string | null) => void;
 }) {
   const { scene } = useGLTF(BRAIN_GLB_URL);
   const matRef = useRef<THREE.MeshPhysicalMaterial | null>(null);
@@ -323,18 +370,23 @@ function BrainShell({
     obj.position.sub(center);
     wrapper.scale.setScalar(s);
 
-    // Apply a single cerulean material so the brain reads as part of the UI.
+    // Luminous "scientific viz" material — dark teal base with a bright
+    // cyan emissive core so the surface glows from within and the
+    // sulci/gyri read as embossed dark lines against a brighter
+    // self-illuminated body.
     const mat = new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color("#5BB7DA"),
-      emissive: new THREE.Color("#1F6B91"),
-      emissiveIntensity: 0.18,
-      roughness: 0.45,
-      metalness: 0.08,
-      clearcoat: 0.5,
-      clearcoatRoughness: 0.35,
+      color: new THREE.Color("#0E3F5F"),
+      emissive: new THREE.Color("#3FB6D9"),
+      emissiveIntensity: 0.65,
+      roughness: 0.32,
+      metalness: 0.05,
+      clearcoat: 0.65,
+      clearcoatRoughness: 0.28,
+      sheen: 0.4,
+      sheenColor: new THREE.Color("#7DD8E8"),
       transmission: 0.0,
       transparent: true,
-      opacity: 0.9,
+      opacity: 0.92,
       side: THREE.DoubleSide,
       depthWrite: true,
     });
@@ -384,21 +436,22 @@ function BrainShell({
   );
 
   // Animate opacity by view mode and selection state.
-  // External: solid. Cutaway: see-through. Exploded: hidden.
+  // External: solid glow. Cutaway: see-through. Exploded: hidden.
   useFrame((_, dt) => {
     if (!matRef.current) return;
     const targetOpacity =
       viewMode === "exploded"
         ? 0.0
         : viewMode === "cutaway"
-          ? 0.18
+          ? 0.22
           : selectedId
-            ? 0.55 // dim shell when a structure is selected so the accent reads
-            : 0.9;
+            ? 0.6 // dim shell when a structure is selected so the accent reads
+            : 0.92;
     matRef.current.opacity +=
       (targetOpacity - matRef.current.opacity) * Math.min(1, dt * 5);
     matRef.current.depthWrite = matRef.current.opacity > 0.5;
-    const targetEmissive = hoveredId === "__shell__" ? 0.35 : 0.18;
+    const targetEmissive =
+      viewMode === "cutaway" ? 0.45 : selectedId ? 0.5 : 0.65;
     matRef.current.emissiveIntensity +=
       (targetEmissive - matRef.current.emissiveIntensity) * Math.min(1, dt * 5);
     if (groupRef.current) {
@@ -461,9 +514,11 @@ function BrainScene({
     <>
       <color attach="background" args={[PALETTE.bg]} />
       <fog attach="fog" args={[PALETTE.bg, 7, 16]} />
-      <ambientLight intensity={lite ? 0.7 : 0.5} />
-      <directionalLight position={[4, 6, 5]} intensity={1.05} color={PALETTE.mist} />
-      <directionalLight position={[-5, 3, -2]} intensity={0.5} color={PALETTE.surf} />
+      <ambientLight intensity={lite ? 0.55 : 0.35} />
+      <directionalLight position={[4, 6, 5]} intensity={0.85} color={PALETTE.mist} />
+      <directionalLight position={[-5, 3, -2]} intensity={0.45} color={PALETTE.surf} />
+      {/* Rim light from behind for that scientific-viz halo */}
+      <directionalLight position={[0, 1, -6]} intensity={0.9} color={PALETTE.surf} />
       <pointLight position={[0, -3, 4]} intensity={0.55} color={PALETTE.teal} />
       {!lite && (
         <Suspense fallback={null}>
@@ -476,9 +531,7 @@ function BrainScene({
             <BrainShell
               viewMode={viewMode}
               selectedId={selectedId}
-              hoveredId={hoveredId}
               onSelect={onSelect}
-              onHover={onHover}
             />
           </Suspense>
           {BRAIN_STRUCTURES.map((s, i) => (
@@ -675,90 +728,166 @@ function ViewModeToggle({
   );
 }
 
-// ──────────────────────────── UI: system filter ────────────────────────────
+// ──────────────────────────── UI: 5-group top tabs ────────────────────────────
 
-function SystemFilter({
+function TopTabs({
   active,
   setActive,
-  onPickStructure,
 }: {
-  active: BrainSystem | "all";
-  setActive: (s: BrainSystem | "all") => void;
-  onPickStructure: (id: string) => void;
+  active: TabGroup | "all";
+  setActive: (g: TabGroup | "all") => void;
 }) {
-  const systems: (BrainSystem | "all")[] = [
-    "all",
-    "cortex",
-    "limbic",
-    "diencephalon",
-    "basal-ganglia",
-    "white-matter",
-    "brainstem",
-    "cerebellum",
-    "ventricle",
+  const items: { value: TabGroup | "all"; label: string; Icon: React.ElementType }[] = [
+    { value: "all", label: "All", Icon: Compass },
+    ...TAB_KEYS.map((k) => ({ value: k, label: TAB_GROUPS[k].label, Icon: TAB_GROUPS[k].icon })),
   ];
+  return (
+    <div
+      className="inline-flex items-center gap-1 p-1 rounded-2xl border overflow-x-auto"
+      style={{
+        background: `${PALETTE.surface}cc`,
+        borderColor: `${PALETTE.steel}99`,
+      }}
+      role="tablist"
+      aria-label="Brain region tabs"
+      data-testid="brain-top-tabs"
+    >
+      {items.map(({ value, label, Icon }) => {
+        const isActive = active === value;
+        return (
+          <button
+            key={value}
+            role="tab"
+            aria-selected={isActive}
+            onClick={() => setActive(value)}
+            className="px-3 md:px-4 py-1.5 rounded-xl text-xs md:text-sm font-medium flex items-center gap-1.5 whitespace-nowrap transition-all"
+            style={
+              isActive
+                ? {
+                    background: `linear-gradient(135deg, ${PALETTE.surf}, ${PALETTE.teal})`,
+                    color: PALETTE.bg,
+                    boxShadow: `0 6px 18px -8px ${PALETTE.surf}cc`,
+                  }
+                : {
+                    background: "transparent",
+                    color: `${PALETTE.mist}cc`,
+                  }
+            }
+            data-testid={`tab-${value}`}
+          >
+            <Icon className="w-3.5 h-3.5" />
+            {label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
 
-  const filtered =
+// Horizontal chip strip — replaces the old sidebar's vertical structure list.
+// Shows the structures inside the active tab group so users can pick by name
+// without ever opening the search modal.
+function GroupChips({
+  active,
+  selectedId,
+  onPick,
+}: {
+  active: TabGroup | "all";
+  selectedId: string | null;
+  onPick: (id: string) => void;
+}) {
+  const items =
     active === "all"
       ? BRAIN_STRUCTURES
-      : BRAIN_STRUCTURES.filter((s) => s.system === active);
+      : BRAIN_STRUCTURES.filter((s) => TAB_GROUPS[active].systems.includes(s.system));
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex flex-wrap gap-1.5 mb-3">
-        {systems.map((s) => {
-          const isActive = active === s;
-          const label = s === "all" ? "All Systems" : SYSTEM_META[s].label;
-          const color = s === "all" ? PALETTE.surf : SYSTEM_META[s].color;
-          return (
-            <button
-              key={s}
-              onClick={() => setActive(s)}
-              className="px-2.5 py-1 rounded-full text-[11px] font-medium border transition-all"
-              style={
-                isActive
-                  ? {
-                      background: `linear-gradient(135deg, ${color}, ${PALETTE.surf})`,
-                      borderColor: color,
-                      color: PALETTE.bg,
-                    }
-                  : {
-                      background: `${PALETTE.surface}aa`,
-                      borderColor: `${PALETTE.steel}99`,
-                      color: PALETTE.mist,
-                    }
-              }
-              data-testid={`system-filter-${s}`}
-            >
-              {label}
-            </button>
-          );
-        })}
-      </div>
-      <div className="flex-1 overflow-y-auto -mx-1 px-1">
-        <ul className="space-y-1">
-          {filtered.map((s) => (
-            <li key={s.id}>
-              <button
-                onClick={() => onPickStructure(s.id)}
-                className="w-full text-left px-2.5 py-1.5 rounded-lg flex items-center gap-2 hover:bg-white/5 transition-colors"
-                data-testid={`structure-list-${s.id}`}
-              >
-                <span
-                  className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                  style={{ background: s.color, boxShadow: `0 0 6px ${s.color}` }}
-                />
-                <span className="text-xs truncate" style={{ color: PALETTE.mist }}>
-                  {s.name}
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
+    <div
+      className="flex gap-1.5 overflow-x-auto py-1 px-1 -mx-1"
+      style={{ scrollbarWidth: "thin" }}
+      data-testid="brain-group-chips"
+    >
+      {items.map((s) => {
+        const isActive = selectedId === s.id;
+        return (
+          <button
+            key={s.id}
+            onClick={() => onPick(s.id)}
+            className="px-2.5 py-1 rounded-full text-[11px] font-medium border whitespace-nowrap flex items-center gap-1.5 transition-all hover:-translate-y-0.5"
+            style={
+              isActive
+                ? {
+                    background: `${s.color}33`,
+                    borderColor: s.color,
+                    color: PALETTE.mist,
+                    boxShadow: `0 0 12px -2px ${s.color}aa`,
+                  }
+                : {
+                    background: `${PALETTE.surface}aa`,
+                    borderColor: `${PALETTE.steel}99`,
+                    color: `${PALETTE.mist}bb`,
+                  }
+            }
+            data-testid={`chip-${s.id}`}
+          >
+            <span
+              className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+              style={{ background: s.color, boxShadow: `0 0 6px ${s.color}` }}
+            />
+            {s.shortName || s.name}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+// Compact S/A/P/I orientation gizmo — bottom-left of the canvas, gives the
+// viewer an anatomical compass without occupying real estate.
+function OrientationGizmo() {
+  return (
+    <div
+      className="absolute bottom-3 left-3 w-20 h-20 rounded-2xl flex items-center justify-center pointer-events-none"
+      style={{
+        background: `${PALETTE.surface}aa`,
+        border: `1px solid ${PALETTE.steel}99`,
+        backdropFilter: "blur(6px)",
+      }}
+      aria-hidden
+      data-testid="orientation-gizmo"
+    >
+      <div className="relative w-full h-full flex items-center justify-center">
+        <Brain className="w-7 h-7" style={{ color: `${PALETTE.surf}aa` }} />
+        <span
+          className="absolute top-1 left-1/2 -translate-x-1/2 text-[10px] font-bold"
+          style={{ color: PALETTE.mist }}
+        >
+          S
+        </span>
+        <span
+          className="absolute bottom-1 left-1/2 -translate-x-1/2 text-[10px] font-bold"
+          style={{ color: PALETTE.mist }}
+        >
+          I
+        </span>
+        <span
+          className="absolute left-1 top-1/2 -translate-y-1/2 text-[10px] font-bold"
+          style={{ color: PALETTE.mist }}
+        >
+          A
+        </span>
+        <span
+          className="absolute right-1 top-1/2 -translate-y-1/2 text-[10px] font-bold"
+          style={{ color: PALETTE.mist }}
+        >
+          P
+        </span>
       </div>
     </div>
   );
 }
+
+// (Legacy `_UnusedSystemFilter` removed — replaced by `TopTabs` + `GroupChips` above.)
 
 // ──────────────────────────── UI: detail panel ────────────────────────────
 
@@ -798,6 +927,8 @@ function DetailSection({
   );
 }
 
+type DetailTab = "overview" | "functions" | "connections" | "clinical";
+
 function StructureDetail({
   struct,
   onClose,
@@ -806,6 +937,19 @@ function StructureDetail({
   onClose: () => void;
 }) {
   const meta = SYSTEM_META[struct.system];
+  const [tab, setTab] = useState<DetailTab>("overview");
+
+  // Reset to overview whenever the user picks a different structure.
+  useEffect(() => {
+    setTab("overview");
+  }, [struct.id]);
+
+  const tabs: { value: DetailTab; label: string }[] = [
+    { value: "overview", label: "Overview" },
+    { value: "functions", label: "Functions" },
+    { value: "connections", label: "Connections" },
+    { value: "clinical", label: "Clinical" },
+  ];
 
   return (
     <div
@@ -817,34 +961,24 @@ function StructureDetail({
       }}
       data-testid="structure-detail"
     >
+      {/* Header */}
       <div
-        className="px-5 py-4 flex items-start justify-between gap-3 border-b"
+        className="px-5 pt-4 pb-3 flex items-start justify-between gap-3 border-b"
         style={{ borderColor: `${PALETTE.steel}66` }}
       >
-        <div className="flex items-start gap-3 min-w-0 flex-1">
+        <div className="min-w-0 flex-1">
           <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{
-              background: `linear-gradient(135deg, ${struct.color}, ${PALETTE.surf})`,
-              color: PALETTE.bg,
-            }}
+            className="text-[10px] font-semibold uppercase tracking-wider mb-0.5"
+            style={{ color: `${PALETTE.surf}cc` }}
           >
-            <Brain className="w-5 h-5" />
+            {meta.label}
           </div>
-          <div className="min-w-0 flex-1">
-            <div
-              className="text-[10px] font-semibold uppercase tracking-wider mb-0.5"
-              style={{ color: `${PALETTE.surf}cc` }}
-            >
-              {meta.label}
+          <h3 className="text-xl font-bold text-white leading-tight">{struct.name}</h3>
+          {struct.paired && (
+            <div className="text-[11px] mt-0.5" style={{ color: `${PALETTE.mist}99` }}>
+              Bilateral · paired structure
             </div>
-            <h3 className="text-lg font-bold text-white leading-tight">{struct.name}</h3>
-            {struct.paired && (
-              <div className="text-[11px] mt-0.5" style={{ color: `${PALETTE.mist}99` }}>
-                Bilateral · paired structure
-              </div>
-            )}
-          </div>
+          )}
         </div>
         <button
           onClick={onClose}
@@ -857,48 +991,100 @@ function StructureDetail({
         </button>
       </div>
 
-      <div className="px-5 py-4 overflow-y-auto flex-1 space-y-5">
-        <div>
-          <h4
-            className="text-[11px] font-semibold uppercase tracking-wider mb-2"
-            style={{ color: PALETTE.surf }}
-          >
-            Overview
-          </h4>
+      {/* Tabs */}
+      <div
+        className="flex items-center gap-1 px-3 pt-2 border-b"
+        style={{ borderColor: `${PALETTE.steel}66` }}
+        role="tablist"
+        aria-label="Structure detail sections"
+      >
+        {tabs.map((t) => {
+          const active = t.value === tab;
+          return (
+            <button
+              key={t.value}
+              role="tab"
+              aria-selected={active}
+              onClick={() => setTab(t.value)}
+              className="relative px-3 py-2 text-xs font-medium transition-colors"
+              style={{ color: active ? PALETTE.surf : `${PALETTE.mist}99` }}
+              data-testid={`detail-tab-${t.value}`}
+            >
+              {t.label}
+              {active && (
+                <span
+                  className="absolute left-2 right-2 -bottom-px h-0.5 rounded-full"
+                  style={{ background: PALETTE.surf }}
+                />
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Body */}
+      <div className="px-5 py-4 overflow-y-auto flex-1 space-y-5" data-testid={`detail-body-${tab}`}>
+        {tab === "overview" && (
           <p className="text-sm leading-relaxed" style={{ color: PALETTE.mist }}>
             {struct.overview}
           </p>
-        </div>
+        )}
 
-        <DetailSection title="Primary Functions" items={struct.functions} bullet={PALETTE.surf} />
-        <DetailSection title="Role in Neuropsychology" items={struct.neuropsych} bullet={struct.color} />
-        <DetailSection title="Clinical Conditions" items={struct.conditions} bullet={PALETTE.mist} />
+        {tab === "functions" && (
+          <DetailSection title="Key Functions" items={struct.functions} bullet={PALETTE.surf} />
+        )}
 
-        <div>
-          <h4
-            className="text-[11px] font-semibold uppercase tracking-wider mb-2"
-            style={{ color: PALETTE.surf }}
-          >
-            Related Study Topics
-          </h4>
-          <div className="flex flex-wrap gap-1.5">
-            {struct.topicHints.map((t) => (
-              <span
-                key={t}
-                className="text-xs px-2.5 py-1 rounded-full border"
-                style={{
-                  background: `${PALETTE.steel}66`,
-                  borderColor: `${PALETTE.surf}44`,
-                  color: PALETTE.mist,
-                }}
+        {tab === "connections" && (
+          <>
+            <div>
+              <h4
+                className="text-[11px] font-semibold uppercase tracking-wider mb-2"
+                style={{ color: PALETTE.surf }}
               >
-                {t}
-              </span>
-            ))}
-          </div>
-        </div>
+                Related Study Topics
+              </h4>
+              <div className="flex flex-wrap gap-1.5">
+                {struct.topicHints.map((t) => (
+                  <span
+                    key={t}
+                    className="text-xs px-2.5 py-1 rounded-full border"
+                    style={{
+                      background: `${PALETTE.steel}66`,
+                      borderColor: `${PALETTE.surf}44`,
+                      color: PALETTE.mist,
+                    }}
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div
+              className="text-xs leading-relaxed pt-2 border-t"
+              style={{ color: `${PALETTE.mist}aa`, borderColor: `${PALETTE.steel}66` }}
+            >
+              Part of the {meta.label.toLowerCase()}. {meta.description}
+            </div>
+          </>
+        )}
+
+        {tab === "clinical" && (
+          <>
+            <DetailSection
+              title="Role in Neuropsychology"
+              items={struct.neuropsych}
+              bullet={struct.color}
+            />
+            <DetailSection
+              title="Clinical Conditions"
+              items={struct.conditions}
+              bullet={PALETTE.mist}
+            />
+          </>
+        )}
       </div>
 
+      {/* Footer actions */}
       <div
         className="px-5 py-3 border-t flex flex-col gap-2"
         style={{ borderColor: `${PALETTE.steel}66` }}
@@ -957,9 +1143,10 @@ function EmptyDetail() {
       </div>
       <h3 className="text-base font-semibold text-white mb-1.5">Pick a structure</h3>
       <p className="text-sm leading-relaxed max-w-xs" style={{ color: `${PALETTE.mist}99` }}>
-        Click any region of the brain, search by name or symptom, or browse from the system list.
-        Each structure opens an overview, its primary functions, neuropsychology role, and the
-        clinical conditions it's tied to.
+        Click any region of the brain, pick a region tab and chip below, or
+        search by name or symptom. Each structure opens an overview, its
+        primary functions, network connections, and the clinical conditions
+        it's tied to.
       </p>
     </div>
   );
@@ -998,8 +1185,8 @@ function WebGLFallback() {
       </div>
       <h3 className="text-base font-semibold text-white mb-1.5">3D view not available</h3>
       <p className="text-sm leading-relaxed max-w-sm" style={{ color: `${PALETTE.mist}99` }}>
-        Your browser or device doesn't support WebGL. You can still browse every structure from
-        the list on the left.
+        Your browser or device doesn't support WebGL. You can still browse every
+        structure from the region tabs above and the chip strip below.
       </p>
     </div>
   );
@@ -1032,7 +1219,7 @@ export default function BrainLabPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("external");
-  const [systemFilter, setSystemFilter] = useState<BrainSystem | "all">("all");
+  const [activeTab, setActiveTab] = useState<TabGroup | "all">("all");
   const [autoSpin, setAutoSpin] = useState(true);
   const [searchOpen, setSearchOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -1063,15 +1250,20 @@ export default function BrainLabPage() {
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
 
-  // Selection handler — auto-switches view mode + writes hash
+  // Selection handler — auto-switches view mode, syncs the active region
+  // tab so the chip strip highlights the picked structure, and writes the
+  // hash so the URL remains shareable.
   const handleSelect = useCallback((id: string) => {
     setSelectedId(id);
     setSearchOpen(false);
     writeFocusToHash(id);
     setShowMobileDetail(true);
     const struct = STRUCTURE_INDEX[id];
-    if (struct && struct.layer !== "cortex" && struct.layer !== "ventricle") {
-      setViewMode((m) => (m === "external" ? "cutaway" : m));
+    if (struct) {
+      setActiveTab(tabForSystem(struct.system));
+      if (struct.layer !== "cortex" && struct.layer !== "ventricle") {
+        setViewMode((m) => (m === "external" ? "cutaway" : m));
+      }
     }
   }, []);
 
@@ -1123,7 +1315,7 @@ export default function BrainLabPage() {
           <div className="min-w-0">
             <h1 className="text-base md:text-lg font-bold text-white truncate">Brain Lab</h1>
             <p className="text-xs hidden sm:block" style={{ color: `${PALETTE.mist}99` }}>
-              {BRAIN_STRUCTURES.length} interactive structures · clinical neuropsychology focus
+              Explore the brain. Understand the mind.
             </p>
           </div>
         </div>
@@ -1168,33 +1360,39 @@ export default function BrainLabPage() {
         </div>
       </div>
 
-      {/* Body — 3-pane layout: filter / 3D / detail */}
-      <div className="flex-1 min-h-0 grid gap-3 p-3 md:p-4"
+      {/* Tabs row — 5 region groups, replaces the old sidebar */}
+      <div
+        className="flex-shrink-0 px-4 md:px-6 py-2 flex items-center justify-center border-b"
         style={{
-          gridTemplateColumns: isMobile ? "1fr" : "minmax(180px, 220px) 1fr minmax(320px, 420px)",
+          borderColor: `${PALETTE.steel}66`,
+          background: `linear-gradient(180deg, ${PALETTE.surface}66, transparent)`,
         }}
       >
-        {/* Left: system filter + structure list (desktop only) */}
-        {!isMobile && (
-          <aside
-            className="rounded-2xl border p-3 overflow-hidden"
-            style={{
-              background: `linear-gradient(180deg, ${PALETTE.surface}, ${PALETTE.bg})`,
-              borderColor: `${PALETTE.steel}99`,
-            }}
-            data-testid="system-sidebar"
-          >
-            <SystemFilter
-              active={systemFilter}
-              setActive={setSystemFilter}
-              onPickStructure={handleSelect}
-            />
-          </aside>
-        )}
+        <TopTabs
+          active={activeTab}
+          setActive={(t) => {
+            setActiveTab(t);
+            // Subcortical / limbic / brainstem / white-matter live inside the
+            // shell — switch to cutaway so they're visible without the user
+            // having to discover the view mode toggle.
+            if (t !== "all" && t !== "cortex" && viewMode === "external") {
+              setViewMode("cutaway");
+            }
+          }}
+        />
+      </div>
 
-        {/* Center: 3D canvas */}
+      {/* Body — 2-pane: 3D canvas / detail */}
+      <div
+        className="flex-1 min-h-0 grid gap-3 p-3 md:p-4"
+        style={{
+          gridTemplateColumns: isMobile ? "1fr" : "1fr minmax(340px, 420px)",
+        }}
+      >
+        {/* Center: 3D canvas + chip strip below */}
+        <div className="flex flex-col gap-3 min-h-0">
         <div
-          className="relative rounded-2xl border overflow-hidden"
+          className="relative rounded-2xl border overflow-hidden flex-1 min-h-0"
           style={{
             background: PALETTE.bg,
             borderColor: `${PALETTE.steel}99`,
@@ -1229,6 +1427,9 @@ export default function BrainLabPage() {
               <ViewModeToggle mode={viewMode} setMode={setViewMode} />
             </div>
           )}
+
+          {/* Anatomical orientation compass */}
+          {webglOk && !isMobile && <OrientationGizmo />}
 
           {/* Hover hint */}
           {hoveredId && !selectedId && (
@@ -1286,6 +1487,18 @@ export default function BrainLabPage() {
               </a>
             </div>
           )}
+        </div>
+
+          {/* Group chip strip — quick pick within the active tab */}
+          <div
+            className="flex-shrink-0 rounded-2xl border px-3 py-2"
+            style={{
+              background: `${PALETTE.surface}aa`,
+              borderColor: `${PALETTE.steel}99`,
+            }}
+          >
+            <GroupChips active={activeTab} selectedId={selectedId} onPick={handleSelect} />
+          </div>
         </div>
 
         {/* Right: detail panel (desktop) */}
