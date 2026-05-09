@@ -370,19 +370,18 @@ function BrainShell({
     obj.position.sub(center);
     wrapper.scale.setScalar(s);
 
-    // Luminous "scientific viz" material — dark teal base with a bright
-    // cyan emissive core so the surface glows from within and the
-    // sulci/gyri read as embossed dark lines against a brighter
-    // self-illuminated body.
+    // Luminous "scientific viz" material — medium cerulean base with a
+    // strong cyan emissive so the surface stays clearly visible against
+    // the dark background but still reads as self-illuminated.
     const mat = new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color("#0E3F5F"),
-      emissive: new THREE.Color("#3FB6D9"),
-      emissiveIntensity: 0.65,
-      roughness: 0.32,
+      color: new THREE.Color("#2A7FA8"),
+      emissive: new THREE.Color("#6CD4F2"),
+      emissiveIntensity: 0.45,
+      roughness: 0.38,
       metalness: 0.05,
-      clearcoat: 0.65,
-      clearcoatRoughness: 0.28,
-      sheen: 0.4,
+      clearcoat: 0.6,
+      clearcoatRoughness: 0.32,
+      sheen: 0.3,
       sheenColor: new THREE.Color("#7DD8E8"),
       transmission: 0.0,
       transparent: true,
@@ -391,12 +390,29 @@ function BrainShell({
       depthWrite: true,
     });
     matRef.current = mat;
+
+    // Edge-line overlay for that "wireframe topology / scientific viz" feel —
+    // EdgesGeometry only emits lines where neighboring faces meet at a sharp
+    // enough angle, so the brain's sulci/gyri become visible bright cyan
+    // tracery on top of the glowing shell.
+    const edgeMat = new THREE.LineBasicMaterial({
+      color: new THREE.Color("#A6E8FF"),
+      transparent: true,
+      opacity: 0.45,
+      depthWrite: false,
+    });
     obj.traverse((child) => {
       const m = child as THREE.Mesh;
       if (m.isMesh) {
         m.material = mat;
         m.castShadow = true;
         m.receiveShadow = true;
+        // Build edges from the same geometry. Threshold 18° catches the
+        // major topology without becoming a noisy mesh.
+        const edges = new THREE.EdgesGeometry(m.geometry, 18);
+        const lines = new THREE.LineSegments(edges, edgeMat);
+        lines.renderOrder = 1;
+        m.add(lines);
       }
     });
     return wrapper;
@@ -443,15 +459,15 @@ function BrainShell({
       viewMode === "exploded"
         ? 0.0
         : viewMode === "cutaway"
-          ? 0.22
+          ? 0.32
           : selectedId
-            ? 0.6 // dim shell when a structure is selected so the accent reads
+            ? 0.65 // dim shell when a structure is selected so the accent reads
             : 0.92;
     matRef.current.opacity +=
       (targetOpacity - matRef.current.opacity) * Math.min(1, dt * 5);
     matRef.current.depthWrite = matRef.current.opacity > 0.5;
     const targetEmissive =
-      viewMode === "cutaway" ? 0.45 : selectedId ? 0.5 : 0.65;
+      viewMode === "cutaway" ? 0.55 : selectedId ? 0.4 : 0.45;
     matRef.current.emissiveIntensity +=
       (targetEmissive - matRef.current.emissiveIntensity) * Math.min(1, dt * 5);
     if (groupRef.current) {
@@ -552,11 +568,11 @@ function BrainScene({
       <OrbitControls
         enablePan={false}
         enableZoom
-        minDistance={3.5}
-        maxDistance={10}
+        minDistance={2.4}
+        maxDistance={12}
         autoRotate={false}
         rotateSpeed={0.7}
-        zoomSpeed={0.6}
+        zoomSpeed={0.8}
       />
     </>
   );
