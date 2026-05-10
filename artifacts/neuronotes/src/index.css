@@ -493,6 +493,20 @@
   .no-default-hover-elevate {}
   .no-default-active-elevate {}
 
+  /* Cerulean glow + soft border lift on hover for quiz answer options
+     (and any matching unselected interactive surfaces). The base inline
+     style sets a subtle shadow; this class amps it up on hover. */
+  .quiz-option-hover {
+    transition: transform 200ms ease, box-shadow 250ms ease, border-color 200ms ease, background 250ms ease;
+  }
+  .quiz-option-hover:hover:not(:disabled) {
+    border-color: rgba(143, 211, 227, 0.55) !important;
+    box-shadow:
+      0 0 0 1px rgba(143, 211, 227, 0.25),
+      0 12px 32px -10px rgba(94, 176, 200, 0.55),
+      0 0 24px -4px rgba(94, 176, 200, 0.35) !important;
+  }
+
   .toggle-elevate::before,
   .toggle-elevate-2::before {
     content: "";

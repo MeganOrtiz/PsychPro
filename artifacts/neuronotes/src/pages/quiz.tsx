@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { ChevronLeft, CheckCircle, XCircle, ChevronRight, BookOpen, Lightbulb } from "lucide-react";
 import { useGetQuizzesByTopic, useUpdateTopicProgress, useIncrementUserUsage, useRecordQuizAttempt } from "@workspace/api-client-react";
@@ -26,6 +26,20 @@ export default function QuizPage({ params }: Props) {
   const [reflectionSaved, setReflectionSaved] = useState(false);
 
   const { data: questions, isLoading, error } = useGetQuizzesByTopic(topicId);
+
+  // Persist reflections per-question to localStorage so they survive
+  // moving between questions, finishing the quiz, and full page reloads.
+  // Key shape: `quiz-reflection:<topicId>:<questionId>`.
+  const currentQuestion = questions?.[index];
+  const reflectionKey = currentQuestion
+    ? `quiz-reflection:${topicId}:${currentQuestion.id}`
+    : null;
+  useEffect(() => {
+    if (!reflectionKey || typeof window === "undefined") return;
+    const stored = window.localStorage.getItem(reflectionKey) ?? "";
+    setReflection(stored);
+    setReflectionSaved(stored.trim().length > 0);
+  }, [reflectionKey]);
   const updateProgress = useUpdateTopicProgress();
   const incrementUsage = useIncrementUserUsage();
   const recordAttempt = useRecordQuizAttempt();
@@ -85,8 +99,9 @@ export default function QuizPage({ params }: Props) {
     } else {
       setSelected(null);
       setShowExplanation(false);
-      setReflection("");
-      setReflectionSaved(false);
+      // Reflection state is reloaded by the useEffect on question change,
+      // so we don't wipe it here — that lets a saved reflection re-appear
+      // if the user navigates back via restart later.
       setIndex(i => i + 1);
     }
   };
@@ -200,7 +215,10 @@ export default function QuizPage({ params }: Props) {
               let cls = baseClass;
 
               if (!selected) {
-                cls += " hover:-translate-y-0.5";
+                // Cerulean glow on hover — `quiz-option-hover` class is
+                // defined in index.css and ramps up the box-shadow + adds
+                // a subtle border-color shift on :hover.
+                cls += " hover:-translate-y-0.5 quiz-option-hover";
                 style = {
                   background: `linear-gradient(135deg, ${P.surface}f2, ${P.bg}f2)`,
                   borderColor: `${P.surf}40`,
@@ -208,11 +226,13 @@ export default function QuizPage({ params }: Props) {
                   boxShadow: `0 6px 18px -10px ${P.teal}55`,
                 };
               } else if (isCorrect) {
+                // Correct answer turns emerald green, mirroring the red
+                // we use for an incorrect selection.
                 cls += " text-white";
                 style = {
-                  background: `linear-gradient(135deg, #1F4F66, ${P.tealDeep})`,
-                  borderColor: P.tealDeep,
-                  boxShadow: `0 14px 32px -16px ${P.tealDeep}cc`,
+                  background: "linear-gradient(135deg, #1E7A4E, #2BA866)",
+                  borderColor: "#1E7A4E",
+                  boxShadow: "0 14px 32px -16px rgba(43,168,102,0.7)",
                 };
               } else if (isSelected && !isCorrect) {
                 cls += " text-white";
@@ -275,38 +295,62 @@ export default function QuizPage({ params }: Props) {
 
           {showExplanation && selected && selected !== current.correctAnswer && (
             <div
-              className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-4 mb-6"
+              className="rounded-xl p-4 mb-6 border"
+              style={{
+                background: `linear-gradient(135deg, ${P.surface}f0, ${P.bg}f0)`,
+                borderColor: `${P.surf}33`,
+              }}
               data-testid="reflect-prompt"
             >
               <div className="flex items-center gap-2 mb-2">
-                <Lightbulb className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                <p className="text-xs font-semibold text-amber-800 dark:text-amber-300 uppercase tracking-wider">Reflect</p>
+                <Lightbulb className="w-4 h-4" style={{ color: `${P.mist}cc` }} />
+                <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: P.mist }}>Reflect</p>
                 <Link href="/study-lab">
-                  <span className="ml-auto text-[11px] text-amber-700 dark:text-amber-400 hover:underline cursor-pointer">
+                  <span className="ml-auto text-[11px] hover:underline cursor-pointer" style={{ color: `${P.mist}99` }}>
                     Why this works →
                   </span>
                 </Link>
               </div>
-              <p className="text-xs text-amber-800/80 dark:text-amber-300/80 mb-2 leading-relaxed">
-                Explain in one sentence why <span className="font-semibold">{current.correctAnswer}</span> was correct (and what tripped you up). Writing it out, even briefly, locks the correction into memory.
+              <p className="text-xs mb-2 leading-relaxed" style={{ color: `${P.mist}cc` }}>
+                Explain in one sentence why <span className="font-semibold" style={{ color: P.mist }}>{current.correctAnswer}</span> was correct (and what tripped you up). Writing it out, even briefly, locks the correction into memory.
               </p>
               <textarea
                 value={reflection}
-                onChange={(e) => { setReflection(e.target.value); setReflectionSaved(false); }}
+                onChange={(e) => {
+                  setReflection(e.target.value);
+                  setReflectionSaved(false);
+                }}
                 placeholder="In your own words…"
                 rows={2}
-                className="w-full text-sm rounded-lg border border-amber-300/60 dark:border-amber-800/60 bg-white/60 dark:bg-background/40 px-3 py-2 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-amber-400/40 resize-none"
+                className="w-full text-sm rounded-lg border px-3 py-2 placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 resize-none"
+                style={{
+                  background: `${P.bg}cc`,
+                  borderColor: `${P.surf}33`,
+                  color: P.mist,
+                  // @ts-expect-error CSS custom property for ring color
+                  "--tw-ring-color": `${P.surf}55`,
+                }}
                 data-testid="textarea-reflection"
               />
               <div className="flex items-center justify-between mt-2">
-                <p className="text-[11px] text-muted-foreground">
-                  Stays on this device — for your eyes only.
+                <p className="text-[11px]" style={{ color: `${P.mist}77` }}>
+                  Saved to this device — review your reflections anytime.
                 </p>
                 <button
                   type="button"
-                  onClick={() => setReflectionSaved(true)}
+                  onClick={() => {
+                    if (reflectionKey && typeof window !== "undefined") {
+                      window.localStorage.setItem(reflectionKey, reflection);
+                    }
+                    setReflectionSaved(true);
+                  }}
                   disabled={reflection.trim().length === 0 || reflectionSaved}
-                  className="text-xs font-medium px-2.5 py-1 rounded-md bg-amber-500 text-white hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="text-xs font-medium px-2.5 py-1 rounded-md text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  style={{
+                    background: reflectionSaved
+                      ? `linear-gradient(135deg, ${P.surf}55, ${P.surf}33)`
+                      : `linear-gradient(135deg, ${P.tealDeep}, ${P.teal})`,
+                  }}
                   data-testid="button-save-reflection"
                 >
                   {reflectionSaved ? "Saved ✓" : "Lock it in"}
