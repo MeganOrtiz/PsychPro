@@ -249,15 +249,15 @@
   --popover-foreground: 187 50% 93%;
   --muted: 199 72% 14%;              /* #0A2D3D bg-input */
   --muted-foreground: 192 22% 59%;   /* #7FA4AD muted text */
-  --border: 194 40% 25%;             /* cerulean-tinted border */
+  --border: 200 42% 28%;             /* cerulean-tinted border */
   --input: 199 72% 14%;              /* #0A2D3D bg-input */
-  --primary: 194 49% 58%;            /* #5EB0C8 cerulean-primary */
+  --primary: 200 70% 62%;            /* #5EB8E0 cerulean-primary (locked, hue 200) */
   --primary-foreground: 199 84% 7%;
-  --secondary: 193 53% 35%;          /* #2A7387 Arctic Ocean Blue */
+  --secondary: 200 56% 38%;          /* #2A7E97 Arctic Ocean Blue (locked, hue 200) */
   --secondary-foreground: 187 50% 93%;
-  --accent: 194 55% 76%;             /* #9FD3E3 Icy Glaze */
+  --accent: 200 70% 80%;             /* #A6DEF2 Icy Glaze (locked, hue 200) */
   --accent-foreground: 199 84% 7%;
-  --ring: 194 49% 58%;
+  --ring: 200 70% 62%;
 }
 
 .study-page-bg,
@@ -281,14 +281,14 @@
     rgba(10, 45, 61, 0.95),
     rgba(6, 32, 44, 0.98)
   );
-  border: 1px solid rgba(94, 176, 200, 0.15);
+  border: 1px solid rgba(94, 184, 224, 0.15);
   border-radius: 22px;
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   box-shadow:
-    0 0 0 1px rgba(94, 176, 200, 0.06),
+    0 0 0 1px rgba(94, 184, 224, 0.06),
     0 20px 40px rgba(0, 0, 0, 0.35),
-    0 0 30px rgba(94, 176, 200, 0.06);
+    0 0 30px rgba(94, 184, 224, 0.06);
 }
 
 /* Glassy cerulean buttons — translucent dark-teal base with a cerulean
@@ -299,21 +299,21 @@
 .study-page-aurora :where(.bg-primary, button.bg-primary, [class*="bg-primary"]) {
   background-image: linear-gradient(
     135deg,
-    rgba(94, 176, 200, 0.42),
+    rgba(94, 184, 224, 0.42),
     rgba(42, 115, 135, 0.55)
   );
   background-color: rgba(8, 43, 58, 0.55);
   color: #E4F4F6;
-  border: 1px solid rgba(159, 211, 227, 0.35);
+  border: 1px solid rgba(170, 222, 242, 0.35);
   border-radius: 14px;
   backdrop-filter: blur(14px) saturate(140%);
   -webkit-backdrop-filter: blur(14px) saturate(140%);
   transition: all 0.25s ease;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.10),
-    0 0 0 1px rgba(94, 176, 200, 0.10),
-    0 6px 22px rgba(94, 176, 200, 0.28),
-    0 0 24px rgba(94, 176, 200, 0.18);
+    0 0 0 1px rgba(94, 184, 224, 0.10),
+    0 6px 22px rgba(94, 184, 224, 0.28),
+    0 0 24px rgba(94, 184, 224, 0.18);
 }
 
 .study-page-bg :where(.bg-primary, button.bg-primary, [class*="bg-primary"]):hover,
@@ -321,15 +321,15 @@
   transform: translateY(-2px);
   background-image: linear-gradient(
     135deg,
-    rgba(94, 176, 200, 0.55),
+    rgba(94, 184, 224, 0.55),
     rgba(42, 115, 135, 0.70)
   );
-  border-color: rgba(159, 211, 227, 0.55);
+  border-color: rgba(170, 222, 242, 0.55);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.14),
-    0 0 0 1px rgba(94, 176, 200, 0.18),
-    0 12px 32px rgba(94, 176, 200, 0.42),
-    0 0 40px rgba(94, 176, 200, 0.32);
+    0 0 0 1px rgba(94, 184, 224, 0.18),
+    0 12px 32px rgba(94, 184, 224, 0.42),
+    0 0 40px rgba(94, 184, 224, 0.32);
 }
 
 /* Secondary buttons — softer glass, same cerulean glow language */
@@ -337,26 +337,26 @@
 .study-page-aurora .bg-secondary {
   background: rgba(8, 43, 58, 0.55);
   color: #E4F4F6;
-  border: 1px solid rgba(94, 176, 200, 0.25);
+  border: 1px solid rgba(94, 184, 224, 0.25);
   border-radius: 14px;
   backdrop-filter: blur(14px) saturate(140%);
   -webkit-backdrop-filter: blur(14px) saturate(140%);
   transition: all 0.25s ease;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 4px 16px rgba(94, 176, 200, 0.15),
-    0 0 18px rgba(94, 176, 200, 0.10);
+    0 4px 16px rgba(94, 184, 224, 0.15),
+    0 0 18px rgba(94, 184, 224, 0.10);
 }
 
 .study-page-bg .bg-secondary:hover,
 .study-page-aurora .bg-secondary:hover {
   transform: translateY(-2px);
   background: rgba(12, 52, 70, 0.70);
-  border-color: rgba(94, 176, 200, 0.45);
+  border-color: rgba(94, 184, 224, 0.45);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.10),
-    0 8px 24px rgba(94, 176, 200, 0.28),
-    0 0 28px rgba(94, 176, 200, 0.22);
+    0 8px 24px rgba(94, 184, 224, 0.28),
+    0 0 28px rgba(94, 184, 224, 0.22);
 }
 
 /* Outline buttons — fully transparent glass with a cerulean ring + glow.
@@ -365,7 +365,7 @@
 .study-page-bg button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive),
 .study-page-aurora button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive) {
   background: rgba(8, 43, 58, 0.40);
-  border-color: rgba(94, 176, 200, 0.30) !important;
+  border-color: rgba(94, 184, 224, 0.30) !important;
   color: #E4F4F6;
   border-radius: 14px;
   backdrop-filter: blur(12px) saturate(140%);
@@ -373,19 +373,19 @@
   transition: all 0.25s ease;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 4px 14px rgba(94, 176, 200, 0.12),
-    0 0 16px rgba(94, 176, 200, 0.08);
+    0 4px 14px rgba(94, 184, 224, 0.12),
+    0 0 16px rgba(94, 184, 224, 0.08);
 }
 
 .study-page-bg button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive):hover,
 .study-page-aurora button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive):hover {
   transform: translateY(-1px);
   background: rgba(12, 52, 70, 0.60);
-  border-color: rgba(94, 176, 200, 0.50) !important;
+  border-color: rgba(94, 184, 224, 0.50) !important;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 6px 20px rgba(94, 176, 200, 0.22),
-    0 0 22px rgba(94, 176, 200, 0.18);
+    0 6px 20px rgba(94, 184, 224, 0.22),
+    0 0 22px rgba(94, 184, 224, 0.18);
 }
 
 /* User-supplied .input recipe — translucent dark teal, cerulean
@@ -417,7 +417,7 @@
   select
 ) {
   background: rgba(8, 43, 58, 0.72);
-  border: 1px solid rgba(94, 176, 200, 0.14);
+  border: 1px solid rgba(94, 184, 224, 0.14);
   color: #E4F4F6;
   border-radius: 14px;
   backdrop-filter: blur(12px);
@@ -500,11 +500,11 @@
     transition: transform 200ms ease, box-shadow 250ms ease, border-color 200ms ease, background 250ms ease;
   }
   .quiz-option-hover:hover:not(:disabled) {
-    border-color: rgba(143, 211, 227, 0.55) !important;
+    border-color: rgba(155, 219, 240, 0.55) !important;
     box-shadow:
-      0 0 0 1px rgba(143, 211, 227, 0.25),
-      0 12px 32px -10px rgba(94, 176, 200, 0.55),
-      0 0 24px -4px rgba(94, 176, 200, 0.35) !important;
+      0 0 0 1px rgba(155, 219, 240, 0.25),
+      0 12px 32px -10px rgba(94, 184, 224, 0.55),
+      0 0 24px -4px rgba(94, 184, 224, 0.35) !important;
   }
 
   .toggle-elevate::before,
