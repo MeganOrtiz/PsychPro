@@ -212,58 +212,76 @@ export default function DashboardPage() {
 
   return (
     <div
-      className="min-h-full study-page-bg"
+      className="relative min-h-full study-page-bg"
       data-testid="dashboard-page"
     >
-      {/* PSYCHPRO page header — cloud strip backdrop with centered wordmark.
-          Bell sits top-right above the cloud. Pulled to the page edges so
-          the cloud bleeds into the sidebar gradient without a hard seam. */}
-      <header className="relative -mt-4 md:-mt-6 lg:-mt-8 mb-6 overflow-hidden">
+      {/* Full-bleed cloud band — absolutely positioned, full viewport width,
+          centered via translateX. Sits over BOTH the sidebar AND the main
+          column (matches the reference). Scrolls away with the page (no
+          fixed positioning) so cards aren't covered when you scroll.
+          pointer-events:none so the sidebar nav stays clickable underneath. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute top-0 z-30 overflow-hidden h-[240px] md:h-[280px]"
+        style={{ left: "50%", transform: "translateX(-50%)", width: "100vw" }}
+      >
         <img
           src={spotlightCloudImage}
           alt=""
-          aria-hidden
-          className="absolute inset-0 w-full h-full object-cover opacity-95"
+          className="absolute inset-0 w-full h-full object-cover"
         />
-        {/* Soft fade to the page bg at the bottom so the seam disappears. */}
+        {/* Bottom fade — cloud → page bg */}
         <div
-          aria-hidden
-          className="absolute inset-x-0 bottom-0 h-24"
+          className="absolute inset-x-0 bottom-0 h-28"
           style={{
-            background: `linear-gradient(to bottom, transparent 0%, ${PALETTE.bg}dd 70%, ${PALETTE.bg} 100%)`,
+            background: `linear-gradient(to bottom, transparent 0%, ${PALETTE.bg}e6 75%, ${PALETTE.bg} 100%)`,
           }}
         />
-        <div className="relative max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 pt-10 md:pt-14 pb-12 md:pb-16">
-          <button
-            className="absolute top-4 right-4 md:top-6 md:right-6 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors backdrop-blur-sm"
-            data-testid="dashboard-notifications"
-            aria-label="Notifications"
+        {/* Left fade — softens the cloud over the sidebar so the nav items
+            read through clearly, matching the reference. */}
+        <div
+          className="absolute inset-y-0 left-0 w-64"
+          style={{
+            background: `linear-gradient(to right, ${PALETTE.ink}cc 0%, ${PALETTE.ink}66 60%, transparent 100%)`,
+          }}
+        />
+      </div>
+
+      {/* Wordmark header — sits ON TOP of the fixed cloud band. Same z-50
+          so it renders above the cloud image. Bell pinned top-right. */}
+      <header
+        className="relative z-40 pt-8 md:pt-12 pb-8 md:pb-12 px-4 md:px-6 lg:px-8"
+        data-testid="dashboard-header"
+      >
+        <button
+          className="pointer-events-auto absolute top-4 right-4 md:top-6 md:right-6 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors backdrop-blur-sm"
+          data-testid="dashboard-notifications"
+          aria-label="Notifications"
+        >
+          <Bell className="w-4 h-4 text-white" />
+        </button>
+        <div className="text-center">
+          <h1
+            className="text-3xl md:text-4xl font-light tracking-[0.32em] uppercase text-white"
+            style={{ textShadow: "0 2px 18px rgba(0,0,0,0.55)" }}
+            data-testid="dashboard-wordmark"
           >
-            <Bell className="w-4 h-4 text-white" />
-          </button>
-          <div className="text-center">
-            <h1
-              className="text-3xl md:text-4xl font-light tracking-[0.32em] uppercase text-white"
-              style={{ textShadow: "0 2px 18px rgba(0,0,0,0.55)" }}
-              data-testid="dashboard-wordmark"
-            >
-              PsychPro
-            </h1>
-            <p
-              className="text-[11px] md:text-xs mt-3 tracking-[0.32em] uppercase"
-              style={{
-                color: `${PALETTE.mist}cc`,
-                textShadow: "0 1px 6px rgba(0,0,0,0.5)",
-              }}
-            >
-              Learn. Expand. Connect.
-            </p>
-          </div>
+            PsychPro
+          </h1>
+          <p
+            className="text-[11px] md:text-xs mt-3 tracking-[0.32em] uppercase"
+            style={{
+              color: `${PALETTE.mist}cc`,
+              textShadow: "0 1px 6px rgba(0,0,0,0.5)",
+            }}
+          >
+            Learn. Expand. Connect.
+          </p>
         </div>
       </header>
 
-      <div className="max-w-[1400px] mx-auto p-4 md:p-6 lg:p-8 pt-0">
-        {/* Greeting moved out — only kept for screen readers / context */}
+      <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 pb-8">
+        {/* Greeting moved into the wordmark — kept here only for SR context */}
         <span className="sr-only">Hello, {firstName}. Let's keep learning and growing your mind.</span>
 
         {isOverLimit && (
