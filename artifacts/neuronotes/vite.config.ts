@@ -75,6 +75,10 @@ export default defineConfig({
     dedupe: ["react", "react-dom"],
   },
   root: path.resolve(import.meta.dirname),
+  // Treat .glb (and other 3D model formats) as static assets so Vite
+  // serves them with the correct binary content type and base prefix
+  // instead of falling through to the SPA index.html middleware.
+  assetsInclude: ["**/*.glb", "**/*.gltf", "**/*.hdr"],
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,

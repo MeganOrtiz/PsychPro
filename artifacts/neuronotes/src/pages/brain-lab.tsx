@@ -3,6 +3,11 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Environment, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { Link } from "wouter";
+// GLB imported as a Vite asset so the URL is base-aware in dev + prod.
+// Files in /public are served from "/" in Vite dev (not the artifact's
+// base path), which previously caused the GLB request to 200-with-HTML
+// (SPA fallback) and silently fail to parse.
+import brainGlbUrl from "@/assets/models/brain.glb?url";
 import {
   Brain,
   ArrowRight,
@@ -336,7 +341,7 @@ function StructureGroup(props: Omit<MeshProps, "mirror" | "seed"> & { index: num
 
 // ──────────────────────────── brain shell (GLB) ────────────────────────────
 
-const BRAIN_GLB_URL = `${import.meta.env.BASE_URL}models/brain.glb`;
+const BRAIN_GLB_URL = brainGlbUrl;
 useGLTF.preload(BRAIN_GLB_URL);
 
 function BrainShell({
@@ -372,11 +377,13 @@ function BrainShell({
 
     // Luminous "scientific viz" material — medium cerulean base with a
     // strong cyan emissive so the surface stays clearly visible against
-    // the dark background but still reads as self-illuminated.
+    // the dark background. Started OPAQUE (transparent=false) so depth
+    // sort can never accidentally hide the mesh; the useFrame animator
+    // below flips it to transparent only when fading for cutaway/exploded.
     const mat = new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color("#2A7FA8"),
+      color: new THREE.Color("#3FA8CC"),
       emissive: new THREE.Color("#6CD4F2"),
-      emissiveIntensity: 0.45,
+      emissiveIntensity: 0.55,
       roughness: 0.38,
       metalness: 0.05,
       clearcoat: 0.6,
@@ -384,8 +391,8 @@ function BrainShell({
       sheen: 0.3,
       sheenColor: new THREE.Color("#7DD8E8"),
       transmission: 0.0,
-      transparent: true,
-      opacity: 0.92,
+      transparent: false,
+      opacity: 1.0,
       side: THREE.DoubleSide,
       depthWrite: true,
     });
@@ -394,11 +401,12 @@ function BrainShell({
     // Edge-line overlay for that "wireframe topology / scientific viz" feel —
     // EdgesGeometry only emits lines where neighboring faces meet at a sharp
     // enough angle, so the brain's sulci/gyri become visible bright cyan
-    // tracery on top of the glowing shell.
+    // tracery on top of the glowing shell. Wrapped in try/catch so a single
+    // bad sub-mesh can't crash the whole BrainShell render.
     const edgeMat = new THREE.LineBasicMaterial({
       color: new THREE.Color("#A6E8FF"),
       transparent: true,
-      opacity: 0.45,
+      opacity: 0.5,
       depthWrite: false,
     });
     obj.traverse((child) => {
@@ -407,12 +415,17 @@ function BrainShell({
         m.material = mat;
         m.castShadow = true;
         m.receiveShadow = true;
-        // Build edges from the same geometry. Threshold 18° catches the
-        // major topology without becoming a noisy mesh.
-        const edges = new THREE.EdgesGeometry(m.geometry, 18);
-        const lines = new THREE.LineSegments(edges, edgeMat);
-        lines.renderOrder = 1;
-        m.add(lines);
+        try {
+          if (m.geometry) {
+            const edges = new THREE.EdgesGeometry(m.geometry, 18);
+            const lines = new THREE.LineSegments(edges, edgeMat);
+            lines.renderOrder = 1;
+            m.add(lines);
+          }
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.warn("BrainShell: edges overlay failed for sub-mesh", err);
+        }
       }
     });
     return wrapper;
@@ -455,19 +468,29 @@ function BrainShell({
   // External: solid glow. Cutaway: see-through. Exploded: hidden.
   useFrame((_, dt) => {
     if (!matRef.current) return;
+    // External default = fully opaque. Cutaway = see-through. Exploded = hidden.
+    // Selecting a structure dims the shell slightly so the accent reads.
     const targetOpacity =
       viewMode === "exploded"
         ? 0.0
         : viewMode === "cutaway"
-          ? 0.32
+          ? 0.35
           : selectedId
-            ? 0.65 // dim shell when a structure is selected so the accent reads
-            : 0.92;
+            ? 0.7
+            : 1.0;
     matRef.current.opacity +=
       (targetOpacity - matRef.current.opacity) * Math.min(1, dt * 5);
-    matRef.current.depthWrite = matRef.current.opacity > 0.5;
+    // Only flip transparent on once we actually need to fade — keeps
+    // depth sort solid in the default external view so the mesh can
+    // never be accidentally hidden behind something else.
+    matRef.current.transparent = matRef.current.opacity < 0.999;
+    // Only write depth when fully (or nearly) opaque. As soon as the shell
+    // is transparent, leave depth alone so interior structures and accents
+    // can be seen through it without z-fighting / occlusion artifacts.
+    matRef.current.depthWrite = matRef.current.opacity >= 0.95;
+    matRef.current.needsUpdate = true;
     const targetEmissive =
-      viewMode === "cutaway" ? 0.55 : selectedId ? 0.4 : 0.45;
+      viewMode === "cutaway" ? 0.65 : selectedId ? 0.45 : 0.55;
     matRef.current.emissiveIntensity +=
       (targetEmissive - matRef.current.emissiveIntensity) * Math.min(1, dt * 5);
     if (groupRef.current) {
