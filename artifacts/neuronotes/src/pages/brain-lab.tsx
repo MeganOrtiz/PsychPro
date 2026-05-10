@@ -3,6 +3,9 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Environment, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { Link } from "wouter";
+// Palette comes from the shared single-source-of-truth file.
+// Do NOT redefine a local PALETTE here — it will fork the brand.
+import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
 // GLB imported as a Vite asset so the URL is base-aware in dev + prod.
 // Files in /public are served from "/" in Vite dev (not the artifact's
 // base path), which previously caused the GLB request to 200-with-HTML
@@ -32,16 +35,6 @@ import {
   type BrainStructure,
   type BrainSystem,
 } from "../data/brain-structures";
-
-const PALETTE = {
-  bg: "#061826",
-  surface: "#0c2538",
-  surfaceElev: "#11324d",
-  steel: "#1C4E75",
-  teal: "#2FA0C6",
-  surf: "#58C9F3",
-  mist: "#BDE5FF",
-};
 
 // "exploded" was removed — pulling structures apart broke anatomical
 // readability and made the brain look insane. We keep rotation (via

@@ -13,6 +13,9 @@ import {
   FileText,
 } from "lucide-react";
 import psychproMark from "@/assets/brand/psychpro-mark.png";
+// Palette comes from the shared single-source-of-truth file.
+// Do NOT redefine a local PALETTE here — it will fork the brand.
+import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
 
 const REAL_TOPICS = [
   "Psychological Disorders", "Personality Disorders", "Neurodevelopmental Disorders",
@@ -75,16 +78,6 @@ function Starfield({ animate = true, count = 60 }: { animate?: boolean; count?: 
     </svg>
   );
 }
-
-const PALETTE = {
-  bg: "#061826",
-  surface: "#0c2538",
-  surfaceElev: "#11324d",
-  steel: "#1C4E75",
-  teal: "#2FA0C6",
-  surf: "#58C9F3",
-  mist: "#BDE5FF",
-};
 
 export default function LandingPage() {
   const [, navigate] = useLocation();

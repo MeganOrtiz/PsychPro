@@ -25,6 +25,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import featuredWorkImage from "@assets/generated_images/spotlight_neuron_teal.png";
 import spotlightAvatarImage from "@assets/Screenshot_2026-04-28_at_8.01.18_PM_1778027668124.png";
+import spotlightCloudImage from "@assets/Screenshot_2026-05-10_at_3.03.20_PM_1778443775551.png";
 import TodayReviews from "@/components/learning/today-reviews";
 import { StudySurface } from "@/components/study/study-surface";
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
@@ -668,19 +669,46 @@ function SpotlightCard({ onCta }: { onCta: () => void }) {
         style={{ background: `radial-gradient(closest-side, ${PALETTE.teal}40, transparent)` }}
       />
 
+      {/* Cloud strip — moody beam-of-light backdrop sits behind the wordmark.
+          Sized to crop tight to the heading area so it reads as a halo
+          rather than a full-card image. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute top-0 left-0 right-0 h-40 overflow-hidden rounded-t-2xl"
+      >
+        <img
+          src={spotlightCloudImage}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover opacity-90"
+        />
+        {/* Fade the cloud into the card body so the seam disappears. */}
+        <div
+          className="absolute inset-x-0 bottom-0 h-24"
+          style={{
+            background: `linear-gradient(to bottom, transparent 0%, ${PALETTE.surface}dd 75%, ${PALETTE.surface} 100%)`,
+          }}
+        />
+      </div>
+
       <div className="relative">
         {/* Outlined star (no fill) */}
         <div className="flex items-center justify-center mb-3">
           <Star className="w-7 h-7 text-white" strokeWidth={1.5} />
         </div>
-        <h3 className="text-2xl font-bold text-center tracking-tight">
-          PsychPro Spotlight
+        <h3
+          className="text-2xl font-bold text-center tracking-[0.18em] uppercase text-white"
+          style={{ textShadow: "0 2px 12px rgba(0,0,0,0.55)" }}
+        >
+          PsychPro
         </h3>
         <p
-          className="text-sm text-center mt-2 mb-6 leading-relaxed px-2"
-          style={{ color: `${PALETTE.mist}dd` }}
+          className="text-xs text-center mt-2 mb-6 leading-relaxed px-2 tracking-[0.22em] uppercase"
+          style={{
+            color: `${PALETTE.mist}dd`,
+            textShadow: "0 1px 6px rgba(0,0,0,0.5)",
+          }}
         >
-          Highlighting the next generation of clinicians and researchers.
+          Learn. Expand. Connect.
         </p>
 
         {/* Featured person — circular avatar with glow ring */}
