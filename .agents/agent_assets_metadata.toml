@@ -1,5 +1,4 @@
 uploads = []
-outputs = []
 
 [[generated]]
 id = "FMks-xeRNNMwnstQfLwtA"
@@ -54,3 +53,9 @@ id = "cWLeYvfRYDRqpec3PnmdS"
 uri = "file://attached_assets/generated_images/spotlight_neuron_teal.png"
 type = "image"
 title = "spotlight neuron teal"
+
+[[outputs]]
+id = "aKKI8N7WseM8lzrKZFEEq"
+uri = "file://.local/exports/brain-lab-code.tar.gz"
+type = "unspecified"
+title = "Brain Lab code (page + data + theme)"
