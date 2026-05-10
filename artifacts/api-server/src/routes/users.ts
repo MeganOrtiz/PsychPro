@@ -50,8 +50,12 @@ router.post("/users/profile", async (req: Request, res: Response): Promise<void>
         goal,
         degree,
         referralSource,
-        onboardingComplete: onboardingComplete ?? false,
-        subscriptionStatus: "free",
+        onboardingComplete: onboardingComplete ?? true,
+        // Dev-mode default: every new anonymous user is provisioned with
+        // full Scholar-tier access and admin flag so the un-authenticated
+        // app is fully usable (no paywalls, no admin gating).
+        subscriptionStatus: "scholar",
+        isAdmin: true,
         usageCount: 0,
       }).returning();
     } else {
@@ -104,7 +108,7 @@ router.post("/users/usage", async (req: Request, res: Response): Promise<void> =
     let [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
 
     if (!user) {
-      [user] = await db.insert(usersTable).values({ id: userId, subscriptionStatus: "free", onboardingComplete: false, usageCount: 0 }).returning();
+      [user] = await db.insert(usersTable).values({ id: userId, subscriptionStatus: "scholar", isAdmin: true, onboardingComplete: true, usageCount: 0 }).returning();
     }
 
     const isSubscribed = user.subscriptionStatus === "active" || user.subscriptionStatus === "pro" || user.subscriptionStatus === "trialing" || user.subscriptionStatus === "scholar";

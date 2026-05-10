@@ -87,7 +87,7 @@ router.post("/subscription/checkout", async (req: Request, res: Response): Promi
       if (!user) {
         [user] = await db
           .insert(usersTable)
-          .values({ id: userId, subscriptionStatus: "free", onboardingComplete: false, stripeCustomerId: customerId })
+          .values({ id: userId, subscriptionStatus: "scholar", isAdmin: true, onboardingComplete: true, stripeCustomerId: customerId })
           .returning();
       } else {
         await db.update(usersTable).set({ stripeCustomerId: customerId }).where(eq(usersTable.id, userId));
