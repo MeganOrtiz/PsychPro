@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import UpgradePrompt from "@/components/upgrade-prompt";
 import { StudySurface } from "@/components/study/study-surface";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
+import { loadReflectionText, saveReflection } from "@/lib/reflections";
 
 interface Props {
   params: { id: string };
@@ -29,17 +30,14 @@ export default function QuizPage({ params }: Props) {
 
   // Persist reflections per-question to localStorage so they survive
   // moving between questions, finishing the quiz, and full page reloads.
-  // Key shape: `quiz-reflection:<topicId>:<questionId>`.
+  // The Reflections page in My Tools reads from the same store.
   const currentQuestion = questions?.[index];
-  const reflectionKey = currentQuestion
-    ? `quiz-reflection:${topicId}:${currentQuestion.id}`
-    : null;
   useEffect(() => {
-    if (!reflectionKey || typeof window === "undefined") return;
-    const stored = window.localStorage.getItem(reflectionKey) ?? "";
+    if (!currentQuestion) return;
+    const stored = loadReflectionText(topicId, currentQuestion.id);
     setReflection(stored);
     setReflectionSaved(stored.trim().length > 0);
-  }, [reflectionKey]);
+  }, [topicId, currentQuestion?.id]);
   const updateProgress = useUpdateTopicProgress();
   const incrementUsage = useIncrementUserUsage();
   const recordAttempt = useRecordQuizAttempt();
@@ -332,16 +330,39 @@ export default function QuizPage({ params }: Props) {
                 }}
                 data-testid="textarea-reflection"
               />
-              <div className="flex items-center justify-between mt-2">
+              <div className="flex items-center justify-between mt-2 gap-3">
                 <p className="text-[11px]" style={{ color: `${P.mist}77` }}>
-                  Saved to this device — review your reflections anytime.
+                  Saved to this device. Review anytime in{" "}
+                  <Link href="/reflections">
+                    <span
+                      className="underline cursor-pointer hover:text-white"
+                      style={{ color: `${P.mist}cc` }}
+                      data-testid="link-my-tools-reflections"
+                    >
+                      My Tools → Reflections
+                    </span>
+                  </Link>
+                  .
                 </p>
                 <button
                   type="button"
                   onClick={() => {
-                    if (reflectionKey && typeof window !== "undefined") {
-                      window.localStorage.setItem(reflectionKey, reflection);
-                    }
+                    if (!currentQuestion) return;
+                    const correctText =
+                      options.find((o) => o.key === current.correctAnswer)?.text ?? "";
+                    const selectedText =
+                      options.find((o) => o.key === selected)?.text ?? "";
+                    saveReflection({
+                      text: reflection,
+                      topicId,
+                      questionId: currentQuestion.id,
+                      questionText: current.question,
+                      correctAnswer: current.correctAnswer,
+                      correctText,
+                      selectedAnswer: selected ?? "",
+                      selectedText,
+                      savedAt: new Date().toISOString(),
+                    });
                     setReflectionSaved(true);
                   }}
                   disabled={reflection.trim().length === 0 || reflectionSaved}

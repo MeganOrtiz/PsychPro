@@ -26,6 +26,7 @@ import AdminFeedbackPage from "@/pages/admin-feedback";
 import MyDecksPage from "@/pages/my-decks";
 import NewDeckPage from "@/pages/my-decks-new";
 import MyDeckDetailPage from "@/pages/my-decks-detail";
+import ReflectionsPage from "@/pages/reflections";
 import NotFound from "@/pages/not-found";
 import AppLayout from "@/components/layout/app-layout";
 import { ErrorBoundary } from "@/components/error-boundary";
@@ -70,6 +71,7 @@ function AppRouter() {
             <Route path="/my-decks" component={MyDecksPage} />
             <Route path="/my-decks/new" component={NewDeckPage} />
             <Route path="/my-decks/:id" component={MyDeckDetailPage} />
+            <Route path="/reflections" component={ReflectionsPage} />
             <Route component={NotFound} />
           </Switch>
         </AppLayout>

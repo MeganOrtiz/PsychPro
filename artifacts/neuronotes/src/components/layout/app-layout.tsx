@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Brain, LayoutDashboard, BookOpen, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck, BookMarked, Library, Wrench, Sparkles, Star, Beaker } from "lucide-react";
+import { Brain, LayoutDashboard, BookOpen, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck, BookMarked, Library, Wrench, Sparkles, Star, Beaker, Lightbulb } from "lucide-react";
 import { getOrCreateAnonymousUserId } from "@/lib/anonymous-user";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -204,6 +204,17 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   Pro
                 </span>
               )}
+            </div>
+          </Link>
+          <Link
+            href="/reflections"
+            onClick={() => setSidebarOpen(false)}
+            data-testid="nav-reflections"
+          >
+            <div className={navItemClass(location === "/reflections")}>
+              <Lightbulb className="w-5 h-5 flex-shrink-0" />
+              <span className="text-sm font-medium">Reflections</span>
+              {location === "/reflections" && <ChevronRight className="w-4 h-4 ml-auto" />}
             </div>
           </Link>
 
