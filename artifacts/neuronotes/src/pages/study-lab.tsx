@@ -100,8 +100,73 @@ const TECHNIQUES: {
   },
 ];
 
+// Pool of long-form recall prompts for the Active Recall technique.
+// Each prompt is paired with the topic it belongs to so the user
+// always sees the domain context in the box header.
+const RECALL_PROMPTS: { topic: string; prompt: string; answer: string }[] = [
+  {
+    topic: "Cognitive Domain — Executive Function",
+    prompt:
+      "Define executive function in your own words and list at least three sub-processes a clinician would assess.",
+    answer:
+      "Executive function is the set of top-down cognitive processes that coordinate goal-directed behavior. Core sub-processes include: (1) working memory — holding and manipulating information online, (2) response inhibition — suppressing prepotent or automatic responses, (3) cognitive flexibility — shifting set in response to changing demands, and often (4) planning/organization and (5) self-monitoring. Performance-based and report-based measures are typically combined because they capture different aspects of the construct.",
+  },
+  {
+    topic: "Mood Disorders — Major Depression",
+    prompt:
+      "What features distinguish a major depressive episode from grief or normative sadness, and why does anhedonia matter diagnostically?",
+    answer:
+      "A major depressive episode requires ≥2 weeks of depressed mood or anhedonia plus a constellation of neurovegetative, cognitive, and motivational symptoms causing significant impairment. Grief is wave-like, tied to the loss, with preserved self-esteem and capacity for positive affect between waves. Anhedonia carries diagnostic weight because it reflects disrupted mesolimbic reward processing — a core neural feature that distinguishes MDD from transient sadness.",
+  },
+  {
+    topic: "Anxiety Disorders — GAD",
+    prompt:
+      "How would you differentiate generalized anxiety disorder (GAD) from a specific phobia or panic disorder in a clinical interview?",
+    answer:
+      "GAD is characterized by excessive, hard-to-control worry across multiple life domains (work, health, finances, family) most days for ≥6 months, with somatic symptoms like muscle tension and sleep disturbance. Specific phobia involves a circumscribed fear of a defined object/situation with avoidance. Panic disorder centers on recurrent unexpected panic attacks plus persistent worry about future attacks or behavioral change to avoid them — the worry is *about the attacks*, not generalized.",
+  },
+  {
+    topic: "Neurodevelopmental — ADHD",
+    prompt:
+      "Name the two symptom dimensions that define ADHD presentations and describe the executive-function profile most consistently affected.",
+    answer:
+      "The two dimensions are inattention and hyperactivity-impulsivity; either or both can dominate, yielding predominantly inattentive, predominantly hyperactive-impulsive, or combined presentations. The executive-function profile most consistently shows deficits in working memory, response inhibition, sustained attention, and self-regulation of arousal — sometimes summarized as 'cool' (cognitive) versus 'hot' (motivational/affective) executive control deficits.",
+  },
+  {
+    topic: "Autism Spectrum Disorder",
+    prompt:
+      "Why are restricted/repetitive behaviors considered a *core* feature of ASD rather than a secondary consequence of social-communication difficulty?",
+    answer:
+      "Restricted, repetitive patterns of behavior, interests, or activities are conceptualized as one of two core dimensions because they reflect the same underlying difference in neural prediction, sensory processing, and cognitive flexibility that drives social-communication features. Both dimensions are two expressions of one phenotype, not cause and effect — which is why DSM-5 requires symptoms in both domains for diagnosis.",
+  },
+  {
+    topic: "Personality Disorders — Borderline",
+    prompt:
+      "What are the four core symptom clusters of borderline personality disorder, and which one is most predictive of treatment response?",
+    answer:
+      "The four clusters are: (1) emotion dysregulation — intense, rapidly shifting affect; (2) interpersonal instability — alternating idealization/devaluation, fear of abandonment; (3) identity disturbance — unstable self-image, chronic emptiness; (4) behavioral dyscontrol — impulsivity, self-harm, suicidality. Emotion dysregulation is the most predictive of treatment response — modalities like DBT that directly target it produce the largest effect sizes.",
+  },
+  {
+    topic: "Trauma — PTSD",
+    prompt:
+      "List the four DSM-5 PTSD symptom clusters and explain how avoidance maintains the disorder over time.",
+    answer:
+      "The four clusters are: (1) intrusion — flashbacks, nightmares, intrusive memories; (2) avoidance — of trauma-related stimuli, thoughts, or feelings; (3) negative alterations in cognition and mood; (4) alterations in arousal and reactivity — hypervigilance, exaggerated startle, sleep disturbance. Avoidance maintains the disorder by preventing corrective learning: the feared associations are never disconfirmed, so the fear network stays intact and often generalizes — which is why exposure-based treatments are first-line.",
+  },
+  {
+    topic: "Psychotic Disorders — Schizophrenia",
+    prompt:
+      "Distinguish positive, negative, and cognitive symptom domains of schizophrenia, and explain why negative symptoms are often more functionally disabling.",
+    answer:
+      "Positive symptoms add to normal experience — hallucinations, delusions, disorganized speech/behavior. Negative symptoms reflect a loss or reduction — avolition, alogia, anhedonia, asociality, blunted affect. Cognitive symptoms include deficits in working memory, attention, and processing speed. Negative and cognitive symptoms are typically more functionally disabling because they interfere with sustained work, relationships, and self-care, and they respond poorly to first-generation antipsychotics — which is why functional outcome lags symptomatic remission.",
+  },
+];
+
 export default function StudyLabPage() {
   const [active, setActive] = useState<TechId | null>(null);
+  // Index into the RECALL_PROMPTS pool for the Active Recall technique.
+  // Advanced via the BrainDump "Next prompt" button after reveal.
+  const [recallIndex, setRecallIndex] = useState(0);
 
   if (active) {
     const tech = TECHNIQUES.find((t) => t.id === active)!;
@@ -127,14 +192,20 @@ export default function StudyLabPage() {
             </div>
           </header>
 
-          {active === "active-recall" && (
-            <BrainDump
-              storageKey="lab-executive-function"
-              topic="Cognitive Domain — Executive Function"
-              prompt="Define executive function in your own words and list at least three sub-processes a clinician would assess."
-              answer="Executive function is the set of top-down cognitive processes that coordinate goal-directed behavior. Core sub-processes include: (1) working memory — holding and manipulating information online, (2) response inhibition — suppressing prepotent or automatic responses, (3) cognitive flexibility — shifting set in response to changing demands, and often (4) planning/organization and (5) self-monitoring. Performance-based and report-based measures are typically combined because they capture different aspects of the construct."
-            />
-          )}
+          {active === "active-recall" && (() => {
+            const current = RECALL_PROMPTS[recallIndex % RECALL_PROMPTS.length];
+            return (
+              <BrainDump
+                // Per-prompt storage key so each prompt remembers its own
+                // partial brain-dump if the user navigates away and back.
+                storageKey={`lab-recall-${recallIndex}`}
+                topic={current.topic}
+                prompt={current.prompt}
+                answer={current.answer}
+                onNext={() => setRecallIndex((i) => (i + 1) % RECALL_PROMPTS.length)}
+              />
+            );
+          })()}
           {active === "spaced" && (
             <SpacedRepetitionScheduler
               storageKey="lab-theory-of-mind"

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Brain, Eye, RotateCcw, Sparkles } from "lucide-react";
+import { Eye, RotateCcw, Sparkles, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
@@ -9,9 +9,15 @@ export interface BrainDumpProps {
   prompt: string;
   answer: string;
   storageKey?: string;
+  /**
+   * Optional callback fired when the user clicks "Next prompt" after
+   * revealing the answer. When provided, a Next button is rendered
+   * alongside "Try again" so the parent can swap in a fresh prompt.
+   */
+  onNext?: () => void;
 }
 
-export default function BrainDump({ topic, prompt, answer, storageKey }: BrainDumpProps) {
+export default function BrainDump({ topic, prompt, answer, storageKey, onNext }: BrainDumpProps) {
   const initial = storageKey && typeof window !== "undefined"
     ? window.localStorage.getItem(`braindump:${storageKey}`) ?? ""
     : "";
@@ -42,21 +48,20 @@ export default function BrainDump({ topic, prompt, answer, storageKey }: BrainDu
       className="rounded-2xl border border-border bg-card p-5 md:p-6 shadow-sm"
       data-testid="brain-dump"
     >
-      <header className="flex items-start gap-3 mb-3">
-        <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
-          <Brain className="w-5 h-5 text-primary" />
+      {/* The page title above the box already says "Active Recall", so
+          the box itself leads with the *topic* the prompt belongs to —
+          that's the most useful piece of context for the user mid-recall. */}
+      <header className="mb-4">
+        <div className="text-[11px] uppercase tracking-[0.14em] text-primary/80 font-semibold mb-1">
+          Topic
         </div>
-        <div className="flex-1 min-w-0">
-          <h3 className="text-lg font-semibold text-foreground">Active Recall</h3>
-          <p className="text-xs text-muted-foreground italic">
-            Retrieval strengthens memory pathways far more than re-exposure.
-          </p>
-        </div>
+        <h3
+          className="text-xl md:text-2xl font-bold text-foreground leading-tight"
+          data-testid="brain-dump-topic"
+        >
+          {topic}
+        </h3>
       </header>
-
-      <div className="mb-2 text-xs uppercase tracking-wider text-muted-foreground font-semibold">
-        {topic}
-      </div>
       <p className="text-base font-medium text-foreground mb-4 leading-relaxed">{prompt}</p>
 
       <Textarea
@@ -107,15 +112,31 @@ export default function BrainDump({ topic, prompt, answer, storageKey }: BrainDu
               {answer}
             </p>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleReset}
-            data-testid="brain-dump-reset"
-          >
-            <RotateCcw className="w-3.5 h-3.5 mr-1.5" />
-            Try again
-          </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            {onNext && (
+              <Button
+                onClick={() => {
+                  // Reset local state first so the next prompt renders
+                  // with a clean textarea + collapsed answer.
+                  handleReset();
+                  onNext();
+                }}
+                data-testid="brain-dump-next"
+              >
+                Next prompt
+                <ArrowRight className="w-4 h-4 ml-1.5" />
+              </Button>
+            )}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleReset}
+              data-testid="brain-dump-reset"
+            >
+              <RotateCcw className="w-3.5 h-3.5 mr-1.5" />
+              Try again
+            </Button>
+          </div>
         </div>
       )}
     </section>
