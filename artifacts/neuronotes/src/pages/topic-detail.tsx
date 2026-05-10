@@ -36,8 +36,8 @@ export default function TopicDetailPage({ params }: Props) {
       description: "Multiple-choice with explanations",
       onClick: () => navigate(`/topics/${topicId}/quiz`),
       testId: "button-quiz",
-      accent: "#7EA8E8", // periwinkle blue
-      accentDeep: "#2E5896",
+      accent: "#5EB0C8", // cerulean — unified with Flashcards
+      accentDeep: "#1F6B83",
     },
     {
       icon: FileText,
@@ -45,8 +45,8 @@ export default function TopicDetailPage({ params }: Props) {
       description: "Comprehensive scrollable notes",
       onClick: () => navigate(`/topics/${topicId}/study-guide`),
       testId: "button-study-guide",
-      accent: "#7EE0C2", // mint teal
-      accentDeep: "#1F7A66",
+      accent: "#5EB0C8", // cerulean — unified with Flashcards
+      accentDeep: "#1F6B83",
     },
     {
       icon: GraduationCap,
@@ -54,8 +54,8 @@ export default function TopicDetailPage({ params }: Props) {
       description: "Timed or untimed full exam",
       onClick: () => navigate(`/topics/${topicId}/exam`),
       testId: "button-practice-exam",
-      accent: "#C39DF0", // soft violet
-      accentDeep: "#6F45A8",
+      accent: "#5EB0C8", // cerulean — unified with Flashcards
+      accentDeep: "#1F6B83",
     },
   ];
 
