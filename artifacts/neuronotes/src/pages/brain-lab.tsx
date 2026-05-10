@@ -3,6 +3,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Environment, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { Link } from "wouter";
+import { useGetTopics } from "@workspace/api-client-react";
 // GLB imported as a Vite asset so the URL is base-aware in dev + prod.
 // Files in /public are served from "/" in Vite dev (not the artifact's
 // base path), which previously caused the GLB request to 200-with-HTML
@@ -17,7 +18,6 @@ import {
   Eye,
   ChevronRight,
   BookOpen,
-  Sparkles,
   Target,
   RotateCcw,
   Heart,
@@ -962,6 +962,31 @@ function StructureDetail({
 }) {
   const meta = SYSTEM_META[struct.system];
   const [tab, setTab] = useState<DetailTab>("overview");
+  const { data: allTopics } = useGetTopics();
+
+  // Match the structure to real Topics in the catalog by checking each
+  // hint (and the structure's own names) as a case-insensitive substring
+  // against topic.name and topic.description. We dedupe by id and cap at
+  // 6 so the panel footer doesn't grow unbounded.
+  const relatedTopics = useMemo(() => {
+    if (!allTopics) return [];
+    const needles = [
+      ...struct.topicHints,
+      struct.name,
+      struct.shortName,
+    ]
+      .map((s) => s.trim().toLowerCase())
+      .filter((s) => s.length > 0);
+
+    const matched = new Map<number, { id: number; name: string }>();
+    for (const t of allTopics as Array<{ id: number; name: string; description: string }>) {
+      const hay = `${t.name} ${t.description}`.toLowerCase();
+      if (needles.some((n) => hay.includes(n))) {
+        matched.set(t.id, { id: t.id, name: t.name });
+      }
+    }
+    return Array.from(matched.values()).slice(0, 6);
+  }, [allTopics, struct.id]);
 
   // Reset to overview whenever the user picks a different structure.
   useEffect(() => {
@@ -1108,40 +1133,55 @@ function StructureDetail({
         )}
       </div>
 
-      {/* Footer actions */}
+      {/* Footer — related topics matched against this structure */}
       <div
-        className="px-5 py-3 border-t flex flex-col gap-2"
+        className="px-5 py-3 border-t"
         style={{ borderColor: `${PALETTE.steel}66` }}
       >
-        <Link href={`/study-lab?seed=${encodeURIComponent(struct.name)}`}>
-          <a
-            className="w-full inline-flex items-center justify-center gap-2 rounded-xl h-10 text-sm font-semibold transition-all"
-            style={{
-              background: `linear-gradient(135deg, ${struct.color}, ${PALETTE.surf})`,
-              color: PALETTE.bg,
-              boxShadow: `0 8px 24px -10px ${struct.color}cc`,
-            }}
-            data-testid="button-study-this"
+        <div
+          className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider mb-2"
+          style={{ color: `${PALETTE.surf}cc` }}
+        >
+          <BookOpen className="w-3 h-3" />
+          {relatedTopics.length > 0 ? "Explore Related Topics" : "Related Topics"}
+        </div>
+        {relatedTopics.length > 0 ? (
+          <div className="flex flex-wrap gap-1.5" data-testid="related-topics">
+            {relatedTopics.map((t) => (
+              <Link key={t.id} href={`/topics/${t.id}`}>
+                <a
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium border transition-all hover:-translate-y-0.5"
+                  style={{
+                    background: `${PALETTE.steel}99`,
+                    borderColor: `${struct.color}66`,
+                    color: PALETTE.mist,
+                    boxShadow: `0 4px 12px -8px ${struct.color}99`,
+                  }}
+                  data-testid={`related-topic-${t.id}`}
+                >
+                  {t.name}
+                  <ArrowRight className="w-3 h-3 opacity-60" />
+                </a>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div
+            className="text-xs leading-relaxed"
+            style={{ color: `${PALETTE.mist}88` }}
+            data-testid="no-related-topics"
           >
-            <Sparkles className="w-4 h-4" />
-            Study this structure
-          </a>
-        </Link>
-        <Link href={`/topics`}>
-          <a
-            className="w-full inline-flex items-center justify-center gap-2 rounded-xl h-9 text-xs font-medium transition-all border"
-            style={{
-              background: `${PALETTE.surface}cc`,
-              borderColor: `${PALETTE.steel}99`,
-              color: PALETTE.mist,
-            }}
-            data-testid="button-explore-topics"
-          >
-            <BookOpen className="w-3.5 h-3.5" />
-            Explore matching topics
-            <ArrowRight className="w-3.5 h-3.5" />
-          </a>
-        </Link>
+            No matching topics yet for this structure.{" "}
+            <Link href="/topics">
+              <a
+                className="underline hover:text-white transition-colors"
+                style={{ color: `${PALETTE.surf}` }}
+              >
+                Browse all topics
+              </a>
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );
