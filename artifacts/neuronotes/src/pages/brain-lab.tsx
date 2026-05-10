@@ -17,7 +17,6 @@ import {
   Eye,
   ChevronRight,
   BookOpen,
-  Sparkles,
   Target,
   RotateCcw,
   Heart,
@@ -1113,20 +1112,6 @@ function StructureDetail({
         className="px-5 py-3 border-t flex flex-col gap-2"
         style={{ borderColor: `${PALETTE.steel}66` }}
       >
-        <Link href={`/study-lab?seed=${encodeURIComponent(struct.name)}`}>
-          <a
-            className="w-full inline-flex items-center justify-center gap-2 rounded-xl h-10 text-sm font-semibold transition-all"
-            style={{
-              background: `linear-gradient(135deg, ${struct.color}, ${PALETTE.surf})`,
-              color: PALETTE.bg,
-              boxShadow: `0 8px 24px -10px ${struct.color}cc`,
-            }}
-            data-testid="button-study-this"
-          >
-            <Sparkles className="w-4 h-4" />
-            Study this structure
-          </a>
-        </Link>
         <Link href={`/topics`}>
           <a
             className="w-full inline-flex items-center justify-center gap-2 rounded-xl h-9 text-xs font-medium transition-all border"
