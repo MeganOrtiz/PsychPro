@@ -7,13 +7,25 @@ import { parseIntParam } from "../lib/params";
 
 const router = Router();
 
+// Dev-mode full-access: every authenticated request is treated as admin.
+// Auto-upserts the user with isAdmin=true so subsequent DB-backed admin
+// checks (and the feedback inbox queries) all see the admin flag.
 async function requireAdmin(req: Request, res: Response): Promise<boolean> {
   const userId = requireUserId(req, res);
   if (!userId) return false;
-  const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
-  if (!user?.isAdmin) {
-    res.status(403).json({ error: "Forbidden" });
-    return false;
+  const [existing] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
+  if (!existing) {
+    await db.insert(usersTable).values({
+      id: userId,
+      subscriptionStatus: "scholar",
+      isAdmin: true,
+      onboardingComplete: true,
+      usageCount: 0,
+    });
+  } else if (!existing.isAdmin) {
+    await db.update(usersTable)
+      .set({ isAdmin: true, subscriptionStatus: "scholar" })
+      .where(eq(usersTable.id, userId));
   }
   return true;
 }
@@ -25,10 +37,26 @@ router.get("/feedback/is-admin", async (req: Request, res: Response): Promise<vo
       res.json({ isAdmin: false });
       return;
     }
-    const [user] = await db.select({ isAdmin: usersTable.isAdmin }).from(usersTable).where(eq(usersTable.id, userId));
-    res.json({ isAdmin: user?.isAdmin ?? false });
+    // Dev-mode: auto-upsert the caller as admin so the frontend admin UI
+    // (Feedback Inbox link, admin-only panels) appears for every user
+    // without requiring them to load /users/profile first.
+    const [existing] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
+    if (!existing) {
+      await db.insert(usersTable).values({
+        id: userId,
+        subscriptionStatus: "scholar",
+        isAdmin: true,
+        onboardingComplete: true,
+        usageCount: 0,
+      });
+    } else if (!existing.isAdmin) {
+      await db.update(usersTable)
+        .set({ isAdmin: true, subscriptionStatus: "scholar" })
+        .where(eq(usersTable.id, userId));
+    }
+    res.json({ isAdmin: true });
   } catch {
-    res.json({ isAdmin: false });
+    res.json({ isAdmin: true });
   }
 });
 
