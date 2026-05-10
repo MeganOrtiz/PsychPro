@@ -182,8 +182,7 @@ export default function QuizPage({ params }: Props) {
             testId="quiz-question-card"
           >
             <p
-              className="text-base md:text-lg font-medium leading-relaxed pr-20"
-              style={{ color: P.ink }}
+              className="text-base md:text-lg font-medium leading-relaxed pr-20 text-white"
               data-testid="text-question"
             >
               {current.question}
@@ -201,9 +200,11 @@ export default function QuizPage({ params }: Props) {
               let cls = baseClass;
 
               if (!selected) {
-                cls += " bg-white text-foreground hover:-translate-y-0.5";
+                cls += " hover:-translate-y-0.5";
                 style = {
-                  borderColor: `${P.surf}55`,
+                  background: `linear-gradient(135deg, ${P.surface}f2, ${P.bg}f2)`,
+                  borderColor: `${P.surf}40`,
+                  color: P.mist,
                   boxShadow: `0 6px 18px -10px ${P.teal}55`,
                 };
               } else if (isCorrect) {
@@ -221,8 +222,12 @@ export default function QuizPage({ params }: Props) {
                   boxShadow: "0 14px 32px -16px rgba(122,44,36,0.65)",
                 };
               } else {
-                cls += " bg-white text-muted-foreground opacity-65";
-                style = { borderColor: `${P.surf}33` };
+                cls += " opacity-55";
+                style = {
+                  background: `linear-gradient(135deg, ${P.surface}cc, ${P.bg}cc)`,
+                  borderColor: `${P.surf}25`,
+                  color: `${P.mist}aa`,
+                };
               }
 
               return (
