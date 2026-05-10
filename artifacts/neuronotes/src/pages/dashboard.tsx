@@ -215,27 +215,56 @@ export default function DashboardPage() {
       className="min-h-full study-page-bg"
       data-testid="dashboard-page"
     >
-      <div className="max-w-[1400px] mx-auto p-4 md:p-6 lg:p-8">
-        {/* Top header */}
-        <header className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
-          <div className="flex-1 min-w-0">
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-              Hello, {firstName} <span aria-hidden>👋</span>
+      {/* PSYCHPRO page header — cloud strip backdrop with centered wordmark.
+          Bell sits top-right above the cloud. Pulled to the page edges so
+          the cloud bleeds into the sidebar gradient without a hard seam. */}
+      <header className="relative -mt-4 md:-mt-6 lg:-mt-8 mb-6 overflow-hidden">
+        <img
+          src={spotlightCloudImage}
+          alt=""
+          aria-hidden
+          className="absolute inset-0 w-full h-full object-cover opacity-95"
+        />
+        {/* Soft fade to the page bg at the bottom so the seam disappears. */}
+        <div
+          aria-hidden
+          className="absolute inset-x-0 bottom-0 h-24"
+          style={{
+            background: `linear-gradient(to bottom, transparent 0%, ${PALETTE.bg}dd 70%, ${PALETTE.bg} 100%)`,
+          }}
+        />
+        <div className="relative max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 pt-10 md:pt-14 pb-12 md:pb-16">
+          <button
+            className="absolute top-4 right-4 md:top-6 md:right-6 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors backdrop-blur-sm"
+            data-testid="dashboard-notifications"
+            aria-label="Notifications"
+          >
+            <Bell className="w-4 h-4 text-white" />
+          </button>
+          <div className="text-center">
+            <h1
+              className="text-3xl md:text-4xl font-light tracking-[0.32em] uppercase text-white"
+              style={{ textShadow: "0 2px 18px rgba(0,0,0,0.55)" }}
+              data-testid="dashboard-wordmark"
+            >
+              PsychPro
             </h1>
-            <p className="text-muted-foreground text-sm mt-1">
-              Let's keep learning and growing your mind.
+            <p
+              className="text-[11px] md:text-xs mt-3 tracking-[0.32em] uppercase"
+              style={{
+                color: `${PALETTE.mist}cc`,
+                textShadow: "0 1px 6px rgba(0,0,0,0.5)",
+              }}
+            >
+              Learn. Expand. Connect.
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            <button
-              className="relative w-10 h-10 rounded-full bg-card border border-border flex items-center justify-center hover:bg-muted transition-colors"
-              data-testid="dashboard-notifications"
-              aria-label="Notifications"
-            >
-              <Bell className="w-4 h-4 text-foreground" />
-            </button>
-          </div>
-        </header>
+        </div>
+      </header>
+
+      <div className="max-w-[1400px] mx-auto p-4 md:p-6 lg:p-8 pt-0">
+        {/* Greeting moved out — only kept for screen readers / context */}
+        <span className="sr-only">Hello, {firstName}. Let's keep learning and growing your mind.</span>
 
         {isOverLimit && (
           <div
@@ -669,46 +698,19 @@ function SpotlightCard({ onCta }: { onCta: () => void }) {
         style={{ background: `radial-gradient(closest-side, ${PALETTE.teal}40, transparent)` }}
       />
 
-      {/* Cloud strip — moody beam-of-light backdrop sits behind the wordmark.
-          Sized to crop tight to the heading area so it reads as a halo
-          rather than a full-card image. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute top-0 left-0 right-0 h-40 overflow-hidden rounded-t-2xl"
-      >
-        <img
-          src={spotlightCloudImage}
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover opacity-90"
-        />
-        {/* Fade the cloud into the card body so the seam disappears. */}
-        <div
-          className="absolute inset-x-0 bottom-0 h-24"
-          style={{
-            background: `linear-gradient(to bottom, transparent 0%, ${PALETTE.surface}dd 75%, ${PALETTE.surface} 100%)`,
-          }}
-        />
-      </div>
-
       <div className="relative">
         {/* Outlined star (no fill) */}
         <div className="flex items-center justify-center mb-3">
           <Star className="w-7 h-7 text-white" strokeWidth={1.5} />
         </div>
-        <h3
-          className="text-2xl font-bold text-center tracking-[0.18em] uppercase text-white"
-          style={{ textShadow: "0 2px 12px rgba(0,0,0,0.55)" }}
-        >
-          PsychPro
+        <h3 className="text-2xl font-bold text-center tracking-tight">
+          Spotlight
         </h3>
         <p
-          className="text-xs text-center mt-2 mb-6 leading-relaxed px-2 tracking-[0.22em] uppercase"
-          style={{
-            color: `${PALETTE.mist}dd`,
-            textShadow: "0 1px 6px rgba(0,0,0,0.5)",
-          }}
+          className="text-sm text-center mt-2 mb-6 leading-relaxed px-2"
+          style={{ color: `${PALETTE.mist}dd` }}
         >
-          Learn. Expand. Connect.
+          Highlighting the next generation of clinicians and researchers.
         </p>
 
         {/* Featured person — circular avatar with glow ring */}
