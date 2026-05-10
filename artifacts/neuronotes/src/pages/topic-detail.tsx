@@ -15,6 +15,11 @@ export default function TopicDetailPage({ params }: Props) {
   const topicId = parseInt(params.id);
   const { data: topic, isLoading } = useGetTopic(topicId);
 
+  // Per-mode accent palette. Each card gets its own glow color so the
+  // four study modes read as distinct destinations instead of a flat
+  // stack of identical tiles. Hues stay inside the cerulean / teal /
+  // violet family so the palette still feels cohesive with the rest
+  // of the app.
   const studyModes = [
     {
       icon: Layers,
@@ -22,6 +27,8 @@ export default function TopicDetailPage({ params }: Props) {
       description: "Tap to flip and test your recall",
       onClick: () => navigate(`/topics/${topicId}/flashcards`),
       testId: "button-flashcards",
+      accent: "#5EB0C8", // cerulean
+      accentDeep: "#1F6B83",
     },
     {
       icon: BookOpen,
@@ -29,6 +36,8 @@ export default function TopicDetailPage({ params }: Props) {
       description: "Multiple-choice with explanations",
       onClick: () => navigate(`/topics/${topicId}/quiz`),
       testId: "button-quiz",
+      accent: "#7EA8E8", // periwinkle blue
+      accentDeep: "#2E5896",
     },
     {
       icon: FileText,
@@ -36,6 +45,8 @@ export default function TopicDetailPage({ params }: Props) {
       description: "Comprehensive scrollable notes",
       onClick: () => navigate(`/topics/${topicId}/study-guide`),
       testId: "button-study-guide",
+      accent: "#7EE0C2", // mint teal
+      accentDeep: "#1F7A66",
     },
     {
       icon: GraduationCap,
@@ -43,6 +54,8 @@ export default function TopicDetailPage({ params }: Props) {
       description: "Timed or untimed full exam",
       onClick: () => navigate(`/topics/${topicId}/exam`),
       testId: "button-practice-exam",
+      accent: "#C39DF0", // soft violet
+      accentDeep: "#6F45A8",
     },
   ];
 
@@ -88,25 +101,77 @@ export default function TopicDetailPage({ params }: Props) {
                   key={mode.title}
                   onClick={mode.onClick}
                   data-testid={mode.testId}
-                  className="group flex items-center gap-4 p-5 rounded-xl border text-left transition-all hover:-translate-y-0.5"
+                  className="group relative flex items-center gap-4 p-5 rounded-xl text-left transition-all duration-300 hover:-translate-y-0.5 overflow-hidden border"
                   style={{
-                    background: `linear-gradient(135deg, #1F4F66, ${P.tealDeep})`,
-                    borderColor: P.tealDeep,
-                    boxShadow: `0 20px 50px -18px ${P.tealDeep}cc`,
+                    // Layered background: a deep navy base + the per-mode
+                    // accent fading in as a radial glow from the top-right
+                    // corner. This gives every card depth and identity
+                    // without losing the unified cerulean theme.
+                    background: `
+                      radial-gradient(120% 90% at 100% 0%, ${mode.accent}3D 0%, transparent 55%),
+                      radial-gradient(80% 110% at 0% 100%, ${mode.accentDeep}40 0%, transparent 60%),
+                      linear-gradient(135deg, #0E2D3F 0%, #0A2030 100%)
+                    `,
+                    borderColor: `${mode.accent}55`,
+                    // Two-layer shadow: a tight rim of accent color hugging
+                    // the card + a wide, soft drop that lifts it off the page.
+                    boxShadow: `
+                      0 0 0 1px ${mode.accent}1A inset,
+                      0 1px 0 0 ${mode.accent}22 inset,
+                      0 18px 45px -18px ${mode.accentDeep}cc,
+                      0 6px 18px -10px ${mode.accent}55
+                    `,
                     color: "#FFFFFF",
                   }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow = `
+                      0 0 0 1px ${mode.accent}55 inset,
+                      0 1px 0 0 ${mode.accent}55 inset,
+                      0 22px 55px -16px ${mode.accentDeep}ee,
+                      0 8px 28px -8px ${mode.accent}88
+                    `;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow = `
+                      0 0 0 1px ${mode.accent}1A inset,
+                      0 1px 0 0 ${mode.accent}22 inset,
+                      0 18px 45px -18px ${mode.accentDeep}cc,
+                      0 6px 18px -10px ${mode.accent}55
+                    `;
+                  }}
                 >
+                  {/* Animated sheen — a faint diagonal highlight that drifts
+                      across on hover, the way a glossy button catches light. */}
                   <div
-                    className="w-11 h-11 rounded-xl flex items-center justify-center border shrink-0 transition-transform group-hover:scale-105"
-                    style={{ background: "rgba(255,255,255,0.18)", borderColor: "rgba(255,255,255,0.35)" }}
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    style={{
+                      background: `linear-gradient(115deg, transparent 35%, ${mode.accent}22 50%, transparent 65%)`,
+                    }}
+                  />
+                  <div
+                    className="relative w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110"
+                    style={{
+                      // Icon tile gets the accent in concentrated form so it
+                      // reads as the card's color signature at a glance.
+                      background: `linear-gradient(135deg, ${mode.accent} 0%, ${mode.accentDeep} 100%)`,
+                      boxShadow: `
+                        0 0 0 1px ${mode.accent}66 inset,
+                        0 8px 20px -8px ${mode.accent}aa,
+                        0 0 24px -4px ${mode.accent}55
+                      `,
+                    }}
                   >
-                    <mode.icon className="w-5 h-5 text-white" />
+                    <mode.icon className="w-5 h-5 text-white drop-shadow" />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-white">{mode.title}</p>
+                  <div className="relative flex-1 min-w-0">
+                    <p className="font-semibold text-white text-base">{mode.title}</p>
                     <p className="text-sm text-white/75">{mode.description}</p>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-white/85 transition-transform group-hover:translate-x-1" />
+                  <ArrowRight
+                    className="relative w-4 h-4 transition-transform duration-300 group-hover:translate-x-1.5"
+                    style={{ color: mode.accent }}
+                  />
                 </button>
               ))}
             </div>
