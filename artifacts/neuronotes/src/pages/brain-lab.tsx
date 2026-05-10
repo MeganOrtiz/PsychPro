@@ -588,14 +588,19 @@ function BrainScene({
           ))}
         </group>
       </GentleSpin>
+      {/* Pan disabled + tighter zoom range so the brain literally cannot
+          leave the framed area no matter what the user does. The previous
+          maxDistance of 12 let the brain shrink to a tiny dot in the
+          middle of a vast empty canvas; 7 keeps it readable at min-zoom. */}
       <OrbitControls
         enablePan={false}
         enableZoom
-        minDistance={2.4}
-        maxDistance={12}
+        minDistance={2.6}
+        maxDistance={7}
         autoRotate={false}
         rotateSpeed={0.7}
-        zoomSpeed={0.8}
+        zoomSpeed={0.7}
+        target={[0, 0, 0]}
       />
     </>
   );
@@ -1428,8 +1433,13 @@ export default function BrainLabPage() {
           gridTemplateColumns: isMobile ? "1fr" : "1fr minmax(340px, 420px)",
         }}
       >
-        {/* Center: 3D canvas + chip strip below */}
-        <div className="flex flex-col gap-3 min-h-0">
+        {/* Center: 3D canvas + chip strip below.
+            CRITICAL: `min-w-0` on this grid track. Without it, the
+            horizontally-scrolling chip strip below would force the `1fr`
+            grid column to expand past its allotted width, which pushed
+            the entire canvas (and brain mesh) off to the right and clipped
+            the chip strip's left edge. */}
+        <div className="flex flex-col gap-3 min-h-0 min-w-0">
         <div
           className="relative rounded-2xl border overflow-hidden flex-1 min-h-0"
           style={{
@@ -1528,9 +1538,11 @@ export default function BrainLabPage() {
           )}
         </div>
 
-          {/* Group chip strip — quick pick within the active tab */}
+          {/* Group chip strip — quick pick within the active tab.
+              `min-w-0 overflow-hidden` here keeps the inner overflow-x-auto
+              scroll container from inflating the parent column width. */}
           <div
-            className="flex-shrink-0 rounded-2xl border px-3 py-2"
+            className="flex-shrink-0 min-w-0 overflow-hidden rounded-2xl border px-3 py-2"
             style={{
               background: `${PALETTE.surface}aa`,
               borderColor: `${PALETTE.steel}99`,
