@@ -15,7 +15,6 @@ import {
   Search,
   Layers,
   Eye,
-  Maximize2,
   ChevronRight,
   BookOpen,
   Sparkles,
@@ -45,7 +44,11 @@ const PALETTE = {
   mist: "#BDE5FF",
 };
 
-type ViewMode = "external" | "cutaway" | "exploded";
+// "exploded" was removed — pulling structures apart broke anatomical
+// readability and made the brain look insane. We keep rotation (via
+// OrbitControls) and the cutaway view, and rely on per-region hover
+// glow for exploration instead of dismantling the geometry.
+type ViewMode = "external" | "cutaway";
 
 // 5 high-level tab groups that consolidate the 8 anatomical systems —
 // matches how clinicians actually think about regions vs. the granular
@@ -221,15 +224,13 @@ function StructureMesh({
       // subcortical/deep/ventricles — hidden behind cortex shell
       visible = false;
     }
-  } else if (viewMode === "cutaway") {
+  } else {
+    // cutaway
     if (shellCovers) {
       // Hide cortex blobs; the shell itself fades to reveal interior.
       visible = false;
     } else if (isVentricle) baseOpacity = 0.35;
     else baseOpacity = 0.92;
-  } else {
-    // exploded — every structure spreads out and is visible
-    baseOpacity = isCortex ? 0.55 : 0.9;
   }
 
   // Always show the selected structure regardless of view mode
@@ -244,12 +245,6 @@ function StructureMesh({
   const pos: [number, number, number] = mirror
     ? [-struct.position[0], struct.position[1], struct.position[2]]
     : struct.position;
-
-  // Exploded mode: push outward from center
-  const explodedPos: [number, number, number] =
-    viewMode === "exploded"
-      ? [pos[0] * 1.6, pos[1] * 1.3, pos[2] * 1.4]
-      : pos;
 
   const rot: [number, number, number] = struct.rotation
     ? mirror
@@ -277,7 +272,7 @@ function StructureMesh({
   return (
     <mesh
       geometry={geometry}
-      position={explodedPos}
+      position={pos}
       rotation={rot}
       onPointerOver={(e) => {
         e.stopPropagation();
@@ -375,38 +370,34 @@ function BrainShell({
     obj.position.sub(center);
     wrapper.scale.setScalar(s);
 
-    // Luminous "scientific viz" material — medium cerulean base with a
-    // strong cyan emissive so the surface stays clearly visible against
-    // the dark background. Started OPAQUE (transparent=false) so depth
-    // sort can never accidentally hide the mesh; the useFrame animator
-    // below flips it to transparent only when fading for cutaway/exploded.
+    // Wireframe-first "scientific viz" treatment — the surface itself is
+    // a dark, near-transparent fill so the white edge tracery (added below)
+    // becomes the dominant read. Per-region accents and the hover glow on
+    // the procedural structures still pop through this dim shell.
     const mat = new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color("#3FA8CC"),
-      emissive: new THREE.Color("#6CD4F2"),
-      emissiveIntensity: 0.55,
-      roughness: 0.38,
+      color: new THREE.Color("#0A2230"),
+      emissive: new THREE.Color("#1A3D52"),
+      emissiveIntensity: 0.18,
+      roughness: 0.6,
       metalness: 0.05,
-      clearcoat: 0.6,
-      clearcoatRoughness: 0.32,
-      sheen: 0.3,
-      sheenColor: new THREE.Color("#7DD8E8"),
+      clearcoat: 0.2,
+      clearcoatRoughness: 0.5,
       transmission: 0.0,
-      transparent: false,
-      opacity: 1.0,
+      transparent: true,
+      opacity: 0.18,
       side: THREE.DoubleSide,
-      depthWrite: true,
+      depthWrite: false,
     });
     matRef.current = mat;
 
-    // Edge-line overlay for that "wireframe topology / scientific viz" feel —
-    // EdgesGeometry only emits lines where neighboring faces meet at a sharp
-    // enough angle, so the brain's sulci/gyri become visible bright cyan
-    // tracery on top of the glowing shell. Wrapped in try/catch so a single
-    // bad sub-mesh can't crash the whole BrainShell render.
+    // White edge overlay — EdgesGeometry only emits lines where neighboring
+    // faces meet at a sharp enough angle, so the brain's sulci/gyri appear
+    // as crisp white tracery on top of the dim shell. Wrapped in try/catch
+    // so a single bad sub-mesh can't crash the whole BrainShell render.
     const edgeMat = new THREE.LineBasicMaterial({
-      color: new THREE.Color("#A6E8FF"),
+      color: new THREE.Color("#FFFFFF"),
       transparent: true,
-      opacity: 0.5,
+      opacity: 0.85,
       depthWrite: false,
     });
     obj.traverse((child) => {
@@ -464,37 +455,27 @@ function BrainShell({
     [onSelect],
   );
 
-  // Animate opacity by view mode and selection state.
-  // External: solid glow. Cutaway: see-through. Exploded: hidden.
+  // Animate the wireframe shell by view mode + selection state.
+  // External: dim translucent fill so the white edges read as wireframe.
+  // Cutaway: even more transparent so interior structures dominate.
+  // Selecting a structure pulls the shell back further so the accent reads.
   useFrame((_, dt) => {
     if (!matRef.current) return;
-    // External default = fully opaque. Cutaway = see-through. Exploded = hidden.
-    // Selecting a structure dims the shell slightly so the accent reads.
     const targetOpacity =
-      viewMode === "exploded"
-        ? 0.0
-        : viewMode === "cutaway"
-          ? 0.35
-          : selectedId
-            ? 0.7
-            : 1.0;
+      viewMode === "cutaway" ? 0.08 : selectedId ? 0.12 : 0.18;
     matRef.current.opacity +=
       (targetOpacity - matRef.current.opacity) * Math.min(1, dt * 5);
-    // Only flip transparent on once we actually need to fade — keeps
-    // depth sort solid in the default external view so the mesh can
-    // never be accidentally hidden behind something else.
-    matRef.current.transparent = matRef.current.opacity < 0.999;
-    // Only write depth when fully (or nearly) opaque. As soon as the shell
-    // is transparent, leave depth alone so interior structures and accents
-    // can be seen through it without z-fighting / occlusion artifacts.
-    matRef.current.depthWrite = matRef.current.opacity >= 0.95;
+    // Always transparent in wireframe mode — depth-write off so the inner
+    // accents are never occluded.
+    matRef.current.transparent = true;
+    matRef.current.depthWrite = false;
     matRef.current.needsUpdate = true;
     const targetEmissive =
-      viewMode === "cutaway" ? 0.65 : selectedId ? 0.45 : 0.55;
+      viewMode === "cutaway" ? 0.1 : selectedId ? 0.14 : 0.18;
     matRef.current.emissiveIntensity +=
       (targetEmissive - matRef.current.emissiveIntensity) * Math.min(1, dt * 5);
     if (groupRef.current) {
-      groupRef.current.visible = matRef.current.opacity > 0.02;
+      groupRef.current.visible = true;
     }
   });
 
@@ -735,7 +716,6 @@ function ViewModeToggle({
   const items: { value: ViewMode; label: string; Icon: React.ElementType }[] = [
     { value: "external", label: "External", Icon: Eye },
     { value: "cutaway", label: "Cutaway", Icon: Layers },
-    { value: "exploded", label: "Exploded", Icon: Maximize2 },
   ];
   return (
     <div
