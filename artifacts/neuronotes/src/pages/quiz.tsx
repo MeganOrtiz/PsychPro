@@ -287,7 +287,7 @@ export default function QuizPage({ params }: Props) {
               innerClassName="p-4 md:p-5 mb-4"
               testId="explanation-box"
             >
-              <p className="text-sm leading-relaxed pr-16" style={{ color: P.ink }}>{current.explanation}</p>
+              <p className="text-sm leading-relaxed pr-16 font-medium" style={{ color: "#FFFFFF" }}>{current.explanation}</p>
             </StudySurface>
           )}
 
