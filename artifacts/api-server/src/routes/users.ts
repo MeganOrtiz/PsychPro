@@ -11,10 +11,24 @@ router.get("/users/profile", async (req: Request, res: Response): Promise<void> 
   try {
     const userId = requireUserId(req, res);
     if (!userId) return;
-    const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
+    // Dev-mode full-access: auto-provision the user if missing, AND force
+    // existing users up to scholar + admin every load. This eliminates any
+    // edge case where a stale localStorage user-id maps to a "free"-tier
+    // record and gets paywalled out of study guides / quizzes / etc.
+    let [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
     if (!user) {
-      res.status(404).json({ error: "User not found" });
-      return;
+      [user] = await db.insert(usersTable).values({
+        id: userId,
+        subscriptionStatus: "scholar",
+        isAdmin: true,
+        onboardingComplete: true,
+        usageCount: 0,
+      }).returning();
+    } else if (user.subscriptionStatus !== "scholar" || !user.isAdmin) {
+      [user] = await db.update(usersTable)
+        .set({ subscriptionStatus: "scholar", isAdmin: true, onboardingComplete: true })
+        .where(eq(usersTable.id, userId))
+        .returning();
     }
     res.json({
       id: user.id,

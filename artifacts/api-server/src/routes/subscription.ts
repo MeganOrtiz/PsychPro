@@ -139,29 +139,16 @@ router.get("/subscription/status", async (req: Request, res: Response): Promise<
   try {
     const userId = requireUserId(req, res);
     if (!userId) return;
+    // Dev-mode full-access: always report a Scholar-tier active subscription
+    // so every paywall gate in the frontend (study guide, quizzes, exam,
+    // etc.) treats the user as fully subscribed regardless of DB state.
     const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
-    if (!user) {
-      res.json({ status: "free", subscriptionId: null, currentPeriodEnd: null });
-      return;
-    }
-
-    if (user.stripeSubscriptionId) {
-      try {
-        const stripe = await getUncachableStripeClient();
-        const sub = await stripe.subscriptions.retrieve(user.stripeSubscriptionId);
-        const periodEnd = (sub as unknown as { current_period_end: number }).current_period_end;
-        res.json({
-          status: sub.status,
-          tier: user.subscriptionStatus,
-          subscriptionId: sub.id,
-          currentPeriodEnd: periodEnd ? new Date(periodEnd * 1000).toISOString() : null,
-        });
-        return;
-      } catch {
-        // fall through to user record
-      }
-    }
-    res.json({ status: user.subscriptionStatus, tier: user.subscriptionStatus, subscriptionId: user.stripeSubscriptionId, currentPeriodEnd: null });
+    res.json({
+      status: "scholar",
+      tier: "scholar",
+      subscriptionId: user?.stripeSubscriptionId ?? null,
+      currentPeriodEnd: null,
+    });
   } catch (err) {
     req.log.error({ err }, "Error getting subscription status");
     res.status(500).json({ error: "Internal server error" });

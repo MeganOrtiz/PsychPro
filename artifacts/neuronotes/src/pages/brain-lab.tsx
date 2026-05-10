@@ -1426,9 +1426,12 @@ export default function BrainLabPage() {
         />
       </div>
 
-      {/* Body — 2-pane: 3D canvas / detail */}
+      {/* Body — 2-pane: 3D canvas / detail.
+          `min-w-0 overflow-hidden w-full` belt-and-suspenders so neither the
+          grid container itself nor any descendant can exceed the viewport
+          width and trigger a horizontal page scroll. */}
       <div
-        className="flex-1 min-h-0 grid gap-3 p-3 md:p-4"
+        className="flex-1 min-h-0 min-w-0 w-full overflow-hidden grid gap-3 p-3 md:p-4"
         style={{
           gridTemplateColumns: isMobile ? "1fr" : "1fr minmax(340px, 420px)",
         }}
