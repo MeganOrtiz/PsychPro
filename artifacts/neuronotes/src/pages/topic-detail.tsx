@@ -20,7 +20,6 @@ export default function TopicDetailPage({ params }: Props) {
       icon: Layers,
       title: "Flashcards",
       description: "Tap to flip and test your recall",
-      gradient: `linear-gradient(135deg, ${P.teal}, ${P.surf})`,
       onClick: () => navigate(`/topics/${topicId}/flashcards`),
       testId: "button-flashcards",
     },
@@ -28,7 +27,6 @@ export default function TopicDetailPage({ params }: Props) {
       icon: BookOpen,
       title: "Quiz",
       description: "Multiple-choice with explanations",
-      gradient: `linear-gradient(135deg, ${P.surf}, ${P.mist})`,
       onClick: () => navigate(`/topics/${topicId}/quiz`),
       testId: "button-quiz",
     },
@@ -36,7 +34,6 @@ export default function TopicDetailPage({ params }: Props) {
       icon: FileText,
       title: "Study Guide",
       description: "Comprehensive scrollable notes",
-      gradient: `linear-gradient(135deg, ${P.tealDeep}, ${P.teal})`,
       onClick: () => navigate(`/topics/${topicId}/study-guide`),
       testId: "button-study-guide",
     },
@@ -44,7 +41,6 @@ export default function TopicDetailPage({ params }: Props) {
       icon: GraduationCap,
       title: "Practice Exam",
       description: "Timed or untimed full exam",
-      gradient: `linear-gradient(135deg, #1F4F66, ${P.tealDeep})`,
       onClick: () => navigate(`/topics/${topicId}/exam`),
       testId: "button-practice-exam",
     },
@@ -92,23 +88,25 @@ export default function TopicDetailPage({ params }: Props) {
                   key={mode.title}
                   onClick={mode.onClick}
                   data-testid={mode.testId}
-                  className="group flex items-center gap-4 p-5 rounded-xl border bg-white text-left transition-all hover:-translate-y-0.5"
+                  className="group flex items-center gap-4 p-5 rounded-xl border text-left transition-all hover:-translate-y-0.5"
                   style={{
-                    borderColor: `${P.surf}55`,
-                    boxShadow: `0 10px 28px -16px ${P.teal}66`,
+                    background: `linear-gradient(135deg, #1F4F66, ${P.tealDeep})`,
+                    borderColor: P.tealDeep,
+                    boxShadow: `0 20px 50px -18px ${P.tealDeep}cc`,
+                    color: "#FFFFFF",
                   }}
                 >
                   <div
                     className="w-11 h-11 rounded-xl flex items-center justify-center border shrink-0 transition-transform group-hover:scale-105"
-                    style={{ background: mode.gradient, borderColor: P.tealDeep }}
+                    style={{ background: "rgba(255,255,255,0.18)", borderColor: "rgba(255,255,255,0.35)" }}
                   >
                     <mode.icon className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-foreground">{mode.title}</p>
-                    <p className="text-sm text-muted-foreground">{mode.description}</p>
+                    <p className="font-semibold text-white">{mode.title}</p>
+                    <p className="text-sm text-white/75">{mode.description}</p>
                   </div>
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" style={{ color: P.tealDeep }} />
+                  <ArrowRight className="w-4 h-4 text-white/85 transition-transform group-hover:translate-x-1" />
                 </button>
               ))}
             </div>

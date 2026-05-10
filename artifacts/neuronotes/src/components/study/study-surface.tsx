@@ -36,6 +36,16 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
         boxShadow: `0 20px 50px -18px ${P.tealDeep}cc`,
         color: "#FFFFFF",
       };
+    case "card-front":
+      // Radial gradient — darker on the outside edge, lighter in the
+      // center — pairs with the "accent" back of the flashcard. Same
+      // white body text so question/answer typography is consistent.
+      return {
+        background: `radial-gradient(ellipse at center, ${P.tealDeep} 0%, #1F4F66 55%, #133544 100%)`,
+        borderColor: P.tealDeep,
+        boxShadow: `0 20px 50px -18px ${P.tealDeep}cc`,
+        color: "#FFFFFF",
+      };
     case "light":
     default:
       // "light" tone now uses the user-supplied .study-card recipe so
@@ -61,7 +71,7 @@ function pillStyles(tone: StudyTone, brand?: boolean): CSSProperties {
       borderColor: `${P.surf}44`,
     };
   }
-  if (tone === "accent") {
+  if (tone === "accent" || tone === "card-front") {
     return {
       background: "rgba(255,255,255,0.22)",
       color: "#FFFFFF",

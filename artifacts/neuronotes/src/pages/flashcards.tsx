@@ -184,7 +184,7 @@ export default function FlashcardsPage({ params }: Props) {
               <div className={`flashcard-inner min-h-64 md:min-h-80 ${flipped ? "flipped" : ""}`}>
                 <div className="flashcard-front">
                   <StudySurface
-                    tone="light"
+                    tone="card-front"
                     glow
                     pill={current ? { text: difficultyStyles[current.difficulty]?.label ?? current.difficulty } : undefined}
                     fillHeight
@@ -192,14 +192,13 @@ export default function FlashcardsPage({ params }: Props) {
                   >
                     <div className="flex-1 flex items-center justify-center w-full">
                       <p
-                        className="text-center text-lg md:text-xl font-medium leading-relaxed"
-                        style={{ color: P.ink }}
+                        className="text-center text-lg md:text-xl font-medium leading-relaxed text-white"
                         data-testid="text-flashcard-question"
                       >
                         {current?.question}
                       </p>
                     </div>
-                    <p className="text-[11px] text-muted-foreground/80 mt-4 tracking-wide uppercase">
+                    <p className="text-[11px] mt-4 tracking-wide uppercase text-white/70">
                       Tap to reveal answer
                     </p>
                   </StudySurface>

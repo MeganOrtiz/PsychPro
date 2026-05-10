@@ -20,4 +20,4 @@ export const STUDY_PALETTE = {
   cloud: "#E4F4F6",
 } as const;
 
-export type StudyTone = "light" | "dark" | "accent";
+export type StudyTone = "light" | "dark" | "accent" | "card-front";
