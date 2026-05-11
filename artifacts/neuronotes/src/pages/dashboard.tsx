@@ -123,6 +123,65 @@ function computeWeeklyFlames(recent: RecentTopic[]) {
   });
 }
 
+// Compact upward-trending streak sparkline. Plots cumulative count of
+// "lit" (studied) days across the current week, so the line stays
+// monotonically non-decreasing — a friendly motivational shape.
+function StreakSparkline({
+  days,
+}: {
+  days: { lit: boolean; isToday: boolean }[];
+}) {
+  const W = 96;
+  const H = 36;
+  const PAD = 2;
+  const cumulative = days.reduce<number[]>((acc, d) => {
+    const prev = acc[acc.length - 1] ?? 0;
+    acc.push(prev + (d.lit ? 1 : 0));
+    return acc;
+  }, []);
+  const max = Math.max(1, cumulative[cumulative.length - 1] ?? 0);
+  const stepX = (W - PAD * 2) / Math.max(1, days.length - 1);
+  const points = cumulative.map((v, i) => {
+    const x = PAD + i * stepX;
+    const y = H - PAD - (v / max) * (H - PAD * 2);
+    return [x, y] as const;
+  });
+  const linePath = points
+    .map(([x, y], i) => `${i === 0 ? "M" : "L"}${x.toFixed(1)} ${y.toFixed(1)}`)
+    .join(" ");
+  const areaPath =
+    `${linePath} L${points[points.length - 1][0].toFixed(1)} ${H - PAD} L${PAD} ${H - PAD} Z`;
+  const last = points[points.length - 1];
+
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      className="flex-shrink-0"
+      aria-hidden
+      data-testid="streak-sparkline"
+    >
+      <defs>
+        <linearGradient id="streakArea" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={PALETTE.surf} stopOpacity="0.45" />
+          <stop offset="100%" stopColor={PALETTE.surf} stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <path d={areaPath} fill="url(#streakArea)" />
+      <path
+        d={linePath}
+        fill="none"
+        stroke={PALETTE.surf}
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx={last[0]} cy={last[1]} r="2.5" fill={PALETTE.surf} />
+    </svg>
+  );
+}
+
 function buildActivitySeries(recent: RecentTopic[]) {
   const buckets = new Map<string, number>();
   recent.forEach((r) => {
@@ -411,32 +470,24 @@ export default function DashboardPage() {
                   <h2 className="font-semibold" style={{ color: PALETTE.mist }}>Your Streak</h2>
                   <span aria-hidden>🔥</span>
                 </div>
-                <div className="mb-4">
+                {/* Streak count + upward sparkline side-by-side, matching
+                    the reference. Sparkline is the cumulative count of
+                    studied days across the current week — naturally
+                    trends up as the user studies more. */}
+                <div className="flex items-end justify-between gap-3 mb-3">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-4xl font-bold leading-none" style={{ color: PALETTE.mist }}>{streak}</span>
-                    <span className="text-sm" style={{ color: PALETTE.mistSoft }}>day streak</span>
+                    <span
+                      className="text-4xl font-bold leading-none"
+                      style={{ color: PALETTE.mist }}
+                      data-testid="streak-count"
+                    >
+                      {streak}
+                    </span>
+                    <span className="text-sm" style={{ color: PALETTE.mistSoft }}>
+                      day streak
+                    </span>
                   </div>
-                </div>
-                <div className="grid grid-cols-7 gap-1 mb-3">
-                  {weeklyFlames.map((d, i) => (
-                    <div key={i} className="flex flex-col items-center gap-1">
-                      <Flame
-                        className={cn(
-                          "w-5 h-5 transition-colors",
-                          d.lit ? "text-orange-500 fill-orange-500" : "text-slate-300"
-                        )}
-                      />
-                      <span
-                        className="text-xs"
-                        style={{
-                          color: d.isToday ? PALETTE.mist : PALETTE.mistSoft,
-                          fontWeight: d.isToday ? 600 : 400,
-                        }}
-                      >
-                        {d.label}
-                      </span>
-                    </div>
-                  ))}
+                  <StreakSparkline days={weeklyFlames} />
                 </div>
                 <p className="text-xs" style={{ color: PALETTE.mistSoft }}>
                   {streak === 0
