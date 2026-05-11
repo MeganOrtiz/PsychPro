@@ -1,0 +1,97 @@
+Create a fully responsive, premium landing page for PsychPro that matches the attached reference image as closely as possible.
+
+Overall aesthetic:
+Dark cinematic neuroscience/clinical psychology platform. Use a deep midnight teal/navy background with luminous cerulean, cyan, and soft aqua glow accents. The page should feel futuristic, elegant, professional, and high-end — not cartoonish.
+
+Color palette:
+- Background: #03131C, #051E2A, #062B3A
+- Deep teal glass panels: rgba(5, 35, 48, 0.58)
+- Cyan glow: #41D8F2
+- Cerulean accent: #1397B6
+- Soft aqua highlight: #8BEFFF
+- Text primary: #F2F7FA
+- Text muted: #B9C9D2
+- Borders: rgba(65,216,242,0.45)
+
+Hero background:
+Use a full-page cinematic neuroscience background featuring a large, perfectly symmetrical glowing brain centered near the top-middle. The brain should be luminous cyan/cerulean, hyper-detailed, and surrounded by smoky underwater ink clouds, neural lines, glowing nodes, and subtle electric signal trails. The background should cover the full viewport and continue subtly behind the lower sections. Add a dark overlay so text remains readable.
+
+Page layout:
+1. Fixed transparent/glass navigation bar at the top.
+   - Left: small brain-line icon + “PSYCHPRO” wordmark with wide letter spacing.
+   - Center nav links: HOME, COURSES, RESOURCES, COMMUNITY, ABOUT.
+   - HOME should have a glowing cyan underline.
+   - Right: search icon and outlined “LOG IN” button.
+
+2. Hero section:
+   - Centered large glowing brain image above the main title.
+   - Main title: “PSYCHPRO” in very thin, elegant, widely spaced uppercase letters.
+   - Font style should feel like a luxury tech/neuroscience brand: thin geometric sans serif, high letter spacing.
+   - Subtitle: “LEARN. EXPAND. CONNECT.”
+   - Description: “Your all-in-one platform for mastering clinical psychology through expert-led courses, practical tools, and a supportive professional community.”
+   - Two glass CTA buttons:
+     - “EXPLORE COURSES” with a book icon
+     - “JOIN COMMUNITY” with a people icon
+   - Buttons should have cyan borders, soft inner glow, hover glow, and slight lift animation.
+
+3. Feature cards row:
+   Four glassmorphism cards with cyan outline icons:
+   - Expert-Led Courses
+     “Learn from leading professionals in clinical psychology.”
+   - Evidence-Based
+     “Content grounded in the latest research and best practices.”
+   - Practical Tools
+     “Resources and tools you can use in real-world settings.”
+   - Professional Community
+     “Connect, collaborate, and grow with peers worldwide.”
+
+4. Trust/testimonial section:
+   Two glass panels side by side.
+   Left panel:
+   Heading: “TRUSTED BY PSYCHOLOGY PROFESSIONALS”
+   Four stats with icons:
+   - 25K+ MEMBERS
+   - 150+ COURSES
+   - 10K+ CERTIFICATIONS
+   - 85+ COUNTRIES
+   Right panel:
+   Quote mark icon and testimonial:
+   “PsychPro has transformed the way I learn and apply clinical knowledge. The community and resources are unmatched.”
+   Add small circular profile image placeholder and:
+   “Dr. Sarah Mitchell”
+   “Clinical Psychologist”
+
+5. Email subscribe panel:
+   Glass horizontal panel with mail icon.
+   Left text:
+   “STAY INSPIRED.”
+   “Get expert insights and updates.”
+   Right: email input with placeholder “Your email address” and glowing “SUBSCRIBE” button.
+
+6. Footer:
+   Left: brain icon + PSYCHPRO
+   Center: PRIVACY POLICY | TERMS OF SERVICE | CONTACT
+   Right: small social media icons.
+
+Animations and interactivity:
+- Background should feel alive but subtle and professional.
+- Add slow drifting smoky cloud layers using CSS animations.
+- Add neural lines/nodes that gently pulse in opacity.
+- Add small electric signal particles traveling along neural paths.
+- The central brain should softly pulse with cyan glow every 4–6 seconds.
+- Add very subtle parallax movement on mouse move: background shifts slightly, brain glow shifts slightly, and neural particles move with depth.
+- Cards should have hover effects: soft cyan glow, slight translateY(-6px), and border brightening.
+- CTA buttons should have animated shimmer/glow on hover.
+- Use CSS keyframes only unless lightweight JS is needed for mouse parallax.
+- Keep animations smooth, slow, and elegant — no distracting fast movement.
+
+Technical instructions:
+- Build with React/Vite if applicable.
+- Use Tailwind CSS if available.
+- Use lucide-react icons for brain, book, users, briefcase, graduation cap, mail, search, globe, certificate, and social icons.
+- Make the landing page mobile responsive.
+- Maintain the exact same visual hierarchy, spacing, and composition as the reference.
+- Use glassmorphism panels with blur, translucent dark backgrounds, thin cyan borders, and soft cyan box shadows.
+- Ensure all text is readable over the background.
+- Do not make it childish, cartoonish, or overly bright.
+- Do not use royal blue; stay in cerulean/cyan/teal tones.

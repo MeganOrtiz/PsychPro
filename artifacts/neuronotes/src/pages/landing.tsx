@@ -1,37 +1,24 @@
 import { useLocation } from "wouter";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, type FormEvent } from "react";
 import {
   BookOpen,
-  Layers,
-  Trophy,
-  CheckCircle,
-  Zap,
-  Sparkles,
+  Users,
+  Briefcase,
   GraduationCap,
-  Clock,
-  ArrowRight,
-  FileText,
+  Mail,
+  Search,
+  Globe,
+  Award,
+  Brain,
+  Linkedin,
+  Twitter,
+  Instagram,
+  Youtube,
+  Sparkles,
 } from "lucide-react";
-import psychproMark from "@/assets/brand/psychpro-mark.png";
-// Palette comes from the shared single-source-of-truth file.
-// Do NOT redefine a local PALETTE here — it will fork the brand.
+import brainHero from "@assets/generated_images/landing_brain_hero.png";
+// Single source of truth for the brand palette — do NOT fork.
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
-
-const REAL_TOPICS = [
-  "Psychological Disorders", "Personality Disorders", "Neurodevelopmental Disorders",
-  "Neurocognitive Disorders", "ADHD & Medications", "Psychopharmacology",
-  "Quantitative Statistics & Research Methods", "Qualitative Research Designs",
-  "Validity & Effort Testing", "Sleep & Circadian Rhythms",
-  "Limbic System & Motivation", "Sensory Pathways",
-  "Language Processing & Aphasia", "Apraxia & Agnosia",
-  "Cell Biology & Neuron Anatomy", "Neurotransmitters & Synaptic Transmission",
-  "Cranial Nerves", "Vascular System of the Brain", "Neuropsychology Overview",
-];
-
-const SAMPLE_FLASHCARD = {
-  front: "What is the core difference between Broca's and Wernicke's aphasia?",
-  back: "Broca's aphasia (left inferior frontal lobe) impairs speech production while comprehension stays largely intact — output is effortful, non-fluent, and agrammatic. Wernicke's aphasia (left posterior superior temporal lobe) preserves fluency but disrupts comprehension — speech flows but is semantically empty, often with paraphasic errors.",
-};
 
 function usePrefersReducedMotion(): boolean {
   const [prefers, setPrefers] = useState(false);
@@ -46,536 +33,773 @@ function usePrefersReducedMotion(): boolean {
   return prefers;
 }
 
-function Starfield({ animate = true, count = 60 }: { animate?: boolean; count?: number }) {
-  const stars = Array.from({ length: count }, (_, i) => ({
-    x: (i * 73) % 100,
-    y: (i * 41) % 100,
-    s: 0.5 + ((i * 13) % 18) / 10,
-    d: 2 + (i % 5),
-  }));
-  return (
-    <svg className="absolute inset-0 w-full h-full -z-10 pointer-events-none" aria-hidden="true">
-      {stars.map((st, i) => (
-        <circle
-          key={i}
-          cx={`${st.x}%`}
-          cy={`${st.y}%`}
-          r={st.s}
-          fill="#BDE5FF"
-          opacity={0.35}
-        >
-          {animate && (
-            <animate
-              attributeName="opacity"
-              values="0.05;0.5;0.05"
-              dur={`${st.d}s`}
-              begin={`${(i % 6) * 0.4}s`}
-              repeatCount="indefinite"
-            />
-          )}
-        </circle>
-      ))}
-    </svg>
-  );
+// Subtle mouse-driven parallax for the hero brain + glow layers.
+function useParallax(disabled: boolean) {
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  useEffect(() => {
+    if (disabled) return;
+    const onMove = (e: MouseEvent) => {
+      const nx = (e.clientX / window.innerWidth - 0.5) * 2;
+      const ny = (e.clientY / window.innerHeight - 0.5) * 2;
+      setPos({ x: nx, y: ny });
+    };
+    window.addEventListener("mousemove", onMove, { passive: true });
+    return () => window.removeEventListener("mousemove", onMove);
+  }, [disabled]);
+  return pos;
 }
+
+const NAV_LINKS = [
+  { label: "HOME", href: "#home" },
+  { label: "COURSES", href: "#features" },
+  { label: "RESOURCES", href: "#features" },
+  { label: "COMMUNITY", href: "#trust" },
+  { label: "ABOUT", href: "#trust" },
+];
+
+const FEATURES = [
+  {
+    icon: GraduationCap,
+    title: "EXPERT-LED COURSES",
+    body: "Learn from leading professionals in clinical psychology.",
+  },
+  {
+    icon: Brain,
+    title: "EVIDENCE-BASED",
+    body: "Content grounded in the latest research and best practices.",
+  },
+  {
+    icon: Briefcase,
+    title: "PRACTICAL TOOLS",
+    body: "Resources and tools you can use in real-world settings.",
+  },
+  {
+    icon: Users,
+    title: "PROFESSIONAL COMMUNITY",
+    body: "Connect, collaborate, and grow with peers worldwide.",
+  },
+];
+
+const STATS = [
+  { icon: Users, n: "25K+", l: "MEMBERS" },
+  { icon: BookOpen, n: "150+", l: "COURSES" },
+  { icon: Award, n: "10K+", l: "CERTIFICATIONS" },
+  { icon: Globe, n: "85+", l: "COUNTRIES" },
+];
 
 export default function LandingPage() {
   const [, navigate] = useLocation();
-  const [flipped, setFlipped] = useState(false);
   const reduceMotion = usePrefersReducedMotion();
-  const animateBg = !reduceMotion;
+  const parallax = useParallax(reduceMotion);
+  const [email, setEmail] = useState("");
+  const [subscribed, setSubscribed] = useState(false);
+  const heroRef = useRef<HTMLDivElement | null>(null);
 
-  const goToApp = () => navigate("/dashboard");
+  const goCourses = () => navigate("/topics");
+  const goCommunity = () => navigate("/feature-request");
+  const goLogin = () => navigate("/dashboard");
 
-  const ctaBtn = `inline-flex items-center justify-center gap-2 rounded-xl text-base font-semibold px-7 h-12 transition-all duration-300`;
-  const ctaBtnGradient = `${ctaBtn} bg-gradient-to-br from-[#2FA0C6] to-[#58C9F3] text-[#061826] shadow-[0_14px_40px_-10px_rgba(47,160,198,0.8)] hover:-translate-y-0.5 hover:brightness-110 hover:shadow-[0_0_0_1px_rgba(189,229,255,0.55),0_18px_50px_-8px_rgba(88,201,243,0.85),0_0_50px_-6px_rgba(88,201,243,0.7)]`;
-  const ctaBtnOutline = `${ctaBtn} bg-transparent text-[#BDE5FF] border border-[#58C9F3]/40 hover:-translate-y-0.5 hover:bg-[#58C9F3]/10 hover:border-[#58C9F3] hover:text-white hover:shadow-[0_0_0_1px_rgba(88,201,243,0.45),0_0_28px_-4px_rgba(88,201,243,0.65)]`;
+  const onSubscribe = (e: FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+    setSubscribed(true);
+    setEmail("");
+  };
+
+  // Glass surface used throughout (nav, panels, cards, buttons).
+  const glassBg = "rgba(5, 35, 48, 0.58)";
+  const glassBorder = `${PALETTE.surf}55`;
+  const glassBorderStrong = `${PALETTE.surf}80`;
+  const glassShadow = `0 14px 50px -16px ${PALETTE.teal}55, inset 0 1px 0 ${PALETTE.surf}1f`;
 
   return (
     <div
-      className="min-h-screen overflow-hidden text-white"
+      className="relative min-h-screen overflow-x-hidden text-white antialiased"
+      style={{
+        background: `radial-gradient(ellipse at 50% 0%, ${PALETTE.bgSoft} 0%, ${PALETTE.bg} 45%, ${PALETTE.ink} 100%)`,
+        color: PALETTE.cloud,
+        fontFamily:
+          '"Outfit", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif',
+      }}
       data-testid="landing-page"
-      style={{ background: PALETTE.bg, color: PALETTE.mist }}
     >
-      {/* NAV */}
+      {/* Local keyframes — kept inline so the page is self-contained. */}
+      <style>{`
+        @keyframes psp-drift-a { 0%,100% { transform: translate3d(0,0,0) scale(1);} 50% { transform: translate3d(2%,-2%,0) scale(1.04);} }
+        @keyframes psp-drift-b { 0%,100% { transform: translate3d(0,0,0) scale(1);} 50% { transform: translate3d(-3%,1%,0) scale(1.06);} }
+        @keyframes psp-pulse { 0%,100% { opacity: .55; filter: drop-shadow(0 0 30px ${PALETTE.surf}aa) drop-shadow(0 0 70px ${PALETTE.teal}77);} 50% { opacity: .85; filter: drop-shadow(0 0 60px ${PALETTE.surf}cc) drop-shadow(0 0 120px ${PALETTE.teal}aa);} }
+        @keyframes psp-spark { 0% { opacity: 0; transform: translateX(0);} 30% { opacity: 1;} 100% { opacity: 0; transform: translateX(60px);} }
+        @keyframes psp-shimmer { 0% { transform: translateX(-120%);} 100% { transform: translateX(220%);} }
+        @keyframes psp-node-pulse { 0%,100% { opacity: .35;} 50% { opacity: 1;} }
+        .psp-cta-shimmer { position: relative; overflow: hidden; }
+        .psp-cta-shimmer::before {
+          content: ""; position: absolute; inset: 0;
+          background: linear-gradient(120deg, transparent 30%, ${PALETTE.surf}55 50%, transparent 70%);
+          transform: translateX(-120%);
+          pointer-events: none;
+        }
+        .psp-cta-shimmer:hover::before { animation: psp-shimmer 1.1s ease forwards; }
+        .psp-card:hover { transform: translateY(-6px); border-color: ${PALETTE.surf} !important; box-shadow: 0 22px 60px -20px ${PALETTE.teal}aa, 0 0 0 1px ${PALETTE.surf}66, 0 0 50px -10px ${PALETTE.surf}66 !important; }
+        .psp-nav-link { position: relative; }
+        .psp-nav-link::after { content:""; position:absolute; left:50%; bottom:-8px; transform: translateX(-50%); width: 0; height: 1px; background: ${PALETTE.surf}; box-shadow: 0 0 8px ${PALETTE.surf}, 0 0 16px ${PALETTE.surf}88; transition: width .3s ease; }
+        .psp-nav-link:hover::after { width: 70%; }
+        .psp-nav-link.psp-active::after { width: 70%; }
+
+        /* Honour reduced-motion: kill non-essential hover/transition motion.
+           Opacity/colour transitions stay (they don't induce motion sickness),
+           but transforms, shimmer sweeps, and underline grows are disabled. */
+        @media (prefers-reduced-motion: reduce) {
+          .psp-cta-shimmer:hover::before { animation: none !important; }
+          .psp-card:hover { transform: none !important; }
+          .psp-nav-link::after,
+          .psp-nav-link:hover::after,
+          .psp-nav-link.psp-active::after { transition: none !important; }
+          [data-testid="landing-page"] *,
+          [data-testid="landing-page"] *::before,
+          [data-testid="landing-page"] *::after {
+            animation-duration: 0.001ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.001ms !important;
+          }
+        }
+      `}</style>
+
+      {/* ============================================================ */}
+      {/* AMBIENT BACKGROUND LAYERS                                    */}
+      {/* ============================================================ */}
+      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden>
+        {/* Smoky cloud layer A */}
+        <div
+          className="absolute -top-40 -left-40 w-[80vw] h-[80vh] rounded-full blur-[140px] opacity-50"
+          style={{
+            background: `radial-gradient(circle, ${PALETTE.teal}55, transparent 65%)`,
+            animation: reduceMotion ? "none" : "psp-drift-a 18s ease-in-out infinite",
+          }}
+        />
+        {/* Smoky cloud layer B */}
+        <div
+          className="absolute -bottom-40 -right-40 w-[70vw] h-[70vh] rounded-full blur-[160px] opacity-40"
+          style={{
+            background: `radial-gradient(circle, ${PALETTE.surf}44, transparent 70%)`,
+            animation: reduceMotion ? "none" : "psp-drift-b 22s ease-in-out infinite",
+          }}
+        />
+        {/* Drifting deep-teal vignette in the middle */}
+        <div
+          className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[120vw] h-[60vh] rounded-full blur-[180px] opacity-30"
+          style={{
+            background: `radial-gradient(ellipse, ${PALETTE.tealDeep}66, transparent 60%)`,
+          }}
+        />
+
+        {/* Pulsing neural nodes scattered across the page */}
+        <svg className="absolute inset-0 w-full h-full" aria-hidden>
+          {Array.from({ length: 28 }).map((_, i) => {
+            const x = (i * 137) % 100;
+            const y = (i * 73) % 100;
+            const r = 0.8 + ((i * 11) % 18) / 10;
+            const dur = 3 + (i % 5);
+            return (
+              <circle
+                key={i}
+                cx={`${x}%`}
+                cy={`${y}%`}
+                r={r}
+                fill={PALETTE.surf}
+                opacity={0.5}
+                style={{
+                  animation: reduceMotion
+                    ? "none"
+                    : `psp-node-pulse ${dur}s ease-in-out ${(i % 7) * 0.4}s infinite`,
+                }}
+              />
+            );
+          })}
+        </svg>
+      </div>
+
+      {/* ============================================================ */}
+      {/* NAV                                                          */}
+      {/* ============================================================ */}
       <header
-        className="sticky top-0 z-30 backdrop-blur-md border-b"
-        style={{ background: `${PALETTE.bg}cc`, borderColor: `${PALETTE.steel}66` }}
+        className="fixed top-0 inset-x-0 z-40 backdrop-blur-xl border-b"
+        style={{
+          background: glassBg,
+          borderColor: `${PALETTE.surf}33`,
+          boxShadow: `0 6px 30px -12px ${PALETTE.teal}66`,
+        }}
       >
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center"
-              style={{ background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})` }}
+        <nav
+          className="max-w-7xl mx-auto px-5 md:px-8 h-16 flex items-center justify-between gap-6"
+          aria-label="Main"
+        >
+          {/* Brand */}
+          <a
+            href="#home"
+            className="flex items-center gap-2.5 shrink-0"
+            data-testid="nav-brand"
+          >
+            <BrainLineIcon className="w-7 h-7" color={PALETTE.surf} />
+            <span
+              className="font-light text-base md:text-[17px] text-white"
+              style={{ letterSpacing: "0.32em" }}
             >
-              <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="6" cy="12" r="2" /><circle cx="18" cy="12" r="2" />
-                <circle cx="12" cy="6" r="2" /><circle cx="12" cy="18" r="2" />
-                <path d="M8 12h8M12 8v8M7.5 7.5l9 9M16.5 7.5l-9 9" />
-              </svg>
-            </div>
-            <span className="font-bold text-xl tracking-tight text-white">PsychPro</span>
+              PSYCHPRO
+            </span>
+          </a>
+
+          {/* Center nav (hidden on small screens) */}
+          <div className="hidden md:flex items-center gap-8 lg:gap-10 text-[12px] font-medium">
+            {NAV_LINKS.map((l, i) => (
+              <a
+                key={l.label}
+                href={l.href}
+                className={`psp-nav-link transition-colors ${
+                  i === 0 ? "psp-active text-white" : ""
+                }`}
+                style={{
+                  color: i === 0 ? PALETTE.cloud : `${PALETTE.mist}cc`,
+                  letterSpacing: "0.22em",
+                }}
+                data-testid={`nav-link-${l.label.toLowerCase()}`}
+              >
+                {l.label}
+              </a>
+            ))}
           </div>
-          <div className="flex items-center gap-3">
+
+          {/* Right cluster */}
+          <div className="flex items-center gap-3 md:gap-4 shrink-0">
             <button
-              onClick={() => goToApp()}
-              className="text-sm transition-colors"
+              type="button"
+              aria-label="Search"
+              className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:bg-white/5"
               style={{ color: `${PALETTE.mist}cc` }}
-              data-testid="header-sign-in"
+              data-testid="nav-search"
             >
-              Sign In
+              <Search className="w-4 h-4" />
             </button>
             <button
-              onClick={() => goToApp()}
-              className="text-sm font-semibold rounded-lg px-3.5 h-9 transition-all"
+              type="button"
+              onClick={goLogin}
+              className="text-[12px] font-medium px-4 md:px-5 h-9 rounded-md border transition-all hover:bg-white/5 hover:text-white"
               style={{
-                background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
-                color: PALETTE.bg,
-                boxShadow: `0 4px 18px -4px ${PALETTE.teal}aa`,
+                color: PALETTE.cloud,
+                borderColor: glassBorderStrong,
+                letterSpacing: "0.22em",
+                boxShadow: `0 0 18px -6px ${PALETTE.surf}66, inset 0 0 12px -8px ${PALETTE.surf}55`,
               }}
-              data-testid="header-sign-up"
+              data-testid="nav-login"
             >
-              Sign Up
+              LOG IN
             </button>
           </div>
-        </div>
+        </nav>
       </header>
 
-      {/* HERO */}
-      <section className="relative overflow-hidden">
-        <Starfield animate={animateBg} />
-        {/* nebula glows */}
-        <div
-          className="absolute top-[-200px] left-1/2 -translate-x-1/2 w-[1100px] h-[700px] rounded-full blur-[140px] -z-10"
-          style={{ background: `radial-gradient(circle, ${PALETTE.teal}55, transparent 60%)` }}
-          aria-hidden
-        />
-        <div
-          className="absolute top-40 right-[-100px] w-[400px] h-[400px] rounded-full blur-[110px] -z-10"
-          style={{ background: `${PALETTE.surf}33` }}
-          aria-hidden
-        />
-        <div
-          className="absolute top-20 left-[-100px] w-[350px] h-[350px] rounded-full blur-[110px] -z-10"
-          style={{ background: `${PALETTE.steel}55` }}
-          aria-hidden
-        />
-
-        <div className="max-w-5xl mx-auto px-4 pt-12 md:pt-16 pb-12 md:pb-16 relative">
-          <div className="relative flex flex-col items-center text-center">
-            {/* Eyebrow pill */}
-            <div
-              className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm backdrop-blur-md border mb-10 md:mb-12 z-10"
-              style={{
-                background: `${PALETTE.surface}cc`,
-                borderColor: `${PALETTE.surf}55`,
-                color: PALETTE.mist,
-              }}
-            >
-              <Sparkles className="w-3.5 h-3.5" style={{ color: PALETTE.surf }} />
-              Built for the next generation of psychologists
-            </div>
-
-            {/* Wordmark with ghosted brain behind */}
-            <div className="relative w-full flex flex-col items-center">
-              {/* Brain ghost layer */}
-              <div
-                aria-hidden
-                className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(720px,90vw)] aspect-square opacity-50"
-                style={{
-                  backgroundImage: `url(${psychproMark})`,
-                  backgroundSize: "180% auto",
-                  backgroundPosition: "center 18%",
-                  backgroundRepeat: "no-repeat",
-                  filter: "blur(2px) saturate(140%)",
-                  maskImage:
-                    "radial-gradient(closest-side, #000 35%, transparent 78%)",
-                  WebkitMaskImage:
-                    "radial-gradient(closest-side, #000 35%, transparent 78%)",
-                }}
-              />
-
-              {/* PsychPro wordmark — thin geometric sans */}
-              <h1
-                className="relative z-10 leading-none select-none"
-                style={{
-                  fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
-                  fontWeight: 300,
-                  fontSize: "clamp(64px, 14vw, 168px)",
-                  letterSpacing: "-0.01em",
-                  textShadow: `0 8px 40px ${PALETTE.bg}cc`,
-                }}
-              >
-                <span style={{ color: "#FFFFFF" }}>Psych</span>
-                <span style={{ color: PALETTE.surf }}>Pro</span>
-              </h1>
-
-              {/* Tagline */}
-              <p
-                className="relative z-10 mt-3 md:mt-4 text-xs sm:text-sm md:text-base font-medium"
-                style={{
-                  color: `${PALETTE.mist}cc`,
-                  letterSpacing: "0.32em",
-                }}
-              >
-                LEARN.&nbsp;&nbsp;EXPAND.&nbsp;&nbsp;CONNECT.
-              </p>
-            </div>
-
-            {/* CTAs */}
-            <div className="relative z-10 flex flex-col sm:flex-row gap-3 justify-center items-center mt-10 md:mt-12">
-              <button
-                onClick={() => goToApp()}
-                data-testid="button-start-learning"
-                className={ctaBtnGradient}
-              >
-                Start Learning <ArrowRight className="w-4 h-4" />
-              </button>
-              <a
-                href="#features"
-                data-testid="button-explore-methods"
-                className={ctaBtnOutline}
-              >
-                Explore Methods
-              </a>
-            </div>
-
-            {/* Benefit line */}
-            <p
-              className="relative z-10 text-base md:text-lg mt-8 md:mt-10 max-w-2xl mx-auto leading-relaxed"
-              style={{ color: `${PALETTE.mist}cc` }}
-            >
-              Cut your study time in half — and engage in the kind of{" "}
-              <span style={{ color: PALETTE.surf }}>deep processing</span> and
-              learning that actually sticks.
-            </p>
-
-            {/* Trust line */}
-            <p
-              className="relative z-10 text-sm mt-5 flex items-center justify-center gap-1.5"
-              style={{ color: `${PALETTE.mist}99` }}
-            >
-              <CheckCircle className="w-3.5 h-3.5" style={{ color: PALETTE.surf }} />
-              10 free interactions — no credit card required
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* STATS */}
+      {/* ============================================================ */}
+      {/* HERO                                                         */}
+      {/* ============================================================ */}
       <section
-        className="py-12 border-y"
-        style={{
-          background: `linear-gradient(180deg, ${PALETTE.surface}, ${PALETTE.bg})`,
-          borderColor: `${PALETTE.steel}55`,
-        }}
+        id="home"
+        ref={heroRef}
+        className="relative pt-28 md:pt-32 pb-16 md:pb-24 overflow-hidden"
       >
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="grid grid-cols-3 gap-4 text-center">
-            {[
-              { n: "27+", l: "Topics covered" },
-              { n: "1,200+", l: "Practice questions" },
-              { n: "27+", l: "Study guides" },
-            ].map((s) => (
-              <div key={s.l}>
+        {/* Brain image — centered, with parallax + pulse */}
+        <div
+          className="relative mx-auto w-full max-w-[1100px] aspect-[16/9] flex items-start justify-center"
+          aria-hidden
+        >
+          <div
+            className="absolute inset-0 flex items-start justify-center"
+            style={{
+              transform: reduceMotion
+                ? undefined
+                : `translate3d(${parallax.x * -10}px, ${parallax.y * -6}px, 0)`,
+              transition: "transform 200ms ease-out",
+            }}
+          >
+            <img
+              src={brainHero}
+              alt=""
+              className="w-full h-full object-contain object-top select-none"
+              style={{
+                animation: reduceMotion ? "none" : "psp-pulse 5.5s ease-in-out infinite",
+              }}
+              draggable={false}
+            />
+          </div>
+
+          {/* Soft cyan halo behind brain */}
+          <div
+            className="absolute top-[10%] left-1/2 -translate-x-1/2 w-[55%] h-[55%] rounded-full blur-[100px] opacity-60 pointer-events-none"
+            style={{
+              background: `radial-gradient(circle, ${PALETTE.surf}66, transparent 65%)`,
+              transform: reduceMotion
+                ? undefined
+                : `translate3d(${parallax.x * -16}px, ${parallax.y * -10}px, 0)`,
+            }}
+          />
+
+          {/* Electric signal sparks travelling sideways */}
+          {!reduceMotion &&
+            Array.from({ length: 6 }).map((_, i) => {
+              const top = 30 + i * 8;
+              const left = i % 2 === 0 ? "8%" : "78%";
+              return (
                 <div
-                  className="text-3xl md:text-5xl font-bold bg-clip-text text-transparent"
-                  style={{ backgroundImage: `linear-gradient(135deg, ${PALETTE.surf}, ${PALETTE.mist})` }}
-                >
-                  {s.n}
-                </div>
-                <div className="text-sm mt-1" style={{ color: `${PALETTE.mist}99` }}>
-                  {s.l}
-                </div>
-              </div>
-            ))}
+                  key={i}
+                  className="absolute h-[1.5px] w-12 rounded-full opacity-0"
+                  style={{
+                    top: `${top}%`,
+                    left,
+                    background: `linear-gradient(90deg, transparent, ${PALETTE.surf}, transparent)`,
+                    boxShadow: `0 0 8px ${PALETTE.surf}, 0 0 16px ${PALETTE.surf}88`,
+                    animation: `psp-spark ${2.4 + (i % 3) * 0.6}s ease-in ${i * 0.7}s infinite`,
+                  }}
+                />
+              );
+            })}
+        </div>
+
+        {/* Wordmark + copy */}
+        <div className="relative max-w-4xl mx-auto px-5 md:px-8 -mt-2 md:-mt-6 text-center">
+          <h1
+            className="text-white"
+            style={{
+              fontWeight: 200,
+              fontSize: "clamp(48px, 9vw, 120px)",
+              letterSpacing: "0.28em",
+              lineHeight: 1,
+              textShadow: `0 0 40px ${PALETTE.surf}55, 0 8px 50px ${PALETTE.bg}aa`,
+            }}
+            data-testid="hero-wordmark"
+          >
+            PSYCHPRO
+          </h1>
+          <p
+            className="mt-4 md:mt-6 text-[12px] sm:text-sm md:text-base"
+            style={{
+              color: `${PALETTE.mist}dd`,
+              letterSpacing: "0.42em",
+              fontWeight: 300,
+            }}
+          >
+            LEARN.&nbsp;&nbsp;EXPAND.&nbsp;&nbsp;CONNECT.
+          </p>
+          <p
+            className="mt-7 md:mt-9 text-[15px] md:text-[17px] max-w-2xl mx-auto leading-relaxed"
+            style={{ color: `${PALETTE.paperSoft}` }}
+          >
+            Your all-in-one platform for mastering clinical psychology through
+            expert-led courses, practical tools, and a supportive professional
+            community.
+          </p>
+
+          {/* CTAs */}
+          <div className="mt-8 md:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
+            <GlassCTA
+              onClick={goCourses}
+              icon={<BookOpen className="w-4 h-4" />}
+              label="EXPLORE COURSES"
+              testId="cta-explore-courses"
+              palette={PALETTE}
+            />
+            <GlassCTA
+              onClick={goCommunity}
+              icon={<Users className="w-4 h-4" />}
+              label="JOIN COMMUNITY"
+              testId="cta-join-community"
+              palette={PALETTE}
+            />
           </div>
         </div>
       </section>
 
-      {/* FEATURES */}
-      <section id="features" className="max-w-6xl mx-auto px-4 py-20 scroll-mt-20">
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
-            Four ways to study. One system.
-          </h2>
-          <p style={{ color: `${PALETTE.mist}99` }}>
-            Each mode reinforces the others — built to move information from short-term to long-term recall.
-          </p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-          {[
-            { icon: Layers, title: "Flashcards", description: "High-yield decks sorted by difficulty, with spaced review." },
-            { icon: BookOpen, title: "Quizzes", description: "10-question multiple-choice sets with detailed clinical rationale." },
-            { icon: FileText, title: "Study Guides", description: "Comprehensive notes with tables and frameworks for every topic." },
-            { icon: Trophy, title: "Practice Exams", description: "25 or 50-question timed exams to prepare for boards and finals." },
-          ].map((feature, i) => (
-            <div
-              key={feature.title}
-              className="group relative rounded-2xl p-6 border transition-all hover:-translate-y-1"
+      {/* ============================================================ */}
+      {/* FEATURE CARDS                                                */}
+      {/* ============================================================ */}
+      <section
+        id="features"
+        className="relative max-w-7xl mx-auto px-5 md:px-8 py-12 md:py-16 scroll-mt-24"
+      >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
+          {FEATURES.map((f) => (
+            <article
+              key={f.title}
+              className="psp-card relative rounded-2xl p-6 md:p-7 border backdrop-blur-md transition-all duration-300 text-center"
               style={{
-                background: `linear-gradient(180deg, ${PALETTE.surface}, ${PALETTE.bg})`,
-                borderColor: `${PALETTE.steel}99`,
+                background: glassBg,
+                borderColor: glassBorder,
+                boxShadow: glassShadow,
               }}
+              data-testid={`feature-${f.title.toLowerCase().replace(/\s+/g, "-")}`}
             >
               <div
-                className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                className="w-14 h-14 mx-auto mb-5 rounded-xl flex items-center justify-center border"
                 style={{
-                  background: `radial-gradient(circle at 50% 0%, ${PALETTE.teal}33, transparent 70%)`,
-                }}
-              />
-              <div
-                className="relative w-11 h-11 rounded-xl flex items-center justify-center mb-4"
-                style={{
-                  background: `linear-gradient(135deg, ${PALETTE.teal}33, ${PALETTE.surf}22)`,
-                  border: `1px solid ${PALETTE.surf}44`,
+                  background: `linear-gradient(180deg, ${PALETTE.surf}22, transparent)`,
+                  borderColor: glassBorder,
+                  boxShadow: `inset 0 0 18px ${PALETTE.surf}22, 0 0 14px -4px ${PALETTE.surf}66`,
                 }}
               >
-                <feature.icon className="w-5 h-5" style={{ color: PALETTE.surf }} />
+                <f.icon
+                  className="w-6 h-6"
+                  style={{
+                    color: PALETTE.surf,
+                    filter: `drop-shadow(0 0 6px ${PALETTE.surf}aa)`,
+                  }}
+                  strokeWidth={1.4}
+                />
               </div>
-              <h3 className="relative font-semibold text-white mb-2">{feature.title}</h3>
-              <p className="relative text-sm leading-relaxed" style={{ color: `${PALETTE.mist}aa` }}>
-                {feature.description}
+              <h3
+                className="text-[13px] font-medium text-white mb-3"
+                style={{ letterSpacing: "0.22em" }}
+              >
+                {f.title}
+              </h3>
+              <p
+                className="text-sm leading-relaxed"
+                style={{ color: `${PALETTE.paperSoft}` }}
+              >
+                {f.body}
               </p>
-              <div
-                className="relative mt-3 text-[11px] font-mono uppercase tracking-wider opacity-50"
-                style={{ color: PALETTE.surf }}
-              >
-                0{i + 1}
-              </div>
-            </div>
+            </article>
           ))}
         </div>
       </section>
 
-      {/* SAMPLE FLASHCARD */}
-      <section className="max-w-6xl mx-auto px-4 pb-20">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div>
+      {/* ============================================================ */}
+      {/* TRUST + TESTIMONIAL                                          */}
+      {/* ============================================================ */}
+      <section
+        id="trust"
+        className="relative max-w-7xl mx-auto px-5 md:px-8 py-10 md:py-14 scroll-mt-24"
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 md:gap-6">
+          {/* LEFT — stats */}
+          <div
+            className="rounded-2xl p-6 md:p-8 border backdrop-blur-md"
+            style={{
+              background: glassBg,
+              borderColor: glassBorder,
+              boxShadow: glassShadow,
+            }}
+            data-testid="trust-panel"
+          >
+            <h2
+              className="text-[12px] md:text-[13px] font-medium text-white mb-6"
+              style={{ letterSpacing: "0.28em" }}
+            >
+              TRUSTED BY PSYCHOLOGY PROFESSIONALS
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
+              {STATS.map((s) => (
+                <div key={s.l} className="flex flex-col items-start gap-2">
+                  <s.icon
+                    className="w-6 h-6"
+                    style={{
+                      color: PALETTE.surf,
+                      filter: `drop-shadow(0 0 6px ${PALETTE.surf}88)`,
+                    }}
+                    strokeWidth={1.4}
+                  />
+                  <div
+                    className="text-2xl md:text-3xl font-light text-white"
+                    style={{
+                      textShadow: `0 0 18px ${PALETTE.surf}55`,
+                    }}
+                  >
+                    {s.n}
+                  </div>
+                  <div
+                    className="text-[10px] md:text-[11px]"
+                    style={{
+                      color: `${PALETTE.mist}cc`,
+                      letterSpacing: "0.22em",
+                    }}
+                  >
+                    {s.l}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* RIGHT — testimonial */}
+          <div
+            className="rounded-2xl p-6 md:p-8 border backdrop-blur-md flex flex-col justify-between"
+            style={{
+              background: glassBg,
+              borderColor: glassBorder,
+              boxShadow: glassShadow,
+            }}
+            data-testid="testimonial-panel"
+          >
+            <div>
+              <span
+                className="text-5xl leading-none font-serif"
+                style={{ color: `${PALETTE.surf}cc` }}
+                aria-hidden
+              >
+                “
+              </span>
+              <p
+                className="mt-1 text-[15px] md:text-base leading-relaxed"
+                style={{ color: PALETTE.cloud }}
+              >
+                PsychPro has transformed the way I learn and apply clinical
+                knowledge. The community and resources are unmatched.
+              </p>
+            </div>
+            <div className="mt-6 flex items-center gap-3">
+              <div
+                className="w-11 h-11 rounded-full flex items-center justify-center text-sm font-semibold"
+                style={{
+                  background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
+                  color: PALETTE.ink,
+                  boxShadow: `0 0 18px -4px ${PALETTE.surf}aa`,
+                }}
+                aria-hidden
+              >
+                SM
+              </div>
+              <div>
+                <div className="text-sm font-medium text-white">
+                  Dr. Sarah Mitchell
+                </div>
+                <div className="text-xs" style={{ color: `${PALETTE.mist}aa` }}>
+                  Clinical Psychologist
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* SUBSCRIBE                                                    */}
+      {/* ============================================================ */}
+      <section className="relative max-w-7xl mx-auto px-5 md:px-8 py-10 md:py-14">
+        <form
+          onSubmit={onSubscribe}
+          className="rounded-2xl p-5 md:p-6 border backdrop-blur-md flex flex-col md:flex-row items-stretch md:items-center gap-5 md:gap-6"
+          style={{
+            background: glassBg,
+            borderColor: glassBorder,
+            boxShadow: glassShadow,
+          }}
+          data-testid="subscribe-panel"
+        >
+          <div className="flex items-center gap-4 md:gap-5 md:flex-1">
             <div
-              className="inline-flex items-center gap-2 text-xs font-semibold rounded-full px-3 py-1 mb-3 border"
+              className="w-12 h-12 rounded-xl flex items-center justify-center border shrink-0"
               style={{
-                background: `${PALETTE.steel}66`,
-                color: PALETTE.surf,
-                borderColor: `${PALETTE.surf}55`,
+                background: `linear-gradient(180deg, ${PALETTE.surf}22, transparent)`,
+                borderColor: glassBorder,
+                boxShadow: `inset 0 0 14px ${PALETTE.surf}33`,
               }}
             >
-              <Layers className="w-3.5 h-3.5" /> Try it now
+              <Mail
+                className="w-5 h-5"
+                style={{
+                  color: PALETTE.surf,
+                  filter: `drop-shadow(0 0 6px ${PALETTE.surf}aa)`,
+                }}
+                strokeWidth={1.5}
+              />
             </div>
-            <h2 className="text-3xl font-bold text-white mb-3">
-              A real flashcard, on the house.
-            </h2>
-            <p className="mb-6 leading-relaxed" style={{ color: `${PALETTE.mist}aa` }}>
-              Tap the card to flip. Every topic ships with 55+ cards covering core
-              concepts, clinical reasoning, and exam-ready content.
-            </p>
+            <div className="min-w-0">
+              <div
+                className="text-[13px] md:text-sm font-medium text-white"
+                style={{ letterSpacing: "0.22em" }}
+              >
+                STAY INSPIRED.
+              </div>
+              <div
+                className="text-xs md:text-sm mt-0.5"
+                style={{ color: `${PALETTE.paperSoft}` }}
+              >
+                Get expert insights and updates.
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-3 md:gap-3 md:flex-1">
+            <input
+              type="email"
+              required
+              placeholder="Your email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="flex-1 h-11 px-4 rounded-lg border bg-transparent text-sm text-white placeholder:opacity-60 outline-none transition-all focus:ring-1"
+              style={{
+                borderColor: glassBorder,
+                background: `${PALETTE.ink}80`,
+                color: PALETTE.cloud,
+                ["--tw-ring-color" as any]: PALETTE.surf,
+              }}
+              data-testid="subscribe-email"
+              aria-label="Email address"
+            />
             <button
-              onClick={() => goToApp()}
-              data-testid="button-try-now"
-              className={ctaBtnGradient}
+              type="submit"
+              className="psp-cta-shimmer h-11 px-6 rounded-lg text-[12px] font-semibold transition-all hover:-translate-y-0.5"
+              style={{
+                background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
+                color: PALETTE.ink,
+                letterSpacing: "0.24em",
+                boxShadow: `0 10px 32px -10px ${PALETTE.surf}cc, 0 0 0 1px ${PALETTE.surf}66`,
+              }}
+              data-testid="subscribe-submit"
             >
-              Get full access free <ArrowRight className="w-4 h-4" />
+              {subscribed ? "SUBSCRIBED" : "SUBSCRIBE"}
             </button>
           </div>
-
-          <button
-            type="button"
-            className="select-none group relative w-full text-left rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
-            style={{
-              ["--tw-ring-color" as any]: PALETTE.surf,
-              ["--tw-ring-offset-color" as any]: PALETTE.bg,
-            }}
-            onClick={() => setFlipped((f) => !f)}
-            aria-pressed={flipped}
-            aria-label={
-              flipped
-                ? "Showing answer — press to show question"
-                : "Showing question — press to show answer"
-            }
-            data-testid="sample-flashcard"
+        </form>
+        {subscribed && (
+          <div
+            className="mt-3 text-xs flex items-center justify-center gap-1.5"
+            style={{ color: `${PALETTE.mist}cc` }}
+            role="status"
           >
-            <div
-              className="absolute -inset-4 rounded-3xl opacity-50 group-hover:opacity-90 transition-opacity blur-2xl pointer-events-none"
-              style={{ background: `radial-gradient(circle at 50% 50%, ${PALETTE.teal}, transparent 65%)` }}
-              aria-hidden
-            />
-            <div
-              className="relative rounded-2xl p-8 min-h-44 flex flex-col justify-center border transition-all group-hover:-translate-y-1"
-              style={{
-                background: `linear-gradient(180deg, ${PALETTE.surfaceElev}, ${PALETTE.surface})`,
-                borderColor: `${PALETTE.surf}55`,
-                boxShadow: `0 20px 60px -20px ${PALETTE.teal}77`,
-              }}
-            >
-              <div
-                className="absolute top-3 right-3 text-[11px] font-medium px-2.5 py-0.5 rounded-full border"
-                style={{
-                  background: `${PALETTE.bg}99`,
-                  color: PALETTE.mist,
-                  borderColor: `${PALETTE.surf}44`,
-                }}
-              >
-                {flipped ? "Answer" : "Question — tap to flip"}
-              </div>
-              <p className="text-white text-center leading-relaxed font-medium">
-                {flipped ? SAMPLE_FLASHCARD.back : SAMPLE_FLASHCARD.front}
-              </p>
-            </div>
-          </button>
-        </div>
+            <Sparkles className="w-3 h-3" /> Thanks — we'll be in touch.
+          </div>
+        )}
       </section>
 
-      {/* TOPICS */}
-      <section
-        className="py-20 border-y"
+      {/* ============================================================ */}
+      {/* FOOTER                                                       */}
+      {/* ============================================================ */}
+      <footer
+        className="relative mt-6 border-t backdrop-blur-md"
         style={{
-          background: `linear-gradient(180deg, ${PALETTE.bg}, ${PALETTE.surface}, ${PALETTE.bg})`,
-          borderColor: `${PALETTE.steel}55`,
+          borderColor: `${PALETTE.surf}33`,
+          background: `${PALETTE.ink}cc`,
         }}
       >
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
-              Every topic. Mapped.
-            </h2>
-            <p style={{ color: `${PALETTE.mist}99` }}>
-              Foundations, assessment, intervention, research methods, and clinical
-              specialties — all in one place.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
-            {REAL_TOPICS.map((topic) => (
-              <div
-                key={topic}
-                className="group flex items-center gap-2 text-sm rounded-lg px-3 py-2.5 border bg-[#0c2538]/80 border-[#1C4E75]/60 text-[#BDE5FF] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#11324d]/90 hover:border-[#58C9F3]/80 hover:shadow-[0_0_0_1px_rgba(88,201,243,0.35),0_0_28px_-4px_rgba(88,201,243,0.55)] cursor-pointer"
-              >
-                <CheckCircle
-                  className="w-3.5 h-3.5 flex-shrink-0 transition-all duration-200 text-[#58C9F3] group-hover:text-[#BDE5FF] group-hover:drop-shadow-[0_0_6px_rgba(88,201,243,0.9)]"
-                />
-                <span className="truncate transition-colors duration-200 group-hover:text-white">{topic}</span>
-              </div>
-            ))}
-            <div
-              className="group flex items-center gap-2 text-sm font-medium rounded-lg px-3 py-2.5 border bg-[#2FA0C6]/10 border-[#58C9F3]/40 text-[#58C9F3] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#2FA0C6]/20 hover:border-[#58C9F3] hover:shadow-[0_0_0_1px_rgba(88,201,243,0.45),0_0_28px_-4px_rgba(88,201,243,0.7)] cursor-pointer"
+        <div className="max-w-7xl mx-auto px-5 md:px-8 py-6 md:py-7 flex flex-col md:flex-row items-center justify-between gap-5 text-[12px]">
+          {/* Left — brand */}
+          <div className="flex items-center gap-2.5">
+            <BrainLineIcon className="w-5 h-5" color={PALETTE.surf} />
+            <span
+              className="font-light text-white"
+              style={{ letterSpacing: "0.32em" }}
             >
-              <Zap className="w-3.5 h-3.5 flex-shrink-0 transition-all duration-200 group-hover:drop-shadow-[0_0_6px_rgba(88,201,243,0.9)]" />
-              <span>+ More being added</span>
-            </div>
+              PSYCHPRO
+            </span>
           </div>
-        </div>
-      </section>
 
-      {/* PRICING */}
-      <section id="pricing" className="max-w-5xl mx-auto px-4 py-20 scroll-mt-20">
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
-            Simple, transparent pricing.
-          </h2>
-          <p style={{ color: `${PALETTE.mist}99` }}>
-            Start free. Upgrade when you're ready for more.
-          </p>
-        </div>
-        <div className="grid md:grid-cols-3 gap-5">
-          {[
-            {
-              name: "Free", price: "$0", period: "forever",
-              features: ["10 free interactions", "All topics accessible", "Flashcards & quizzes"],
-              cta: "Get Started", highlight: false,
-            },
-            {
-              name: "Pro", price: "$9.99", period: "/ month",
-              features: ["Unlimited interactions", "All study guides", "Practice exams", "Progress tracking"],
-              cta: "Start Free Trial", highlight: true,
-            },
-            {
-              name: "Scholar", price: "$19.99", period: "/ month",
-              features: ["Everything in Pro", "AI-generated custom decks", "Upload your own notes", "Priority access to new content"],
-              cta: "Go Scholar", highlight: false,
-            },
-          ].map((plan) => (
-            <div
-              key={plan.name}
-              className={`relative rounded-2xl p-6 flex flex-col border transition-all ${
-                plan.highlight ? "md:-translate-y-3" : "hover:-translate-y-1"
-              }`}
-              style={
-                plan.highlight
-                  ? {
-                      background: `linear-gradient(180deg, ${PALETTE.surfaceElev}, ${PALETTE.surface})`,
-                      borderColor: PALETTE.surf,
-                      boxShadow: `0 30px 70px -25px ${PALETTE.teal}cc, 0 0 0 1px ${PALETTE.surf}55`,
-                    }
-                  : {
-                      background: `${PALETTE.surface}cc`,
-                      borderColor: `${PALETTE.steel}99`,
-                    }
-              }
-            >
-              {plan.highlight && (
-                <div
-                  className="absolute -top-3 left-1/2 -translate-x-1/2 text-[11px] font-bold uppercase tracking-wider rounded-full px-3 py-1"
-                  style={{
-                    background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
-                    color: PALETTE.bg,
-                  }}
-                >
-                  Most Popular
-                </div>
-              )}
-              <h3 className="font-bold text-lg text-white">{plan.name}</h3>
-              <div className="mt-1 mb-4">
-                <span className="text-3xl font-bold text-white">{plan.price}</span>
-                <span className="text-sm ml-1" style={{ color: `${PALETTE.mist}99` }}>
-                  {plan.period}
-                </span>
-              </div>
-              <ul className="space-y-2 mb-6 flex-1">
-                {plan.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-sm" style={{ color: `${PALETTE.mist}cc` }}>
-                    <CheckCircle className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" style={{ color: PALETTE.surf }} />
-                    <span>{f}</span>
-                  </li>
-                ))}
-              </ul>
-              <button
-                onClick={() => goToApp()}
-                data-testid={`button-plan-${plan.name.toLowerCase()}`}
-                className={
-                  plan.highlight
-                    ? "w-full rounded-xl h-11 font-semibold transition-all duration-300 bg-gradient-to-br from-[#2FA0C6] to-[#58C9F3] text-[#061826] shadow-[0_10px_30px_-10px_rgba(47,160,198,0.8)] hover:-translate-y-0.5 hover:shadow-[0_0_0_1px_rgba(189,229,255,0.55),0_14px_40px_-8px_rgba(88,201,243,0.85),0_0_44px_-6px_rgba(88,201,243,0.7)] hover:brightness-110"
-                    : "w-full rounded-xl h-11 font-semibold transition-all duration-300 bg-transparent text-[#BDE5FF] border border-[#58C9F3]/40 hover:-translate-y-0.5 hover:bg-[#58C9F3]/10 hover:border-[#58C9F3] hover:text-white hover:shadow-[0_0_0_1px_rgba(88,201,243,0.45),0_0_28px_-4px_rgba(88,201,243,0.65)]"
-                }
-              >
-                {plan.cta}
-              </button>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer
-        className="border-t py-8"
-        style={{ borderColor: `${PALETTE.steel}55`, background: PALETTE.bg }}
-      >
-        <div
-          className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm"
-          style={{ color: PALETTE.mist }}
-        >
-          <div className="flex items-center gap-2">
-            <div
-              className="w-5 h-5 rounded-md"
-              style={{ background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})` }}
-            />
-            <span>© {new Date().getFullYear()} PsychPro. All rights reserved.</span>
+          {/* Center — legal */}
+          <div
+            className="flex items-center gap-5 md:gap-7"
+            style={{ color: `${PALETTE.mist}cc`, letterSpacing: "0.18em" }}
+          >
+            <a href="#" className="hover:text-white transition-colors">
+              PRIVACY POLICY
+            </a>
+            <span className="opacity-40">|</span>
+            <a href="#" className="hover:text-white transition-colors">
+              TERMS OF SERVICE
+            </a>
+            <span className="opacity-40">|</span>
+            <a href="#" className="hover:text-white transition-colors">
+              CONTACT
+            </a>
           </div>
-          <div className="flex items-center gap-4">
-            <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
-            <button onClick={() => goToApp()} className="hover:text-white transition-colors">Sign In</button>
-            <button onClick={() => goToApp()} className="hover:text-white transition-colors">Start Free</button>
+
+          {/* Right — social */}
+          <div className="flex items-center gap-4" style={{ color: `${PALETTE.mist}cc` }}>
+            <a href="#" aria-label="LinkedIn" className="hover:text-white transition-colors">
+              <Linkedin className="w-4 h-4" strokeWidth={1.6} />
+            </a>
+            <a href="#" aria-label="Twitter" className="hover:text-white transition-colors">
+              <Twitter className="w-4 h-4" strokeWidth={1.6} />
+            </a>
+            <a href="#" aria-label="Instagram" className="hover:text-white transition-colors">
+              <Instagram className="w-4 h-4" strokeWidth={1.6} />
+            </a>
+            <a href="#" aria-label="YouTube" className="hover:text-white transition-colors">
+              <Youtube className="w-4 h-4" strokeWidth={1.6} />
+            </a>
           </div>
         </div>
       </footer>
     </div>
+  );
+}
+
+// ----------------------------------------------------------------------
+// Helpers
+// ----------------------------------------------------------------------
+
+// Small inline brain-outline mark used in nav + footer. Kept as SVG so it
+// renders crisp at any size without an extra image fetch.
+function BrainLineIcon({
+  className,
+  color,
+}: {
+  className?: string;
+  color: string;
+}) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={className}
+      fill="none"
+      stroke={color}
+      strokeWidth={1.4}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      style={{ filter: `drop-shadow(0 0 6px ${color}99)` }}
+    >
+      <path d="M9 4.5a2.5 2.5 0 0 0-2.5 2.5v.2A2.8 2.8 0 0 0 4 9.8c0 1 .5 1.9 1.3 2.4A2.8 2.8 0 0 0 4 14.7c0 1.5 1.2 2.7 2.7 2.7H7c.1 1.4 1.3 2.6 2.7 2.6A2.3 2.3 0 0 0 12 17.7V6.5A2 2 0 0 0 10 4.5Z" />
+      <path d="M15 4.5a2.5 2.5 0 0 1 2.5 2.5v.2A2.8 2.8 0 0 1 20 9.8c0 1-.5 1.9-1.3 2.4A2.8 2.8 0 0 1 20 14.7c0 1.5-1.2 2.7-2.7 2.7H17c-.1 1.4-1.3 2.6-2.7 2.6A2.3 2.3 0 0 1 12 17.7V6.5a2 2 0 0 1 2-2Z" />
+      <path d="M12 9v6" opacity=".6" />
+    </svg>
+  );
+}
+
+// Glass CTA button used in the hero — cyan border, soft inner glow,
+// hover lift + animated shimmer sweep.
+function GlassCTA({
+  onClick,
+  icon,
+  label,
+  testId,
+  palette,
+}: {
+  onClick: () => void;
+  icon: React.ReactNode;
+  label: string;
+  testId: string;
+  palette: typeof PALETTE;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      data-testid={testId}
+      className="psp-cta-shimmer group relative inline-flex items-center justify-center gap-2.5 h-12 px-7 md:px-8 rounded-md text-[12px] font-medium text-white transition-all duration-300 hover:-translate-y-0.5"
+      style={{
+        background: `linear-gradient(180deg, ${palette.surf}1a, ${palette.ink}66)`,
+        border: `1px solid ${palette.surf}88`,
+        letterSpacing: "0.24em",
+        boxShadow: `inset 0 0 18px -4px ${palette.surf}55, 0 8px 30px -10px ${palette.teal}88, 0 0 0 1px ${palette.surf}33`,
+        backdropFilter: "blur(8px)",
+      }}
+    >
+      <span
+        className="relative z-10 flex items-center justify-center"
+        style={{
+          color: palette.surf,
+          filter: `drop-shadow(0 0 4px ${palette.surf}aa)`,
+        }}
+      >
+        {icon}
+      </span>
+      <span className="relative z-10">{label}</span>
+    </button>
   );
 }

@@ -54,6 +54,12 @@ uri = "file://attached_assets/generated_images/spotlight_neuron_teal.png"
 type = "image"
 title = "spotlight neuron teal"
 
+[[generated]]
+id = "bI-IRF1h24q8zAFXL_ARc"
+uri = "file://attached_assets/generated_images/landing_brain_hero.png"
+type = "image"
+title = "landing brain hero"
+
 [[outputs]]
 id = "aKKI8N7WseM8lzrKZFEEq"
 uri = "file://.local/exports/brain-lab-code.tar.gz"
