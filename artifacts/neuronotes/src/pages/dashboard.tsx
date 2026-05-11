@@ -18,12 +18,12 @@ import {
   Share2,
   ChevronDown,
   ArrowDownUp,
+  Upload,
 } from "lucide-react";
 import { useGetDashboardSummary, useGetTopics, useGetLeaderboard, useGetUserProgress } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import featuredWorkImage from "@assets/generated_images/spotlight_neuron_teal.png";
 import spotlightAvatarImage from "@assets/Screenshot_2026-04-28_at_8.01.18_PM_1778027668124.png";
 import spotlightCloudImage from "@assets/Screenshot_2026-05-10_at_3.03.20_PM_1778443775551.png";
 import TodayReviews from "@/components/learning/today-reviews";
@@ -215,46 +215,15 @@ export default function DashboardPage() {
       className="relative min-h-full study-page-bg"
       data-testid="dashboard-page"
     >
-      {/* Full-bleed cloud band — absolutely positioned, full viewport width,
-          centered via translateX. Sits over BOTH the sidebar AND the main
-          column (matches the reference). Scrolls away with the page (no
-          fixed positioning) so cards aren't covered when you scroll.
-          pointer-events:none so the sidebar nav stays clickable underneath. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute top-0 z-30 overflow-hidden h-[240px] md:h-[280px]"
-        style={{ left: "50%", transform: "translateX(-50%)", width: "100vw" }}
-      >
-        <img
-          src={spotlightCloudImage}
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        {/* Bottom fade — cloud → page bg */}
-        <div
-          className="absolute inset-x-0 bottom-0 h-28"
-          style={{
-            background: `linear-gradient(to bottom, transparent 0%, ${PALETTE.bg}e6 75%, ${PALETTE.bg} 100%)`,
-          }}
-        />
-        {/* Left fade — softens the cloud over the sidebar so the nav items
-            read through clearly, matching the reference. */}
-        <div
-          className="absolute inset-y-0 left-0 w-64"
-          style={{
-            background: `linear-gradient(to right, ${PALETTE.ink}cc 0%, ${PALETTE.ink}66 60%, transparent 100%)`,
-          }}
-        />
-      </div>
-
-      {/* Wordmark header — sits ON TOP of the fixed cloud band. Same z-50
-          so it renders above the cloud image. Bell pinned top-right. */}
+      {/* Centered wordmark header on the dark page bg. The cloud is NOT
+          here anymore — it lives inside the Spotlight rail box (right
+          column), matching the reference. Bell sits top-right. */}
       <header
-        className="relative z-40 pt-8 md:pt-12 pb-8 md:pb-12 px-4 md:px-6 lg:px-8"
+        className="relative pt-6 md:pt-8 pb-4 md:pb-6 px-4 md:px-6 lg:px-8"
         data-testid="dashboard-header"
       >
         <button
-          className="pointer-events-auto absolute top-4 right-4 md:top-6 md:right-6 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors backdrop-blur-sm"
+          className="absolute top-4 right-4 md:top-6 md:right-6 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
           data-testid="dashboard-notifications"
           aria-label="Notifications"
         >
@@ -262,18 +231,14 @@ export default function DashboardPage() {
         </button>
         <div className="text-center">
           <h1
-            className="text-3xl md:text-4xl font-light tracking-[0.32em] uppercase text-white"
-            style={{ textShadow: "0 2px 18px rgba(0,0,0,0.55)" }}
+            className="text-2xl md:text-3xl font-light tracking-[0.32em] uppercase text-white"
             data-testid="dashboard-wordmark"
           >
             PsychPro
           </h1>
           <p
-            className="text-[11px] md:text-xs mt-3 tracking-[0.32em] uppercase"
-            style={{
-              color: `${PALETTE.mist}cc`,
-              textShadow: "0 1px 6px rgba(0,0,0,0.5)",
-            }}
+            className="text-[10px] md:text-[11px] mt-2 tracking-[0.32em] uppercase"
+            style={{ color: `${PALETTE.mist}cc` }}
           >
             Learn. Expand. Connect.
           </p>
@@ -689,31 +654,27 @@ function MasteryLegend() {
 function SpotlightCard({ onCta }: { onCta: () => void }) {
   return (
     <div
-      className="relative overflow-hidden rounded-2xl p-6 text-white shadow-xl border border-white/10"
+      className="relative overflow-hidden rounded-2xl p-6 text-white shadow-xl border border-white/10 min-h-[560px]"
       style={{
-        background: `radial-gradient(130% 90% at 30% 0%, ${PALETTE.tealDeep}55 0%, ${PALETTE.surfaceElev}cc 35%, ${PALETTE.surface}f5 70%, ${PALETTE.steel} 100%)`,
         boxShadow: `0 24px 60px -28px ${PALETTE.teal}aa, 0 0 0 1px ${PALETTE.surf}22 inset`,
       }}
     >
-      {/* Starry shimmer */}
+      {/* Cloud as the FULL background of the Spotlight box (matches the
+          reference). The dark scrim below keeps Sarah K.'s text legible. */}
+      <img
+        src={spotlightCloudImage}
+        alt=""
+        aria-hidden
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+      {/* Bottom-weighted scrim — fades cloud into a deep navy floor so the
+          name + credentials read cleanly. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-80"
+        className="pointer-events-none absolute inset-0"
         style={{
-          backgroundImage:
-            "radial-gradient(1px 1px at 18% 12%, rgba(255,255,255,.85), transparent 60%), radial-gradient(1.2px 1.2px at 65% 8%, rgba(255,255,255,.7), transparent 60%), radial-gradient(1px 1px at 82% 28%, rgba(255,255,255,.6), transparent 60%), radial-gradient(1.4px 1.4px at 32% 52%, rgba(255,255,255,.45), transparent 60%), radial-gradient(1px 1px at 75% 68%, rgba(255,255,255,.5), transparent 60%), radial-gradient(1px 1px at 12% 76%, rgba(255,255,255,.45), transparent 60%), radial-gradient(1.2px 1.2px at 88% 90%, rgba(255,255,255,.55), transparent 60%), radial-gradient(0.8px 0.8px at 45% 22%, rgba(255,255,255,.5), transparent 60%), radial-gradient(0.8px 0.8px at 25% 38%, rgba(255,255,255,.4), transparent 60%), radial-gradient(1px 1px at 60% 80%, rgba(255,255,255,.4), transparent 60%)",
+          background: `linear-gradient(to bottom, transparent 0%, transparent 35%, ${PALETTE.surface}aa 65%, ${PALETTE.ink}ee 100%)`,
         }}
-      />
-      {/* Soft nebula glows */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-16 -right-12 w-56 h-56 rounded-full blur-3xl"
-        style={{ background: `radial-gradient(closest-side, ${PALETTE.surf}55, transparent)` }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -bottom-10 -left-10 w-48 h-48 rounded-full blur-3xl"
-        style={{ background: `radial-gradient(closest-side, ${PALETTE.teal}40, transparent)` }}
       />
 
       <div className="relative">
@@ -760,38 +721,24 @@ function SpotlightCard({ onCta }: { onCta: () => void }) {
           </p>
         </div>
 
-        {/* Featured work — neuron image as prominent background */}
-        <div className="relative overflow-hidden rounded-xl mb-4 ring-1 ring-white/15 shadow-xl">
-          <img
-            src={featuredWorkImage}
-            alt="Neural network — featured dissertation imagery"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-          {/* Subtle bottom-weighted gradient — image stays visible, text remains legible */}
-          <div
-            aria-hidden
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(to top, rgba(2,6,23,0.85) 0%, rgba(2,6,23,0.55) 40%, rgba(2,6,23,0.15) 75%, rgba(2,6,23,0) 100%)",
-            }}
-          />
-          <div className="relative p-4 pt-24">
-            <p
-              className="text-[10px] font-bold tracking-widest uppercase mb-2"
-              style={{ color: PALETTE.surf, textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}
-            >
-              Featured Work
-            </p>
-            <p
-              className="text-sm font-semibold text-white leading-snug mb-2"
-              style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}
-            >
-              Dissertation work: SOCIAL COGNITION IN CHILDREN WITH AUTISM
-              SPECTRUM DISORDER: EXPLORING CORRELATES BETWEEN OBJECTIVE
-              NEUROPSYCHOLOGICAL MEASURES AND PARENT REPORTS
-            </p>
-          </div>
+        {/* Compact "FEATURED WORK" footer — small label bottom-left,
+            upload/share affordance bottom-right (matches reference). */}
+        <div className="mt-8 flex items-end justify-between">
+          <p
+            className="text-[10px] font-bold tracking-[0.22em] uppercase"
+            style={{ color: `${PALETTE.mist}aa` }}
+          >
+            Featured Work
+          </p>
+          <button
+            type="button"
+            onClick={onCta}
+            className="w-8 h-8 rounded-md flex items-center justify-center hover:bg-white/10 transition-colors"
+            aria-label="Share or upload your work"
+            data-testid="spotlight-upload"
+          >
+            <Upload className="w-4 h-4 text-white/80" />
+          </button>
         </div>
 
         <button
