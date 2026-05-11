@@ -1,0 +1,65 @@
+Revise the current PsychPro landing page so it matches the second reference image exactly.
+
+CRITICAL FIX:
+Remove the rectangular hero image/container completely. Do NOT place the brain artwork inside a centered box. The brain/neural smoke artwork must become the full-page background, edge-to-edge, covering the entire viewport and continuing behind every section.
+
+The current version is wrong because:
+- The brain image is trapped inside a large rectangle.
+- The page has too much empty dark space around the image.
+- The hero title sits below the image instead of layered over the background.
+- The background does not fill the full page like the reference.
+
+Exact layout changes:
+1. Set the neuroscience/brain image as the absolute fixed/full-page background:
+   - position: absolute or fixed
+   - inset: 0
+   - width: 100%
+   - min-height: 100%
+   - object-fit: cover
+   - object-position: center top
+   - z-index behind all content
+   - no border, no frame, no image box
+
+2. Add dark gradient overlays:
+   - top/nav dark overlay
+   - subtle center transparency so the brain glows through
+   - bottom dark overlay so cards remain readable
+
+3. Hero positioning:
+   - Brain should appear large and centered at the top like the reference.
+   - Title “PSYCHPRO” should overlay the lower portion of the brain/background, not sit below a separate image.
+   - Move title upward so it begins around the lower third of the brain.
+   - Use very large thin uppercase letters with wide spacing.
+   - Subtitle and paragraph should sit directly beneath title.
+   - CTA buttons should sit beneath paragraph.
+
+4. Full-page composition:
+   - Content max-width should be around 1100–1180px.
+   - Hero should start near the top under the nav.
+   - Feature cards should appear closer to the buttons, not far below.
+   - The full page should look like one continuous cinematic design, not separate sections.
+
+5. Navigation:
+   - Keep nav transparent/glass over the background.
+   - Logo should be top-left.
+   - Nav links centered.
+   - Search + login top-right.
+   - Do not create a solid header block.
+
+6. Background animation:
+   - Add subtle animated smoke layers on the left and right edges.
+   - Add slow pulsing glow behind the brain.
+   - Add faint neural nodes that pulse.
+   - Add thin cyan electric lines that animate outward from the brain.
+   - Keep movement subtle, slow, elegant, and professional.
+
+7. Glass cards:
+   - Cards should be translucent and placed directly over the background.
+   - Use cyan borders and soft glow.
+   - Do not use solid blocks.
+   - Maintain spacing similar to the second reference.
+
+8. Important visual rule:
+   The final page should look like the second image: immersive, edge-to-edge, cinematic, layered, and integrated. It should NOT look like a website with a hero image placed inside a rectangular container.
+
+Use the existing content, but restructure CSS/HTML so the background is global and all content overlays it.

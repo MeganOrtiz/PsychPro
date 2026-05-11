@@ -17,6 +17,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import brainHero from "@assets/generated_images/landing_brain_hero.png";
+import smokeTexture from "@assets/Screenshot_2026-04-27_at_1.40.17_AM_1778535214205.png";
 // Single source of truth for the brand palette — do NOT fork.
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
 
@@ -116,7 +117,9 @@ export default function LandingPage() {
     <div
       className="relative min-h-screen overflow-x-hidden text-white antialiased"
       style={{
-        background: `radial-gradient(ellipse at 50% 0%, ${PALETTE.bgSoft} 0%, ${PALETTE.bg} 45%, ${PALETTE.ink} 100%)`,
+        // No background here — the fixed cinematic brain layer below
+        // owns the entire page canvas. A dark fallback sits on <body>
+        // so areas the brain hasn't covered (very tall pages) stay dark.
         color: PALETTE.cloud,
         fontFamily:
           '"Outfit", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif',
@@ -125,6 +128,7 @@ export default function LandingPage() {
     >
       {/* Local keyframes — kept inline so the page is self-contained. */}
       <style>{`
+        body { background: ${PALETTE.ink}; }
         @keyframes psp-drift-a { 0%,100% { transform: translate3d(0,0,0) scale(1);} 50% { transform: translate3d(2%,-2%,0) scale(1.04);} }
         @keyframes psp-drift-b { 0%,100% { transform: translate3d(0,0,0) scale(1);} 50% { transform: translate3d(-3%,1%,0) scale(1.06);} }
         @keyframes psp-pulse { 0%,100% { opacity: .55; filter: drop-shadow(0 0 30px ${PALETTE.surf}aa) drop-shadow(0 0 70px ${PALETTE.teal}77);} 50% { opacity: .85; filter: drop-shadow(0 0 60px ${PALETTE.surf}cc) drop-shadow(0 0 120px ${PALETTE.teal}aa);} }
@@ -165,36 +169,91 @@ export default function LandingPage() {
       `}</style>
 
       {/* ============================================================ */}
-      {/* AMBIENT BACKGROUND LAYERS                                    */}
+      {/* GLOBAL CINEMATIC BACKGROUND                                  */}
+      {/* The brain + smoky neural artwork IS the page — fixed,        */}
+      {/* edge-to-edge. Every section overlays this single canvas.     */}
       {/* ============================================================ */}
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden>
-        {/* Smoky cloud layer A */}
+        {/* Brain hero — sized to viewport width, anchored top so the
+            brain occupies the upper portion of the page exactly like
+            the reference. Bottom of viewport falls into the dark scrim
+            below; sections beneath the hero overlay that area. */}
         <div
-          className="absolute -top-40 -left-40 w-[80vw] h-[80vh] rounded-full blur-[140px] opacity-50"
+          className="absolute inset-x-0 top-0 select-none"
           style={{
-            background: `radial-gradient(circle, ${PALETTE.teal}55, transparent 65%)`,
-            animation: reduceMotion ? "none" : "psp-drift-a 18s ease-in-out infinite",
+            backgroundImage: `url(${brainHero})`,
+            backgroundSize: "100% auto",
+            backgroundPosition: "center top",
+            backgroundRepeat: "no-repeat",
+            // 1408x768 source → height = width * (768/1408) ≈ 0.546.
+            // Use aspect-ratio so the layer is exactly the artwork's height.
+            aspectRatio: "1408 / 768",
+            animation: reduceMotion ? "none" : "psp-pulse 6s ease-in-out infinite",
+          }}
+          aria-hidden
+        />
+
+        {/* Side smoke columns — left + mirrored right — drifting slowly. */}
+        <div
+          className="absolute top-0 -left-24 w-[36vw] h-full opacity-55 mix-blend-screen"
+          style={{
+            backgroundImage: `url(${smokeTexture})`,
+            backgroundSize: "auto 110%",
+            backgroundPosition: "left center",
+            backgroundRepeat: "no-repeat",
+            maskImage:
+              "linear-gradient(90deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 55%, transparent 100%)",
+            WebkitMaskImage:
+              "linear-gradient(90deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 55%, transparent 100%)",
+            animation: reduceMotion ? "none" : "psp-drift-a 22s ease-in-out infinite",
           }}
         />
-        {/* Smoky cloud layer B */}
         <div
-          className="absolute -bottom-40 -right-40 w-[70vw] h-[70vh] rounded-full blur-[160px] opacity-40"
+          className="absolute top-0 -right-24 w-[36vw] h-full opacity-55 mix-blend-screen"
           style={{
-            background: `radial-gradient(circle, ${PALETTE.surf}44, transparent 70%)`,
-            animation: reduceMotion ? "none" : "psp-drift-b 22s ease-in-out infinite",
-          }}
-        />
-        {/* Drifting deep-teal vignette in the middle */}
-        <div
-          className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[120vw] h-[60vh] rounded-full blur-[180px] opacity-30"
-          style={{
-            background: `radial-gradient(ellipse, ${PALETTE.tealDeep}66, transparent 60%)`,
+            backgroundImage: `url(${smokeTexture})`,
+            backgroundSize: "auto 110%",
+            backgroundPosition: "right center",
+            backgroundRepeat: "no-repeat",
+            transform: "scaleX(-1)",
+            maskImage:
+              "linear-gradient(90deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 55%, transparent 100%)",
+            WebkitMaskImage:
+              "linear-gradient(90deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 55%, transparent 100%)",
+            animation: reduceMotion ? "none" : "psp-drift-b 26s ease-in-out infinite",
           }}
         />
 
-        {/* Pulsing neural nodes scattered across the page */}
+        {/* Halo glow behind brain (parallax-shifted in JSX below). */}
+        <div
+          className="absolute top-[6%] left-1/2 -translate-x-1/2 w-[55vw] h-[55vh] rounded-full blur-[100px] opacity-50"
+          style={{
+            background: `radial-gradient(circle, ${PALETTE.surf}66, transparent 65%)`,
+            transform: reduceMotion
+              ? "translate(-50%, 0)"
+              : `translate(calc(-50% + ${parallax.x * -14}px), ${parallax.y * -10}px)`,
+          }}
+        />
+
+        {/* Top dark scrim so nav stays legible. */}
+        <div
+          className="absolute inset-x-0 top-0 h-40"
+          style={{
+            background: `linear-gradient(180deg, ${PALETTE.ink}cc 0%, ${PALETTE.ink}55 60%, transparent 100%)`,
+          }}
+        />
+
+        {/* Bottom dark scrim — fades the brain art into the cards/footer. */}
+        <div
+          className="absolute inset-x-0 bottom-0 h-[55%]"
+          style={{
+            background: `linear-gradient(180deg, transparent 0%, ${PALETTE.bg}cc 45%, ${PALETTE.ink} 100%)`,
+          }}
+        />
+
+        {/* Pulsing neural nodes scattered across the canvas. */}
         <svg className="absolute inset-0 w-full h-full" aria-hidden>
-          {Array.from({ length: 28 }).map((_, i) => {
+          {Array.from({ length: 22 }).map((_, i) => {
             const x = (i * 137) % 100;
             const y = (i * 73) % 100;
             const r = 0.8 + ((i * 11) % 18) / 10;
@@ -206,7 +265,7 @@ export default function LandingPage() {
                 cy={`${y}%`}
                 r={r}
                 fill={PALETTE.surf}
-                opacity={0.5}
+                opacity={0.55}
                 style={{
                   animation: reduceMotion
                     ? "none"
@@ -216,6 +275,26 @@ export default function LandingPage() {
             );
           })}
         </svg>
+
+        {/* Thin cyan electric lines pulsing outward from the brain. */}
+        {!reduceMotion &&
+          Array.from({ length: 6 }).map((_, i) => {
+            const top = 22 + i * 5;
+            const left = i % 2 === 0 ? "10%" : "76%";
+            return (
+              <div
+                key={i}
+                className="absolute h-[1.5px] w-16 rounded-full opacity-0"
+                style={{
+                  top: `${top}%`,
+                  left,
+                  background: `linear-gradient(90deg, transparent, ${PALETTE.surf}, transparent)`,
+                  boxShadow: `0 0 8px ${PALETTE.surf}, 0 0 18px ${PALETTE.surf}88`,
+                  animation: `psp-spark ${2.6 + (i % 3) * 0.6}s ease-in ${i * 0.7}s infinite`,
+                }}
+              />
+            );
+          })}
       </div>
 
       {/* ============================================================ */}
@@ -298,72 +377,22 @@ export default function LandingPage() {
       </header>
 
       {/* ============================================================ */}
-      {/* HERO                                                         */}
+      {/* HERO — overlays the global brain background, no image box.   */}
+      {/* Spacer pushes the wordmark down so it lands over the lower   */}
+      {/* third of the brain artwork (matches reference composition).  */}
       {/* ============================================================ */}
       <section
         id="home"
         ref={heroRef}
-        className="relative pt-28 md:pt-32 pb-16 md:pb-24 overflow-hidden"
+        className="relative pb-10 md:pb-14"
       >
-        {/* Brain image — centered, with parallax + pulse */}
-        <div
-          className="relative mx-auto w-full max-w-[1100px] aspect-[16/9] flex items-start justify-center"
-          aria-hidden
-        >
-          <div
-            className="absolute inset-0 flex items-start justify-center"
-            style={{
-              transform: reduceMotion
-                ? undefined
-                : `translate3d(${parallax.x * -10}px, ${parallax.y * -6}px, 0)`,
-              transition: "transform 200ms ease-out",
-            }}
-          >
-            <img
-              src={brainHero}
-              alt=""
-              className="w-full h-full object-contain object-top select-none"
-              style={{
-                animation: reduceMotion ? "none" : "psp-pulse 5.5s ease-in-out infinite",
-              }}
-              draggable={false}
-            />
-          </div>
+        {/* Spacer — sized as a fraction of viewport WIDTH so the
+            wordmark always lands inside the lower third of the brain
+            artwork (the artwork's height tracks viewport width). */}
+        <div className="h-[36vw] max-h-[640px] min-h-[260px]" aria-hidden />
 
-          {/* Soft cyan halo behind brain */}
-          <div
-            className="absolute top-[10%] left-1/2 -translate-x-1/2 w-[55%] h-[55%] rounded-full blur-[100px] opacity-60 pointer-events-none"
-            style={{
-              background: `radial-gradient(circle, ${PALETTE.surf}66, transparent 65%)`,
-              transform: reduceMotion
-                ? undefined
-                : `translate3d(${parallax.x * -16}px, ${parallax.y * -10}px, 0)`,
-            }}
-          />
-
-          {/* Electric signal sparks travelling sideways */}
-          {!reduceMotion &&
-            Array.from({ length: 6 }).map((_, i) => {
-              const top = 30 + i * 8;
-              const left = i % 2 === 0 ? "8%" : "78%";
-              return (
-                <div
-                  key={i}
-                  className="absolute h-[1.5px] w-12 rounded-full opacity-0"
-                  style={{
-                    top: `${top}%`,
-                    left,
-                    background: `linear-gradient(90deg, transparent, ${PALETTE.surf}, transparent)`,
-                    boxShadow: `0 0 8px ${PALETTE.surf}, 0 0 16px ${PALETTE.surf}88`,
-                    animation: `psp-spark ${2.4 + (i % 3) * 0.6}s ease-in ${i * 0.7}s infinite`,
-                  }}
-                />
-              );
-            })}
-        </div>
-
-        {/* Wordmark + copy */}
-        <div className="relative max-w-4xl mx-auto px-5 md:px-8 -mt-2 md:-mt-6 text-center">
+        {/* Wordmark + copy — sits directly over the brain background */}
+        <div className="relative max-w-[1180px] mx-auto px-5 md:px-8 text-center">
           <h1
             className="text-white"
             style={{
@@ -371,7 +400,7 @@ export default function LandingPage() {
               fontSize: "clamp(48px, 9vw, 120px)",
               letterSpacing: "0.28em",
               lineHeight: 1,
-              textShadow: `0 0 40px ${PALETTE.surf}55, 0 8px 50px ${PALETTE.bg}aa`,
+              textShadow: `0 0 40px ${PALETTE.surf}66, 0 8px 60px ${PALETTE.ink}, 0 2px 12px ${PALETTE.ink}`,
             }}
             data-testid="hero-wordmark"
           >
@@ -421,7 +450,7 @@ export default function LandingPage() {
       {/* ============================================================ */}
       <section
         id="features"
-        className="relative max-w-7xl mx-auto px-5 md:px-8 py-12 md:py-16 scroll-mt-24"
+        className="relative max-w-[1180px] mx-auto px-5 md:px-8 pt-2 pb-8 md:pb-10 scroll-mt-24"
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
           {FEATURES.map((f) => (
@@ -474,7 +503,7 @@ export default function LandingPage() {
       {/* ============================================================ */}
       <section
         id="trust"
-        className="relative max-w-7xl mx-auto px-5 md:px-8 py-10 md:py-14 scroll-mt-24"
+        className="relative max-w-[1180px] mx-auto px-5 md:px-8 py-6 md:py-8 scroll-mt-24"
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 md:gap-6">
           {/* LEFT — stats */}
@@ -580,7 +609,7 @@ export default function LandingPage() {
       {/* ============================================================ */}
       {/* SUBSCRIBE                                                    */}
       {/* ============================================================ */}
-      <section className="relative max-w-7xl mx-auto px-5 md:px-8 py-10 md:py-14">
+      <section className="relative max-w-[1180px] mx-auto px-5 md:px-8 py-6 md:py-8">
         <form
           onSubmit={onSubscribe}
           className="rounded-2xl p-5 md:p-6 border backdrop-blur-md flex flex-col md:flex-row items-stretch md:items-center gap-5 md:gap-6"
@@ -678,7 +707,7 @@ export default function LandingPage() {
           background: `${PALETTE.ink}cc`,
         }}
       >
-        <div className="max-w-7xl mx-auto px-5 md:px-8 py-6 md:py-7 flex flex-col md:flex-row items-center justify-between gap-5 text-[12px]">
+        <div className="max-w-[1180px] mx-auto px-5 md:px-8 py-6 md:py-7 flex flex-col md:flex-row items-center justify-between gap-5 text-[12px]">
           {/* Left — brand */}
           <div className="flex items-center gap-2.5">
             <BrainLineIcon className="w-5 h-5" color={PALETTE.surf} />
