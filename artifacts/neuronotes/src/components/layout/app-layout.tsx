@@ -84,14 +84,16 @@ export default function AppLayout({ children }: AppLayoutProps) {
         className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
         aria-hidden
         style={{
-          background: `linear-gradient(180deg, ${STUDY_PALETTE.bg} 0%, #0A2030 45%, ${STUDY_PALETTE.surface} 100%)`,
+          background:
+            "linear-gradient(180deg, #01070B 0%, #04131B 38%, #071C26 72%, #082330 100%)",
         }}
       >
         {/* Soft cerulean halo high on the page — restrained, atmospheric. */}
         <div
           className="absolute top-[-18%] left-[44%] -translate-x-1/2 w-[62vw] h-[55vh] rounded-full blur-[160px] opacity-25"
           style={{
-            background: `radial-gradient(circle, ${STUDY_PALETTE.surf}3a, ${STUDY_PALETTE.teal}1f 40%, transparent 70%)`,
+            background:
+            "radial-gradient(circle, rgba(111,217,234,0.22), rgba(52,170,199,0.10) 40%, transparent 70%)",
           }}
         />
         {/* Drifting smoke columns — left + mirrored right. Slower, fainter, asymmetric. */}
@@ -176,8 +178,11 @@ export default function AppLayout({ children }: AppLayoutProps) {
         style={{
           // CSS var consumed by NAV_ITEM_* tokens for the teal hover glow.
           ["--nav-glow" as never]: STUDY_PALETTE.surf,
-          background: "linear-gradient(180deg, #041A24 0%, #031923 100%)",
-          borderRight: "1px solid rgba(94, 176, 200, 0.08)",
+          background:
+            "linear-gradient(180deg, rgba(4,19,27,0.92) 0%, rgba(2,11,18,0.96) 100%)",
+          borderRight: "1px solid rgba(106, 221, 241, 0.10)",
+          backdropFilter: "blur(14px)",
+          WebkitBackdropFilter: "blur(14px)",
         }}
         data-testid="sidebar"
       >

@@ -52,14 +52,19 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
       // dashboard tiles match every other shadcn Card on the dark theme.
       // Diagonal dark-teal gradient, cerulean hairline border, deep drop
       // shadow with faint outer cerulean glow, Frost-White text.
+      // Glass panel floating in atmospheric depth — deep transparent
+      // navy, cyan hairline edge, soft inset highlight, deep diffused
+      // shadow. Backdrop blur applied via CSS in index.css.
       return {
         background:
-          "linear-gradient(145deg, rgba(10,45,61,0.92), rgba(6,32,44,0.96))",
-        borderColor: "rgba(94,176,200,0.10)",
+          "linear-gradient(145deg, rgba(8,32,44,0.72), rgba(4,18,28,0.78))",
+        borderColor: "rgba(106,221,241,0.16)",
         boxShadow:
-          "0 1px 0 rgba(255,255,255,0.04) inset, 0 24px 48px -24px rgba(0,0,0,0.55)",
+          "inset 0 1px 0 rgba(141,234,245,0.06), 0 28px 60px -28px rgba(0,0,0,0.65)",
         color: P.mist,
-      };
+        backdropFilter: "blur(18px)",
+        WebkitBackdropFilter: "blur(18px)",
+      } as CSSProperties;
   }
 }
 

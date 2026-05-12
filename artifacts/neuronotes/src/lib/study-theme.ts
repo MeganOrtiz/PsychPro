@@ -26,27 +26,30 @@
 // =============================================================================
 
 export const STUDY_PALETTE = {
-  // Backgrounds — deep cyan-navy stack
-  ink: "#041520",         // deepest anchor (sidebar)
-  bg: "#061826",          // page bg primary
-  bgSoft: "#0E2C40",      // page bg secondary
-  surface: "#0C2538",     // card surface
-  surfaceElev: "#11324D", // card hover / lifted
+  // Backgrounds — deep blue-black stack matching the cinematic
+  // smoke-diffusion reference. Pulled from the locked color directive:
+  //   #01070B / #020B12 / #04131B / #071C26 (page blacks)
+  //   #082330 / #0A2A39 / #0B3445 (midnight blue depth)
+  ink: "#04131B",          // deepest anchor (sidebar / page floor)
+  bg: "#071C26",           // page bg primary
+  bgSoft: "#082330",       // page bg secondary
+  surface: "#0A2A39",      // card surface (glass mid)
+  surfaceElev: "#0B3445",  // card hover / lifted
 
-  // Mid-blue — borders, dividers, structural lines
-  steel: "#1C4E75",
+  // Deep teal shadows — borders, dividers, structural lines.
+  steel: "#124A5B",
 
-  // Cyan accents — locked at hue ~200 (cerulean), no green cast
-  tealDeep: "#2A7E97",    // dark cerulean
-  teal: "#2FA0C6",        // primary cerulean
-  surf: "#58C9F3",        // bright cerulean (icons, highlights)
-  mist: "#BDE5FF",        // icy soft text / accent text
+  // Cerulean accents — muted, atmospheric (NOT neon). Hue band 188–195.
+  tealDeep: "#124A5B",     // deep teal shadow
+  teal: "#34AAC7",         // primary cerulean (CTAs, focal accents)
+  surf: "#6FD9EA",         // muted cerulean glow (icons, highlights)
+  mist: "#BDE5FF",         // icy soft text / accent text
 
-  // Neutrals
-  cloud: "#E4F4F6",       // brightest white-ish (body copy on dark)
-  paper: "#E4F4F6",       // alias for `cloud` — light-card text
-  paperSoft: "#B7D5DC",   // secondary text
-  inkSoft: "#7FA4AD",     // muted text
+  // Neutrals — kept for body copy readability on dark surfaces.
+  cloud: "#E4F4F6",
+  paper: "#E4F4F6",
+  paperSoft: "#B7D5DC",
+  inkSoft: "#7FA4AD",
 } as const;
 
 export type StudyTone = "light" | "dark" | "accent" | "card-front";

@@ -242,23 +242,23 @@
 .study-page-aurora {
   /* Mirrors STUDY_PALETTE in src/lib/study-theme.ts. If you change a
      hex value there, mirror it here (and the rgba glow values below). */
-  --background: 211 71% 9%;          /* #061826 bg */
+  --background: 204 70% 9%;          /* #071C26 bg */
   --foreground: 205 100% 87%;        /* #BDE5FF mist (icy text) */
-  --card: 210 51% 13%;               /* #0C2538 surface */
+  --card: 202 64% 13%;               /* #0A2A39 surface */
   --card-foreground: 205 100% 87%;
-  --popover: 210 51% 13%;
+  --popover: 202 64% 13%;
   --popover-foreground: 205 100% 87%;
-  --muted: 209 51% 16%;              /* #0E2C40 bgSoft */
+  --muted: 203 73% 11%;              /* #082330 bgSoft */
   --muted-foreground: 192 22% 59%;   /* #7FA4AD inkSoft */
-  --border: 209 61% 28%;             /* #1C4E75 steel */
-  --input: 209 51% 16%;              /* #0E2C40 bgSoft */
-  --primary: 195 62% 48%;            /* #2FA0C6 teal */
-  --primary-foreground: 211 71% 9%;
-  --secondary: 195 56% 38%;          /* #2A7E97 tealDeep */
+  --border: 195 65% 21%;             /* #124A5B steel/teal-deep */
+  --input: 203 73% 11%;              /* #082330 bgSoft */
+  --primary: 191 59% 49%;            /* #34AAC7 teal */
+  --primary-foreground: 204 70% 9%;
+  --secondary: 195 65% 21%;          /* #124A5B tealDeep */
   --secondary-foreground: 205 100% 87%;
-  --accent: 200 86% 65%;             /* #58C9F3 surf */
-  --accent-foreground: 211 71% 9%;
-  --ring: 200 86% 65%;
+  --accent: 189 75% 67%;             /* #6FD9EA surf */
+  --accent-foreground: 204 70% 9%;
+  --ring: 189 75% 67%;
 }
 
 /* Page surface stays transparent — the AppLayout renders a single
@@ -278,17 +278,16 @@
 .study-page-aurora .bg-card {
   background-image: linear-gradient(
     145deg,
-    rgba(17, 50, 77, 0.95),
-    rgba(12, 37, 56, 0.98)
+    rgba(8, 32, 44, 0.72),
+    rgba(4, 18, 28, 0.78)
   );
-  border: 1px solid rgba(88, 201, 243, 0.15);
+  border: 1px solid rgba(106, 221, 241, 0.16);
   border-radius: 22px;
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   box-shadow:
-    0 0 0 1px rgba(88, 201, 243, 0.06),
-    0 20px 40px rgba(0, 0, 0, 0.35),
-    0 0 30px rgba(88, 201, 243, 0.06);
+    inset 0 1px 0 rgba(141, 234, 245, 0.06),
+    0 28px 60px -28px rgba(0, 0, 0, 0.65);
 }
 
 /* Glassy cerulean buttons — translucent dark-teal base with a cerulean
