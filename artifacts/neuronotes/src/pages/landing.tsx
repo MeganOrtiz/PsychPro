@@ -460,16 +460,6 @@ export default function LandingPage() {
             PSYCHPRO
           </h1>
           <p
-            className="mt-4 md:mt-6 text-[12px] sm:text-sm md:text-base"
-            style={{
-              color: `${PALETTE.mist}dd`,
-              letterSpacing: "0.42em",
-              fontWeight: 300,
-            }}
-          >
-            ADVANCE YOUR MIND.&nbsp;&nbsp;ELEVATE CARE.
-          </p>
-          <p
             className="mt-7 md:mt-9 text-[15px] md:text-[17px] max-w-2xl mx-auto leading-relaxed"
             style={{ color: `${PALETTE.paperSoft}` }}
           >
