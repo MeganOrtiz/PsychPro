@@ -3,21 +3,36 @@ import { useState, useEffect, useRef, type FormEvent } from "react";
 import {
   BookOpen,
   Users,
-  Briefcase,
-  GraduationCap,
   Mail,
   Search,
-  Globe,
-  Award,
   Brain,
   Linkedin,
   Twitter,
   Instagram,
   Youtube,
   Sparkles,
+  Timer,
+  Repeat,
+  Layers,
+  ListTree,
+  Activity,
+  Microscope,
+  HeartPulse,
+  Stethoscope,
+  Pill,
+  ClipboardList,
+  Baby,
+  GraduationCap,
+  FlaskConical,
+  Scale,
+  ShieldAlert,
+  Eye,
+  Zap,
+  TrendingUp,
 } from "lucide-react";
-import brainHero from "@assets/generated_images/landing_brain_hero.png";
-import smokeTexture from "@assets/Screenshot_2026-04-27_at_1.40.17_AM_1778535214205.png";
+import brainHero from "@assets/generated_images/landing_brain_topdown.png";
+import smokeTexture from "@assets/generated_images/atmospheric_smoke_full.png";
+import sideSmoke from "@assets/Screenshot_2026-04-27_at_1.40.17_AM_1778535214205.png";
 // Single source of truth for the brand palette — do NOT fork.
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
 
@@ -54,38 +69,66 @@ const NAV_LINKS = [
   { label: "HOME", href: "#home" },
   { label: "COURSES", href: "#features" },
   { label: "RESOURCES", href: "#features" },
-  { label: "COMMUNITY", href: "#trust" },
-  { label: "ABOUT", href: "#trust" },
+  { label: "TOPICS", href: "#topics" },
+  { label: "ABOUT", href: "#topics" },
 ];
 
 const FEATURES = [
   {
-    icon: GraduationCap,
-    title: "EXPERT-LED COURSES",
-    body: "Learn from leading professionals in clinical psychology.",
+    icon: Timer,
+    title: "CUT STUDY TIME IN HALF",
+    body: "Use adaptive flashcards, active recall, spaced repetition, and integrated study systems designed to maximize long-term retention.",
   },
   {
-    icon: Brain,
-    title: "EVIDENCE-BASED",
-    body: "Content grounded in the latest research and best practices.",
+    icon: Repeat,
+    title: "ACTUALLY RETAIN INFORMATION",
+    body: "PsychPro reinforces learning through evidence-based memory consolidation techniques rather than passive rereading.",
   },
   {
-    icon: Briefcase,
-    title: "PRACTICAL TOOLS",
-    body: "Resources and tools you can use in real-world settings.",
+    icon: Layers,
+    title: "MASTER COMPLEX TOPICS",
+    body: "Study difficult concepts through visually immersive explanations, neuroscience-based learning tools, and practical clinical application.",
   },
   {
-    icon: Users,
-    title: "PROFESSIONAL COMMUNITY",
-    body: "Connect, collaborate, and grow with peers worldwide.",
+    icon: ListTree,
+    title: "STRUCTURE, NOT CHAOS",
+    body: "Organized systems for neuropsychology, psychotherapy, assessment, neuroscience, research methods, DSM disorders, and more.",
   },
 ];
 
-const STATS = [
-  { icon: Users, n: "25K+", l: "MEMBERS" },
-  { icon: BookOpen, n: "150+", l: "COURSES" },
-  { icon: Award, n: "10K+", l: "CERTIFICATIONS" },
-  { icon: Globe, n: "85+", l: "COUNTRIES" },
+// Topic grid — a curated 28-tile sample of the 39+ specialized
+// psychology and neuroscience domains PsychPro covers. The remaining
+// topics are surfaced in-app; copy below the grid signals expansion.
+// Icons stay understated and editorial, not LMS-style.
+const TOPICS: { icon: typeof Brain; label: string }[] = [
+  { icon: Brain, label: "Neuropsychology" },
+  { icon: Activity, label: "Neuroscience" },
+  { icon: HeartPulse, label: "Psychotherapy" },
+  { icon: ClipboardList, label: "Clinical Assessment" },
+  { icon: Pill, label: "Psychopharmacology" },
+  { icon: BookOpen, label: "DSM-5 Disorders" },
+  { icon: Users, label: "Personality Disorders" },
+  { icon: Baby, label: "Developmental Psychology" },
+  { icon: Microscope, label: "Cognitive Neuroscience" },
+  { icon: Sparkles, label: "Learning & Memory" },
+  { icon: FlaskConical, label: "Research Methods" },
+  { icon: TrendingUp, label: "Statistics" },
+  { icon: Layers, label: "Autism Spectrum" },
+  { icon: Zap, label: "ADHD" },
+  { icon: ListTree, label: "Executive Function" },
+  { icon: ShieldAlert, label: "Brain Injury" },
+  { icon: Eye, label: "Sensation & Perception" },
+  { icon: Scale, label: "Ethics" },
+  { icon: GraduationCap, label: "Child Psychology" },
+  { icon: Stethoscope, label: "Health Psychology" },
+  { icon: ShieldAlert, label: "Forensic Psychology" },
+  { icon: Repeat, label: "CBT" },
+  { icon: HeartPulse, label: "ACT / DBT" },
+  { icon: Brain, label: "Psychoanalytic Theory" },
+  { icon: Users, label: "Family Systems" },
+  { icon: HeartPulse, label: "Emotion Regulation" },
+  { icon: ClipboardList, label: "Diagnostic Interviewing" },
+  { icon: Layers, label: "Case Conceptualization" },
 ];
 
 export default function LandingPage() {
@@ -130,7 +173,8 @@ export default function LandingPage() {
       <style>{`
         body { background: ${PALETTE.ink}; }
         @keyframes psp-drift-a { 0%,100% { transform: translate3d(0,0,0) scale(1);} 50% { transform: translate3d(2%,-2%,0) scale(1.04);} }
-        @keyframes psp-drift-b { 0%,100% { transform: translate3d(0,0,0) scale(1);} 50% { transform: translate3d(-3%,1%,0) scale(1.06);} }
+        @keyframes psp-drift-b { 0%,100% { transform: scaleX(-1) translate3d(0,0,0);} 50% { transform: scaleX(-1) translate3d(2%,1%,0) scale(1.04);} }
+        @keyframes psp-drift-c { 0%,100% { transform: translate3d(-1%,0,0) scale(1.05);} 50% { transform: translate3d(1.5%,-1.2%,0) scale(1.10);} }
         @keyframes psp-pulse { 0%,100% { opacity: .55; filter: drop-shadow(0 0 30px ${PALETTE.surf}aa) drop-shadow(0 0 70px ${PALETTE.teal}77);} 50% { opacity: .85; filter: drop-shadow(0 0 60px ${PALETTE.surf}cc) drop-shadow(0 0 120px ${PALETTE.teal}aa);} }
         @keyframes psp-spark { 0% { opacity: 0; transform: translateX(0);} 30% { opacity: 1;} 100% { opacity: 0; transform: translateX(60px);} }
         @keyframes psp-shimmer { 0% { transform: translateX(-120%);} 100% { transform: translateX(220%);} }
@@ -187,40 +231,54 @@ export default function LandingPage() {
             backgroundRepeat: "no-repeat",
             // 1408x768 source → height = width * (768/1408) ≈ 0.546.
             // Use aspect-ratio so the layer is exactly the artwork's height.
-            aspectRatio: "1408 / 768",
+            aspectRatio: "1024 / 573",
             animation: reduceMotion ? "none" : "psp-pulse 6s ease-in-out infinite",
           }}
           aria-hidden
         />
 
-        {/* Side smoke columns — left + mirrored right — drifting slowly. */}
+        {/* Atmospheric smoke — diffused across the ENTIRE page (no side
+            walls). A full-bleed haze layer sits behind every section so the
+            background reads as one continuous underwater environment. Two
+            additional drifting layers add organic movement without producing
+            hard edges. */}
         <div
-          className="absolute top-0 -left-24 w-[36vw] h-full opacity-55 mix-blend-screen"
+          className="absolute inset-0 opacity-[0.55] mix-blend-screen"
           style={{
             backgroundImage: `url(${smokeTexture})`,
-            backgroundSize: "auto 110%",
-            backgroundPosition: "left center",
+            backgroundSize: "180% auto",
+            backgroundPosition: "center center",
             backgroundRepeat: "no-repeat",
-            maskImage:
-              "linear-gradient(90deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 55%, transparent 100%)",
-            WebkitMaskImage:
-              "linear-gradient(90deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 55%, transparent 100%)",
-            animation: reduceMotion ? "none" : "psp-drift-a 22s ease-in-out infinite",
+            animation: reduceMotion ? "none" : "psp-drift-c 90s ease-in-out infinite",
           }}
         />
         <div
-          className="absolute top-0 -right-24 w-[36vw] h-full opacity-55 mix-blend-screen"
+          className="absolute top-0 -left-32 w-[60vw] h-full opacity-[0.32] mix-blend-screen"
           style={{
-            backgroundImage: `url(${smokeTexture})`,
-            backgroundSize: "auto 110%",
+            backgroundImage: `url(${sideSmoke})`,
+            backgroundSize: "auto 120%",
+            backgroundPosition: "left center",
+            backgroundRepeat: "no-repeat",
+            maskImage:
+              "linear-gradient(90deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.55) 55%, transparent 100%)",
+            WebkitMaskImage:
+              "linear-gradient(90deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.55) 55%, transparent 100%)",
+            animation: reduceMotion ? "none" : "psp-drift-a 38s ease-in-out infinite",
+          }}
+        />
+        <div
+          className="absolute top-0 -right-32 w-[60vw] h-full opacity-[0.30] mix-blend-screen"
+          style={{
+            backgroundImage: `url(${sideSmoke})`,
+            backgroundSize: "auto 120%",
             backgroundPosition: "right center",
             backgroundRepeat: "no-repeat",
             transform: "scaleX(-1)",
             maskImage:
-              "linear-gradient(90deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 55%, transparent 100%)",
+              "linear-gradient(90deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.55) 55%, transparent 100%)",
             WebkitMaskImage:
-              "linear-gradient(90deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 55%, transparent 100%)",
-            animation: reduceMotion ? "none" : "psp-drift-b 26s ease-in-out infinite",
+              "linear-gradient(90deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.55) 55%, transparent 100%)",
+            animation: reduceMotion ? "none" : "psp-drift-b 46s ease-in-out infinite",
           }}
         />
 
@@ -251,13 +309,14 @@ export default function LandingPage() {
           }}
         />
 
-        {/* Pulsing neural nodes scattered across the canvas. */}
+        {/* Faint floating particles — subtle "underwater dust", not
+            electrical sparks. Slow, soft, biological. No streaks/lightning. */}
         <svg className="absolute inset-0 w-full h-full" aria-hidden>
-          {Array.from({ length: 22 }).map((_, i) => {
+          {Array.from({ length: 14 }).map((_, i) => {
             const x = (i * 137) % 100;
             const y = (i * 73) % 100;
-            const r = 0.8 + ((i * 11) % 18) / 10;
-            const dur = 3 + (i % 5);
+            const r = 0.6 + ((i * 11) % 14) / 14;
+            const dur = 9 + (i % 6) * 1.5;
             return (
               <circle
                 key={i}
@@ -265,36 +324,16 @@ export default function LandingPage() {
                 cy={`${y}%`}
                 r={r}
                 fill={PALETTE.surf}
-                opacity={0.55}
+                opacity={0.32}
                 style={{
                   animation: reduceMotion
                     ? "none"
-                    : `psp-node-pulse ${dur}s ease-in-out ${(i % 7) * 0.4}s infinite`,
+                    : `psp-node-pulse ${dur}s ease-in-out ${(i % 7) * 0.6}s infinite`,
                 }}
               />
             );
           })}
         </svg>
-
-        {/* Thin cyan electric lines pulsing outward from the brain. */}
-        {!reduceMotion &&
-          Array.from({ length: 6 }).map((_, i) => {
-            const top = 22 + i * 5;
-            const left = i % 2 === 0 ? "10%" : "76%";
-            return (
-              <div
-                key={i}
-                className="absolute h-[1.5px] w-16 rounded-full opacity-0"
-                style={{
-                  top: `${top}%`,
-                  left,
-                  background: `linear-gradient(90deg, transparent, ${PALETTE.surf}, transparent)`,
-                  boxShadow: `0 0 8px ${PALETTE.surf}, 0 0 18px ${PALETTE.surf}88`,
-                  animation: `psp-spark ${2.6 + (i % 3) * 0.6}s ease-in ${i * 0.7}s infinite`,
-                }}
-              />
-            );
-          })}
       </div>
 
       {/* ============================================================ */}
@@ -414,15 +453,15 @@ export default function LandingPage() {
               fontWeight: 300,
             }}
           >
-            LEARN.&nbsp;&nbsp;EXPAND.&nbsp;&nbsp;CONNECT.
+            ADVANCE YOUR MIND.&nbsp;&nbsp;ELEVATE CARE.
           </p>
           <p
             className="mt-7 md:mt-9 text-[15px] md:text-[17px] max-w-2xl mx-auto leading-relaxed"
             style={{ color: `${PALETTE.paperSoft}` }}
           >
-            Your all-in-one platform for mastering clinical psychology through
-            expert-led courses, practical tools, and a supportive professional
-            community.
+            PsychPro combines neuroscience-based learning systems, clinical
+            psychology education, active recall, and immersive study tools to
+            help you learn faster and retain information long term.
           </p>
 
           {/* CTAs */}
@@ -450,8 +489,33 @@ export default function LandingPage() {
       {/* ============================================================ */}
       <section
         id="features"
-        className="relative max-w-[1180px] mx-auto px-5 md:px-8 pt-2 pb-8 md:pb-10 scroll-mt-24"
+        className="relative max-w-[1180px] mx-auto px-5 md:px-8 pt-6 md:pt-10 pb-8 md:pb-10 scroll-mt-24"
       >
+        <div className="text-center mb-10 md:mb-14">
+          <p
+            className="text-[11px] md:text-[12px] font-medium"
+            style={{
+              color: PALETTE.surf,
+              letterSpacing: "0.42em",
+              textShadow: `0 0 14px ${PALETTE.surf}66`,
+            }}
+          >
+            BUILT FOR PSYCHOLOGY STUDENTS &amp; CLINICIANS
+          </p>
+          <h2
+            className="mt-4 text-3xl md:text-5xl font-light text-white leading-tight"
+            style={{ letterSpacing: "0.02em" }}
+          >
+            Master Clinical Psychology Faster
+          </h2>
+          <p
+            className="mt-5 text-[14px] md:text-[15px] max-w-2xl mx-auto leading-relaxed"
+            style={{ color: PALETTE.paperSoft }}
+          >
+            Evidence-based study tools grounded in cognitive neuroscience —
+            designed to help you study less, retain more, and think clinically.
+          </p>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
           {FEATURES.map((f) => (
             <article
@@ -499,111 +563,90 @@ export default function LandingPage() {
       </section>
 
       {/* ============================================================ */}
-      {/* TRUST + TESTIMONIAL                                          */}
+      {/* TOPIC GRID — 39+ specialized psychology / neuroscience areas */}
       {/* ============================================================ */}
       <section
-        id="trust"
-        className="relative max-w-[1180px] mx-auto px-5 md:px-8 py-6 md:py-8 scroll-mt-24"
+        id="topics"
+        className="relative max-w-[1180px] mx-auto px-5 md:px-8 pt-10 md:pt-16 pb-12 md:pb-16 scroll-mt-24"
       >
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 md:gap-6">
-          {/* LEFT — stats */}
-          <div
-            className="rounded-2xl p-6 md:p-8 border backdrop-blur-md"
+        <div className="text-center mb-10 md:mb-14">
+          <p
+            className="text-[11px] md:text-[12px] font-medium"
             style={{
-              background: glassBg,
-              borderColor: glassBorder,
-              boxShadow: glassShadow,
+              color: PALETTE.surf,
+              letterSpacing: "0.42em",
+              textShadow: `0 0 14px ${PALETTE.surf}66`,
             }}
-            data-testid="trust-panel"
           >
-            <h2
-              className="text-[12px] md:text-[13px] font-medium text-white mb-6"
-              style={{ letterSpacing: "0.28em" }}
-            >
-              TRUSTED BY PSYCHOLOGY PROFESSIONALS
-            </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
-              {STATS.map((s) => (
-                <div key={s.l} className="flex flex-col items-start gap-2">
-                  <s.icon
-                    className="w-6 h-6"
-                    style={{
-                      color: PALETTE.surf,
-                      filter: `drop-shadow(0 0 6px ${PALETTE.surf}88)`,
-                    }}
-                    strokeWidth={1.4}
-                  />
-                  <div
-                    className="text-2xl md:text-3xl font-light text-white"
-                    style={{
-                      textShadow: `0 0 18px ${PALETTE.surf}55`,
-                    }}
-                  >
-                    {s.n}
-                  </div>
-                  <div
-                    className="text-[10px] md:text-[11px]"
-                    style={{
-                      color: `${PALETTE.mist}cc`,
-                      letterSpacing: "0.22em",
-                    }}
-                  >
-                    {s.l}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* RIGHT — testimonial */}
-          <div
-            className="rounded-2xl p-6 md:p-8 border backdrop-blur-md flex flex-col justify-between"
-            style={{
-              background: glassBg,
-              borderColor: glassBorder,
-              boxShadow: glassShadow,
-            }}
-            data-testid="testimonial-panel"
+            COMPREHENSIVE COVERAGE
+          </p>
+          <h2
+            className="mt-4 text-3xl md:text-5xl font-light text-white leading-tight"
+            style={{ letterSpacing: "0.02em" }}
           >
-            <div>
-              <span
-                className="text-5xl leading-none font-serif"
-                style={{ color: `${PALETTE.surf}cc` }}
-                aria-hidden
-              >
-                “
-              </span>
-              <p
-                className="mt-1 text-[15px] md:text-base leading-relaxed"
-                style={{ color: PALETTE.cloud }}
-              >
-                PsychPro has transformed the way I learn and apply clinical
-                knowledge. The community and resources are unmatched.
-              </p>
-            </div>
-            <div className="mt-6 flex items-center gap-3">
-              <div
-                className="w-11 h-11 rounded-full flex items-center justify-center text-sm font-semibold"
-                style={{
-                  background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
-                  color: PALETTE.ink,
-                  boxShadow: `0 0 18px -4px ${PALETTE.surf}aa`,
-                }}
-                aria-hidden
-              >
-                SM
-              </div>
-              <div>
-                <div className="text-sm font-medium text-white">
-                  Dr. Sarah Mitchell
-                </div>
-                <div className="text-xs" style={{ color: `${PALETTE.mist}aa` }}>
-                  Clinical Psychologist
-                </div>
-              </div>
-            </div>
-          </div>
+            Explore 39+ Specialized Psychology Topics
+          </h2>
+          <p
+            className="mt-5 text-[14px] md:text-[15px] max-w-2xl mx-auto leading-relaxed"
+            style={{ color: PALETTE.paperSoft }}
+          >
+            From neuropsychology and psychotherapy to assessment, ethics, and
+            specialized clinical populations — every domain you need to study
+            for boards or practice with confidence.
+          </p>
         </div>
+
+        <div
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4"
+          data-testid="topic-grid"
+        >
+          {TOPICS.map((t) => (
+            <div
+              key={t.label}
+              className="psp-card group flex items-center gap-3 rounded-xl px-4 py-3.5 border backdrop-blur-md transition-all duration-300"
+              style={{
+                background: glassBg,
+                borderColor: glassBorder,
+                boxShadow: glassShadow,
+              }}
+              data-testid={`topic-${t.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+            >
+              <span
+                className="shrink-0 w-9 h-9 rounded-lg flex items-center justify-center border"
+                style={{
+                  background: `linear-gradient(180deg, ${PALETTE.surf}1c, transparent)`,
+                  borderColor: glassBorder,
+                  boxShadow: `inset 0 0 10px ${PALETTE.surf}22`,
+                }}
+              >
+                <t.icon
+                  className="w-4 h-4"
+                  style={{
+                    color: PALETTE.surf,
+                    filter: `drop-shadow(0 0 5px ${PALETTE.surf}88)`,
+                  }}
+                  strokeWidth={1.5}
+                />
+              </span>
+              <span
+                className="text-[12.5px] md:text-[13px] font-light text-white truncate"
+                style={{ letterSpacing: "0.04em" }}
+              >
+                {t.label}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <p
+          className="mt-8 text-center text-[12px]"
+          style={{
+            color: `${PALETTE.mist}cc`,
+            letterSpacing: "0.22em",
+          }}
+        >
+          + MORE TOPICS ADDED EVERY MONTH
+        </p>
       </section>
 
       {/* ============================================================ */}

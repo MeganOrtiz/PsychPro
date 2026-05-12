@@ -60,6 +60,24 @@ uri = "file://attached_assets/generated_images/landing_brain_hero.png"
 type = "image"
 title = "landing brain hero"
 
+[[generated]]
+id = "WrQRKp-avto4J0i3SjY52"
+uri = "file://attached_assets/generated_images/landing_brain_superior.png"
+type = "image"
+title = "superior brain view"
+
+[[generated]]
+id = "5LOU9gVzH8GfJB5yYK19v"
+uri = "file://attached_assets/generated_images/atmospheric_smoke_full.png"
+type = "image"
+title = "atmospheric smoke full"
+
+[[generated]]
+id = "GQfrthycDzBYnYJIDBha_"
+uri = "file://attached_assets/generated_images/landing_brain_topdown.png"
+type = "image"
+title = "topdown brain dorsal"
+
 [[outputs]]
 id = "aKKI8N7WseM8lzrKZFEEq"
 uri = "file://.local/exports/brain-lab-code.tar.gz"

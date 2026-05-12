@@ -96,36 +96,51 @@ export default function AppLayout({ children }: AppLayoutProps) {
             "radial-gradient(circle, rgba(111,217,234,0.22), rgba(52,170,199,0.10) 40%, transparent 70%)",
           }}
         />
-        {/* Drifting smoke columns — left + mirrored right. Slower, fainter, asymmetric. */}
+        {/* Atmospheric smoke — diffused across the ENTIRE canvas, not just
+            the sides. Three drifting layers (left, right, full-bleed center)
+            blend together so there are no visible "smoke walls" at the edges
+            and the cinematic haze sits behind every card. */}
         <div
-          className="absolute top-0 -left-32 w-[40vw] h-full opacity-[0.22] mix-blend-screen"
+          className="absolute inset-0 opacity-[0.28] mix-blend-screen"
           style={{
             backgroundImage: `url(${smokeTexture})`,
-            backgroundSize: "auto 110%",
+            backgroundSize: "180% auto",
+            backgroundPosition: "center center",
+            backgroundRepeat: "no-repeat",
+            animation: "psp-app-drift-c 110s ease-in-out infinite",
+            willChange: "transform",
+          }}
+          data-psp-anim
+        />
+        <div
+          className="absolute top-0 -left-32 w-[55vw] h-full opacity-[0.22] mix-blend-screen"
+          style={{
+            backgroundImage: `url(${smokeTexture})`,
+            backgroundSize: "auto 120%",
             backgroundPosition: "left center",
             backgroundRepeat: "no-repeat",
             maskImage:
-              "linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.45) 55%, transparent 100%)",
+              "linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.55) 60%, transparent 100%)",
             WebkitMaskImage:
-              "linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.45) 55%, transparent 100%)",
+              "linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.55) 60%, transparent 100%)",
             animation: "psp-app-drift-a 64s ease-in-out infinite",
             willChange: "transform",
           }}
           data-psp-anim
         />
         <div
-          className="absolute top-0 -right-32 w-[40vw] h-full opacity-[0.18] mix-blend-screen"
+          className="absolute top-0 -right-32 w-[55vw] h-full opacity-[0.20] mix-blend-screen"
           data-psp-anim
           style={{
             backgroundImage: `url(${smokeTexture})`,
-            backgroundSize: "auto 110%",
+            backgroundSize: "auto 120%",
             backgroundPosition: "right center",
             backgroundRepeat: "no-repeat",
             transform: "scaleX(-1)",
             maskImage:
-              "linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.45) 55%, transparent 100%)",
+              "linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.55) 60%, transparent 100%)",
             WebkitMaskImage:
-              "linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.45) 55%, transparent 100%)",
+              "linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.55) 60%, transparent 100%)",
             animation: "psp-app-drift-b 82s ease-in-out infinite",
             willChange: "transform",
           }}
@@ -157,6 +172,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
       <style>{`
         @keyframes psp-app-drift-a { 0%,100% { transform: translate3d(0,0,0) scale(1);} 50% { transform: translate3d(1.2%,-1.4%,0) scale(1.02);} }
         @keyframes psp-app-drift-b { 0%,100% { transform: scaleX(-1) translate3d(0,0,0);} 50% { transform: scaleX(-1) translate3d(1.4%,0.8%,0) scale(1.025);} }
+        @keyframes psp-app-drift-c { 0%,100% { transform: translate3d(-1%,0,0) scale(1.04);} 50% { transform: translate3d(1.5%,-1%,0) scale(1.08);} }
         @keyframes psp-app-node { 0%,100% { opacity: 0.10; } 50% { opacity: 0.32; } }
         @media (prefers-reduced-motion: reduce) {
           [data-psp-anim] { animation: none !important; }
