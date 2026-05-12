@@ -1,0 +1,557 @@
+PSYCHPRO — COMPLETE CINEMATIC UI REBUILD DIRECTIVE
+THIS PROMPT OVERRIDES PREVIOUS DESIGN INSTRUCTIONS.
+
+GOAL:
+Rebuild the PsychPro landing page, dashboard, and all subsequent pages so they match the EXACT atmosphere, composition quality, cinematic immersion, and premium neuroscience aesthetic of the provided reference images.
+
+IMPORTANT:
+The current implementation is still too:
+- generic AI-generated
+- SaaS-like
+- flat
+- over-glowy
+- visually disconnected
+- scientifically inaccurate
+
+This redesign must feel like:
+“A luxury neuroscience learning operating system for future clinicians.”
+
+The final result should feel:
+- immersive
+- editorial
+- cinematic
+- atmospheric
+- biologically inspired
+- premium
+- restrained
+- elegant
+- psychologically intelligent
+
+NOT:
+- cyberpunk
+- futuristic gamer UI
+- generic dashboard template
+- neon tech startup
+- crypto app
+- flashy sci-fi
+
+====================================================
+MOST IMPORTANT GLOBAL RULE
+====================================================
+
+The ENTIRE application must share ONE cohesive atmospheric environment.
+
+The:
+- landing page
+- dashboard
+- topics pages
+- study lab
+- brain lab
+- flashcards
+- quizzes
+- resources
+- profile pages
+
+must ALL feel like they exist inside the SAME world.
+
+Create ONE reusable global atmospheric system.
+
+====================================================
+PART 1 — GLOBAL BACKGROUND SYSTEM
+====================================================
+
+THIS IS THE MOST IMPORTANT SECTION.
+
+The background should look EXACTLY like:
+- underwater teal smoke diffusion
+- cinematic atmospheric haze
+- glowing bioluminescent fog
+- premium neuroscience editorial visuals
+
+====================================================
+BACKGROUND IMPLEMENTATION REQUIREMENTS
+====================================================
+
+DO NOT:
+- place smoke only on the sides
+- use isolated image blocks
+- use visible smoke panels
+- use generic gradients
+- use tech grids
+- use lightning streaks
+- use neural explosions
+- use glowing rays shooting from the brain
+
+Instead:
+
+Build a FULL-PAGE layered atmospheric environment.
+
+====================================================
+BACKGROUND LAYER STACK
+====================================================
+
+LAYER 1 — BASE GRADIENT
+Very dark cinematic navy-black gradient.
+
+Colors:
+#01070B
+#020B12
+#03131D
+#041C28
+
+====================================================
+
+LAYER 2 — FULL PAGE SMOKE DIFFUSION
+Apply underwater-style teal smoke across the ENTIRE application.
+
+The smoke must:
+- diffuse naturally
+- fade softly
+- overlap subtly
+- drift organically
+- feel fluid and biological
+
+The smoke should resemble:
+ink diffusing underwater.
+
+NOT:
+- clouds
+- fog machine smoke
+- vapor
+- nebula effects
+
+Opacity:
+VERY LOW.
+
+Blur:
+HEAVILY softened.
+
+====================================================
+
+LAYER 3 — ATMOSPHERIC CYAN HAZE
+Add subtle volumetric cyan glow throughout the page.
+
+The glow should:
+- softly illuminate sections
+- create cinematic depth
+- subtly brighten focal areas
+
+NO bright neon bloom.
+
+====================================================
+
+LAYER 4 — SOFT PARTICLE DEPTH
+Add extremely subtle floating particles.
+
+Particles should:
+- drift slowly
+- be sparse
+- softly blurred
+- low opacity
+
+NO:
+- spark effects
+- stars
+- shooting particles
+- glowing dots everywhere
+
+====================================================
+GLOBAL COLOR SYSTEM
+====================================================
+
+USE THESE COLORS EXACTLY.
+
+PRIMARY BACKGROUNDS:
+#01070B
+#020B12
+#04131B
+#071C26
+
+DEEP TEAL:
+#0A2A39
+#103847
+#124A5B
+
+PRIMARY CYAN:
+#5FC9DE
+#6FD9EA
+#7CE5F3
+
+SOFT CYAN HIGHLIGHTS:
+#8DEAF5
+
+GLASS PANELS:
+rgba(4,18,28,0.72)
+rgba(6,25,36,0.78)
+
+BORDERS:
+rgba(120,235,255,0.16)
+
+====================================================
+IMPORTANT COLOR RULE
+====================================================
+
+The UI MUST remain DARK.
+
+Cyan should ONLY be used for:
+- edge glow
+- subtle lighting
+- focal illumination
+- hover states
+- active states
+
+DO NOT:
+- create bright cyan panels
+- use solid turquoise backgrounds
+- use glowing neon cards
+- create overexposed spotlight cards
+
+The interface should feel:
+- restrained
+- cinematic
+- premium
+- atmospheric
+
+====================================================
+PART 2 — HERO SECTION REBUILD
+====================================================
+
+CURRENT IMPLEMENTATION IS WRONG.
+
+The brain is:
+- front-facing
+- gray
+- clay-like
+- disconnected from atmosphere
+- overlapping incorrectly with typography
+
+====================================================
+NEW HERO REQUIREMENTS
+====================================================
+
+The brain MUST match the reference image EXACTLY.
+
+====================================================
+BRAIN REQUIREMENTS
+====================================================
+
+Use:
+TRUE SUPERIOR/TOP-DOWN ANATOMICAL VIEW.
+
+The brain should:
+- be viewed from above
+- clearly show both hemispheres
+- have realistic sulci and gyri
+- feel organic
+- feel biological
+- feel immersive
+- feel premium
+
+The brain should NOT:
+- look like a clay model
+- be white or gray
+- look plastic
+- look cartoonish
+- look overly CGI
+
+====================================================
+
+BRAIN COLOR + LIGHTING
+====================================================
+
+The brain should:
+- blend into the environment
+- use deep teal/cyan tones
+- glow softly from within
+- fade naturally into surrounding haze
+
+Lighting should feel:
+- underwater
+- volumetric
+- cinematic
+- restrained
+
+====================================================
+
+REMOVE COMPLETELY:
+- electrical streaks
+- neural rays
+- glowing side beams
+- lightning effects
+- shooting lines
+- sci-fi energy trails
+
+====================================================
+
+BRAIN POSITIONING
+====================================================
+
+Place the brain:
+- top center
+- floating slightly above the title
+- clearly separated from typography
+
+DO NOT overlap the title heavily with the brain.
+
+The composition should feel:
+- balanced
+- editorial
+- elegant
+
+====================================================
+TYPOGRAPHY
+====================================================
+
+TITLE:
+P S Y C H P R O
+
+Style:
+- ultra thin
+- luxury spacing
+- clean
+- cinematic
+- soft white with subtle cyan reflection
+
+Subtitle:
+LEARN. EXPAND. CONNECT.
+
+OR:
+ADVANCE YOUR MIND. ELEVATE CARE.
+
+Typography should feel:
+- Apple-level restraint
+- premium editorial
+- elegant
+
+====================================================
+HERO VALUE PROPOSITION
+====================================================
+
+The homepage must communicate VALUE immediately.
+
+Replace generic marketing copy with:
+
+PsychPro combines neuroscience-based learning systems, active recall, spaced repetition, clinical psychology education, and immersive study tools to help students and professionals learn faster and retain information long term.
+
+====================================================
+CTA BUTTONS
+====================================================
+
+Buttons:
+- glassmorphism
+- subtle edge glow
+- dark transparent interiors
+- soft hover illumination
+
+NO:
+- bright neon
+- strong gradients
+- thick glows
+
+====================================================
+PART 3 — LANDING PAGE CONTENT STRUCTURE
+====================================================
+
+REMOVE COMPLETELY:
+- trusted by psychology professionals section
+- fake statistics
+- fake certifications
+- generic testimonials
+
+These make the platform feel:
+- template-based
+- generic SaaS
+- visually cluttered
+
+====================================================
+REPLACE WITH:
+====================================================
+
+SECTION:
+MASTER CLINICAL PSYCHOLOGY FASTER
+
+SUBTEXT:
+Built using evidence-based learning principles to improve long-term retention, clinical mastery, and efficient studying.
+
+====================================================
+FEATURE GRID
+====================================================
+
+Create elegant atmospheric feature cards.
+
+Cards:
+1. CUT STUDY TIME IN HALF
+2. ACTUALLY RETAIN INFORMATION OVER TIME
+3. MASTER COMPLEX CLINICAL TOPICS
+4. STUDY WITH STRUCTURE, NOT CHAOS
+
+Cards should:
+- float softly
+- use subtle transparency
+- have restrained edge glow
+- use premium spacing
+
+====================================================
+TOPIC SECTION
+====================================================
+
+NEW SECTION:
+EXPLORE 39+ SPECIALIZED PSYCHOLOGY TOPICS
+
+Show actual topic categories:
+- Neuropsychology
+- Neuroscience
+- Psychotherapy
+- Psychopharmacology
+- ADHD
+- Autism
+- Executive Functioning
+- DSM-5 Disorders
+- Research Methods
+- Statistics
+- CBT
+- ACT/DBT
+- Personality Disorders
+- Child Psychology
+- Ethics
+- Brain Injury
+- Learning & Memory
+- And more…
+
+====================================================
+
+TOPIC GRID DESIGN
+====================================================
+
+The topic grid should:
+- feel editorial
+- be highly organized
+- use premium spacing
+- use dark atmospheric cards
+- softly illuminate on hover
+
+NOT:
+- LMS tiles
+- colorful category blocks
+- generic dashboard widgets
+
+====================================================
+PART 4 — DASHBOARD REBUILD
+====================================================
+
+The dashboard should match the provided dashboard reference almost EXACTLY.
+
+====================================================
+GLOBAL DASHBOARD RULE
+====================================================
+
+The dashboard MUST share the SAME atmospheric background system as the landing page.
+
+Do NOT create:
+- separate dashboard backgrounds
+- different smoke styles
+- different color systems
+
+The dashboard should feel:
+like the user entered deeper into the SAME world.
+
+====================================================
+SIDEBAR
+====================================================
+
+The sidebar should:
+- blend into the environment
+- remain dark
+- use translucent glass styling
+- use restrained active states
+
+DO NOT:
+- use bright cyan fills
+- use thick glowing outlines
+- create gaming UI styling
+
+Active item:
+- subtle internal glow
+- slight elevation
+- soft cyan edge lighting
+
+====================================================
+SPOTLIGHT PANEL FIX
+====================================================
+
+CURRENT IMPLEMENTATION IS WRONG.
+
+The spotlight panel is:
+- too bright
+- too turquoise
+- too flat
+- disconnected from rest of UI
+
+NEW REQUIREMENTS:
+The spotlight panel must:
+- use the SAME dark atmospheric styling as other cards
+- integrate smoke INSIDE the card
+- use subtle volumetric lighting
+- remain dark and cinematic
+
+DO NOT:
+- use solid cyan backgrounds
+- use bright gradients
+- create a glowing billboard effect
+
+====================================================
+DASHBOARD CARDS
+====================================================
+
+All dashboard cards should:
+- share identical glass system
+- use restrained edge lighting
+- have deep atmospheric backgrounds
+- softly float above background
+
+Cards should feel:
+- premium
+- editorial
+- immersive
+
+====================================================
+PART 5 — MOTION SYSTEM
+====================================================
+
+ALL motion should feel:
+- calm
+- cinematic
+- underwater
+- premium
+
+NO:
+- bouncing
+- flashy transitions
+- exaggerated hover effects
+
+Use:
+- slow drifting background motion
+- subtle hover lift
+- soft fade transitions
+- gentle parallax
+
+====================================================
+FINAL IMPORTANT RULE
+====================================================
+
+The platform should feel LESS like:
+“AI futuristic UI”
+
+and MORE like:
+“a luxury neuroscience educational experience.”
+
+The user should subconsciously feel:
+- calm
+- focus
+- immersion
+- professionalism
+- ambition
+- intelligence
+
+Everything should feel:
+softly illuminated through atmospheric teal diffusion.

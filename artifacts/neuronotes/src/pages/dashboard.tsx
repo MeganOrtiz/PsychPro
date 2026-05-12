@@ -710,21 +710,32 @@ function SpotlightCard({ onCta }: { onCta: () => void }) {
         boxShadow: `0 24px 60px -28px ${PALETTE.teal}aa, 0 0 0 1px ${PALETTE.surf}22 inset`,
       }}
     >
-      {/* Cloud as the FULL background of the Spotlight box (matches the
-          reference). The dark scrim below keeps Sarah K.'s text legible. */}
+      {/* Spotlight panel must share the SAME dark atmospheric system as
+          every other dashboard card — no bright turquoise billboard.
+          The cloud now sits behind a deep navy base + multi-stop scrim
+          so it reads as soft volumetric haze inside the card, not as a
+          glowing background. */}
+      <div
+        aria-hidden
+        className="absolute inset-0"
+        style={{
+          background: `linear-gradient(180deg, ${PALETTE.ink} 0%, ${PALETTE.bg} 100%)`,
+        }}
+      />
       <img
         src={spotlightCloudImage}
         alt=""
         aria-hidden
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-cover opacity-[0.22] mix-blend-screen"
+        style={{ filter: "blur(2px) saturate(0.55) brightness(0.7)" }}
       />
-      {/* Bottom-weighted scrim — fades cloud into a deep navy floor so the
-          name + credentials read cleanly. */}
+      {/* Multi-stop scrim — top + bottom darken so the cloud reads as
+          atmosphere (not a flat bright panel) and text stays crisp. */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
-          background: `linear-gradient(to bottom, transparent 0%, transparent 35%, ${PALETTE.surface}aa 65%, ${PALETTE.ink}ee 100%)`,
+          background: `linear-gradient(to bottom, ${PALETTE.ink}cc 0%, ${PALETTE.ink}55 25%, transparent 45%, ${PALETTE.surface}aa 70%, ${PALETTE.ink}f0 100%)`,
         }}
       />
 

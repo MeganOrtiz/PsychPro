@@ -171,7 +171,7 @@ export default function LandingPage() {
     >
       {/* Local keyframes — kept inline so the page is self-contained. */}
       <style>{`
-        body { background: ${PALETTE.ink}; }
+        body { background: linear-gradient(180deg, #01070B 0%, #020B12 35%, #04131B 70%, ${PALETTE.ink} 100%); }
         @keyframes psp-drift-a { 0%,100% { transform: translate3d(0,0,0) scale(1);} 50% { transform: translate3d(2%,-2%,0) scale(1.04);} }
         @keyframes psp-drift-b { 0%,100% { transform: scaleX(-1) translate3d(0,0,0);} 50% { transform: scaleX(-1) translate3d(2%,1%,0) scale(1.04);} }
         @keyframes psp-drift-c { 0%,100% { transform: translate3d(-1%,0,0) scale(1.05);} 50% { transform: translate3d(1.5%,-1.2%,0) scale(1.10);} }
@@ -223,18 +223,32 @@ export default function LandingPage() {
             the reference. Bottom of viewport falls into the dark scrim
             below; sections beneath the hero overlay that area. */}
         <div
-          className="absolute inset-x-0 top-0 select-none"
+          className="absolute inset-x-0 top-0 select-none mix-blend-screen"
           style={{
             backgroundImage: `url(${brainHero})`,
-            backgroundSize: "100% auto",
+            backgroundSize: "82% auto",
             backgroundPosition: "center top",
             backgroundRepeat: "no-repeat",
-            // 1408x768 source → height = width * (768/1408) ≈ 0.546.
-            // Use aspect-ratio so the layer is exactly the artwork's height.
             aspectRatio: "1024 / 573",
+            // Hue-rotate + saturate pulls the gray clay brain into the
+            // teal/cyan atmospheric palette so it reads as part of the
+            // environment, not a stock 3D model on top of it.
+            filter:
+              "hue-rotate(165deg) saturate(0.85) brightness(0.78) contrast(1.05)",
             animation: reduceMotion ? "none" : "psp-pulse 6s ease-in-out infinite",
           }}
           aria-hidden
+        />
+        {/* Soft atmospheric scrim faded over the bottom half of the brain
+            so the lower hemisphere dissolves into the page haze and the
+            "PSYCHPRO" wordmark is no longer visually overlapped. */}
+        <div
+          className="absolute inset-x-0 top-0 pointer-events-none"
+          aria-hidden
+          style={{
+            aspectRatio: "1024 / 573",
+            background: `linear-gradient(180deg, transparent 0%, transparent 45%, ${PALETTE.ink}aa 78%, ${PALETTE.ink} 100%)`,
+          }}
         />
 
         {/* Atmospheric smoke — diffused across the ENTIRE page (no side
