@@ -299,7 +299,7 @@ export default function DashboardPage() {
             className="text-[10px] md:text-[11px] mt-2 tracking-[0.32em] uppercase"
             style={{ color: `${PALETTE.mist}cc` }}
           >
-            Advance Your Mind. Elevate Care.
+            Learn. Expand. Connect.
           </p>
         </div>
       </header>
