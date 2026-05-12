@@ -5,6 +5,7 @@ import { getOrCreateAnonymousUserId } from "@/lib/anonymous-user";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { STUDY_PALETTE } from "@/lib/study-theme";
+import smokeTexture from "@assets/Screenshot_2026-04-27_at_1.40.17_AM_1778535214205.png";
 
 type NavItem = { href: string; label: string; icon: React.ElementType };
 
@@ -70,7 +71,94 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const { isAdmin, isScholar } = useUserMeta();
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
+    <div className="flex h-screen overflow-hidden relative">
+      {/* ============================================================ */}
+      {/* GLOBAL CINEMATIC AMBIENT BACKGROUND                          */}
+      {/* Drifting cyan smoke columns + soft halo glow + pulsing nodes */}
+      {/* sit behind every interior page so dashboard, topics, brain-  */}
+      {/* lab, study-lab and the rest share the same atmosphere as the */}
+      {/* landing page. Subtle enough that cards remain perfectly      */}
+      {/* readable; the smoke just gives the canvas depth and life.    */}
+      {/* ============================================================ */}
+      <div
+        className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
+        aria-hidden
+        style={{
+          background: `linear-gradient(180deg, ${STUDY_PALETTE.bg} 0%, #0A2030 45%, ${STUDY_PALETTE.surface} 100%)`,
+        }}
+      >
+        {/* Soft cerulean halo high on the page (like the brain glow). */}
+        <div
+          className="absolute top-[-12%] left-1/2 -translate-x-1/2 w-[70vw] h-[60vh] rounded-full blur-[140px] opacity-40"
+          style={{
+            background: `radial-gradient(circle, ${STUDY_PALETTE.surf}55, ${STUDY_PALETTE.teal}33 40%, transparent 70%)`,
+          }}
+        />
+        {/* Drifting smoke columns — left + mirrored right. */}
+        <div
+          className="absolute top-0 -left-32 w-[40vw] h-full opacity-40 mix-blend-screen"
+          style={{
+            backgroundImage: `url(${smokeTexture})`,
+            backgroundSize: "auto 110%",
+            backgroundPosition: "left center",
+            backgroundRepeat: "no-repeat",
+            maskImage:
+              "linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.55) 60%, transparent 100%)",
+            WebkitMaskImage:
+              "linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.55) 60%, transparent 100%)",
+            animation: "psp-app-drift-a 28s ease-in-out infinite",
+          }}
+          data-psp-anim
+        />
+        <div
+          className="absolute top-0 -right-32 w-[40vw] h-full opacity-40 mix-blend-screen"
+          data-psp-anim
+          style={{
+            backgroundImage: `url(${smokeTexture})`,
+            backgroundSize: "auto 110%",
+            backgroundPosition: "right center",
+            backgroundRepeat: "no-repeat",
+            transform: "scaleX(-1)",
+            maskImage:
+              "linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.55) 60%, transparent 100%)",
+            WebkitMaskImage:
+              "linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.55) 60%, transparent 100%)",
+            animation: "psp-app-drift-b 32s ease-in-out infinite",
+          }}
+        />
+        {/* Faint pulsing neural nodes scattered across the canvas. */}
+        <svg className="absolute inset-0 w-full h-full" aria-hidden>
+          {Array.from({ length: 18 }).map((_, i) => {
+            const x = (i * 137) % 100;
+            const y = (i * 73) % 100;
+            const r = 0.7 + ((i * 11) % 16) / 12;
+            const dur = 3 + (i % 5);
+            return (
+              <circle
+                key={i}
+                cx={`${x}%`}
+                cy={`${y}%`}
+                r={r}
+                fill={STUDY_PALETTE.surf}
+                opacity={0.35}
+                style={{
+                  animation: `psp-app-node ${dur}s ease-in-out ${(i % 7) * 0.4}s infinite`,
+                }}
+                data-psp-anim
+              />
+            );
+          })}
+        </svg>
+      </div>
+      <style>{`
+        @keyframes psp-app-drift-a { 0%,100% { transform: translate3d(0,0,0) scale(1);} 50% { transform: translate3d(2%,-2%,0) scale(1.04);} }
+        @keyframes psp-app-drift-b { 0%,100% { transform: scaleX(-1) translate3d(0,0,0);} 50% { transform: scaleX(-1) translate3d(2%,1%,0) scale(1.05);} }
+        @keyframes psp-app-node { 0%,100% { opacity: 0.18; } 50% { opacity: 0.55; } }
+        @media (prefers-reduced-motion: reduce) {
+          [data-psp-anim] { animation: none !important; }
+        }
+      `}</style>
+
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-30 md:hidden"

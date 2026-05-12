@@ -261,14 +261,13 @@
   --ring: 200 86% 65%;
 }
 
+/* Page surface stays transparent — the AppLayout renders a single
+   fixed cinematic background (smoke + halo + nodes) behind every
+   interior page so the dashboard, topics, brain-lab, etc. all share
+   the same atmosphere as the landing page. */
 .study-page-bg,
 .study-page-aurora {
-  background: linear-gradient(
-    180deg,
-    #061826 0%,
-    #0A2030 40%,
-    #0C2538 100%
-  );
+  background: transparent;
 }
 
 /* User-supplied .study-card recipe — applied to every shadcn Card
