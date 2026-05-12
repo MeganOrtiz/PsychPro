@@ -295,6 +295,12 @@ export default function DashboardPage() {
           >
             PsychPro
           </h1>
+          <p
+            className="text-[10px] md:text-[11px] mt-2 tracking-[0.32em] uppercase"
+            style={{ color: `${PALETTE.mist}cc` }}
+          >
+            Learn. Expand. Connect.
+          </p>
         </div>
       </header>
 
