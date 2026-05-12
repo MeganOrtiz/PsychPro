@@ -87,31 +87,32 @@ export default function AppLayout({ children }: AppLayoutProps) {
           background: `linear-gradient(180deg, ${STUDY_PALETTE.bg} 0%, #0A2030 45%, ${STUDY_PALETTE.surface} 100%)`,
         }}
       >
-        {/* Soft cerulean halo high on the page (like the brain glow). */}
+        {/* Soft cerulean halo high on the page — restrained, atmospheric. */}
         <div
-          className="absolute top-[-12%] left-1/2 -translate-x-1/2 w-[70vw] h-[60vh] rounded-full blur-[140px] opacity-40"
+          className="absolute top-[-18%] left-[44%] -translate-x-1/2 w-[62vw] h-[55vh] rounded-full blur-[160px] opacity-25"
           style={{
-            background: `radial-gradient(circle, ${STUDY_PALETTE.surf}55, ${STUDY_PALETTE.teal}33 40%, transparent 70%)`,
+            background: `radial-gradient(circle, ${STUDY_PALETTE.surf}3a, ${STUDY_PALETTE.teal}1f 40%, transparent 70%)`,
           }}
         />
-        {/* Drifting smoke columns — left + mirrored right. */}
+        {/* Drifting smoke columns — left + mirrored right. Slower, fainter, asymmetric. */}
         <div
-          className="absolute top-0 -left-32 w-[40vw] h-full opacity-40 mix-blend-screen"
+          className="absolute top-0 -left-32 w-[40vw] h-full opacity-[0.22] mix-blend-screen"
           style={{
             backgroundImage: `url(${smokeTexture})`,
             backgroundSize: "auto 110%",
             backgroundPosition: "left center",
             backgroundRepeat: "no-repeat",
             maskImage:
-              "linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.55) 60%, transparent 100%)",
+              "linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.45) 55%, transparent 100%)",
             WebkitMaskImage:
-              "linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.55) 60%, transparent 100%)",
-            animation: "psp-app-drift-a 28s ease-in-out infinite",
+              "linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.45) 55%, transparent 100%)",
+            animation: "psp-app-drift-a 64s ease-in-out infinite",
+            willChange: "transform",
           }}
           data-psp-anim
         />
         <div
-          className="absolute top-0 -right-32 w-[40vw] h-full opacity-40 mix-blend-screen"
+          className="absolute top-0 -right-32 w-[40vw] h-full opacity-[0.18] mix-blend-screen"
           data-psp-anim
           style={{
             backgroundImage: `url(${smokeTexture})`,
@@ -120,19 +121,20 @@ export default function AppLayout({ children }: AppLayoutProps) {
             backgroundRepeat: "no-repeat",
             transform: "scaleX(-1)",
             maskImage:
-              "linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.55) 60%, transparent 100%)",
+              "linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.45) 55%, transparent 100%)",
             WebkitMaskImage:
-              "linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.55) 60%, transparent 100%)",
-            animation: "psp-app-drift-b 32s ease-in-out infinite",
+              "linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.45) 55%, transparent 100%)",
+            animation: "psp-app-drift-b 82s ease-in-out infinite",
+            willChange: "transform",
           }}
         />
-        {/* Faint pulsing neural nodes scattered across the canvas. */}
+        {/* Faint pulsing neural nodes — fewer, slower, biological. */}
         <svg className="absolute inset-0 w-full h-full" aria-hidden>
-          {Array.from({ length: 18 }).map((_, i) => {
+          {Array.from({ length: 9 }).map((_, i) => {
             const x = (i * 137) % 100;
             const y = (i * 73) % 100;
-            const r = 0.7 + ((i * 11) % 16) / 12;
-            const dur = 3 + (i % 5);
+            const r = 0.6 + ((i * 11) % 16) / 18;
+            const dur = 9 + (i % 6) * 1.5;
             return (
               <circle
                 key={i}
@@ -140,9 +142,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 cy={`${y}%`}
                 r={r}
                 fill={STUDY_PALETTE.surf}
-                opacity={0.35}
+                opacity={0.22}
                 style={{
-                  animation: `psp-app-node ${dur}s ease-in-out ${(i % 7) * 0.4}s infinite`,
+                  animation: `psp-app-node ${dur}s ease-in-out ${(i % 7) * 0.8}s infinite`,
                 }}
                 data-psp-anim
               />
@@ -151,9 +153,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
         </svg>
       </div>
       <style>{`
-        @keyframes psp-app-drift-a { 0%,100% { transform: translate3d(0,0,0) scale(1);} 50% { transform: translate3d(2%,-2%,0) scale(1.04);} }
-        @keyframes psp-app-drift-b { 0%,100% { transform: scaleX(-1) translate3d(0,0,0);} 50% { transform: scaleX(-1) translate3d(2%,1%,0) scale(1.05);} }
-        @keyframes psp-app-node { 0%,100% { opacity: 0.18; } 50% { opacity: 0.55; } }
+        @keyframes psp-app-drift-a { 0%,100% { transform: translate3d(0,0,0) scale(1);} 50% { transform: translate3d(1.2%,-1.4%,0) scale(1.02);} }
+        @keyframes psp-app-drift-b { 0%,100% { transform: scaleX(-1) translate3d(0,0,0);} 50% { transform: scaleX(-1) translate3d(1.4%,0.8%,0) scale(1.025);} }
+        @keyframes psp-app-node { 0%,100% { opacity: 0.10; } 50% { opacity: 0.32; } }
         @media (prefers-reduced-motion: reduce) {
           [data-psp-anim] { animation: none !important; }
         }

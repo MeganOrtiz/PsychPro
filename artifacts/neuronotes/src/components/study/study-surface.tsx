@@ -24,8 +24,8 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
     case "dark":
       return {
         background: `linear-gradient(180deg, ${P.surfaceElev}, ${P.surface})`,
-        borderColor: `${P.surf}55`,
-        boxShadow: `0 20px 60px -20px ${P.teal}77`,
+        borderColor: `${P.surf}33`,
+        boxShadow: `0 24px 60px -28px ${P.teal}55, 0 1px 0 rgba(255,255,255,0.04) inset`,
         color: "#FFFFFF",
       };
     case "accent":
@@ -54,10 +54,10 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
       // shadow with faint outer cerulean glow, Frost-White text.
       return {
         background:
-          "linear-gradient(145deg, rgba(10,45,61,0.95), rgba(6,32,44,0.98))",
-        borderColor: "rgba(94,176,200,0.15)",
+          "linear-gradient(145deg, rgba(10,45,61,0.92), rgba(6,32,44,0.96))",
+        borderColor: "rgba(94,176,200,0.10)",
         boxShadow:
-          "0 0 0 1px rgba(94,176,200,0.06), 0 20px 40px rgba(0,0,0,0.35), 0 0 30px rgba(94,176,200,0.06)",
+          "0 1px 0 rgba(255,255,255,0.04) inset, 0 24px 48px -24px rgba(0,0,0,0.55)",
         color: P.mist,
       };
   }
@@ -134,11 +134,11 @@ export const StudySurface = forwardRef<HTMLElement, StudySurfaceProps>(
           <div
             aria-hidden
             className={cn(
-              "absolute -inset-4 rounded-3xl opacity-60 transition-opacity blur-2xl pointer-events-none",
-              isButton && "group-hover:opacity-100",
+              "absolute -inset-6 rounded-[28px] opacity-30 transition-opacity duration-500 blur-3xl pointer-events-none",
+              isButton && "group-hover:opacity-70",
             )}
             style={{
-              background: `radial-gradient(circle at 50% 50%, ${P.teal}, transparent 65%)`,
+              background: `radial-gradient(circle at 50% 50%, ${P.teal}cc, transparent 65%)`,
             }}
           />
         )}

@@ -278,7 +278,7 @@ export default function DashboardPage() {
           here anymore — it lives inside the Spotlight rail box (right
           column), matching the reference. Bell sits top-right. */}
       <header
-        className="relative pt-6 md:pt-8 pb-4 md:pb-6 px-4 md:px-6 lg:px-8"
+        className="relative pt-10 md:pt-16 pb-8 md:pb-14 px-4 md:px-6 lg:px-8"
         data-testid="dashboard-header"
       >
         <button
@@ -304,7 +304,7 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 pb-8">
+      <div className="max-w-[1400px] mx-auto px-4 md:px-8 lg:px-12 pb-16">
         {/* Greeting moved into the wordmark — kept here only for SR context */}
         <span className="sr-only">Hello, {firstName}. Let's keep learning and growing your mind.</span>
 
@@ -337,8 +337,8 @@ export default function DashboardPage() {
         )}
 
         {/* Two-column: main + spotlight rail */}
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-6">
-          <div className="min-w-0 space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-8 lg:gap-10">
+          <div className="min-w-0 space-y-8 md:space-y-10">
             {/* Begin/Continue Your Journey (full width, top) */}
             <div>
             <StudySurface tone="light" glow innerClassName="p-5">
