@@ -5,6 +5,7 @@ import { getOrCreateAnonymousUserId } from "@/lib/anonymous-user";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { STUDY_PALETTE } from "@/lib/study-theme";
+import smokeTexture from "@assets/Screenshot_2026-04-27_at_1.40.17_AM_1778535214205.png";
 
 type NavItem = { href: string; label: string; icon: React.ElementType };
 
@@ -72,97 +73,44 @@ export default function AppLayout({ children }: AppLayoutProps) {
   return (
     <div className="flex h-screen overflow-hidden relative">
       {/* ============================================================ */}
-      {/* COSMIC NEBULA BACKGROUND                                     */}
-      {/* Replaces the smoke-image stack with a fully CSS-rendered     */}
-      {/* deep-space scene: navy base + radial cyan core + two soft    */}
-      {/* nebula clouds + drifting particle starfield. No imagery.     */}
+      {/* GLOBAL ATMOSPHERIC BACKGROUND                                */}
+      {/* Smoky teal cinematic environment shared across all pages.    */}
       {/* ============================================================ */}
       <div
         className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
         aria-hidden
         style={{
           background:
-            "linear-gradient(180deg, #050B14 0%, #07101D 40%, #0A1628 75%, #0D1E36 100%)",
+            "linear-gradient(180deg, #04101a 0%, #061826 45%, #07202f 100%)",
         }}
       >
-        {/* Central nebula core — soft cyan luminescence behind the
-            primary content area. */}
+        <div
+          className="absolute inset-0 opacity-[0.55] mix-blend-screen"
+          style={{
+            backgroundImage: `url(${smokeTexture})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
+            backgroundRepeat: "no-repeat",
+          }}
+        />
+        <div
+          className="absolute inset-0 opacity-[0.35] mix-blend-screen"
+          style={{
+            backgroundImage: `url(${smokeTexture})`,
+            backgroundSize: "180% auto",
+            backgroundPosition: "center top",
+            backgroundRepeat: "no-repeat",
+            transform: "scaleX(-1)",
+          }}
+        />
         <div
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(ellipse 60% 50% at 50% 30%, rgba(77,228,255,0.18) 0%, rgba(27,77,122,0.10) 35%, transparent 70%)",
+              "linear-gradient(to bottom, transparent 55%, rgba(4,16,26,0.55) 100%)",
           }}
         />
-        {/* Left nebula cloud — large soft blue blob bleeding off the edge. */}
-        <div
-          className="absolute"
-          style={{
-            top: "10%",
-            left: "-10%",
-            width: "60%",
-            height: "70%",
-            background:
-              "radial-gradient(ellipse at center, rgba(27,77,122,0.45) 0%, rgba(13,37,64,0.25) 40%, transparent 70%)",
-            filter: "blur(40px)",
-          }}
-        />
-        {/* Right nebula cloud — mirror partner. */}
-        <div
-          className="absolute"
-          style={{
-            top: "15%",
-            right: "-10%",
-            width: "60%",
-            height: "70%",
-            background:
-              "radial-gradient(ellipse at center, rgba(27,77,122,0.45) 0%, rgba(13,37,64,0.25) 40%, transparent 70%)",
-            filter: "blur(40px)",
-          }}
-        />
-        {/* Bottom darkening vignette — anchors the page floor. */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to bottom, transparent 50%, rgba(5,11,20,0.6) 100%)",
-          }}
-        />
-        {/* Particle starfield — drifting cyan dots for depth. */}
-        <svg className="absolute inset-0 w-full h-full" aria-hidden>
-          {Array.from({ length: 60 }).map((_, i) => {
-            const x = (i * 41) % 100;
-            const y = (i * 67) % 100;
-            const r = 0.5 + ((i * 7) % 18) / 12;
-            const dur = 10 + (i % 8) * 1.6;
-            const delay = (i % 12) * 0.9;
-            const baseOp = 0.18 + ((i * 13) % 50) / 100;
-            return (
-              <circle
-                key={i}
-                cx={`${x}%`}
-                cy={`${y}%`}
-                r={r}
-                fill={STUDY_PALETTE.surf}
-                opacity={baseOp}
-                style={{
-                  animation: `psp-particle-drift ${dur}s ease-in-out ${delay}s infinite`,
-                }}
-                data-psp-anim
-              />
-            );
-          })}
-        </svg>
       </div>
-      <style>{`
-        @keyframes psp-particle-drift {
-          0%,100% { transform: translate(0,0); opacity: 0.25; }
-          50%     { transform: translate(18px,-26px); opacity: 0.65; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          [data-psp-anim] { animation: none !important; }
-        }
-      `}</style>
 
       {sidebarOpen && (
         <div

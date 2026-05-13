@@ -30,7 +30,9 @@ import {
   Zap,
   TrendingUp,
 } from "lucide-react";
-import { BrainHero, CosmicBackground } from "@/components/CosmicBackground";
+import brainHero from "@assets/generated_images/cosmic_brain_hero.png";
+import smokeTexture from "@assets/Screenshot_2026-04-27_at_1.40.17_AM_1778535214205.png";
+const sideSmoke = smokeTexture;
 // Single source of truth for the brand palette — do NOT fork.
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
 
@@ -215,7 +217,88 @@ export default function LandingPage() {
       {/* The brain + smoky neural artwork IS the page — fixed,        */}
       {/* edge-to-edge. Every section overlays this single canvas.     */}
       {/* ============================================================ */}
-      <CosmicBackground />
+      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden>
+        <div
+          className="absolute inset-x-0 top-0 select-none mix-blend-screen"
+          style={{
+            backgroundImage: `url(${brainHero})`,
+            backgroundSize: "82% auto",
+            backgroundPosition: "center top",
+            backgroundRepeat: "no-repeat",
+            aspectRatio: "1024 / 573",
+            animation: reduceMotion ? "none" : "psp-pulse 6s ease-in-out infinite",
+          }}
+          aria-hidden
+        />
+        <div
+          className="absolute inset-x-0 top-0 pointer-events-none"
+          aria-hidden
+          style={{
+            aspectRatio: "1024 / 573",
+            background: `linear-gradient(180deg, transparent 0%, transparent 45%, ${PALETTE.ink}aa 78%, ${PALETTE.ink} 100%)`,
+          }}
+        />
+        <div
+          className="absolute inset-0 opacity-[0.55] mix-blend-screen"
+          style={{
+            backgroundImage: `url(${smokeTexture})`,
+            backgroundSize: "180% auto",
+            backgroundPosition: "center center",
+            backgroundRepeat: "no-repeat",
+            animation: reduceMotion ? "none" : "psp-drift-c 90s ease-in-out infinite",
+          }}
+        />
+        <div
+          className="absolute top-0 -left-32 w-[60vw] h-full opacity-[0.32] mix-blend-screen"
+          style={{
+            backgroundImage: `url(${sideSmoke})`,
+            backgroundSize: "auto 120%",
+            backgroundPosition: "left center",
+            backgroundRepeat: "no-repeat",
+            maskImage:
+              "linear-gradient(90deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.55) 55%, transparent 100%)",
+            WebkitMaskImage:
+              "linear-gradient(90deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.55) 55%, transparent 100%)",
+            animation: reduceMotion ? "none" : "psp-drift-a 38s ease-in-out infinite",
+          }}
+        />
+        <div
+          className="absolute top-0 -right-32 w-[60vw] h-full opacity-[0.30] mix-blend-screen"
+          style={{
+            backgroundImage: `url(${sideSmoke})`,
+            backgroundSize: "auto 120%",
+            backgroundPosition: "right center",
+            backgroundRepeat: "no-repeat",
+            transform: "scaleX(-1)",
+            maskImage:
+              "linear-gradient(90deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.55) 55%, transparent 100%)",
+            WebkitMaskImage:
+              "linear-gradient(90deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.55) 55%, transparent 100%)",
+            animation: reduceMotion ? "none" : "psp-drift-b 46s ease-in-out infinite",
+          }}
+        />
+        <div
+          className="absolute top-[6%] left-1/2 -translate-x-1/2 w-[55vw] h-[55vh] rounded-full blur-[100px] opacity-50"
+          style={{
+            background: `radial-gradient(circle, ${PALETTE.surf}66, transparent 65%)`,
+            transform: reduceMotion
+              ? "translate(-50%, 0)"
+              : `translate(calc(-50% + ${parallax.x * -14}px), ${parallax.y * -10}px)`,
+          }}
+        />
+        <div
+          className="absolute inset-x-0 top-0 h-40"
+          style={{
+            background: `linear-gradient(180deg, ${PALETTE.ink}cc 0%, ${PALETTE.ink}55 60%, transparent 100%)`,
+          }}
+        />
+        <div
+          className="absolute inset-x-0 bottom-0 h-[55%]"
+          style={{
+            background: `linear-gradient(180deg, transparent 0%, ${PALETTE.bg}cc 45%, ${PALETTE.ink} 100%)`,
+          }}
+        />
+      </div>
 
       {/* ============================================================ */}
       {/* NAV                                                          */}
@@ -306,10 +389,9 @@ export default function LandingPage() {
         ref={heroRef}
         className="relative pb-10 md:pb-14"
       >
-        {/* Pure SVG cosmic brain hero — sits above the wordmark. */}
-        <div className="pt-10 md:pt-14 pb-4 md:pb-6">
-          <BrainHero />
-        </div>
+        {/* Spacer — pushes wordmark down so it lands just below the
+            cinematic brain artwork in the fixed background. */}
+        <div className="h-[36vw] max-h-[640px] min-h-[260px]" aria-hidden />
 
         {/* Wordmark + copy — sits directly over the brain background */}
         <div className="relative max-w-[1180px] mx-auto px-5 md:px-8 text-center">
