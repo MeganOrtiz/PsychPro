@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import cosmicBrainImg from "@assets/generated_images/cosmic_brain_hero.png";
 
 export function CosmicBackground() {
   const stars = useMemo(
@@ -67,11 +68,20 @@ export function BrainHero() {
 
       <div className="brain-halo" />
 
+      <img
+        src={cosmicBrainImg}
+        alt=""
+        aria-hidden="true"
+        className="brain-hero brain-hero--photo"
+        draggable={false}
+      />
+
       <svg
-        className="brain-hero"
+        className="brain-hero brain-hero--svg"
         viewBox="0 0 400 400"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
+        style={{ display: "none" }}
       >
         <defs>
           <radialGradient id="brainGlow" cx="50%" cy="40%" r="60%">
