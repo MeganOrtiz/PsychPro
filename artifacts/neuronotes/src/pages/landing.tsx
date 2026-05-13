@@ -30,9 +30,13 @@ import {
   Zap,
   TrendingUp,
 } from "lucide-react";
-import brainHero from "@assets/generated_images/landing_brain_topdown.png";
 import smokeTexture from "@assets/generated_images/atmospheric_smoke_full.png";
-import sideSmoke from "@assets/Screenshot_2026-04-27_at_1.40.17_AM_1778535214205.png";
+// Cosmic redesign: brain hero asset is being regenerated as a glowing
+// nebula brain. Until it lands, alias to the smoke texture so the
+// import graph stays valid; the layer's blend mode renders it as part
+// of the atmosphere rather than a visible brain.
+const brainHero = smokeTexture;
+const sideSmoke = smokeTexture;
 // Single source of truth for the brand palette — do NOT fork.
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
 
@@ -171,7 +175,7 @@ export default function LandingPage() {
     >
       {/* Local keyframes — kept inline so the page is self-contained. */}
       <style>{`
-        body { background: linear-gradient(180deg, #01070B 0%, #020B12 35%, #04131B 70%, ${PALETTE.ink} 100%); }
+        body { background: linear-gradient(180deg, #050B14 0%, #07101D 40%, #0A1628 75%, #0D1E36 100%); }
         @keyframes psp-drift-a { 0%,100% { transform: translate3d(0,0,0) scale(1);} 50% { transform: translate3d(2%,-2%,0) scale(1.04);} }
         @keyframes psp-drift-b { 0%,100% { transform: scaleX(-1) translate3d(0,0,0);} 50% { transform: scaleX(-1) translate3d(2%,1%,0) scale(1.04);} }
         @keyframes psp-drift-c { 0%,100% { transform: translate3d(-1%,0,0) scale(1.05);} 50% { transform: translate3d(1.5%,-1.2%,0) scale(1.10);} }

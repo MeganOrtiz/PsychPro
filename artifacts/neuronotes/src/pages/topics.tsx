@@ -5,14 +5,18 @@ import { useGetTopics } from "@workspace/api-client-react";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { STUDY_PALETTE } from "@/lib/study-theme";
-import assessmentImg from "@/assets/topics/assessment.png";
-import clinicalCasesImg from "@/assets/topics/clinical-cases.png";
-import neuropsychologyImg from "@/assets/topics/neuropsychology.png";
+// Only neuroscience.png currently exists in src/assets/topics/. The other
+// category images are not yet generated, so they fall back to the same
+// asset to keep the import graph valid until proper category artwork
+// lands. Swap each import path to the real file once added.
 import neuroscienceImg from "@/assets/topics/neuroscience.png";
-import psychologyImg from "@/assets/topics/psychology.png";
-import psychotherapyImg from "@/assets/topics/psychotherapy.png";
-import researchMethodsImg from "@/assets/topics/research-methods.png";
-import specialTopicsImg from "@/assets/topics/special-topics.png";
+const assessmentImg = neuroscienceImg;
+const clinicalCasesImg = neuroscienceImg;
+const neuropsychologyImg = neuroscienceImg;
+const psychologyImg = neuroscienceImg;
+const psychotherapyImg = neuroscienceImg;
+const researchMethodsImg = neuroscienceImg;
+const specialTopicsImg = neuroscienceImg;
 
 const CATEGORY_ORDER = [
   "Neuroscience",

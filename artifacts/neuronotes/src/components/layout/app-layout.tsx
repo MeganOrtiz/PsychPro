@@ -5,7 +5,6 @@ import { getOrCreateAnonymousUserId } from "@/lib/anonymous-user";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { STUDY_PALETTE } from "@/lib/study-theme";
-import smokeTexture from "@assets/Screenshot_2026-04-27_at_1.40.17_AM_1778535214205.png";
 
 type NavItem = { href: string; label: string; icon: React.ElementType };
 
@@ -73,85 +72,71 @@ export default function AppLayout({ children }: AppLayoutProps) {
   return (
     <div className="flex h-screen overflow-hidden relative">
       {/* ============================================================ */}
-      {/* GLOBAL CINEMATIC AMBIENT BACKGROUND                          */}
-      {/* Drifting cyan smoke columns + soft halo glow + pulsing nodes */}
-      {/* sit behind every interior page so dashboard, topics, brain-  */}
-      {/* lab, study-lab and the rest share the same atmosphere as the */}
-      {/* landing page. Subtle enough that cards remain perfectly      */}
-      {/* readable; the smoke just gives the canvas depth and life.    */}
+      {/* COSMIC NEBULA BACKGROUND                                     */}
+      {/* Replaces the smoke-image stack with a fully CSS-rendered     */}
+      {/* deep-space scene: navy base + radial cyan core + two soft    */}
+      {/* nebula clouds + drifting particle starfield. No imagery.     */}
       {/* ============================================================ */}
       <div
         className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
         aria-hidden
         style={{
           background:
-            "linear-gradient(180deg, #01070B 0%, #04131B 38%, #071C26 72%, #082330 100%)",
+            "linear-gradient(180deg, #050B14 0%, #07101D 40%, #0A1628 75%, #0D1E36 100%)",
         }}
       >
-        {/* Soft cerulean halo high on the page — restrained, atmospheric. */}
+        {/* Central nebula core — soft cyan luminescence behind the
+            primary content area. */}
         <div
-          className="absolute top-[-18%] left-[44%] -translate-x-1/2 w-[62vw] h-[55vh] rounded-full blur-[160px] opacity-25"
+          className="absolute inset-0"
           style={{
             background:
-            "radial-gradient(circle, rgba(111,217,234,0.22), rgba(52,170,199,0.10) 40%, transparent 70%)",
+              "radial-gradient(ellipse 60% 50% at 50% 30%, rgba(77,228,255,0.18) 0%, rgba(27,77,122,0.10) 35%, transparent 70%)",
           }}
         />
-        {/* Atmospheric smoke — diffused across the ENTIRE canvas, not just
-            the sides. Three drifting layers (left, right, full-bleed center)
-            blend together so there are no visible "smoke walls" at the edges
-            and the cinematic haze sits behind every card. */}
+        {/* Left nebula cloud — large soft blue blob bleeding off the edge. */}
         <div
-          className="absolute inset-0 opacity-[0.28] mix-blend-screen"
+          className="absolute"
           style={{
-            backgroundImage: `url(${smokeTexture})`,
-            backgroundSize: "180% auto",
-            backgroundPosition: "center center",
-            backgroundRepeat: "no-repeat",
-            animation: "psp-app-drift-c 110s ease-in-out infinite",
-            willChange: "transform",
+            top: "10%",
+            left: "-10%",
+            width: "60%",
+            height: "70%",
+            background:
+              "radial-gradient(ellipse at center, rgba(27,77,122,0.45) 0%, rgba(13,37,64,0.25) 40%, transparent 70%)",
+            filter: "blur(40px)",
           }}
-          data-psp-anim
         />
+        {/* Right nebula cloud — mirror partner. */}
         <div
-          className="absolute top-0 -left-32 w-[55vw] h-full opacity-[0.22] mix-blend-screen"
+          className="absolute"
           style={{
-            backgroundImage: `url(${smokeTexture})`,
-            backgroundSize: "auto 120%",
-            backgroundPosition: "left center",
-            backgroundRepeat: "no-repeat",
-            maskImage:
-              "linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.55) 60%, transparent 100%)",
-            WebkitMaskImage:
-              "linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.55) 60%, transparent 100%)",
-            animation: "psp-app-drift-a 64s ease-in-out infinite",
-            willChange: "transform",
+            top: "15%",
+            right: "-10%",
+            width: "60%",
+            height: "70%",
+            background:
+              "radial-gradient(ellipse at center, rgba(27,77,122,0.45) 0%, rgba(13,37,64,0.25) 40%, transparent 70%)",
+            filter: "blur(40px)",
           }}
-          data-psp-anim
         />
+        {/* Bottom darkening vignette — anchors the page floor. */}
         <div
-          className="absolute top-0 -right-32 w-[55vw] h-full opacity-[0.20] mix-blend-screen"
-          data-psp-anim
+          className="absolute inset-0"
           style={{
-            backgroundImage: `url(${smokeTexture})`,
-            backgroundSize: "auto 120%",
-            backgroundPosition: "right center",
-            backgroundRepeat: "no-repeat",
-            transform: "scaleX(-1)",
-            maskImage:
-              "linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.55) 60%, transparent 100%)",
-            WebkitMaskImage:
-              "linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.55) 60%, transparent 100%)",
-            animation: "psp-app-drift-b 82s ease-in-out infinite",
-            willChange: "transform",
+            background:
+              "linear-gradient(to bottom, transparent 50%, rgba(5,11,20,0.6) 100%)",
           }}
         />
-        {/* Faint pulsing neural nodes — fewer, slower, biological. */}
+        {/* Particle starfield — drifting cyan dots for depth. */}
         <svg className="absolute inset-0 w-full h-full" aria-hidden>
-          {Array.from({ length: 9 }).map((_, i) => {
-            const x = (i * 137) % 100;
-            const y = (i * 73) % 100;
-            const r = 0.6 + ((i * 11) % 16) / 18;
-            const dur = 9 + (i % 6) * 1.5;
+          {Array.from({ length: 60 }).map((_, i) => {
+            const x = (i * 41) % 100;
+            const y = (i * 67) % 100;
+            const r = 0.5 + ((i * 7) % 18) / 12;
+            const dur = 10 + (i % 8) * 1.6;
+            const delay = (i % 12) * 0.9;
+            const baseOp = 0.18 + ((i * 13) % 50) / 100;
             return (
               <circle
                 key={i}
@@ -159,9 +144,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 cy={`${y}%`}
                 r={r}
                 fill={STUDY_PALETTE.surf}
-                opacity={0.22}
+                opacity={baseOp}
                 style={{
-                  animation: `psp-app-node ${dur}s ease-in-out ${(i % 7) * 0.8}s infinite`,
+                  animation: `psp-particle-drift ${dur}s ease-in-out ${delay}s infinite`,
                 }}
                 data-psp-anim
               />
@@ -170,10 +155,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
         </svg>
       </div>
       <style>{`
-        @keyframes psp-app-drift-a { 0%,100% { transform: translate3d(0,0,0) scale(1);} 50% { transform: translate3d(1.2%,-1.4%,0) scale(1.02);} }
-        @keyframes psp-app-drift-b { 0%,100% { transform: scaleX(-1) translate3d(0,0,0);} 50% { transform: scaleX(-1) translate3d(1.4%,0.8%,0) scale(1.025);} }
-        @keyframes psp-app-drift-c { 0%,100% { transform: translate3d(-1%,0,0) scale(1.04);} 50% { transform: translate3d(1.5%,-1%,0) scale(1.08);} }
-        @keyframes psp-app-node { 0%,100% { opacity: 0.10; } 50% { opacity: 0.32; } }
+        @keyframes psp-particle-drift {
+          0%,100% { transform: translate(0,0); opacity: 0.25; }
+          50%     { transform: translate(18px,-26px); opacity: 0.65; }
+        }
         @media (prefers-reduced-motion: reduce) {
           [data-psp-anim] { animation: none !important; }
         }
