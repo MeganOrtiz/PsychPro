@@ -29,9 +29,14 @@ import {
   Eye,
   Zap,
   TrendingUp,
+  Briefcase,
+  Globe,
+  Award,
+  Quote,
 } from "lucide-react";
 import brainHero from "@assets/generated_images/cosmic_brain_hero.png";
 import smokeTexture from "@assets/Screenshot_2026-04-27_at_1.40.17_AM_1778535214205.png";
+import drMitchellPhoto from "@assets/Screenshot_2026-04-28_at_8.01.18_PM_1778712136454.png";
 const sideSmoke = smokeTexture;
 // Single source of truth for the brand palette — do NOT fork.
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
@@ -75,25 +80,32 @@ const NAV_LINKS = [
 
 const FEATURES = [
   {
-    icon: Timer,
-    title: "CUT STUDY TIME IN HALF",
-    body: "Use adaptive flashcards, active recall, spaced repetition, and integrated study systems designed to maximize long-term retention.",
+    icon: GraduationCap,
+    title: "EXPERT-LED COURSES",
+    body: "Learn from leading professionals in clinical psychology and neuroscience.",
   },
   {
-    icon: Repeat,
-    title: "ACTUALLY RETAIN INFORMATION",
-    body: "PsychPro reinforces learning through evidence-based memory consolidation techniques rather than passive rereading.",
+    icon: Brain,
+    title: "EVIDENCE-BASED",
+    body: "Content grounded in the latest research and best clinical practices.",
   },
   {
-    icon: Layers,
-    title: "MASTER COMPLEX TOPICS",
-    body: "Study difficult concepts through visually immersive explanations, neuroscience-based learning tools, and practical clinical application.",
+    icon: Briefcase,
+    title: "PRACTICAL TOOLS",
+    body: "Resources and tools you can use in real-world clinical settings.",
   },
   {
-    icon: ListTree,
-    title: "STRUCTURE, NOT CHAOS",
-    body: "Organized systems for neuropsychology, psychotherapy, assessment, neuroscience, research methods, DSM disorders, and more.",
+    icon: Users,
+    title: "PROFESSIONAL COMMUNITY",
+    body: "Connect, collaborate, and grow with peers worldwide.",
   },
+];
+
+const STATS = [
+  { icon: Users, value: "25K+", label: "MEMBERS" },
+  { icon: BookOpen, value: "150+", label: "COURSES" },
+  { icon: Award, value: "10K+", label: "CERTIFICATIONS" },
+  { icon: Globe, value: "85+", label: "COUNTRIES" },
 ];
 
 // Topic grid — a curated 28-tile sample of the 39+ specialized
@@ -610,6 +622,133 @@ export default function LandingPage() {
         >
           + MORE TOPICS ADDED EVERY MONTH
         </p>
+      </section>
+
+      {/* ============================================================ */}
+      {/* TRUSTED BY + TESTIMONIAL                                     */}
+      {/* ============================================================ */}
+      <section className="relative max-w-[1180px] mx-auto px-5 md:px-8 pt-4 md:pt-6 pb-6 md:pb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+          {/* Trusted-By stats */}
+          <div
+            className="psp-card rounded-2xl p-6 md:p-7 border backdrop-blur-md"
+            style={{
+              background: glassBg,
+              borderColor: glassBorder,
+              boxShadow: glassShadow,
+            }}
+            data-testid="trusted-by-panel"
+          >
+            <p
+              className="text-[11px] md:text-[12px] font-medium mb-5"
+              style={{
+                color: PALETTE.surf,
+                letterSpacing: "0.32em",
+                textShadow: `0 0 14px ${PALETTE.surf}66`,
+              }}
+            >
+              TRUSTED BY<br />PSYCHOLOGY PROFESSIONALS
+            </p>
+            <div className="grid grid-cols-4 gap-3">
+              {STATS.map((s) => (
+                <div
+                  key={s.label}
+                  className="flex flex-col items-center text-center"
+                  data-testid={`stat-${s.label.toLowerCase()}`}
+                >
+                  <span
+                    className="w-10 h-10 mb-2.5 rounded-lg flex items-center justify-center border"
+                    style={{
+                      background: `linear-gradient(180deg, ${PALETTE.surf}1c, transparent)`,
+                      borderColor: glassBorder,
+                      boxShadow: `inset 0 0 10px ${PALETTE.surf}22`,
+                    }}
+                  >
+                    <s.icon
+                      className="w-4 h-4"
+                      style={{
+                        color: PALETTE.surf,
+                        filter: `drop-shadow(0 0 5px ${PALETTE.surf}88)`,
+                      }}
+                      strokeWidth={1.5}
+                    />
+                  </span>
+                  <span
+                    className="text-lg md:text-xl font-light text-white"
+                    style={{ letterSpacing: "0.04em" }}
+                  >
+                    {s.value}
+                  </span>
+                  <span
+                    className="text-[10px] md:text-[11px] mt-1"
+                    style={{
+                      color: PALETTE.mist,
+                      letterSpacing: "0.18em",
+                    }}
+                  >
+                    {s.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Testimonial */}
+          <div
+            className="psp-card rounded-2xl p-6 md:p-7 border backdrop-blur-md flex flex-col"
+            style={{
+              background: glassBg,
+              borderColor: glassBorder,
+              boxShadow: glassShadow,
+            }}
+            data-testid="testimonial-panel"
+          >
+            <Quote
+              className="w-7 h-7 mb-3"
+              style={{
+                color: PALETTE.surf,
+                filter: `drop-shadow(0 0 8px ${PALETTE.surf}88)`,
+              }}
+              strokeWidth={1.4}
+            />
+            <p
+              className="text-[14px] md:text-[15px] leading-relaxed flex-1"
+              style={{ color: PALETTE.cloud }}
+            >
+              PsychPro has transformed the way I learn and apply clinical
+              knowledge. The community and resources are unmatched.
+            </p>
+            <div className="mt-5 flex items-center gap-3">
+              <span
+                className="w-12 h-12 rounded-full overflow-hidden border-2 shrink-0"
+                style={{
+                  borderColor: `${PALETTE.surf}aa`,
+                  boxShadow: `0 0 16px -2px ${PALETTE.surf}aa`,
+                }}
+              >
+                <img
+                  src={drMitchellPhoto}
+                  alt="Dr. Sarah Mitchell"
+                  className="w-full h-full object-cover"
+                />
+              </span>
+              <div className="min-w-0">
+                <div
+                  className="text-[14px] font-medium text-white"
+                  style={{ letterSpacing: "0.02em" }}
+                >
+                  Dr. Sarah Mitchell
+                </div>
+                <div
+                  className="text-[12px]"
+                  style={{ color: PALETTE.paperSoft }}
+                >
+                  Clinical Psychologist
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* ============================================================ */}

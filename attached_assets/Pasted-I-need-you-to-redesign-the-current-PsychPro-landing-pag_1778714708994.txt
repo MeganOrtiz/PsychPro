@@ -1,0 +1,179 @@
+I need you to redesign the current PsychPro landing page and dashboard so they match the target reference images much more closely.
+
+CURRENT STATE:
+The current landing page and dashboard are close, but the visuals feel too flat, too muted, too boxed-in, and the brain/background imagery is not dramatic enough. The current landing page uses a faded frontal/anterior brain image and a narrow centered image area with darker side panels. The dashboard uses the right color family but still feels less immersive and less polished than the target.
+
+TARGET STYLE:
+Use the second set of reference images as the exact visual direction:
+- dark cinematic neuroscience interface
+- glowing superior-view brain centered at the top of the landing page
+- electric cerulean/cyan/teal glow
+- dramatic smoke/ink diffusion clouds filling the entire background
+- neural light strands and subtle glowing nodes extending outward from the brain
+- premium clinical-tech aesthetic
+- glassmorphism panels with cyan borders
+- soft glow around buttons, cards, icons, and active navigation
+- clean, thin, widely spaced typography
+- no royal blue, no navy-heavy flat look, no cartoon style
+
+GLOBAL COLOR PALETTE:
+Use this exact palette direction throughout:
+- Background base: #031923, #062733, #083847
+- Deep teal: #0B3E4A
+- Cerulean: #1DA7C2
+- Bright cyan glow: #5EEBFF
+- Soft cyan text: #A9E8F2
+- Muted blue-gray text: #88A9B5
+- Card background: rgba(3, 20, 28, 0.72)
+- Card elevated background: rgba(5, 35, 45, 0.78)
+- Border glow: rgba(94, 235, 255, 0.35)
+- Strong glow: rgba(94, 235, 255, 0.65)
+- Avoid royal blue and avoid pure black except for depth overlays.
+
+LANDING PAGE CHANGES:
+1. Replace the current faded frontal brain image with a dramatic SUPERIOR VIEW brain image like the target reference:
+   - looking straight down from above
+   - both hemispheres symmetrical
+   - central longitudinal fissure visible vertically
+   - rounded gyri/sulci
+   - glowing cyan/cerulean edges
+   - luminous internal glow
+   - not a frontal brain, not a side view, not a cartoon
+
+2. The background must cover the FULL page width and height.
+   - Remove the narrow centered-image look.
+   - Remove the large dark side columns.
+   - The smoke/nebula/ink diffusion should fill the entire viewport.
+   - Add dark overlays only to improve readability, not to hide the background.
+
+3. Add neural energy strands similar to the target image:
+   - thin cyan lines flowing outward from the brain
+   - small glowing nodes
+   - subtle motion/pulse
+   - do NOT add shooting beams or harsh light rays
+   - do NOT add random bright streaks coming out of the brain
+
+4. Hero layout:
+   - Brain should sit large and centered in the upper hero.
+   - “PSYCHPRO” should be huge, centered, thin, elegant, and widely letter-spaced.
+   - Use a clean thin font similar to the reference.
+   - Under it: “LEARN. EXPAND. CONNECT.”
+   - Under that, use refined copy:
+     “Your all-in-one platform for mastering clinical psychology through neuroscience-based learning, active recall, immersive tools, and long-term retention.”
+   - Add two glowing glass buttons:
+     “EXPLORE COURSES”
+     “JOIN COMMUNITY”
+
+5. Navigation:
+   - Keep logo on the left.
+   - Use spaced uppercase nav items.
+   - Active HOME should have a cyan underline/glow.
+   - Add search icon and Login button on the right.
+   - Header should be transparent/glass, not a heavy dark bar.
+   - Keep the same premium, thin, clinical-tech feel.
+
+6. Add lower landing content like the target:
+   - Four glass cards:
+     Expert-Led Courses
+     Evidence-Based
+     Practical Tools
+     Professional Community
+   - Each card should have a thin cyan line icon, soft glow, and short supporting copy.
+   - Add a stats/testimonial area below using glass panels.
+   - Keep all cards aligned, centered, and spacious.
+
+DASHBOARD CHANGES:
+1. Make the dashboard match the target reference image:
+   - more immersive
+   - darker cinematic background
+   - stronger cyan cloud background
+   - glassy panels
+   - glowing cyan borders
+   - more polished spacing
+   - less flat and less empty
+
+2. Use the smoke/ink diffusion background across the entire dashboard.
+   - The background should visibly fill behind all content.
+   - Use dark overlays for readability.
+   - Make the right Spotlight card background use the same smoke/cloud image, not a plain dark card.
+
+3. Sidebar:
+   - Keep sidebar dark glass.
+   - Active item should glow cyan with a subtle gradient.
+   - Icons should be thin line icons.
+   - Keep labels:
+     Dashboard, Topics, Study Lab, Brain Lab, Progress, Resources, My Tools, Standard Tools, Pro Tools, Reflections, Be Featured, Feedback, Feedback Inbox.
+   - Make the sidebar look integrated into the background instead of a flat block.
+
+4. Top dashboard title:
+   - Center “PSYCHPRO” at the top.
+   - Use thin, widely spaced letters.
+   - Under it use:
+     “LEARN. EXPAND. CONNECT.”
+   - Keep it elegant and minimal.
+
+5. Main dashboard cards:
+   - Begin Your Journey card should be translucent glass with cyan border glow.
+   - Recommended for You should use two-column cards with glowing cyan icon tiles.
+   - Streak and Leaderboard cards should feel like premium glass widgets.
+   - Use soft cyan text and muted secondary text.
+   - Buttons should have inner cyan glow and hover glow.
+
+6. Spotlight card:
+   - Make it look like the target reference.
+   - Use the same cyan smoke/cloud background inside the card.
+   - Add a star icon at top.
+   - Keep the title “Spotlight.”
+   - Add text: “Highlighting the next generation of clinicians and researchers.”
+   - Keep the circular profile image centered with cyan glowing border.
+   - Name: “Sarah K.”
+   - Subtitle: “PsyD Candidate”
+   - Second line: “Clinical Neuropsychology”
+   - Bottom label: “FEATURED WORK”
+   - Add a subtle glowing border around the entire card.
+   - Do not make this a plain black/navy box.
+
+7. Overall dashboard layout:
+   - Use the target dashboard composition:
+     sidebar left, main content center, Spotlight card right.
+   - Keep the dashboard easy to navigate.
+   - Make all cards feel cohesive.
+   - Improve padding and spacing.
+   - Avoid clutter.
+
+ANIMATION / INTERACTION:
+Add subtle movement:
+- background smoke slowly drifts
+- brain softly pulses with cyan glow
+- neural strands gently flicker
+- buttons glow on hover
+- cards lift slightly on hover
+- active nav/sidebar items have a cyan glow
+Keep motion smooth and professional, not distracting.
+
+IMPORTANT DO NOTS:
+- Do NOT use royal blue.
+- Do NOT use a frontal brain on the landing hero.
+- Do NOT use shooting light beams.
+- Do NOT keep the landing page trapped inside a narrow center image with side bars.
+- Do NOT make the dashboard cards flat black.
+- Do NOT use cartoon icons or childish UI.
+- Do NOT remove the clinical/professional tone.
+- Do NOT change the overall PsychPro brand name or core navigation.
+
+IMPLEMENTATION:
+Update the existing React/Tailwind components directly. Create reusable design tokens/classes for:
+- glass cards
+- cyan glow borders
+- hero background
+- dashboard background
+- glowing buttons
+- active nav states
+- icon tiles
+
+Make the design responsive:
+- desktop should match the target layout closely
+- tablet should stack gracefully
+- mobile should preserve the same premium aesthetic without crowding
+
+The final result should look like the target references: cinematic, cerulean/cyan, neuroscience-inspired, premium, clinical, immersive, polished, and visually engaging.
