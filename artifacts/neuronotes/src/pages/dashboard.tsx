@@ -24,7 +24,7 @@ import { useGetDashboardSummary, useGetTopics, useGetLeaderboard, useGetUserProg
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import spotlightAvatarImage from "@assets/Screenshot_2026-04-28_at_8.01.18_PM_1778550712317.png";
+import spotlightAvatarImage from "@assets/Screenshot_2026-04-28_at_8.01.18_PM_1778712136454.png";
 import spotlightCloudImage from "@assets/Screenshot_2026-05-10_at_3.03.20_PM_1778443775551.png";
 import TodayReviews from "@/components/learning/today-reviews";
 import { StudySurface } from "@/components/study/study-surface";

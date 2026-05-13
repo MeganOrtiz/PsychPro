@@ -9,7 +9,7 @@ import { STUDY_PALETTE } from "@/lib/study-theme";
 // category images are not yet generated, so they fall back to the same
 // asset to keep the import graph valid until proper category artwork
 // lands. Swap each import path to the real file once added.
-import neuroscienceImg from "@/assets/topics/neuroscience.png";
+import neuroscienceImg from "@assets/Screenshot_2026-05-10_at_3.03.20_PM_1778443775551.png";
 const assessmentImg = neuroscienceImg;
 const clinicalCasesImg = neuroscienceImg;
 const neuropsychologyImg = neuroscienceImg;

@@ -1,12 +1,6 @@
 uploads = []
 
 [[generated]]
-id = "OLIOVKYff3cBmblAClIdu"
-uri = "file://artifacts/neuronotes/src/assets/topics/neuroscience.png"
-type = "image"
-title = "neuroscience"
-
-[[generated]]
 id = "5LOU9gVzH8GfJB5yYK19v"
 uri = "file://attached_assets/generated_images/atmospheric_smoke_full.png"
 type = "image"
