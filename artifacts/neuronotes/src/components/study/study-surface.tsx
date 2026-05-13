@@ -24,8 +24,8 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
     case "dark":
       return {
         background: `linear-gradient(180deg, ${P.surfaceElev}, ${P.surface})`,
-        borderColor: `${P.surf}33`,
-        boxShadow: `0 24px 60px -28px ${P.teal}55, 0 1px 0 rgba(255,255,255,0.04) inset`,
+        borderColor: `${P.surf}55`,
+        boxShadow: `0 20px 60px -20px ${P.teal}77`,
         color: "#FFFFFF",
       };
     case "accent":
@@ -52,19 +52,14 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
       // dashboard tiles match every other shadcn Card on the dark theme.
       // Diagonal dark-teal gradient, cerulean hairline border, deep drop
       // shadow with faint outer cerulean glow, Frost-White text.
-      // Glass panel floating in atmospheric depth — deep transparent
-      // navy, cyan hairline edge, soft inset highlight, deep diffused
-      // shadow. Backdrop blur applied via CSS in index.css.
       return {
         background:
-          "linear-gradient(145deg, rgba(8,32,44,0.72), rgba(4,18,28,0.78))",
-        borderColor: "rgba(106,221,241,0.16)",
+          "linear-gradient(145deg, rgba(10,45,61,0.95), rgba(6,32,44,0.98))",
+        borderColor: "rgba(94,176,200,0.15)",
         boxShadow:
-          "inset 0 1px 0 rgba(141,234,245,0.06), 0 28px 60px -28px rgba(0,0,0,0.65)",
+          "0 0 0 1px rgba(94,176,200,0.06), 0 20px 40px rgba(0,0,0,0.35), 0 0 30px rgba(94,176,200,0.06)",
         color: P.mist,
-        backdropFilter: "blur(18px)",
-        WebkitBackdropFilter: "blur(18px)",
-      } as CSSProperties;
+      };
   }
 }
 
@@ -139,11 +134,11 @@ export const StudySurface = forwardRef<HTMLElement, StudySurfaceProps>(
           <div
             aria-hidden
             className={cn(
-              "absolute -inset-6 rounded-[28px] opacity-30 transition-opacity duration-500 blur-3xl pointer-events-none",
-              isButton && "group-hover:opacity-70",
+              "absolute -inset-4 rounded-3xl opacity-60 transition-opacity blur-2xl pointer-events-none",
+              isButton && "group-hover:opacity-100",
             )}
             style={{
-              background: `radial-gradient(circle at 50% 50%, ${P.teal}cc, transparent 65%)`,
+              background: `radial-gradient(circle at 50% 50%, ${P.teal}, transparent 65%)`,
             }}
           />
         )}

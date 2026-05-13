@@ -18,13 +18,13 @@ import {
   Share2,
   ChevronDown,
   ArrowDownUp,
-  Upload,
 } from "lucide-react";
 import { useGetDashboardSummary, useGetTopics, useGetLeaderboard, useGetUserProgress } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import spotlightAvatarImage from "@assets/Screenshot_2026-04-28_at_8.01.18_PM_1778712136454.png";
+import featuredWorkImage from "@assets/generated_images/spotlight_neuron_teal.png";
+import spotlightAvatarImage from "@assets/Screenshot_2026-04-28_at_8.01.18_PM_1778027668124.png";
 import spotlightCloudImage from "@assets/Screenshot_2026-05-10_at_3.03.20_PM_1778443775551.png";
 import TodayReviews from "@/components/learning/today-reviews";
 import { StudySurface } from "@/components/study/study-surface";
@@ -123,65 +123,6 @@ function computeWeeklyFlames(recent: RecentTopic[]) {
   });
 }
 
-// Compact upward-trending streak sparkline. Plots cumulative count of
-// "lit" (studied) days across the current week, so the line stays
-// monotonically non-decreasing — a friendly motivational shape.
-function StreakSparkline({
-  days,
-}: {
-  days: { lit: boolean; isToday: boolean }[];
-}) {
-  const W = 96;
-  const H = 36;
-  const PAD = 2;
-  const cumulative = days.reduce<number[]>((acc, d) => {
-    const prev = acc[acc.length - 1] ?? 0;
-    acc.push(prev + (d.lit ? 1 : 0));
-    return acc;
-  }, []);
-  const max = Math.max(1, cumulative[cumulative.length - 1] ?? 0);
-  const stepX = (W - PAD * 2) / Math.max(1, days.length - 1);
-  const points = cumulative.map((v, i) => {
-    const x = PAD + i * stepX;
-    const y = H - PAD - (v / max) * (H - PAD * 2);
-    return [x, y] as const;
-  });
-  const linePath = points
-    .map(([x, y], i) => `${i === 0 ? "M" : "L"}${x.toFixed(1)} ${y.toFixed(1)}`)
-    .join(" ");
-  const areaPath =
-    `${linePath} L${points[points.length - 1][0].toFixed(1)} ${H - PAD} L${PAD} ${H - PAD} Z`;
-  const last = points[points.length - 1];
-
-  return (
-    <svg
-      viewBox={`0 0 ${W} ${H}`}
-      width={W}
-      height={H}
-      className="flex-shrink-0"
-      aria-hidden
-      data-testid="streak-sparkline"
-    >
-      <defs>
-        <linearGradient id="streakArea" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={PALETTE.surf} stopOpacity="0.45" />
-          <stop offset="100%" stopColor={PALETTE.surf} stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      <path d={areaPath} fill="url(#streakArea)" />
-      <path
-        d={linePath}
-        fill="none"
-        stroke={PALETTE.surf}
-        strokeWidth="1.75"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle cx={last[0]} cy={last[1]} r="2.5" fill={PALETTE.surf} />
-    </svg>
-  );
-}
-
 function buildActivitySeries(recent: RecentTopic[]) {
   const buckets = new Map<string, number>();
   recent.forEach((r) => {
@@ -271,42 +212,30 @@ export default function DashboardPage() {
 
   return (
     <div
-      className="relative min-h-full study-page-bg"
+      className="min-h-full study-page-bg"
       data-testid="dashboard-page"
     >
-      {/* Centered wordmark header on the dark page bg. The cloud is NOT
-          here anymore — it lives inside the Spotlight rail box (right
-          column), matching the reference. Bell sits top-right. */}
-      <header
-        className="relative pt-10 md:pt-16 pb-8 md:pb-14 px-4 md:px-6 lg:px-8"
-        data-testid="dashboard-header"
-      >
-        <button
-          className="absolute top-4 right-4 md:top-6 md:right-6 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
-          data-testid="dashboard-notifications"
-          aria-label="Notifications"
-        >
-          <Bell className="w-4 h-4 text-white" />
-        </button>
-        <div className="text-center">
-          <h1
-            className="text-2xl md:text-3xl font-light tracking-[0.32em] uppercase text-white"
-            data-testid="dashboard-wordmark"
-          >
-            PsychPro
-          </h1>
-          <p
-            className="text-[10px] md:text-[11px] mt-2 tracking-[0.32em] uppercase"
-            style={{ color: `${PALETTE.mist}cc` }}
-          >
-            Learn. Expand. Connect.
-          </p>
-        </div>
-      </header>
-
-      <div className="max-w-[1400px] mx-auto px-4 md:px-8 lg:px-12 pb-16">
-        {/* Greeting moved into the wordmark — kept here only for SR context */}
-        <span className="sr-only">Hello, {firstName}. Let's keep learning and growing your mind.</span>
+      <div className="max-w-[1400px] mx-auto p-4 md:p-6 lg:p-8">
+        {/* Top header */}
+        <header className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+              Hello, {firstName} <span aria-hidden>👋</span>
+            </h1>
+            <p className="text-muted-foreground text-sm mt-1">
+              Let's keep learning and growing your mind.
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              className="relative w-10 h-10 rounded-full bg-card border border-border flex items-center justify-center hover:bg-muted transition-colors"
+              data-testid="dashboard-notifications"
+              aria-label="Notifications"
+            >
+              <Bell className="w-4 h-4 text-foreground" />
+            </button>
+          </div>
+        </header>
 
         {isOverLimit && (
           <div
@@ -337,8 +266,8 @@ export default function DashboardPage() {
         )}
 
         {/* Two-column: main + spotlight rail */}
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-8 lg:gap-10">
-          <div className="min-w-0 space-y-8 md:space-y-10">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-6">
+          <div className="min-w-0 space-y-6">
             {/* Begin/Continue Your Journey (full width, top) */}
             <div>
             <StudySurface tone="light" glow innerClassName="p-5">
@@ -470,24 +399,32 @@ export default function DashboardPage() {
                   <h2 className="font-semibold" style={{ color: PALETTE.mist }}>Your Streak</h2>
                   <span aria-hidden>🔥</span>
                 </div>
-                {/* Streak count + upward sparkline side-by-side, matching
-                    the reference. Sparkline is the cumulative count of
-                    studied days across the current week — naturally
-                    trends up as the user studies more. */}
-                <div className="flex items-end justify-between gap-3 mb-3">
+                <div className="mb-4">
                   <div className="flex items-baseline gap-2">
-                    <span
-                      className="text-4xl font-bold leading-none"
-                      style={{ color: PALETTE.mist }}
-                      data-testid="streak-count"
-                    >
-                      {streak}
-                    </span>
-                    <span className="text-sm" style={{ color: PALETTE.mistSoft }}>
-                      day streak
-                    </span>
+                    <span className="text-4xl font-bold leading-none" style={{ color: PALETTE.mist }}>{streak}</span>
+                    <span className="text-sm" style={{ color: PALETTE.mistSoft }}>day streak</span>
                   </div>
-                  <StreakSparkline days={weeklyFlames} />
+                </div>
+                <div className="grid grid-cols-7 gap-1 mb-3">
+                  {weeklyFlames.map((d, i) => (
+                    <div key={i} className="flex flex-col items-center gap-1">
+                      <Flame
+                        className={cn(
+                          "w-5 h-5 transition-colors",
+                          d.lit ? "text-orange-500 fill-orange-500" : "text-slate-300"
+                        )}
+                      />
+                      <span
+                        className="text-xs"
+                        style={{
+                          color: d.isToday ? PALETTE.mist : PALETTE.mistSoft,
+                          fontWeight: d.isToday ? 600 : 400,
+                        }}
+                      >
+                        {d.label}
+                      </span>
+                    </div>
+                  ))}
                 </div>
                 <p className="text-xs" style={{ color: PALETTE.mistSoft }}>
                   {streak === 0
@@ -705,53 +642,73 @@ function MasteryLegend() {
 function SpotlightCard({ onCta }: { onCta: () => void }) {
   return (
     <div
-      className="relative overflow-hidden rounded-2xl p-6 text-white shadow-xl border border-white/10 min-h-[560px]"
+      className="relative overflow-hidden rounded-2xl p-6 text-white shadow-xl border border-white/10"
       style={{
+        background: `radial-gradient(130% 90% at 30% 0%, ${PALETTE.tealDeep}55 0%, ${PALETTE.surfaceElev}cc 35%, ${PALETTE.surface}f5 70%, ${PALETTE.steel} 100%)`,
         boxShadow: `0 24px 60px -28px ${PALETTE.teal}aa, 0 0 0 1px ${PALETTE.surf}22 inset`,
       }}
     >
-      {/* Spotlight panel must share the SAME dark atmospheric system as
-          every other dashboard card — no bright turquoise billboard.
-          The cloud now sits behind a deep navy base + multi-stop scrim
-          so it reads as soft volumetric haze inside the card, not as a
-          glowing background. */}
+      {/* Starry shimmer */}
       <div
         aria-hidden
-        className="absolute inset-0"
+        className="pointer-events-none absolute inset-0 opacity-80"
         style={{
-          background: `linear-gradient(180deg, ${PALETTE.ink} 0%, ${PALETTE.bg} 100%)`,
+          backgroundImage:
+            "radial-gradient(1px 1px at 18% 12%, rgba(255,255,255,.85), transparent 60%), radial-gradient(1.2px 1.2px at 65% 8%, rgba(255,255,255,.7), transparent 60%), radial-gradient(1px 1px at 82% 28%, rgba(255,255,255,.6), transparent 60%), radial-gradient(1.4px 1.4px at 32% 52%, rgba(255,255,255,.45), transparent 60%), radial-gradient(1px 1px at 75% 68%, rgba(255,255,255,.5), transparent 60%), radial-gradient(1px 1px at 12% 76%, rgba(255,255,255,.45), transparent 60%), radial-gradient(1.2px 1.2px at 88% 90%, rgba(255,255,255,.55), transparent 60%), radial-gradient(0.8px 0.8px at 45% 22%, rgba(255,255,255,.5), transparent 60%), radial-gradient(0.8px 0.8px at 25% 38%, rgba(255,255,255,.4), transparent 60%), radial-gradient(1px 1px at 60% 80%, rgba(255,255,255,.4), transparent 60%)",
         }}
       />
-      <img
-        src={spotlightCloudImage}
-        alt=""
-        aria-hidden
-        className="absolute inset-0 w-full h-full object-cover opacity-[0.22] mix-blend-screen"
-        style={{ filter: "blur(2px) saturate(0.55) brightness(0.7)" }}
-      />
-      {/* Multi-stop scrim — top + bottom darken so the cloud reads as
-          atmosphere (not a flat bright panel) and text stays crisp. */}
+      {/* Soft nebula glows */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background: `linear-gradient(to bottom, ${PALETTE.ink}cc 0%, ${PALETTE.ink}55 25%, transparent 45%, ${PALETTE.surface}aa 70%, ${PALETTE.ink}f0 100%)`,
-        }}
+        className="pointer-events-none absolute -top-16 -right-12 w-56 h-56 rounded-full blur-3xl"
+        style={{ background: `radial-gradient(closest-side, ${PALETTE.surf}55, transparent)` }}
       />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -bottom-10 -left-10 w-48 h-48 rounded-full blur-3xl"
+        style={{ background: `radial-gradient(closest-side, ${PALETTE.teal}40, transparent)` }}
+      />
+
+      {/* Cloud strip — moody beam-of-light backdrop sits behind the wordmark.
+          Sized to crop tight to the heading area so it reads as a halo
+          rather than a full-card image. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute top-0 left-0 right-0 h-40 overflow-hidden rounded-t-2xl"
+      >
+        <img
+          src={spotlightCloudImage}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover opacity-90"
+        />
+        {/* Fade the cloud into the card body so the seam disappears. */}
+        <div
+          className="absolute inset-x-0 bottom-0 h-24"
+          style={{
+            background: `linear-gradient(to bottom, transparent 0%, ${PALETTE.surface}dd 75%, ${PALETTE.surface} 100%)`,
+          }}
+        />
+      </div>
 
       <div className="relative">
         {/* Outlined star (no fill) */}
         <div className="flex items-center justify-center mb-3">
           <Star className="w-7 h-7 text-white" strokeWidth={1.5} />
         </div>
-        <h3 className="text-2xl font-bold text-center tracking-tight">
-          Spotlight
+        <h3
+          className="text-2xl font-bold text-center tracking-[0.18em] uppercase text-white"
+          style={{ textShadow: "0 2px 12px rgba(0,0,0,0.55)" }}
+        >
+          PsychPro
         </h3>
         <p
-          className="text-sm text-center mt-2 mb-6 leading-relaxed px-2"
-          style={{ color: `${PALETTE.mist}dd` }}
+          className="text-xs text-center mt-2 mb-6 leading-relaxed px-2 tracking-[0.22em] uppercase"
+          style={{
+            color: `${PALETTE.mist}dd`,
+            textShadow: "0 1px 6px rgba(0,0,0,0.5)",
+          }}
         >
-          Highlighting the next generation of clinicians and researchers.
+          Learn. Expand. Connect.
         </p>
 
         {/* Featured person — circular avatar with glow ring */}
@@ -783,24 +740,38 @@ function SpotlightCard({ onCta }: { onCta: () => void }) {
           </p>
         </div>
 
-        {/* Compact "FEATURED WORK" footer — small label bottom-left,
-            upload/share affordance bottom-right (matches reference). */}
-        <div className="mt-8 flex items-end justify-between">
-          <p
-            className="text-[10px] font-bold tracking-[0.22em] uppercase"
-            style={{ color: `${PALETTE.mist}aa` }}
-          >
-            Featured Work
-          </p>
-          <button
-            type="button"
-            onClick={onCta}
-            className="w-8 h-8 rounded-md flex items-center justify-center hover:bg-white/10 transition-colors"
-            aria-label="Share or upload your work"
-            data-testid="spotlight-upload"
-          >
-            <Upload className="w-4 h-4 text-white/80" />
-          </button>
+        {/* Featured work — neuron image as prominent background */}
+        <div className="relative overflow-hidden rounded-xl mb-4 ring-1 ring-white/15 shadow-xl">
+          <img
+            src={featuredWorkImage}
+            alt="Neural network — featured dissertation imagery"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          {/* Subtle bottom-weighted gradient — image stays visible, text remains legible */}
+          <div
+            aria-hidden
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(to top, rgba(2,6,23,0.85) 0%, rgba(2,6,23,0.55) 40%, rgba(2,6,23,0.15) 75%, rgba(2,6,23,0) 100%)",
+            }}
+          />
+          <div className="relative p-4 pt-24">
+            <p
+              className="text-[10px] font-bold tracking-widest uppercase mb-2"
+              style={{ color: PALETTE.surf, textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}
+            >
+              Featured Work
+            </p>
+            <p
+              className="text-sm font-semibold text-white leading-snug mb-2"
+              style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}
+            >
+              Dissertation work: SOCIAL COGNITION IN CHILDREN WITH AUTISM
+              SPECTRUM DISORDER: EXPLORING CORRELATES BETWEEN OBJECTIVE
+              NEUROPSYCHOLOGICAL MEASURES AND PARENT REPORTS
+            </p>
+          </div>
         </div>
 
         <button

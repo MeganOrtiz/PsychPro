@@ -58,8 +58,8 @@ export default function ReflectionsPage() {
 
   return (
     <div
-      className="min-h-screen px-4 md:px-8 py-6 md:py-10 study-page-bg"
-      style={{ color: P.mist }}
+      className="min-h-screen px-4 md:px-8 py-6 md:py-10"
+      style={{ background: P.bg, color: P.mist }}
       data-testid="reflections-page"
     >
       <div className="max-w-4xl mx-auto">

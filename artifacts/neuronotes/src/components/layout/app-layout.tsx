@@ -5,7 +5,6 @@ import { getOrCreateAnonymousUserId } from "@/lib/anonymous-user";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { STUDY_PALETTE } from "@/lib/study-theme";
-import smokeTexture from "@assets/Screenshot_2026-04-27_at_1.40.17_AM_1778535214205.png";
 
 type NavItem = { href: string; label: string; icon: React.ElementType };
 
@@ -71,47 +70,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const { isAdmin, isScholar } = useUserMeta();
 
   return (
-    <div className="flex h-screen overflow-hidden relative">
-      {/* ============================================================ */}
-      {/* GLOBAL ATMOSPHERIC BACKGROUND                                */}
-      {/* Smoky teal cinematic environment shared across all pages.    */}
-      {/* ============================================================ */}
-      <div
-        className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
-        aria-hidden
-        style={{
-          background:
-            "linear-gradient(180deg, #04101a 0%, #061826 45%, #07202f 100%)",
-        }}
-      >
-        <div
-          className="absolute inset-0 opacity-[0.55] mix-blend-screen"
-          style={{
-            backgroundImage: `url(${smokeTexture})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center center",
-            backgroundRepeat: "no-repeat",
-          }}
-        />
-        <div
-          className="absolute inset-0 opacity-[0.35] mix-blend-screen"
-          style={{
-            backgroundImage: `url(${smokeTexture})`,
-            backgroundSize: "180% auto",
-            backgroundPosition: "center top",
-            backgroundRepeat: "no-repeat",
-            transform: "scaleX(-1)",
-          }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to bottom, transparent 55%, rgba(4,16,26,0.55) 100%)",
-          }}
-        />
-      </div>
-
+    <div className="flex h-screen bg-background overflow-hidden">
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-30 md:hidden"
@@ -127,11 +86,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
         style={{
           // CSS var consumed by NAV_ITEM_* tokens for the teal hover glow.
           ["--nav-glow" as never]: STUDY_PALETTE.surf,
-          background:
-            "linear-gradient(180deg, rgba(4,19,27,0.92) 0%, rgba(2,11,18,0.96) 100%)",
-          borderRight: "1px solid rgba(106, 221, 241, 0.10)",
-          backdropFilter: "blur(14px)",
-          WebkitBackdropFilter: "blur(14px)",
+          background: "linear-gradient(180deg, #041A24 0%, #031923 100%)",
+          borderRight: "1px solid rgba(94, 176, 200, 0.08)",
         }}
         data-testid="sidebar"
       >

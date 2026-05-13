@@ -242,32 +242,33 @@
 .study-page-aurora {
   /* Mirrors STUDY_PALETTE in src/lib/study-theme.ts. If you change a
      hex value there, mirror it here (and the rgba glow values below). */
-  --background: 204 70% 9%;          /* #071C26 bg */
+  --background: 211 71% 9%;          /* #061826 bg */
   --foreground: 205 100% 87%;        /* #BDE5FF mist (icy text) */
-  --card: 202 64% 13%;               /* #0A2A39 surface */
+  --card: 210 51% 13%;               /* #0C2538 surface */
   --card-foreground: 205 100% 87%;
-  --popover: 202 64% 13%;
+  --popover: 210 51% 13%;
   --popover-foreground: 205 100% 87%;
-  --muted: 203 73% 11%;              /* #082330 bgSoft */
+  --muted: 209 51% 16%;              /* #0E2C40 bgSoft */
   --muted-foreground: 192 22% 59%;   /* #7FA4AD inkSoft */
-  --border: 195 65% 21%;             /* #124A5B steel/teal-deep */
-  --input: 203 73% 11%;              /* #082330 bgSoft */
-  --primary: 191 59% 49%;            /* #34AAC7 teal */
-  --primary-foreground: 204 70% 9%;
-  --secondary: 195 65% 21%;          /* #124A5B tealDeep */
+  --border: 209 61% 28%;             /* #1C4E75 steel */
+  --input: 209 51% 16%;              /* #0E2C40 bgSoft */
+  --primary: 195 62% 48%;            /* #2FA0C6 teal */
+  --primary-foreground: 211 71% 9%;
+  --secondary: 195 56% 38%;          /* #2A7E97 tealDeep */
   --secondary-foreground: 205 100% 87%;
-  --accent: 189 75% 67%;             /* #6FD9EA surf */
-  --accent-foreground: 204 70% 9%;
-  --ring: 189 75% 67%;
+  --accent: 200 86% 65%;             /* #58C9F3 surf */
+  --accent-foreground: 211 71% 9%;
+  --ring: 200 86% 65%;
 }
 
-/* Page surface stays transparent — the AppLayout renders a single
-   fixed cinematic background (smoke + halo + nodes) behind every
-   interior page so the dashboard, topics, brain-lab, etc. all share
-   the same atmosphere as the landing page. */
 .study-page-bg,
 .study-page-aurora {
-  background: transparent;
+  background: linear-gradient(
+    180deg,
+    #061826 0%,
+    #0A2030 40%,
+    #0C2538 100%
+  );
 }
 
 /* User-supplied .study-card recipe — applied to every shadcn Card
@@ -278,24 +279,25 @@
 .study-page-aurora .bg-card {
   background-image: linear-gradient(
     145deg,
-    rgba(8, 32, 44, 0.72),
-    rgba(4, 18, 28, 0.78)
+    rgba(17, 50, 77, 0.95),
+    rgba(12, 37, 56, 0.98)
   );
-  border: 1px solid rgba(106, 221, 241, 0.16);
+  border: 1px solid rgba(88, 201, 243, 0.15);
   border-radius: 22px;
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   box-shadow:
-    inset 0 1px 0 rgba(141, 234, 245, 0.06),
-    0 28px 60px -28px rgba(0, 0, 0, 0.65);
+    0 0 0 1px rgba(88, 201, 243, 0.06),
+    0 20px 40px rgba(0, 0, 0, 0.35),
+    0 0 30px rgba(88, 201, 243, 0.06);
 }
 
 /* Glassy cerulean buttons — translucent dark-teal base with a cerulean
    tint overlay, frosted backdrop blur, soft cyan hairline, and a layered
    cerulean glow that intensifies on hover. Applies to primary, secondary,
    and outline-style buttons so the entire UI reads consistently. */
-.study-page-bg :where(button.bg-primary, a.bg-primary, [role="button"].bg-primary),
-.study-page-aurora :where(button.bg-primary, a.bg-primary, [role="button"].bg-primary) {
+.study-page-bg :where(.bg-primary, button.bg-primary, [class*="bg-primary"]),
+.study-page-aurora :where(.bg-primary, button.bg-primary, [class*="bg-primary"]) {
   background-image: linear-gradient(
     135deg,
     rgba(88, 201, 243, 0.42),
@@ -315,8 +317,8 @@
     0 0 24px rgba(88, 201, 243, 0.18);
 }
 
-.study-page-bg :where(button.bg-primary, a.bg-primary, [role="button"].bg-primary):hover,
-.study-page-aurora :where(button.bg-primary, a.bg-primary, [role="button"].bg-primary):hover {
+.study-page-bg :where(.bg-primary, button.bg-primary, [class*="bg-primary"]):hover,
+.study-page-aurora :where(.bg-primary, button.bg-primary, [class*="bg-primary"]):hover {
   transform: translateY(-2px);
   background-image: linear-gradient(
     135deg,
@@ -331,11 +333,9 @@
     0 0 40px rgba(88, 201, 243, 0.32);
 }
 
-/* Secondary buttons — softer glass, same cerulean glow language.
-   Scoped to actual buttons/links so opacity utilities like bg-secondary/30
-   on chips/badges/state surfaces don't inherit the full button recipe. */
-.study-page-bg :where(button.bg-secondary, a.bg-secondary, [role="button"].bg-secondary),
-.study-page-aurora :where(button.bg-secondary, a.bg-secondary, [role="button"].bg-secondary) {
+/* Secondary buttons — softer glass, same cerulean glow language */
+.study-page-bg .bg-secondary,
+.study-page-aurora .bg-secondary {
   background: rgba(8, 43, 58, 0.55);
   color: #E4F4F6;
   border: 1px solid rgba(88, 201, 243, 0.25);
@@ -349,8 +349,8 @@
     0 0 18px rgba(88, 201, 243, 0.10);
 }
 
-.study-page-bg :where(button.bg-secondary, a.bg-secondary, [role="button"].bg-secondary):hover,
-.study-page-aurora :where(button.bg-secondary, a.bg-secondary, [role="button"].bg-secondary):hover {
+.study-page-bg .bg-secondary:hover,
+.study-page-aurora .bg-secondary:hover {
   transform: translateY(-2px);
   background: rgba(12, 52, 70, 0.70);
   border-color: rgba(88, 201, 243, 0.45);

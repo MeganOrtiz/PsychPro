@@ -26,33 +26,27 @@
 // =============================================================================
 
 export const STUDY_PALETTE = {
-  // COSMIC NEBULA palette (2026-05-13 redesign). Keys preserved so all
-  // existing consumers stay intact; only hex values shift toward a deeper
-  // navy-black base with brighter electric-cyan accents and ethereal
-  // blue cloud tones.
-  //   #050B14 / #0A1628 / #0F2138 (page blacks → space depth)
-  //   #1B4D7A / #0D2540 (nebula cloud blues)
-  //   #4DE4FF / #7FF0FF / #A8E8F0 (electric cyan → soft glow → ice mist)
-  ink: "#050B14",          // deepest anchor (sidebar / page floor)
-  bg: "#0A1628",           // page bg primary
-  bgSoft: "#0D1E36",       // page bg secondary
-  surface: "#0F2138",      // card surface (glass mid)
-  surfaceElev: "#152B45",  // card hover / lifted
+  // Backgrounds — deep cyan-navy stack
+  ink: "#041520",         // deepest anchor (sidebar)
+  bg: "#061826",          // page bg primary
+  bgSoft: "#0E2C40",      // page bg secondary
+  surface: "#0C2538",     // card surface
+  surfaceElev: "#11324D", // card hover / lifted
 
-  // Cloud-blue depth — borders, dividers, structural lines.
-  steel: "#1B4D7A",
+  // Mid-blue — borders, dividers, structural lines
+  steel: "#1C4E75",
 
-  // Cyan accents — luminous, electric (cosmic redesign). Hue ~188–192.
-  tealDeep: "#1B4D7A",     // deep cloud blue
-  teal: "#4DE4FF",         // primary electric cyan (CTAs, focal accents)
-  surf: "#7FF0FF",         // bright cyan glow (icons, highlights)
-  mist: "#A8E8F0",         // soft cyan text / accent text
+  // Cyan accents — locked at hue ~200 (cerulean), no green cast
+  tealDeep: "#2A7E97",    // dark cerulean
+  teal: "#2FA0C6",        // primary cerulean
+  surf: "#58C9F3",        // bright cerulean (icons, highlights)
+  mist: "#BDE5FF",        // icy soft text / accent text
 
-  // Neutrals — kept for body copy readability on dark surfaces.
-  cloud: "#E8F4F8",
-  paper: "#E8F4F8",
-  paperSoft: "#8FA8B8",
-  inkSoft: "#5A7388",
+  // Neutrals
+  cloud: "#E4F4F6",       // brightest white-ish (body copy on dark)
+  paper: "#E4F4F6",       // alias for `cloud` — light-card text
+  paperSoft: "#B7D5DC",   // secondary text
+  inkSoft: "#7FA4AD",     // muted text
 } as const;
 
 export type StudyTone = "light" | "dark" | "accent" | "card-front";
