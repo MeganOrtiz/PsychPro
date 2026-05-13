@@ -32,11 +32,9 @@ import {
   Briefcase,
   Globe,
   Award,
-  Quote,
 } from "lucide-react";
 import brainHero from "@assets/generated_images/cosmic_brain_hero.png";
 import smokeTexture from "@assets/Screenshot_2026-04-27_at_1.40.17_AM_1778535214205.png";
-import drMitchellPhoto from "@assets/Screenshot_2026-04-28_at_8.01.18_PM_1778712136454.png";
 const sideSmoke = smokeTexture;
 // Single source of truth for the brand palette — do NOT fork.
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
@@ -628,7 +626,7 @@ export default function LandingPage() {
       {/* TRUSTED BY + TESTIMONIAL                                     */}
       {/* ============================================================ */}
       <section className="relative max-w-[1180px] mx-auto px-5 md:px-8 pt-4 md:pt-6 pb-6 md:pb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+        <div className="grid grid-cols-1 gap-5 md:gap-6">
           {/* Trusted-By stats */}
           <div
             className="psp-card rounded-2xl p-6 md:p-7 border backdrop-blur-md"
@@ -693,61 +691,6 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Testimonial */}
-          <div
-            className="psp-card rounded-2xl p-6 md:p-7 border backdrop-blur-md flex flex-col"
-            style={{
-              background: glassBg,
-              borderColor: glassBorder,
-              boxShadow: glassShadow,
-            }}
-            data-testid="testimonial-panel"
-          >
-            <Quote
-              className="w-7 h-7 mb-3"
-              style={{
-                color: PALETTE.surf,
-                filter: `drop-shadow(0 0 8px ${PALETTE.surf}88)`,
-              }}
-              strokeWidth={1.4}
-            />
-            <p
-              className="text-[14px] md:text-[15px] leading-relaxed flex-1"
-              style={{ color: PALETTE.cloud }}
-            >
-              PsychPro has transformed the way I learn and apply clinical
-              knowledge. The community and resources are unmatched.
-            </p>
-            <div className="mt-5 flex items-center gap-3">
-              <span
-                className="w-12 h-12 rounded-full overflow-hidden border-2 shrink-0"
-                style={{
-                  borderColor: `${PALETTE.surf}aa`,
-                  boxShadow: `0 0 16px -2px ${PALETTE.surf}aa`,
-                }}
-              >
-                <img
-                  src={drMitchellPhoto}
-                  alt="Dr. Sarah Mitchell"
-                  className="w-full h-full object-cover"
-                />
-              </span>
-              <div className="min-w-0">
-                <div
-                  className="text-[14px] font-medium text-white"
-                  style={{ letterSpacing: "0.02em" }}
-                >
-                  Dr. Sarah Mitchell
-                </div>
-                <div
-                  className="text-[12px]"
-                  style={{ color: PALETTE.paperSoft }}
-                >
-                  Clinical Psychologist
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
