@@ -18,8 +18,8 @@ import {
   CheckCircle2,
   Sparkles,
 } from "lucide-react";
-import brainHero from "@assets/generated_images/brain_front_v3.png";
-import smokeBg from "@assets/generated_images/smoke_radial_bg.png";
+import brainHero from "@assets/generated_images/brain_top_v2.png";
+import smokeBg from "@assets/generated_images/smoke_radial_v2.png";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -211,8 +211,8 @@ export default function LandingPage() {
         className="pointer-events-none fixed inset-0 -z-10"
         style={{
           background: `
-            radial-gradient(ellipse 75% 60% at 50% 45%, rgba(118, 228, 247, 0.18) 0%, transparent 55%),
-            radial-gradient(ellipse 110% 100% at 50% 50%, transparent 30%, rgba(3, 21, 29, 0.55) 80%, rgba(3, 21, 29, 0.85) 100%)
+            radial-gradient(ellipse 55% 45% at 50% 45%, rgba(167, 243, 255, 0.28) 0%, rgba(118, 228, 247, 0.10) 35%, transparent 65%),
+            radial-gradient(ellipse 120% 110% at 50% 50%, transparent 22%, rgba(3, 21, 29, 0.45) 60%, rgba(3, 21, 29, 0.85) 88%, rgba(3, 21, 29, 0.96) 100%)
           `,
         }}
       />
