@@ -261,15 +261,53 @@
   --ring: 188 90% 72%;
 }
 
+/* Cinematic ink-wallpaper background — same flowy teal smoke as the
+   landing page, applied to every dashboard/app page via .study-page-bg.
+   The image is mirrored across the page (left + right) so it reads as
+   one continuous body of ink, with vignette + center fade on top to
+   keep content readable. Fixed-attached so it never scrolls. */
 .study-page-bg,
 .study-page-aurora {
-  background:
-    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(118, 228, 247, 0.08), transparent 70%),
-    radial-gradient(ellipse 50% 70% at 0% 30%, rgba(42, 115, 135, 0.18), transparent 60%),
-    radial-gradient(ellipse 50% 70% at 100% 30%, rgba(42, 115, 135, 0.18), transparent 60%),
-    radial-gradient(ellipse 70% 50% at 50% 100%, rgba(118, 228, 247, 0.06), transparent 65%),
-    linear-gradient(180deg, #03151D 0%, #061F2B 35%, #083240 100%);
-  background-attachment: fixed;
+  position: relative;
+  background-color: #03151D;
+}
+.study-page-bg::before,
+.study-page-aurora::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background-image:
+    /* Soft center wash — keeps content readable without hiding ink */
+    radial-gradient(ellipse 45% 40% at 50% 45%, rgba(3, 21, 29, 0.45) 0%, rgba(3, 21, 29, 0.18) 50%, transparent 85%),
+    /* Outer vignette — gentle darkening at corners */
+    radial-gradient(ellipse 130% 115% at 50% 50%, transparent 45%, rgba(3, 21, 29, 0.40) 80%, rgba(3, 21, 29, 0.78) 100%),
+    /* Mirrored ink body — left half then right half */
+    url("./assets/smoke_flowy_v5.png"),
+    url("./assets/smoke_flowy_v5.png");
+  background-size: auto, auto, 60% auto, 60% auto;
+  background-position: center, center, left center, right center;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+  background-color: #03151D;
+  pointer-events: none;
+}
+/* The right-half ink layer needs to be mirrored for symmetry. We do
+   this with a second pseudo-element so the transform doesn't affect
+   the gradients. */
+.study-page-bg::after,
+.study-page-aurora::after {
+  content: "";
+  position: fixed;
+  inset: 0 0 0 50%;
+  /* Sit BELOW ::before so the readability gradients in ::before
+     remain on top of the mirrored smoke. */
+  z-index: -3;
+  background-image: url("./assets/smoke_flowy_v5.png");
+  background-size: auto 100%;
+  background-position: right center;
+  background-repeat: no-repeat;
+  transform: scaleX(-1);
+  pointer-events: none;
 }
 
 /* User-supplied .study-card recipe — applied to every shadcn Card
@@ -280,17 +318,18 @@
 .study-page-aurora .bg-card {
   background-image: linear-gradient(
     145deg,
-    rgba(14, 60, 80, 0.95),
-    rgba(10, 45, 61, 0.98)
+    rgba(10, 45, 61, 0.72),
+    rgba(6, 32, 44, 0.82)
   );
-  border: 1px solid rgba(118, 228, 247, 0.15);
+  border: 1px solid rgba(118, 228, 247, 0.22);
   border-radius: 22px;
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(22px) saturate(135%);
+  -webkit-backdrop-filter: blur(22px) saturate(135%);
   box-shadow:
+    inset 0 1px 0 rgba(167, 243, 255, 0.08),
     0 0 0 1px rgba(118, 228, 247, 0.06),
-    0 20px 40px rgba(0, 0, 0, 0.35),
-    0 0 30px rgba(118, 228, 247, 0.06);
+    0 20px 40px rgba(0, 0, 0, 0.40),
+    0 0 30px rgba(118, 228, 247, 0.08);
 }
 
 /* Glassy cerulean buttons — translucent dark-teal base with a cerulean
