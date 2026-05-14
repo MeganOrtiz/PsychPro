@@ -1,0 +1,112 @@
+The current page is incorrectly layering a separate brain image on top of the ink/smoke background. Remove the separate foreground brain asset entirely.
+
+Do NOT render the brain as its own <img>, absolute layer, pseudo-element, canvas layer, or background overlay. The brain must be part of ONE unified full-page hero background image, not stacked on top of another background.
+
+Goal:
+Make the landing page look closer to the second reference image: one seamless cinematic neuroscience hero scene where the brain, smoke, glow, and neural lines are integrated into a single background composition.
+
+Required changes:
+1. Remove the standalone brain image layer.
+   - Delete any component, div, img, ::before, ::after, or absolute element that renders the brain separately.
+   - Search for files using terms like:
+     brain
+     hero-brain
+     BrainHero
+     brainImage
+     heroImage
+     foreground
+     absolute
+     z-index
+
+2. Use one full-screen background image for the entire hero.
+   - The background should already include the superior-view brain centered inside the image.
+   - Apply it directly to the hero section:
+     background-image: linear-gradient(rgba(3,18,28,0.35), rgba(3,18,28,0.65)), url("/path-to-final-integrated-background.png");
+     background-size: cover;
+     background-position: center top;
+     background-repeat: no-repeat;
+
+3. Remove the translucent rectangle behind the brain/title.
+   - The current design has visible layered panels/blocks over the background.
+   - Replace them with subtle text shadows and soft radial gradients only.
+   - No large rectangular overlay behind the brain.
+
+4. Rebuild the hero layout to match the reference:
+   - Logo/nav at top, clean and minimal.
+   - Brain centered in upper-middle as part of the background image.
+   - Large “PSYCHPRO” title centered below the brain.
+   - Tagline underneath: “LEARN. EXPAND. CONNECT.”
+   - Short paragraph underneath.
+   - Two glowing buttons centered below.
+   - Feature cards below the fold with glassmorphism styling.
+
+5. Make the whole page darker, moodier, and more cohesive.
+   - Use deep teal / midnight background tones.
+   - Use cyan glow accents.
+   - Avoid bright teal blobs covering the page.
+   - Avoid any boxy overlay that makes the image look pasted together.
+
+6. Update CSS layering:
+   - Hero background: z-index 0
+   - Dark gradient overlay: z-index 1
+   - Content/nav/cards: z-index 2
+   - There should be NO separate brain layer above the background.
+
+Suggested CSS structure:
+
+.hero {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at center 28%, rgba(80, 220, 235, 0.24), transparent 34%),
+    linear-gradient(180deg, rgba(2, 15, 24, 0.25) 0%, rgba(2, 15, 24, 0.78) 72%, rgba(2, 15, 24, 0.96) 100%),
+    url("/path-to-final-integrated-background.png");
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at center 36%, transparent 0%, rgba(0, 0, 0, 0.08) 38%, rgba(0, 0, 0, 0.55) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero-content,
+.navbar,
+.hero-cards {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-brain,
+.brain-image,
+.hero-image {
+  display: none !important;
+}
+
+.hero-title {
+  font-size: clamp(4rem, 9vw, 8.5rem);
+  letter-spacing: 0.35em;
+  font-weight: 300;
+  color: rgba(255,255,255,0.92);
+  text-shadow: 0 0 24px rgba(77, 224, 240, 0.45);
+}
+
+.hero-tagline {
+  letter-spacing: 0.55em;
+  color: rgba(220, 250, 255, 0.82);
+}
+
+.glass-card {
+  background: linear-gradient(180deg, rgba(5, 50, 65, 0.55), rgba(3, 28, 40, 0.72));
+  border: 1px solid rgba(90, 220, 235, 0.42);
+  box-shadow: 0 0 26px rgba(40, 210, 230, 0.16), inset 0 0 20px rgba(255,255,255,0.04);
+  backdrop-filter: blur(14px);
+  border-radius: 22px;
+}

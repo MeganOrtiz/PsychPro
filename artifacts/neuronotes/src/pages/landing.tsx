@@ -18,8 +18,7 @@ import {
   CheckCircle2,
   Sparkles,
 } from "lucide-react";
-import brainHero from "@assets/generated_images/brain_top_v2.png";
-import smokeWallpaper from "@assets/generated_images/smoke_flowy_v5.png";
+import heroBg from "@assets/generated_images/hero_brain_smoke_unified_v1.png";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -161,136 +160,46 @@ export default function LandingPage() {
       }}
     >
       {/* ============================================================
-          BACKGROUND ATMOSPHERE — billowing teal smoke image diffused
-          across the entire page (fixed), darkened to brand ink and
-          softened with cyan radial glows so it reads as living mist.
+          UNIFIED HERO BACKGROUND — one cinematic composition with the
+          brain already integrated into the smoke. NO separate brain
+          layer, NO stacked smoke plates. Just the source image plus
+          a soft darkening overlay below the brain so text stays
+          readable in the lower half of the hero.
           ============================================================ */}
-      {/* Layer 1: deep ink floor */}
+      {/* Single hero background image — fixed, full-bleed, top-aligned
+          so the brain (which lives in the upper third of the image)
+          sits in the upper third of the viewport. */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 -z-40"
-        style={{ background: P.ink }}
-      />
-      {/* Layer 2: FAR smoke plate — the flowy ink wallpaper. Drifts very
-          slowly side-to-side; mirrored copy on the right gives full-bleed
-          coverage that reads as one continuous ink body. */}
-      <div
-        aria-hidden
-        className="pointer-events-none fixed inset-0 -z-30 landing-smoke-far"
+        className="pointer-events-none fixed inset-0 -z-30"
         style={{
-          backgroundImage: `url(${smokeWallpaper}), url(${smokeWallpaper})`,
-          backgroundSize: "60% auto, 60% auto",
-          backgroundPosition: "left center, right center",
-          backgroundRepeat: "no-repeat, no-repeat",
-          transform: "scaleX(1)",
-          backgroundColor: P.ink,
-          willChange: "transform, opacity, filter",
-          imageRendering: "auto" as any,
-          WebkitBackfaceVisibility: "hidden",
-          backfaceVisibility: "hidden",
-        }}
-      >
-        {/* Right half mirrored so the ink reads symmetrically across the
-            full page width without an obvious seam. */}
-        <div
-          aria-hidden
-          className="absolute inset-y-0 right-0 w-1/2"
-          style={{
-            backgroundImage: `url(${smokeWallpaper})`,
-            backgroundSize: "auto 100%",
-            backgroundPosition: "right center",
-            backgroundRepeat: "no-repeat",
-            transform: "scaleX(-1)",
-            mixBlendMode: "normal",
-          }}
-        />
-      </div>
-      {/* Layer 3: NEAR smoke — same ink, larger and screen-blended for
-          atmospheric depth. Drifts in the opposite direction at a
-          different cadence so layered billows continually shift. */}
-      <div
-        aria-hidden
-        className="pointer-events-none fixed inset-0 -z-20 landing-smoke-near"
-        style={{
-          backgroundImage: `url(${smokeWallpaper})`,
-          backgroundSize: "150% auto",
-          backgroundPosition: "center",
+          backgroundImage: `url(${heroBg})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center top",
           backgroundRepeat: "no-repeat",
-          opacity: 0.32,
-          filter: "blur(2px) saturate(118%)",
-          mixBlendMode: "screen",
-          willChange: "transform",
+          backgroundColor: P.ink,
         }}
       />
-      {/* Layer 4: CENTER FADE — a deep ink wash that dissolves the smoke
-          as it approaches the brain, leaving a quiet pocket of darkness
-          for the glowing brain to inhabit. */}
+      {/* Soft darkening overlay — gradient deepens toward the bottom
+          so the wordmark, tagline, copy, and CTAs read crisply
+          against the dark lower portion of the composition. The top
+          stays clear so the brain & smoke remain untouched. */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 -z-15"
+        className="pointer-events-none fixed inset-0 -z-20"
         style={{
-          background: `
-            radial-gradient(ellipse 46% 40% at 50% 42%, rgba(3, 21, 29, 0.98) 0%, rgba(3, 21, 29, 0.88) 25%, rgba(3, 21, 29, 0.60) 50%, rgba(3, 21, 29, 0.22) 75%, transparent 92%)
-          `,
+          background: `linear-gradient(180deg, rgba(3, 21, 29, 0.00) 0%, rgba(3, 21, 29, 0.00) 38%, rgba(3, 21, 29, 0.45) 62%, rgba(3, 21, 29, 0.85) 88%, rgba(3, 21, 29, 0.96) 100%)`,
         }}
       />
-      {/* Layer 5: VIGNETTE — gentle darkening at the outer corners so
-          attention drifts inward to the brain. */}
+      {/* Outer vignette — gentle darkening at the corners only */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 -z-10"
         style={{
-          background: `
-            radial-gradient(ellipse 130% 115% at 50% 50%, transparent 38%, rgba(3, 21, 29, 0.40) 72%, rgba(3, 21, 29, 0.82) 95%, rgba(3, 21, 29, 0.94) 100%)
-          `,
-        }}
-      />
-      {/* Layer 4: sparse electric particles for depth */}
-      <div
-        aria-hidden
-        className="pointer-events-none fixed inset-0 -z-10 opacity-50"
-        style={{
-          backgroundImage:
-            "radial-gradient(1.2px 1.2px at 12% 18%, rgba(167, 243, 255, 0.9), transparent 60%), radial-gradient(1px 1px at 78% 12%, rgba(118, 228, 247, 0.85), transparent 60%), radial-gradient(1.4px 1.4px at 38% 72%, rgba(167, 243, 255, 0.7), transparent 60%), radial-gradient(1px 1px at 88% 58%, rgba(118, 228, 247, 0.75), transparent 60%), radial-gradient(1.2px 1.2px at 22% 88%, rgba(167, 243, 255, 0.6), transparent 60%), radial-gradient(0.8px 0.8px at 62% 38%, rgba(118, 228, 247, 0.7), transparent 60%), radial-gradient(1px 1px at 8% 52%, rgba(167, 243, 255, 0.5), transparent 60%), radial-gradient(1px 1px at 92% 80%, rgba(118, 228, 247, 0.65), transparent 60%)",
+          background: `radial-gradient(ellipse 130% 115% at 50% 50%, transparent 55%, rgba(3, 21, 29, 0.35) 82%, rgba(3, 21, 29, 0.75) 100%)`,
         }}
       />
       <style>{`
-        /* Slow ambient ink flow — both layers drift gently in opposite
-           cadences so the smoke feels alive, mysterious, and continuous,
-           never frantic or repetitive. No cursor interaction. */
-        @keyframes landingSmokeFarFlow {
-          0%   { transform: scale(1.05) translate3d(0, 0, 0); }
-          50%  { transform: scale(1.08) translate3d(-1.2%, 0.6%, 0); }
-          100% { transform: scale(1.05) translate3d(0, 0, 0); }
-        }
-        @keyframes landingSmokeNearFlow {
-          0%   { transform: scale(1.20) translate3d(0, 0, 0) rotate(0deg); }
-          50%  { transform: scale(1.24) translate3d(1.4%, -0.8%, 0) rotate(0.6deg); }
-          100% { transform: scale(1.20) translate3d(0, 0, 0) rotate(0deg); }
-        }
-        .landing-smoke-far  { animation: landingSmokeFarFlow  60s ease-in-out infinite; }
-        .landing-smoke-near { animation: landingSmokeNearFlow 75s ease-in-out infinite; }
-        @media (prefers-reduced-motion: reduce) {
-          .landing-smoke-far, .landing-smoke-near { animation: none; transform: none; }
-        }
-        @keyframes landingBrainPulse {
-          0%, 100% { filter: drop-shadow(0 0 50px rgba(118, 228, 247, 0.35)) drop-shadow(0 0 110px rgba(118, 228, 247, 0.16)); }
-          50%      { filter: drop-shadow(0 0 75px rgba(118, 228, 247, 0.55)) drop-shadow(0 0 150px rgba(118, 228, 247, 0.26)); }
-        }
-        .landing-brain-pulse {
-          animation: landingBrainPulse 9s ease-in-out infinite;
-          mix-blend-mode: screen;
-        }
-        @keyframes landingBrainAura {
-          0%, 100% { opacity: 0.85; transform: scale(1.00); }
-          50%      { opacity: 1.00; transform: scale(1.04); }
-        }
-        .landing-brain-aura {
-          animation: landingBrainAura 11s ease-in-out infinite;
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .landing-brain-pulse, .landing-brain-aura { animation: none; }
-        }
         .landing-glass-btn {
           position: relative;
           overflow: hidden;
@@ -462,55 +371,21 @@ export default function LandingPage() {
           HERO — brain centered, wordmark, tagline, copy, CTAs
           ============================================================ */}
       <section className="relative">
-        <div className="max-w-5xl mx-auto px-6 lg:px-10 pt-2 pb-14 text-center">
-          {/* 3D glowing brain — superior view, top center, no card */}
-          <div className="relative flex justify-center">
-            <div
-              className="relative w-full max-w-[520px]"
-              style={{ aspectRatio: "1 / 1" }}
-            >
-              {/* Mysterious aura — wide outer halo that radiates softly
-                  outward, commanding presence without glare. */}
-              <div
-                aria-hidden
-                className="absolute -inset-1/4 rounded-full landing-brain-aura"
-                style={{
-                  background: `radial-gradient(closest-side, rgba(118, 228, 247, 0.32), rgba(118, 228, 247, 0.14) 38%, rgba(118, 228, 247, 0.05) 62%, transparent 80%)`,
-                  filter: "blur(40px)",
-                }}
-              />
-              {/* Inner halo — closer, slightly cooler, gives the brain
-                  a luminous shoulder. */}
-              <div
-                aria-hidden
-                className="absolute -inset-4 rounded-full"
-                style={{
-                  background: `radial-gradient(closest-side, rgba(167, 243, 255, 0.22), rgba(118, 228, 247, 0.08) 55%, transparent 78%)`,
-                  filter: "blur(20px)",
-                }}
-              />
-              <img
-                src={brainHero}
-                alt="Glowing 3D anatomical brain, superior view"
-                className="relative w-full h-full object-contain landing-brain-pulse"
-                draggable={false}
-              />
-              {/* Soft veil — knocks down the harsh bright flare at the
-                  brain's center fissure into a calmer, mysterious gleam.
-                  Sits above the screen-blended brain so it actually masks. */}
-              <div
-                aria-hidden
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                  background: `radial-gradient(ellipse 14% 18% at 50% 53%, rgba(3, 21, 29, 0.85), rgba(3, 21, 29, 0.45) 45%, rgba(3, 21, 29, 0.15) 70%, transparent 88%)`,
-                }}
-              />
-            </div>
-          </div>
+        <div className="max-w-5xl mx-auto px-6 lg:px-10 text-center">
+          {/* Spacer — pushes the wordmark down into the dark lower
+              portion of the unified hero image, just below the brain
+              that lives inside the background composition. NO separate
+              brain element renders here — the brain is part of the
+              background image itself. */}
+          <div
+            aria-hidden
+            className="w-full"
+            style={{ height: "clamp(280px, 38vw, 460px)" }}
+          />
 
           {/* Wordmark */}
           <h1
-            className="font-light leading-none -mt-16 md:-mt-24 lg:-mt-32 relative"
+            className="font-light leading-none relative"
             style={{
               ...TRACK_HERO,
               fontSize: "clamp(44px, 7.5vw, 88px)",
