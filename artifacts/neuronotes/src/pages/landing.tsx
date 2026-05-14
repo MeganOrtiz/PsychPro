@@ -216,17 +216,86 @@ export default function LandingPage() {
           mix-blend-mode: screen;
         }
         .landing-glass-btn {
-          transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease, background .3s ease;
+          position: relative;
+          overflow: hidden;
+          isolation: isolate;
+          backdrop-filter: blur(18px) saturate(140%);
+          -webkit-backdrop-filter: blur(18px) saturate(140%);
+          transition: transform .25s cubic-bezier(.2,.8,.2,1),
+                      box-shadow .35s ease,
+                      border-color .25s ease,
+                      background .25s ease,
+                      letter-spacing .35s ease;
+        }
+        .landing-glass-btn::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          z-index: -1;
+          background: linear-gradient(120deg,
+            transparent 0%,
+            transparent 35%,
+            rgba(167, 243, 255, 0.55) 50%,
+            transparent 65%,
+            transparent 100%);
+          transform: translateX(-120%);
+          transition: transform .8s cubic-bezier(.2,.8,.2,1);
+          mix-blend-mode: screen;
+          pointer-events: none;
         }
         .landing-glass-btn:hover {
           transform: translateY(-2px);
+          border-color: rgba(167, 243, 255, 0.9) !important;
+          background: rgba(10, 45, 61, 0.78) !important;
+          box-shadow:
+            0 0 0 1px rgba(167, 243, 255, 0.55),
+            0 0 28px rgba(118, 228, 247, 0.55),
+            0 0 60px rgba(118, 228, 247, 0.32),
+            0 12px 40px rgba(0, 0, 0, 0.45),
+            inset 0 0 20px rgba(118, 228, 247, 0.20) !important;
+        }
+        .landing-glass-btn:hover::before {
+          transform: translateX(120%);
+        }
+        .landing-glass-btn:hover svg {
+          color: #A7F3FF !important;
+          filter: drop-shadow(0 0 8px rgba(167, 243, 255, 0.85));
+          transform: scale(1.08);
+        }
+        .landing-glass-btn:active {
+          transform: translateY(0);
+          box-shadow:
+            0 0 0 1px rgba(167, 243, 255, 0.7),
+            0 0 18px rgba(118, 228, 247, 0.45),
+            inset 0 0 24px rgba(118, 228, 247, 0.30) !important;
+        }
+        .landing-glass-btn svg {
+          transition: color .25s ease, filter .25s ease, transform .25s ease;
+        }
+        .landing-glass-icon-btn {
+          position: relative;
+          backdrop-filter: blur(14px) saturate(140%);
+          -webkit-backdrop-filter: blur(14px) saturate(140%);
+          transition: transform .25s cubic-bezier(.2,.8,.2,1),
+                      box-shadow .3s ease,
+                      border-color .25s ease,
+                      background .25s ease;
+        }
+        .landing-glass-icon-btn:hover {
+          transform: translateY(-1px) scale(1.06);
           border-color: rgba(167, 243, 255, 0.85) !important;
           background: rgba(10, 45, 61, 0.78) !important;
           box-shadow:
             0 0 0 1px rgba(167, 243, 255, 0.45),
-            0 0 32px rgba(118, 228, 247, 0.55),
-            0 0 64px rgba(118, 228, 247, 0.30),
-            inset 0 0 18px rgba(118, 228, 247, 0.18) !important;
+            0 0 22px rgba(118, 228, 247, 0.55),
+            inset 0 0 12px rgba(118, 228, 247, 0.18) !important;
+        }
+        .landing-glass-icon-btn:hover svg {
+          color: #A7F3FF !important;
+          filter: drop-shadow(0 0 8px rgba(167, 243, 255, 0.9));
+        }
+        .landing-glass-icon-btn svg {
+          transition: color .25s ease, filter .25s ease;
         }
       `}</style>
 
@@ -284,11 +353,12 @@ export default function LandingPage() {
           <div className="flex items-center gap-4">
             <button
               aria-label="Search"
-              className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:scale-105"
+              className="landing-glass-icon-btn w-9 h-9 rounded-full flex items-center justify-center"
               style={{
                 color: P.mist,
-                border: `1px solid rgba(118, 228, 247, 0.25)`,
-                background: "rgba(6, 32, 44, 0.4)",
+                border: `1px solid rgba(118, 228, 247, 0.45)`,
+                background: "rgba(10, 45, 61, 0.55)",
+                boxShadow: `0 0 14px rgba(118, 228, 247, 0.18), inset 0 0 10px rgba(118, 228, 247, 0.06)`,
               }}
               data-testid="header-search"
             >
@@ -296,11 +366,11 @@ export default function LandingPage() {
             </button>
             <button
               onClick={goToApp}
-              className="px-6 h-9 rounded-md text-xs font-light transition-all hover:-translate-y-0.5"
+              className="landing-glass-btn px-6 h-9 rounded-md text-xs font-light"
               style={{
                 ...TRACK_NAV,
                 color: P.cloud,
-                background: "rgba(6, 32, 44, 0.55)",
+                background: "rgba(10, 45, 61, 0.62)",
                 border: `1px solid rgba(118, 228, 247, 0.45)`,
                 boxShadow: `0 0 18px rgba(118, 228, 247, 0.22), inset 0 0 12px rgba(118, 228, 247, 0.05)`,
               }}
@@ -645,11 +715,11 @@ export default function LandingPage() {
             />
             <button
               type="submit"
-              className="h-11 px-7 rounded-md text-xs font-light transition-all hover:-translate-y-0.5"
+              className="landing-glass-btn h-11 px-7 rounded-md text-xs font-light"
               style={{
                 ...TRACK_NAV,
                 color: P.cloud,
-                background: "rgba(6, 32, 44, 0.55)",
+                background: "rgba(10, 45, 61, 0.62)",
                 border: `1px solid rgba(118, 228, 247, 0.55)`,
                 boxShadow: `0 0 18px rgba(118, 228, 247, 0.28), inset 0 0 10px rgba(118, 228, 247, 0.08)`,
               }}
