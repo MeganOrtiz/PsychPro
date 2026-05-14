@@ -18,7 +18,7 @@ import {
   CheckCircle2,
   Sparkles,
 } from "lucide-react";
-import heroBg from "@assets/generated_images/hero_brain_smoke_unified_v1.png";
+import heroBg from "@assets/generated_images/hero_brain_superior_v1.png";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -173,6 +173,13 @@ export default function LandingPage() {
         aria-hidden
         className="pointer-events-none fixed inset-0 -z-30"
         style={{
+          /* Full-bleed: the image IS the page background. No mask,
+             no seam — the dark teal ink that surrounds the brain in
+             the source image becomes the surrounding atmosphere of
+             the entire viewport, so the brain reads as integrated
+             into the composition rather than pasted on top.
+             Anchored to the top so the superior-view brain sits in
+             the upper portion of the viewport. */
           backgroundImage: `url(${heroBg})`,
           backgroundSize: "cover",
           backgroundPosition: "center top",
@@ -188,7 +195,7 @@ export default function LandingPage() {
         aria-hidden
         className="pointer-events-none fixed inset-0 -z-20"
         style={{
-          background: `linear-gradient(180deg, rgba(3, 21, 29, 0.00) 0%, rgba(3, 21, 29, 0.00) 48%, rgba(3, 21, 29, 0.55) 70%, rgba(3, 21, 29, 0.90) 90%, rgba(3, 21, 29, 0.97) 100%)`,
+          background: `linear-gradient(180deg, rgba(3, 21, 29, 0.00) 0%, rgba(3, 21, 29, 0.00) 58%, rgba(3, 21, 29, 0.60) 75%, rgba(3, 21, 29, 0.90) 90%, rgba(3, 21, 29, 0.97) 100%)`,
         }}
       />
       {/* Outer vignette — gentle darkening at the corners only */}
@@ -372,17 +379,16 @@ export default function LandingPage() {
           ============================================================ */}
       <section className="relative">
         <div className="max-w-5xl mx-auto px-6 lg:px-10 text-center">
-          {/* Spacer — pushes the wordmark down into the dark lower
-              portion of the unified hero image, just below the brain
-              that lives inside the background composition. NO separate
-              brain element renders here — the brain is part of the
-              background image itself. Sized in viewport-height units
-              so the wordmark always lands in the dark band below the
-              brain regardless of screen height (1366x768 -> 1920x1080). */}
+          {/* Spacer — pushes the wordmark down so it sits DIRECTLY
+              beneath the superior-view brain that lives inside the
+              background composition. Per the design direction we want
+              minimal empty space between the brain and the title.
+              Scaled in viewport-height units so it tracks with screen
+              height across 1366x768 -> 1920x1080. */}
           <div
             aria-hidden
             className="w-full"
-            style={{ height: "clamp(380px, 62vh, 640px)" }}
+            style={{ height: "clamp(420px, 64vh, 640px)" }}
           />
 
           {/* Wordmark */}
