@@ -17,7 +17,6 @@ import {
   Brain,
 } from "lucide-react";
 import brainHero from "@assets/generated_images/brain_hero_cinematic.png";
-import testimonialAvatar from "@assets/Screenshot_2026-04-28_at_8.01.18_PM_1778027668124.png";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -205,11 +204,11 @@ export default function LandingPage() {
           HERO — brain centered, wordmark, tagline, copy, CTAs
           ============================================================ */}
       <section className="relative">
-        <div className="max-w-5xl mx-auto px-6 lg:px-10 pt-4 pb-20 text-center">
+        <div className="max-w-5xl mx-auto px-6 lg:px-10 pt-2 pb-14 text-center">
           {/* Brain image — large, centered, top */}
           <div className="relative flex justify-center">
             <div
-              className="relative w-full max-w-[720px]"
+              className="relative w-full max-w-[640px]"
               style={{ aspectRatio: "3 / 4" }}
             >
               <img
@@ -233,10 +232,10 @@ export default function LandingPage() {
 
           {/* Wordmark */}
           <h1
-            className="font-light leading-none -mt-12 md:-mt-20 lg:-mt-28 relative"
+            className="font-light leading-none -mt-16 md:-mt-24 lg:-mt-32 relative"
             style={{
               ...TRACK_HERO,
-              fontSize: "clamp(48px, 8vw, 96px)",
+              fontSize: "clamp(44px, 7.5vw, 88px)",
               color: P.cloud,
               textShadow: `0 0 40px rgba(118, 228, 247, 0.35), 0 8px 50px ${P.ink}`,
             }}
@@ -246,7 +245,7 @@ export default function LandingPage() {
 
           {/* Tagline */}
           <p
-            className="mt-5 text-sm md:text-base font-light"
+            className="mt-4 text-sm md:text-base font-light"
             style={{
               ...TRACK_WIDE,
               color: P.mist,
@@ -258,7 +257,7 @@ export default function LandingPage() {
 
           {/* Body copy */}
           <p
-            className="mt-10 mx-auto max-w-2xl text-base md:text-[17px] leading-relaxed font-light"
+            className="mt-8 mx-auto max-w-2xl text-base md:text-[17px] leading-relaxed font-light"
             style={{ color: P.inkSoft }}
           >
             Cut study time in half and actually retain the information over time
@@ -267,7 +266,7 @@ export default function LandingPage() {
           </p>
 
           {/* CTAs */}
-          <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button
               onClick={goToApp}
               className="group inline-flex items-center gap-3 px-8 h-12 rounded-md text-xs font-light transition-all hover:-translate-y-0.5"
@@ -305,7 +304,7 @@ export default function LandingPage() {
           ============================================================ */}
       <section
         id="features"
-        className="relative max-w-7xl mx-auto px-6 lg:px-10 pb-20"
+        className="relative max-w-7xl mx-auto px-6 lg:px-10 pb-14"
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {FEATURE_CARDS.map((card, i) => (
@@ -354,111 +353,51 @@ export default function LandingPage() {
       </section>
 
       {/* ============================================================
-          STATS + TESTIMONIAL
+          STATS — full-width content library panel (real numbers only)
           ============================================================ */}
       <section
         id="trust"
-        className="relative max-w-7xl mx-auto px-6 lg:px-10 pb-20"
+        className="relative max-w-7xl mx-auto px-6 lg:px-10 pb-16"
       >
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          {/* Stats panel */}
-          <div
-            className="rounded-xl p-8 lg:p-10"
-            style={{
-              ...glass,
-              boxShadow: `0 24px 50px rgba(0,0,0,0.45)`,
-            }}
-            data-testid="trust-panel"
+        <div
+          className="rounded-xl p-8 lg:p-12"
+          style={{
+            ...glass,
+            boxShadow: `0 24px 50px rgba(0,0,0,0.45)`,
+          }}
+          data-testid="trust-panel"
+        >
+          <h2
+            className="text-xs font-light mb-10 text-center"
+            style={{ ...TRACK_NAV, color: P.cloud }}
           >
-            <h2
-              className="text-xs font-light mb-8"
-              style={{ ...TRACK_NAV, color: P.cloud }}
-            >
-              TRUSTED BY
-              <br />
-              PSYCHOLOGY PROFESSIONALS
-            </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-              {TRUST_STATS.map((s) => (
-                <div key={s.l} className="text-center">
-                  <s.icon
-                    className="w-7 h-7 mx-auto mb-3"
-                    strokeWidth={1.25}
-                    style={{
-                      color: P.surf,
-                      filter: `drop-shadow(0 0 10px rgba(118, 228, 247, 0.5))`,
-                    }}
-                  />
-                  <div
-                    className="text-2xl font-light"
-                    style={{ color: P.cloud, letterSpacing: "0.04em" }}
-                  >
-                    {s.n}
-                  </div>
-                  <div
-                    className="text-[10px] mt-2 font-light"
-                    style={{ ...TRACK_NAV, color: P.inkSoft }}
-                  >
-                    {s.l}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Testimonial */}
-          <div
-            id="testimonial"
-            className="rounded-xl p-8 lg:p-10 flex flex-col justify-center"
-            style={{
-              ...glass,
-              boxShadow: `0 24px 50px rgba(0,0,0,0.45)`,
-            }}
-            data-testid="testimonial-card"
-          >
-            <div
-              className="text-5xl leading-none mb-4 font-serif"
-              style={{ color: P.surf, opacity: 0.9 }}
-              aria-hidden
-            >
-              "
-            </div>
-            <p
-              className="text-base lg:text-lg leading-relaxed font-light mb-6"
-              style={{ color: P.cloud }}
-            >
-              PsychPro has transformed the way I learn and apply clinical
-              knowledge. The community and resources are unmatched.
-            </p>
-            <div className="flex items-center gap-4">
-              <div
-                className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0"
-                style={{
-                  border: `1px solid rgba(118, 228, 247, 0.55)`,
-                  boxShadow: `0 0 16px rgba(118, 228, 247, 0.35)`,
-                }}
-              >
-                <img
-                  src={testimonialAvatar}
-                  alt=""
-                  className="w-full h-full object-cover"
+            A COMPLETE STUDY LIBRARY
+          </h2>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            {TRUST_STATS.map((s) => (
+              <div key={s.l} className="text-center">
+                <s.icon
+                  className="w-8 h-8 mx-auto mb-4"
+                  strokeWidth={1.25}
+                  style={{
+                    color: P.surf,
+                    filter: `drop-shadow(0 0 10px rgba(118, 228, 247, 0.5))`,
+                  }}
                 />
-              </div>
-              <div>
                 <div
-                  className="text-sm font-medium"
-                  style={{ color: P.cloud }}
+                  className="text-3xl lg:text-4xl font-light"
+                  style={{ color: P.cloud, letterSpacing: "0.04em" }}
                 >
-                  Dr. Sarah Mitchell
+                  {s.n}
                 </div>
                 <div
-                  className="text-xs mt-0.5 font-light"
-                  style={{ color: P.inkSoft }}
+                  className="text-[10px] mt-2 font-light"
+                  style={{ ...TRACK_NAV, color: P.inkSoft }}
                 >
-                  Clinical Psychologist
+                  {s.l}
                 </div>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
