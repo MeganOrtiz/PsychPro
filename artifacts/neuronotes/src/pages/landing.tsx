@@ -15,6 +15,8 @@ import {
   Instagram,
   Youtube,
   Brain,
+  CheckCircle2,
+  Sparkles,
 } from "lucide-react";
 import brainHero from "@assets/generated_images/brain_superior_v2.png";
 import smokeBg from "@assets/generated_images/smoke_neural_bg.png";
@@ -620,67 +622,88 @@ export default function LandingPage() {
           ============================================================ */}
       <section
         id="topics"
-        className="relative max-w-7xl mx-auto px-6 lg:px-10 pb-16"
+        className="relative max-w-6xl mx-auto px-6 lg:px-10 pb-20"
       >
-        <div className="text-center mb-10">
+        <div className="text-center mb-12">
           <h2
-            className="text-xs font-light"
-            style={{ ...TRACK_NAV, color: P.cloud }}
+            className="text-3xl md:text-4xl font-semibold tracking-tight"
+            style={{ color: P.cloud }}
           >
-            EVERY TOPIC WE COVER
+            The full clinical map.
           </h2>
           <p
-            className="mt-3 text-sm font-light"
-            style={{ color: P.inkSoft }}
+            className="mt-4 text-sm md:text-base font-light max-w-2xl mx-auto leading-relaxed"
+            style={{ color: "rgba(244, 251, 255, 0.65)" }}
           >
-            39 expertly curated subjects across neuroscience, clinical practice, and research methods.
+            Foundations, assessment, intervention, research methods, and clinical specialties — all in one place.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {TOPIC_CATEGORIES.map((cat) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {TOPIC_CATEGORIES.flatMap((c) => c.topics).map((t) => (
             <div
-              key={cat.title}
-              className="rounded-xl p-6 lg:p-7"
+              key={t}
+              className="topic-pill flex items-center gap-3 px-4 h-12 rounded-lg text-sm font-light"
               style={{
-                ...glass,
-                boxShadow: `0 24px 50px rgba(0,0,0,0.45)`,
+                color: P.cloud,
+                background: "rgba(10, 45, 61, 0.55)",
+                border: "1px solid rgba(118, 228, 247, 0.22)",
+                backdropFilter: "blur(12px) saturate(135%)",
+                WebkitBackdropFilter: "blur(12px) saturate(135%)",
               }}
-              data-testid={`topic-category-${cat.title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+              data-testid={`topic-pill-${t.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
             >
-              <h3
-                className="text-[11px] font-light mb-5 pb-4"
+              <CheckCircle2
+                className="w-4 h-4 flex-shrink-0"
                 style={{
-                  ...TRACK_NAV,
                   color: P.surf,
-                  borderBottom: `1px solid rgba(118, 228, 247, 0.18)`,
-                  textShadow: `0 0 10px rgba(118, 228, 247, 0.4)`,
+                  filter: `drop-shadow(0 0 5px rgba(118, 228, 247, 0.55))`,
                 }}
-              >
-                {cat.title}
-              </h3>
-              <ul className="space-y-2.5">
-                {cat.topics.map((t) => (
-                  <li
-                    key={t}
-                    className="flex items-start gap-2.5 text-sm font-light leading-relaxed"
-                    style={{ color: P.cloud }}
-                  >
-                    <span
-                      aria-hidden
-                      className="mt-2 inline-block w-1 h-1 rounded-full flex-shrink-0"
-                      style={{
-                        background: P.surf,
-                        boxShadow: `0 0 6px ${P.surf}`,
-                      }}
-                    />
-                    <span>{t}</span>
-                  </li>
-                ))}
-              </ul>
+              />
+              <span className="truncate">{t}</span>
             </div>
           ))}
+          {/* "More being added" pill — final cell, accent-styled */}
+          <div
+            className="topic-pill flex items-center gap-3 px-4 h-12 rounded-lg text-sm font-light"
+            style={{
+              color: P.mist,
+              background: "rgba(10, 45, 61, 0.62)",
+              border: "1px solid rgba(167, 243, 255, 0.55)",
+              backdropFilter: "blur(12px) saturate(135%)",
+              WebkitBackdropFilter: "blur(12px) saturate(135%)",
+              boxShadow: `0 0 18px rgba(118, 228, 247, 0.22), inset 0 0 10px rgba(118, 228, 247, 0.08)`,
+            }}
+            data-testid="topic-pill-more"
+          >
+            <Sparkles
+              className="w-4 h-4 flex-shrink-0"
+              style={{
+                color: P.mist,
+                filter: `drop-shadow(0 0 6px rgba(167, 243, 255, 0.85))`,
+              }}
+            />
+            <span className="truncate">+ More being added</span>
+          </div>
         </div>
+
+        <style>{`
+          .topic-pill {
+            transition: transform .25s cubic-bezier(.2,.8,.2,1),
+                        background .25s ease,
+                        border-color .25s ease,
+                        box-shadow .3s ease;
+          }
+          .topic-pill:hover {
+            transform: translateY(-1px);
+            background: rgba(10, 45, 61, 0.78) !important;
+            border-color: rgba(167, 243, 255, 0.7) !important;
+            box-shadow:
+              0 0 0 1px rgba(167, 243, 255, 0.35),
+              0 0 22px rgba(118, 228, 247, 0.40),
+              inset 0 0 12px rgba(118, 228, 247, 0.12);
+          }
+        `}</style>
       </section>
 
       {/* ============================================================
