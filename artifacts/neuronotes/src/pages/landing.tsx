@@ -16,7 +16,7 @@ import {
   Youtube,
   Brain,
 } from "lucide-react";
-import brainHero from "@assets/generated_images/brain_3d_glowing.png";
+import brainHero from "@assets/generated_images/brain_superior_view.png";
 import smokeBg from "@assets/Screenshot_2026-04-27_at_1.40.17_AM_1778720312053.png";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
@@ -153,7 +153,7 @@ export default function LandingPage() {
       className="min-h-screen relative overflow-x-hidden"
       data-testid="landing-page"
       style={{
-        background: P.ink,
+        background: "transparent",
         color: P.cloud,
         fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
       }}
@@ -163,34 +163,29 @@ export default function LandingPage() {
           across the entire page (fixed), darkened to brand ink and
           softened with cyan radial glows so it reads as living mist.
           ============================================================ */}
-      {/* Layer 1: deep ink wash so smoke never blows out the page */}
+      {/* Layer 1: THE SMOKE PHOTO — the actual page background.
+          Fixed, full-bleed, fully visible so the billowing teal clouds
+          fill the entire page. Slowly drifts for a living atmosphere. */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 -z-30"
-        style={{ background: P.ink }}
-      />
-      {/* Layer 2: the smoke photo, scaled to cover, slowly drifting */}
-      <div
-        aria-hidden
-        className="pointer-events-none fixed inset-0 -z-20 landing-smoke-drift"
+        className="pointer-events-none fixed inset-0 -z-30 landing-smoke-drift"
         style={{
           backgroundImage: `url(${smokeBg})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
-          opacity: 0.95,
-          filter: "blur(1px) saturate(125%) hue-rotate(-6deg) contrast(105%)",
+          backgroundColor: P.ink,
         }}
       />
-      {/* Layer 3: gentle vignette + cyan top-glow so smoke reads as living mist */}
+      {/* Layer 2: legibility wash — just enough darkness for text to read,
+          plus a soft cyan top-glow behind the brain. Smoke stays dominant. */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 -z-10"
+        className="pointer-events-none fixed inset-0 -z-20"
         style={{
           background: `
-            radial-gradient(ellipse 70% 45% at 50% 0%, rgba(118, 228, 247, 0.20), transparent 65%),
-            radial-gradient(ellipse 100% 90% at 50% 50%, transparent 35%, rgba(3, 21, 29, 0.45) 100%),
-            linear-gradient(180deg, rgba(3, 21, 29, 0.20) 0%, rgba(6, 31, 43, 0.10) 50%, rgba(3, 21, 29, 0.45) 100%)
+            radial-gradient(ellipse 80% 50% at 50% 0%, rgba(118, 228, 247, 0.22), transparent 65%),
+            linear-gradient(180deg, rgba(3, 21, 29, 0.45) 0%, rgba(3, 21, 29, 0.25) 35%, rgba(3, 21, 29, 0.35) 70%, rgba(3, 21, 29, 0.65) 100%)
           `,
         }}
       />
