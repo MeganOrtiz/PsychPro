@@ -1,0 +1,164 @@
+Redesign the entire PsychPro site so the landing page, dashboard, and all internal pages share the exact same premium cinematic neuroscience aesthetic shown in the reference images.
+
+The visual direction must match the references exactly:
+- Dark luxury neuroscience UI
+- Deep teal, cyan, cerulean, turquoise, and midnight blue palette
+- NO royal blue, NO flat navy, NO purple
+- Atmospheric smoke / ink diffusion clouds throughout the background
+- Glowing cyan neural lines and subtle particles
+- Glassmorphism cards with thin cyan borders
+- Soft internal glow, blurred edges, and premium clinical-tech feel
+- Clean, widely spaced typography
+- Centered, elegant brand identity
+- Professional, not childish, not cartoon-like
+
+LANDING PAGE REQUIREMENTS:
+Create the landing page to match the first reference image.
+
+Hero:
+- Full-screen cinematic background
+- Center a superior-view anatomical brain near the top-middle
+- Brain must be symmetrical, glowing cyan/teal from within
+- Add smoke-like teal nebula clouds on both sides and throughout the full page
+- Add subtle neural/electric connection lines behind the brain
+- Background should diffuse across the entire page, not just the edges
+- Remove any irrelevant decorative objects or shooting light beams
+
+Top navigation:
+- Left: small brain icon + “PSYCHPRO”
+- Center nav links: Home, Courses, Resources, Community, About
+- Right: search icon and Log In button
+- Use thin uppercase letter-spaced font
+- Active nav item should have a small cyan underline glow
+
+Hero text:
+- Large centered title: “PSYCHPRO”
+- Use very thin, elegant, widely letter-spaced uppercase font
+- Under it: “LEARN. EXPAND. CONNECT.”
+- Then add this copy:
+  “Cut study time in half and actually retain the information over time with clinically grounded tools built for psychology students and professionals.”
+
+Hero buttons:
+- Two large glass buttons with cyan glow:
+  1. Explore Courses
+  2. Join Community
+- Buttons should have icons, soft glow, hover lift, and brighter cyan border on hover
+
+Feature cards:
+Create 3 glass cards beneath the hero:
+1.	Easy to Navigate
+2.	Evidence-Based
+3.	Practical Tools
+4.	Professional Community
+
+Each card should have:
+- thin cyan outline
+- translucent dark teal background
+- subtle blur
+- simple line icon
+- soft hover glow
+- clean centered text
+
+Stats / trust section:
+Create a glass panel titled:
+“TRUSTED BY PSYCHOLOGY PROFESSIONALS”
+
+Include:
+- 39+ Topics
+- 1,612+ Flashcards
+- 935+ Quiz Questions
+- 738+ Exam Questions
+
+Add a testimonial card beside it with a quote-style design and a small circular profile image placeholder.
+
+Email subscribe section:
+Create a horizontal glass panel with:
+- “STAY INSPIRED.”
+- “Get expert insights and updates.”
+- Email input
+- Subscribe button
+
+Footer:
+- Brain icon + PsychPro
+- Privacy Policy
+- Terms of Service
+- Contact
+- Social icons
+
+DASHBOARD / INTERNAL SITE REQUIREMENTS:
+Make the rest of the site match the second reference image.
+
+Dashboard layout:
+- Keep the left sidebar, but restyle it to match the same glass/cyan aesthetic
+- Sidebar should be dark translucent teal with cyan borders and hover glows
+- Use clean icons and compact spacing
+- Main dashboard background must use the same cinematic smoke/brain/neural background from the landing page
+- Top center should show “PSYCHPRO” with tagline underneath:
+  “ADVANCE YOUR MIND. ELEVATE CARE.”
+- Keep the dashboard easy to navigate and not cluttered
+
+Dashboard cards:
+Style every card as glassmorphism:
+- translucent dark teal
+- thin cyan outline
+- blur backdrop
+- soft shadow
+- rounded corners
+- hover glow
+- consistent spacing
+
+Create these dashboard sections:
+1. Begin Your Journey
+2. Recommended for You
+3. Your Streak
+4. Leaderboard
+5. PsychPro Spotlight
+
+Spotlight card:
+- Large vertical glass card on the right
+- Use same smoke background inside the card
+- Add circular profile image
+- Title: “Spotlight”
+- Subtitle: “Highlighting the next generation of clinicians and researchers.”
+- Do NOT add childish graphics
+- Do NOT add random neurons inside the box unless subtle and background-integrated
+
+GLOBAL DESIGN SYSTEM:
+Apply this theme across every page: landing, dashboard, topics, study lab, brain lab, progress, resources, tools, community, login, and signup.
+
+Use these CSS variables globally:
+
+:root {
+  --bg-deep: #03151d;
+  --bg-midnight: #061f2b;
+  --bg-teal: #083240;
+  --cerulean: #2A7387;
+  --cyan: #5EB0C8;
+  --bright-cyan: #76E4F7;
+  --soft-cyan: #A7F3FF;
+  --text-main: #F4FBFF;
+  --text-muted: #A9C6CF;
+  --glass-bg: rgba(6, 32, 44, 0.58);
+  --glass-bg-strong: rgba(10, 45, 61, 0.72);
+  --glass-border: rgba(118, 228, 247, 0.38);
+  --glass-border-bright: rgba(118, 228, 247, 0.72);
+  --shadow-cyan: 0 0 32px rgba(94, 176, 200, 0.32);
+  --shadow-deep: 0 24px 80px rgba(0, 0, 0, 0.55);
+}
+
+Typography:
+- Use a thin, elegant, professional sans-serif
+- Titles should be uppercase with wide letter spacing
+- Avoid bulky fonts
+- Avoid childish friendly copy
+- Keep everything clinical, polished, premium, and refined
+
+Implementation:
+- Create reusable components: GlassCard, GlowButton, SectionHeader, BackgroundAtmosphere, BrainHero, Sidebar, SpotlightCard
+- Use the same background system across the whole app
+- Do not break current routing or app functionality
+- Keep all existing page content and data, but restyle it to match this visual system
+- Make the site fully responsive for desktop, tablet, and mobile
+
+Most important:
+The entire PsychPro site should look like one cohesive premium neuroscience learning platform. Match the reference images closely: cinematic glowing brain, teal/cyan smoke, glass panels, thin typography, cyan glow, and professional clinical-tech luxury.

@@ -216,26 +216,53 @@ export default function DashboardPage() {
       data-testid="dashboard-page"
     >
       <div className="max-w-[1400px] mx-auto p-4 md:p-6 lg:p-8">
-        {/* Top header */}
-        <header className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
-          <div className="flex-1 min-w-0">
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-              Hello, {firstName} <span aria-hidden>👋</span>
-            </h1>
-            <p className="text-muted-foreground text-sm mt-1">
-              Let's keep learning and growing your mind.
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
+        {/* Top header — centered cinematic PSYCHPRO wordmark per brand spec */}
+        <header className="relative flex items-center justify-center mb-8 py-4">
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-3">
             <button
-              className="relative w-10 h-10 rounded-full bg-card border border-border flex items-center justify-center hover:bg-muted transition-colors"
+              className="relative w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-105"
+              style={{
+                background: "rgba(6, 32, 44, 0.55)",
+                border: "1px solid rgba(118, 228, 247, 0.28)",
+                color: PALETTE.mist,
+              }}
               data-testid="dashboard-notifications"
               aria-label="Notifications"
             >
-              <Bell className="w-4 h-4 text-foreground" />
+              <Bell className="w-4 h-4" />
             </button>
           </div>
+          <div className="text-center">
+            <h1
+              className="font-light"
+              style={{
+                fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
+                fontSize: "clamp(28px, 4vw, 44px)",
+                letterSpacing: "0.42em",
+                color: PALETTE.cloud,
+                textShadow: `0 0 24px rgba(118, 228, 247, 0.32)`,
+              }}
+            >
+              PSYCHPRO
+            </h1>
+            <p
+              className="mt-2 text-[11px] md:text-xs font-light"
+              style={{
+                letterSpacing: "0.32em",
+                color: PALETTE.mist,
+              }}
+            >
+              ADVANCE YOUR MIND. ELEVATE CARE.
+            </p>
+          </div>
         </header>
+
+        {/* Greeting (kept smaller, beneath cinematic header) */}
+        <div className="mb-6">
+          <p className="text-sm font-light" style={{ color: PALETTE.inkSoft }}>
+            Welcome back, <span style={{ color: PALETTE.mist }}>{firstName}</span>. Let's keep learning.
+          </p>
+        </div>
 
         {isOverLimit && (
           <div

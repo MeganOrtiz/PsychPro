@@ -240,35 +240,36 @@
    automatically resolve to dark-theme values inside any .study-page-bg page. */
 .study-page-bg,
 .study-page-aurora {
-  /* Mirrors STUDY_PALETTE in src/lib/study-theme.ts. If you change a
-     hex value there, mirror it here (and the rgba glow values below). */
-  --background: 211 71% 9%;          /* #061826 bg */
-  --foreground: 205 100% 87%;        /* #BDE5FF mist (icy text) */
-  --card: 210 51% 13%;               /* #0C2538 surface */
-  --card-foreground: 205 100% 87%;
-  --popover: 210 51% 13%;
-  --popover-foreground: 205 100% 87%;
-  --muted: 209 51% 16%;              /* #0E2C40 bgSoft */
-  --muted-foreground: 192 22% 59%;   /* #7FA4AD inkSoft */
-  --border: 209 61% 28%;             /* #1C4E75 steel */
-  --input: 209 51% 16%;              /* #0E2C40 bgSoft */
-  --primary: 195 62% 48%;            /* #2FA0C6 teal */
-  --primary-foreground: 211 71% 9%;
-  --secondary: 195 56% 38%;          /* #2A7E97 tealDeep */
-  --secondary-foreground: 205 100% 87%;
-  --accent: 200 86% 65%;             /* #58C9F3 surf */
-  --accent-foreground: 211 71% 9%;
-  --ring: 200 86% 65%;
+  /* Mirrors STUDY_PALETTE in src/lib/study-theme.ts. Canonical palette
+     = the landing-page cinematic neuroscience UI. */
+  --background: 200 75% 9%;          /* #061F2B bg */
+  --foreground: 188 100% 83%;        /* #A7F3FF mist (icy text) */
+  --card: 197 72% 14%;               /* #0A2D3D surface */
+  --card-foreground: 188 100% 83%;
+  --popover: 197 72% 14%;
+  --popover-foreground: 188 100% 83%;
+  --muted: 195 78% 14%;              /* #083240 bgSoft */
+  --muted-foreground: 195 24% 73%;   /* #A9C6CF inkSoft */
+  --border: 192 52% 35%;             /* #2A7387 steel/cerulean */
+  --input: 195 78% 14%;              /* #083240 bgSoft */
+  --primary: 192 47% 58%;            /* #5EB0C8 teal */
+  --primary-foreground: 200 75% 9%;
+  --secondary: 192 52% 35%;          /* #2A7387 cerulean */
+  --secondary-foreground: 188 100% 83%;
+  --accent: 188 90% 72%;             /* #76E4F7 surf (bright-cyan) */
+  --accent-foreground: 200 75% 9%;
+  --ring: 188 90% 72%;
 }
 
 .study-page-bg,
 .study-page-aurora {
-  background: linear-gradient(
-    180deg,
-    #061826 0%,
-    #0A2030 40%,
-    #0C2538 100%
-  );
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(118, 228, 247, 0.08), transparent 70%),
+    radial-gradient(ellipse 50% 70% at 0% 30%, rgba(42, 115, 135, 0.18), transparent 60%),
+    radial-gradient(ellipse 50% 70% at 100% 30%, rgba(42, 115, 135, 0.18), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 50% 100%, rgba(118, 228, 247, 0.06), transparent 65%),
+    linear-gradient(180deg, #03151D 0%, #061F2B 35%, #083240 100%);
+  background-attachment: fixed;
 }
 
 /* User-supplied .study-card recipe — applied to every shadcn Card
@@ -279,17 +280,17 @@
 .study-page-aurora .bg-card {
   background-image: linear-gradient(
     145deg,
-    rgba(17, 50, 77, 0.95),
-    rgba(12, 37, 56, 0.98)
+    rgba(14, 60, 80, 0.95),
+    rgba(10, 45, 61, 0.98)
   );
-  border: 1px solid rgba(88, 201, 243, 0.15);
+  border: 1px solid rgba(118, 228, 247, 0.15);
   border-radius: 22px;
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   box-shadow:
-    0 0 0 1px rgba(88, 201, 243, 0.06),
+    0 0 0 1px rgba(118, 228, 247, 0.06),
     0 20px 40px rgba(0, 0, 0, 0.35),
-    0 0 30px rgba(88, 201, 243, 0.06);
+    0 0 30px rgba(118, 228, 247, 0.06);
 }
 
 /* Glassy cerulean buttons — translucent dark-teal base with a cerulean
@@ -300,21 +301,21 @@
 .study-page-aurora :where(.bg-primary, button.bg-primary, [class*="bg-primary"]) {
   background-image: linear-gradient(
     135deg,
-    rgba(88, 201, 243, 0.42),
+    rgba(118, 228, 247, 0.42),
     rgba(42, 115, 135, 0.55)
   );
-  background-color: rgba(8, 43, 58, 0.55);
+  background-color: rgba(6, 32, 44, 0.55);
   color: #E4F4F6;
-  border: 1px solid rgba(189, 229, 255, 0.35);
+  border: 1px solid rgba(167, 243, 255, 0.35);
   border-radius: 14px;
   backdrop-filter: blur(14px) saturate(140%);
   -webkit-backdrop-filter: blur(14px) saturate(140%);
   transition: all 0.25s ease;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.10),
-    0 0 0 1px rgba(88, 201, 243, 0.10),
-    0 6px 22px rgba(88, 201, 243, 0.28),
-    0 0 24px rgba(88, 201, 243, 0.18);
+    0 0 0 1px rgba(118, 228, 247, 0.10),
+    0 6px 22px rgba(118, 228, 247, 0.28),
+    0 0 24px rgba(118, 228, 247, 0.18);
 }
 
 .study-page-bg :where(.bg-primary, button.bg-primary, [class*="bg-primary"]):hover,
@@ -322,42 +323,42 @@
   transform: translateY(-2px);
   background-image: linear-gradient(
     135deg,
-    rgba(88, 201, 243, 0.55),
+    rgba(118, 228, 247, 0.55),
     rgba(42, 115, 135, 0.70)
   );
-  border-color: rgba(189, 229, 255, 0.55);
+  border-color: rgba(167, 243, 255, 0.55);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.14),
-    0 0 0 1px rgba(88, 201, 243, 0.18),
-    0 12px 32px rgba(88, 201, 243, 0.42),
-    0 0 40px rgba(88, 201, 243, 0.32);
+    0 0 0 1px rgba(118, 228, 247, 0.18),
+    0 12px 32px rgba(118, 228, 247, 0.42),
+    0 0 40px rgba(118, 228, 247, 0.32);
 }
 
 /* Secondary buttons — softer glass, same cerulean glow language */
 .study-page-bg .bg-secondary,
 .study-page-aurora .bg-secondary {
-  background: rgba(8, 43, 58, 0.55);
+  background: rgba(6, 32, 44, 0.55);
   color: #E4F4F6;
-  border: 1px solid rgba(88, 201, 243, 0.25);
+  border: 1px solid rgba(118, 228, 247, 0.25);
   border-radius: 14px;
   backdrop-filter: blur(14px) saturate(140%);
   -webkit-backdrop-filter: blur(14px) saturate(140%);
   transition: all 0.25s ease;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 4px 16px rgba(88, 201, 243, 0.15),
-    0 0 18px rgba(88, 201, 243, 0.10);
+    0 4px 16px rgba(118, 228, 247, 0.15),
+    0 0 18px rgba(118, 228, 247, 0.10);
 }
 
 .study-page-bg .bg-secondary:hover,
 .study-page-aurora .bg-secondary:hover {
   transform: translateY(-2px);
-  background: rgba(12, 52, 70, 0.70);
-  border-color: rgba(88, 201, 243, 0.45);
+  background: rgba(10, 45, 61, 0.70);
+  border-color: rgba(118, 228, 247, 0.45);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.10),
-    0 8px 24px rgba(88, 201, 243, 0.28),
-    0 0 28px rgba(88, 201, 243, 0.22);
+    0 8px 24px rgba(118, 228, 247, 0.28),
+    0 0 28px rgba(118, 228, 247, 0.22);
 }
 
 /* Outline buttons — fully transparent glass with a cerulean ring + glow.
@@ -365,8 +366,8 @@
    without a bg-* class. */
 .study-page-bg button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive),
 .study-page-aurora button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive) {
-  background: rgba(8, 43, 58, 0.40);
-  border-color: rgba(88, 201, 243, 0.30) !important;
+  background: rgba(6, 32, 44, 0.40);
+  border-color: rgba(118, 228, 247, 0.30) !important;
   color: #E4F4F6;
   border-radius: 14px;
   backdrop-filter: blur(12px) saturate(140%);
@@ -374,19 +375,19 @@
   transition: all 0.25s ease;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 4px 14px rgba(88, 201, 243, 0.12),
-    0 0 16px rgba(88, 201, 243, 0.08);
+    0 4px 14px rgba(118, 228, 247, 0.12),
+    0 0 16px rgba(118, 228, 247, 0.08);
 }
 
 .study-page-bg button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive):hover,
 .study-page-aurora button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive):hover {
   transform: translateY(-1px);
-  background: rgba(12, 52, 70, 0.60);
-  border-color: rgba(88, 201, 243, 0.50) !important;
+  background: rgba(10, 45, 61, 0.60);
+  border-color: rgba(118, 228, 247, 0.50) !important;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 6px 20px rgba(88, 201, 243, 0.22),
-    0 0 22px rgba(88, 201, 243, 0.18);
+    0 6px 20px rgba(118, 228, 247, 0.22),
+    0 0 22px rgba(118, 228, 247, 0.18);
 }
 
 /* User-supplied .input recipe — translucent dark teal, cerulean
@@ -417,8 +418,8 @@
   textarea,
   select
 ) {
-  background: rgba(8, 43, 58, 0.72);
-  border: 1px solid rgba(88, 201, 243, 0.14);
+  background: rgba(6, 32, 44, 0.72);
+  border: 1px solid rgba(118, 228, 247, 0.14);
   color: #E4F4F6;
   border-radius: 14px;
   backdrop-filter: blur(12px);
@@ -501,11 +502,11 @@
     transition: transform 200ms ease, box-shadow 250ms ease, border-color 200ms ease, background 250ms ease;
   }
   .quiz-option-hover:hover:not(:disabled) {
-    border-color: rgba(189, 229, 255, 0.55) !important;
+    border-color: rgba(167, 243, 255, 0.55) !important;
     box-shadow:
-      0 0 0 1px rgba(189, 229, 255, 0.25),
-      0 12px 32px -10px rgba(88, 201, 243, 0.55),
-      0 0 24px -4px rgba(88, 201, 243, 0.35) !important;
+      0 0 0 1px rgba(167, 243, 255, 0.25),
+      0 12px 32px -10px rgba(118, 228, 247, 0.55),
+      0 0 24px -4px rgba(118, 228, 247, 0.35) !important;
   }
 
   .toggle-elevate::before,

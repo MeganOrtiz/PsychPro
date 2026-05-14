@@ -86,8 +86,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
         style={{
           // CSS var consumed by NAV_ITEM_* tokens for the teal hover glow.
           ["--nav-glow" as never]: STUDY_PALETTE.surf,
-          background: "linear-gradient(180deg, #041A24 0%, #031923 100%)",
-          borderRight: "1px solid rgba(94, 176, 200, 0.08)",
+          background: `linear-gradient(180deg, ${STUDY_PALETTE.ink} 0%, ${STUDY_PALETTE.bg} 100%)`,
+          borderRight: "1px solid rgba(118, 228, 247, 0.12)",
         }}
         data-testid="sidebar"
       >
@@ -112,9 +112,23 @@ export default function AppLayout({ children }: AppLayoutProps) {
           style={{ background: `radial-gradient(closest-side, ${STUDY_PALETTE.teal}2e, transparent)` }}
         />
 
-        <div className="relative flex items-center gap-2 p-4 border-b border-white/10">
-          <Brain className="w-7 h-7 text-sidebar-primary flex-shrink-0" />
-          <span className="text-white font-bold text-lg">PsychPro</span>
+        <div
+          className="relative flex items-center gap-3 p-5 border-b"
+          style={{ borderColor: "rgba(118, 228, 247, 0.15)" }}
+        >
+          <Brain
+            className="w-6 h-6 flex-shrink-0"
+            style={{
+              color: STUDY_PALETTE.surf,
+              filter: `drop-shadow(0 0 8px ${STUDY_PALETTE.surf}aa)`,
+            }}
+          />
+          <span
+            className="text-white font-light text-sm"
+            style={{ letterSpacing: "0.28em", color: STUDY_PALETTE.cloud }}
+          >
+            PSYCHPRO
+          </span>
           <button
             className="ml-auto md:hidden text-white/80"
             onClick={() => setSidebarOpen(false)}
