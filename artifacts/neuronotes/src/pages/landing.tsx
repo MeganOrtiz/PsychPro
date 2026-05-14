@@ -19,7 +19,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import brainHero from "@assets/generated_images/brain_top_v2.png";
-import smokeWallpaper from "@assets/generated_images/smoke_flowy_v4.png";
+import smokeWallpaper from "@assets/generated_images/smoke_flowy_v5.png";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -185,6 +185,9 @@ export default function LandingPage() {
           transform: "scaleX(1)",
           backgroundColor: P.ink,
           willChange: "transform, opacity, filter",
+          imageRendering: "auto" as any,
+          WebkitBackfaceVisibility: "hidden",
+          backfaceVisibility: "hidden",
         }}
       >
         {/* Right half mirrored so the ink reads symmetrically across the
@@ -210,11 +213,11 @@ export default function LandingPage() {
         className="pointer-events-none fixed inset-0 -z-20 landing-smoke-near"
         style={{
           backgroundImage: `url(${smokeWallpaper})`,
-          backgroundSize: "180% auto",
+          backgroundSize: "150% auto",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
-          opacity: 0.40,
-          filter: "blur(8px) saturate(115%)",
+          opacity: 0.32,
+          filter: "blur(2px) saturate(118%)",
           mixBlendMode: "screen",
           willChange: "transform",
         }}
