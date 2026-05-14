@@ -188,7 +188,7 @@ export default function LandingPage() {
         aria-hidden
         className="pointer-events-none fixed inset-0 -z-20"
         style={{
-          background: `linear-gradient(180deg, rgba(3, 21, 29, 0.00) 0%, rgba(3, 21, 29, 0.00) 38%, rgba(3, 21, 29, 0.45) 62%, rgba(3, 21, 29, 0.85) 88%, rgba(3, 21, 29, 0.96) 100%)`,
+          background: `linear-gradient(180deg, rgba(3, 21, 29, 0.00) 0%, rgba(3, 21, 29, 0.00) 48%, rgba(3, 21, 29, 0.55) 70%, rgba(3, 21, 29, 0.90) 90%, rgba(3, 21, 29, 0.97) 100%)`,
         }}
       />
       {/* Outer vignette — gentle darkening at the corners only */}
@@ -376,11 +376,13 @@ export default function LandingPage() {
               portion of the unified hero image, just below the brain
               that lives inside the background composition. NO separate
               brain element renders here — the brain is part of the
-              background image itself. */}
+              background image itself. Sized in viewport-height units
+              so the wordmark always lands in the dark band below the
+              brain regardless of screen height (1366x768 -> 1920x1080). */}
           <div
             aria-hidden
             className="w-full"
-            style={{ height: "clamp(280px, 38vw, 460px)" }}
+            style={{ height: "clamp(380px, 62vh, 640px)" }}
           />
 
           {/* Wordmark */}
