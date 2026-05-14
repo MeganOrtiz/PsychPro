@@ -18,7 +18,8 @@ import {
   CheckCircle2,
   Sparkles,
 } from "lucide-react";
-import heroBg from "@assets/generated_images/hero_brain_smoke_unified_v1.png";
+import brainAlive from "@assets/generated_images/brain_alive_glowing_v1.png";
+import ceruleanClouds from "@assets/generated_images/cerulean_clouds_v1.png";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -160,46 +161,134 @@ export default function LandingPage() {
       }}
     >
       {/* ============================================================
-          UNIFIED HERO BACKGROUND — one cinematic composition with the
-          brain already integrated into the smoke. NO separate brain
-          layer, NO stacked smoke plates. Just the source image plus
-          a soft darkening overlay below the brain so text stays
-          readable in the lower half of the hero.
+          LIVING HERO — cerulean clouds drift in two layers behind a
+          breathing, glowing top-down brain. Everything moves slowly
+          so the page feels alive and atmospheric, not static.
           ============================================================ */}
-      {/* Single hero background image — fixed, full-bleed, top-aligned
-          so the brain (which lives in the upper third of the image)
-          sits in the upper third of the viewport. */}
+      {/* Layer 0: deep ink floor */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 -z-30"
+        className="pointer-events-none fixed inset-0 -z-50"
+        style={{ background: P.ink }}
+      />
+      {/* Layer 1: FAR cerulean clouds — large, soft, drifting slowly
+          left to right. Mirrored copy on the right gives full-bleed
+          coverage with no visible seam. */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 -z-40 landing-clouds-far"
         style={{
-          backgroundImage: `url(${heroBg})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center top",
+          backgroundImage: `url(${ceruleanClouds}), url(${ceruleanClouds})`,
+          backgroundSize: "70% auto, 70% auto",
+          backgroundPosition: "left center, right center",
+          backgroundRepeat: "no-repeat, no-repeat",
+          opacity: 0.85,
+          willChange: "transform",
+        }}
+      >
+        <div
+          aria-hidden
+          className="absolute inset-y-0 right-0 w-1/2"
+          style={{
+            backgroundImage: `url(${ceruleanClouds})`,
+            backgroundSize: "auto 100%",
+            backgroundPosition: "right center",
+            backgroundRepeat: "no-repeat",
+            transform: "scaleX(-1)",
+          }}
+        />
+      </div>
+      {/* Layer 2: NEAR cerulean clouds — larger, blurred, screen-blended
+          for atmospheric depth. Drifts opposite direction at a different
+          cadence so the sky feels continuously alive. */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 -z-30 landing-clouds-near"
+        style={{
+          backgroundImage: `url(${ceruleanClouds})`,
+          backgroundSize: "150% auto",
+          backgroundPosition: "center 40%",
           backgroundRepeat: "no-repeat",
-          backgroundColor: P.ink,
+          opacity: 0.45,
+          filter: "blur(3px) saturate(125%)",
+          mixBlendMode: "screen",
+          willChange: "transform",
         }}
       />
-      {/* Soft darkening overlay — gradient deepens toward the bottom
-          so the wordmark, tagline, copy, and CTAs read crisply
-          against the dark lower portion of the composition. The top
-          stays clear so the brain & smoke remain untouched. */}
+      {/* Layer 3: vignette — pulls focus toward the center where the
+          brain lives */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 -z-20"
         style={{
-          background: `linear-gradient(180deg, rgba(3, 21, 29, 0.00) 0%, rgba(3, 21, 29, 0.00) 48%, rgba(3, 21, 29, 0.55) 70%, rgba(3, 21, 29, 0.90) 90%, rgba(3, 21, 29, 0.97) 100%)`,
+          background: `radial-gradient(ellipse 110% 95% at 50% 45%, transparent 0%, transparent 35%, rgba(3, 21, 29, 0.35) 65%, rgba(3, 21, 29, 0.78) 92%, rgba(3, 21, 29, 0.96) 100%)`,
         }}
       />
-      {/* Outer vignette — gentle darkening at the corners only */}
+      {/* Layer 4: bottom darkening — gives the wordmark/copy/CTAs a
+          crisp reading bed once the user scrolls past the brain */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 -z-10"
         style={{
-          background: `radial-gradient(ellipse 130% 115% at 50% 50%, transparent 55%, rgba(3, 21, 29, 0.35) 82%, rgba(3, 21, 29, 0.75) 100%)`,
+          background: `linear-gradient(180deg, rgba(3, 21, 29, 0.00) 0%, rgba(3, 21, 29, 0.00) 50%, rgba(3, 21, 29, 0.55) 75%, rgba(3, 21, 29, 0.92) 95%, rgba(3, 21, 29, 0.98) 100%)`,
         }}
       />
       <style>{`
+        /* Slow ambient cloud drift — two layers move in opposing,
+           mismatched cadences so the sky reads as continuously alive
+           without any visible loop. */
+        @keyframes landingCloudsFarDrift {
+          0%   { transform: scale(1.06) translate3d(0, 0, 0); }
+          50%  { transform: scale(1.10) translate3d(-1.6%, 0.8%, 0); }
+          100% { transform: scale(1.06) translate3d(0, 0, 0); }
+        }
+        @keyframes landingCloudsNearDrift {
+          0%   { transform: scale(1.18) translate3d(0, 0, 0) rotate(0deg); }
+          50%  { transform: scale(1.24) translate3d(2.0%, -1.2%, 0) rotate(0.8deg); }
+          100% { transform: scale(1.18) translate3d(0, 0, 0) rotate(0deg); }
+        }
+        .landing-clouds-far  { animation: landingCloudsFarDrift  70s ease-in-out infinite; }
+        .landing-clouds-near { animation: landingCloudsNearDrift 90s ease-in-out infinite; }
+        @media (prefers-reduced-motion: reduce) {
+          .landing-clouds-far, .landing-clouds-near { animation: none; transform: none; }
+        }
+        /* Brain — slow breathing pulse. The image is solid black behind
+           the brain itself; we use mix-blend-mode: screen to drop the
+           black so the brain glows directly over the clouds. */
+        @keyframes landingBrainBreathe {
+          0%, 100% { transform: scale(1.00); filter: drop-shadow(0 0 35px rgba(118, 228, 247, 0.50)) drop-shadow(0 0 90px rgba(118, 228, 247, 0.28)); }
+          50%      { transform: scale(1.025); filter: drop-shadow(0 0 60px rgba(118, 228, 247, 0.75)) drop-shadow(0 0 140px rgba(118, 228, 247, 0.42)); }
+        }
+        .landing-brain-breathe {
+          animation: landingBrainBreathe 7s ease-in-out infinite;
+          mix-blend-mode: screen;
+          will-change: transform, filter;
+        }
+        /* Outer aura — wide soft halo that pulses on a different cycle
+           so the brain feels like it's exhaling light into the clouds. */
+        @keyframes landingAuraPulse {
+          0%, 100% { opacity: 0.55; transform: scale(1.00); }
+          50%      { opacity: 0.95; transform: scale(1.08); }
+        }
+        .landing-aura-pulse {
+          animation: landingAuraPulse 9s ease-in-out infinite;
+          will-change: transform, opacity;
+        }
+        /* Inner electric flicker — very subtle, irregular cadence,
+           gives the brain a faint synaptic shimmer */
+        @keyframes landingBrainFlicker {
+          0%, 92%, 100% { opacity: 0; }
+          93%, 95%      { opacity: 0.45; }
+          94%           { opacity: 0; }
+        }
+        .landing-brain-flicker {
+          animation: landingBrainFlicker 6s ease-in-out infinite;
+          mix-blend-mode: screen;
+          pointer-events: none;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .landing-brain-breathe, .landing-aura-pulse, .landing-brain-flicker { animation: none; }
+        }
         .landing-glass-btn {
           position: relative;
           overflow: hidden;
@@ -372,22 +461,69 @@ export default function LandingPage() {
           ============================================================ */}
       <section className="relative">
         <div className="max-w-5xl mx-auto px-6 lg:px-10 text-center">
-          {/* Spacer — pushes the wordmark down into the dark lower
-              portion of the unified hero image, just below the brain
-              that lives inside the background composition. NO separate
-              brain element renders here — the brain is part of the
-              background image itself. Sized in viewport-height units
-              so the wordmark always lands in the dark band below the
-              brain regardless of screen height (1366x768 -> 1920x1080). */}
-          <div
-            aria-hidden
-            className="w-full"
-            style={{ height: "clamp(380px, 62vh, 640px)" }}
-          />
+          {/* LIVING BRAIN — superior view, glowing, breathing. The image
+              has a solid black background; mix-blend-mode: screen drops
+              the black so the brain glows directly into the cerulean
+              clouds behind it. The wide aura behind it pulses on a
+              different cycle so the brain looks like it's exhaling
+              light. */}
+          <div className="relative flex justify-center mt-2">
+            <div
+              className="relative"
+              style={{
+                width: "clamp(360px, 44vw, 620px)",
+                aspectRatio: "1 / 1",
+              }}
+            >
+              {/* Wide outer aura — soft commanding halo */}
+              <div
+                aria-hidden
+                className="absolute -inset-1/3 rounded-full landing-aura-pulse"
+                style={{
+                  background: `radial-gradient(closest-side, rgba(118, 228, 247, 0.42) 0%, rgba(118, 228, 247, 0.18) 40%, rgba(118, 228, 247, 0.06) 65%, transparent 82%)`,
+                  filter: "blur(50px)",
+                }}
+              />
+              {/* The breathing brain itself.
+                  - mix-blend-mode: screen drops the pure-black bg of
+                    the source image so the brain glows over the clouds.
+                  - The radial mask fades the image's bounding box edges
+                    to transparent so any near-black gradient halo in
+                    the source can never form a visible rectangle. */}
+              <img
+                src={brainAlive}
+                alt="Glowing top-down view of a living brain"
+                className="relative w-full h-full object-contain landing-brain-breathe"
+                draggable={false}
+                style={{
+                  WebkitMaskImage:
+                    "radial-gradient(ellipse 62% 62% at 50% 50%, black 55%, rgba(0,0,0,0.7) 72%, transparent 92%)",
+                  maskImage:
+                    "radial-gradient(ellipse 62% 62% at 50% 50%, black 55%, rgba(0,0,0,0.7) 72%, transparent 92%)",
+                }}
+              />
+              {/* Synaptic flicker — same brain blended brighter on a
+                  rare cadence to suggest neural firing */}
+              <img
+                aria-hidden
+                src={brainAlive}
+                alt=""
+                className="absolute inset-0 w-full h-full object-contain landing-brain-flicker"
+                draggable={false}
+                style={{
+                  filter: "brightness(1.4) saturate(140%)",
+                  WebkitMaskImage:
+                    "radial-gradient(ellipse 62% 62% at 50% 50%, black 55%, rgba(0,0,0,0.7) 72%, transparent 92%)",
+                  maskImage:
+                    "radial-gradient(ellipse 62% 62% at 50% 50%, black 55%, rgba(0,0,0,0.7) 72%, transparent 92%)",
+                }}
+              />
+            </div>
+          </div>
 
           {/* Wordmark */}
           <h1
-            className="font-light leading-none relative"
+            className="font-light leading-none mt-4 relative"
             style={{
               ...TRACK_HERO,
               fontSize: "clamp(44px, 7.5vw, 88px)",
