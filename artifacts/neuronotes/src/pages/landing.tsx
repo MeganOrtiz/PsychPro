@@ -18,7 +18,7 @@ import {
   CheckCircle2,
   Sparkles,
 } from "lucide-react";
-import heroBg from "@assets/generated_images/hero_brain_clean_v1.png";
+import heroBg from "@assets/generated_images/hero_brain_smoke_unified_v1.png";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -160,51 +160,15 @@ export default function LandingPage() {
       }}
     >
       {/* ============================================================
-          HERO BACKGROUND STACK
-          ------------------------------------------------------------
-          Layer order (back -> front):
-            -z-50  solid deep ink page floor
-            -z-45  animated cerulean cloud field (3 drifting blobs)
-                   — radial-mask fades to transparent near the brain so
-                     the clouds dissipate as they approach it
-            -z-40  soft pulsing cyan halo glow behind the brain
-            -z-30  superior-view brain image (mix-blend: screen so the
-                   image's dark backdrop drops out and the animated
-                   clouds show through behind it — image acts as a
-                   bright transparent overlay, not an opaque card)
-            -z-20  bottom darkening gradient for text legibility
-            -z-10  outer vignette
+          UNIFIED HERO BACKGROUND — one cinematic composition with the
+          brain already integrated into the smoke. NO separate brain
+          layer, NO stacked smoke plates. Just the source image plus
+          a soft darkening overlay below the brain so text stays
+          readable in the lower half of the hero.
           ============================================================ */}
-      {/* Solid ink floor — the page never shows anything brighter than
-          this color underneath the cloud field. */}
-      <div
-        aria-hidden
-        className="pointer-events-none fixed inset-0 -z-50"
-        style={{ background: P.ink }}
-      />
-      {/* Animated cerulean cloud field. Three slowly-drifting radial
-          blobs (different sizes / phases / durations) feel like
-          billowing smoke spreading across the page. A radial mask
-          centered on the brain fades the entire cloud layer to
-          transparent in the middle so the clouds dissipate before
-          they reach the brain. */}
-      <div
-        aria-hidden
-        className="pointer-events-none fixed inset-0 -z-45 landing-cloud-field"
-      >
-        <div className="landing-cloud landing-cloud--a" />
-        <div className="landing-cloud landing-cloud--b" />
-        <div className="landing-cloud landing-cloud--c" />
-      </div>
-      {/* Soft pulsing halo behind the brain — gentle cerulean glow
-          that breathes, anchored to the brain's position. */}
-      <div
-        aria-hidden
-        className="pointer-events-none fixed inset-0 -z-40 landing-brain-halo"
-      />
-      {/* Brain image — full-bleed with mix-blend-mode: screen so the
-          dark cerulean backdrop drops out and only the bright brain
-          shines over the animated cloud field behind it. */}
+      {/* Single hero background image — fixed, full-bleed, top-aligned
+          so the brain (which lives in the upper third of the image)
+          sits in the upper third of the viewport. */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 -z-30"
@@ -213,18 +177,18 @@ export default function LandingPage() {
           backgroundSize: "cover",
           backgroundPosition: "center top",
           backgroundRepeat: "no-repeat",
-          mixBlendMode: "screen",
+          backgroundColor: P.ink,
         }}
       />
       {/* Soft darkening overlay — gradient deepens toward the bottom
           so the wordmark, tagline, copy, and CTAs read crisply
           against the dark lower portion of the composition. The top
-          stays clear so the brain & clouds remain untouched. */}
+          stays clear so the brain & smoke remain untouched. */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 -z-20"
         style={{
-          background: `linear-gradient(180deg, rgba(3, 21, 29, 0.00) 0%, rgba(3, 21, 29, 0.00) 58%, rgba(3, 21, 29, 0.60) 75%, rgba(3, 21, 29, 0.90) 90%, rgba(3, 21, 29, 0.97) 100%)`,
+          background: `linear-gradient(180deg, rgba(3, 21, 29, 0.00) 0%, rgba(3, 21, 29, 0.00) 48%, rgba(3, 21, 29, 0.55) 70%, rgba(3, 21, 29, 0.90) 90%, rgba(3, 21, 29, 0.97) 100%)`,
         }}
       />
       {/* Outer vignette — gentle darkening at the corners only */}
@@ -318,126 +282,6 @@ export default function LandingPage() {
         .landing-glass-icon-btn svg {
           transition: color .25s ease, filter .25s ease;
         }
-
-        /* ============================================================
-           Animated cerulean cloud field
-           ------------------------------------------------------------
-           Three radial-gradient blobs drift slowly across the
-           viewport at different speeds and phases, creating the
-           feel of billowing smoke spreading across the page. The
-           parent .landing-cloud-field applies a radial mask centered
-           on the brain (top ~32% of the viewport) so the clouds
-           dissipate to nothing as they approach the brain.
-           ============================================================ */
-        .landing-cloud-field {
-          overflow: hidden;
-          mask-image: radial-gradient(
-            ellipse 42% 38% at 50% 32%,
-            transparent 0%,
-            transparent 30%,
-            rgba(0, 0, 0, 0.55) 55%,
-            black 78%
-          );
-          -webkit-mask-image: radial-gradient(
-            ellipse 42% 38% at 50% 32%,
-            transparent 0%,
-            transparent 30%,
-            rgba(0, 0, 0, 0.55) 55%,
-            black 78%
-          );
-        }
-        .landing-cloud {
-          position: absolute;
-          border-radius: 50%;
-          filter: blur(60px);
-          mix-blend-mode: screen;
-          will-change: transform, opacity;
-        }
-        .landing-cloud--a {
-          width: 70vw;
-          height: 70vw;
-          top: -15vw;
-          left: -20vw;
-          background: radial-gradient(
-            circle at 50% 50%,
-            rgba(118, 228, 247, 0.55) 0%,
-            rgba(43, 182, 224, 0.32) 30%,
-            rgba(42, 115, 135, 0.15) 55%,
-            transparent 75%
-          );
-          animation: landing-cloud-drift-a 48s ease-in-out infinite;
-        }
-        .landing-cloud--b {
-          width: 80vw;
-          height: 80vw;
-          bottom: -25vw;
-          right: -25vw;
-          background: radial-gradient(
-            circle at 50% 50%,
-            rgba(167, 243, 255, 0.45) 0%,
-            rgba(94, 176, 200, 0.28) 30%,
-            rgba(42, 115, 135, 0.14) 55%,
-            transparent 75%
-          );
-          animation: landing-cloud-drift-b 62s ease-in-out infinite;
-        }
-        .landing-cloud--c {
-          width: 60vw;
-          height: 60vw;
-          top: 35vh;
-          left: 20vw;
-          background: radial-gradient(
-            circle at 50% 50%,
-            rgba(94, 176, 200, 0.50) 0%,
-            rgba(43, 182, 224, 0.28) 35%,
-            rgba(42, 115, 135, 0.14) 60%,
-            transparent 78%
-          );
-          animation: landing-cloud-drift-c 78s ease-in-out infinite;
-        }
-        @keyframes landing-cloud-drift-a {
-          0%   { transform: translate(0, 0)        scale(1);    opacity: 0.85; }
-          25%  { transform: translate(8vw, 4vh)    scale(1.10); opacity: 1.00; }
-          50%  { transform: translate(14vw, -3vh)  scale(1.05); opacity: 0.90; }
-          75%  { transform: translate(4vw, 6vh)    scale(1.15); opacity: 0.95; }
-          100% { transform: translate(0, 0)        scale(1);    opacity: 0.85; }
-        }
-        @keyframes landing-cloud-drift-b {
-          0%   { transform: translate(0, 0)        scale(1);    opacity: 0.80; }
-          30%  { transform: translate(-10vw, -5vh) scale(1.12); opacity: 0.95; }
-          60%  { transform: translate(-16vw, 4vh)  scale(1.06); opacity: 0.85; }
-          85%  { transform: translate(-6vw, -2vh)  scale(1.18); opacity: 1.00; }
-          100% { transform: translate(0, 0)        scale(1);    opacity: 0.80; }
-        }
-        @keyframes landing-cloud-drift-c {
-          0%   { transform: translate(0, 0)        scale(1);    opacity: 0.75; }
-          33%  { transform: translate(-12vw, -6vh) scale(1.20); opacity: 0.95; }
-          66%  { transform: translate(10vw, 5vh)   scale(1.08); opacity: 0.85; }
-          100% { transform: translate(0, 0)        scale(1);    opacity: 0.75; }
-        }
-
-        /* ============================================================
-           Soft pulsing cyan halo behind the brain
-           ============================================================ */
-        .landing-brain-halo {
-          background: radial-gradient(
-            ellipse 32% 28% at 50% 32%,
-            rgba(167, 243, 255, 0.30) 0%,
-            rgba(118, 228, 247, 0.18) 35%,
-            rgba(43, 182, 224, 0.08) 60%,
-            transparent 78%
-          );
-          mix-blend-mode: screen;
-          animation: landing-brain-halo-pulse 6.5s ease-in-out infinite;
-        }
-        @keyframes landing-brain-halo-pulse {
-          0%, 100% { opacity: 0.75; transform: scale(1); }
-          50%      { opacity: 1.00; transform: scale(1.06); }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .landing-cloud, .landing-brain-halo { animation: none !important; }
-        }
       `}</style>
 
       {/* ============================================================
@@ -528,16 +372,17 @@ export default function LandingPage() {
           ============================================================ */}
       <section className="relative">
         <div className="max-w-5xl mx-auto px-6 lg:px-10 text-center">
-          {/* Spacer — pushes the wordmark down so it sits DIRECTLY
-              beneath the superior-view brain that lives inside the
-              background composition. Per the design direction we want
-              minimal empty space between the brain and the title.
-              Scaled in viewport-height units so it tracks with screen
-              height across 1366x768 -> 1920x1080. */}
+          {/* Spacer — pushes the wordmark down into the dark lower
+              portion of the unified hero image, just below the brain
+              that lives inside the background composition. NO separate
+              brain element renders here — the brain is part of the
+              background image itself. Sized in viewport-height units
+              so the wordmark always lands in the dark band below the
+              brain regardless of screen height (1366x768 -> 1920x1080). */}
           <div
             aria-hidden
             className="w-full"
-            style={{ height: "clamp(420px, 64vh, 640px)" }}
+            style={{ height: "clamp(380px, 62vh, 640px)" }}
           />
 
           {/* Wordmark */}
