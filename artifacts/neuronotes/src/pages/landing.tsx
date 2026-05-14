@@ -18,8 +18,8 @@ import {
   CheckCircle2,
   Sparkles,
 } from "lucide-react";
-import brainHero from "@assets/generated_images/brain_superior_v2.png";
-import smokeBg from "@assets/generated_images/smoke_neural_bg.png";
+import brainHero from "@assets/generated_images/brain_front_v3.png";
+import smokeBg from "@assets/generated_images/smoke_radial_bg.png";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -171,45 +171,48 @@ export default function LandingPage() {
         className="pointer-events-none fixed inset-0 -z-40"
         style={{ background: P.ink }}
       />
-      {/* Layer 2: FAR smoke band — large, slow, drifts left-to-right.
-          Sized 220% wide so panning never reveals an edge. */}
+      {/* Layer 2: PRIMARY smoke — the radial-composed photo. Smoke billows
+          live at the edges; the center is a luminous cyan opening. Slowly
+          breathes so it feels alive without breaking the framed composition. */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 -z-30 landing-smoke-far"
+        className="pointer-events-none fixed inset-0 -z-30 landing-smoke-breathe"
         style={{
           backgroundImage: `url(${smokeBg})`,
-          backgroundSize: "220% auto",
-          backgroundPosition: "0% 30%",
-          backgroundRepeat: "repeat-x",
-          opacity: 0.85,
-          filter: "blur(2px) saturate(115%)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundColor: P.ink,
+          willChange: "transform",
         }}
       />
-      {/* Layer 3: NEAR smoke band — same image, larger scale, drifts the
-          opposite direction at a different speed → true parallax flow. */}
+      {/* Layer 3: SUBTLE inner-flow — same smoke, scaled larger, slowly
+          rotating with screen blend → the edge billows shimmer and shift,
+          giving the impression of smoke continuously drifting inward. */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 -z-20 landing-smoke-near"
+        className="pointer-events-none fixed inset-0 -z-20 landing-smoke-flow"
         style={{
           backgroundImage: `url(${smokeBg})`,
-          backgroundSize: "260% auto",
-          backgroundPosition: "100% 65%",
-          backgroundRepeat: "repeat-x",
-          opacity: 0.95,
-          filter: "saturate(125%) contrast(105%)",
+          backgroundSize: "140% auto",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          opacity: 0.45,
+          filter: "blur(3px) saturate(120%)",
           mixBlendMode: "screen",
+          willChange: "transform",
         }}
       />
-      {/* Layer 4: legibility wash — top cyan glow behind the brain,
-          gentle bottom darkening so text still reads cleanly. */}
+      {/* Layer 4: DARK→LIGHT radial gradient — darkens the corners and
+          edges further while keeping the center luminous, sealing the
+          inward-diffusion effect. */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 -z-10"
         style={{
           background: `
-            radial-gradient(ellipse 70% 45% at 50% 8%, rgba(118, 228, 247, 0.28), transparent 65%),
-            radial-gradient(ellipse 100% 70% at 50% 50%, transparent 40%, rgba(3, 21, 29, 0.35) 100%),
-            linear-gradient(180deg, rgba(3, 21, 29, 0.30) 0%, rgba(3, 21, 29, 0.10) 40%, rgba(3, 21, 29, 0.55) 100%)
+            radial-gradient(ellipse 75% 60% at 50% 45%, rgba(118, 228, 247, 0.18) 0%, transparent 55%),
+            radial-gradient(ellipse 110% 100% at 50% 50%, transparent 30%, rgba(3, 21, 29, 0.55) 80%, rgba(3, 21, 29, 0.85) 100%)
           `,
         }}
       />
@@ -223,18 +226,19 @@ export default function LandingPage() {
         }}
       />
       <style>{`
-        @keyframes landingSmokeFar {
-          0%   { background-position:   0%  30%; }
-          100% { background-position: 100%  30%; }
+        @keyframes landingSmokeBreathe {
+          0%, 100% { transform: scale(1.02); }
+          50%      { transform: scale(1.06); }
         }
-        @keyframes landingSmokeNear {
-          0%   { background-position: 100%  65%; }
-          100% { background-position:   0%  65%; }
+        @keyframes landingSmokeFlow {
+          0%   { transform: scale(1.10) rotate(0deg);   }
+          50%  { transform: scale(1.14) rotate(0.6deg); }
+          100% { transform: scale(1.10) rotate(0deg);   }
         }
-        .landing-smoke-far  { animation: landingSmokeFar  90s linear infinite; }
-        .landing-smoke-near { animation: landingSmokeNear 55s linear infinite; }
+        .landing-smoke-breathe { animation: landingSmokeBreathe 28s ease-in-out infinite; }
+        .landing-smoke-flow    { animation: landingSmokeFlow    44s ease-in-out infinite; }
         @media (prefers-reduced-motion: reduce) {
-          .landing-smoke-far, .landing-smoke-near { animation: none; }
+          .landing-smoke-breathe, .landing-smoke-flow { animation: none; }
         }
         @keyframes landingBrainPulse {
           0%, 100% { filter: drop-shadow(0 0 60px rgba(118, 228, 247, 0.45)) drop-shadow(0 0 120px rgba(118, 228, 247, 0.18)); }

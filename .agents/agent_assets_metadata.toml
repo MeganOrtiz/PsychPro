@@ -84,6 +84,18 @@ uri = "file://attached_assets/generated_images/smoke_neural_bg.png"
 type = "image"
 title = "generated_image"
 
+[[generated]]
+id = "iP64ISzGZfWme0_ukmhtU"
+uri = "file://attached_assets/generated_images/brain_front_v3.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "RTTmdJEUaZ6EFd8DOYpag"
+uri = "file://attached_assets/generated_images/smoke_radial_bg.png"
+type = "image"
+title = "generated_image"
+
 [[outputs]]
 id = "aKKI8N7WseM8lzrKZFEEq"
 uri = "file://.local/exports/brain-lab-code.tar.gz"
