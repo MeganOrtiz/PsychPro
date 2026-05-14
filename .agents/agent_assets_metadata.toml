@@ -60,6 +60,12 @@ uri = "file://attached_assets/generated_images/brain_hero_cinematic.png"
 type = "image"
 title = "generated_image"
 
+[[generated]]
+id = "xCak7HvrxvK_HtlCZ0MyA"
+uri = "file://attached_assets/generated_images/brain_3d_glowing.png"
+type = "image"
+title = "generated_image"
+
 [[outputs]]
 id = "aKKI8N7WseM8lzrKZFEEq"
 uri = "file://.local/exports/brain-lab-code.tar.gz"

@@ -16,7 +16,8 @@ import {
   Youtube,
   Brain,
 } from "lucide-react";
-import brainHero from "@assets/generated_images/brain_hero_cinematic.png";
+import brainHero from "@assets/generated_images/brain_3d_glowing.png";
+import smokeBg from "@assets/Screenshot_2026-04-27_at_1.40.17_AM_1778720312053.png";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -64,6 +65,74 @@ const TRUST_STATS = [
   { icon: Globe, n: "738+", l: "EXAM QUESTIONS" },
 ];
 
+// All 39 topics PsychPro currently offers, grouped for the landing page.
+const TOPIC_CATEGORIES: Array<{ title: string; topics: string[] }> = [
+  {
+    title: "NEUROSCIENCE & NEUROANATOMY",
+    topics: [
+      "Brain Networks",
+      "Central Nervous System",
+      "Cranial Nerves",
+      "Endocrine System & Reproduction",
+      "Enteric Nervous System",
+      "Limbic System & Motivation",
+      "Neurophysiology",
+      "Peripheral Nervous System",
+      "Sensory Systems",
+      "Sleep & Circadian Rhythms",
+      "Vascular System of the Brain",
+    ],
+  },
+  {
+    title: "NEUROPSYCHOLOGY",
+    topics: [
+      "Apraxia & Agnosia",
+      "Executive Function",
+      "Forensic Neuropsychology",
+      "Language Processing & Aphasia",
+      "Neurocognitive Disorders",
+      "Neurodevelopmental Disorders",
+      "Neuroimaging & Neuromodulation",
+      "Neuropsychology Overview",
+      "Validity & Effort Testing",
+    ],
+  },
+  {
+    title: "CLINICAL & PHARMACOLOGY",
+    topics: [
+      "ADHD & Medications",
+      "Personality Disorders",
+      "Psychiatric Disorders",
+      "Psychopharmacology",
+      "Trauma-Focused Approaches",
+    ],
+  },
+  {
+    title: "THERAPY & COUNSELING",
+    topics: [
+      "Acceptance, Mindfulness, and Third-Wave Approaches",
+      "Adlerian, Humanistic, and Existential Approaches",
+      "Analytical Psychology — Jung",
+      "Behavior Therapy and Applied Behavior Analysis",
+      "Cognitive Therapy, CBT, and Schema Therapy",
+      "Family, Systems, and Couples Therapies",
+      "Foundations of Psychotherapy",
+      "Gestalt, Experiential, and Emotion-Focused Therapy",
+      "Psychoanalytic and Psychodynamic Approaches",
+    ],
+  },
+  {
+    title: "ASSESSMENT & RESEARCH",
+    topics: [
+      "Foundations in Statistics",
+      "Objective Measures",
+      "Qualitative Research Methods",
+      "Quantitative Research Methods",
+      "Subjective Measures & Rating Scales",
+    ],
+  },
+];
+
 export default function LandingPage() {
   const [, navigate] = useLocation();
   const [activeNav, setActiveNav] = useState("HOME");
@@ -90,33 +159,81 @@ export default function LandingPage() {
       }}
     >
       {/* ============================================================
-          BACKGROUND ATMOSPHERE — diffused teal smoke + electric particles
-          spans the entire page (fixed) so every section breathes.
+          BACKGROUND ATMOSPHERE — billowing teal smoke image diffused
+          across the entire page (fixed), darkened to brand ink and
+          softened with cyan radial glows so it reads as living mist.
           ============================================================ */}
+      {/* Layer 1: deep ink wash so smoke never blows out the page */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 -z-30"
+        style={{ background: P.ink }}
+      />
+      {/* Layer 2: the smoke photo, scaled to cover, slowly drifting */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 -z-20 landing-smoke-drift"
+        style={{
+          backgroundImage: `url(${smokeBg})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          opacity: 0.95,
+          filter: "blur(1px) saturate(125%) hue-rotate(-6deg) contrast(105%)",
+        }}
+      />
+      {/* Layer 3: gentle vignette + cyan top-glow so smoke reads as living mist */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 -z-10"
         style={{
           background: `
-            radial-gradient(ellipse 70% 50% at 50% 5%, rgba(118, 228, 247, 0.22), transparent 60%),
-            radial-gradient(ellipse 45% 70% at 0% 25%, rgba(42, 115, 135, 0.32), transparent 60%),
-            radial-gradient(ellipse 45% 70% at 100% 25%, rgba(42, 115, 135, 0.32), transparent 60%),
-            radial-gradient(ellipse 60% 40% at 50% 60%, rgba(94, 176, 200, 0.10), transparent 70%),
-            radial-gradient(ellipse 50% 70% at 10% 90%, rgba(42, 115, 135, 0.22), transparent 60%),
-            radial-gradient(ellipse 50% 70% at 90% 90%, rgba(42, 115, 135, 0.22), transparent 60%),
-            linear-gradient(180deg, ${P.ink} 0%, ${P.bg} 30%, ${P.bg} 70%, ${P.ink} 100%)
+            radial-gradient(ellipse 70% 45% at 50% 0%, rgba(118, 228, 247, 0.20), transparent 65%),
+            radial-gradient(ellipse 100% 90% at 50% 50%, transparent 35%, rgba(3, 21, 29, 0.45) 100%),
+            linear-gradient(180deg, rgba(3, 21, 29, 0.20) 0%, rgba(6, 31, 43, 0.10) 50%, rgba(3, 21, 29, 0.45) 100%)
           `,
         }}
       />
-      {/* Subtle electric particles — sparse, scattered cyan dots */}
+      {/* Layer 4: sparse electric particles for depth */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 -z-10 opacity-40"
+        className="pointer-events-none fixed inset-0 -z-10 opacity-50"
         style={{
           backgroundImage:
             "radial-gradient(1.2px 1.2px at 12% 18%, rgba(167, 243, 255, 0.9), transparent 60%), radial-gradient(1px 1px at 78% 12%, rgba(118, 228, 247, 0.85), transparent 60%), radial-gradient(1.4px 1.4px at 38% 72%, rgba(167, 243, 255, 0.7), transparent 60%), radial-gradient(1px 1px at 88% 58%, rgba(118, 228, 247, 0.75), transparent 60%), radial-gradient(1.2px 1.2px at 22% 88%, rgba(167, 243, 255, 0.6), transparent 60%), radial-gradient(0.8px 0.8px at 62% 38%, rgba(118, 228, 247, 0.7), transparent 60%), radial-gradient(1px 1px at 8% 52%, rgba(167, 243, 255, 0.5), transparent 60%), radial-gradient(1px 1px at 92% 80%, rgba(118, 228, 247, 0.65), transparent 60%)",
         }}
       />
+      <style>{`
+        @keyframes landingSmokeDrift {
+          0%   { transform: scale(1.05) translate3d(0, 0, 0); }
+          50%  { transform: scale(1.08) translate3d(-1.5%, -1%, 0); }
+          100% { transform: scale(1.05) translate3d(0, 0, 0); }
+        }
+        .landing-smoke-drift {
+          animation: landingSmokeDrift 32s ease-in-out infinite;
+        }
+        @keyframes landingBrainPulse {
+          0%, 100% { filter: drop-shadow(0 0 60px rgba(118, 228, 247, 0.45)) drop-shadow(0 0 120px rgba(118, 228, 247, 0.18)); }
+          50%      { filter: drop-shadow(0 0 90px rgba(118, 228, 247, 0.70)) drop-shadow(0 0 160px rgba(118, 228, 247, 0.30)); }
+        }
+        .landing-brain-pulse {
+          animation: landingBrainPulse 6s ease-in-out infinite;
+          mix-blend-mode: screen;
+        }
+        .landing-glass-btn {
+          transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease, background .3s ease;
+        }
+        .landing-glass-btn:hover {
+          transform: translateY(-2px);
+          border-color: rgba(167, 243, 255, 0.85) !important;
+          background: rgba(10, 45, 61, 0.78) !important;
+          box-shadow:
+            0 0 0 1px rgba(167, 243, 255, 0.45),
+            0 0 32px rgba(118, 228, 247, 0.55),
+            0 0 64px rgba(118, 228, 247, 0.30),
+            inset 0 0 18px rgba(118, 228, 247, 0.18) !important;
+        }
+      `}</style>
 
       {/* ============================================================
           TOP NAVIGATION
@@ -205,27 +322,25 @@ export default function LandingPage() {
           ============================================================ */}
       <section className="relative">
         <div className="max-w-5xl mx-auto px-6 lg:px-10 pt-2 pb-14 text-center">
-          {/* Brain image — large, centered, top */}
+          {/* 3D glowing brain — superior view, top center, no card */}
           <div className="relative flex justify-center">
             <div
-              className="relative w-full max-w-[640px]"
-              style={{ aspectRatio: "3 / 4" }}
+              className="relative w-full max-w-[520px]"
+              style={{ aspectRatio: "1 / 1" }}
             >
-              <img
-                src={brainHero}
-                alt="Glowing anatomical brain surrounded by teal neural smoke"
-                className="absolute inset-0 w-full h-full object-contain"
-                style={{
-                  filter: `drop-shadow(0 0 60px rgba(118, 228, 247, 0.25))`,
-                }}
-              />
-              {/* Vertical fade so the brain melts into the page bottom */}
+              {/* Soft cyan halo behind the brain */}
               <div
                 aria-hidden
-                className="absolute inset-x-0 bottom-0 h-1/3"
+                className="absolute inset-0 rounded-full blur-3xl opacity-60"
                 style={{
-                  background: `linear-gradient(to bottom, transparent, ${P.ink} 95%)`,
+                  background: `radial-gradient(closest-side, rgba(118, 228, 247, 0.55), rgba(118, 228, 247, 0.15) 50%, transparent 70%)`,
                 }}
+              />
+              <img
+                src={brainHero}
+                alt="Glowing 3D anatomical brain, superior view"
+                className="relative w-full h-full object-contain landing-brain-pulse"
+                draggable={false}
               />
             </div>
           </div>
@@ -269,12 +384,15 @@ export default function LandingPage() {
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button
               onClick={goToApp}
-              className="group inline-flex items-center gap-3 px-8 h-12 rounded-md text-xs font-light transition-all hover:-translate-y-0.5"
+              className="landing-glass-btn group inline-flex items-center gap-3 px-8 h-12 rounded-md text-xs font-light"
               style={{
                 ...TRACK_NAV,
                 color: P.cloud,
-                ...glass,
-                boxShadow: `0 0 24px rgba(118, 228, 247, 0.28), inset 0 0 14px rgba(118, 228, 247, 0.08)`,
+                background: "rgba(10, 45, 61, 0.72)",
+                border: `1px solid rgba(118, 228, 247, 0.45)`,
+                backdropFilter: "blur(18px) saturate(140%)",
+                WebkitBackdropFilter: "blur(18px) saturate(140%)",
+                boxShadow: `0 0 18px rgba(118, 228, 247, 0.20), inset 0 0 12px rgba(118, 228, 247, 0.05)`,
               }}
               data-testid="cta-explore-courses"
             >
@@ -283,12 +401,15 @@ export default function LandingPage() {
             </button>
             <button
               onClick={goToApp}
-              className="group inline-flex items-center gap-3 px-8 h-12 rounded-md text-xs font-light transition-all hover:-translate-y-0.5"
+              className="landing-glass-btn group inline-flex items-center gap-3 px-8 h-12 rounded-md text-xs font-light"
               style={{
                 ...TRACK_NAV,
                 color: P.cloud,
-                ...glass,
-                boxShadow: `0 0 24px rgba(118, 228, 247, 0.28), inset 0 0 14px rgba(118, 228, 247, 0.08)`,
+                background: "rgba(10, 45, 61, 0.72)",
+                border: `1px solid rgba(118, 228, 247, 0.45)`,
+                backdropFilter: "blur(18px) saturate(140%)",
+                WebkitBackdropFilter: "blur(18px) saturate(140%)",
+                boxShadow: `0 0 18px rgba(118, 228, 247, 0.20), inset 0 0 12px rgba(118, 228, 247, 0.05)`,
               }}
               data-testid="cta-join-community"
             >
@@ -399,6 +520,74 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ============================================================
+          ALL TOPICS — every subject PsychPro currently offers
+          ============================================================ */}
+      <section
+        id="topics"
+        className="relative max-w-7xl mx-auto px-6 lg:px-10 pb-16"
+      >
+        <div className="text-center mb-10">
+          <h2
+            className="text-xs font-light"
+            style={{ ...TRACK_NAV, color: P.cloud }}
+          >
+            EVERY TOPIC WE COVER
+          </h2>
+          <p
+            className="mt-3 text-sm font-light"
+            style={{ color: P.inkSoft }}
+          >
+            39 expertly curated subjects across neuroscience, clinical practice, and research methods.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {TOPIC_CATEGORIES.map((cat) => (
+            <div
+              key={cat.title}
+              className="rounded-xl p-6 lg:p-7"
+              style={{
+                ...glass,
+                boxShadow: `0 24px 50px rgba(0,0,0,0.45)`,
+              }}
+              data-testid={`topic-category-${cat.title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+            >
+              <h3
+                className="text-[11px] font-light mb-5 pb-4"
+                style={{
+                  ...TRACK_NAV,
+                  color: P.surf,
+                  borderBottom: `1px solid rgba(118, 228, 247, 0.18)`,
+                  textShadow: `0 0 10px rgba(118, 228, 247, 0.4)`,
+                }}
+              >
+                {cat.title}
+              </h3>
+              <ul className="space-y-2.5">
+                {cat.topics.map((t) => (
+                  <li
+                    key={t}
+                    className="flex items-start gap-2.5 text-sm font-light leading-relaxed"
+                    style={{ color: P.cloud }}
+                  >
+                    <span
+                      aria-hidden
+                      className="mt-2 inline-block w-1 h-1 rounded-full flex-shrink-0"
+                      style={{
+                        background: P.surf,
+                        boxShadow: `0 0 6px ${P.surf}`,
+                      }}
+                    />
+                    <span>{t}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </section>
 
