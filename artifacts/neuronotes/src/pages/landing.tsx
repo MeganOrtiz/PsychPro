@@ -1,5 +1,5 @@
 import { useLocation } from "wouter";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Search,
   GraduationCap,
@@ -19,7 +19,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import brainHero from "@assets/generated_images/brain_top_v2.png";
-import smokeBg from "@assets/generated_images/smoke_radial_v2.png";
+import smokeWallpaper from "@assets/generated_images/smoke_wallpaper_v3.png";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -139,6 +139,37 @@ export default function LandingPage() {
   const [, navigate] = useLocation();
   const [activeNav, setActiveNav] = useState("HOME");
   const [email, setEmail] = useState("");
+  // Interactive parallax — mouse position drives smoke layers + cursor glow.
+  // Refs avoid re-rendering the whole page on every mousemove; we mutate
+  // CSS custom properties directly on the root for buttery-smooth motion.
+  const fxRootRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const root = fxRootRef.current;
+    if (!root) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let raf = 0;
+    let tx = 0, ty = 0;
+    const onMove = (e: PointerEvent) => {
+      const w = window.innerWidth || 1;
+      const h = window.innerHeight || 1;
+      tx = (e.clientX / w) * 2 - 1; // -1..1
+      ty = (e.clientY / h) * 2 - 1;
+      if (!raf) {
+        raf = requestAnimationFrame(() => {
+          raf = 0;
+          root.style.setProperty("--mx", tx.toFixed(3));
+          root.style.setProperty("--my", ty.toFixed(3));
+          root.style.setProperty("--cx", `${e.clientX}px`);
+          root.style.setProperty("--cy", `${e.clientY}px`);
+        });
+      }
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
 
   const goToApp = () => navigate("/dashboard");
 
@@ -152,12 +183,18 @@ export default function LandingPage() {
 
   return (
     <div
-      className="min-h-screen relative overflow-x-hidden"
+      ref={fxRootRef}
+      className="min-h-screen relative overflow-x-hidden landing-fx-root"
       data-testid="landing-page"
       style={{
         background: "transparent",
         color: P.cloud,
         fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
+        // CSS-var defaults so first paint is centered (no layout shift).
+        ["--mx" as any]: 0,
+        ["--my" as any]: 0,
+        ["--cx" as any]: "50vw",
+        ["--cy" as any]: "50vh",
       }}
     >
       {/* ============================================================
@@ -171,14 +208,14 @@ export default function LandingPage() {
         className="pointer-events-none fixed inset-0 -z-40"
         style={{ background: P.ink }}
       />
-      {/* Layer 2: PRIMARY smoke — the radial-composed photo. Smoke billows
-          live at the edges; the center is a luminous cyan opening. Slowly
-          breathes so it feels alive without breaking the framed composition. */}
+      {/* Layer 2: FAR smoke plate — the wallpaper hero photo. Sits behind
+          everything, breathes slowly, drifts opposite to the cursor for
+          the deepest parallax depth. */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 -z-30 landing-smoke-breathe"
+        className="pointer-events-none fixed inset-0 -z-30 landing-smoke-far"
         style={{
-          backgroundImage: `url(${smokeBg})`,
+          backgroundImage: `url(${smokeWallpaper})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -186,32 +223,45 @@ export default function LandingPage() {
           willChange: "transform",
         }}
       />
-      {/* Layer 3: SUBTLE inner-flow — same smoke, scaled larger, slowly
-          rotating with screen blend → the edge billows shimmer and shift,
-          giving the impression of smoke continuously drifting inward. */}
+      {/* Layer 3: NEAR smoke — same wallpaper, larger and screen-blended.
+          Drifts further with the cursor → ink billows shimmer like you're
+          stirring water with your pointer. */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 -z-20 landing-smoke-flow"
+        className="pointer-events-none fixed inset-0 -z-20 landing-smoke-near"
         style={{
-          backgroundImage: `url(${smokeBg})`,
-          backgroundSize: "140% auto",
+          backgroundImage: `url(${smokeWallpaper})`,
+          backgroundSize: "150% auto",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
-          opacity: 0.45,
-          filter: "blur(3px) saturate(120%)",
+          opacity: 0.55,
+          filter: "blur(4px) saturate(125%) hue-rotate(-4deg)",
           mixBlendMode: "screen",
           willChange: "transform",
         }}
       />
-      {/* Layer 4: DARK→LIGHT radial gradient — darkens the corners and
-          edges further while keeping the center luminous, sealing the
-          inward-diffusion effect. */}
+      {/* Layer 4: CURSOR GLOW — a soft cyan light that follows the pointer,
+          revealing detail in the smoke under it. The whole point of "fun
+          to fidget with". */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 -z-10"
+        className="pointer-events-none fixed inset-0 -z-15 landing-cursor-glow"
+        style={{
+          background:
+            "radial-gradient(circle 360px at var(--cx) var(--cy), rgba(118, 228, 247, 0.22), rgba(167, 243, 255, 0.08) 35%, transparent 70%)",
+          mixBlendMode: "screen",
+          transition: "opacity .4s ease",
+        }}
+      />
+      {/* Layer 5: DARK→LIGHT radial vignette — deepens corners, keeps the
+          center luminous; the vignette also tracks the cursor a touch so
+          the "spotlight" follows you across the page. */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 -z-10 landing-vignette"
         style={{
           background: `
-            radial-gradient(ellipse 55% 45% at 50% 45%, rgba(167, 243, 255, 0.28) 0%, rgba(118, 228, 247, 0.10) 35%, transparent 65%),
+            radial-gradient(ellipse 60% 50% at calc(50% + (var(--mx) * 6%)) calc(45% + (var(--my) * 5%)), rgba(167, 243, 255, 0.22) 0%, rgba(118, 228, 247, 0.08) 38%, transparent 68%),
             radial-gradient(ellipse 120% 110% at 50% 50%, transparent 22%, rgba(3, 21, 29, 0.45) 60%, rgba(3, 21, 29, 0.85) 88%, rgba(3, 21, 29, 0.96) 100%)
           `,
         }}
@@ -226,19 +276,32 @@ export default function LandingPage() {
         }}
       />
       <style>{`
-        @keyframes landingSmokeBreathe {
-          0%, 100% { transform: scale(1.02); }
-          50%      { transform: scale(1.06); }
+        /* The smoke layers combine a slow ambient drift (keyframes) with
+           a live cursor-driven offset (CSS vars). Multiplying the var by
+           different magnitudes per layer creates depth: far layer barely
+           moves, near layer lurches → real parallax. */
+        @keyframes landingSmokeFarDrift {
+          0%, 100% { background-position: 50% 50%; }
+          50%      { background-position: 52% 48%; }
         }
-        @keyframes landingSmokeFlow {
-          0%   { transform: scale(1.10) rotate(0deg);   }
-          50%  { transform: scale(1.14) rotate(0.6deg); }
-          100% { transform: scale(1.10) rotate(0deg);   }
+        @keyframes landingSmokeNearDrift {
+          0%   { transform: scale(1.18) translate3d(calc(var(--mx, 0) * -28px), calc(var(--my, 0) * -22px), 0) rotate(0deg); }
+          50%  { transform: scale(1.22) translate3d(calc(var(--mx, 0) * -28px), calc(var(--my, 0) * -22px), 0) rotate(0.6deg); }
+          100% { transform: scale(1.18) translate3d(calc(var(--mx, 0) * -28px), calc(var(--my, 0) * -22px), 0) rotate(0deg); }
         }
-        .landing-smoke-breathe { animation: landingSmokeBreathe 28s ease-in-out infinite; }
-        .landing-smoke-flow    { animation: landingSmokeFlow    44s ease-in-out infinite; }
+        .landing-smoke-far {
+          transform: scale(1.06) translate3d(calc(var(--mx, 0) * -10px), calc(var(--my, 0) * -8px), 0);
+          transition: transform 600ms cubic-bezier(.2,.8,.2,1);
+          animation: landingSmokeFarDrift 32s ease-in-out infinite;
+        }
+        .landing-smoke-near {
+          animation: landingSmokeNearDrift 44s ease-in-out infinite;
+          transition: transform 500ms cubic-bezier(.2,.8,.2,1);
+        }
+        .landing-cursor-glow { transition: opacity .4s ease; }
         @media (prefers-reduced-motion: reduce) {
-          .landing-smoke-breathe, .landing-smoke-flow { animation: none; }
+          .landing-smoke-far, .landing-smoke-near { animation: none; transform: none; }
+          .landing-cursor-glow { display: none; }
         }
         @keyframes landingBrainPulse {
           0%, 100% { filter: drop-shadow(0 0 60px rgba(118, 228, 247, 0.45)) drop-shadow(0 0 120px rgba(118, 228, 247, 0.18)); }

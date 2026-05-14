@@ -114,6 +114,12 @@ uri = "file://attached_assets/generated_images/brain_top_v2.png"
 type = "image"
 title = "generated_image"
 
+[[generated]]
+id = "hjcrPhfhpEdo4CTIMxKoE"
+uri = "file://attached_assets/generated_images/smoke_wallpaper_v3.png"
+type = "image"
+title = "generated_image"
+
 [[outputs]]
 id = "aKKI8N7WseM8lzrKZFEEq"
 uri = "file://.local/exports/brain-lab-code.tar.gz"
