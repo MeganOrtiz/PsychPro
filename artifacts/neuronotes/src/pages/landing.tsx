@@ -18,7 +18,8 @@ import {
   CheckCircle2,
   Sparkles,
 } from "lucide-react";
-import heroReference from "@assets/generated_images/hero_reference_brain_v1.png";
+import heroReference from "@assets/generated_images/hero_brain_topdown_clean_v1_cropped.png";
+import cloudsDrift from "@assets/generated_images/clouds_drift_v1.png";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -160,60 +161,126 @@ export default function LandingPage() {
       }}
     >
       {/* ============================================================
-          HERO BACKGROUND — single fixed reference image (1055x375,
-          aspect ratio ~2.813:1). The brain + cerulean clouds are
-          already composited inside the source so there is no separate
-          brain layer, no mix-blend, and no edge artifacts. The image
-          is anchored to the top of the viewport and sized so its
-          rendered height is exactly `--hero-bg-h` (defined in :root
-          below), giving us one source-of-truth value the spacer can
-          also consume to keep the wordmark glued to the bottom of
-          the brain at every breakpoint.
+          LIVING HERO — three fixed bg layers:
+          - L0 (deep ink floor): solid ink color so any uncovered area
+            never blows out white.
+          - L1 (cerulean clouds drift): a wide cloud texture stretched
+            to cover the entire viewport, slowly drifting horizontally
+            in an infinite ease-in-out loop. This is what makes the
+            background feel alive and what carries the cerulean smoke
+            all the way down behind the cards/footer.
+          - L2 (brain hero image): the cropped top-down brain on its
+            own composition, anchored to the top of the viewport and
+            sized via `--hero-bg-h`. Has its own slow drift so the
+            two cloud cadences read as continuously moving, not looped.
+          - L3 (readability gradient): subtle darkening that begins
+            after the brain so wordmark/copy/CTAs/cards stay crisp,
+            with a final fade-to-ink at the very bottom of the page.
           ============================================================ */}
-      {/* Layer 0: deep ink floor — covers any area the image doesn't reach */}
+      {/* L0: deep ink floor */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 -z-30"
+        className="pointer-events-none fixed inset-0 -z-40"
         style={{ background: P.ink }}
       />
-      {/* Layer 1: the reference image itself — pure brain + clouds,
-          anchored to the top of the viewport. `cover` preserves the
-          image's native 2.813:1 aspect ratio (no horizontal squashing
-          on ultrawide), and the container height matches the image's
-          natural height-at-100%-viewport-width up to a cap so it
-          never grows taller than the viewport. */}
+      {/* L1: full-viewport drifting cerulean clouds — provides the
+          atmospheric texture that extends from the top of the page
+          all the way down behind every section. */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-x-0 top-0 -z-20 hero-bg-image"
+        className="pointer-events-none fixed inset-0 -z-30 landing-clouds-drift"
+        style={{
+          backgroundImage: `url(${cloudsDrift})`,
+          backgroundSize: "120% auto",
+          backgroundPosition: "center center",
+          backgroundRepeat: "no-repeat",
+          opacity: 0.55,
+        }}
+      />
+      {/* L2: brain hero image — top-down, sparkle-free, anchored to
+          the top of the viewport with its own gentle drift cadence.
+          The bottom edge is masked to fade into transparent so it
+          blends seamlessly into the cerulean cloud layer below
+          instead of leaving a visible horizontal seam. */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-x-0 top-0 -z-20 hero-bg-image landing-brain-drift"
         style={{
           backgroundImage: `url(${heroReference})`,
           backgroundSize: "cover",
           backgroundPosition: "center top",
           backgroundRepeat: "no-repeat",
+          WebkitMaskImage:
+            "linear-gradient(180deg, black 0%, black 70%, rgba(0,0,0,0.7) 85%, transparent 100%)",
+          maskImage:
+            "linear-gradient(180deg, black 0%, black 70%, rgba(0,0,0,0.7) 85%, transparent 100%)",
         }}
       />
-      {/* Layer 2: bottom darkening — keeps the wordmark/copy/CTAs and
-          everything below the hero readable against the busy clouds */}
+      {/* L3: bottom fade — anchored to the document container
+          (absolute, not fixed), so the dark wash is concentrated at
+          the very bottom of the page rather than glued to the bottom
+          of the viewport at every scroll position. Clouds stay
+          visible across the full page height; only the final ~15%
+          of the document fades into deep ink. */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 -z-10"
+        className="pointer-events-none absolute inset-0 -z-10"
         style={{
-          background: `linear-gradient(180deg, rgba(3, 21, 29, 0.00) 0%, rgba(3, 21, 29, 0.00) 45%, rgba(3, 21, 29, 0.55) 70%, rgba(3, 21, 29, 0.92) 92%, rgba(3, 21, 29, 0.98) 100%)`,
+          background: `linear-gradient(180deg,
+            rgba(3, 21, 29, 0.00) 0%,
+            rgba(3, 21, 29, 0.00) 70%,
+            rgba(3, 21, 29, 0.25) 85%,
+            rgba(3, 21, 29, 0.70) 95%,
+            rgba(3, 21, 29, 1.00) 100%)`,
         }}
       />
       <style>{`
         /* Single source of truth for the hero background image height.
            Both the fixed bg layer and the spacer below the brain
            consume this so they always stay locked together regardless
-           of viewport size. The 35.5% multiplier mirrors the cropped
-           reference image's aspect ratio (375/1055 ≈ 0.3555), capped
-           at 70vh so the brain never grows taller than the viewport
-           and floored at 220px so it stays prominent on phones. */
+           of viewport size. The 34% multiplier mirrors the cropped
+           brain image's aspect ratio (480/1408 ≈ 0.341), capped at
+           70vh so the brain never grows taller than the viewport and
+           floored at 220px so it stays prominent on phones. */
         :root {
-          --hero-bg-h: clamp(220px, calc(100vw * 0.3555), 70vh);
+          --hero-bg-h: clamp(220px, calc(100vw * 0.341), 70vh);
         }
         .hero-bg-image { height: var(--hero-bg-h); }
         .hero-spacer   { height: var(--hero-bg-h); }
+
+        /* Cloud drift — the wide cloud texture slowly pans horizontally
+           and breathes a tiny bit in scale. 80s loop is intentional:
+           slow enough that the page feels calm and atmospheric, fast
+           enough that you can see the motion if you watch for it. */
+        @keyframes landingCloudsDrift {
+          0%   { transform: scale(1.05) translate3d(-1.5%, 0, 0); }
+          50%  { transform: scale(1.10) translate3d( 1.5%, -0.6%, 0); }
+          100% { transform: scale(1.05) translate3d(-1.5%, 0, 0); }
+        }
+        .landing-clouds-drift {
+          animation: landingCloudsDrift 80s ease-in-out infinite;
+          will-change: transform;
+        }
+        /* Brain drift — same idea but a different cadence so the two
+           layers never sync. Scale stays very tight so the brain
+           reads as still-but-alive, not floating. */
+        @keyframes landingBrainDrift {
+          0%   { transform: scale(1.00) translate3d(0, 0, 0); }
+          50%  { transform: scale(1.015) translate3d(0.4%, 0.3%, 0); }
+          100% { transform: scale(1.00) translate3d(0, 0, 0); }
+        }
+        .landing-brain-drift {
+          animation: landingBrainDrift 11s ease-in-out infinite;
+          will-change: transform;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .landing-clouds-drift,
+          .landing-brain-drift {
+            animation: none;
+            will-change: auto;
+          }
+        }
+
         .landing-glass-btn {
           position: relative;
           overflow: hidden;
