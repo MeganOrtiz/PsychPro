@@ -264,15 +264,8 @@ export default function LandingPage() {
              saturation + a hue nudge up makes the tile read as the
              same sky as the hero's clouds, so the handoff disappears. */
           filter: brightness(0.5) saturate(1.45) hue-rotate(-6deg) contrast(1.1);
-          /* Very slow drift — animates background-position by exactly
-             one full tile in each axis so the loop is mathematically
-             seamless (the tile already wraps bit-exactly at its edges,
-             so landing back on (0,0) is identical to one tile over).
-             120s is slow enough to read as ambient atmospheric drift,
-             not motion. Diagonal direction adds subtle parallax-like
-             depth without any axis feeling like a scroll. */
-          animation: cerulean-drift 120s linear infinite;
-          will-change: background-position;
+          /* Drift animation intentionally disabled — the page reads
+             more cinematic with the clouds completely still. */
           /* Long, gentle cross-fade mask. The tile starts bleeding in
              ~35% down the hero (well inside the cloud area, so the
              bleed-through reads as more clouds, not a new layer) and
@@ -284,24 +277,17 @@ export default function LandingPage() {
             transparent 0,
             transparent calc(var(--hero-bg-h) * 0.35),
             #000 calc(var(--hero-bg-h) + 30vh),
-            #000 100%
+            #000 60%,
+            transparent 100%
           );
           mask-image: linear-gradient(
             180deg,
             transparent 0,
             transparent calc(var(--hero-bg-h) * 0.35),
             #000 calc(var(--hero-bg-h) + 30vh),
-            #000 100%
+            #000 60%,
+            transparent 100%
           );
-        }
-        @keyframes cerulean-drift {
-          from { background-position: 0 0; }
-          to   { background-position: calc(var(--cloud-tile-size) * -1) calc(var(--cloud-tile-size) * -1); }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .cerulean-tile-layer {
-            animation: none;
-          }
         }
         .landing-glass-btn {
           position: relative;
@@ -488,7 +474,7 @@ export default function LandingPage() {
               ...TRACK_HERO,
               fontSize: "clamp(44px, 7.5vw, 88px)",
               color: P.cloud,
-              textShadow: `0 0 40px rgba(118, 228, 247, 0.35), 0 8px 50px ${P.ink}`,
+              textShadow: `0 0 24px rgba(118, 228, 247, 0.30)`,
             }}
           >
             PSYCHPRO
@@ -501,7 +487,7 @@ export default function LandingPage() {
             style={{
               ...TRACK_WIDE,
               color: P.mist,
-              textShadow: `0 0 16px rgba(3, 21, 29, 0.85), 0 2px 10px rgba(3, 21, 29, 0.7)`,
+              textShadow: `0 1px 6px rgba(3, 21, 29, 0.6)`,
             }}
           >
             LEARN. EXPAND. CONNECT.
@@ -513,7 +499,7 @@ export default function LandingPage() {
             className="mt-8 mx-auto max-w-2xl text-base md:text-[17px] leading-relaxed font-light"
             style={{
               color: P.inkSoft,
-              textShadow: `0 0 16px rgba(3, 21, 29, 0.9), 0 2px 10px rgba(3, 21, 29, 0.8)`,
+              textShadow: `0 1px 6px rgba(3, 21, 29, 0.65)`,
             }}
           >
             Cut study time in half and actually retain the information over time
