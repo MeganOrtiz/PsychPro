@@ -248,6 +248,15 @@ export default function LandingPage() {
         .hero-spacer   { height: var(--hero-bg-h); }
         .cerulean-tile-layer {
           background-size: var(--cloud-tile-size) var(--cloud-tile-size);
+          /* Very slow drift — animates background-position by exactly
+             one full tile in each axis so the loop is mathematically
+             seamless (the tile already wraps bit-exactly at its edges,
+             so landing back on (0,0) is identical to one tile over).
+             120s is slow enough to read as ambient atmospheric drift,
+             not motion. Diagonal direction adds subtle parallax-like
+             depth without any axis feeling like a scroll. */
+          animation: cerulean-drift 120s linear infinite;
+          will-change: background-position;
           /* Soft cross-fade mask: the tile is hidden inside the hero
              band and crossfades in gradually below it. The crossfade
              starts ~65% down the hero (where the hero image is mostly
@@ -274,6 +283,15 @@ export default function LandingPage() {
            difference between the hero's bottom and the fading-in
            tile. Peak opacity is low (~0.18) so the clouds remain
            continuously visible through the transition. */
+        @keyframes cerulean-drift {
+          from { background-position: 0 0; }
+          to   { background-position: calc(var(--cloud-tile-size) * -1) calc(var(--cloud-tile-size) * -1); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .cerulean-tile-layer {
+            animation: none;
+          }
+        }
         .hero-blend-seam {
           top: calc(var(--hero-bg-h) * 0.78);
           height: calc(var(--hero-bg-h) * 0.35 + 16vh);
