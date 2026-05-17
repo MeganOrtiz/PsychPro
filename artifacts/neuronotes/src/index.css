@@ -261,15 +261,23 @@
   --ring: 188 90% 72%;
 }
 
-/* Cinematic ink-wallpaper background — same flowy teal smoke as the
-   landing page, applied to every dashboard/app page via .study-page-bg.
-   The image is mirrored across the page (left + right) so it reads as
-   one continuous body of ink, with vignette + center fade on top to
-   keep content readable. Fixed-attached so it never scrolls. */
+/* Cerulean cloud wallpaper — same continuous cloud tile as the landing
+   page, applied to every authenticated app page via .study-page-bg so
+   the visual language carries from the marketing surface straight into
+   the dashboard, courses, flashcards, etc. The tile is bit-exact
+   seamless (column 0 == column 799, row 0 == row 799), so it repeats
+   without any visible boundary at any viewport size.
+   The body is fixed-attached so it never scrolls, and a darkening
+   scrim sits on top to keep glass cards and body copy readable — this
+   is the calmer in-app variant of the landing hero (no big brain
+   image, scrim a touch heavier so working content stays the focus). */
 .study-page-bg,
 .study-page-aurora {
   position: relative;
   background-color: #03151D;
+  /* Same tile-size token as the landing page so the cloud scale
+     reads identically across marketing and app surfaces. */
+  --cloud-tile-size: clamp(640px, 95vw, 1400px);
 }
 .study-page-bg::before,
 .study-page-aurora::before {
@@ -278,36 +286,28 @@
   inset: 0;
   z-index: -2;
   background-image:
-    /* Soft center wash — keeps content readable without hiding ink */
-    radial-gradient(ellipse 45% 40% at 50% 45%, rgba(3, 21, 29, 0.45) 0%, rgba(3, 21, 29, 0.18) 50%, transparent 85%),
-    /* Outer vignette — gentle darkening at corners */
-    radial-gradient(ellipse 130% 115% at 50% 50%, transparent 45%, rgba(3, 21, 29, 0.40) 80%, rgba(3, 21, 29, 0.78) 100%),
-    /* Mirrored ink body — left half then right half */
-    url("./assets/smoke_flowy_v5.png"),
-    url("./assets/smoke_flowy_v5.png");
-  background-size: auto, auto, 60% auto, 60% auto;
-  background-position: center, center, left center, right center;
-  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+    /* Readability scrim — soft center wash that lifts content out
+       of the clouds without hiding them, plus a gentle vignette
+       toward the corners. Tuned darker than the landing seam so
+       in-app glass cards keep AA contrast on body copy. */
+    radial-gradient(ellipse 60% 55% at 50% 45%, rgba(3, 21, 29, 0.55) 0%, rgba(3, 21, 29, 0.35) 55%, transparent 90%),
+    radial-gradient(ellipse 130% 115% at 50% 50%, transparent 40%, rgba(3, 21, 29, 0.45) 78%, rgba(3, 21, 29, 0.80) 100%),
+    /* Continuous cerulean cloud tile — single source of truth shared
+       with the landing page hero/below-the-fold layer. */
+    url("./assets/cerulean-clouds-tile.png");
+  background-size: auto, auto, var(--cloud-tile-size) var(--cloud-tile-size);
+  background-position: center, center, center top;
+  background-repeat: no-repeat, no-repeat, repeat;
   background-color: #03151D;
   pointer-events: none;
 }
-/* The right-half ink layer needs to be mirrored for symmetry. We do
-   this with a second pseudo-element so the transform doesn't affect
-   the gradients. */
+/* Second pseudo no longer needed — the seamless tile handles the full
+   surface on its own. Kept as an empty rule so any consumer that
+   previously expected a layered ::after won't trip a missing-selector
+   warning. */
 .study-page-bg::after,
 .study-page-aurora::after {
-  content: "";
-  position: fixed;
-  inset: 0 0 0 50%;
-  /* Sit BELOW ::before so the readability gradients in ::before
-     remain on top of the mirrored smoke. */
-  z-index: -3;
-  background-image: url("./assets/smoke_flowy_v5.png");
-  background-size: auto 100%;
-  background-position: right center;
-  background-repeat: no-repeat;
-  transform: scaleX(-1);
-  pointer-events: none;
+  content: none;
 }
 
 /* User-supplied .study-card recipe — applied to every shadcn Card
