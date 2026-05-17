@@ -277,16 +277,16 @@ export default function LandingPage() {
             transparent 0,
             transparent calc(var(--hero-bg-h) * 0.35),
             #000 calc(var(--hero-bg-h) + 30vh),
-            #000 60%,
-            transparent 100%
+            #000 50%,
+            transparent 92%
           );
           mask-image: linear-gradient(
             180deg,
             transparent 0,
             transparent calc(var(--hero-bg-h) * 0.35),
             #000 calc(var(--hero-bg-h) + 30vh),
-            #000 60%,
-            transparent 100%
+            #000 50%,
+            transparent 92%
           );
         }
         .landing-glass-btn {
