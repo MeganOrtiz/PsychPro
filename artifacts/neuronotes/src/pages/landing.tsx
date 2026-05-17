@@ -19,6 +19,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import heroReference from "@assets/generated_images/hero_reference_brain_v1.png";
+import ceruleanCloudsTile from "@/assets/cerulean-clouds-tile.png";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -170,13 +171,35 @@ export default function LandingPage() {
           also consume to keep the wordmark glued to the bottom of
           the brain at every breakpoint.
           ============================================================ */}
-      {/* Layer 0: deep ink floor — covers any area the image doesn't reach */}
+      {/* Layer 0: deep ink floor — covers any area other layers don't reach */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 -z-30"
-        style={{ background: P.ink }}
+        className="pointer-events-none fixed inset-0"
+        style={{ background: P.ink, zIndex: -50 }}
       />
-      {/* Layer 1: the reference image itself — pure brain + clouds,
+      {/* Layer 1: continuous cerulean cloud tile that scrolls with the
+          page. Spans the full height of the landing container so the
+          clouds extend from the very top all the way to the footer
+          with no end. The PNG asset is generated offline (see
+          src/assets/cerulean-clouds-tile.png) with bit-exact edges:
+          column 0 equals column 799 and row 0 equals row 799, so it
+          tiles with NO visible boundary at any page length or
+          viewport size. The fixed hero image sits on top of this
+          layer to cover the top band, and the tile shows through
+          everywhere below. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 cerulean-tile-layer"
+        style={{
+          top: 0,
+          bottom: 0,
+          zIndex: -40,
+          backgroundImage: `url(${ceruleanCloudsTile})`,
+          backgroundRepeat: "repeat",
+          backgroundPosition: "center top",
+        }}
+      />
+      {/* Layer 2: the reference image itself — pure brain + clouds,
           anchored to the top of the viewport. `cover` preserves the
           image's native 2.813:1 aspect ratio (no horizontal squashing
           on ultrawide), and the container height matches the image's
@@ -184,7 +207,7 @@ export default function LandingPage() {
           never grows taller than the viewport. */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-x-0 top-0 -z-20 hero-bg-image"
+        className="pointer-events-none fixed inset-x-0 top-0 -z-30 hero-bg-image"
         style={{
           backgroundImage: `url(${heroReference})`,
           backgroundSize: "cover",
@@ -192,14 +215,16 @@ export default function LandingPage() {
           backgroundRepeat: "no-repeat",
         }}
       />
-      {/* Layer 2: bottom darkening — keeps the wordmark/copy/CTAs and
-          everything below the hero readable against the busy clouds */}
+      {/* Layer 3: hero→tile blend seam — a very subtle soft scrim
+          pinned to the bottom edge of the hero image. Scrolls with
+          content. Only takes the slightest edge off any residual
+          luminance difference between the hero's bottom and the
+          tile fading in — the clouds remain visible through the
+          transition (no dark band). */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 -z-10"
-        style={{
-          background: `linear-gradient(180deg, rgba(3, 21, 29, 0.00) 0%, rgba(3, 21, 29, 0.00) 45%, rgba(3, 21, 29, 0.55) 70%, rgba(3, 21, 29, 0.92) 92%, rgba(3, 21, 29, 0.98) 100%)`,
-        }}
+        className="pointer-events-none absolute inset-x-0 hero-blend-seam"
+        style={{ zIndex: -20 }}
       />
       <style>{`
         /* Single source of truth for the hero background image height.
@@ -211,9 +236,54 @@ export default function LandingPage() {
            and floored at 220px so it stays prominent on phones. */
         :root {
           --hero-bg-h: clamp(220px, calc(100vw * 0.3555), 70vh);
+          /* Tile size — kept large so cloud puffs read as roomy
+             atmosphere (not noisy texture) and so the density visually
+             matches the hero image's cloud scale on wide displays.
+             Capped to viewport width with a min so phones still see
+             readable detail, and a max so ultrawide doesn't stretch
+             the puffs into bands. */
+          --cloud-tile-size: clamp(640px, 95vw, 1400px);
         }
         .hero-bg-image { height: var(--hero-bg-h); }
         .hero-spacer   { height: var(--hero-bg-h); }
+        .cerulean-tile-layer {
+          background-size: var(--cloud-tile-size) var(--cloud-tile-size);
+          /* Soft cross-fade mask: the tile is hidden inside the hero
+             band and crossfades in gradually below it. The crossfade
+             starts ~65% down the hero (where the hero image is mostly
+             cerulean clouds, so the bleed-through reads as continuous
+             clouds, not a band) and reaches full opacity ~18vh past
+             the hero bottom. No hard threshold, no dark step. */
+          -webkit-mask-image: linear-gradient(
+            180deg,
+            transparent 0,
+            transparent calc(var(--hero-bg-h) * 0.65),
+            #000 calc(var(--hero-bg-h) + 18vh),
+            #000 100%
+          );
+          mask-image: linear-gradient(
+            180deg,
+            transparent 0,
+            transparent calc(var(--hero-bg-h) * 0.65),
+            #000 calc(var(--hero-bg-h) + 18vh),
+            #000 100%
+          );
+        }
+        /* Very soft seam scrim — only a hint of darkening across the
+           crossfade zone to take the edge off any tiny luminance
+           difference between the hero's bottom and the fading-in
+           tile. Peak opacity is low (~0.18) so the clouds remain
+           continuously visible through the transition. */
+        .hero-blend-seam {
+          top: calc(var(--hero-bg-h) * 0.78);
+          height: calc(var(--hero-bg-h) * 0.35 + 16vh);
+          background: linear-gradient(
+            180deg,
+            rgba(3, 21, 29, 0.00) 0%,
+            rgba(3, 21, 29, 0.18) 50%,
+            rgba(3, 21, 29, 0.00) 100%
+          );
+        }
         .landing-glass-btn {
           position: relative;
           overflow: hidden;
@@ -405,22 +475,27 @@ export default function LandingPage() {
             PSYCHPRO
           </h1>
 
-          {/* Tagline */}
+          {/* Tagline — original color preserved; only a soft dark
+              text-shadow added so it reads against the cloud tile. */}
           <p
             className="mt-4 text-sm md:text-base font-light"
             style={{
               ...TRACK_WIDE,
               color: P.mist,
-              textShadow: `0 0 12px rgba(118, 228, 247, 0.2)`,
+              textShadow: `0 0 16px rgba(3, 21, 29, 0.85), 0 2px 10px rgba(3, 21, 29, 0.7)`,
             }}
           >
             LEARN. EXPAND. CONNECT.
           </p>
 
-          {/* Body copy */}
+          {/* Body copy — original color preserved; soft dark
+              text-shadow scrim for readability against the clouds. */}
           <p
             className="mt-8 mx-auto max-w-2xl text-base md:text-[17px] leading-relaxed font-light"
-            style={{ color: P.inkSoft }}
+            style={{
+              color: P.inkSoft,
+              textShadow: `0 0 16px rgba(3, 21, 29, 0.9), 0 2px 10px rgba(3, 21, 29, 0.8)`,
+            }}
           >
             Cut study time in half and actually retain the information over time
             with clinically grounded tools built for psychology students and
