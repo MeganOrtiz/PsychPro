@@ -215,17 +215,6 @@ export default function LandingPage() {
           backgroundRepeat: "no-repeat",
         }}
       />
-      {/* Layer 3: hero→tile blend seam — a very subtle soft scrim
-          pinned to the bottom edge of the hero image. Scrolls with
-          content. Only takes the slightest edge off any residual
-          luminance difference between the hero's bottom and the
-          tile fading in — the clouds remain visible through the
-          transition (no dark band). */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 hero-blend-seam"
-        style={{ zIndex: -20 }}
-      />
       <style>{`
         /* Single source of truth for the hero background image height.
            Both the fixed bg layer and the spacer below the brain
@@ -244,10 +233,37 @@ export default function LandingPage() {
              the puffs into bands. */
           --cloud-tile-size: clamp(640px, 95vw, 1400px);
         }
-        .hero-bg-image { height: var(--hero-bg-h); }
+        .hero-bg-image {
+          height: var(--hero-bg-h);
+          /* Fade the hero image's hard bottom edge into the tile.
+             Without this, the rectangular crop creates a subtle
+             horizontal line right at the bottom of the brain even
+             when the tile color matches. The fade starts at 70% of
+             the image height so the brain stays crisp and only the
+             cloud-only bottom band dissolves. */
+          -webkit-mask-image: linear-gradient(
+            180deg,
+            #000 0,
+            #000 70%,
+            transparent 100%
+          );
+          mask-image: linear-gradient(
+            180deg,
+            #000 0,
+            #000 70%,
+            transparent 100%
+          );
+        }
         .hero-spacer   { height: var(--hero-bg-h); }
         .cerulean-tile-layer {
           background-size: var(--cloud-tile-size) var(--cloud-tile-size);
+          /* Color-match to the hero's deep cerulean. The source tile
+             reads milky/lavender at full brightness, which creates a
+             visible "frosted shelf" band where it first becomes
+             visible below the hero. Pushing brightness down and
+             saturation + a hue nudge up makes the tile read as the
+             same sky as the hero's clouds, so the handoff disappears. */
+          filter: brightness(0.5) saturate(1.45) hue-rotate(-6deg) contrast(1.1);
           /* Very slow drift — animates background-position by exactly
              one full tile in each axis so the loop is mathematically
              seamless (the tile already wraps bit-exactly at its edges,
@@ -257,32 +273,27 @@ export default function LandingPage() {
              depth without any axis feeling like a scroll. */
           animation: cerulean-drift 120s linear infinite;
           will-change: background-position;
-          /* Soft cross-fade mask: the tile is hidden inside the hero
-             band and crossfades in gradually below it. The crossfade
-             starts ~65% down the hero (where the hero image is mostly
-             cerulean clouds, so the bleed-through reads as continuous
-             clouds, not a band) and reaches full opacity ~18vh past
-             the hero bottom. No hard threshold, no dark step. */
+          /* Long, gentle cross-fade mask. The tile starts bleeding in
+             ~35% down the hero (well inside the cloud area, so the
+             bleed-through reads as more clouds, not a new layer) and
+             only reaches full opacity ~30vh below the hero. This long
+             ramp is what kills the visible "shelf" — there's no point
+             on the page where the tile suddenly appears. */
           -webkit-mask-image: linear-gradient(
             180deg,
             transparent 0,
-            transparent calc(var(--hero-bg-h) * 0.65),
-            #000 calc(var(--hero-bg-h) + 18vh),
+            transparent calc(var(--hero-bg-h) * 0.35),
+            #000 calc(var(--hero-bg-h) + 30vh),
             #000 100%
           );
           mask-image: linear-gradient(
             180deg,
             transparent 0,
-            transparent calc(var(--hero-bg-h) * 0.65),
-            #000 calc(var(--hero-bg-h) + 18vh),
+            transparent calc(var(--hero-bg-h) * 0.35),
+            #000 calc(var(--hero-bg-h) + 30vh),
             #000 100%
           );
         }
-        /* Very soft seam scrim — only a hint of darkening across the
-           crossfade zone to take the edge off any tiny luminance
-           difference between the hero's bottom and the fading-in
-           tile. Peak opacity is low (~0.18) so the clouds remain
-           continuously visible through the transition. */
         @keyframes cerulean-drift {
           from { background-position: 0 0; }
           to   { background-position: calc(var(--cloud-tile-size) * -1) calc(var(--cloud-tile-size) * -1); }
@@ -291,16 +302,6 @@ export default function LandingPage() {
           .cerulean-tile-layer {
             animation: none;
           }
-        }
-        .hero-blend-seam {
-          top: calc(var(--hero-bg-h) * 0.78);
-          height: calc(var(--hero-bg-h) * 0.35 + 16vh);
-          background: linear-gradient(
-            180deg,
-            rgba(3, 21, 29, 0.00) 0%,
-            rgba(3, 21, 29, 0.18) 50%,
-            rgba(3, 21, 29, 0.00) 100%
-          );
         }
         .landing-glass-btn {
           position: relative;
