@@ -1,6 +1,7 @@
 import { randomBytes, createHash, timingSafeEqual } from "node:crypto";
-import { db, adminTokensTable, usersTable } from "@workspace/db";
+import { db, adminTokensTable } from "@workspace/db";
 import { and, eq } from "drizzle-orm";
+import { getOwnerUserId } from "./requireAdmin";
 
 const TOKEN_PREFIX = "ppmcp_";
 const TOKEN_BYTES = 32;
@@ -29,6 +30,8 @@ export async function verifyBearerToken(authHeader: string | undefined): Promise
   if (!authHeader || !authHeader.toLowerCase().startsWith("bearer ")) return null;
   const token = authHeader.slice(7).trim();
   if (!token.startsWith(TOKEN_PREFIX)) return null;
+  const ownerId = getOwnerUserId();
+  if (!ownerId) return null;
   const incomingHash = hashToken(token);
 
   const rows = await db
@@ -36,14 +39,15 @@ export async function verifyBearerToken(authHeader: string | undefined): Promise
       id: adminTokensTable.id,
       userId: adminTokensTable.userId,
       tokenHash: adminTokensTable.tokenHash,
-      isAdmin: usersTable.isAdmin,
     })
     .from(adminTokensTable)
-    .innerJoin(usersTable, eq(usersTable.id, adminTokensTable.userId))
     .where(eq(adminTokensTable.tokenHash, incomingHash));
 
   for (const row of rows) {
-    if (!row.isAdmin) continue;
+    // Defense in depth: token must belong to the configured owner, not just
+    // any user with isAdmin=true. This blocks privilege-escalation paths
+    // elsewhere in the codebase that may flip isAdmin without a real check.
+    if (row.userId !== ownerId) continue;
     if (!constantTimeEquals(row.tokenHash, incomingHash)) continue;
     void db
       .update(adminTokensTable)

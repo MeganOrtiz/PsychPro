@@ -1,8 +1,22 @@
 import { Router, type Request, type Response } from "express";
-import { requireAdminUserId } from "../lib/requireAdmin";
+import { requireAdminUserId, getOwnerUserId } from "../lib/requireAdmin";
 import { createToken, listTokens, revokeToken } from "../lib/adminTokens";
+import { getUserId } from "../lib/userId";
 
 const router = Router();
+
+// Unauthenticated helper so the owner can see *their* current user id from
+// the UI (the value they need to put in OWNER_USER_ID) and whether ownership
+// is already configured. Does NOT reveal whose id is configured.
+router.get("/admin/owner-status", (req: Request, res: Response) => {
+  const ownerId = getOwnerUserId();
+  const callerId = getUserId(req);
+  res.json({
+    callerUserId: callerId,
+    ownerConfigured: Boolean(ownerId),
+    callerIsOwner: Boolean(ownerId && callerId && ownerId === callerId),
+  });
+});
 
 router.get("/admin/tokens", async (req: Request, res: Response): Promise<void> => {
   try {

@@ -1,39 +1,45 @@
 import type { Request, Response } from "express";
 import { db, usersTable } from "@workspace/db";
-import { eq, and, ne } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { requireUserId } from "./userId";
 
 /**
- * Ensure the caller is an admin user.
+ * Owner-only authorization for privileged routes (MCP token mint, etc.).
  *
- * Single-owner deployment model: the very first caller to a privileged route
- * (when no admin exists in the system yet) is claimed as the owner and
- * promoted to admin. After that, only callers whose users row already has
- * isAdmin=true are admitted; subsequent unknown callers get 403. This is
- * stricter than the older feedback admin pattern, which is important for
- * routes that mint long-lived MCP bearer tokens.
+ * The owner is the single user whose id equals the `OWNER_USER_ID` env var.
+ * No promotion-through-API path exists: a request is admitted iff the caller's
+ * id (currently the X-User-Id header — replace with verified auth before
+ * trusting on the open internet) matches OWNER_USER_ID. The owner's `users`
+ * row is upserted with `isAdmin=true` so downstream admin checks elsewhere
+ * still work, but isAdmin alone is no longer sufficient for token routes.
  *
  * Returns the userId on success, null on failure (response already written).
  */
+export function getOwnerUserId(): string | null {
+  const raw = process.env.OWNER_USER_ID;
+  if (typeof raw !== "string") return null;
+  const trimmed = raw.trim();
+  return trimmed.length > 0 ? trimmed : null;
+}
+
 export async function requireAdminUserId(req: Request, res: Response): Promise<string | null> {
   const userId = requireUserId(req, res);
   if (!userId) return null;
 
-  const [existing] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
-  if (existing?.isAdmin) return userId;
-
-  // Owner-claim path: only run if no admin exists at all.
-  const [anyOtherAdmin] = await db
-    .select({ id: usersTable.id })
-    .from(usersTable)
-    .where(and(eq(usersTable.isAdmin, true), ne(usersTable.id, userId)))
-    .limit(1);
-
-  if (anyOtherAdmin) {
-    res.status(403).json({ error: "Admin access required" });
+  const ownerId = getOwnerUserId();
+  if (!ownerId) {
+    res.status(503).json({
+      error: "Owner not configured. Set the OWNER_USER_ID env var to your user id (visible on /admin/tokens).",
+    });
+    return null;
+  }
+  if (userId !== ownerId) {
+    res.status(403).json({ error: "Owner access required" });
     return null;
   }
 
+  // Ensure the owner has a users row with isAdmin=true (best-effort upsert).
+  const [existing] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
   if (!existing) {
     await db.insert(usersTable).values({
       id: userId,
@@ -42,7 +48,7 @@ export async function requireAdminUserId(req: Request, res: Response): Promise<s
       onboardingComplete: true,
       usageCount: 0,
     });
-  } else {
+  } else if (!existing.isAdmin) {
     await db.update(usersTable)
       .set({ isAdmin: true, subscriptionStatus: "scholar" })
       .where(eq(usersTable.id, userId));

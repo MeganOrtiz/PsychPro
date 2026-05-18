@@ -4,6 +4,19 @@
 
 pnpm workspace monorepo using TypeScript. Each package manages its own dependencies.
 
+## Claude Desktop (MCP) content uploader
+
+PsychPro exposes an admin-only MCP server at `${ORIGIN}/api/mcp` so the owner can add topics, flashcards, quiz questions, study guides, and practice exams directly from Claude Desktop.
+
+One-time setup:
+1. Visit `/admin/tokens` in the running app. Copy the user id shown in the amber "One-time setup required" panel.
+2. Set the `OWNER_USER_ID` env var on the API server to that value, then restart the `artifacts/api-server: API Server` workflow.
+3. Reload `/admin/tokens` — the panel should disappear and "Create token" should be enabled.
+4. Click "Create" to mint a bearer token. Copy it immediately (it's shown only once).
+5. In Claude Desktop: **Settings → Connectors → Add custom connector**. Set the URL to `https://<your-domain>/api/mcp`, auth type to **Bearer Token**, and paste the token. Restart Claude Desktop.
+
+Security model: only the user whose id matches `OWNER_USER_ID` can mint or revoke tokens. MCP bearer tokens are verified to belong to that owner (not just any `isAdmin=true` user), so unrelated admin-promotion paths elsewhere in the codebase cannot escalate into MCP write access. Tokens are stored as SHA-256 hashes and prefixed `ppmcp_`. Per-token rate limit: 60 requests/minute.
+
 ## Stack
 
 - **Monorepo tool**: pnpm workspaces
