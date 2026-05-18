@@ -1,57 +1,77 @@
 import type { Request, Response } from "express";
+import { timingSafeEqual } from "node:crypto";
 import { db, usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
-import { requireUserId } from "./userId";
 
 /**
- * Owner-only authorization for privileged routes (MCP token mint, etc.).
+ * Owner authentication for admin-token CRUD routes.
  *
- * The owner is the single user whose id equals the `OWNER_USER_ID` env var.
- * No promotion-through-API path exists: a request is admitted iff the caller's
- * id (currently the X-User-Id header — replace with verified auth before
- * trusting on the open internet) matches OWNER_USER_ID. The owner's `users`
- * row is upserted with `isAdmin=true` so downstream admin checks elsewhere
- * still work, but isAdmin alone is no longer sufficient for token routes.
+ * Identity comes from a server-side shared secret `MCP_ADMIN_SECRET` rather
+ * than the client-supplied `X-User-Id` header (which is unverified and
+ * forgeable). The owner provides this secret as
+ *   Authorization: Bearer <MCP_ADMIN_SECRET>
+ * when minting / listing / revoking MCP tokens. The secret is never sent to
+ * the browser, never stored client-side, and never written to logs.
  *
- * Returns the userId on success, null on failure (response already written).
+ * MCP bearer tokens themselves (the ones Claude Desktop uses) are minted
+ * *through* this route — they are unrelated to MCP_ADMIN_SECRET and have
+ * their own 32-byte random material verified in `adminTokens.verifyBearerToken`.
  */
-export function getOwnerUserId(): string | null {
-  const raw = process.env.OWNER_USER_ID;
+
+export const OWNER_SENTINEL_USER_ID = "owner";
+
+function getAdminSecret(): string | null {
+  const raw = process.env.MCP_ADMIN_SECRET;
   if (typeof raw !== "string") return null;
   const trimmed = raw.trim();
-  return trimmed.length > 0 ? trimmed : null;
+  return trimmed.length >= 16 ? trimmed : null;
 }
 
-export async function requireAdminUserId(req: Request, res: Response): Promise<string | null> {
-  const userId = requireUserId(req, res);
-  if (!userId) return null;
+function constantTimeStringEquals(a: string, b: string): boolean {
+  const bufA = Buffer.from(a, "utf8");
+  const bufB = Buffer.from(b, "utf8");
+  if (bufA.length !== bufB.length) return false;
+  return timingSafeEqual(bufA, bufB);
+}
 
-  const ownerId = getOwnerUserId();
-  if (!ownerId) {
+/**
+ * Returns the sentinel owner id on success; null on failure (response written).
+ * Failure modes:
+ *   - 503 if MCP_ADMIN_SECRET is not configured on the server
+ *   - 401 if the bearer header is missing or doesn't match
+ */
+export async function requireOwner(req: Request, res: Response): Promise<string | null> {
+  const secret = getAdminSecret();
+  if (!secret) {
     res.status(503).json({
-      error: "Owner not configured. Set the OWNER_USER_ID env var to your user id (visible on /admin/tokens).",
+      error: "Server not configured. Set the MCP_ADMIN_SECRET env var (>=16 chars) and restart.",
     });
     return null;
   }
-  if (userId !== ownerId) {
-    res.status(403).json({ error: "Owner access required" });
+  const auth = req.header("authorization");
+  if (!auth || !auth.toLowerCase().startsWith("bearer ")) {
+    res.status(401).json({ error: "Missing Bearer credentials" });
     return null;
   }
-
-  // Ensure the owner has a users row with isAdmin=true (best-effort upsert).
-  const [existing] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
+  const provided = auth.slice(7).trim();
+  if (!constantTimeStringEquals(provided, secret)) {
+    res.status(401).json({ error: "Invalid admin credentials" });
+    return null;
+  }
+  // Ensure the sentinel owner row exists so token rows can satisfy the FK.
+  const [existing] = await db.select().from(usersTable).where(eq(usersTable.id, OWNER_SENTINEL_USER_ID));
   if (!existing) {
     await db.insert(usersTable).values({
-      id: userId,
+      id: OWNER_SENTINEL_USER_ID,
       subscriptionStatus: "scholar",
       isAdmin: true,
       onboardingComplete: true,
       usageCount: 0,
     });
-  } else if (!existing.isAdmin) {
-    await db.update(usersTable)
-      .set({ isAdmin: true, subscriptionStatus: "scholar" })
-      .where(eq(usersTable.id, userId));
   }
-  return userId;
+  return OWNER_SENTINEL_USER_ID;
+}
+
+export function isAdminSecretConfigured(): boolean {
+  return getAdminSecret() !== null;
 }

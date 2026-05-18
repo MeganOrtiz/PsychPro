@@ -9,13 +9,13 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 PsychPro exposes an admin-only MCP server at `${ORIGIN}/api/mcp` so the owner can add topics, flashcards, quiz questions, study guides, and practice exams directly from Claude Desktop.
 
 One-time setup:
-1. Visit `/admin/tokens` in the running app. Copy the user id shown in the amber "One-time setup required" panel.
-2. Set the `OWNER_USER_ID` env var on the API server to that value, then restart the `artifacts/api-server: API Server` workflow.
-3. Reload `/admin/tokens` — the panel should disappear and "Create token" should be enabled.
-4. Click "Create" to mint a bearer token. Copy it immediately (it's shown only once).
-5. In Claude Desktop: **Settings → Connectors → Add custom connector**. Set the URL to `https://<your-domain>/api/mcp`, auth type to **Bearer Token**, and paste the token. Restart Claude Desktop.
+1. Generate a strong random string (e.g. `openssl rand -base64 32`).
+2. Save it as the **secret** `MCP_ADMIN_SECRET` in the Replit Secrets pane (must be at least 16 characters). Never commit it.
+3. Restart the `artifacts/api-server: API Server` workflow so the env var is picked up.
+4. Visit `/admin/tokens` in the app, paste the secret to unlock, then click **Create** to mint a Claude bearer token. Copy it immediately — it is shown only once.
+5. In Claude Desktop: **Settings → Connectors → Add custom connector**. Set the URL to `https://<your-domain>/api/mcp`, auth type to **Bearer Token**, and paste the `ppmcp_…` token. Restart Claude Desktop.
 
-Security model: only the user whose id matches `OWNER_USER_ID` can mint or revoke tokens. MCP bearer tokens are verified to belong to that owner (not just any `isAdmin=true` user), so unrelated admin-promotion paths elsewhere in the codebase cannot escalate into MCP write access. Tokens are stored as SHA-256 hashes and prefixed `ppmcp_`. Per-token rate limit: 60 requests/minute.
+Security model: the admin-token CRUD routes (`/api/admin/tokens`) require `Authorization: Bearer <MCP_ADMIN_SECRET>` — a server-side shared secret that cannot be forged from the network. The browser keeps the secret in session storage only (no localStorage, no cookies, never sent to logs). The MCP route itself (`/api/mcp`) requires its own per-Claude bearer token; tokens are 32 random bytes prefixed `ppmcp_`, stored as SHA-256 hashes, owner-bound to a sentinel row so unrelated `isAdmin=true` flips elsewhere in the codebase cannot grant MCP write access. Per-token rate limit: 60 requests/minute. Revoking a token is immediate.
 
 ## Stack
 

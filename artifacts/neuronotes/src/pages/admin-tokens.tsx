@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { Copy, KeyRound, Trash2, Plus, Check, AlertTriangle } from "lucide-react";
+import { Copy, KeyRound, Trash2, Plus, Check, AlertTriangle, Lock, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { getOrCreateAnonymousUserId } from "@/lib/anonymous-user";
 
 type TokenRow = {
   id: number;
@@ -12,47 +11,61 @@ type TokenRow = {
   lastUsedAt: string | null;
 };
 
-type OwnerStatus = {
-  callerUserId: string | null;
-  ownerConfigured: boolean;
-  callerIsOwner: boolean;
-};
+const SECRET_STORAGE_KEY = "psychpro_admin_secret";
 
-function authHeaders() {
-  return { "X-User-Id": getOrCreateAnonymousUserId() };
+function getStoredSecret(): string {
+  try {
+    return sessionStorage.getItem(SECRET_STORAGE_KEY) ?? "";
+  } catch {
+    return "";
+  }
+}
+
+function setStoredSecret(value: string) {
+  try {
+    if (value) sessionStorage.setItem(SECRET_STORAGE_KEY, value);
+    else sessionStorage.removeItem(SECRET_STORAGE_KEY);
+  } catch { /* ignore */ }
 }
 
 export default function AdminTokensPage() {
+  const [secret, setSecret] = useState("");
+  const [secretInput, setSecretInput] = useState("");
+  const [serverConfigured, setServerConfigured] = useState<boolean | null>(null);
   const [tokens, setTokens] = useState<TokenRow[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [label, setLabel] = useState("Claude Desktop");
   const [creating, setCreating] = useState(false);
   const [justCreated, setJustCreated] = useState<{ token: string; label: string } | null>(null);
   const [copied, setCopied] = useState(false);
-  const [copiedId, setCopiedId] = useState(false);
   const [mcpUrl, setMcpUrl] = useState("");
-  const [owner, setOwner] = useState<OwnerStatus | null>(null);
-  const [myUserId, setMyUserId] = useState("");
+  const [unauthorized, setUnauthorized] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       setMcpUrl(`${window.location.origin}/api/mcp`);
-      setMyUserId(getOrCreateAnonymousUserId());
+      setSecret(getStoredSecret());
     }
+    fetch("/api/admin/status")
+      .then((r) => r.json())
+      .then((d) => setServerConfigured(Boolean(d.secretConfigured)))
+      .catch(() => setServerConfigured(false));
   }, []);
 
-  async function loadOwner() {
-    try {
-      const res = await fetch("/api/admin/owner-status", { headers: authHeaders() });
-      if (res.ok) setOwner(await res.json());
-    } catch { /* ignore */ }
+  function authHeaders(): Record<string, string> {
+    return secret ? { Authorization: `Bearer ${secret}` } : {};
   }
 
-  async function loadTokens() {
+  async function loadTokens(currentSecret: string) {
+    if (!currentSecret) return;
     setLoading(true);
+    setUnauthorized(false);
     try {
-      const res = await fetch("/api/admin/tokens", { headers: authHeaders() });
-      if (res.status === 401 || res.status === 403 || res.status === 503) {
+      const res = await fetch("/api/admin/tokens", {
+        headers: { Authorization: `Bearer ${currentSecret}` },
+      });
+      if (res.status === 401) {
+        setUnauthorized(true);
         setTokens([]);
         return;
       }
@@ -66,9 +79,27 @@ export default function AdminTokensPage() {
   }
 
   useEffect(() => {
-    loadOwner();
-    loadTokens();
-  }, []);
+    if (secret) loadTokens(secret);
+  }, [secret]);
+
+  function unlock() {
+    const trimmed = secretInput.trim();
+    if (trimmed.length < 16) {
+      toast.error("Secret must be at least 16 characters");
+      return;
+    }
+    setSecret(trimmed);
+    setStoredSecret(trimmed);
+    setSecretInput("");
+  }
+
+  function lock() {
+    setSecret("");
+    setStoredSecret("");
+    setTokens([]);
+    setJustCreated(null);
+    setUnauthorized(false);
+  }
 
   async function createOne() {
     if (creating) return;
@@ -79,19 +110,16 @@ export default function AdminTokensPage() {
         headers: { ...authHeaders(), "Content-Type": "application/json" },
         body: JSON.stringify({ label: label.trim() || "Claude Desktop" }),
       });
-      if (res.status === 503) {
-        toast.error("Set OWNER_USER_ID env var first");
-        return;
-      }
-      if (res.status === 403) {
-        toast.error("Only the configured owner can create tokens");
+      if (res.status === 401) {
+        setUnauthorized(true);
+        toast.error("Invalid admin secret");
         return;
       }
       if (!res.ok) throw new Error("Failed");
       const data = await res.json();
       setJustCreated({ token: data.token, label: data.label });
       setCopied(false);
-      await loadTokens();
+      await loadTokens(secret);
     } catch {
       toast.error("Couldn't create token");
     } finally {
@@ -105,56 +133,87 @@ export default function AdminTokensPage() {
       const res = await fetch(`/api/admin/tokens/${id}`, { method: "DELETE", headers: authHeaders() });
       if (!res.ok) throw new Error("Failed");
       toast.success("Token revoked");
-      await loadTokens();
+      await loadTokens(secret);
     } catch {
       toast.error("Couldn't revoke token");
     }
   }
 
-  function copy(text: string, setter: (v: boolean) => void) {
+  function copyText(text: string) {
     navigator.clipboard.writeText(text).then(() => {
-      setter(true);
+      setCopied(true);
       toast.success("Copied to clipboard");
-      setTimeout(() => setter(false), 2000);
+      setTimeout(() => setCopied(false), 2000);
     });
   }
 
-  const canMintTokens = owner?.ownerConfigured && owner?.callerIsOwner;
-  const needsOwnerConfig = owner && !owner.ownerConfigured;
-  const wrongUser = owner && owner.ownerConfigured && !owner.callerIsOwner;
+  // === Render branches ===
+
+  if (serverConfigured === false) {
+    return (
+      <div className="min-h-full study-page-bg">
+        <div className="max-w-2xl mx-auto p-8">
+          <div className="rounded-xl border border-amber-300/40 bg-amber-300/5 p-6 space-y-3">
+            <div className="flex items-center gap-2 text-amber-100 font-medium">
+              <AlertTriangle className="w-4 h-4" /> Server not configured
+            </div>
+            <p className="text-sm text-white/80">
+              Set the <code className="px-1 py-0.5 rounded bg-black/40 text-amber-200 text-xs">MCP_ADMIN_SECRET</code> environment variable on the API server (at least 16 characters) and restart it. Then refresh this page.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!secret) {
+    return (
+      <div className="min-h-full study-page-bg">
+        <div className="max-w-md mx-auto p-8 space-y-6">
+          <div className="flex items-center gap-3">
+            <Lock className="w-6 h-6 text-cyan-300" />
+            <h1 className="text-2xl font-semibold">Unlock Admin</h1>
+          </div>
+          <p className="text-sm text-white/70">
+            Enter your <code className="px-1 rounded bg-black/40 text-cyan-200 text-xs">MCP_ADMIN_SECRET</code> to manage Claude tokens. It's kept only in this browser tab's session storage.
+          </p>
+          <div className="space-y-2">
+            <Input
+              type="password"
+              value={secretInput}
+              onChange={(e) => setSecretInput(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") unlock(); }}
+              placeholder="Admin secret"
+              className="bg-white/5 border-white/10"
+              autoFocus
+            />
+            <Button onClick={unlock} className="w-full">Unlock</Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-full study-page-bg">
       <div className="max-w-3xl mx-auto p-4 md:p-6 lg:p-8 space-y-6">
-        <div className="flex items-center gap-3">
-          <KeyRound className="w-6 h-6 text-cyan-300" />
-          <h1 className="text-2xl md:text-3xl font-semibold">Claude MCP Tokens</h1>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <KeyRound className="w-6 h-6 text-cyan-300" />
+            <h1 className="text-2xl md:text-3xl font-semibold">Claude MCP Tokens</h1>
+          </div>
+          <Button variant="ghost" size="sm" onClick={lock}>
+            <LogOut className="w-4 h-4 mr-1" /> Lock
+          </Button>
         </div>
 
-        {needsOwnerConfig && (
-          <div className="rounded-xl border border-amber-300/40 bg-amber-300/5 p-5 space-y-3">
-            <div className="flex items-center gap-2 text-amber-100 font-medium">
-              <AlertTriangle className="w-4 h-4" /> One-time setup required
-            </div>
-            <p className="text-sm text-white/80">
-              No owner is configured yet. Set the <code className="px-1 py-0.5 rounded bg-black/40 text-amber-200 text-xs">OWNER_USER_ID</code> environment variable on the server to your user id below, then restart the API server.
-            </p>
-            <div className="flex items-center gap-2">
-              <code className="flex-1 break-all px-3 py-2 rounded bg-black/40 text-amber-200 text-xs">{myUserId}</code>
-              <Button size="sm" variant="secondary" onClick={() => copy(myUserId, setCopiedId)}>
-                {copiedId ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {wrongUser && (
+        {unauthorized && (
           <div className="rounded-xl border border-red-300/40 bg-red-300/5 p-5 space-y-2">
             <div className="flex items-center gap-2 text-red-100 font-medium">
-              <AlertTriangle className="w-4 h-4" /> Not the owner
+              <AlertTriangle className="w-4 h-4" /> Invalid admin secret
             </div>
             <p className="text-sm text-white/80">
-              An owner is already configured and your user id does not match. Sign in from the owner's browser to manage tokens.
+              The secret you entered doesn't match what the server expects. Click <b>Lock</b> above and try again.
             </p>
           </div>
         )}
@@ -168,8 +227,8 @@ export default function AdminTokensPage() {
               Server URL:
               <code className="ml-2 px-2 py-0.5 rounded bg-black/40 text-cyan-200 text-xs">{mcpUrl || ".../api/mcp"}</code>
             </li>
-            <li>Auth: <span className="text-white/90">Bearer Token</span>, paste your token.</li>
-            <li>Save and restart Claude Desktop. The PsychPro tools will appear in any chat.</li>
+            <li>Auth: <span className="text-white/90">Bearer Token</span>, paste the token (the long string starting with <code className="text-cyan-200">ppmcp_</code>).</li>
+            <li>Save and restart Claude Desktop. PsychPro tools will appear in any chat.</li>
           </ol>
         </div>
 
@@ -177,21 +236,16 @@ export default function AdminTokensPage() {
           <div className="rounded-xl border border-cyan-300/40 bg-cyan-300/5 p-5 space-y-3">
             <div className="flex items-center justify-between">
               <div className="font-medium text-cyan-100">New token: {justCreated.label}</div>
-              <button
-                onClick={() => setJustCreated(null)}
-                className="text-xs text-white/60 hover:text-white"
-              >
+              <button onClick={() => setJustCreated(null)} className="text-xs text-white/60 hover:text-white">
                 Dismiss
               </button>
             </div>
-            <p className="text-xs text-white/70">
-              Copy this now — for security, the full token will never be shown again.
-            </p>
+            <p className="text-xs text-white/70">Copy this now — for security, the full token will never be shown again.</p>
             <div className="flex items-center gap-2">
               <code className="flex-1 break-all px-3 py-2 rounded bg-black/40 text-cyan-200 text-xs">
                 {justCreated.token}
               </code>
-              <Button size="sm" variant="secondary" onClick={() => copy(justCreated.token, setCopied)}>
+              <Button size="sm" variant="secondary" onClick={() => copyText(justCreated.token)}>
                 {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
               </Button>
             </div>
@@ -207,16 +261,12 @@ export default function AdminTokensPage() {
               placeholder="Label (e.g. Claude Desktop)"
               className="bg-white/5 border-white/10"
               maxLength={80}
-              disabled={!canMintTokens}
             />
-            <Button onClick={createOne} disabled={creating || !canMintTokens}>
+            <Button onClick={createOne} disabled={creating || unauthorized}>
               <Plus className="w-4 h-4 mr-1" />
               {creating ? "Creating…" : "Create"}
             </Button>
           </div>
-          {!canMintTokens && (
-            <p className="text-xs text-white/55">Token creation is locked until the owner is configured and you're signed in as them.</p>
-          )}
         </div>
 
         <div className="rounded-xl border border-white/10 bg-white/[0.04] backdrop-blur-sm p-5">

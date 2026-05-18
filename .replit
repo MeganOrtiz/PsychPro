@@ -62,4 +62,4 @@ channel = "stable-25_05"
 [userenv]
 
 [userenv.shared]
-OWNER_USER_ID = "owner_smoke_test_user"
+MCP_ADMIN_SECRET = "smoke-test-admin-secret-please-rotate"
