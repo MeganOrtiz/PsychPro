@@ -1,16 +1,33 @@
-import { Router, type Request, type Response } from "express";
+import express, { Router, type Request, type Response } from "express";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { verifyBearerToken } from "../lib/adminTokens";
 import { buildMcpServer } from "../lib/mcpServer";
 
 const router = Router();
 
-// Simple in-memory per-token rate limiter (60 requests / minute).
+// `/api/mcp` accepts large study-guide payloads (schema allows ~200k chars),
+// so we override the app-wide 100kb default just for this route.
+const mcpJsonParser = express.json({ limit: "1mb" });
+
+// Simple in-memory per-token rate limiter (60 requests / minute) with
+// opportunistic cleanup so the map can't grow unboundedly across token
+// rotations on a long-lived server.
 const RATE_LIMIT = 60;
 const WINDOW_MS = 60_000;
 const hits = new Map<number, number[]>();
+let lastSweep = 0;
+function sweepStale(now: number): void {
+  if (now - lastSweep < WINDOW_MS) return;
+  lastSweep = now;
+  for (const [id, arr] of hits) {
+    const fresh = arr.filter((t) => now - t < WINDOW_MS);
+    if (fresh.length === 0) hits.delete(id);
+    else if (fresh.length !== arr.length) hits.set(id, fresh);
+  }
+}
 function rateLimited(tokenId: number): boolean {
   const now = Date.now();
+  sweepStale(now);
   const arr = (hits.get(tokenId) ?? []).filter((t) => now - t < WINDOW_MS);
   arr.push(now);
   hits.set(tokenId, arr);
@@ -59,7 +76,7 @@ async function handleMcp(req: Request, res: Response): Promise<void> {
   }
 }
 
-router.post("/mcp", handleMcp);
+router.post("/mcp", mcpJsonParser, handleMcp);
 router.get("/mcp", (_req, res) => {
   res.status(405).json({
     jsonrpc: "2.0",

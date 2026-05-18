@@ -138,7 +138,7 @@ export function buildMcpServer(): McpServer {
     {
       title: "Add quiz questions to a topic",
       description:
-        "Bulk-add multiple-choice quiz questions to a topic. Each question has 4 options A-D, a correct answer letter, and an explanation. Set exam_only=true for questions that should only show up in practice exams.",
+        "Bulk-add multiple-choice quiz questions to a topic. Each question has 4 options A-D, a correct answer letter, and an explanation. Set examOnly=true for questions that should only show up in practice exams.",
       inputSchema: {
         topic_id: z.number().int().positive(),
         questions: z.array(quizQuestionSchema).min(1).max(100),
