@@ -8,6 +8,8 @@ import feedbackRouter from "./feedback";
 import customDecksRouter from "./custom-decks";
 import leaderboardRouter from "./leaderboard";
 import clientErrorsRouter from "./client-errors";
+import adminTokensRouter from "./admin-tokens";
+import mcpRouter from "./mcp";
 
 const router: IRouter = Router();
 
@@ -20,5 +22,7 @@ router.use(feedbackRouter);
 router.use(customDecksRouter);
 router.use(leaderboardRouter);
 router.use(clientErrorsRouter);
+router.use(adminTokensRouter);
+router.use(mcpRouter);
 
 export default router;

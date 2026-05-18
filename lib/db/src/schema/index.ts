@@ -236,3 +236,14 @@ export const clientErrorRateWarningsTable = pgTable(
 );
 
 export type ClientErrorRateWarning = typeof clientErrorRateWarningsTable.$inferSelect;
+
+export const adminTokensTable = pgTable("admin_tokens", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull().references(() => usersTable.id),
+  tokenHash: text("token_hash").notNull().unique(),
+  label: text("label").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  lastUsedAt: timestamp("last_used_at", { withTimezone: true }),
+});
+
+export type AdminToken = typeof adminTokensTable.$inferSelect;

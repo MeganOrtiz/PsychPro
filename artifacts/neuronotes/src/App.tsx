@@ -23,6 +23,7 @@ import ResourcesPage from "@/pages/resources";
 import StudyLabPage from "@/pages/study-lab";
 import BrainLabPage from "@/pages/brain-lab";
 import AdminFeedbackPage from "@/pages/admin-feedback";
+import AdminTokensPage from "@/pages/admin-tokens";
 import MyDecksPage from "@/pages/my-decks";
 import NewDeckPage from "@/pages/my-decks-new";
 import MyDeckDetailPage from "@/pages/my-decks-detail";
@@ -68,6 +69,7 @@ function AppRouter() {
             <Route path="/study-lab" component={StudyLabPage} />
             <Route path="/brain-lab" component={BrainLabPage} />
             <Route path="/admin/feedback" component={AdminFeedbackPage} />
+            <Route path="/admin/tokens" component={AdminTokensPage} />
             <Route path="/my-decks" component={MyDecksPage} />
             <Route path="/my-decks/new" component={NewDeckPage} />
             <Route path="/my-decks/:id" component={MyDeckDetailPage} />
