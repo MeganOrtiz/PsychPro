@@ -8,23 +8,50 @@ import { eq } from "drizzle-orm";
  *
  * Identity comes from a server-side shared secret `MCP_ADMIN_SECRET` rather
  * than the client-supplied `X-User-Id` header (which is unverified and
- * forgeable). The owner provides this secret as
- *   Authorization: Bearer <MCP_ADMIN_SECRET>
- * when minting / listing / revoking MCP tokens. The secret is never sent to
- * the browser, never stored client-side, and never written to logs.
+ * forgeable). The owner pastes this secret into the `/admin/tokens` page,
+ * which stores it in the browser tab's sessionStorage (not localStorage,
+ * not cookies) and sends it as `Authorization: Bearer <MCP_ADMIN_SECRET>`
+ * over HTTPS when minting / listing / revoking MCP tokens. The secret is
+ * never written to server logs.
  *
- * MCP bearer tokens themselves (the ones Claude Desktop uses) are minted
- * *through* this route — they are unrelated to MCP_ADMIN_SECRET and have
- * their own 32-byte random material verified in `adminTokens.verifyBearerToken`.
+ * The MCP bearer tokens that Claude Desktop uses are minted *through* this
+ * route — they are unrelated to MCP_ADMIN_SECRET and have their own
+ * 32-byte random material verified in `adminTokens.verifyBearerToken`.
+ *
+ * Configuration must come from Replit Secrets (or equivalent), NEVER from
+ * `.replit`/source control. We hard-reject a small set of known placeholder
+ * values to fail-fast on accidental dev/test secrets reaching production.
  */
 
 export const OWNER_SENTINEL_USER_ID = "owner";
+
+const WEAK_SECRET_FRAGMENTS = [
+  "smoke-test",
+  "please-rotate",
+  "changeme",
+  "change-me",
+  "placeholder",
+  "test-secret",
+  "dev-secret",
+];
 
 function getAdminSecret(): string | null {
   const raw = process.env.MCP_ADMIN_SECRET;
   if (typeof raw !== "string") return null;
   const trimmed = raw.trim();
-  return trimmed.length >= 16 ? trimmed : null;
+  if (trimmed.length < 16) return null;
+  const lower = trimmed.toLowerCase();
+  for (const frag of WEAK_SECRET_FRAGMENTS) {
+    if (lower.includes(frag)) {
+      // Eslint-friendly diagnostic without leaking the value.
+      // eslint-disable-next-line no-console
+      console.warn(
+        "[security] MCP_ADMIN_SECRET appears to contain a known placeholder fragment; refusing to use it. Rotate the secret to a strong random value.",
+      );
+      return null;
+    }
+  }
+  return trimmed;
 }
 
 function constantTimeStringEquals(a: string, b: string): boolean {
