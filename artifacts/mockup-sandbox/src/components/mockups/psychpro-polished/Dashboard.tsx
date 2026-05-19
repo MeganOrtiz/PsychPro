@@ -18,29 +18,8 @@ import {
   Clock,
 } from "lucide-react";
 
-const P = {
-  ink: "#03151D",
-  bg: "#061F2B",
-  bgSoft: "#083240",
-  surface: "#0A2D3D",
-  surfaceElev: "#0E3C50",
-  steel: "#2A7387",
-  tealDeep: "#2A7387",
-  teal: "#5EB0C8",
-  surf: "#76E4F7",
-  mist: "#A7F3FF",
-  cloud: "#F4FBFF",
-  paperSoft: "#CCE5EC",
-  inkSoft: "#A9C6CF",
-} as const;
-
-const CARD_LIGHT = {
-  background: "rgba(244,251,255,0.94)",
-  border: `1px solid rgba(94,176,200,0.35)`,
-  boxShadow:
-    "0 20px 60px -20px rgba(42,115,135,.45), 0 0 0 1px rgba(118,228,247,.15)",
-  borderRadius: 22,
-} as const;
+import { STUDY_PALETTE as P } from "@neuronotes/lib/study-theme";
+import { LightCard, LIGHT_CARD_STYLE as CARD_LIGHT } from "./_shared/LightCard";
 
 const CARD_DARK = {
   background:

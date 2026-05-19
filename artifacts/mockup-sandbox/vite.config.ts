@@ -48,6 +48,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "src"),
+      "@neuronotes": path.resolve(import.meta.dirname, "../neuronotes/src"),
     },
   },
   root: path.resolve(import.meta.dirname),
@@ -62,6 +63,7 @@ export default defineConfig({
     fs: {
       strict: true,
       deny: ["**/.*"],
+      allow: [path.resolve(import.meta.dirname, ".."), path.resolve(import.meta.dirname)],
     },
   },
   preview: {

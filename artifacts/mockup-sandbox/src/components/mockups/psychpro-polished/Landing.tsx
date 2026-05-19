@@ -12,21 +12,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-const P = {
-  ink: "#03151D",
-  bg: "#061F2B",
-  bgSoft: "#083240",
-  surface: "#0A2D3D",
-  surfaceElev: "#0E3C50",
-  steel: "#2A7387",
-  tealDeep: "#2A7387",
-  teal: "#5EB0C8",
-  surf: "#76E4F7",
-  mist: "#A7F3FF",
-  cloud: "#F4FBFF",
-  paperSoft: "#CCE5EC",
-  inkSoft: "#A9C6CF",
-} as const;
+import { STUDY_PALETTE as P } from "@neuronotes/lib/study-theme";
 
 const GLASS_DARK = {
   background: `rgba(6,32,44,.58)`,
