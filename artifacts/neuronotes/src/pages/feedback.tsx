@@ -20,6 +20,17 @@ const SUCCESS_COPY: Record<string, string> = {
 
 type FieldErrors = { message?: string; submitterEmail?: string };
 
+function extractFieldErrors(body: unknown): FieldErrors | null {
+  if (!body || typeof body !== "object") return null;
+  const raw = (body as { fieldErrors?: unknown }).fieldErrors;
+  if (!raw || typeof raw !== "object") return null;
+  const src = raw as Record<string, unknown>;
+  const out: FieldErrors = {};
+  if (typeof src.message === "string") out.message = src.message;
+  if (typeof src.submitterEmail === "string") out.submitterEmail = src.submitterEmail;
+  return Object.keys(out).length > 0 ? out : null;
+}
+
 export default function FeedbackPage() {
   const [type, setType] = useState(DEFAULT_TYPE);
   const [message, setMessage] = useState("");
@@ -67,7 +78,7 @@ export default function FeedbackPage() {
       return;
     }
 
-    let body: any = null;
+    let body: unknown = null;
     try {
       body = await res.clone().json();
     } catch {
@@ -89,8 +100,9 @@ export default function FeedbackPage() {
 
     console.error(`[feedback] submit failed: ${res.status}`, body);
 
-    if (res.status === 400 && body && typeof body === "object" && body.fieldErrors) {
-      setFieldErrors(body.fieldErrors);
+    const serverFieldErrors = extractFieldErrors(body);
+    if (res.status === 400 && serverFieldErrors) {
+      setFieldErrors(serverFieldErrors);
       toast.error("Please fix the highlighted fields and try again.");
     } else if (res.status === 401 || res.status === 403) {
       toast.error("You're not allowed to send feedback right now. Try signing in and try again.");
