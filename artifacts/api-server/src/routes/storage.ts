@@ -22,8 +22,12 @@ function recordPendingUpload(objectId: string, userId: string): void {
 
 function extractObjectId(objectPath: string): string | null {
   if (!objectPath.startsWith("/objects/")) return null;
-  const id = objectPath.slice("/objects/".length).split("/")[0];
-  return id || null;
+  // The full sub-path after "/objects/" is the unique object identifier
+  // (e.g. "uploads/<uuid>"). Using only the first segment would collide
+  // across every upload, so we key by the entire remainder.
+  const id = objectPath.slice("/objects/".length).trim();
+  if (!id || id.includes("..")) return null;
+  return id;
 }
 
 export function isUploadOwnedBy(objectPath: string, userId: string): boolean {
