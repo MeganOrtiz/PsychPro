@@ -1,4 +1,4 @@
-import { randomBytes, randomUUID, createHash, createHmac, timingSafeEqual } from "node:crypto";
+import { randomBytes, randomUUID, createHash, timingSafeEqual } from "node:crypto";
 
 /**
  * Single-user OAuth 2.1 + PKCE store for the MCP route.
@@ -243,85 +243,6 @@ export function verifyOauthAccessToken(token: string): VerifiedAccessToken | nul
     return null;
   }
   return { clientId: entry.clientId, rateLimitKey: rateLimitKeyForOauthToken(token) };
-}
-
-/**
- * Owner-session cookie (HMAC-signed, short-lived) used to gate the
- * `/oauth/authorize` endpoint. PKCE alone protects the channel between client
- * and authorization server but does NOT authenticate the resource owner — so
- * without this gate, anyone reachable on the internet could complete the
- * register→authorize→token dance and mint a write-capable MCP token. The
- * owner enters `MCP_ADMIN_SECRET` once per browser; after that, `authorize`
- * auto-approves (no consent screen on subsequent connector pairings) until
- * the cookie expires.
- */
-export const OWNER_COOKIE_NAME = "pp_oauth_owner";
-const OWNER_SESSION_TTL_MS = 60 * 60 * 1000; // 1 hour
-
-function ownerSigningKey(): Buffer {
-  // Derive a stable key from MCP_ADMIN_SECRET so rotating the secret
-  // immediately invalidates all outstanding owner sessions. We don't read
-  // process.env at module load because the env may not be set yet during
-  // unit tests / startup ordering.
-  const secret = process.env.MCP_ADMIN_SECRET ?? "";
-  return createHash("sha256").update(`pp-owner-session-v1::${secret}`).digest();
-}
-
-export function mintOwnerSessionCookie(): { value: string; maxAgeSeconds: number } {
-  const exp = Date.now() + OWNER_SESSION_TTL_MS;
-  const payload = String(exp);
-  const sig = createHmac("sha256", ownerSigningKey()).update(payload).digest("base64url");
-  return { value: `${payload}.${sig}`, maxAgeSeconds: Math.floor(OWNER_SESSION_TTL_MS / 1000) };
-}
-
-/**
- * Per-request CSRF nonce for the authorize confirmation form. Even with a
- * valid owner cookie, an attacker page that triggers top-level navigation to
- * `/oauth/authorize` would otherwise complete the flow on the owner's behalf
- * (SameSite=Lax sends the cookie on cross-site top-level GETs). Requiring an
- * explicit same-origin POST carrying this signed nonce closes that hole. The
- * nonce is bound to the current minute-bucket of `Date.now()` so it expires
- * automatically (5-minute window).
- */
-const APPROVE_NONCE_TTL_MS = 5 * 60 * 1000;
-
-export function mintApproveNonce(): string {
-  const exp = Date.now() + APPROVE_NONCE_TTL_MS;
-  const payload = String(exp);
-  const sig = createHmac("sha256", ownerSigningKey()).update(`approve::${payload}`).digest("base64url");
-  return `${payload}.${sig}`;
-}
-
-export function verifyApproveNonce(raw: string | null | undefined): boolean {
-  if (!raw) return false;
-  const idx = raw.indexOf(".");
-  if (idx <= 0) return false;
-  const payload = raw.slice(0, idx);
-  const sig = raw.slice(idx + 1);
-  const expected = createHmac("sha256", ownerSigningKey()).update(`approve::${payload}`).digest("base64url");
-  const sigBuf = Buffer.from(sig);
-  const expBuf = Buffer.from(expected);
-  if (sigBuf.length !== expBuf.length) return false;
-  if (!timingSafeEqual(sigBuf, expBuf)) return false;
-  const exp = Number.parseInt(payload, 10);
-  if (!Number.isFinite(exp)) return false;
-  return exp > Date.now();
-}
-
-export function verifyOwnerSessionCookie(raw: string | null | undefined): boolean {
-  if (!raw) return false;
-  const idx = raw.indexOf(".");
-  if (idx <= 0) return false;
-  const payload = raw.slice(0, idx);
-  const sig = raw.slice(idx + 1);
-  const expected = createHmac("sha256", ownerSigningKey()).update(payload).digest("base64url");
-  const sigBuf = Buffer.from(sig);
-  const expBuf = Buffer.from(expected);
-  if (sigBuf.length !== expBuf.length) return false;
-  if (!timingSafeEqual(sigBuf, expBuf)) return false;
-  const exp = Number.parseInt(payload, 10);
-  if (!Number.isFinite(exp)) return false;
-  return exp > Date.now();
 }
 
 /** Test-only utility — never invoked in production code paths. */
