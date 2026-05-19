@@ -120,14 +120,17 @@ router.get("/connections/suggestions", async (req: Request, res: Response): Prom
       return;
     }
     const myTags = parseTags(me.interests);
-    if (myTags.length === 0 || !me.prefSuggestConnections || !me.prefNetworkingIntros) {
-      // Even if I don't appear in others' suggestions, I can still see them
-      // — but only if I have at least one tag to overlap against. Without
-      // any tags there is no signal to score on.
-      if (myTags.length === 0) {
-        res.json({ suggestions: [], hasMore: false });
-        return;
-      }
+    // Double opt-in is the privacy contract: a caller who has either
+    // toggle off cannot see suggestions AND must not be suggested to
+    // others. The latter is enforced by the candidate filter below; the
+    // former is enforced here.
+    if (
+      !me.prefSuggestConnections ||
+      !me.prefNetworkingIntros ||
+      myTags.length === 0
+    ) {
+      res.json({ suggestions: [], hasMore: false, total: 0 });
+      return;
     }
 
     const limit = Math.min(
@@ -287,6 +290,15 @@ router.post("/connections/requests", async (req: Request, res: Response): Promis
       res.status(404).json({ error: "Recipient not found" });
       return;
     }
+    if (!me || !me.prefSuggestConnections || !me.prefNetworkingIntros) {
+      // Requester must also be opted in to both toggles. This makes the
+      // intro genuinely double opt-in (task #67 privacy contract).
+      res.status(403).json({
+        error:
+          "Turn on connection suggestions and networking introductions in your profile before sending a request.",
+      });
+      return;
+    }
     if (!recipient.prefSuggestConnections || !recipient.prefNetworkingIntros) {
       res.status(403).json({ error: "Recipient is not open to introductions" });
       return;
@@ -326,7 +338,16 @@ router.post("/connections/requests", async (req: Request, res: Response): Promis
       );
     if (existing) {
       if (existing.status === "pending") {
-        res.status(409).json({ error: "A request is already pending between you." });
+        // Idempotent — repeat submissions of the same pending pair return
+        // the existing row instead of erroring. This makes the client safe
+        // to retry on flaky networks without producing 409 noise.
+        res.status(200).json({
+          id: existing.id,
+          status: existing.status,
+          recipientDisplayName: recipient.displayName,
+          sharedTags: parseTags(existing.sharedTags),
+          duplicate: true,
+        });
         return;
       }
       res.status(409).json({ error: "You can't request this connection right now." });

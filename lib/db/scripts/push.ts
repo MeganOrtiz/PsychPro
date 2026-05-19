@@ -83,9 +83,39 @@ function runDrizzleKitPush(): Promise<number> {
   });
 }
 
+async function ensureConnectionRequestsPendingUnique(): Promise<void> {
+  // Partial unique index on (requester_id, recipient_id) WHERE status='pending'
+  // — drizzle-kit does not model partial indexes natively, so we add it here
+  // after `drizzle-kit push` creates the connection_requests table. Without
+  // this index two simultaneous POST /api/connections/requests calls could
+  // race past the application-level duplicate check and create two pending
+  // rows for the same pair. (task #67)
+  const client = new pg.Client({ connectionString: process.env.DATABASE_URL });
+  await client.connect();
+  try {
+    const tableExists = await client.query<{ exists: boolean }>(
+      `SELECT EXISTS (
+         SELECT 1 FROM information_schema.tables
+         WHERE table_schema = 'public' AND table_name = 'connection_requests'
+       ) AS exists`,
+    );
+    if (!tableExists.rows[0]?.exists) return;
+    await client.query(
+      `CREATE UNIQUE INDEX IF NOT EXISTS connection_requests_pending_unique_idx
+         ON connection_requests (requester_id, recipient_id)
+         WHERE status = 'pending'`,
+    );
+  } finally {
+    await client.end();
+  }
+}
+
 async function main(): Promise<void> {
   await ensureTopicsNameUnique();
   const code = await runDrizzleKitPush();
+  if (code === 0) {
+    await ensureConnectionRequestsPendingUnique();
+  }
   process.exit(code);
 }
 
