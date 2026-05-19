@@ -1,0 +1,19 @@
+I have an MCP server running at POST /api/mcp on my Express app. It currently requires a static bearer token (validated against MCP_ADMIN_SECRET). I want to add OAuth 2.1 with PKCE so Claude.ai's custom connector can authenticate. This is single-user (just me), so the OAuth flow should auto-approve without a login screen.
+Add the following endpoints to my Express server, mounted BEFORE the React catch-all route so they don't get swallowed by the SPA:
+1. GET /.well-known/oauth-authorization-server — returns JSON:
+json{
+  "issuer": "https://psychprosuite.com",
+  "authorization_endpoint": "https://psychprosuite.com/authorize",
+  "token_endpoint": "https://psychprosuite.com/token",
+  "registration_endpoint": "https://psychprosuite.com/register",
+  "response_types_supported": ["code"],
+  "grant_types_supported": ["authorization_code", "refresh_token"],
+  "code_challenge_methods_supported": ["S256"],
+  "token_endpoint_auth_methods_supported": ["none"]
+}
+2. POST /register (Dynamic Client Registration, RFC 7591) — accept any client metadata, generate a client_id (UUID), store it in memory (a Map is fine for now), return { client_id, client_id_issued_at, ...echoed metadata }. No client secret (public client).
+3. GET /authorize — validate client_id, redirect_uri, code_challenge, code_challenge_method=S256, state. Since this is single-user, auto-approve: generate a one-time auth code, store it in memory keyed to the code_challenge and redirect_uri (with 60s expiry), then 302 redirect to redirect_uri?code=...&state=....
+4. POST /token — accept form-encoded body with grant_type=authorization_code, code, redirect_uri, client_id, code_verifier. Verify the code exists, hasn't expired, the redirect_uri matches, and that SHA256(code_verifier) base64url-encoded equals the stored code_challenge. If valid, issue a JWT (or random opaque token) as access_token, also return a refresh_token. Response: { access_token, token_type: "Bearer", expires_in: 3600, refresh_token }. Also support grant_type=refresh_token.
+5. Update /api/mcp — accept bearer tokens that are EITHER the legacy MCP_ADMIN_SECRET (so my existing config keeps working) OR a valid OAuth-issued token from /token.
+Make sure all of this is mounted on the Express app BEFORE app.use(express.static(...)) and the SPA fallback, otherwise the React app will intercept these routes.
+Reference spec: https://modelcontextprotocol.io/specification/2025-03-26/basic/authorization
