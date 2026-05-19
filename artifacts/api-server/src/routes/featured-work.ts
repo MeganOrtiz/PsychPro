@@ -104,7 +104,10 @@ function serialize(
     displayName: hideIdentity ? "Anonymous contributor" : row.displayName,
     interestTags: parseTags(row.interestTags),
     status: row.status as FeaturedWorkStatus,
-    adminNote: row.adminNote,
+    // adminNote contains private reviewer-to-submitter feedback. Only the
+    // submitter (owner) and admins should ever see it; public archive
+    // viewers must not.
+    adminNote: viewerIsOwnerOrAdmin ? row.adminNote : null,
     createdAt: row.createdAt.toISOString(),
     reviewedAt: row.reviewedAt ? row.reviewedAt.toISOString() : null,
     approvedAt: row.approvedAt ? row.approvedAt.toISOString() : null,
@@ -153,24 +156,16 @@ async function isAdmin(userId: string): Promise<boolean> {
   return !!u?.isAdmin;
 }
 
-// Dev-mode admin gate — mirrors the feedback inbox helper so the same users
-// see admin features without an explicit grant flow.
+// Strict admin gate — requires the caller's `users.isAdmin` flag to already
+// be true. No auto-upgrade. Returns 403 otherwise so moderation routes can
+// never be accessed by a regular signed-in user.
 async function requireAdminCaller(req: Request, res: Response): Promise<string | null> {
   const userId = requireUserId(req, res);
   if (!userId) return null;
-  const [existing] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
-  if (!existing) {
-    await db.insert(usersTable).values({
-      id: userId,
-      subscriptionStatus: "scholar",
-      isAdmin: true,
-      onboardingComplete: true,
-      usageCount: 0,
-    });
-  } else if (!existing.isAdmin) {
-    await db.update(usersTable)
-      .set({ isAdmin: true, subscriptionStatus: "scholar" })
-      .where(eq(usersTable.id, userId));
+  const [existing] = await db.select({ isAdmin: usersTable.isAdmin }).from(usersTable).where(eq(usersTable.id, userId));
+  if (!existing || !existing.isAdmin) {
+    res.status(403).json({ error: "Admin access required" });
+    return null;
   }
   return userId;
 }
