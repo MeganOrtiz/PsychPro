@@ -12,14 +12,17 @@
     "test": "node ./scripts/run-tests.mjs"
   },
   "dependencies": {
+    "@google-cloud/storage": "^7.19.0",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@workspace/api-zod": "workspace:*",
+    "@workspace/community": "workspace:*",
     "@workspace/db": "workspace:*",
     "@workspace/integrations-openai-ai-server": "workspace:*",
     "cookie-parser": "^1.4.7",
     "cors": "^2",
     "drizzle-orm": "catalog:",
     "express": "^5",
+    "google-auth-library": "^10.6.2",
     "http-proxy-middleware": "^3.0.5",
     "mammoth": "^1.8.0",
     "multer": "^1.4.5-lts.1",

@@ -248,3 +248,55 @@ export const adminTokensTable = pgTable("admin_tokens", {
 });
 
 export type AdminToken = typeof adminTokensTable.$inferSelect;
+
+// =============================================================================
+// Community: user profiles & connect preferences (task #65)
+//
+// Foundation for the Community surface. Backs the Profile page and exposes
+// the controlled interests taxonomy as a single source of truth reusable by
+// Featured Work (#66) and Connections (#67).
+// =============================================================================
+
+export {
+  PROFILE_ROLES,
+  INTERESTS_TAXONOMY,
+  INTEREST_TAGS,
+  INTEREST_TAGS_SET,
+  MAX_INTERESTS,
+  MAX_BIO_LENGTH,
+  MAX_DISPLAY_NAME_LENGTH,
+  MAX_INSTITUTION_LENGTH,
+} from "@workspace/community";
+export type { ProfileRole } from "@workspace/community";
+
+
+export const userProfilesTable = pgTable("user_profiles", {
+  userId: text("user_id")
+    .primaryKey()
+    .references(() => usersTable.id, { onDelete: "cascade" }),
+  displayName: text("display_name"),
+  profilePhotoUrl: text("profile_photo_url"),
+  currentRole: text("current_role"),
+  institution: text("institution"),
+  bio: text("bio"),
+  // JSON-encoded string[] of taxonomy tags (kept simple — no array column to
+  // avoid a custom JSON column type in this schema file).
+  interests: text("interests").notNull().default("[]"),
+  prefSuggestConnections: boolean("pref_suggest_connections")
+    .notNull()
+    .default(false),
+  prefNetworkingIntros: boolean("pref_networking_intros")
+    .notNull()
+    .default(false),
+  prefShowOnFeaturedWork: boolean("pref_show_on_featured_work")
+    .notNull()
+    .default(true),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+export type UserProfile = typeof userProfilesTable.$inferSelect;

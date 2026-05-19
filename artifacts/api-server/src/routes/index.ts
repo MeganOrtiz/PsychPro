@@ -11,6 +11,8 @@ import clientErrorsRouter from "./client-errors";
 import adminTokensRouter from "./admin-tokens";
 import mcpRouter from "./mcp";
 import oauthRouter from "./oauth";
+import storageRouter from "./storage";
+import profileRouter from "./profile";
 
 const router: IRouter = Router();
 
@@ -26,5 +28,7 @@ router.use(clientErrorsRouter);
 router.use(adminTokensRouter);
 router.use(mcpRouter);
 router.use(oauthRouter);
+router.use(storageRouter);
+router.use(profileRouter);
 
 export default router;

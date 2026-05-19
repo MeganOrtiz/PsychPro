@@ -1,0 +1,251 @@
+import { Router, type IRouter, type Request, type Response } from "express";
+import { db } from "@workspace/db";
+import { userProfilesTable, usersTable } from "@workspace/db";
+import {
+  PROFILE_ROLES,
+  INTEREST_TAGS_SET,
+  MAX_INTERESTS,
+  MAX_BIO_LENGTH,
+  MAX_DISPLAY_NAME_LENGTH,
+  MAX_INSTITUTION_LENGTH,
+} from "@workspace/community";
+import { eq } from "drizzle-orm";
+import { requireUserId } from "../lib/userId";
+import { ObjectStorageService } from "../lib/objectStorage";
+
+const router: IRouter = Router();
+const objectStorageService = new ObjectStorageService();
+
+type ProfilePayload = {
+  userId: string;
+  displayName: string | null;
+  profilePhotoUrl: string | null;
+  currentRole: string | null;
+  institution: string | null;
+  bio: string | null;
+  interests: string[];
+  prefSuggestConnections: boolean;
+  prefNetworkingIntros: boolean;
+  prefShowOnFeaturedWork: boolean;
+};
+
+function serialize(row: typeof userProfilesTable.$inferSelect): ProfilePayload {
+  let interests: string[] = [];
+  try {
+    const parsed = JSON.parse(row.interests ?? "[]");
+    if (Array.isArray(parsed)) {
+      interests = parsed.filter((t): t is string => typeof t === "string");
+    }
+  } catch {
+    interests = [];
+  }
+  return {
+    userId: row.userId,
+    displayName: row.displayName,
+    profilePhotoUrl: row.profilePhotoUrl,
+    currentRole: row.currentRole,
+    institution: row.institution,
+    bio: row.bio,
+    interests,
+    prefSuggestConnections: row.prefSuggestConnections,
+    prefNetworkingIntros: row.prefNetworkingIntros,
+    prefShowOnFeaturedWork: row.prefShowOnFeaturedWork,
+  };
+}
+
+async function ensureUser(userId: string): Promise<void> {
+  const [existing] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
+  if (!existing) {
+    await db.insert(usersTable).values({
+      id: userId,
+      onboardingComplete: true,
+      usageCount: 0,
+    });
+  }
+}
+
+async function getOrCreateProfile(userId: string): Promise<typeof userProfilesTable.$inferSelect> {
+  const [existing] = await db
+    .select()
+    .from(userProfilesTable)
+    .where(eq(userProfilesTable.userId, userId));
+  if (existing) return existing;
+  await ensureUser(userId);
+  const [created] = await db
+    .insert(userProfilesTable)
+    .values({ userId })
+    .returning();
+  return created;
+}
+
+router.get("/profile/me", async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = requireUserId(req, res);
+    if (!userId) return;
+    const row = await getOrCreateProfile(userId);
+    res.json(serialize(row));
+  } catch (err) {
+    req.log.error({ err }, "Error loading profile");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+type FieldErrors = Record<string, string>;
+
+function validatePatch(body: unknown): { values: Partial<typeof userProfilesTable.$inferInsert>; fieldErrors: FieldErrors } {
+  const fieldErrors: FieldErrors = {};
+  const values: Partial<typeof userProfilesTable.$inferInsert> = {};
+  const src = (body && typeof body === "object" ? (body as Record<string, unknown>) : {}) as Record<string, unknown>;
+
+  // displayName — required, length-bounded
+  if ("displayName" in src) {
+    const v = src.displayName;
+    if (typeof v !== "string") {
+      fieldErrors.displayName = "Display name is required.";
+    } else {
+      const t = v.trim();
+      if (!t) {
+        fieldErrors.displayName = "Display name is required.";
+      } else if (t.length > MAX_DISPLAY_NAME_LENGTH) {
+        fieldErrors.displayName = `Display name must be ${MAX_DISPLAY_NAME_LENGTH} characters or fewer.`;
+      } else {
+        values.displayName = t;
+      }
+    }
+  }
+
+  if ("currentRole" in src) {
+    const v = src.currentRole;
+    if (v === null || v === "") {
+      values.currentRole = null;
+    } else if (typeof v !== "string" || !(PROFILE_ROLES as readonly string[]).includes(v)) {
+      fieldErrors.currentRole = "Please pick a role from the list.";
+    } else {
+      values.currentRole = v;
+    }
+  }
+
+  if ("institution" in src) {
+    const v = src.institution;
+    if (v === null || v === "") {
+      values.institution = null;
+    } else if (typeof v !== "string") {
+      fieldErrors.institution = "Institution must be text.";
+    } else {
+      const t = v.trim();
+      if (t.length > MAX_INSTITUTION_LENGTH) {
+        fieldErrors.institution = `Institution must be ${MAX_INSTITUTION_LENGTH} characters or fewer.`;
+      } else {
+        values.institution = t || null;
+      }
+    }
+  }
+
+  if ("bio" in src) {
+    const v = src.bio;
+    if (v === null || v === "") {
+      values.bio = null;
+    } else if (typeof v !== "string") {
+      fieldErrors.bio = "Bio must be text.";
+    } else if (v.length > MAX_BIO_LENGTH) {
+      fieldErrors.bio = `Bio must be ${MAX_BIO_LENGTH} characters or fewer (currently ${v.length}).`;
+    } else {
+      values.bio = v;
+    }
+  }
+
+  if ("interests" in src) {
+    const v = src.interests;
+    if (!Array.isArray(v)) {
+      fieldErrors.interests = "Interests must be a list.";
+    } else if (v.length > MAX_INTERESTS) {
+      fieldErrors.interests = `Pick up to ${MAX_INTERESTS} interests.`;
+    } else {
+      const cleaned: string[] = [];
+      for (const item of v) {
+        if (typeof item !== "string" || !INTEREST_TAGS_SET.has(item)) {
+          fieldErrors.interests = "Interests must come from the provided list.";
+          break;
+        }
+        if (!cleaned.includes(item)) cleaned.push(item);
+      }
+      if (!fieldErrors.interests) {
+        values.interests = JSON.stringify(cleaned);
+      }
+    }
+  }
+
+  if ("profilePhotoUrl" in src) {
+    const v = src.profilePhotoUrl;
+    if (v === null || v === "") {
+      values.profilePhotoUrl = null;
+    } else if (typeof v !== "string") {
+      fieldErrors.profilePhotoUrl = "Photo URL must be text.";
+    } else if (!v.startsWith("/objects/")) {
+      // Must be a path returned from our own upload endpoint.
+      fieldErrors.profilePhotoUrl = "Photo must be uploaded through the profile page.";
+    } else {
+      values.profilePhotoUrl = v;
+    }
+  }
+
+  for (const key of ["prefSuggestConnections", "prefNetworkingIntros", "prefShowOnFeaturedWork"] as const) {
+    if (key in src) {
+      const v = src[key];
+      if (typeof v !== "boolean") {
+        fieldErrors[key] = "Toggle value must be true or false.";
+      } else {
+        values[key] = v;
+      }
+    }
+  }
+
+  return { values, fieldErrors };
+}
+
+router.patch("/profile/me", async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = requireUserId(req, res);
+    if (!userId) return;
+
+    // Ensure the row exists so we can do a clean UPDATE.
+    await getOrCreateProfile(userId);
+
+    const { values, fieldErrors } = validatePatch(req.body);
+    if (Object.keys(fieldErrors).length > 0) {
+      res.status(400).json({ error: "Validation failed", fieldErrors });
+      return;
+    }
+
+    // If a profile photo URL was sent, normalize and bind ownership ACL so
+    // it cannot be cross-user referenced.
+    if (typeof values.profilePhotoUrl === "string" && values.profilePhotoUrl) {
+      try {
+        values.profilePhotoUrl = await objectStorageService.trySetObjectEntityAclPolicy(
+          values.profilePhotoUrl,
+          { owner: userId, visibility: "public" },
+        );
+      } catch (aclErr) {
+        req.log.warn({ err: aclErr }, "Failed to set ACL on profile photo");
+        res.status(400).json({
+          error: "Validation failed",
+          fieldErrors: { profilePhotoUrl: "Could not attach uploaded photo. Please re-upload." },
+        });
+        return;
+      }
+    }
+
+    const [updated] = await db
+      .update(userProfilesTable)
+      .set({ ...values, updatedAt: new Date() })
+      .where(eq(userProfilesTable.userId, userId))
+      .returning();
+
+    res.json(serialize(updated));
+  } catch (err) {
+    req.log.error({ err }, "Error updating profile");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+export default router;

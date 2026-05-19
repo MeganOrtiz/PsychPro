@@ -35,6 +35,58 @@ const communityNav: NavItem[] = [
   { href: "/feedback", label: "Feedback", icon: MessageSquare },
 ];
 
+type ProfileSummary = {
+  displayName: string | null;
+  profilePhotoUrl: string | null;
+};
+
+function profileInitials(name: string | null | undefined): string {
+  const trimmed = (name ?? "").trim();
+  if (!trimmed) return "G";
+  const parts = trimmed.split(/\s+/).slice(0, 2);
+  return parts.map((p) => p[0]?.toUpperCase() ?? "").join("") || "G";
+}
+
+function profilePhotoSrc(path: string | null | undefined): string | null {
+  if (!path) return null;
+  if (path.startsWith("http")) return path;
+  if (path.startsWith("/objects/")) return `/api/storage${path}`;
+  return path;
+}
+
+function useProfileSummary(): ProfileSummary {
+  const [summary, setSummary] = useState<ProfileSummary>({ displayName: null, profilePhotoUrl: null });
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        const res = await fetch("/api/profile/me", {
+          headers: { "X-User-Id": getOrCreateAnonymousUserId() },
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (cancelled) return;
+        setSummary({
+          displayName: typeof data?.displayName === "string" ? data.displayName : null,
+          profilePhotoUrl: typeof data?.profilePhotoUrl === "string" ? data.profilePhotoUrl : null,
+        });
+      } catch {
+        /* silent — sidebar falls back to Guest */
+      }
+    }
+    load();
+    function onUpdated() { load(); }
+    window.addEventListener("psychpro:profile-updated", onUpdated);
+    return () => {
+      cancelled = true;
+      window.removeEventListener("psychpro:profile-updated", onUpdated);
+    };
+  }, []);
+
+  return summary;
+}
+
 const accountNav: NavItem[] = [
   { href: "/subscription", label: "Upgrade", icon: CreditCard },
 ];
@@ -298,24 +350,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           )}
         </nav>
 
-        <div className="relative p-4 border-t border-white/10 z-10">
-          <div className="flex items-center gap-3">
-            <div
-              className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-semibold border"
-              style={{
-                background: `linear-gradient(135deg, ${STUDY_PALETTE.tealDeep}, ${STUDY_PALETTE.teal})`,
-                borderColor: `${STUDY_PALETTE.surf}55`,
-              }}
-            >
-              G
-            </div>
-            <div className="min-w-0">
-              <p className="text-white text-sm font-medium truncate">
-                Guest
-              </p>
-            </div>
-          </div>
-        </div>
+        <SidebarProfileLink onNavigate={() => setSidebarOpen(false)} />
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
@@ -336,6 +371,54 @@ export default function AppLayout({ children }: AppLayoutProps) {
           {children}
         </main>
       </div>
+    </div>
+  );
+}
+
+function SidebarProfileLink({ onNavigate }: { onNavigate: () => void }) {
+  const [location] = useLocation();
+  const { displayName, profilePhotoUrl } = useProfileSummary();
+  const photoUrl = profilePhotoSrc(profilePhotoUrl);
+  const isActive = location === "/profile";
+  const name = (displayName ?? "").trim() || "Guest";
+
+  return (
+    <div className="relative p-4 border-t border-white/10 z-10">
+      <Link href="/profile" onClick={onNavigate} data-testid="nav-profile">
+        <div
+          className={cn(
+            "flex items-center gap-3 rounded-lg p-2 border transition-colors cursor-pointer",
+            isActive
+              ? "bg-white/[0.08] border-[color:var(--nav-glow)]/55 shadow-[0_8px_24px_-10px_var(--nav-glow)]"
+              : "bg-white/[0.03] border-white/8 hover:bg-white/[0.07] hover:border-[color:var(--nav-glow)]/45",
+          )}
+        >
+          {photoUrl ? (
+            <img
+              src={photoUrl}
+              alt={name}
+              className="w-9 h-9 rounded-full object-cover border"
+              style={{ borderColor: `${STUDY_PALETTE.surf}55` }}
+            />
+          ) : (
+            <div
+              className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-semibold border flex-shrink-0"
+              style={{
+                background: `linear-gradient(135deg, ${STUDY_PALETTE.tealDeep}, ${STUDY_PALETTE.teal})`,
+                borderColor: `${STUDY_PALETTE.surf}55`,
+              }}
+            >
+              {profileInitials(displayName)}
+            </div>
+          )}
+          <div className="min-w-0 flex-1">
+            <p className="text-white text-sm font-medium truncate" data-testid="text-sidebar-display-name">
+              {name}
+            </p>
+            <p className="text-white/55 text-xs truncate">View profile</p>
+          </div>
+        </div>
+      </Link>
     </div>
   );
 }
