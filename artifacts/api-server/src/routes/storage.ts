@@ -3,10 +3,45 @@ import { Readable } from "stream";
 import { z } from "zod";
 import { ObjectStorageService, ObjectNotFoundError } from "../lib/objectStorage";
 import { ObjectPermission } from "../lib/objectAcl";
-import { getUserId } from "../lib/userId";
+import { getUserId, requireUserId } from "../lib/userId";
 
 const router: IRouter = Router();
 const objectStorageService = new ObjectStorageService();
+
+// In-memory mapping of recently-issued upload object IDs -> uploader user ID.
+// Used to verify that a /objects/<id> path supplied to PATCH /profile/me (or
+// similar finalize-upload endpoints) was actually issued to the caller, so
+// users cannot reassign ownership of arbitrary objects they discover.
+// Entries expire after UPLOAD_TTL_MS to bound memory.
+const UPLOAD_TTL_MS = 60 * 60 * 1000; // 1 hour
+const pendingUploads = new Map<string, { userId: string; expiresAt: number }>();
+
+function recordPendingUpload(objectId: string, userId: string): void {
+  pendingUploads.set(objectId, { userId, expiresAt: Date.now() + UPLOAD_TTL_MS });
+}
+
+function extractObjectId(objectPath: string): string | null {
+  if (!objectPath.startsWith("/objects/")) return null;
+  const id = objectPath.slice("/objects/".length).split("/")[0];
+  return id || null;
+}
+
+export function isUploadOwnedBy(objectPath: string, userId: string): boolean {
+  const id = extractObjectId(objectPath);
+  if (!id) return false;
+  const entry = pendingUploads.get(id);
+  if (!entry) return false;
+  if (entry.expiresAt < Date.now()) {
+    pendingUploads.delete(id);
+    return false;
+  }
+  return entry.userId === userId;
+}
+
+export function consumeUpload(objectPath: string): void {
+  const id = extractObjectId(objectPath);
+  if (id) pendingUploads.delete(id);
+}
 
 const RequestUploadUrlBody = z.object({
   name: z.string().min(1).max(255),
@@ -15,6 +50,8 @@ const RequestUploadUrlBody = z.object({
 });
 
 router.post("/storage/uploads/request-url", async (req: Request, res: Response): Promise<void> => {
+  const userId = requireUserId(req, res);
+  if (!userId) return;
   const parsed = RequestUploadUrlBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: "Missing or invalid required fields" });
@@ -24,6 +61,8 @@ router.post("/storage/uploads/request-url", async (req: Request, res: Response):
     const { name, size, contentType } = parsed.data;
     const uploadURL = await objectStorageService.getObjectEntityUploadURL();
     const objectPath = objectStorageService.normalizeObjectEntityPath(uploadURL);
+    const id = extractObjectId(objectPath);
+    if (id) recordPendingUpload(id, userId);
     res.json({ uploadURL, objectPath, metadata: { name, size, contentType } });
   } catch (error) {
     req.log.error({ err: error }, "Error generating upload URL");

@@ -12,6 +12,7 @@ import {
 import { eq } from "drizzle-orm";
 import { requireUserId } from "../lib/userId";
 import { ObjectStorageService } from "../lib/objectStorage";
+import { isUploadOwnedBy, consumeUpload } from "./storage";
 
 const router: IRouter = Router();
 const objectStorageService = new ObjectStorageService();
@@ -217,14 +218,23 @@ router.patch("/profile/me", async (req: Request, res: Response): Promise<void> =
       return;
     }
 
-    // If a profile photo URL was sent, normalize and bind ownership ACL so
-    // it cannot be cross-user referenced.
+    // If a profile photo URL was sent, ensure this caller actually uploaded it
+    // (prevents cross-user ACL takeover), then bind ownership ACL.
     if (typeof values.profilePhotoUrl === "string" && values.profilePhotoUrl) {
+      const normalized = objectStorageService.normalizeObjectEntityPath(values.profilePhotoUrl);
+      if (!isUploadOwnedBy(normalized, userId)) {
+        res.status(400).json({
+          error: "Validation failed",
+          fieldErrors: { profilePhotoUrl: "Photo upload not recognized. Please upload again." },
+        });
+        return;
+      }
       try {
         values.profilePhotoUrl = await objectStorageService.trySetObjectEntityAclPolicy(
-          values.profilePhotoUrl,
+          normalized,
           { owner: userId, visibility: "public" },
         );
+        consumeUpload(normalized);
       } catch (aclErr) {
         req.log.warn({ err: aclErr }, "Failed to set ACL on profile photo");
         res.status(400).json({
@@ -233,6 +243,22 @@ router.patch("/profile/me", async (req: Request, res: Response): Promise<void> =
         });
         return;
       }
+    }
+
+    // Enforce displayName invariant: after this PATCH the profile must have a
+    // non-empty displayName. (Task #65: displayName is required.)
+    const existing = await db
+      .select({ displayName: userProfilesTable.displayName })
+      .from(userProfilesTable)
+      .where(eq(userProfilesTable.userId, userId));
+    const finalDisplayName =
+      values.displayName !== undefined ? values.displayName : existing[0]?.displayName ?? null;
+    if (!finalDisplayName || finalDisplayName.trim().length === 0) {
+      res.status(400).json({
+        error: "Validation failed",
+        fieldErrors: { displayName: "Display name is required." },
+      });
+      return;
     }
 
     const [updated] = await db
