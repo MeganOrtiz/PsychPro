@@ -372,10 +372,20 @@ router.post("/connections/requests", async (req: Request, res: Response): Promis
       return;
     }
 
-    // Snapshot shared tags at request time.
+    // Snapshot shared tags at request time. Suggestions only surface
+    // overlapping profiles, so an empty overlap here means the caller
+    // is hitting the API directly outside the intended flow; reject to
+    // preserve the "shared-interest match" contract.
     const myTags = parseTags(me?.interests ?? null);
     const theirTags = parseTags(recipient.interests);
     const shared = intersection(myTags, theirTags);
+    if (shared.length === 0) {
+      res.status(400).json({
+        error:
+          "You don't share any interest tags with this member yet. Add overlapping interests to your profile to connect.",
+      });
+      return;
+    }
 
     const [created] = await db
       .insert(connectionRequestsTable)
