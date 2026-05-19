@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import {
-  Star, Send, Search, Filter, Upload, FileText, ExternalLink, X, CheckCircle2, Loader2, User as UserIcon,
+  Star, Send, Search, Filter, Upload, FileText, ExternalLink, X, Loader2, User as UserIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -331,13 +331,22 @@ function DetailModal({ submission, onClose }: { submission: Submission; onClose:
         )}
         <div className="flex flex-wrap gap-2">
           {fileHref && (
-            <a href={fileHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium">
+            <a href={fileHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium" data-testid="link-pdf">
               <FileText className="w-4 h-4" /> Download PDF
             </a>
           )}
           {submission.externalLink && (
-            <a href={submission.externalLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-input bg-card text-sm font-medium text-foreground">
+            <a href={submission.externalLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-input bg-card text-sm font-medium text-foreground" data-testid="link-external">
               <ExternalLink className="w-4 h-4" /> Open link
+            </a>
+          )}
+          {!submission.submitter.isAnonymous && submission.userId && (
+            <a
+              href={`/u/${encodeURIComponent(submission.userId)}`}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-input bg-card text-sm font-medium text-foreground"
+              data-testid="link-submitter-profile"
+            >
+              <UserIcon className="w-4 h-4" /> View submitter profile
             </a>
           )}
         </div>
@@ -640,5 +649,3 @@ function Field({ label, error, hint, children }: { label: string; error?: string
   );
 }
 
-// Eliminate unused-import warning when useMemo / CheckCircle2 aren't referenced.
-void useMemo; void CheckCircle2;

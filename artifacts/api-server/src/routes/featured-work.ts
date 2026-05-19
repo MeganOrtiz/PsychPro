@@ -331,6 +331,29 @@ router.post("/featured-work", async (req: Request, res: Response): Promise<void>
         return;
       }
       try {
+        // Server-side enforcement: fetch the actually-uploaded object's
+        // metadata and verify content-type + size. The /storage/uploads/
+        // request-url endpoint only sees client-claimed metadata, so a
+        // caller could request a signed URL with claimed application/pdf
+        // and then PUT arbitrary bytes. This is the authoritative check.
+        const objectFile = await objectStorageService.getObjectEntityFile(values.fileUrl);
+        const [metadata] = await objectFile.getMetadata();
+        const contentType = String(metadata.contentType ?? "").toLowerCase();
+        const sizeBytes = Number(metadata.size ?? 0);
+        if (contentType !== "application/pdf") {
+          res.status(400).json({
+            error: "Validation failed",
+            fieldErrors: { fileUrl: "Uploaded file must be a PDF." },
+          });
+          return;
+        }
+        if (sizeBytes > 25 * 1024 * 1024) {
+          res.status(400).json({
+            error: "Validation failed",
+            fieldErrors: { fileUrl: "Uploaded file exceeds the 25 MB limit." },
+          });
+          return;
+        }
         // Submit private: the file is owner+admin-only until the submission
         // is approved. The status PATCH endpoint flips it to public on
         // approval and back to private on rejection / revision.

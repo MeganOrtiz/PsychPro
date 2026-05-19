@@ -672,8 +672,15 @@ type SpotlightSubmission = {
   id: number;
   workType: string;
   title: string;
+  abstract: string;
   submitter: { displayName: string; role: string | null; institution: string | null };
 };
+
+const SPOTLIGHT_ABSTRACT_PREVIEW = 150;
+function previewAbstract(text: string): string {
+  if (text.length <= SPOTLIGHT_ABSTRACT_PREVIEW) return text;
+  return `${text.slice(0, SPOTLIGHT_ABSTRACT_PREVIEW).trimEnd()}…`;
+}
 
 function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
   const [spot, setSpot] = useState<SpotlightSubmission | null>(null);
@@ -693,6 +700,7 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
   const featuredTitle = spot
     ? spot.title
     : "Dissertation work: SOCIAL COGNITION IN CHILDREN WITH AUTISM SPECTRUM DISORDER: EXPLORING CORRELATES BETWEEN OBJECTIVE NEUROPSYCHOLOGICAL MEASURES AND PARENT REPORTS";
+  const featuredAbstractPreview = spot ? previewAbstract(spot.abstract) : null;
 
   return (
     <div
@@ -822,11 +830,20 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
               {featuredTypeLabel}
             </p>
             <p
-              className="text-sm font-semibold text-white leading-snug mb-2 line-clamp-4"
+              className="text-sm font-semibold text-white leading-snug mb-2 line-clamp-3"
               style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}
             >
               {featuredTitle}
             </p>
+            {featuredAbstractPreview && (
+              <p
+                className="text-xs text-white/85 leading-relaxed line-clamp-4"
+                style={{ textShadow: "0 1px 4px rgba(0,0,0,0.85)" }}
+                data-testid="text-spotlight-abstract"
+              >
+                {featuredAbstractPreview}
+              </p>
+            )}
           </div>
         </div>
 

@@ -79,6 +79,36 @@ async function getOrCreateProfile(userId: string): Promise<typeof userProfilesTa
   return created;
 }
 
+// Minimal public profile view (display name + role + institution + bio +
+// photo). Used by Featured Work detail pages to link from a submission to
+// its submitter. Returns 404 if the user has the "Show on featured work"
+// toggle OFF so we don't leak identity for anonymous submitters.
+router.get("/profile/public/:userId", async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = req.params.userId;
+    if (!userId) { res.status(404).json({ error: "Not found" }); return; }
+    const [row] = await db
+      .select()
+      .from(userProfilesTable)
+      .where(eq(userProfilesTable.userId, userId));
+    if (!row || !row.prefShowOnFeaturedWork) {
+      res.status(404).json({ error: "Not found" });
+      return;
+    }
+    res.json({
+      userId: row.userId,
+      displayName: row.displayName,
+      profilePhotoUrl: row.profilePhotoUrl,
+      currentRole: row.currentRole,
+      institution: row.institution,
+      bio: row.bio,
+    });
+  } catch (err) {
+    req.log.error({ err }, "Error loading public profile");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 router.get("/profile/me", async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = requireUserId(req, res);
