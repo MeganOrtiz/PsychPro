@@ -125,3 +125,44 @@ export const MAX_INTERESTS = 8;
 export const MAX_BIO_LENGTH = 300;
 export const MAX_DISPLAY_NAME_LENGTH = 80;
 export const MAX_INSTITUTION_LENGTH = 120;
+
+// =============================================================================
+// Featured Work taxonomy (task #66)
+// =============================================================================
+
+export const WORK_TYPES = [
+  { value: "research", label: "Research Paper" },
+  { value: "dissertation", label: "Dissertation" },
+  { value: "poster", label: "Poster Presentation" },
+  { value: "conference", label: "Conference Presentation" },
+  { value: "other", label: "Other Scholarly Work" },
+] as const;
+
+export type WorkType = (typeof WORK_TYPES)[number]["value"];
+export const WORK_TYPE_VALUES: readonly WorkType[] = WORK_TYPES.map((w) => w.value);
+export const WORK_TYPE_SET: ReadonlySet<string> = new Set(WORK_TYPE_VALUES);
+
+export function workTypeLabel(value: string): string {
+  return WORK_TYPES.find((w) => w.value === value)?.label ?? value;
+}
+
+export const FEATURED_WORK_STATUSES = [
+  "pending",
+  "approved",
+  "rejected",
+  "revision_requested",
+] as const;
+export type FeaturedWorkStatus = (typeof FEATURED_WORK_STATUSES)[number];
+
+export const MAX_FEATURED_TITLE_LENGTH = 250;
+export const MIN_FEATURED_ABSTRACT_LENGTH = 100;
+export const MAX_FEATURED_ABSTRACT_LENGTH = 2000;
+export const MAX_FEATURED_COAUTHORS_LENGTH = 500;
+export const MAX_FEATURED_VENUE_LENGTH = 250;
+export const MAX_FEATURED_INTEREST_TAGS = 5;
+export const MIN_FEATURED_INTEREST_TAGS = 1;
+export const MAX_FEATURED_FILE_BYTES = 25 * 1024 * 1024; // 25 MB
+export const MAX_FEATURED_ADMIN_NOTE_LENGTH = 1000;
+
+export const FEATURED_WORK_CONSENT_TEXT =
+  "I confirm this is my original work, all client/participant information is appropriately de-identified, and I grant PsychPro permission to display this submission on the platform.";

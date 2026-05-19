@@ -1,4 +1,6 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { getOrCreateAnonymousUserId } from "@/lib/anonymous-user";
+import { workTypeLabel } from "@workspace/community";
 import { useLocation } from "wouter";
 import {
   BookOpen,
@@ -584,7 +586,7 @@ export default function DashboardPage() {
 
           {/* Spotlight rail */}
           <aside className="lg:sticky lg:top-6 self-start space-y-4">
-            <SpotlightCard onCta={() => navigate("/feature-request")} />
+            <SpotlightCard onCta={(id) => navigate(id ? `/featured-work?submission=${id}` : "/featured-work")} />
             <TodayReviews topics={allTopics} />
           </aside>
         </div>
@@ -666,7 +668,32 @@ function MasteryLegend() {
   );
 }
 
-function SpotlightCard({ onCta }: { onCta: () => void }) {
+type SpotlightSubmission = {
+  id: number;
+  workType: string;
+  title: string;
+  submitter: { displayName: string; role: string | null; institution: string | null };
+};
+
+function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
+  const [spot, setSpot] = useState<SpotlightSubmission | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/featured-work/spotlight", { headers: { "X-User-Id": getOrCreateAnonymousUserId() } })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => { if (!cancelled && d) setSpot(d); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
+
+  const featuredName = spot ? spot.submitter.displayName : "Sarah K.";
+  const featuredRole = spot ? (spot.submitter.role ?? "Contributor") : "PsyD Candidate";
+  const featuredInstitution = spot ? (spot.submitter.institution ?? "") : "Clinical Neuropsychology";
+  const featuredTypeLabel = spot ? workTypeLabel(spot.workType) : "Featured Work";
+  const featuredTitle = spot
+    ? spot.title
+    : "Dissertation work: SOCIAL COGNITION IN CHILDREN WITH AUTISM SPECTRUM DISORDER: EXPLORING CORRELATES BETWEEN OBJECTIVE NEUROPSYCHOLOGICAL MEASURES AND PARENT REPORTS";
+
   return (
     <div
       className="relative overflow-hidden rounded-2xl p-6 text-white shadow-xl border border-white/10"
@@ -752,19 +779,23 @@ function SpotlightCard({ onCta }: { onCta: () => void }) {
               className="absolute inset-0 w-full h-full object-cover"
             />
           </div>
-          <p className="text-xl font-bold tracking-tight">Sarah K.</p>
-          <p
-            className="text-sm mt-1"
-            style={{ color: `${PALETTE.mist}cc` }}
-          >
-            PsyD Candidate
-          </p>
-          <p
-            className="text-sm"
-            style={{ color: `${PALETTE.mist}cc` }}
-          >
-            Clinical Neuropsychology
-          </p>
+          <p className="text-xl font-bold tracking-tight text-center px-2">{featuredName}</p>
+          {featuredRole && (
+            <p
+              className="text-sm mt-1 text-center"
+              style={{ color: `${PALETTE.mist}cc` }}
+            >
+              {featuredRole}
+            </p>
+          )}
+          {featuredInstitution && (
+            <p
+              className="text-sm text-center"
+              style={{ color: `${PALETTE.mist}cc` }}
+            >
+              {featuredInstitution}
+            </p>
+          )}
         </div>
 
         {/* Featured work — neuron image as prominent background */}
@@ -788,21 +819,19 @@ function SpotlightCard({ onCta }: { onCta: () => void }) {
               className="text-[10px] font-bold tracking-widest uppercase mb-2"
               style={{ color: PALETTE.surf, textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}
             >
-              Featured Work
+              {featuredTypeLabel}
             </p>
             <p
-              className="text-sm font-semibold text-white leading-snug mb-2"
+              className="text-sm font-semibold text-white leading-snug mb-2 line-clamp-4"
               style={{ textShadow: "0 1px 6px rgba(0,0,0,0.9)" }}
             >
-              Dissertation work: SOCIAL COGNITION IN CHILDREN WITH AUTISM
-              SPECTRUM DISORDER: EXPLORING CORRELATES BETWEEN OBJECTIVE
-              NEUROPSYCHOLOGICAL MEASURES AND PARENT REPORTS
+              {featuredTitle}
             </p>
           </div>
         </div>
 
         <button
-          onClick={onCta}
+          onClick={() => onCta(spot?.id)}
           className="w-full rounded-lg px-4 py-2.5 text-sm font-semibold flex items-center justify-center gap-1.5 transition-all backdrop-blur-sm border"
           style={{
             background: `${PALETTE.teal}33`,

@@ -19,6 +19,8 @@ import LeaderboardPage from "@/pages/leaderboard";
 import SubscriptionPage from "@/pages/subscription";
 import FeedbackPage from "@/pages/feedback";
 import FeatureRequestPage from "@/pages/feature-request";
+import FeaturedWorkPage from "@/pages/featured-work";
+import AdminFeaturedWorkPage from "@/pages/admin-featured-work";
 import ResourcesPage from "@/pages/resources";
 import StudyLabPage from "@/pages/study-lab";
 import BrainLabPage from "@/pages/brain-lab";
@@ -65,7 +67,9 @@ function AppRouter() {
             <Route path="/leaderboard" component={LeaderboardPage} />
             <Route path="/subscription" component={SubscriptionPage} />
             <Route path="/feedback" component={FeedbackPage} />
+            <Route path="/featured-work" component={FeaturedWorkPage} />
             <Route path="/feature-request" component={FeatureRequestPage} />
+            <Route path="/admin/featured-work" component={AdminFeaturedWorkPage} />
             <Route path="/resources" component={ResourcesPage} />
             <Route path="/study-lab" component={StudyLabPage} />
             <Route path="/brain-lab" component={BrainLabPage} />

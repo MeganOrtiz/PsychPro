@@ -31,7 +31,7 @@ const studyNav: NavItem[] = [
 ];
 
 const communityNav: NavItem[] = [
-  { href: "/feature-request", label: "Be Featured", icon: Star },
+  { href: "/featured-work", label: "Featured Work", icon: Star },
   { href: "/feedback", label: "Feedback", icon: MessageSquare },
 ];
 
@@ -344,6 +344,17 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   <ShieldCheck className="w-5 h-5 flex-shrink-0" />
                   <span className="text-sm font-medium">Feedback Inbox</span>
                   {location === "/admin/feedback" && <ChevronRight className="w-4 h-4 ml-auto" />}
+                </div>
+              </Link>
+              <Link
+                href="/admin/featured-work"
+                onClick={() => setSidebarOpen(false)}
+                data-testid="nav-admin-featured-work"
+              >
+                <div className={navItemClass(location === "/admin/featured-work")}>
+                  <Star className="w-5 h-5 flex-shrink-0" />
+                  <span className="text-sm font-medium">Featured Work</span>
+                  {location === "/admin/featured-work" && <ChevronRight className="w-4 h-4 ml-auto" />}
                 </div>
               </Link>
             </>

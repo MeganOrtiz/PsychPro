@@ -266,8 +266,22 @@ export {
   MAX_BIO_LENGTH,
   MAX_DISPLAY_NAME_LENGTH,
   MAX_INSTITUTION_LENGTH,
+  WORK_TYPES,
+  WORK_TYPE_VALUES,
+  WORK_TYPE_SET,
+  FEATURED_WORK_STATUSES,
+  MAX_FEATURED_TITLE_LENGTH,
+  MIN_FEATURED_ABSTRACT_LENGTH,
+  MAX_FEATURED_ABSTRACT_LENGTH,
+  MAX_FEATURED_COAUTHORS_LENGTH,
+  MAX_FEATURED_VENUE_LENGTH,
+  MAX_FEATURED_INTEREST_TAGS,
+  MIN_FEATURED_INTEREST_TAGS,
+  MAX_FEATURED_FILE_BYTES,
+  MAX_FEATURED_ADMIN_NOTE_LENGTH,
+  FEATURED_WORK_CONSENT_TEXT,
 } from "@workspace/community";
-export type { ProfileRole } from "@workspace/community";
+export type { ProfileRole, WorkType, FeaturedWorkStatus } from "@workspace/community";
 
 
 export const userProfilesTable = pgTable("user_profiles", {
@@ -300,3 +314,66 @@ export const userProfilesTable = pgTable("user_profiles", {
 });
 
 export type UserProfile = typeof userProfilesTable.$inferSelect;
+
+// =============================================================================
+// Community: Featured Work (task #66)
+// =============================================================================
+
+export const featuredWorkTable = pgTable(
+  "featured_work",
+  {
+    id: serial("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => usersTable.id, { onDelete: "cascade" }),
+    workType: text("work_type").notNull(),
+    title: text("title").notNull(),
+    abstract: text("abstract").notNull(),
+    fileUrl: text("file_url"),
+    externalLink: text("external_link"),
+    coauthors: text("coauthors"),
+    venue: text("venue"),
+    displayName: text("display_name").notNull(),
+    // JSON-encoded string[] of taxonomy tags (kept simple — matches the
+    // user_profiles interests column convention).
+    interestTags: text("interest_tags").notNull().default("[]"),
+    status: text("status").notNull().default("pending"),
+    adminNote: text("admin_note"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    reviewedAt: timestamp("reviewed_at", { withTimezone: true }),
+    approvedAt: timestamp("approved_at", { withTimezone: true }),
+  },
+  (table) => [
+    index("featured_work_status_created_idx").on(table.status, table.createdAt),
+    index("featured_work_user_idx").on(table.userId),
+  ],
+);
+
+export type FeaturedWork = typeof featuredWorkTable.$inferSelect;
+
+// In-app notification rows. Generic enough that the Connections task can
+// reuse the same table for connection-request notifications.
+export const notificationsTable = pgTable(
+  "community_notifications",
+  {
+    id: serial("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => usersTable.id, { onDelete: "cascade" }),
+    kind: text("kind").notNull(),
+    title: text("title").notNull(),
+    body: text("body"),
+    href: text("href"),
+    readAt: timestamp("read_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index("community_notifications_user_created_idx").on(table.userId, table.createdAt),
+  ],
+);
+
+export type CommunityNotification = typeof notificationsTable.$inferSelect;

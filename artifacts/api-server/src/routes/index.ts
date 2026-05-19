@@ -13,6 +13,7 @@ import mcpRouter from "./mcp";
 import oauthRouter from "./oauth";
 import storageRouter from "./storage";
 import profileRouter from "./profile";
+import featuredWorkRouter from "./featured-work";
 
 const router: IRouter = Router();
 
@@ -30,5 +31,6 @@ router.use(mcpRouter);
 router.use(oauthRouter);
 router.use(storageRouter);
 router.use(profileRouter);
+router.use(featuredWorkRouter);
 
 export default router;

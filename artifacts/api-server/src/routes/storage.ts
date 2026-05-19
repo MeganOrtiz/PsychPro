@@ -47,9 +47,21 @@ export function consumeUpload(objectPath: string): void {
   if (id) pendingUploads.delete(id);
 }
 
+// 25 MB max (bumped from 20 MB to support Featured Work PDF uploads — see
+// MAX_FEATURED_FILE_BYTES in @workspace/community). Profile photos are
+// validated separately by the profile route at a much smaller cap.
+const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
+const ALLOWED_CONTENT_TYPES = new Set([
+  "application/pdf",
+  "image/png",
+  "image/jpeg",
+  "image/jpg",
+  "image/webp",
+]);
+
 const RequestUploadUrlBody = z.object({
   name: z.string().min(1).max(255),
-  size: z.number().int().nonnegative().max(20 * 1024 * 1024),
+  size: z.number().int().nonnegative().max(MAX_UPLOAD_BYTES),
   contentType: z.string().min(1).max(255),
 });
 
@@ -63,6 +75,10 @@ router.post("/storage/uploads/request-url", async (req: Request, res: Response):
   }
   try {
     const { name, size, contentType } = parsed.data;
+    if (!ALLOWED_CONTENT_TYPES.has(contentType.toLowerCase())) {
+      res.status(400).json({ error: "Unsupported file type. Only PDF and PNG/JPEG/WebP images are allowed." });
+      return;
+    }
     const uploadURL = await objectStorageService.getObjectEntityUploadURL();
     const objectPath = objectStorageService.normalizeObjectEntityPath(uploadURL);
     const id = extractObjectId(objectPath);
