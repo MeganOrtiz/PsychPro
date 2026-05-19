@@ -1,6 +1,7 @@
 import express, { Router, type Request, type Response } from "express";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { verifyBearerToken } from "../lib/adminTokens";
+import { verifyOauthAccessToken } from "../lib/oauthStore";
 import { buildMcpServer } from "../lib/mcpServer";
 
 const router = Router();
@@ -34,9 +35,31 @@ function rateLimited(tokenId: number): boolean {
   return arr.length > RATE_LIMIT;
 }
 
+async function authenticate(req: Request): Promise<{ rateLimitKey: number } | null> {
+  const header = req.header("authorization");
+  // Try admin-issued long-lived tokens first (Claude Desktop / curl path).
+  const admin = await verifyBearerToken(header);
+  if (admin) return { rateLimitKey: admin.tokenId };
+  // Then OAuth-issued short-lived tokens (Claude.ai web custom connector).
+  if (header && header.toLowerCase().startsWith("bearer ")) {
+    const token = header.slice(7).trim();
+    const oauth = verifyOauthAccessToken(token);
+    if (oauth) return { rateLimitKey: oauth.rateLimitKey };
+  }
+  return null;
+}
+
 async function handleMcp(req: Request, res: Response): Promise<void> {
-  const verified = await verifyBearerToken(req.header("authorization"));
+  const verified = await authenticate(req);
   if (!verified) {
+    // Per MCP / OAuth 2.0 §3, advertise the protected-resource metadata via
+    // WWW-Authenticate so OAuth-aware clients (claude.ai) can kick off the
+    // dynamic-registration + PKCE flow on a 401.
+    const issuer = `${req.protocol}://${req.get("host")}`;
+    res.set(
+      "WWW-Authenticate",
+      `Bearer realm="psychpro-mcp", resource_metadata="${issuer}/.well-known/oauth-authorization-server"`,
+    );
     res.status(401).json({
       jsonrpc: "2.0",
       error: { code: -32001, message: "Unauthorized: invalid or missing bearer token" },
@@ -44,7 +67,7 @@ async function handleMcp(req: Request, res: Response): Promise<void> {
     });
     return;
   }
-  if (rateLimited(verified.tokenId)) {
+  if (rateLimited(verified.rateLimitKey)) {
     res.status(429).json({
       jsonrpc: "2.0",
       error: { code: -32002, message: "Rate limit exceeded (60 requests/min)" },

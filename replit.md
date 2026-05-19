@@ -17,6 +17,12 @@ One-time setup:
 
 Security model: the admin-token CRUD routes (`/api/admin/tokens`) require `Authorization: Bearer <MCP_ADMIN_SECRET>` — a server-side shared secret that cannot be forged from the network. The browser keeps the secret in session storage only (no localStorage, no cookies, never sent to logs). The MCP route itself (`/api/mcp`) requires its own per-Claude bearer token; tokens are 32 random bytes prefixed `ppmcp_`, stored as SHA-256 hashes, owner-bound to a sentinel row so unrelated `isAdmin=true` flips elsewhere in the codebase cannot grant MCP write access. Per-token rate limit: 60 requests/minute. Revoking a token is immediate.
 
+### Claude.ai web custom connector (OAuth 2.1 + PKCE)
+
+Claude.ai's web "Add custom connector" dialog only supports OAuth, so `/api/mcp` also accepts short-lived OAuth access tokens prefixed `ppmcp_oauth_` (1hr access, 30d refresh with rotation). Discovery is published at `https://psychprosuite.com/.well-known/oauth-authorization-server` (and an `/api/.well-known/...` alias). To pair: in Claude.ai, **Settings → Connectors → Add custom connector**, paste the MCP URL `https://psychprosuite.com/api/mcp`, choose OAuth, and complete the flow. On first connect Claude opens `/api/oauth/authorize`; you'll see a one-time password prompt for `MCP_ADMIN_SECRET`, then a one-click "Approve this MCP connector" page. The browser is remembered for 1 hour (HttpOnly cookie scoped to `/api/oauth`), so subsequent connector pairings only need the approval click.
+
+OAuth security: the `/oauth/authorize` page never issues tokens itself — only `POST /oauth/approve` does, and it requires BOTH the owner cookie AND a same-origin HMAC-signed CSRF nonce embedded in the approval form. This blocks confused-deputy attacks where a malicious page would otherwise trigger top-level navigation and harvest tokens via a lingering SameSite=Lax cookie. The owner-login form is IP-rate-limited (10 attempts / 5 min). Rotating `MCP_ADMIN_SECRET` invalidates all outstanding owner sessions because the cookie's signing key is derived from it.
+
 ## Stack
 
 - **Monorepo tool**: pnpm workspaces

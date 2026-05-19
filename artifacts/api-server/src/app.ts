@@ -2,6 +2,7 @@ import express, { type Express, type Request, type Response } from "express";
 import cors from "cors";
 import pinoHttp from "pino-http";
 import router from "./routes";
+import { handleDiscovery } from "./routes/oauth";
 import { logger } from "./lib/logger";
 import { getUncachableStripeClient } from "./stripeClient";
 import { handleStripeWebhookEvent } from "./webhookHandlers";
@@ -76,6 +77,14 @@ app.post(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Root-level OAuth discovery alias. The platform router forwards this exact
+// path to the api-server (see `paths` in artifact.toml) so we have a stable
+// `https://<host>/.well-known/oauth-authorization-server` URL even though
+// everything else lives under `/api/*`. The same handler is also mounted at
+// `/api/.well-known/...` via the oauth router for clients that probe the api
+// base.
+app.get("/.well-known/oauth-authorization-server", handleDiscovery);
 
 app.use("/api", router);
 

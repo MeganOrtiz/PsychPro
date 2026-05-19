@@ -10,6 +10,7 @@ import leaderboardRouter from "./leaderboard";
 import clientErrorsRouter from "./client-errors";
 import adminTokensRouter from "./admin-tokens";
 import mcpRouter from "./mcp";
+import oauthRouter from "./oauth";
 
 const router: IRouter = Router();
 
@@ -24,5 +25,6 @@ router.use(leaderboardRouter);
 router.use(clientErrorsRouter);
 router.use(adminTokensRouter);
 router.use(mcpRouter);
+router.use(oauthRouter);
 
 export default router;
