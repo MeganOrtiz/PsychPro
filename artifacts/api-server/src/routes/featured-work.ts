@@ -89,10 +89,11 @@ function serialize(
   const hideIdentity = !showProfile && !viewerIsOwnerOrAdmin;
   return {
     id: row.id,
-    // Only expose the raw userId to the owner/admin. For anonymous public
-    // payloads this would otherwise let any viewer correlate submissions
-    // back to the same user even after the displayName is masked.
-    userId: viewerIsOwnerOrAdmin ? row.userId : null,
+    // Expose userId only when identity is visible (owner, admin, or a
+    // non-anonymous public submission). Anonymous (toggle OFF) public
+    // payloads omit it so viewers can't correlate submissions back to
+    // the same user even after displayName is masked.
+    userId: hideIdentity ? null : row.userId,
     workType: row.workType,
     title: row.title,
     abstract: row.abstract,
