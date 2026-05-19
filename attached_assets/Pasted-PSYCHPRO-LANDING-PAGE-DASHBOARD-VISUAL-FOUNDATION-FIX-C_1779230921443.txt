@@ -1,0 +1,413 @@
+PSYCHPRO — LANDING PAGE & DASHBOARD VISUAL FOUNDATION FIX
+
+CRITICAL CONTEXT
+The current landing page and dashboard do NOT match the intended visual
+language. This prompt fixes the foundation. Send and complete this BEFORE
+running the Workshop section fix prompt — every Workshop page inherits
+from these decisions.
+
+REFERENCE TARGETS (provided as uploaded screenshots):
+  - TARGET-LANDING.png — what /landing must look like
+  - TARGET-DASHBOARD.png — what /dashboard must look like
+
+CURRENT STATE (verified by inspection):
+  - Landing page brain hero is dim, not luminous
+  - Landing page has a visible color seam below the hero (cerulean
+    clouds stop, darker greenish band takes over — looks "choppy")
+  - Dashboard background reads as flat navy, NOT the cerulean cloud
+    wallpaper that the landing page uses
+  - Dashboard greeting "Welcome back, there. Let's keep learning."
+    needs to be removed entirely
+  - Landing tagline copy is wrong ("Cut study time in half...")
+
+GOAL: The landing page and the dashboard share ONE continuous visual
+language. Same cerulean cloud sky. Same palette. Same glass treatment.
+Scrolling from the landing page hero down to the footer is seamless —
+no color seams, no hue shifts, no "shelf" where one background ends
+and another begins. Logging in and landing on the dashboard feels like
+the same world, not a different app.
+
+────────────────────────────────────────────────────────────────────────
+SECTION 1 — LANDING PAGE FIXES
+File: artifacts/neuronotes/src/pages/landing.tsx
+File: artifacts/neuronotes/src/index.css
+File: artifacts/neuronotes/src/assets/ (new asset)
+────────────────────────────────────────────────────────────────────────
+
+L-1.  REPLACE THE HERO BRAIN IMAGE WITH A BRIGHTER, MORE LUMINOUS ASSET
+
+The current image at:
+  artifacts/neuronotes/src/assets/generated_images/hero_reference_brain_v1.png
+is too dim and renders as a dark navy brain that doesn't match the
+intended cinematic look.
+
+ACTION:
+The user will provide a new hero asset (filename:
+hero_reference_brain_v2.png) that matches TARGET-LANDING.png — a
+brighter, mostly-symmetric brain with luminous cerulean energy
+radiating outward as cloud volume, neural lattice lines visible across
+the lower half of the image. The image's aspect ratio is approximately
+2.813:1 (matching the existing reference) so the existing
+--hero-bg-h clamp() math continues to work without changes.
+
+Once the user uploads hero_reference_brain_v2.png to
+src/assets/generated_images/:
+  1. Update the import in landing.tsx:
+       FROM: import heroReference from "@assets/generated_images/hero_reference_brain_v1.png";
+       TO:   import heroReference from "@assets/generated_images/hero_reference_brain_v2.png";
+  2. DO NOT delete v1 yet — keep it as a fallback. After deploy and
+     visual confirmation, v1 can be removed in a follow-up.
+
+If the user has not yet provided v2, REPORT BACK asking for the asset
+before proceeding with the rest of this section.
+
+
+L-2.  FIX THE CEREULEAN SEAM BELOW THE HERO
+
+ROOT CAUSE: In landing.tsx, the `.cerulean-tile-layer` div applies:
+  filter: brightness(0.5) saturate(1.45) hue-rotate(-6deg) contrast(1.1);
+The hue-rotate(-6deg) shifts the tile toward green-teal, which is why
+the area below the hero reads "green" and feels disconnected from the
+hero's cerulean. The brightness(0.5) also makes the tile much darker
+than the hero image's cloud color, creating a visible horizontal seam.
+
+ACTION:
+In landing.tsx, locate the inline `<style>{` block and the
+`.cerulean-tile-layer` rule. Change the filter to:
+
+  filter: brightness(0.78) saturate(1.15) hue-rotate(0deg) contrast(1.05);
+
+Rationale:
+  - brightness(0.78) instead of 0.5 — tile reads as same sky as hero,
+    not a dark band below
+  - saturate(1.15) instead of 1.45 — keep the cerulean rich without
+    over-saturating into electric-blue
+  - hue-rotate(0deg) — stop the green drift. The tile asset itself is
+    already in the correct cerulean band.
+  - contrast(1.05) — gentle, preserves cloud detail
+
+Then EXTEND the mask gradient so the handoff from hero to tile is even
+softer. Find the .cerulean-tile-layer mask-image rule and change the
+gradient stops to:
+
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0,
+    transparent calc(var(--hero-bg-h) * 0.55),
+    #000 calc(var(--hero-bg-h) + 40vh),
+    #000 60%,
+    transparent 95%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0,
+    transparent calc(var(--hero-bg-h) * 0.55),
+    #000 calc(var(--hero-bg-h) + 40vh),
+    #000 60%,
+    transparent 95%
+  );
+
+Acceptance: Scroll slowly from top of landing page to bottom. There is
+NO visible horizontal line, color band, or hue shift anywhere. The
+clouds read as one continuous sky from the top of the brain image all
+the way down through the footer.
+
+
+L-3.  FIX THE LANDING PAGE TAGLINE COPY
+
+File: artifacts/neuronotes/src/pages/landing.tsx
+Find the hero copy block (after the "LEARN. EXPAND. CONNECT." tagline,
+before the two CTA buttons).
+
+Current copy is wrong. The correct copy is:
+
+  Your all-in-one platform for mastering clinical psychology through
+  expert-led courses, practical tools, and a supportive professional
+  community.
+
+Replace whatever currently appears in that <p> element with the exact
+text above. Keep existing classNames and styles.
+
+Acceptance: Hero body copy matches the target screenshot exactly.
+
+
+L-4.  CONFIRM NAV, CTAs, FEATURE CARDS, TRUST STATS, TESTIMONIAL, EMAIL
+      SIGNUP, FOOTER STAY UNCHANGED
+
+These elements in landing.tsx are correct and must NOT be touched by
+this prompt:
+  - Top nav (PsychPro logo + HOME / COURSES / RESOURCES / COMMUNITY /
+    ABOUT + search + LOG IN)
+  - EXPLORE COURSES and JOIN COMMUNITY CTAs
+  - 4-up feature card row (Expert-Led Courses, Evidence-Based,
+    Practical Tools, Professional Community) — content stays as-is
+  - "Trusted By Psychology Professionals" stats block
+  - Testimonial card (Dr. Sarah Mitchell)
+  - "Stay Inspired" email signup
+  - Footer with social icons
+
+Verify after L-1 / L-2 / L-3 that none of these were inadvertently
+modified.
+
+
+────────────────────────────────────────────────────────────────────────
+SECTION 2 — DASHBOARD FIXES
+File: artifacts/neuronotes/src/pages/dashboard.tsx
+File: artifacts/neuronotes/src/index.css
+────────────────────────────────────────────────────────────────────────
+
+D-A.  RESTORE THE CEREULEAN CLOUD WALLPAPER ON THE DASHBOARD
+
+ROOT CAUSE: The .study-page-bg::before pseudo-element in index.css has
+TWO radial gradients layered ON TOP OF the cerulean cloud tile:
+
+  radial-gradient(ellipse 60% 55% at 50% 45%, rgba(3,21,29,0.55) 0%, ...)
+  radial-gradient(ellipse 130% 115% at 50% 50%, transparent 40%, rgba(3,21,29,0.45) 78%, rgba(3,21,29,0.80) 100%)
+
+These scrims are too heavy — they kill the cloud visibility entirely
+and the page reads as flat dark. The landing page does NOT have these
+scrims, which is why the two surfaces don't match.
+
+ACTION:
+In index.css, locate the `.study-page-bg::before, .study-page-aurora::before`
+rule. Change the background-image stack to lighten the scrims:
+
+  background-image:
+    /* Light readability wash — drops to 0.18 from 0.55 so clouds
+       remain visible while body copy stays AA-readable */
+    radial-gradient(ellipse 60% 55% at 50% 45%, rgba(3, 21, 29, 0.18) 0%, rgba(3, 21, 29, 0.10) 55%, transparent 90%),
+    /* Soft vignette — drops to 0.20 from 0.45 / 0.80 */
+    radial-gradient(ellipse 130% 115% at 50% 50%, transparent 40%, rgba(3, 21, 29, 0.15) 78%, rgba(3, 21, 29, 0.35) 100%),
+    /* Cerulean cloud tile — UNCHANGED */
+    url("./assets/cerulean-clouds-tile.png");
+
+ALSO add the SAME filter from the landing page tile layer so the
+clouds read as the same color on both surfaces. Add a new rule:
+
+  .study-page-bg::before,
+  .study-page-aurora::before {
+    /* Match landing page .cerulean-tile-layer filter exactly */
+    filter: brightness(0.78) saturate(1.15) hue-rotate(0deg) contrast(1.05);
+  }
+
+(If filter on a pseudo-element with multiple background layers doesn't
+behave correctly across browsers, instead split this into a wrapper
+div approach: add a real div behind the page content with the tile +
+filter, and remove the tile from the pseudo-element. Report back if
+you hit this issue.)
+
+Acceptance: Open /dashboard. Background shows the same cerulean cloud
+sky as the landing page, with the same brightness and hue. NOT flat
+navy. NOT dark green. The clouds are clearly visible behind all glass
+cards.
+
+
+D-B.  REMOVE THE "Welcome back" / "Hello, there" GREETING ENTIRELY
+
+File: artifacts/neuronotes/src/pages/dashboard.tsx
+
+The greeting line and its subtitle ("Welcome back, there. Let's keep
+learning." or "Hello, there 👋 / Let's keep learning and growing your
+mind.") must be REMOVED. The user wants the top of the dashboard to
+feel sleek and editorial — PSYCHPRO wordmark + tagline only, then the
+content starts.
+
+ACTION:
+1. Locate the greeting block in dashboard.tsx. It likely looks like:
+
+   <div className="mb-6">
+     <h1 className="text-3xl font-bold ...">
+       {greeting}, {firstName} <span>👋</span>
+     </h1>
+     <p className="text-sm ...">Let's keep ...</p>
+   </div>
+
+2. DELETE the entire block.
+
+3. ALSO delete the `firstName`, `greeting`, and related variables/imports
+   that are now unused. (Keep the data fetch — prompt #4 in the queue
+   will reuse them — but remove the JSX and any dead local consts.)
+
+   If `greeting` is computed via a time-of-day helper, delete that
+   helper if it's only used here.
+
+4. The PSYCHPRO wordmark + "ADVANCE YOUR MIND. ELEVATE CARE." tagline
+   block at the top of the dashboard stays UNCHANGED. It now sits
+   directly above the "Continue Your Journey" / "Begin Your Journey"
+   card with no greeting between them.
+
+5. Adjust top spacing if needed: the gap between the tagline and the
+   first card should feel intentional — roughly mt-8 to mt-10 on the
+   first card's container, or pb-6 on the wordmark block.
+
+Acceptance: /dashboard top reads (from top down):
+  PSYCHPRO
+  ADVANCE YOUR MIND. ELEVATE CARE.
+  [spacing]
+  [Continue Your Journey card]
+
+No "Hello", "Welcome", "Hi", or any greeting variant anywhere on the
+dashboard.
+
+
+D-C.  POLISH THE WORDMARK + TAGLINE BLOCK FOR EDITORIAL FEEL
+
+File: artifacts/neuronotes/src/pages/dashboard.tsx
+
+The PSYCHPRO wordmark + tagline currently exists but needs to feel
+more aesthetic, professional, and sleek to anchor the page now that
+the greeting is gone.
+
+ACTION:
+1. Verify the wordmark uses the same font, tracking, and color as the
+   landing page hero wordmark:
+   - fontSize: clamp(36px, 5vw, 64px)  (smaller than landing's 88px
+     since this is in-app, not hero)
+   - letterSpacing: 0.42em
+   - color: STUDY_PALETTE.cloud (#F4FBFF)
+   - textShadow: 0 0 24px rgba(118, 228, 247, 0.30)
+   - fontWeight: 300 (light)
+   - fontFamily: "Outfit", "Inter", system-ui, sans-serif
+
+2. Tagline "ADVANCE YOUR MIND. ELEVATE CARE." should use:
+   - fontSize: clamp(10px, 1vw, 13px)
+   - letterSpacing: 0.32em
+   - color: STUDY_PALETTE.mist (#A7F3FF)
+   - fontWeight: 300
+   - text-transform: uppercase (if not already)
+   - mt-2 from wordmark
+
+3. The whole block should be centered horizontally and have mt-6 to
+   mt-8 from the top of the main content area (the sidebar is fixed,
+   so this margin applies to the main column only).
+
+4. The small brain icon currently above the wordmark (per the target
+   screenshot) stays. Use the same brain icon from the landing page
+   header at small size (~32px), positioned centered above the
+   wordmark with mb-2.
+
+Acceptance: The top of the dashboard reads as a sleek editorial banner,
+matching the target screenshot's wordmark treatment.
+
+
+D-D.  CONFIRM ALL DASHBOARD CARDS USE THE SAME GLASS LANGUAGE
+
+File: artifacts/neuronotes/src/pages/dashboard.tsx
+
+Every card on the dashboard (Continue Your Journey, Recommended for
+You, Your Streak, Leaderboard, PsychPro Spotlight, Featured Work)
+must use the StudySurface component with tone="light" — which
+applies the canonical glass recipe defined in index.css under
+`.study-page-bg .bg-card`:
+
+  background-image: linear-gradient(145deg, rgba(10,45,61,0.72), rgba(6,32,44,0.82));
+  border: 1px solid rgba(118, 228, 247, 0.22);
+  border-radius: 22px;
+  backdrop-filter: blur(22px) saturate(135%);
+  box-shadow: [layered cyan glow + dark drop shadow stack]
+
+ACTION:
+Audit each card on dashboard.tsx. For any card NOT using StudySurface
+(e.g., raw <div className="bg-card border ...">), wrap it in
+StudySurface tone="light" innerClassName="p-5" (or appropriate padding).
+
+DO NOT change any card's internal content or layout. Only normalize
+the surface.
+
+Acceptance: Every card on the dashboard has identical glass treatment
+— same gradient, same border, same blur, same glow. No card stands
+out as flat or differently-styled.
+
+
+D-E.  REMOVE THE PSYCHPRO LOGO+TEXT IN THE TOP-LEFT OF THE SIDEBAR
+      IF DUPLICATIVE
+
+File: artifacts/neuronotes/src/components/layout/app-layout.tsx
+
+The target screenshot shows "PsychPro" in the sidebar top-left. The
+current code likely has this. Keep it — but ensure it does NOT compete
+visually with the centered PSYCHPRO wordmark in the main content
+area.
+
+ACTION:
+Verify the sidebar PsychPro lockup is:
+  - Small (icon ~24px, text-base or text-sm)
+  - Uses STUDY_PALETTE.mist for text color
+  - Has no glow effect (subtle, secondary to the main wordmark)
+If the sidebar lockup is currently too prominent, scale it down.
+
+Acceptance: Sidebar PsychPro is present but subdued; the main content
+wordmark is the dominant brand element on the page.
+
+
+────────────────────────────────────────────────────────────────────────
+SECTION 3 — CROSS-SURFACE CONSISTENCY VERIFICATION
+────────────────────────────────────────────────────────────────────────
+
+C-1.  WALK THE TWO SURFACES SIDE BY SIDE
+
+After completing Sections 1 and 2, perform this manual check:
+
+1. Open /landing in one browser tab. Open /dashboard in another.
+2. Compare the background color at the bottom of the landing page
+   (just above the footer) with the background of the dashboard.
+   They should be VISUALLY IDENTICAL — same hue, same brightness,
+   same cloud density.
+3. Compare any glass card on the landing page (e.g., a feature card
+   like "Expert-Led Courses") with any glass card on the dashboard
+   (e.g., "Continue Your Journey"). They should have IDENTICAL glass
+   treatment.
+4. Compare the wordmark on the landing page hero with the wordmark
+   on the dashboard. Same font, same tracking, same color, same
+   glow — just different size.
+
+If anything reads as different colors/textures across the two surfaces,
+report back with screenshots.
+
+
+C-2.  CONFIRM STUDY_PALETTE IS THE SINGLE SOURCE OF TRUTH
+
+File: artifacts/neuronotes/src/lib/study-theme.ts
+
+This file defines STUDY_PALETTE. NO other file in the project should
+define its own palette object or hardcode hex codes that should come
+from this palette.
+
+ACTION:
+1. Search the codebase for hex code patterns: #061F2B, #083240,
+   #0A2D3D, #2A7387, #5EB0C8, #76E4F7, #A7F3FF, #F4FBFF.
+2. For any occurrence OUTSIDE of study-theme.ts and index.css,
+   replace with the corresponding STUDY_PALETTE.* reference.
+3. Search for any local PALETTE = { ... } redefinition. If found,
+   delete it and import STUDY_PALETTE from study-theme.ts instead.
+
+Acceptance: STUDY_PALETTE is referenced from every page; no
+hardcoded brand hex codes anywhere outside the palette file and
+the index.css tokens.
+
+
+────────────────────────────────────────────────────────────────────────
+FINAL CHECKLIST
+────────────────────────────────────────────────────────────────────────
+
+[ ] Landing page: new brighter brain hero image (v2) is in place
+[ ] Landing page: no visible color seam below the hero
+[ ] Landing page: clouds read as continuous cerulean from top to footer
+[ ] Landing page: hero copy matches target ("Your all-in-one platform...")
+[ ] Dashboard: background shows the cerulean cloud wallpaper, NOT
+    flat navy
+[ ] Dashboard: no greeting (no "Hello", no "Welcome back")
+[ ] Dashboard: PSYCHPRO wordmark + tagline anchor the top
+[ ] Dashboard: every card uses the same glass treatment
+[ ] Side-by-side: landing page bottom and dashboard background look
+    identical
+[ ] Side-by-side: a feature card on landing and a card on dashboard
+    look identical
+[ ] No console errors on either page
+[ ] No off-palette colors (greens, royal blues, purples) anywhere
+
+REPORT BACK:
+1. Status of each item L-1 through C-2 (done / blocked / needs asset)
+2. Screenshots of /landing and /dashboard after changes
+3. Any places where the filter approach in D-A didn't work and
+   needed the wrapper-div fallback
