@@ -26,6 +26,7 @@ import { requireUserId, getUserId } from "../lib/userId";
 import { parseIntParam } from "../lib/params";
 import { ObjectStorageService } from "../lib/objectStorage";
 import { isUploadOwnedBy, consumeUpload } from "./storage";
+import { sendEmail } from "../lib/email";
 
 const router: IRouter = Router();
 const objectStorageService = new ObjectStorageService();
@@ -587,7 +588,7 @@ const STATUS_NOTIFICATION: Record<FeaturedWorkStatus, { title: string; body: (no
   },
   approved: {
     title: "Your Featured Work was approved",
-    body: () => "It's now live in the Community archive and eligible for the dashboard spotlight.",
+    body: () => "It's now live in the Studio archive and eligible for the dashboard spotlight.",
   },
   rejected: {
     title: "Your Featured Work submission was not accepted",
@@ -680,9 +681,36 @@ router.patch("/admin/featured-work/:id", async (req: Request, res: Response): Pr
       href: `/featured-work?submission=${existing.id}`,
     });
 
-    // TODO(connections-#67): when the email sender ships, also fire an email
-    // here using the submitter's preferred contact email. For now in-app
-    // notifications are the only channel.
+    // Email notification — uses the same email helper as Connections.
+    // In dev with no RESEND_API_KEY this logs the payload to the api-server
+    // workflow console; in prod with EMAIL_ENABLED + RESEND_API_KEY it sends
+    // via Resend. Failures are swallowed so a transient email outage never
+    // blocks the moderation decision (in-app notification still succeeds).
+    try {
+      const [submitter] = await db
+        .select({ email: usersTable.email })
+        .from(usersTable)
+        .where(eq(usersTable.id, existing.userId));
+      if (submitter?.email) {
+        const noteLine = adminNote ? `\n\nReviewer note: ${adminNote}\n` : "";
+        const text =
+          `Hi ${updated.displayName},\n\n${tpl.title}.\n\n` +
+          `Submission: ${updated.title}${noteLine}\n` +
+          `View it here: ${process.env.PUBLIC_APP_URL ?? ""}/featured-work?submission=${updated.id}\n\n` +
+          `— PsychPro`;
+        await sendEmail({
+          to: submitter.email,
+          subject: `PsychPro · ${tpl.title}`,
+          text,
+          html: `<p>Hi ${updated.displayName},</p><p><strong>${tpl.title}.</strong></p>` +
+            `<p>Submission: <em>${updated.title}</em></p>` +
+            (adminNote ? `<p>Reviewer note: ${adminNote}</p>` : "") +
+            `<p><a href="${process.env.PUBLIC_APP_URL ?? ""}/featured-work?submission=${updated.id}">View it on PsychPro</a></p>`,
+        });
+      }
+    } catch (mailErr) {
+      req.log.warn({ err: mailErr, id: updated.id }, "Featured Work status email failed (non-fatal)");
+    }
 
     const profileMap = await loadSubmitterProfiles([updated.userId]);
     res.json(serialize(updated, profileMap.get(updated.userId) ?? null, true));

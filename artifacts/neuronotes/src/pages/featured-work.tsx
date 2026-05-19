@@ -106,7 +106,7 @@ export default function FeaturedWorkPage() {
               <h1 className="text-2xl md:text-3xl font-bold text-foreground">Featured Work</h1>
             </div>
             <p className="text-sm text-muted-foreground max-w-xl">
-              Share your research, dissertation, posters, and presentations with the PsychPro community.
+              Share your work, get featured, and discover what others in the PsychPro community are creating.
               Approved submissions appear in the archive below and are eligible for the dashboard spotlight.
             </p>
           </div>

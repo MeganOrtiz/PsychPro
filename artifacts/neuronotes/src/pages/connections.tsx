@@ -170,8 +170,8 @@ export default function ConnectionsPage() {
             <h1 className="text-2xl md:text-3xl font-bold text-foreground">Connections</h1>
           </div>
           <p className="text-sm text-muted-foreground">
-            People who share your clinical and research interests. Introductions are double opt-in
-            and happen by email — your address is never shown in the app.
+            Find collaborators in your areas of interest and stay in touch with the PsychPro team.
+            Introductions are double opt-in and happen by email — your address is never shown in the app.
           </p>
         </div>
 

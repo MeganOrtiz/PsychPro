@@ -21,17 +21,28 @@ function navItemClass(isActive: boolean) {
   return cn(NAV_ITEM_BASE, isActive ? NAV_ITEM_ACTIVE : NAV_ITEM_IDLE);
 }
 
-const studyNav: NavItem[] = [
+// Sidebar IA per task #67 brief: WORKSHOP / LAB / STUDIO / CONNECT / ADMIN.
+// "Study Lab" and "Brain Lab" are old names we must not surface in the UI;
+// the underlying routes are kept but relabeled here. Page internals for the
+// Workshop and Lab sections are intentionally left untouched.
+const workshopNav: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/topics", label: "Topics", icon: BookOpen },
-  { href: "/study-lab", label: "Study Lab", icon: Beaker },
-  { href: "/brain-lab", label: "Brain Lab", icon: Brain },
   { href: "/progress", label: "Progress", icon: Trophy },
   { href: "/resources", label: "Resources", icon: Library },
 ];
 
-const communityNav: NavItem[] = [
+const labNav: NavItem[] = [
+  { href: "/study-lab", label: "Sessions", icon: Beaker },
+  { href: "/brain-lab", label: "Brain Trainers", icon: Brain },
+  { href: "/reflections", label: "Reflections", icon: Lightbulb },
+];
+
+const studioNav: NavItem[] = [
   { href: "/featured-work", label: "Featured Work", icon: Star },
+];
+
+const connectNav: NavItem[] = [
   { href: "/connections", label: "Connections", icon: Users },
   { href: "/feedback", label: "Feedback", icon: MessageSquare },
 ];
@@ -192,9 +203,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
         <nav className="relative flex-1 p-3 space-y-1 overflow-y-auto">
           <div className="px-3 pt-1 pb-1">
-            <p className="text-xs font-semibold text-white/45 uppercase tracking-wider">Study</p>
+            <p className="text-xs font-semibold text-white/45 uppercase tracking-wider">Workshop</p>
           </div>
-          {studyNav.map((item) => {
+          {workshopNav.map((item) => {
             const isActive = location === item.href || location.startsWith(item.href + "/");
             return (
               <Link
@@ -213,8 +224,25 @@ export default function AppLayout({ children }: AppLayoutProps) {
           })}
 
           <div className="px-3 pt-3 pb-1">
-            <p className="text-xs font-semibold text-white/45 uppercase tracking-wider">Toolkit</p>
+            <p className="text-xs font-semibold text-white/45 uppercase tracking-wider">Lab</p>
           </div>
+          {labNav.map((item) => {
+            const isActive = location === item.href || location.startsWith(item.href + "/");
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setSidebarOpen(false)}
+                data-testid={`nav-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
+              >
+                <div className={navItemClass(isActive)}>
+                  <item.icon className="w-5 h-5 flex-shrink-0" />
+                  <span className="text-sm font-medium">{item.label}</span>
+                  {isActive && <ChevronRight className="w-4 h-4 ml-auto" />}
+                </div>
+              </Link>
+            );
+          })}
           <Link
             href="/my-decks"
             onClick={() => setSidebarOpen(false)}
@@ -273,22 +301,32 @@ export default function AppLayout({ children }: AppLayoutProps) {
               )}
             </div>
           </Link>
-          <Link
-            href="/reflections"
-            onClick={() => setSidebarOpen(false)}
-            data-testid="nav-reflections"
-          >
-            <div className={navItemClass(location === "/reflections")}>
-              <Lightbulb className="w-5 h-5 flex-shrink-0" />
-              <span className="text-sm font-medium">Reflections</span>
-              {location === "/reflections" && <ChevronRight className="w-4 h-4 ml-auto" />}
-            </div>
-          </Link>
 
           <div className="px-3 pt-3 pb-1">
-            <p className="text-xs font-semibold text-white/45 uppercase tracking-wider">Community</p>
+            <p className="text-xs font-semibold text-white/45 uppercase tracking-wider">Studio</p>
           </div>
-          {communityNav.map((item) => {
+          {studioNav.map((item) => {
+            const isActive = location === item.href || location.startsWith(item.href + "/");
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setSidebarOpen(false)}
+                data-testid={`nav-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
+              >
+                <div className={navItemClass(isActive)}>
+                  <item.icon className="w-5 h-5 flex-shrink-0" />
+                  <span className="text-sm font-medium">{item.label}</span>
+                  {isActive && <ChevronRight className="w-4 h-4 ml-auto" />}
+                </div>
+              </Link>
+            );
+          })}
+
+          <div className="px-3 pt-3 pb-1">
+            <p className="text-xs font-semibold text-white/45 uppercase tracking-wider">Connect</p>
+          </div>
+          {connectNav.map((item) => {
             const isActive = location === item.href || location.startsWith(item.href + "/");
             return (
               <Link
@@ -356,6 +394,17 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   <Star className="w-5 h-5 flex-shrink-0" />
                   <span className="text-sm font-medium">Featured Work</span>
                   {location === "/admin/featured-work" && <ChevronRight className="w-4 h-4 ml-auto" />}
+                </div>
+              </Link>
+              <Link
+                href="/admin/connections"
+                onClick={() => setSidebarOpen(false)}
+                data-testid="nav-admin-connections"
+              >
+                <div className={navItemClass(location === "/admin/connections")}>
+                  <Users className="w-5 h-5 flex-shrink-0" />
+                  <span className="text-sm font-medium">Connection Requests</span>
+                  {location === "/admin/connections" && <ChevronRight className="w-4 h-4 ml-auto" />}
                 </div>
               </Link>
             </>

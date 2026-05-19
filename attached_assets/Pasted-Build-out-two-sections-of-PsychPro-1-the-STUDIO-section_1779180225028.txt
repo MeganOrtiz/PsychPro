@@ -1,0 +1,134 @@
+Build out two sections of PsychPro: (1) the STUDIO section with a Featured Work submission and display system covering research, dissertations, presentations, and conference work; and (2) the CONNECT section with an interest-based user matching system using double opt-in email introductions. Match the existing dark/glassmorphism aesthetic. Do not modify the Workshop or Lab sections of the app.
+Important context on naming: PsychPro's sidebar uses these section labels: WORKSHOP, LAB, STUDIO, CONNECT, ADMIN. Use this terminology throughout. The user-generated artifact in Lab is called a "tool." Do not use the words "Community," "Toolkit," "Study Lab," or "Brain Lab" anywhere — those are old names.
+Part 1 — User profile additions
+Every logged-in user needs a profile to support both features. Add a profile section accessible from the user menu (bottom-left, where "Guest" currently displays) with the following fields:
+
+Display name (required)
+Profile photo (optional, with default avatar of initials)
+Current role (dropdown: Graduate Student, Doctoral Candidate, Postdoc, Early Career, Licensed Clinician, Faculty, Other)
+Institution / affiliation (optional, free text)
+Brief bio (optional, max 300 chars)
+Clinical / research interests (multi-select from a controlled taxonomy — see below)
+Connect preferences:
+
+Toggle: "Allow PsychPro to suggest connections with users who share my interests" (default OFF)
+Toggle: "Open to networking introductions via email" (default OFF — must be ON for matching to work)
+
+
+Public profile toggle: "Show my profile on featured work submissions" (default ON)
+
+Clinical / research interests taxonomy — implement as a tagged multi-select with these categories and tags. Users can pick up to 8 tags.
+
+Neuropsychology: Pediatric Neuropsych, Adult Neuropsych, Geriatric Neuropsych, Forensic Neuropsych, Rehabilitation, Sports Concussion, Cross-Cultural Neuropsych
+Neurodevelopmental: ASD, ADHD, Intellectual Disability, Learning Disorders, Female Autism Phenotype
+Neurocognitive: Alzheimer's & Dementias, TBI, Stroke, Epilepsy, Movement Disorders, MS
+Psychopathology: Mood Disorders, Anxiety Disorders, Trauma & PTSD, Psychotic Disorders, Personality Disorders, Eating Disorders, Substance Use
+Assessment: Cognitive Assessment, Personality Assessment, Performance Validity, Rating Scales, Test Development
+Intervention: CBT, DBT, ACT, EMDR, Psychodynamic, Family Systems, ABA, Behavioral Interventions
+Research methods: Quantitative, Qualitative, Mixed Methods, Psychometrics, Meta-Analysis, Single-Case Design
+Populations: Pediatric, Adolescent, Adult, Geriatric, LGBTQ+, BIPOC, Veterans, Forensic Populations
+
+Store profile fields in a user_profiles table linked to user_id.
+Part 2 — Featured Work in STUDIO section
+Add a "Featured Work" tab as a sub-item under the STUDIO section header in the sidebar. (STUDIO is currently empty — this populates it.)
+Submission form with these fields:
+
+Work type (required, single-select): Research Paper, Dissertation, Poster Presentation, Conference Presentation, Other Scholarly Work
+Title (required, max 250 chars)
+Abstract / summary (required, 100–2000 chars, plain text)
+File upload (optional, accept: PDF, max 25MB) — for posters, papers, or slide decks
+External link (optional, validated URL) — for published papers, conference programs, OSF projects, etc.
+Co-authors (optional, free text)
+Venue / publication (optional, free text — e.g., "INS 2026", "Journal of Clinical Neuropsychology", "Adler University Dissertation")
+Interest tags (multi-select from the taxonomy above, up to 5 — required) so we can categorize and recommend
+Display name on submission — defaults to profile display name with override option
+Consent checkbox (required): "I confirm this is my original work, all client/participant information is appropriately de-identified, and I grant PsychPro permission to display this submission on the platform."
+
+Submission status flow:
+
+All submissions enter a pending state and do NOT appear publicly until reviewed
+Admin sees them in a "Manage Featured Work" tab under the ADMIN section
+Admin actions: Approve, Reject (with optional reason), Request Revision (with note)
+On approval: submission becomes visible on the Featured Work archive AND becomes eligible for dashboard rotation
+Email notifications to submitter on each status change
+
+Display — two surfaces:
+A) Dashboard preview card (lives in Workshop → Dashboard)
+
+Add a "Featured from PsychPro Studio" card to the main dashboard
+Shows ONE approved submission at a time, rotating (e.g., new featured item every 24 hours, weighted toward recent submissions)
+Card displays: work type badge, title, submitter's display name + role, abstract preview (first ~150 chars), and a "View" button
+Clicking the card opens the full submission in an overlay/modal, OR routes to the Featured Work archive in Studio
+Card uses the existing glassmorphism style and fits visually with surrounding dashboard cards
+
+B) Full archive in Studio → Featured Work tab
+
+Grid/feed view of all approved submissions, newest first
+Filter bar at top: filter by work type (all/research/dissertation/poster/presentation/other) and by interest tag
+Search bar
+Each card shows: work type badge, title, submitter name + role + institution, abstract preview, tags, posted date
+Click to open full detail view with full abstract, file download (if attached), external link (if provided), submitter profile link
+Empty state: "Be the first to share your work — submit research, a dissertation, a poster, or a presentation for a chance to be featured."
+Prominent "Submit Your Work" CTA at the top of the tab
+
+Database schema for featured_work:
+id, user_id, work_type, title, abstract, file_url (nullable), external_link (nullable),
+coauthors (nullable), venue (nullable), display_name, interest_tags (array),
+status (pending/approved/rejected/revision_requested), admin_note (nullable),
+created_at, reviewed_at (nullable), approved_at (nullable)
+Part 3 — Connections feature in CONNECT section
+Add a "Connections" tab as a sub-item under the CONNECT section header in the sidebar. (CONNECT also contains the existing Feedback tab.)
+Connections page layout:
+
+Top section: "People you might want to connect with"
+Card grid of suggested users based on overlapping interest tags
+Each card shows: profile photo/initials, display name, role, institution (if filled in), top 3 shared interest tags (highlighted as "shared with you"), bio preview
+Each card has one CTA button: "Request introduction"
+
+Matching logic:
+
+Only show users who have BOTH "Allow connection suggestions" AND "Open to networking introductions" toggles ON
+Sort suggestions by number of overlapping interest tags (descending), then by recency of profile activity
+Exclude users the current user has already connected with or declined
+Show max 12 suggestions per page with "Show more" pagination
+
+Double opt-in flow:
+
+User A clicks "Request introduction" on User B's card
+System creates a connection_request record (status: pending)
+User A sees a confirmation: "We've sent your interest to [User B]. If they're also interested, we'll connect you both via email."
+User B receives an in-app notification AND an email: "A fellow PsychPro user is interested in connecting based on your shared interest in [top 3 shared tags]. View their profile and decide if you'd like to connect."
+User B can view A's profile and click Accept or Decline
+On Accept: system sends a single intro email to BOTH users, CC'd, containing each user's display name, role, institution, bio, and shared interests. Subject line: "PsychPro intro: [User A name] ↔ [User B name]". Email body explains they both opted in based on shared interests and lists the shared tags. After this, PsychPro is out of the loop — conversation moves to email.
+On Decline: request is silently closed; User A is not notified that they were declined (just doesn't hear back). User B is not shown User A as a suggestion again.
+
+Important note on email infrastructure: the user has NOT yet set up Resend or another email service. For now, implement all email-sending logic but route emails to the server console / logs instead of actually sending. Add a clearly marked TODO: connect Resend or another email service comment at each send point. When email is wired up later, only that integration layer should need to change.
+Privacy and abuse safeguards:
+
+Email addresses are NEVER shown in the app or in the suggestion UI — they're only revealed in the intro email after mutual accept
+Users can disable connection suggestions at any time from their profile
+Add a "Block this user" option on the request notification (in case of abuse) — blocked users never appear as suggestions for the blocker again
+Admin sees a "Connection Requests" tab in the ADMIN section showing aggregate stats (sent, accepted, declined, blocked) — but admin should NOT see message content or individual user identities in this report unless investigating abuse
+Rate limit: each user can send max 5 outgoing connection requests per week to prevent spam
+
+Database schema for connection_requests:
+id, requester_id, recipient_id, status (pending/accepted/declined/blocked),
+shared_tags (array, captured at request time),
+created_at, responded_at (nullable), intro_email_sent_at (nullable)
+Part 4 — Section descriptions
+Above the tabs in each section, add a one-sentence header. Style as muted secondary text.
+
+STUDIO: "Share your work, get featured, and discover what others in the PsychPro community are creating."
+CONNECT: "Find collaborators in your areas of interest and stay in touch with the PsychPro team."
+
+Testing
+After implementation, manually test:
+
+Create profile, set interests, enable both connection toggles
+Submit a piece of featured work, confirm pending state, approve as admin, confirm it appears in the Studio archive and rotates onto the dashboard
+Create a second test user with overlapping interests, confirm they appear as a suggestion on the Connections page
+Send a connection request from User A → User B, confirm User B gets in-app notification and console log shows the email payload
+Accept on User B's side, confirm intro email payload is logged to console with both users CC'd
+Verify a user with connection toggles OFF never appears in suggestions and cannot receive requests
+Verify abstract validation (100–2000 chars), file size limits work correctly
+Verify admin cannot see message content or individual user identities in the Connection Requests admin report
