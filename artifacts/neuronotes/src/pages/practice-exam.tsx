@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { ChevronLeft, Clock, Timer, BookOpen, FileText, GraduationCap, Beaker, Lightbulb, Brain, ArrowRight } from "lucide-react";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { useGetPracticeExamByTopic, useGetTopic, useUpdateTopicProgress, useIncrementUserUsage, useRecordExamAttempt } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -205,9 +206,11 @@ export default function PracticeExamPage({ params }: Props) {
     return (
       <div className="min-h-full study-page-bg" data-testid="exam-setup">
         <div className="max-w-lg mx-auto p-4 md:p-6 lg:p-8">
-        <button onClick={() => navigate(`/topics/${topicId}`)} className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6">
-          <ChevronLeft className="w-4 h-4" /> Back
-        </button>
+        <Breadcrumbs items={[
+          { label: "Topics", href: "/topics" },
+          { label: topic?.name ?? "Topic", href: `/topics/${topicId}` },
+          { label: "Practice Exam" },
+        ]} />
         <div className="flex items-center gap-3 mb-2">
           <div
             className="w-10 h-10 rounded-lg flex items-center justify-center border"

@@ -168,6 +168,20 @@ router.get("/dashboard/summary", async (req: Request, res: Response): Promise<vo
     ];
     const currentStreak = computeStreakFromDates(allDates);
 
+    // Build weeklyActivity: Sunday-anchored current week, one entry per day,
+    // marked active if any progress/quiz/exam activity was recorded that day.
+    const today = startOfDay(new Date());
+    const daysActive = new Set(
+      allDates.filter((d): d is Date => d != null).map((d) => dayKey(d)),
+    );
+    const weekStart = startOfDay(new Date(today));
+    weekStart.setDate(today.getDate() - today.getDay()); // Sunday
+    const weeklyActivity = Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(weekStart);
+      d.setDate(weekStart.getDate() + i);
+      return { date: d.toISOString(), active: daysActive.has(dayKey(d)) };
+    });
+
     const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
     const FREE_LIMIT = 10;
 
@@ -181,6 +195,7 @@ router.get("/dashboard/summary", async (req: Request, res: Response): Promise<vo
       averageScore: avgScore,
       recentTopics,
       weakAreas,
+      weeklyActivity,
       subscriptionStatus: user?.subscriptionStatus ?? "free",
       usageCount: user?.usageCount ?? 0,
       freeLimit: FREE_LIMIT,

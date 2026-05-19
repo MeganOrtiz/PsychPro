@@ -12,6 +12,7 @@ export * from "./clientErrorsRateLimitCleanupConfig";
 export * from "./clientErrorsRateLimitConfig";
 export * from "./createCheckoutSessionBody";
 export * from "./dashboardSummary";
+export * from "./dashboardSummaryWeeklyActivityItem";
 export * from "./flashcard";
 export * from "./flashcardDifficulty";
 export * from "./healthConfig";

@@ -1,9 +1,10 @@
 import { Link, useLocation } from "wouter";
-import { Layers, BookOpen, FileText, GraduationCap, ChevronLeft, Beaker, ArrowRight } from "lucide-react";
+import { Layers, BookOpen, FileText, GraduationCap, Beaker, ArrowRight } from "lucide-react";
 import { useGetTopic } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import SpacedRepetitionScheduler from "@/components/learning/spaced-repetition";
 import CategoryHero from "@/components/learning/category-hero";
+import { Breadcrumbs, type BreadcrumbItem } from "@/components/breadcrumbs";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 
 interface Props {
@@ -59,17 +60,23 @@ export default function TopicDetailPage({ params }: Props) {
     },
   ];
 
+  const crumbs: BreadcrumbItem[] = [
+    { label: "Topics", href: "/topics" },
+    ...(topic?.category
+      ? [
+          {
+            label: topic.category,
+            href: `/topics?category=${encodeURIComponent(topic.category)}`,
+          },
+        ]
+      : []),
+    { label: topic?.name ?? "…" },
+  ];
+
   return (
     <div className="min-h-full study-page-bg" data-testid="topic-detail-page">
-      <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
-        <button
-          onClick={() => navigate("/topics")}
-          className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-4 transition-colors"
-          data-testid="button-back"
-        >
-          <ChevronLeft className="w-4 h-4" />
-          Back to Topics
-        </button>
+      <div className="max-w-4xl mx-auto p-4 md:p-6 lg:p-8">
+        <Breadcrumbs items={crumbs} />
 
         {isLoading ? (
           <div>
@@ -95,7 +102,7 @@ export default function TopicDetailPage({ params }: Props) {
               <GraduationCap className="w-4 h-4" style={{ color: P.tealDeep }} />
               <h2 className="font-semibold text-foreground">Study Modes</h2>
             </div>
-            <div className="grid grid-cols-1 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {studyModes.map(mode => (
                 <button
                   key={mode.title}
@@ -181,6 +188,8 @@ export default function TopicDetailPage({ params }: Props) {
                 <Beaker className="w-4 h-4" style={{ color: P.tealDeep }} />
                 <h2 className="font-semibold text-foreground">Retention Plan</h2>
               </div>
+              {/* Routes /study-lab in the Lab section, which is being relabeled
+                  "Rounds" per the sidebar restructure brief. Route stays the same. */}
               <Link href="/study-lab">
                 <span className="text-xs hover:underline cursor-pointer" style={{ color: P.tealDeep }}>
                   Why this works →

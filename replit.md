@@ -85,7 +85,7 @@ A mobile-responsive neuroscience/neuropsychology study app.
 - Landing page with CTAs that go straight to the dashboard (no sign-up gate)
 - 4-step onboarding (role → goal → degree → referral)
 - Dashboard with progress summary
-- Topics browser (15 consolidated topics) with search/filter
+- Topics browser (39 topics) with search/filter
 - Flashcards with flip animation (click to reveal)
 - **Study Lab** (`/study-lab`) — four evidence-based learning components:
   - `BrainDump` (active recall, amber)
@@ -114,22 +114,16 @@ A mobile-responsive neuroscience/neuropsychology study app.
   - `isAdmin` flag on users; admin-only feedback inbox
   - Scholar subscription status gates custom decks; Pro features work for scholar too
 
-### 15 Topics (Consolidated)
-1. Neuropsychology Overview
-2. Cell Biology & Neuron Anatomy
-3. Neurotransmitters & Synaptic Transmission
-4. Sensory Pathways
-5. **Sensory Systems** (Vision, Hearing, Touch, Smell, Taste, Vestibular, Motor Control — combined)
-6. Limbic System & Motivation
-7. Sleep & Circadian Rhythms
-8. Endocrine System & Reproduction
-9. Psychopharmacology
-10. **Psychological Disorders** (Psychopathology/Psychosis, Schizophrenia Spectrum/Bipolar/Depressive, Dissociative — combined)
-11. Personality Disorders
-12. ADHD & Medications
-13. Language Processing & Aphasia
-14. Apraxia & Agnosia
-15. **Neurocognitive Disorders** (Huntington's, Parkinson's, Lewy Body, TBI, HIV, Delirium, Cortical Pain — combined)
+### Topic Catalogue
+39 neuroscience/neuropsychology topics across the major categories
+(see `topicsTable` seed for the authoritative list). The landing page
+TRUST_STATS and TOPIC_CATEGORIES reflect the same count.
+
+Content totals (matches DB seed):
+- 39 topics
+- 1,612 flashcards
+- 935 quiz questions
+- 738 practice exam questions
 
 ### Production Publishing
 See `PUBLISHING.md` at the repo root for the full checklist (production secrets,
@@ -143,12 +137,12 @@ once to seed Pro + Scholar products in live Stripe.
 
 ### DB Schema
 - `usersTable` — user profile, usage count, subscription status
-- `topicsTable` — 15 consolidated neuroscience/neuropsychology topics
-- `flashcardsTable` — 208 flashcards across topics
-- `quizQuestionsTable` — 156 quiz questions with explanations
-- `studyGuidesTable` — 15 study guides with markdown content
-- `practiceExamsTable` — 15 practice exams (one per topic)
-- `practiceExamQuestionsTable` — join table linking exams to 10 questions each
+- `topicsTable` — 39 neuroscience/neuropsychology topics
+- `flashcardsTable` — 1,612 flashcards across topics
+- `quizQuestionsTable` — 935 quiz questions with explanations
+- `studyGuidesTable` — study guides with markdown content (one per topic)
+- `practiceExamsTable` — practice exams (one per topic)
+- `practiceExamQuestionsTable` — 738 join rows linking exams to questions
 - `progressTable` — practice exam scores per user/topic
 - `clientErrorRateHitsTable` / `clientErrorRateWarningsTable` — back the per-IP rate limit on `POST /api/client-errors` so the limit is enforced globally and survives restarts/scale-out
 

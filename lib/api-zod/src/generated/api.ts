@@ -296,6 +296,16 @@ export const GetDashboardSummaryResponse = zod.object({
       lastAccessed: zod.string(),
     }),
   ),
+  weeklyActivity: zod
+    .array(
+      zod.object({
+        date: zod.coerce.date(),
+        active: zod.boolean(),
+      }),
+    )
+    .describe(
+      "Last 7 days (Sun→Sat of current week) with active flag based on any progress\/quiz\/exam activity recorded that day.",
+    ),
   subscriptionStatus: zod.string(),
   usageCount: zod.number(),
   freeLimit: zod.number(),

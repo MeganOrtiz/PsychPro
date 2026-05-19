@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { ChevronLeft, ChevronRight, RotateCcw, Layers, Lightbulb, Beaker } from "lucide-react";
-import { useGetFlashcardsByTopic, useIncrementUserUsage } from "@workspace/api-client-react";
+import { useGetFlashcardsByTopic, useIncrementUserUsage, useGetTopic } from "@workspace/api-client-react";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
@@ -29,6 +30,7 @@ export default function FlashcardsPage({ params }: Props) {
   const [showUpgrade, setShowUpgrade] = useState(false);
 
   const { data: flashcards, isLoading, error } = useGetFlashcardsByTopic(topicId);
+  const { data: topic } = useGetTopic(topicId);
   const incrementUsage = useIncrementUserUsage();
 
   const current = flashcards?.[index];
@@ -78,14 +80,12 @@ export default function FlashcardsPage({ params }: Props) {
   return (
     <div className="min-h-full study-page-bg" data-testid="flashcards-page">
       <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
+      <Breadcrumbs items={[
+        { label: "Topics", href: "/topics" },
+        { label: topic?.name ?? "Topic", href: `/topics/${topicId}` },
+        { label: "Flashcards" },
+      ]} />
       <div className="flex items-center gap-3 mb-6">
-        <button
-          onClick={() => navigate(`/topics/${topicId}`)}
-          className="text-muted-foreground hover:text-foreground"
-          data-testid="button-back"
-        >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
         <div
           className="w-10 h-10 rounded-lg flex items-center justify-center border"
           style={{ background: `linear-gradient(135deg, ${P.teal}, ${P.surf})`, borderColor: `${P.tealDeep}` }}

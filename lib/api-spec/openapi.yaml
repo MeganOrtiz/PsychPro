@@ -693,6 +693,20 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/TopicProgress"
+        weeklyActivity:
+          type: array
+          description: "Last 7 days (Sun→Sat of current week) with active flag based on any progress/quiz/exam activity recorded that day."
+          items:
+            type: object
+            properties:
+              date:
+                type: string
+                format: date-time
+              active:
+                type: boolean
+            required:
+              - date
+              - active
         subscriptionStatus:
           type: string
         usageCount:
@@ -708,6 +722,7 @@ components:
         - currentStreak
         - averageScore
         - recentTopics
+        - weeklyActivity
         - weakAreas
         - subscriptionStatus
         - usageCount

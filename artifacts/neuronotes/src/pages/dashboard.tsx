@@ -16,11 +16,9 @@ import {
   Award,
   Medal,
   ShieldCheck,
-  Share2,
   ChevronDown,
-  ArrowDownUp,
 } from "lucide-react";
-import { useGetDashboardSummary, useGetTopics, useGetLeaderboard, useGetUserProgress } from "@workspace/api-client-react";
+import { useGetDashboardSummary, useGetTopics, useGetLeaderboard } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -90,41 +88,6 @@ function buildLast7Days() {
   });
 }
 
-function computeStreak(recent: RecentTopic[]) {
-  const days = new Set(
-    recent
-      .map((r) => (r.lastAccessed ? dayKey(new Date(r.lastAccessed)) : null))
-      .filter(Boolean) as string[]
-  );
-  let streak = 0;
-  const cursor = startOfDay(new Date());
-  while (days.has(cursor.toISOString())) {
-    streak += 1;
-    cursor.setDate(cursor.getDate() - 1);
-  }
-  return streak;
-}
-
-function computeWeeklyFlames(recent: RecentTopic[]) {
-  const days = new Set(
-    recent
-      .map((r) => (r.lastAccessed ? dayKey(new Date(r.lastAccessed)) : null))
-      .filter(Boolean) as string[]
-  );
-  const today = new Date();
-  const weekStart = startOfDay(new Date(today));
-  weekStart.setDate(today.getDate() - today.getDay());
-  return Array.from({ length: 7 }).map((_, i) => {
-    const d = new Date(weekStart);
-    d.setDate(weekStart.getDate() + i);
-    return {
-      label: DAY_LABELS[i],
-      lit: days.has(d.toISOString()),
-      isToday: d.getTime() === startOfDay(today).getTime(),
-    };
-  });
-}
-
 function buildActivitySeries(recent: RecentTopic[]) {
   const buckets = new Map<string, number>();
   recent.forEach((r) => {
@@ -146,23 +109,41 @@ export default function DashboardPage() {
   const { data: summary, isLoading } = useGetDashboardSummary();
   const { data: allTopics } = useGetTopics();
   const { data: leaderboard } = useGetLeaderboard();
-  const { data: progress } = useGetUserProgress();
 
+  const isFree =
+    !summary?.subscriptionStatus || summary.subscriptionStatus === "free";
   const isOverLimit =
-    summary &&
-    summary.usageCount >= summary.freeLimit &&
-    summary.subscriptionStatus === "free";
+    isFree && summary !== undefined && summary.usageCount >= summary.freeLimit;
+  const isApproachingLimit =
+    isFree &&
+    summary !== undefined &&
+    !isOverLimit &&
+    summary.usageCount >= Math.ceil(summary.freeLimit * 0.8);
 
   const firstName = "there";
 
   const recent = (summary?.recentTopics ?? []) as RecentTopic[];
   const weak = (summary?.weakAreas ?? []) as RecentTopic[];
 
-  const streak = useMemo(() => computeStreak(recent), [recent]);
-  const weeklyFlames = useMemo(() => computeWeeklyFlames(recent), [recent]);
+  const streak = summary?.currentStreak ?? 0;
+  const weeklyFlames = useMemo(() => {
+    const today = startOfDay(new Date()).getTime();
+    const source = summary?.weeklyActivity ?? [];
+    return source.map((d, i) => {
+      const dt = startOfDay(new Date(d.date));
+      return {
+        label: DAY_LABELS[i],
+        lit: d.active,
+        isToday: dt.getTime() === today,
+      };
+    });
+  }, [summary?.weeklyActivity]);
   const activitySeries = useMemo(() => buildActivitySeries(recent), [recent]);
 
-  const continueTopic = recent[0];
+  // Pick the first recent topic that isn't fully mastered; fall back to the
+  // most-recent entry so returning students always see something to resume.
+  const continueTopic = recent.find((r) => r.score < 100) ?? recent[0];
+
   const recommended = useMemo(() => {
     const seen = new Set<number>();
     const out: RecentTopic[] = [];
@@ -171,46 +152,25 @@ export default function DashboardPage() {
       seen.add(t.topicId);
       out.push(t);
     };
-    weak.forEach(push);
-    recent.filter((r) => r.score < 80).forEach(push);
-    (allTopics ?? []).forEach((t) => {
+    const hasHistory = recent.length > 0 || weak.length > 0;
+    if (hasHistory) {
+      weak.forEach(push);
+      recent.filter((r) => r.score < 80).forEach(push);
+    }
+    // For brand-new users (no history), recommend alphabetically-sorted starter
+    // topics so we don't accidentally fall through to the "study a few topics
+    // first" empty state when we actually have a full catalogue to show.
+    const catalogue = [...(allTopics ?? [])].sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
+    catalogue.forEach((t) => {
       push({ id: t.id, topicId: t.id, topicName: t.name, score: 0, lastAccessed: null });
     });
     recent.forEach(push);
     return out;
   }, [weak, recent, allTopics]);
 
-  const masteryByCategory = useMemo(() => {
-    const scoreByTopic = new Map<number, number>();
-    (progress ?? []).forEach((p) => {
-      const cur = scoreByTopic.get(p.topicId);
-      if (cur === undefined || p.score > cur) scoreByTopic.set(p.topicId, p.score);
-    });
-    const groups = new Map<string, Array<{ id: number; name: string; score: number | null }>>();
-    (allTopics ?? []).forEach((t) => {
-      const cat = t.category ?? "Other";
-      const score = scoreByTopic.has(t.id) ? scoreByTopic.get(t.id)! : null;
-      if (!groups.has(cat)) groups.set(cat, []);
-      groups.get(cat)!.push({ id: t.id, name: t.name, score });
-    });
-    return Array.from(groups.entries()).map(([category, items]) => ({
-      category,
-      items: items.sort((a, b) => a.name.localeCompare(b.name)),
-    }));
-  }, [allTopics, progress]);
-
-  const masteryStats = useMemo(() => {
-    const all = masteryByCategory.flatMap((g) => g.items);
-    const studied = all.filter((t) => t.score !== null);
-    const strong = studied.filter((t) => (t.score ?? 0) >= 85).length;
-    return { total: all.length, studied: studied.length, strong };
-  }, [masteryByCategory]);
-
   const totalTopics = (allTopics ?? []).length;
-  const usageCount = summary?.usageCount ?? 0;
-  const freeLimit = summary?.freeLimit ?? 10;
-  const isPaid =
-    summary?.subscriptionStatus && summary.subscriptionStatus !== "free";
 
   return (
     <div
@@ -262,6 +222,7 @@ export default function DashboardPage() {
               background: "rgba(244,180,98,0.14)",
               borderColor: "rgba(244,180,98,0.55)",
             }}
+            data-testid="banner-over-limit"
           >
             <Zap className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
             <div className="flex-1 min-w-0">
@@ -269,14 +230,47 @@ export default function DashboardPage() {
                 Free limit reached
               </p>
               <p className="text-amber-800 text-sm mt-1">
-                You've used all 10 free interactions. Upgrade to continue
-                studying.
+                You've used all {summary?.freeLimit ?? 10} free interactions.
+                Upgrade to continue studying.
               </p>
             </div>
             <Button
               size="sm"
               onClick={() => navigate("/subscription")}
               data-testid="button-upgrade-banner"
+            >
+              Upgrade
+            </Button>
+          </div>
+        )}
+
+        {isApproachingLimit && (
+          <div
+            className="rounded-xl p-4 mb-6 flex items-start gap-3 border"
+            style={{
+              background: "rgba(94,176,200,0.12)",
+              borderColor: `${PALETTE.surf}66`,
+            }}
+            data-testid="banner-approaching-limit"
+          >
+            <Sparkles
+              className="w-5 h-5 flex-shrink-0 mt-0.5"
+              style={{ color: PALETTE.tealDeep }}
+            />
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-sm" style={{ color: PALETTE.mist }}>
+                You're close to your free limit
+              </p>
+              <p className="text-sm mt-1" style={{ color: PALETTE.mistSoft }}>
+                {summary!.usageCount} of {summary!.freeLimit} free interactions
+                used. Upgrade now to keep your momentum going.
+              </p>
+            </div>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => navigate("/subscription")}
+              data-testid="button-upgrade-approaching"
             >
               Upgrade
             </Button>
@@ -553,6 +547,7 @@ export default function DashboardPage() {
                 series={activitySeries}
                 averageScore={summary?.averageScore ?? 0}
                 topicsStudied={summary?.topicsStudied ?? 0}
+                totalTopics={totalTopics}
               />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <RecentActivityCard
@@ -564,8 +559,10 @@ export default function DashboardPage() {
                 <AchievementsCard
                   streak={streak}
                   topicsStudied={summary?.topicsStudied ?? 0}
+                  topicsCompleted={summary?.topicsCompleted ?? 0}
+                  quizzesCompleted={summary?.quizzesCompleted ?? 0}
+                  examsCompleted={summary?.examsCompleted ?? 0}
                   averageScore={summary?.averageScore ?? 0}
-                  onViewAll={() => navigate("/progress")}
                 />
               </div>
             </div>
@@ -580,79 +577,6 @@ export default function DashboardPage() {
           </aside>
         </div>
       </div>
-    </div>
-  );
-}
-
-function masteryColors(score: number | null) {
-  if (score === null) {
-    return "bg-muted/60 text-muted-foreground hover:bg-muted border-transparent";
-  }
-  if (score >= 85) {
-    return "bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-950/50 dark:text-green-300 dark:hover:bg-green-950/70 border-transparent";
-  }
-  if (score >= 70) {
-    return "bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-950/50 dark:text-blue-300 dark:hover:bg-blue-950/70 border-transparent";
-  }
-  if (score >= 50) {
-    return "bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-950/50 dark:text-amber-300 dark:hover:bg-amber-950/70 border-transparent";
-  }
-  return "bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-950/50 dark:text-red-300 dark:hover:bg-red-950/70 border-transparent";
-}
-
-function topicInitials(name: string) {
-  const cleaned = name.replace(/[^A-Za-z0-9 ]/g, "").trim();
-  const words = cleaned.split(/\s+/).filter(Boolean);
-  if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
-  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
-  return "?";
-}
-
-function MasteryTile({
-  name,
-  score,
-  onClick,
-}: {
-  name: string;
-  score: number | null;
-  onClick: () => void;
-}) {
-  const label = score === null ? `${name} — Not started` : `${name} — ${score}%`;
-  const badge = score === null ? "New" : `${score}%`;
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      title={label}
-      aria-label={label}
-      data-testid={`mastery-tile-${name.replace(/\s+/g, "-").toLowerCase()}`}
-      className={cn(
-        "shrink-0 w-40 h-20 rounded-lg border flex flex-col justify-between p-2.5 text-left transition-colors",
-        masteryColors(score)
-      )}
-    >
-      <span className="text-[12px] font-medium leading-tight line-clamp-2">{name}</span>
-      <span className="text-[11px] font-semibold opacity-80">{badge}</span>
-    </button>
-  );
-}
-
-function MasteryLegend() {
-  const items: Array<{ label: string; cls: string }> = [
-    { label: "New", cls: "bg-muted/60" },
-    { label: "<50", cls: "bg-red-200 dark:bg-red-950/70" },
-    { label: "50-69", cls: "bg-amber-200 dark:bg-amber-950/70" },
-    { label: "70-84", cls: "bg-blue-200 dark:bg-blue-950/70" },
-    { label: "85+", cls: "bg-green-200 dark:bg-green-950/70" },
-  ];
-  return (
-    <div className="flex items-center gap-2 flex-wrap">
-      {items.map((it) => (
-        <div key={it.label} className="flex items-center gap-1">
-          <span className={cn("w-3 h-3 rounded", it.cls)} aria-hidden />
-          <span className="text-[11px] text-muted-foreground">{it.label}</span>
-        </div>
-      ))}
     </div>
   );
 }
@@ -850,23 +774,6 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
           View Feature
           <ArrowUpRight className="w-4 h-4" />
         </button>
-
-        {/* Pagination dots */}
-        <div className="flex items-center justify-center gap-1.5 mt-4">
-          <span className="w-4 h-1.5 rounded-full" style={{ background: PALETTE.surf }} />
-          <span className="w-1.5 h-1.5 rounded-full bg-white/30" />
-          <span className="w-1.5 h-1.5 rounded-full bg-white/30" />
-          <span className="w-1.5 h-1.5 rounded-full bg-white/30" />
-        </div>
-
-        {/* Share button */}
-        <button
-          aria-label="Share spotlight"
-          className="absolute -bottom-2 right-0 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center backdrop-blur-sm transition-colors"
-          data-testid="button-spotlight-share"
-        >
-          <Share2 className="w-4 h-4 text-white" />
-        </button>
       </div>
     </div>
   );
@@ -876,11 +783,31 @@ function StudyAnalyticsCard({
   series,
   averageScore,
   topicsStudied,
+  totalTopics,
 }: {
   series: { day: string; score: number }[];
   averageScore: number;
   topicsStudied: number;
+  totalTopics: number;
 }) {
+  const scoreDescriptor =
+    averageScore >= 85
+      ? "Excellent retention"
+      : averageScore >= 70
+      ? "On track — keep going"
+      : averageScore >= 50
+      ? "Building proficiency"
+      : averageScore > 0
+      ? "Early progress — review weak areas"
+      : "Take a quiz to see your score";
+  const topicsDescriptor =
+    totalTopics === 0
+      ? "Topics loading…"
+      : topicsStudied === 0
+      ? `${totalTopics} topics available`
+      : topicsStudied >= totalTopics
+      ? "All topics started"
+      : `${totalTopics - topicsStudied} topics left to explore`;
   return (
     <StudySurface tone="light" innerClassName="p-5 flex flex-col">
       <div className="flex items-center justify-between mb-4 gap-3">
@@ -959,16 +886,21 @@ function StudyAnalyticsCard({
             </p>
             <p className="text-xs mt-1.5" style={{ color: PALETTE.mistSoft }}>Average Score</p>
             <p className="text-[11px] mt-0.5" style={{ color: PALETTE.tealDeep }}>
-              ↑ 8% vs last week
+              {scoreDescriptor}
             </p>
           </div>
           <div>
             <p className="text-3xl font-bold leading-none" style={{ color: PALETTE.mist }}>
               {topicsStudied}
+              {totalTopics > 0 && (
+                <span className="text-base font-medium" style={{ color: PALETTE.mistSoft }}>
+                  {" "}/ {totalTopics}
+                </span>
+              )}
             </p>
-            <p className="text-xs mt-1.5" style={{ color: PALETTE.mistSoft }}>Total Topics</p>
+            <p className="text-xs mt-1.5" style={{ color: PALETTE.mistSoft }}>Topics Studied</p>
             <p className="text-[11px] mt-0.5" style={{ color: PALETTE.mistSoft }}>
-              Keep learning!
+              {topicsDescriptor}
             </p>
           </div>
         </div>
@@ -1065,13 +997,17 @@ function RecentActivityCard({
 function AchievementsCard({
   streak,
   topicsStudied,
+  topicsCompleted,
+  quizzesCompleted,
+  examsCompleted,
   averageScore,
-  onViewAll,
 }: {
   streak: number;
   topicsStudied: number;
+  topicsCompleted: number;
+  quizzesCompleted: number;
+  examsCompleted: number;
   averageScore: number;
-  onViewAll: () => void;
 }) {
   const achievements = [
     {
@@ -1089,11 +1025,32 @@ function AchievementsCard({
     {
       icon: ShieldCheck,
       label: "Score Master",
-      hint: "Get 80% or higher",
+      hint: "Average 80% or higher",
       unlocked: averageScore >= 80,
+    },
+    {
+      icon: BookOpen,
+      label: "Quiz Veteran",
+      hint: "Finish 10 quizzes",
+      unlocked: quizzesCompleted >= 10,
+    },
+    {
+      icon: Flame,
+      label: "Week Warrior",
+      hint: "Maintain a 7-day streak",
+      unlocked: streak >= 7,
+    },
+    {
+      icon: Trophy,
+      label: "Exam Ready",
+      hint: "Complete 5 practice exams",
+      unlocked: examsCompleted >= 5,
     },
   ];
   const unlockedCount = achievements.filter((a) => a.unlocked).length;
+  // topicsCompleted is currently unused in the badge thresholds above but is
+  // accepted for future expansion (e.g. a "Topic Master" tier).
+  void topicsCompleted;
 
   return (
     <StudySurface tone="light" innerClassName="p-5 flex flex-col">
@@ -1103,21 +1060,9 @@ function AchievementsCard({
             Achievements
           </h2>
           <p className="text-xs mt-0.5" style={{ color: PALETTE.mistSoft }}>
-            {unlockedCount}/6 unlocked
+            {unlockedCount}/{achievements.length} unlocked
           </p>
         </div>
-        <button
-          className="flex items-center gap-1 text-xs rounded-full px-3 py-1 transition-colors whitespace-nowrap border"
-          style={{
-            color: PALETTE.tealDeep,
-            background: "rgba(255,255,255,0.7)",
-            borderColor: `${PALETTE.surf}55`,
-          }}
-          data-testid="button-achievements-sort"
-        >
-          Sort
-          <ArrowDownUp className="w-3 h-3" />
-        </button>
       </div>
 
       <div className="flex-1 space-y-1.5">
@@ -1154,15 +1099,6 @@ function AchievementsCard({
           );
         })}
       </div>
-
-      <button
-        onClick={onViewAll}
-        className="text-xs hover:underline pt-3 text-center mt-3 font-medium border-t"
-        style={{ color: PALETTE.tealDeep, borderColor: `${PALETTE.surf}40` }}
-        data-testid="button-view-all-achievements"
-      >
-        View achievements →
-      </button>
     </StudySurface>
   );
 }

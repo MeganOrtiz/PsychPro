@@ -5,6 +5,7 @@
  * NeuroNotes API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { DashboardSummaryWeeklyActivityItem } from "./dashboardSummaryWeeklyActivityItem";
 import type { TopicProgress } from "./topicProgress";
 
 export interface DashboardSummary {
@@ -17,6 +18,8 @@ export interface DashboardSummary {
   averageScore: number;
   recentTopics: TopicProgress[];
   weakAreas: TopicProgress[];
+  /** Last 7 days (Sun→Sat of current week) with active flag based on any progress/quiz/exam activity recorded that day. */
+  weeklyActivity: DashboardSummaryWeeklyActivityItem[];
   subscriptionStatus: string;
   usageCount: number;
   freeLimit: number;

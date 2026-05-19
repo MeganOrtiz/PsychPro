@@ -1,7 +1,8 @@
 import { type ReactElement } from "react";
 import { useLocation } from "wouter";
-import { ChevronLeft, BookOpen, Lock, FileText } from "lucide-react";
-import { useGetStudyGuideByTopic, useGetUserProfile } from "@workspace/api-client-react";
+import { BookOpen, Lock, FileText } from "lucide-react";
+import { useGetStudyGuideByTopic, useGetUserProfile, useGetTopic } from "@workspace/api-client-react";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { StudySurface } from "@/components/study/study-surface";
@@ -18,20 +19,19 @@ export default function StudyGuidePage({ params }: Props) {
   const isSubscribed = profile?.subscriptionStatus === "active" || profile?.subscriptionStatus === "pro" || profile?.subscriptionStatus === "trialing" || profile?.subscriptionStatus === "scholar";
 
   const { data: guide, isLoading, error } = useGetStudyGuideByTopic(topicId);
+  const { data: topic } = useGetTopic(topicId);
 
   const is402 = (error as any)?.status === 402 || (error as any)?.response?.status === 402 || (!isSubscribed && profile !== undefined);
 
   return (
     <div className="min-h-full study-page-bg" data-testid="study-guide-page">
       <div className="max-w-3xl mx-auto p-4 md:p-6 lg:p-8">
+      <Breadcrumbs items={[
+        { label: "Topics", href: "/topics" },
+        { label: topic?.name ?? "Topic", href: `/topics/${topicId}` },
+        { label: "Study Guide" },
+      ]} />
       <div className="flex items-center gap-3 mb-6">
-        <button
-          onClick={() => navigate(`/topics/${topicId}`)}
-          className="text-muted-foreground hover:text-foreground"
-          data-testid="button-back"
-        >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
         <div
           className="w-10 h-10 rounded-lg flex items-center justify-center border"
           style={{ background: `linear-gradient(135deg, ${P.teal}, ${P.surf})`, borderColor: P.tealDeep }}
@@ -56,7 +56,7 @@ export default function StudyGuidePage({ params }: Props) {
           </div>
           <h2 className="text-xl font-bold text-foreground mb-2">Study Guides are a Premium Feature</h2>
           <p className="text-muted-foreground mb-6 max-w-sm mx-auto">
-            Unlock comprehensive, in-depth study guides for all 15 topics — written from real course notes with clinical depth.
+            Unlock comprehensive, in-depth study guides for all 39 topics — written from real course notes with clinical depth.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button

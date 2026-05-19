@@ -147,6 +147,11 @@ export interface UpdateTopicProgressBody {
   score: number;
 }
 
+export type DashboardSummaryWeeklyActivityItem = {
+  date: string;
+  active: boolean;
+};
+
 export interface DashboardSummary {
   totalTopics: number;
   topicsStudied: number;
@@ -157,6 +162,8 @@ export interface DashboardSummary {
   averageScore: number;
   recentTopics: TopicProgress[];
   weakAreas: TopicProgress[];
+  /** Last 7 days (Sun→Sat of current week) with active flag based on any progress/quiz/exam activity recorded that day. */
+  weeklyActivity: DashboardSummaryWeeklyActivityItem[];
   subscriptionStatus: string;
   usageCount: number;
   freeLimit: number;

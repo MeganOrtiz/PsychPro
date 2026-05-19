@@ -52,8 +52,8 @@ export default function TopicsPage() {
 
   const setSearch = (value: string) => {
     const next = new URLSearchParams();
+    if (selectedCategory) next.set("category", selectedCategory);
     if (value) next.set("q", value);
-    else if (selectedCategory) next.set("category", selectedCategory);
     const qs = next.toString();
     navigate(qs ? `/topics?${qs}` : "/topics");
   };
@@ -71,16 +71,21 @@ export default function TopicsPage() {
     const all = Array.from(new Set([...CATEGORY_ORDER, ...counts.keys()])).sort((a, b) =>
       a.localeCompare(b),
     );
-    return all.map(name => ({ name, count: counts.get(name) ?? 0 }));
+    return all
+      .map(name => ({ name, count: counts.get(name) ?? 0 }))
+      .filter(c => c.count > 0);
   }, [allTopics]);
 
   const searchedTopics = useMemo(() => {
     if (!search) return [];
     const q = search.toLowerCase();
-    return allTopics.filter(
+    const scope = selectedCategory
+      ? allTopics.filter(t => t.category === selectedCategory)
+      : allTopics;
+    return scope.filter(
       t => t.name.toLowerCase().includes(q) || t.description.toLowerCase().includes(q),
     );
-  }, [allTopics, search]);
+  }, [allTopics, search, selectedCategory]);
 
   const categoryTopics = useMemo(() => {
     if (!selectedCategory) return [];
@@ -123,7 +128,9 @@ export default function TopicsPage() {
           </h1>
         </div>
         <p className="text-sm text-muted-foreground">
-          {showCategoryView
+          {showSearchResults && selectedCategory
+            ? `Searching in ${selectedCategory} for "${search}"`
+            : showCategoryView
             ? `Browse ${categoryTopics.length} ${categoryTopics.length === 1 ? "topic" : "topics"}`
             : "Choose a topic area to start exploring"}
         </p>
@@ -231,19 +238,14 @@ interface CategoryCardProps {
 }
 
 function CategoryCard({ name, topics, onOpenCategory, onOpenTopic }: CategoryCardProps) {
-  const isEmpty = topics.length === 0;
   const image = CATEGORY_IMAGES[name];
   const slug = name.toLowerCase().replace(/\s+/g, "-");
 
   return (
     <div
-      onClick={() => !isEmpty && onOpenCategory()}
+      onClick={() => onOpenCategory()}
       data-testid={`card-category-${slug}`}
-      className={`group relative overflow-hidden rounded-2xl border border-white/10 aspect-[16/10] transition-all ${
-        isEmpty
-          ? "opacity-60 cursor-not-allowed"
-          : "cursor-pointer hover:-translate-y-0.5 hover:border-[color:var(--surf,#58C9F3)]/55"
-      }`}
+      className="group relative overflow-hidden rounded-2xl border border-white/10 aspect-[16/10] transition-all cursor-pointer hover:-translate-y-0.5 hover:border-[color:var(--surf,#58C9F3)]/55"
       style={{
         ["--surf" as never]: STUDY_PALETTE.surf,
         background: STUDY_PALETTE.surface,
@@ -252,9 +254,7 @@ function CategoryCard({ name, topics, onOpenCategory, onOpenTopic }: CategoryCar
         transition: "transform .3s ease, border-color .3s ease, box-shadow .3s ease",
       }}
       onMouseEnter={(e) => {
-        if (!isEmpty) {
-          e.currentTarget.style.boxShadow = `0 14px 34px -10px ${STUDY_PALETTE.surf}66, 0 0 0 1px ${STUDY_PALETTE.surf}33`;
-        }
+        e.currentTarget.style.boxShadow = `0 14px 34px -10px ${STUDY_PALETTE.surf}66, 0 0 0 1px ${STUDY_PALETTE.surf}33`;
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.boxShadow = "0 4px 14px -8px rgba(0,0,0,0.4)";
@@ -278,7 +278,6 @@ function CategoryCard({ name, topics, onOpenCategory, onOpenTopic }: CategoryCar
       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/50 to-black/15 transition-opacity duration-300 group-hover:opacity-0" />
       {/* Hover overlay — solid dark backdrop for the topic list. */}
       <div
-        aria-hidden={isEmpty}
         className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         style={{
           background: `linear-gradient(180deg, ${STUDY_PALETTE.surfaceElev}f0 0%, ${STUDY_PALETTE.surface}f5 100%)`,
@@ -290,19 +289,18 @@ function CategoryCard({ name, topics, onOpenCategory, onOpenTopic }: CategoryCar
         <h3 className="font-semibold leading-tight text-lg drop-shadow-md">{name}</h3>
         <div className="mt-1 flex items-center justify-between">
           <p className="text-xs text-white/85">
-            {isEmpty ? "Coming soon" : `${topics.length} ${topics.length === 1 ? "topic" : "topics"}`}
+            {topics.length} {topics.length === 1 ? "topic" : "topics"}
           </p>
-          {!isEmpty && (
-            <span className="inline-flex items-center gap-1 text-xs font-medium text-white/90">
-              Hover to preview
-              <ChevronRight className="w-3.5 h-3.5" />
-            </span>
-          )}
+          <span className="inline-flex items-center gap-1 text-xs font-medium text-white/90">
+            <span className="hidden md:inline">Hover to preview</span>
+            <span className="md:hidden">Tap to open</span>
+            <ChevronRight className="w-3.5 h-3.5" />
+          </span>
         </div>
       </div>
 
       {/* Hover state — topic list overlaid on top of the dark backdrop */}
-      {!isEmpty && (
+      {(
         <div className="absolute inset-0 p-4 flex flex-col opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto">
           <div className="flex items-center justify-between mb-2 shrink-0">
             <h3 className="font-semibold leading-tight text-white">{name}</h3>

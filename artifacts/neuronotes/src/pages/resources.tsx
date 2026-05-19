@@ -1,4 +1,19 @@
-import { ExternalLink, BookOpen, Stethoscope, Brain, Microscope, Scale, Pill, Library } from "lucide-react";
+import { useMemo, useState } from "react";
+import {
+  ExternalLink,
+  BookOpen,
+  Stethoscope,
+  Brain,
+  Microscope,
+  Scale,
+  Pill,
+  Library,
+  GraduationCap,
+  Search,
+  Info,
+} from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { STUDY_PALETTE } from "@/lib/study-theme";
 
 type Resource = {
   name: string;
@@ -105,6 +120,11 @@ const SECTIONS: Section[] = [
         url: "https://988lifeline.org/",
         description: "Free, confidential 24/7 crisis support — call or text 988 in the United States.",
       },
+      {
+        name: "PsychDB",
+        url: "https://www.psychdb.com/",
+        description: "Open-access clinical reference for residents — diagnostic criteria, treatment frameworks, and pharmacology summaries.",
+      },
     ],
   },
   {
@@ -121,6 +141,33 @@ const SECTIONS: Section[] = [
         name: "MedlinePlus Drugs & Supplements",
         url: "https://medlineplus.gov/druginformation.html",
         description: "Patient-facing drug information from the National Library of Medicine.",
+      },
+      {
+        name: "Stahl's Essential Psychopharmacology (reference)",
+        url: "https://www.cambridge.org/core/books/stahls-essential-psychopharmacology/",
+        description: "Cambridge's landing page for Stephen Stahl's reference work — the standard textbook for clinical psychopharmacology mechanisms.",
+      },
+    ],
+  },
+  {
+    title: "Board & Licensure Exams",
+    icon: GraduationCap,
+    blurb: "Information on the major credentialing exams that PsychPro content supports.",
+    resources: [
+      {
+        name: "EPPP (ASPPB)",
+        url: "https://www.asppb.net/page/EPPP_1_About",
+        description: "Examination for Professional Practice in Psychology — required for licensure as a psychologist in most US/Canadian jurisdictions.",
+      },
+      {
+        name: "ABPN — Psychiatry Certification",
+        url: "https://www.abpn.com/become-certified/taking-a-subspecialty-exam/psychiatry/",
+        description: "American Board of Psychiatry and Neurology certification information for psychiatrists.",
+      },
+      {
+        name: "ABCN — Clinical Neuropsychology",
+        url: "https://abcn.theabpp.org/",
+        description: "American Board of Clinical Neuropsychology — credentialing pathway for board certification in clinical neuropsychology.",
       },
     ],
   },
@@ -144,15 +191,37 @@ const SECTIONS: Section[] = [
         url: "https://scholar.google.com/",
         description: "Free academic search engine spanning peer-reviewed articles, theses, books, and conference proceedings.",
       },
+      {
+        name: "PsycINFO (APA)",
+        url: "https://www.apa.org/pubs/databases/psycinfo",
+        description: "APA's flagship abstracting database covering peer-reviewed literature in psychology and behavioral sciences.",
+      },
     ],
   },
 ];
 
 export default function ResourcesPage() {
+  const [query, setQuery] = useState("");
+
+  const filteredSections = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return SECTIONS;
+    return SECTIONS
+      .map(s => ({
+        ...s,
+        resources: s.resources.filter(
+          r =>
+            r.name.toLowerCase().includes(q) ||
+            r.description.toLowerCase().includes(q),
+        ),
+      }))
+      .filter(s => s.resources.length > 0);
+  }, [query]);
+
   return (
     <div className="min-h-full study-page-bg" data-testid="resources-page">
       <div className="max-w-5xl mx-auto p-4 md:p-6 lg:p-8">
-      <div className="mb-8">
+      <div className="mb-6">
         <div className="flex items-center gap-3 mb-2">
           <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
             <Library className="w-5 h-5 text-primary" />
@@ -164,43 +233,69 @@ export default function ResourcesPage() {
         </p>
       </div>
 
-      <div className="space-y-8">
-        {SECTIONS.map((section) => {
-          const Icon = section.icon;
-          return (
-            <section key={section.title} data-testid={`section-${section.title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}>
-              <div className="flex items-center gap-2 mb-2">
-                <Icon className="w-4 h-4 text-primary" />
-                <h2 className="font-semibold text-foreground">{section.title}</h2>
-              </div>
-              <p className="text-sm text-muted-foreground mb-4">{section.blurb}</p>
-
-              <div className="grid gap-3 sm:grid-cols-2">
-                {section.resources.map((r) => (
-                  <a
-                    key={r.url}
-                    href={r.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group block bg-card border border-border rounded-xl p-4 hover:border-primary hover:shadow-md transition-all"
-                    data-testid={`resource-link-${r.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 40)}`}
-                  >
-                    <div className="flex items-start justify-between gap-3 mb-1.5">
-                      <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors leading-snug">
-                        {r.name}
-                      </h3>
-                      <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-primary flex-shrink-0 mt-1" />
-                    </div>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{r.description}</p>
-                  </a>
-                ))}
-              </div>
-            </section>
-          );
-        })}
+      <div className="relative mb-6">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <Input
+          placeholder="Search resources..."
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+          className="pl-9"
+          data-testid="input-search-resources"
+        />
       </div>
 
-      <div className="mt-10 p-5 bg-card border border-border rounded-xl">
+      {filteredSections.length === 0 ? (
+        <div className="bg-card border border-border rounded-xl p-8 text-center text-sm text-muted-foreground" data-testid="resources-empty">
+          No resources match "{query}".
+        </div>
+      ) : (
+        <div className="space-y-8">
+          {filteredSections.map((section) => {
+            const Icon = section.icon;
+            return (
+              <section key={section.title} data-testid={`section-${section.title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}>
+                <div className="flex items-center gap-2 mb-2">
+                  <Icon className="w-4 h-4 text-primary" />
+                  <h2 className="font-semibold text-foreground">{section.title}</h2>
+                </div>
+                <p className="text-sm text-muted-foreground mb-4">{section.blurb}</p>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {section.resources.map((r) => (
+                    <a
+                      key={r.url}
+                      href={r.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group block bg-card border border-border rounded-xl p-4 hover:border-primary hover:shadow-md transition-all"
+                      data-testid={`resource-link-${r.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 40)}`}
+                    >
+                      <div className="flex items-start justify-between gap-3 mb-1.5">
+                        <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors leading-snug">
+                          {r.name}
+                        </h3>
+                        <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-primary flex-shrink-0 mt-1" />
+                      </div>
+                      <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
+                        {r.description}
+                      </p>
+                    </a>
+                  ))}
+                </div>
+              </section>
+            );
+          })}
+        </div>
+      )}
+
+      <div
+        className="mt-10 p-5 bg-card border border-border rounded-xl flex gap-3"
+        style={{ borderLeft: `3px solid ${STUDY_PALETTE.tealDeep}` }}
+      >
+        <Info
+          className="w-4 h-4 flex-shrink-0 mt-0.5"
+          style={{ color: STUDY_PALETTE.tealDeep }}
+        />
         <p className="text-sm text-muted-foreground leading-relaxed">
           <span className="font-semibold text-foreground">A note on scope.</span> PsychPro's content is built from publicly available diagnostic frameworks, peer-reviewed neuroscience, and clinical practice references. It is intended as an educational study aid for students and clinicians — not a substitute for clinical judgment, supervision, or the original source materials. Always consult primary sources and current guidelines for clinical decision-making.
         </p>

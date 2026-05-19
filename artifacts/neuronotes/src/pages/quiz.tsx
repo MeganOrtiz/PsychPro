@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { ChevronLeft, CheckCircle, XCircle, ChevronRight, BookOpen, Lightbulb } from "lucide-react";
-import { useGetQuizzesByTopic, useUpdateTopicProgress, useIncrementUserUsage, useRecordQuizAttempt } from "@workspace/api-client-react";
+import { CheckCircle, XCircle, ChevronRight, BookOpen, Lightbulb } from "lucide-react";
+import { useGetQuizzesByTopic, useUpdateTopicProgress, useIncrementUserUsage, useRecordQuizAttempt, useGetTopic } from "@workspace/api-client-react";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -27,6 +28,7 @@ export default function QuizPage({ params }: Props) {
   const [reflectionSaved, setReflectionSaved] = useState(false);
 
   const { data: questions, isLoading, error } = useGetQuizzesByTopic(topicId);
+  const { data: topic } = useGetTopic(topicId);
 
   // Persist reflections per-question to localStorage so they survive
   // moving between questions, finishing the quiz, and full page reloads.
@@ -152,10 +154,12 @@ export default function QuizPage({ params }: Props) {
   return (
     <div className="min-h-full study-page-bg" data-testid="quiz-page">
       <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
+      <Breadcrumbs items={[
+        { label: "Topics", href: "/topics" },
+        { label: topic?.name ?? "Topic", href: `/topics/${topicId}` },
+        { label: "Quiz" },
+      ]} />
       <div className="flex items-center gap-3 mb-6">
-        <button onClick={() => navigate(`/topics/${topicId}`)} className="text-muted-foreground hover:text-foreground" data-testid="button-back">
-          <ChevronLeft className="w-5 h-5" />
-        </button>
         <div
           className="w-10 h-10 rounded-lg flex items-center justify-center border"
           style={{ background: `linear-gradient(135deg, ${P.teal}, ${P.surf})`, borderColor: P.tealDeep }}
