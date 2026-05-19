@@ -8,7 +8,6 @@ import {
   Trophy,
   Zap,
   ChevronRight,
-  Bell,
   Flame,
   Star,
   TrendingUp,
@@ -30,6 +29,7 @@ import spotlightAvatarImage from "@assets/Screenshot_2026-04-28_at_8.01.18_PM_17
 import spotlightCloudImage from "@assets/Screenshot_2026-05-10_at_3.03.20_PM_1778443775551.png";
 import TodayReviews from "@/components/learning/today-reviews";
 import { StudySurface } from "@/components/study/study-surface";
+import { NotificationsBell } from "@/components/notifications-bell";
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
 import {
   ResponsiveContainer,
@@ -221,18 +221,7 @@ export default function DashboardPage() {
         {/* Top header — centered cinematic PSYCHPRO wordmark per brand spec */}
         <header className="relative flex items-center justify-center mb-8 py-4">
           <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-3">
-            <button
-              className="relative w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-105"
-              style={{
-                background: "rgba(6, 32, 44, 0.55)",
-                border: "1px solid rgba(118, 228, 247, 0.28)",
-                color: PALETTE.mist,
-              }}
-              data-testid="dashboard-notifications"
-              aria-label="Notifications"
-            >
-              <Bell className="w-4 h-4" />
-            </button>
+            <NotificationsBell />
           </div>
           <div className="text-center">
             <h1

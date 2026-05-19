@@ -21,6 +21,8 @@ import FeedbackPage from "@/pages/feedback";
 import FeatureRequestPage from "@/pages/feature-request";
 import FeaturedWorkPage from "@/pages/featured-work";
 import AdminFeaturedWorkPage from "@/pages/admin-featured-work";
+import ConnectionsPage from "@/pages/connections";
+import AdminConnectionsPage from "@/pages/admin-connections";
 import PublicProfilePage from "@/pages/public-profile";
 import ResourcesPage from "@/pages/resources";
 import StudyLabPage from "@/pages/study-lab";
@@ -71,6 +73,8 @@ function AppRouter() {
             <Route path="/featured-work" component={FeaturedWorkPage} />
             <Route path="/feature-request" component={FeatureRequestPage} />
             <Route path="/admin/featured-work" component={AdminFeaturedWorkPage} />
+            <Route path="/connections" component={ConnectionsPage} />
+            <Route path="/admin/connections" component={AdminConnectionsPage} />
             <Route path="/u/:userId" component={PublicProfilePage} />
             <Route path="/resources" component={ResourcesPage} />
             <Route path="/study-lab" component={StudyLabPage} />

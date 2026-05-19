@@ -280,8 +280,13 @@ export {
   MAX_FEATURED_FILE_BYTES,
   MAX_FEATURED_ADMIN_NOTE_LENGTH,
   FEATURED_WORK_CONSENT_TEXT,
+  CONNECTION_REQUEST_STATUSES,
+  CONNECTION_REQUESTS_PER_WEEK,
+  CONNECTIONS_SUGGESTIONS_PAGE_SIZE,
+  CONNECTION_SHARED_TAGS_HIGHLIGHTED,
+  CONNECTION_BIO_PREVIEW_LENGTH,
 } from "@workspace/community";
-export type { ProfileRole, WorkType, FeaturedWorkStatus } from "@workspace/community";
+export type { ProfileRole, WorkType, FeaturedWorkStatus, ConnectionRequestStatus } from "@workspace/community";
 
 
 export const userProfilesTable = pgTable("user_profiles", {
@@ -377,3 +382,83 @@ export const notificationsTable = pgTable(
 );
 
 export type CommunityNotification = typeof notificationsTable.$inferSelect;
+
+// =============================================================================
+// Community: Connections (task #67)
+//
+// `connection_requests` stores the lifecycle of a double-opt-in intro. The
+// unique partial index on (requester_id, recipient_id) WHERE status='pending'
+// makes duplicate pending requests impossible at the DB level (created via
+// raw SQL since drizzle-kit does not yet model partial indexes natively).
+//
+// `user_blocks` is a one-way block list. If (blocker, blocked) exists then
+// `blocked` will never appear in `blocker`'s suggestions and any request
+// `blocked` sends to `blocker` is silently rejected.
+//
+// `connections_audit_log` records every "Investigate abuse" reveal so the
+// privacy contract spelled out in task-67 is verifiable.
+// =============================================================================
+
+export const connectionRequestsTable = pgTable(
+  "connection_requests",
+  {
+    id: serial("id").primaryKey(),
+    requesterId: text("requester_id")
+      .notNull()
+      .references(() => usersTable.id, { onDelete: "cascade" }),
+    recipientId: text("recipient_id")
+      .notNull()
+      .references(() => usersTable.id, { onDelete: "cascade" }),
+    status: text("status").notNull().default("pending"),
+    // JSON-encoded string[] snapshot of overlapping tags at request time so
+    // the recipient always sees the tags that motivated the introduction,
+    // even if either user later edits their interests.
+    sharedTags: text("shared_tags").notNull().default("[]"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    respondedAt: timestamp("responded_at", { withTimezone: true }),
+    introEmailSentAt: timestamp("intro_email_sent_at", { withTimezone: true }),
+  },
+  (table) => [
+    index("connection_requests_requester_idx").on(table.requesterId, table.status),
+    index("connection_requests_recipient_idx").on(table.recipientId, table.status),
+  ],
+);
+
+export type ConnectionRequest = typeof connectionRequestsTable.$inferSelect;
+
+export const userBlocksTable = pgTable(
+  "user_blocks",
+  {
+    id: serial("id").primaryKey(),
+    blockerId: text("blocker_id")
+      .notNull()
+      .references(() => usersTable.id, { onDelete: "cascade" }),
+    blockedId: text("blocked_id")
+      .notNull()
+      .references(() => usersTable.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index("user_blocks_blocker_idx").on(table.blockerId),
+    index("user_blocks_blocked_idx").on(table.blockedId),
+  ],
+);
+
+export type UserBlock = typeof userBlocksTable.$inferSelect;
+
+export const connectionsAuditLogTable = pgTable(
+  "connections_audit_log",
+  {
+    id: serial("id").primaryKey(),
+    adminUserId: text("admin_user_id").notNull(),
+    action: text("action").notNull(),
+    targetRequestId: integer("target_request_id"),
+    reason: text("reason"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index("connections_audit_admin_idx").on(table.adminUserId, table.createdAt),
+  ],
+);
+
+export type ConnectionsAuditLog = typeof connectionsAuditLogTable.$inferSelect;

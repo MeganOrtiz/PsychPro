@@ -166,3 +166,20 @@ export const MAX_FEATURED_ADMIN_NOTE_LENGTH = 1000;
 
 export const FEATURED_WORK_CONSENT_TEXT =
   "I confirm this is my original work, all client/participant information is appropriately de-identified, and I grant PsychPro permission to display this submission on the platform.";
+
+// =============================================================================
+// Connections (task #67) — double opt-in introductions
+// =============================================================================
+
+export const CONNECTION_REQUEST_STATUSES = [
+  "pending",
+  "accepted",
+  "declined",
+  "blocked",
+] as const;
+export type ConnectionRequestStatus = (typeof CONNECTION_REQUEST_STATUSES)[number];
+
+export const CONNECTION_REQUESTS_PER_WEEK = 5;
+export const CONNECTIONS_SUGGESTIONS_PAGE_SIZE = 12;
+export const CONNECTION_SHARED_TAGS_HIGHLIGHTED = 3;
+export const CONNECTION_BIO_PREVIEW_LENGTH = 160;

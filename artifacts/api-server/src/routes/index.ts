@@ -14,6 +14,7 @@ import oauthRouter from "./oauth";
 import storageRouter from "./storage";
 import profileRouter from "./profile";
 import featuredWorkRouter from "./featured-work";
+import connectionsRouter from "./connections";
 
 const router: IRouter = Router();
 
@@ -32,5 +33,6 @@ router.use(oauthRouter);
 router.use(storageRouter);
 router.use(profileRouter);
 router.use(featuredWorkRouter);
+router.use(connectionsRouter);
 
 export default router;
