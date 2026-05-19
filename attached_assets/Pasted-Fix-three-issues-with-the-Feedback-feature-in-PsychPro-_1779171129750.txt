@@ -1,0 +1,35 @@
+Fix three issues with the Feedback feature in PsychPro:
+1. Feedback submission is failing with a generic "Failed to send feedback. Please try again." error.
+Debug why submissions are failing. Check:
+
+The API endpoint the form posts to — is it reachable, and does it expect the payload shape the form is sending?
+Authentication — Guest users are currently able to open and fill out the form, but submission may be failing because the backend requires an authenticated user. Decide and implement one of two behaviors:
+
+Option A: Allow guest submissions. The form should include an optional email field for guests so we have a way to follow up.
+Option B: Require login. If a guest tries to access Feedback, redirect them to sign-in with a message explaining that feedback requires an account.
+
+
+Database/storage — is the feedback actually being written anywhere? Confirm the Feedback Inbox in the Admin section is reading from the same source the form writes to.
+CORS, rate limiting, or any middleware that might be blocking the request.
+
+After fixing, test end-to-end: submit a feedback entry, confirm it lands in the Feedback Inbox, and confirm no console or network errors.
+2. Replace the generic error message with specific, actionable error states.
+Right now any failure shows "Failed to send feedback. Please try again." Replace this with distinct messages for each failure mode:
+
+Network error → "Couldn't reach the server. Check your connection and try again."
+Auth error (if Option B above) → "Please sign in to send feedback."
+Validation error → field-specific inline errors (e.g., "Message is required," "Message must be at least 20 characters")
+Server error (500) → "Something went wrong on our end. We've been notified. Please try again in a few minutes."
+Rate limit → "You've sent several messages recently. Please wait a moment before sending another."
+
+Log all errors to the console with enough detail for debugging (status code, response body), but show the user the friendly version.
+3. Implement a success state.
+Currently there is no defined behavior when submission succeeds. Implement:
+
+Clear the form (Type resets to default, Message field empties)
+Show a success toast in the same bottom-right position as the error toast, but styled in the app's glassmorphism/glow aesthetic to match the rest of PsychPro (not the current white toast which looks out of place)
+Success message: "Thanks — your feedback has been sent. We read every message and will follow up if needed."
+The success toast should auto-dismiss after ~4 seconds
+If the user submitted a Bug Report or Content Suggestion specifically, the message can be slightly tailored (e.g., "Thanks for the bug report — we're on it.")
+
+Match the existing dark theme, glow borders, and rounded styling used elsewhere in the app. Do not introduce new colors outside the existing palette.
