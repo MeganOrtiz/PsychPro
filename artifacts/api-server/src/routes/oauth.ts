@@ -96,10 +96,15 @@ router.post("/oauth/register", (req: Request, res: Response): void => {
     }
     try {
       const parsed = new URL(u);
-      if (parsed.protocol !== "https:" && parsed.hostname !== "localhost" && parsed.hostname !== "127.0.0.1") {
+      const isHttps = parsed.protocol === "https:";
+      const isLoopback = parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1";
+      const isHttpLoopback = parsed.protocol === "http:" && isLoopback;
+      // Spec: HTTPS anywhere, OR plain HTTP only on loopback. Anything else
+      // (ftp://, custom schemes, http on a public host, …) is rejected.
+      if (!isHttps && !isHttpLoopback) {
         res.status(400).json({
           error: "invalid_redirect_uri",
-          error_description: "redirect_uri must use https (or http on localhost)",
+          error_description: "redirect_uri must use https (or http on localhost/127.0.0.1)",
         });
         return;
       }
