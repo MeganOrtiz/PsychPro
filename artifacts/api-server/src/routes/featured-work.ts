@@ -156,29 +156,46 @@ async function isAdmin(userId: string): Promise<boolean> {
   return !!u?.isAdmin;
 }
 
-// Admin gate — mirrors the feedback inbox `requireAdmin` helper so the same
-// set of users see moderation routes without an extra grant flow. This is
-// the established project-wide pattern (see routes/feedback.ts); diverging
-// here would cause Featured Work moderation to fail for users that the
-// Feedback inbox already treats as admin.
+// Strict admin gate for Featured Work moderation.
+//
+// Rules (no silent self-promotion):
+//   1. The caller MUST have `users.isAdmin = true` already, OR
+//   2. The caller MUST present a valid `x-admin-secret` header that matches
+//      the server-side `MCP_ADMIN_SECRET`. When (2) succeeds we upsert the
+//      caller as admin so subsequent requests from the same user don't
+//      require the header. This bootstrap path is the only way a non-admin
+//      can gain admin access, and it is gated by a secret only the operator
+//      knows.
+//
+// All other callers receive 403 — no on-demand privilege escalation.
 async function requireAdminCaller(req: Request, res: Response): Promise<string | null> {
   const userId = requireUserId(req, res);
   if (!userId) return null;
+
   const [existing] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
-  if (!existing) {
-    await db.insert(usersTable).values({
-      id: userId,
-      subscriptionStatus: "scholar",
-      isAdmin: true,
-      onboardingComplete: true,
-      usageCount: 0,
-    });
-  } else if (!existing.isAdmin) {
-    await db.update(usersTable)
-      .set({ isAdmin: true, subscriptionStatus: "scholar" })
-      .where(eq(usersTable.id, userId));
+  if (existing?.isAdmin) return userId;
+
+  const providedSecret = req.header("x-admin-secret");
+  const expectedSecret = process.env.MCP_ADMIN_SECRET;
+  if (expectedSecret && providedSecret && providedSecret === expectedSecret) {
+    if (!existing) {
+      await db.insert(usersTable).values({
+        id: userId,
+        subscriptionStatus: "scholar",
+        isAdmin: true,
+        onboardingComplete: true,
+        usageCount: 0,
+      });
+    } else {
+      await db.update(usersTable)
+        .set({ isAdmin: true })
+        .where(eq(usersTable.id, userId));
+    }
+    return userId;
   }
-  return userId;
+
+  res.status(403).json({ error: "Admin access required" });
+  return null;
 }
 
 // =============================================================================
