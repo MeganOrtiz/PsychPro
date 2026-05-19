@@ -10,6 +10,7 @@ type FeedbackEntry = {
   id: number;
   userId: string;
   email: string | null;
+  submitterEmail: string | null;
   role: string | null;
   type: string;
   message: string;
@@ -140,7 +141,10 @@ export default function AdminFeedbackPage() {
                     {entry.status}
                   </span>
                   <span className="text-xs text-muted-foreground truncate">
-                    {entry.email || entry.role || entry.userId.slice(0, 12) + "…"}
+                    {entry.email || entry.submitterEmail || entry.role || entry.userId.slice(0, 12) + "…"}
+                    {entry.submitterEmail && entry.email && entry.submitterEmail !== entry.email && (
+                      <span className="ml-1 opacity-70">· reply: {entry.submitterEmail}</span>
+                    )}
                   </span>
                 </div>
                 <div className="flex items-center gap-1 text-xs text-muted-foreground whitespace-nowrap flex-shrink-0">

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MessageSquare, Send, CheckCircle } from "lucide-react";
+import { MessageSquare, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -9,52 +9,99 @@ const FEEDBACK_TYPES = [
   { value: "general", label: "💬 General Feedback" },
 ];
 
+const MIN_MESSAGE_LENGTH = 20;
+const DEFAULT_TYPE = "general";
+
+const SUCCESS_COPY: Record<string, string> = {
+  bug: "Thanks for the bug report — we're on it.",
+  content: "Thanks for the suggestion — we'll take a look.",
+  general: "Thanks — your feedback has been sent. We read every message and will follow up if needed.",
+};
+
+type FieldErrors = { message?: string; submitterEmail?: string };
+
 export default function FeedbackPage() {
-  const [type, setType] = useState("general");
+  const [type, setType] = useState(DEFAULT_TYPE);
   const [message, setMessage] = useState("");
+  const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+
+  function validateClient(): FieldErrors {
+    const errs: FieldErrors = {};
+    const trimmed = message.trim();
+    if (!trimmed) {
+      errs.message = "Message is required.";
+    } else if (trimmed.length < MIN_MESSAGE_LENGTH) {
+      errs.message = `Please add a bit more detail — at least ${MIN_MESSAGE_LENGTH} characters (currently ${trimmed.length}).`;
+    }
+    if (email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      errs.submitterEmail = "Please enter a valid email address.";
+    }
+    return errs;
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!message.trim()) return;
+    const clientErrs = validateClient();
+    setFieldErrors(clientErrs);
+    if (Object.keys(clientErrs).length > 0) return;
+
     setSubmitting(true);
+    const submittedType = type;
+    let res: Response;
     try {
-      const res = await fetch("/api/feedback", {
+      res = await fetch("/api/feedback", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type, message }),
+        body: JSON.stringify({
+          type: submittedType,
+          message: message.trim(),
+          submitterEmail: email.trim() || undefined,
+        }),
       });
-      if (!res.ok) throw new Error("Failed to submit");
-      setSubmitted(true);
-    } catch {
-      toast.error("Failed to send feedback. Please try again.");
-    } finally {
+    } catch (networkErr) {
+      console.error("[feedback] network error", networkErr);
+      toast.error("Can't reach the server. Check your connection and try again.");
       setSubmitting(false);
+      return;
     }
-  }
 
-  if (submitted) {
-    return (
-      <div className="min-h-full study-page-bg">
-        <div className="max-w-lg mx-auto p-4 md:p-6 lg:p-8">
-          <div className="flex flex-col items-center text-center py-16 gap-4">
-            <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-              <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
-            </div>
-            <h2 className="text-xl font-bold text-foreground">Thanks for your feedback!</h2>
-            <p className="text-muted-foreground text-sm">Your message has been received. We appreciate you helping improve PsychPro.</p>
-            <Button
-              variant="outline"
-              className="mt-2"
-              onClick={() => { setSubmitted(false); setMessage(""); setType("general"); }}
-            >
-              Send another
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
+    let body: any = null;
+    try {
+      body = await res.clone().json();
+    } catch {
+      try { body = await res.text(); } catch { body = null; }
+    }
+
+    if (res.ok) {
+      setMessage("");
+      setEmail("");
+      setType(DEFAULT_TYPE);
+      setFieldErrors({});
+      toast.success(SUCCESS_COPY[submittedType] ?? SUCCESS_COPY.general, {
+        duration: 4000,
+        position: "bottom-right",
+      });
+      setSubmitting(false);
+      return;
+    }
+
+    console.error(`[feedback] submit failed: ${res.status}`, body);
+
+    if (res.status === 400 && body && typeof body === "object" && body.fieldErrors) {
+      setFieldErrors(body.fieldErrors);
+      toast.error("Please fix the highlighted fields and try again.");
+    } else if (res.status === 401 || res.status === 403) {
+      toast.error("You're not allowed to send feedback right now. Try signing in and try again.");
+    } else if (res.status === 429) {
+      toast.error("You're sending feedback too quickly. Please wait a moment and try again.");
+    } else if (res.status >= 500) {
+      toast.error("Something went wrong on our end. Please try again in a minute.");
+    } else {
+      toast.error(`Couldn't send feedback (error ${res.status}). Please try again.`);
+    }
+    setSubmitting(false);
   }
 
   return (
@@ -70,7 +117,7 @@ export default function FeedbackPage() {
         <p className="text-sm text-muted-foreground">Found a bug? Have a suggestion? We want to hear it.</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-5" noValidate>
         <div>
           <label className="block text-sm font-medium text-foreground mb-2">Type</label>
           <div className="grid grid-cols-2 gap-2">
@@ -92,18 +139,62 @@ export default function FeedbackPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">Message</label>
+          <label className="block text-sm font-medium text-foreground mb-2" htmlFor="feedback-message">Message</label>
           <textarea
+            id="feedback-message"
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={(e) => {
+              setMessage(e.target.value);
+              if (fieldErrors.message) setFieldErrors((p) => ({ ...p, message: undefined }));
+            }}
             placeholder="Tell us what's on your mind..."
             rows={5}
-            required
-            className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+            aria-invalid={!!fieldErrors.message}
+            aria-describedby={fieldErrors.message ? "feedback-message-error" : undefined}
+            className={`w-full rounded-lg border px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 ${
+              fieldErrors.message
+                ? "border-red-400/60 bg-card focus:ring-red-400/60"
+                : "border-border bg-card focus:ring-primary"
+            }`}
           />
+          {fieldErrors.message ? (
+            <p id="feedback-message-error" className="mt-1.5 text-xs text-red-400" role="alert">
+              {fieldErrors.message}
+            </p>
+          ) : (
+            <p className="mt-1.5 text-xs text-muted-foreground">At least {MIN_MESSAGE_LENGTH} characters.</p>
+          )}
         </div>
 
-        <Button type="submit" className="w-full gap-2" disabled={submitting || !message.trim()}>
+        <div>
+          <label className="block text-sm font-medium text-foreground mb-2" htmlFor="feedback-email">
+            Email <span className="text-muted-foreground font-normal">(optional, if you'd like a reply)</span>
+          </label>
+          <input
+            id="feedback-email"
+            type="email"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (fieldErrors.submitterEmail) setFieldErrors((p) => ({ ...p, submitterEmail: undefined }));
+            }}
+            placeholder="you@example.com"
+            aria-invalid={!!fieldErrors.submitterEmail}
+            aria-describedby={fieldErrors.submitterEmail ? "feedback-email-error" : undefined}
+            className={`w-full rounded-lg border px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 ${
+              fieldErrors.submitterEmail
+                ? "border-red-400/60 bg-card focus:ring-red-400/60"
+                : "border-border bg-card focus:ring-primary"
+            }`}
+          />
+          {fieldErrors.submitterEmail && (
+            <p id="feedback-email-error" className="mt-1.5 text-xs text-red-400" role="alert">
+              {fieldErrors.submitterEmail}
+            </p>
+          )}
+        </div>
+
+        <Button type="submit" className="w-full gap-2" disabled={submitting}>
           <Send className="w-4 h-4" />
           {submitting ? "Sending..." : "Send Feedback"}
         </Button>

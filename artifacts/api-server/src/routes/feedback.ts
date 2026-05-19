@@ -60,19 +60,58 @@ router.get("/feedback/is-admin", async (req: Request, res: Response): Promise<vo
   }
 });
 
+const MIN_MESSAGE_LENGTH = 20;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 router.post("/feedback", async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = requireUserId(req, res);
     if (!userId) return;
-    const { type, message } = req.body;
-    if (!message || typeof message !== "string" || message.trim().length === 0) {
-      res.status(400).json({ error: "Message is required" });
+    const { type, message, submitterEmail } = req.body ?? {};
+
+    const fieldErrors: Record<string, string> = {};
+    const trimmedMessage = typeof message === "string" ? message.trim() : "";
+    if (!trimmedMessage) {
+      fieldErrors.message = "Message is required.";
+    } else if (trimmedMessage.length < MIN_MESSAGE_LENGTH) {
+      fieldErrors.message = `Message must be at least ${MIN_MESSAGE_LENGTH} characters.`;
+    }
+
+    let cleanEmail: string | null = null;
+    if (submitterEmail != null && submitterEmail !== "") {
+      if (typeof submitterEmail !== "string" || !EMAIL_RE.test(submitterEmail.trim())) {
+        fieldErrors.submitterEmail = "Please enter a valid email address.";
+      } else {
+        cleanEmail = submitterEmail.trim();
+      }
+    }
+
+    if (Object.keys(fieldErrors).length > 0) {
+      res.status(400).json({ error: "Validation failed", fieldErrors });
       return;
     }
+
+    // Auto-upsert the caller's user row so anonymous and signed-in callers
+    // can both write feedback without tripping the FK constraint.
+    const [existing] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
+    if (!existing) {
+      await db.insert(usersTable).values({
+        id: userId,
+        email: cleanEmail,
+        subscriptionStatus: "free",
+        onboardingComplete: false,
+        usageCount: 0,
+      }).onConflictDoNothing();
+    } else if (cleanEmail && !existing.email) {
+      // Backfill email if the user row has none yet.
+      await db.update(usersTable).set({ email: cleanEmail }).where(eq(usersTable.id, userId));
+    }
+
     const [entry] = await db.insert(feedbackTable).values({
       userId,
-      type: type || "general",
-      message: message.trim(),
+      submitterEmail: cleanEmail,
+      type: typeof type === "string" && type ? type : "general",
+      message: trimmedMessage,
       status: "unread",
     }).returning();
     res.status(201).json(entry);
@@ -92,6 +131,7 @@ router.get("/feedback", async (req: Request, res: Response): Promise<void> => {
         id: feedbackTable.id,
         userId: feedbackTable.userId,
         email: usersTable.email,
+        submitterEmail: feedbackTable.submitterEmail,
         role: usersTable.role,
         type: feedbackTable.type,
         message: feedbackTable.message,

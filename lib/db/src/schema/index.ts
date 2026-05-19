@@ -114,6 +114,7 @@ export type PracticeExamQuestion = typeof practiceExamQuestionsTable.$inferSelec
 export const feedbackTable = pgTable("feedback", {
   id: serial("id").primaryKey(),
   userId: text("user_id").notNull().references(() => usersTable.id),
+  submitterEmail: text("submitter_email"),
   type: text("type").notNull().default("general"),
   message: text("message").notNull(),
   status: text("status").notNull().default("unread"),
