@@ -387,18 +387,51 @@ router.post("/connections/requests", async (req: Request, res: Response): Promis
       return;
     }
 
-    const [created] = await db
-      .insert(connectionRequestsTable)
-      .values({
-        requesterId: userId,
-        recipientId,
-        status: "pending",
-        sharedTags: JSON.stringify(shared),
-      })
-      .returning();
+    let created: typeof connectionRequestsTable.$inferSelect;
+    try {
+      [created] = await db
+        .insert(connectionRequestsTable)
+        .values({
+          requesterId: userId,
+          recipientId,
+          status: "pending",
+          sharedTags: JSON.stringify(shared),
+        })
+        .returning();
+    } catch (insertErr) {
+      // Race against the partial unique index — another concurrent POST
+      // beat us to inserting the same (requester, recipient) pending row.
+      // Treat as idempotent and return the existing row, matching the
+      // duplicate-check branch above.
+      const code = (insertErr as { code?: string } | null)?.code;
+      if (code === "23505") {
+        const [existingRow] = await db
+          .select()
+          .from(connectionRequestsTable)
+          .where(
+            and(
+              eq(connectionRequestsTable.requesterId, userId),
+              eq(connectionRequestsTable.recipientId, recipientId),
+              eq(connectionRequestsTable.status, "pending"),
+            ),
+          );
+        if (existingRow) {
+          res.status(200).json({
+            id: existingRow.id,
+            status: existingRow.status,
+            recipientDisplayName: recipient.displayName,
+            sharedTags: parseTags(existingRow.sharedTags),
+            duplicate: true,
+          });
+          return;
+        }
+      }
+      throw insertErr;
+    }
 
     // Notification for recipient — does NOT include the requester's email.
-    const myName = me?.displayName ?? "A fellow PsychPro member";
+    const appUrl = process.env.PUBLIC_APP_URL ?? "https://psychpro.app";
+    const incomingUrl = `${appUrl}/connections?incoming=${created.id}`;
     const topShared = shared.slice(0, CONNECTION_SHARED_TAGS_HIGHLIGHTED).join(", ") ||
       "shared interests";
     await db.insert(notificationsTable).values({
@@ -424,14 +457,14 @@ router.post("/connections/requests", async (req: Request, res: Response): Promis
           `A fellow PsychPro user is interested in connecting based on your ` +
           `shared interest in ${topShared}.\n\n` +
           `View their profile and decide if you'd like to connect: ` +
-          `https://psychpro.app/connections?incoming=${created.id}\n\n` +
+          `${incomingUrl}\n\n` +
           `If you accept, we'll send one introduction email to both of you. ` +
           `If you decline, we'll silently close the request and they won't be notified.`,
         html:
           `<p>Hi ${escapeHtml(recipName)},</p>` +
           `<p>A fellow PsychPro user is interested in connecting based on your ` +
           `shared interest in <strong>${escapeHtml(topShared)}</strong>.</p>` +
-          `<p><a href="https://psychpro.app/connections?incoming=${created.id}">` +
+          `<p><a href="${incomingUrl}">` +
           `View their profile and decide</a>.</p>` +
           `<p>If you accept, we'll send one introduction email to both of you. ` +
           `If you decline, we'll silently close the request and they won't be notified.</p>`,
