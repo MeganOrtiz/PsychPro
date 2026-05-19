@@ -21,14 +21,6 @@ import {
 import { STUDY_PALETTE as P } from "@neuronotes/lib/study-theme";
 import { LightCard, LIGHT_CARD_STYLE as CARD_LIGHT } from "./_shared/LightCard";
 
-const CARD_DARK = {
-  background:
-    "linear-gradient(145deg, rgba(10,45,61,0.85), rgba(6,31,43,0.96))",
-  border: `1px solid rgba(42,115,135,0.45)`,
-  boxShadow: "0 20px 40px -10px rgba(3,21,29,0.8)",
-  borderRadius: 22,
-} as const;
-
 const BRAND_GRADIENT = `linear-gradient(135deg, ${P.teal}, ${P.surf})`;
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
@@ -289,31 +281,24 @@ export function Dashboard() {
             </div>
 
             {/* Banner */}
-            <div
-              className="p-5 flex flex-col gap-4"
-              style={{
-                background: "rgba(94,176,200,.12)",
-                border: "1px solid rgba(118,228,247,.4)",
-                borderRadius: 22,
-              }}
-            >
+            <LightCard className="p-5 flex flex-col gap-4">
               <div className="flex gap-3">
                 <div
                   className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
                   style={{ background: `${P.surf}33` }}
                 >
-                  <Sparkles className="w-4 h-4" style={{ color: P.teal }} />
+                  <Sparkles className="w-4 h-4" style={{ color: P.tealDeep }} />
                 </div>
                 <div>
                   <h4
                     className="font-medium mb-1"
-                    style={{ color: P.cloud }}
+                    style={{ color: P.surface }}
                   >
                     You're close to your free limit
                   </h4>
                   <p
                     className="text-sm font-light"
-                    style={{ color: P.mist }}
+                    style={{ color: P.tealDeep }}
                   >
                     8 of 10 free interactions used
                   </p>
@@ -322,36 +307,22 @@ export function Dashboard() {
               <button
                 className="w-full py-2.5 rounded-full font-medium text-sm transition-colors"
                 style={{
-                  border: `1px solid ${P.surf}80`,
-                  color: P.surf,
-                  background: "transparent",
+                  background: BRAND_GRADIENT,
+                  color: P.cloud,
                 }}
               >
                 Upgrade to Unlimited
               </button>
-            </div>
+            </LightCard>
           </div>
         </div>
 
         {/* Recommended — horizontal-scroll carousel */}
         <div className="mb-10">
-          <div className="flex items-end justify-between mb-4 ml-1 pr-1">
-            <h3
-              className="text-[11px] font-bold uppercase"
-              style={{ color: P.tealDeep, letterSpacing: "0.18em" }}
-            >
-              Recommended For You
-            </h3>
-            <span
-              className="text-[10px] uppercase"
-              style={{ color: P.mist, letterSpacing: "0.18em" }}
-            >
-              ← scroll →
-            </span>
-          </div>
+          <SectionLabel>Recommended For You</SectionLabel>
 
           <div
-            className="flex gap-4 overflow-x-auto pb-4 -mx-1 px-1 snap-x snap-mandatory"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:overflow-visible overflow-x-auto pb-4 snap-x snap-mandatory"
             style={{ scrollbarWidth: "thin" }}
           >
             {[
@@ -370,26 +341,10 @@ export function Dashboard() {
                 desc: "Sharpen your weak area",
                 icon: Sparkles,
               },
-              {
-                title: "Limbic System",
-                desc: "Frequently on exams",
-                icon: TrendingUp,
-              },
-              {
-                title: "Psychopharmacology",
-                desc: "High-yield clinical topic",
-                icon: Activity,
-              },
-              {
-                title: "Validity & Effort Testing",
-                desc: "Round out assessment",
-                icon: ShieldCheck,
-              },
             ].map((item, i) => (
-              <div
+              <LightCard
                 key={i}
-                className="p-5 flex items-center gap-4 cursor-pointer hover:-translate-y-0.5 transition-transform duration-300 group shrink-0 snap-start"
-                style={{ ...CARD_LIGHT, width: 320 }}
+                className="p-5 flex items-center gap-4 cursor-pointer hover:-translate-y-0.5 transition-transform duration-300 group snap-start"
               >
                 <div
                   className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
@@ -418,7 +373,7 @@ export function Dashboard() {
                   className="w-5 h-5 transition-colors"
                   style={{ color: `${P.tealDeep}99` }}
                 />
-              </div>
+              </LightCard>
             ))}
           </div>
         </div>
@@ -431,12 +386,12 @@ export function Dashboard() {
             style={{ scrollbarWidth: "thin" }}
           >
             {/* Card 1: Spotlight person */}
-            <div
+            <LightCard
               className="relative overflow-hidden shrink-0 snap-start"
-              style={{ ...CARD_DARK, width: 380 }}
+              style={{ width: 380 }}
             >
               <div
-                className="absolute top-0 left-0 right-0 h-28 opacity-60"
+                className="absolute top-0 left-0 right-0 h-28 opacity-70"
                 style={{
                   backgroundImage:
                     "url(/__mockup/images/spotlight_cloud.png)",
@@ -452,26 +407,26 @@ export function Dashboard() {
                 <Star
                   className="w-6 h-6 mb-3"
                   style={{
-                    color: P.surf,
-                    filter: "drop-shadow(0 0 8px rgba(118,228,247,.6))",
+                    color: P.tealDeep,
+                    filter: "drop-shadow(0 0 8px rgba(94,176,200,.5))",
                   }}
                 />
                 <h4
                   className="text-sm font-light uppercase mb-1"
-                  style={{ color: P.cloud, letterSpacing: "0.18em" }}
+                  style={{ color: P.surface, letterSpacing: "0.18em" }}
                 >
                   PsychPro Spotlight
                 </h4>
                 <p
                   className="text-[10px] mb-5"
-                  style={{ color: P.mist, letterSpacing: "0.22em" }}
+                  style={{ color: P.tealDeep, letterSpacing: "0.22em" }}
                 >
                   LEARN. EXPAND. CONNECT.
                 </p>
                 <div
                   className="w-24 h-24 rounded-full overflow-hidden mb-4"
                   style={{
-                    boxShadow: `0 0 0 3px ${P.surf}, 0 0 28px rgba(118,228,247,.5)`,
+                    boxShadow: `0 0 0 3px ${P.teal}, 0 0 28px rgba(94,176,200,.4)`,
                   }}
                 >
                   <img
@@ -482,28 +437,28 @@ export function Dashboard() {
                 </div>
                 <h3
                   className="text-xl font-bold mb-1"
-                  style={{ color: P.cloud }}
+                  style={{ color: P.surface }}
                 >
                   Sarah K.
                 </h3>
                 <p
                   className="text-sm"
-                  style={{ color: P.mist }}
+                  style={{ color: P.tealDeep }}
                 >
                   PsyD Candidate
                   <br />
                   Clinical Neuropsychology
                 </p>
               </div>
-            </div>
+            </LightCard>
 
             {/* Card 2: Featured Work */}
-            <div
+            <LightCard
               className="relative overflow-hidden shrink-0 snap-start"
-              style={{ ...CARD_DARK, width: 520 }}
+              style={{ width: 520 }}
             >
               <div
-                className="absolute inset-0 z-0"
+                className="absolute inset-0 z-0 opacity-40"
                 style={{
                   backgroundImage:
                     "url(/__mockup/images/spotlight_neuron.png)",
@@ -514,7 +469,7 @@ export function Dashboard() {
               <div
                 className="absolute inset-0 z-0"
                 style={{
-                  background: `linear-gradient(to right, ${P.ink}f0, ${P.bg}cc 40%, transparent)`,
+                  background: `linear-gradient(to right, ${P.cloud}f5, ${P.cloud}e0 40%, ${P.cloud}80)`,
                 }}
               />
               <div className="relative z-10 p-7 flex flex-col justify-between h-full min-h-[300px]">
@@ -522,27 +477,23 @@ export function Dashboard() {
                   <span
                     className="inline-block text-[10px] font-bold uppercase px-2.5 py-1 rounded mb-4"
                     style={{
-                      color: P.surf,
-                      background: "rgba(10,45,61,0.6)",
-                      border: `1px solid ${P.steel}55`,
+                      color: P.tealDeep,
+                      background: `${P.surf}33`,
+                      border: `1px solid ${P.teal}66`,
                       letterSpacing: "0.2em",
-                      backdropFilter: "blur(4px)",
                     }}
                   >
                     FEATURED WORK
                   </span>
                   <h3
                     className="text-2xl font-bold mb-3 leading-tight max-w-md"
-                    style={{
-                      color: P.cloud,
-                      textShadow: "0 2px 8px rgba(0,0,0,0.6)",
-                    }}
+                    style={{ color: P.surface }}
                   >
                     SOCIAL COGNITION IN CHILDREN WITH AUTISM SPECTRUM DISORDER
                   </h3>
                   <p
                     className="text-sm max-w-md leading-relaxed mb-6"
-                    style={{ color: P.mist }}
+                    style={{ color: P.tealDeep }}
                   >
                     A comprehensive review of the neurological underpinnings of
                     social cognitive deficits in ASD, focusing on the default
@@ -552,29 +503,27 @@ export function Dashboard() {
                 <button
                   className="self-start px-5 py-2.5 rounded-full text-sm font-semibold flex items-center gap-2 transition-all"
                   style={{
-                    background: `${P.surf}1a`,
-                    border: `1px solid ${P.surf}55`,
+                    background: BRAND_GRADIENT,
                     color: P.cloud,
-                    backdropFilter: "blur(6px)",
                   }}
                 >
                   View Feature
                   <ArrowUpRight className="w-4 h-4" />
                 </button>
               </div>
-            </div>
+            </LightCard>
 
             {/* Card 3: Editor's Pick */}
-            <div
+            <LightCard
               className="relative overflow-hidden shrink-0 snap-start p-7"
-              style={{ ...CARD_DARK, width: 380 }}
+              style={{ width: 380 }}
             >
               <span
                 className="inline-block text-[10px] font-bold uppercase px-2.5 py-1 rounded mb-4"
                 style={{
-                  color: P.surf,
-                  background: "rgba(10,45,61,0.6)",
-                  border: `1px solid ${P.steel}55`,
+                  color: P.tealDeep,
+                  background: `${P.surf}33`,
+                  border: `1px solid ${P.teal}66`,
                   letterSpacing: "0.2em",
                 }}
               >
@@ -582,13 +531,13 @@ export function Dashboard() {
               </span>
               <h3
                 className="text-xl font-bold mb-3 leading-tight"
-                style={{ color: P.cloud }}
+                style={{ color: P.surface }}
               >
                 Reframing CBT for Complex Trauma Survivors
               </h3>
               <p
                 className="text-sm mb-6 leading-relaxed"
-                style={{ color: P.mist }}
+                style={{ color: P.tealDeep }}
               >
                 Dr. Mara Chen on integrating somatic regulation into traditional
                 cognitive therapy. Watch the 18-minute interview and download
@@ -596,7 +545,7 @@ export function Dashboard() {
               </p>
               <div
                 className="flex items-center gap-3 pt-4"
-                style={{ borderTop: `1px solid ${P.steel}40` }}
+                style={{ borderTop: `1px solid ${P.teal}40` }}
               >
                 <div
                   className="w-10 h-10 rounded-full flex items-center justify-center"
@@ -610,19 +559,19 @@ export function Dashboard() {
                 <div className="flex-1 min-w-0">
                   <p
                     className="text-xs font-semibold truncate"
-                    style={{ color: P.cloud }}
+                    style={{ color: P.surface }}
                   >
                     Trauma-Focused Approaches
                   </p>
                   <p
                     className="text-[11px] truncate"
-                    style={{ color: P.mist }}
+                    style={{ color: P.tealDeep }}
                   >
                     Interview · 18 min · Updated this week
                   </p>
                 </div>
               </div>
-            </div>
+            </LightCard>
           </div>
         </div>
 
