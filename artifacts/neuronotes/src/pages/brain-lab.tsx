@@ -705,7 +705,7 @@ function ViewModeToggle({
   mode: ViewMode;
   setMode: (m: ViewMode) => void;
 }) {
-  const items: { value: ViewMode; label: string; Icon: React.ElementType }[] = [
+  const items: { value: ViewMode; label: string; Icon: React.ComponentType<{ className?: string }> }[] = [
     { value: "external", label: "External", Icon: Eye },
     { value: "cutaway", label: "Cutaway", Icon: Layers },
   ];
@@ -753,7 +753,7 @@ function TopTabs({
   active: TabGroup | "all";
   setActive: (g: TabGroup | "all") => void;
 }) {
-  const items: { value: TabGroup | "all"; label: string; Icon: React.ElementType }[] = [
+  const items: { value: TabGroup | "all"; label: string; Icon: React.ComponentType<{ className?: string }> }[] = [
     { value: "all", label: "All", Icon: Compass },
     ...TAB_KEYS.map((k) => ({ value: k, label: TAB_GROUPS[k].label, Icon: TAB_GROUPS[k].icon })),
   ];

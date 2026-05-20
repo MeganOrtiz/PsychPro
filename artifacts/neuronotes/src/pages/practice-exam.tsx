@@ -38,7 +38,7 @@ export default function PracticeExamPage({ params }: Props) {
   const [showUpgrade, setShowUpgrade] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const { data: exam, isLoading, error } = useGetPracticeExamByTopic(topicId, questionCount ?? undefined);
+  const { data: exam, isLoading, error } = useGetPracticeExamByTopic(topicId);
   const { data: topic } = useGetTopic(topicId);
   const updateProgress = useUpdateTopicProgress();
   const incrementUsage = useIncrementUserUsage();

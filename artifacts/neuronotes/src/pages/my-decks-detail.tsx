@@ -14,14 +14,14 @@ type ClozeItem = { id: number; sentence: string; answer: string; hint: string | 
 
 type Tab = "flashcards" | "quiz" | "cloze" | "match" | "review" | "study-guide" | "exam";
 
-const STANDARD_TABS: { id: Tab; label: string; icon: React.ElementType; toolId: string }[] = [
+const STANDARD_TABS: { id: Tab; label: string; icon: React.ComponentType<{ className?: string }>; toolId: string }[] = [
   { id: "flashcards", label: "Flashcards", icon: Layers, toolId: "flashcards" },
   { id: "quiz", label: "Quiz", icon: BookMarked, toolId: "quiz" },
   { id: "study-guide", label: "Study Guide", icon: FileText, toolId: "studyGuide" },
   { id: "exam", label: "Practice Exam", icon: GraduationCap, toolId: "exam" },
 ];
 
-const PRO_TABS: { id: Tab; label: string; icon: React.ElementType; toolId: string }[] = [
+const PRO_TABS: { id: Tab; label: string; icon: React.ComponentType<{ className?: string }>; toolId: string }[] = [
   { id: "match", label: "Matching", icon: Shuffle, toolId: "match" },
   { id: "cloze", label: "Fill-in-Blank", icon: Pencil, toolId: "cloze" },
   { id: "review", label: "Spaced Review", icon: Repeat, toolId: "review" },

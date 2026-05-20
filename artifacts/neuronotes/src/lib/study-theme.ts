@@ -41,6 +41,7 @@ export const STUDY_PALETTE = {
   teal: "#5EB0C8",        // cyan
   surf: "#76E4F7",        // bright-cyan (primary glow)
   mist: "#A7F3FF",        // soft-cyan (icy text)
+  mistSoft: "#7FBFD0",    // dimmer soft-cyan (muted icy text on dark surfaces)
 
   // Neutrals
   cloud: "#F4FBFF",       // brightest text (text-main)

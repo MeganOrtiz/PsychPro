@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { STUDY_PALETTE } from "@/lib/study-theme";
 
-type NavItem = { href: string; label: string; icon: React.ElementType };
+type NavItem = { href: string; label: string; icon: React.ComponentType<{ className?: string }> };
 
 // Shared glass tile styling for sidebar nav items — translucent surface
 // with a soft teal glow on hover, mirroring the landing page chip styling.

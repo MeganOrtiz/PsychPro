@@ -20,7 +20,7 @@ type ToolDef = {
   label: string;
   blurb: string;
   longBlurb: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
 };
 
 const STANDARD_TOOLS: ToolDef[] = [

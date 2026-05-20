@@ -65,7 +65,7 @@ type TechId = "active-recall" | "spaced" | "mixed" | "elaboration";
 
 const TECHNIQUES: {
   id: TechId;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   title: string;
   blurb: string;
   longBlurb: string;
