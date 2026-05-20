@@ -86,7 +86,7 @@ async function getOrCreateProfile(userId: string): Promise<typeof userProfilesTa
 router.get("/profile/public/:userId", async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = req.params.userId;
-    if (!userId) { res.status(404).json({ error: "Not found" }); return; }
+    if (!userId || typeof userId !== "string") { res.status(404).json({ error: "Not found" }); return; }
     const [row] = await db
       .select()
       .from(userProfilesTable)
