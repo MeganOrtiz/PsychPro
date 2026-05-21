@@ -1,11 +1,10 @@
 import { type Request, type Response } from "express";
 import { getAuth } from "@clerk/express";
 
-// The legacy `X-User-Id` header name is kept for backwards-compatible logging
-// only. Identity is now derived from the verified Clerk session token (set on
-// the request by `clerkMiddleware()` in `src/app.ts`) — the header itself is
-// no longer read for any authorization decision.
-export const USER_ID_HEADER = "x-user-id";
+// Identity is derived exclusively from the verified Clerk session token (set
+// on the request by `clerkMiddleware()` in `src/app.ts`). The legacy
+// `X-User-Id` request header is neither read by the server nor sent by the
+// frontend any more — see `replit.md` § Auth Pattern.
 
 /**
  * Returns the verified Clerk user id for the current request, or `null` when

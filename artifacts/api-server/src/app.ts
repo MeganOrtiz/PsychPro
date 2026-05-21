@@ -84,11 +84,11 @@ app.use(express.urlencoded({ extended: true }));
 // <token>` on every request. Populates `getAuth(req)` so the route-level
 // `requireUserId(req,res)` / `getOptionalUserId(req)` helpers in
 // `src/lib/userId.ts` can read the verified Clerk user id. Every protected
-// `/api/**` route now derives identity from this middleware; the legacy
-// `X-User-Id` request header is no longer consulted for any authorization
-// decision (see `src/lib/userId.ts`, `replit.md` § Auth Pattern, and
-// `threat_model.md` § Spoofing). If Clerk credentials are missing the
-// middleware no-ops and protected routes will respond `401 Unauthorized`.
+// `/api/**` route derives identity from this middleware — there is no
+// fallback to any client-supplied identity header (see `src/lib/userId.ts`,
+// `replit.md` § Auth Pattern, and `threat_model.md` § Spoofing). If Clerk
+// credentials are missing the middleware no-ops and protected routes will
+// respond `401 Unauthorized`.
 app.use(
   clerkMiddleware({
     publishableKey: process.env.CLERK_PUBLISHABLE_KEY,

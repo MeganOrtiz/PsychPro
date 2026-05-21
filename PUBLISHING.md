@@ -11,7 +11,7 @@ working production deployment on `*.replit.app`. Follow it top-to-bottom on the
 > **Deploy ordering (May 2026 server-verified auth migration):** the API server
 > now requires a verified Clerk session on every protected `/api/**` route.
 > Deploy order is safe in either direction — the API server still tolerates
-> requests that include the legacy `X-User-Id` header (it ignores them), and
+> requests (the legacy `X-User-Id` header is no longer sent or consulted), and
 > the frontend already sends `Authorization: Bearer <clerk-token>` via
 > `ClerkTokenBridge` for every signed-in user. As long as production
 > `CLERK_SECRET_KEY` and `CLERK_PUBLISHABLE_KEY` (server) and

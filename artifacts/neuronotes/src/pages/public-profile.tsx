@@ -3,7 +3,6 @@ import { useParams, useLocation } from "wouter";
 import { ArrowLeft, User as UserIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getCurrentUserId } from "@/lib/user-id";
 
 type PublicProfile = {
   userId: string;
@@ -22,9 +21,9 @@ export default function PublicProfilePage() {
 
   useEffect(() => {
     if (!params.userId) return;
-    fetch(`/api/profile/public/${encodeURIComponent(params.userId)}`, {
-      headers: { "X-User-Id": getCurrentUserId() },
-    })
+    // Public route — no Clerk session required; the API only returns rows
+    // where the owner has opted in via `pref_show_on_featured_work`.
+    fetch(`/api/profile/public/${encodeURIComponent(params.userId)}`)
       .then(async (r) => {
         if (r.ok) { setProfile(await r.json()); setState("ok"); }
         else setState("not-found");

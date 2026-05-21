@@ -3,7 +3,7 @@ import { User as UserIcon, Save, Camera, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { getCurrentUserId } from "@/lib/user-id";
+import { authHeaders, jsonAuthHeaders } from "@/lib/auth-headers";
 import {
   INTERESTS_TAXONOMY,
   PROFILE_ROLES,
@@ -53,8 +53,11 @@ function extractFieldErrors(body: unknown): FieldErrors | null {
   return Object.keys(out).length > 0 ? out : null;
 }
 
-function userHeaders(): HeadersInit {
-  return { "X-User-Id": getCurrentUserId(), "Content-Type": "application/json" };
+async function userHeaders(): Promise<HeadersInit> {
+  return jsonAuthHeaders();
+}
+async function readHeaders(): Promise<HeadersInit> {
+  return authHeaders();
 }
 
 function initialsFor(name: string | null | undefined): string {
@@ -92,7 +95,7 @@ export default function ProfilePage() {
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch("/api/profile/me", { headers: userHeaders() });
+        const res = await fetch("/api/profile/me", { headers: await readHeaders() });
         if (!res.ok) throw new Error(`load failed: ${res.status}`);
         const p = (await res.json()) as Profile;
         if (cancelled) return;
@@ -149,7 +152,7 @@ export default function ProfilePage() {
     try {
       const urlRes = await fetch("/api/storage/uploads/request-url", {
         method: "POST",
-        headers: userHeaders(),
+        headers: await userHeaders(),
         body: JSON.stringify({ name: file.name, size: file.size, contentType: file.type }),
       });
       if (!urlRes.ok) throw new Error(`request-url failed: ${urlRes.status}`);
@@ -202,7 +205,7 @@ export default function ProfilePage() {
     try {
       res = await fetch("/api/profile/me", {
         method: "PATCH",
-        headers: userHeaders(),
+        headers: await userHeaders(),
         body: JSON.stringify({
           displayName: displayName.trim(),
           currentRole: currentRole || null,

@@ -19,7 +19,7 @@ import {
   MAX_FEATURED_VENUE_LENGTH,
   workTypeLabel,
 } from "@workspace/community";
-import { getCurrentUserId } from "@/lib/user-id";
+import { authHeaders, jsonAuthHeaders } from "@/lib/auth-headers";
 
 type Submission = {
   id: number;
@@ -43,8 +43,8 @@ type Submission = {
 
 const ABSTRACT_PREVIEW = 220;
 
-function headers() { return { "X-User-Id": getCurrentUserId() }; }
-function jsonHeaders() { return { "Content-Type": "application/json", ...headers() }; }
+function headers(): Promise<Record<string, string>> { return authHeaders(); }
+function jsonHeaders(): Promise<Record<string, string>> { return jsonAuthHeaders(); }
 function objectsUrl(p: string | null): string | null {
   if (!p) return null;
   if (p.startsWith("http")) return p;
@@ -69,7 +69,7 @@ export default function FeaturedWorkPage() {
       if (workTypeFilter) params.set("workType", workTypeFilter);
       if (tagFilter) params.set("tag", tagFilter);
       if (q.trim()) params.set("q", q.trim());
-      const res = await fetch(`/api/featured-work?${params.toString()}`, { headers: headers() });
+      const res = await fetch(`/api/featured-work?${params.toString()}`, { headers: await headers() });
       if (!res.ok) throw new Error();
       setArchive(await res.json());
     } catch {
@@ -87,10 +87,13 @@ export default function FeaturedWorkPage() {
     const sp = new URLSearchParams(window.location.search);
     const subId = sp.get("submission");
     if (subId) {
-      fetch(`/api/featured-work/${subId}`, { headers: headers() })
-        .then((r) => (r.ok ? r.json() : null))
-        .then((d) => { if (d) setDetail(d); })
-        .catch(() => {});
+      (async () => {
+        const h = await headers();
+        fetch(`/api/featured-work/${subId}`, { headers: h })
+          .then((r) => (r.ok ? r.json() : null))
+          .then((d) => { if (d) setDetail(d); })
+          .catch(() => {});
+      })();
     }
   }, [location]);
 
@@ -382,12 +385,15 @@ function SubmitForm({ onSubmitted }: { onSubmitted: () => void }) {
   const [profileLoaded, setProfileLoaded] = useState(false);
 
   useEffect(() => {
-    fetch("/api/profile/me", { headers: headers() })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((p: Profile | null) => {
-        if (p?.displayName) setForm((f) => ({ ...f, displayName: f.displayName || p.displayName! }));
-      })
-      .finally(() => setProfileLoaded(true));
+    (async () => {
+      const h = await headers();
+      fetch("/api/profile/me", { headers: h })
+        .then((r) => (r.ok ? r.json() : null))
+        .then((p: Profile | null) => {
+          if (p?.displayName) setForm((f) => ({ ...f, displayName: f.displayName || p.displayName! }));
+        })
+        .finally(() => setProfileLoaded(true));
+    })();
   }, []);
 
   function update<K extends keyof FormState>(k: K, v: FormState[K]) {
@@ -419,7 +425,7 @@ function SubmitForm({ onSubmitted }: { onSubmitted: () => void }) {
     try {
       const reqRes = await fetch("/api/storage/uploads/request-url", {
         method: "POST",
-        headers: jsonHeaders(),
+        headers: await jsonHeaders(),
         body: JSON.stringify({ name: file.name, size: file.size, contentType: file.type }),
       });
       if (!reqRes.ok) throw new Error("upload request failed");
@@ -441,7 +447,7 @@ function SubmitForm({ onSubmitted }: { onSubmitted: () => void }) {
     try {
       const res = await fetch("/api/featured-work", {
         method: "POST",
-        headers: jsonHeaders(),
+        headers: await jsonHeaders(),
         body: JSON.stringify({
           workType: form.workType,
           title: form.title.trim(),

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { workTypeLabel } from "@workspace/community";
-import { getCurrentUserId } from "@/lib/user-id";
+import { authHeaders } from "@/lib/auth-headers";
 
 type Submission = {
   id: number;
@@ -44,7 +44,7 @@ const STATUS_PILL: Record<Status, string> = {
   rejected: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
 };
 
-function headers() { return { "X-User-Id": getCurrentUserId() }; }
+function headers(): Promise<Record<string, string>> { return authHeaders(); }
 function objectsUrl(p: string | null): string | null {
   if (!p) return null;
   if (p.startsWith("http")) return p;
@@ -64,7 +64,7 @@ export default function AdminFeaturedWorkPage() {
   async function load() {
     setLoading(true);
     try {
-      const res = await fetch("/api/admin/featured-work", { headers: headers() });
+      const res = await fetch("/api/admin/featured-work", { headers: await headers() });
       if (res.status === 403 || res.status === 401) { navigate("/dashboard"); return; }
       if (!res.ok) throw new Error();
       setEntries(await res.json());
@@ -84,7 +84,7 @@ export default function AdminFeaturedWorkPage() {
     try {
       const res = await fetch(`/api/admin/featured-work/${id}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json", ...headers() },
+        headers: { "Content-Type": "application/json", ...(await headers()) },
         body: JSON.stringify({ status, adminNote }),
       });
       if (!res.ok) throw new Error();

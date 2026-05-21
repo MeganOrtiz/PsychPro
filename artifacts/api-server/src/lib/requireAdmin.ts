@@ -7,8 +7,9 @@ import { eq } from "drizzle-orm";
  * Owner authentication for admin-token CRUD routes.
  *
  * Identity comes from a server-side shared secret `MCP_ADMIN_SECRET` rather
- * than the client-supplied `X-User-Id` header (which is unverified and
- * forgeable). The owner pastes this secret into the `/admin/tokens` page,
+ * than the Clerk session — this route is reachable from Claude Desktop which
+ * never holds a Clerk token. The owner pastes this secret into the
+ * `/admin/tokens` page,
  * which stores it in the browser tab's sessionStorage (not localStorage,
  * not cookies) and sends it as `Authorization: Bearer <MCP_ADMIN_SECRET>`
  * over HTTPS when minting / listing / revoking MCP tokens. The secret is

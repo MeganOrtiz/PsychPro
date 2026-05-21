@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Brain, LayoutDashboard, BookOpen, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck, BookMarked, Library, Wrench, Sparkles, Star, Beaker, Lightbulb, Users } from "lucide-react";
 import { UserButton } from "@clerk/clerk-react";
-import { getCurrentUserId } from "@/lib/user-id";
+import { authHeaders } from "@/lib/auth-headers";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { STUDY_PALETTE } from "@/lib/study-theme";
@@ -75,7 +75,7 @@ function useProfileSummary(): ProfileSummary {
     async function load() {
       try {
         const res = await fetch("/api/profile/me", {
-          headers: { "X-User-Id": getCurrentUserId() },
+          headers: await authHeaders(),
         });
         if (!res.ok) return;
         const data = await res.json();
@@ -109,17 +109,22 @@ function useUserMeta() {
   const [isScholar, setIsScholar] = useState(false);
 
   useEffect(() => {
-    const headers = { "X-User-Id": getCurrentUserId() };
+    let cancelled = false;
+    (async () => {
+      const headers = await authHeaders();
+      if (cancelled) return;
 
-    fetch("/api/feedback/is-admin", { headers })
-      .then((r) => r.json())
-      .then((d) => setIsAdmin(d.isAdmin ?? false))
-      .catch(() => setIsAdmin(false));
+      fetch("/api/feedback/is-admin", { headers })
+        .then((r) => r.json())
+        .then((d) => { if (!cancelled) setIsAdmin(d.isAdmin ?? false); })
+        .catch(() => { if (!cancelled) setIsAdmin(false); });
 
-    fetch("/api/subscription/status", { headers })
-      .then((r) => r.json())
-      .then((d) => setIsScholar(d.tier === "scholar"))
-      .catch(() => setIsScholar(false));
+      fetch("/api/subscription/status", { headers })
+        .then((r) => r.json())
+        .then((d) => { if (!cancelled) setIsScholar(d.tier === "scholar"); })
+        .catch(() => { if (!cancelled) setIsScholar(false); });
+    })();
+    return () => { cancelled = true; };
   }, []);
 
   return { isAdmin, isScholar };

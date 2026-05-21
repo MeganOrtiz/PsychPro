@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import { Bell, CheckCheck } from "lucide-react";
-import { getCurrentUserId } from "@/lib/user-id";
+import { authHeaders } from "@/lib/auth-headers";
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
 
 type Notification = {
@@ -35,7 +35,7 @@ export function NotificationsBell() {
   async function load() {
     try {
       const res = await fetch("/api/notifications", {
-        headers: { "X-User-Id": getCurrentUserId() },
+        headers: await authHeaders(),
       });
       if (!res.ok) return;
       const data = (await res.json()) as Notification[];
@@ -69,7 +69,7 @@ export function NotificationsBell() {
     try {
       await fetch(`/api/notifications/${id}/read`, {
         method: "PATCH",
-        headers: { "X-User-Id": getCurrentUserId() },
+        headers: await authHeaders(),
       });
     } catch {
       /* optimistic */
@@ -79,11 +79,12 @@ export function NotificationsBell() {
   async function markAllRead() {
     const unread = items.filter((n) => !n.readAt);
     setItems((prev) => prev.map((n) => ({ ...n, readAt: n.readAt ?? new Date().toISOString() })));
+    const headers = await authHeaders();
     await Promise.all(
       unread.map((n) =>
         fetch(`/api/notifications/${n.id}/read`, {
           method: "PATCH",
-          headers: { "X-User-Id": getCurrentUserId() },
+          headers,
         }).catch(() => null),
       ),
     );

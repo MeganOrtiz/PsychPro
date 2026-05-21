@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import { Users, Sparkles, X, Loader2, Check, Ban, UserMinus } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { getCurrentUserId } from "@/lib/user-id";
+import { authHeaders as buildAuthHeaders, jsonAuthHeaders } from "@/lib/auth-headers";
 
 type Suggestion = {
   userId: string;
@@ -28,8 +28,11 @@ type Incoming = {
   createdAt: string;
 };
 
-function authHeaders(): HeadersInit {
-  return { "X-User-Id": getCurrentUserId(), "Content-Type": "application/json" };
+async function authHeaders(): Promise<HeadersInit> {
+  return jsonAuthHeaders();
+}
+async function readAuthHeaders(): Promise<HeadersInit> {
+  return buildAuthHeaders();
 }
 
 function initials(name: string): string {
@@ -56,7 +59,7 @@ export default function ConnectionsPage() {
     setLoading(true);
     try {
       const res = await fetch(`/api/connections/suggestions?offset=${nextOffset}`, {
-        headers: authHeaders(),
+        headers: await authHeaders(),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
@@ -72,7 +75,7 @@ export default function ConnectionsPage() {
 
   async function loadIncoming() {
     try {
-      const res = await fetch("/api/connections/incoming", { headers: authHeaders() });
+      const res = await fetch("/api/connections/incoming", { headers: await authHeaders() });
       if (!res.ok) return;
       const data = (await res.json()) as Incoming[];
       setIncoming(data);
@@ -99,7 +102,7 @@ export default function ConnectionsPage() {
     try {
       const res = await fetch("/api/connections/requests", {
         method: "POST",
-        headers: authHeaders(),
+        headers: await authHeaders(),
         body: JSON.stringify({ recipientId: s.userId }),
       });
       const body = await res.json().catch(() => ({}));
@@ -134,7 +137,7 @@ export default function ConnectionsPage() {
     try {
       const res = await fetch(`/api/connections/requests/${request.id}/respond`, {
         method: "POST",
-        headers: authHeaders(),
+        headers: await authHeaders(),
         body: JSON.stringify({ action }),
       });
       const body = await res.json().catch(() => ({}));

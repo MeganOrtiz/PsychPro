@@ -6,8 +6,6 @@ export type ErrorType<T = unknown> = ApiError<T>;
 
 export type BodyType<T> = T;
 
-export type UserIdProvider = () => Promise<string | null> | string | null;
-
 const NO_BODY_STATUS = new Set([204, 205, 304]);
 const DEFAULT_JSON_ACCEPT = "application/json, application/problem+json";
 
@@ -18,7 +16,6 @@ const DEFAULT_JSON_ACCEPT = "application/json, application/problem+json";
 export type AuthTokenGetter = () => Promise<string | null> | string | null;
 
 let _baseUrl: string | null = null;
-let _userIdProvider: UserIdProvider | null = null;
 let _authTokenGetter: AuthTokenGetter | null = null;
 
 /**
@@ -30,18 +27,6 @@ let _authTokenGetter: AuthTokenGetter | null = null;
  */
 export function setBaseUrl(url: string | null): void {
   _baseUrl = url ? url.replace(/\/+$/, "") : null;
-}
-
-/**
- * Register a provider that supplies the current user identifier. Before every
- * fetch the provider is invoked; when it returns a non-null string, an
- * `X-User-Id` header is attached to the request.
- *
- * The API server trusts this header verbatim — there is intentionally no
- * server-side authentication. Pass `null` to clear the provider.
- */
-export function setUserIdProvider(provider: UserIdProvider | null): void {
-  _userIdProvider = provider;
 }
 
 /**
@@ -357,15 +342,6 @@ export async function customFetch<T = unknown>(
 
   if (responseType === "json" && !headers.has("accept")) {
     headers.set("accept", DEFAULT_JSON_ACCEPT);
-  }
-
-  // Attach X-User-Id from the registered provider when no explicit header
-  // has been set by the caller.
-  if (_userIdProvider && !headers.has("x-user-id")) {
-    const userId = await _userIdProvider();
-    if (userId) {
-      headers.set("x-user-id", userId);
-    }
   }
 
   // Attach Clerk session token (or any registered bearer) when present.

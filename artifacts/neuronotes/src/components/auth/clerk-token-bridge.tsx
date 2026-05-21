@@ -1,36 +1,39 @@
 import { useEffect } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import { setAuthTokenGetter } from "@workspace/api-client-react";
-import { setClerkUserId } from "@/lib/user-id";
+import { setClerkTokenGetter } from "@/lib/auth-headers";
 
 /**
- * Bridges the Clerk session into the generated API client. Once the Clerk
- * SDK has loaded, every API request will carry an
- * `Authorization: Bearer <clerk-session-token>` header so the api-server's
- * `clerkMiddleware()` can authenticate the request, and the
- * `X-User-Id` header carries the signed-in Clerk user id (falling back to
- * the anonymous browser UUID when not signed in — see
- * `src/lib/user-id.ts`).
+ * Bridges the Clerk session into both:
+ *   1. The generated API client (`@workspace/api-client-react`) so every
+ *      generated request carries `Authorization: Bearer <clerk-token>`.
+ *   2. The shared `authHeaders()` helper in `@/lib/auth-headers` so any
+ *      direct `fetch()` call site can build the same header.
+ *
+ * The api-server's `clerkMiddleware()` then verifies the token via
+ * `getAuth(req)` and route handlers read the verified user id with
+ * `requireUserId` / `getOptionalUserId`. The legacy `X-User-Id` request
+ * header is no longer sent or consulted.
  *
  * Render this once, near the top of the tree, inside <ClerkProvider>.
  */
 export function ClerkTokenBridge() {
-  const { isLoaded, isSignedIn, userId, getToken } = useAuth();
+  const { isLoaded, isSignedIn, getToken } = useAuth();
 
   useEffect(() => {
     if (!isLoaded) return;
     if (isSignedIn) {
       setAuthTokenGetter(() => getToken());
-      setClerkUserId(userId ?? null);
+      setClerkTokenGetter(() => getToken());
     } else {
       setAuthTokenGetter(null);
-      setClerkUserId(null);
+      setClerkTokenGetter(null);
     }
     return () => {
       setAuthTokenGetter(null);
-      setClerkUserId(null);
+      setClerkTokenGetter(null);
     };
-  }, [isLoaded, isSignedIn, userId, getToken]);
+  }, [isLoaded, isSignedIn, getToken]);
 
   return null;
 }
