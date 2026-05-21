@@ -1,0 +1,185 @@
+3. Document in replit.md: to enable MCP in production, set
+   MCP_ENABLED=true in deployment secrets.
+
+If user confirms MCP IS in active use, leave routes mounted but
+verify MCP_ADMIN_SECRET is set and is at least 16 chars in
+production.
+
+ACCEPTANCE: MCP/OAuth routes either confirmed in active use, or
+gated behind explicit env flag.
+
+B-14. Old dev-era DB users have residual scholar/admin.
+File: scripts/reset-dev-users.ts (NEW)
+
+Pre-launch ops cleanup. Existing dev DB users have
+subscriptionStatus="scholar" and isAdmin=true baked in from
+before the dev-mode-overrides fix. They should be reset to free
++ non-admin EXCEPT for the user who runs grant-admin.ts.
+
+ACTION:
+Create scripts/reset-dev-users.ts:
+
+  /**
+   * Reset all users in the DB to free/non-admin, EXCEPT the
+   * caller (who should run grant-admin.ts to restore admin
+   * after this script).
+   *
+   * Usage: pnpm exec tsx scripts/reset-dev-users.ts
+   *
+   * WARNING: This is destructive. Run only against a dev DB or
+   * when explicitly cleaning up before launch.
+   */
+  import { db, usersTable } from "@workspace/db";
+
+  async function main() {
+    const confirm = process.env.CONFIRM_RESET_DEV_USERS;
+    if (confirm !== "yes") {
+      console.error("Refusing to run without CONFIRM_RESET_DEV_USERS=yes");
+      process.exit(1);
+    }
+    const result = await db.update(usersTable).set({
+      subscriptionStatus: "free",
+      isAdmin: false,
+    }).returning();
+    console.log(`Reset ${result.length} users to free/non-admin.`);
+    console.log("Now run scripts/grant-admin.ts for any user that needs admin.");
+    process.exit(0);
+  }
+  main().catch((err) => { console.error(err); process.exit(1); });
+
+Add a section to PUBLISHING.md describing when to run this
+(before first public launch, only against dev DB).
+
+ACCEPTANCE: Script exists, documented, requires explicit env
+flag to run.
+
+
+────────────────────────────────────────────────────────────────
+PHASE C — DOCUMENTATION ALIGNMENT
+────────────────────────────────────────────────────────────────
+
+C-1. Rewrite replit.md to match reality.
+File: replit.md
+
+This file is the FIRST thing every new AI agent reads about the
+project. Outdated content actively misleads them. Rewrite it
+based on the PHASE A findings so it accurately describes:
+
+  - Current auth state (Clerk in or out — be specific)
+  - Current sidebar IA (Workshop / Lab / Studio / Connect with
+    accurate child page lists; or whatever's actually deployed)
+  - Real topic count (from PHASE A-6)
+  - Real feature labels (Rounds vs Study Lab, Brain Scan vs
+    Brain Lab, etc. — match the actual code)
+  - Current subscription tier behavior (real DB-backed, not
+    dev-mode override)
+  - Current admin gating (DB flag, not auto-grant)
+  - Current Stripe integration state (live keys, webhook
+    verified, products seeded)
+
+KEEP the parts of replit.md that are still accurate (stack
+description, key commands, etc.) — only update sections that
+contradict reality.
+
+ACCEPTANCE: replit.md describes the actual deployed app, not the
+pre-Clerk pre-dev-mode-fix snapshot.
+
+C-2. Align threat_model.md with replit.md.
+File: threat_model.md
+
+Both docs must say the same thing about auth. If Clerk is in,
+threat_model.md is correct and replit.md was updated in C-1. If
+Clerk is out, threat_model.md needs updating to remove Clerk
+references.
+
+ACCEPTANCE: replit.md and threat_model.md agree on auth.
+
+C-3. Update PUBLISHING.md required secrets list.
+File: PUBLISHING.md
+
+Confirm all of these are listed as required production secrets:
+  - DATABASE_URL
+  - CLERK_SECRET_KEY (if Clerk is in)
+  - CLERK_PUBLISHABLE_KEY (if Clerk is in)
+  - VITE_CLERK_PUBLISHABLE_KEY (if Clerk is in)
+  - STRIPE_WEBHOOK_SECRET
+  - RESEND_API_KEY (if email is being used)
+  - PUBLIC_APP_URL
+  - MCP_ENABLED (if applicable)
+  - MCP_ADMIN_SECRET (only if MCP enabled)
+
+Add any that are missing. For each, describe what happens if
+unset.
+
+ACCEPTANCE: PUBLISHING.md lists every env var the app needs,
+with a one-line description of each.
+
+C-4. Topic count alignment.
+Files: replit.md, PUBLISHING.md, artifacts/neuronotes/src/pages/
+landing.tsx, artifacts/neuronotes/src/pages/subscription.tsx
+
+Per PHASE A-6 actual DB count, align every reference in code
+and docs to that number. If the actual count is 15 and you want
+to launch with "Over 35 topics" copy, the seed data needs to be
+expanded — that's a separate content effort, not a code fix.
+
+ACTION:
+- If the user explicitly wants the landing copy to say "Over 35
+  topics" but DB only has 15, FLAG this — do not silently change
+  the landing copy
+- Update replit.md and PUBLISHING.md to match real DB count
+- Update PRO_FEATURES copy to match real study guide count
+  (B-5 above)
+
+ACCEPTANCE: All references to topic count are consistent with
+each other and with the DB.
+
+
+────────────────────────────────────────────────────────────────
+FINAL ACCEPTANCE CHECKLIST
+────────────────────────────────────────────────────────────────
+
+PHASE A (verification — no edits):
+[ ] All A-1 through A-8 findings reported back verbatim
+
+PHASE B (fixes — only what PHASE A confirmed broken):
+[ ] B-1: Dev-mode override gaps closed (if any)
+[ ] B-2: Clerk integration state confirmed; gaps flagged not fixed
+[ ] B-3: Stripe webhook signature verification confirmed or fixed
+[ ] B-4: subscription.tsx duplicate fetch removed
+[ ] B-5: PRO_FEATURES copy doesn't hardcode topic/guide count
+[ ] B-6: /api/leaderboard privacy gate added
+[ ] B-7: /api/feedback rate limit added
+[ ] B-8: Fisher-Yates shuffle replaces all Math.random sort biases
+[ ] B-9: practice-exam reads real timeLimit, not hardcoded 90s
+[ ] B-10: Spotlight rotation behavior confirmed (no change)
+[ ] B-11: X-User-Id header sources unified (if Clerk in)
+[ ] B-12: Notifications bell consumes notificationsTable
+[ ] B-13: MCP/OAuth gated behind MCP_ENABLED if not in active use
+[ ] B-14: scripts/reset-dev-users.ts created + documented
+
+PHASE C (docs):
+[ ] C-1: replit.md rewritten to match reality
+[ ] C-2: threat_model.md aligned with replit.md
+[ ] C-3: PUBLISHING.md required secrets list complete
+[ ] C-4: Topic count consistent across all references
+
+VERIFICATION:
+[ ] pnpm --filter @workspace/api-server run typecheck — exit 0
+[ ] pnpm --filter @workspace/neuronotes run typecheck — exit 0
+[ ] pnpm run build — completes successfully
+[ ] All flagged items (Clerk gaps, etc.) listed in final report
+
+
+================================================================
+REPORT BACK WITH
+================================================================
+1. All PHASE A findings (verbatim quotes / yes-no answers)
+2. For each PHASE B item: "done" / "skipped — already correct" /
+   "blocked — reason" / "flagged for follow-up"
+3. For each PHASE C item: brief diff summary
+4. Final typecheck and build exit codes
+5. List of anything you found that wasn't in the prompt but
+   seemed important — same format as Replit's T002/T008 audit
+   findings from the previous prompt
+6. Any decisions you made that weren't explicit in the prompt

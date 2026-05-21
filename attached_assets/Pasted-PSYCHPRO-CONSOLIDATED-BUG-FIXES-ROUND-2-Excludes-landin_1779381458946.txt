@@ -1,0 +1,413 @@
+PSYCHPRO — CONSOLIDATED BUG FIXES (ROUND 2)
+Excludes: landing page, dashboard. Handled separately.
+
+================================================================
+WHAT & WHY
+================================================================
+A round-2 bug scan surfaced ~30 issues across the api-server,
+neuronotes frontend (non-landing/non-dashboard pages), docs, and
+pre-launch ops. Many may already be resolved by recent prompts
+(dev-mode overrides, visual foundation, Clerk integration); we
+need to VERIFY first, then fix only what's actually still broken.
+
+This prompt has three phases:
+  PHASE A — Read-only verification (no edits)
+  PHASE B — Targeted fixes for items confirmed still broken
+  PHASE C — Documentation alignment
+
+================================================================
+GROUND RULES
+================================================================
+- Do NOT edit src/pages/landing.tsx or src/pages/dashboard.tsx.
+  Those are scoped to a separate prompt.
+- Do NOT edit visual rules in src/index.css that relate to
+  .study-page-bg, .bg-card, or background/cloud rules. Those are
+  the canonical visual surface and protected.
+- Do NOT touch Clerk integration code — if Clerk is wired, leave
+  the wrapper alone. Bug fixes that depend on Clerk session vs
+  anonymous-uuid identity should be flagged in the report and
+  await a follow-up prompt, not auto-fixed.
+- Use existing palette tokens (STUDY_PALETTE) — no new colors.
+- Every fix must keep existing data-testid attributes intact.
+- TypeScript must compile clean. No `any` casts in new code.
+
+
+────────────────────────────────────────────────────────────────
+PHASE A — READ-ONLY VERIFICATION
+────────────────────────────────────────────────────────────────
+
+DO NOT MAKE ANY EDITS IN THIS PHASE. Read the listed files/lines
+and report back exactly what's there. The fix plan in PHASE B
+depends on knowing which items are already done.
+
+A-1. State of dev-mode override removal — quote the current code:
+
+  a) artifacts/api-server/src/routes/subscription.ts —
+     the /subscription/status handler (paste full handler body)
+  b) artifacts/api-server/src/routes/users.ts —
+     the /users/profile GET handler (paste full handler body)
+     AND the /users/profile POST handler insert path (the
+     .values({...}) inside the if (!user) branch)
+  c) artifacts/api-server/src/routes/users.ts —
+     the /users/usage POST handler insert path
+  d) artifacts/api-server/src/routes/feedback.ts —
+     the requireAdmin() function definition AND the
+     /feedback/is-admin route handler
+  e) artifacts/api-server/src/routes/connections.ts —
+     the requireAdminCaller() function definition
+  f) artifacts/api-server/src/routes/featured-work.ts —
+     any requireAdminCaller() or admin-grant pattern (paste
+     the function if present)
+  g) Does scripts/grant-admin.ts exist? If yes, paste its
+     full contents.
+
+A-2. State of Clerk integration — answer these questions:
+
+  a) Does artifacts/neuronotes/src/main.tsx wrap the app in
+     <ClerkProvider>? Paste the relevant import + JSX.
+  b) Is @clerk/clerk-react listed in
+     artifacts/neuronotes/package.json dependencies?
+  c) Does artifacts/api-server/package.json include @clerk/backend
+     or @clerk/express?
+  d) In artifacts/neuronotes/src/App.tsx, what user-id provider
+     is registered? Paste the setUserIdProvider call.
+  e) Does any backend middleware verify Clerk session tokens?
+     Find and paste the middleware if it exists.
+  f) Is there a route like /sign-in or /sign-up using Clerk's
+     <SignIn /> / <SignUp /> components?
+
+A-3. State of Stripe webhook — verify it's correct:
+
+  a) Find the Stripe webhook route. Paste the route handler
+     verbatim (typically in artifacts/api-server/src/app.ts).
+  b) Confirm it uses express.raw({type: "application/json"})
+     and is mounted BEFORE express.json().
+  c) Confirm it reads STRIPE_WEBHOOK_SECRET from env.
+  d) Confirm it calls stripe.webhooks.constructEvent and
+     returns 400 on signature failure.
+  e) Is STRIPE_WEBHOOK_SECRET listed as a required secret in
+     PUBLISHING.md?
+
+A-4. State of public route exposures — for each route, confirm
+whether it's gated and how:
+
+  a) /api/leaderboard — does it return data for any caller, or
+     gate by something?
+  b) /api/feedback (admin inbox GET) — does requireAdmin() now
+     return 403 for non-admins?
+  c) /api/admin/featured-work — same question.
+  d) /api/connections/suggestions — what's the gate?
+
+A-5. State of email infrastructure:
+
+  a) Search for sendEmail() definition. Paste the function.
+  b) Does it reference RESEND_API_KEY?
+  c) What happens if RESEND_API_KEY is unset — silent log? Throw?
+  d) Is RESEND_API_KEY listed in PUBLISHING.md as required?
+  e) Is PUBLIC_APP_URL referenced in email templates? Is it
+     listed in PUBLISHING.md?
+
+A-6. Topic count truth — answer:
+
+  a) SELECT COUNT(*) FROM topics; — what's the actual number?
+  b) SELECT COUNT(*) FROM flashcards;
+  c) SELECT COUNT(*) FROM quiz_questions;
+  d) SELECT COUNT(*) FROM study_guides;
+  e) SELECT COUNT(*) FROM practice_exam_questions;
+  f) What does artifacts/neuronotes/src/pages/landing.tsx
+     TRUST_STATS say for "TOPICS"?
+  g) What does replit.md say about topic count?
+  h) What does artifacts/neuronotes/src/pages/subscription.tsx
+     PRO_FEATURES say about study guide count?
+
+A-7. State of replit.md auth claims:
+
+  a) Quote the section under "### Auth Pattern" verbatim.
+  b) Quote any section that mentions Clerk.
+
+A-8. State of threat_model.md:
+
+  a) Quote the section under "## Project Overview" first paragraph.
+
+REPORT BACK with all A-1 through A-8 findings before proceeding
+to PHASE B. Do not edit anything.
+
+
+────────────────────────────────────────────────────────────────
+PHASE B — TARGETED FIXES (only for items confirmed still broken)
+────────────────────────────────────────────────────────────────
+
+The fixes below are conditional on PHASE A findings. For each
+item, only execute if PHASE A confirmed the issue is still
+present in the code.
+
+B-1. (CONDITIONAL on A-1 findings) Complete any dev-mode override
+removals that didn't land. The original spec is in
+.local/tasks/remove-dev-mode-overrides.md if it still exists.
+Apply only the fixes that PHASE A showed as still broken.
+
+B-2. (CONDITIONAL on A-2 findings) If Clerk is NOT properly wired
+up — for example, ClerkProvider missing from main.tsx, or
+@clerk/clerk-react not installed — STOP and report. Do NOT attempt
+to wire up Clerk in this prompt; that's a dedicated effort and
+needs its own context.
+
+If Clerk IS wired up, verify the X-User-Id header still works
+correctly for backend calls:
+  - Frontend's API client should be sending Clerk's session
+    token AND/OR the Clerk user ID
+  - Backend should be reading and verifying the token, not
+    blindly trusting X-User-Id
+
+If frontend still uses getOrCreateAnonymousUserId() for the
+X-User-Id header (in App.tsx setUserIdProvider call), and Clerk
+is also installed, that's an inconsistent state. FLAG IT in the
+report. Do not fix in this prompt.
+
+B-3. (CONDITIONAL on A-3 findings) If the Stripe webhook is
+missing signature verification, missing raw body parser, or is
+mounted after express.json(), FIX IT. The correct pattern is:
+
+  app.post("/api/stripe/webhook",
+    express.raw({ type: "application/json" }),
+    async (req, res) => {
+      const signature = req.headers["stripe-signature"] as string;
+      if (!signature) {
+        res.status(400).send("Missing stripe-signature");
+        return;
+      }
+      let event: Stripe.Event;
+      try {
+        const stripe = await getUncachableStripeClient();
+        event = stripe.webhooks.constructEvent(
+          req.body,
+          signature,
+          process.env.STRIPE_WEBHOOK_SECRET!,
+        );
+      } catch (err: any) {
+        req.log.warn({ err }, "Stripe webhook signature verification failed");
+        res.status(400).send(`Webhook Error: ${err.message}`);
+        return;
+      }
+      try {
+        await handleStripeWebhookEvent(event, req.log);
+        res.json({ received: true });
+      } catch (err) {
+        req.log.error({ err, eventType: event.type }, "Webhook handler failed");
+        res.status(500).json({ error: "Webhook handler failed" });
+      }
+    }
+  );
+
+If the webhook IS already correct (PHASE A confirmed), skip.
+
+B-4. Fix the subscription.tsx duplicate fetch.
+File: artifacts/neuronotes/src/pages/subscription.tsx
+
+Current code does BOTH:
+  const { data: status, isLoading: statusLoading } = useGetSubscriptionStatus();
+  ...
+  useEffect(() => {
+    fetch("/api/subscription/status")
+      .then((r) => r.json())
+      .then(setStatusData)
+      .catch(() => {});
+  }, []);
+
+The manual fetch is redundant and creates two sources of truth
+(`status` from the hook, `statusData` from the manual fetch).
+
+ACTION:
+1. Delete the useEffect that does manual fetch + setStatusData
+2. Delete the useState<StatusData | null>(null) and the
+   StatusData type if no longer used
+3. Update `isPro` and `isScholar` to use ONLY the hook data:
+
+     const isActive = status?.status === "active";
+     const isPro = isActive && status?.tier !== "scholar";
+     const isScholar = isActive && status?.tier === "scholar";
+
+   (Note: this requires the hook's return type to include `tier`.
+   If the generated type doesn't include tier, update the OpenAPI
+   spec for /subscription/status to declare the tier field, then
+   regenerate the client. If that's out of scope for this prompt,
+   use `(status as any)?.tier` with a TODO comment to fix when
+   the spec is updated.)
+
+ACCEPTANCE: Single source of truth for subscription status. No
+manual fetch in subscription.tsx.
+
+B-5. Fix PRO_FEATURES "All 15 study guides" copy drift.
+File: artifacts/neuronotes/src/pages/subscription.tsx
+
+Current PRO_FEATURES array contains hardcoded "All 15 study
+guides". Replace with the actual study guide count from PHASE
+A-6(d). If the count is ambiguous or will grow, use:
+  "All study guides for every topic"
+(no number; copy doesn't drift as content grows)
+
+ACCEPTANCE: PRO_FEATURES doesn't contain a hardcoded count that
+will drift.
+
+B-6. (CONDITIONAL on A-4 findings) If /api/leaderboard returns
+data with displayName + topicsCompleted + streak for every user
+without any privacy gate, flag this. With Clerk + real names, the
+leaderboard now exposes identifiable user data to any caller.
+
+Fix:
+1. Add a column to userProfilesTable: prefShowOnLeaderboard
+   (boolean, default true for now since the existing UX expects
+   participation by default — but adjustable from settings)
+2. Update /api/leaderboard to only return users with this pref true
+3. For users with pref false, the user's OWN row should still
+   appear with "You" — gate based on caller's userId match
+4. Add the toggle to the connections preferences UI (wherever
+   prefSuggestConnections/prefNetworkingIntros are managed)
+
+If this is too much for one prompt, scope to just (1) and (2) —
+adding the toggle UI can be a follow-up. The privacy gate is the
+important part.
+
+ACCEPTANCE: Anonymous caller hitting /api/leaderboard sees only
+opted-in users; opted-out users are not exposed.
+
+B-7. Add rate limit to /api/feedback POST.
+File: artifacts/api-server/src/routes/feedback.ts
+
+The /api/client-errors route already has a rate limit pattern.
+Apply the same pattern to /api/feedback POST. Goal: prevent a
+spammer from flooding the admin inbox with thousands of
+submissions.
+
+ACTION:
+1. Find the rate limiter used by /api/client-errors
+2. Apply it to /api/feedback POST with conservative limits
+   (e.g., 5 submissions per IP per hour, or 10 per user per day)
+3. On rate limit hit, return 429 with a friendly message
+
+ACCEPTANCE: A burst of 20 POSTs to /api/feedback from the same
+IP/user gets throttled after the limit.
+
+B-8. Fix Math.random() shuffle bias in practice-exam.
+File: artifacts/api-server/src/routes/practice-exam.ts (or
+wherever the question shuffle happens)
+
+Current pattern:
+  shuffled = linkedQuestions.sort(() => Math.random() - 0.5)
+
+This is NOT a uniform shuffle. Replace with Fisher-Yates:
+
+  function shuffle<T>(arr: T[]): T[] {
+    const out = [...arr];
+    for (let i = out.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [out[i], out[j]] = [out[j], out[i]];
+    }
+    return out;
+  }
+  ...
+  const shuffled = shuffle(linkedQuestions);
+
+Search the entire api-server codebase for the
+`sort(() => Math.random()` pattern and replace every instance
+with the shuffle helper above. Define the helper once in a shared
+util file and import where needed.
+
+ACCEPTANCE: No `sort(() => Math.random())` patterns remain.
+
+B-9. Fix `practiceExamsTable` time limit usage in frontend.
+File: artifacts/neuronotes/src/pages/practice-exam.tsx
+
+Current code hardcodes "90s per question" for timed exams.
+Backend's `practice_exams` table has a `timeLimit` field that
+should be used instead.
+
+ACTION:
+1. Update the practice exam frontend to read `timeLimit` from
+   the exam data returned by the API
+2. If timeLimit is null/0, treat as untimed (no timer)
+3. Otherwise use the actual value
+4. Update any UI that says "90s per question" to use the real
+   value, or remove the static label entirely
+
+ACCEPTANCE: Different exams with different timeLimit values
+show different per-question time budgets in the UI.
+
+B-10. Featured Work spotlight rotation.
+File: artifacts/api-server/src/routes/featured-work.ts
+
+Current implementation uses a deterministic daily seed:
+  pick = ((dayBucket * 2654435761) % totalWeight + totalWeight) % totalWeight
+
+This means the SAME spotlight shows every day for the entire
+day. Decision point:
+
+  OPTION A (keep current): one spotlight per day, rotates daily.
+  OPTION B (true random per request): every page load could show
+  a different spotlight.
+  OPTION C (weighted random, refresh hourly): less stable than A,
+  more variety than B.
+
+Default to OPTION A — it's intentional behavior (consistent
+daily spotlight reads as "today's featured work"). Only change
+if user requests it.
+
+ACTION: NO CHANGE unless user specifies otherwise. Confirm the
+current behavior in the report.
+
+B-11. Featured Work admin page uses anonymous user ID header.
+File: artifacts/neuronotes/src/pages/admin-featured-work.tsx
+
+Current code:
+  function headers() { return { "X-User-Id": getOrCreateAnonymousUserId() }; }
+
+This explicitly bypasses Clerk if Clerk is now wired up. The
+admin page must use the Clerk user ID, not anonymous.
+
+ACTION (CONDITIONAL on A-2 findings):
+- If Clerk is wired up: replace `getOrCreateAnonymousUserId()`
+  with the Clerk user ID source (likely useUser() from
+  @clerk/clerk-react). The header should reflect the same
+  user-id the rest of the app sends.
+- If Clerk is NOT wired up: leave as-is, flag for follow-up.
+
+Search the entire frontend codebase for other usages of
+`getOrCreateAnonymousUserId()` directly in component code.
+Each one is a similar bug if Clerk is in. List them in the
+report.
+
+ACCEPTANCE: All component-level X-User-Id header construction
+uses the same source as the API client interceptor.
+
+B-12. Notifications consumption.
+Files: artifacts/api-server/src/routes/featured-work.ts (writes
+to notificationsTable), artifacts/neuronotes/src/components/
+notifications-bell.tsx (probably reads it).
+
+Confirm:
+1. There is a notifications bell UI somewhere that fetches and
+   displays rows from notificationsTable
+2. The bell shows unread count and lets users mark notifications
+   read
+3. The "view this" links in notification bodies route correctly
+
+If the bell exists and works, no action. If it's missing or
+broken, the Featured Work moderation notifications are dead
+writes — fix by either implementing the bell consumer or
+flagging as a follow-up.
+
+ACCEPTANCE: Notifications written by backend are visible to
+users in the UI.
+
+B-13. OAuth/MCP route audit for production.
+Files: artifacts/api-server/src/routes/oauth.ts,
+artifacts/api-server/src/routes/mcp.ts (or wherever these live)
+
+Question: Is the MCP/OAuth Claude.ai connector actively in use
+in production? If not, the routes add public attack surface for
+no benefit.
+
+ACTION:
+1. Confirm whether MCP/OAuth is in use
+2. If not in use, add an env gate that disables the routes in
+   production:
