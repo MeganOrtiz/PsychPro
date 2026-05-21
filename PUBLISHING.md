@@ -32,6 +32,9 @@ the live/production value — not the dev value used in this project.
 | `RESEND_API_KEY` | API server (transactional email via Resend) | Required to actually send email. Leave unset to keep email disabled in production (e.g. during a soft launch). |
 | `EMAIL_FROM` | API server (transactional email) | e.g. `"PsychPro <hello@your-domain.com>"`. Must be a domain verified in your Resend account. |
 | `EMAIL_ENABLED` | API server (transactional email gate) | Optional. Defaults to `true` when `RESEND_API_KEY` + `EMAIL_FROM` are both set; set to `false` to suppress email sends without rotating the API key (useful for staging or incident response). |
+| `PRIVATE_OBJECT_DIR` | API server (object storage uploads) | Auto-provisioned when you add Replit App Storage to the deployment. Required for the Scholar custom-deck upload flow. |
+| `PUBLIC_OBJECT_SEARCH_PATHS` | API server (object storage public reads) | Same — auto-provisioned with App Storage. |
+| `LOG_LEVEL` | API server (pino logger) | Optional. Defaults to `info` in production. Set to `debug` temporarily during an incident to widen the log surface; revert afterwards. |
 | `SESSION_SECRET` | Reserved (not currently read at runtime) | Optional. |
 
 Auto-injected by Replit (you do **not** set these manually):
@@ -55,6 +58,8 @@ startup with a clear error.
 | `CLIENT_ERRORS_RATE_LIMIT_WINDOW_MS` | API server (`POST /api/client-errors`) | `60000` (60s) | Sliding window length, in milliseconds, for the per-IP throttle on client error reports. |
 | `CLIENT_ERRORS_RATE_LIMIT_MAX` | API server (`POST /api/client-errors`) | `30` | Max requests per IP per window before responding `429 Too Many Requests`. Lower it during an incident to clamp down on noisy clients without a redeploy. |
 | `CLIENT_ERRORS_RATE_LIMIT_CLEANUP_INTERVAL_MS` | API server (background sweeper) | same value as `CLIENT_ERRORS_RATE_LIMIT_WINDOW_MS` | How often the API server sweeps `client_error_rate_hits` / `client_error_rate_warnings` for rows older than the sliding window. The sweep runs in-process on every API instance and is `unref()`ed, so it never blocks process shutdown. With the default an expired row sticks around at most ~2× the window length before being collected; raise it on quiet deployments to cut DB writes, lower it during an incident to keep the tables tighter. Setting it to a value larger than the window is supported (rows simply linger longer); zero or negative values are rejected at startup. |
+| `FEEDBACK_RATE_LIMIT_WINDOW_MS` | API server (`POST /api/feedback`) | `3600000` (1 hour) | Sliding window length for the per-IP throttle on feedback submissions. In-memory only — single API instance assumption. |
+| `FEEDBACK_RATE_LIMIT_MAX` | API server (`POST /api/feedback`) | `5` | Max feedback submissions per IP per window before responding `429 Too Many Requests`. |
 
 Changes to these values take effect on the next deploy / API server restart.
 
@@ -141,6 +146,41 @@ thing you need to do is connect Stripe in live mode for the deployment.
 The Postgres database for the deployment is empty when first provisioned. Push
 the schema and seed all study content (39 topics, 1,612 flashcards, 935 quiz
 questions, 39 study guides, 39 practice exams with 738 join rows):
+
+### 4a. Pre-launch user reset (only when promoting an existing dev database)
+
+If you are promoting a dev database that already contains test accounts to
+production (e.g. by snapshotting the dev DB into the deployment DB), reset
+every existing user back to the free, non-admin baseline **before** going
+live so no test account ships with paid entitlements or admin privileges:
+
+```bash
+CONFIRM_RESET_DEV_USERS=yes \
+  pnpm --filter @workspace/scripts run reset-dev-users
+```
+
+What this does:
+- Runs `UPDATE users SET subscription_status='free', is_admin=false` for
+  every row. User rows, progress, custom decks, feedback, profiles, and
+  every other user-owned table are **left intact** — only the entitlement
+  and admin flags are reset.
+- Refuses to run unless `CONFIRM_RESET_DEV_USERS=yes` is set in the
+  environment. This guard is intentional — running this against a live
+  prod DB would log every paying user out of their paid tier.
+- Does **not** touch Stripe. After running, the matching Stripe customers
+  and subscriptions still exist; cancel them in the Stripe Dashboard if
+  the dev accounts had test subscriptions you don't want to carry over.
+
+After running the reset, re-grant admin to each real admin user with:
+
+```bash
+pnpm --filter @workspace/scripts run grant-admin <user-id>
+```
+
+Skip this section entirely on a brand-new prod DB — there are no users
+to reset.
+
+
 
 ```bash
 # Run these against the production DATABASE_URL (from the deployment shell, or

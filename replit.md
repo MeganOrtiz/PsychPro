@@ -76,7 +76,7 @@ A mobile-responsive neuroscience/neuropsychology study app.
 - `artifacts/neuronotes/src/lib/anonymous-user.ts` — `getOrCreateAnonymousUserId()` localStorage-backed UUID
 - `artifacts/neuronotes/src/pages/` — All 11 pages
 - `lib/db/src/schema/index.ts` — DB schema (users, topics, flashcards, quiz_questions, study_guides, progress)
-- `lib/db/src/seed.ts` — Neuroscience content seed (94 flashcards, 42 quiz questions, 9 study guides, 29 topics)
+- `lib/db/src/seed.ts` — PsychPro content seed (39 topics, 1,612 flashcards, 935 quiz questions, 39 study guides, 39 practice exams with 738 join rows)
 
 ### Auth Pattern
 - **Clerk is the identity provider; the API still trusts `X-User-Id`.**
@@ -107,7 +107,7 @@ A mobile-responsive neuroscience/neuropsychology study app.
   - Page: `src/pages/brain-lab.tsx`; nav added in `src/components/layout/app-layout.tsx` (Brain icon)
 - Multiple-choice quizzes with explanations
 - Scrollable study guides (custom Markdown renderer)
-- Practice exams (timed 90s/question or untimed)
+- Practice exams (per-exam time budget from `practice_exams.time_limit` in seconds — DB default 600s = 10 minutes; users can also opt into Untimed Mode)
 - Progress tracker
 - Subscription page with Stripe ($9.99/mo, $79.99/yr Pro; $19.99/mo, $159.99/yr Scholar)
 - Freemium: 10 free interactions, then upgrade prompt

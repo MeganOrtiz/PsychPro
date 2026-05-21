@@ -393,7 +393,7 @@ export default function PracticeExamPage({ params }: Props) {
       <div className="flex items-center justify-between mb-6">
         <span className="text-xs font-semibold tracking-wider uppercase" style={{ color: P.tealDeep }}>{index + 1}/{total}</span>
         <div className="flex items-center gap-1">
-          {timed && (
+          {timed && examIsTimeable && (
             <div className={`flex items-center gap-1.5 text-sm font-semibold mr-2 ${timeLeft < 60 ? "text-red-500" : "text-foreground"}`} data-testid="timer">
               <Clock className="w-4 h-4" />
               {formatTime(timeLeft)}
