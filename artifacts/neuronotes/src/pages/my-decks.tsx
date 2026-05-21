@@ -4,6 +4,7 @@ import { BookMarked, Trash2, Clock, CheckCircle, AlertCircle, Loader2, Wrench, S
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
+import { authHeaders } from "@/lib/auth-headers";
 
 type DeckSummary = {
   id: number;
@@ -39,7 +40,7 @@ export default function MyDecksPage() {
 
   async function loadDecks() {
     try {
-      const res = await fetch("/api/custom-decks");
+      const res = await fetch("/api/custom-decks", { headers: await authHeaders() });
       if (res.status === 403) {
         navigate("/subscription");
         return;
@@ -61,7 +62,7 @@ export default function MyDecksPage() {
     if (!confirm("Delete this deck? This cannot be undone.")) return;
     setDeleting(id);
     try {
-      const res = await fetch(`/api/custom-decks/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/custom-decks/${id}`, { method: "DELETE", headers: await authHeaders() });
       if (!res.ok) throw new Error("Delete failed");
       setDecks((prev) => prev.filter((d) => d.id !== id));
       toast.success("Deck deleted");

@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { shuffle } from "@/lib/shuffle";
+import { authHeaders } from "@/lib/auth-headers";
 
 type Deck = { id: number; title: string; studyGuide: string | null; status: string; tier?: "standard" | "pro"; tools?: string[]; examQuestionCount?: number; examTimed?: boolean };
 type Flashcard = { id: number; front: string; back: string; difficulty: string; cardOrder: number };
@@ -539,11 +540,12 @@ export default function MyDeckDetailPage() {
 
   const loadDeck = useCallback(async () => {
     try {
+      const headers = await authHeaders();
       const [deckRes, cardsRes, quizRes, clozeRes] = await Promise.all([
-        fetch(`/api/custom-decks/${id}`),
-        fetch(`/api/custom-decks/${id}/flashcards`),
-        fetch(`/api/custom-decks/${id}/quiz`),
-        fetch(`/api/custom-decks/${id}/cloze`),
+        fetch(`/api/custom-decks/${id}`, { headers }),
+        fetch(`/api/custom-decks/${id}/flashcards`, { headers }),
+        fetch(`/api/custom-decks/${id}/quiz`, { headers }),
+        fetch(`/api/custom-decks/${id}/cloze`, { headers }),
       ]);
       if (deckRes.status === 404) { navigate("/my-decks"); return; }
       if (!deckRes.ok) throw new Error("Failed");

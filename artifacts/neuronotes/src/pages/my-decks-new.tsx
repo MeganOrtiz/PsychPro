@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { authHeaders } from "@/lib/auth-headers";
 
 type InputMode = "text" | "file";
 type AiMode = "strict" | "enhance";
@@ -150,7 +151,7 @@ export default function NewDeckPage() {
         formData.append("text", text);
       }
 
-      const res = await fetch("/api/custom-decks", { method: "POST", body: formData });
+      const res = await fetch("/api/custom-decks", { method: "POST", body: formData, headers: await authHeaders() });
       if (res.status === 403) {
         toast.error("Scholar subscription required to create custom decks.");
         navigate("/subscription");

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
+import { authHeaders, jsonAuthHeaders } from "@/lib/auth-headers";
 
 type FeedbackEntry = {
   id: number;
@@ -40,7 +41,7 @@ export default function AdminFeedbackPage() {
   async function load() {
     setLoading(true);
     try {
-      const res = await fetch("/api/feedback");
+      const res = await fetch("/api/feedback", { headers: await authHeaders() });
       if (res.status === 403) {
         navigate("/dashboard");
         return;
@@ -60,7 +61,7 @@ export default function AdminFeedbackPage() {
     try {
       const res = await fetch(`/api/feedback/${id}/status`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: await jsonAuthHeaders(),
         body: JSON.stringify({ status }),
       });
       if (!res.ok) throw new Error("Failed");

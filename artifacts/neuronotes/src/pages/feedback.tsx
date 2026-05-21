@@ -2,6 +2,7 @@ import { useState } from "react";
 import { MessageSquare, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { jsonAuthHeaders } from "@/lib/auth-headers";
 
 const FEEDBACK_TYPES = [
   { value: "bug", label: "🐛 Bug Report" },
@@ -64,7 +65,7 @@ export default function FeedbackPage() {
     try {
       res = await fetch("/api/feedback", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: await jsonAuthHeaders(),
         body: JSON.stringify({
           type: submittedType,
           message: message.trim(),
