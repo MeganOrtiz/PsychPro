@@ -426,9 +426,11 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto px-6 lg:px-10 text-center relative z-10">
           {/* Wordmark (brain is baked into the landing_page.png canvas) */}
           <h1
-            className="font-light leading-none relative"
+            className="leading-none relative"
             style={{
               ...TRACK_HERO,
+              fontFamily: '"Julius Sans One", "Outfit", system-ui, sans-serif',
+              fontWeight: 400,
               fontSize: "clamp(44px, 7.5vw, 88px)",
               color: P.cloud,
               textShadow: `0 0 24px rgba(118, 228, 247, 0.30)`,
