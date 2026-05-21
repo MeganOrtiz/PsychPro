@@ -35,7 +35,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import featuredWorkImage from "@assets/generated_images/spotlight_neuron_teal.png";
-import spotlightAvatarImage from "@assets/Screenshot_2026-04-28_at_8.01.18_PM_1778027668124.png";
+import spotlightAvatarImage from "@assets/Screenshot_2026-04-28_at_8.01.18_PM_1779324671560.png";
 import spotlightCloudImage from "@assets/Screenshot_2026-05-10_at_3.03.20_PM_1778443775551.png";
 import TodayReviews from "@/components/learning/today-reviews";
 import { StudySurface } from "@/components/study/study-surface";
@@ -631,7 +631,7 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
     return () => { cancelled = true; };
   }, []);
 
-  const featuredName = spot ? spot.submitter.displayName : "Sarah K.";
+  const featuredName = spot ? spot.submitter.displayName : "Megan O.";
   const featuredRole = spot ? (spot.submitter.role ?? "Contributor") : "PsyD Candidate";
   const featuredInstitution = spot ? (spot.submitter.institution ?? "") : "Clinical Neuropsychology";
   const featuredTypeLabel = spot ? workTypeLabel(spot.workType) : "Featured Work";
