@@ -19,6 +19,12 @@ import { MCP_ENABLED } from "../lib/mcpEnabled";
 
 const router: IRouter = Router();
 
+// NOTE: every child router below is mounted with NO path prefix
+// (`router.use(childRouter)`), so the routes they declare are reachable
+// at exactly `/api/<their-literal-path>`. The route-auth matrix test in
+// `test/routeAuthMatrix.test.ts` relies on this — if you ever mount a
+// child router with a path (e.g. `router.use("/v2", v2Router)`) you must
+// also add `{ v2Router: "/v2" }` to that test's `buildKnownPrefixes()`.
 router.use(healthRouter);
 router.use(topicsRouter);
 router.use(usersRouter);
