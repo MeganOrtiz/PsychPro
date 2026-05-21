@@ -30,8 +30,7 @@ import {
   CheckCircle2,
   Sparkles,
 } from "lucide-react";
-import heroBrain from "@/assets/generated_images/hero_brain_isolated.png";
-import cloudsBackground from "@/assets/cerulean-clouds-background.png";
+import cloudsBackground from "@/assets/generated_images/landing_page.png";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -173,12 +172,13 @@ export default function LandingPage() {
       }}
     >
       <style>{`
-        /* Landing canvas — fixed cerulean-clouds composition that paints
-           the entire landing page. Same image as the in-app
-           .study-page-bg surface (see src/index.css), but with a
-           LIGHTER dimming wash so the hero clouds read brighter than
-           the dashboard. DO NOT swap the clouds image without also
-           updating src/index.css. */
+        /* Landing canvas — fixed full-bleed landing composition that
+           paints the entire landing page (extends to the bottom on
+           scroll because it's position:fixed). Uses a very light
+           dimming wash so the source image's resolution and detail
+           read through clearly. DO NOT add a per-section background
+           image elsewhere on this page — let this one canvas paint
+           the whole route. */
         .landing-canvas::before {
           content: "";
           position: fixed;
@@ -187,13 +187,14 @@ export default function LandingPage() {
           background-color: ${P.ink};
           background-image:
             radial-gradient(ellipse 130% 115% at 50% 50%,
-              rgba(3, 21, 29, 0.30) 0%,
-              rgba(3, 21, 29, 0.45) 60%,
-              rgba(3, 21, 29, 0.65) 100%),
+              rgba(3, 21, 29, 0.10) 0%,
+              rgba(3, 21, 29, 0.20) 60%,
+              rgba(3, 21, 29, 0.38) 100%),
             url(${cloudsBackground});
           background-size: cover, cover;
           background-position: center, center;
           background-repeat: no-repeat, no-repeat;
+          image-rendering: -webkit-optimize-contrast;
           pointer-events: none;
         }
         /* Floating isolated brain — transparent-PNG hero element that
@@ -388,11 +389,7 @@ export default function LandingPage() {
           ============================================================ */}
       <section className="relative flex flex-col items-center justify-center pt-8 pb-20 md:pb-28">
         <div className="max-w-5xl mx-auto px-6 lg:px-10 text-center relative z-10">
-          {/* Floating isolated brain */}
-          <div className="landing-hero-brain mb-6 md:mb-8">
-            <img src={heroBrain} alt="" aria-hidden />
-          </div>
-          {/* Wordmark */}
+          {/* Wordmark (brain is baked into the landing_page.png canvas) */}
           <h1
             className="font-light leading-none relative"
             style={{
