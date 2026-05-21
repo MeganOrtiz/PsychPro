@@ -158,17 +158,10 @@ async function isAdmin(userId: string): Promise<boolean> {
 }
 
 // Strict admin gate for Featured Work moderation.
-//
-// Rules (no silent self-promotion):
-//   1. The caller MUST have `users.isAdmin = true` already, OR
-//   2. The caller MUST present a valid `x-admin-secret` header that matches
-//      the server-side `MCP_ADMIN_SECRET`. When (2) succeeds we upsert the
-//      caller as admin so subsequent requests from the same user don't
-//      require the header. This bootstrap path is the only way a non-admin
-//      can gain admin access, and it is gated by a secret only the operator
-//      knows.
-//
-// All other callers receive 403 — no on-demand privilege escalation.
+// The caller MUST have `users.isAdmin = true` already; everything else gets
+// 403. Admin is granted only via `scripts/src/grant-admin.ts`, never through
+// a route. (Previous versions accepted an `x-admin-secret` self-promotion
+// header — that backdoor was removed for launch.)
 async function requireAdminCaller(req: Request, res: Response): Promise<string | null> {
   const userId = requireUserId(req, res);
   if (!userId) return null;

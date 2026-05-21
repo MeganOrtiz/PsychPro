@@ -118,7 +118,7 @@ function useUserMeta() {
 
     fetch("/api/subscription/status", { headers })
       .then((r) => r.json())
-      .then((d) => setIsScholar(d.status === "scholar"))
+      .then((d) => setIsScholar(d.tier === "scholar"))
       .catch(() => setIsScholar(false));
   }, []);
 

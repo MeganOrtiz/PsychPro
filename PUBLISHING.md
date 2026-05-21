@@ -283,6 +283,30 @@ to include it.
 
 ---
 
+## 8. Granting admin access
+
+The Feedback Inbox, Featured Work moderation, and `/api/admin/*` endpoints
+require `users.isAdmin = true` in the production database. There is no UI or
+secret-header path to grant admin — it must be done from the deployment shell.
+
+1. Have the target user sign in once on production so their `users` row exists.
+2. Find their user ID (e.g. from the Clerk dashboard, or by querying
+   `SELECT id, email FROM users WHERE email = '…'`).
+3. From a shell with production `DATABASE_URL` set, run:
+
+   ```bash
+   pnpm --filter @workspace/scripts run grant-admin <user-id>
+   ```
+
+4. The script prints `Granted admin to user <id> (<email>).` on success. The
+   user's next request to `/api/feedback/is-admin` will return `{isAdmin: true}`
+   and the admin UI will appear on refresh.
+
+To revoke admin, run the equivalent SQL by hand:
+`UPDATE users SET is_admin = false WHERE id = '<user-id>';`
+
+---
+
 ## Rollback
 
 If a publish goes wrong:
