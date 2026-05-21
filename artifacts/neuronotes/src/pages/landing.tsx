@@ -30,7 +30,7 @@ import {
   CheckCircle2,
   Sparkles,
 } from "lucide-react";
-import heroBrain from "@/assets/generated_images/hero_brain_isolated.png";
+import heroBrain from "@/assets/generated_images/hero_brain_clouds_integrated_nobg.png";
 import cloudsBackground from "@/assets/cerulean-clouds-background.png";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
@@ -206,10 +206,14 @@ export default function LandingPage() {
           margin-bottom: 1.25rem;
         }
         .landing-hero-brain img {
-          width: clamp(260px, 48vw, 620px);
+          /* AI-remixed brain+mist composite with transparent background —
+             the source PNG carries its own cyan halo and mist trail, so
+             it composites directly onto the cerulean clouds wallpaper
+             with no rectangular edge. Drop-shadow adds extra bloom. */
+          width: clamp(320px, 70vw, 920px);
           height: auto;
-          filter: drop-shadow(0 0 28px ${P.surf}66)
-                  drop-shadow(0 0 60px ${P.teal}44);
+          filter: drop-shadow(0 0 40px ${P.surf}55)
+                  drop-shadow(0 0 90px ${P.teal}55);
           pointer-events: none;
           user-select: none;
         }
