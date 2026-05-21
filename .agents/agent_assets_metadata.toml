@@ -1,10 +1,5 @@
 uploads = []
-
-[[generated]]
-id = "Y25-pIDrrRhndccvFw-W_"
-uri = "file://artifacts/neuronotes/src/assets/generated_images/hero_brain_clouds_integrated.png"
-type = "image"
-title = "generated_image"
+generated = []
 
 [[outputs]]
 id = "aKKI8N7WseM8lzrKZFEEq"
