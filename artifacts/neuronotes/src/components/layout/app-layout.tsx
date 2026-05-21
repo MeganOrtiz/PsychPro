@@ -134,7 +134,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const { isAdmin, isScholar } = useUserMeta();
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
+    <div className="study-page-bg flex h-screen overflow-hidden">
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-30 md:hidden"

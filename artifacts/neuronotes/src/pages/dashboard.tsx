@@ -237,7 +237,7 @@ export default function DashboardPage() {
           <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-3">
             <NotificationsBell />
           </div>
-          <BrandBanner size="lg" greeting={greetingText} className="mt-6 mb-2" />
+          <BrandBanner size="lg" greeting={greetingText} className="mt-6 mb-8" />
         </header>
 
         {isOverLimit && (
@@ -641,13 +641,7 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
   const featuredAbstractPreview = spot ? previewAbstract(spot.abstract) : null;
 
   return (
-    <div
-      className="relative overflow-hidden rounded-2xl p-6 text-white shadow-xl border border-white/10"
-      style={{
-        background: `radial-gradient(130% 90% at 30% 0%, ${PALETTE.tealDeep}55 0%, ${PALETTE.surfaceElev}cc 35%, ${PALETTE.surface}f5 70%, ${PALETTE.steel} 100%)`,
-        boxShadow: `0 24px 60px -28px ${PALETTE.teal}aa, 0 0 0 1px ${PALETTE.surf}22 inset`,
-      }}
-    >
+    <StudySurface tone="dark" innerClassName="relative overflow-hidden p-6 text-white">
       {/* Starry shimmer */}
       <div
         aria-hidden
@@ -800,7 +794,7 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
           <ArrowUpRight className="w-4 h-4" />
         </button>
       </div>
-    </div>
+    </StudySurface>
   );
 }
 
