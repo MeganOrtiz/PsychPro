@@ -220,10 +220,15 @@ export default function LandingPage() {
               rgba(3, 21, 29, 0.38) 100%),
             url(${cloudsBackground});
           background-size: cover, cover;
-          /* Anchor image to TOP so the brain (which sits in the upper
-             portion of the source composition) reads in the upper half
-             of the viewport, centered above the PSYCHPRO wordmark. */
-          background-position: center top, center top;
+          /* Shift the background up so the brain (which sits ~25% from
+             the top of the portrait source) reads in the upper third of
+             the viewport, above the PSYCHPRO wordmark. With cover sizing
+             on a landscape viewport the source is scaled by width and
+             ends up much taller than the viewport — anchoring at the
+             top leaves the brain ~80% down the viewport (behind the
+             wordmark/cards). 30% pulls the overflow upward so the brain
+             sits visibly above the wordmark. */
+          background-position: center 30%, center 30%;
           background-repeat: no-repeat, no-repeat;
           image-rendering: -webkit-optimize-contrast;
           pointer-events: none;
