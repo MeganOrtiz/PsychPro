@@ -1,6 +1,6 @@
 import { type Request, type Response, type NextFunction } from "express";
 import type { Logger } from "pino";
-import { getUserId } from "../lib/userId";
+import { getOptionalUserId } from "../lib/userId";
 import { db } from "@workspace/db";
 import {
   clientErrorRateHitsTable,
@@ -321,7 +321,7 @@ export async function clientErrorsRateLimit(
 
     if (decision.shouldWarn) {
       const userAgent = req.headers["user-agent"] ?? null;
-      const userId = getUserId(req);
+      const userId = getOptionalUserId(req);
       req.log.warn(
         {
           clientErrorsRateLimit: {

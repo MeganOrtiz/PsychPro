@@ -3,7 +3,7 @@ import { Readable } from "stream";
 import { z } from "zod";
 import { ObjectStorageService, ObjectNotFoundError } from "../lib/objectStorage";
 import { ObjectPermission } from "../lib/objectAcl";
-import { getUserId, requireUserId } from "../lib/userId";
+import { getOptionalUserId, requireUserId } from "../lib/userId";
 
 const router: IRouter = Router();
 const objectStorageService = new ObjectStorageService();
@@ -120,7 +120,7 @@ router.get("/storage/objects/*path", async (req: Request, res: Response): Promis
     const wildcardPath = Array.isArray(raw) ? raw.join("/") : raw;
     const objectPath = `/objects/${wildcardPath}`;
     const objectFile = await objectStorageService.getObjectEntityFile(objectPath);
-    const userId = getUserId(req) ?? undefined;
+    const userId = getOptionalUserId(req) ?? undefined;
     const allowed = await objectStorageService.canAccessObjectEntity({
       userId,
       objectFile,

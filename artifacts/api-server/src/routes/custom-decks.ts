@@ -10,7 +10,7 @@ import {
 } from "@workspace/db";
 import { eq, desc, and, gte, count } from "drizzle-orm";
 import { openai } from "@workspace/integrations-openai-ai-server";
-import { getUserId, requireUserId } from "../lib/userId";
+import { requireUserId } from "../lib/userId";
 import { parseIntParam } from "../lib/params";
 
 const router = Router();
@@ -28,11 +28,8 @@ async function getUser(userId: string) {
 }
 
 async function requireScholar(req: Request, res: Response, next: NextFunction): Promise<void> {
-  const userId = getUserId(req);
-  if (!userId) {
-    res.status(400).json({ error: "Missing x-user-id header" });
-    return;
-  }
+  const userId = requireUserId(req, res);
+  if (!userId) return;
   const user = await getUser(userId);
   if (!user || user.subscriptionStatus !== "scholar") {
     res.status(403).json({ error: "Scholar subscription required" });

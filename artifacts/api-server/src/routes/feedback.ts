@@ -2,7 +2,7 @@ import { Router, type Request, type Response } from "express";
 import { db } from "@workspace/db";
 import { feedbackTable, usersTable } from "@workspace/db";
 import { eq, desc } from "drizzle-orm";
-import { getUserId, requireUserId } from "../lib/userId";
+import { getOptionalUserId, requireUserId } from "../lib/userId";
 import { parseIntParam } from "../lib/params";
 import { feedbackRateLimit } from "../middlewares/feedbackRateLimit";
 
@@ -23,7 +23,7 @@ async function requireAdmin(req: Request, res: Response): Promise<boolean> {
 
 router.get("/feedback/is-admin", async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = getUserId(req);
+    const userId = getOptionalUserId(req);
     if (!userId) {
       res.json({ isAdmin: false });
       return;

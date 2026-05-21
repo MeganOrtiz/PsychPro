@@ -1,5 +1,5 @@
 import { Router, type Request, type Response, type IRouter } from "express";
-import { getUserId } from "../lib/userId";
+import { getOptionalUserId } from "../lib/userId";
 import { clientErrorsRateLimit } from "../middlewares/clientErrorsRateLimit";
 
 const router: IRouter = Router();
@@ -26,7 +26,7 @@ router.post("/client-errors", clientErrorsRateLimit, (req: Request, res: Respons
   const userAgent = asString(body.userAgent, MAX_USER_AGENT_LENGTH);
   const releaseId = asString(body.releaseId, MAX_RELEASE_ID_LENGTH);
 
-  const userId = getUserId(req);
+  const userId = getOptionalUserId(req);
 
   req.log.error(
     {

@@ -2,7 +2,7 @@ import { Router, type Request, type Response } from "express";
 import { db } from "@workspace/db";
 import { topicsTable, flashcardsTable, quizQuestionsTable, studyGuidesTable, practiceExamsTable, practiceExamQuestionsTable, usersTable } from "@workspace/db";
 import { eq, count, asc } from "drizzle-orm";
-import { getUserId } from "../lib/userId";
+import { requireUserId } from "../lib/userId";
 import { shuffle } from "../lib/shuffle";
 
 const router = Router();
@@ -85,11 +85,8 @@ router.get("/topics/:topicId/quizzes", async (req: Request, res: Response): Prom
 
 router.get("/topics/:topicId/study-guide", async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = getUserId(req);
-    if (!userId) {
-      res.status(400).json({ error: "Missing x-user-id header" });
-      return;
-    }
+    const userId = requireUserId(req, res);
+    if (!userId) return;
     const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
     const isSubscribed = user && (user.subscriptionStatus === "active" || user.subscriptionStatus === "pro" || user.subscriptionStatus === "trialing" || user.subscriptionStatus === "scholar");
     if (!isSubscribed) {

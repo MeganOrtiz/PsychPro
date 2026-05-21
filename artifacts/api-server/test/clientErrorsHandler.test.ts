@@ -75,12 +75,11 @@ function makeRes(): MockRes {
 
 interface InvokeOptions {
   body: unknown;
-  // `userId` mirrors the value the client supplies in the unauthenticated
-  // `X-User-Id` request header. Server-side authentication has been removed,
-  // so the handler now reads this header verbatim via `getUserId` with no
-  // validation. Cases:
-  //   - omitted (undefined) → no header set, handler logs userId=null.
-  //   - string → simulate the client passing a user identifier.
+  // `userId` simulates the verified Clerk user id that `clerkMiddleware()`
+  // would attach to the request as `req.auth().userId`. The handler reads
+  // it via `getOptionalUserId(req)` → `getAuth(req)`. Cases:
+  //   - omitted (undefined) → no Clerk session, handler logs userId=null.
+  //   - string → simulate a signed-in caller with that Clerk id.
   //   - explicit null → identical to omitting.
   userId?: string | null;
 }
@@ -95,19 +94,25 @@ function invokeHandler({ body, userId }: InvokeOptions): InvokeResult {
 
   // Mock just the bits of express's Request that the handler reads:
   // - `req.body` is what the handler trims/normalizes.
-  // - `req.header("x-user-id")` is what `getUserId` reads. Server-side auth
-  //   has been removed; the value is taken verbatim from the request header.
+  // - `req.auth()` is what `getAuth()` from `@clerk/express` reads. In
+  //   production this is populated by `clerkMiddleware()`; here we stub it
+  //   so `getOptionalUserId(req)` returns the simulated Clerk user id.
   // - `req.log.error` is the pino-http per-request logger we capture.
   const headers: Record<string, string> = {};
-  if (typeof userId === "string" && userId.length > 0) {
-    headers["x-user-id"] = userId;
-  }
+  // `tokenType: "session_token"` is required: `getAuth(req)` from
+  // `@clerk/express` defaults `acceptsToken` to `SessionToken` and
+  // returns a signed-out auth object (userId=null) when the stub omits it.
+  const auth = {
+    userId: typeof userId === "string" && userId.length > 0 ? userId : null,
+    tokenType: "session_token" as const,
+  };
   const req = {
     body,
     headers,
     header(name: string): string | undefined {
       return headers[name.toLowerCase()];
     },
+    auth: () => auth,
     log: {
       error: (obj: Record<string, unknown>, msg: string) => {
         errorLogs.push({ obj, msg });
@@ -387,7 +392,7 @@ test("missing/null body is tolerated and yields a fallback-message log", () => {
   }
 });
 
-test("request with x-user-id header includes that userId in payload", () => {
+test("request with verified Clerk user id includes that userId in payload", () => {
   const userId = `user_${randomUUID()}`;
   const { res, errorLogs } = invokeHandler({
     body: { message: "client-supplied id error" },
@@ -405,9 +410,10 @@ test("request with x-user-id header includes that userId in payload", () => {
   );
 });
 
-test("request without x-user-id header yields userId=null", () => {
-  // No `userId` provided → invokeHandler omits the `x-user-id` header. The
-  // handler's `getUserId` returns null and the log carries null.
+test("request without a Clerk session yields userId=null", () => {
+  // No `userId` provided → invokeHandler stubs `req.auth()` to return
+  // `{ userId: null }`. The handler's `getOptionalUserId` returns null and
+  // the log carries null.
   const { res, errorLogs } = invokeHandler({ body: { message: "anon error" } });
   assert(res.statusCode === 204, `expected 204, got ${res.statusCode}`);
   const payload = getClientErrorPayload(errorLogs[0]);

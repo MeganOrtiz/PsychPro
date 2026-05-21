@@ -2,7 +2,7 @@ import { createHash } from "crypto";
 import { Router, type Request, type Response } from "express";
 import { db } from "@workspace/db";
 import { progressTable, userProfilesTable } from "@workspace/db";
-import { getUserId } from "../lib/userId";
+import { getOptionalUserId } from "../lib/userId";
 
 const router = Router();
 
@@ -40,7 +40,7 @@ function deriveDisplayName(userId: string): string {
 
 router.get("/leaderboard", async (req: Request, res: Response): Promise<void> => {
   try {
-    const currentUserId = getUserId(req);
+    const currentUserId = getOptionalUserId(req);
 
     // Load opt-in preferences. Default is opt-in (`true`) — the column is
     // `notNull default true` — but a user with no `user_profiles` row at all

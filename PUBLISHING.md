@@ -8,6 +8,16 @@ working production deployment on `*.replit.app`. Follow it top-to-bottom on the
 > deploy outside North America, choose the region in the **Advanced** section of
 > the Publishing tool *before* the first publish.
 
+> **Deploy ordering (May 2026 server-verified auth migration):** the API server
+> now requires a verified Clerk session on every protected `/api/**` route.
+> Deploy order is safe in either direction — the API server still tolerates
+> requests that include the legacy `X-User-Id` header (it ignores them), and
+> the frontend already sends `Authorization: Bearer <clerk-token>` via
+> `ClerkTokenBridge` for every signed-in user. As long as production
+> `CLERK_SECRET_KEY` and `CLERK_PUBLISHABLE_KEY` (server) and
+> `VITE_CLERK_PUBLISHABLE_KEY` (frontend build) are set before the first
+> protected request, no extra coordination is required.
+
 ---
 
 ## 1. Production secrets to set
@@ -19,8 +29,8 @@ the live/production value — not the dev value used in this project.
 | Secret | Used by | Notes |
 | --- | --- | --- |
 | `DATABASE_URL` | API server, seed scripts | Provisioned automatically when you add a Postgres database to the deployment. |
-| `CLERK_SECRET_KEY` | API server (Clerk middleware) | **production** — `sk_live_…` from Clerk's production instance. |
-| `CLERK_PUBLISHABLE_KEY` | API server (Clerk middleware) | **production** — `pk_live_…`. Read at API startup so `clerkMiddleware()` can verify session tokens. |
+| `CLERK_SECRET_KEY` | API server (Clerk middleware) | **production** — `sk_live_…` from Clerk's production instance. Required — every protected `/api/**` route verifies the Clerk session via `getAuth(req)`; without this secret the server cannot verify session tokens and all protected routes will respond `401 Unauthorized`. |
+| `CLERK_PUBLISHABLE_KEY` | API server (Clerk middleware) | **production** — `pk_live_…`. Read at API startup so `clerkMiddleware()` can verify session tokens. Required for the same reason as `CLERK_SECRET_KEY`. |
 | `VITE_CLERK_PUBLISHABLE_KEY` | Web frontend (build-time) | **production** — `pk_live_…` from Clerk's production instance. The Vite build inlines this, so it must be present *before* the build runs. |
 | `STRIPE_WEBHOOK_SECRET` | API server (`/api/stripe/webhook`) | **production** — `whsec_…` from the Stripe Dashboard's *Live mode* webhook endpoint pointed at `https://<your-app>.replit.app/api/stripe/webhook`. |
 | `AI_INTEGRATIONS_OPENAI_API_KEY` | Custom-deck generation (Scholar tier) | Auto-managed by the Replit AI integration; copy the value from your dev secrets if it isn't auto-provisioned in production. |

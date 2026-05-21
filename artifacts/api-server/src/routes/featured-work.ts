@@ -22,7 +22,7 @@ import {
   type FeaturedWorkStatus,
 } from "@workspace/community";
 import { and, desc, eq, ilike, or, sql } from "drizzle-orm";
-import { requireUserId, getUserId } from "../lib/userId";
+import { requireUserId, getOptionalUserId } from "../lib/userId";
 import { parseIntParam } from "../lib/params";
 import { ObjectStorageService } from "../lib/objectStorage";
 import { isUploadOwnedBy, consumeUpload } from "./storage";
@@ -504,7 +504,7 @@ router.get("/featured-work/:id", async (req: Request, res: Response): Promise<vo
     const [row] = await db.select().from(featuredWorkTable).where(eq(featuredWorkTable.id, id));
     if (!row) { res.status(404).json({ error: "Not found" }); return; }
 
-    const callerId = getUserId(req);
+    const callerId = getOptionalUserId(req);
     const isOwner = !!callerId && callerId === row.userId;
     const callerIsAdmin = callerId ? await isAdmin(callerId) : false;
     if (row.status !== "approved" && !isOwner && !callerIsAdmin) {

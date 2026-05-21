@@ -81,10 +81,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Clerk auth middleware — verifies session cookie OR `Authorization: Bearer
-// <token>` on every request. Populates `getAuth(req)` so downstream
-// route-level `requireAuth` helpers can check `auth.userId`. This middleware
-// is a no-op when no Clerk credentials are present, so legacy routes that
-// still rely on `X-User-Id` continue to work unchanged.
+// <token>` on every request. Populates `getAuth(req)` so the route-level
+// `requireUserId(req,res)` / `getOptionalUserId(req)` helpers in
+// `src/lib/userId.ts` can read the verified Clerk user id. Every protected
+// `/api/**` route now derives identity from this middleware; the legacy
+// `X-User-Id` request header is no longer consulted for any authorization
+// decision (see `src/lib/userId.ts`, `replit.md` § Auth Pattern, and
+// `threat_model.md` § Spoofing). If Clerk credentials are missing the
+// middleware no-ops and protected routes will respond `401 Unauthorized`.
 app.use(
   clerkMiddleware({
     publishableKey: process.env.CLERK_PUBLISHABLE_KEY,
