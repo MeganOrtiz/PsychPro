@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import { Bell, CheckCheck } from "lucide-react";
-import { getOrCreateAnonymousUserId } from "@/lib/anonymous-user";
+import { getCurrentUserId } from "@/lib/user-id";
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
 
 type Notification = {
@@ -35,7 +35,7 @@ export function NotificationsBell() {
   async function load() {
     try {
       const res = await fetch("/api/notifications", {
-        headers: { "X-User-Id": getOrCreateAnonymousUserId() },
+        headers: { "X-User-Id": getCurrentUserId() },
       });
       if (!res.ok) return;
       const data = (await res.json()) as Notification[];
@@ -69,7 +69,7 @@ export function NotificationsBell() {
     try {
       await fetch(`/api/notifications/${id}/read`, {
         method: "PATCH",
-        headers: { "X-User-Id": getOrCreateAnonymousUserId() },
+        headers: { "X-User-Id": getCurrentUserId() },
       });
     } catch {
       /* optimistic */
@@ -83,7 +83,7 @@ export function NotificationsBell() {
       unread.map((n) =>
         fetch(`/api/notifications/${n.id}/read`, {
           method: "PATCH",
-          headers: { "X-User-Id": getOrCreateAnonymousUserId() },
+          headers: { "X-User-Id": getCurrentUserId() },
         }).catch(() => null),
       ),
     );

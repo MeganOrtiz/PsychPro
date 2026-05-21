@@ -15,6 +15,7 @@ import storageRouter from "./storage";
 import profileRouter from "./profile";
 import featuredWorkRouter from "./featured-work";
 import connectionsRouter from "./connections";
+import { MCP_ENABLED } from "../lib/mcpEnabled";
 
 const router: IRouter = Router();
 
@@ -27,9 +28,16 @@ router.use(feedbackRouter);
 router.use(customDecksRouter);
 router.use(leaderboardRouter);
 router.use(clientErrorsRouter);
-router.use(adminTokensRouter);
-router.use(mcpRouter);
-router.use(oauthRouter);
+// Gate the MCP HTTP route, its OAuth discovery endpoints, and the
+// admin-token issuer (which exists solely to mint per-Claude bearer
+// tokens) behind `MCP_ENABLED`. Deployments that don't ship the Claude
+// integration can turn all three surfaces off without removing the code.
+// Default is on — see `lib/mcpEnabled.ts`.
+if (MCP_ENABLED) {
+  router.use(adminTokensRouter);
+  router.use(mcpRouter);
+  router.use(oauthRouter);
+}
 router.use(storageRouter);
 router.use(profileRouter);
 router.use(featuredWorkRouter);

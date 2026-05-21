@@ -48,7 +48,12 @@ export default function PracticeExamPage({ params }: Props) {
 
   const questions = exam?.questions ?? [];
   const total = questions.length;
-  const TIME_PER_QUESTION = 90;
+  // Total exam time budget in seconds (the `practice_exams.time_limit` column
+  // is the whole-exam budget, not per-question — DB default is 600s = 10
+  // minutes). Treat 0 or null as untimed so future seeds that opt out of
+  // timing keep working.
+  const examTimeLimitSec = exam?.timeLimit && exam.timeLimit > 0 ? exam.timeLimit : 0;
+  const examIsTimeable = examTimeLimitSec > 0;
 
   const answersRef = useRef<Record<number, string>>({});
   const questionsRef = useRef(questions);
@@ -73,8 +78,8 @@ export default function PracticeExamPage({ params }: Props) {
   };
 
   useEffect(() => {
-    if (started && !warmupActive && timed && !submitted) {
-      setTimeLeft(total * TIME_PER_QUESTION);
+    if (started && !warmupActive && timed && examIsTimeable && !submitted) {
+      setTimeLeft(examTimeLimitSec);
       timerRef.current = setInterval(() => {
         setTimeLeft(t => {
           if (t <= 1) {
@@ -87,7 +92,7 @@ export default function PracticeExamPage({ params }: Props) {
       }, 1000);
     }
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [started, warmupActive, timed, submitted, total]);
+  }, [started, warmupActive, timed, submitted, total, examTimeLimitSec, examIsTimeable]);
 
   const handleSubmit = () => { submitRef.current(); };
 

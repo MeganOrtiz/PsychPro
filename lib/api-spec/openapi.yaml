@@ -567,6 +567,9 @@ components:
           type: integer
         title:
           type: string
+        timeLimit:
+          type: ["integer", "null"]
+          description: "Total exam time budget in seconds. 0 or null means the exam is untimed."
         questions:
           type: array
           items:
@@ -853,6 +856,10 @@ components:
       properties:
         status:
           type: string
+          description: "Stripe subscription status — e.g. 'free', 'active', 'past_due', 'canceled'."
+        tier:
+          type: ["string", "null"]
+          description: "Product tier when active — typically 'pro' or 'scholar'. Null when status is 'free'."
         subscriptionId:
           type: ["string", "null"]
         currentPeriodEnd:

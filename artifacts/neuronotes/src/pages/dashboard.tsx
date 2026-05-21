@@ -11,7 +11,7 @@
 //   - Replace StudySurface cards with raw bg-card / glass divs.
 // =============================================================================
 import { useEffect, useMemo, useState } from "react";
-import { getOrCreateAnonymousUserId } from "@/lib/anonymous-user";
+import { getCurrentUserId } from "@/lib/user-id";
 import { workTypeLabel } from "@workspace/community";
 import { useLocation } from "wouter";
 import {
@@ -143,7 +143,7 @@ export default function DashboardPage() {
     async function load() {
       try {
         const res = await fetch("/api/profile/me", {
-          headers: { "X-User-Id": getOrCreateAnonymousUserId() },
+          headers: { "X-User-Id": getCurrentUserId() },
         });
         if (!res.ok) {
           if (!cancelled) setIsProfileLoading(false);
@@ -624,7 +624,7 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
   const [spot, setSpot] = useState<SpotlightSubmission | null>(null);
   useEffect(() => {
     let cancelled = false;
-    fetch("/api/featured-work/spotlight", { headers: { "X-User-Id": getOrCreateAnonymousUserId() } })
+    fetch("/api/featured-work/spotlight", { headers: { "X-User-Id": getCurrentUserId() } })
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => { if (!cancelled && d) setSpot(d); })
       .catch(() => {});

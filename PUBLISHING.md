@@ -20,10 +20,18 @@ the live/production value — not the dev value used in this project.
 | --- | --- | --- |
 | `DATABASE_URL` | API server, seed scripts | Provisioned automatically when you add a Postgres database to the deployment. |
 | `CLERK_SECRET_KEY` | API server (Clerk middleware) | **production** — `sk_live_…` from Clerk's production instance. |
+| `CLERK_PUBLISHABLE_KEY` | API server (Clerk middleware) | **production** — `pk_live_…`. Read at API startup so `clerkMiddleware()` can verify session tokens. |
 | `VITE_CLERK_PUBLISHABLE_KEY` | Web frontend (build-time) | **production** — `pk_live_…` from Clerk's production instance. The Vite build inlines this, so it must be present *before* the build runs. |
 | `STRIPE_WEBHOOK_SECRET` | API server (`/api/stripe/webhook`) | **production** — `whsec_…` from the Stripe Dashboard's *Live mode* webhook endpoint pointed at `https://<your-app>.replit.app/api/stripe/webhook`. |
 | `AI_INTEGRATIONS_OPENAI_API_KEY` | Custom-deck generation (Scholar tier) | Auto-managed by the Replit AI integration; copy the value from your dev secrets if it isn't auto-provisioned in production. |
 | `AI_INTEGRATIONS_OPENAI_BASE_URL` | Custom-deck generation | Same — copy from dev. |
+| `PUBLIC_APP_URL` | API server (transactional email links, OAuth issuer fallback) | Set to `https://<your-app>.replit.app` (no trailing slash). Used to build absolute URLs in outgoing emails and as the OAuth issuer when `OAUTH_ISSUER` is not set. |
+| `MCP_ADMIN_SECRET` | API server (`/api/admin/tokens` gate) | Required only if you publish the Claude/MCP integration. Strong random string (≥16 chars). Used to mint per-Claude bearer tokens from the admin UI — see replit.md. Leave unset to keep the admin token UI disabled in production. |
+| `MCP_ENABLED` | API server route mounting | Optional. `true` (default) keeps `/api/mcp`, `/api/oauth/*`, and `/.well-known/oauth-authorization-server` mounted. Set to `false` to take the MCP integration offline entirely without removing the code. |
+| `OAUTH_ISSUER` | API server (OAuth discovery) | Optional. Defaults to `PUBLIC_APP_URL`. Only override if your OAuth metadata must advertise a different issuer URL than the public app URL. |
+| `RESEND_API_KEY` | API server (transactional email via Resend) | Required to actually send email. Leave unset to keep email disabled in production (e.g. during a soft launch). |
+| `EMAIL_FROM` | API server (transactional email) | e.g. `"PsychPro <hello@your-domain.com>"`. Must be a domain verified in your Resend account. |
+| `EMAIL_ENABLED` | API server (transactional email gate) | Optional. Defaults to `true` when `RESEND_API_KEY` + `EMAIL_FROM` are both set; set to `false` to suppress email sends without rotating the API key (useful for staging or incident response). |
 | `SESSION_SECRET` | Reserved (not currently read at runtime) | Optional. |
 
 Auto-injected by Replit (you do **not** set these manually):
@@ -131,8 +139,8 @@ thing you need to do is connect Stripe in live mode for the deployment.
 ## 4. Seed the production database
 
 The Postgres database for the deployment is empty when first provisioned. Push
-the schema and seed all study content (15 topics, 200+ flashcards, 150+ quiz
-questions, 15 study guides, 15 practice exams):
+the schema and seed all study content (39 topics, 1,612 flashcards, 935 quiz
+questions, 39 study guides, 39 practice exams with 738 join rows):
 
 ```bash
 # Run these against the production DATABASE_URL (from the deployment shell, or

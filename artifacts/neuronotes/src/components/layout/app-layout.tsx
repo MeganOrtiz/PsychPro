@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Brain, LayoutDashboard, BookOpen, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck, BookMarked, Library, Wrench, Sparkles, Star, Beaker, Lightbulb, Users } from "lucide-react";
 import { UserButton } from "@clerk/clerk-react";
-import { getOrCreateAnonymousUserId } from "@/lib/anonymous-user";
+import { getCurrentUserId } from "@/lib/user-id";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { STUDY_PALETTE } from "@/lib/study-theme";
@@ -75,7 +75,7 @@ function useProfileSummary(): ProfileSummary {
     async function load() {
       try {
         const res = await fetch("/api/profile/me", {
-          headers: { "X-User-Id": getOrCreateAnonymousUserId() },
+          headers: { "X-User-Id": getCurrentUserId() },
         });
         if (!res.ok) return;
         const data = await res.json();
@@ -109,7 +109,7 @@ function useUserMeta() {
   const [isScholar, setIsScholar] = useState(false);
 
   useEffect(() => {
-    const headers = { "X-User-Id": getOrCreateAnonymousUserId() };
+    const headers = { "X-User-Id": getCurrentUserId() };
 
     fetch("/api/feedback/is-admin", { headers })
       .then((r) => r.json())

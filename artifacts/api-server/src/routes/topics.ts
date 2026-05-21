@@ -3,6 +3,7 @@ import { db } from "@workspace/db";
 import { topicsTable, flashcardsTable, quizQuestionsTable, studyGuidesTable, practiceExamsTable, practiceExamQuestionsTable, usersTable } from "@workspace/db";
 import { eq, count, asc } from "drizzle-orm";
 import { getUserId } from "../lib/userId";
+import { shuffle } from "../lib/shuffle";
 
 const router = Router();
 
@@ -137,8 +138,8 @@ router.get("/topics/:topicId/practice-exam", async (req: Request, res: Response)
       .where(eq(practiceExamQuestionsTable.examId, exam.id))
       .orderBy(asc(practiceExamQuestionsTable.questionOrder));
 
-    // Shuffle and return requested count
-    const shuffled = linkedQuestions.sort(() => Math.random() - 0.5).slice(0, count);
+    // Shuffle and return requested count (Fisher–Yates, see lib/shuffle.ts).
+    const shuffled = shuffle(linkedQuestions).slice(0, count);
 
     res.json({
       id: exam.id,

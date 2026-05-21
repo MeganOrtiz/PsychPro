@@ -95,6 +95,11 @@ export interface PracticeExam {
   id: number;
   topicId: number;
   title: string;
+  /**
+   * Total exam time budget in seconds. 0 or null means the exam is untimed.
+   * @nullable
+   */
+  timeLimit?: number | null;
   questions: QuizQuestion[];
 }
 
@@ -221,7 +226,13 @@ export interface PortalSessionResponse {
 }
 
 export interface SubscriptionStatus {
+  /** Stripe subscription status — e.g. 'free', 'active', 'past_due', 'canceled'. */
   status: string;
+  /**
+   * Product tier when active — typically 'pro' or 'scholar'. Null when status is 'free'.
+   * @nullable
+   */
+  tier?: string | null;
   /** @nullable */
   subscriptionId?: string | null;
   /** @nullable */

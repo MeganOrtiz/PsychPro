@@ -140,6 +140,12 @@ export const GetPracticeExamByTopicResponse = zod.object({
   id: zod.number(),
   topicId: zod.number(),
   title: zod.string(),
+  timeLimit: zod
+    .number()
+    .nullish()
+    .describe(
+      "Total exam time budget in seconds. 0 or null means the exam is untimed.",
+    ),
   questions: zod.array(
     zod.object({
       id: zod.number(),
@@ -404,7 +410,17 @@ export const CreateCheckoutSessionResponse = zod.object({
  * @summary Get current user subscription status
  */
 export const GetSubscriptionStatusResponse = zod.object({
-  status: zod.string(),
+  status: zod
+    .string()
+    .describe(
+      "Stripe subscription status — e.g. 'free', 'active', 'past_due', 'canceled'.",
+    ),
+  tier: zod
+    .string()
+    .nullish()
+    .describe(
+      "Product tier when active — typically 'pro' or 'scholar'. Null when status is 'free'.",
+    ),
   subscriptionId: zod.string().nullish(),
   currentPeriodEnd: zod.string().nullish(),
 });

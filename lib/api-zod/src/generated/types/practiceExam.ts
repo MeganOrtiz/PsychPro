@@ -11,5 +11,10 @@ export interface PracticeExam {
   id: number;
   topicId: number;
   title: string;
+  /**
+   * Total exam time budget in seconds. 0 or null means the exam is untimed.
+   * @nullable
+   */
+  timeLimit?: number | null;
   questions: QuizQuestion[];
 }

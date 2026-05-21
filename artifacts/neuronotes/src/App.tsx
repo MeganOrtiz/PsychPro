@@ -5,7 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { setUserIdProvider } from "@workspace/api-client-react";
-import { getOrCreateAnonymousUserId } from "@/lib/anonymous-user";
+import { getCurrentUserId } from "@/lib/user-id";
 import { ClerkTokenBridge } from "@/components/auth/clerk-token-bridge";
 import { RequireSignedIn } from "@/components/auth/require-signed-in";
 import SignInPage from "@/pages/sign-in";
@@ -53,7 +53,7 @@ const queryClient = new QueryClient({
   },
 });
 
-setUserIdProvider(() => getOrCreateAnonymousUserId());
+setUserIdProvider(() => getCurrentUserId());
 
 const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined;
 if (!clerkPublishableKey) {

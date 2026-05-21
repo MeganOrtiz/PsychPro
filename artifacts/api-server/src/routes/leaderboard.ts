@@ -1,7 +1,7 @@
 import { createHash } from "crypto";
 import { Router, type Request, type Response } from "express";
 import { db } from "@workspace/db";
-import { progressTable } from "@workspace/db";
+import { progressTable, userProfilesTable } from "@workspace/db";
 import { getUserId } from "../lib/userId";
 
 const router = Router();
@@ -42,6 +42,20 @@ router.get("/leaderboard", async (req: Request, res: Response): Promise<void> =>
   try {
     const currentUserId = getUserId(req);
 
+    // Load opt-in preferences. Default is opt-in (`true`) — the column is
+    // `notNull default true` — but a user with no `user_profiles` row at all
+    // is also treated as opted-in so anonymous progress keeps appearing.
+    const profiles = await db
+      .select({
+        userId: userProfilesTable.userId,
+        prefShowOnLeaderboard: userProfilesTable.prefShowOnLeaderboard,
+      })
+      .from(userProfilesTable);
+    const optedOut = new Set<string>();
+    for (const p of profiles) {
+      if (p.prefShowOnLeaderboard === false) optedOut.add(p.userId);
+    }
+
     const rows = await db
       .select({
         userId: progressTable.userId,
@@ -66,23 +80,31 @@ router.get("/leaderboard", async (req: Request, res: Response): Promise<void> =>
       if (r.lastAccessed) entry.dates.push(r.lastAccessed);
     }
 
-    const entries = Array.from(byUser.entries()).map(([userId, agg]) => {
-      return {
-        userId,
-        displayName: deriveDisplayName(userId),
-        streak: computeStreakFromDates(agg.dates),
-        topicsCompleted: agg.completed.size,
-      };
-    });
+    // The caller's own entry is always visible to them regardless of opt-in,
+    // so they can see their own progress even after opting out — but opted-
+    // out users do not appear in the public ranked list or counts.
+    const allEntries = Array.from(byUser.entries()).map(([userId, agg]) => ({
+      userId,
+      displayName: deriveDisplayName(userId),
+      streak: computeStreakFromDates(agg.dates),
+      topicsCompleted: agg.completed.size,
+    }));
 
-    entries.sort((a, b) => {
+    const sortFn = (
+      a: { topicsCompleted: number; streak: number; displayName: string },
+      b: { topicsCompleted: number; streak: number; displayName: string },
+    ) => {
       if (b.topicsCompleted !== a.topicsCompleted)
         return b.topicsCompleted - a.topicsCompleted;
       if (b.streak !== a.streak) return b.streak - a.streak;
       return a.displayName.localeCompare(b.displayName);
-    });
+    };
 
-    const ranked = entries.slice(0, LEADERBOARD_LIMIT).map((e, i) => {
+    const publicEntries = allEntries
+      .filter((e) => !optedOut.has(e.userId))
+      .sort(sortFn);
+
+    const ranked = publicEntries.slice(0, LEADERBOARD_LIMIT).map((e, i) => {
       const { userId, ...rest } = e;
       return {
         ...rest,
@@ -93,12 +115,27 @@ router.get("/leaderboard", async (req: Request, res: Response): Promise<void> =>
 
     let currentUserEntry: typeof ranked[number] | null = null;
     if (currentUserId && !ranked.some((r) => r.isCurrentUser)) {
-      const idx = entries.findIndex((e) => e.userId === currentUserId);
-      if (idx >= 0) {
-        const { userId, ...rest } = entries[idx];
+      // Rank against the public list so the user sees where they would
+      // stand among opted-in peers. If the caller is opted out their rank
+      // is shown only to them.
+      const idx = publicEntries.findIndex((e) => e.userId === currentUserId);
+      const own = allEntries.find((e) => e.userId === currentUserId);
+      if (idx >= 0 && own) {
+        const { userId: _u, ...rest } = own;
         currentUserEntry = {
           ...rest,
           rank: idx + 1,
+          isCurrentUser: true,
+        };
+      } else if (own) {
+        // Opted-out caller with progress: compute their would-be rank
+        // against the public list.
+        const wouldBeRank =
+          publicEntries.filter((p) => sortFn(p, own) < 0).length + 1;
+        const { userId: _u, ...rest } = own;
+        currentUserEntry = {
+          ...rest,
+          rank: wouldBeRank,
           isCurrentUser: true,
         };
       } else {
@@ -106,7 +143,7 @@ router.get("/leaderboard", async (req: Request, res: Response): Promise<void> =>
           displayName: deriveDisplayName(currentUserId),
           streak: 0,
           topicsCompleted: 0,
-          rank: entries.length + 1,
+          rank: publicEntries.length + 1,
           isCurrentUser: true,
         };
       }
@@ -115,7 +152,7 @@ router.get("/leaderboard", async (req: Request, res: Response): Promise<void> =>
     res.json({
       entries: ranked,
       currentUser: currentUserEntry,
-      totalParticipants: entries.length,
+      totalParticipants: publicEntries.length,
     });
   } catch (err) {
     req.log.error({ err }, "Error getting leaderboard");

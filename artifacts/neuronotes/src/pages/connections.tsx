@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import { Users, Sparkles, X, Loader2, Check, Ban, UserMinus } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { getOrCreateAnonymousUserId } from "@/lib/anonymous-user";
+import { getCurrentUserId } from "@/lib/user-id";
 
 type Suggestion = {
   userId: string;
@@ -29,7 +29,7 @@ type Incoming = {
 };
 
 function authHeaders(): HeadersInit {
-  return { "X-User-Id": getOrCreateAnonymousUserId(), "Content-Type": "application/json" };
+  return { "X-User-Id": getCurrentUserId(), "Content-Type": "application/json" };
 }
 
 function initials(name: string): string {

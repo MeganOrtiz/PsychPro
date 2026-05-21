@@ -310,6 +310,9 @@ export const userProfilesTable = pgTable("user_profiles", {
   prefShowOnFeaturedWork: boolean("pref_show_on_featured_work")
     .notNull()
     .default(true),
+  prefShowOnLeaderboard: boolean("pref_show_on_leaderboard")
+    .notNull()
+    .default(true),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

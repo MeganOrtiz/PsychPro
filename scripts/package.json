@@ -6,6 +6,7 @@
   "scripts": {
     "hello": "tsx ./src/hello.ts",
     "grant-admin": "tsx ./src/grant-admin.ts",
+    "reset-dev-users": "tsx ./src/reset-dev-users.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {

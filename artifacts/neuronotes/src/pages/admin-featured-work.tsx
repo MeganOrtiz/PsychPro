@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { workTypeLabel } from "@workspace/community";
-import { getOrCreateAnonymousUserId } from "@/lib/anonymous-user";
+import { getCurrentUserId } from "@/lib/user-id";
 
 type Submission = {
   id: number;
@@ -44,7 +44,7 @@ const STATUS_PILL: Record<Status, string> = {
   rejected: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
 };
 
-function headers() { return { "X-User-Id": getOrCreateAnonymousUserId() }; }
+function headers() { return { "X-User-Id": getCurrentUserId() }; }
 function objectsUrl(p: string | null): string | null {
   if (!p) return null;
   if (p.startsWith("http")) return p;

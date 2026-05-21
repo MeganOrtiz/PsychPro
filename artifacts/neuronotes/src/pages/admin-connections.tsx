@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Users, Shield, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { getOrCreateAnonymousUserId } from "@/lib/anonymous-user";
+import { getCurrentUserId } from "@/lib/user-id";
 
 type Stats = {
   days: number;
@@ -34,7 +34,7 @@ export default function AdminConnectionsPage() {
       setLoading(true);
       try {
         const res = await fetch(`/api/admin/connections/stats?days=${range}`, {
-          headers: { "X-User-Id": getOrCreateAnonymousUserId() },
+          headers: { "X-User-Id": getCurrentUserId() },
         });
         if (!res.ok) {
           toast.error(res.status === 403 ? "Admin access required" : `Couldn't load (error ${res.status})`);
@@ -60,7 +60,7 @@ export default function AdminConnectionsPage() {
       const res = await fetch("/api/admin/connections/audit", {
         method: "POST",
         headers: {
-          "X-User-Id": getOrCreateAnonymousUserId(),
+          "X-User-Id": getCurrentUserId(),
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ reason: reason.trim() }),

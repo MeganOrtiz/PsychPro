@@ -7,7 +7,13 @@
  */
 
 export interface SubscriptionStatus {
+  /** Stripe subscription status — e.g. 'free', 'active', 'past_due', 'canceled'. */
   status: string;
+  /**
+   * Product tier when active — typically 'pro' or 'scholar'. Null when status is 'free'.
+   * @nullable
+   */
+  tier?: string | null;
   /** @nullable */
   subscriptionId?: string | null;
   /** @nullable */

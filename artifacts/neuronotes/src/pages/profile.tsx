@@ -3,7 +3,7 @@ import { User as UserIcon, Save, Camera, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { getOrCreateAnonymousUserId } from "@/lib/anonymous-user";
+import { getCurrentUserId } from "@/lib/user-id";
 import {
   INTERESTS_TAXONOMY,
   PROFILE_ROLES,
@@ -54,7 +54,7 @@ function extractFieldErrors(body: unknown): FieldErrors | null {
 }
 
 function userHeaders(): HeadersInit {
-  return { "X-User-Id": getOrCreateAnonymousUserId(), "Content-Type": "application/json" };
+  return { "X-User-Id": getCurrentUserId(), "Content-Type": "application/json" };
 }
 
 function initialsFor(name: string | null | undefined): string {

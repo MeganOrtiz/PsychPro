@@ -19,7 +19,7 @@ import {
   MAX_FEATURED_VENUE_LENGTH,
   workTypeLabel,
 } from "@workspace/community";
-import { getOrCreateAnonymousUserId } from "@/lib/anonymous-user";
+import { getCurrentUserId } from "@/lib/user-id";
 
 type Submission = {
   id: number;
@@ -43,7 +43,7 @@ type Submission = {
 
 const ABSTRACT_PREVIEW = 220;
 
-function headers() { return { "X-User-Id": getOrCreateAnonymousUserId() }; }
+function headers() { return { "X-User-Id": getCurrentUserId() }; }
 function jsonHeaders() { return { "Content-Type": "application/json", ...headers() }; }
 function objectsUrl(p: string | null): string | null {
   if (!p) return null;

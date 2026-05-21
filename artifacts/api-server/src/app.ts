@@ -4,6 +4,7 @@ import pinoHttp from "pino-http";
 import { clerkMiddleware } from "@clerk/express";
 import router from "./routes";
 import { handleDiscovery } from "./routes/oauth";
+import { MCP_ENABLED } from "./lib/mcpEnabled";
 import { logger } from "./lib/logger";
 import { getUncachableStripeClient } from "./stripeClient";
 import { handleStripeWebhookEvent } from "./webhookHandlers";
@@ -97,7 +98,9 @@ app.use(
 // everything else lives under `/api/*`. The same handler is also mounted at
 // `/api/.well-known/...` via the oauth router for clients that probe the api
 // base.
-app.get("/.well-known/oauth-authorization-server", handleDiscovery);
+if (MCP_ENABLED) {
+  app.get("/.well-known/oauth-authorization-server", handleDiscovery);
+}
 
 app.use("/api", router);
 

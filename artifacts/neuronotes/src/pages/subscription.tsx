@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useLocation, useSearch } from "wouter";
 import { Check, Zap, Crown, Loader2, BookMarked, Sparkles, Settings } from "lucide-react";
 import { useGetSubscriptionPlans, useGetSubscriptionStatus, useCreateCheckoutSession, useCreatePortalSession } from "@workspace/api-client-react";
@@ -10,7 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 const PRO_FEATURES = [
   "Unlimited flashcard interactions",
   "Unlimited quiz questions",
-  "All 15 study guides",
+  "Study guides for every topic",
   "Practice exams",
   "Progress tracking",
 ];
@@ -40,8 +40,6 @@ function formatPrice(amount: number, currency: string) {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: currency.toUpperCase() }).format(amount / 100);
 }
 
-type StatusData = { status: string; tier?: string; subscriptionId?: string; currentPeriodEnd?: string };
-
 export default function SubscriptionPage() {
   const [, navigate] = useLocation();
   const search = useSearch();
@@ -49,15 +47,6 @@ export default function SubscriptionPage() {
   const { data: status, isLoading: statusLoading } = useGetSubscriptionStatus();
   const createCheckout = useCreateCheckoutSession();
   const createPortal = useCreatePortalSession();
-
-  const [statusData, setStatusData] = useState<StatusData | null>(null);
-
-  useEffect(() => {
-    fetch("/api/subscription/status")
-      .then((r) => r.json())
-      .then(setStatusData)
-      .catch(() => {});
-  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(search);
@@ -70,8 +59,10 @@ export default function SubscriptionPage() {
   }, [search]);
 
   const isActive = status?.status === "active";
-  const isPro = isActive && statusData?.tier !== "scholar";
-  const isScholar = isActive && statusData?.tier === "scholar";
+  const tier = status?.tier ?? null;
+  const isScholar = isActive && tier === "scholar";
+  const isPro = isActive && !isScholar;
+  const currentPeriodEnd = status?.currentPeriodEnd ?? null;
 
   const proPlans = (plans as Plan[] | undefined)?.filter((p) => !p.name.toLowerCase().includes("scholar")) ?? [];
   const scholarPlans = (plans as Plan[] | undefined)?.filter((p) => p.name.toLowerCase().includes("scholar")) ?? [];
@@ -120,9 +111,9 @@ export default function SubscriptionPage() {
               <p className={`text-sm ${isScholar ? "text-purple-700 dark:text-purple-400" : "text-green-700 dark:text-green-400"}`}>
                 {isScholar ? "You have full access including custom study decks." : "Enjoy unlimited access to all built-in content."}
               </p>
-              {statusData?.currentPeriodEnd && (
+              {currentPeriodEnd && (
                 <p className={`text-xs mt-0.5 ${isScholar ? "text-purple-600 dark:text-purple-500" : "text-green-600 dark:text-green-500"}`}>
-                  Renews: {new Date(statusData.currentPeriodEnd).toLocaleDateString()}
+                  Renews: {new Date(currentPeriodEnd).toLocaleDateString()}
                 </p>
               )}
             </div>

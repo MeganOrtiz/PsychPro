@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
+import { shuffle } from "@/lib/shuffle";
 
 type Deck = { id: number; title: string; studyGuide: string | null; status: string; tier?: "standard" | "pro"; tools?: string[]; examQuestionCount?: number; examTimed?: boolean };
 type Flashcard = { id: number; front: string; back: string; difficulty: string; cardOrder: number };
@@ -294,12 +295,12 @@ function MatchingView({ cards }: { cards: Flashcard[] }) {
 
   type Pair = { id: number; front: string; back: string };
   const buildRound = useCallback((): { pairs: Pair[]; shuffledFronts: Pair[]; shuffledBacks: Pair[] } => {
-    const shuffled = [...cards].sort(() => Math.random() - 0.5).slice(0, PAIR_COUNT);
+    const shuffled = shuffle(cards).slice(0, PAIR_COUNT);
     const pairs = shuffled.map((c) => ({ id: c.id, front: c.front, back: c.back }));
     return {
       pairs,
-      shuffledFronts: [...pairs].sort(() => Math.random() - 0.5),
-      shuffledBacks: [...pairs].sort(() => Math.random() - 0.5),
+      shuffledFronts: shuffle(pairs),
+      shuffledBacks: shuffle(pairs),
     };
   }, [cards, PAIR_COUNT]);
 

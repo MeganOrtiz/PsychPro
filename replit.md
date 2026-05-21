@@ -34,7 +34,7 @@ OAuth security: PKCE S256 + exact-match `redirect_uri` + single-use 60-second au
 - **Validation**: Zod (`zod/v4`), `drizzle-zod`
 - **API codegen**: Orval (from OpenAPI spec)
 - **Build**: esbuild (CJS bundle)
-- **Auth**: **Fully removed — front and back.** No Clerk, no login screen, no token validation, no session checks. The API server reads a `X-User-Id` header verbatim (pass-through, no validation). The frontend generates an anonymous user ID per browser via `localStorage` (`artifacts/neuronotes/src/lib/anonymous-user.ts`) and attaches it as `X-User-Id` on every API call through `setUserIdProvider` in `lib/api-client-react/src/custom-fetch.ts`. Re-add a real auth layer before exposing this server to untrusted clients.
+- **Auth**: **Clerk identity, header-trust transport** (re-introduced May 2026). The frontend wraps the app in `<ClerkProvider>` (see `artifacts/neuronotes/src/App.tsx`) and the `ClerkTokenBridge` component pushes the Clerk session token into the generated API client as `Authorization: Bearer <token>` and the Clerk user id as `X-User-Id` (via `setClerkUserId` in `artifacts/neuronotes/src/lib/user-id.ts`). The API server mounts `@clerk/express` `clerkMiddleware()` so MCP and any future Clerk-gated routes can call `getAuth(req)`, but most existing `/api/**` routes still derive identity by reading the `X-User-Id` header verbatim (`artifacts/api-server/src/lib/userId.ts`). For pre-onboarding visits and pages that read profile data before Clerk hydrates, the frontend falls back to a browser-scoped anonymous UUID stored in `localStorage` (`artifacts/neuronotes/src/lib/anonymous-user.ts`); the helper `getCurrentUserId()` returns the Clerk id when signed in and the anon UUID otherwise — every component must call it instead of `getOrCreateAnonymousUserId()` directly so signed-in identity reaches the API. Tightening the existing routes to verify the bearer token server-side is tracked as a follow-up; do not assume `X-User-Id` is authenticated today.
 - **Payments**: Stripe (API version: 2026-03-25.dahlia)
 
 ## Key Commands
@@ -65,20 +65,25 @@ A mobile-responsive neuroscience/neuropsychology study app.
 - **PsychPro Web** (`artifacts/neuronotes`) — React/Vite SPA (teal/navy theme)
 
 ### Key Files
-- `artifacts/api-server/src/app.ts` — Express app with Stripe webhook (NO Clerk, NO auth middleware)
-- `artifacts/api-server/src/lib/userId.ts` — `getUserId(req)` / `requireUserId(req,res)` — reads `X-User-Id` header (pass-through identifier, NOT auth)
+- `artifacts/api-server/src/app.ts` — Express app with Stripe webhook + Clerk middleware
+- `artifacts/api-server/src/lib/userId.ts` — `getUserId(req)` / `requireUserId(req,res)` — prefers Clerk auth, falls back to the `X-User-Id` header for the anonymous flow
+- `artifacts/api-server/src/lib/mcpEnabled.ts` — gates `/api/mcp`, `/api/oauth/*`, and `/.well-known/oauth-authorization-server` on `MCP_ENABLED` (default on)
+- `artifacts/api-server/src/middlewares/feedbackRateLimit.ts` — per-IP throttle on `POST /api/feedback` (default 5/hour, env-tunable)
 - `artifacts/api-server/src/routes/` — Route handlers (topics, flashcards, quizzes, study guides, practice exams, users, progress, subscription)
 - `artifacts/api-server/src/stripeClient.ts` — Stripe client (API version: 2026-03-25.dahlia)
-- `artifacts/neuronotes/src/App.tsx` — wouter routes (no auth gating); calls `setUserIdProvider(getOrCreateAnonymousUserId)` at module load
+- `artifacts/neuronotes/src/App.tsx` — wouter routes wrapped in `<ClerkProvider>`; calls `setUserIdProvider(() => getCurrentUserId())` at module load
+- `artifacts/neuronotes/src/lib/user-id.ts` — shared `getCurrentUserId()` / `setClerkUserId()` helper (Clerk id when signed in, anon UUID fallback)
 - `artifacts/neuronotes/src/lib/anonymous-user.ts` — `getOrCreateAnonymousUserId()` localStorage-backed UUID
 - `artifacts/neuronotes/src/pages/` — All 11 pages
 - `lib/db/src/schema/index.ts` — DB schema (users, topics, flashcards, quiz_questions, study_guides, progress)
 - `lib/db/src/seed.ts` — Neuroscience content seed (94 flashcards, 42 quiz questions, 9 study guides, 29 topics)
 
 ### Auth Pattern
-- **Authentication has been removed end-to-end.** No Clerk middleware, no token verification, no session checks, no login screen. The API server trusts whatever `X-User-Id` header the client supplies. This is intentionally insecure and must be replaced before exposing the server to untrusted clients.
-- The frontend mints an anonymous browser-scoped UUID at first visit (stored in `localStorage` under key `psychpro.anonymous-user-id`). `App.tsx` registers it as the user-id provider, so every API call made through `@workspace/api-client-react` automatically carries `X-User-Id: <uuid>`. Per-user data (progress, custom decks, subscription, feedback) is keyed off that UUID — clearing browser storage = new user.
-- Sidebar and dashboard show "Guest" / "Hello, there" (no real identity). Sign In / Sign Up buttons on the landing page route straight to `/dashboard`.
+- **Clerk is the identity provider; the API still trusts `X-User-Id`.**
+  - Frontend: `<ClerkProvider>` wraps the app in `App.tsx`. `ClerkTokenBridge` (`src/components/auth/clerk-token-bridge.tsx`) listens to `useAuth()` and pushes the Clerk session token into the generated API client (`Authorization: Bearer <token>`) plus the Clerk user id into the shared user-id store (`src/lib/user-id.ts`). `setUserIdProvider(() => getCurrentUserId())` in `App.tsx` makes every `@workspace/api-client-react` request carry the right `X-User-Id`.
+  - Backend: `clerkMiddleware()` is mounted globally in `artifacts/api-server/src/app.ts` (so MCP and any future Clerk-gated routes can call `getAuth(req)`), but the existing `/api/**` routes call `getUserId(req)` / `requireUserId(req,res)` from `artifacts/api-server/src/lib/userId.ts`, which **reads `X-User-Id` verbatim without verifying the bearer token**. In production the frontend sends the Clerk user id in that header, but a malicious client can forge it. Hardening these routes to derive identity from `getAuth(req)` is a tracked follow-up — do not rely on `X-User-Id` being authenticated.
+- **Anonymous fallback:** when no Clerk session is loaded, the frontend mints a browser-scoped UUID at first visit (stored in `localStorage` under `psychpro.anonymous-user-id`). `getCurrentUserId()` in `src/lib/user-id.ts` returns the Clerk id when signed in and the anon UUID otherwise — components must call this helper instead of `getOrCreateAnonymousUserId()` directly so signed-in identity actually reaches the API.
+- Sidebar and dashboard show the Clerk-derived display name when signed in. Sign In / Sign Up buttons on the landing page open the Clerk-hosted flow.
 - Public routes (no identifier needed): `/api/healthz`, `/api/topics/**`, `/api/stripe/**`, `/api/subscription/plans`, `/api/leaderboard`, `/api/client-errors`, `/api/feedback/is-admin`
 
 ### Features
@@ -127,8 +132,9 @@ Content totals (matches DB seed):
 
 ### Production Publishing
 See `PUBLISHING.md` at the repo root for the full checklist (production secrets,
-Stripe live mode + connector, DB seeding, smoke test, rollback). Auth keys are
-no longer needed — auth was removed in May 2026.
+Stripe live mode + connector, DB seeding, smoke test, rollback). Production
+requires Clerk live keys (`CLERK_SECRET_KEY`, `CLERK_PUBLISHABLE_KEY`,
+`VITE_CLERK_PUBLISHABLE_KEY`); see `PUBLISHING.md` §1–§2.
 Stripe credentials come from the Replit Stripe **connector** — the API server
 auto-selects the `production` connector when `REPLIT_DEPLOYMENT=1`. Price IDs are
 fetched dynamically (no hard-coded IDs). Run

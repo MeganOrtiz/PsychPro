@@ -4,6 +4,7 @@ import { feedbackTable, usersTable } from "@workspace/db";
 import { eq, desc } from "drizzle-orm";
 import { getUserId, requireUserId } from "../lib/userId";
 import { parseIntParam } from "../lib/params";
+import { feedbackRateLimit } from "../middlewares/feedbackRateLimit";
 
 const router = Router();
 
@@ -41,7 +42,7 @@ router.get("/feedback/is-admin", async (req: Request, res: Response): Promise<vo
 const MIN_MESSAGE_LENGTH = 20;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-router.post("/feedback", async (req: Request, res: Response): Promise<void> => {
+router.post("/feedback", feedbackRateLimit, async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = requireUserId(req, res);
     if (!userId) return;
