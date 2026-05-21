@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Brain, LayoutDashboard, BookOpen, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck, BookMarked, Library, Wrench, Sparkles, Star, Beaker, Lightbulb, Users } from "lucide-react";
+import { UserButton } from "@clerk/clerk-react";
 import { getOrCreateAnonymousUserId } from "@/lib/anonymous-user";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -426,6 +427,22 @@ export default function AppLayout({ children }: AppLayoutProps) {
           </Button>
           <Brain className="w-6 h-6 text-primary" />
           <span className="font-bold text-foreground">PsychPro</span>
+          <div className="ml-auto">
+            <UserButton afterSignOutUrl={import.meta.env.BASE_URL.replace(/\/$/, "") || "/"} />
+          </div>
+        </header>
+
+        {/* Desktop top bar: Clerk UserButton lives in the top-right so users
+            can manage their account and sign out from any page. */}
+        <header className="hidden md:flex items-center justify-end px-6 py-2 border-b border-white/5">
+          <UserButton
+            afterSignOutUrl={import.meta.env.BASE_URL.replace(/\/$/, "") || "/"}
+            appearance={{
+              elements: {
+                avatarBox: "w-8 h-8",
+              },
+            }}
+          />
         </header>
 
         <main className="flex-1 overflow-y-auto" data-testid="main-content">

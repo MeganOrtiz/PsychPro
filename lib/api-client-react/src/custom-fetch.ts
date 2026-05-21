@@ -15,8 +15,11 @@ const DEFAULT_JSON_ACCEPT = "application/json, application/problem+json";
 // Module-level configuration
 // ---------------------------------------------------------------------------
 
+export type AuthTokenGetter = () => Promise<string | null> | string | null;
+
 let _baseUrl: string | null = null;
 let _userIdProvider: UserIdProvider | null = null;
+let _authTokenGetter: AuthTokenGetter | null = null;
 
 /**
  * Set a base URL that is prepended to every relative request URL
@@ -39,6 +42,16 @@ export function setBaseUrl(url: string | null): void {
  */
 export function setUserIdProvider(provider: UserIdProvider | null): void {
   _userIdProvider = provider;
+}
+
+/**
+ * Register a getter that supplies the current auth bearer token (e.g. a
+ * Clerk session token). When set, every request gets an
+ * `Authorization: Bearer <token>` header unless the caller already
+ * provided one. Pass `null` to clear.
+ */
+export function setAuthTokenGetter(getter: AuthTokenGetter | null): void {
+  _authTokenGetter = getter;
 }
 
 function isRequest(input: RequestInfo | URL): input is Request {
@@ -352,6 +365,14 @@ export async function customFetch<T = unknown>(
     const userId = await _userIdProvider();
     if (userId) {
       headers.set("x-user-id", userId);
+    }
+  }
+
+  // Attach Clerk session token (or any registered bearer) when present.
+  if (_authTokenGetter && !headers.has("authorization")) {
+    const token = await _authTokenGetter();
+    if (token) {
+      headers.set("authorization", `Bearer ${token}`);
     }
   }
 

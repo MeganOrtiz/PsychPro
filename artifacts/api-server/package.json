@@ -12,6 +12,7 @@
     "test": "node ./scripts/run-tests.mjs"
   },
   "dependencies": {
+    "@clerk/express": "^2.1.19",
     "@google-cloud/storage": "^7.19.0",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@workspace/api-zod": "workspace:*",

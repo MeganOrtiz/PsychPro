@@ -1,6 +1,7 @@
 import express, { type Express, type Request, type Response } from "express";
 import cors from "cors";
 import pinoHttp from "pino-http";
+import { clerkMiddleware } from "@clerk/express";
 import router from "./routes";
 import { handleDiscovery } from "./routes/oauth";
 import { logger } from "./lib/logger";
@@ -77,6 +78,18 @@ app.post(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Clerk auth middleware — verifies session cookie OR `Authorization: Bearer
+// <token>` on every request. Populates `getAuth(req)` so downstream
+// route-level `requireAuth` helpers can check `auth.userId`. This middleware
+// is a no-op when no Clerk credentials are present, so legacy routes that
+// still rely on `X-User-Id` continue to work unchanged.
+app.use(
+  clerkMiddleware({
+    publishableKey: process.env.CLERK_PUBLISHABLE_KEY,
+    secretKey: process.env.CLERK_SECRET_KEY,
+  }),
+);
 
 // Root-level OAuth discovery alias. The platform router forwards this exact
 // path to the api-server (see `paths` in artifact.toml) so we have a stable

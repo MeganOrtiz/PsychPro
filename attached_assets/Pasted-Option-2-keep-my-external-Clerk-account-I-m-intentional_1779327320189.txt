@@ -1,0 +1,52 @@
+Option 2 — keep my external Clerk account. I'm intentionally using
+live keys for both development and production. Proceed with integration.
+
+Before you start, verify and report:
+
+1. Confirm CLERK_SECRET_KEY exists and is a backend-only secret.
+   Confirm NO secret named VITE_CLERK_SECRET_KEY (or anything similar
+   that would expose the secret key to the frontend) exists. If
+   one does, DELETE it immediately and tell me — I will then rotate
+   my Clerk secret key.
+
+2. Confirm CLERK_PUBLISHABLE_KEY (backend) and
+   VITE_CLERK_PUBLISHABLE_KEY (frontend) both exist and have the
+   pk_live_... value.
+
+Then proceed with integration:
+
+FRONTEND (neuronotes):
+- Install @clerk/clerk-react at the version compatible with our
+  current React version
+- Wrap the app root in <ClerkProvider> using
+  import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as publishableKey
+- The wrapper goes in src/main.tsx around the existing app render,
+  OR in src/App.tsx as the outermost component — pick whichever
+  matches the existing pattern
+- Add sign-in and sign-up routes:
+  - /sign-in renders <SignIn routing="path" path="/sign-in" />
+  - /sign-up renders <SignUp routing="path" path="/sign-up" />
+- Style these to match the PsychPro palette (STUDY_PALETTE) using
+  Clerk's appearance prop. Apply the same glass treatment, cerulean
+  accents, and dark background that the rest of the app uses. Do
+  not introduce off-palette colors. The sign-in page should feel
+  like part of PsychPro, not a generic Clerk page.
+- Add a route protection mechanism: any authenticated route
+  (Dashboard, Workshop, Lab, Studio, Connect) should be wrapped
+  such that <SignedOut> users redirect to /sign-in, and
+  <SignedIn> users see the protected content
+- The landing page (/landing) remains public
+- Add <UserButton /> in the top-right of the app shell (in
+  app-layout.tsx) so users can manage their account and sign out.
+  If a placeholder user button already exists, replace it.
+- The existing API client must add the Clerk session token as
+  Authorization: Bearer <token> on every request to api-server.
+  Use Clerk's useAuth().getToken() in the API client setup.
+
+BACKEND (api-server):
+- Install @clerk/backend or @clerk/express depending on the
+  existing framework (check package.json for express vs fastify
+  vs hono, etc.)
+- Add middleware that verifies Clerk session tokens on protected
+  routes using process.env.CLERK_SECRET_KEY
+- Unauthe

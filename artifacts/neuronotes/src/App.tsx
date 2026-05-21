@@ -1,10 +1,15 @@
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ClerkProvider } from "@clerk/clerk-react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { setUserIdProvider } from "@workspace/api-client-react";
 import { getOrCreateAnonymousUserId } from "@/lib/anonymous-user";
+import { ClerkTokenBridge } from "@/components/auth/clerk-token-bridge";
+import { RequireSignedIn } from "@/components/auth/require-signed-in";
+import SignInPage from "@/pages/sign-in";
+import SignUpPage from "@/pages/sign-up";
 import LandingPage from "@/pages/landing";
 import OnboardingPage from "@/pages/onboarding";
 import DashboardPage from "@/pages/dashboard";
@@ -50,14 +55,22 @@ const queryClient = new QueryClient({
 
 setUserIdProvider(() => getOrCreateAnonymousUserId());
 
+const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined;
+if (!clerkPublishableKey) {
+  throw new Error("Missing VITE_CLERK_PUBLISHABLE_KEY environment variable");
+}
+
 function AppRouter() {
   return (
     <Switch>
       <Route path="/" component={LandingPage} />
+      <Route path="/sign-in/*?" component={SignInPage} />
+      <Route path="/sign-up/*?" component={SignUpPage} />
       {import.meta.env.DEV ? <Route path="/__crash-test" component={CrashTestPage} /> : null}
       <Route>
-        <AppLayout>
-          <Switch>
+        <RequireSignedIn>
+          <AppLayout>
+            <Switch>
             <Route path="/onboarding" component={OnboardingPage} />
             <Route path="/dashboard" component={DashboardPage} />
             <Route path="/topics" component={TopicsPage} />
@@ -89,23 +102,34 @@ function AppRouter() {
             <Route component={NotFound} />
           </Switch>
         </AppLayout>
+        </RequireSignedIn>
       </Route>
     </Switch>
   );
 }
 
 function App() {
+  const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
   return (
     <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-            <AppRouter />
-          </WouterRouter>
-          <Toaster />
-          <SonnerToaster />
-        </TooltipProvider>
-      </QueryClientProvider>
+      <ClerkProvider
+        publishableKey={clerkPublishableKey!}
+        signInUrl={`${basePath}/sign-in`}
+        signUpUrl={`${basePath}/sign-up`}
+        signInFallbackRedirectUrl={`${basePath}/dashboard`}
+        signUpFallbackRedirectUrl={`${basePath}/dashboard`}
+      >
+        <ClerkTokenBridge />
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
+            <WouterRouter base={basePath}>
+              <AppRouter />
+            </WouterRouter>
+            <Toaster />
+            <SonnerToaster />
+          </TooltipProvider>
+        </QueryClientProvider>
+      </ClerkProvider>
     </ErrorBoundary>
   );
 }
