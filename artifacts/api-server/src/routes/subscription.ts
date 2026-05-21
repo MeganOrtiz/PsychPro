@@ -87,7 +87,7 @@ router.post("/subscription/checkout", async (req: Request, res: Response): Promi
       if (!user) {
         [user] = await db
           .insert(usersTable)
-          .values({ id: userId, subscriptionStatus: "scholar", isAdmin: true, onboardingComplete: true, stripeCustomerId: customerId })
+          .values({ id: userId, subscriptionStatus: "free", isAdmin: false, onboardingComplete: false, stripeCustomerId: customerId })
           .returning();
       } else {
         await db.update(usersTable).set({ stripeCustomerId: customerId }).where(eq(usersTable.id, userId));
@@ -139,14 +139,42 @@ router.get("/subscription/status", async (req: Request, res: Response): Promise<
   try {
     const userId = requireUserId(req, res);
     if (!userId) return;
-    // Dev-mode full-access: always report a Scholar-tier active subscription
-    // so every paywall gate in the frontend (study guide, quizzes, exam,
-    // etc.) treats the user as fully subscribed regardless of DB state.
     const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
+
+    // No row yet → free tier. Do not auto-create the user here; that
+    // happens via /users/profile or other write paths.
+    if (!user) {
+      res.json({
+        status: "free",
+        tier: "free",
+        subscriptionId: null,
+        currentPeriodEnd: null,
+      });
+      return;
+    }
+
+    const dbStatus = user.subscriptionStatus ?? "free";
+    // Map DB subscriptionStatus to the {status, tier} shape the frontend
+    // expects. "scholar" → status="active" tier="scholar".
+    // "active"/"pro"/"trialing" → status="active" tier="pro".
+    // Anything else → status="free" tier="free".
+    let status: string;
+    let tier: string;
+    if (dbStatus === "scholar") {
+      status = "active";
+      tier = "scholar";
+    } else if (dbStatus === "active" || dbStatus === "pro" || dbStatus === "trialing") {
+      status = "active";
+      tier = "pro";
+    } else {
+      status = "free";
+      tier = "free";
+    }
+
     res.json({
-      status: "scholar",
-      tier: "scholar",
-      subscriptionId: user?.stripeSubscriptionId ?? null,
+      status,
+      tier,
+      subscriptionId: user.stripeSubscriptionId ?? null,
       currentPeriodEnd: null,
     });
   } catch (err) {

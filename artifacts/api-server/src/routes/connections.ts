@@ -86,21 +86,6 @@ async function requireAdminCaller(req: Request, res: Response): Promise<string |
   const userId = requireUserId(req, res);
   if (!userId) return null;
   if (await isAdmin(userId)) return userId;
-  const providedSecret = req.header("x-admin-secret");
-  const expectedSecret = process.env.MCP_ADMIN_SECRET;
-  if (expectedSecret && providedSecret && providedSecret === expectedSecret) {
-    await db
-      .insert(usersTable)
-      .values({
-        id: userId,
-        subscriptionStatus: "scholar",
-        isAdmin: true,
-        onboardingComplete: true,
-        usageCount: 0,
-      })
-      .onConflictDoUpdate({ target: usersTable.id, set: { isAdmin: true } });
-    return userId;
-  }
   res.status(403).json({ error: "Admin access required" });
   return null;
 }

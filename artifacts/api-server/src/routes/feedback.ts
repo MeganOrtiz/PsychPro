@@ -7,25 +7,15 @@ import { parseIntParam } from "../lib/params";
 
 const router = Router();
 
-// Dev-mode full-access: every authenticated request is treated as admin.
-// Auto-upserts the user with isAdmin=true so subsequent DB-backed admin
-// checks (and the feedback inbox queries) all see the admin flag.
+// Strict admin gate. The caller must already have isAdmin=true in the DB.
+// Grant admin only via scripts/src/grant-admin.ts — never through a route.
 async function requireAdmin(req: Request, res: Response): Promise<boolean> {
   const userId = requireUserId(req, res);
   if (!userId) return false;
   const [existing] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
-  if (!existing) {
-    await db.insert(usersTable).values({
-      id: userId,
-      subscriptionStatus: "scholar",
-      isAdmin: true,
-      onboardingComplete: true,
-      usageCount: 0,
-    });
-  } else if (!existing.isAdmin) {
-    await db.update(usersTable)
-      .set({ isAdmin: true, subscriptionStatus: "scholar" })
-      .where(eq(usersTable.id, userId));
+  if (!existing || !existing.isAdmin) {
+    res.status(403).json({ error: "Admin access required" });
+    return false;
   }
   return true;
 }
@@ -37,26 +27,14 @@ router.get("/feedback/is-admin", async (req: Request, res: Response): Promise<vo
       res.json({ isAdmin: false });
       return;
     }
-    // Dev-mode: auto-upsert the caller as admin so the frontend admin UI
-    // (Feedback Inbox link, admin-only panels) appears for every user
-    // without requiring them to load /users/profile first.
-    const [existing] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
-    if (!existing) {
-      await db.insert(usersTable).values({
-        id: userId,
-        subscriptionStatus: "scholar",
-        isAdmin: true,
-        onboardingComplete: true,
-        usageCount: 0,
-      });
-    } else if (!existing.isAdmin) {
-      await db.update(usersTable)
-        .set({ isAdmin: true, subscriptionStatus: "scholar" })
-        .where(eq(usersTable.id, userId));
-    }
-    res.json({ isAdmin: true });
-  } catch {
-    res.json({ isAdmin: true });
+    const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
+    res.json({ isAdmin: !!user?.isAdmin });
+  } catch (err) {
+    req.log.error({ err }, "Error checking admin status");
+    // SECURITY: on error, default to NOT admin. Better to lock out a
+    // legitimate admin during an outage than to grant admin to an
+    // attacker during one.
+    res.json({ isAdmin: false });
   }
 });
 

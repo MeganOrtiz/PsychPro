@@ -11,24 +11,20 @@ router.get("/users/profile", async (req: Request, res: Response): Promise<void> 
   try {
     const userId = requireUserId(req, res);
     if (!userId) return;
-    // Dev-mode full-access: auto-provision the user if missing, AND force
-    // existing users up to scholar + admin every load. This eliminates any
-    // edge case where a stale localStorage user-id maps to a "free"-tier
-    // record and gets paywalled out of study guides / quizzes / etc.
+    // Auto-create the user row on first access so the rest of the app has
+    // something to read. New users start as "free" with no admin flag and
+    // onboarding incomplete. Existing users are NEVER force-upgraded —
+    // subscriptionStatus comes from Stripe webhooks, isAdmin from a manual
+    // DB grant (see scripts/src/grant-admin.ts).
     let [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
     if (!user) {
       [user] = await db.insert(usersTable).values({
         id: userId,
-        subscriptionStatus: "scholar",
-        isAdmin: true,
-        onboardingComplete: true,
+        subscriptionStatus: "free",
+        isAdmin: false,
+        onboardingComplete: false,
         usageCount: 0,
       }).returning();
-    } else if (user.subscriptionStatus !== "scholar" || !user.isAdmin) {
-      [user] = await db.update(usersTable)
-        .set({ subscriptionStatus: "scholar", isAdmin: true, onboardingComplete: true })
-        .where(eq(usersTable.id, userId))
-        .returning();
     }
     res.json({
       id: user.id,
@@ -65,11 +61,8 @@ router.post("/users/profile", async (req: Request, res: Response): Promise<void>
         degree,
         referralSource,
         onboardingComplete: onboardingComplete ?? true,
-        // Dev-mode default: every new anonymous user is provisioned with
-        // full Scholar-tier access and admin flag so the un-authenticated
-        // app is fully usable (no paywalls, no admin gating).
-        subscriptionStatus: "scholar",
-        isAdmin: true,
+        subscriptionStatus: "free",
+        isAdmin: false,
         usageCount: 0,
       }).returning();
     } else {
@@ -122,7 +115,7 @@ router.post("/users/usage", async (req: Request, res: Response): Promise<void> =
     let [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
 
     if (!user) {
-      [user] = await db.insert(usersTable).values({ id: userId, subscriptionStatus: "scholar", isAdmin: true, onboardingComplete: true, usageCount: 0 }).returning();
+      [user] = await db.insert(usersTable).values({ id: userId, subscriptionStatus: "free", isAdmin: false, onboardingComplete: false, usageCount: 0 }).returning();
     }
 
     const isSubscribed = user.subscriptionStatus === "active" || user.subscriptionStatus === "pro" || user.subscriptionStatus === "trialing" || user.subscriptionStatus === "scholar";

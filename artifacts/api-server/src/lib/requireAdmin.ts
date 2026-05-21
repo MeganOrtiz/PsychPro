@@ -88,9 +88,13 @@ export async function requireOwner(req: Request, res: Response): Promise<string 
   // Ensure the sentinel owner row exists so token rows can satisfy the FK.
   const [existing] = await db.select().from(usersTable).where(eq(usersTable.id, OWNER_SENTINEL_USER_ID));
   if (!existing) {
+    // Sentinel owner row exists only to satisfy FK constraints on
+    // admin-token rows minted via this route. subscriptionStatus is
+    // intentionally "free" (the sentinel does not consume features);
+    // isAdmin remains true because that is the sentinel's purpose.
     await db.insert(usersTable).values({
       id: OWNER_SENTINEL_USER_ID,
-      subscriptionStatus: "scholar",
+      subscriptionStatus: "free",
       isAdmin: true,
       onboardingComplete: true,
       usageCount: 0,
