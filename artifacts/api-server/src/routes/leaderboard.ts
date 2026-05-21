@@ -113,14 +113,15 @@ router.get("/leaderboard", async (req: Request, res: Response): Promise<void> =>
       };
     });
 
+    // `currentUser` is always populated when we can resolve the caller —
+    // even if they already appear in `entries` — so the client never has
+    // to scan `entries` to find their own row.
     let currentUserEntry: typeof ranked[number] | null = null;
-    if (currentUserId && !ranked.some((r) => r.isCurrentUser)) {
-      // Rank against the public list so the user sees where they would
-      // stand among opted-in peers. If the caller is opted out their rank
-      // is shown only to them.
+    if (currentUserId) {
       const idx = publicEntries.findIndex((e) => e.userId === currentUserId);
       const own = allEntries.find((e) => e.userId === currentUserId);
       if (idx >= 0 && own) {
+        // Opted-in caller with progress: report their rank in the public list.
         const { userId: _u, ...rest } = own;
         currentUserEntry = {
           ...rest,
@@ -139,6 +140,8 @@ router.get("/leaderboard", async (req: Request, res: Response): Promise<void> =>
           isCurrentUser: true,
         };
       } else {
+        // Caller has no progress rows yet: still echo a stub row so the
+        // client can render "you're not ranked yet" without a null check.
         currentUserEntry = {
           displayName: deriveDisplayName(currentUserId),
           streak: 0,

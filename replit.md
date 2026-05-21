@@ -67,7 +67,7 @@ A mobile-responsive neuroscience/neuropsychology study app.
 ### Key Files
 - `artifacts/api-server/src/app.ts` — Express app with Stripe webhook + Clerk middleware
 - `artifacts/api-server/src/lib/userId.ts` — `getUserId(req)` / `requireUserId(req,res)` — reads the `X-User-Id` header verbatim with no token verification (header-trust). The frontend writes the Clerk user id into that header when signed in and the anonymous browser UUID otherwise, but the server does not validate either.
-- `artifacts/api-server/src/lib/mcpEnabled.ts` — gates `/api/mcp`, `/api/oauth/*`, and `/.well-known/oauth-authorization-server` on `MCP_ENABLED` (default on)
+- `artifacts/api-server/src/lib/mcpEnabled.ts` — gates `/api/mcp`, `/api/oauth/*`, `/.well-known/oauth-authorization-server`, and the `/api/admin/tokens` admin router on `MCP_ENABLED` (default on). The flag applies in every environment, not just production, so it can also be used to disable MCP locally during development.
 - `artifacts/api-server/src/middlewares/feedbackRateLimit.ts` — per-IP throttle on `POST /api/feedback` (default 5/hour, env-tunable)
 - `artifacts/api-server/src/routes/` — Route handlers (topics, flashcards, quizzes, study guides, practice exams, users, progress, subscription)
 - `artifacts/api-server/src/stripeClient.ts` — Stripe client (API version: 2026-03-25.dahlia)
