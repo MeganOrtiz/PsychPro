@@ -311,13 +311,16 @@
   background-image:
     /* Dimming wash so cards remain readable on top — alpha
        controls how subtle the clouds are. Higher alpha = darker
-       background, more card prominence. */
+       background, more card prominence. Kept moderate so the
+       full-bleed brain composition stays visible behind cards. */
     radial-gradient(ellipse 130% 115% at 50% 50%,
-      rgba(3, 21, 29, 0.55) 0%,
-      rgba(3, 21, 29, 0.65) 60%,
-      rgba(3, 21, 29, 0.75) 100%),
-    /* The cerulean cloud composition */
-    url("./assets/cerulean-clouds-background.png");
+      rgba(3, 21, 29, 0.35) 0%,
+      rgba(3, 21, 29, 0.50) 60%,
+      rgba(3, 21, 29, 0.65) 100%),
+    /* Full-bleed brain-in-clouds composition. Same source image
+       as the landing canvas — landing and dashboard share one
+       continuous visual identity. */
+    url("./assets/generated_images/dashboard.png");
   background-size: cover, cover;
   background-position: center, center;
   background-repeat: no-repeat, no-repeat;
