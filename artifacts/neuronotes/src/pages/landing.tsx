@@ -29,6 +29,7 @@ import {
   Brain,
   CheckCircle2,
   Sparkles,
+  Star,
 } from "lucide-react";
 import cloudsBackground from "@/assets/generated_images/landing_page.png";
 // Palette comes from the shared single-source-of-truth file.
@@ -51,23 +52,50 @@ const NAV_LINKS = [
 const FEATURE_CARDS = [
   {
     icon: GraduationCap,
-    title: "EXPERT-LED COURSES",
-    body: "Learn from leading professionals in clinical psychology.",
+    title: "EVIDENCE-BASED LEARNING",
+    body: "Flashcards, quizzes, study guides, and practice exams designed for optimal knowledge retention.",
   },
   {
     icon: Brain,
-    title: "EVIDENCE-BASED",
-    body: "Content grounded in the latest research and best practices.",
+    title: "INTERACTIVE BRAIN LAB",
+    body: "Explore neuroanatomy through a fully interactive 3D brain — click any region to learn its function and clinical relevance.",
   },
   {
-    icon: Wrench,
-    title: "PRACTICAL TOOLS",
-    body: "Resources and tools you can use in real-world settings.",
+    icon: Sparkles,
+    title: "PERSONALIZED RESOURCES",
+    body: "Upload your own notes, articles, or PDFs and PsychPro generates flashcards, quizzes, and study guides from your material.",
   },
   {
-    icon: Users,
-    title: "PROFESSIONAL COMMUNITY",
-    body: "Connect, collaborate, and grow with peers worldwide.",
+    icon: Star,
+    title: "PSYCHPRO SPOTLIGHT",
+    body: "Submit dissertations, research, or presentations for the chance to be featured in our PsychPro Spotlight.",
+  },
+];
+
+const WHATS_INSIDE_CARDS = [
+  {
+    n: "01",
+    eyebrow: "STUDY SYSTEM",
+    headline: "Flashcards, study guides, quizzes & practice exams",
+    body: "Built around evidence-based learning principles — spaced repetition, active recall, and interleaving — so every minute of study earns long-term retention.",
+  },
+  {
+    n: "02",
+    eyebrow: "BREADTH",
+    headline: "35+ topics covered",
+    body: "Comprehensive coverage across clinical psychology: neuroscience, neuropsychology, psychopharmacology, assessment, psychotherapy, research methods, and more — curated for both coursework and board prep.",
+  },
+  {
+    n: "03",
+    eyebrow: "PERSONALIZATION",
+    headline: "Personalized dashboard with progress tracking",
+    body: "Streaks, performance analytics, and recommendations tailored to your goals, your degree path, and where you actually need work.",
+  },
+  {
+    n: "04",
+    eyebrow: "COMMUNITY",
+    headline: "Opt-in community connections",
+    body: "Match with peers who share your clinical interests, training stage, and learning goals — only if and when you want to.",
   },
 ];
 
@@ -192,7 +220,10 @@ export default function LandingPage() {
               rgba(3, 21, 29, 0.38) 100%),
             url(${cloudsBackground});
           background-size: cover, cover;
-          background-position: center, center;
+          /* Anchor image to TOP so the brain (which sits in the upper
+             portion of the source composition) reads in the upper half
+             of the viewport, centered above the PSYCHPRO wordmark. */
+          background-position: center top, center top;
           background-repeat: no-repeat, no-repeat;
           image-rendering: -webkit-optimize-contrast;
           pointer-events: none;
@@ -387,7 +418,11 @@ export default function LandingPage() {
           HERO — floating isolated brain over the fixed cloud canvas,
           followed by wordmark, tagline, body copy and CTAs.
           ============================================================ */}
-      <section className="relative flex flex-col items-center justify-center pt-8 pb-20 md:pb-28">
+      {/* Top padding is intentionally generous so the PSYCHPRO wordmark
+          drops down into the cloud composition, leaving the brain in the
+          fixed background visible centered above it. The fixed canvas
+          fills the viewport — there is NO gap above the brain. */}
+      <section className="relative flex flex-col items-center justify-center pt-44 md:pt-56 lg:pt-64 pb-20 md:pb-28">
         <div className="max-w-5xl mx-auto px-6 lg:px-10 text-center relative z-10">
           {/* Wordmark (brain is baked into the landing_page.png canvas) */}
           <h1
@@ -510,6 +545,103 @@ export default function LandingPage() {
                 style={{ ...TRACK_NAV, color: P.cloud }}
               >
                 {card.title}
+              </h3>
+              <p
+                className="text-sm leading-relaxed font-light"
+                style={{ color: P.inkSoft }}
+              >
+                {card.body}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ============================================================
+          WHAT'S INSIDE PSYCHPRO — numbered detail cards
+          ============================================================ */}
+      <section
+        id="whats-inside"
+        className="relative max-w-7xl mx-auto px-6 lg:px-10 pb-16"
+      >
+        <div className="text-center mb-10">
+          <p
+            className="text-xs font-light"
+            style={{ ...TRACK_NAV, color: P.surf }}
+          >
+            WHAT'S INSIDE PSYCHPRO
+          </p>
+          <h2
+            className="mt-3 font-light"
+            style={{
+              fontSize: "clamp(26px, 3.6vw, 40px)",
+              color: P.cloud,
+              letterSpacing: "0.01em",
+              textShadow: "0 1px 6px rgba(3, 21, 29, 0.65)",
+            }}
+          >
+            High-yield tools for deeper clinical understanding.
+          </h2>
+          <p
+            className="mt-3 mx-auto max-w-2xl text-sm md:text-[15px] leading-relaxed font-light"
+            style={{
+              color: P.inkSoft,
+              textShadow: "0 1px 6px rgba(3, 21, 29, 0.65)",
+            }}
+          >
+            A complete learning experience built for psychology students,
+            residents, and early-career professionals.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {WHATS_INSIDE_CARDS.map((card, i) => (
+            <div
+              key={card.n}
+              className="group relative rounded-xl p-7 lg:p-8 transition-all duration-300 hover:-translate-y-1"
+              style={{
+                ...glass,
+                boxShadow: `0 24px 50px rgba(0,0,0,0.45), 0 0 0 1px rgba(118, 228, 247, 0.05)`,
+              }}
+              data-testid={`whats-inside-card-${i}`}
+            >
+              {/* Hover glow */}
+              <div
+                aria-hidden
+                className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                style={{
+                  boxShadow: `0 0 32px rgba(118, 228, 247, 0.32), inset 0 0 20px rgba(118, 228, 247, 0.06)`,
+                  border: `1px solid rgba(118, 228, 247, 0.72)`,
+                  borderRadius: "inherit",
+                }}
+              />
+              <div className="flex items-baseline gap-3 mb-4">
+                <span
+                  className="text-xs font-light"
+                  style={{ ...TRACK_NAV, color: P.surf }}
+                >
+                  {card.n}
+                </span>
+                <span
+                  aria-hidden
+                  className="flex-1 h-px"
+                  style={{ background: `rgba(118, 228, 247, 0.25)` }}
+                />
+                <span
+                  className="text-[10px] font-light"
+                  style={{ ...TRACK_NAV, color: P.inkSoft }}
+                >
+                  {card.eyebrow}
+                </span>
+              </div>
+              <h3
+                className="font-light mb-3"
+                style={{
+                  fontSize: "clamp(18px, 1.8vw, 22px)",
+                  color: P.cloud,
+                  letterSpacing: "0.01em",
+                }}
+              >
+                {card.headline}
               </h3>
               <p
                 className="text-sm leading-relaxed font-light"
