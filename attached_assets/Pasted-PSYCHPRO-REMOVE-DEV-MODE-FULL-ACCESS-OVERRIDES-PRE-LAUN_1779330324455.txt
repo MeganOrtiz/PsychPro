@@ -1,0 +1,634 @@
+PSYCHPRO — REMOVE DEV-MODE FULL-ACCESS OVERRIDES (PRE-LAUNCH SECURITY FIX)
+
+================================================================
+WHAT & WHY
+================================================================
+Multiple backend routes contain "dev-mode full-access" overrides that
+silently grant every visitor Scholar-tier subscription and admin
+privileges, bypassing all paywalls and admin gating. These overrides
+were appropriate during anonymous-UUID development but are LAUNCH
+BLOCKERS — once paying users exist, every visitor would receive free
+Scholar access and admin-level read access to feedback from all users.
+
+This prompt removes every dev-mode override and replaces them with
+honest reads from the database. Subscription state must come from
+Stripe webhooks (which already correctly populate the DB). Admin
+state must come from an explicit DB flag set manually.
+
+================================================================
+DONE LOOKS LIKE
+================================================================
+1. A brand-new visitor who has never paid sees subscriptionStatus
+   "free" everywhere — backend response AND frontend gates
+2. A user who completes Stripe checkout for Pro sees
+   subscriptionStatus "pro" (or "active") after the webhook fires;
+   Scholar checkout → "scholar"
+3. No route creates new users with subscriptionStatus="scholar" or
+   isAdmin=true by default
+4. No route force-upgrades existing users on profile load
+5. /feedback/is-admin returns true ONLY for users whose DB
+   isAdmin flag is true; defaults to false for everyone else
+6. /admin/feedback inbox returns 403 for non-admin callers
+7. The connections.ts x-admin-secret backdoor is removed OR
+   explicitly gated behind a production-disabled flag
+8. A way exists to bootstrap the first real admin (see step 8)
+9. Stripe webhook signature verification is confirmed working
+10. Typecheck and build pass
+
+================================================================
+OUT OF SCOPE
+================================================================
+- Visual/UX changes
+- Clerk integration changes (separate prompt)
+- New feature work
+- Replacing the X-User-Id header trust model (separate hardening)
+- Changes to public routes that don't gate paid/admin features
+
+================================================================
+CRITICAL CONTEXT FOR THE AGENT
+================================================================
+The "dev-mode full-access" overrides are intentional comments in
+the code marking lines that need to be removed. They look like:
+  // Dev-mode full-access: ...
+  subscriptionStatus: "scholar",
+  isAdmin: true,
+
+DO NOT remove the surrounding logic that creates user rows if
+missing — that's a separate concern (the "auto-upsert if missing"
+pattern is fine). ONLY change the values being set so new users
+default to free/non-admin instead of scholar/admin.
+
+If you find a dev-mode override I haven't listed below, REPORT IT
+before changing it. Do not "clean up" code you weren't asked to
+touch.
+
+================================================================
+STEPS
+================================================================
+
+────────────────────────────────────────────────────────────────
+STEP 1 — Fix /subscription/status endpoint
+File: artifacts/api-server/src/routes/subscription.ts
+────────────────────────────────────────────────────────────────
+
+CURRENT (broken):
+  router.get("/subscription/status", async (req, res) => {
+    ...
+    // Dev-mode full-access: always report a Scholar-tier active
+    // subscription so every paywall gate in the frontend treats the
+    // user as fully subscribed regardless of DB state.
+    const [user] = await db.select().from(usersTable)...;
+    res.json({
+      status: "scholar",
+      tier: "scholar",
+      subscriptionId: user?.stripeSubscriptionId ?? null,
+      currentPeriodEnd: null,
+    });
+  });
+
+REPLACE WITH:
+  router.get("/subscription/status", async (req, res) => {
+    try {
+      const userId = requireUserId(req, res);
+      if (!userId) return;
+      const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
+
+      // No row yet → free tier. Do not auto-create the user here;
+      // that happens via /users/profile or other write paths.
+      if (!user) {
+        res.json({
+          status: "free",
+          tier: "free",
+          subscriptionId: null,
+          currentPeriodEnd: null,
+        });
+        return;
+      }
+
+      const dbStatus = user.subscriptionStatus ?? "free";
+      // Map DB subscriptionStatus to the {status, tier} shape the
+      // frontend expects. "active"/"pro"/"trialing" → status="active"
+      // tier="pro". "scholar" → status="active" tier="scholar".
+      // Anything else → status="free" tier="free".
+      let status: string;
+      let tier: string;
+      if (dbStatus === "scholar") {
+        status = "active";
+        tier = "scholar";
+      } else if (dbStatus === "active" || dbStatus === "pro" || dbStatus === "trialing") {
+        status = "active";
+        tier = "pro";
+      } else {
+        status = "free";
+        tier = "free";
+      }
+
+      res.json({
+        status,
+        tier,
+        subscriptionId: user.stripeSubscriptionId ?? null,
+        currentPeriodEnd: null,
+      });
+    } catch (err) {
+      req.log.error({ err }, "Error getting subscription status");
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+REMOVE the entire dev-mode comment block. The new code is what stays.
+
+ACCEPTANCE: A user with `subscriptionStatus="free"` in DB sees
+`{status: "free", tier: "free"}` in the response.
+
+
+────────────────────────────────────────────────────────────────
+STEP 2 — Fix /users/profile GET (auto-upgrade on load)
+File: artifacts/api-server/src/routes/users.ts
+────────────────────────────────────────────────────────────────
+
+CURRENT (broken):
+  router.get("/users/profile", async (req, res) => {
+    ...
+    let [user] = await db.select()...;
+    if (!user) {
+      [user] = await db.insert(usersTable).values({
+        id: userId,
+        subscriptionStatus: "scholar",   // ← DEV OVERRIDE
+        isAdmin: true,                    // ← DEV OVERRIDE
+        onboardingComplete: true,
+        usageCount: 0,
+      }).returning();
+    } else if (user.subscriptionStatus !== "scholar" || !user.isAdmin) {
+      // ← THE ENTIRE force-upgrade ELSE BRANCH
+      [user] = await db.update(usersTable)
+        .set({ subscriptionStatus: "scholar", isAdmin: true, onboardingComplete: true })
+        .where(eq(usersTable.id, userId))
+        .returning();
+    }
+    res.json({...});
+  });
+
+REPLACE WITH:
+  router.get("/users/profile", async (req, res) => {
+    try {
+      const userId = requireUserId(req, res);
+      if (!userId) return;
+
+      // Auto-create the user row on first access so the rest of the
+      // app has something to read. New users start as "free" with no
+      // admin flag and onboarding incomplete.
+      let [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
+      if (!user) {
+        [user] = await db.insert(usersTable).values({
+          id: userId,
+          subscriptionStatus: "free",
+          isAdmin: false,
+          onboardingComplete: false,
+          usageCount: 0,
+        }).returning();
+      }
+      // DO NOT force-upgrade existing users. Their subscriptionStatus
+      // comes from Stripe webhooks; their isAdmin comes from manual
+      // DB grants.
+
+      res.json({
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        goal: user.goal,
+        degree: user.degree,
+        referralSource: user.referralSource,
+        subscriptionStatus: user.subscriptionStatus,
+        onboardingComplete: user.onboardingComplete,
+        stripeCustomerId: user.stripeCustomerId,
+        stripeSubscriptionId: user.stripeSubscriptionId,
+        createdAt: user.createdAt?.toISOString(),
+      });
+    } catch (err) {
+      req.log.error({ err }, "Error getting user profile");
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+ACCEPTANCE: A new user calling /users/profile sees
+`subscriptionStatus: "free"`, `onboardingComplete: false`, no admin.
+
+
+────────────────────────────────────────────────────────────────
+STEP 3 — Fix /users/profile POST (onboarding upsert)
+File: artifacts/api-server/src/routes/users.ts
+────────────────────────────────────────────────────────────────
+
+CURRENT (broken) — in the POST handler, the insert path uses:
+  await db.insert(usersTable).values({
+    id: userId,
+    email, role, goal, degree, referralSource,
+    onboardingComplete: onboardingComplete ?? true,
+    // Dev-mode default: every new anonymous user is provisioned with
+    // full Scholar-tier access and admin flag...
+    subscriptionStatus: "scholar",  // ← DEV OVERRIDE
+    isAdmin: true,                   // ← DEV OVERRIDE
+    usageCount: 0,
+  }).returning();
+
+REPLACE WITH (insert path only — leave the update path as-is, since
+it does not touch subscriptionStatus/isAdmin):
+  await db.insert(usersTable).values({
+    id: userId,
+    email,
+    role,
+    goal,
+    degree,
+    referralSource,
+    onboardingComplete: onboardingComplete ?? true,
+    subscriptionStatus: "free",
+    isAdmin: false,
+    usageCount: 0,
+  }).returning();
+
+Remove the dev-mode comment.
+
+ACCEPTANCE: A new user completing onboarding lands with free tier
+and no admin flag.
+
+
+────────────────────────────────────────────────────────────────
+STEP 4 — Fix /users/usage POST (usage increment auto-create)
+File: artifacts/api-server/src/routes/users.ts
+────────────────────────────────────────────────────────────────
+
+CURRENT (broken):
+  if (!user) {
+    [user] = await db.insert(usersTable).values({
+      id: userId,
+      subscriptionStatus: "scholar",  // ← DEV OVERRIDE
+      isAdmin: true,                   // ← DEV OVERRIDE
+      onboardingComplete: true,
+      usageCount: 0
+    }).returning();
+  }
+
+REPLACE WITH:
+  if (!user) {
+    [user] = await db.insert(usersTable).values({
+      id: userId,
+      subscriptionStatus: "free",
+      isAdmin: false,
+      onboardingComplete: false,
+      usageCount: 0,
+    }).returning();
+  }
+
+Apply this fix to BOTH /users/usage handlers (GET fallback if it
+exists, AND POST). Search the file for any other `.insert(usersTable)`
+calls and apply the same correction wherever `subscriptionStatus:
+"scholar"` or `isAdmin: true` appear in defaults.
+
+ACCEPTANCE: First call to /users/usage by a new user creates a
+free-tier non-admin row.
+
+
+────────────────────────────────────────────────────────────────
+STEP 5 — Fix /feedback/is-admin and requireAdmin in feedback routes
+File: artifacts/api-server/src/routes/feedback.ts
+────────────────────────────────────────────────────────────────
+
+CURRENT (broken):
+
+  async function requireAdmin(req, res): Promise<boolean> {
+    const userId = requireUserId(req, res);
+    if (!userId) return false;
+    const [existing] = await db.select().from(usersTable)...;
+    if (!existing) {
+      await db.insert(usersTable).values({
+        id: userId, subscriptionStatus: "scholar", isAdmin: true, ...
+      });
+    } else if (!existing.isAdmin) {
+      await db.update(usersTable)
+        .set({ isAdmin: true, subscriptionStatus: "scholar" })  // ← AUTO-GRANT
+        ...
+    }
+    return true;  // ← ALWAYS TRUE
+  }
+
+  router.get("/feedback/is-admin", async (req, res) => {
+    ...
+    // Dev-mode: auto-upsert the caller as admin
+    ...
+    res.json({ isAdmin: true });
+  });
+
+REPLACE WITH:
+
+  async function requireAdmin(req, res): Promise<boolean> {
+    const userId = requireUserId(req, res);
+    if (!userId) return false;
+    const [existing] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
+    if (!existing || !existing.isAdmin) {
+      res.status(403).json({ error: "Admin access required" });
+      return false;
+    }
+    return true;
+  }
+
+  router.get("/feedback/is-admin", async (req, res) => {
+    try {
+      const userId = getUserId(req);
+      if (!userId) {
+        res.json({ isAdmin: false });
+        return;
+      }
+      const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
+      res.json({ isAdmin: !!user?.isAdmin });
+    } catch (err) {
+      req.log.error({ err }, "Error checking admin status");
+      // SECURITY: on error, default to NOT admin. Better to lock out
+      // a legitimate admin during an outage than to grant admin to
+      // an attacker during one.
+      res.json({ isAdmin: false });
+    }
+  });
+
+ACCEPTANCE:
+- A non-admin user calling /feedback/is-admin gets `{isAdmin: false}`
+- A non-admin user calling /feedback (admin inbox GET) gets 403
+- The error catch handler defaults to isAdmin=false
+
+
+────────────────────────────────────────────────────────────────
+STEP 6 — Remove the connections.ts x-admin-secret backdoor
+File: artifacts/api-server/src/routes/connections.ts
+────────────────────────────────────────────────────────────────
+
+CURRENT (backdoor):
+  async function requireAdminCaller(req, res): Promise<string | null> {
+    const userId = requireUserId(req, res);
+    if (!userId) return null;
+    if (await isAdmin(userId)) return userId;
+    const providedSecret = req.header("x-admin-secret");
+    const expectedSecret = process.env.MCP_ADMIN_SECRET;
+    if (expectedSecret && providedSecret && providedSecret === expectedSecret) {
+      await db.insert(usersTable).values({
+        id: userId,
+        subscriptionStatus: "scholar",  // ← AUTO-GRANT
+        isAdmin: true,                   // ← AUTO-GRANT
+        ...
+      }).onConflictDoUpdate({ target: usersTable.id, set: { isAdmin: true } });
+      return userId;
+    }
+    res.status(403).json({ error: "Admin access required" });
+    return null;
+  }
+
+DECISION POINT — pick ONE of these two options based on whether the
+MCP integration with Claude.ai is in active use:
+
+OPTION A (recommended — remove the backdoor entirely):
+  async function requireAdminCaller(req, res): Promise<string | null> {
+    const userId = requireUserId(req, res);
+    if (!userId) return null;
+    if (await isAdmin(userId)) return userId;
+    res.status(403).json({ error: "Admin access required" });
+    return null;
+  }
+
+OPTION B (keep backdoor but disable in production):
+  async function requireAdminCaller(req, res): Promise<string | null> {
+    const userId = requireUserId(req, res);
+    if (!userId) return null;
+    if (await isAdmin(userId)) return userId;
+
+    // Dev-only header-based admin grant. Disabled in production.
+    if (process.env.NODE_ENV !== "production" && process.env.REPLIT_DEPLOYMENT !== "1") {
+      const providedSecret = req.header("x-admin-secret");
+      const expectedSecret = process.env.MCP_ADMIN_SECRET;
+      if (expectedSecret && providedSecret && providedSecret === expectedSecret) {
+        await db.insert(usersTable).values({
+          id: userId,
+          subscriptionStatus: "free",
+          isAdmin: true,
+          onboardingComplete: true,
+          usageCount: 0,
+        }).onConflictDoUpdate({ target: usersTable.id, set: { isAdmin: true } });
+        return userId;
+      }
+    }
+
+    res.status(403).json({ error: "Admin access required" });
+    return null;
+  }
+
+Default to OPTION A. Switch to OPTION B only if the user explicitly
+confirms the MCP/Claude.ai connector is in active use and needs the
+header-based grant in development.
+
+Note even in OPTION B: the grant no longer sets `subscriptionStatus:
+"scholar"` — only `isAdmin: true`. Subscription state stays separate.
+
+ACCEPTANCE: In production builds, requireAdminCaller returns 403
+for any non-admin caller regardless of headers.
+
+
+────────────────────────────────────────────────────────────────
+STEP 7 — Audit for any other dev-mode overrides
+────────────────────────────────────────────────────────────────
+
+Search the entire api-server codebase for these patterns and report
+EVERY match (do not modify without listing them first):
+
+  Pattern 1: subscriptionStatus: "scholar"
+  Pattern 2: isAdmin: true
+  Pattern 3: comment lines containing "Dev-mode" or "dev-mode"
+  Pattern 4: "full-access" or "full access"
+  Pattern 5: Any onConflictDoUpdate that sets isAdmin or
+             subscriptionStatus to non-default values
+
+For each match, report:
+  - File path and line number
+  - Surrounding 5 lines of context
+  - Whether it's already addressed by steps 1-6 above
+
+After reporting, fix anything not already covered by steps 1-6
+using the same pattern: defaults are subscriptionStatus="free" and
+isAdmin=false. Stripe webhooks change subscriptionStatus; manual
+DB updates change isAdmin.
+
+ACCEPTANCE: All instances of dev-mode override patterns either
+have been fixed or are explicitly flagged as intentional with a
+reason in the report.
+
+
+────────────────────────────────────────────────────────────────
+STEP 8 — Add a way to bootstrap the first real admin
+────────────────────────────────────────────────────────────────
+
+Now that no route auto-grants admin, you need a controlled way to
+make a specific user the first admin (for managing feedback inbox,
+etc.).
+
+Create a new script at: scripts/grant-admin.ts
+
+  /**
+   * Grant admin privileges to a specific user by ID.
+   * Usage:
+   *   pnpm exec tsx scripts/grant-admin.ts <user-id>
+   *
+   * This script is the ONLY supported path to granting admin
+   * after the dev-mode overrides were removed. Run it once for
+   * each real admin user.
+   */
+  import { db, usersTable } from "@workspace/db";
+  import { eq } from "drizzle-orm";
+
+  async function main() {
+    const userId = process.argv[2];
+    if (!userId) {
+      console.error("Usage: pnpm exec tsx scripts/grant-admin.ts <user-id>");
+      process.exit(1);
+    }
+
+    const [existing] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
+    if (!existing) {
+      console.error(`User ${userId} does not exist. Make sure they have signed in at least once.`);
+      process.exit(1);
+    }
+
+    const [updated] = await db.update(usersTable)
+      .set({ isAdmin: true })
+      .where(eq(usersTable.id, userId))
+      .returning();
+
+    console.log(`Granted admin to user ${updated.id} (${updated.email ?? "no email"}).`);
+    process.exit(0);
+  }
+
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+
+Also document the workflow in replit.md or PUBLISHING.md under a
+new section "Granting admin access":
+
+  1. The target user signs in to the app at least once (creating
+     their DB row)
+  2. Look up their user ID in the database OR in Clerk dashboard
+  3. Run: pnpm exec tsx scripts/grant-admin.ts <their-user-id>
+  4. They reload — the /admin/feedback link becomes visible
+
+ACCEPTANCE: scripts/grant-admin.ts exists and runs without errors
+against the production DB. Documentation updated.
+
+
+────────────────────────────────────────────────────────────────
+STEP 9 — Verify Stripe webhook signature verification
+────────────────────────────────────────────────────────────────
+
+CRITICAL: With the subscription gates now real, the Stripe webhook
+becomes the ONLY trusted path for granting paid tiers. If the
+webhook route doesn't verify signatures, an attacker can POST fake
+events and grant themselves Pro/Scholar.
+
+ACTION:
+1. Locate the Stripe webhook route. It should be in app.ts or a
+   dedicated routes file, NOT in subscription.ts. Look for the
+   path "/api/stripe/webhook" or similar.
+
+2. Verify the route:
+   - Uses express.raw({ type: "application/json" }) — NOT the
+     default JSON body parser. Stripe signature verification
+     requires the raw bytes.
+   - Calls stripe.webhooks.constructEvent(rawBody, signature,
+     STRIPE_WEBHOOK_SECRET) and handles the error if signature
+     check fails (return 400)
+   - Only then calls handleStripeWebhookEvent
+
+3. If the route is missing, broken, or doesn't verify:
+   - STOP and report exactly what you found
+   - Do NOT attempt to fix it without explicit instruction —
+     webhook handling is high-stakes and a wrong implementation
+     can break billing or open security holes
+
+4. If the route is correct, confirm STRIPE_WEBHOOK_SECRET is set
+   in environment (check process.env reads in the file).
+
+ACCEPTANCE: Paste the full webhook route handler code in your
+report so it can be reviewed. Confirm STRIPE_WEBHOOK_SECRET env
+var is read.
+
+
+────────────────────────────────────────────────────────────────
+STEP 10 — Smoke-test the changes
+────────────────────────────────────────────────────────────────
+
+Before running the full test suite, manually verify:
+
+1. Wipe (or note) the dev DB user row for a test user.
+
+2. Hit /users/profile as that user. Confirm response shows
+   subscriptionStatus="free", onboardingComplete=false, no
+   isAdmin field or isAdmin=false.
+
+3. Hit /subscription/status as that user. Confirm response is
+   {status: "free", tier: "free"}.
+
+4. Hit /feedback/is-admin as that user. Confirm response is
+   {isAdmin: false}.
+
+5. Try to access /api/feedback (the admin inbox endpoint) as
+   that user. Confirm 403 Forbidden.
+
+6. Run the grant-admin script against the test user. Confirm
+   they now get {isAdmin: true} and can access /api/feedback.
+
+7. Revoke admin: run a SQL update or modify the script to set
+   isAdmin=false. Confirm they lose access.
+
+
+────────────────────────────────────────────────────────────────
+STEP 11 — Typecheck and build
+────────────────────────────────────────────────────────────────
+
+1. pnpm --filter @workspace/api-server run typecheck → exit 0
+2. pnpm --filter @workspace/neuronotes run typecheck → exit 0
+3. pnpm run build → completes successfully
+
+Common failures from this work:
+- Frontend type for subscription status may need updating if it
+  used to expect "scholar" always; ensure it handles "free" |
+  "active" gracefully
+- Unused import warnings after removing dev-mode comments
+
+
+================================================================
+FINAL ACCEPTANCE CHECKLIST
+================================================================
+[ ] /subscription/status returns real DB-backed status
+[ ] /users/profile GET no longer force-upgrades existing users
+[ ] /users/profile GET creates new users as free/non-admin
+[ ] /users/profile POST creates new users as free/non-admin
+[ ] /users/usage POST creates new users as free/non-admin
+[ ] requireAdmin in feedback.ts returns 403 for non-admins
+[ ] /feedback/is-admin returns real DB-backed isAdmin
+[ ] /feedback/is-admin catch handler defaults to false
+[ ] connections.ts x-admin-secret backdoor removed (or production-gated)
+[ ] All other dev-mode override patterns audited and reported
+[ ] scripts/grant-admin.ts exists and works
+[ ] PUBLISHING.md or replit.md documents the admin-grant workflow
+[ ] Stripe webhook signature verification confirmed (or flagged)
+[ ] Smoke test passes: new user is free/non-admin everywhere
+[ ] Smoke test passes: granted admin sees admin features
+[ ] Typecheck passes
+[ ] Build passes
+
+
+================================================================
+REPORT BACK WITH
+================================================================
+1. Confirmation each step (1-11) is done, skipped (with reason),
+   or blocked
+2. The full list of dev-mode override matches found in step 7,
+   with file paths and line numbers
+3. The full text of the Stripe webhook route handler (step 9)
+4. Smoke test results
+5. Any decisions you made that weren't covered above

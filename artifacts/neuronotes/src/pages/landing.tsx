@@ -30,7 +30,7 @@ import {
   CheckCircle2,
   Sparkles,
 } from "lucide-react";
-import heroScene from "@/assets/landing-hero-brain-clouds.png";
+import heroBrain from "@/assets/generated_images/hero_brain_isolated.png";
 import cloudsBackground from "@/assets/cerulean-clouds-background.png";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
@@ -173,11 +173,12 @@ export default function LandingPage() {
       }}
     >
       <style>{`
-        /* Landing canvas — fixed cerulean-clouds composition behind the
-           lower sections (features, stats, topics, footer). The hero
-           scene at the top uses its own dedicated brain+clouds image
-           (see .landing-hero-scene below). DO NOT swap the clouds image
-           without also updating src/index.css. */
+        /* Landing canvas — fixed cerulean-clouds composition that paints
+           the entire landing page. Same image as the in-app
+           .study-page-bg surface (see src/index.css), but with a
+           LIGHTER dimming wash so the hero clouds read brighter than
+           the dashboard. DO NOT swap the clouds image without also
+           updating src/index.css. */
         .landing-canvas::before {
           content: "";
           position: fixed;
@@ -186,66 +187,33 @@ export default function LandingPage() {
           background-color: ${P.ink};
           background-image:
             radial-gradient(ellipse 130% 115% at 50% 50%,
-              rgba(3, 21, 29, 0.40) 0%,
-              rgba(3, 21, 29, 0.55) 60%,
-              rgba(3, 21, 29, 0.78) 100%),
+              rgba(3, 21, 29, 0.30) 0%,
+              rgba(3, 21, 29, 0.45) 60%,
+              rgba(3, 21, 29, 0.65) 100%),
             url(${cloudsBackground});
           background-size: cover, cover;
           background-position: center, center;
           background-repeat: no-repeat, no-repeat;
           pointer-events: none;
         }
-        /* Hero scene — full-bleed brain-in-clouds image as the dramatic
-           opening visual. The image already contains the glowing brain
-           integrated into cerulean clouds, so we do NOT layer a separate
-           floating brain on top. The wordmark, tagline, body and CTAs
-           sit overlaid on the lower portion of the image (clouds-only
-           area) with a soft gradient scrim for legibility, then the
-           image fades smoothly into the page below. */
-        .landing-hero-scene {
-          position: relative;
+        /* Floating isolated brain — transparent-PNG hero element that
+           sits centered over the cloud canvas. No rectangular edge,
+           soft cyan glow halo only. */
+        .landing-hero-brain {
+          display: flex;
+          justify-content: center;
+          align-items: center;
           width: 100%;
-          min-height: clamp(720px, 95vh, 1080px);
-          overflow: hidden;
-          isolation: isolate;
         }
-        .landing-hero-scene::before {
-          /* The hero image itself — object-fit cover keeps the brain
-             centered and visible across viewport widths. */
-          content: "";
-          position: absolute;
-          inset: 0;
-          z-index: -2;
-          background-image: url(${heroScene});
-          background-size: cover;
-          background-position: 50% 22%;
-          background-repeat: no-repeat;
-          background-color: ${P.ink};
-        }
-        .landing-hero-scene::after {
-          /* Soft gradient scrim — keeps the brain unobstructed in the
-             upper portion while darkening the lower portion just enough
-             for the wordmark and body copy to read cleanly. Also fades
-             the bottom edge into the page below for a seamless seam. */
-          content: "";
-          position: absolute;
-          inset: 0;
-          z-index: -1;
-          background:
-            linear-gradient(
-              to bottom,
-              rgba(3, 21, 29, 0.20) 0%,
-              rgba(3, 21, 29, 0.10) 35%,
-              rgba(3, 21, 29, 0.45) 60%,
-              rgba(3, 21, 29, 0.78) 85%,
-              ${P.ink} 100%
-            );
+        .landing-hero-brain img {
+          width: clamp(280px, 42vw, 560px);
+          height: auto;
+          display: block;
+          filter:
+            drop-shadow(0 0 28px rgba(118, 228, 247, 0.45))
+            drop-shadow(0 0 56px rgba(118, 228, 247, 0.28));
           pointer-events: none;
-        }
-        @media (min-width: 1280px) {
-          .landing-hero-scene {
-            background-position: 50% 18%;
-          }
+          user-select: none;
         }
         .landing-glass-btn {
           position: relative;
@@ -415,11 +383,15 @@ export default function LandingPage() {
       </header>
 
       {/* ============================================================
-          HERO — full-bleed brain-in-clouds scene, with wordmark,
-          tagline, body copy and CTAs overlaid on the lower portion.
+          HERO — floating isolated brain over the fixed cloud canvas,
+          followed by wordmark, tagline, body copy and CTAs.
           ============================================================ */}
-      <section className="landing-hero-scene flex items-end justify-center pb-20 md:pb-28 -mt-[88px] pt-[88px]">
+      <section className="relative flex flex-col items-center justify-center pt-8 pb-20 md:pb-28">
         <div className="max-w-5xl mx-auto px-6 lg:px-10 text-center relative z-10">
+          {/* Floating isolated brain */}
+          <div className="landing-hero-brain mb-6 md:mb-8">
+            <img src={heroBrain} alt="" aria-hidden />
+          </div>
           {/* Wordmark */}
           <h1
             className="font-light leading-none relative"
