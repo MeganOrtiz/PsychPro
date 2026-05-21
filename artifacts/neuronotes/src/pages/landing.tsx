@@ -82,7 +82,7 @@ const WHATS_INSIDE_CARDS = [
   {
     n: "02",
     eyebrow: "BREADTH",
-    headline: "35+ topics covered",
+    headline: "39+ topics covered",
     body: "Comprehensive coverage across clinical psychology: neuroscience, neuropsychology, psychopharmacology, assessment, psychotherapy, research methods, and more — curated for both coursework and board prep.",
   },
   {

@@ -56,7 +56,7 @@ export default function StudyGuidePage({ params }: Props) {
           </div>
           <h2 className="text-xl font-bold text-foreground mb-2">Study Guides are a Premium Feature</h2>
           <p className="text-muted-foreground mb-6 max-w-sm mx-auto">
-            Unlock comprehensive, in-depth study guides for all 39 topics — written from real course notes with clinical depth.
+            Unlock comprehensive, in-depth study guides for every topic — written from real course notes with clinical depth.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button
