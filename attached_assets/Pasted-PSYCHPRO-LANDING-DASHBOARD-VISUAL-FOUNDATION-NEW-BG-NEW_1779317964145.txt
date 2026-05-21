@@ -1,0 +1,650 @@
+PSYCHPRO — LANDING + DASHBOARD VISUAL FOUNDATION (NEW BG + NEW BRAIN)
+
+================================================================
+WHAT & WHY
+================================================================
+Replace the current landing and dashboard visual foundation with a
+new asset system:
+  - NEW background: cerulean-clouds-background.png (dense volumetric
+    cerulean cloud composition, used as a single non-tiling fixed
+    background on every page)
+  - NEW hero brain: hero_brain_isolated.png (the glowing cyan brain
+    with transparent background, sits on top of the cloud background)
+
+Both surfaces (landing and dashboard) inherit the SAME cloud
+background so they feel like one continuous product. The landing
+page hero shows the brain floating on top of the clouds; the
+dashboard shows the clouds subtly behind cards (no brain).
+
+================================================================
+DONE LOOKS LIKE
+================================================================
+1. /landing background is the new cerulean-clouds-background.png
+   composition, displayed as a single non-tiling fixed image that
+   covers the viewport
+2. /landing hero shows the glowing brain (hero_brain_isolated.png)
+   centered, floating on top of the cloud background, with no
+   visible seam, frame, or rectangular edge
+3. The page scrolls cleanly — no horizontal lines, color bands,
+   or hue shifts anywhere from top to footer
+4. /dashboard background is the SAME cerulean-clouds-background.png
+   but darker/more subtle so cards remain prominent (like
+   reference image: subtle clouds visible between cards)
+5. /dashboard greeting "Hello, there" / "Welcome, there" is gone;
+   replaced with PSYCHPRO wordmark + tagline + personalized
+   greeting line
+6. All glass cards on both pages use the canonical glass treatment
+7. Old tile-based wallpaper system is removed
+8. Build and typecheck pass
+
+================================================================
+ASSET PREREQUISITES
+================================================================
+Before starting, verify both files exist:
+  src/assets/cerulean-clouds-background.png
+  src/assets/generated_images/hero_brain_isolated.png
+
+If either is missing, STOP and report. Do not proceed.
+
+Note dimensions of each file and report them back — the CSS may
+need adjustment based on actual aspect ratios.
+
+The OLD assets should remain on disk during this work (do NOT
+delete them) so we can roll back if needed:
+  src/assets/cerulean-clouds-tile.png (old tile — keep)
+  src/assets/generated_images/hero_reference_brain_v1.png (keep)
+
+================================================================
+ARCHITECTURE
+================================================================
+The new system replaces the tile-based wallpaper with a single
+fixed-background image that covers the viewport on every
+authenticated page.
+
+Sources of truth (do not duplicate or fork):
+  Palette          → src/lib/study-theme.ts (STUDY_PALETTE)
+  Cloud background → src/index.css (.study-page-bg::before)
+  Glass cards      → src/index.css (.study-page-bg .bg-card)
+  Wordmark         → NEW src/components/brand/brand-banner.tsx
+  Hero brain       → src/assets/generated_images/hero_brain_isolated.png
+
+The cloud background filter/opacity differs between landing and
+dashboard (landing is full strength, dashboard is dimmed for
+readability), but the IMAGE FILE is the same.
+
+================================================================
+STEPS
+================================================================
+
+────────────────────────────────────────────────────────────────
+STEP 1 — REPLACE THE WALLPAPER SYSTEM IN index.css
+File: src/index.css
+────────────────────────────────────────────────────────────────
+
+The current .study-page-bg::before paints a tiled, repeating cloud
+pattern. Replace it with a single non-tiling fixed background.
+
+1. Locate the .study-page-bg::before / .study-page-aurora::before
+   rule.
+
+2. REPLACE the entire rule with:
+
+   /* ============================================================
+      CANONICAL APP SURFACE — DO NOT OVERRIDE PER-PAGE
+      ============================================================
+      .study-page-bg is the canonical PsychPro app surface used by
+      every authenticated page. It paints:
+        - shadcn token overrides (cerulean palette)
+        - the cerulean cloud background image (::before)
+        - canonical glass card treatment (.bg-card descendants)
+
+      The cloud background image is a single fixed composition —
+      NOT tiled. The same image is used on the landing page; if
+      you change the filter or opacity here, also review the
+      landing page's hero background rules to keep both surfaces
+      visually coherent.
+
+      DO NOT override the ::before background per-page. DO NOT
+      re-declare these CSS variables in another scope. DO NOT add
+      a competing .bg-card rule.
+      ============================================================ */
+   .study-page-bg::before,
+   .study-page-aurora::before {
+     content: "";
+     position: fixed;
+     inset: 0;
+     z-index: -2;
+     background-image:
+       /* Dimming wash so cards remain readable on top — alpha
+          controls how subtle the clouds are. Higher alpha = darker
+          background, more card prominence. */
+       radial-gradient(ellipse 130% 115% at 50% 50%,
+         rgba(3, 21, 29, 0.55) 0%,
+         rgba(3, 21, 29, 0.65) 60%,
+         rgba(3, 21, 29, 0.75) 100%),
+       /* The cerulean cloud composition */
+       url("./assets/cerulean-clouds-background.png");
+     background-size: cover, cover;
+     background-position: center, center;
+     background-repeat: no-repeat, no-repeat;
+     background-color: #03151D;
+     pointer-events: none;
+   }
+
+   .study-page-bg::after,
+   .study-page-aurora::after {
+     content: none;
+   }
+
+3. The dimming wash (the first radial-gradient) is set strong
+   here for the DASHBOARD use case. The landing page will use
+   a separate, lighter version of this wash. See step 2.
+
+4. Keep the existing .study-page-bg .bg-card rule unchanged. It
+   is the canonical card treatment.
+
+ACCEPTANCE: index.css ::before rule uses the new background image
+with background-size: cover (no tiling).
+
+────────────────────────────────────────────────────────────────
+STEP 2 — LANDING PAGE: NEW BACKGROUND + ISOLATED BRAIN
+File: src/pages/landing.tsx
+────────────────────────────────────────────────────────────────
+
+The landing page needs:
+  (a) Same cloud background image, but with LIGHTER dimming so
+      the clouds read at full atmospheric strength (not subdued
+      like the dashboard)
+  (b) The isolated brain image floating on top, centered in the
+      hero area
+
+ACTION:
+
+PART A — Replace the imports:
+
+1. Find the existing hero image import:
+     import heroReference from "@assets/generated_images/hero_reference_brain_v1.png";
+
+2. Replace with the isolated brain:
+     import heroBrain from "@assets/generated_images/hero_brain_isolated.png";
+
+3. Add a new import for the cloud background:
+     import cloudsBackground from "@assets/cerulean-clouds-background.png";
+
+PART B — Replace the inline <style> block's background rules:
+
+Find the inline <style>{`...`}</style> block. Locate any rules
+related to .hero-bg-image, .cerulean-tile-layer, --hero-bg-h, and
+hero background painting.
+
+REPLACE all of those background-related rules with this single
+new system:
+
+   /* Landing page canonical background — uses same image as
+      .study-page-bg but with lighter dimming so the clouds
+      read at full strength. */
+   .landing-canvas {
+     position: relative;
+     min-height: 100vh;
+     background-color: #03151D;
+     isolation: isolate;
+   }
+   .landing-canvas::before {
+     content: "";
+     position: fixed;
+     inset: 0;
+     z-index: -2;
+     background-image:
+       /* Light vignette wash — lets the cloud composition breathe */
+       radial-gradient(ellipse 130% 115% at 50% 50%,
+         rgba(3, 21, 29, 0.30) 0%,
+         rgba(3, 21, 29, 0.45) 70%,
+         rgba(3, 21, 29, 0.65) 100%),
+       url("${cloudsBackground}");
+     background-size: cover, cover;
+     background-position: center, center;
+     background-repeat: no-repeat, no-repeat;
+     pointer-events: none;
+   }
+
+   /* The isolated brain, centered in the hero, floating */
+   .landing-hero-brain {
+     position: relative;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     padding-top: clamp(40px, 8vh, 120px);
+     padding-bottom: clamp(20px, 4vh, 60px);
+   }
+   .landing-hero-brain img {
+     width: clamp(280px, 45vw, 560px);
+     height: auto;
+     filter: drop-shadow(0 0 60px rgba(118, 228, 247, 0.35));
+     pointer-events: none;
+     user-select: none;
+   }
+
+NOTE on the url() interpolation: the syntax above uses a template
+literal `${cloudsBackground}` because the inline <style> is JSX
+template-literal'd. If the existing inline <style> uses a
+different interpolation pattern (e.g., styled-jsx, plain string),
+match the existing pattern. The point is: the url() must resolve
+to the imported asset, not be a hardcoded path.
+
+PART C — Update the JSX structure:
+
+1. Find the existing hero section (the part with the brain image,
+   PSYCHPRO wordmark, "LEARN. EXPAND. CONNECT." tagline, body
+   copy, and CTA buttons).
+
+2. Wrap the entire landing page returned JSX in a top-level div
+   with className="landing-canvas".
+
+3. Replace the existing hero brain rendering (whatever currently
+   paints the v1 brain — could be a CSS background, an <img>, a
+   <div> with background-image style) with:
+
+     <div className="landing-hero-brain">
+       <img
+         src={heroBrain}
+         alt=""
+         aria-hidden
+       />
+     </div>
+
+   Position this above the wordmark within the hero section.
+
+4. Remove the .cerulean-tile-layer div, .hero-bg-image div, or
+   any other now-orphaned background-painting elements. Their
+   job is now handled by .landing-canvas::before.
+
+PART D — Update hero copy:
+
+Find the hero body copy <p> element (between the "LEARN. EXPAND.
+CONNECT." tagline and the CTA buttons). Replace its text with
+EXACTLY:
+
+  Your all-in-one platform for mastering clinical psychology
+  through expert-led courses, practical tools, and a supportive
+  professional community.
+
+ACCEPTANCE:
+- /landing background is the new cloud composition, not tiled
+- The brain floats centered in the hero with no rectangular edge,
+  no visible background frame
+- The brain has a soft cyan glow halo around it (from the
+  drop-shadow filter)
+- Hero copy matches the target string
+- Scrolling from top to footer shows no seam, no color band, no
+  hue shift
+
+────────────────────────────────────────────────────────────────
+STEP 3 — VERIFY DASHBOARD INHERITS THE NEW BACKGROUND
+File: src/components/layout/app-layout.tsx
+File: src/pages/dashboard.tsx
+────────────────────────────────────────────────────────────────
+
+Because step 1 already updated .study-page-bg::before, any page
+inside an element with .study-page-bg class will automatically
+get the new background.
+
+1. Open src/components/layout/app-layout.tsx. Confirm the <main>
+   or outermost content container has className including
+   "study-page-bg min-h-screen". If not, ADD IT.
+
+2. Confirm body and #root have no opaque background-color that
+   would block the fixed pseudo-element. They should be
+   transparent or #03151D.
+
+3. Open /dashboard in browser. Confirm the cloud background is
+   visible behind cards. The dimming should be strong enough
+   that cards remain clearly readable but the clouds are
+   discernibly present (like the reference image you uploaded).
+
+4. If the dashboard background looks too dark (clouds barely
+   visible), lower the radial-gradient alphas in index.css step 1
+   from 0.55/0.65/0.75 to 0.45/0.55/0.65. If too light (clouds
+   compete with cards), raise to 0.60/0.70/0.80.
+
+ACCEPTANCE: /dashboard background shows visible-but-subtle clouds
+matching the reference. Same background image as /landing, just
+dimmed more.
+
+────────────────────────────────────────────────────────────────
+STEP 4 — CREATE THE BrandBanner COMPONENT
+File: src/components/brand/brand-banner.tsx (NEW FILE)
+────────────────────────────────────────────────────────────────
+
+Create new file with EXACTLY this content:
+
+/**
+ * BrandBanner — Canonical in-app PSYCHPRO wordmark + tagline +
+ * optional personalized greeting.
+ *
+ * This is the single source of truth for the PSYCHPRO branding
+ * block displayed at the top of authenticated pages. The landing
+ * page hero wordmark and this component MUST stay visually
+ * identical (different size only). If you change the font,
+ * tracking, color, or shadow here, update the landing hero to
+ * match.
+ *
+ * DO NOT inline the wordmark in pages. DO NOT introduce a
+ * different font, tracking, color, or shadow.
+ */
+import { Brain } from "lucide-react";
+import { STUDY_PALETTE as P } from "@/lib/study-theme";
+
+const TRACK_HERO = { letterSpacing: "0.42em" } as const;
+const TRACK_TAGLINE = { letterSpacing: "0.32em" } as const;
+
+export interface BrandBannerProps {
+  /** Optional tagline override. Defaults to canonical app tagline. */
+  tagline?: string;
+  /** Optional personalized greeting shown below the tagline. */
+  greeting?: string;
+  /** Size: "lg" for top-of-page hero, "sm" for inline use. */
+  size?: "lg" | "sm";
+  /** Show the small brain icon above the wordmark. */
+  showIcon?: boolean;
+  className?: string;
+}
+
+export function BrandBanner({
+  tagline = "ADVANCE YOUR MIND. ELEVATE CARE.",
+  greeting,
+  size = "lg",
+  showIcon = true,
+  className = "",
+}: BrandBannerProps) {
+  const wordmarkFontSize =
+    size === "lg" ? "clamp(36px, 5vw, 64px)" : "clamp(24px, 3vw, 36px)";
+  const taglineFontSize =
+    size === "lg" ? "clamp(10px, 1vw, 13px)" : "clamp(9px, 0.85vw, 11px)";
+
+  return (
+    <div
+      className={`flex flex-col items-center text-center ${className}`}
+      data-testid="brand-banner"
+    >
+      {showIcon && (
+        <Brain
+          aria-hidden
+          className="mb-2"
+          style={{
+            width: size === "lg" ? 32 : 24,
+            height: size === "lg" ? 32 : 24,
+            color: P.surf,
+            filter: "drop-shadow(0 0 8px rgba(118, 228, 247, 0.5))",
+          }}
+        />
+      )}
+      <h1
+        className="font-light leading-none"
+        style={{
+          ...TRACK_HERO,
+          fontSize: wordmarkFontSize,
+          color: P.cloud,
+          textShadow: "0 0 24px rgba(118, 228, 247, 0.30)",
+          fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
+        }}
+      >
+        PSYCHPRO
+      </h1>
+      <p
+        className="mt-2 uppercase"
+        style={{
+          ...TRACK_TAGLINE,
+          fontSize: taglineFontSize,
+          color: P.mist,
+          fontWeight: 300,
+          fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
+        }}
+      >
+        {tagline}
+      </p>
+      {greeting && (
+        <p
+          className="mt-4 text-sm"
+          style={{
+            color: (P as any).mistSoft ?? P.mist,
+            fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
+            fontWeight: 300,
+            opacity: 0.85,
+          }}
+          data-testid="brand-banner-greeting"
+        >
+          {greeting}
+        </p>
+      )}
+    </div>
+  );
+}
+
+────────────────────────────────────────────────────────────────
+STEP 5 — REPLACE THE DASHBOARD GREETING WITH BrandBanner
+File: src/pages/dashboard.tsx
+────────────────────────────────────────────────────────────────
+
+1. Add import:
+     import { BrandBanner } from "@/components/brand/brand-banner";
+
+2. Find existing greeting block — any JSX with "Hello",
+   "Welcome back", "Let's keep learning", or references to
+   firstName/greeting variables. Usually a <div> with <h1> + <p>
+   near the top of the main column.
+
+3. Also find any existing inline PSYCHPRO wordmark + tagline
+   block on the dashboard.
+
+4. REPLACE BOTH with a single BrandBanner. Compute the greeting:
+
+     const displayName = profile?.displayName?.trim() || null;
+     const greetingText = displayName
+       ? `Welcome back, ${displayName.split(/\s+/)[0]}.`
+       : "Welcome back.";
+
+   Use ONLY the first name (split on whitespace, take [0]).
+   NEVER fall back to "Welcome back, there" — fallback is just
+   "Welcome back." with no name placeholder.
+
+5. Render:
+
+     <BrandBanner
+       size="lg"
+       greeting={isProfileLoading ? undefined : greetingText}
+       className="mt-6 mb-8"
+     />
+
+6. Delete orphaned helpers — getGreeting, getTimeOfDay, etc.
+   that are now unused.
+
+ACCEPTANCE:
+- Dashboard top renders: brain icon, PSYCHPRO wordmark, tagline,
+  personalized greeting line
+- User "Megan Smith" sees "Welcome back, Megan."
+- User with no name sees "Welcome back."
+- Profile loading shows wordmark + tagline only, no flicker
+- Searching dashboard.tsx for "Hello" or ", there" returns ZERO
+  matches
+
+────────────────────────────────────────────────────────────────
+STEP 6 — NORMALIZE DASHBOARD CARDS TO StudySurface
+File: src/pages/dashboard.tsx
+────────────────────────────────────────────────────────────────
+
+1. Verify src/components/study/study-surface.tsx exists and its
+   output element has className="bg-card" or equivalent that
+   triggers the canonical glass rule. If not, report back.
+
+2. Audit every card on dashboard.tsx. For each:
+   - Uses <StudySurface tone="..." ...> → leave alone
+   - Uses raw <div className="bg-card ..."> or hand-rolled glass
+     → wrap in <StudySurface tone="light" innerClassName="p-5">
+     keeping inner content unchanged
+
+3. Do NOT change card content, headings, data, or behavior.
+
+ACCEPTANCE: Every dashboard card has identical glass treatment.
+
+────────────────────────────────────────────────────────────────
+STEP 7 — REMOVE HARDCODED BRAND HEX CODES
+File: src/pages/dashboard.tsx
+File: src/pages/landing.tsx
+────────────────────────────────────────────────────────────────
+
+1. Search both files for brand hex codes:
+   #03151D, #061F2B, #083240, #0A2D3D, #0E3C50, #2A7387,
+   #5EB0C8, #76E4F7, #A7F3FF, #F4FBFF, #CCE5EC, #A9C6CF
+
+2. Replace each with the corresponding STUDY_PALETTE token.
+
+3. EXCEPTION: the #03151D in CSS background-color fallbacks
+   (index.css and landing.tsx inline <style>) stays — CSS can't
+   reference JS objects.
+
+4. Status colors (red-500, green-500, orange-500) are NOT brand
+   colors — leave them.
+
+ACCEPTANCE: No brand hex codes hardcoded in TSX files outside
+of STUDY_PALETTE-equivalent references.
+
+────────────────────────────────────────────────────────────────
+STEP 8 — ADD PROTECTIVE COMMENTS
+────────────────────────────────────────────────────────────────
+
+Add these comments to the TOP of each file (above imports):
+
+A. src/pages/dashboard.tsx:
+
+/**
+ * DASHBOARD — Canonical Surface Page
+ *
+ * Visual system contract:
+ *   - Background: inherited from .study-page-bg (do NOT override)
+ *   - Palette: STUDY_PALETTE only (no hardcoded hex brand colors)
+ *   - Cards: StudySurface component only (no raw bg-card divs)
+ *   - Brand block: BrandBanner component only (do NOT inline)
+ *
+ * If you need a different surface, extend the canonical rules in
+ * src/index.css — do not fork them here.
+ */
+
+B. src/pages/landing.tsx:
+
+/**
+ * LANDING — Canonical Brand Surface
+ *
+ * Visual system contract:
+ *   - Cloud background: src/assets/cerulean-clouds-background.png
+ *     (same image used by .study-page-bg::before in index.css)
+ *   - Hero brain: src/assets/generated_images/hero_brain_isolated.png
+ *     (PNG with transparent background, floats on the cloud bg)
+ *   - Hero copy: locked to canonical marketing string
+ *
+ * The cloud background dimming differs between this page (light
+ * wash, 0.30/0.45/0.65) and the dashboard (heavier wash,
+ * 0.55/0.65/0.75 in index.css). The IMAGE FILE is the same.
+ *
+ * DO NOT reintroduce the old tile system. DO NOT inline a
+ * different brain image without updating this comment.
+ */
+
+C. src/components/brand/brand-banner.tsx:
+(Comment already included in step 4.)
+
+ACCEPTANCE: All three comments present.
+
+────────────────────────────────────────────────────────────────
+STEP 9 — VERIFY VISUAL PARITY
+────────────────────────────────────────────────────────────────
+
+Run `pnpm run dev`. In a real browser at desktop width:
+
+1. Open /landing. Take a screenshot of the full hero area
+   (top through CTA buttons).
+2. Scroll to bottom of /landing. Take a screenshot of the
+   background between content and footer.
+3. Open /dashboard. Take a screenshot showing the cloud
+   background between cards.
+4. Compare /landing footer area background vs /dashboard
+   background. They use the SAME image, but dashboard is darker.
+   Both should show the cloud composition recognizably — same
+   shapes visible in both, just different brightness.
+5. Confirm the brain in /landing hero has NO visible rectangular
+   edge — it floats with a soft glow halo, blending into the
+   cloud background behind it.
+
+If the brain shows a hard edge:
+   - The background removal on hero_brain_isolated.png wasn't
+     clean. User needs to re-process the image with better
+     background removal.
+   - Verify the brain PNG actually has transparency (open it on
+     disk and check — if the background is black/dark, it's a
+     JPEG-style export and won't blend).
+
+If the landing background looks washed out:
+   - Lower the radial-gradient alphas in step 2's CSS
+
+If the dashboard background is invisible (just dark):
+   - Lower the radial-gradient alphas in step 1's CSS
+   - Verify the .study-page-bg wrapper is applied (step 3)
+
+REPORT BACK with screenshots embedded.
+
+────────────────────────────────────────────────────────────────
+STEP 10 — TYPECHECK AND BUILD
+────────────────────────────────────────────────────────────────
+
+1. Run `pnpm --filter @workspace/neuronotes run typecheck` — must exit 0
+2. Run `pnpm run build` from repo root — must complete
+
+Fix any failures before marking complete. Common failures:
+- "Cannot find name 'firstName'" → orphaned ref after step 5
+- "Cannot find module '@/components/brand/brand-banner'" → wrong
+  import path in step 5
+- Image import path errors → verify the @assets alias resolves
+  correctly for both new files
+
+================================================================
+FINAL ACCEPTANCE CHECKLIST
+================================================================
+[ ] cerulean-clouds-background.png exists at src/assets/
+[ ] hero_brain_isolated.png exists at src/assets/generated_images/
+[ ] index.css ::before uses cover, not tile
+[ ] index.css has the protective comment block
+[ ] landing.tsx imports the new clouds + isolated brain
+[ ] landing.tsx uses .landing-canvas::before for background
+[ ] landing.tsx hero shows brain with NO visible edge
+[ ] landing.tsx hero copy matches "Your all-in-one platform..."
+[ ] No tile-related CSS remains in landing.tsx or index.css
+[ ] /dashboard background visibly shows cloud composition
+   (subtle but present)
+[ ] /landing background shows cloud composition at full strength
+[ ] dashboard.tsx has no "Hello, there" / "Welcome, there"
+[ ] dashboard.tsx uses BrandBanner with personalized greeting
+[ ] Greeting falls back to "Welcome back." (no name) safely
+[ ] Every dashboard card uses StudySurface
+[ ] Protective comments on landing.tsx, dashboard.tsx,
+   brand-banner.tsx, index.css
+[ ] No hardcoded brand hex codes in TSX
+[ ] Typecheck passes
+[ ] Build passes
+[ ] Screenshots embedded showing all four reference points
+
+================================================================
+WHY THIS FIX IS PERMANENT
+================================================================
+1. ONE wallpaper image used by every page (index.css ::before)
+2. ONE card rule (.bg-card descendants of .study-page-bg)
+3. ONE wordmark component (BrandBanner) — no inline forks
+4. The cloud image is the same on both surfaces; only dimming
+   differs, making drift impossible
+5. The old tile system is removed entirely — there's no leftover
+   code that could conflict
+6. Protective comments warn future agents away from canonical files
+7. Hardcoded hex codes removed from page files — palette changes
+   propagate automatically
+
+There is no path for a future prompt to break this system without
+explicitly editing the protected shared files, and those files'
+comments warn against doing so.
