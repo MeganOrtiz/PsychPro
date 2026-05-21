@@ -1,3 +1,15 @@
+// =============================================================================
+// Dashboard — PROTECTED.
+// ---------------------------------------------------------------------------
+// This page inherits the canonical .study-page-bg cerulean-clouds surface
+// from src/index.css and uses StudySurface for every card. DO NOT:
+//   - Add a competing wallpaper (no per-page bg image, no extra ::before).
+//   - Re-render an inline <h1>PSYCHPRO</h1> wordmark — use <BrandBanner/>.
+//   - Resurrect "Hello, there" / "Welcome back, there" — greeting is
+//     personalized or omitted (never a placeholder name).
+//   - Hardcode brand hex codes — use STUDY_PALETTE tokens.
+//   - Replace StudySurface cards with raw bg-card / glass divs.
+// =============================================================================
 import { useEffect, useMemo, useState } from "react";
 import { getOrCreateAnonymousUserId } from "@/lib/anonymous-user";
 import { workTypeLabel } from "@workspace/community";
@@ -28,6 +40,7 @@ import spotlightCloudImage from "@assets/Screenshot_2026-05-10_at_3.03.20_PM_177
 import TodayReviews from "@/components/learning/today-reviews";
 import { StudySurface } from "@/components/study/study-surface";
 import { NotificationsBell } from "@/components/notifications-bell";
+import { BrandBanner } from "@/components/brand/brand-banner";
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
 import {
   ResponsiveContainer,
@@ -120,7 +133,46 @@ export default function DashboardPage() {
     !isOverLimit &&
     summary.usageCount >= Math.ceil(summary.freeLimit * 0.8);
 
-  const firstName = "there";
+  // Personalized greeting — pulls from /api/profile/me (same source the
+  // sidebar uses). While loading we pass greeting={undefined} so the banner
+  // shows only the wordmark + tagline (never a placeholder name).
+  const [profileDisplayName, setProfileDisplayName] = useState<string | null>(null);
+  const [isProfileLoading, setIsProfileLoading] = useState(true);
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        const res = await fetch("/api/profile/me", {
+          headers: { "X-User-Id": getOrCreateAnonymousUserId() },
+        });
+        if (!res.ok) {
+          if (!cancelled) setIsProfileLoading(false);
+          return;
+        }
+        const data = await res.json();
+        if (cancelled) return;
+        setProfileDisplayName(
+          typeof data?.displayName === "string" ? data.displayName : null,
+        );
+      } catch {
+        /* silent — greeting falls back to "Welcome back." */
+      } finally {
+        if (!cancelled) setIsProfileLoading(false);
+      }
+    }
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const greetingText = (() => {
+    if (isProfileLoading) return undefined;
+    const trimmed = (profileDisplayName ?? "").trim();
+    if (!trimmed) return "Welcome back.";
+    const firstName = trimmed.split(/\s+/)[0];
+    return `Welcome back, ${firstName}.`;
+  })();
 
   const recent = (summary?.recentTopics ?? []) as RecentTopic[];
   const weak = (summary?.weakAreas ?? []) as RecentTopic[];
@@ -178,42 +230,15 @@ export default function DashboardPage() {
       data-testid="dashboard-page"
     >
       <div className="max-w-[1400px] mx-auto p-4 md:p-6 lg:p-8">
-        {/* Top header — centered cinematic PSYCHPRO wordmark per brand spec */}
-        <header className="relative flex items-center justify-center mb-8 py-4">
+        {/* Top header — notifications bell + canonical BrandBanner.
+            The wordmark + tagline + personalized greeting are all owned by
+            BrandBanner so every page renders the brand identically. */}
+        <header className="relative mb-8 py-4">
           <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-3">
             <NotificationsBell />
           </div>
-          <div className="text-center">
-            <h1
-              className="font-light"
-              style={{
-                fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
-                fontSize: "clamp(28px, 4vw, 44px)",
-                letterSpacing: "0.42em",
-                color: PALETTE.cloud,
-                textShadow: `0 0 24px rgba(118, 228, 247, 0.32)`,
-              }}
-            >
-              PSYCHPRO
-            </h1>
-            <p
-              className="mt-2 text-[11px] md:text-xs font-light"
-              style={{
-                letterSpacing: "0.32em",
-                color: PALETTE.mist,
-              }}
-            >
-              ADVANCE YOUR MIND. ELEVATE CARE.
-            </p>
-          </div>
+          <BrandBanner size="lg" greeting={greetingText} className="mt-6 mb-2" />
         </header>
-
-        {/* Greeting (kept smaller, beneath cinematic header) */}
-        <div className="mb-6">
-          <p className="text-sm font-light" style={{ color: PALETTE.inkSoft }}>
-            Welcome back, <span style={{ color: PALETTE.mist }}>{firstName}</span>. Let's keep learning.
-          </p>
-        </div>
 
         {isOverLimit && (
           <div

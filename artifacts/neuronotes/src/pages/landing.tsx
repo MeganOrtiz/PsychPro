@@ -1,3 +1,15 @@
+// =============================================================================
+// Landing page — PROTECTED.
+// ---------------------------------------------------------------------------
+// The cerulean-clouds background and the floating isolated brain are the
+// canonical PsychPro hero. The clouds image is shared with the in-app
+// .study-page-bg surface (see src/index.css) — same composition, lighter
+// wash here. DO NOT:
+//   - Re-introduce a tiled / repeating cloud layer.
+//   - Add a rectangular hero image with a hard edge.
+//   - Hardcode brand hex codes — use STUDY_PALETTE tokens.
+//   - Rewrite the hero body copy without product approval.
+// =============================================================================
 import { useLocation } from "wouter";
 import { useState } from "react";
 import {
@@ -18,8 +30,8 @@ import {
   CheckCircle2,
   Sparkles,
 } from "lucide-react";
-import heroReference from "@assets/generated_images/hero_reference_brain_v1.png";
-import ceruleanCloudsTile from "@/assets/cerulean-clouds-tile.png";
+import heroBrain from "@/assets/generated_images/hero_brain_isolated.png";
+import cloudsBackground from "@/assets/cerulean-clouds-background.png";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -152,7 +164,7 @@ export default function LandingPage() {
 
   return (
     <div
-      className="min-h-screen relative overflow-x-hidden"
+      className="landing-canvas min-h-screen relative overflow-x-hidden"
       data-testid="landing-page"
       style={{
         background: "transparent",
@@ -160,134 +172,46 @@ export default function LandingPage() {
         fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
       }}
     >
-      {/* ============================================================
-          HERO BACKGROUND — single fixed reference image (1055x375,
-          aspect ratio ~2.813:1). The brain + cerulean clouds are
-          already composited inside the source so there is no separate
-          brain layer, no mix-blend, and no edge artifacts. The image
-          is anchored to the top of the viewport and sized so its
-          rendered height is exactly `--hero-bg-h` (defined in :root
-          below), giving us one source-of-truth value the spacer can
-          also consume to keep the wordmark glued to the bottom of
-          the brain at every breakpoint.
-          ============================================================ */}
-      {/* Layer 0: deep ink floor — covers any area other layers don't reach */}
-      <div
-        aria-hidden
-        className="pointer-events-none fixed inset-0"
-        style={{ background: P.ink, zIndex: -50 }}
-      />
-      {/* Layer 1: continuous cerulean cloud tile that scrolls with the
-          page. Spans the full height of the landing container so the
-          clouds extend from the very top all the way to the footer
-          with no end. The PNG asset is generated offline (see
-          src/assets/cerulean-clouds-tile.png) with bit-exact edges:
-          column 0 equals column 799 and row 0 equals row 799, so it
-          tiles with NO visible boundary at any page length or
-          viewport size. The fixed hero image sits on top of this
-          layer to cover the top band, and the tile shows through
-          everywhere below. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 cerulean-tile-layer"
-        style={{
-          top: 0,
-          bottom: 0,
-          zIndex: -40,
-          backgroundImage: `url(${ceruleanCloudsTile})`,
-          backgroundRepeat: "repeat",
-          backgroundPosition: "center top",
-        }}
-      />
-      {/* Layer 2: the reference image itself — pure brain + clouds,
-          anchored to the top of the viewport. `cover` preserves the
-          image's native 2.813:1 aspect ratio (no horizontal squashing
-          on ultrawide), and the container height matches the image's
-          natural height-at-100%-viewport-width up to a cap so it
-          never grows taller than the viewport. */}
-      <div
-        aria-hidden
-        className="pointer-events-none fixed inset-x-0 top-0 -z-30 hero-bg-image"
-        style={{
-          backgroundImage: `url(${heroReference})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center top",
-          backgroundRepeat: "no-repeat",
-        }}
-      />
       <style>{`
-        /* Single source of truth for the hero background image height.
-           Both the fixed bg layer and the spacer below the brain
-           consume this so they always stay locked together regardless
-           of viewport size. The 35.5% multiplier mirrors the cropped
-           reference image's aspect ratio (375/1055 ≈ 0.3555), capped
-           at 70vh so the brain never grows taller than the viewport
-           and floored at 220px so it stays prominent on phones. */
-        :root {
-          --hero-bg-h: clamp(220px, calc(100vw * 0.3555), 70vh);
-          /* Tile size — kept large so cloud puffs read as roomy
-             atmosphere (not noisy texture) and so the density visually
-             matches the hero image's cloud scale on wide displays.
-             Capped to viewport width with a min so phones still see
-             readable detail, and a max so ultrawide doesn't stretch
-             the puffs into bands. */
-          --cloud-tile-size: clamp(640px, 95vw, 1400px);
+        /* Landing canvas — fixed cerulean-clouds composition (same source
+           image as .study-page-bg, lighter wash so the marketing surface
+           reads brighter than the in-app dashboard). DO NOT swap the
+           image without also updating src/index.css. */
+        .landing-canvas::before {
+          content: "";
+          position: fixed;
+          inset: 0;
+          z-index: -50;
+          background-color: ${P.ink};
+          background-image:
+            radial-gradient(ellipse 130% 115% at 50% 50%,
+              rgba(3, 21, 29, 0.30) 0%,
+              rgba(3, 21, 29, 0.45) 60%,
+              rgba(3, 21, 29, 0.65) 100%),
+            url(${cloudsBackground});
+          background-size: cover, cover;
+          background-position: center, center;
+          background-repeat: no-repeat, no-repeat;
+          pointer-events: none;
         }
-        .hero-bg-image {
-          height: var(--hero-bg-h);
-          /* Fade the hero image's hard bottom edge into the tile.
-             Without this, the rectangular crop creates a subtle
-             horizontal line right at the bottom of the brain even
-             when the tile color matches. The fade starts at 70% of
-             the image height so the brain stays crisp and only the
-             cloud-only bottom band dissolves. */
-          -webkit-mask-image: linear-gradient(
-            180deg,
-            #000 0,
-            #000 70%,
-            transparent 100%
-          );
-          mask-image: linear-gradient(
-            180deg,
-            #000 0,
-            #000 70%,
-            transparent 100%
-          );
+        /* Floating hero brain — transparent PNG centered above the
+           wordmark with a soft cyan glow halo. clamp() keeps it
+           responsive without a rectangular edge. */
+        .landing-hero-brain {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 100%;
+          margin-top: 1.5rem;
+          margin-bottom: 1.25rem;
         }
-        .hero-spacer   { height: var(--hero-bg-h); }
-        .cerulean-tile-layer {
-          background-size: var(--cloud-tile-size) var(--cloud-tile-size);
-          /* Color-match to the hero's deep cerulean. The source tile
-             reads milky/lavender at full brightness, which creates a
-             visible "frosted shelf" band where it first becomes
-             visible below the hero. Pushing brightness down and
-             saturation + a hue nudge up makes the tile read as the
-             same sky as the hero's clouds, so the handoff disappears. */
-          filter: brightness(0.5) saturate(1.45) hue-rotate(-6deg) contrast(1.1);
-          /* Drift animation intentionally disabled — the page reads
-             more cinematic with the clouds completely still. */
-          /* Long, gentle cross-fade mask. The tile starts bleeding in
-             ~35% down the hero (well inside the cloud area, so the
-             bleed-through reads as more clouds, not a new layer) and
-             only reaches full opacity ~30vh below the hero. This long
-             ramp is what kills the visible "shelf" — there's no point
-             on the page where the tile suddenly appears. */
-          -webkit-mask-image: linear-gradient(
-            180deg,
-            transparent 0,
-            transparent calc(var(--hero-bg-h) * 0.35),
-            #000 calc(var(--hero-bg-h) + 30vh),
-            #000 50%,
-            transparent 92%
-          );
-          mask-image: linear-gradient(
-            180deg,
-            transparent 0,
-            transparent calc(var(--hero-bg-h) * 0.35),
-            #000 calc(var(--hero-bg-h) + 30vh),
-            #000 50%,
-            transparent 92%
-          );
+        .landing-hero-brain img {
+          width: clamp(260px, 48vw, 620px);
+          height: auto;
+          filter: drop-shadow(0 0 28px ${P.surf}66)
+                  drop-shadow(0 0 60px ${P.teal}44);
+          pointer-events: none;
+          user-select: none;
         }
         .landing-glass-btn {
           position: relative;
@@ -332,7 +256,7 @@ export default function LandingPage() {
           transform: translateX(120%);
         }
         .landing-glass-btn:hover svg {
-          color: #A7F3FF !important;
+          color: ${P.mist} !important;
           filter: drop-shadow(0 0 8px rgba(167, 243, 255, 0.85));
           transform: scale(1.08);
         }
@@ -365,7 +289,7 @@ export default function LandingPage() {
             inset 0 0 12px rgba(118, 228, 247, 0.18) !important;
         }
         .landing-glass-icon-btn:hover svg {
-          color: #A7F3FF !important;
+          color: ${P.mist} !important;
           filter: drop-shadow(0 0 8px rgba(167, 243, 255, 0.9));
         }
         .landing-glass-icon-btn svg {
@@ -461,11 +385,13 @@ export default function LandingPage() {
           ============================================================ */}
       <section className="relative">
         <div className="max-w-5xl mx-auto px-6 lg:px-10 text-center">
-          {/* Spacer — pushes the wordmark down so it sits exactly at
-              the bottom of the brain image. Consumes the same
-              `--hero-bg-h` token as the fixed bg layer, so the two
-              stay locked together at every viewport size. */}
-          <div aria-hidden className="w-full hero-spacer" />
+          {/* Floating isolated brain — transparent PNG, no rectangular
+              edge. Sits centered above the wordmark with a soft cyan
+              halo applied via .landing-hero-brain in the inline style
+              block above. */}
+          <div className="landing-hero-brain">
+            <img src={heroBrain} alt="" aria-hidden />
+          </div>
 
           {/* Wordmark */}
           <h1
@@ -502,9 +428,9 @@ export default function LandingPage() {
               textShadow: `0 1px 6px rgba(3, 21, 29, 0.65)`,
             }}
           >
-            Cut study time in half and actually retain the information over time
-            with clinically grounded tools built for psychology students and
-            professionals.
+            Your all-in-one platform for mastering clinical psychology through
+            expert-led courses, practical tools, and a supportive professional
+            community.
           </p>
 
           {/* CTAs */}
