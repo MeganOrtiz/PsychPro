@@ -263,6 +263,7 @@ export default function DashboardPage() {
               size="sm"
               onClick={() => navigate("/subscription")}
               data-testid="button-upgrade-banner"
+              className="glass-button rounded-md px-4"
             >
               Upgrade
             </Button>
@@ -296,6 +297,7 @@ export default function DashboardPage() {
               variant="outline"
               onClick={() => navigate("/subscription")}
               data-testid="button-upgrade-approaching"
+              className="glass-button rounded-md px-4 border-0"
             >
               Upgrade
             </Button>
@@ -338,6 +340,7 @@ export default function DashboardPage() {
                   <Button
                     onClick={() => navigate(`/topics/${continueTopic.topicId}`)}
                     data-testid="button-continue-studying"
+                    className="glass-button rounded-md px-5"
                   >
                     Continue Studying
                     <ArrowUpRight className="w-4 h-4 ml-1" />
@@ -352,6 +355,7 @@ export default function DashboardPage() {
                   <Button
                     onClick={() => navigate("/topics")}
                     data-testid="button-begin-journey"
+                    className="glass-button rounded-md px-5"
                   >
                     Browse Topics
                     <ArrowUpRight className="w-4 h-4 ml-1" />
@@ -481,8 +485,7 @@ export default function DashboardPage() {
                   </div>
                   <button
                     onClick={() => navigate("/leaderboard")}
-                    className="text-xs hover:underline"
-                    style={{ color: PALETTE.tealDeep }}
+                    className="glass-button text-xs rounded-full px-3 h-7"
                     data-testid="button-view-leaderboard"
                   >
                     View all
@@ -787,13 +790,7 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
 
         <button
           onClick={() => onCta(spot?.id)}
-          className="w-full rounded-lg px-4 py-2.5 text-sm font-semibold flex items-center justify-center gap-1.5 transition-all backdrop-blur-sm border"
-          style={{
-            background: `${PALETTE.teal}33`,
-            borderColor: `${PALETTE.surf}66`,
-            color: "#fff",
-            boxShadow: `0 4px 18px -6px ${PALETTE.teal}aa`,
-          }}
+          className="glass-button w-full rounded-lg px-4 py-2.5 text-sm font-semibold"
           data-testid="button-spotlight-cta"
         >
           View Feature
@@ -840,12 +837,7 @@ function StudyAnalyticsCard({
           Study Analytics
         </h2>
         <button
-          className="flex items-center gap-1 text-xs rounded-full px-3 py-1 transition-colors whitespace-nowrap border"
-          style={{
-            color: PALETTE.tealDeep,
-            background: "rgba(255,255,255,0.7)",
-            borderColor: `${PALETTE.surf}55`,
-          }}
+          className="glass-button whitespace-nowrap text-xs rounded-full px-3 py-1"
           data-testid="button-analytics-period"
         >
           This Week
@@ -1009,8 +1001,7 @@ function RecentActivityCard({
       )}
       <button
         onClick={onViewAll}
-        className="text-xs hover:underline pt-3 text-center mt-3 font-medium border-t"
-        style={{ color: PALETTE.tealDeep, borderColor: `${PALETTE.surf}40` }}
+        className="glass-button text-xs rounded-full px-4 py-2 mt-3 self-center font-medium"
         data-testid="button-view-all-activity"
       >
         View all activity →

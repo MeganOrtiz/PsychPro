@@ -627,3 +627,82 @@
     inset: -1px;
   }
 }
+
+@layer components {
+  .glass-button {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: #F4FBFF;
+    background: rgba(10, 45, 61, 0.55);
+    border: 1px solid rgba(167, 243, 255, 0.35);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    box-shadow:
+      0 0 0 1px rgba(167, 243, 255, 0.18),
+      0 8px 28px -10px rgba(0, 0, 0, 0.55),
+      inset 0 0 14px rgba(118, 228, 247, 0.10);
+    transition: transform .25s cubic-bezier(.2,.8,.2,1),
+                box-shadow .35s ease,
+                border-color .25s ease,
+                background .25s ease,
+                color .2s ease;
+  }
+  .glass-button::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(120deg,
+      transparent 0%,
+      transparent 35%,
+      rgba(167, 243, 255, 0.45) 50%,
+      transparent 65%,
+      transparent 100%);
+    transform: translateX(-120%);
+    transition: transform .8s cubic-bezier(.2,.8,.2,1);
+    mix-blend-mode: screen;
+    pointer-events: none;
+  }
+  .glass-button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    border-color: rgba(167, 243, 255, 0.9);
+    background: rgba(10, 45, 61, 0.78);
+    color: #F4FBFF;
+    box-shadow:
+      0 0 0 1px rgba(167, 243, 255, 0.55),
+      0 0 22px rgba(118, 228, 247, 0.45),
+      0 0 48px rgba(118, 228, 247, 0.22),
+      0 10px 30px rgba(0, 0, 0, 0.45),
+      inset 0 0 18px rgba(118, 228, 247, 0.18);
+  }
+  .glass-button:hover:not(:disabled)::before {
+    transform: translateX(120%);
+  }
+  .glass-button:hover:not(:disabled) svg {
+    color: #A7F3FF;
+    filter: drop-shadow(0 0 6px rgba(167, 243, 255, 0.75));
+  }
+  .glass-button:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow:
+      0 0 0 1px rgba(167, 243, 255, 0.7),
+      0 0 14px rgba(118, 228, 247, 0.4),
+      inset 0 0 22px rgba(118, 228, 247, 0.28);
+  }
+  .glass-button:focus-visible {
+    outline: 2px solid rgba(167, 243, 255, 0.85);
+    outline-offset: 2px;
+  }
+  .glass-button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+  .glass-button svg {
+    transition: color .25s ease, filter .25s ease, transform .25s ease;
+  }
+}
