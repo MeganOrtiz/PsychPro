@@ -6,3 +6,9 @@ id = "aKKI8N7WseM8lzrKZFEEq"
 uri = "file://.local/exports/brain-lab-code.tar.gz"
 type = "unspecified"
 title = "Brain Lab code (page + data + theme)"
+
+[[outputs]]
+id = "tqOL_ZVSGI9BkOoUQ9kmW"
+uri = "file://attached_assets/topics_9_53_export.txt"
+type = "text"
+title = "Topics 9 & 53 — Full Content Export"

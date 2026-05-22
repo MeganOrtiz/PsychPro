@@ -1,0 +1,1679 @@
+
+##############################################################
+# TOPIC 9 — Psychopharmacology
+# Counts: flashcards=50, quiz=15, study_guides=1
+##############################################################
+
+==========================================================
+## 1. FLASHCARDS (50)
+==========================================================
+
+[#113 | easy] Q: What is the mechanism of SSRIs?
+             A: Selective serotonin reuptake inhibitors block the serotonin transporter (SERT), preventing reuptake of serotonin into the presynaptic neuron — increasing serotonin in the synaptic cleft.
+
+[#114 | easy] Q: What is the difference between agonist and antagonist?
+             A: An agonist binds to a receptor and activates it; an antagonist binds but does not activate it and blocks the agonist from binding.
+
+[#115 | medium] Q: How do benzodiazepines work?
+             A: Benzodiazepines (e.g., diazepam) are positive allosteric modulators of GABA-A receptors — they increase the frequency of Cl- channel opening when GABA is present, enhancing inhibitory effects.
+
+[#116 | medium] Q: What is the mechanism of antipsychotics?
+             A: First-generation (typical) antipsychotics (e.g., haloperidol) primarily block D2 dopamine receptors. Second-generation (atypical) antipsychotics also block serotonin receptors with fewer extrapyramidal side effects.
+
+[#117 | hard] Q: What is tardive dyskinesia?
+             A: A side effect of long-term antipsychotic use — involuntary, repetitive movements (especially of the face, lips, tongue) caused by dopamine receptor supersensitivity from chronic D2 blockade.
+
+[#118 | medium] Q: What are MAOIs and how do they work?
+             A: Monoamine oxidase inhibitors block the enzyme MAO that degrades monoamines (serotonin, norepinephrine, dopamine) — increasing their availability. Dietary restrictions needed (tyramine interactions).
+
+[#119 | hard] Q: What is lithium's mechanism in bipolar disorder?
+             A: Lithium's exact mechanism is unclear — it modulates second messenger systems (inositol phosphate, GSK-3β), reduces neuronal excitability, and has neuroprotective effects. It stabilizes mood in bipolar disorder.
+
+[#120 | medium] Q: What are stimulants and how do they work in ADHD?
+             A: Stimulants (e.g., methylphenidate, amphetamine) increase dopamine and norepinephrine in the prefrontal cortex — improving attention, impulse control, and working memory in ADHD.
+
+[#121 | easy] Q: What is the half-life of a drug?
+             A: The time it takes for the drug's plasma concentration to decrease by 50% — drugs with longer half-lives have more sustained effects and take longer to clear.
+
+[#122 | medium] Q: What are opioids and how do they work?
+             A: Opioids (e.g., morphine, oxycodone) bind to mu, delta, and kappa opioid receptors in the brain and spinal cord — reducing pain perception and producing euphoria; highly addictive.
+
+[#123 | medium] Q: What is the blood-brain barrier (BBB)?
+             A: A selective barrier formed by tight junctions between brain endothelial cells that restricts entry of many substances — drugs must be lipid-soluble or use active transport to enter the CNS.
+
+[#124 | medium] Q: What is levodopa and why is it used in Parkinson's disease?
+             A: Levodopa is the precursor to dopamine — it crosses the BBB (dopamine cannot) and is converted to dopamine in the brain, replenishing depleted dopamine in the substantia nigra.
+
+[#125 | easy] Q: What is drug tolerance?
+             A: Reduced response to a drug after repeated exposure — requires higher doses to achieve the same effect. Can result from receptor downregulation, increased metabolism, or cellular adaptation.
+
+[#126 | medium] Q: What are SNRIs?
+             A: Serotonin-norepinephrine reuptake inhibitors (e.g., venlafaxine, duloxetine) block both SERT and NET — used for depression, anxiety, and chronic pain.
+
+[#259 | hard] Q: What is neuroleptic malignant syndrome (NMS)?
+             A: A rare but life-threatening reaction to antipsychotics — characterized by FEVER, muscle rigidity, altered consciousness, and autonomic instability. Caused by sudden dopamine blockade. Treated by stopping the drug and supportive care.
+
+[#260 | hard] Q: What is serotonin syndrome?
+             A: A potentially life-threatening condition caused by excess serotonergic activity (e.g., combining SSRIs + MAOIs) — triad of: altered mental status, autonomic instability, and neuromuscular abnormalities (clonus, hyperreflexia, tremor).
+
+[#261 | hard] Q: What is the CYP450 system and why is it important in pharmacology?
+             A: A family of liver enzymes that metabolize most drugs — CYP3A4 metabolizes ~50% of drugs. Inhibitors (e.g., fluoxetine) can raise drug levels (toxicity risk); inducers (e.g., carbamazepine) can lower levels (treatment failure).
+
+[#262 | hard] Q: What is a partial agonist in receptor pharmacology?
+             A: A drug that binds a receptor and activates it, but produces a submaximal response — in the presence of a full agonist, it acts as an antagonist (competitive); examples include buspirone (5-HT1A) and buprenorphine (mu opioid).
+
+[#263 | medium] Q: What is the difference between physical dependence and addiction?
+             A: Physical dependence = physiological adaptation requiring drug to function normally (withdrawal if stopped — can occur with prescribed drugs). Addiction = compulsive drug seeking despite harm (a brain disease involving reward circuits).
+
+[#264 | medium] Q: What are cholinesterase inhibitors and when are they used?
+             A: Drugs that inhibit acetylcholinesterase (e.g., donepezil, rivastigmine) — increase acetylcholine in the synaptic cleft; used in Alzheimer's disease, DLB, and other dementias with cholinergic deficits. Symptomatic, not disease-modifying.
+
+[#540 | hard] Q: What is the volume of distribution (Vd) of a drug?
+             A: A theoretical volume that relates the drug dose to the plasma concentration — a large Vd means the drug distributes extensively into tissues (e.g., lipophilic drugs). Vd = Dose / Plasma concentration at time zero.
+
+[#541 | medium] Q: What is the half-life of a drug and why does it matter clinically?
+             A: Time for plasma drug concentration to fall by 50% — drugs take ~4-5 half-lives to reach steady-state and 4-5 half-lives to be cleared. Long half-life: fewer doses needed, less withdrawal risk; short half-life: more doses required, greater withdrawal symptoms.
+
+[#542 | medium] Q: What is bioavailability and what affects it?
+             A: The fraction of an oral dose that reaches systemic circulation — reduced by first-pass hepatic metabolism. IV drugs have 100% bioavailability. Highly metabolized drugs (e.g., morphine, propranolol) have low oral bioavailability.
+
+[#543 | medium] Q: What is the benzodiazepine mechanism of action?
+             A: BZDs are positive allosteric modulators of GABA-A receptors — they bind between the α and γ subunits, increasing the FREQUENCY of Cl- channel opening in response to GABA. This enhances inhibitory neurotransmission → sedation, anxiolysis, anticonvulsant, muscle relaxant effects.
+
+[#544 | hard] Q: How do barbiturates differ from benzodiazepines at GABA-A receptors?
+             A: Barbiturates increase the DURATION of Cl- channel opening (vs. BZD frequency); at high doses can activate GABA-A without GABA. This greater efficacy makes overdose more dangerous — barbiturates were replaced by BZDs for most clinical uses.
+
+[#545 | hard] Q: What is lithium's mechanism of action?
+             A: Not fully understood — lithium inhibits inositol monophosphatase (depleting IP3 precursors for PLC signaling) and glycogen synthase kinase-3β (GSK-3β), and modulates gene expression. Narrow therapeutic window (0.6-1.2 mEq/L); requires regular monitoring.
+
+[#546 | medium] Q: What are the first-generation (typical) antipsychotics?
+             A: Block D2 dopamine receptors — examples: haloperidol, chlorpromazine, fluphenazine. Effective for positive symptoms; extrapyramidal side effects (EPS) common: acute dystonia, akathisia, parkinsonism, tardive dyskinesia from nigrostriatal D2 blockade.
+
+[#547 | medium] Q: What are second-generation (atypical) antipsychotics and how do they differ?
+             A: Block D2 AND 5-HT2A receptors (and others) — examples: olanzapine, quetiapine, risperidone, clozapine, aripiprazole. Lower EPS risk; key side effects: metabolic syndrome (weight gain, diabetes risk), QTc prolongation; clozapine: agranulocytosis (requires WBC monitoring).
+
+[#548 | hard] Q: What is tardive dyskinesia and what causes it?
+             A: Involuntary repetitive movements (lip smacking, tongue protrusion, choreiform) from chronic D2 blockade — caused by dopamine receptor upregulation in the nigrostriatal system; can be irreversible. Treated with VMAT2 inhibitors (valbenazine, deutetrabenazine).
+
+[#549 | easy] Q: What are the SSRI medications and their mechanism?
+             A: Selective serotonin reuptake inhibitors (e.g., fluoxetine, sertraline, escitalopram) block SERT — increasing synaptic serotonin. First-line for depression, anxiety, OCD, PTSD; side effects: sexual dysfunction, GI symptoms, initial activation/anxiety; delayed onset (2-4 weeks).
+
+[#550 | medium] Q: What are SNRIs and how do they differ from SSRIs?
+             A: Serotonin-Norepinephrine Reuptake Inhibitors (e.g., venlafaxine, duloxetine) block both SERT and NET — used for depression, anxiety, pain, and fibromyalgia; more noradrenergic effects (e.g., increased blood pressure, sweating) than SSRIs.
+
+[#551 | medium] Q: What are tricyclic antidepressants (TCAs) and their side effects?
+             A: TCAs (e.g., amitriptyline, nortriptyline, imipramine) block SERT, NET, and multiple other receptors (H1, muscarinic, α1, Na+ channels) — lethal in overdose (cardiac arrhythmia); anticholinergic side effects (dry mouth, constipation, urinary retention, confusion).
+
+[#552 | hard] Q: What are irreversible MAOIs and why are they dangerous?
+             A: Monoamine oxidase inhibitors (e.g., phenelzine, tranylcypromine) irreversibly inhibit MAO-A and B — prevent monoamine breakdown; effective for treatment-resistant depression and atypical depression. Require tyramine-free diet (cheese, wine, cured meats) or risk hypertensive crisis.
+
+[#553 | hard] Q: What is the tyramine reaction?
+             A: Tyramine (in aged cheeses, wine, cured meats) is normally metabolized by MAO in the gut wall — with MAOIs blocking MAO, tyramine enters circulation, displaces NE from vesicles, causing dangerous hypertensive crisis (severe headache, stroke risk).
+
+[#554 | medium] Q: What is naltrexone and when is it used?
+             A: An opioid receptor antagonist (blocks mu, kappa, delta) — used for opioid use disorder (prevents euphoria from opioids) and alcohol use disorder (reduces cravings by blocking alcohol-induced endorphin release). Long-acting injectable formulation (Vivitrol) improves adherence.
+
+[#555 | hard] Q: What is buprenorphine and how does it work?
+             A: A partial mu opioid agonist / kappa antagonist — high receptor affinity (displaces full agonists) but ceiling effect on respiratory depression, making it safer than full agonists. Used for opioid use disorder (Suboxone = buprenorphine + naloxone).
+
+[#556 | hard] Q: What is methadone and its properties?
+             A: A full mu opioid agonist with long half-life (24-36 hrs) and NMDA receptor antagonism — used for opioid use disorder maintenance and chronic pain. Risks: QTc prolongation, drug accumulation (overdose risk), drug interactions via CYP3A4.
+
+[#557 | hard] Q: What is the mechanism of valproic acid (valproate)?
+             A: A mood stabilizer and anticonvulsant — mechanisms include: blocking Na+ channels (stabilizes neuronal membranes), enhancing GABA activity (inhibiting GABA-T, the enzyme that breaks down GABA), and inhibiting histone deacetylases. Used for bipolar and epilepsy.
+
+[#558 | hard] Q: What is lamotrigine and its mechanism?
+             A: An anticonvulsant/mood stabilizer — blocks voltage-gated Na+ channels, reducing glutamate release. Particularly effective for bipolar depression; must be titrated slowly to prevent Stevens-Johnson syndrome (severe rash).
+
+[#559 | medium] Q: What is guanfacine and why is it used in ADHD?
+             A: A selective alpha-2A adrenergic agonist — acts on postsynaptic receptors in the PFC to strengthen PFC networks and improve working memory and impulse control. Non-stimulant ADHD treatment; also used for PTSD nightmares.
+
+[#560 | medium] Q: What is first-pass metabolism?
+             A: Drugs absorbed orally pass through the liver before reaching systemic circulation — the liver metabolizes a fraction, reducing bioavailability. High first-pass drugs (e.g., morphine, propranolol, lidocaine) require much larger oral doses than parenteral.
+
+[#561 | hard] Q: What are the phases of drug metabolism?
+             A: Phase I: oxidation, reduction, hydrolysis (mainly CYP enzymes) — typically activate or reveal reactive groups; Phase II: conjugation (glucuronidation, sulfation, acetylation) — makes drug more water-soluble for excretion.
+
+[#562 | hard] Q: What is protein binding of drugs and its clinical significance?
+             A: Many drugs bind to plasma proteins (albumin, α1-acid glycoprotein) — only the unbound (free) drug is pharmacologically active. Highly protein-bound drugs have longer half-lives and can be displaced by competing drugs, causing toxicity.
+
+[#563 | medium] Q: What is akathisia and how is it treated?
+             A: An antipsychotic side effect (EPS) — subjective restlessness and inner drive to move; patients cannot sit still, pace constantly; can be confused with agitation or anxiety. Treated with propranolol (beta-blocker), benzodiazepines, or dose reduction.
+
+[#564 | medium] Q: What is bupropion and its mechanism?
+             A: An atypical antidepressant that inhibits NET and DAT (not SERT) — no sexual side effects; also used for smoking cessation (Zyban) and ADHD. Risk: lowers seizure threshold (contraindicated in eating disorders/seizure history).
+
+[#565 | hard] Q: What is mirtazapine and its mechanism?
+             A: A noradrenergic and specific serotonergic antidepressant (NaSSA) — blocks α2 autoreceptors (increasing NE and 5-HT release), H1 receptors (sedation, weight gain), 5-HT2/3 receptors. Good for insomnia and weight loss associated depression.
+
+[#566 | medium] Q: What is the black box warning on antidepressants for youth?
+             A: FDA black box warning: SSRIs and SNRIs may increase suicidal ideation and behavior in children, adolescents, and young adults (up to age 25) — clinical monitoring is required, especially in the first weeks of treatment.
+
+[#567 | hard] Q: What is the mechanism of buspirone?
+             A: A partial 5-HT1A agonist (serotonin autoreceptor) — used for generalized anxiety disorder; takes 2-4 weeks to work (not PRN); no abuse potential, no sedation. Mechanism: reduces autoreceptor inhibition → increased serotonergic tone.
+
+[#568 | medium] Q: What is the CIWA scale and when is it used?
+             A: Clinical Institute Withdrawal Assessment for Alcohol — a standardized scale measuring alcohol withdrawal severity (tremor, diaphoresis, hallucinations, seizure risk); guides medication management (BZD dosing) in alcohol detoxification.
+
+[#569 | medium] Q: What is disulfiram (Antabuse) and its mechanism?
+             A: Blocks aldehyde dehydrogenase (ALDH) — alcohol → acetaldehyde (normally converted to acetate by ALDH); without ALDH, acetaldehyde accumulates → flushing, nausea, vomiting, palpitations. Creates aversive conditioning to alcohol.
+
+==========================================================
+## 2. QUIZ QUESTIONS (15)
+==========================================================
+
+#81
+Q: How do benzodiazepines produce their anxiolytic effects?
+A) Blocking D2 receptors
+B) Blocking NMDA receptors
+C) Enhancing GABA-A receptor function
+D) Inhibiting serotonin reuptake
+Correct: C
+Explanation: Benzodiazepines are positive allosteric modulators of GABA-A receptors — they increase the frequency of Cl- channel opening when GABA is present, enhancing inhibitory neurotransmission.
+
+#82
+Q: Tardive dyskinesia is caused by:
+A) Short-term benzodiazepine use
+B) Long-term antipsychotic use causing dopamine receptor supersensitivity
+C) SSRI overdose
+D) Stimulant abuse
+Correct: B
+Explanation: Tardive dyskinesia results from chronic D2 receptor blockade by antipsychotics — the receptors become supersensitive, leading to involuntary repetitive movements, especially facial and oral.
+
+#83
+Q: Levodopa is used in Parkinson's disease because:
+A) It blocks acetylcholine receptors
+B) It can cross the blood-brain barrier and be converted to dopamine
+C) It is a direct dopamine agonist
+D) It prevents alpha-synuclein accumulation
+Correct: B
+Explanation: Dopamine cannot cross the blood-brain barrier, but its precursor levodopa can — once in the brain, it is converted to dopamine by DOPA decarboxylase, replenishing depleted dopamine.
+
+#84
+Q: The blood-brain barrier (BBB) is formed by:
+A) Tight junctions between astrocytes
+B) Tight junctions between brain endothelial cells
+C) Myelin sheaths around blood vessels
+D) The meninges
+Correct: B
+Explanation: The BBB is formed by tight junctions between the endothelial cells lining brain capillaries — drugs must be lipid-soluble or use active transport to cross it.
+
+#85
+Q: MAOIs work by:
+A) Blocking dopamine receptors
+B) Inhibiting the enzyme that breaks down monoamines
+C) Blocking serotonin reuptake
+D) Activating GABA receptors
+Correct: B
+Explanation: MAOIs (monoamine oxidase inhibitors) block the enzyme MAO that degrades monoamines (serotonin, norepinephrine, dopamine) — increasing their availability. Dietary tyramine restrictions are necessary.
+
+#86
+Q: Drug tolerance is defined as:
+A) Increased response with repeated use
+B) Reduced response with repeated use, requiring higher doses
+C) Adverse reactions to a drug
+D) Physical dependence
+Correct: B
+Explanation: Drug tolerance is a reduced response to a drug after repeated exposure — requiring higher doses to achieve the same effect, due to receptor downregulation or increased drug metabolism.
+
+#87
+Q: Atypical antipsychotics differ from typical antipsychotics in that they:
+A) Only block D2 receptors
+B) Block both D2 and serotonin receptors, with fewer extrapyramidal side effects
+C) Are not FDA-approved
+D) Have no effect on negative symptoms
+Correct: B
+Explanation: Atypical (second-generation) antipsychotics block both D2 and 5-HT2A receptors — they have fewer extrapyramidal side effects and are more effective for negative symptoms than typical antipsychotics.
+
+#88
+Q: Opioids produce analgesia by acting on:
+A) Dopamine receptors
+B) GABA-A receptors
+C) Mu, delta, and kappa opioid receptors
+D) NMDA receptors
+Correct: C
+Explanation: Opioids bind to mu, delta, and kappa opioid receptors in the brain and spinal cord — reducing pain perception, producing euphoria, and suppressing respiration at high doses.
+
+#89
+Q: What is the mechanism of amphetamine in ADHD treatment?
+A) Blocks reuptake of dopamine and norepinephrine only
+B) Both blocks reuptake and reverses transporters, actively pumping out DA and NE
+C) Only blocks norepinephrine reuptake
+D) Acts on GABA receptors
+Correct: B
+Explanation: Amphetamine both blocks reuptake transporters AND reverses them, actively pumping dopamine and norepinephrine out of the presynaptic neuron — stronger and longer-acting than methylphenidate.
+
+#90
+Q: Lithium is used primarily for:
+A) Schizophrenia
+B) Bipolar disorder mood stabilization
+C) ADHD
+D) Anxiety disorders
+Correct: B
+Explanation: Lithium is a mood stabilizer used in bipolar disorder — it modulates second messenger systems (inositol phosphate, GSK-3β) and has neuroprotective effects. Requires blood level monitoring due to narrow therapeutic window.
+
+#191
+Q: Neuroleptic malignant syndrome (NMS) is characterized by:
+A) Fever, rigidity, altered consciousness, and autonomic instability
+B) Involuntary facial movements only
+C) Sedation and weight gain
+D) Excessive salivation and tremor
+Correct: A
+Explanation: NMS is a rare, life-threatening antipsychotic reaction — FEVER (high), severe muscle rigidity, altered consciousness, and autonomic instability. Caused by sudden dopamine blockade. Medical emergency.
+
+#192
+Q: Serotonin syndrome differs from NMS in that serotonin syndrome:
+A) Is caused by too little serotonin
+B) Is caused by excess serotonergic activity and features clonus/hyperreflexia/tremor rather than lead-pipe rigidity
+C) Only occurs with SSRI overdose
+D) Is not life-threatening
+Correct: B
+Explanation: Serotonin syndrome (excess 5-HT): mental status change + autonomic instability + neuromuscular signs (clonus, hyperreflexia, tremor, hyperthermia). NMS (dopamine blockade): rigidity is 'lead-pipe', onset is slower.
+
+#193
+Q: CYP450 enzyme inhibitors are clinically important because they:
+A) Speed up drug metabolism, reducing drug levels
+B) Slow drug metabolism, raising levels of co-administered drugs — risk of toxicity
+C) Block all drug absorption
+D) Only affect first-pass metabolism
+Correct: B
+Explanation: CYP inhibitors (e.g., fluoxetine inhibits CYP2D6) prevent metabolism of co-administered drugs — raising their plasma levels to potentially toxic concentrations. Drug-drug interactions are a major clinical concern.
+
+#194
+Q: Cholinesterase inhibitors (e.g., donepezil) are used in Alzheimer's disease because:
+A) They clear amyloid plaques
+B) They prevent tau formation
+C) They increase acetylcholine by blocking its breakdown — compensating for cholinergic neuron loss
+D) They block NMDA receptors
+Correct: C
+Explanation: In Alzheimer's, cholinergic neurons in the basal forebrain degenerate — cholinesterase inhibitors compensate by preventing ACh breakdown, increasing its availability in the synapse. Symptomatic benefit, not disease-modifying.
+
+#195
+Q: Physical dependence differs from addiction in that:
+A) Physical dependence always indicates addiction
+B) Physical dependence is physiological adaptation to a drug (can occur with prescribed medications); addiction is compulsive use despite harm
+C) Addiction requires tolerance
+D) Physical dependence only occurs with illicit drugs
+Correct: B
+Explanation: Physical dependence (withdrawal if stopped) can develop with many medications (e.g., antidepressants, corticosteroids, opioids for pain) without addiction. Addiction is compulsive, reward-driven drug seeking despite harmful consequences.
+
+==========================================================
+## 3. STUDY GUIDE (1)
+==========================================================
+
+--- Study Guide #9: Psychopharmacology — Study Guide ---
+
+## Core Pharmacology Concepts
+
+### Pharmacokinetics (ADME): What the Body Does to the Drug
+
+**Absorption:** The process of a drug entering the bloodstream. Oral administration requires absorption from the GI tract. Rate depends on: lipophilicity, drug ionization (acid vs. base), GI motility, and formulation.
+
+**Distribution:** Once in the bloodstream, drugs distribute to tissues. Volume of distribution (Vd) = Dose / Plasma concentration. A large Vd (e.g., diazepam, chlorpromazine) means the drug distributes extensively into tissues (lipophilic, high fat solubility). Drugs must be lipophilic to cross the blood-brain barrier.
+
+**Protein binding:** Many drugs bind to plasma proteins (albumin, α1-acid glycoprotein). Only the UNBOUND (free) fraction is pharmacologically active. Highly protein-bound drugs (diazepam: 99%) have smaller free fraction — drug interactions that displace protein binding can cause toxicity.
+
+**Metabolism:** Primarily hepatic (CYP450 enzymes). Phase I (oxidation/reduction/hydrolysis) → Phase II (conjugation: glucuronidation, sulfation, acetylation). The liver may also convert prodrugs to active forms (codeine → morphine via CYP2D6).
+
+**Excretion:** Primarily renal (glomerular filtration, tubular secretion). Renal failure impairs clearance of renally excreted drugs (e.g., lithium — dangerous accumulation). Also: biliary/fecal excretion.
+
+**First-pass effect:** Orally absorbed drugs pass through the liver before reaching systemic circulation — a fraction is metabolized, reducing bioavailability. High first-pass drugs: morphine (oral bioavailability ~25%), propranolol, lidocaine. IV administration bypasses first-pass.
+
+**Half-life (t1/2):** Time for plasma concentration to fall by 50%. Drugs reach steady state after ~4-5 half-lives; similarly, they are cleared after ~4-5 half-lives after discontinuation. Clinical significance:
+- Short t1/2 (e.g., triazolam): frequent dosing, more rebound/withdrawal risk
+- Long t1/2 (e.g., fluoxetine t1/2 = 2-6 days; norfluoxetine = 7-15 days): less withdrawal, but drug interactions persist weeks after stopping
+
+### Pharmacodynamics: What the Drug Does to the Body
+
+**Agonist:** Binds receptor → activates it (mimics endogenous NT)
+**Partial agonist:** Binds and activates but with less than maximal efficacy — at high doses, it displaces full agonists and reduces response (buprenorphine displaces full opioid agonists)
+**Antagonist:** Binds without activating (competitive — can be overcome with more agonist; irreversible — cannot)
+**Inverse agonist:** Binds and decreases baseline receptor activity
+**Allosteric modulator:** Binds a different site, changing the receptor's response to its ligand (BZDs on GABA-A)
+
+**Tolerance:** Reduced response to a drug with repeated administration — mechanisms: receptor downregulation, desensitization (uncoupling), increased metabolism (CYP induction), and behavioral tolerance.
+
+**Dependence vs. addiction:** Physical dependence = physiological adaptation requiring drug to maintain homeostasis (withdrawal on discontinuation). Addiction (substance use disorder) = compulsive drug-seeking despite consequences — a complex brain disorder involving dopamine reward pathways.
+
+## Antidepressants
+
+### SSRIs (Selective Serotonin Reuptake Inhibitors)
+**Mechanism:** Block SERT → increased synaptic serotonin
+**Examples:** Fluoxetine (Prozac), sertraline (Zoloft), escitalopram (Lexapro), paroxetine (Paxil), citalopram (Celexa)
+**Indications:** Depression, GAD, panic disorder, OCD, PTSD, social anxiety, PMDD
+**Side effects:** Sexual dysfunction (most common long-term complaint), GI upset, initial agitation/anxiety, weight gain (long-term), hyponatremia (via SIADH, especially elderly), serotonin syndrome (with MAOIs)
+**Onset:** 2-4 weeks for antidepressant effect (immediate neurobiological effects on serotonin, but downstream plasticity/BDNF changes take weeks)
+**CYP interactions:** Fluoxetine and paroxetine are potent CYP2D6 inhibitors
+
+### SNRIs (Serotonin-Norepinephrine Reuptake Inhibitors)
+**Mechanism:** Block both SERT and NET
+**Examples:** Venlafaxine (Effexor), duloxetine (Cymbalta), desvenlafaxine (Pristiq), levomilnacipran (Fetzima)
+**Advantages over SSRIs:** Effective for neuropathic pain (duloxetine FDA-approved for diabetic neuropathy, fibromyalgia), broader efficacy in some SSRI non-responders
+**Additional side effects:** Hypertension (NE vasoconstriction, especially high-dose venlafaxine), sweating, discontinuation syndrome (venlafaxine notorious — must taper slowly)
+
+### TCAs (Tricyclic Antidepressants)
+**Mechanism:** Block SERT + NET + multiple other receptors (H1, M1/M3, α1, Na+ channels)
+**Examples:** Amitriptyline, nortriptyline, imipramine, clomipramine (OCD), desipramine
+**Anticholinergic effects (M1/M3 blockade):** Dry mouth, urinary retention, constipation, blurred vision, tachycardia, confusion/delirium (in elderly)
+**Lethality in overdose:** Na+ channel blockade → cardiac arrhythmia (wide QRS, QTc prolongation) → dangerous; not first-line due to safety profile
+**Clinical uses now:** Neuropathic pain, migraine prophylaxis, insomnia (low-dose amitriptyline), OCD (clomipramine)
+
+### MAOIs (Monoamine Oxidase Inhibitors)
+**Mechanism:** Inhibit MAO enzyme → less catecholamine/serotonin breakdown → increased monoamines
+**Irreversible:** Phenelzine, tranylcypromine (non-selective: inhibit both MAO-A and MAO-B)
+**Reversible/selective:** Moclobemide (MAO-A inhibitor — RIMA; fewer dietary restrictions), selegiline (MAO-B inhibitor at low dose — used in Parkinson's; at higher doses inhibits MAO-A)
+**Tyramine reaction (cheese reaction):** Tyramine (in aged cheese, wine, cured meat, fermented foods) is normally metabolized by MAO in the gut wall → with MAOIs blocking this, tyramine enters circulation → massive catecholamine release → hypertensive crisis (explosive headache, stroke risk). Requires tyramine-free diet.
+**Serotonin syndrome (with other serotonergic drugs):** Hyperthermia, muscle rigidity, clonus, autonomic instability, mental status changes — a medical emergency.
+**Indications:** Atypical depression (with reversed neurovegetative features), treatment-resistant depression
+
+### Other Antidepressants
+| Drug | Class | Unique Features |
+|------|-------|----------------|
+| Bupropion (Wellbutrin) | NDRI (NE+DA reuptake inhibitor) | No sexual side effects; also used for smoking cessation; lowers seizure threshold |
+| Mirtazapine (Remeron) | α2/H1/5-HT2/3 antagonist | Sedating (H1), weight-promoting, no sexual SEs; good for insomnia/poor appetite |
+| Vortioxetine (Trintellix) | Multimodal: SERT blocker + 5-HT1A agonist + 5-HT3/7 antagonist | Cognitive benefits; pro-serotonergic |
+| Trazodone | 5-HT2A antagonist + weak SERT inhibitor | Highly sedating low-dose → used as non-habit-forming sleep aid |
+| Esketamine (Spravato) | NMDA antagonist (intranasal) | Rapid-acting (hours); for TRD and MDD with acute suicidality; dissociative SE |
+
+## Antipsychotics
+
+**Dopamine hypothesis:** Positive symptoms of schizophrenia = excess mesolimbic DA. All effective antipsychotics block D2 receptors to some degree.
+
+### Typical (First-Generation) Antipsychotics (FGAs)
+**High-potency:** Haloperidol (Haldol), fluphenazine, thiothixene — potent D2 blockade → high EPS risk, low sedation
+**Low-potency:** Chlorpromazine, thioridazine — less potent D2, more anticholinergic/antihistaminergic → more sedation, less EPS
+
+**EPS (Extrapyramidal Symptoms — from nigrostriatal D2 blockade):**
+- Acute dystonia (within hours-days): Sudden sustained muscle contractions (torticollis, oculogyric crisis) — treat with anticholinergic (benztropine)
+- Akathisia (days-weeks): Subjective restlessness, inner need to move — treat with propranolol, BZD, dose reduction
+- Drug-induced Parkinsonism (weeks): Bradykinesia, rigidity, tremor — treat with anticholinergic or dose reduction
+- Tardive dyskinesia (months-years): Involuntary repetitive oro-facial-lingual movements from D2 receptor upregulation (supersensitivity) — may be irreversible; treat with VMAT2 inhibitors (valbenazine, deutetrabenazine)
+
+### Atypical (Second-Generation) Antipsychotics (SGAs)
+**Mechanism:** Block D2 + 5-HT2A (and variable effects on other receptors). Fast D2 dissociation ("loose binding") hypothesis may explain lower EPS.
+
+| Drug | Key Receptor Profile | Notable Features |
+|------|---------------------|-----------------|
+| Clozapine | D4>D2, 5-HT2A, M, H1, α1 | Most effective for treatment-resistant schizophrenia; risk: agranulocytosis (requires WBC monitoring), seizures, weight gain, myocarditis |
+| Olanzapine | D2, 5-HT2A, M, H1 | High metabolic syndrome risk (weight gain, diabetes, dyslipidemia) |
+| Quetiapine | D2 (weak), 5-HT2A, H1, α1 | Low EPS; sedating; widely used for insomnia/anxiety off-label |
+| Risperidone | D2, 5-HT2A, α1 | Moderate EPS risk; highest prolactin elevation of all SGAs |
+| Aripiprazole | D2 partial agonist, 5-HT1A partial agonist | Low metabolic SE; activating (can worsen akathisia); weight-neutral |
+| Ziprasidone | D2, 5-HT2A, α1, 5-HT/NE reuptake inhibitor | QTc prolongation risk; lowest metabolic effects |
+| Lurasidone | D2, 5-HT2A, 5-HT7, α2C | FDA-approved for bipolar depression; must take with food |
+
+## Mood Stabilizers
+
+**Lithium:** The oldest and most proven mood stabilizer.
+- Mechanisms: Inhibits inositol monophosphatase (depletes PIP2 signaling), inhibits GSK-3β, modulates gene expression/BDNF, neuroprotective
+- Therapeutic range: 0.6-1.2 mEq/L (narrow therapeutic window!)
+- Monitoring: Serum levels, renal function (lithium is renally excreted), thyroid (lithium causes hypothyroidism), EKG (T-wave changes)
+- Toxicity: >1.5 mEq/L → tremor, ataxia; >2.0 → confusion, seizures; >2.5 → cardiac arrhythmia, death
+- Drug interactions: NSAIDs, thiazides, ACE inhibitors → increase lithium levels (reduced renal clearance)
+- Special advantage: Antisuicidal properties (reduces completed suicide by ~50% in bipolar disorder)
+
+**Valproic acid (Valproate, Depakote):**
+- Mechanisms: Na+ channel blockade (stabilizes neuronal membrane), ↑ GABA (inhibits GABA-T), histone deacetylase inhibition, modulates PKC
+- Uses: Bipolar I mania (especially mixed features/rapid cycling), epilepsy (multiple types), migraine prophylaxis
+- Side effects: Teratogenic (neural tube defects — requires folate supplementation, contraindicated in pregnancy), weight gain, hair loss, tremor, hepatotoxicity (rare), polycystic ovarian syndrome
+
+**Lamotrigine (Lamictal):**
+- Mechanism: Blocks voltage-gated Na+ channels → reduces glutamate release
+- Particularly effective for: Bipolar depression (FDA-approved), bipolar maintenance, epilepsy
+- Titration: Must be titrated VERY slowly over 6 weeks (rapid titration → Stevens-Johnson syndrome, a dangerous immune-mediated rash)
+- Drug interaction: Valproate dramatically INCREASES lamotrigine levels (half the dose needed); carbamazepine induces its metabolism
+
+**Carbamazepine (Tegretol):**
+- Na+ channel blocker — effective for bipolar I mania, trigeminal neuralgia, epilepsy
+- Strong CYP3A4 inducer (increases its own metabolism and many other drugs)
+- Risk: Agranulocytosis, hyponatremia (SIADH), teratogen (spina bifida)
+
+## Anxiolytics and Sedative-Hypnotics
+
+**Benzodiazepines:**
+- Mechanism: Positive allosteric modulators of GABA-A receptors — increase Cl- channel OPENING FREQUENCY in response to GABA
+- Used for: Acute anxiety, panic disorder, alcohol withdrawal, seizures, procedural sedation, muscle spasm, insomnia (short-term)
+- Risks: Sedation, cognitive impairment, falls (elderly), tolerance, physical dependence, respiratory depression (especially with opioids or alcohol — synergistic), rebound anxiety
+- Short-acting (high addiction potential): Alprazolam (Xanax), lorazepam (Ativan), triazolam
+- Long-acting (less withdrawal): Diazepam (Valium), clonazepam (Klonopin), chlordiazepoxide (for alcohol withdrawal)
+
+**Z-drugs (non-benzodiazepine hypnotics):**
+- Zolpidem (Ambien), zaleplon, eszopiclone — also act on GABA-A (at BZD site) but more specific for α1 subunit → more sedative-selective, less anxiolytic/muscle relaxant
+- Still carry risks of dependence, amnesia (sleepwalking with complex behaviors), and abuse
+
+**Buspirone:**
+- Partial 5-HT1A agonist → serotonergic modulation; some D2 antagonism
+- Used for: GAD; requires 2-4 weeks for therapeutic effect (not PRN)
+- No sedation, no abuse potential, no withdrawal — but patients expect immediate BZD-like effect and may not persist
+
+## Stimulants (ADHD and Narcolepsy)
+
+| Drug | Mechanism | Duration | Notes |
+|------|-----------|----------|-------|
+| Methylphenidate | Blocks DAT + NET | IR: 4-6h; XR: 8-12h | More gradual; D-MPH is active enantiomer (Focalin) |
+| Amphetamine salts | Blocks + reverses DAT/NET; displaces vesicular DA | IR: 4-6h; XR: 8-12h | Stronger DA effect; lisdexamfetamine (Vyvanse) is pro-drug (longer, smoother) |
+| Modafinil | Uncertain — inhibits DAT; promotes orexin/H | Once daily | Approved narcolepsy; off-label ADHD, shift work; much lower abuse potential |
+
+## Opioid Pharmacology
+
+**Receptor types:** Mu (μ), Kappa (κ), Delta (δ) — all Gi-coupled, reduce neuronal excitability
+- **Mu:** Analgesia, euphoria, respiratory depression, constipation, miosis, physical dependence — target of morphine, oxycodone, fentanyl, heroin
+- **Kappa:** Analgesia, dysphoria, psychotomimetic effects — target of dynorphin, nalbuphine
+- **Delta:** Analgesia, mood modulation
+
+**Key opioid medications:**
+| Drug | Type | Key Feature |
+|------|------|------------|
+| Morphine | Full μ agonist | Prototype; poor oral bioavailability (~25%) from first-pass |
+| Oxycodone | Full μ agonist | Oral bioavailability ~60-87%; common abuse target |
+| Fentanyl | Full μ agonist | 100x more potent than morphine; transdermal patch, IV, nasal |
+| Buprenorphine | Partial μ agonist / κ antagonist | Ceiling on respiratory depression; high receptor affinity (displaces full agonists); Suboxone (+ naloxone sublingual) for OUD |
+| Methadone | Full μ agonist | Long t1/2 (24-36h); NMDA antagonism; QTc prolongation; OUD maintenance |
+| Naloxone | μ antagonist (IV/IN) | Opioid overdose reversal; blocks euphoria in Suboxone |
+| Naltrexone | μ/κ/δ antagonist (oral, long-acting IM) | OUD maintenance; alcohol use disorder (blocks endorphin reinforcement) |
+
+
+##############################################################
+# TOPIC 53 — Objective Measures
+# Counts: flashcards=41, quiz=25, study_guides=1
+##############################################################
+
+==========================================================
+## 1. FLASHCARDS (41)
+==========================================================
+
+[#2359 | easy] Q: What does the WAIS-5 measure and for what age range?
+             A: The Wechsler Adult Intelligence Scale, Fifth Edition is a broadband cognitive ability measure for adolescents and adults (16:0 – 90:11). It is co-normed with the WMS-5 and yields a Full Scale IQ plus five primary indices: VCI, VSI, FRI, WMI, and PSI.
+
+[#2360 | easy] Q: What are the five primary index scores on the WISC-V?
+             A: Verbal Comprehension Index (VCI), Visual Spatial Index (VSI), Fluid Reasoning Index (FRI), Working Memory Index (WMI), and Processing Speed Index (PSI). Together they combine into the Full Scale IQ.
+
+[#2361 | medium] Q: What ages does the WPPSI-IV cover and how is the battery split?
+             A: The Wechsler Preschool and Primary Scale of Intelligence, Fourth Edition covers 2:6 – 7:7. Because young children's abilities differ across the age range, it splits into two age bands (2:6 – 3:11 and 4:0 – 7:7) with battery composition tailored to each band, and yields a Full Scale IQ plus primary indices for verbal, visual-spatial, fluid, working memory, and processing-speed abilities (the youngest band omits some indices).
+
+[#2362 | easy] Q: What is the WASI-II and when is it typically used?
+             A: The Wechsler Abbreviated Scale of Intelligence, Second Edition (6:0 – 90:11) is a brief intellectual screen. A two-subtest form yields a quick Full Scale IQ estimate; a four-subtest form adds Verbal Comprehension and Perceptual Reasoning index estimates. It is used for screening, re-evaluation, or research — not as a substitute for a full battery.
+
+[#2363 | medium] Q: What does the KABC-II measure and what alternative composite does it offer?
+             A: The Kaufman Assessment Battery for Children, Second Edition (3:0 – 18:11) is a children's cognitive battery. It produces a Mental Processing Index (MPI) — a culture-reduced composite that omits acquired knowledge — alongside a Fluid-Crystallized Index (FCI) that includes a knowledge component. This split lets clinicians choose the composite that best fits the child's background.
+
+[#2364 | medium] Q: How does the D-KEFS Color-Word Interference task assess executive function?
+             A: It is a Stroop-style task that measures inhibition of automatic responses — the examinee must suppress reading the color word and instead name the ink color, indexing prepotent response inhibition.
+
+[#2365 | medium] Q: What is the ADOS-2 used for and how is severity quantified?
+             A: The Autism Diagnostic Observation Schedule, Second Edition is a semi-structured observation for autism spectrum disorder. Severity is quantified with the Calibrated Severity Score (CSS) for Social Affect and for Restricted / Repetitive Behaviors. It includes a Toddler Module plus Modules 1–4. Module choice is driven by language level, not age.
+
+[#2366 | medium] Q: What is the Test of Premorbid Functioning (ToPF) used for?
+             A: It estimates pre-injury intellectual functioning by combining word reading performance with demographic variables to generate a Predicted FSIQ and Predicted GAI with confidence intervals — useful for benchmarking current performance against expected baseline.
+
+[#2367 | easy] Q: What is the RBANS designed for?
+             A: The Repeatable Battery for the Assessment of Neuropsychological Status is a brief broadband cognitive measure (12:0 – 89:11), often used with older adults. It yields a Total Scale Index plus domain indices for Immediate Memory, Visuospatial / Constructional, Language, Attention, and Delayed Memory. Parallel forms make it the go-to for serial assessment.
+
+[#2368 | medium] Q: What is the NAB and when is it used?
+             A: The Neuropsychological Assessment Battery (18:0 – 97:11) is a comprehensive adult neuropsychological battery. It yields a Total NAB Index plus module indices for Attention, Language, Memory, Spatial, and Executive Functions, and offers a shorter Screening Module that flags whether deeper testing in any module is warranted.
+
+[#2369 | medium] Q: What is the NEPSY-II designed to do?
+             A: The Developmental NEuroPSYchological Assessment, Second Edition (3:0 – 16:11) is a flexible, child-focused neuropsychological battery. Rather than a single global IQ, it yields domain scores across Attention/Executive Functioning, Language, Memory & Learning, Sensorimotor, Social Perception, and Visuospatial Processing — clinicians select only the subtests relevant to the referral question.
+
+[#2370 | medium] Q: Name three performance validity tests covered in this topic.
+             A: Test of Memory Malingering (TOMM), Medical Symptom Validity Test (MSVT), and the Rey 15-Item Test (REY-15 / FIT). The Pediatric Performance Validity Test Suite (PdPVTS) bundles pediatric versions for ages 5–18.
+
+[#2371 | medium] Q: How does the TOMM detect non-credible memory performance?
+             A: The Test of Memory Malingering presents 50 line-drawing items across two learning trials and an optional retention trial. Because the task looks hard but is actually easy for genuinely impaired patients, performance well below cutoffs on Trial 2 / Retention suggests sub-optimal effort rather than true memory impairment.
+
+[#2372 | hard] Q: What does the CVLT-3 measure and what are its core indices?
+             A: The California Verbal Learning Test, Third Edition assesses verbal learning and memory. Core indices include Total Recall (Trials 1–5 T-score), Short- and Long-Delay Free / Cued Recall, Long-Delay Recognition Hits, False Positives, Discriminability, Response Bias, Intrusions, Repetitions, and Semantic / Serial Clustering. The process scores reveal the strategy behind the score.
+
+[#2373 | medium] Q: What is the ChAMP and what does it cover?
+             A: The Child and Adolescent Memory Profile (5:0 – 21:11) is a brief memory battery for youth. It samples verbal and visual memory across immediate and delayed recall, plus recognition, yielding a memory composite alongside index scores so clinicians can compare strengths and weaknesses across modality and delay.
+
+[#2374 | hard] Q: What does the TOMAL-2 measure?
+             A: The Test of Memory and Learning, Second Edition (5:0 – 59:11) is a broad memory battery. It yields a Composite Memory Index plus indices for Verbal Memory, Nonverbal Memory, Verbal Delayed Recall, Learning, Attention/Concentration, Sequential Memory, Free Recall, and Associative Recall, allowing detailed profiling of memory strengths and weaknesses.
+
+[#2375 | hard] Q: What broad cognitive abilities does the WJ V Cognitive Battery measure?
+             A: Comprehension-Knowledge (vocabulary and general knowledge), Fluid Reasoning (novel problem-solving), Short-Term Working Memory, Processing Speed, Auditory Processing (analyzing speech sounds), Long-Term Storage (encoding new information), Retrieval Fluency (speed of retrieving stored information), and Visual Processing.
+
+[#2376 | medium] Q: What is the WCST used to assess?
+             A: The Wisconsin Card Sorting Task assesses executive functioning — particularly abstract reasoning and cognitive shifting. Key scores include Categories Completed, Perseverative Responses, Perseverative Errors, Failure to Maintain Set, and Conceptual Level Responses.
+
+[#2377 | medium] Q: What do the WIAT-III and KTEA-3 measure?
+             A: Both are comprehensive academic achievement batteries. The WIAT-III (4:0 – 50:11) covers Oral Language, Reading, Written Expression, and Mathematics with a Total Achievement Composite. The KTEA-3 (4:6 – 25:11) yields an Academic Skills Battery composite plus Reading, Math, Written Language, and Oral Language composites.
+
+[#2378 | easy] Q: What is the WRAT5 and what does it cover?
+             A: The Wide Range Achievement Test, Fifth Edition (5:0 – 85:11+) is a brief academic achievement screen. It samples Word Reading, Sentence Comprehension (which combine into a Reading Composite), Spelling, and Math Computation, plus a total achievement composite — useful when a quick achievement snapshot is needed rather than a full battery.
+
+[#2379 | hard] Q: What are the Feifer FAR, FAM, and FAW designed for?
+             A: These are diagnostic academic batteries that look at how a student fails — not just whether they fail. The FAR profiles reading subtypes (e.g., dysphonetic, surface, mixed), the FAM profiles math subtypes (procedural, semantic, etc.), and the FAW profiles writing breakdowns. Each yields an overall index plus process scores that point to instructional targets.
+
+[#2380 | medium] Q: What does the CTOPP-2 assess?
+             A: The Comprehensive Test of Phonological Processing, Second Edition (4:0 – 24:11) measures the phonological skills that underlie reading. It yields composites for Phonological Awareness (manipulating speech sounds), Phonological Memory (holding sound-based information), and Rapid Symbolic / Non-Symbolic Naming (speed of retrieving familiar labels), plus Alternate Phonological Awareness composites for follow-up testing.
+
+[#2381 | medium] Q: What does the CELF-5 measure and what are its key composites?
+             A: The Clinical Evaluation of Language Fundamentals, Fifth Edition (CELF-5: 5:0 – 21:11; CELF-P2 for preschool) is a comprehensive language battery. It yields a Core Language Score plus Receptive Language, Expressive Language, Language Content, Language Structure, and Language Memory indices to characterize language strengths and weaknesses.
+
+[#2382 | medium] Q: How are the PPVT-5 and EVT-3 paired in practice?
+             A: The Peabody Picture Vocabulary Test, Fifth Edition (PPVT-5) measures receptive vocabulary — the examinee points to a picture matching a spoken word. The Expressive Vocabulary Test, Third Edition (EVT-3) measures expressive vocabulary — the examinee names pictures or provides synonyms. Co-normed, they let clinicians compare receptive vs. expressive vocabulary directly.
+
+[#2383 | medium] Q: What is the SCAN-3 and who is it for?
+             A: The Tests for Auditory Processing Disorders (SCAN-3) come in Children (5:0 – 12:11) and Adolescents/Adults (13:0 – 50:11) versions. They screen central auditory processing through tasks like filtered words, auditory figure-ground, competing words, and competing sentences, helping flag when a fuller audiological evaluation is needed.
+
+[#2384 | hard] Q: What does the CPT-III measure and what indices does it yield?
+             A: The Conners Continuous Performance Test, Third Edition is a 14-minute computerized vigilance task. It yields indices including Detectability (d′), Omissions, Commissions, Hit Reaction Time, HRT Standard Deviation, Variability, Perseverations, and HRT by block / by ISI — together flagging inattention, impulsive responding, and inconsistent vigilance.
+
+[#2385 | medium] Q: What does the PASAT measure?
+             A: The Paced Auditory Serial Addition Task (16:0+) presents single digits at a fixed pace and asks the examinee to add each new digit to the one immediately preceding it. Scores reflect sustained attention, working memory, and information-processing speed under pressure — frequently used in MS and TBI evaluations.
+
+[#2386 | easy] Q: What does the BEERY VMI measure?
+             A: The Beery-Buktenica Developmental Test of Visual-Motor Integration measures visual-motor abilities. The main score reflects integration of visual perception with motor control, and supplemental Visual Perception and Motor Coordination scores help isolate which component is driving any difficulty.
+
+[#2387 | medium] Q: Why might a clinician add the BEERY supplemental tests to the main VMI?
+             A: If a child scores low on the main VMI, the supplemental Visual Perception (motor-free) and Motor Coordination (perception-light) scores help pinpoint whether the difficulty stems from the perceptual side, the motor side, or true integration of the two — guiding intervention targets.
+
+[#2388 | easy] Q: What is the Finger Tapping Test (FTT) used for?
+             A: The Finger Tapping Test (15:0 – 90:0) measures fine motor speed. The examinee taps a key as fast as possible across timed trials with each hand. Dominant vs. non-dominant tap rates can flag lateralized motor slowing and are often included in broader neuropsychological screens.
+
+[#2389 | hard] Q: Compare the ADOS-2 and the MIGDAS-2 in autism evaluation.
+             A: Both are observation-based autism measures. The ADOS-2 uses standardized 'presses' and yields algorithm scores plus Calibrated Severity Scores. The MIGDAS-2 (Monteiro Interview Guidelines for Diagnosing the Autism Spectrum, Second Edition) is a sensory-based, conversational protocol with Pre-Verbal/Minimally Verbal, Verbal Child, and Verbal Adolescent/Adult guides — useful when a more naturalistic interaction better fits the examinee.
+
+[#2390 | medium] Q: What is the KADI used for?
+             A: The Krug Asperger's Disorder Index (6:0 – 21:0) is a brief informant rating designed to distinguish Asperger's-style presentations from high-functioning autism and from non-spectrum conditions. It yields a total index plus diagnostic decision categories — useful as a screen rather than a stand-alone diagnostic tool.
+
+[#2391 | medium] Q: What is the CAM and where is it used?
+             A: The Confusion Assessment Method is a brief, structured bedside protocol used to detect delirium. Its algorithm requires acute onset/fluctuating course and inattention, plus either disorganized thinking or altered consciousness. It is widely used in hospital and consult-liaison settings.
+
+[#2392 | hard] Q: What is the R-PAS and how does it differ from older Rorschach systems?
+             A: The Rorschach Performance Assessment System replaces older systems with international norms, an optimized R-Optimized administration that targets ~24 responses, and structured Page-1/Page-2 indices (e.g., EII-3, SC-Comp, TP-Comp). It provides clearer psychometric grounding than legacy approaches.
+
+[#2393 | medium] Q: How are the TAT and Roberts-2 different from the R-PAS?
+             A: The TAT (Thematic Apperception Test) and Roberts-2 use story-telling to ambiguous picture cards and are scored for thematic content. They are generally interpreted clinically/qualitatively rather than via the standardized indices used by the R-PAS, which has explicit administration rules and quantitative composite scores.
+
+[#2394 | easy] Q: What does the Rotter Sentence Completion measure?
+             A: The Rotter Incomplete Sentences Blank presents stems (e.g., 'I wish…') for the examinee to finish. Responses are scored for adjustment level along a continuum and reviewed qualitatively for themes — used as a brief projective adjunct rather than a stand-alone diagnostic tool.
+
+[#2395 | medium] Q: Why is the MSVT an embedded performance validity option?
+             A: The Medical Symptom Validity Test is a brief, computerized verbal-recognition task with effort indicators (Immediate Recognition, Delayed Recognition, Consistency) and a memory profile that distinguishes likely effort failure from genuine impairment, while also yielding usable memory data — making it efficient to embed in larger batteries.
+
+[#2396 | medium] Q: What is the MVP and who is it for?
+             A: The Memory Validity Profile (5:0 – 16:11) is a pediatric performance validity measure that uses age-appropriate verbal and visual recognition trials to flag sub-optimal effort in children — important because adult validity cutoffs are not appropriate for younger examinees.
+
+[#2397 | medium] Q: What does the BAYLEY-III assess and across what domains?
+             A: The Bayley Scales of Infant and Toddler Development, Third Edition (1 month – 42 months) is the gold-standard developmental assessment for infants and toddlers. It yields composite scores for Cognitive, Language (Receptive + Expressive), and Motor (Fine + Gross) development, with caregiver-report scales for Social-Emotional and Adaptive Behavior.
+
+[#2398 | easy] Q: What is the BSRA and when is it used?
+             A: The Bracken School Readiness Assessment, Third Edition (3:0 – 6:11) screens early concept knowledge — colors, letters, numbers/counting, sizes/comparisons, and shapes — to gauge readiness for kindergarten and early elementary instruction. It yields a School Readiness Composite plus subtest scores.
+
+[#2399 | hard] Q: What is the ACS and how is it used with the Wechsler family?
+             A: The Advanced Clinical Solutions is a supplementary kit used with Wechsler scales (e.g., WAIS, WMS). It provides additional indices for premorbid estimation, social cognition, effort/validity, and demographic/test-pair comparisons, allowing clinicians to extract more clinically relevant information from administered Wechsler tasks.
+
+==========================================================
+## 2. QUIZ QUESTIONS (25)
+==========================================================
+
+#1415
+Q: Which measure is co-normed with the WMS-5 and is intended for ages 16:0 to 90:11?
+A) WAIS-5
+B) WISC-V
+C) WPPSI-IV
+D) WASI-II
+Correct: A
+Explanation: The Wechsler Adult Intelligence Scale, Fifth Edition (WAIS-5) is co-normed with the WMS-5 and covers ages 16:0 – 90:11. WISC-V covers children, WPPSI-IV covers preschoolers, and WASI-II is a brief screen.
+
+#1416
+Q: A clinician needs a quick estimate of intellectual functioning for a re-evaluation. Which measure is best suited?
+A) WAIS-5
+B) WASI-II
+C) KABC-II
+D) WJ V Cognitive
+Correct: B
+Explanation: The Wechsler Abbreviated Scale of Intelligence, Second Edition (WASI-II) is a brief intellectual screen with two- and four-subtest forms that yield quick FSIQ estimates — well suited for re-evaluations and screening, not full diagnosis.
+
+#1417
+Q: Which children's cognitive battery offers a culture-reduced composite that omits acquired knowledge alongside a traditional knowledge-inclusive composite?
+A) WISC-V
+B) WPPSI-IV
+C) KABC-II
+D) RBANS
+Correct: C
+Explanation: The Kaufman Assessment Battery for Children, Second Edition (KABC-II) offers the Mental Processing Index (MPI), a culture-reduced composite, alongside the Fluid-Crystallized Index (FCI), which includes acquired knowledge.
+
+#1418
+Q: Which D-KEFS task most directly measures inhibition of automatic responses?
+A) Tower
+B) Trail Making
+C) Color-Word Interference
+D) Twenty Questions
+Correct: C
+Explanation: Color-Word Interference is a Stroop-style task targeting inhibition of automatic responses. Tower taps planning, Trail Making taps cognitive flexibility, and Twenty Questions taps deductive reasoning.
+
+#1419
+Q: Which performance validity test uses a 15-item visual recognition format?
+A) TOMM
+B) MSVT
+C) Rey-15 (FIT)
+D) PdPVTS
+Correct: C
+Explanation: The Rey 15-Item Visual Memory Test (also called the FIT) presents 15 simple items and yields total correct, recognition, and combined scores with pass / fail cutoffs.
+
+#1420
+Q: Which performance validity measure is specifically designed for pediatric examinees (5:0 – 16:11)?
+A) TOMM
+B) MSVT
+C) Rey-15 (FIT)
+D) MVP
+Correct: D
+Explanation: The Memory Validity Profile (MVP) uses age-appropriate verbal and visual recognition trials to flag sub-optimal effort in children, since adult cutoffs are not appropriate for younger examinees.
+
+#1421
+Q: Which broadband cognitive battery is brief, repeatable, and frequently used with older adults?
+A) NAB
+B) NEPSY-II
+C) RBANS
+D) WJ V
+Correct: C
+Explanation: The RBANS is brief, repeatable, and frequently used with older adults — yielding a Total Scale Index and five domain indices.
+
+#1422
+Q: Which child-focused neuropsychological battery is organized into Attention/Executive, Language, Memory & Learning, Sensorimotor, Social Perception, and Visuospatial domains?
+A) WISC-V
+B) NEPSY-II
+C) KABC-II
+D) BAYLEY-III
+Correct: B
+Explanation: The NEPSY-II (Developmental NEuroPSYchological Assessment, Second Edition) is organized by neuropsychological domains, with clinicians selecting only the subtests relevant to the referral question.
+
+#1423
+Q: Which projective measure follows a standardized administration system with structured indices like EII-3 and SC-Comp?
+A) TAT
+B) Roberts-2
+C) R-PAS
+D) Rotter Sentence Completion
+Correct: C
+Explanation: The Rorschach Performance Assessment System (R-PAS) provides standardized administration and structured indices including EII-3, SC-Comp, and TP-Comp on Pages 1 and 2.
+
+#1424
+Q: Which test estimates premorbid intellectual functioning?
+A) ToPF
+B) TOMAL-2
+C) WCST
+D) PASAT
+Correct: A
+Explanation: The Test of Premorbid Functioning combines word reading and demographic data to predict pre-injury FSIQ and GAI with confidence intervals.
+
+#1425
+Q: Which measure assesses verbal learning and memory and yields process scores like Semantic / Serial Clustering and Discriminability?
+A) CVLT-3
+B) ChAMP
+C) TOMAL-2
+D) RBANS
+Correct: A
+Explanation: The California Verbal Learning Test, Third Edition (CVLT-3) yields detailed process scores — including clustering strategy, discriminability, response bias, intrusions, and repetitions — alongside total recall and recognition indices.
+
+#1426
+Q: Which measure is the gold-standard developmental assessment for infants and toddlers (1 – 42 months)?
+A) BSRA
+B) BAYLEY-III
+C) WPPSI-IV
+D) KABC-II
+Correct: B
+Explanation: The Bayley Scales of Infant and Toddler Development, Third Edition is the standard infant/toddler developmental assessment, yielding Cognitive, Language, Motor, Social-Emotional, and Adaptive composites.
+
+#1427
+Q: Which brief screener checks early concept knowledge — colors, letters, numbers, sizes, and shapes — for kindergarten readiness?
+A) BSRA
+B) WIAT-III
+C) KTEA-3
+D) WRAT5
+Correct: A
+Explanation: The Bracken School Readiness Assessment, Third Edition (3:0 – 6:11) screens early concept knowledge to gauge readiness for kindergarten and early elementary instruction.
+
+#1428
+Q: Which two co-normed measures pair receptive vocabulary with expressive vocabulary?
+A) CELF-5 and CASL
+B) PPVT-5 and EVT-3
+C) WIAT-III and KTEA-3
+D) FAR and FAW
+Correct: B
+Explanation: The Peabody Picture Vocabulary Test, Fifth Edition (receptive) and Expressive Vocabulary Test, Third Edition (expressive) are co-normed, allowing direct comparison of receptive vs. expressive vocabulary.
+
+#1429
+Q: Which measure samples Phonological Awareness, Phonological Memory, and Rapid Naming?
+A) CTOPP-2
+B) CELF-5
+C) FAR
+D) DST-II
+Correct: A
+Explanation: The Comprehensive Test of Phonological Processing, Second Edition (CTOPP-2) measures the phonological skills underlying reading: phonological awareness, phonological memory, and rapid naming.
+
+#1430
+Q: Which measure most directly assesses sustained attention and information-processing speed under pressure using paced auditory addition?
+A) CPT-III
+B) PASAT
+C) TEA
+D) WCST
+Correct: B
+Explanation: The Paced Auditory Serial Addition Task (PASAT) presents single digits at a fixed pace and asks the examinee to add each new digit to the prior one — taxing sustained attention, working memory, and processing speed.
+
+#1431
+Q: Which measure is a 14-minute computerized vigilance task yielding indices like Detectability, Omissions, and HRT Variability?
+A) PASAT
+B) TEA
+C) CPT-III
+D) WCST
+Correct: C
+Explanation: The Conners Continuous Performance Test, Third Edition (CPT-III) is a 14-minute computerized vigilance task with indices including Detectability, Omissions, Commissions, Hit Reaction Time, and HRT Variability.
+
+#1432
+Q: Which measure assesses executive functioning by requiring the examinee to discover and shift sorting principles based on feedback?
+A) WCST
+B) D-KEFS Tower
+C) PASAT
+D) CPT-III
+Correct: A
+Explanation: The Wisconsin Card Sorting Task assesses abstract reasoning and cognitive shifting, with key indices like Categories Completed, Perseverative Responses, and Failure to Maintain Set.
+
+#1433
+Q: Which measure is the brief bedside protocol used to detect delirium based on acute onset, inattention, and disorganized thinking or altered consciousness?
+A) TOMM
+B) RBANS
+C) CAM
+D) MSVT
+Correct: C
+Explanation: The Confusion Assessment Method (CAM) is a brief bedside protocol whose algorithm requires acute onset/fluctuating course and inattention, plus either disorganized thinking or altered consciousness.
+
+#1434
+Q: Which measure assesses visual-motor integration and offers supplemental Visual Perception and Motor Coordination scores?
+A) WRAVMA
+B) BEERY (VMI)
+C) FTT
+D) BSRA
+Correct: B
+Explanation: The Beery-Buktenica Developmental Test of Visual-Motor Integration (BEERY VMI) measures integration of visual perception with motor control, with supplemental Visual Perception and Motor Coordination scores to isolate the source of any difficulty.
+
+#1435
+Q: Which battery is the comprehensive adult neuropsychological measure with modules for Attention, Language, Memory, Spatial, and Executive Functions plus a Screening Module?
+A) RBANS
+B) NAB
+C) WJ V Cognitive
+D) NEPSY-II
+Correct: B
+Explanation: The Neuropsychological Assessment Battery (NAB; 18:0 – 97:11) yields a Total NAB Index plus module indices for Attention, Language, Memory, Spatial, and Executive Functions, and offers a Screening Module to flag where deeper testing is needed.
+
+#1436
+Q: Which observation-based autism measure uses sensory-based, conversational guides for Pre-Verbal/Minimally Verbal, Verbal Child, and Verbal Adolescent/Adult examinees?
+A) ADOS-2
+B) MIGDAS-2
+C) KADI
+D) SRS-2
+Correct: B
+Explanation: The Monteiro Interview Guidelines for Diagnosing the Autism Spectrum, Second Edition (MIGDAS-2) is a sensory-based, conversational autism protocol with guides matched to language level.
+
+#1437
+Q: Which Feifer battery profiles different reading subtypes to guide instructional targeting?
+A) FAM
+B) FAW
+C) FAR
+D) TOD
+Correct: C
+Explanation: The Feifer Assessment of Reading (FAR) profiles reading breakdown subtypes (e.g., dysphonetic, surface, mixed) and yields process scores that point to instructional targets.
+
+#1438
+Q: Which measure most directly samples fine motor speed across dominant and non-dominant hands?
+A) BEERY (VMI)
+B) WRAVMA
+C) FTT
+D) PASAT
+Correct: C
+Explanation: The Finger Tapping Test (FTT) measures fine motor speed by having the examinee tap a key as fast as possible across timed trials with each hand, often flagging lateralized motor slowing.
+
+#1439
+Q: Which kit is a supplementary set used with Wechsler scales for premorbid estimation, social cognition, and effort/validity indices?
+A) ACS
+B) ToPF
+C) NAB
+D) RBANS
+Correct: A
+Explanation: The Advanced Clinical Solutions (ACS) is a supplementary kit used with Wechsler scales (e.g., WAIS, WMS) to provide additional indices including premorbid estimation, social cognition, and effort/validity.
+
+==========================================================
+## 3. STUDY GUIDE (1)
+==========================================================
+
+--- Study Guide #79: Objective Measures — Reference Guide ---
+
+# Objective Measures
+
+Objective measures are standardized, performance-based instruments where the examinee actively completes tasks and responses are scored against normative data. Each measure below is grouped by what it primarily assesses, and every card uses the same scannable layout so you can compare instruments quickly.
+
+## How to use this guide
+
+- **Skim the master index first** to anchor where each test lives.
+- **Use the quick-reference table** at the top of each group to compare age range and what each test covers at a glance.
+- **Read the cards** when you need depth — every card lists the test's age range followed by every index, composite, or scale you'd see on a report, with a brief plain-English description of what it measures.
+- **For exam-style recall**, focus on the headline composite for each test plus the names and meanings of its primary indices.
+
+## Master index
+
+Jump to a category below. Within each category you'll find a quick-reference table and one card per measure.
+
+| Group | Instruments |
+|---|---|
+| **Broadband cognitive and intellectual batteries** | WAIS-5, WISC-V, WPPSI-IV, WASI-II, KABC-II, RBANS, NAB, NEPSY-II, WJ V, BAYLEY-III, BSRA, ACS |
+| **Memory** | CVLT-3, ChAMP, TOMAL-2 |
+| **Academic achievement and learning disabilities** | KTEA-3, WIAT-III, WRAT5, FAR, FAM, FAW, TOD, CTOPP-2, DEST-II, DST-J, DST-II |
+| **Language and communication** | CELF-5 / CELF-P2, CASL / CASL-II, PPVT-5, EVT-3, PVAT, CAPs, SCAN-3 |
+| **Attention and executive function** | D-KEFS, WCST, CPT-III, PASAT, TEA, TEA-Ch |
+| **Motor and visual-motor** | BEERY (VMI), WRAVMA, FTT |
+| **Autism and developmental diagnostic measures** | ADOS-2, MIGDAS-2, KADI, CAM |
+| **Projective and performance-based personality** | R-PAS, TAT, Roberts-2, Sentence Completion |
+| **Performance validity and premorbid functioning** | TOMM, MSVT, MVP, REY-15 (FIT), PdPVTS, ToPF |
+
+## Broadband cognitive and intellectual batteries
+
+General-ability batteries used to characterize overall intellectual functioning across verbal, nonverbal, working memory, processing speed, and reasoning domains. Most produce a global composite (e.g., FSIQ) plus index-level scores.
+
+| Test | Age range | Measures |
+|---|---|---|
+| **WAIS-5** | 16:0 – 90:11 | Verbal Comprehension, Visual Spatial, Fluid Reasoning, Working Memory, Processing Speed |
+| **WISC-V** | 6:0 – 16:11 | Verbal Comprehension, Visual Spatial, Fluid Reasoning, Working Memory, Processing Speed |
+| **WPPSI-IV** | 2:6 – 7:7 | Verbal Comprehension, Visual Spatial, Fluid Reasoning, Working Memory, Processing Speed |
+| **WASI-II** | 6:0 – 90:11 | Verbal Comprehension, Perceptual Reasoning |
+| **KABC-II** | 3:0 – 18:11 | Sequential Processing, Simultaneous Processing, Learning, Planning, Knowledge |
+| **RBANS** | 12:0 – 89:11 | Immediate Memory, Visuospatial / Constructional, Language, Attention, Delayed Memory |
+| **NAB** | 18:0 – 97:11 | Attention, Language, Memory, Spatial, Executive Functions |
+| **NEPSY-II** | 3:0 – 16:11 | Attention / Executive Functions, Language, Memory and Learning, Sensorimotor, Visuospatial Processing, Social Perception |
+| **WJ V** | 2:0 – 90:11 | Cognitive abilities, Academic achievement |
+| **BAYLEY-III** | 1 mo – 42 mo | Cognitive, Language (Receptive / Expressive), Motor (Gross / Fine), Social-Emotional, Adaptive Behavior |
+| **BSRA** | Pre-K – 2nd grade | Colors, Letters / Sounds, Numbers / Counting, Sizes / Comparisons, Shapes |
+| **ACS** | 16:0 – 90:11 | Social Cognition, Effort / Validity, Daily Living Skills, Premorbid Functioning |
+
+### WAIS-5 — Wechsler Adult Intelligence Scale, Fifth Edition
+
+Age range: 16:0 – 90:11
+
+**Indices**
+- **Full Scale IQ (FSIQ)** — overall intellectual ability across the five primary indices; the headline summary score
+- **Verbal Comprehension Index (VCI)** — verbal reasoning, vocabulary, and acquired word knowledge
+- **Visual Spatial Index (VSI)** — visual perception, spatial reasoning, and the ability to construct or manipulate visual designs
+- **Fluid Reasoning Index (FRI)** — novel problem-solving and inductive / quantitative reasoning with minimal reliance on prior knowledge
+- **Working Memory Index (WMI)** — short-term auditory storage and the ability to mentally manipulate that information
+- **Processing Speed Index (PSI)** — speed and efficiency of simple visual scanning and graphomotor responding
+- **General Ability Index (GAI)** — VCI + VSI + FRI; an estimate of overall ability that pulls less from working memory and processing speed
+- **Cognitive Proficiency Index (CPI)** — WMI + PSI; reflects the efficiency with which cognitive material is registered and acted on
+- **Nonverbal Index (NVI)** — overall ability estimate with reduced verbal demands; useful when language is a confound
+- **Nonmotor Index (NMI)** — overall ability with minimal motor and graphomotor demands
+- **Verbal Expanded Crystallized Index (VECI)** — broader sample of acquired verbal knowledge than VCI alone
+- **Expanded Fluid Index (EFI)** — broader sample of fluid-reasoning performance
+- **Quantitative Reasoning Index (QRI)** — numerical and quantitative reasoning
+- **Expanded Processing Speed Index (EPSI)** — broader sample of processing-speed performance
+- **Multidomain Reasoning Plus Speed Index (MRPSI)** — reasoning under speeded conditions
+- **Auditory Working Memory Index — Recall (AWMI-R)** — recall component of auditory working memory
+- **Auditory Working Memory Index — Manipulation (AWMI-M)** — mental manipulation component of auditory working memory
+- **Expanded Working Memory Index (EWMI)** — broader sample of working-memory performance across modalities
+- **Expanded Visual Spatial Index (EVSI)** — broader sample of visual-spatial performance
+- **Visual Working Memory Index (VWMI)** — short-term storage and manipulation of visual information
+- **Visual Reasoning Index (VRI)** — reasoning with primarily visual material
+
+**Key notes**
+- Co-normed with the WMS-5 — pair them when memory and intellect are both in question.
+
+### WISC-V — Wechsler Intelligence Scale for Children, Fifth Edition
+
+Age range: 6:0 – 16:11
+
+**Indices**
+- **Full Scale IQ (FSIQ)** — overall intellectual ability across the five primary indices
+- **Verbal Comprehension Index (VCI)** — verbal reasoning, vocabulary, and word knowledge
+- **Visual Spatial Index (VSI)** — visual perception, spatial reasoning, and design construction
+- **Fluid Reasoning Index (FRI)** — abstract problem-solving and inductive reasoning with novel material
+- **Working Memory Index (WMI)** — short-term storage and mental manipulation of auditory information
+- **Processing Speed Index (PSI)** — speed and accuracy of simple visual processing under time limits
+- **General Ability Index (GAI)** — overall ability estimate from the verbal and reasoning indices; less affected by working memory and processing speed
+- **Cognitive Proficiency Index (CPI)** — efficiency composite combining working memory and processing speed
+- **Nonverbal Index (NVI)** — overall ability with reduced verbal demands
+- **Expanded Fluid Index (EFI)** — broader sample of fluid-reasoning performance
+- **Quantitative Reasoning Index (QRI)** — numerical and quantitative reasoning
+
+### WPPSI-IV — Wechsler Preschool and Primary Scale of Intelligence, Fourth Edition
+
+Age range: 2:6 – 7:7
+
+**Indices**
+- **Full Scale IQ (FSIQ)** — overall intellectual ability across the available age-appropriate indices
+- **General Ability Index (GAI)** — verbal and visual-spatial composite, less affected by working memory and processing speed
+- **Verbal Comprehension Index (VCI)** — early vocabulary, word knowledge, and verbal reasoning (all ages)
+- **Visual Spatial Index (VSI)** — visual perception and basic spatial reasoning (all ages)
+- **Fluid Reasoning Index (FRI)** — early inductive and quantitative reasoning (ages 4:0 – 7:7)
+- **Working Memory Index (WMI)** — short-term storage of visual and verbal information (ages 4:0 – 7:7)
+- **Processing Speed Index (PSI)** — early visual scanning and graphomotor speed (ages 4:0 – 7:7)
+
+**Key notes**
+- Younger band (2:6 – 3:11) yields VCI, VSI, and FSIQ only; the full five-index profile starts at 4:0.
+
+### WASI-II — Wechsler Abbreviated Scale of Intelligence, Second Edition
+
+Age range: 6:0 – 90:11
+
+**Indices**
+- **Full Scale IQ — 2 (FSIQ-2)** — quickest estimate of overall ability
+- **Full Scale IQ — 4 (FSIQ-4)** — more reliable estimate of overall ability
+- **Verbal Comprehension Index (VCI)** — verbal reasoning and word knowledge
+- **Perceptual Reasoning Index (PRI)** — visual-spatial and fluid reasoning
+
+**Key notes**
+- Pick FSIQ-2 for a fast screen; FSIQ-4 when you need a more dependable estimate.
+
+### KABC-II — Kaufman Assessment Battery for Children, Second Edition
+
+Age range: 3:0 – 18:11
+
+**Indices**
+- **Mental Processing Index (MPI)** — overall ability estimate built from reasoning, memory, and visual processing; pulls minimally from acquired knowledge, useful when crystallized knowledge could be a confound
+- **Fluid-Crystallized Index (FCI)** — overall ability estimate that includes acquired knowledge alongside reasoning and processing
+- **Sequential Processing scale** — short-term and working memory for information presented in serial order
+- **Simultaneous Processing scale** — visual processing and the ability to integrate spatial information into a whole
+- **Learning scale** — paired-associate learning and storage of new information
+- **Planning scale** — fluid reasoning and strategy formation (school-age and older)
+- **Knowledge scale** — vocabulary and acquired verbal knowledge (school-age and older)
+
+**Key notes**
+- Use the MPI when language or cultural background could disadvantage a knowledge-loaded score; use the FCI when acquired learning is part of the question.
+
+### RBANS — Repeatable Battery for the Assessment of Neuropsychological Status
+
+Age range: 12:0 – 89:11
+
+**Indices**
+- **Total Scale Index** — overall cognitive estimate across the five domains
+- **Immediate Memory Index** — list and story learning across initial trials
+- **Visuospatial / Constructional Index** — visual perception, line orientation, and figure copy
+- **Language Index** — picture naming and semantic fluency
+- **Attention Index** — basic attention and short-term auditory span
+- **Delayed Memory Index** — recall and recognition of list, story, and figure information after a delay
+
+**Key notes**
+- Parallel forms make it the go-to for serial assessment after stroke or traumatic brain injury.
+
+### NAB — Neuropsychological Assessment Battery
+
+Age range: 18:0 – 97:11
+
+**Indices**
+- **Total NAB Index** — overall cognitive estimate across all five modules
+- **Attention Module Index** — basic and complex attention, working memory, and processing speed
+- **Language Module Index** — naming, comprehension, reading, and writing
+- **Memory Module Index** — verbal and visual learning and recall
+- **Spatial Module Index** — visual discrimination, design construction, and visuospatial judgment
+- **Executive Functions Module Index** — concept formation, generative fluency, and judgment
+
+### NEPSY-II — Developmental NEuroPSYchological Assessment, Second Edition
+
+Age range: 3:0 – 16:11
+
+**Indices**
+- **Attention and Executive Functioning domain** — sustained attention, inhibition, set-shifting, and planning
+- **Language domain** — phonological processing, oral comprehension, and verbal generativity
+- **Memory and Learning domain** — verbal and visual encoding, recall, and recognition
+- **Sensorimotor domain** — fine motor control, imitation, and sensory perception
+- **Visuospatial Processing domain** — visual discrimination, geometric reasoning, and route finding
+- **Social Perception domain** — recognition of facial affect and theory of mind
+
+**Key notes**
+- There is no global IQ-equivalent — interpret at the domain level.
+
+### WJ V — Woodcock-Johnson Tests, Fifth Edition
+
+Age range: 2:0 – 90:11
+
+**Indices**
+- **General Intellectual Ability (GIA)** — overall cognitive estimate from the cognitive battery
+- **Brief Intellectual Ability (BIA)** — quick estimate of overall ability
+- **Comprehension-Knowledge cluster** — vocabulary, general knowledge, and verbal reasoning
+- **Fluid Reasoning cluster** — novel problem solving and inductive / deductive reasoning
+- **Short-Term Working Memory cluster** — short-term storage and mental manipulation
+- **Processing Speed cluster** — speed of simple cognitive tasks under timed conditions
+- **Auditory Processing cluster** — analysis and synthesis of speech sounds
+- **Long-Term Storage cluster** — encoding and storage of new information into long-term memory
+- **Retrieval Fluency cluster** — speed and ease of retrieving stored information
+- **Visual Processing cluster** — analyzing and manipulating visual patterns and spatial information
+- **Broad Achievement Composite** — overall academic achievement across the academic clusters
+- **Reading cluster** — word identification, reading fluency, and comprehension
+- **Math cluster** — calculation, fluency, and applied problem solving
+- **Written Language cluster** — spelling, writing fluency, and written expression
+- **Oral Language cluster** — listening comprehension and oral expression
+- **Academic Knowledge cluster** — knowledge of science, social studies, and humanities content
+- **Academic Skills, Academic Fluency, and Academic Applications composites** — cross-domain measures of basic skill, speeded performance, and applied use
+
+**Key notes**
+- Cognitive and achievement batteries can be co-administered, so cognitive-academic discrepancies are easy to interpret on the same normative sample.
+
+### BAYLEY-III — Bayley Scales of Infant and Toddler Development, Third Edition
+
+Age range: 1 mo – 42 mo
+
+**Indices**
+- **Cognitive Scale Index** — early problem solving, exploration, and concept development
+- **Receptive Communication scale** — what the child understands from spoken language and gesture
+- **Expressive Communication scale** — what the child produces verbally and pre-verbally
+- **Language Composite** — combined Receptive + Expressive Communication
+- **Fine Motor scale** — precise grasping, manipulation, and visual-motor coordination
+- **Gross Motor scale** — large-muscle control, balance, and locomotion
+- **Motor Composite** — combined Fine + Gross Motor
+- **Social-Emotional Scale (caregiver report)** — interactive engagement, self-regulation, and emotional reciprocity
+- **Adaptive Behavior Composite (caregiver report)** — daily-living, social, and conceptual functioning
+
+### BSRA — Bracken School Readiness Assessment, Third Edition
+
+Age range: Pre-K – 2nd grade
+
+**Indices**
+- **School Readiness Composite (SRC)** — overall readiness across the early-concept domains assessed
+- **Domain scores** — Colors, Letters / Sounds, Numbers / Counting, Sizes / Comparisons, and Shapes
+
+### ACS — Advanced Clinical Solutions
+
+Age range: 16:0 – 90:11
+
+**Indices**
+- **Social Perception Score** — recognition of facial affect and prosody
+- **Word Choice and Reliable Digit Span** — embedded effort / validity scores
+- **Activities of Daily Living Scale (ADLS)** — informant-rated everyday functioning
+- **Test of Premorbid Functioning (ToPF)** — predicted FSIQ and GAI based on word reading and demographics
+
+## Memory
+
+Standardized verbal and visual memory measures evaluating encoding, storage, retrieval, learning curves, and recognition.
+
+| Test | Age range | Measures |
+|---|---|---|
+| **CVLT-3** | 16:0 – 89:11 | List Learning across five trials, Short-Delay Free / Cued Recall, Long-Delay Free / Cued Recall, Recognition with false positives |
+| **ChAMP** | 5:0 – 21:11 | Verbal Memory, Visual Memory |
+| **TOMAL-2** | 5:0 – 59:11 | Core Memory Indices, Supplementary Memory Indices, Delayed Recall, Attention / Concentration |
+
+### CVLT-3 — California Verbal Learning Test, Third Edition
+
+Age range: 16:0 – 89:11
+
+**Indices**
+- **Total Recall (Trials 1–5)** — total words recalled across the five learning trials; the headline learning score
+- **Short-Delay Free Recall** — words recalled spontaneously after the interference list
+- **Short-Delay Cued Recall** — words recalled after semantic category cues
+- **Long-Delay Free Recall** — spontaneous recall after a 20-minute delay
+- **Long-Delay Cued Recall** — recall after the long delay with semantic cues
+- **Long-Delay Recognition Hits and False Positives** — discriminating learned words from foils
+- **Discriminability Index** — overall accuracy of recognition (hits versus false positives)
+- **Response Bias (c)** — tendency to say 'yes' versus 'no' on recognition
+- **Process scores — Intrusions, Repetitions, Semantic / Serial Clustering** — reveal the learning strategy used, not just the totals
+
+**Key notes**
+- Process scores (intrusions, clustering, response bias) reveal the strategy behind the score, not just the headline number.
+
+### ChAMP — Child and Adolescent Memory Profile
+
+Age range: 5:0 – 21:11
+
+**Indices**
+- **Verbal Memory Index** — encoding and recall of word-list and story material
+- **Visual Memory Index** — encoding and recall of visual designs and locations
+- **Learning and Memory Index** — overall composite combining verbal and visual learning
+
+### TOMAL-2 — Test of Memory and Learning, Second Edition
+
+Age range: 5:0 – 59:11
+
+**Indices**
+- **Composite Memory Index (CMI)** — overall memory composite across verbal and nonverbal material
+- **Verbal Memory Index (VMI)** — list, story, and paired-associate verbal learning
+- **Nonverbal Memory Index (NMI)** — recall of visual designs, locations, and faces
+- **Delayed Recall Index (DRI)** — retention of learned material after a delay
+- **Learning Index (LI)** — improvement across repeated learning trials
+- **Attention / Concentration Index (ACI)** — short-term attention and digit / letter span
+
+## Academic achievement and learning disabilities
+
+Performance-based achievement batteries and dyslexia / dyscalculia / dysgraphia screeners. Used for educational planning, eligibility decisions, and characterizing specific learning disorders.
+
+| Test | Age range | Measures |
+|---|---|---|
+| **KTEA-3** | 4:6 – 25:11 | Reading, Math, Written Language, Oral Language, Academic Skills Battery |
+| **WIAT-III** | 4:0 – 50:11 | Oral Language, Total Reading, Basic Reading, Reading Comprehension & Fluency, Written Expression, Mathematics, Math Fluency |
+| **WRAT5** | 5:0 – 85:11 | Word Reading, Sentence Comprehension, Spelling, Math Computation |
+| **FAR** | 4:0 – 21:11 | Phonological Dyslexia, Surface Dyslexia, Mixed Dyslexia |
+| **FAM** | 4:0 – 21:11 | Procedural Dyscalculia, Verbal Dyscalculia, Semantic Dyscalculia |
+| **FAW** | 4:0 – 21:11 | Phonological Dysgraphia, Surface Dysgraphia, Mixed Dysgraphia |
+| **TOD** | 5:0 – 89:11 | Phonological Awareness, Rapid Automatized Naming, Orthographic Processing, Reading Fluency, Reading Comprehension |
+| **CTOPP-2** | 4:0 – 24:11 | Phonological Awareness, Phonological Memory, Rapid Symbolic Naming, Rapid Non-Symbolic Naming |
+| **DEST-II** | 4:6 – 6:5 | Rapid Naming, Bead Threading, Phonological Discrimination, Postural Stability, Rhyme, Sound Order, Letter Knowledge |
+| **DST-J** | 6:6 – 11:5 | Rapid Naming, Bead Threading, Phonemic Segmentation, Backwards Digit Span, Nonsense Passage Reading, Spoonerisms |
+| **DST-II** | 4:6 – 65+ | Rapid Naming, Bead Threading, Phonemic Segmentation, Backwards Digit Span, Nonsense Passage Reading, Spoonerisms |
+
+### KTEA-3 — Kaufman Test of Educational Achievement, Third Edition
+
+Age range: 4:6 – 25:11
+
+**Indices**
+- **Academic Skills Battery (ASB) Composite** — overall achievement across reading, math, and written language
+- **Reading Composite** — letter / word recognition, reading comprehension, and fluency
+- **Math Composite** — calculation, problem solving, and math fluency
+- **Written Language Composite** — spelling, written expression, and writing fluency
+- **Oral Language Composite** — listening comprehension and oral expression
+- **Sound-Symbol Composite** — letter-sound knowledge and decoding-related skills
+- **Decoding Composite** — phonetic and word-attack skills
+- **Reading Fluency Composite** — speed of single-word and connected-text reading
+- **Reading Understanding Composite** — comprehension of read material
+- **Oral Fluency Composite** — speed of word and sentence-level oral production
+- **Comprehension Composite** — understanding across reading and listening
+- **Expression Composite** — writing and oral expression
+- **Orthographic Processing Composite** — recognition of letter patterns and spelling-relevant visual processing
+- **Academic Fluency Composite** — speed across reading, math, and writing fluency tasks
+
+### WIAT-III — Wechsler Individual Achievement Test, Third Edition
+
+Age range: 4:0 – 50:11
+
+**Indices**
+- **Total Achievement Composite** — overall academic achievement across all domains
+- **Oral Language Composite** — listening comprehension and oral expression
+- **Total Reading Composite** — overall reading skill across decoding, comprehension, and fluency
+- **Basic Reading Composite** — single-word reading and pseudoword decoding
+- **Reading Comprehension and Fluency Composite** — connected-text reading speed and understanding
+- **Written Expression Composite** — spelling, sentence composition, and essay writing
+- **Mathematics Composite** — numerical operations and applied problem solving
+- **Math Fluency Composite** — speed of basic addition, subtraction, and multiplication
+
+### WRAT5 — Wide Range Achievement Test, Fifth Edition
+
+Age range: 5:0 – 85:11
+
+**Indices**
+- **Word Reading** — single-word recognition and pronunciation
+- **Sentence Comprehension** — comprehension of brief written sentences with cloze-style items
+- **Spelling** — written spelling of dictated words
+- **Math Computation** — paper-and-pencil arithmetic
+- **Reading Composite** — Word Reading + Sentence Comprehension; an overall reading estimate
+
+### FAR — Feifer Assessment of Reading
+
+Age range: 4:0 – 21:11
+
+**Indices**
+- **Global Reading Index (GRI)** — overall reading achievement composite
+- **Phonological Index** — decoding, sound blending, and other sound-based reading processes (phonological dyslexia profile)
+- **Surface Index** — orthographic / sight-word recognition and spelling (surface dyslexia profile)
+- **Mixed Index** — combined breakdown across phonological and orthographic systems
+- **Process scores** — finer-grained scores that pinpoint specific reading processes for intervention planning
+
+### FAM — Feifer Assessment of Mathematics
+
+Age range: 4:0 – 21:11
+
+**Indices**
+- **Global Math Index (GMI)** — overall mathematics achievement composite
+- **Procedural Index** — calculation, computation, and execution of math procedures
+- **Verbal Index** — verbal mathematical reasoning, word problems, and language demands of math
+- **Semantic Index** — number sense, magnitude estimation, and mathematical concepts
+- **Process scores** — finer-grained scores that pinpoint specific math processes for intervention planning
+
+### FAW — Feifer Assessment of Writing
+
+Age range: 4:0 – 21:11
+
+**Indices**
+- **Global Writing Index (GWI)** — overall writing achievement composite
+- **Phonological Index** — sound-based spelling errors (phonological dysgraphia profile)
+- **Surface Index** — orthographic / sight-word spelling errors (surface dysgraphia profile)
+- **Mixed Index** — combined breakdown across phonological and orthographic systems
+
+### TOD — Test of Dyslexia
+
+Age range: 5:0 – 89:11
+
+**Indices**
+- **Total Dyslexia Index (TDI)** — overall composite indicating dyslexia risk and severity
+- **Phonological Awareness Index** — manipulation of speech sounds (segmentation, blending, deletion)
+- **Rapid Automatized Naming Index** — speed of retrieving familiar visual symbols
+- **Orthographic Processing Index** — recognition of letter patterns and visual word forms
+- **Reading Fluency Index** — speed and accuracy of connected-text reading
+- **Reading Comprehension Index** — understanding of read material
+
+### CTOPP-2 — Comprehensive Test of Phonological Processing, Second Edition
+
+Age range: 4:0 – 24:11
+
+**Indices**
+- **Phonological Awareness Composite** — manipulation of phonemes, syllables, and rhymes
+- **Phonological Memory Composite** — short-term storage of phonological information
+- **Rapid Symbolic Naming Composite** — speed of naming familiar letters and digits
+- **Rapid Non-Symbolic Naming Composite** — speed of naming familiar colors and objects
+- **Alternative Phonological Awareness Composite** — additional phonological tasks for in-depth analysis
+
+### DEST-II — Dyslexia Early Screening Test, Second Edition
+
+Age range: 4:6 – 6:5
+
+**Indices**
+- **At-Risk Quotient (ARQ)** — overall risk indicator for early reading difficulty
+
+### DST-J — Dyslexia Screening Test — Junior
+
+Age range: 6:6 – 11:5
+
+**Indices**
+- **Screening Score** — overall At-Risk / Not At-Risk classification
+
+### DST-II — Dyslexia Screening Test, Second Edition
+
+Age range: 4:6 – 65+
+
+**Indices**
+- **Screening Score** — overall At-Risk / Not At-Risk classification
+
+## Language and communication
+
+Receptive and expressive language batteries plus pragmatic and auditory-processing measures across the lifespan.
+
+| Test | Age range | Measures |
+|---|---|---|
+| **CELF-5 / CELF-P2** | Preschool 3:0 – 6:11; School Age 5:0 – 21:11 | Core Language, Receptive Language, Expressive Language, Language Content, Language Structure, Language Memory |
+| **CASL / CASL-II** | 3:0 – 21:11 | Lexical / Semantic, Syntactic, Supralinguistic, Pragmatic |
+| **PPVT-5** | 2:6 – 90+ | Receptive Vocabulary |
+| **EVT-3** | 2:6 – 90+ | Expressive Vocabulary, Word Retrieval |
+| **PVAT** | 2:6 – 22:11 | Receptive Vocabulary, Language Acquisition |
+| **CAPs** | 7:0 – 18:11 | Utterance, Discourse, Nonliteral Language, Nonverbal Communication, Social Relations |
+| **SCAN-3** | 13:0 – 50:11 | Filtered Words, Auditory Figure Ground, Competing Words, Competing Sentences |
+
+### CELF-5 / CELF-P2 — Clinical Evaluation of Language Fundamentals, Fifth Edition / Preschool, Second Edition
+
+Age range: Preschool 3:0 – 6:11; School Age 5:0 – 21:11
+
+**Indices**
+- **Core Language Score (CLS)** — headline composite of overall language ability
+- **Receptive Language Index** — comprehension of words, sentences, and directions
+- **Expressive Language Index** — production of words, sentences, and structured spoken language
+- **Language Content Index** — semantic knowledge — what words and ideas mean
+- **Language Structure Index** — syntactic and morphological skills — how language is put together
+- **Language Memory Index** — short-term recall and manipulation of language material
+- **Pragmatics Profile** — functional and social use of language
+- **Reading and Writing Index** — connected-text reading and written expression (older ages)
+
+### CASL / CASL-II — Comprehensive Assessment of Spoken Language
+
+Age range: 3:0 – 21:11
+
+**Indices**
+- **Oral Language Index (OLI)** — overall composite of spoken-language ability
+- **Core Language Index** — primary composite of core spoken-language ability
+- **Lexical / Semantic Index** — word knowledge and meaning
+- **Syntactic Index** — sentence structure and grammar
+- **Supralinguistic Index** — higher-order language including inference, ambiguity, and figurative language
+- **Pragmatic Index** — social use of language in context
+
+### PPVT-5 — Peabody Picture Vocabulary Test, Fifth Edition
+
+Age range: 2:6 – 90+
+
+**Indices**
+- **Receptive Vocabulary Standard Score** — single-word listening vocabulary
+- **Growth Scale Value (GSV)** — vocabulary on a continuous, age-independent scale; useful for tracking change over time
+
+**Key notes**
+- Pairs naturally with the EVT-3 — receptive vocabulary (PPVT) versus expressive vocabulary (EVT).
+
+### EVT-3 — Expressive Vocabulary Test, Third Edition
+
+Age range: 2:6 – 90+
+
+**Indices**
+- **Expressive Vocabulary Total Score** — single-word labeling and synonym-generation vocabulary
+- **Growth Scale Value (GSV)** — expressive vocabulary on a continuous, age-independent scale
+
+### PVAT — Ortiz Picture Vocabulary Acquisition Test
+
+Age range: 2:6 – 22:11
+
+**Indices**
+- **Acquisition Score** — total receptive vocabulary acquired
+- **Vocabulary Age Equivalent** — age-equivalent estimate of vocabulary level
+- **Language Acquisition Index** — composite estimate of vocabulary development
+
+### CAPs — Comprehensive Assessment of Pragmatics
+
+Age range: 7:0 – 18:11
+
+**Indices**
+- **Pragmatic Language Index** — overall composite of functional and social language use
+- **Domain scores** — Utterance, Discourse, Nonliteral Language, Nonverbal Communication, and Social Relations
+
+### SCAN-3 — Tests for Auditory Processing Disorders
+
+Age range: 13:0 – 50:11
+
+**Indices**
+- **Composite Score** — overall auditory-processing composite
+- **Filtered Words** — recognition of words with degraded acoustic information
+- **Auditory Figure Ground** — speech recognition against a background of noise
+- **Competing Words** — recognition of two different words presented to each ear simultaneously
+- **Competing Sentences** — recognition of competing sentences across the two ears
+
+## Attention and executive function
+
+Performance-based measures of attention, processing speed, working memory, set-shifting, inhibition, planning, and abstract reasoning.
+
+| Test | Age range | Measures |
+|---|---|---|
+| **D-KEFS** | 8:0 – 89:11 | Color-Word Interference (Stroop), Design Fluency, Proverb Test, Sorting Test, Tower, Trail Making, Twenty Questions, Verbal Fluency, Word Context |
+| **WCST** | 6:5 – 89:11 | Perseverative Errors / Responses, Failure to Maintain Set, Conceptual Level Responses, Categories Completed |
+| **CPT-III** | 8:0+ | Inattentiveness (omissions), Impulsivity (commissions), Sustained Attention, Response Variability |
+| **PASAT** | Adolescent – Adult | Auditory Attention, Processing Speed, Mental Flexibility, Calculation Ability |
+| **TEA** | 18:0 – 80:11 | Selective Attention, Sustained Attention, Attentional Switching |
+| **TEA-Ch** | 6:0 – 16:11 | Selective Attention, Sustained Attention, Attentional Control, Response Inhibition |
+
+### D-KEFS — Delis-Kaplan Executive Function System
+
+Age range: 8:0 – 89:11
+
+**Indices**
+- **Color-Word Interference (Stroop)** — inhibition of automatic word reading to name ink color; measures response inhibition and switching
+- **Design Fluency** — generating novel visual designs under time and rule constraints; measures visual fluency and rule monitoring
+- **Proverb Test** — interpreting figurative language; measures abstract verbal reasoning
+- **Sorting Test** — sorting cards by self-generated rules; measures cognitive flexibility and concept formation
+- **Tower Test** — moving disks to a goal state in the fewest moves; measures spatial planning and impulse control
+- **Trail Making Test** — alternating between numbers and letters; measures visual-motor set shifting
+- **Twenty Questions** — narrowing categories with yes/no questions; measures deductive reasoning
+- **Verbal Fluency** — generating words by letter or category, including switching; measures generative fluency
+- **Word Context** — inferring word meanings from sentence clues; measures verbal abstraction
+
+**Key notes**
+- There is no global summary score — interpret each task's scaled scores individually and look at the pattern across tasks.
+
+### WCST — Wisconsin Card Sorting Task
+
+Age range: 6:5 – 89:11
+
+**Indices**
+- **Categories Completed** — number of sorting categories successfully solved
+- **Perseverative Responses** — repeated use of a sorting rule that is no longer correct
+- **Perseverative Errors** — perseverative responses that were also incorrect
+- **Non-Perseverative Errors** — incorrect responses that were not perseverative
+- **Conceptual Level Responses** — strings of correct responses suggesting genuine understanding of the rule
+- **Trials to Complete First Category** — efficiency of initial concept formation
+- **Failure to Maintain Set** — losing a correct sorting rule mid-category
+- **Learning to Learn** — improvement in efficiency from one category to the next
+
+### CPT-III — Conners Continuous Performance Test, Third Edition
+
+Age range: 8:0+
+
+**Indices**
+- **Detectability (d')** — sensitivity to detecting targets versus non-targets
+- **Omissions** — missed targets (inattention indicator)
+- **Commissions** — responses to non-targets (impulsivity indicator)
+- **Perseverations** — extra responses too quickly after the prior one
+- **Hit Reaction Time** — average response speed to targets
+- **Hit Reaction Time Standard Error** — variability in response speed
+- **Variability** — inconsistency of response timing across the task
+- **Response Style (Beta)** — overall tendency to respond cautiously or impulsively
+- **ADHD Confidence Index** — overall index of similarity to clinical ADHD profiles
+
+### PASAT — Paced Auditory Serial Addition Task
+
+Age range: Adolescent – Adult
+
+**Indices**
+- **PASAT Total Score** — total correct sums across the trial; the headline score
+- **Paced Serial Addition Score** — performance at each stimulus rate (typically 2.4 and 1.6 seconds between digits)
+
+### TEA — Test of Everyday Attention
+
+Age range: 18:0 – 80:11
+
+**Indices**
+- **Selective Attention** — focusing on a target while ignoring distractors
+- **Sustained Attention** — maintaining attention over time on a low-stimulation task
+- **Attentional Switching** — flexibility in shifting attention between targets
+- **Task scores** — derived from everyday-style tasks tapping each attention domain
+
+### TEA-Ch — Test of Everyday Attention for Children
+
+Age range: 6:0 – 16:11
+
+**Indices**
+- **Overall Attention Score** — composite estimate across the attention domains
+- **Selective Attention** — focusing on a target while ignoring competing visual information
+- **Sustained Attention** — maintaining attention over time on a low-stimulation task
+- **Attentional Control / Switching** — flexibly shifting attention between rules or targets
+- **Response Inhibition** — withholding a prepotent motor response on cue
+
+## Motor and visual-motor
+
+Tests of fine motor control, visual perception, and integration between visual input and motor output.
+
+| Test | Age range | Measures |
+|---|---|---|
+| **BEERY (VMI)** | 2:0 – 18:11; 19:0 – 100:11 | Visual-Motor Integration (copy designs), Visual Perception, Motor Coordination |
+| **WRAVMA** | 3:0 – 17:11 | Drawing, Matching, Pegboard |
+| **FTT** | 9:0+ | Dominant Hand Tapping, Non-Dominant Hand Tapping |
+
+### BEERY (VMI) — Beery-Buktenica Developmental Test of Visual-Motor Integration
+
+Age range: 2:0 – 18:11; 19:0 – 100:11
+
+**Indices**
+- **Visual-Motor Integration Standard Score** — main composite from the design-copy task
+- **Visual Perception Standard Score** — discrimination of forms without a motor component
+- **Motor Coordination Standard Score** — tracing precision without a perceptual judgment component
+
+**Key notes**
+- Comparing the VMI score to the supplemental Visual Perception and Motor Coordination scores helps tell whether a low VMI is driven by perception, motor control, or the integration of the two.
+
+### WRAVMA — Wide Range Assessment of Visual Motor Abilities
+
+Age range: 3:0 – 17:11
+
+**Indices**
+- **Drawing Standard Score** — design-copy performance
+- **Matching Standard Score** — visual-perceptual matching without a motor demand
+- **Pegboard Standard Score** — fine motor control without a perceptual demand
+- **Visual Motor Integration Composite** — overall integration of visual perception and motor control
+
+### FTT — Finger Tapping Test
+
+Age range: 9:0+
+
+**Indices**
+- **Dominant Hand Tapping Rate** — average taps per 10-second trial with the dominant hand
+- **Non-Dominant Hand Tapping Rate** — average taps per trial with the non-dominant hand
+- **Dominant / Non-Dominant Ratio** — typical asymmetry; deviations can suggest lateralized motor problems
+
+## Autism and developmental diagnostic measures
+
+Semi-structured observations and interviews used to support diagnosis of autism spectrum disorder and related developmental presentations, plus a brief delirium screen for completeness.
+
+| Test | Age range | Measures |
+|---|---|---|
+| **ADOS-2** | 12 mo – Adult | Social Affect, Restricted and Repetitive Behaviors |
+| **MIGDAS-2** | 3:0 – 99:11 | Sensory Interests / Repetitive Behaviors, Social and Emotional Skills, Language, Cognitive Awareness |
+| **KADI** | 6:0 – 22:11 | Language, Social Interaction, Sensory / Motor, Behavioral Patterns |
+| **CAM** | Adult | Acute Onset and Fluctuating Course, Inattention, Disorganized Thinking, Altered Level of Consciousness |
+
+### ADOS-2 — Autism Diagnostic Observation Schedule, Second Edition
+
+Age range: 12 mo – Adult
+
+**Indices**
+- **Toddler Module (12–30 months)** — administered to infants and young toddlers; uses Ranges of Concern instead of cutoff scores
+- **Module 1** — for examinees with no consistent phrase speech
+- **Module 2** — for examinees with phrase speech but not yet fluent
+- **Module 3** — for verbally fluent children and younger adolescents
+- **Module 4** — for verbally fluent older adolescents and adults
+- **Calibrated Severity Score (CSS) — Social Affect (SA)** — severity of social-communication symptoms on a 1–10 scale
+- **Calibrated Severity Score (CSS) — Restricted and Repetitive Behaviors (RRB)** — severity of restricted-repetitive behavior symptoms on a 1–10 scale
+- **Overall CSS** — combined severity score across SA and RRB
+
+**Key notes**
+- Choose the module by the examinee's expressive language level — not by chronological age.
+
+### MIGDAS-2 — Monteiro Interview Guidelines for Diagnosing the Autism Spectrum, Second Edition
+
+Age range: 3:0 – 99:11
+
+**Indices**
+- **Overall Autism Spectrum Rating** — clinician-derived determination of autism spectrum presentation
+- **Sensory Use and Interests / Repetitive Behaviors domain** — sensory-driven behavior and routines
+- **Social and Emotional Skills domain** — reciprocal social engagement and emotional understanding
+- **Language domain** — qualitative description of communicative language use
+- **Cognitive Awareness domain** — examinee's self-understanding of their experience
+
+### KADI — Krug Asperger's Disorder Index
+
+Age range: 6:0 – 22:11
+
+**Indices**
+- **Asperger's Index (Total Score)** — overall likelihood that the presentation is more consistent with an Asperger's-style profile than high-functioning autism
+- **Subscale ratings** — Language, Social Interaction, Sensory / Motor, and Behavioral Patterns
+
+### CAM — Confusion Assessment Method
+
+Age range: Adult
+
+**Indices**
+- **CAM Algorithm Score** — Delirium Present versus Delirium Absent
+- **Feature 1 — Acute Onset and Fluctuating Course** — required for a positive screen
+- **Feature 2 — Inattention** — required for a positive screen
+- **Feature 3 — Disorganized Thinking** — supports a positive screen
+- **Feature 4 — Altered Level of Consciousness** — supports a positive screen
+
+**Key notes**
+- Algorithm: Features 1 and 2 must both be present, plus either Feature 3 or Feature 4.
+
+## Projective and performance-based personality
+
+Open-response measures used to characterize social-emotional functioning, perceptual organization, thought process, and interpersonal themes.
+
+| Test | Age range | Measures |
+|---|---|---|
+| **R-PAS** | 5:0+ | Engagement / Cognitive Processing, Memory, Perception / Thinking Problems, Stress and Distress, Self / Other Representation |
+| **TAT** | 5:0 – 79:11 | Social and Emotional Functioning (projective) |
+| **Roberts-2** | 6:0 – 18:11 | Reliance on Others, Support from Others, Family Acceptance, Limit Setting, Ego Functioning, Emotional Tone |
+| **Sentence Completion** | High school+ | Social and Emotional Functioning (projective) |
+
+### R-PAS — Rorschach Performance Assessment System
+
+Age range: 5:0+
+
+**Indices**
+- **Page 1 — Engagement and Cognitive Processing** — complexity, organization, and effort invested in responses
+- **Page 1 — Memory** — accuracy and clarity of perception
+- **Page 1 — Perception and Thinking Problems** — markers of disordered thinking and perceptual distortion
+- **Page 2 — Stress and Distress** — markers of acute distress, dysphoria, and morbid imagery
+- **Page 2 — Self and Other Representation** — interpersonal themes and self-representation
+- **Complexity** — overall richness and organization of responses
+- **Ego Impairment Index — 3 (EII-3)** — composite of perceptual, thinking, and reality-testing problems
+- **Suicide Concern Composite (SC-Comp)** — composite of variables associated with suicide risk
+- **Thought and Perception Composite (TP-Comp)** — composite of thought and perceptual disturbance variables
+
+### TAT — Thematic Apperception Test
+
+Age range: 5:0 – 79:11
+
+**Indices**
+- **No standardized index scores** — interpretation is qualitative
+- **Themes** — recurring story themes (e.g., achievement, aggression, intimacy)
+- **Needs and Press** — needs of the central character and environmental forces acting on them
+- **Narrative structure** — coherence, perspective-taking, and resolution of the stories
+
+### Roberts-2 — Roberts Apperception Test for Children, Second Edition
+
+Age range: 6:0 – 18:11
+
+**Indices**
+- **Theme Overview Scales** — recurring story themes (popular versus atypical content)
+- **Available Resources Scales** — interpersonal supports the child draws on (Reliance on Others, Support, Family Acceptance, Limit Setting)
+- **Problem Identification, Resolution, Emotion, and Outcome scales** — story-construction process variables
+- **Clinical Scales** — Anxiety, Aggression, Depression, Rejection, and Unusual / Atypical Responses
+- **Ego Functioning Scales** — broad indicators of self-organization and emotional tone
+
+### Sentence Completion — Rotter Incomplete Sentences Blank
+
+Age range: High school+
+
+**Indices**
+- **Adjustment Score** — overall maladjustment estimate from the rated stem responses
+- **Individual item ratings** — each completed stem is scored on a conflict / neutral / positive scale
+
+## Performance validity and premorbid functioning
+
+Standalone and embedded measures of cognitive effort and symptom validity, plus instruments used to estimate pre-injury intellectual ability.
+
+| Test | Age range | Measures |
+|---|---|---|
+| **TOMM** | 16:0 – 84:11 | Trial 1, Trial 2, Retention, Recognition |
+| **MSVT** | Adult | Immediate Recognition, Delayed Recognition, Consistency |
+| **MVP** | 5:0 – 21:11 | Immediate Memory, Delayed Memory, Consistency |
+| **REY-15 (FIT)** | 11:0+ | Recall, Recognition, Effort / Validity |
+| **PdPVTS** | 5:0 – 18:11 | Performance Validity, Memory Validity, Effort |
+| **ToPF** | 16:0 – 90:11 | Premorbid Intellectual Functioning |
+
+### TOMM — Test of Memory Malingering
+
+Age range: 16:0 – 84:11
+
+**Indices**
+- **Trial 1** — initial recognition learning
+- **Trial 2** — recognition after a second study trial; the headline trial
+- **Retention** — recognition after a delay
+- **Pass / Fail cutoffs** — standard cutoffs flag suboptimal effort regardless of true cognitive ability
+
+### MSVT — Medical Symptom Validity Test
+
+Age range: Adult
+
+**Indices**
+- **Immediate Recognition (IR)** — recognition after immediate exposure
+- **Delayed Recognition (DR)** — recognition after a delay
+- **Consistency (CNS)** — agreement between IR and DR
+- **Paired Associates (PA)** — recall of the paired-associate items
+- **Free Recall (FR)** — spontaneous recall without cues
+- **Pass / Fail cutoffs** — IR, DR, and CNS each carry a cutoff for valid effort
+
+### MVP — Memory Validity Profile
+
+Age range: 5:0 – 21:11
+
+**Indices**
+- **Immediate Memory Index** — performance on the immediate recognition trial
+- **Delayed Memory Index** — performance on the delayed recognition trial
+- **Consistency Index** — agreement between the immediate and delayed trials
+- **Pass / Fail determination** — standard cutoffs flag suboptimal effort
+
+### REY-15 (FIT) — Rey 15-Item Visual Memory Test
+
+Age range: 11:0+
+
+**Indices**
+- **Total Correct Score (0–15)** — number of items recalled from the simple visual array
+- **Recognition Score** — items correctly identified on a recognition trial
+- **Combined Score** — recall plus recognition; the primary effort indicator
+- **Pass / Fail cutoffs** — cutoffs flag suboptimal effort even when actual memory is intact
+
+### PdPVTS — Pediatric Performance Validity Test Suite
+
+Age range: 5:0 – 18:11
+
+**Indices**
+- **Performance Validity Index** — overall composite across the bundled validity measures
+- **Component scores** — TOMM-C (child version of the TOMM), MSVT-C, and Rey-15-C
+- **Pass / Fail classification** — bundled effort decision for pediatric / adolescent assessment
+
+### ToPF — Test of Premorbid Functioning
+
+Age range: 16:0 – 90:11
+
+**Indices**
+- **Predicted FSIQ** — predicted pre-injury Full Scale IQ from word reading combined with demographic variables
+- **Predicted GAI** — predicted pre-injury General Ability Index
+- **Confidence intervals** — bounds on the predicted scores; useful for benchmarking current performance against expected baseline
+
+**Key notes**
+- Use the predicted scores as the 'expected baseline' before interpreting current cognitive performance.
+
+
