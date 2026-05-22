@@ -434,7 +434,7 @@ export default function LandingPage() {
             className="leading-none relative"
             style={{
               ...TRACK_HERO,
-              fontFamily: '"Julius Sans One", "Outfit", system-ui, sans-serif',
+              fontFamily: '"Italiana", "Julius Sans One", "Outfit", system-ui, serif',
               fontWeight: 400,
               fontSize: "clamp(44px, 7.5vw, 88px)",
               color: P.cloud,
