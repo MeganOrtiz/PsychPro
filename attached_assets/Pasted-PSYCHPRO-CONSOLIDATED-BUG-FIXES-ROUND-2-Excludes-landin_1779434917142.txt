@@ -1,0 +1,192 @@
+PSYCHPRO — CONSOLIDATED BUG FIXES (ROUND 2)
+Excludes: landing page, dashboard, sidebar rename, content expansion,
+practice-exam population (done in Task #84).
+
+================================================================
+WHAT & WHY
+================================================================
+Recent tasks landed Clerk auth (#79), the auth-header migration
+(#80), a route-auth matrix test (#81), dev-mode-override removal,
+and practice-exam population (#84). This prompt cleans up the
+remaining non-visual bugs and aligns docs. Three phases:
+  PHASE A — Read-only verification (no edits)
+  PHASE B — Targeted fixes for items confirmed still broken
+  PHASE C — Documentation alignment
+
+================================================================
+GROUND RULES
+================================================================
+- Do NOT edit src/pages/landing.tsx or src/pages/dashboard.tsx
+  (separate prompt).
+- Do NOT edit .study-page-bg / .bg-card / background rules in
+  src/index.css (canonical visual surface, protected).
+- Do NOT rename sidebar sections or features (separate prompt).
+- Do NOT expand or modify topic content.
+- Use STUDY_PALETTE tokens, no new colors.
+- Keep all data-testid attributes intact.
+- TypeScript must compile clean; no `any` unless explicitly noted.
+
+────────────────────────────────────────────────────────────────
+PHASE A — READ-ONLY VERIFICATION (no edits)
+────────────────────────────────────────────────────────────────
+
+Report what's there; do not change anything.
+
+A-1. subscription.tsx — does it still do BOTH
+useGetSubscriptionStatus() (hook) AND a manual
+fetch("/api/subscription/status") in a useEffect? Paste both.
+
+A-2. PRO_FEATURES array in subscription.tsx — paste it. Does it
+hardcode a study-guide or topic count (e.g. "All 15 study guides")?
+
+A-3. Search api-server for `sort(() => Math.random()`. List every
+file:line match.
+
+A-4. practice-exam.tsx — does it hardcode "90s per question" or
+read a real timeLimit from the exam data? Paste the relevant code.
+(Note: a follow-up task to honor real time limits may already be
+queued/done — report current state.)
+
+A-5. /api/leaderboard handler — paste it. Does it return
+displayName + stats for every user with no privacy gate?
+
+A-6. /api/feedback POST handler — is there any rate limiting?
+Compare to /api/client-errors which has the rate-limit pattern.
+
+A-7. Notifications: does a notifications bell UI exist that reads
+notificationsTable? Paste the component that consumes it, or
+confirm none exists. (Note: notifications-bell was converted in
+#80, so it likely exists — confirm it actually fetches + displays.)
+
+A-8. MCP/OAuth routes — always mounted, or gated behind an env
+flag? Paste the mount logic.
+
+A-9. Cookie-fallback fetch sites (architect drift note from #80).
+For each file, paste the fetch call(s) showing headers used — do
+they use authHeaders()/jsonAuthHeaders() from src/lib/auth-headers.ts,
+or raw fetch relying on the Clerk session cookie?
+  a) src/pages/my-decks.tsx
+  b) src/pages/my-decks-new.tsx
+  c) src/pages/my-decks-detail.tsx
+  d) src/pages/admin-feedback.tsx
+  e) src/pages/feedback.tsx
+Also grep the whole frontend for getOrCreateAnonymousUserId — it
+should no longer exist (deleted in #80). Report any survivors.
+
+A-10. Doc state — paste the auth section of replit.md and the
+first paragraph of threat_model.md's overview. Do they agree?
+
+REPORT A-1 through A-10 before any edits.
+
+────────────────────────────────────────────────────────────────
+PHASE B — TARGETED FIXES (only what PHASE A confirms broken)
+────────────────────────────────────────────────────────────────
+
+B-1. (if A-1 confirms) Remove the manual fetch in subscription.tsx.
+Keep only useGetSubscriptionStatus(). Derive isPro/isScholar from
+the hook's data:
+  const isActive = status?.status === "active";
+  const isPro = isActive && status?.tier !== "scholar";
+  const isScholar = isActive && status?.tier === "scholar";
+If the generated type lacks `tier`, use (status as any)?.tier with
+a TODO to add tier to the OpenAPI spec. Delete now-unused
+StatusData type/state.
+
+B-2. (if A-2 confirms) Replace any hardcoded count in PRO_FEATURES
+with count-free copy: "All study guides for every topic". (Per
+content audit, every topic has a study guide, so this is accurate.)
+
+B-3. (if A-3 confirms) Add a Fisher-Yates shuffle helper to a
+shared util and replace every `sort(() => Math.random())`:
+  function shuffle<T>(arr: T[]): T[] {
+    const out = [...arr];
+    for (let i = out.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [out[i], out[j]] = [out[j], out[i]];
+    }
+    return out;
+  }
+
+B-4. (if A-4 confirms still hardcoded AND no queued fix has landed)
+practice-exam.tsx reads real timeLimit from exam data. If timeLimit
+is null/0 → untimed (no timer). Otherwise use the value. Remove the
+static "90s per question" label or make it dynamic. If a follow-up
+task already owns this, SKIP and note it.
+
+B-5. (if A-5 confirms) Add privacy gate to /api/leaderboard:
+  1. Add userProfilesTable column prefShowOnLeaderboard (boolean,
+     default true).
+  2. /api/leaderboard returns only users with pref true, PLUS the
+     caller's own row (matched by userId) even if opted out.
+  3. (Optional, can be follow-up) Add the toggle to the prefs UI
+     alongside prefSuggestConnections/prefNetworkingIntros.
+
+B-6. (if A-6 confirms) Add rate limit to /api/feedback POST using
+the same pattern as /api/client-errors. Suggested: 5/IP/hour or
+10/user/day. Return 429 on limit.
+
+B-7. (if A-7 says missing/broken) If a notifications bell exists
+but isn't wired, wire it. If it works, no action. If entirely
+absent, FLAG as follow-up (don't build a new feature here).
+
+B-8. (if A-8 confirms always-mounted) Gate MCP/OAuth behind
+MCP_ENABLED env flag — skip mounting in production unless
+MCP_ENABLED=true. Document in replit.md. If user confirms MCP is
+actively used, leave mounted but verify MCP_ADMIN_SECRET is set
+and ≥16 chars.
+
+B-9. (if A-9 confirms) Convert any cookie-fallback fetch sites to
+use authHeaders()/jsonAuthHeaders() from src/lib/auth-headers.ts:
+  - GET → headers: authHeaders()
+  - POST/PATCH/DELETE → headers: jsonAuthHeaders()
+This closes the #80 architect drift note. Files: my-decks.tsx,
+my-decks-new.tsx, my-decks-detail.tsx, admin-feedback.tsx,
+feedback.tsx. Replace any getOrCreateAnonymousUserId survivors
+with the Clerk-aware header source too.
+
+B-10. Create scripts/reset-dev-users.ts (pre-launch cleanup):
+Resets all users to free/non-admin, gated behind
+CONFIRM_RESET_DEV_USERS=yes env var. Document in PUBLISHING.md
+when to run it (before first public launch).
+
+────────────────────────────────────────────────────────────────
+PHASE C — DOCUMENTATION ALIGNMENT
+────────────────────────────────────────────────────────────────
+
+C-1. Rewrite replit.md to match reality (use PHASE A facts):
+  - Auth: Clerk (front + back), bearer tokens, route-auth matrix
+    test (#81) enforces posture
+  - Real topic count: 39 topics
+  - Content: ~1,718 flashcards, ~838 quiz questions, 39 study
+    guides, 39 practice exams (all populated as of #84)
+  - Subscription: real DB-backed tiers, Stripe webhook verified
+  - Admin: manual via grant-admin.ts only
+  - Remove all "auth removed / no Clerk" language
+  - Keep accurate sections (stack, commands) unchanged
+
+C-2. Align threat_model.md with replit.md on auth.
+
+C-3. PUBLISHING.md required-secrets list — confirm all present
+with a one-line "what if unset" for each: DATABASE_URL,
+CLERK_SECRET_KEY, CLERK_PUBLISHABLE_KEY, VITE_CLERK_PUBLISHABLE_KEY,
+STRIPE_WEBHOOK_SECRET, RESEND_API_KEY, PUBLIC_APP_URL, MCP_ENABLED,
+MCP_ADMIN_SECRET. Add the reset-dev-users run instructions (B-10).
+
+────────────────────────────────────────────────────────────────
+VERIFICATION
+────────────────────────────────────────────────────────────────
+[ ] pnpm --filter @workspace/api-server run typecheck — exit 0
+[ ] pnpm --filter @workspace/neuronotes run typecheck — exit 0
+[ ] pnpm run build — completes
+[ ] All api-server tests pass (including routeAuthMatrix from #81)
+
+================================================================
+REPORT BACK WITH
+================================================================
+1. All PHASE A findings (verbatim quotes / yes-no answers)
+2. Each PHASE B item: done / skipped-already-correct / blocked /
+   flagged-for-follow-up
+3. Each PHASE C item: brief diff summary
+4. Typecheck + build + test exit codes
+5. Anything important you found that wasn't in the prompt (same
+   as the T002/T008 audit findings from earlier)
