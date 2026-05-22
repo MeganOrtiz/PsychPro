@@ -25,6 +25,10 @@ export default function SignInPage() {
             colorInputBackground: P.ink,
             colorInputText: P.cloud,
             colorDanger: "#ef4444",
+            // Overrides Clerk's default orange warning color (e.g. the
+            // "You're signing in from a new device" banner) so security
+            // notices match the PsychPro cyan palette instead of clashing.
+            colorWarning: P.surf,
             borderRadius: "0.75rem",
             fontFamily: "inherit",
           },
