@@ -1,0 +1,173 @@
+PSYCHPRO — POPULATE PRACTICE EXAMS (CONTENT — LAUNCH BLOCKER)
+
+================================================================
+WHAT & WHY
+================================================================
+A content audit found practice-exam coverage is broken on two
+fronts:
+  1. TWO topics have ZERO practice-exam questions — users who
+     click "Practice Exam" on them hit an empty exam:
+       - Brain Networks (topic_id 32) — has 22 quiz questions
+       - Neuroimaging & Neuromodulation (topic_id 31) — has 20
+         quiz questions
+  2. NINETEEN topics have only 5 practice-exam questions — a stub
+     default that was never filled in. Other topics have 15-51.
+     A 5-question exam is not a real exam, and Practice Exam is a
+     paid (Pro) feature, so this underdelivers on a paid promise.
+
+This task populates practice exams by LINKING existing quiz
+questions into the practice_exam_questions join table. It does
+NOT generate any new content — every question already exists and
+has been quality-reviewed. This is purely a data/linking fix.
+
+================================================================
+HOW THE EXAM SYSTEM WORKS (read before acting)
+================================================================
+- quiz_questions table: holds all questions per topic. Some have
+  examOnly=true (meant only for exams, not the regular quiz).
+- practice_exams table: one row per topic (the exam itself, with
+  title, timeLimit, passingScore).
+- practice_exam_questions table: join table linking an exam to
+  its questions, with questionOrder.
+
+A topic's practice exam should include ALL of that topic's quiz
+questions (both examOnly=true AND examOnly=false), because the
+exam is the comprehensive assessment for the topic. The regular
+quiz can use a subset; the exam uses everything.
+
+================================================================
+GROUND RULES
+================================================================
+- Do NOT generate, write, or invent any new questions, answers,
+  or explanations. Only link EXISTING quiz_questions rows.
+- Do NOT modify quiz_questions content.
+- Do NOT touch any topic that already has a well-populated exam
+  unless PHASE A shows it's one of the broken ones.
+- All linking must be idempotent — re-running must not create
+  duplicate links.
+- This is data only — no frontend changes, no schema changes.
+
+================================================================
+PHASE A — AUDIT (read-only, report before acting)
+================================================================
+
+For EVERY topic in the topics table, report a table with:
+  topic_id, topic_name,
+  total_quiz_questions (count in quiz_questions for this topic),
+  examOnly_count (how many have examOnly=true),
+  current_exam_exists (is there a practice_exams row?),
+  current_exam_question_count (rows in practice_exam_questions
+    for this topic's exam)
+
+Then explicitly list:
+  a) Topics with NO practice_exams row at all
+  b) Topics with a practice_exams row but ZERO linked questions
+  c) Topics with exactly 5 linked questions (the stub pattern)
+  d) Topics where total_quiz_questions < 10 (can't make a
+     meaningful exam even after linking — flag these, don't force)
+
+REPORT PHASE A before making changes. Do not proceed to PHASE B
+until the audit is printed.
+
+================================================================
+PHASE B — POPULATE (after audit)
+================================================================
+
+For each topic identified in PHASE A as broken (no exam row,
+zero-linked, or 5-question stub):
+
+B-1. Ensure a practice_exams row exists for the topic. If missing,
+     create it with:
+       title: "<Topic Name> Practice Exam"
+       timeLimit: 0  (untimed by default — see note below)
+       passingScore: 70
+
+B-2. Link ALL of the topic's quiz_questions (both examOnly=true
+     and examOnly=false) into practice_exam_questions for that
+     topic's exam, in a sensible order:
+       - examOnly=false questions first (in id order)
+       - examOnly=true questions after (in id order)
+       - set questionOrder sequentially starting at 0
+
+B-3. Idempotency: before inserting links, DELETE existing
+     practice_exam_questions rows for that exam, then re-insert
+     the full set. This makes the operation safely re-runnable
+     and also "upgrades" the 5-question stubs to the full set in
+     one clean pass. (Do NOT delete the practice_exams row
+     itself — only its question links.)
+
+B-4. For the two ZERO-question topics specifically:
+       - Brain Networks (32) — link all 22 quiz questions
+       - Neuroimaging & Neuromodulation (31) — link all 20
+
+B-5. For any topic flagged in PHASE A item (d) — fewer than 10
+     total quiz questions — do NOT force a tiny exam. Link
+     whatever exists but FLAG the topic in the report as
+     "exam thin — only N questions available, needs more quiz
+     content (separate effort)." Per the audit, every topic has
+     at least 15 quiz questions, so this case may not occur — but
+     handle it safely if it does.
+
+================================================================
+TIME LIMIT NOTE
+================================================================
+Set timeLimit: 0 (untimed) for newly created exams. Rationale:
+the frontend currently has inconsistent time-limit handling (a
+separate bug fix will make it read the real timeLimit field).
+Untimed is the safe default until that fix lands. Do NOT set a
+timed default that the frontend might mishandle.
+
+If a topic's exam ALREADY has a non-zero timeLimit set, leave it
+as-is — don't overwrite an intentional value.
+
+================================================================
+PHASE C — VERIFY
+================================================================
+
+C-1. Re-run the PHASE A audit query and print the updated table.
+     Confirm:
+       - Zero topics with no exam row
+       - Zero topics with zero linked questions
+       - Zero topics stuck at exactly 5 (unless the topic
+         genuinely only has 5 quiz questions, which per the audit
+         should not happen)
+
+C-2. Spot-check: for Brain Networks (32) and Neuroimaging &
+     Neuromodulation (31), print the exam's linked question count
+     and confirm it matches the topic's total quiz_questions count.
+
+C-3. Confirm no duplicate links: for each exam, the count of
+     practice_exam_questions rows should equal the count of
+     distinct question_ids (no question linked twice).
+
+C-4. Run the practice-exam endpoint test if one exists, or
+     manually hit the API for topic 32 and 31 to confirm the
+     exam now returns questions instead of empty.
+
+================================================================
+FINAL ACCEPTANCE CHECKLIST
+================================================================
+[ ] PHASE A audit printed before any changes
+[ ] Every topic now has a practice_exams row
+[ ] Every topic's exam links ALL its quiz questions (regular +
+    examOnly)
+[ ] Brain Networks (32) exam = 22 questions
+[ ] Neuroimaging & Neuromodulation (31) exam = 20 questions
+[ ] No exam stuck at 5 questions (unless topic truly has only 5)
+[ ] No duplicate question links in any exam
+[ ] Operation is idempotent (re-running produces same result)
+[ ] No new question content was generated or invented
+[ ] No quiz_questions content was modified
+[ ] PHASE C verification table printed
+[ ] typecheck + build pass (should be unaffected — data only)
+
+================================================================
+REPORT BACK WITH
+================================================================
+1. PHASE A audit table (before)
+2. List of which topics were changed and how many questions each
+   exam went from → to
+3. PHASE C verification table (after)
+4. Any topic flagged as "exam thin"
+5. Confirmation that no new content was generated — only existing
+   quiz_questions were linked
