@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
-import { FREE_TOPIC_LIMIT } from "@/lib/limits";
+import { STUDY_PALETTE as P } from "@/lib/study-theme";
+import { FREE_FLASHCARD_PREVIEW, FREE_QUIZ_LIMIT, FREE_EXAM_LIMIT } from "@/lib/limits";
 
 // B-1: display name is "Master" (the internal subscriptionStatus / Stripe
 // metadata stays "pro" — see api-server/routes/subscription.ts).
@@ -105,18 +106,28 @@ export default function SubscriptionPage() {
       </div>
 
       {(isPro || isScholar) && (
-        <div className={`border rounded-xl p-4 mb-6 flex flex-col sm:flex-row sm:items-center gap-3 ${isScholar ? "bg-purple-50 dark:bg-purple-950/30 border-purple-200 dark:border-purple-800" : "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800"}`} data-testid="active-subscription-banner">
+        <div
+          className="border rounded-xl p-4 mb-6 flex flex-col sm:flex-row sm:items-center gap-3"
+          style={{
+            background: `linear-gradient(135deg, ${P.surface}, ${P.bg})`,
+            borderColor: `${P.surf}66`,
+            color: "#FFFFFF",
+          }}
+          data-testid="active-subscription-banner"
+        >
           <div className="flex items-center gap-3 flex-1">
-            {isScholar ? <Sparkles className="w-5 h-5 text-purple-600 dark:text-purple-400 flex-shrink-0" /> : <Crown className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" />}
+            {isScholar
+              ? <Sparkles className="w-5 h-5 flex-shrink-0" style={{ color: P.surf }} />
+              : <Crown className="w-5 h-5 flex-shrink-0" style={{ color: P.surf }} />}
             <div>
-              <p className={`font-semibold ${isScholar ? "text-purple-900 dark:text-purple-300" : "text-green-900 dark:text-green-300"}`}>
+              <p className="font-semibold text-white">
                 {isScholar ? "You're on Scholar!" : `You're on ${PRO_DISPLAY_NAME}!`}
               </p>
-              <p className={`text-sm ${isScholar ? "text-purple-700 dark:text-purple-400" : "text-green-700 dark:text-green-400"}`}>
+              <p className="text-sm text-white/80">
                 {isScholar ? "You have full access including custom study decks." : "Enjoy unlimited access to all built-in content."}
               </p>
               {currentPeriodEnd && (
-                <p className={`text-xs mt-0.5 ${isScholar ? "text-purple-600 dark:text-purple-500" : "text-green-600 dark:text-green-500"}`}>
+                <p className="text-xs mt-0.5 text-white/60">
                   Renews: {new Date(currentPeriodEnd).toLocaleDateString()}
                 </p>
               )}
@@ -196,20 +207,38 @@ export default function SubscriptionPage() {
           )}
         </div>
 
-        <div className="bg-card border-2 border-purple-200 dark:border-purple-800 rounded-xl p-5 relative">
+        {/* Scholar tier — recolored from purple to the cerulean/teal study
+            palette so it sits in the same brand family as the rest of the app. */}
+        <div
+          className="bg-card border-2 rounded-xl p-5 relative"
+          style={{ borderColor: `${P.surf}88` }}
+        >
           <div className="absolute -top-3 left-5">
-            <span className="bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full">NEW</span>
+            <span
+              className="text-white text-xs font-bold px-3 py-1 rounded-full"
+              style={{ background: P.tealDeep }}
+            >
+              NEW
+            </span>
           </div>
           <div className="flex items-center gap-2 mb-4">
-            <BookMarked className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+            <BookMarked className="w-4 h-4" style={{ color: P.tealDeep }} />
             <span className="font-semibold text-foreground text-lg">PsychPro Scholar</span>
-            <Badge className="ml-auto bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 border-0">Best Value</Badge>
+            <Badge
+              className="ml-auto border-0 text-white"
+              style={{ background: P.teal }}
+            >
+              Best Value
+            </Badge>
           </div>
 
           <div className="space-y-2 mb-5">
             {SCHOLAR_FEATURES.map((f) => (
               <div key={f} className="flex items-center gap-2 text-sm text-foreground">
-                <Check className={`w-4 h-4 flex-shrink-0 ${f.startsWith("Everything") ? "text-primary" : "text-purple-500"}`} />
+                <Check
+                  className="w-4 h-4 flex-shrink-0"
+                  style={{ color: f.startsWith("Everything") ? undefined : P.tealDeep }}
+                />
                 {f}
               </div>
             ))}
@@ -220,11 +249,17 @@ export default function SubscriptionPage() {
           ) : scholarPlans.length > 0 ? (
             <div className="space-y-3">
               {scholarPlans.map((plan) => (
-                <div key={plan.priceId} className="border border-purple-200 dark:border-purple-800 rounded-xl p-4">
+                <div
+                  key={plan.priceId}
+                  className="border rounded-xl p-4"
+                  style={{ borderColor: `${P.surf}55` }}
+                >
                   <div className="flex items-center justify-between mb-3">
                     <div>
                       <p className="font-semibold text-foreground capitalize">Billed {plan.interval}ly</p>
-                      {plan.interval === "year" && <p className="text-xs text-purple-600 dark:text-purple-400 font-medium">Save ~33%</p>}
+                      {plan.interval === "year" && (
+                        <p className="text-xs font-medium" style={{ color: P.tealDeep }}>Save ~33%</p>
+                      )}
                     </div>
                     <div className="text-right">
                       <p className="text-2xl font-bold text-foreground">{formatPrice(plan.unitAmount, plan.currency)}</p>
@@ -232,7 +267,8 @@ export default function SubscriptionPage() {
                     </div>
                   </div>
                   <Button
-                    className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+                    className="w-full text-white"
+                    style={{ background: P.tealDeep }}
                     disabled={isScholar || createCheckout.isPending}
                     onClick={() => handleSubscribe(plan.priceId)}
                     data-testid={`button-subscribe-${plan.priceId}`}
@@ -256,9 +292,13 @@ export default function SubscriptionPage() {
         </div>
       </div>
 
+      {/* B-14: the free tier is no longer "N topics fully unlocked" — it's
+          a permanent preview across every topic. Copy reflects that. */}
       <div className="bg-card border border-border rounded-xl p-4 text-center mt-5">
         <p className="text-sm text-muted-foreground">
-          Start with <strong className="text-foreground">full access to {FREE_TOPIC_LIMIT} topics</strong> — no credit card required.
+          Free includes <strong className="text-foreground">{FREE_FLASHCARD_PREVIEW} flashcards per topic</strong>,{" "}
+          <strong className="text-foreground">{FREE_QUIZ_LIMIT} quiz</strong>, and{" "}
+          <strong className="text-foreground">{FREE_EXAM_LIMIT} practice exam</strong> — no credit card required.
         </p>
       </div>
       </div>

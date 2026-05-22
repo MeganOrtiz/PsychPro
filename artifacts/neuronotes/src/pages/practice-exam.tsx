@@ -22,6 +22,11 @@ interface Props {
 
 type QuestionCount = 25 | 50;
 
+// B-5: when a topic has fewer linked questions than the requested count,
+// the server quietly clamps. To avoid the bait-and-switch we surface the
+// real cap here and hide options that would be silently downgraded.
+const QUESTION_COUNT_OPTIONS: QuestionCount[] = [25, 50];
+
 export default function PracticeExamPage({ params }: Props) {
   const [, navigate] = useLocation();
   const topicId = parseInt(params.id);
@@ -109,11 +114,18 @@ export default function PracticeExamPage({ params }: Props) {
   const score = total > 0 ? Math.round((correct / total) * 100) : 0;
 
   if (fetchError?.status === 402 || showUpgrade) {
-    return <UpgradePrompt onDismiss={() => {
+    return <UpgradePrompt reason="exam" onDismiss={() => {
       if (showUpgrade) setShowUpgrade(false);
       else navigate(`/topics/${topicId}`);
     }} />;
   }
+
+  // B-5: examQuestionCount is the actual number of questions linked to this
+  // topic's practice exam. If the user can't pick 50 truthfully, the 50
+  // option is hidden and the existing 25 is auto-clamped to whatever is
+  // available (still ≥ 1).
+  const examAvailable = topic?.examQuestionCount ?? Infinity;
+  const availableCounts = QUESTION_COUNT_OPTIONS.filter((n) => n <= examAvailable);
 
   if (started && !isLoading && total === 0) {
     return (
@@ -223,9 +235,27 @@ export default function PracticeExamPage({ params }: Props) {
         </div>
         <p className="text-sm text-muted-foreground mb-8">Choose your exam length to get started</p>
 
-        {/* Question count selector */}
-        <div className="grid grid-cols-2 gap-3 mb-6">
-          {([25, 50] as QuestionCount[]).map(n => (
+        {/* Question count selector — only counts the topic can actually
+            satisfy are rendered (see B-5 note above). If the topic has fewer
+            than 25 linked questions, we show a single "max available" tile. */}
+        <div className={`grid gap-3 mb-6 ${availableCounts.length === 2 ? "grid-cols-2" : "grid-cols-1"}`}>
+          {availableCounts.length === 0 && examAvailable > 0 && (
+            <button
+              onClick={() => setQuestionCount(Math.min(25, examAvailable) as QuestionCount)}
+              data-testid={`button-count-${examAvailable}`}
+              className="rounded-xl border p-5 text-left transition-all bg-white hover:-translate-y-0.5"
+              style={{ borderColor: `${P.surf}55`, boxShadow: `0 6px 18px -10px ${P.teal}44` }}
+            >
+              <div className="flex items-center gap-2.5 mb-2">
+                <BookOpen className="w-5 h-5" style={{ color: P.tealDeep }} />
+                <span className="text-xl font-bold text-foreground">{examAvailable} Questions</span>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                All available exam questions for this topic
+              </p>
+            </button>
+          )}
+          {availableCounts.map(n => (
             <button
               key={n}
               onClick={() => setQuestionCount(n)}

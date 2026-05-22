@@ -93,19 +93,9 @@ export type Progress = typeof progressTable.$inferSelect;
 // for FREE_TOPIC_LIMIT topics, any new topic is gated behind an upgrade.
 // Composite PK on (user_id, topic_id) makes the upsert idempotent — a user
 // who revisits a topic does not consume an additional slot.
-export const freeTopicAccessTable = pgTable(
-  "free_topic_access",
-  {
-    userId: text("user_id").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
-    topicId: integer("topic_id").notNull().references(() => topicsTable.id, { onDelete: "cascade" }),
-    firstAccessedAt: timestamp("first_accessed_at").notNull().defaultNow(),
-  },
-  (table) => [
-    primaryKey({ columns: [table.userId, table.topicId] }),
-    index("free_topic_access_user_idx").on(table.userId),
-  ],
-);
-export type FreeTopicAccess = typeof freeTopicAccessTable.$inferSelect;
+// (Removed `freeTopicAccessTable` and its `FreeTopicAccess` type — the
+//  "N topics fully unlocked" free-tier model was replaced with per-content
+//  caps. The DB table was dropped. See api-server/lib/entitlements.ts.)
 
 export const practiceExamsTable = pgTable("practice_exams", {
   id: serial("id").primaryKey(),

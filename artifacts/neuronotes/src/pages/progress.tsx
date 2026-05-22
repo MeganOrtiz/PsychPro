@@ -22,6 +22,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { STUDY_PALETTE } from "@/lib/study-theme";
 
+// B-9: shared score thresholds. Centralized so the strong/weak split, the
+// per-topic icon color, and the score-badge color tier never disagree.
+const STRONG_SCORE = 80;
+const WEAK_SCORE = 70;
+const P = STUDY_PALETTE;
+
 type ProgressFilter = "all" | "studied" | "notStarted";
 
 function timeAgo(iso: string): string {
@@ -64,12 +70,12 @@ export default function ProgressPage() {
             studied.length,
         )
       : 0;
-  // Canonical thresholds (P-1): strong >= 85, weak < 70.
+  // Canonical thresholds (B-9): strong >= STRONG_SCORE, weak < WEAK_SCORE.
   const strong = studied
-    .filter(t => (t.progress?.score ?? 0) >= 85)
+    .filter(t => (t.progress?.score ?? 0) >= STRONG_SCORE)
     .sort((a, b) => (b.progress?.score ?? 0) - (a.progress?.score ?? 0));
   const weak = studied
-    .filter(t => (t.progress?.score ?? 0) < 70)
+    .filter(t => (t.progress?.score ?? 0) < WEAK_SCORE)
     .sort((a, b) => (a.progress?.score ?? 0) - (b.progress?.score ?? 0));
 
   const categories = Array.from(
@@ -185,12 +191,16 @@ export default function ProgressPage() {
             <div className="text-xs text-muted-foreground mt-0.5">Topics Studied</div>
           </div>
           <div className="bg-card border border-border rounded-xl p-4 text-center">
-            <div className={`text-2xl font-bold ${
-              avgScore >= 85 ? "text-green-600 dark:text-green-400"
-              : avgScore >= 70 ? "text-cyan-600 dark:text-cyan-400"
-              : avgScore >= 50 ? "text-amber-600 dark:text-amber-400"
-              : "text-red-600 dark:text-red-400"
-            }`}>
+            <div
+              className="text-2xl font-bold"
+              style={{
+                color:
+                  avgScore >= STRONG_SCORE ? P.tealDeep
+                  : avgScore >= WEAK_SCORE ? P.teal
+                  : avgScore >= 50 ? P.surf
+                  : P.inkSoft,
+              }}
+            >
               {`${avgScore}%`}
             </div>
             <div className="text-xs text-muted-foreground mt-0.5">Average Score</div>
@@ -229,14 +239,17 @@ export default function ProgressPage() {
         </div>
       )}
 
-      {/* Highlights row */}
+      {/* Highlights row — recolored from green/amber to the study palette */}
       {!isEmpty && (weak.length > 0 || strong.length > 0) && (
         <div className="grid md:grid-cols-2 gap-4 mb-6">
           {weak.length > 0 && (
-            <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
+            <div
+              className="rounded-xl p-4 border"
+              style={{ background: `${P.paperSoft}`, borderColor: `${P.surf}55` }}
+            >
               <div className="flex items-center gap-2 mb-3">
-                <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                <h2 className="font-semibold text-amber-900 dark:text-amber-300 text-sm">Needs Work</h2>
+                <AlertCircle className="w-4 h-4" style={{ color: P.tealDeep }} />
+                <h2 className="font-semibold text-sm" style={{ color: P.ink }}>Needs Work</h2>
               </div>
               <div className="space-y-2">
                 {weak.slice(0, 3).map(t => (
@@ -245,7 +258,7 @@ export default function ProgressPage() {
                     className="flex items-center justify-between cursor-pointer hover:opacity-80 transition-opacity"
                     onClick={() => navigate(`/topics/${t.id}`)}
                   >
-                    <span className="text-sm text-amber-800 dark:text-amber-300 truncate mr-2">{t.name}</span>
+                    <span className="text-sm truncate mr-2" style={{ color: P.ink }}>{t.name}</span>
                     <ScoreBadge score={t.progress?.score ?? 0} />
                   </div>
                 ))}
@@ -253,10 +266,16 @@ export default function ProgressPage() {
             </div>
           )}
           {strong.length > 0 && (
-            <div className="bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-xl p-4">
+            <div
+              className="rounded-xl p-4 border"
+              style={{
+                background: `linear-gradient(135deg, ${P.surface}, ${P.bg})`,
+                borderColor: `${P.surf}66`,
+              }}
+            >
               <div className="flex items-center gap-2 mb-3">
-                <CheckCircle2 className="w-4 h-4 text-green-600 dark:text-green-400" />
-                <h2 className="font-semibold text-green-900 dark:text-green-300 text-sm">Strong Areas</h2>
+                <CheckCircle2 className="w-4 h-4" style={{ color: P.surf }} />
+                <h2 className="font-semibold text-sm text-white">Strong Areas</h2>
               </div>
               <div className="space-y-2">
                 {strong.slice(0, 3).map(t => (
@@ -265,7 +284,7 @@ export default function ProgressPage() {
                     className="flex items-center justify-between cursor-pointer hover:opacity-80 transition-opacity"
                     onClick={() => navigate(`/topics/${t.id}`)}
                   >
-                    <span className="text-sm text-green-800 dark:text-green-300 truncate mr-2">{t.name}</span>
+                    <span className="text-sm truncate mr-2 text-white/90">{t.name}</span>
                     <ScoreBadge score={t.progress?.score ?? 0} />
                   </div>
                 ))}
@@ -320,14 +339,12 @@ export default function ProgressPage() {
                   >
                     <div className="flex items-center gap-3 min-w-0">
                       {t.progress ? (
-                        (t.progress.score ?? 0) >= 85 ? (
-                          <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />
-                        ) : (t.progress.score ?? 0) >= 70 ? (
-                          <TrendingUp className="w-4 h-4 text-cyan-500 flex-shrink-0" />
-                        ) : (t.progress.score ?? 0) >= 50 ? (
-                          <AlertCircle className="w-4 h-4 text-amber-500 flex-shrink-0" />
+                        (t.progress.score ?? 0) >= STRONG_SCORE ? (
+                          <CheckCircle2 className="w-4 h-4 flex-shrink-0" style={{ color: P.tealDeep }} />
+                        ) : (t.progress.score ?? 0) >= WEAK_SCORE ? (
+                          <TrendingUp className="w-4 h-4 flex-shrink-0" style={{ color: P.teal }} />
                         ) : (
-                          <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0" />
+                          <AlertCircle className="w-4 h-4 flex-shrink-0" style={{ color: P.surf }} />
                         )
                       ) : (
                         <Circle className="w-4 h-4 text-muted-foreground/40 flex-shrink-0" />
@@ -364,15 +381,15 @@ export default function ProgressPage() {
 }
 
 function ScoreBadge({ score }: { score: number }) {
-  const color = score >= 85
-    ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400"
-    : score >= 70
-    ? "bg-cyan-100 text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-400"
-    : score >= 50
-    ? "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400"
-    : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400";
+  // Tiers match the icons / strong-vs-weak split on the rest of the page.
+  const style: { background: string; color: string } =
+    score >= STRONG_SCORE
+      ? { background: "rgba(31,107,131,0.15)", color: P.tealDeep }
+      : score >= WEAK_SCORE
+      ? { background: "rgba(47,160,198,0.15)", color: P.teal }
+      : { background: "rgba(94,176,200,0.18)", color: P.tealDeep };
   return (
-    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${color}`}>
+    <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={style}>
       {score}%
     </span>
   );

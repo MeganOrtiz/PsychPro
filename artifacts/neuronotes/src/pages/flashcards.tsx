@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { ChevronLeft, ChevronRight, RotateCcw, Layers, Lightbulb, Beaker } from "lucide-react";
+import { ChevronLeft, ChevronRight, RotateCcw, Layers, Lightbulb, Beaker, Lock, Zap } from "lucide-react";
 import { useGetFlashcardsByTopic, useGetTopic } from "@workspace/api-client-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import UpgradePrompt from "@/components/upgrade-prompt";
 import ElaborationPanel from "@/components/learning/elaboration-panel";
 import { StudySurface } from "@/components/study/study-surface";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
+import { useEntitlements } from "@/lib/use-entitlements";
 
 interface Props {
   params: { id: string };
@@ -31,13 +32,20 @@ export default function FlashcardsPage({ params }: Props) {
 
   const { data: flashcards, isLoading, error } = useGetFlashcardsByTopic(topicId);
   const { data: topic } = useGetTopic(topicId);
+  const { data: ent } = useEntitlements();
 
   const current = flashcards?.[index];
   const total = flashcards?.length ?? 0;
+  // Free-tier preview: server slices to FREE_FLASHCARD_PREVIEW. If the topic
+  // actually has more cards than we received, show the upgrade overlay once
+  // the user reaches the last previewed card.
+  const totalAvailable = topic?.flashcardCount ?? total;
+  const isCapped = !!ent?.flashcardsCapped && totalAvailable > total;
+  const onLastPreviewCard = isCapped && index >= total - 1;
 
   const fetchError = error as { status?: number } | null;
   if (fetchError?.status === 402) {
-    return <UpgradePrompt onDismiss={() => navigate(`/topics/${topicId}`)} />;
+    return <UpgradePrompt reason="flashcards" onDismiss={() => navigate(`/topics/${topicId}`)} />;
   }
 
   // Free-tier gating now happens once on the topic detail page (see
@@ -83,7 +91,11 @@ export default function FlashcardsPage({ params }: Props) {
         </div>
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-foreground">Flashcards</h1>
-          {!isLoading && <p className="text-sm text-muted-foreground">{total} cards</p>}
+          {!isLoading && (
+            <p className="text-sm text-muted-foreground">
+              {isCapped ? `Showing ${total} of ${totalAvailable} cards` : `${total} cards`}
+            </p>
+          )}
         </div>
         <div className="ml-auto flex items-center gap-1">
           <Tooltip>
@@ -221,6 +233,37 @@ export default function FlashcardsPage({ params }: Props) {
               <ChevronRight className="w-4 h-4 ml-1" />
             </Button>
           </div>
+
+          {/* Shown-but-locked CTA: appears once a free user reaches the last
+              previewed card in a deck that has more cards on the server. */}
+          {onLastPreviewCard && (
+            <div
+              className="mt-6 rounded-xl border p-5 text-center"
+              style={{
+                background: `linear-gradient(135deg, ${P.bg}, ${P.surface})`,
+                borderColor: `${P.surf}55`,
+                boxShadow: `0 14px 32px -18px ${P.tealDeep}aa`,
+              }}
+              data-testid="flashcards-upgrade-cta"
+            >
+              <div
+                className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3"
+                style={{ background: `rgba(94,176,200,0.25)`, border: `1px solid ${P.surf}55` }}
+              >
+                <Lock className="w-5 h-5 text-white" />
+              </div>
+              <p className="font-semibold text-white mb-1">
+                {totalAvailable - total} more {totalAvailable - total === 1 ? "card" : "cards"} waiting
+              </p>
+              <p className="text-sm text-white/75 mb-4">
+                Upgrade to PsychPro Master to study every card in this deck.
+              </p>
+              <Button onClick={() => navigate("/subscription")} data-testid="button-upgrade-from-flashcards">
+                <Zap className="w-4 h-4 mr-2" />
+                Upgrade to Master
+              </Button>
+            </div>
+          )}
         </>
       )}
       </div>

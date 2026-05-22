@@ -1,14 +1,12 @@
-import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { Layers, BookOpen, FileText, GraduationCap, Beaker, ArrowRight } from "lucide-react";
+import { Layers, BookOpen, FileText, GraduationCap, Beaker, ArrowRight, Lock } from "lucide-react";
 import { useGetTopic } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import SpacedRepetitionScheduler from "@/components/learning/spaced-repetition";
 import CategoryHero from "@/components/learning/category-hero";
 import { Breadcrumbs, type BreadcrumbItem } from "@/components/breadcrumbs";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
-import UpgradePrompt from "@/components/upgrade-prompt";
-import { jsonAuthHeaders } from "@/lib/auth-headers";
+import { useEntitlements } from "@/lib/use-entitlements";
 
 interface Props {
   params: { id: string };
@@ -18,36 +16,9 @@ export default function TopicDetailPage({ params }: Props) {
   const [, navigate] = useLocation();
   const topicId = parseInt(params.id);
   const { data: topic, isLoading } = useGetTopic(topicId);
-  const [accessBlocked, setAccessBlocked] = useState(false);
-
-  // Free-tier gate: record this topic in `free_topic_access`. If the user is
-  // free and has already accessed FREE_TOPIC_LIMIT distinct topics AND this
-  // one isn't among them, the server returns 402 and we show UpgradePrompt
-  // instead of the topic. Subscribed/admin users always pass.
-  useEffect(() => {
-    if (!Number.isFinite(topicId) || topicId <= 0) return;
-    let cancelled = false;
-    (async () => {
-      try {
-        const headers = await jsonAuthHeaders();
-        const res = await fetch("/api/users/topic-access", {
-          method: "POST",
-          headers,
-          body: JSON.stringify({ topicId }),
-        });
-        if (cancelled) return;
-        if (res.status === 402) setAccessBlocked(true);
-      } catch {
-        // Network failure: fail open (don't block the page on a transient
-        // error). The server is the source of truth for actual gating.
-      }
-    })();
-    return () => { cancelled = true; };
-  }, [topicId]);
-
-  if (accessBlocked) {
-    return <UpgradePrompt onDismiss={() => navigate("/topics")} />;
-  }
+  // Free-tier model is now per-content (not per-topic). The topic page itself
+  // is never blocked — locks live on the individual mode cards below.
+  const { data: ent } = useEntitlements();
 
   // Per-mode accent palette. Each card gets its own glow color so the
   // four study modes read as distinct destinations instead of a flat
@@ -58,38 +29,50 @@ export default function TopicDetailPage({ params }: Props) {
     {
       icon: Layers,
       title: "Flashcards",
-      description: "Tap to flip and test your recall",
+      description: ent?.flashcardsCapped
+        ? `Preview the first ${ent.flashcardPreviewLimit} cards`
+        : "Tap to flip and test your recall",
       onClick: () => navigate(`/topics/${topicId}/flashcards`),
       testId: "button-flashcards",
-      accent: "#5EB0C8", // cerulean
+      accent: "#5EB0C8",
       accentDeep: "#1F6B83",
+      locked: false,
     },
     {
       icon: BookOpen,
       title: "Quiz",
-      description: "Multiple-choice with explanations",
+      description: ent?.quizLocked
+        ? "Upgrade to Master for unlimited quizzes"
+        : "Multiple-choice with explanations",
       onClick: () => navigate(`/topics/${topicId}/quiz`),
       testId: "button-quiz",
-      accent: "#5EB0C8", // cerulean — unified with Flashcards
+      accent: "#5EB0C8",
       accentDeep: "#1F6B83",
+      locked: !!ent?.quizLocked,
     },
     {
       icon: FileText,
       title: "Study Guide",
-      description: "Comprehensive scrollable notes",
+      description: ent?.studyGuideLocked
+        ? "Master feature — comprehensive notes"
+        : "Comprehensive scrollable notes",
       onClick: () => navigate(`/topics/${topicId}/study-guide`),
       testId: "button-study-guide",
-      accent: "#5EB0C8", // cerulean — unified with Flashcards
+      accent: "#5EB0C8",
       accentDeep: "#1F6B83",
+      locked: !!ent?.studyGuideLocked,
     },
     {
       icon: GraduationCap,
       title: "Practice Exam",
-      description: "Timed or untimed full exam",
+      description: ent?.examLocked
+        ? "Upgrade to Master for unlimited exams"
+        : "Timed or untimed full exam",
       onClick: () => navigate(`/topics/${topicId}/exam`),
       testId: "button-practice-exam",
-      accent: "#5EB0C8", // cerulean — unified with Flashcards
+      accent: "#5EB0C8",
       accentDeep: "#1F6B83",
+      locked: !!ent?.examLocked,
     },
   ];
 
@@ -141,6 +124,7 @@ export default function TopicDetailPage({ params }: Props) {
                   key={mode.title}
                   onClick={mode.onClick}
                   data-testid={mode.testId}
+                  aria-label={mode.locked ? `${mode.title} — locked, requires PsychPro Master` : mode.title}
                   className="group relative flex items-center gap-4 p-5 rounded-xl text-left transition-all duration-300 hover:-translate-y-0.5 overflow-hidden border"
                   style={{
                     // Layered background: a deep navy base + the per-mode
@@ -205,7 +189,18 @@ export default function TopicDetailPage({ params }: Props) {
                     <mode.icon className="w-5 h-5 text-white drop-shadow" />
                   </div>
                   <div className="relative flex-1 min-w-0">
-                    <p className="font-semibold text-white text-base">{mode.title}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="font-semibold text-white text-base">{mode.title}</p>
+                      {mode.locked && (
+                        <span
+                          className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded"
+                          style={{ background: "rgba(255,255,255,0.18)", color: "#FFFFFF" }}
+                          data-testid={`badge-locked-${mode.testId}`}
+                        >
+                          <Lock className="w-2.5 h-2.5" /> Master
+                        </span>
+                      )}
+                    </div>
                     <p className="text-sm text-white/75">{mode.description}</p>
                   </div>
                   <ArrowRight

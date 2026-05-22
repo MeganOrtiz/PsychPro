@@ -3,7 +3,6 @@ import { db } from "@workspace/db";
 import { usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { requireUserId } from "../lib/userId";
-import { assertTopicAccess, FREE_TOPIC_LIMIT } from "../lib/topicAccess";
 
 const router = Router();
 // Legacy free-interaction cap. The /users/usage routes are kept as no-ops
@@ -128,36 +127,6 @@ router.post("/users/usage", async (req: Request, res: Response): Promise<void> =
     });
   } catch (err) {
     req.log.error({ err }, "Error in legacy usage endpoint");
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-// New free-tier gate. Called when a user opens a topic detail page.
-// Subscribed/admin users always pass; free users get an idempotent slot
-// claim. Logic lives in lib/topicAccess.ts so this client-facing endpoint
-// and the per-route guards (study-guide, flashcards, etc.) stay in sync.
-router.post("/users/topic-access", async (req: Request, res: Response): Promise<void> => {
-  try {
-    const userId = requireUserId(req, res);
-    if (!userId) return;
-    const topicId = Number((req.body as { topicId?: unknown })?.topicId);
-    if (!Number.isFinite(topicId) || topicId <= 0) {
-      res.status(400).json({ error: "Missing or invalid topicId" });
-      return;
-    }
-    const result = await assertTopicAccess(userId, topicId);
-    if (!result.allowed) {
-      res.status(result.status).json(result.body);
-      return;
-    }
-    res.json({
-      allowed: true,
-      usedTopics: result.usedTopics,
-      freeLimit: FREE_TOPIC_LIMIT,
-      isOverLimit: false,
-    });
-  } catch (err) {
-    req.log.error({ err }, "Error recording topic access");
     res.status(500).json({ error: "Internal server error" });
   }
 });
