@@ -16,5 +16,7 @@ export interface PracticeExam {
    * @nullable
    */
   timeLimit?: number | null;
+  /** How many questions are actually linked to this topic's exam. Use to clamp the client-side question-count picker. */
+  availableCount?: number;
   questions: QuizQuestion[];
 }

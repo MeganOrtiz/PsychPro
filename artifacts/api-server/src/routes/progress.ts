@@ -9,6 +9,7 @@ import {
 } from "@workspace/db";
 import { eq, and, desc } from "drizzle-orm";
 import { requireUserId } from "../lib/userId";
+import { getEntitlements } from "../lib/entitlements";
 
 const router = Router();
 
@@ -210,6 +211,7 @@ async function recordAttempt(
   req: Request,
   res: Response,
   table: typeof quizAttemptsTable | typeof examAttemptsTable,
+  kind: "quiz" | "exam",
 ): Promise<void> {
   try {
     const userId = requireUserId(req, res);
@@ -228,6 +230,27 @@ async function recordAttempt(
       });
       return;
     }
+
+    // Server-authoritative free-tier cap enforcement. The content-fetch
+    // routes (/topics/:id/quizzes, /topics/:id/practice-exam) also block
+    // free users at the cap, but the Retake button reuses already-fetched
+    // questions and would otherwise let a free user submit unlimited
+    // attempts. We re-check here so the cap is enforced at the write
+    // boundary too.
+    const ent = await getEntitlements(userId);
+    const locked = kind === "quiz" ? ent.quizLocked : ent.examLocked;
+    if (locked) {
+      const limit = kind === "quiz" ? ent.quizLimit : ent.examLimit;
+      const completed = kind === "quiz" ? ent.quizzesCompleted : ent.examsCompleted;
+      res.status(402).json({
+        error: `Free ${kind} limit reached`,
+        message: `Free accounts can complete ${limit} ${kind} total. Upgrade to PsychPro Master for unlimited ${kind}s.`,
+        [`${kind}sCompleted`]: completed,
+        [`${kind}Limit`]: limit,
+      });
+      return;
+    }
+
     const [row] = await db
       .insert(table)
       .values({ userId, topicId, score, total })
@@ -245,7 +268,7 @@ async function recordAttempt(
   }
 }
 
-router.post("/quiz-attempts", (req, res) => recordAttempt(req, res, quizAttemptsTable));
-router.post("/exam-attempts", (req, res) => recordAttempt(req, res, examAttemptsTable));
+router.post("/quiz-attempts", (req, res) => recordAttempt(req, res, quizAttemptsTable, "quiz"));
+router.post("/exam-attempts", (req, res) => recordAttempt(req, res, examAttemptsTable, "exam"));
 
 export default router;

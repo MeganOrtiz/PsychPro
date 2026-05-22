@@ -102,6 +102,8 @@ export interface PracticeExam {
    * @nullable
    */
   timeLimit?: number | null;
+  /** How many questions are actually linked to this topic's exam. Use to clamp the client-side question-count picker. */
+  availableCount?: number;
   questions: QuizQuestion[];
 }
 
@@ -240,3 +242,12 @@ export interface SubscriptionStatus {
   /** @nullable */
   currentPeriodEnd?: string | null;
 }
+
+export type GetPracticeExamByTopicParams = {
+  /**
+   * How many questions the client wants. Server clamps to availableCount and to 50.
+   * @minimum 1
+   * @maximum 50
+   */
+  count?: number;
+};

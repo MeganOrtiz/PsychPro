@@ -1,12 +1,13 @@
 import { type ReactElement } from "react";
 import { useLocation } from "wouter";
 import { BookOpen, Lock, FileText } from "lucide-react";
-import { useGetStudyGuideByTopic, useGetUserProfile, useGetTopic } from "@workspace/api-client-react";
+import { useGetStudyGuideByTopic, useGetTopic } from "@workspace/api-client-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { StudySurface } from "@/components/study/study-surface";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
+import { useEntitlements } from "@/lib/use-entitlements";
 
 interface Props {
   params: { id: string };
@@ -15,13 +16,18 @@ interface Props {
 export default function StudyGuidePage({ params }: Props) {
   const [, navigate] = useLocation();
   const topicId = parseInt(params.id);
-  const { data: profile } = useGetUserProfile();
-  const isSubscribed = profile?.subscriptionStatus === "active" || profile?.subscriptionStatus === "pro" || profile?.subscriptionStatus === "trialing" || profile?.subscriptionStatus === "scholar";
+  // Single source of truth for "is this user allowed to see the guide".
+  // Includes admin bypass + tier check. Previously this used
+  // `subscriptionStatus` directly, which paywalled admins. (Bug fix.)
+  const { data: ent } = useEntitlements();
 
   const { data: guide, isLoading, error } = useGetStudyGuideByTopic(topicId);
   const { data: topic } = useGetTopic(topicId);
 
-  const is402 = (error as any)?.status === 402 || (error as any)?.response?.status === 402 || (!isSubscribed && profile !== undefined);
+  const is402 =
+    (error as any)?.status === 402 ||
+    (error as any)?.response?.status === 402 ||
+    (ent !== undefined && ent.studyGuideLocked);
 
   return (
     <div className="min-h-full study-page-bg" data-testid="study-guide-page">
@@ -41,7 +47,7 @@ export default function StudyGuidePage({ params }: Props) {
         <h1 className="text-2xl md:text-3xl font-bold text-foreground">Study Guide</h1>
       </div>
 
-      {isLoading && profile === undefined ? (
+      {isLoading && ent === undefined ? (
         <div className="space-y-4">
           <Skeleton className="h-8 w-1/2" />
           {Array(8).fill(0).map((_, i) => <Skeleton key={i} className="h-4 rounded" />)}

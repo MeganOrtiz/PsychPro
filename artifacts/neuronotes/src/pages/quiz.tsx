@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { CheckCircle, XCircle, ChevronRight, BookOpen, Lightbulb } from "lucide-react";
 import { useGetQuizzesByTopic, useUpdateTopicProgress, useRecordQuizAttempt, useGetTopic } from "@workspace/api-client-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -42,6 +43,7 @@ export default function QuizPage({ params }: Props) {
   }, [topicId, currentQuestion?.id]);
   const updateProgress = useUpdateTopicProgress();
   const recordAttempt = useRecordQuizAttempt();
+  const queryClient = useQueryClient();
 
   const fetchError = error as { status?: number } | null;
   if (fetchError?.status === 402) {
@@ -85,8 +87,13 @@ export default function QuizPage({ params }: Props) {
         try {
           await recordAttempt.mutateAsync({ data: { topicId, score, total } });
         } catch {
-          // non-blocking
+          // non-blocking — server still enforces the cap on the next attempt
         }
+        // Free-tier caps key off lifetime attempt counts. Invalidate so
+        // the next render reflects the new lock immediately (otherwise a
+        // Retake within the 30s entitlements cache would bypass the cap
+        // until the cache expires).
+        queryClient.invalidateQueries({ queryKey: ["entitlements"] });
       }
     } else {
       setSelected(null);

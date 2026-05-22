@@ -22,6 +22,7 @@ import type {
   CreateCheckoutSessionBody,
   DashboardSummary,
   Flashcard,
+  GetPracticeExamByTopicParams,
   HealthStatus,
   Leaderboard,
   PortalSessionResponse,
@@ -543,22 +544,47 @@ export function useGetStudyGuideByTopic<
 /**
  * @summary Get a practice exam for a topic
  */
-export const getGetPracticeExamByTopicUrl = (topicId: number) => {
-  return `/api/topics/${topicId}/practice-exam`;
+export const getGetPracticeExamByTopicUrl = (
+  topicId: number,
+  params?: GetPracticeExamByTopicParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/topics/${topicId}/practice-exam?${stringifiedParams}`
+    : `/api/topics/${topicId}/practice-exam`;
 };
 
 export const getPracticeExamByTopic = async (
   topicId: number,
+  params?: GetPracticeExamByTopicParams,
   options?: RequestInit,
 ): Promise<PracticeExam> => {
-  return customFetch<PracticeExam>(getGetPracticeExamByTopicUrl(topicId), {
-    ...options,
-    method: "GET",
-  });
+  return customFetch<PracticeExam>(
+    getGetPracticeExamByTopicUrl(topicId, params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
 };
 
-export const getGetPracticeExamByTopicQueryKey = (topicId: number) => {
-  return [`/api/topics/${topicId}/practice-exam`] as const;
+export const getGetPracticeExamByTopicQueryKey = (
+  topicId: number,
+  params?: GetPracticeExamByTopicParams,
+) => {
+  return [
+    `/api/topics/${topicId}/practice-exam`,
+    ...(params ? [params] : []),
+  ] as const;
 };
 
 export const getGetPracticeExamByTopicQueryOptions = <
@@ -566,6 +592,7 @@ export const getGetPracticeExamByTopicQueryOptions = <
   TError = ErrorType<void>,
 >(
   topicId: number,
+  params?: GetPracticeExamByTopicParams,
   options?: {
     query?: UseQueryOptions<
       Awaited<ReturnType<typeof getPracticeExamByTopic>>,
@@ -578,12 +605,13 @@ export const getGetPracticeExamByTopicQueryOptions = <
   const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey =
-    queryOptions?.queryKey ?? getGetPracticeExamByTopicQueryKey(topicId);
+    queryOptions?.queryKey ??
+    getGetPracticeExamByTopicQueryKey(topicId, params);
 
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof getPracticeExamByTopic>>
   > = ({ signal }) =>
-    getPracticeExamByTopic(topicId, { signal, ...requestOptions });
+    getPracticeExamByTopic(topicId, params, { signal, ...requestOptions });
 
   return {
     queryKey,
@@ -611,6 +639,7 @@ export function useGetPracticeExamByTopic<
   TError = ErrorType<void>,
 >(
   topicId: number,
+  params?: GetPracticeExamByTopicParams,
   options?: {
     query?: UseQueryOptions<
       Awaited<ReturnType<typeof getPracticeExamByTopic>>,
@@ -620,7 +649,11 @@ export function useGetPracticeExamByTopic<
     request?: SecondParameter<typeof customFetch>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getGetPracticeExamByTopicQueryOptions(topicId, options);
+  const queryOptions = getGetPracticeExamByTopicQueryOptions(
+    topicId,
+    params,
+    options,
+  );
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;

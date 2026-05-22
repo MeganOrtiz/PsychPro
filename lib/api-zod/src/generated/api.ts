@@ -148,6 +148,19 @@ export const GetPracticeExamByTopicParams = zod.object({
   topicId: zod.coerce.number(),
 });
 
+export const getPracticeExamByTopicQueryCountMax = 50;
+
+export const GetPracticeExamByTopicQueryParams = zod.object({
+  count: zod.coerce
+    .number()
+    .min(1)
+    .max(getPracticeExamByTopicQueryCountMax)
+    .optional()
+    .describe(
+      "How many questions the client wants. Server clamps to availableCount and to 50.",
+    ),
+});
+
 export const GetPracticeExamByTopicResponse = zod.object({
   id: zod.number(),
   topicId: zod.number(),
@@ -157,6 +170,12 @@ export const GetPracticeExamByTopicResponse = zod.object({
     .nullish()
     .describe(
       "Total exam time budget in seconds. 0 or null means the exam is untimed.",
+    ),
+  availableCount: zod
+    .number()
+    .optional()
+    .describe(
+      "How many questions are actually linked to this topic's exam. Use to clamp the client-side question-count picker.",
     ),
   questions: zod.array(
     zod.object({

@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { ChevronLeft, Clock, Timer, BookOpen, FileText, GraduationCap, Beaker, Lightbulb, Brain, ArrowRight } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { useGetPracticeExamByTopic, useGetTopic, useUpdateTopicProgress, useRecordExamAttempt } from "@workspace/api-client-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
@@ -44,10 +45,19 @@ export default function PracticeExamPage({ params }: Props) {
   const [showUpgrade, setShowUpgrade] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const { data: exam, isLoading, error } = useGetPracticeExamByTopic(topicId);
+  // B-5 (real fix): send the picked count to the server so the user
+  // actually receives the number they selected. Before this fix the
+  // picker was cosmetic — the server always returned its default. We
+  // default to 25 before the user picks so the prefetch still hydrates.
+  const requestedCount = questionCount ?? 25;
+  const { data: exam, isLoading, error } = useGetPracticeExamByTopic(
+    topicId,
+    { count: requestedCount },
+  );
   const { data: topic } = useGetTopic(topicId);
   const updateProgress = useUpdateTopicProgress();
   const recordAttempt = useRecordExamAttempt();
+  const queryClient = useQueryClient();
 
   const fetchError = error as { status?: number } | null;
 
@@ -77,7 +87,17 @@ export default function PracticeExamPage({ params }: Props) {
     const score = qs.length > 0 ? Math.round((correct / qs.length) * 100) : 0;
     updateProgress.mutate({ topicId, data: { score } });
     if (qs.length > 0) {
-      recordAttempt.mutate({ data: { topicId, score: correct, total: qs.length } });
+      recordAttempt.mutate(
+        { data: { topicId, score: correct, total: qs.length } },
+        {
+          // Free-tier caps key off lifetime attempt counts. Invalidate so
+          // the next render reflects the new lock immediately (otherwise
+          // the user could Retake within the 30s entitlements cache).
+          onSettled: () => {
+            queryClient.invalidateQueries({ queryKey: ["entitlements"] });
+          },
+        },
+      );
     }
     setSubmitted(true);
   };

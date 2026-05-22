@@ -15,6 +15,7 @@ export * from "./dashboardSummary";
 export * from "./dashboardSummaryWeeklyActivityItem";
 export * from "./flashcard";
 export * from "./flashcardDifficulty";
+export * from "./getPracticeExamByTopicParams";
 export * from "./healthConfig";
 export * from "./healthStatus";
 export * from "./leaderboard";
