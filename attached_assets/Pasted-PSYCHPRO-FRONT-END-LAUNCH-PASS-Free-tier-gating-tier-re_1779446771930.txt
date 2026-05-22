@@ -1,0 +1,239 @@
+PSYCHPRO — FRONT-END LAUNCH PASS
+Free-tier gating + tier rename + Stripe fix + study-page bugs.
+Excludes: landing.tsx, dashboard.tsx, sidebar section rename.
+
+================================================================
+WHAT & WHY
+================================================================
+Implements the final free-tier model, renames the Pro tier to
+Master (display-only), fixes the Stripe pricing error handling,
+and clears a batch of user-facing study-page bugs from a full
+scan. Phases: A (verify, read-only) → B (fixes) → C (verify).
+
+FINAL FREE-TIER MODEL (authoritative):
+- Flashcards: free users see the FIRST 10 per topic (all topics);
+  rest locked.
+- Quizzes: free users may COMPLETE 1 full quiz total (any topic).
+- Practice exams: free users may COMPLETE 1 full exam total.
+- Study guides: paid-only (Master/Scholar), shown-but-locked.
+- Custom decks: Scholar-only (unchanged).
+- "Used" counts on COMPLETION (reaching results), not on open.
+- ALL caps enforced SERVER-SIDE.
+- Tiers: Free / Master (internal "pro") / Scholar (internal
+  "scholar"). Rename is DISPLAY-ONLY; internal values unchanged.
+
+================================================================
+GROUND RULES
+================================================================
+- Do NOT edit landing.tsx or dashboard.tsx.
+- Do NOT edit .study-page-bg / .bg-card / background in index.css.
+- Do NOT rename sidebar sections/routes. "/study-lab" stays;
+  inventory only (A-10).
+- Tier rename is DISPLAY-ONLY: internal "pro"/"scholar" literals,
+  isPro/proPlans var names, DB values, Stripe metadata all stay.
+  Only user-visible "Pro" text becomes "Master".
+- Use STUDY_PALETTE; no raw Tailwind brand colors (purple-*).
+  Quiz correct/incorrect green/red is fine.
+- SCRAP any free_topic_access table / topic-access approach. This
+  model uses per-content caps + completion flags, not topic
+  tracking.
+- Remove the legacy per-interaction/per-flip usage counter.
+- Keep data-testid attributes. TypeScript clean.
+
+────────────────────────────────────────────────────────────────
+PHASE A — READ-ONLY VERIFICATION
+────────────────────────────────────────────────────────────────
+
+A-1. USAGE SYSTEM: find every useIncrementUserUsage()/incrementUsage
+call and the backend usage endpoint + schema. Report exactly what
+currently decrements the free allowance and where. (We're replacing
+this whole system.)
+
+A-2. FLASHCARDS API: paste the backend handler that returns
+flashcards for a topic (artifacts/api-server/src/routes/topics.ts
+or similar). Does it return ALL cards regardless of tier? Confirm.
+
+A-3. QUIZ API + completion: how does the app know a quiz was
+completed? Is there a recordAttempt / quiz-attempt endpoint? Paste
+it. Same for exams (recordExamAttempt).
+
+A-4. SUBSCRIPTION STATUS: how does the frontend/backend know a
+user's tier? Paste how subscriptionStatus/tier is read on both
+sides (the gating will key off this).
+
+A-5. TIER LABELS: grep frontend for user-facing "Pro" as a tier
+name (not "PsychPro"/"Professional"). List file:line.
+
+A-6. practice-exam.tsx: confirm TIME_PER_QUESTION=90 hardcoded,
+exam.timeLimit unused. Paste timer useEffect. Confirm
+QuestionCount=25|50 always shown.
+
+A-7. topics.ts exam endpoint: confirm sort(()=>Math.random()-0.5)
+.slice(0,count). Paste it.
+
+A-8. topics.tsx: confirm CATEGORY_ORDER includes "Clinical Cases"
+and empty categories render "Coming soon" disabled cards.
+
+A-9. progress.tsx: paste threshold logic + score-tier color
+classes. subscription.tsx: list purple-* classes + hardcoded
+"10 free interactions" copy.
+
+A-10. study-guide renderer: handles markdown tables? (topic 53
+uses them). Grep "/study-lab" + "Study Lab" → file:line inventory.
+
+REPORT A-1..A-10 before edits.
+
+────────────────────────────────────────────────────────────────
+PHASE B — FIXES
+────────────────────────────────────────────────────────────────
+
+B-1. REMOVE legacy usage metering.
+Delete the per-interaction/per-flip increment system:
+- flashcards.tsx: remove incrementUsage on flip.
+- quiz.tsx: remove per-answer incrementUsage.
+- practice-exam.tsx: remove per-answer incrementUsage.
+The old "10 free interactions" counter is gone, replaced by B-2.
+Keep the usage table only if B-2 reuses it; otherwise note it's
+orphaned (don't drop the column in this prompt — just stop using
+it, flag for later cleanup).
+
+B-2. FREE-TIER GATING (server-side enforced).
+
+(a) FLASHCARDS — cap at 10 for free users.
+Backend flashcards-by-topic endpoint: if caller's tier is free,
+return only the first 10 cards (by cardOrder) PLUS a field like
+{ totalCount: N, lockedCount: N-10, isCapped: true }. Master/
+Scholar get all cards, isCapped:false. The remaining cards must
+NOT be in the free response payload (server-side protection).
+Frontend flashcards.tsx: after the 10th card, show an upgrade
+card ("You've previewed 10 of N cards. Unlock the full deck with
+Master.") instead of more cards.
+
+(b) QUIZZES — 1 completed quiz total for free users.
+Track completed quizzes server-side. Add a count/flag (e.g.
+users.freeQuizzesCompleted or a small free_quiz_completions
+record). On quiz COMPLETION (the existing recordAttempt call),
+if free tier, mark it used.
+- A free user with 0 completed quizzes: can take a full quiz
+  start to finish (no truncation).
+- On completion, increment.
+- A free user who already completed 1 quiz: starting any quiz
+  shows the upgrade prompt instead (gate at quiz entry/load).
+Enforce server-side: the quiz-by-topic endpoint (or an
+entitlement check) refuses to serve a 2nd quiz to a free user
+who's used their one. Frontend shows upgrade.
+
+(c) EXAMS — 1 completed exam total for free users.
+Same pattern as quizzes, separately tracked
+(freeExamsCompleted). One full completed exam, then upgrade gate.
+
+(d) STUDY GUIDES — paid-only, shown-but-locked.
+Free users: the Study Guide study-mode is shown with a lock icon
+and "Unlock with Master". Tapping it shows the upgrade prompt.
+Backend study-guide endpoint refuses content to free users (403/
+402). Master/Scholar: full access.
+
+(e) SHOWN-BUT-LOCKED treatment:
+On topic-detail and study-mode entry points, locked modes for
+free users render visibly with a lock + "Unlock with Master"
+rather than being hidden. Flashcards always available (capped).
+Quiz/Exam available until their one freebie is used, then locked.
+Study Guide always locked for free.
+
+COMPLETION semantics: quiz/exam counts as used when the user
+reaches the results/score screen, NOT on open — so backing out
+mid-attempt doesn't burn the freebie.
+
+If implementing requires schema additions (freeQuizzesCompleted /
+freeExamsCompleted columns or small tables), that's in scope —
+FLAG the schema change in your plan before applying for review.
+
+B-3. TIER RENAME (display-only): user-facing "Pro" → "Master".
+subscription.tsx labels/buttons/headings, upgrade prompts, any
+banner. Keep isPro/proPlans var names and the "pro" literal.
+Scholar untouched. Pull tier display names from Stripe product
+names where shown.
+
+B-4. EXAM TIMER honors exam.timeLimit (practice-exam.tsx):
+timeLimit>0 → total = timeLimit, show timer; 0/null → untimed,
+hide timer, Timed Mode toggle off+disabled w/ "This exam is
+untimed." Remove total*90.
+
+B-5. EXAM LENGTH reflects reality: expose actual linked-question
+count (add availableCount to exam API if missing); don't offer 50
+when fewer exist; show real max; never silently deliver fewer
+than chosen.
+
+B-6. FISHER-YATES (topics.ts + any api-server matches): replace
+sort(()=>Math.random()-0.5) with a shared Fisher-Yates helper
+applied before slicing.
+
+B-7. CLINICAL CASES / empty categories (topics.tsx): remove
+"Clinical Cases" from CATEGORY_ORDER; stop rendering any
+zero-topic category. No "Coming soon" cards.
+
+B-8. MOBILE category cards (topics.tsx): tapping opens the category
+on all devices; remove "Hover to preview" text and hover-only
+dependency.
+
+B-9. PROGRESS (progress.tsx): one threshold set as named constants
+(STRONG=80, WEAK=70); replace green/amber/red Tailwind score-tier
+colors with STUDY_PALETTE tones.
+
+B-10. SUBSCRIPTION palette (subscription.tsx): remove all purple-*;
+Scholar styled within cerulean/teal, distinct from Master but
+on-palette.
+
+B-11. STRIPE error handling (subscription.ts /subscription/plans):
+the catch returns res.json([]) — change so a genuine error returns
+res.status(500).json({error}); empty-but-successful still []. (Do
+NOT add a product-ID allowlist — metadata filter stays; products
+are tagged in the dashboard.)
+
+B-12. STUDY GUIDE tables (conditional on A-10): if renderer lacks
+table support, add it so topic 53's guide renders tables.
+
+B-13. EXAM WARM-UP default (practice-exam.tsx): warmupEnabled
+defaults false.
+
+B-14. FREE-LIMIT copy not hardcoded: any "10 free interactions"
+style copy replaced to reflect the new model ("Preview 10 cards
+per topic + 1 free quiz and exam") sourced from constants, not
+magic numbers.
+
+────────────────────────────────────────────────────────────────
+PHASE C — VERIFY
+────────────────────────────────────────────────────────────────
+[ ] Free user: sees exactly 10 cards/topic; card 11+ not in API
+    payload; upgrade card shown
+[ ] Free user: can complete 1 full quiz (no truncation); 2nd quiz
+    gated; enforced server-side
+[ ] Free user: can complete 1 full exam; 2nd gated server-side
+[ ] Quiz/exam counts as used on completion, not open (back out
+    mid-attempt doesn't burn it)
+[ ] Free user: study guide locked everywhere, shown with lock
+[ ] Master/Scholar: unlimited cards/quizzes/exams/guides
+[ ] No user-facing "Pro"; shows "Master"; internal "pro" intact
+[ ] Exam timeLimit=0 → no timer; timed → real value
+[ ] Exam length never promises more than exists
+[ ] No biased Math.random sort
+[ ] No empty/"Coming soon" category cards
+[ ] Mobile: tap opens category; no "Hover to preview"
+[ ] Progress: one threshold set + palette colors
+[ ] No purple on subscription page
+[ ] /subscription/plans: 500 on real error, [] on no-match
+[ ] Topic 53 guide tables render
+[ ] Warm-up defaults off
+[ ] Old per-flip counter removed
+[ ] neuronotes + api-server typecheck, build, tests pass
+
+================================================================
+REPORT BACK WITH
+================================================================
+1. PHASE A findings (esp. A-1 usage map, A-3 completion hooks,
+   A-10 table support)
+2. Each PHASE B item: done/skipped/blocked/flagged
+3. Any schema change for B-2 (flag explicitly before applying)
+4. /study-lab inventory (A-10) for the sidebar prompt
+5. typecheck/build/test results
+6. Anything else found not listed
