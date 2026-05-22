@@ -200,36 +200,50 @@ export default function LandingPage() {
       }}
     >
       <style>{`
-        /* Landing canvas — fixed full-bleed landing composition that
-           paints the entire landing page (extends to the bottom on
-           scroll because it's position:fixed). Uses a very light
-           dimming wash so the source image's resolution and detail
-           read through clearly. DO NOT add a per-section background
-           image elsewhere on this page — let this one canvas paint
-           the whole route. */
+        /* Landing canvas — hero-bound cerulean-clouds composition.
+           The image paints ONCE at the top of the page (sized to the
+           hero viewport) and fades down into the solid ink ground for
+           the rest of the route. Previously this layer was
+           position:fixed/inset:0, which kept the same brain visible
+           behind every scrolled section. Now ::before paints the
+           hero-bound brain+clouds and ::after paints the solid ink
+           ground for the rest of the scrollable canvas. The parent
+           MUST stay background:transparent so the negative-z layers
+           remain visible. DO NOT add a per-section background image
+           elsewhere on this page. */
+        .landing-canvas::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          z-index: -60;
+          background-color: ${P.ink};
+          pointer-events: none;
+        }
         .landing-canvas::before {
           content: "";
-          position: fixed;
-          inset: 0;
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 100vh;
           z-index: -50;
-          background-color: ${P.ink};
           background-image:
+            linear-gradient(180deg,
+              rgba(3, 21, 29, 0.00) 0%,
+              rgba(3, 21, 29, 0.00) 55%,
+              rgba(3, 21, 29, 0.55) 80%,
+              ${P.ink} 100%),
             radial-gradient(ellipse 130% 115% at 50% 50%,
               rgba(3, 21, 29, 0.10) 0%,
               rgba(3, 21, 29, 0.20) 60%,
               rgba(3, 21, 29, 0.38) 100%),
             url(${cloudsBackground});
-          background-size: cover, cover;
-          /* Shift the background up so the brain (which sits ~25% from
-             the top of the portrait source) reads in the upper third of
-             the viewport, above the PSYCHPRO wordmark. With cover sizing
-             on a landscape viewport the source is scaled by width and
-             ends up much taller than the viewport — anchoring at the
-             top leaves the brain ~80% down the viewport (behind the
-             wordmark/cards). 30% pulls the overflow upward so the brain
-             sits visibly above the wordmark. */
-          background-position: center 30%, center 30%;
-          background-repeat: no-repeat, no-repeat;
+          background-size: cover, cover, cover;
+          /* Anchor the source so the brain (which sits ~25% from the
+             top of the portrait composition) reads in the upper third
+             of the hero, clearly above the PSYCHPRO wordmark. */
+          background-position: center 30%, center 30%, center 30%;
+          background-repeat: no-repeat, no-repeat, no-repeat;
           image-rendering: -webkit-optimize-contrast;
           pointer-events: none;
         }
