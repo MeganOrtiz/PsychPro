@@ -1,0 +1,220 @@
+PSYCHPRO — FRONT-END LAUNCH PASS
+Tier rename + free-tier rebuild + Stripe fix + study-page bugs.
+Excludes: landing.tsx, dashboard.tsx, sidebar section rename.
+
+================================================================
+WHAT & WHY
+================================================================
+Consolidated fix pass from a full scan of the deployed study
+pages. Covers: a tier display rename (Pro→Master), a rebuilt
+free tier (topic-scoped, not per-flip), a Stripe pricing fix,
+and a batch of user-facing bugs.
+
+Phases: A (verify, read-only) → B (fixes) → C (verify).
+
+================================================================
+GROUND RULES
+================================================================
+- Do NOT edit landing.tsx or dashboard.tsx.
+- Do NOT edit .study-page-bg / .bg-card / background in index.css.
+- Do NOT rename sidebar sections or routes (separate prompt). The
+  "/study-lab" route stays; just inventory references (A-8).
+- Use STUDY_PALETTE tokens. No raw Tailwind brand colors (purple-*).
+  Quiz correct/incorrect green/red is allowed; score-tier colors
+  must use palette.
+- Tier rename is DISPLAY-ONLY. Internal values "pro"/"scholar"
+  stay everywhere (DB, Stripe metadata, code literals, type
+  unions). Only user-visible text changes.
+- Keep all data-testid attributes.
+- TypeScript clean.
+
+────────────────────────────────────────────────────────────────
+PHASE A — READ-ONLY VERIFICATION
+────────────────────────────────────────────────────────────────
+
+A-1. FREE-TIER MODEL: find every useIncrementUserUsage() /
+incrementUsage call across the frontend. Report file + the user
+action that triggers each (flip card / select quiz answer / answer
+exam Q / etc). Also find the backend usage endpoint and how the
+limit is enforced (raw counter? what field?). Paste the usage
+table schema columns related to free-tier tracking.
+
+A-2. TIER LABELS: grep frontend for the visible string "Pro" (as a
+tier label, not "PsychPro" or "Professional"). List every file:line
+where "Pro" appears as a user-facing tier name. Also confirm the
+internal value is "pro" (isPro, proPlans, tier === "pro").
+
+A-3. practice-exam.tsx: confirm TIME_PER_QUESTION = 90 hardcoded
+and exam.timeLimit unused. Paste the timer useEffect.
+
+A-4. practice-exam.tsx: confirm QuestionCount = 25 | 50 with both
+always shown. Paste the option JSX.
+
+A-5. topics.ts backend exam endpoint: confirm
+sort(() => Math.random() - 0.5).slice(0, count). Paste it.
+
+A-6. topics.tsx: confirm CATEGORY_ORDER includes "Clinical Cases"
+and empty categories render as "Coming soon" disabled cards.
+
+A-7. progress.tsx: paste threshold logic + score-tier color classes.
+
+A-8. subscription.tsx: list every purple-* class and the hardcoded
+"10 free interactions" copy location. Also confirm proPlans /
+scholarPlans rendering structure.
+
+A-9. study-guide renderer: does the custom markdown renderer handle
+tables (| col | col |)? Topic 53 uses them. Report yes/no.
+
+A-10. Grep "/study-lab" and "Study Lab" — list file:line (inventory
+for the later sidebar prompt; no edits now).
+
+REPORT A-1 through A-10 before edits.
+
+────────────────────────────────────────────────────────────────
+PHASE B — FIXES
+────────────────────────────────────────────────────────────────
+
+B-1. TIER RENAME (display-only): "Pro" → "Master" everywhere a
+user sees it. Internal value stays "pro".
+  - subscription.tsx: tier card label, button text, feature
+    headings — "Pro" becomes "Master". Keep variable names
+    (isPro, proPlans) and the "pro" literal unchanged.
+  - Any upgrade prompts / banners that say "Pro" → "Master".
+  - The plans come from Stripe; the product is tagged
+    neuronotes_tier=pro and may be named "PsychPro Master" in
+    Stripe — display the Stripe product name as-is, but any
+    hardcoded "Pro" label in code becomes "Master".
+  - Scholar label unchanged.
+ACCEPTANCE: Users never see "Pro" as a tier name; they see
+"Master". Code still uses "pro" internally. Scholar untouched.
+
+B-2. FREE-TIER REBUILD: 2 free topics, full access within them.
+This replaces per-interaction metering.
+  Model: a free user may fully use any 2 distinct topics
+  (unlimited flashcards, quiz, study guide, practice exam within
+  those topics). Entering a study mode for a 3rd, previously-
+  unused topic triggers the upgrade prompt.
+
+  Backend:
+  - Track distinct topic IDs a free user has "opened" (entered any
+    study mode for). Add a mechanism: either a usedTopics join/
+    array on the user, or derive from existing progress/attempt
+    records keyed by topicId. Prefer an explicit free_topic_access
+    record (userId, topicId, firstAccessedAt) so it's unambiguous.
+  - Free limit = 2 distinct topics. The Nth study-mode entry for a
+    NEW topic when the user already has 2 used topics AND is on the
+    free tier → return 402.
+  - Master and Scholar tiers: unlimited topics (no gating).
+  - Remove/replace the per-interaction counter logic. Flipping a
+    card, answering a quiz question, etc. must NOT decrement
+    anything.
+
+  Frontend:
+  - flashcards.tsx: remove incrementUsage on flip entirely.
+  - quiz.tsx: remove per-answer incrementUsage.
+  - practice-exam.tsx: remove per-answer incrementUsage.
+  - The 402 gate now fires at the point of ENTERING a new topic's
+    study mode (topic-detail or the study-mode pages' initial load)
+    when the free user is over their 2-topic limit. Show
+    UpgradePrompt then.
+  - Upgrade prompt copy: "You've used your 2 free topics. Upgrade
+    to Master for all 39 topics." (or similar — pull the "2" and
+    "39" from real values where feasible).
+
+  If this requires backend schema/endpoint changes, that's in
+  scope — but FLAG the schema change in your plan before applying
+  so it can be reviewed. Existing free users' prior activity should
+  map sensibly (their already-studied topics count as their used
+  topics; if they've already touched >2, don't lock them out
+  retroactively in a jarring way — cap gracefully and note it).
+
+ACCEPTANCE: Free user fully uses 2 topics with zero friction;
+entering a 3rd shows upgrade. No action within an open topic ever
+costs a metered interaction.
+
+B-3. EXAM TIMER honors exam.timeLimit (practice-exam.tsx):
+  - timeLimit > 0 → total seconds = timeLimit; show timer.
+  - timeLimit 0/null → untimed; hide timer; Timed Mode toggle off
+    + disabled with note "This exam is untimed."
+  - Remove total * 90.
+
+B-4. EXAM LENGTH reflects reality (practice-exam.tsx + endpoint):
+  - Expose the topic's actual linked-question count (add
+    availableCount to the exam API response if not present).
+  - Don't offer 50 when fewer exist. Show real max ("All N
+    questions"). Never silently deliver fewer than chosen.
+
+B-5. FISHER-YATES (topics.ts + any other api-server matches):
+replace sort(() => Math.random() - 0.5) with a shared
+Fisher-Yates shuffle helper applied before slicing.
+
+B-6. CLINICAL CASES / empty categories (topics.tsx): remove
+"Clinical Cases" from CATEGORY_ORDER and stop rendering any
+zero-topic category. No "Coming soon" disabled cards.
+
+B-7. MOBILE category cards (topics.tsx): tapping a category opens
+it on all devices (already wired via onClick). Remove the
+"Hover to preview" text and the hover-only dependency so touch
+users aren't stuck. Hover preview may remain as a desktop-only
+nicety but must not be the only path.
+
+B-8. PROGRESS (progress.tsx): one threshold set as named constants
+(STRONG_THRESHOLD=80, WEAK_THRESHOLD=70). Replace green/amber/red
+Tailwind score-tier colors with STUDY_PALETTE tones (teal/success
+for strong, mist for mid, the existing hard-card red family for
+weak).
+
+B-9. SUBSCRIPTION palette (subscription.tsx): remove all purple-*
+classes. Scholar tier styled within cerulean/teal family, visually
+distinct from Master but on-palette.
+
+B-10. FREE-LIMIT copy not hardcoded (subscription.tsx + anywhere):
+the "2 free topics" / free-tier numbers should read from a shared
+constant or the API, not be a hardcoded magic number in copy.
+
+B-11. STRIPE error handling (subscription.ts /subscription/plans):
+the catch block currently returns res.json([]) on error, making a
+real Stripe failure look identical to "no products". Change: on a
+genuine error, return res.status(500).json({ error: ... }). Empty-
+but-successful (no matching products) still returns []. Frontend
+distinguishes: 500 → "Couldn't load pricing, try again"; [] →
+"Pricing coming soon".
+
+B-12. STUDY GUIDE tables (CONDITIONAL on A-9): if the markdown
+renderer doesn't support tables, add table support so topic 53's
+guide renders tables, not raw pipes.
+
+B-13. EXAM WARM-UP default (practice-exam.tsx): warmupEnabled
+defaults false. Users opt in rather than being forced through a
+~60s warm-up before every exam.
+
+────────────────────────────────────────────────────────────────
+PHASE C — VERIFY
+────────────────────────────────────────────────────────────────
+[ ] No user-facing "Pro" tier label; shows "Master". Internal
+    "pro" intact. Scholar unchanged.
+[ ] Free user fully uses 2 topics; 3rd new topic → upgrade
+[ ] No action inside an open topic costs a metered interaction
+[ ] Master/Scholar users: unlimited topics
+[ ] Exam timeLimit=0 → no timer; timed exam counts from real value
+[ ] Exam length never promises more questions than exist
+[ ] No biased Math.random sort in api-server
+[ ] No empty/"Coming soon" category cards
+[ ] Mobile: tapping a category opens it; no "Hover to preview"
+[ ] Progress: one threshold set + palette colors
+[ ] No purple on subscription page
+[ ] Free-limit numbers not hardcoded
+[ ] /subscription/plans returns 500 on real error, [] on no-match
+[ ] Topic 53 study guide tables render
+[ ] Exam warm-up defaults off
+[ ] neuronotes typecheck, api-server typecheck, build, tests pass
+
+================================================================
+REPORT BACK WITH
+================================================================
+1. PHASE A findings (esp. A-1 usage map, A-9 table support)
+2. Each PHASE B item: done / skipped / blocked / flagged
+3. Any backend schema change made for B-2 (flag explicitly)
+4. The /study-lab inventory (A-10) for the sidebar prompt
+5. typecheck/build/test results
+6. Anything else found in these pages not listed here
