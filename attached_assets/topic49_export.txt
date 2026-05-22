@@ -1,0 +1,310 @@
+# Topic 49 — Cognitive Therapy, CBT, and Schema Therapy
+
+Counts: flashcards=12, quiz=15, study_guides=1
+
+==========================================================
+## 1. FLASHCARDS (12)
+==========================================================
+
+[#2001 | easy] Q: Name Beck's three levels of cognition.
+             A: (1) Automatic thoughts — surface, spontaneous, fleeting; (2) Intermediate beliefs — conditional rules and assumptions; (3) Core beliefs/schemas — deepest, fundamental beliefs about self, others, world.
+
+[#2002 | medium] Q: What is Beck's cognitive triad of depression?
+             A: Negative views of (1) the self ('I am worthless'); (2) the world ('Everything is unfair'); (3) the future ('Nothing will improve'). These three interlocking beliefs maintain depressive thinking.
+
+[#2003 | medium] Q: What is collaborative empiricism?
+             A: Beck's therapeutic stance: therapist and client work as a team examining evidence for and against the client's beliefs — treating cognitions as hypotheses to be tested, not facts to be accepted.
+
+[#2004 | medium] Q: What is the downward arrow technique?
+             A: A CBT technique for uncovering core beliefs by repeatedly asking 'If that were true, what would it mean about you/others/the world?' until reaching the underlying core belief (e.g., 'I am unlovable,' 'I am defective').
+
+[#2005 | hard] Q: What is the difference between Ellis's REBT and Beck's CT?
+             A: Ellis focused on philosophical change — disputing absolutist demandingness underlying beliefs. Beck focused on empirical change — testing the evidence for specific automatic thoughts. Ellis was active-confrontational; Beck used Socratic guided discovery.
+
+[#2006 | medium] Q: What is the REBT ABCDE model?
+             A: Activating event → Beliefs (rational/irrational) → Consequences (emotional/behavioral) → Disputation of irrational beliefs (empirical, logical, pragmatic) → new Effective philosophy.
+
+[#2007 | hard] Q: Name three primary categories of irrational belief in REBT.
+             A: (1) Demandingness ('musts/shoulds/oughts'); (2) Awfulizing/catastrophizing; (3) Low frustration tolerance (LFT); plus global self- or other-deprecation.
+
+[#2008 | medium] Q: What is unconditional self-acceptance (USA) in REBT?
+             A: Accepting oneself as a fallible human being whose worth is not contingent on performance, others' approval, or specific qualities. The REBT alternative to conditional self-rating.
+
+[#2009 | medium] Q: What is an early maladaptive schema (EMS) in schema therapy?
+             A: A deeply held, pervasive, unconditional belief and feeling about self and relationships, developed in childhood from unmet core emotional needs and maintained through schema perpetuation (avoidance, compensation, surrender).
+
+[#2010 | hard] Q: Name the five schema domains in Young's framework.
+             A: (1) Disconnection/Rejection; (2) Impaired Autonomy; (3) Impaired Limits; (4) Other-Directedness; (5) Overvigilance/Inhibition.
+
+[#2011 | medium] Q: What is 'limited reparenting' in schema therapy?
+             A: The therapist provides — within professional limits — the empathy, validation, safety, and nurturing the client did not receive in childhood. The most distinctive departure of schema therapy from standard CBT.
+
+[#2012 | hard] Q: What is imagery rescripting?
+             A: A schema therapy technique in which traumatic childhood memories are revisited and reworked imaginally — the adult self (or therapist as protective figure) intervenes to meet the unmet need or stop the harm. Used for shame, abuse, and neglect-related schemas.
+
+==========================================================
+## 2. QUIZ QUESTIONS (15)
+==========================================================
+
+#1185
+Q: Beck's cognitive triad of depression includes negative views of:
+A) Self, others, future
+B) Self, world, future
+C) Self, body, others
+D) Past, present, future
+Correct: B
+Explanation: Beck's cognitive triad is negative views of the self, the world, and the future — three interlocking depressive beliefs that maintain the disorder.
+
+#1186
+Q: Which is NOT one of Beck's three levels of cognition?
+A) Automatic thoughts
+B) Intermediate beliefs
+C) Core beliefs / schemas
+D) Unconscious wishes
+Correct: D
+Explanation: Beck's three levels are automatic thoughts (surface), intermediate beliefs (conditional rules), and core beliefs/schemas. Unconscious wishes are a psychoanalytic concept.
+
+#1187
+Q: Which technique is used to uncover core beliefs underlying automatic thoughts?
+A) Free association
+B) Downward arrow
+C) Empty chair
+D) Active imagination
+Correct: B
+Explanation: The downward arrow technique repeatedly asks 'If that were true, what would it mean?' until the underlying core belief is reached.
+
+#1188
+Q: REBT's ABC model adds D and E for:
+A) Diagnosis and Etiology
+B) Disputation and Effective new philosophy
+C) Discharge and Education
+D) Discrimination and Extinction
+Correct: B
+Explanation: The ABCDE model: Activating event → Beliefs → Consequences → Disputation → Effective new philosophy. D and E represent the change steps.
+
+#1189
+Q: REBT's hallmark intervention is:
+A) Empathic reflection
+B) Active disputation of irrational beliefs
+C) Free association
+D) Behavioral activation
+Correct: B
+Explanation: Ellis used active, sometimes confrontational disputation of demandingness, awfulizing, and LFT — distinguishing REBT from Beck's Socratic guided discovery.
+
+#1190
+Q: Which is the cognitive distortion 'I feel anxious, so something must be wrong'?
+A) Catastrophizing
+B) Mind reading
+C) Emotional reasoning
+D) Should statement
+Correct: C
+Explanation: Emotional reasoning treats feelings as evidence for facts about reality — 'I feel it, therefore it must be true.'
+
+#1191
+Q: Schema therapy's 'limited reparenting' refers to:
+A) Telling clients how to behave like adults
+B) Therapist providing — within professional limits — what the client's caregivers failed to provide
+C) Family therapy with parents
+D) Genogram work
+Correct: B
+Explanation: Limited reparenting is schema therapy's most distinctive departure from standard CBT — explicitly using the therapy relationship as a corrective developmental experience.
+
+#1192
+Q: Which is NOT one of Young's five schema domains?
+A) Disconnection/Rejection
+B) Impaired Autonomy
+C) Cognitive Distortions
+D) Overvigilance/Inhibition
+Correct: C
+Explanation: Young's five domains are Disconnection/Rejection, Impaired Autonomy, Impaired Limits, Other-Directedness, Overvigilance/Inhibition. Cognitive distortions are a Beck/Burns concept, not a schema domain.
+
+#1193
+Q: Beck's collaborative empiricism treats client cognitions as:
+A) Symptoms to be eliminated
+B) Hypotheses to be tested
+C) Truths to be accepted
+D) Defenses to be interpreted
+Correct: B
+Explanation: Collaborative empiricism — therapist and client work as a team to examine evidence for and against beliefs treated as hypotheses.
+
+#1194
+Q: Imagery rescripting (schema therapy) involves:
+A) Visualizing future success
+B) Reworking traumatic childhood memories so the unmet need is met or harm is stopped
+C) Hypnotic age regression
+D) Dream interpretation
+Correct: B
+Explanation: Imagery rescripting accesses childhood memory imaginally and inserts an adult self or protective figure to meet the unmet need or stop the harm — particularly powerful for shame, abuse, and neglect schemas.
+
+#1195 (exam only)
+Q: The key distinction between Ellis's REBT and Beck's CT is:
+A) Ellis emphasizes philosophical change (demandingness); Beck emphasizes empirical change (testing evidence)
+B) Ellis uses behavioral techniques; Beck does not
+C) Ellis treats only depression; Beck treats anxiety
+D) Ellis avoided homework
+Correct: A
+Explanation: Ellis targeted the absolutist 'musts' underlying beliefs (philosophical change) with active disputation. Beck targeted specific automatic thoughts with Socratic guided discovery and evidence-testing.
+
+#1196 (exam only)
+Q: Schema modes in schema therapy include all EXCEPT:
+A) Healthy adult
+B) Vulnerable child
+C) Cognitive distortions
+D) Detached protector
+Correct: C
+Explanation: Schema modes are dynamic states such as healthy adult, vulnerable child, angry child, critic modes (punitive, demanding), and coping modes (compliant surrenderer, detached protector, overcompensator). Cognitive distortions are surface thinking errors, not modes.
+
+#1197 (exam only)
+Q: Behavioral experiments in CBT are used to:
+A) Provide reinforcement
+B) Test the empirical accuracy of specific beliefs in real-world situations
+C) Practice relaxation
+D) Build the alliance
+Correct: B
+Explanation: Behavioral experiments operationalize collaborative empiricism — clients run real-world tests of their predictions ('If I speak up, people will mock me') to gather data that updates their beliefs.
+
+#1198 (exam only)
+Q: CBT shows particularly durable post-treatment effects in depression because:
+A) It produces complete remission
+B) It teaches skills (cognitive monitoring, behavioral experiments) that the client continues to use after treatment
+C) It is always combined with medication
+D) It works only for severe depression
+Correct: B
+Explanation: Skills acquisition produces lasting cognitive and behavioral change — explaining why CBT outperforms medication on relapse prevention even after treatment ends.
+
+#1199 (exam only)
+Q: Schema therapy was shown by Giesen-Bloo et al. (2006) to be superior to which comparator for BPD?
+A) DBT
+B) Treatment as usual
+C) Transference-focused psychotherapy (TFP)
+D) Medication
+Correct: C
+Explanation: The Giesen-Bloo (2006) RCT showed schema therapy significantly superior to transference-focused psychotherapy for BPD at 3-year follow-up — establishing schema therapy as a major evidence-based treatment for personality pathology.
+
+==========================================================
+## 3. STUDY GUIDE (1)
+==========================================================
+
+--- Study Guide #53: Cognitive Therapy, CBT, and Schema Therapy ---
+
+## Overview
+
+The cognitive revolution — initiated by Aaron Beck (1963) and Albert Ellis (1955) — shifted the therapeutic focus to the role of cognition in maintaining distress. CBT is now the most extensively researched and widely practiced psychotherapy in the world.
+
+## Beck's Cognitive Therapy / CBT
+
+**Developer**
+- Aaron T. Beck (1921–2021); further developed by Judith Beck and others
+
+**Core assumptions — the cognitive model**
+- Thoughts mediate between events and emotional/behavioral responses
+- Three levels of cognition
+- Automatic thoughts — surface, spontaneous, fleeting
+- Intermediate beliefs — rules, attitudes, conditional assumptions ("If X then Y")
+- Core beliefs / schemas — fundamental beliefs about self, others, world
+
+**Beck's cognitive triad of depression**
+- Negative views of the self ("I am worthless")
+- Negative views of the world ("Everything is unfair")
+- Negative views of the future ("Nothing will improve")
+
+**Theory of change**
+- Identifying and evaluating dysfunctional cognitions through Socratic questioning and behavioral experiments
+- Replacing distorted thoughts with more balanced, evidence-based alternatives
+
+**Key techniques**
+- Thought record (situation → emotion → automatic thought → evidence for/against → balanced thought → outcome)
+- Socratic questioning / guided discovery
+- Behavioral experiments — testing beliefs in vivo
+- Activity scheduling and graded task assignment
+- Downward arrow technique — uncovering core beliefs
+- Problem-solving and relapse prevention
+
+**Therapeutic stance**
+- Collaborative empiricism — therapist and client work as a team examining evidence; cognitions treated as hypotheses
+
+**Evidence**
+- Among the most extensively researched psychotherapies
+- Butler et al. (2006) meta-analysis: large effects for depression (d = 0.82), GAD (d = 1.01), social phobia, panic, PTSD, bulimia
+- CBT shows durable effects; superior to medication in preventing depressive relapse
+
+## Major Cognitive Distortions
+
+Systematic errors in thinking that maintain emotional distress (Beck; expanded by Burns).
+
+**The classical distortions**
+- All-or-nothing (dichotomous) thinking
+- Overgeneralization
+- Mental filter — focusing exclusively on one negative detail
+- Disqualifying the positive
+- Mind reading
+- Fortune telling
+- Catastrophizing / magnification
+- Emotional reasoning ("I feel it, therefore it's true")
+- Should statements
+- Labeling
+- Personalization
+
+## Rational Emotive Behavior Therapy (REBT)
+
+**Developer**
+- Albert Ellis (1913–2007)
+
+**The ABC model**
+- Activating event → Beliefs (rational vs. irrational) → Consequences (emotional/behavioral)
+- It is not the event but the belief that causes emotional disturbance
+
+**Irrational beliefs**
+- Demandingness (musts, shoulds, oughts)
+- Awfulizing
+- Low frustration tolerance (LFT)
+- Global self- or other-deprecation
+
+**The ABCDE model**
+- Add D — Disputation (empirical, logical, pragmatic)
+- Add E — new Effective philosophy
+
+**Key techniques and concepts**
+- Active disputation of irrational beliefs
+- Unconditional self-acceptance (USA), other-acceptance (UOA), life-acceptance (ULA)
+- Shame-attacking exercises
+- Rational emotive imagery
+- Bibliotherapy and humor
+
+**REBT vs. Beck's CT — key distinction**
+- Ellis focused on philosophical change (changing the absolutist demandingness)
+- Beck focused on empirical change (testing the evidence for specific automatic thoughts)
+- Ellis used active confrontation; Beck preferred Socratic guided discovery
+
+## Schema Therapy
+
+**Developer**
+- Jeffrey Young — building on Beck's CT
+
+**Core assumptions**
+- Early maladaptive schemas (EMS) are deeply held, unconditional beliefs about self and relationships
+- Develop in childhood from unmet core emotional needs
+- Maintained through schema perpetuation: avoidance, compensation, or surrender
+
+**18 EMS organized into 5 schema domains**
+- Disconnection/Rejection — abandonment, mistrust, emotional deprivation, defectiveness, social isolation
+- Impaired Autonomy — dependence, vulnerability, enmeshment, failure
+- Impaired Limits — entitlement, insufficient self-control
+- Other-Directedness — subjugation, self-sacrifice, approval-seeking
+- Overvigilance/Inhibition — negativity, emotional inhibition, unrelenting standards, punitiveness
+
+**Schema modes**
+- Healthy adult, vulnerable child, angry child, critic, coping modes (avoidant, surrendering, overcompensating)
+
+**Key techniques**
+- Schema assessment using a structured self-report worksheet
+- Imagery rescripting — reworking traumatic memories to meet unmet childhood needs
+- Mode work (chair dialogues between modes)
+- Limited reparenting — therapist provides, within professional limits, what was missing in childhood
+- Empathic confrontation
+- Letter-writing to parents
+
+**Evidence**
+- Giesen-Bloo et al. (2006) RCT: schema therapy significantly superior to transference-focused psychotherapy for BPD at 3-year follow-up
+- Multiple subsequent RCTs across personality disorders
+
