@@ -43,6 +43,8 @@ export interface Topic {
   description: string;
   flashcardCount: number;
   quizCount: number;
+  /** Number of questions linked to this topic's practice exam (used to clamp the question-count picker). */
+  examQuestionCount?: number;
 }
 
 export type FlashcardDifficulty =

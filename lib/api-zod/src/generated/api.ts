@@ -56,6 +56,12 @@ export const GetTopicsResponseItem = zod.object({
   description: zod.string(),
   flashcardCount: zod.number(),
   quizCount: zod.number(),
+  examQuestionCount: zod
+    .number()
+    .optional()
+    .describe(
+      "Number of questions linked to this topic's practice exam (used to clamp the question-count picker).",
+    ),
 });
 export const GetTopicsResponse = zod.array(GetTopicsResponseItem);
 
@@ -73,6 +79,12 @@ export const GetTopicResponse = zod.object({
   description: zod.string(),
   flashcardCount: zod.number(),
   quizCount: zod.number(),
+  examQuestionCount: zod
+    .number()
+    .optional()
+    .describe(
+      "Number of questions linked to this topic's practice exam (used to clamp the question-count picker).",
+    ),
 });
 
 /**

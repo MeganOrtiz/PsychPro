@@ -479,6 +479,9 @@ components:
           type: integer
         quizCount:
           type: integer
+        examQuestionCount:
+          type: integer
+          description: Number of questions linked to this topic's practice exam (used to clamp the question-count picker).
       required:
         - id
         - name

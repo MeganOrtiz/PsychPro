@@ -94,7 +94,7 @@ router.post("/users/profile", async (req: Request, res: Response): Promise<void>
 });
 
 // LEGACY: returns the legacy per-interaction counter for older clients.
-// New free-tier gating uses /users/topic-access (distinct topics accessed).
+// New free-tier gating lives in `/users/entitlements` (per-content caps).
 router.get("/users/usage", async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = requireUserId(req, res);

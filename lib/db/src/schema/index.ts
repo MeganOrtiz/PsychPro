@@ -89,13 +89,10 @@ export type Progress = typeof progressTable.$inferSelect;
 
 // Tracks the first time a free-tier user accessed a topic's detail page.
 // The free plan allows full, unmetered access to a small number of distinct
-// topics (see FREE_TOPIC_LIMIT on the client). Once a free user has rows here
-// for FREE_TOPIC_LIMIT topics, any new topic is gated behind an upgrade.
-// Composite PK on (user_id, topic_id) makes the upsert idempotent — a user
-// who revisits a topic does not consume an additional slot.
 // (Removed `freeTopicAccessTable` and its `FreeTopicAccess` type — the
 //  "N topics fully unlocked" free-tier model was replaced with per-content
-//  caps. The DB table was dropped. See api-server/lib/entitlements.ts.)
+//  caps (10 flashcards/topic + 1 quiz total + 1 exam total). The DB table
+//  was dropped. See api-server/src/lib/entitlements.ts for the new model.)
 
 export const practiceExamsTable = pgTable("practice_exams", {
   id: serial("id").primaryKey(),
