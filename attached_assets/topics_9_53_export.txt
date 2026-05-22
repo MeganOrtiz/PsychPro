@@ -1,4 +1,16 @@
+This is a DATA-ONLY content fix — linking existing quiz questions
+into practice exams. No new questions should be generated or
+invented; every question already exists and was quality-reviewed.
 
+PHASE A is read-only — print the audit before making changes so I
+can see the current state.
+
+The core operation (PHASE B-3) is: for each broken exam, delete its
+existing question links and re-insert the full set of that topic's
+quiz questions. This is idempotent and upgrades the 5-question stubs
+to full exams in one pass.
+
+Main agent. Data only — no schema changes, no frontend changes.
 ##############################################################
 # TOPIC 9 — Psychopharmacology
 # Counts: flashcards=50, quiz=15, study_guides=1
