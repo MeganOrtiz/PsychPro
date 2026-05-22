@@ -6,17 +6,21 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
+import { FREE_TOPIC_LIMIT } from "@/lib/limits";
+
+// B-1: display name is "Master" (the internal subscriptionStatus / Stripe
+// metadata stays "pro" — see api-server/routes/subscription.ts).
+const PRO_DISPLAY_NAME = "Master";
 
 const PRO_FEATURES = [
-  "Unlimited flashcard interactions",
-  "Unlimited quiz questions",
+  "Unlimited topics, flashcards, quizzes, and exams",
   "Study guides for every topic",
   "Practice exams",
   "Progress tracking",
 ];
 
 const SCHOLAR_FEATURES = [
-  "Everything in Pro",
+  `Everything in ${PRO_DISPLAY_NAME}`,
   "Upload PDF, DOCX, or TXT notes",
   "Paste text directly",
   "AI generates flashcards from your content only",
@@ -106,7 +110,7 @@ export default function SubscriptionPage() {
             {isScholar ? <Sparkles className="w-5 h-5 text-purple-600 dark:text-purple-400 flex-shrink-0" /> : <Crown className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" />}
             <div>
               <p className={`font-semibold ${isScholar ? "text-purple-900 dark:text-purple-300" : "text-green-900 dark:text-green-300"}`}>
-                {isScholar ? "You're on Scholar!" : "You're on Pro!"}
+                {isScholar ? "You're on Scholar!" : `You're on ${PRO_DISPLAY_NAME}!`}
               </p>
               <p className={`text-sm ${isScholar ? "text-purple-700 dark:text-purple-400" : "text-green-700 dark:text-green-400"}`}>
                 {isScholar ? "You have full access including custom study decks." : "Enjoy unlimited access to all built-in content."}
@@ -139,7 +143,7 @@ export default function SubscriptionPage() {
         <div className="bg-card border border-border rounded-xl p-5">
           <div className="flex items-center gap-2 mb-4">
             <Crown className="w-4 h-4 text-primary" />
-            <span className="font-semibold text-foreground text-lg">PsychPro Pro</span>
+            <span className="font-semibold text-foreground text-lg">PsychPro {PRO_DISPLAY_NAME}</span>
             <Badge variant="secondary" className="ml-auto">Most Popular</Badge>
           </div>
 
@@ -179,7 +183,7 @@ export default function SubscriptionPage() {
                     ) : isPro || isScholar ? (
                       isScholar ? "Included in Scholar" : "Current Plan"
                     ) : (
-                      <><Zap className="w-4 h-4 mr-2" />Subscribe to Pro</>
+                      <><Zap className="w-4 h-4 mr-2" />Subscribe to {PRO_DISPLAY_NAME}</>
                     )}
                   </Button>
                 </div>
@@ -254,7 +258,7 @@ export default function SubscriptionPage() {
 
       <div className="bg-card border border-border rounded-xl p-4 text-center mt-5">
         <p className="text-sm text-muted-foreground">
-          Start with <strong className="text-foreground">10 free interactions</strong> — no credit card required.
+          Start with <strong className="text-foreground">full access to {FREE_TOPIC_LIMIT} topics</strong> — no credit card required.
         </p>
       </div>
       </div>

@@ -3,8 +3,11 @@ import { db } from "@workspace/db";
 import { usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { requireUserId } from "../lib/userId";
+import { assertTopicAccess, FREE_TOPIC_LIMIT } from "../lib/topicAccess";
 
 const router = Router();
+// Legacy free-interaction cap. The /users/usage routes are kept as no-ops
+// for backward compatibility with older clients, but no new gating uses it.
 const FREE_LIMIT = 10;
 
 router.get("/users/profile", async (req: Request, res: Response): Promise<void> => {
@@ -91,6 +94,8 @@ router.post("/users/profile", async (req: Request, res: Response): Promise<void>
   }
 });
 
+// LEGACY: returns the legacy per-interaction counter for older clients.
+// New free-tier gating uses /users/topic-access (distinct topics accessed).
 router.get("/users/usage", async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = requireUserId(req, res);
@@ -100,7 +105,7 @@ router.get("/users/usage", async (req: Request, res: Response): Promise<void> =>
     res.json({
       usageCount,
       freeLimit: FREE_LIMIT,
-      isOverLimit: usageCount >= FREE_LIMIT && (user?.subscriptionStatus !== "active" && user?.subscriptionStatus !== "pro" && user?.subscriptionStatus !== "trialing" && user?.subscriptionStatus !== "scholar"),
+      isOverLimit: false,
     });
   } catch (err) {
     req.log.error({ err }, "Error getting user usage");
@@ -108,45 +113,51 @@ router.get("/users/usage", async (req: Request, res: Response): Promise<void> =>
   }
 });
 
+// LEGACY: now a no-op success. The free tier no longer meters per-interaction.
+// Older clients still call this on flashcard flips / quiz answers; respond OK
+// so they don't break, but do not increment any counter.
 router.post("/users/usage", async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = requireUserId(req, res);
     if (!userId) return;
-    let [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
-
-    if (!user) {
-      [user] = await db.insert(usersTable).values({ id: userId, subscriptionStatus: "free", isAdmin: false, onboardingComplete: false, usageCount: 0 }).returning();
-    }
-
-    const isSubscribed = user.subscriptionStatus === "active" || user.subscriptionStatus === "pro" || user.subscriptionStatus === "trialing" || user.subscriptionStatus === "scholar";
-    const currentCount = user.usageCount ?? 0;
-
-    if (!isSubscribed && currentCount >= FREE_LIMIT) {
-      res.status(402).json({
-        error: "Free limit reached",
-        message: `You have used all ${FREE_LIMIT} free interactions. Upgrade to continue learning.`,
-        usageCount: currentCount,
-        freeLimit: FREE_LIMIT,
-        isOverLimit: true,
-      });
-      return;
-    }
-
-    if (!isSubscribed) {
-      [user] = await db
-        .update(usersTable)
-        .set({ usageCount: currentCount + 1 })
-        .where(eq(usersTable.id, userId))
-        .returning();
-    }
-
+    const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
     res.json({
-      usageCount: user.usageCount,
+      usageCount: user?.usageCount ?? 0,
       freeLimit: FREE_LIMIT,
-      isOverLimit: (user.usageCount ?? 0) >= FREE_LIMIT && (user.subscriptionStatus !== "active" && user.subscriptionStatus !== "pro" && user.subscriptionStatus !== "trialing" && user.subscriptionStatus !== "scholar"),
+      isOverLimit: false,
     });
   } catch (err) {
-    req.log.error({ err }, "Error incrementing usage");
+    req.log.error({ err }, "Error in legacy usage endpoint");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// New free-tier gate. Called when a user opens a topic detail page.
+// Subscribed/admin users always pass; free users get an idempotent slot
+// claim. Logic lives in lib/topicAccess.ts so this client-facing endpoint
+// and the per-route guards (study-guide, flashcards, etc.) stay in sync.
+router.post("/users/topic-access", async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = requireUserId(req, res);
+    if (!userId) return;
+    const topicId = Number((req.body as { topicId?: unknown })?.topicId);
+    if (!Number.isFinite(topicId) || topicId <= 0) {
+      res.status(400).json({ error: "Missing or invalid topicId" });
+      return;
+    }
+    const result = await assertTopicAccess(userId, topicId);
+    if (!result.allowed) {
+      res.status(result.status).json(result.body);
+      return;
+    }
+    res.json({
+      allowed: true,
+      usedTopics: result.usedTopics,
+      freeLimit: FREE_TOPIC_LIMIT,
+      isOverLimit: false,
+    });
+  } catch (err) {
+    req.log.error({ err }, "Error recording topic access");
     res.status(500).json({ error: "Internal server error" });
   }
 });

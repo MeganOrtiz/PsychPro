@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { ChevronLeft, ChevronRight, RotateCcw, Layers, Lightbulb, Beaker } from "lucide-react";
-import { useGetFlashcardsByTopic, useIncrementUserUsage, useGetTopic } from "@workspace/api-client-react";
+import { useGetFlashcardsByTopic, useGetTopic } from "@workspace/api-client-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -31,7 +31,6 @@ export default function FlashcardsPage({ params }: Props) {
 
   const { data: flashcards, isLoading, error } = useGetFlashcardsByTopic(topicId);
   const { data: topic } = useGetTopic(topicId);
-  const incrementUsage = useIncrementUserUsage();
 
   const current = flashcards?.[index];
   const total = flashcards?.length ?? 0;
@@ -41,21 +40,11 @@ export default function FlashcardsPage({ params }: Props) {
     return <UpgradePrompt onDismiss={() => navigate(`/topics/${topicId}`)} />;
   }
 
-  const handleFlip = async () => {
-    if (flipped) {
-      setFlipped(false);
-      return;
-    }
-    try {
-      await incrementUsage.mutateAsync();
-    } catch (err) {
-      const e = err as { status?: number };
-      if (e?.status === 402) {
-        setShowUpgrade(true);
-        return;
-      }
-    }
-    setFlipped(true);
+  // Free-tier gating now happens once on the topic detail page (see
+  // useTopicAccessGate). Inside a topic the user already has access to,
+  // flips/answers are unmetered.
+  const handleFlip = () => {
+    setFlipped((f) => !f);
   };
 
   const handleNext = () => {

@@ -1,6 +1,8 @@
 import { useLocation } from "wouter";
 import { Zap, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { STUDY_PALETTE as P } from "@/lib/study-theme";
+import { FREE_TOPIC_LIMIT } from "@/lib/limits";
 
 interface UpgradePromptProps {
   onDismiss?: () => void;
@@ -11,12 +13,15 @@ export default function UpgradePrompt({ onDismiss }: UpgradePromptProps) {
 
   return (
     <div className="p-4 md:p-6 max-w-lg mx-auto flex flex-col items-center justify-center min-h-[60vh] text-center" data-testid="upgrade-prompt">
-      <div className="w-16 h-16 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-6">
-        <Lock className="w-8 h-8 text-amber-600 dark:text-amber-400" />
+      <div
+        className="w-16 h-16 rounded-full flex items-center justify-center mb-6"
+        style={{ background: `rgba(94,176,200,0.18)`, border: `1px solid ${P.surf}55` }}
+      >
+        <Lock className="w-8 h-8" style={{ color: P.tealDeep }} />
       </div>
       <h2 className="text-2xl font-bold text-foreground mb-3">Free Limit Reached</h2>
       <p className="text-muted-foreground mb-8 leading-relaxed">
-        You've used all 10 free interactions. Upgrade to PsychPro Pro for unlimited flashcards, quizzes, and exams.
+        Free accounts get full access to {FREE_TOPIC_LIMIT} topics. Upgrade to PsychPro Master for unlimited topics, flashcards, quizzes, and exams.
       </p>
       <div className="flex flex-col sm:flex-row gap-3 w-full max-w-xs">
         <Button

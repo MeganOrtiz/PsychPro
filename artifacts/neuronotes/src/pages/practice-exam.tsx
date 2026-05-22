@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { ChevronLeft, Clock, Timer, BookOpen, FileText, GraduationCap, Beaker, Lightbulb, Brain, ArrowRight } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
-import { useGetPracticeExamByTopic, useGetTopic, useUpdateTopicProgress, useIncrementUserUsage, useRecordExamAttempt } from "@workspace/api-client-react";
+import { useGetPracticeExamByTopic, useGetTopic, useUpdateTopicProgress, useRecordExamAttempt } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
@@ -28,7 +28,8 @@ export default function PracticeExamPage({ params }: Props) {
   const [questionCount, setQuestionCount] = useState<QuestionCount | null>(null);
   const [started, setStarted] = useState(false);
   const [timed, setTimed] = useState(true);
-  const [warmupEnabled, setWarmupEnabled] = useState(true);
+  // B-13: warm-up is off by default. Users opt in when they want it.
+  const [warmupEnabled, setWarmupEnabled] = useState(false);
   const [warmupActive, setWarmupActive] = useState(false);
   const [warmupText, setWarmupText] = useState("");
   const [index, setIndex] = useState(0);
@@ -41,7 +42,6 @@ export default function PracticeExamPage({ params }: Props) {
   const { data: exam, isLoading, error } = useGetPracticeExamByTopic(topicId);
   const { data: topic } = useGetTopic(topicId);
   const updateProgress = useUpdateTopicProgress();
-  const incrementUsage = useIncrementUserUsage();
   const recordAttempt = useRecordExamAttempt();
 
   const fetchError = error as { status?: number } | null;
@@ -96,14 +96,10 @@ export default function PracticeExamPage({ params }: Props) {
 
   const handleSubmit = () => { submitRef.current(); };
 
-  const handleAnswer = async (qId: number, key: string) => {
+  // Free-tier gating happens on the topic detail page (useTopicAccessGate).
+  // Inside an allowed topic, answering is unmetered.
+  const handleAnswer = (qId: number, key: string) => {
     if (answers[qId]) return;
-    try {
-      await incrementUsage.mutateAsync();
-    } catch (err) {
-      const e = err as { status?: number };
-      if (e?.status === 402) { setShowUpgrade(true); return; }
-    }
     setAnswers(prev => ({ ...prev, [qId]: key }));
   };
 
@@ -271,9 +267,20 @@ export default function PracticeExamPage({ params }: Props) {
                   <div className="flex items-center justify-between">
                     <div>
                       <Label htmlFor="timed-switch" className="text-base font-semibold text-foreground">Timed Mode</Label>
-                      <p className="text-sm text-muted-foreground">Race against the clock</p>
+                      <p className="text-sm text-muted-foreground">
+                        {examIsTimeable ? "Race against the clock" : "This exam has no time limit"}
+                      </p>
                     </div>
-                    <Switch id="timed-switch" checked={timed} onCheckedChange={setTimed} data-testid="switch-timed" />
+                    {/* B-3: toggle is disabled (and visually muted) when the
+                        underlying exam has no time limit, so users can't pick
+                        a setting that has no effect. */}
+                    <Switch
+                      id="timed-switch"
+                      checked={timed && examIsTimeable}
+                      onCheckedChange={setTimed}
+                      disabled={!examIsTimeable}
+                      data-testid="switch-timed"
+                    />
                   </div>
                 </StudySurface>
                 <StudySurface tone="light" innerClassName="p-5">
@@ -324,24 +331,41 @@ export default function PracticeExamPage({ params }: Props) {
           <button onClick={() => { setWarmupActive(false); setStarted(false); }} className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6">
             <ChevronLeft className="w-4 h-4" /> Back to setup
           </button>
-          <section className="rounded-2xl border border-amber-200/60 dark:border-amber-900/40 bg-gradient-to-br from-amber-50/80 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/10 p-6 shadow-sm">
+          {/* Warm-up panel — recolored from amber/orange to the site's
+              cerulean / teal palette so it sits in the same visual family as
+              the rest of the study UI. Subtitle uses a high-contrast color
+              token instead of muted-on-cream, which was unreadable. */}
+          <section
+            className="rounded-2xl border p-6 shadow-sm"
+            style={{
+              borderColor: `${P.surf}55`,
+              background: `linear-gradient(135deg, ${P.surface}, ${P.bg})`,
+              boxShadow: `0 18px 40px -18px ${P.tealDeep}cc`,
+            }}
+          >
             <header className="flex items-start gap-3 mb-3">
-              <div className="w-10 h-10 rounded-lg bg-amber-500/15 flex items-center justify-center shrink-0">
-                <Brain className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+              <div
+                className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+                style={{ background: `rgba(94,176,200,0.18)`, border: `1px solid ${P.surf}55` }}
+              >
+                <Brain className="w-5 h-5" style={{ color: P.surf }} />
               </div>
               <div className="flex-1 min-w-0">
-                <h2 className="text-lg font-semibold text-foreground">Warm up your recall</h2>
-                <p className="text-xs text-muted-foreground italic">
+                <h2 className="text-lg font-semibold text-white">Warm up your recall</h2>
+                <p className="text-xs text-white/80 italic">
                   A 60-second brain-dump before a test reliably raises your score — even when you don't peek at notes.
                 </p>
               </div>
               <Link href="/study-lab">
-                <span className="text-[11px] text-amber-700 dark:text-amber-400 hover:underline cursor-pointer whitespace-nowrap">
+                <span
+                  className="text-[11px] hover:underline cursor-pointer whitespace-nowrap"
+                  style={{ color: P.surf }}
+                >
                   Why →
                 </span>
               </Link>
             </header>
-            <p className="text-base font-medium text-foreground mb-4 leading-relaxed">
+            <p className="text-base font-medium mb-4 leading-relaxed text-white">
               List everything you remember about <span className="font-semibold">{topic?.name ?? "this topic"}</span> — key terms, definitions, mechanisms, examples. Don't worry about being neat.
             </p>
             <Textarea
@@ -349,12 +373,18 @@ export default function PracticeExamPage({ params }: Props) {
               onChange={(e) => setWarmupText(e.target.value)}
               placeholder="Start typing whatever comes to mind…"
               rows={8}
-              className="bg-background/80 border-amber-200 dark:border-amber-900/40 focus-visible:ring-amber-400/40 mb-3 resize-y"
+              className="mb-3 resize-y text-white placeholder:text-white/40"
+              style={{
+                background: `${P.bg}cc`,
+                borderColor: `${P.surf}55`,
+                // @ts-expect-error CSS custom property for focus ring color
+                "--tw-ring-color": `${P.surf}66`,
+              }}
               data-testid="warmup-textarea"
               autoFocus
             />
             <div className="flex flex-wrap items-center gap-3 justify-between">
-              <span className="text-xs text-muted-foreground">
+              <span className="text-xs text-white/70">
                 {wordCount === 0
                   ? "Aim for at least 10 words to prime your memory."
                   : `${wordCount} word${wordCount === 1 ? "" : "s"} ${ready ? "— nice." : "— keep going."}`}
@@ -365,13 +395,18 @@ export default function PracticeExamPage({ params }: Props) {
                   size="sm"
                   onClick={() => { setWarmupActive(false); setWarmupText(""); }}
                   data-testid="button-skip-warmup"
+                  className="text-white/80 hover:text-white hover:bg-white/10"
                 >
                   Skip
                 </Button>
                 <Button
                   onClick={() => { setWarmupActive(false); setWarmupText(""); }}
                   disabled={!ready}
-                  className="bg-amber-500 hover:bg-amber-600 text-white"
+                  className="text-white"
+                  style={{
+                    background: `linear-gradient(135deg, ${P.tealDeep}, ${P.teal})`,
+                    boxShadow: `0 14px 32px -16px ${P.tealDeep}cc`,
+                  }}
                   data-testid="button-begin-exam"
                 >
                   Begin Exam
@@ -526,11 +561,7 @@ export default function PracticeExamPage({ params }: Props) {
         ) : (
           <Button
             variant="outline"
-            onClick={async () => {
-              try { await incrementUsage.mutateAsync(); } catch (err) {
-                const e = err as { status?: number };
-                if (e?.status === 402) { setShowUpgrade(true); return; }
-              }
+            onClick={() => {
               setAnswers(prev => ({ ...prev, [q.id]: "" }));
               if (index + 1 >= total) handleSubmit();
               else setIndex(i => i + 1);

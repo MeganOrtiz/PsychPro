@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Layers, BookOpen, FileText, GraduationCap, Beaker, ArrowRight } from "lucide-react";
 import { useGetTopic } from "@workspace/api-client-react";
@@ -6,6 +7,8 @@ import SpacedRepetitionScheduler from "@/components/learning/spaced-repetition";
 import CategoryHero from "@/components/learning/category-hero";
 import { Breadcrumbs, type BreadcrumbItem } from "@/components/breadcrumbs";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
+import UpgradePrompt from "@/components/upgrade-prompt";
+import { jsonAuthHeaders } from "@/lib/auth-headers";
 
 interface Props {
   params: { id: string };
@@ -15,6 +18,36 @@ export default function TopicDetailPage({ params }: Props) {
   const [, navigate] = useLocation();
   const topicId = parseInt(params.id);
   const { data: topic, isLoading } = useGetTopic(topicId);
+  const [accessBlocked, setAccessBlocked] = useState(false);
+
+  // Free-tier gate: record this topic in `free_topic_access`. If the user is
+  // free and has already accessed FREE_TOPIC_LIMIT distinct topics AND this
+  // one isn't among them, the server returns 402 and we show UpgradePrompt
+  // instead of the topic. Subscribed/admin users always pass.
+  useEffect(() => {
+    if (!Number.isFinite(topicId) || topicId <= 0) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const headers = await jsonAuthHeaders();
+        const res = await fetch("/api/users/topic-access", {
+          method: "POST",
+          headers,
+          body: JSON.stringify({ topicId }),
+        });
+        if (cancelled) return;
+        if (res.status === 402) setAccessBlocked(true);
+      } catch {
+        // Network failure: fail open (don't block the page on a transient
+        // error). The server is the source of truth for actual gating.
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [topicId]);
+
+  if (accessBlocked) {
+    return <UpgradePrompt onDismiss={() => navigate("/topics")} />;
+  }
 
   // Per-mode accent palette. Each card gets its own glow color so the
   // four study modes read as distinct destinations instead of a flat

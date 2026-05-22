@@ -4,6 +4,7 @@ import { topicsTable, flashcardsTable, quizQuestionsTable, studyGuidesTable, pra
 import { eq, count, asc } from "drizzle-orm";
 import { requireUserId } from "../lib/userId";
 import { shuffle } from "../lib/shuffle";
+import { enforceTopicAccess } from "../lib/topicAccess";
 
 const router = Router();
 
@@ -47,7 +48,13 @@ router.get("/topics/:topicId", async (req: Request, res: Response): Promise<void
 
 router.get("/topics/:topicId/flashcards", async (req: Request, res: Response): Promise<void> => {
   try {
+    const userId = requireUserId(req, res);
+    if (!userId) return;
     const topicId = parseInt(String(req.params.topicId));
+    // Server-side gate: free users can only consume study content for their
+    // allotted topics. Without this, a direct API call bypasses the topic
+    // detail page's client-side gate.
+    if (!(await enforceTopicAccess(userId, topicId, res))) return;
     const flashcards = await db.select().from(flashcardsTable).where(eq(flashcardsTable.topicId, topicId));
     res.json(flashcards);
   } catch (err) {
@@ -58,7 +65,10 @@ router.get("/topics/:topicId/flashcards", async (req: Request, res: Response): P
 
 router.get("/topics/:topicId/quizzes", async (req: Request, res: Response): Promise<void> => {
   try {
+    const userId = requireUserId(req, res);
+    if (!userId) return;
     const topicId = parseInt(String(req.params.topicId));
+    if (!(await enforceTopicAccess(userId, topicId, res))) return;
     const questions = await db
       .select()
       .from(quizQuestionsTable)
@@ -87,13 +97,12 @@ router.get("/topics/:topicId/study-guide", async (req: Request, res: Response): 
   try {
     const userId = requireUserId(req, res);
     if (!userId) return;
-    const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
-    const isSubscribed = user && (user.subscriptionStatus === "active" || user.subscriptionStatus === "pro" || user.subscriptionStatus === "trialing" || user.subscriptionStatus === "scholar");
-    if (!isSubscribed) {
-      res.status(402).json({ error: "Subscription required", message: "Study guides are available to subscribers only. Upgrade to unlock full access." });
-      return;
-    }
     const topicId = parseInt(String(req.params.topicId));
+    // Free-tier model: a user's allotted topics get FULL access including
+    // the study guide. The old subscription-only 402 here contradicted the
+    // "2 topics fully unlocked" promise. Now we gate the same way as
+    // flashcards/quizzes — by topic entitlement.
+    if (!(await enforceTopicAccess(userId, topicId, res))) return;
     const [guide] = await db.select().from(studyGuidesTable).where(eq(studyGuidesTable.topicId, topicId));
     if (!guide) {
       res.status(404).json({ error: "Study guide not found" });
@@ -108,7 +117,10 @@ router.get("/topics/:topicId/study-guide", async (req: Request, res: Response): 
 
 router.get("/topics/:topicId/practice-exam", async (req: Request, res: Response): Promise<void> => {
   try {
+    const userId = requireUserId(req, res);
+    if (!userId) return;
     const topicId = parseInt(String(req.params.topicId));
+    if (!(await enforceTopicAccess(userId, topicId, res))) return;
     const requestedCount = parseInt(String(req.query.count ?? "25")) || 25;
     const count = Math.min(Math.max(requestedCount, 1), 50);
 

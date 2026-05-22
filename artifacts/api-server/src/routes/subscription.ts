@@ -40,8 +40,12 @@ router.get("/subscription/plans", async (req: Request, res: Response): Promise<v
     }
     res.json(plans);
   } catch (err) {
+    // B-11: surface real upstream Stripe errors as 500 so the client can
+    // distinguish "Stripe is broken" from "no plans match the filter". The
+    // empty-array path above is reserved for the legitimate case where the
+    // Stripe account simply has zero products tagged `neuronotes_tier`.
     req.log.error({ err }, "Error getting subscription plans");
-    res.json([]);
+    res.status(500).json({ error: "Unable to load plans" });
   }
 });
 

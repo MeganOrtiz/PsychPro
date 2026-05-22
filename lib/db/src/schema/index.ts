@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, timestamp, boolean, bigserial, index } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, timestamp, boolean, bigserial, index, primaryKey } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
@@ -86,6 +86,26 @@ export const progressTable = pgTable("progress", {
 export const insertProgressSchema = createInsertSchema(progressTable).omit({ id: true, lastAccessed: true });
 export type InsertProgress = z.infer<typeof insertProgressSchema>;
 export type Progress = typeof progressTable.$inferSelect;
+
+// Tracks the first time a free-tier user accessed a topic's detail page.
+// The free plan allows full, unmetered access to a small number of distinct
+// topics (see FREE_TOPIC_LIMIT on the client). Once a free user has rows here
+// for FREE_TOPIC_LIMIT topics, any new topic is gated behind an upgrade.
+// Composite PK on (user_id, topic_id) makes the upsert idempotent — a user
+// who revisits a topic does not consume an additional slot.
+export const freeTopicAccessTable = pgTable(
+  "free_topic_access",
+  {
+    userId: text("user_id").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
+    topicId: integer("topic_id").notNull().references(() => topicsTable.id, { onDelete: "cascade" }),
+    firstAccessedAt: timestamp("first_accessed_at").notNull().defaultNow(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.userId, table.topicId] }),
+    index("free_topic_access_user_idx").on(table.userId),
+  ],
+);
+export type FreeTopicAccess = typeof freeTopicAccessTable.$inferSelect;
 
 export const practiceExamsTable = pgTable("practice_exams", {
   id: serial("id").primaryKey(),

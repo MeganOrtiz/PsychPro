@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { STUDY_PALETTE } from "@/lib/study-theme";
 import assessmentImg from "@/assets/topics/assessment.png";
-import clinicalCasesImg from "@/assets/topics/clinical-cases.png";
 import neuropsychologyImg from "@/assets/topics/neuropsychology.png";
 import neuroscienceImg from "@/assets/topics/neuroscience.png";
 import psychologyImg from "@/assets/topics/psychology.png";
@@ -14,6 +13,8 @@ import psychotherapyImg from "@/assets/topics/psychotherapy.png";
 import researchMethodsImg from "@/assets/topics/research-methods.png";
 import specialTopicsImg from "@/assets/topics/special-topics.png";
 
+// B-6: "Clinical Cases" intentionally omitted — the category has no
+// content and was confusing users who clicked into an empty section.
 const CATEGORY_ORDER = [
   "Neuroscience",
   "Psychology",
@@ -22,12 +23,10 @@ const CATEGORY_ORDER = [
   "Psychotherapy",
   "Research Methods",
   "Special Topics",
-  "Clinical Cases",
 ];
 
 const CATEGORY_IMAGES: Record<string, string> = {
   Assessment: assessmentImg,
-  "Clinical Cases": clinicalCasesImg,
   Neuropsychology: neuropsychologyImg,
   Neuroscience: neuroscienceImg,
   Psychology: psychologyImg,
@@ -291,9 +290,11 @@ function CategoryCard({ name, topics, onOpenCategory, onOpenTopic }: CategoryCar
           <p className="text-xs text-white/85">
             {topics.length} {topics.length === 1 ? "topic" : "topics"}
           </p>
+          {/* B-7: removed "Hover to preview" desktop label — on touch
+              devices it was misleading and on desktop the hover state is
+              self-evident. Single, device-agnostic affordance only. */}
           <span className="inline-flex items-center gap-1 text-xs font-medium text-white/90">
-            <span className="hidden md:inline">Hover to preview</span>
-            <span className="md:hidden">Tap to open</span>
+            <span>Tap to open</span>
             <ChevronRight className="w-3.5 h-3.5" />
           </span>
         </div>

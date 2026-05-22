@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { CheckCircle, XCircle, ChevronRight, BookOpen, Lightbulb } from "lucide-react";
-import { useGetQuizzesByTopic, useUpdateTopicProgress, useIncrementUserUsage, useRecordQuizAttempt, useGetTopic } from "@workspace/api-client-react";
+import { useGetQuizzesByTopic, useUpdateTopicProgress, useRecordQuizAttempt, useGetTopic } from "@workspace/api-client-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -41,7 +41,6 @@ export default function QuizPage({ params }: Props) {
     setReflectionSaved(stored.trim().length > 0);
   }, [topicId, currentQuestion?.id]);
   const updateProgress = useUpdateTopicProgress();
-  const incrementUsage = useIncrementUserUsage();
   const recordAttempt = useRecordQuizAttempt();
 
   const fetchError = error as { status?: number } | null;
@@ -61,17 +60,10 @@ export default function QuizPage({ params }: Props) {
       ]
     : [];
 
-  const handleSelect = async (key: string) => {
+  // Free-tier gating happens on the topic detail page (useTopicAccessGate).
+  // Inside an allowed topic, answering is unmetered.
+  const handleSelect = (key: string) => {
     if (selected) return;
-    try {
-      await incrementUsage.mutateAsync();
-    } catch (err) {
-      const e = err as { status?: number };
-      if (e?.status === 402) {
-        setShowUpgrade(true);
-        return;
-      }
-    }
     setSelected(key);
     setShowExplanation(true);
     if (key === current?.correctAnswer) {
