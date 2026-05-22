@@ -35,7 +35,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import featuredWorkImage from "@/assets/generated_images/dashboard.png";
-import spotlightAvatarImage from "@assets/Screenshot_2026-04-28_at_8.01.18_PM_1779324671560.png";
+import spotlightAvatarImage from "@assets/Screenshot_2026-04-28_at_8.01.18_PM_1779409357019.png";
 import spotlightCloudImage from "@assets/Screenshot_2026-05-10_at_3.03.20_PM_1778443775551.png";
 import TodayReviews from "@/components/learning/today-reviews";
 import { StudySurface } from "@/components/study/study-surface";
@@ -633,7 +633,7 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
     return () => { cancelled = true; };
   }, []);
 
-  const featuredName = spot ? spot.submitter.displayName : "Megan O.";
+  const featuredName = spot ? spot.submitter.displayName : "Sarah K.";
   const featuredRole = spot ? (spot.submitter.role ?? "Contributor") : "PsyD Candidate";
   const featuredInstitution = spot ? (spot.submitter.institution ?? "") : "Clinical Neuropsychology";
   const featuredTypeLabel = spot ? workTypeLabel(spot.workType) : "Featured Work";
@@ -692,19 +692,23 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
           <Star className="w-7 h-7 text-white" strokeWidth={1.5} />
         </div>
         <h3
-          className="text-2xl font-bold text-center tracking-[0.18em] uppercase text-white"
-          style={{ textShadow: "0 2px 12px rgba(0,0,0,0.55)" }}
+          className="text-2xl text-center text-white"
+          style={{
+            fontFamily: '"Italiana", "Julius Sans One", serif',
+            letterSpacing: "0.04em",
+            textShadow: "0 2px 12px rgba(0,0,0,0.55)",
+          }}
         >
-          PsychPro
+          Spotlight
         </h3>
         <p
-          className="text-xs text-center mt-2 mb-6 leading-relaxed px-2 tracking-[0.22em] uppercase"
+          className="text-xs text-center mt-2 mb-6 leading-relaxed px-2"
           style={{
-            color: `${PALETTE.mist}dd`,
+            color: `${PALETTE.mist}cc`,
             textShadow: "0 1px 6px rgba(0,0,0,0.5)",
           }}
         >
-          Learn. Expand. Connect.
+          Highlighting the next generation of clinicians and researchers.
         </p>
 
         {/* Featured person — circular avatar with glow ring */}

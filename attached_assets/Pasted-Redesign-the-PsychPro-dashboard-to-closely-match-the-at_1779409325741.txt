@@ -1,0 +1,80 @@
+Redesign the PsychPro dashboard to closely match the attached reference image.
+
+IMPORTANT:
+Do not create a generic dashboard. Recreate the exact layout, spacing, proportions, mood, and visual hierarchy of the reference.
+
+STYLE:
+- Dark cerulean/cyan PsychPro theme
+- Billowy cyan smoke/cloud background across the full page
+- Glassmorphism panels with translucent dark teal fills
+- Thin cyan borders
+- Soft cerulean glow, not green/teal
+- Rounded corners throughout
+- Minimal, elegant, premium clinical/neuroscience feel
+- Font should feel thin, modern, spaced, and clean like the PSYCHPRO title in the reference
+
+LAYOUT:
+1. Full-screen dashboard with no white background.
+2. Left vertical sidebar, fixed width, dark translucent glass.
+3. Centered top logo/title:
+   PSYCHPRO
+   ADVANCE YOUR MIND. ELEVATE CARE.
+4. Main content area in the center with:
+   - “Begin Your Journey” card
+   - “Recommended for You” card with 4 topic cards
+   - Bottom row with “Your Streak” and “Leaderboard”
+5. Right-side tall Spotlight card.
+6. Use the uploaded headshot/photo inside the Spotlight circle.
+7. Spotlight text:
+   Spotlight
+   Highlighting the next generation of clinicians and researchers.
+   Sarah K.
+   PsyD Candidate
+   Clinical Neuropsychology
+   FEATURED WORK
+
+SIDEBAR ITEMS:
+Study:
+- Dashboard
+- Topics
+- Study Lab
+- Brain Lab
+- Progress
+- Resources
+
+Toolkit:
+- My Tools
+- Standard Tools
+- Pro Tools
+
+Community:
+- Community
+- Messages
+- Events
+
+CONTENT:
+Begin Your Journey:
+Pick a topic to start your first study session. We’ll keep track of your progress from here.
+Button: Browse Topics
+
+Recommended for You:
+Psychopharmacology — Expand your knowledge
+Neurophysiology — Strengthen your foundation
+Sensory Systems — Sharpen your skills
+Limbic System & Motivation — Level up next
+
+DESIGN RULES:
+- Keep the dashboard horizontally balanced like the reference.
+- Sidebar should not take over the page.
+- Main center cards should align cleanly.
+- Spotlight card should be tall, right-aligned, and visually dominant.
+- Do not add extra unrelated sections.
+- Do not use bright royal blue, purple, green, or generic SaaS colors.
+- Do not use stock icons that look childish.
+- Do not change the overall structure unless needed for responsiveness.
+
+TECHNICAL:
+Implement this directly in the existing dashboard component/page.
+Use CSS grid for the main layout:
+sidebar | main content | spotlight
+Use responsive behavior only after the desktop version matches the reference.
