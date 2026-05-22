@@ -32,6 +32,7 @@ import {
   Star,
 } from "lucide-react";
 import cloudsBackground from "@/assets/generated_images/landing_page.png";
+import brainHero from "@/assets/generated_images/brain_hero.png";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -228,10 +229,16 @@ export default function LandingPage() {
           height: 100vh;
           z-index: -50;
           background-image:
+            /* Strong top scrim — hides the baked-in brain region of the
+               source PNG on taller viewports where bottom-anchored
+               cropping isn't enough on its own. Fades to clear so the
+               clouds in the middle/lower hero still read. */
             linear-gradient(180deg,
-              rgba(3, 21, 29, 0.00) 0%,
-              rgba(3, 21, 29, 0.00) 55%,
-              rgba(3, 21, 29, 0.55) 80%,
+              ${P.ink} 0%,
+              rgba(3, 21, 29, 0.92) 18%,
+              rgba(3, 21, 29, 0.55) 38%,
+              rgba(3, 21, 29, 0.20) 60%,
+              rgba(3, 21, 29, 0.55) 85%,
               ${P.ink} 100%),
             radial-gradient(ellipse 130% 115% at 50% 50%,
               rgba(3, 21, 29, 0.10) 0%,
@@ -239,10 +246,12 @@ export default function LandingPage() {
               rgba(3, 21, 29, 0.38) 100%),
             url(${cloudsBackground});
           background-size: cover, cover, cover;
-          /* Anchor the source so the brain (which sits ~25% from the
-             top of the portrait composition) reads in the upper third
-             of the hero, clearly above the PSYCHPRO wordmark. */
-          background-position: center 30%, center 30%, center 30%;
+          /* Anchor at center bottom so the baked-in brain (upper ~45%
+             of the portrait source) is cropped off-screen and only the
+             cloud composition fills the hero. The isolated brain layer
+             below renders as a separate transparent element above the
+             wordmark. */
+          background-position: center bottom, center bottom, center bottom;
           background-repeat: no-repeat, no-repeat, no-repeat;
           image-rendering: -webkit-optimize-contrast;
           pointer-events: none;
@@ -253,18 +262,89 @@ export default function LandingPage() {
         .landing-hero-brain {
           display: flex;
           justify-content: center;
-          align-items: center;
+          align-items: flex-end;
           width: 100%;
+          /* The source PNG is portrait with the brain occupying only the
+             upper ~45%; cap the *container* height and let the image
+             overflow downward-invisible so the brain reads compact. */
+          height: clamp(170px, 22vw, 280px);
+          overflow: visible;
+          margin-bottom: -8px;
         }
         .landing-hero-brain img {
-          width: clamp(280px, 42vw, 560px);
+          width: clamp(200px, 28vw, 360px);
           height: auto;
           display: block;
+          /* Pull the image up so its visible brain region aligns with
+             the container. The source has roughly 55% empty space below
+             the brain. */
+          margin-bottom: -42%;
           filter:
-            drop-shadow(0 0 28px rgba(118, 228, 247, 0.45))
-            drop-shadow(0 0 56px rgba(118, 228, 247, 0.28));
+            drop-shadow(0 0 24px rgba(118, 228, 247, 0.55))
+            drop-shadow(0 0 48px rgba(118, 228, 247, 0.30));
           pointer-events: none;
           user-select: none;
+          animation: brainFloat 7s ease-in-out infinite;
+        }
+        @keyframes brainFloat {
+          0%, 100% { transform: translateY(0); }
+          50%      { transform: translateY(-6px); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .landing-hero-brain img { animation: none; }
+        }
+        .landing-glow-link {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.45rem;
+          padding: 0.5rem 0.25rem;
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          transition: color .25s ease, text-shadow .35s ease, letter-spacing .35s ease;
+        }
+        .landing-glow-link:hover {
+          color: rgba(232, 252, 255, 1) !important;
+          text-shadow:
+            0 0 12px rgba(167, 243, 255, 0.85),
+            0 0 24px rgba(118, 228, 247, 0.45);
+          letter-spacing: 0.34em;
+        }
+        .landing-glow-link:focus-visible {
+          outline: 2px solid rgba(167, 243, 255, 0.85);
+          outline-offset: 4px;
+          border-radius: 4px;
+        }
+        .landing-glass-btn:focus-visible,
+        .landing-glass-icon-btn:focus-visible {
+          outline: 2px solid rgba(167, 243, 255, 0.85);
+          outline-offset: 2px;
+        }
+        .nav-text-link {
+          position: relative;
+          transition: color .25s ease, text-shadow .3s ease;
+        }
+        .nav-text-link:hover {
+          color: ${P.cloud} !important;
+          text-shadow: 0 0 10px rgba(167, 243, 255, 0.7);
+        }
+        .nav-text-link:focus-visible {
+          outline: 2px solid rgba(167, 243, 255, 0.85);
+          outline-offset: 4px;
+          border-radius: 2px;
+        }
+        .footer-text-link {
+          transition: color .25s ease, text-shadow .3s ease;
+        }
+        .footer-text-link:hover {
+          color: ${P.cloud} !important;
+          text-shadow: 0 0 10px rgba(167, 243, 255, 0.7);
+        }
+        .footer-text-link:focus-visible {
+          outline: 2px solid rgba(167, 243, 255, 0.85);
+          outline-offset: 3px;
+          border-radius: 2px;
         }
         .landing-glass-btn {
           position: relative;
@@ -378,7 +458,7 @@ export default function LandingPage() {
                   key={link.label}
                   href={link.href}
                   onClick={() => setActiveNav(link.label)}
-                  className="relative text-xs font-light transition-colors"
+                  className="nav-text-link text-xs font-light"
                   style={{
                     ...TRACK_NAV,
                     color: isActive ? P.cloud : P.inkSoft,
@@ -441,15 +521,22 @@ export default function LandingPage() {
           drops down into the cloud composition, leaving the brain in the
           fixed background visible centered above it. The fixed canvas
           fills the viewport — there is NO gap above the brain. */}
-      <section className="relative flex flex-col items-center justify-center pt-44 md:pt-56 lg:pt-64 pb-20 md:pb-28">
+      <section className="relative flex flex-col items-center justify-center pt-20 md:pt-24 lg:pt-28 pb-20 md:pb-28">
         <div className="max-w-5xl mx-auto px-6 lg:px-10 text-center relative z-10">
-          {/* Wordmark (brain is baked into the landing_page.png canvas) */}
+          {/* Isolated transparent brain — sits above the wordmark.
+              The original baked brain in landing_page.png is cropped
+              off-screen by background-position: center bottom. */}
+          <div className="landing-hero-brain" aria-hidden>
+            <img src={brainHero} alt="" draggable={false} />
+          </div>
+
+          {/* Wordmark — thin Proxima Nova / Outfit 200 */}
           <h1
-            className="leading-none relative"
+            className="leading-none relative mt-2"
             style={{
               ...TRACK_HERO,
-              fontFamily: '"Montserrat", "Inter", system-ui, sans-serif',
-              fontWeight: 500,
+              fontFamily: 'var(--app-font-sans), "Outfit", "Inter", system-ui, sans-serif',
+              fontWeight: 200,
               fontSize: "clamp(44px, 7.5vw, 88px)",
               color: P.cloud,
               textShadow: `0 0 24px rgba(118, 228, 247, 0.30)`,
@@ -461,9 +548,11 @@ export default function LandingPage() {
           {/* Tagline — original color preserved; only a soft dark
               text-shadow added so it reads against the cloud tile. */}
           <p
-            className="mt-4 text-sm md:text-base font-light"
+            className="mt-4 text-sm md:text-base"
             style={{
               ...TRACK_WIDE,
+              fontFamily: 'var(--app-font-sans), "Outfit", "Inter", system-ui, sans-serif',
+              fontWeight: 200,
               color: P.mist,
               textShadow: `0 1px 6px rgba(3, 21, 29, 0.6)`,
             }}
@@ -471,56 +560,74 @@ export default function LandingPage() {
             LEARN. EXPAND. CONNECT.
           </p>
 
-          {/* Body copy — original color preserved; soft dark
-              text-shadow scrim for readability against the clouds. */}
+          {/* Body copy — lightly tightened tone, thin face for cohesion. */}
           <p
-            className="mt-8 mx-auto max-w-2xl text-base md:text-[17px] leading-relaxed font-light"
+            className="mt-8 mx-auto max-w-2xl text-base md:text-[17px] leading-relaxed"
             style={{
+              fontFamily: 'var(--app-font-sans), "Outfit", "Inter", system-ui, sans-serif',
+              fontWeight: 300,
               color: P.inkSoft,
               textShadow: `0 1px 6px rgba(3, 21, 29, 0.65)`,
             }}
           >
-            Your all-in-one platform for mastering clinical psychology through
-            expert-led courses, practical tools, and a supportive professional
-            community.
+            One quiet place to master clinical psychology — built around the
+            way the brain actually learns, with the tools and community to
+            keep you moving.
           </p>
 
-          {/* CTAs */}
-          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button
-              onClick={goToApp}
-              className="landing-glass-btn group inline-flex items-center gap-3 px-8 h-12 rounded-md text-xs font-light"
-              style={{
-                ...TRACK_NAV,
-                color: P.cloud,
-                background: "rgba(10, 45, 61, 0.72)",
-                border: `1px solid rgba(118, 228, 247, 0.45)`,
-                backdropFilter: "blur(18px) saturate(140%)",
-                WebkitBackdropFilter: "blur(18px) saturate(140%)",
-                boxShadow: `0 0 18px rgba(118, 228, 247, 0.20), inset 0 0 12px rgba(118, 228, 247, 0.05)`,
+          {/* CTA cluster — primary (large), secondary (smaller), tertiary
+              text-link with glow that scroll-jumps to "WHAT'S INSIDE". */}
+          <div className="mt-10 flex flex-col items-center gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 items-center">
+              <button
+                onClick={goToApp}
+                className="landing-glass-btn group inline-flex items-center gap-3 px-10 h-14 rounded-full text-sm font-light"
+                style={{
+                  ...TRACK_NAV,
+                  color: P.cloud,
+                  background: "rgba(10, 45, 61, 0.72)",
+                  border: `1px solid rgba(167, 243, 255, 0.55)`,
+                  backdropFilter: "blur(18px) saturate(140%)",
+                  WebkitBackdropFilter: "blur(18px) saturate(140%)",
+                  boxShadow: `0 0 22px rgba(118, 228, 247, 0.28), inset 0 0 14px rgba(118, 228, 247, 0.08)`,
+                }}
+                data-testid="cta-explore-courses"
+              >
+                <BookOpen className="w-4 h-4" style={{ color: P.surf }} />
+                START STUDYING
+              </button>
+              <button
+                onClick={goToApp}
+                className="landing-glass-btn group inline-flex items-center gap-3 px-7 h-11 rounded-full text-xs font-light"
+                style={{
+                  ...TRACK_NAV,
+                  color: P.cloud,
+                  background: "rgba(10, 45, 61, 0.55)",
+                  border: `1px solid rgba(118, 228, 247, 0.38)`,
+                  backdropFilter: "blur(18px) saturate(140%)",
+                  WebkitBackdropFilter: "blur(18px) saturate(140%)",
+                  boxShadow: `0 0 14px rgba(118, 228, 247, 0.18), inset 0 0 10px rgba(118, 228, 247, 0.04)`,
+                }}
+                data-testid="cta-join-community"
+              >
+                <Users className="w-4 h-4" style={{ color: P.surf }} />
+                MEET YOUR COHORT
+              </button>
+            </div>
+            <a
+              href="#whats-inside"
+              onClick={(e) => {
+                e.preventDefault();
+                document
+                  .getElementById("whats-inside")
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
               }}
-              data-testid="cta-explore-courses"
+              className="landing-glow-link text-[11px] font-light"
+              style={{ ...TRACK_NAV, color: P.inkSoft }}
+              data-testid="cta-see-inside"
             >
-              <BookOpen className="w-4 h-4" style={{ color: P.surf }} />
-              EXPLORE COURSES
-            </button>
-            <button
-              onClick={goToApp}
-              className="landing-glass-btn group inline-flex items-center gap-3 px-8 h-12 rounded-md text-xs font-light"
-              style={{
-                ...TRACK_NAV,
-                color: P.cloud,
-                background: "rgba(10, 45, 61, 0.72)",
-                border: `1px solid rgba(118, 228, 247, 0.45)`,
-                backdropFilter: "blur(18px) saturate(140%)",
-                WebkitBackdropFilter: "blur(18px) saturate(140%)",
-                boxShadow: `0 0 18px rgba(118, 228, 247, 0.20), inset 0 0 12px rgba(118, 228, 247, 0.05)`,
-              }}
-              data-testid="cta-join-community"
-            >
-              <Users className="w-4 h-4" style={{ color: P.surf }} />
-              JOIN COMMUNITY
-            </button>
+              → SEE WHAT'S INSIDE
+            </a>
           </div>
         </div>
       </section>
@@ -905,21 +1012,21 @@ export default function LandingPage() {
           <div className="flex items-center gap-7 font-light">
             <a
               href="#"
-              className="transition-colors hover:opacity-100"
+              className="footer-text-link"
               style={{ ...TRACK_NAV, color: P.inkSoft }}
             >
               PRIVACY POLICY
             </a>
             <a
               href="#"
-              className="transition-colors hover:opacity-100"
+              className="footer-text-link"
               style={{ ...TRACK_NAV, color: P.inkSoft }}
             >
               TERMS OF SERVICE
             </a>
             <a
               href="#"
-              className="transition-colors hover:opacity-100"
+              className="footer-text-link"
               style={{ ...TRACK_NAV, color: P.inkSoft }}
             >
               CONTACT
@@ -930,7 +1037,7 @@ export default function LandingPage() {
               <a
                 key={i}
                 href="#"
-                className="w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                className="landing-glass-icon-btn w-8 h-8 rounded-full flex items-center justify-center"
                 style={{
                   border: `1px solid rgba(118, 228, 247, 0.28)`,
                   background: "rgba(6, 32, 44, 0.4)",
