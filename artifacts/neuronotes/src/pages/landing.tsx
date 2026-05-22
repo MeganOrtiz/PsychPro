@@ -448,8 +448,8 @@ export default function LandingPage() {
             className="leading-none relative"
             style={{
               ...TRACK_HERO,
-              fontFamily: '"Italiana", "Julius Sans One", "Outfit", system-ui, serif',
-              fontWeight: 400,
+              fontFamily: '"Montserrat", "Inter", system-ui, sans-serif',
+              fontWeight: 500,
               fontSize: "clamp(44px, 7.5vw, 88px)",
               color: P.cloud,
               textShadow: `0 0 24px rgba(118, 228, 247, 0.30)`,
