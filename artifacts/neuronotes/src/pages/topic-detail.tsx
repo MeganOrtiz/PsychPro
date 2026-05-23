@@ -82,7 +82,7 @@ export default function TopicDetailPage({ params }: Props) {
       ? [
           {
             label: topic.category,
-            href: `/topics?category=${encodeURIComponent(topic.category)}`,
+            href: `/topics#category-${topic.category.toLowerCase().replace(/\s+/g, "-")}`,
           },
         ]
       : []),
