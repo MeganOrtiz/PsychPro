@@ -1,0 +1,175 @@
+PSYCHPRO — STUDY LAB OVERHAUL
+Rewire the Study Lab from hardcoded demo content to a real tool
+operating on the user's actual topics, fix all known bugs, and
+align it to the cerulean palette.
+
+Scope: artifacts/neuronotes/src/pages/study-lab.tsx and
+artifacts/neuronotes/src/components/learning/* (brain-dump,
+spaced-repetition, interleaving-mode, elaboration-panel,
+today-reviews). Plus any backend endpoint needed to serve real
+flashcards for the techniques. Do NOT touch landing.tsx,
+dashboard.tsx, or the cerulean cloud background in index.css.
+
+================================================================
+WHY
+================================================================
+The Lab currently runs every technique on HARDCODED sample content
+(SAMPLE_CARDS, RECALL_PROMPTS, a single hardcoded "Theory of Mind"
+SRS card) that has nothing to do with what the user is actually
+studying. It persists everything to localStorage, disconnected from
+the user account. The result feels like a demo, not a tool, and
+that disconnect — not just the bugs — is why it feels unintuitive.
+This overhaul makes the techniques operate on the user's real
+topics and content, fixes the concrete bugs, and aligns the visuals.
+
+Phases: A (read-only audit) → B (rewire + fixes) → C (verify).
+
+================================================================
+GROUND RULES
+================================================================
+- Use STUDY_PALETTE tokens. NO raw Tailwind brand colors
+  (green-*, amber-*, orange-*, purple-*). The "success/finished"
+  state uses the palette's teal/success tone; warm accents move
+  to cerulean family.
+- Prefer backend/account persistence over localStorage where an
+  endpoint exists or can be added. If a full backend migration is
+  too large, FLAG it in Phase A and propose the smallest viable
+  version rather than silently keeping localStorage.
+- Keep all data-testid attributes. TypeScript clean.
+- If any step requires a schema change or a new endpoint, FLAG it
+  in the Phase A plan BEFORE building so it can be reviewed.
+
+────────────────────────────────────────────────────────────────
+PHASE A — READ-ONLY AUDIT (report before changing anything)
+────────────────────────────────────────────────────────────────
+
+A-1. Confirm and list every HARDCODED content source in the Lab:
+SAMPLE_CARDS (Mixed Mode), RECALL_PROMPTS (Active Recall), the
+hardcoded SRS card ("lab-theory-of-mind"), and any others. Paste
+where each is defined and consumed.
+
+A-2. Confirm all persistence is localStorage. List every storage
+key scheme used across the Lab components (braindump:, srs:, etc.).
+
+A-3. KEY-MISMATCH BUG: TodayReviews scans localStorage for
+"srs:topic-<id>" keys, but the Lab's SpacedRepetitionScheduler
+writes "srs:lab-theory-of-mind" (and exam writes "srs:exam-..."?).
+Trace it and confirm: do the Lab's own spaced-repetition reviews
+EVER surface in TodayReviews? Report the exact key namespaces.
+
+A-4. Is there an existing backend endpoint that returns flashcards
+for a topic (e.g. GET /api/topics/:id/flashcards) and a list of
+the user's topics (GET /api/topics)? Paste their shapes. We need
+these to feed real content into the Lab. If a "flashcards across
+multiple topics" or "topics the user has studied" endpoint does
+NOT exist, say so and propose the minimal addition.
+
+A-5. List every off-palette color class (green-*, amber-*,
+orange-*, purple-*) in the Lab components and the exam warm-up.
+
+A-6. List every link/route reference to "/study-lab" across the
+app (for awareness; do NOT rename the route in this prompt — the
+sidebar rename is a separate task).
+
+REPORT A-1..A-6 and your Phase B plan (especially any new endpoint
+or schema change) BEFORE editing.
+
+────────────────────────────────────────────────────────────────
+PHASE B — REWIRE + FIXES
+────────────────────────────────────────────────────────────────
+
+B-1. MIXED MODE on real content.
+Replace SAMPLE_CARDS with the user's real flashcards. The Lab
+should let the user pick which topics to interleave (a small
+multi-select of their topics, defaulting to a sensible set), then
+pull real flashcards from those topics via the backend and
+interleave them. The "topic distribution" bar should reflect the
+real selected topics. If no topics are selected/available, show a
+clear empty state prompting them to pick topics. Remove the
+hardcoded SAMPLE_CARDS array.
+
+B-2. ACTIVE RECALL on real content.
+Replace the fixed RECALL_PROMPTS pool with prompts derived from
+the user's real topics. Simplest acceptable approach: let the user
+pick a topic, then present that topic's real flashcards/study
+prompts as recall items, advancing through them. The brain-dump
+textarea + reveal flow stays. Remove the hardcoded RECALL_PROMPTS
+where feasible (or, if a curated prompt set is desired, clearly
+tie prompts to real topics the user can choose). Empty state when
+no topic chosen.
+
+B-3. SPACED REPETITION — make it real and connected.
+- Let the user schedule spaced repetition for a REAL topic they
+  choose (not the hardcoded "Theory of Mind" card).
+- FIX THE KEY MISMATCH: the Lab's SRS must write to the SAME key
+  scheme TodayReviews reads ("srs:topic-<id>"), so reviews
+  scheduled in the Lab actually appear in TodayReviews. Unify the
+  scheme. Confirm round-trip: schedule in Lab → appears in
+  TodayReviews.
+- Keep the Day 1/3/7/14 interval model, but make the in-session
+  experience non-confusing: clearly show "next review in X days"
+  as a SCHEDULE the user is setting up for later (not something
+  that should resolve in-session). Frame copy so users understand
+  this is a multi-day plan, not a same-session activity. (This is
+  the #1 "I clicked it and nothing happened" complaint.)
+- Persist to the account/backend if an endpoint exists or can be
+  added cheaply; otherwise keep localStorage but unify the key
+  scheme as above and FLAG the persistence limitation.
+
+B-4. ELABORATION — confirm it works on real context.
+The ElaborationPanel takes a context string. Ensure that when
+launched from a topic/exam, it receives real topic context, and
+from the Lab landing it prompts the user to pick what they're
+elaborating on rather than a generic placeholder. Persist notes to
+the account if feasible; otherwise keep local but flag it.
+
+B-5. PALETTE alignment.
+Replace every off-palette color (from A-5) with STUDY_PALETTE
+tokens. The SRS "finished" badge, the exam warm-up amber/orange
+gradient — all move into the cerulean/teal family. No raw green/
+amber/orange/purple.
+
+B-6. EMPTY STATES + INTUITIVENESS.
+Each technique must have a clear empty state and a one-line "what
+this does and how to use it" so the user isn't dropped into a tool
+with no context. The Lab landing should make clear these techniques
+operate on THEIR topics. Remove any copy implying canned/sample
+content is the user's own.
+
+B-7. PERSISTENCE (conditional on A-4 / your plan).
+If you add backend persistence for SRS/brain-dump/elaboration,
+flag the schema change first. If staying localStorage for now,
+ensure keys are consistent and namespaced and note the limitation
+in your report. Do not leave two conflicting key schemes.
+
+────────────────────────────────────────────────────────────────
+PHASE C — VERIFY
+────────────────────────────────────────────────────────────────
+[ ] Mixed Mode interleaves the user's REAL selected topics; no
+    SAMPLE_CARDS remain
+[ ] Active Recall presents real topic content; fixed hardcoded
+    pool removed or clearly tied to real topics
+[ ] Spaced Repetition schedules a real chosen topic
+[ ] Lab-scheduled SRS reviews ACTUALLY appear in TodayReviews
+    (key mismatch fixed; round-trip confirmed)
+[ ] SRS in-session copy makes the multi-day schedule intuitive
+    (no "clicked it, nothing happened" confusion)
+[ ] Elaboration receives real context; sensible empty state
+[ ] No off-palette colors anywhere in the Lab or exam warm-up
+[ ] Every technique has a clear empty state + how-to line
+[ ] No conflicting localStorage key schemes
+[ ] neuronotes typecheck + build pass; no console errors on the
+    Lab page
+
+================================================================
+REPORT BACK WITH
+================================================================
+1. PHASE A findings (A-1..A-6) and the plan you executed
+2. Each PHASE B item: done / partial / blocked / flagged
+3. Any new endpoint or schema change made (flag explicitly)
+4. Whether persistence moved to backend or stayed localStorage,
+   and why
+5. typecheck/build results + any console errors
+6. Honest assessment: is the Lab now a real tool operating on the
+   user's content, or are there parts that still rely on hardcoded
+   samples you couldn't rewire? Be specific about what's left.
