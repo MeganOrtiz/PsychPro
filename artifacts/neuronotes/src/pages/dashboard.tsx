@@ -244,17 +244,20 @@ export default function DashboardPage() {
           <div
             className="rounded-xl p-4 mb-6 flex items-start gap-3 border"
             style={{
-              background: "rgba(244,180,98,0.14)",
-              borderColor: "rgba(244,180,98,0.55)",
+              background: "rgba(94,176,200,0.16)",
+              borderColor: `${PALETTE.tealDeep}88`,
             }}
             data-testid="banner-over-limit"
           >
-            <Zap className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+            <Zap
+              className="w-5 h-5 flex-shrink-0 mt-0.5"
+              style={{ color: PALETTE.tealDeep }}
+            />
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-amber-900 text-sm">
+              <p className="font-semibold text-sm" style={{ color: PALETTE.mist }}>
                 Free limit reached
               </p>
-              <p className="text-amber-800 text-sm mt-1">
+              <p className="text-sm mt-1" style={{ color: `${PALETTE.mist}cc` }}>
                 You've used all {summary?.freeLimit ?? 10} free interactions.
                 Upgrade to continue studying.
               </p>
