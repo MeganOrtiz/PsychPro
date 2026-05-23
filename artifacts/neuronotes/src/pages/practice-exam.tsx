@@ -183,7 +183,7 @@ export default function PracticeExamPage({ params }: Props) {
               boxShadow: passed ? `0 18px 40px -18px ${P.tealDeep}cc` : "none",
             }}
           >
-            <span className={cn("text-3xl font-bold", passed ? "text-white" : "text-amber-700")}>{score}%</span>
+            <span className="text-3xl font-bold" style={{ color: passed ? "#FFFFFF" : "#B8453A" }}>{score}%</span>
           </div>
           <h2 className="text-2xl font-bold text-foreground mb-2">Exam Complete</h2>
           <p className="text-muted-foreground">{correct}/{total} correct</p>

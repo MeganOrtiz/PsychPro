@@ -57,6 +57,13 @@ export default function SpacedRepetitionScheduler({ storageKey, cardTitle, cardS
     return () => clearInterval(t);
   }, []);
 
+  // Reload state if the storageKey changes at runtime (e.g. the Lab swaps the
+  // scheduled topic without remounting). Without this, the previous topic's
+  // state would be written into the new key on the next save.
+  useEffect(() => {
+    setState(loadState(storageKey));
+  }, [storageKey]);
+
   useEffect(() => {
     saveState(storageKey, state);
   }, [storageKey, state]);
@@ -96,14 +103,14 @@ export default function SpacedRepetitionScheduler({ storageKey, cardTitle, cardS
         <div className="flex-1 min-w-0">
           <h3 className="text-lg font-semibold text-foreground">Spaced Repetition</h3>
           <p className="text-xs text-muted-foreground italic">
-            Spacing reviews across days strengthens long-term recall.
+            A multi-day plan — each checkpoint unlocks on its own day and appears in Today's Reviews when ready.
           </p>
         </div>
         <span
           className={cn(
             "shrink-0 inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full",
             isFinished
-              ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400"
+              ? "bg-primary/15 text-primary border border-primary/30"
               : ready
                 ? "bg-primary text-primary-foreground"
                 : "bg-muted text-muted-foreground"

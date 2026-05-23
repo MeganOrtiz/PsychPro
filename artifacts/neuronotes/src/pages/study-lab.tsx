@@ -1,65 +1,20 @@
-import { useState } from "react";
-import { Beaker, Brain, CalendarDays, Shuffle, Lightbulb, ArrowRight, ChevronLeft } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Beaker, Brain, CalendarDays, Shuffle, Lightbulb, ArrowRight, ChevronLeft, BookOpen, Info } from "lucide-react";
 import { Link } from "wouter";
+import { useQueries } from "@tanstack/react-query";
+import {
+  useGetTopics,
+  getFlashcardsByTopic,
+  type Topic,
+  type Flashcard,
+} from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 import BrainDump from "@/components/learning/brain-dump";
 import SpacedRepetitionScheduler from "@/components/learning/spaced-repetition";
 import InterleavingMode, { type InterleaveCard } from "@/components/learning/interleaving-mode";
 import ElaborationPanel from "@/components/learning/elaboration-panel";
-
-const SAMPLE_CARDS: InterleaveCard[] = [
-  {
-    topic: "ADHD",
-    question:
-      "What two broad symptom dimensions define attention-deficit/hyperactivity disorder (ADHD) presentations?",
-    answer:
-      "Inattention and hyperactivity-impulsivity. Each can dominate independently, producing predominantly inattentive, predominantly hyperactive-impulsive, or combined presentations.",
-  },
-  {
-    topic: "Mood Disorders",
-    question: "Why does anhedonia carry diagnostic weight beyond low mood alone?",
-    answer:
-      "Anhedonia reflects disrupted reward processing in mesolimbic circuitry — a core feature that distinguishes major depressive disorder from transient sadness or grief responses.",
-  },
-  {
-    topic: "Autism Spectrum",
-    question:
-      "How do social communication deficits in autism spectrum disorder (ASD) differ from social anxiety?",
-    answer:
-      "ASD involves reduced social reciprocity and difficulty reading social cues across contexts; social anxiety preserves social skill but inhibits expression due to fear of evaluation.",
-  },
-  {
-    topic: "Anxiety",
-    question:
-      "What distinguishes generalized anxiety disorder (GAD) worry from worry tied to another disorder?",
-    answer:
-      "GAD worry is excessive, hard to control, and spans multiple life domains — finances, health, work, family — rather than being tied to a specific feared object, situation, or trauma.",
-  },
-  {
-    topic: "ADHD",
-    question: "Which executive function domains are most consistently affected in ADHD?",
-    answer:
-      "Working memory, response inhibition, sustained attention, and self-regulation of arousal — a profile sometimes summarized as 'cool' versus 'hot' executive control deficits.",
-  },
-  {
-    topic: "Mood Disorders",
-    question: "What feature differentiates a mixed mood episode from rapid cycling?",
-    answer:
-      "A mixed episode features depressive and manic-spectrum symptoms simultaneously within the same episode; rapid cycling refers to four or more discrete mood episodes within a year.",
-  },
-  {
-    topic: "Autism Spectrum",
-    question: "Why is restricted/repetitive behavior considered a core feature of ASD, not secondary?",
-    answer:
-      "Restricted, repetitive patterns of behavior, interests, or activities reflect the same underlying difference in neural prediction and flexibility that drives social-communication features — they're two expressions of one phenotype.",
-  },
-  {
-    topic: "Anxiety",
-    question: "How does avoidance maintain anxiety disorders over time?",
-    answer:
-      "Avoidance prevents corrective learning. The feared outcome is never disconfirmed, so the anxiety response stays intact and often generalizes to related cues.",
-  },
-];
 
 type TechId = "active-recall" | "spaced" | "mixed" | "elaboration";
 
@@ -69,6 +24,7 @@ const TECHNIQUES: {
   title: string;
   blurb: string;
   longBlurb: string;
+  howToUse: string;
 }[] = [
   {
     id: "active-recall",
@@ -76,6 +32,7 @@ const TECHNIQUES: {
     title: "Active Recall",
     blurb: "Retrieve information to strengthen memory pathways.",
     longBlurb: "Pull the answer out of your head before checking — that retrieval effort is what makes the memory stick.",
+    howToUse: "Pick a topic. We'll show you one of its flashcards as a prompt. Write what you remember, then reveal the answer.",
   },
   {
     id: "spaced",
@@ -83,6 +40,7 @@ const TECHNIQUES: {
     title: "Spaced Repetition",
     blurb: "Review over time to build long-term retention.",
     longBlurb: "Review at expanding intervals (Day 1, 3, 7, 14) so each return interrupts the forgetting curve.",
+    howToUse: "Pick a topic and start its retention plan. Each day-checkpoint appears in Today's Reviews on your home page when it's due — this is a multi-day plan, not a same-session activity.",
   },
   {
     id: "mixed",
@@ -90,6 +48,7 @@ const TECHNIQUES: {
     title: "Mixed Mode",
     blurb: "Mix topics over time to improve discrimination and flexibility.",
     longBlurb: "Interleaving forces your brain to choose the right strategy, not just repeat one — durable learning.",
+    howToUse: "Pick two or more of your topics. We'll interleave their real flashcards so you have to discriminate between them.",
   },
   {
     id: "elaboration",
@@ -97,76 +56,408 @@ const TECHNIQUES: {
     title: "Elaboration",
     blurb: "Connect ideas and explain why they make sense.",
     longBlurb: "Why does this make sense? How does it connect to what you already know? Generative answers consolidate it.",
+    howToUse: "Pick a topic to anchor your reflection. Generative prompts help you connect what you've learned to clinical reality.",
   },
 ];
 
-// Pool of long-form recall prompts for the Active Recall technique.
-// Each prompt is paired with the topic it belongs to so the user
-// always sees the domain context in the box header.
-const RECALL_PROMPTS: { topic: string; prompt: string; answer: string }[] = [
-  {
-    topic: "Cognitive Domain — Executive Function",
-    prompt:
-      "Define executive function in your own words and list at least three sub-processes a clinician would assess.",
-    answer:
-      "Executive function is the set of top-down cognitive processes that coordinate goal-directed behavior. Core sub-processes include: (1) working memory — holding and manipulating information online, (2) response inhibition — suppressing prepotent or automatic responses, (3) cognitive flexibility — shifting set in response to changing demands, and often (4) planning/organization and (5) self-monitoring. Performance-based and report-based measures are typically combined because they capture different aspects of the construct.",
-  },
-  {
-    topic: "Mood Disorders — Major Depression",
-    prompt:
-      "What features distinguish a major depressive episode from grief or normative sadness, and why does anhedonia matter diagnostically?",
-    answer:
-      "A major depressive episode requires ≥2 weeks of depressed mood or anhedonia plus a constellation of neurovegetative, cognitive, and motivational symptoms causing significant impairment. Grief is wave-like, tied to the loss, with preserved self-esteem and capacity for positive affect between waves. Anhedonia carries diagnostic weight because it reflects disrupted mesolimbic reward processing — a core neural feature that distinguishes MDD from transient sadness.",
-  },
-  {
-    topic: "Anxiety Disorders — GAD",
-    prompt:
-      "How would you differentiate generalized anxiety disorder (GAD) from a specific phobia or panic disorder in a clinical interview?",
-    answer:
-      "GAD is characterized by excessive, hard-to-control worry across multiple life domains (work, health, finances, family) most days for ≥6 months, with somatic symptoms like muscle tension and sleep disturbance. Specific phobia involves a circumscribed fear of a defined object/situation with avoidance. Panic disorder centers on recurrent unexpected panic attacks plus persistent worry about future attacks or behavioral change to avoid them — the worry is *about the attacks*, not generalized.",
-  },
-  {
-    topic: "Neurodevelopmental — ADHD",
-    prompt:
-      "Name the two symptom dimensions that define ADHD presentations and describe the executive-function profile most consistently affected.",
-    answer:
-      "The two dimensions are inattention and hyperactivity-impulsivity; either or both can dominate, yielding predominantly inattentive, predominantly hyperactive-impulsive, or combined presentations. The executive-function profile most consistently shows deficits in working memory, response inhibition, sustained attention, and self-regulation of arousal — sometimes summarized as 'cool' (cognitive) versus 'hot' (motivational/affective) executive control deficits.",
-  },
-  {
-    topic: "Autism Spectrum Disorder",
-    prompt:
-      "Why are restricted/repetitive behaviors considered a *core* feature of ASD rather than a secondary consequence of social-communication difficulty?",
-    answer:
-      "Restricted, repetitive patterns of behavior, interests, or activities are conceptualized as one of two core dimensions because they reflect the same underlying difference in neural prediction, sensory processing, and cognitive flexibility that drives social-communication features. Both dimensions are two expressions of one phenotype, not cause and effect — which is why DSM-5 requires symptoms in both domains for diagnosis.",
-  },
-  {
-    topic: "Personality Disorders — Borderline",
-    prompt:
-      "What are the four core symptom clusters of borderline personality disorder, and which one is most predictive of treatment response?",
-    answer:
-      "The four clusters are: (1) emotion dysregulation — intense, rapidly shifting affect; (2) interpersonal instability — alternating idealization/devaluation, fear of abandonment; (3) identity disturbance — unstable self-image, chronic emptiness; (4) behavioral dyscontrol — impulsivity, self-harm, suicidality. Emotion dysregulation is the most predictive of treatment response — modalities like DBT that directly target it produce the largest effect sizes.",
-  },
-  {
-    topic: "Trauma — PTSD",
-    prompt:
-      "List the four DSM-5 PTSD symptom clusters and explain how avoidance maintains the disorder over time.",
-    answer:
-      "The four clusters are: (1) intrusion — flashbacks, nightmares, intrusive memories; (2) avoidance — of trauma-related stimuli, thoughts, or feelings; (3) negative alterations in cognition and mood; (4) alterations in arousal and reactivity — hypervigilance, exaggerated startle, sleep disturbance. Avoidance maintains the disorder by preventing corrective learning: the feared associations are never disconfirmed, so the fear network stays intact and often generalizes — which is why exposure-based treatments are first-line.",
-  },
-  {
-    topic: "Psychotic Disorders — Schizophrenia",
-    prompt:
-      "Distinguish positive, negative, and cognitive symptom domains of schizophrenia, and explain why negative symptoms are often more functionally disabling.",
-    answer:
-      "Positive symptoms add to normal experience — hallucinations, delusions, disorganized speech/behavior. Negative symptoms reflect a loss or reduction — avolition, alogia, anhedonia, asociality, blunted affect. Cognitive symptoms include deficits in working memory, attention, and processing speed. Negative and cognitive symptoms are typically more functionally disabling because they interfere with sustained work, relationships, and self-care, and they respond poorly to first-generation antipsychotics — which is why functional outcome lags symptomatic remission.",
-  },
-];
+// ---------------------------------------------------------------------------
+// Topic pickers — small inline components reused across the four techniques.
+// ---------------------------------------------------------------------------
+
+function TopicGridSingle({
+  topics,
+  value,
+  onChange,
+  requireFlashcards = false,
+}: {
+  topics: Topic[];
+  value: number | null;
+  onChange: (id: number) => void;
+  requireFlashcards?: boolean;
+}) {
+  const eligible = requireFlashcards
+    ? topics.filter((t) => (t.flashcardCount ?? 0) > 0)
+    : topics;
+
+  if (eligible.length === 0) {
+    return (
+      <EmptyTopics
+        message={
+          requireFlashcards
+            ? "None of your topics have flashcards yet. Open a topic and generate flashcards to use this technique."
+            : "No topics in your library yet."
+        }
+      />
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2" data-testid="topic-picker-single">
+      {eligible.map((t) => {
+        const active = value === t.id;
+        return (
+          <button
+            key={t.id}
+            onClick={() => onChange(t.id)}
+            data-testid={`topic-option-${t.id}`}
+            className={cn(
+              "text-left rounded-lg border p-3 transition-all",
+              active
+                ? "border-primary bg-primary/10"
+                : "border-border bg-card hover:border-primary/40 hover:bg-muted/50",
+            )}
+          >
+            <div className="text-sm font-medium text-foreground">{t.name}</div>
+            <div className="text-[11px] text-muted-foreground mt-0.5">
+              {t.flashcardCount ?? 0} cards · {t.quizCount ?? 0} quiz Qs
+            </div>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function TopicGridMulti({
+  topics,
+  selected,
+  onToggle,
+  max = 6,
+}: {
+  topics: Topic[];
+  selected: Set<number>;
+  onToggle: (id: number) => void;
+  max?: number;
+}) {
+  const eligible = topics.filter((t) => (t.flashcardCount ?? 0) > 0);
+
+  if (eligible.length === 0) {
+    return (
+      <EmptyTopics message="None of your topics have flashcards yet. Open a topic and generate flashcards to interleave." />
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2" data-testid="topic-picker-multi">
+      {eligible.map((t) => {
+        const active = selected.has(t.id);
+        const atMax = !active && selected.size >= max;
+        return (
+          <button
+            key={t.id}
+            onClick={() => onToggle(t.id)}
+            disabled={atMax}
+            data-testid={`topic-option-${t.id}`}
+            className={cn(
+              "text-left rounded-lg border p-3 transition-all",
+              active
+                ? "border-primary bg-primary/10"
+                : "border-border bg-card hover:border-primary/40 hover:bg-muted/50",
+              atMax && "opacity-40 cursor-not-allowed",
+            )}
+          >
+            <div className="flex items-start gap-2">
+              <span
+                className={cn(
+                  "shrink-0 mt-0.5 w-4 h-4 rounded border flex items-center justify-center text-[10px] font-bold",
+                  active
+                    ? "bg-primary border-primary text-primary-foreground"
+                    : "border-border bg-background",
+                )}
+              >
+                {active ? "✓" : ""}
+              </span>
+              <div className="min-w-0">
+                <div className="text-sm font-medium text-foreground truncate">{t.name}</div>
+                <div className="text-[11px] text-muted-foreground mt-0.5">
+                  {t.flashcardCount ?? 0} cards
+                </div>
+              </div>
+            </div>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function EmptyTopics({ message }: { message: string }) {
+  return (
+    <div
+      className="rounded-lg border border-dashed border-border bg-muted/30 p-6 text-center"
+      data-testid="topic-picker-empty"
+    >
+      <BookOpen className="w-6 h-6 text-muted-foreground mx-auto mb-2" />
+      <p className="text-sm text-muted-foreground mb-3">{message}</p>
+      <Link href="/topics">
+        <Button variant="outline" size="sm" data-testid="empty-topics-cta">
+          Browse topics
+        </Button>
+      </Link>
+    </div>
+  );
+}
+
+function HowToBanner({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mb-4 flex items-start gap-2 rounded-lg border border-border bg-muted/40 px-3 py-2">
+      <Info className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+      <p className="text-xs text-muted-foreground leading-snug">{children}</p>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Technique containers — each handles its own picker + content.
+// ---------------------------------------------------------------------------
+
+function ActiveRecallView({ topics, howToUse }: { topics: Topic[]; howToUse: string }) {
+  const [topicId, setTopicId] = useState<number | null>(null);
+  const [recallIndex, setRecallIndex] = useState(0);
+
+  const { data: cards } = useQueries({
+    queries: [
+      {
+        queryKey: ["flashcardsByTopic", topicId],
+        queryFn: () => (topicId ? getFlashcardsByTopic(topicId) : Promise.resolve([] as Flashcard[])),
+        enabled: !!topicId,
+      },
+    ],
+    combine: (results) => ({
+      data: results[0].data,
+      isLoading: results[0].isLoading,
+    }),
+  });
+
+  const topic = topics.find((t) => t.id === topicId);
+
+  if (!topicId) {
+    return (
+      <>
+        <HowToBanner>{howToUse}</HowToBanner>
+        <TopicGridSingle topics={topics} value={null} onChange={setTopicId} requireFlashcards />
+      </>
+    );
+  }
+
+  if (!cards) {
+    return <Skeleton className="h-64 w-full rounded-2xl" />;
+  }
+
+  if (cards.length === 0) {
+    return (
+      <EmptyTopics message="No flashcards available for this topic. Pick another or generate cards on the topic page." />
+    );
+  }
+
+  const current = cards[recallIndex % cards.length];
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+        <span>Recalling from</span>
+        <span className="font-medium text-foreground">{topic?.name}</span>
+        <span className="ml-auto">
+          Card {(recallIndex % cards.length) + 1} of {cards.length}
+        </span>
+        <button
+          onClick={() => {
+            setTopicId(null);
+            setRecallIndex(0);
+          }}
+          className="text-primary hover:underline"
+          data-testid="recall-change-topic"
+        >
+          Change topic
+        </button>
+      </div>
+      <BrainDump
+        storageKey={`lab-recall-${topicId}-${recallIndex}`}
+        topic={topic?.name ?? "Topic"}
+        prompt={current.question}
+        answer={current.answer}
+        onNext={() => setRecallIndex((i) => i + 1)}
+      />
+    </div>
+  );
+}
+
+function SpacedView({ topics, howToUse }: { topics: Topic[]; howToUse: string }) {
+  const [topicId, setTopicId] = useState<number | null>(null);
+  const topic = topics.find((t) => t.id === topicId);
+
+  if (!topicId || !topic) {
+    return (
+      <>
+        <HowToBanner>{howToUse}</HowToBanner>
+        <TopicGridSingle topics={topics} value={null} onChange={setTopicId} />
+      </>
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+        <span>Scheduling</span>
+        <span className="font-medium text-foreground">{topic.name}</span>
+        <button
+          onClick={() => setTopicId(null)}
+          className="ml-auto text-primary hover:underline"
+          data-testid="spaced-change-topic"
+        >
+          Change topic
+        </button>
+      </div>
+      {/* KEY FIX: storageKey={`topic-${id}`} matches what TodayReviews reads
+          (srs:topic-<id>). Lab-scheduled reviews now surface in Today's Reviews. */}
+      <SpacedRepetitionScheduler
+        storageKey={`topic-${topicId}`}
+        cardTitle={topic.name}
+        cardSummary="Each checkpoint unlocks at the listed day. When it's ready, it'll appear in Today's Reviews on your home page."
+      />
+    </div>
+  );
+}
+
+function MixedView({ topics, howToUse }: { topics: Topic[]; howToUse: string }) {
+  // Default selection: top 3 topics by flashcard count.
+  const defaultSelection = useMemo(() => {
+    const ranked = [...topics]
+      .filter((t) => (t.flashcardCount ?? 0) > 0)
+      .sort((a, b) => (b.flashcardCount ?? 0) - (a.flashcardCount ?? 0))
+      .slice(0, 3)
+      .map((t) => t.id);
+    return new Set(ranked);
+  }, [topics]);
+  const [selected, setSelected] = useState<Set<number>>(defaultSelection);
+  const [started, setStarted] = useState(false);
+
+  const selectedIds = useMemo(() => Array.from(selected), [selected]);
+
+  const { data: allCards, isLoading } = useQueries({
+    queries: selectedIds.map((id) => ({
+      queryKey: ["flashcardsByTopic", id],
+      queryFn: () => getFlashcardsByTopic(id),
+      enabled: started,
+    })),
+    combine: (results) => ({
+      data: results.flatMap((r, idx) =>
+        (r.data ?? []).map<InterleaveCard>((fc) => ({
+          topic: topics.find((t) => t.id === selectedIds[idx])?.name ?? "Topic",
+          question: fc.question,
+          answer: fc.answer,
+        })),
+      ),
+      isLoading: results.some((r) => r.isLoading),
+    }),
+  });
+
+  function toggle(id: number) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  if (!started) {
+    return (
+      <div className="space-y-4">
+        <HowToBanner>{howToUse}</HowToBanner>
+        <div className="flex items-center justify-between">
+          <h4 className="text-sm font-semibold text-foreground">Pick topics to interleave</h4>
+          <span className="text-xs text-muted-foreground">
+            {selected.size} selected · max 6
+          </span>
+        </div>
+        <TopicGridMulti topics={topics} selected={selected} onToggle={toggle} max={6} />
+        <Button
+          onClick={() => setStarted(true)}
+          disabled={selected.size < 2}
+          className="w-full"
+          data-testid="mixed-start"
+        >
+          {selected.size < 2
+            ? "Pick at least 2 topics"
+            : `Start mixed session (${selected.size} topics)`}
+          <ArrowRight className="w-4 h-4 ml-1.5" />
+        </Button>
+      </div>
+    );
+  }
+
+  if (isLoading || !allCards) {
+    return <Skeleton className="h-64 w-full rounded-2xl" />;
+  }
+
+  if (allCards.length === 0) {
+    return (
+      <EmptyTopics message="No flashcards across the selected topics. Pick different topics or generate cards first." />
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+        <span>Interleaving</span>
+        <span className="font-medium text-foreground">
+          {selectedIds.length} topic{selectedIds.length === 1 ? "" : "s"} ·{" "}
+          {allCards.length} cards
+        </span>
+        <button
+          onClick={() => setStarted(false)}
+          className="ml-auto text-primary hover:underline"
+          data-testid="mixed-change-topics"
+        >
+          Change topics
+        </button>
+      </div>
+      <InterleavingMode cards={allCards} />
+    </div>
+  );
+}
+
+function ElaborationView({ topics, howToUse }: { topics: Topic[]; howToUse: string }) {
+  const [topicId, setTopicId] = useState<number | null>(null);
+  const topic = topics.find((t) => t.id === topicId);
+
+  if (!topicId || !topic) {
+    return (
+      <>
+        <HowToBanner>{howToUse}</HowToBanner>
+        <TopicGridSingle topics={topics} value={null} onChange={setTopicId} />
+      </>
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+        <span>Elaborating on</span>
+        <span className="font-medium text-foreground">{topic.name}</span>
+        <button
+          onClick={() => setTopicId(null)}
+          className="ml-auto text-primary hover:underline"
+          data-testid="elab-change-topic"
+        >
+          Change topic
+        </button>
+      </div>
+      <ElaborationPanel
+        storageKey={`lab-elab-topic-${topicId}`}
+        context={`Reflecting on ${topic.name}. Use these prompts to connect this topic to clinical reality, other topics you know, or cases you've seen.`}
+      />
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Page
+// ---------------------------------------------------------------------------
 
 export default function StudyLabPage() {
   const [active, setActive] = useState<TechId | null>(null);
-  // Index into the RECALL_PROMPTS pool for the Active Recall technique.
-  // Advanced via the BrainDump "Next prompt" button after reveal.
-  const [recallIndex, setRecallIndex] = useState(0);
+  const { data: topics, isLoading } = useGetTopics();
 
   if (active) {
     const tech = TECHNIQUES.find((t) => t.id === active)!;
@@ -192,33 +483,19 @@ export default function StudyLabPage() {
             </div>
           </header>
 
-          {active === "active-recall" && (() => {
-            const current = RECALL_PROMPTS[recallIndex % RECALL_PROMPTS.length];
-            return (
-              <BrainDump
-                // Per-prompt storage key so each prompt remembers its own
-                // partial brain-dump if the user navigates away and back.
-                storageKey={`lab-recall-${recallIndex}`}
-                topic={current.topic}
-                prompt={current.prompt}
-                answer={current.answer}
-                onNext={() => setRecallIndex((i) => (i + 1) % RECALL_PROMPTS.length)}
-              />
-            );
-          })()}
-          {active === "spaced" && (
-            <SpacedRepetitionScheduler
-              storageKey="lab-theory-of-mind"
-              cardTitle="Theory of Mind — clinical relevance"
-              cardSummary="The ability to attribute mental states to self and others; relevant across autism spectrum, schizophrenia spectrum, and frontal-lobe presentations."
-            />
-          )}
-          {active === "mixed" && <InterleavingMode cards={SAMPLE_CARDS} />}
-          {active === "elaboration" && (
-            <ElaborationPanel
-              storageKey="lab-elaboration"
-              context="Use these prompts on whatever you studied most recently — the deeper you process it now, the easier it'll come back later."
-            />
+          {isLoading || !topics ? (
+            <Skeleton className="h-64 w-full rounded-2xl" />
+          ) : (
+            <>
+              {active === "active-recall" && (
+                <ActiveRecallView topics={topics} howToUse={tech.howToUse} />
+              )}
+              {active === "spaced" && <SpacedView topics={topics} howToUse={tech.howToUse} />}
+              {active === "mixed" && <MixedView topics={topics} howToUse={tech.howToUse} />}
+              {active === "elaboration" && (
+                <ElaborationView topics={topics} howToUse={tech.howToUse} />
+              )}
+            </>
           )}
         </div>
       </div>
@@ -236,7 +513,7 @@ export default function StudyLabPage() {
             <h1 className="text-2xl md:text-3xl font-bold text-foreground">Study Lab</h1>
           </div>
           <p className="text-sm md:text-base text-muted-foreground max-w-3xl">
-            Four evidence-based techniques to study any topic in PsychPro. Choose a technique to get started.
+            Four evidence-based techniques applied to <span className="font-semibold text-foreground">your</span> topics. Pick a technique to get started.
           </p>
         </header>
 

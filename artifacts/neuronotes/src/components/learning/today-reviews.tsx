@@ -133,7 +133,7 @@ export default function TodayReviews({ topics }: TodayReviewsProps) {
                 <span className={cn(
                   "shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold",
                   item.isOverdue
-                    ? "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
+                    ? "bg-primary text-primary-foreground ring-2 ring-primary/30"
                     : "bg-primary/10 text-primary",
                 )}>
                   {item.stage}
