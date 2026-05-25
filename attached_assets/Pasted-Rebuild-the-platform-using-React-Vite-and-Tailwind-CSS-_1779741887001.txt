@@ -1,0 +1,61 @@
+Rebuild the platform using React/Vite and Tailwind CSS. The design must be updated to match a clean, structurally sound, premium portal. Replace the floating sci-fi concept with a structured layout using Proxima Nova as the primary font, dense background smoke graphics, and precise typography.
+
+Apply the following detailed specifications for the Landing Page and Dashboard:
+
+===================================================================
+PART 1: THE LANDING PAGE
+===================================================================
+
+1. GLOBAL TYPOGRAPHY & BRANDING:
+- Primary Font: Proxima Nova (or custom sans-serif fallback with identical geometric scaling like Inter/Montserrat if native Proxima Nova assets are loading).
+- Header Navigation: Clean top navbar containing [Logo + PSYCHPRO] on the far left. Navigation items: HOME (with cyan active underline), COURSES, RESOURCES, COMMUNITY, ABOUT. Right side: Minimalist magnifying glass search icon and an outlined "LOG IN" button.
+
+2. HERO SECTION LAYOUT (Stacked Center Alignment):
+- Background: A deep, dark teal canvas (#020d12) with high-density electric cyan/teal volumetric smoke framing the upper section and sides.
+- Centerpiece Asset: The high-resolution glowing electric-cyan brain graphic sits prominently at the top-center of the hero section.
+- Main Typography Stack (Perfectly centered beneath the brain):
+  * "PSYCHPRO" in massive, ultra-clean, widely tracking (letter-spaced) capital letters.
+  * Tagline: "LEARN. EXPAND. CONNECT." in a smaller, medium-weight uppercase font with generous letter spacing.
+  * Paragraph Copy: "Master clinical psychology. Deeper understanding for topics in psychology, neuroscience and intervention for real-world clinical application." centered, using highly readable light-gray-teal text.
+- Call to Actions (Two adjacent buttons, perfectly centered):
+  * Left Button: "Join Now" with a solid dark teal fill, bright neon cyan border, and a subtle external cyan glow.
+  * Right Button: "Explore Courses" with a matching thin neon cyan border and a transparent background.
+
+3. FEATURE FEATURES GRID (5 Columns):
+- Directly below the hero text, place a clean horizontal row of 5 thin, vertically oriented glassmorphism cards.
+- Each card should feature a distinct minimalist outline icon at the top, a crisp capitalized header, and short description text:
+  1. FLASHCARDS / STUDY GUIDES / QUIZZES / EXAMS
+  2. EVIDENCE-BASED LEARNING TOOLS
+  3. CREATE LEARNING RESOURCES FROM YOUR OWN MATERIAL
+  4. CONNECT WITH OTHERS
+  5. PSYCHPRO SPOTLIGHT (Features a minimalist star-in-a-shield icon)
+
+4. BROWSE TOPICS INDEX (3-Column Clean Table):
+- Section Header: "BROWSE TOPICS" in all-caps, tracking-wide text on the left.
+- Layout: A massive, structured grid containing 3 equal columns of topic rows.
+- Row Styling: Each topic must be a dark translucent pill/row with a thin border and a sharp cyan checkmark circle icon on the left (e.g., "Brain Networks", "Neurophysiology", "Psychopharmacology").
+
+5. LANDING PAGE FOOTER:
+- Simple bottom bar featuring [Logo + PSYCHPRO] on the left, standard links (PRIVACY POLICY, TERMS OF SERVICE, CONTACT) centered, and social media vector icons (LinkedIn, Twitter, Instagram, YouTube) on the far right.
+
+===================================================================
+PART 2: THE DASHBOARD TRANSITION
+===================================================================
+
+Carry this exact aesthetic over to a functional 2-column web app dashboard panel using the same Proxima Nova font, deep dark teal values, and UI accents:
+
+1. TOP HEADER BRANDING:
+- The exact same centered branding header layout from the landing page must scale cleanly into the dashboard top-center: "PSYCHPRO" stacked over "learn. expand. connect.".
+
+2. TWO-COLUMN GRID SYSTEM:
+- Left Column (Sidebar - 20% width):
+  * Glassmorphic navigation menu grouped under "STUDY", "TOOLKIT" (with neat mini PRO tags), and "COMMUNITY" headings.
+  * Active state links should feature a filled bright cyan glowing background capsule.
+- Center Column (Main Content Area - 55% width):
+  * Top Panel: "Begin Your Journey" dashboard welcoming banner with a functional "Browse Topics ↗" button.
+  * Middle Grid: A 4-card matrix displaying recommendations ("Psychopharmacology", "Neurophysiology", etc.).
+  * Bottom Row: Side-by-side modules for a "Your Streak 🔥" line chart and a student "Leaderboard".
+- Right Column (PsychPro Spotlight Panel - 25% width):
+  * A full-height, premium glassmorphic feature container topped with the Spotlight star icon.
+  * Must contain a perfectly centered circular user avatar container ("Sarah K. - PsyD Candidate").
+  * Implement an absolute-positioned glowing radial teal/cyan spotlight behind the profile image container to visually illuminate the featured user.

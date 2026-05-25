@@ -22,10 +22,11 @@ function navItemClass(isActive: boolean) {
   return cn(NAV_ITEM_BASE, isActive ? NAV_ITEM_ACTIVE : NAV_ITEM_IDLE);
 }
 
-// Sidebar IA per task #67 brief: WORKSHOP / LAB / STUDIO / CONNECT / ADMIN.
-// "Study Lab" and "Brain Lab" are old names we must not surface in the UI;
-// the underlying routes are kept but relabeled here. Page internals for the
-// Workshop and Lab sections are intentionally left untouched.
+// Sidebar IA (updated 2026-05-25 per new landing/dashboard spec):
+// STUDY / TOOLKIT / COMMUNITY / ADMIN.
+// "Study Lab" and "Brain Lab" page titles are old internal names; routes
+// are preserved here but the surface labels follow the new spec. The PRO
+// tags on Standard Tools / Pro Tools live under TOOLKIT.
 const workshopNav: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/topics", label: "Topics", icon: BookOpen },
@@ -224,7 +225,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
         <nav className="relative flex-1 p-3 space-y-1 overflow-y-auto">
           <div className="px-3 pt-1 pb-1">
-            <p className="text-xs font-semibold text-white/45 uppercase tracking-wider">Workshop</p>
+            <p className="text-xs font-semibold text-white/45 uppercase tracking-wider">Study</p>
           </div>
           {workshopNav.map((item) => {
             const isActive = location === item.href || location.startsWith(item.href + "/");
@@ -245,7 +246,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           })}
 
           <div className="px-3 pt-3 pb-1">
-            <p className="text-xs font-semibold text-white/45 uppercase tracking-wider">Lab</p>
+            <p className="text-xs font-semibold text-white/45 uppercase tracking-wider">Toolkit</p>
           </div>
           {labNav.map((item) => {
             const isActive = location === item.href || location.startsWith(item.href + "/");
@@ -314,7 +315,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           </Link>
 
           <div className="px-3 pt-3 pb-1">
-            <p className="text-xs font-semibold text-white/45 uppercase tracking-wider">Studio</p>
+            <p className="text-xs font-semibold text-white/45 uppercase tracking-wider">Community</p>
           </div>
           {studioNav.map((item) => {
             const isActive = location === item.href || location.startsWith(item.href + "/");
@@ -333,10 +334,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
               </Link>
             );
           })}
-
-          <div className="px-3 pt-3 pb-1">
-            <p className="text-xs font-semibold text-white/45 uppercase tracking-wider">Connect</p>
-          </div>
           {connectNav.map((item) => {
             const isActive = location === item.href || location.startsWith(item.href + "/");
             return (
