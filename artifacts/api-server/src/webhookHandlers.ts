@@ -20,8 +20,8 @@ async function getSubscriptionTier(stripe: Stripe, sub: Stripe.Subscription): Pr
     if (!priceId) return null;
     const price = await stripe.prices.retrieve(priceId, { expand: ["product"] });
     const product = price.product as Stripe.Product;
-    const tier = product?.metadata?.neuronotes_tier;
-    if (!APPROVED_TIERS.has(tier)) return null;
+    const tier = product?.metadata?.neuronotes_tier?.toLowerCase();
+    if (!tier || !APPROVED_TIERS.has(tier)) return null;
     if (tier === "scholar") return "scholar";
     return "active";
   } catch {

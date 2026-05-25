@@ -18,8 +18,10 @@ router.get("/subscription/plans", async (req: Request, res: Response): Promise<v
       // future SKUs, etc.) from appearing on the pricing page.
       // "master" is accepted as an alias for "pro" — the display name in
       // Stripe / the dashboard is "Master", but the internal tier string
-      // stays "pro" everywhere else in the codebase.
-      const tier = product.metadata?.neuronotes_tier;
+      // stays "pro" everywhere else in the codebase. Case-insensitive so
+      // metadata values like "Scholar" or "Pro" entered via the Stripe
+      // dashboard still match.
+      const tier = product.metadata?.neuronotes_tier?.toLowerCase();
       if (tier !== "pro" && tier !== "master" && tier !== "scholar") continue;
 
       const prices = await stripe.prices.list({ product: product.id, active: true, limit: 10 });
@@ -71,7 +73,7 @@ router.post("/subscription/checkout", async (req: Request, res: Response): Promi
     try {
       const price = await stripe.prices.retrieve(priceId, { expand: ["product"] });
       const product = price.product as import("stripe").default.Product;
-      const tier = product?.metadata?.neuronotes_tier;
+      const tier = product?.metadata?.neuronotes_tier?.toLowerCase();
       const interval = price.recurring?.interval;
       const isApprovedTier = tier === "pro" || tier === "master" || tier === "scholar";
       const isApprovedInterval = interval === "month" || interval === "year";
