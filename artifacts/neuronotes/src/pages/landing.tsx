@@ -115,7 +115,7 @@ const TOPIC_COLUMNS: string[][] = [
     "Psychopharmacology",
     "Adlerian, Humanistic, and Existential Approaches",
     "Cognitive Therapy, CBT, and Schema Therapy",
-    "Gestalt, Experiential, and Emotion-Focused Approaches",
+    "Gestalt, Experiential, and Emotion-Focused Therapy",
   ],
 ];
 
