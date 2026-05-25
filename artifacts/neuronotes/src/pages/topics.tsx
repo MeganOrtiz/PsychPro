@@ -116,14 +116,23 @@ export default function TopicsPage() {
     else sectionRefs.current.delete(name);
   };
 
+  // The app shell renders the page inside `<main data-testid="main-content"
+  // className="overflow-y-auto">`, so `window` itself never scrolls. Every
+  // scroll read/write in this file must target that container — otherwise
+  // category chips and scroll-spy silently no-op.
+  const getScrollContainer = (): HTMLElement | null =>
+    document.querySelector<HTMLElement>('[data-testid="main-content"]');
+
   useEffect(() => {
     if (showSearchResults || isLoading) return;
     const refs = sectionRefs.current;
     if (refs.size === 0) return;
+    const root = getScrollContainer();
+    if (!root) return;
 
     const observer = new IntersectionObserver(
       entries => {
-        // Pick the entry closest to the top of the viewport that is intersecting.
+        // Pick the entry closest to the top of the scroll container.
         const visible = entries
           .filter(e => e.isIntersecting)
           .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
@@ -133,8 +142,11 @@ export default function TopicsPage() {
         }
       },
       {
-        // Trigger when section header crosses ~140px from the top (below the
-        // sticky chip rail). Bottom margin keeps the last section reachable.
+        // Scoped to the actual scroll container so the math is correct.
+        // Trigger when a section header crosses ~140px from the top (just
+        // under the sticky chip rail). Bottom margin keeps the last section
+        // reachable.
+        root,
         rootMargin: "-140px 0px -55% 0px",
         threshold: 0,
       },
@@ -144,19 +156,19 @@ export default function TopicsPage() {
     return () => observer.disconnect();
   }, [showSearchResults, isLoading, orderedCategories]);
 
-  // Keep the active chip horizontally visible inside the rail.
+  // Keep the active chip horizontally visible inside the rail. Use only
+  // inline scroll so we don't accidentally scroll the whole page vertically.
   useEffect(() => {
     if (!activeCategory || !railRef.current) return;
     const chip = railRef.current.querySelector<HTMLElement>(
       `[data-chip="${slugify(activeCategory)}"]`,
     );
     if (chip) {
-      chip.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+      chip.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
     }
   }, [activeCategory]);
 
   // Honor #category-{slug} hash links (used by topic-detail breadcrumbs).
-  // Wait for sections to mount, then scroll to the matching category.
   useEffect(() => {
     if (showSearchResults || isLoading) return;
     const hash = window.location.hash;
@@ -164,12 +176,16 @@ export default function TopicsPage() {
     const slug = hash.slice("#category-".length);
     const match = orderedCategories.find(c => slugify(c.name) === slug);
     if (!match) return;
-    // Defer one frame so refs are populated.
     const id = window.requestAnimationFrame(() => {
+      const container = getScrollContainer();
       const el = sectionRefs.current.get(match.name);
-      if (el) {
-        const top = el.getBoundingClientRect().top + window.scrollY - 120;
-        window.scrollTo({ top, behavior: "smooth" });
+      if (container && el) {
+        const top =
+          el.getBoundingClientRect().top -
+          container.getBoundingClientRect().top +
+          container.scrollTop -
+          120;
+        container.scrollTo({ top, behavior: "smooth" });
         setActiveCategory(match.name);
       }
     });
@@ -177,15 +193,21 @@ export default function TopicsPage() {
   }, [showSearchResults, isLoading, orderedCategories]);
 
   const scrollToCategory = (name: string | null) => {
+    const container = getScrollContainer();
+    if (!container) return;
     if (!name) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      container.scrollTo({ top: 0, behavior: "smooth" });
       setActiveCategory(null);
       return;
     }
     const el = sectionRefs.current.get(name);
     if (el) {
-      const top = el.getBoundingClientRect().top + window.scrollY - 120;
-      window.scrollTo({ top, behavior: "smooth" });
+      const top =
+        el.getBoundingClientRect().top -
+        container.getBoundingClientRect().top +
+        container.scrollTop -
+        120;
+      container.scrollTo({ top, behavior: "smooth" });
       setActiveCategory(name);
     }
   };
@@ -390,28 +412,164 @@ function TopicCard({ topic, onClick, showCategory }: TopicCardProps) {
       type="button"
       onClick={onClick}
       data-testid={`card-topic-${topic.id}`}
-      className="group text-left bg-card border border-border rounded-xl p-5 cursor-pointer hover:border-primary/40 hover:-translate-y-0.5 hover:shadow-[0_10px_28px_-12px_rgba(118,228,247,0.45)] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+      className="group text-left bg-card border border-border rounded-xl p-4 cursor-pointer hover:border-primary/40 hover:-translate-y-0.5 hover:shadow-[0_10px_28px_-12px_rgba(118,228,247,0.45)] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
     >
-      <div className="flex items-start justify-between mb-2">
-        {showCategory ? (
-          <span className="text-xs text-muted-foreground">{topic.category}</span>
-        ) : (
-          <span />
-        )}
-        <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
-      </div>
-      <h3 className="font-semibold text-foreground mb-1.5">{topic.name}</h3>
-      <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{topic.description}</p>
-      <div className="flex gap-4 text-xs text-muted-foreground">
-        <span className="flex items-center gap-1">
-          <Layers className="w-3.5 h-3.5" />
-          {topic.flashcardCount} flashcards
-        </span>
-        <span className="flex items-center gap-1">
-          <BookOpen className="w-3.5 h-3.5" />
-          {topic.quizCount} quiz Qs
-        </span>
+      <div className="flex items-start gap-3">
+        <TopicThumbnail topic={topic} />
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between gap-2 mb-1">
+            <div className="min-w-0">
+              {showCategory ? (
+                <span className="block text-[11px] text-muted-foreground mb-0.5">
+                  {topic.category}
+                </span>
+              ) : null}
+              <h3 className="font-semibold text-foreground leading-tight truncate">
+                {topic.name}
+              </h3>
+            </div>
+            <ChevronRight className="w-4 h-4 mt-0.5 shrink-0 text-muted-foreground group-hover:text-foreground transition-colors" />
+          </div>
+          <p className="text-[13px] text-muted-foreground line-clamp-2 mb-3">
+            {topic.description}
+          </p>
+          <div className="flex gap-4 text-xs text-muted-foreground">
+            <span className="flex items-center gap-1">
+              <Layers className="w-3.5 h-3.5" />
+              {topic.flashcardCount} flashcards
+            </span>
+            <span className="flex items-center gap-1">
+              <BookOpen className="w-3.5 h-3.5" />
+              {topic.quizCount} quiz Qs
+            </span>
+          </div>
+        </div>
       </div>
     </button>
+  );
+}
+
+// =============================================================================
+// TopicThumbnail
+// -----------------------------------------------------------------------------
+// Small decorative tile rendered on the left of each TopicCard. Each topic
+// category gets its own line-art SVG keyed off the category name, so the
+// thumbnail feels thematic without us having to author 39 unique drawings.
+// The tile also has a thin border + subtle glow to match the brand surface.
+// =============================================================================
+function TopicThumbnail({ topic }: { topic: Topic }) {
+  const stroke = STUDY_PALETTE.surf;
+  const soft = "rgba(118,228,247,0.45)";
+  const common = {
+    width: "100%",
+    height: "100%",
+    viewBox: "0 0 64 64",
+    fill: "none",
+    stroke,
+    strokeWidth: 1.25,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+  };
+
+  const art = (() => {
+    switch (topic.category) {
+      case "Neuroscience":
+        // Neural-network nodes connected by lines.
+        return (
+          <svg {...common}>
+            <circle cx="14" cy="18" r="2.5" fill={soft} />
+            <circle cx="32" cy="12" r="2.5" fill={soft} />
+            <circle cx="50" cy="20" r="2.5" fill={soft} />
+            <circle cx="20" cy="36" r="2.5" fill={soft} />
+            <circle cx="44" cy="38" r="2.5" fill={soft} />
+            <circle cx="32" cy="52" r="2.5" fill={soft} />
+            <path d="M14 18 L32 12 L50 20 M14 18 L20 36 L32 52 L44 38 L50 20 M20 36 L44 38 M32 12 L32 52" opacity="0.7" />
+          </svg>
+        );
+      case "Psychology":
+        // Two head silhouettes facing each other with a connecting line.
+        return (
+          <svg {...common}>
+            <path d="M22 44 V32 a8 8 0 0 1 16 0 V44" />
+            <circle cx="30" cy="20" r="6" />
+            <path d="M14 50 H50" opacity="0.5" />
+            <circle cx="44" cy="14" r="2" fill={soft} stroke="none" />
+            <circle cx="18" cy="14" r="2" fill={soft} stroke="none" />
+          </svg>
+        );
+      case "Neuropsychology":
+        // Brain outline with internal activity waveform.
+        return (
+          <svg {...common}>
+            <path d="M22 16 a10 10 0 0 0 0 20 a8 8 0 0 0 4 8 h12 a8 8 0 0 0 4 -8 a10 10 0 0 0 0 -20 a8 8 0 0 0 -20 0 z" />
+            <path d="M22 30 h4 l3 -6 l4 12 l3 -6 h6" opacity="0.8" />
+          </svg>
+        );
+      case "Assessment":
+        // Clipboard with rows + a checkmark.
+        return (
+          <svg {...common}>
+            <rect x="18" y="14" width="28" height="38" rx="3" />
+            <rect x="26" y="10" width="12" height="8" rx="2" fill={soft} stroke="none" />
+            <path d="M24 28 h16 M24 36 h16 M24 44 h10" opacity="0.7" />
+            <path d="M38 42 l3 3 l5 -7" stroke={stroke} strokeWidth="1.5" />
+          </svg>
+        );
+      case "Psychotherapy":
+        // Two speech bubbles overlapping.
+        return (
+          <svg {...common}>
+            <path d="M12 20 h22 a4 4 0 0 1 4 4 v10 a4 4 0 0 1 -4 4 h-6 l-6 6 v-6 h-10 a4 4 0 0 1 -4 -4 v-10 a4 4 0 0 1 4 -4 z" />
+            <path d="M30 30 h18 a4 4 0 0 1 4 4 v8 a4 4 0 0 1 -4 4 h-12 l-4 4 v-4" opacity="0.6" />
+          </svg>
+        );
+      case "Research Methods":
+        // Erlenmeyer flask with measurement marks.
+        return (
+          <svg {...common}>
+            <path d="M26 10 h12 v14 l8 22 a4 4 0 0 1 -4 6 H22 a4 4 0 0 1 -4 -6 l8 -22 z" />
+            <path d="M22 38 h20" opacity="0.7" />
+            <path d="M30 14 h4 M30 18 h4" opacity="0.5" />
+            <circle cx="28" cy="44" r="1.5" fill={soft} stroke="none" />
+            <circle cx="36" cy="42" r="1.5" fill={soft} stroke="none" />
+          </svg>
+        );
+      case "Special Topics":
+        // Sparkle / starburst.
+        return (
+          <svg {...common}>
+            <path d="M32 12 L34 28 L50 32 L34 36 L32 52 L30 36 L14 32 L30 28 z" fill={soft} />
+            <path d="M48 14 l1.5 4 l4 1.5 l-4 1.5 l-1.5 4 l-1.5 -4 l-4 -1.5 l4 -1.5 z" opacity="0.7" />
+          </svg>
+        );
+      default: {
+        // Fallback: generic grid using topic.id as a stable seed so it still
+        // feels unique-ish for any future categories without art.
+        const seed = topic.id % 4;
+        return (
+          <svg {...common}>
+            <rect x="14" y="14" width="36" height="36" rx="4" />
+            <circle cx={22 + seed * 4} cy="32" r="3" fill={soft} stroke="none" />
+            <circle cx={42 - seed * 4} cy="32" r="3" fill={soft} stroke="none" />
+            <path d="M14 32 H50" opacity="0.5" />
+          </svg>
+        );
+      }
+    }
+  })();
+
+  return (
+    <div
+      aria-hidden
+      className="shrink-0 w-14 h-14 rounded-lg flex items-center justify-center border"
+      style={{
+        background: "rgba(10,45,61,0.55)",
+        borderColor: "rgba(118,228,247,0.22)",
+        boxShadow: "inset 0 0 12px rgba(118,228,247,0.08)",
+      }}
+      data-testid={`topic-thumb-${topic.id}`}
+    >
+      <div className="w-10 h-10">{art}</div>
+    </div>
   );
 }
