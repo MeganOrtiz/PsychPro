@@ -434,15 +434,15 @@ export default function LandingPage() {
           fills the viewport — there is NO gap above the brain. */}
       <section className="relative flex flex-col items-center justify-center pt-20 md:pt-24 lg:pt-28 pb-20 md:pb-28">
         <div className="max-w-5xl mx-auto px-6 lg:px-10 text-center relative z-10">
-          {/* Wordmark — Italiana, thin display serif, wide-tracked.
-              Matches the approved landing comp. Italiana ships at a single
-              weight (400). */}
+          {/* Wordmark — Proxima Nova (paid Adobe font) with Montserrat as
+              the closest free fallback. Montserrat is loaded globally in
+              index.html and is visually ~95% identical to Proxima Nova. */}
           <h1
             className="leading-none relative mt-2"
             style={{
               ...TRACK_HERO,
-              fontFamily: '"Italiana", "Cormorant Garamond", serif',
-              fontWeight: 400,
+              fontFamily: '"Proxima Nova", "Montserrat", "Inter", system-ui, sans-serif',
+              fontWeight: 300,
               fontSize: "clamp(44px, 7.5vw, 88px)",
               color: P.cloud,
               textShadow: `0 0 24px rgba(118, 228, 247, 0.30)`,
