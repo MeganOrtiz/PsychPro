@@ -228,29 +228,25 @@ export default function LandingPage() {
           height: 100vh;
           z-index: -50;
           background-image:
-            /* Strong top scrim — hides the baked-in brain region of the
-               source PNG on taller viewports where bottom-anchored
-               cropping isn't enough on its own. Fades to clear so the
-               clouds in the middle/lower hero still read. */
+            /* Light bottom-anchored fade — keeps the brain + upper clouds
+               fully visible while ensuring lower-page text (CTAs, body
+               copy below the hero) reads against the cloud composition.
+               No top scrim: the brain is the focal point. */
             linear-gradient(180deg,
-              ${P.ink} 0%,
-              rgba(3, 21, 29, 0.92) 18%,
-              rgba(3, 21, 29, 0.55) 38%,
-              rgba(3, 21, 29, 0.20) 60%,
-              rgba(3, 21, 29, 0.55) 85%,
+              rgba(3, 21, 29, 0.00) 0%,
+              rgba(3, 21, 29, 0.00) 55%,
+              rgba(3, 21, 29, 0.45) 80%,
               ${P.ink} 100%),
             radial-gradient(ellipse 130% 115% at 50% 50%,
-              rgba(3, 21, 29, 0.10) 0%,
-              rgba(3, 21, 29, 0.20) 60%,
-              rgba(3, 21, 29, 0.38) 100%),
+              rgba(3, 21, 29, 0.00) 0%,
+              rgba(3, 21, 29, 0.08) 70%,
+              rgba(3, 21, 29, 0.25) 100%),
             url(${cloudsBackground});
           background-size: cover, cover, cover;
-          /* Anchor at center bottom so the baked-in brain (upper ~45%
-             of the portrait source) is cropped off-screen and only the
-             cloud composition fills the hero. The isolated brain layer
-             below renders as a separate transparent element above the
-             wordmark. */
-          background-position: center bottom, center bottom, center bottom;
+          /* Anchor at center top so the brain (upper ~40% of the portrait
+             source) sits in the upper hero region and the cloud field
+             flows down behind the wordmark and CTAs. */
+          background-position: center top, center top, center top;
           background-repeat: no-repeat, no-repeat, no-repeat;
           image-rendering: -webkit-optimize-contrast;
           pointer-events: none;
