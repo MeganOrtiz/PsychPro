@@ -452,10 +452,12 @@ function TopicCard({ topic, onClick, showCategory }: TopicCardProps) {
 // =============================================================================
 // TopicThumbnail
 // -----------------------------------------------------------------------------
-// Small decorative tile rendered on the left of each TopicCard. Each topic
-// category gets its own line-art SVG keyed off the category name, so the
-// thumbnail feels thematic without us having to author 39 unique drawings.
-// The tile also has a thin border + subtle glow to match the brand surface.
+// Small decorative tile rendered on the left of each TopicCard. Art is chosen
+// per-TOPIC (not per-category) so cards within the same category filter still
+// look distinct. We pick from a library of 10 line-art motifs using a hash of
+// the topic name as a stable seed — so the same topic always gets the same
+// thumbnail across reloads, and within any category view the cards look
+// varied rather than identical.
 // =============================================================================
 function TopicThumbnail({ topic }: { topic: Topic }) {
   const stroke = STUDY_PALETTE.surf;
@@ -471,9 +473,22 @@ function TopicThumbnail({ topic }: { topic: Topic }) {
     strokeLinejoin: "round" as const,
   };
 
+  // Stable hash of topic name → integer. Same topic always yields the same
+  // motif across sessions (the previous category-keyed approach made every
+  // card inside one category look identical, which is the bug being fixed).
+  const hashName = (s: string) => {
+    let h = 2166136261;
+    for (let i = 0; i < s.length; i++) {
+      h ^= s.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    return h >>> 0;
+  };
+  const motifIndex = hashName(topic.name) % 10;
+
   const art = (() => {
-    switch (topic.category) {
-      case "Neuroscience":
+    switch (motifIndex) {
+      case 0:
         // Neural-network nodes connected by lines.
         return (
           <svg {...common}>
@@ -486,7 +501,7 @@ function TopicThumbnail({ topic }: { topic: Topic }) {
             <path d="M14 18 L32 12 L50 20 M14 18 L20 36 L32 52 L44 38 L50 20 M20 36 L44 38 M32 12 L32 52" opacity="0.7" />
           </svg>
         );
-      case "Psychology":
+      case 1:
         // Two head silhouettes facing each other with a connecting line.
         return (
           <svg {...common}>
@@ -497,7 +512,7 @@ function TopicThumbnail({ topic }: { topic: Topic }) {
             <circle cx="18" cy="14" r="2" fill={soft} stroke="none" />
           </svg>
         );
-      case "Neuropsychology":
+      case 2:
         // Brain outline with internal activity waveform.
         return (
           <svg {...common}>
@@ -505,7 +520,7 @@ function TopicThumbnail({ topic }: { topic: Topic }) {
             <path d="M22 30 h4 l3 -6 l4 12 l3 -6 h6" opacity="0.8" />
           </svg>
         );
-      case "Assessment":
+      case 3:
         // Clipboard with rows + a checkmark.
         return (
           <svg {...common}>
@@ -515,7 +530,7 @@ function TopicThumbnail({ topic }: { topic: Topic }) {
             <path d="M38 42 l3 3 l5 -7" stroke={stroke} strokeWidth="1.5" />
           </svg>
         );
-      case "Psychotherapy":
+      case 4:
         // Two speech bubbles overlapping.
         return (
           <svg {...common}>
@@ -523,7 +538,7 @@ function TopicThumbnail({ topic }: { topic: Topic }) {
             <path d="M30 30 h18 a4 4 0 0 1 4 4 v8 a4 4 0 0 1 -4 4 h-12 l-4 4 v-4" opacity="0.6" />
           </svg>
         );
-      case "Research Methods":
+      case 5:
         // Erlenmeyer flask with measurement marks.
         return (
           <svg {...common}>
@@ -534,7 +549,7 @@ function TopicThumbnail({ topic }: { topic: Topic }) {
             <circle cx="36" cy="42" r="1.5" fill={soft} stroke="none" />
           </svg>
         );
-      case "Special Topics":
+      case 6:
         // Sparkle / starburst.
         return (
           <svg {...common}>
@@ -542,16 +557,41 @@ function TopicThumbnail({ topic }: { topic: Topic }) {
             <path d="M48 14 l1.5 4 l4 1.5 l-4 1.5 l-1.5 4 l-1.5 -4 l-4 -1.5 l4 -1.5 z" opacity="0.7" />
           </svg>
         );
+      case 7:
+        // DNA double helix — twin sine waves with rungs.
+        return (
+          <svg {...common}>
+            <path d="M22 12 C 32 22, 32 22, 22 32 S 32 42, 22 52" />
+            <path d="M42 12 C 32 22, 32 22, 42 32 S 32 42, 42 52" />
+            <path d="M24 18 H40 M26 26 H38 M26 38 H38 M24 46 H40" opacity="0.6" />
+          </svg>
+        );
+      case 8:
+        // Open book with bookmark — references/library motif.
+        return (
+          <svg {...common}>
+            <path d="M10 16 H30 a4 4 0 0 1 4 4 V52 a4 4 0 0 0 -4 -4 H10 z" />
+            <path d="M54 16 H34 a4 4 0 0 0 -4 4 V52 a4 4 0 0 1 4 -4 H54 z" />
+            <path d="M16 24 H26 M16 30 H26 M38 24 H48 M38 30 H48" opacity="0.55" />
+            <path d="M40 12 V22 L43 19 L46 22 V12 z" fill={soft} stroke="none" />
+          </svg>
+        );
+      case 9:
+        // Concentric pulse rings — radiating signal / activity.
+        return (
+          <svg {...common}>
+            <circle cx="32" cy="32" r="4" fill={soft} stroke="none" />
+            <circle cx="32" cy="32" r="10" opacity="0.85" />
+            <circle cx="32" cy="32" r="16" opacity="0.55" />
+            <circle cx="32" cy="32" r="22" opacity="0.3" />
+          </svg>
+        );
       default: {
-        // Fallback: generic grid using topic.id as a stable seed so it still
-        // feels unique-ish for any future categories without art.
-        const seed = topic.id % 4;
+        // Unreachable (motifIndex is mod 10), kept for type-safety.
         return (
           <svg {...common}>
             <rect x="14" y="14" width="36" height="36" rx="4" />
-            <circle cx={22 + seed * 4} cy="32" r="3" fill={soft} stroke="none" />
-            <circle cx={42 - seed * 4} cy="32" r="3" fill={soft} stroke="none" />
-            <path d="M14 32 H50" opacity="0.5" />
+            <path d="M14 32 H50 M32 14 V50" opacity="0.5" />
           </svg>
         );
       }
