@@ -23,6 +23,7 @@ import {
 } from "@workspace/community";
 import { and, desc, eq, ilike, or, sql } from "drizzle-orm";
 import { requireUserId, getOptionalUserId } from "../lib/userId";
+import { requireAdminCaller as requireAdminCallerShared, isCallerAdmin } from "../lib/isAdmin";
 import { parseIntParam } from "../lib/params";
 import { ObjectStorageService } from "../lib/objectStorage";
 import { isUploadOwnedBy, consumeUpload } from "./storage";
@@ -157,20 +158,13 @@ async function isAdmin(userId: string): Promise<boolean> {
   return !!u?.isAdmin;
 }
 
-// Strict admin gate for Featured Work moderation.
-// The caller MUST have `users.isAdmin = true` already; everything else gets
-// 403. Admin is granted only via `scripts/src/grant-admin.ts`, never through
-// a route. (Previous versions accepted an `x-admin-secret` self-promotion
-// header — that backdoor was removed for launch.)
+// Strict admin gate for Featured Work moderation. Delegates to the shared
+// `isCallerAdmin` helper which accepts either `users.isAdmin = true` (set
+// with `scripts/src/grant-admin.ts`) OR verified Clerk email matching the
+// `ADMIN_EMAILS` allowlist. (The legacy `x-admin-secret` self-promotion
+// header was removed for launch.)
 async function requireAdminCaller(req: Request, res: Response): Promise<string | null> {
-  const userId = requireUserId(req, res);
-  if (!userId) return null;
-
-  const [existing] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
-  if (existing?.isAdmin) return userId;
-
-  res.status(403).json({ error: "Admin access required" });
-  return null;
+  return requireAdminCallerShared(req, res);
 }
 
 // =============================================================================
@@ -506,7 +500,10 @@ router.get("/featured-work/:id", async (req: Request, res: Response): Promise<vo
 
     const callerId = getOptionalUserId(req);
     const isOwner = !!callerId && callerId === row.userId;
-    const callerIsAdmin = callerId ? await isAdmin(callerId) : false;
+    // Use the shared admin check so the allowlisted owner (admin@psychprosuite.com)
+    // can view their own non-approved drafts even before the DB row has
+    // self-healed via a prior /feedback/is-admin call.
+    const callerIsAdmin = callerId ? await isCallerAdmin(req) : false;
     if (row.status !== "approved" && !isOwner && !callerIsAdmin) {
       res.status(404).json({ error: "Not found" });
       return;

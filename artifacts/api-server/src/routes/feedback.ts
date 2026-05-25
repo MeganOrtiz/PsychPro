@@ -2,34 +2,28 @@ import { Router, type Request, type Response } from "express";
 import { db } from "@workspace/db";
 import { feedbackTable, usersTable } from "@workspace/db";
 import { eq, desc } from "drizzle-orm";
-import { getOptionalUserId, requireUserId } from "../lib/userId";
+import { requireUserId } from "../lib/userId";
+import { isCallerAdmin } from "../lib/isAdmin";
 import { parseIntParam } from "../lib/params";
 import { feedbackRateLimit } from "../middlewares/feedbackRateLimit";
 
 const router = Router();
 
-// Strict admin gate. The caller must already have isAdmin=true in the DB.
-// Grant admin only via scripts/src/grant-admin.ts — never through a route.
+// Strict admin gate. Admin is granted either via `users.isAdmin = true`
+// (set with `scripts/src/grant-admin.ts`) OR by verified Clerk email
+// matching the `ADMIN_EMAILS` allowlist (see `lib/isAdmin.ts`).
 async function requireAdmin(req: Request, res: Response): Promise<boolean> {
   const userId = requireUserId(req, res);
   if (!userId) return false;
-  const [existing] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
-  if (!existing || !existing.isAdmin) {
-    res.status(403).json({ error: "Admin access required" });
-    return false;
-  }
-  return true;
+  if (await isCallerAdmin(req)) return true;
+  res.status(403).json({ error: "Admin access required" });
+  return false;
 }
 
 router.get("/feedback/is-admin", async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId = getOptionalUserId(req);
-    if (!userId) {
-      res.json({ isAdmin: false });
-      return;
-    }
-    const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
-    res.json({ isAdmin: !!user?.isAdmin });
+    const ok = await isCallerAdmin(req);
+    res.json({ isAdmin: ok });
   } catch (err) {
     req.log.error({ err }, "Error checking admin status");
     // SECURITY: on error, default to NOT admin. Better to lock out a
