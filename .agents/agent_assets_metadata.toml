@@ -1,5 +1,10 @@
 uploads = []
-generated = []
+
+[[generated]]
+id = "0LWZL7aDGwccJ_Gx_e5Fg"
+uri = "file://artifacts/neuronotes/src/assets/hero/brain-smoke.png"
+type = "image"
+title = "brain in cyan smoke"
 
 [[outputs]]
 id = "aKKI8N7WseM8lzrKZFEEq"
