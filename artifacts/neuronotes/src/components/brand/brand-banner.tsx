@@ -70,7 +70,7 @@ export function BrandBanner({
         }}
         data-testid="brand-banner-tagline"
       >
-        ADVANCE YOUR MIND. ELEVATE CARE.
+        learn. expand. connect.
       </p>
       {greeting !== undefined && (
         <p
