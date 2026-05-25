@@ -25,9 +25,12 @@ import {
   X,
 } from "lucide-react";
 import { useGetTopics } from "@workspace/api-client-react";
-import heroBrainWebp from "@/assets/hero/brain.webp";
-import heroBrain1024 from "@/assets/hero/brain-1024.webp";
-import heroBrain640 from "@/assets/hero/brain-640.webp";
+import heroBrainWebp from "@/assets/hero/brain-iso.webp";
+import heroBrain1024 from "@/assets/hero/brain-iso-1024.webp";
+import heroBrain640 from "@/assets/hero/brain-iso-640.webp";
+import smokeBgFull from "@/assets/bg/smoke-full.webp";
+import smokeBg1600 from "@/assets/bg/smoke-1600.webp";
+import smokeBg768 from "@/assets/bg/smoke-768.webp";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -134,22 +137,90 @@ export default function LandingPage() {
     boxShadow: "inset 0 0 24px rgba(58, 224, 236, 0.06)",
   } as const;
 
+  // Smoke-cloud background: full-bleed fixed image so the whole
+  // landing route (hero, features, footer) sits inside one
+  // continuous atmosphere. Same source used by the authenticated
+  // .study-page-bg surface (see src/index.css) so landing → app is
+  // visually seamless. The 1600w WebP (~182KB) is plenty sharp on
+  // desktop and reasonable on phones; mobile-first picking via
+  // image-set() below in CSS. A dark vignette overlay
+  // (.landing-vignette) keeps body copy readable on the brighter
+  // cloud zones.
   return (
     <div
       className="landing-canvas min-h-screen relative overflow-x-hidden"
       data-testid="landing-page"
       style={{
-        background: "#04080c",
+        backgroundColor: "#04080c",
+        // image-set lets the browser pick the right DPR variant; the
+        // mobile 768w override and the iOS scroll-attachment fallback
+        // both live in the <style> block below where media queries
+        // are available. isolation:isolate forces .landing-canvas to
+        // create its own stacking context so the negative-z vignette
+        // sits BETWEEN the smoke background and content (instead of
+        // escaping behind the root stacking context).
+        backgroundImage: `-webkit-image-set(url(${smokeBg1600}) 1x, url(${smokeBgFull}) 2x)`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+        isolation: "isolate",
         color: P.cloud,
         fontFamily: '"Montserrat", sans-serif',
       }}
     >
-      {/* NOTE: the brain image is no longer a full-bleed cover background.
-          It is rendered as an in-flow <img> inside the hero section below,
-          sized to 40vh, horizontally centered, with generous dark space
-          around it on all sides. The page ground (#04080c) shows through
-          the natural transparency around the brain in the source PNG. */}
+      {/* Dark vignette overlay — sits between the smoke and content so
+          headlines, body copy, and cards stay readable. Heavier at the
+          edges, lighter in the upper-center where the brain sits, so the
+          smoke's brightest light still feels like it's "behind" the
+          brain. pointer-events:none + z:-1 so it never blocks input. */}
+      <div className="landing-vignette" aria-hidden />
       <style>{`
+        /* Vignette overlay sitting between the fixed smoke background
+           and the page content. Radial gradient: transparent in the
+           upper-center where the brain floats, deepening to near-black
+           at the edges and toward the page bottom so the long-scroll
+           sections (features, topics, footer) stay readable on top of
+           the bright smoke. */
+        .landing-vignette {
+          position: fixed;
+          inset: 0;
+          z-index: 0;
+          pointer-events: none;
+          background:
+            radial-gradient(ellipse 75% 55% at 50% 32%,
+              rgba(4, 8, 12, 0.18) 0%,
+              rgba(4, 8, 12, 0.45) 45%,
+              rgba(4, 8, 12, 0.78) 80%,
+              rgba(4, 8, 12, 0.92) 100%),
+            linear-gradient(180deg,
+              rgba(4, 8, 12, 0.10) 0%,
+              rgba(4, 8, 12, 0.55) 60%,
+              rgba(4, 8, 12, 0.90) 100%);
+        }
+        /* All page content (header, hero, sections, footer) sits in
+           a positive stacking layer above the vignette (z:0) which
+           sits above the canvas background. */
+        .landing-canvas > :not(.landing-vignette) {
+          position: relative;
+          z-index: 1;
+        }
+        /* Mobile — swap to the smaller 768w smoke variant to save
+           bytes; iOS Safari has historically choked on fixed
+           background-attachment with large images, so we also drop
+           back to scroll on touch devices. The vignette + smoke
+           still feel seamless because the image is sized to cover. */
+        @media (max-width: 768px) {
+          .landing-canvas {
+            background-image: url(${smokeBg768}) !important;
+          }
+        }
+        @media (hover: none) and (pointer: coarse) {
+          .landing-canvas {
+            background-attachment: scroll !important;
+          }
+        }
+
         /* Landing canvas — hero-bound cerulean-clouds composition.
            The image paints ONCE at the top of the page (sized to the
            hero viewport) and fades down into the solid ink ground for
@@ -174,173 +245,40 @@ export default function LandingPage() {
            lives) to crop out the bottom smoke tail. A soft radial mask
            then dissolves the rectangular wrapper edges into the
            near-black ground so the brain reads as floating in smoke. */
+        /* Isolated brain — transparent PNG converted to WebP, so it
+           sits on the smoke background with NO rectangular edge. The
+           old radial mask is gone (used to be needed to fade out the
+           PNG's own background). We keep the cerulean glow and the
+           gentle breathing pulse so the brain feels alive against
+           the clouds. */
         .landing-canvas .landing-brain {
           position: relative;
           z-index: 2;
           display: block;
-          width: min(60vh, 78vw);
+          width: min(54vh, 72vw);
           aspect-ratio: 1 / 1;
           margin: 0 auto;
-          object-fit: cover;
-          object-position: center 28%;
+          object-fit: contain;
+          object-position: center;
           pointer-events: none;
           user-select: none;
-          filter: drop-shadow(0 0 80px rgba(58, 224, 236, 0.30));
-          -webkit-mask-image:
-            radial-gradient(circle at 50% 50%,
-              #000 45%,
-              rgba(0,0,0,0.55) 72%,
-              transparent 100%);
-                  mask-image:
-            radial-gradient(circle at 50% 50%,
-              #000 45%,
-              rgba(0,0,0,0.55) 72%,
-              transparent 100%);
+          filter:
+            drop-shadow(0 0 60px rgba(58, 224, 236, 0.55))
+            drop-shadow(0 0 120px rgba(30, 212, 224, 0.30));
           animation: brain-breathe 9s ease-in-out infinite;
         }
         @media (max-width: 768px) {
           .landing-canvas .landing-brain {
-            width: min(52vh, 88vw);
+            width: min(46vh, 84vw);
           }
         }
 
-        /* ──────────────────────────────────────────────────────────────
-           ATMOSPHERIC LAYERS — engagement polish
-           Three stacked decorative layers behind the brain that bring
-           the dead side-margins to life without competing with content:
-             • landing-aurora — large, soft, slowly pulsing turquoise
-               radial that bleeds across the full viewport width so the
-               brain doesn't feel like a stamp on a black void.
-             • landing-halo   — slow-rotating conic ring directly behind
-               the brain that adds a subtle "energy field" feel.
-             • landing-stars  — twinkling pinpoint particle field for
-               depth. Generated with stacked box-shadows (no JS / no
-               extra DOM nodes).
-           All layers are pointer-events:none, z-index:0–1 (brain is 2,
-           text is 10), and respect prefers-reduced-motion. */
+        /* Atmospheric layers (aurora / halo / stars) were removed when
+           we adopted the full-bleed smoke background — the smoke is
+           the atmosphere now. The hero-stage stays relative for its
+           in-flow stacking. */
         .landing-hero-stage {
           position: relative;
-        }
-        .landing-aurora {
-          position: absolute;
-          inset: -10% -10% 0 -10%;
-          z-index: 0;
-          pointer-events: none;
-          background:
-            radial-gradient(ellipse 55% 45% at 50% 38%,
-              rgba(58, 224, 236, 0.22) 0%,
-              rgba(58, 224, 236, 0.10) 35%,
-              rgba(10, 60, 80, 0.06) 60%,
-              transparent 85%),
-            radial-gradient(ellipse 80% 30% at 50% 50%,
-              rgba(118, 228, 247, 0.06) 0%,
-              transparent 70%);
-          filter: blur(8px);
-          animation: aurora-pulse 11s ease-in-out infinite;
-        }
-        .landing-halo {
-          position: absolute;
-          top: 0;
-          left: 50%;
-          transform: translateX(-50%);
-          width: min(72vh, 92vw);
-          aspect-ratio: 1 / 1;
-          z-index: 1;
-          pointer-events: none;
-          border-radius: 50%;
-          background:
-            conic-gradient(from 0deg,
-              rgba(58, 224, 236, 0.00) 0deg,
-              rgba(58, 224, 236, 0.18) 60deg,
-              rgba(118, 228, 247, 0.05) 130deg,
-              rgba(58, 224, 236, 0.20) 220deg,
-              rgba(58, 224, 236, 0.00) 320deg,
-              rgba(58, 224, 236, 0.00) 360deg);
-          -webkit-mask-image:
-            radial-gradient(circle at 50% 50%,
-              transparent 38%,
-              #000 46%,
-              #000 52%,
-              transparent 62%);
-                  mask-image:
-            radial-gradient(circle at 50% 50%,
-              transparent 38%,
-              #000 46%,
-              #000 52%,
-              transparent 62%);
-          filter: blur(6px);
-          opacity: 0.7;
-          animation: halo-spin 45s linear infinite;
-        }
-        .landing-stars {
-          position: absolute;
-          inset: 0;
-          z-index: 0;
-          pointer-events: none;
-          overflow: hidden;
-        }
-        /* Pinpoint stars — three stacked dots, each given a small army
-           of box-shadow copies at hand-picked positions so they spread
-           naturally across the hero. Three layers with different sizes
-           and twinkle phases keep the field from feeling mechanical. */
-        .landing-stars::before,
-        .landing-stars::after,
-        .landing-stars > .stars-mid {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 1px;
-          height: 1px;
-          border-radius: 50%;
-          background: transparent;
-        }
-        .landing-stars::before {
-          box-shadow:
-             7vw  9vh 0 0.5px rgba(167,243,255,0.85),
-            14vw 22vh 0 0.5px rgba(167,243,255,0.55),
-            21vw  5vh 0 0.5px rgba(167,243,255,0.70),
-            28vw 32vh 0 0.5px rgba(167,243,255,0.40),
-            34vw 14vh 0 0.5px rgba(167,243,255,0.80),
-            42vw 28vh 0 0.5px rgba(167,243,255,0.50),
-            48vw  7vh 0 0.5px rgba(167,243,255,0.65),
-            56vw 35vh 0 0.5px rgba(167,243,255,0.45),
-            63vw 11vh 0 0.5px rgba(167,243,255,0.75),
-            70vw 26vh 0 0.5px rgba(167,243,255,0.55),
-            78vw  6vh 0 0.5px rgba(167,243,255,0.85),
-            85vw 30vh 0 0.5px rgba(167,243,255,0.60),
-            92vw 18vh 0 0.5px rgba(167,243,255,0.50),
-             4vw 38vh 0 0.5px rgba(167,243,255,0.60),
-            96vw  9vh 0 0.5px rgba(167,243,255,0.70);
-          animation: star-twinkle 4.5s ease-in-out infinite;
-        }
-        .landing-stars > .stars-mid {
-          box-shadow:
-            10vw 16vh 0 0.5px rgba(118,228,247,0.55),
-            18vw 41vh 0 0.5px rgba(118,228,247,0.40),
-            25vw 18vh 0 0.5px rgba(118,228,247,0.65),
-            38vw 44vh 0 0.5px rgba(118,228,247,0.45),
-            52vw 21vh 0 0.5px rgba(118,228,247,0.55),
-            66vw 40vh 0 0.5px rgba(118,228,247,0.50),
-            74vw 17vh 0 0.5px rgba(118,228,247,0.60),
-            82vw 43vh 0 0.5px rgba(118,228,247,0.40),
-            89vw 24vh 0 0.5px rgba(118,228,247,0.55),
-             2vw 28vh 0 0.5px rgba(118,228,247,0.50);
-          animation: star-twinkle 6.5s ease-in-out infinite;
-          animation-delay: -2s;
-        }
-        .landing-stars::after {
-          box-shadow:
-             6vw 47vh 0 0.5px rgba(58,224,236,0.70),
-            16vw 52vh 0 0.5px rgba(58,224,236,0.45),
-            29vw 49vh 0 0.5px rgba(58,224,236,0.55),
-            44vw 53vh 0 0.5px rgba(58,224,236,0.40),
-            59vw 47vh 0 0.5px rgba(58,224,236,0.55),
-            71vw 51vh 0 0.5px rgba(58,224,236,0.45),
-            86vw 48vh 0 0.5px rgba(58,224,236,0.60),
-            94vw 54vh 0 0.5px rgba(58,224,236,0.40);
-          animation: star-twinkle 5.5s ease-in-out infinite;
-          animation-delay: -3.5s;
         }
 
         /* Wordmark — subtle slow shine sweep every ~12s. */
@@ -394,17 +332,6 @@ export default function LandingPage() {
             filter: drop-shadow(0 0 110px rgba(58, 224, 236, 0.42));
           }
         }
-        @keyframes aurora-pulse {
-          0%, 100% { opacity: 0.85; transform: scale(1); }
-          50%      { opacity: 1;    transform: scale(1.04); }
-        }
-        @keyframes halo-spin {
-          to { transform: translateX(-50%) rotate(360deg); }
-        }
-        @keyframes star-twinkle {
-          0%, 100% { opacity: 0.35; }
-          50%      { opacity: 1; }
-        }
         @keyframes wordmark-shine {
           0%   { background-position: 200% 0; }
           55%  { background-position: -50% 0; }
@@ -415,15 +342,9 @@ export default function LandingPage() {
            have requested reduced motion at the OS level. */
         @media (prefers-reduced-motion: reduce) {
           .landing-canvas .landing-brain,
-          .landing-aurora,
-          .landing-halo,
-          .landing-stars::before,
-          .landing-stars::after,
-          .landing-stars > .stars-mid,
           .landing-wordmark::after {
             animation: none !important;
           }
-          .landing-halo { opacity: 0.5; }
         }
         .landing-glow-link {
           position: relative;
@@ -725,11 +646,9 @@ export default function LandingPage() {
         {/* Atmospheric decoration — see the .landing-aurora / .landing-halo
             / .landing-stars CSS block above for layering rules. All three
             are pointer-events:none and sit behind the brain (z 0–1). */}
-        <div className="landing-aurora" aria-hidden />
-        <div className="landing-stars" aria-hidden>
-          <div className="stars-mid" />
-        </div>
-        <div className="landing-halo" aria-hidden />
+        {/* Atmospheric decoration removed — the new full-bleed smoke
+            background carries all the atmosphere on its own. Adding
+            aurora / halo / stars on top would compete with the clouds. */}
         {/* Responsive WebP variants: serve 640w on phones, 1024w on
             tablets, full on desktop. Cuts hero weight from ~1.9MB PNG
             down to ~35–141KB WebP. fetchPriority="high" + decoding="async"
