@@ -199,15 +199,18 @@ export default function LandingPage() {
           left: 0;
           width: 100%;
           height: 100vh;
-          object-fit: cover;
+          /* "contain" so the FULL portrait composition (brain + clouds
+             above and below) is always visible. The dark ink ground
+             painted by ::after fills the empty side bars naturally. */
+          object-fit: contain;
           object-position: center top;
           z-index: -55;
           pointer-events: none;
           user-select: none;
-          /* Avoid a hard rectangular bottom edge — fade the bottom 18% of
-             the image into the ink ground beneath it. */
-          -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 82%, transparent 100%);
-                  mask-image: linear-gradient(180deg, #000 0%, #000 82%, transparent 100%);
+          /* Soft fade at the very bottom so the image dissolves into the
+             ink ground rather than ending on a hard line. */
+          -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 88%, transparent 100%);
+                  mask-image: linear-gradient(180deg, #000 0%, #000 88%, transparent 100%);
         }
         .landing-glow-link {
           position: relative;
