@@ -15,7 +15,6 @@ import { authHeaders } from "@/lib/auth-headers";
 import { workTypeLabel } from "@workspace/community";
 import { useLocation } from "wouter";
 import { useUser } from "@clerk/clerk-react";
-import brainHeroImage from "@assets/landing_page_1779697562530.png";
 import {
   BookOpen,
   Brain,
@@ -36,11 +35,12 @@ import { useGetDashboardSummary, useGetTopics, useGetLeaderboard } from "@worksp
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-// Spotlight uses the same brain-in-clouds composition as the landing
-// page so the dashboard and landing read as a single visual identity.
-// Avatar is sourced live from the signed-in Clerk user inside
-// SpotlightCard — no module-scope placeholder needed.
-const spotlightCloudImage: string = brainHeroImage;
+// Spotlight background image removed at the user's request — the landing
+// page and dashboard background art are being rebuilt from scratch.
+// While there's no image, the existing falsy-branch gradient in
+// SpotlightCard paints the cloud strip, so this stays as a plain
+// undefined until the new artwork is wired in here.
+const spotlightCloudImage: string | undefined = undefined;
 const featuredWorkImage: string | undefined = undefined;
 import TodayReviews from "@/components/learning/today-reviews";
 import { StudySurface } from "@/components/study/study-surface";

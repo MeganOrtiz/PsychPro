@@ -289,14 +289,15 @@
    .study-page-bg is the canonical PsychPro app surface used by
    every authenticated page. It paints:
      - shadcn token overrides (cerulean palette, defined above)
-     - the cerulean cloud background image (::before)
+     - a flat dark base color via ::before (image stripped — see note)
      - canonical glass card treatment (.bg-card descendants)
 
-   The cloud background image is a single fixed composition —
-   NOT tiled. The same image is used on the landing page; if
-   you change the filter or opacity here, also review the
-   landing page's .landing-canvas::before rule to keep both
-   surfaces visually coherent.
+   NOTE: the previous full-bleed cerulean smoke image has been
+   removed at the user's request to start the visual design from
+   scratch. The ::before now paints only a plain dark surface so
+   the page chrome and cards still have something to sit on. When
+   the new background art lands, re-introduce it here so every
+   page picks it up automatically.
 
    DO NOT override the ::before background per-page. DO NOT
    re-declare these CSS variables in another scope. DO NOT add
@@ -308,26 +309,6 @@
   position: fixed;
   inset: 0;
   z-index: -2;
-  background-image:
-    /* Dimming wash so cards remain readable on top — alpha
-       controls how subtle the clouds are. Higher alpha = darker
-       background, more card prominence. Kept moderate so the
-       full-bleed brain composition stays visible behind cards. */
-    /* Deeper dimming wash so the cloud composition reads as moody
-       near-black smoke (matches the landing page's #04080c ground).
-       Heavier vignette at the edges keeps cards prominent while the
-       turquoise glow stays subtly visible behind them. */
-    radial-gradient(ellipse 130% 115% at 50% 38%,
-      rgba(4, 8, 12, 0.62) 0%,
-      rgba(4, 8, 12, 0.78) 55%,
-      rgba(4, 8, 12, 0.92) 100%),
-    /* Full-bleed cerulean smoke composition. Same source image
-       as the landing canvas — landing and dashboard share one
-       continuous visual identity. */
-    url("./assets/bg/smoke-full.webp");
-  background-size: cover, cover;
-  background-position: center, center;
-  background-repeat: no-repeat, no-repeat;
   background-color: #03151D;
   pointer-events: none;
 }
