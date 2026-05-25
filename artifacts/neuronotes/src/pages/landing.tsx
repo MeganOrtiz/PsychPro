@@ -138,20 +138,16 @@ export default function LandingPage() {
       className="landing-canvas min-h-screen relative overflow-x-hidden"
       data-testid="landing-page"
       style={{
-        background: "transparent",
+        background: "#04080c",
         color: P.cloud,
-        fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
+        fontFamily: '"Montserrat", sans-serif',
       }}
     >
-      {/* Hero background — brain-in-clouds image. Sits behind the gradient
-          overlay (::before) and in front of the solid ink ground (::after).
-          Bound to 100vh so it fades into the ink for the rest of the page. */}
-      <img
-        className="landing-bg-image"
-        src={heroBackground}
-        alt=""
-        aria-hidden
-      />
+      {/* NOTE: the brain image is no longer a full-bleed cover background.
+          It is rendered as an in-flow <img> inside the hero section below,
+          sized to 40vh, horizontally centered, with generous dark space
+          around it on all sides. The page ground (#04080c) shows through
+          the natural transparency around the brain in the source PNG. */}
       <style>{`
         /* Landing canvas — hero-bound cerulean-clouds composition.
            The image paints ONCE at the top of the page (sized to the
@@ -164,64 +160,26 @@ export default function LandingPage() {
            MUST stay background:transparent so the negative-z layers
            remain visible. DO NOT add a per-section background image
            elsewhere on this page. */
-        /* Near-black page ground. Hard-coded #04080c per the approved
-           comp — this is darker than P.ink and gives the turquoise glow
-           the contrast it needs to pop. */
-        .landing-canvas::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          z-index: -60;
-          background-color: #04080c;
-          pointer-events: none;
-        }
-        /* Radial vignette that blends the brain image's turquoise smoke
-           into the near-black edges. Hero-bound (100vh) so it only
-           applies over the brain region; the rest of the page is the
-           solid #04080c ground. */
-        .landing-canvas::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          height: 100vh;
-          z-index: -50;
-          background:
-            radial-gradient(ellipse 80% 70% at 50% 22%,
-              transparent 35%,
-              rgba(4, 8, 12, 0.55) 75%,
-              #04080c 92%),
-            linear-gradient(180deg,
-              transparent 0%,
-              transparent 65%,
-              rgba(4, 8, 12, 0.7) 85%,
-              #04080c 100%);
-          pointer-events: none;
-        }
-        /* Full-bleed background image — brain + turquoise smoke spans
-           the entire viewport width with NO rectangular container edge.
-           "cover" + object-position centered top crops the portrait so
-           the brain sits glowing at the top-center and the smoke fades
-           naturally into the vignette at all edges. */
-        .landing-canvas > .landing-bg-image {
-          position: absolute;
-          top: 0;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 100%;
-          height: 95vh;
-          object-fit: cover;
-          object-position: center 18%;
-          z-index: -55;
+        /* Brain element — in-flow image sized to 40vh, horizontally
+           centered with generous dark space around it. object-fit:contain
+           preserves the full portrait so the cerebellum at the bottom
+           and the smoke wisps at the top/sides remain visible. A soft
+           radial mask fades the rectangular edges of the PNG into the
+           near-black page ground so there is no visible container edge. */
+        .landing-canvas .landing-brain {
+          display: block;
+          height: 40vh;
+          width: auto;
+          max-width: 90vw;
+          margin: 0 auto;
+          object-fit: contain;
           pointer-events: none;
           user-select: none;
-          /* Soft edge fade so the image dissolves into the vignette
-             on all sides rather than terminating on a hard rectangle. */
+          filter: drop-shadow(0 0 60px rgba(58, 224, 236, 0.25));
           -webkit-mask-image:
-            radial-gradient(ellipse 85% 75% at 50% 35%, #000 45%, transparent 90%);
+            radial-gradient(ellipse 75% 75% at 50% 50%, #000 55%, transparent 95%);
                   mask-image:
-            radial-gradient(ellipse 85% 75% at 50% 35%, #000 45%, transparent 90%);
+            radial-gradient(ellipse 75% 75% at 50% 50%, #000 55%, transparent 95%);
         }
         .landing-glow-link {
           position: relative;
@@ -376,8 +334,8 @@ export default function LandingPage() {
               style={{
                 ...TRACK_NAV,
                 color: P.cloud,
-                fontFamily: '"Saira", "Outfit", "Inter", system-ui, sans-serif',
-                fontWeight: 200,
+                fontFamily: '"Montserrat", sans-serif',
+                fontWeight: 300,
               }}
             >
               PSYCHPRO
@@ -451,13 +409,18 @@ export default function LandingPage() {
           HERO — floating isolated brain over the fixed cloud canvas,
           followed by wordmark, tagline, body copy and CTAs.
           ============================================================ */}
-      {/* The brain image (z:-55, ~95vh tall, object-fit:cover) sits at the
-          top of the canvas. Hero text content uses a generous top padding
-          so the wordmark + tagline + CTAs all sit BELOW the brain, not
-          overlaid on it. Bottom padding tightened so the feature cards
-          and Browse Topics grid pull up into the first screen. */}
-      <section className="relative flex flex-col items-center justify-center pt-[58vh] sm:pt-[60vh] md:pt-[62vh] pb-8 md:pb-10">
-        <div className="max-w-5xl mx-auto px-6 lg:px-10 text-center relative z-10">
+      {/* Hero stack — brain image (40vh, centered, dark space around it),
+          then PSYCHPRO wordmark, tagline, body copy, CTAs. All centered
+          in a vertical column. Tightened bottom padding so the feature
+          cards pull up into the first screen. */}
+      <section className="relative flex flex-col items-center pt-6 md:pt-8 pb-8 md:pb-10">
+        <img
+          src={heroBackground}
+          alt=""
+          aria-hidden
+          className="landing-brain"
+        />
+        <div className="max-w-5xl mx-auto px-6 lg:px-10 text-center relative z-10 mt-4 md:mt-6">
           {/* Wordmark — Proxima Nova first (for users who have it locally
               via Adobe Creative Cloud), then a carefully chosen free
               fallback stack designed to mimic Proxima Nova's proportions:
@@ -470,14 +433,11 @@ export default function LandingPage() {
           <h1
             className="leading-none relative"
             style={{
-              fontFamily:
-                '"Proxima Nova", "proxima-nova", "Mukta", "Sofia Sans", "Montserrat", "Inter", system-ui, sans-serif',
+              fontFamily: '"Montserrat", sans-serif',
               fontWeight: 200,
               fontSize: "clamp(40px, 6.8vw, 78px)",
               letterSpacing: "0.35em",
-              fontStretch: "95%",
               fontFeatureSettings: '"kern" 1, "liga" 1, "calt" 1',
-              fontOpticalSizing: "auto",
               color: "#e8fcff",
               // Soft turquoise glow per the redesign brief.
               textShadow: "0 0 30px rgba(58, 224, 236, 0.4)",
@@ -732,7 +692,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6 lg:px-10 py-8 flex flex-col md:flex-row items-center justify-between gap-5 text-xs">
           <div className="flex items-center gap-3">
             <Brain className="w-5 h-5" style={{ color: P.surf }} />
-            <span style={{ ...TRACK_NAV, color: P.cloud, fontFamily: '"Saira", "Outfit", "Inter", system-ui, sans-serif', fontWeight: 200 }}>PSYCHPRO</span>
+            <span style={{ ...TRACK_NAV, color: P.cloud, fontFamily: '"Montserrat", sans-serif', fontWeight: 300 }}>PSYCHPRO</span>
           </div>
           <div className="flex items-center gap-7 font-light">
             <a
