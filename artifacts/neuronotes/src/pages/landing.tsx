@@ -32,6 +32,7 @@ import {
   Star,
 } from "lucide-react";
 import cloudsBackground from "@/assets/generated_images/landing_page.png";
+import landingVideo from "@/assets/generated_images/landingpage_bg.mp4";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -199,6 +200,21 @@ export default function LandingPage() {
         fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
       }}
     >
+      {/* Hero background video. Must be muted + playsInline + autoPlay for
+          browsers to permit autoplay without user interaction. The PNG
+          stays as a poster so there's no flash of black on first paint
+          or if the codec fails. */}
+      <video
+        className="landing-bg-video"
+        src={landingVideo}
+        poster={cloudsBackground}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        aria-hidden
+      />
       <style>{`
         /* Landing canvas — hero-bound cerulean-clouds composition.
            The image paints ONCE at the top of the page (sized to the
@@ -219,6 +235,8 @@ export default function LandingPage() {
           background-color: ${P.ink};
           pointer-events: none;
         }
+        /* Gradient overlay that sits ON TOP of the background video to
+           keep wordmark + CTAs readable. Hero-bound (100vh). */
         .landing-canvas::before {
           content: "";
           position: absolute;
@@ -228,10 +246,6 @@ export default function LandingPage() {
           height: 100vh;
           z-index: -50;
           background-image:
-            /* Light bottom-anchored fade — keeps the brain + upper clouds
-               fully visible while ensuring lower-page text (CTAs, body
-               copy below the hero) reads against the cloud composition.
-               No top scrim: the brain is the focal point. */
             linear-gradient(180deg,
               rgba(3, 21, 29, 0.00) 0%,
               rgba(3, 21, 29, 0.00) 55%,
@@ -240,16 +254,26 @@ export default function LandingPage() {
             radial-gradient(ellipse 130% 115% at 50% 50%,
               rgba(3, 21, 29, 0.00) 0%,
               rgba(3, 21, 29, 0.08) 70%,
-              rgba(3, 21, 29, 0.25) 100%),
-            url(${cloudsBackground});
-          background-size: cover, cover, cover;
-          /* Anchor at center top so the brain (upper ~40% of the portrait
-             source) sits in the upper hero region and the cloud field
-             flows down behind the wordmark and CTAs. */
-          background-position: center top, center top, center top;
-          background-repeat: no-repeat, no-repeat, no-repeat;
-          image-rendering: -webkit-optimize-contrast;
+              rgba(3, 21, 29, 0.25) 100%);
           pointer-events: none;
+        }
+        /* The actual background video — sits behind the gradient overlay
+           and in front of the solid ink ground. Hero-bound (100vh) so it
+           fades into the ink color for the rest of the scrollable page. */
+        .landing-canvas > .landing-bg-video {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100vh;
+          object-fit: cover;
+          object-position: center top;
+          z-index: -55;
+          pointer-events: none;
+          /* Avoid a hard rectangular bottom edge — fade the bottom 15% of
+             the video into the ink ground beneath it. */
+          -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 82%, transparent 100%);
+                  mask-image: linear-gradient(180deg, #000 0%, #000 82%, transparent 100%);
         }
         .landing-glow-link {
           position: relative;
