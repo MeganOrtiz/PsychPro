@@ -5,7 +5,10 @@ import type { Logger } from "pino";
 import type Stripe from "stripe";
 import { getUncachableStripeClient } from "./stripeClient";
 
-const APPROVED_TIERS = new Set(["pro", "scholar"]);
+// "master" is accepted as an alias for "pro" — the Stripe product is
+// labeled Master in the dashboard but we still store the internal tier
+// string as "pro" / "active" everywhere downstream.
+const APPROVED_TIERS = new Set(["pro", "master", "scholar"]);
 
 // Returns the PsychPro tier string for an approved subscription, or null if
 // the underlying Stripe product is not an approved PsychPro plan. Callers

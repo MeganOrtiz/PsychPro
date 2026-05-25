@@ -16,8 +16,11 @@ router.get("/subscription/plans", async (req: Request, res: Response): Promise<v
       // Only surface products tagged as PsychPro tiers — this prevents any
       // unrelated products living in the same Stripe account (test artifacts,
       // future SKUs, etc.) from appearing on the pricing page.
+      // "master" is accepted as an alias for "pro" — the display name in
+      // Stripe / the dashboard is "Master", but the internal tier string
+      // stays "pro" everywhere else in the codebase.
       const tier = product.metadata?.neuronotes_tier;
-      if (tier !== "pro" && tier !== "scholar") continue;
+      if (tier !== "pro" && tier !== "master" && tier !== "scholar") continue;
 
       const prices = await stripe.prices.list({ product: product.id, active: true, limit: 10 });
       for (const price of prices.data) {
@@ -70,7 +73,7 @@ router.post("/subscription/checkout", async (req: Request, res: Response): Promi
       const product = price.product as import("stripe").default.Product;
       const tier = product?.metadata?.neuronotes_tier;
       const interval = price.recurring?.interval;
-      const isApprovedTier = tier === "pro" || tier === "scholar";
+      const isApprovedTier = tier === "pro" || tier === "master" || tier === "scholar";
       const isApprovedInterval = interval === "month" || interval === "year";
       if (!isApprovedTier || !isApprovedInterval || !price.active || product.deleted) {
         res.status(400).json({ error: "Invalid plan selected" });
