@@ -621,17 +621,26 @@ export default function LandingPage() {
       </section>
 
       {/* ============================================================
-          FEATURE CARDS — 4 glass tiles
-          ============================================================ */}
+          FEATURE CARDS — 5 glass tiles. Responsive grid:
+            mobile:   1 column (full stack)
+            sm:       2 columns (last card spans both → no orphan)
+            md:       3 columns (3 + 2 layout)
+            lg:       5 columns (single row, matches the comp)
+          Tightened paddings + icon/type sizes so the 5-up row fits
+          comfortably inside max-w-7xl without truncation. */}
       <section
         id="features"
         className="relative max-w-7xl mx-auto px-6 lg:px-10 pb-14"
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {FEATURE_CARDS.map((card, i) => (
             <div
               key={card.title}
-              className="group relative rounded-xl p-7 text-center transition-all duration-300 hover:-translate-y-1"
+              className={`group relative rounded-xl p-5 text-center transition-all duration-300 hover:-translate-y-1 flex flex-col ${
+                /* Span the lone last card across the full sm row so it
+                   never sits as an orphan. md+ resolves naturally. */
+                i === FEATURE_CARDS.length - 1 ? "sm:col-span-2 md:col-span-1" : ""
+              }`}
               style={{
                 ...glass,
                 boxShadow: `0 24px 50px rgba(0,0,0,0.45), 0 0 0 1px rgba(118, 228, 247, 0.05)`,
@@ -649,7 +658,7 @@ export default function LandingPage() {
                 }}
               />
               <card.icon
-                className="w-10 h-10 mx-auto mb-5"
+                className="w-8 h-8 mx-auto mb-3"
                 strokeWidth={1.25}
                 style={{
                   color: P.surf,
@@ -657,13 +666,17 @@ export default function LandingPage() {
                 }}
               />
               <h3
-                className="text-xs font-light mb-3"
-                style={{ ...TRACK_NAV, color: P.cloud }}
+                className="text-[10.5px] font-light mb-2 min-h-[2.6em] flex items-center justify-center"
+                style={{
+                  ...TRACK_NAV,
+                  color: P.cloud,
+                  lineHeight: 1.35,
+                }}
               >
                 {card.title}
               </h3>
               <p
-                className="text-sm leading-relaxed font-light"
+                className="text-[13px] leading-relaxed font-light"
                 style={{ color: P.inkSoft }}
               >
                 {card.body}
