@@ -30,6 +30,7 @@ import {
   CheckCircle2,
   Sparkles,
   Star,
+  FileText,
 } from "lucide-react";
 import cloudsBackground from "@/assets/generated_images/landing_page.png";
 import landingVideo from "@/assets/generated_images/landingpage_bg.mp4";
@@ -52,24 +53,29 @@ const NAV_LINKS = [
 
 const FEATURE_CARDS = [
   {
-    icon: GraduationCap,
-    title: "EVIDENCE-BASED LEARNING",
-    body: "Flashcards, quizzes, study guides, and practice exams designed for optimal knowledge retention.",
+    icon: Sparkles,
+    title: "FLASHCARDS / STUDY GUIDES / QUIZZES / EXAMS",
+    body: "Reinforce your learning with interactive study tools.",
   },
   {
     icon: Brain,
-    title: "INTERACTIVE BRAIN LAB",
-    body: "Explore neuroanatomy through a fully interactive 3D brain — click any region to learn its function and clinical relevance.",
+    title: "EVIDENCE-BASED LEARNING TOOLS",
+    body: "Explore evidence-based content and practical learning tools.",
   },
   {
-    icon: Sparkles,
-    title: "PERSONALIZED RESOURCES",
-    body: "Upload your own notes, articles, or PDFs and PsychPro generates flashcards, quizzes, and study guides from your material.",
+    icon: FileText,
+    title: "CREATE LEARNING RESOURCES FROM YOUR OWN MATERIAL",
+    body: "Upload, organize, and transform your material into smart resources.",
+  },
+  {
+    icon: Users,
+    title: "CONNECT WITH OTHERS",
+    body: "Collaborate, share insights, and grow together.",
   },
   {
     icon: Star,
     title: "PSYCHPRO SPOTLIGHT",
-    body: "Submit dissertations, research, or presentations for the chance to be featured in our PsychPro Spotlight.",
+    body: "Submit your dissertation, research, presentations for opportunities to be featured in the PsychPro Spotlight.",
   },
 ];
 
@@ -510,13 +516,15 @@ export default function LandingPage() {
           fills the viewport — there is NO gap above the brain. */}
       <section className="relative flex flex-col items-center justify-center pt-20 md:pt-24 lg:pt-28 pb-20 md:pb-28">
         <div className="max-w-5xl mx-auto px-6 lg:px-10 text-center relative z-10">
-          {/* Wordmark — Saira Thin (100), wide-tracked, ethereal */}
+          {/* Wordmark — Italiana, thin display serif, wide-tracked.
+              Matches the approved landing comp. Italiana ships at a single
+              weight (400). */}
           <h1
             className="leading-none relative mt-2"
             style={{
               ...TRACK_HERO,
-              fontFamily: '"Saira", "Outfit", "Inter", system-ui, sans-serif',
-              fontWeight: 100,
+              fontFamily: '"Italiana", "Cormorant Garamond", serif',
+              fontWeight: 400,
               fontSize: "clamp(44px, 7.5vw, 88px)",
               color: P.cloud,
               textShadow: `0 0 24px rgba(118, 228, 247, 0.30)`,
@@ -550,9 +558,9 @@ export default function LandingPage() {
               textShadow: `0 1px 6px rgba(3, 21, 29, 0.65)`,
             }}
           >
-            An all-in-one learning platform for mastery of topics in clinical
-            psychology. Gain in-depth understanding of psychology, neuroscience,
-            psychotherapy and intervention for real-world clinical application.
+            Master clinical psychology. Deeper understanding for topics in
+            psychology, neuroscience and intervention for real-world clinical
+            application.
           </p>
 
           {/* CTA cluster — primary (large), secondary (smaller), tertiary
@@ -574,7 +582,7 @@ export default function LandingPage() {
                 data-testid="cta-explore-courses"
               >
                 <BookOpen className="w-4 h-4" style={{ color: P.surf }} />
-                START STUDYING
+                EXPLORE COURSES
               </button>
               <button
                 onClick={goToApp}
@@ -591,7 +599,7 @@ export default function LandingPage() {
                 data-testid="cta-join-community"
               >
                 <Users className="w-4 h-4" style={{ color: P.surf }} />
-                MEET YOUR COHORT
+                JOIN COMMUNITY
               </button>
             </div>
             <a
