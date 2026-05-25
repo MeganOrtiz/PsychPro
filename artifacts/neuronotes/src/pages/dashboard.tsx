@@ -14,6 +14,8 @@ import { useEffect, useMemo, useState } from "react";
 import { authHeaders } from "@/lib/auth-headers";
 import { workTypeLabel } from "@workspace/community";
 import { useLocation } from "wouter";
+import { useUser } from "@clerk/clerk-react";
+import brainHeroImage from "@assets/landing_page_1779697562530.png";
 import {
   BookOpen,
   Brain,
@@ -34,10 +36,11 @@ import { useGetDashboardSummary, useGetTopics, useGetLeaderboard } from "@worksp
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-// Spotlight & featured-work imagery intentionally removed — re-add when
-// fresh assets land. Render fallbacks below keep the layout intact.
-const spotlightCloudImage: string | undefined = undefined;
-const spotlightAvatarImage: string | undefined = undefined;
+// Spotlight uses the same brain-in-clouds composition as the landing
+// page so the dashboard and landing read as a single visual identity.
+// Avatar is sourced live from the signed-in Clerk user inside
+// SpotlightCard — no module-scope placeholder needed.
+const spotlightCloudImage: string = brainHeroImage;
 const featuredWorkImage: string | undefined = undefined;
 import TodayReviews from "@/components/learning/today-reviews";
 import { StudySurface } from "@/components/study/study-surface";
@@ -630,6 +633,11 @@ function previewAbstract(text: string): string {
 
 function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
   const [spot, setSpot] = useState<SpotlightSubmission | null>(null);
+  // Pull the signed-in user so the spotlight renders with the real
+  // viewer's name + profile picture as the demo subject when no
+  // approved community submission is available. This makes the
+  // dashboard read as a live, personalized page instead of a stub.
+  const { user } = useUser();
   useEffect(() => {
     let cancelled = false;
     // Public anonymous-tolerant route — no auth header needed; the API
@@ -641,14 +649,27 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
     return () => { cancelled = true; };
   }, []);
 
-  const featuredName = spot ? spot.submitter.displayName : "Sarah K.";
-  const featuredRole = spot ? (spot.submitter.role ?? "Contributor") : "PsyD Candidate";
-  const featuredInstitution = spot ? (spot.submitter.institution ?? "") : "Clinical Neuropsychology";
+  // Display fields: prefer an approved community submission, fall back
+  // to the signed-in user so the card never shows a placeholder name.
+  const viewerName =
+    user?.fullName ||
+    [user?.firstName, user?.lastName].filter(Boolean).join(" ").trim() ||
+    user?.username ||
+    user?.primaryEmailAddress?.emailAddress?.split("@")[0] ||
+    "PsychPro Member";
+  const viewerAvatar = user?.imageUrl ?? undefined;
+
+  const featuredName = spot ? spot.submitter.displayName : viewerName;
+  const featuredRole = spot ? (spot.submitter.role ?? "Contributor") : "PsychPro Member";
+  const featuredInstitution = spot
+    ? (spot.submitter.institution ?? "")
+    : "Clinical Psychology";
   const featuredTypeLabel = spot ? workTypeLabel(spot.workType) : "Featured Work";
   const featuredTitle = spot
     ? spot.title
-    : "Dissertation work: SOCIAL COGNITION IN CHILDREN WITH AUTISM SPECTRUM DISORDER: EXPLORING CORRELATES BETWEEN OBJECTIVE NEUROPSYCHOLOGICAL MEASURES AND PARENT REPORTS";
+    : `Welcome, ${viewerName.split(" ")[0]} — this is where your featured research, dissertations, and presentations will live.`;
   const featuredAbstractPreview = spot ? previewAbstract(spot.abstract) : null;
+  const spotlightAvatarImage = spot ? undefined : viewerAvatar;
 
   return (
     <StudySurface tone="dark" innerClassName="relative overflow-hidden p-6 text-white">

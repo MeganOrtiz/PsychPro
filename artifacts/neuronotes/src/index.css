@@ -313,10 +313,14 @@
        controls how subtle the clouds are. Higher alpha = darker
        background, more card prominence. Kept moderate so the
        full-bleed brain composition stays visible behind cards. */
-    radial-gradient(ellipse 130% 115% at 50% 50%,
-      rgba(3, 21, 29, 0.35) 0%,
-      rgba(3, 21, 29, 0.50) 60%,
-      rgba(3, 21, 29, 0.65) 100%),
+    /* Deeper dimming wash so the cloud composition reads as moody
+       near-black smoke (matches the landing page's #04080c ground).
+       Heavier vignette at the edges keeps cards prominent while the
+       turquoise glow stays subtly visible behind them. */
+    radial-gradient(ellipse 130% 115% at 50% 38%,
+      rgba(4, 8, 12, 0.55) 0%,
+      rgba(4, 8, 12, 0.72) 55%,
+      rgba(4, 8, 12, 0.88) 100%),
     /* Full-bleed brain-in-clouds composition. Same source image
        as the landing canvas — landing and dashboard share one
        continuous visual identity. */
