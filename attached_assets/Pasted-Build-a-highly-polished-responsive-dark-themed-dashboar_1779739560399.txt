@@ -1,0 +1,38 @@
+Build a highly polished, responsive dark-themed dashboard using React/Vite and Tailwind CSS. The design must precisely mirror a cinematic, high-end "psychology and neuroscience platform" aesthetic using glassmorphism, glowing cyan accents, and volumetric dark teal smoke backgrounds.
+
+Please structure the layout, components, and styling based on the following detailed specifications:
+
+1. GLOBAL THEME & BACKGROUND:
+- Background: A deep, dark teal-to-black canvas (#020d12 to #050505) with a high-resolution smoky cloud texture overlay framing the borders, especially dense behind the right panel.
+- Color Palette: 
+  * Electric Cyan (#00f0ff) for primary glows, active states, and highlights.
+  * Muted Gray-Teal (#6b7c85) for secondary text and subheaders.
+- Card Styling: True glassmorphism. High background blur (backdrop-blur-md), semi-transparent dark teal backgrounds (e.g., rgba(3, 22, 28, 0.6)), thin subtle borders (border-cyan-500/10), and soft rounded corners (rounded-2xl).
+
+2. BRANDING HEADER (Centered at Top):
+- Text Layer 1: Center "PSYCHPRO" in a clean, high-contrast, widely-spaced (tracking-widest) sans-serif font. Add a subtle neon cyan text-shadow.
+- Text Layer 2: Directly below it, add the tagline "learn. expand. connect." in small, tracking-wide, lowercase gray-teal text.
+- Header Right: A sleek minimalist notification bell icon with a subtle cyan dot if active.
+
+3. TWO-COLUMN GRID SYSTEM:
+- Left Column (Sidebar - Roughly 20% width):
+  * Category 1: "STUDY" with menu links: Dashboard (Active state with a filled bright cyan background blur and crisp arrow indicator), Topics, Study Lab, Brain Lab, Progress, Resources.
+  * Category 2: "TOOLKIT" with menu links: My Tools, Standard Tools, Pro Tools (each featuring a small, clean, outlined "PRO" badge).
+  * Category 3: "COMMUNITY" with relevant menu links.
+- Center Column (Main Content Area - Roughly 55% width):
+  * Widget 1: "Begin Your Journey" card. Clean description text, and a sleek "Browse Topics ↗" button styled as an outlined button with a soft inner cyan glow.
+  * Widget 2: "Recommended for You". A grid of 4 interactive grid cards: "Psychopharmacology", "Neurophysiology", "Sensory Systems", and "Limbic System & Motion". Each card should feature a distinct minimalist icon on the left, an arrow on the right, and a subtle hover lift effect.
+  * Widget 3 (Bottom Row Split): A "Your Streak 🔥" card with a miniature glowing teal sparkline chart, and a "Leaderboard" card showing a quick rank table.
+- Right Column (PsychPro Spotlight Panel - Roughly 25% width):
+  * Create a tall, full-height glassmorphic card titled "Spotlight" topped with an elegant minimalist star icon.
+  * Text below title: "Highlighting the next generation of clinicians and researchers."
+  * The Spotlight Photo: A large, perfect circular avatar container holding a professional user profile picture. 
+  * The Spotlight Glow Effect: Implement an absolute-positioned radial gradient spotlight directly behind and encircling the avatar. It must cast a rich, glowing cyan aura that visually "illuminates" the user's photo.
+  * User Details: Below the photo, place the user's name ("Sarah K.") in crisp white text, followed by their credentials ("PsyD Candidate / Clinical Neuropsychology") in soft gray-teal.
+  * Background Element: The back of this specific spotlight card should subtly embody elements of neural pathways or brain insight imagery interwoven with the smoke.
+  * Card Footer: A clean share icon at the bottom right, and the muted label "FEATURED WORK" at the bottom left.
+
+4. ANIMATION & MICRO-INTERACTIONS:
+- Use Framer Motion for ultra-smooth layout transitions.
+- The sidebar links and main cards should have instantaneous but buttery hover states (slight scale or increased border glow).
+- Numbers on the streak card should animate upwards from 0 upon initial page load.
