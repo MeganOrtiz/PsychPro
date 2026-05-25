@@ -174,6 +174,8 @@ export default function LandingPage() {
            then dissolves the rectangular wrapper edges into the
            near-black ground so the brain reads as floating in smoke. */
         .landing-canvas .landing-brain {
+          position: relative;
+          z-index: 2;
           display: block;
           width: min(60vh, 78vw);
           aspect-ratio: 1 / 1;
@@ -193,11 +195,234 @@ export default function LandingPage() {
               #000 45%,
               rgba(0,0,0,0.55) 72%,
               transparent 100%);
+          animation: brain-breathe 9s ease-in-out infinite;
         }
         @media (max-width: 768px) {
           .landing-canvas .landing-brain {
             width: min(52vh, 88vw);
           }
+        }
+
+        /* ──────────────────────────────────────────────────────────────
+           ATMOSPHERIC LAYERS — engagement polish
+           Three stacked decorative layers behind the brain that bring
+           the dead side-margins to life without competing with content:
+             • landing-aurora — large, soft, slowly pulsing turquoise
+               radial that bleeds across the full viewport width so the
+               brain doesn't feel like a stamp on a black void.
+             • landing-halo   — slow-rotating conic ring directly behind
+               the brain that adds a subtle "energy field" feel.
+             • landing-stars  — twinkling pinpoint particle field for
+               depth. Generated with stacked box-shadows (no JS / no
+               extra DOM nodes).
+           All layers are pointer-events:none, z-index:0–1 (brain is 2,
+           text is 10), and respect prefers-reduced-motion. */
+        .landing-hero-stage {
+          position: relative;
+        }
+        .landing-aurora {
+          position: absolute;
+          inset: -10% -10% 0 -10%;
+          z-index: 0;
+          pointer-events: none;
+          background:
+            radial-gradient(ellipse 55% 45% at 50% 38%,
+              rgba(58, 224, 236, 0.22) 0%,
+              rgba(58, 224, 236, 0.10) 35%,
+              rgba(10, 60, 80, 0.06) 60%,
+              transparent 85%),
+            radial-gradient(ellipse 80% 30% at 50% 50%,
+              rgba(118, 228, 247, 0.06) 0%,
+              transparent 70%);
+          filter: blur(8px);
+          animation: aurora-pulse 11s ease-in-out infinite;
+        }
+        .landing-halo {
+          position: absolute;
+          top: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: min(72vh, 92vw);
+          aspect-ratio: 1 / 1;
+          z-index: 1;
+          pointer-events: none;
+          border-radius: 50%;
+          background:
+            conic-gradient(from 0deg,
+              rgba(58, 224, 236, 0.00) 0deg,
+              rgba(58, 224, 236, 0.18) 60deg,
+              rgba(118, 228, 247, 0.05) 130deg,
+              rgba(58, 224, 236, 0.20) 220deg,
+              rgba(58, 224, 236, 0.00) 320deg,
+              rgba(58, 224, 236, 0.00) 360deg);
+          -webkit-mask-image:
+            radial-gradient(circle at 50% 50%,
+              transparent 38%,
+              #000 46%,
+              #000 52%,
+              transparent 62%);
+                  mask-image:
+            radial-gradient(circle at 50% 50%,
+              transparent 38%,
+              #000 46%,
+              #000 52%,
+              transparent 62%);
+          filter: blur(6px);
+          opacity: 0.7;
+          animation: halo-spin 45s linear infinite;
+        }
+        .landing-stars {
+          position: absolute;
+          inset: 0;
+          z-index: 0;
+          pointer-events: none;
+          overflow: hidden;
+        }
+        /* Pinpoint stars — three stacked dots, each given a small army
+           of box-shadow copies at hand-picked positions so they spread
+           naturally across the hero. Three layers with different sizes
+           and twinkle phases keep the field from feeling mechanical. */
+        .landing-stars::before,
+        .landing-stars::after,
+        .landing-stars > .stars-mid {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 1px;
+          height: 1px;
+          border-radius: 50%;
+          background: transparent;
+        }
+        .landing-stars::before {
+          box-shadow:
+             7vw  9vh 0 0.5px rgba(167,243,255,0.85),
+            14vw 22vh 0 0.5px rgba(167,243,255,0.55),
+            21vw  5vh 0 0.5px rgba(167,243,255,0.70),
+            28vw 32vh 0 0.5px rgba(167,243,255,0.40),
+            34vw 14vh 0 0.5px rgba(167,243,255,0.80),
+            42vw 28vh 0 0.5px rgba(167,243,255,0.50),
+            48vw  7vh 0 0.5px rgba(167,243,255,0.65),
+            56vw 35vh 0 0.5px rgba(167,243,255,0.45),
+            63vw 11vh 0 0.5px rgba(167,243,255,0.75),
+            70vw 26vh 0 0.5px rgba(167,243,255,0.55),
+            78vw  6vh 0 0.5px rgba(167,243,255,0.85),
+            85vw 30vh 0 0.5px rgba(167,243,255,0.60),
+            92vw 18vh 0 0.5px rgba(167,243,255,0.50),
+             4vw 38vh 0 0.5px rgba(167,243,255,0.60),
+            96vw  9vh 0 0.5px rgba(167,243,255,0.70);
+          animation: star-twinkle 4.5s ease-in-out infinite;
+        }
+        .landing-stars > .stars-mid {
+          box-shadow:
+            10vw 16vh 0 0.5px rgba(118,228,247,0.55),
+            18vw 41vh 0 0.5px rgba(118,228,247,0.40),
+            25vw 18vh 0 0.5px rgba(118,228,247,0.65),
+            38vw 44vh 0 0.5px rgba(118,228,247,0.45),
+            52vw 21vh 0 0.5px rgba(118,228,247,0.55),
+            66vw 40vh 0 0.5px rgba(118,228,247,0.50),
+            74vw 17vh 0 0.5px rgba(118,228,247,0.60),
+            82vw 43vh 0 0.5px rgba(118,228,247,0.40),
+            89vw 24vh 0 0.5px rgba(118,228,247,0.55),
+             2vw 28vh 0 0.5px rgba(118,228,247,0.50);
+          animation: star-twinkle 6.5s ease-in-out infinite;
+          animation-delay: -2s;
+        }
+        .landing-stars::after {
+          box-shadow:
+             6vw 47vh 0 0.5px rgba(58,224,236,0.70),
+            16vw 52vh 0 0.5px rgba(58,224,236,0.45),
+            29vw 49vh 0 0.5px rgba(58,224,236,0.55),
+            44vw 53vh 0 0.5px rgba(58,224,236,0.40),
+            59vw 47vh 0 0.5px rgba(58,224,236,0.55),
+            71vw 51vh 0 0.5px rgba(58,224,236,0.45),
+            86vw 48vh 0 0.5px rgba(58,224,236,0.60),
+            94vw 54vh 0 0.5px rgba(58,224,236,0.40);
+          animation: star-twinkle 5.5s ease-in-out infinite;
+          animation-delay: -3.5s;
+        }
+
+        /* Wordmark — subtle slow shine sweep every ~12s. */
+        .landing-wordmark {
+          position: relative;
+          display: inline-block;
+        }
+        .landing-wordmark::after {
+          content: "PSYCHPRO";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(110deg,
+            transparent 38%,
+            rgba(255, 255, 255, 0.85) 50%,
+            transparent 62%);
+          -webkit-background-clip: text;
+                  background-clip: text;
+          -webkit-text-fill-color: transparent;
+          color: transparent;
+          background-size: 250% 100%;
+          background-position: 200% 0;
+          animation: wordmark-shine 12s ease-in-out infinite;
+          pointer-events: none;
+        }
+
+        /* CTA buttons — magnetic hover lift + intensified glow. */
+        .landing-glass-btn {
+          transition:
+            transform .35s cubic-bezier(.2,.8,.2,1),
+            box-shadow .35s ease,
+            border-color .35s ease,
+            background-color .35s ease !important;
+        }
+        .landing-glass-btn:hover {
+          transform: translateY(-2px);
+          box-shadow:
+            0 0 32px rgba(118, 228, 247, 0.55),
+            0 0 60px rgba(58, 224, 236, 0.25),
+            inset 0 0 18px rgba(118, 228, 247, 0.12) !important;
+          border-color: rgba(167, 243, 255, 0.85) !important;
+        }
+
+        /* ── Keyframes ─────────────────────────────────────────────── */
+        @keyframes brain-breathe {
+          0%, 100% {
+            transform: scale(1);
+            filter: drop-shadow(0 0 80px rgba(58, 224, 236, 0.28));
+          }
+          50% {
+            transform: scale(1.025);
+            filter: drop-shadow(0 0 110px rgba(58, 224, 236, 0.42));
+          }
+        }
+        @keyframes aurora-pulse {
+          0%, 100% { opacity: 0.85; transform: scale(1); }
+          50%      { opacity: 1;    transform: scale(1.04); }
+        }
+        @keyframes halo-spin {
+          to { transform: translateX(-50%) rotate(360deg); }
+        }
+        @keyframes star-twinkle {
+          0%, 100% { opacity: 0.35; }
+          50%      { opacity: 1; }
+        }
+        @keyframes wordmark-shine {
+          0%   { background-position: 200% 0; }
+          55%  { background-position: -50% 0; }
+          100% { background-position: -50% 0; }
+        }
+
+        /* Accessibility — kill all decorative motion for users who
+           have requested reduced motion at the OS level. */
+        @media (prefers-reduced-motion: reduce) {
+          .landing-canvas .landing-brain,
+          .landing-aurora,
+          .landing-halo,
+          .landing-stars::before,
+          .landing-stars::after,
+          .landing-stars > .stars-mid,
+          .landing-wordmark::after {
+            animation: none !important;
+          }
+          .landing-halo { opacity: 0.5; }
         }
         .landing-glow-link {
           position: relative;
@@ -431,7 +656,15 @@ export default function LandingPage() {
           then PSYCHPRO wordmark, tagline, body copy, CTAs. All centered
           in a vertical column. Tightened bottom padding so the feature
           cards pull up into the first screen. */}
-      <section className="relative flex flex-col items-center pt-6 md:pt-8 pb-8 md:pb-10">
+      <section className="landing-hero-stage relative flex flex-col items-center pt-6 md:pt-8 pb-8 md:pb-10">
+        {/* Atmospheric decoration — see the .landing-aurora / .landing-halo
+            / .landing-stars CSS block above for layering rules. All three
+            are pointer-events:none and sit behind the brain (z 0–1). */}
+        <div className="landing-aurora" aria-hidden />
+        <div className="landing-stars" aria-hidden>
+          <div className="stars-mid" />
+        </div>
+        <div className="landing-halo" aria-hidden />
         <img
           src={heroBackground}
           alt=""
@@ -449,7 +682,7 @@ export default function LandingPage() {
               Optical tweaks below (font-stretch, optical-sizing) help
               align the substitute fonts to Proxima Nova's feel. */}
           <h1
-            className="leading-none relative"
+            className="landing-wordmark leading-none relative"
             style={{
               fontFamily: '"Montserrat", sans-serif',
               fontWeight: 200,
