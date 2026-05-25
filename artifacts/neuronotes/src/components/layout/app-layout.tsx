@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "wouter";
+import { Link, useLocation, useSearch } from "wouter";
 import { Brain, LayoutDashboard, BookOpen, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck, BookMarked, Library, Wrench, Sparkles, Star, Beaker, Lightbulb, Users } from "lucide-react";
 import { UserButton } from "@clerk/clerk-react";
 import { authHeaders } from "@/lib/auth-headers";
@@ -34,8 +34,8 @@ const workshopNav: NavItem[] = [
 ];
 
 const labNav: NavItem[] = [
-  { href: "/study-lab", label: "Sessions", icon: Beaker },
-  { href: "/brain-lab", label: "Brain Trainers", icon: Brain },
+  { href: "/study-lab", label: "Study Lab", icon: Beaker },
+  { href: "/brain-lab", label: "Brain Lab", icon: Brain },
   { href: "/reflections", label: "Reflections", icon: Lightbulb },
 ];
 
@@ -137,7 +137,22 @@ interface AppLayoutProps {
 export default function AppLayout({ children }: AppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [location] = useLocation();
+  // Reactive query-string read. Wouter's `useLocation` returns pathname
+  // only, so the previous `window.location.search` read at render time was
+  // never reactive — clicking from Standard Tools → Pro Tools wouldn't
+  // update the active highlight until a hard reload. `useSearch` re-renders
+  // on every URL change.
+  const search = useSearch();
+  const currentTier = new URLSearchParams(search).get("tier");
   const { isAdmin, isScholar } = useUserMeta();
+
+  // Active flags for the three Tools entries. Computed once so the JSX
+  // below stays readable and we don't repeat the path/tier logic inline.
+  const isOnMyDecksList =
+    location === "/my-decks" ||
+    (location.startsWith("/my-decks/") && !location.startsWith("/my-decks/new"));
+  const isOnStandardTools = location === "/my-decks/new" && currentTier !== "pro";
+  const isOnProTools = location === "/my-decks/new" && currentTier === "pro";
 
   return (
     <div className="study-page-bg flex h-screen overflow-hidden">
@@ -218,7 +233,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 key={item.href}
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
-                data-testid={`nav-${item.label.toLowerCase()}`}
+                data-testid={`nav-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
               >
                 <div className={navItemClass(isActive)}>
                   <item.icon className="w-5 h-5 flex-shrink-0" />
@@ -252,59 +267,49 @@ export default function AppLayout({ children }: AppLayoutProps) {
           <Link
             href="/my-decks"
             onClick={() => setSidebarOpen(false)}
-            data-testid="nav-my-decks"
+            data-testid="nav-my-tools"
           >
-            <div
-              className={navItemClass(
-                location === "/my-decks" || (location.startsWith("/my-decks/") && location !== "/my-decks/new")
-              )}
-            >
+            <div className={navItemClass(isOnMyDecksList)}>
               <BookMarked className="w-5 h-5 flex-shrink-0" />
               <span className="text-sm font-medium">My Tools</span>
-              {!isScholar && (
+              {!isScholar && !isOnMyDecksList && (
                 <span className="ml-auto text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded bg-white/10 text-white/70 border border-white/10">
                   Pro
                 </span>
               )}
-              {isScholar && (location === "/my-decks" || (location.startsWith("/my-decks/") && location !== "/my-decks/new")) && <ChevronRight className="w-4 h-4 ml-auto" />}
+              {isOnMyDecksList && <ChevronRight className="w-4 h-4 ml-auto" />}
             </div>
           </Link>
           <Link
             href="/my-decks/new?tier=standard"
             onClick={() => setSidebarOpen(false)}
-            data-testid="nav-new-standard"
+            data-testid="nav-standard-tools"
           >
-            <div
-              className={navItemClass(
-                location === "/my-decks/new" && typeof window !== "undefined" && window.location.search.includes("tier=standard")
-              )}
-            >
+            <div className={navItemClass(isOnStandardTools)}>
               <Wrench className="w-5 h-5 flex-shrink-0" />
               <span className="text-sm font-medium">Standard Tools</span>
-              {!isScholar && (
+              {!isScholar && !isOnStandardTools && (
                 <span className="ml-auto text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded bg-white/10 text-white/70 border border-white/10">
                   Pro
                 </span>
               )}
+              {isOnStandardTools && <ChevronRight className="w-4 h-4 ml-auto" />}
             </div>
           </Link>
           <Link
             href="/my-decks/new?tier=pro"
             onClick={() => setSidebarOpen(false)}
-            data-testid="nav-new-pro"
+            data-testid="nav-pro-tools"
           >
-            <div
-              className={navItemClass(
-                location === "/my-decks/new" && typeof window !== "undefined" && window.location.search.includes("tier=pro")
-              )}
-            >
+            <div className={navItemClass(isOnProTools)}>
               <Sparkles className="w-5 h-5 flex-shrink-0" />
               <span className="text-sm font-medium">Pro Tools</span>
-              {!isScholar && (
+              {!isScholar && !isOnProTools && (
                 <span className="ml-auto text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded bg-white/10 text-white/70 border border-white/10">
                   Pro
                 </span>
               )}
+              {isOnProTools && <ChevronRight className="w-4 h-4 ml-auto" />}
             </div>
           </Link>
 
