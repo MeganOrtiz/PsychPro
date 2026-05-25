@@ -6,6 +6,12 @@ uri = "file://artifacts/neuronotes/src/assets/hero/brain-smoke.png"
 type = "image"
 title = "brain in cyan smoke"
 
+[[generated]]
+id = "ztpuSDWP8NfeVH7ChA5qL"
+uri = "file://artifacts/neuronotes/src/assets/bg/smoke-full.png"
+type = "image"
+title = "dark teal smoke background"
+
 [[outputs]]
 id = "aKKI8N7WseM8lzrKZFEEq"
 uri = "file://.local/exports/brain-lab-code.tar.gz"

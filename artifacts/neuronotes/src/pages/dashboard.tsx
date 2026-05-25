@@ -10,7 +10,7 @@
 //   - Hardcode brand hex codes — use STUDY_PALETTE tokens.
 //   - Replace StudySurface cards with raw bg-card / glass divs.
 // =============================================================================
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { authHeaders } from "@/lib/auth-headers";
 import { workTypeLabel } from "@workspace/community";
 import { useLocation } from "wouter";
@@ -30,17 +30,16 @@ import {
   Medal,
   ShieldCheck,
   ChevronDown,
+  Share2,
 } from "lucide-react";
+import smokeBg from "@/assets/bg/smoke-full.png";
 import { useGetDashboardSummary, useGetTopics, useGetLeaderboard } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-// Spotlight background image removed at the user's request — the landing
-// page and dashboard background art are being rebuilt from scratch.
-// While there's no image, the existing falsy-branch gradient in
-// SpotlightCard paints the cloud strip, so this stays as a plain
-// undefined until the new artwork is wired in here.
-const spotlightCloudImage: string | undefined = undefined;
+// Spotlight cloud halo — same smoke composition as the page background so
+// the spotlight card reads as cut from the same atmospheric continuum.
+const spotlightCloudImage: string | undefined = smokeBg;
 const featuredWorkImage: string | undefined = undefined;
 import TodayReviews from "@/components/learning/today-reviews";
 import { StudySurface } from "@/components/study/study-surface";
@@ -442,47 +441,13 @@ export default function DashboardPage() {
             {/* Streak (left) + Leaderboard (right) */}
             <div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Your Streak */}
-              <StudySurface tone="light" innerClassName="p-5">
-                <div className="flex items-center gap-2 mb-3">
-                  <h2 className="font-semibold" style={{ color: PALETTE.mist }}>Your Streak</h2>
-                  <span aria-hidden>🔥</span>
-                </div>
-                <div className="mb-4">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-4xl font-bold leading-none" style={{ color: PALETTE.mist }}>{streak}</span>
-                    <span className="text-sm" style={{ color: PALETTE.mistSoft }}>day streak</span>
-                  </div>
-                </div>
-                <div className="grid grid-cols-7 gap-1 mb-3">
-                  {weeklyFlames.map((d, i) => (
-                    <div key={i} className="flex flex-col items-center gap-1">
-                      <Flame
-                        className={cn(
-                          "w-5 h-5 transition-colors",
-                          d.lit ? "text-orange-500 fill-orange-500" : "text-slate-300"
-                        )}
-                      />
-                      <span
-                        className="text-xs"
-                        style={{
-                          color: d.isToday ? PALETTE.mist : PALETTE.mistSoft,
-                          fontWeight: d.isToday ? 600 : 400,
-                        }}
-                      >
-                        {d.label}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-                <p className="text-xs" style={{ color: PALETTE.mistSoft }}>
-                  {streak === 0
-                    ? "Study today to start a streak."
-                    : streak < 3
-                    ? "You're building momentum!"
-                    : "Great consistency this week."}
-                </p>
-              </StudySurface>
+              {/* Your Streak — count-up + glowing teal sparkline */}
+              <StreakCard
+                streak={streak}
+                series={activitySeries}
+                weeklyFlames={weeklyFlames}
+              />
+
 
               {/* Leaderboard (moved from right rail) */}
               <StudySurface tone="light" innerClassName="p-5">
@@ -750,12 +715,39 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
           Highlighting the next generation of clinicians and researchers.
         </p>
 
-        {/* Featured person — circular avatar with glow ring */}
+        {/* Featured person — circular avatar with cyan spotlight glow */}
         <div className="flex flex-col items-center mb-5">
+          <div className="relative mb-4">
+            {/* Spotlight aura — absolute-positioned radial gradient
+                cast behind the avatar so the photo reads as illuminated
+                from within. Sits behind the avatar via negative z-index. */}
+            <div
+              aria-hidden
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+              style={{
+                width: 280,
+                height: 280,
+                background: `radial-gradient(circle, ${PALETTE.surf}55 0%, ${PALETTE.surf}28 28%, ${PALETTE.teal}14 50%, transparent 72%)`,
+                filter: "blur(8px)",
+                zIndex: 0,
+              }}
+            />
+            <div
+              aria-hidden
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none rounded-full"
+              style={{
+                width: 170,
+                height: 170,
+                background: `radial-gradient(circle, ${PALETTE.surf}75 0%, ${PALETTE.surf}30 45%, transparent 75%)`,
+                filter: "blur(14px)",
+                zIndex: 0,
+              }}
+            />
           <div
-            className="relative w-32 h-32 rounded-full overflow-hidden mb-4"
+            className="relative w-32 h-32 rounded-full overflow-hidden"
             style={{
-              boxShadow: `0 0 0 3px ${PALETTE.surf}aa, 0 0 28px 4px ${PALETTE.surf}55, inset 0 0 0 1px rgba(255,255,255,0.15)`,
+              boxShadow: `0 0 0 3px ${PALETTE.surf}cc, 0 0 32px 6px ${PALETTE.surf}66, inset 0 0 0 1px rgba(255,255,255,0.18)`,
+              zIndex: 1,
             }}
           >
             {spotlightAvatarImage ? (
@@ -776,6 +768,7 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
                 {(featuredName ?? "?").slice(0, 1).toUpperCase()}
               </div>
             )}
+          </div>
           </div>
           <p className="text-xl font-bold tracking-tight text-center px-2">{featuredName}</p>
           {featuredRole && (
@@ -855,7 +848,154 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
           View Feature
           <ArrowUpRight className="w-4 h-4" />
         </button>
+
+        {/* Footer — muted "FEATURED WORK" label on the left, share icon right */}
+        <div className="mt-5 pt-4 flex items-center justify-between border-t border-white/10">
+          <span
+            className="text-[10px] font-semibold tracking-[0.32em] uppercase"
+            style={{ color: `${PALETTE.mistSoft}cc` }}
+            data-testid="spotlight-footer-label"
+          >
+            Featured Work
+          </span>
+          <button
+            type="button"
+            onClick={() => onCta(spot?.id)}
+            className="w-8 h-8 rounded-full flex items-center justify-center transition-all border"
+            style={{
+              background: `${PALETTE.surf}14`,
+              borderColor: `${PALETTE.surf}38`,
+              color: PALETTE.mist,
+            }}
+            aria-label="Share featured work"
+            data-testid="button-spotlight-share"
+          >
+            <Share2 className="w-4 h-4" />
+          </button>
+        </div>
       </div>
+    </StudySurface>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// StreakCard — count-up streak number + glowing teal sparkline.
+// Replaces the prior 7-flame row; matches the reference dashboard's
+// "Your Streak 🔥" widget with a miniature upward-trending chart.
+// ---------------------------------------------------------------------------
+function useCountUp(target: number, durationMs = 1100) {
+  const [value, setValue] = useState(0);
+  const rafRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (target <= 0) {
+      setValue(0);
+      return;
+    }
+    const start = performance.now();
+    const from = 0;
+    const step = (now: number) => {
+      const t = Math.min(1, (now - start) / durationMs);
+      // ease-out cubic
+      const eased = 1 - Math.pow(1 - t, 3);
+      setValue(Math.round(from + (target - from) * eased));
+      if (t < 1) rafRef.current = requestAnimationFrame(step);
+    };
+    rafRef.current = requestAnimationFrame(step);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [target, durationMs]);
+  return value;
+}
+
+function StreakCard({
+  streak,
+  series,
+  weeklyFlames,
+}: {
+  streak: number;
+  series: { day: string; score: number }[];
+  weeklyFlames: { label: string; lit: boolean; isToday: boolean }[];
+}) {
+  const animated = useCountUp(streak, 1200);
+  // Ensure the sparkline always has something to draw — when scores are all
+  // zero the line collapses to a flat baseline, so we lift it slightly by
+  // counting active days as 1's so the trend reads.
+  const sparkData = useMemo(() => {
+    const allZero = series.every((s) => s.score === 0);
+    if (!allZero) return series;
+    return weeklyFlames.map((d, i) => ({ day: d.label, score: d.lit ? 1 : 0, i }));
+  }, [series, weeklyFlames]);
+
+  const activeDays = weeklyFlames.filter((d) => d.lit).length;
+
+  return (
+    <StudySurface tone="light" innerClassName="p-5">
+      <div className="flex items-center gap-2 mb-3">
+        <h2 className="font-semibold" style={{ color: PALETTE.mist }}>Your Streak</h2>
+        <span aria-hidden>🔥</span>
+      </div>
+      <div className="flex items-end justify-between gap-3 mb-3">
+        <div>
+          <div className="flex items-baseline gap-2">
+            <span
+              className="text-5xl font-bold leading-none tabular-nums"
+              style={{
+                color: PALETTE.mist,
+                textShadow: `0 0 24px ${PALETTE.surf}55`,
+              }}
+              data-testid="text-streak-count"
+            >
+              {animated}
+            </span>
+            <span className="text-sm" style={{ color: PALETTE.mistSoft }}>
+              day{streak === 1 ? "" : "s"}
+            </span>
+          </div>
+          <p
+            className="mt-1 text-[11px] tracking-wide uppercase font-semibold"
+            style={{ color: `${PALETTE.tealDeep}` }}
+          >
+            {activeDays}/7 this week
+          </p>
+        </div>
+        <div className="flex-1 max-w-[160px] h-16">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={sparkData} margin={{ top: 6, right: 4, bottom: 0, left: 0 }}>
+              <defs>
+                <linearGradient id="streakSparkStroke" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor={PALETTE.teal} stopOpacity={0.6} />
+                  <stop offset="100%" stopColor={PALETTE.surf} stopOpacity={1} />
+                </linearGradient>
+                <filter id="streakSparkGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="2.4" result="b" />
+                  <feMerge>
+                    <feMergeNode in="b" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+              <Line
+                type="monotone"
+                dataKey="score"
+                stroke="url(#streakSparkStroke)"
+                strokeWidth={2.25}
+                dot={false}
+                isAnimationActive
+                animationDuration={1000}
+                filter="url(#streakSparkGlow)"
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+      <p className="text-xs" style={{ color: PALETTE.mistSoft }}>
+        {streak === 0
+          ? "Study today to start a streak."
+          : streak < 3
+          ? "You're building momentum!"
+          : "Great consistency this week."}
+      </p>
     </StudySurface>
   );
 }

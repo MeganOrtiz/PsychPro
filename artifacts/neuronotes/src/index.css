@@ -309,7 +309,16 @@
   position: fixed;
   inset: 0;
   z-index: -2;
-  background-color: #03151D;
+  background-image:
+    radial-gradient(ellipse 130% 115% at 50% 38%,
+      rgba(2, 13, 18, 0.55) 0%,
+      rgba(2, 13, 18, 0.78) 55%,
+      rgba(2, 13, 18, 0.95) 100%),
+    url("./assets/bg/smoke-full.png");
+  background-size: cover, cover;
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
+  background-color: #020d12;
   pointer-events: none;
 }
 
