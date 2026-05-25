@@ -550,9 +550,9 @@ export default function LandingPage() {
               textShadow: `0 1px 6px rgba(3, 21, 29, 0.65)`,
             }}
           >
-            One quiet place to master clinical psychology — built around the
-            way the brain actually learns, with the tools and community to
-            keep you moving.
+            An all-in-one learning platform for mastery of topics in clinical
+            psychology. Gain in-depth understanding of psychology, neuroscience,
+            psychotherapy and intervention for real-world clinical application.
           </p>
 
           {/* CTA cluster — primary (large), secondary (smaller), tertiary
