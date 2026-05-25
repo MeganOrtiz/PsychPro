@@ -9,6 +9,8 @@ import { RequireSignedIn } from "@/components/auth/require-signed-in";
 import SignInPage from "@/pages/sign-in";
 import SignUpPage from "@/pages/sign-up";
 import LandingPage from "@/pages/landing";
+import PrivacyPage from "@/pages/privacy";
+import TermsPage from "@/pages/terms";
 import OnboardingPage from "@/pages/onboarding";
 import DashboardPage from "@/pages/dashboard";
 import TopicsPage from "@/pages/topics";
@@ -60,6 +62,8 @@ function AppRouter() {
   return (
     <Switch>
       <Route path="/" component={LandingPage} />
+      <Route path="/privacy" component={PrivacyPage} />
+      <Route path="/terms" component={TermsPage} />
       <Route path="/sign-in/*?" component={SignInPage} />
       <Route path="/sign-up/*?" component={SignUpPage} />
       {import.meta.env.DEV ? <Route path="/__crash-test" component={CrashTestPage} /> : null}

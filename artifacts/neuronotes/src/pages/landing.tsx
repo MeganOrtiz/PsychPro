@@ -10,16 +10,12 @@
 //   - Hardcode brand hex codes — use STUDY_PALETTE tokens.
 //   - Rewrite the hero body copy without product approval.
 // =============================================================================
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 import { useState } from "react";
 import {
   Search,
   Users,
   BookOpen,
-  Linkedin,
-  Twitter,
-  Instagram,
-  Youtube,
   Brain,
   CheckCircle2,
   Layers,
@@ -29,7 +25,9 @@ import {
   X,
 } from "lucide-react";
 import { useGetTopics } from "@workspace/api-client-react";
-import heroBackground from "@assets/landing_page_1779697562530.png";
+import heroBrainWebp from "@/assets/hero/brain.webp";
+import heroBrain1024 from "@/assets/hero/brain-1024.webp";
+import heroBrain640 from "@/assets/hero/brain-640.webp";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -732,10 +730,18 @@ export default function LandingPage() {
           <div className="stars-mid" />
         </div>
         <div className="landing-halo" aria-hidden />
+        {/* Responsive WebP variants: serve 640w on phones, 1024w on
+            tablets, full on desktop. Cuts hero weight from ~1.9MB PNG
+            down to ~35–141KB WebP. fetchPriority="high" + decoding="async"
+            so the hero paints fast without blocking. */}
         <img
-          src={heroBackground}
+          src={heroBrainWebp}
+          srcSet={`${heroBrain640} 640w, ${heroBrain1024} 1024w, ${heroBrainWebp} 1600w`}
+          sizes="(max-width: 768px) 88vw, 60vh"
           alt=""
           aria-hidden
+          fetchPriority="high"
+          decoding="async"
           className="landing-brain"
         />
         <div className="max-w-5xl mx-auto px-6 lg:px-10 text-center relative z-10 mt-4 md:mt-6">
@@ -1012,46 +1018,35 @@ export default function LandingPage() {
             <Brain className="w-5 h-5" style={{ color: P.surf }} />
             <span style={{ ...TRACK_NAV, color: P.cloud, fontFamily: '"Montserrat", sans-serif', fontWeight: 300 }}>PSYCHPRO</span>
           </div>
-          <div className="flex items-center gap-7 font-light">
-            <a
-              href="#"
+          <div className="flex flex-wrap items-center justify-center gap-x-7 gap-y-2 font-light">
+            <Link
+              href="/privacy"
               className="footer-text-link"
               style={{ ...TRACK_NAV, color: P.inkSoft }}
+              data-testid="footer-privacy"
             >
               PRIVACY POLICY
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              href="/terms"
               className="footer-text-link"
               style={{ ...TRACK_NAV, color: P.inkSoft }}
+              data-testid="footer-terms"
             >
               TERMS OF SERVICE
-            </a>
+            </Link>
             <a
-              href="#"
+              href="mailto:hello@psychprosuite.com"
               className="footer-text-link"
               style={{ ...TRACK_NAV, color: P.inkSoft }}
+              data-testid="footer-contact"
             >
               CONTACT
             </a>
           </div>
-          <div className="flex items-center gap-4">
-            {[Linkedin, Twitter, Instagram, Youtube].map((Icon, i) => (
-              <a
-                key={i}
-                href="#"
-                className="landing-glass-icon-btn w-8 h-8 rounded-full flex items-center justify-center"
-                style={{
-                  border: `1px solid rgba(118, 228, 247, 0.28)`,
-                  background: "rgba(6, 32, 44, 0.4)",
-                  color: P.mist,
-                }}
-                aria-label="Social link"
-              >
-                <Icon className="w-3.5 h-3.5" />
-              </a>
-            ))}
-          </div>
+          {/* Social icons intentionally omitted until live accounts exist.
+              Re-enable when real profile URLs are available — placeholder
+              `#` links were removed to avoid dead clicks on launch. */}
         </div>
         <div
           className="text-center pb-6 text-[11px] font-light"
