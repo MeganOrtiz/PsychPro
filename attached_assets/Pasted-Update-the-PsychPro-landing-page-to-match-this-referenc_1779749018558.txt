@@ -1,0 +1,29 @@
+Update the PsychPro landing page to match this reference comp exactly. Keep the existing navbar (it's already correct). Change the following:
+1. Hero — much bigger, smokier brain
+•	Make the brain image the dominant element of the hero — roughly 2× its current size, filling the upper third of the viewport, and bleeding off the top of the page (no top padding above it).
+•	The smoke around the brain should extend wide across the full hero width — not a tight circle. Loosen the radial mask so the wispy cyan smoke from the PNG reads as the hero's atmosphere instead of being cropped away. The smoke should feather seamlessly into the page background on the left and right edges with no rectangular halo.
+•	Reduce vertical spacing between the brain and the PSYCHPRO wordmark so the wordmark sits closer to the base of the brain.
+2. CTA buttons — change copy, add icons, swap order
+•	KEEP "JOIN NOW" / "EXPLORE TOPICS" with two ghost-style buttons (both transparent with the cyan border + glow, no solid fill):
+o	Left: JOIN NOW with a small book icon on the left
+o	Right: EXPLORE TOPICS with a small people/users icon on the left
+•	Uppercase, letter-spaced labels. Both buttons identical styling.
+3. Feature cards — refine copy and icons (3 above/2 Below)
+•	Keep 3-card layout above:
+i.	FLASHCARDS / STUDY GUIDES / QUIZZES / EXAMS — "Reinforce your learning with interactive study tools." (stacked-cards icon)
+ii.	EVIDENCE-BASED LEARNING TOOLS — "Utilize specific tools for spaced repetition, interleaved learning and active recall." (brain icon)
+iii.	CREATE LEARNING RESOURCES FROM YOUR OWN MATERIAL — "Upload, organize, and transform your material into smart resources." (document icon)
+•	2-card layout below:
+i.	CONNECT WITH OTHERS — "Collaborate, share insights, and grow together." (users icon)
+ii.	PSYCHPRO SPOTLIGHT — "Submit your dissertation, research, presentations for opportunities to be featured in the PsychPro Spotlight." (sparkle/shield-with-star icon)
+•	Center-align the title and body text inside each card (currently left-aligned).
+4. Browse Topics — wrap in a bordered panel, expand the list
+•	Wrap the entire BROWSE TOPICS section (header + 3-column grid) in a single rounded glassmorphism panel with a thin cyan hairline border and slight inner padding, so it reads as one contained block.
+•	Replace the current 15 topics with this neuroanatomy-/clinical-focused list (3 columns, ~12 rows each, reading top-to-bottom by column):
+Column 1: Brain Networks · Endocrine System & Reproduction · Neurophysiology · Sleep & Circadian Rhythms · Executive Function · Neurocognitive Disorders · Neuropsychology Overview · Personality Disorders · Trauma-Focused Approaches · Analytical Psychology — Jung · Family, Systems, and Couples Therapies
+Column 2: Central Nervous System · Enteric Nervous System · Peripheral Nervous System · Vascular System of the Brain · Forensic Neuropsychology · Neurodevelopmental Disorders · Validity & Effort Testing · Psychiatric Disorders · Acceptance, Mindfulness, and Third-Wave Approaches · Behavior Therapy and Applied Behavior Analysis · Foundations of Psychotherapy
+Column 3: Cranial Nerves · Limbic System & Motivation · Sensory Systems · Apraxia & Agnosia · Language Processing & Aphasia · Neuroimaging & Neuromodulation · ADHD & Medications · Psychopharmacology · Adlerian, Humanistic, and Existential Approaches · Cognitive Therapy, CBT, and Schema Therapy · Gestalt, Experiential, and Emotion-Focused Approaches
+•	Remove the "A growing catalogue across neuroscience..." subtitle under BROWSE TOPICS.
+5. Footer
+•	Add thin vertical pipe separators (|) between PRIVACY POLICY, TERMS OF SERVICE, CONTACT.
+Everything else (navbar, color palette, font stack, animations) stays as it is.
