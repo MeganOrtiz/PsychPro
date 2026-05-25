@@ -434,16 +434,26 @@ export default function LandingPage() {
           fills the viewport — there is NO gap above the brain. */}
       <section className="relative flex flex-col items-center justify-center pt-20 md:pt-24 lg:pt-28 pb-20 md:pb-28">
         <div className="max-w-5xl mx-auto px-6 lg:px-10 text-center relative z-10">
-          {/* Wordmark — Proxima Nova (paid Adobe font) with Montserrat as
-              the closest free fallback. Montserrat is loaded globally in
-              index.html and is visually ~95% identical to Proxima Nova. */}
+          {/* Wordmark — Proxima Nova first (for users who have it locally
+              via Adobe Creative Cloud), then a carefully chosen free
+              fallback stack designed to mimic Proxima Nova's proportions:
+                • Mukta — Indian Type Foundry, the closest free match for
+                  Proxima Nova's letterform width and x-height.
+                • Sofia Sans — secondary near-match.
+                • Montserrat — wider/more geometric backup.
+              Optical tweaks below (font-stretch, optical-sizing) help
+              align the substitute fonts to Proxima Nova's feel. */}
           <h1
             className="leading-none relative mt-2"
             style={{
               ...TRACK_HERO,
-              fontFamily: '"Proxima Nova", "Montserrat", "Inter", system-ui, sans-serif',
+              fontFamily:
+                '"Proxima Nova", "proxima-nova", "Mukta", "Sofia Sans", "Montserrat", "Inter", system-ui, sans-serif',
               fontWeight: 300,
               fontSize: "clamp(44px, 7.5vw, 88px)",
+              fontStretch: "95%",
+              fontFeatureSettings: '"kern" 1, "liga" 1, "calt" 1',
+              fontOpticalSizing: "auto",
               color: P.cloud,
               textShadow: `0 0 24px rgba(118, 228, 247, 0.30)`,
             }}
