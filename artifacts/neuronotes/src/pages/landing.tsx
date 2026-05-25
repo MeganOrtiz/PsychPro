@@ -25,6 +25,8 @@ import {
   Layers,
   FileText,
   Gift,
+  Menu,
+  X,
 } from "lucide-react";
 import { useGetTopics } from "@workspace/api-client-react";
 import heroBackground from "@assets/landing_page_1779697562530.png";
@@ -94,6 +96,7 @@ interface LandingTopic {
 export default function LandingPage() {
   const [, navigate] = useLocation();
   const [activeNav, setActiveNav] = useState("HOME");
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const { data: topics, isLoading: topicsLoading, isError: topicsError } =
     useGetTopics() as {
       data: LandingTopic[] | undefined;
@@ -587,8 +590,11 @@ export default function LandingPage() {
 
           {/* Center nav — absolutely positioned so the links read as
               perfectly centered on the page regardless of the brand /
-              right-cluster widths. Lighter weight (200) per redesign. */}
-          <nav className="hidden md:flex items-center gap-9 absolute left-1/2 -translate-x-1/2">
+              right-cluster widths. Lighter weight (200) per redesign.
+              Hidden below lg (1024px) so the nav doesn't collide with
+              the right-cluster on tablet — replaced by the hamburger
+              button + dropdown drawer in the right cluster instead. */}
+          <nav className="hidden lg:flex items-center gap-9 absolute left-1/2 -translate-x-1/2">
             {NAV_LINKS.map((link) => {
               const isActive = activeNav === link.label;
               return (
@@ -632,7 +638,7 @@ export default function LandingPage() {
             </button>
             <button
               onClick={goToApp}
-              className="landing-glass-btn px-6 h-9 rounded-md text-xs font-light"
+              className="landing-glass-btn px-4 sm:px-6 h-9 rounded-md text-xs font-light whitespace-nowrap"
               style={{
                 ...TRACK_NAV,
                 color: P.cloud,
@@ -644,8 +650,69 @@ export default function LandingPage() {
             >
               LOG IN
             </button>
+            {/* Hamburger — visible below lg, opens the mobile drawer
+                with the same NAV_LINKS. Hidden on desktop where the
+                center nav is shown. */}
+            <button
+              type="button"
+              aria-label={mobileNavOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileNavOpen}
+              aria-controls="landing-mobile-nav"
+              onClick={() => setMobileNavOpen((v) => !v)}
+              className="lg:hidden nav-text-link p-1"
+              style={{ color: P.cloud, background: "transparent", border: "none" }}
+              data-testid="header-mobile-menu"
+            >
+              {mobileNavOpen ? (
+                <X className="w-5 h-5" strokeWidth={1.5} />
+              ) : (
+                <Menu className="w-5 h-5" strokeWidth={1.5} />
+              )}
+            </button>
           </div>
         </div>
+
+        {/* Mobile / tablet nav drawer — slides down from the header.
+            Same NAV_LINKS as desktop, stacked vertically with generous
+            tap targets. Closes on link tap. */}
+        {mobileNavOpen && (
+          <div
+            id="landing-mobile-nav"
+            className="lg:hidden border-t"
+            style={{
+              borderColor: "rgba(58, 224, 236, 0.15)",
+              background: "rgba(4, 8, 12, 0.92)",
+              backdropFilter: "blur(20px)",
+              WebkitBackdropFilter: "blur(20px)",
+            }}
+            data-testid="mobile-nav-drawer"
+          >
+            <nav className="max-w-7xl mx-auto px-6 py-4 flex flex-col gap-1">
+              {NAV_LINKS.map((link) => {
+                const isActive = activeNav === link.label;
+                return (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    onClick={() => {
+                      setActiveNav(link.label);
+                      setMobileNavOpen(false);
+                    }}
+                    className="nav-text-link text-sm py-3 px-2 rounded-md"
+                    style={{
+                      ...TRACK_NAV,
+                      fontWeight: 300,
+                      color: isActive ? P.cloud : P.inkSoft,
+                    }}
+                    data-testid={`mobile-nav-${link.label.toLowerCase()}`}
+                  >
+                    {link.label}
+                  </a>
+                );
+              })}
+            </nav>
+          </div>
+        )}
       </header>
 
       {/* ============================================================
