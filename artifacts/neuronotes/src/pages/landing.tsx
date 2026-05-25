@@ -27,6 +27,7 @@ import {
   Gift,
 } from "lucide-react";
 import { useGetTopics } from "@workspace/api-client-react";
+import heroBackground from "@assets/landing_page_1779697562530.png";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -138,7 +139,15 @@ export default function LandingPage() {
         fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
       }}
     >
-      {/* Hero background intentionally removed — assets to be re-added. */}
+      {/* Hero background — brain-in-clouds image. Sits behind the gradient
+          overlay (::before) and in front of the solid ink ground (::after).
+          Bound to 100vh so it fades into the ink for the rest of the page. */}
+      <img
+        className="landing-bg-image"
+        src={heroBackground}
+        alt=""
+        aria-hidden
+      />
       <style>{`
         /* Landing canvas — hero-bound cerulean-clouds composition.
            The image paints ONCE at the top of the page (sized to the
@@ -181,10 +190,10 @@ export default function LandingPage() {
               rgba(3, 21, 29, 0.25) 100%);
           pointer-events: none;
         }
-        /* The actual background video — sits behind the gradient overlay
+        /* The actual background image — sits behind the gradient overlay
            and in front of the solid ink ground. Hero-bound (100vh) so it
            fades into the ink color for the rest of the scrollable page. */
-        .landing-canvas > .landing-bg-video {
+        .landing-canvas > .landing-bg-image {
           position: absolute;
           top: 0;
           left: 0;
@@ -194,8 +203,9 @@ export default function LandingPage() {
           object-position: center top;
           z-index: -55;
           pointer-events: none;
-          /* Avoid a hard rectangular bottom edge — fade the bottom 15% of
-             the video into the ink ground beneath it. */
+          user-select: none;
+          /* Avoid a hard rectangular bottom edge — fade the bottom 18% of
+             the image into the ink ground beneath it. */
           -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 82%, transparent 100%);
                   mask-image: linear-gradient(180deg, #000 0%, #000 82%, transparent 100%);
         }
