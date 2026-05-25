@@ -40,7 +40,7 @@ import { STUDY_PALETTE as P } from "@/lib/study-theme";
 // Premium thin uppercase tracking — used for nav, wordmark, and section heads.
 const TRACK_WIDE = { letterSpacing: "0.32em" } as const;
 const TRACK_NAV = { letterSpacing: "0.28em" } as const;
-const TRACK_HERO = { letterSpacing: "0.42em" } as const;
+const TRACK_HERO = { letterSpacing: "0.52em" } as const;
 
 const NAV_LINKS = [
   { label: "HOME", href: "#" },
@@ -424,8 +424,13 @@ export default function LandingPage() {
               style={{ color: P.surf, filter: `drop-shadow(0 0 8px ${P.surf}aa)` }}
             />
             <span
-              className="font-light text-base"
-              style={{ ...TRACK_NAV, color: P.cloud }}
+              className="text-base"
+              style={{
+                ...TRACK_NAV,
+                color: P.cloud,
+                fontFamily: '"Saira", "Outfit", "Inter", system-ui, sans-serif',
+                fontWeight: 200,
+              }}
             >
               PSYCHPRO
             </span>
@@ -505,13 +510,13 @@ export default function LandingPage() {
           fills the viewport — there is NO gap above the brain. */}
       <section className="relative flex flex-col items-center justify-center pt-20 md:pt-24 lg:pt-28 pb-20 md:pb-28">
         <div className="max-w-5xl mx-auto px-6 lg:px-10 text-center relative z-10">
-          {/* Wordmark — thin Proxima Nova / Outfit 200 */}
+          {/* Wordmark — Saira Thin (100), wide-tracked, ethereal */}
           <h1
             className="leading-none relative mt-2"
             style={{
               ...TRACK_HERO,
-              fontFamily: 'var(--app-font-sans), "Outfit", "Inter", system-ui, sans-serif',
-              fontWeight: 200,
+              fontFamily: '"Saira", "Outfit", "Inter", system-ui, sans-serif',
+              fontWeight: 100,
               fontSize: "clamp(44px, 7.5vw, 88px)",
               color: P.cloud,
               textShadow: `0 0 24px rgba(118, 228, 247, 0.30)`,
@@ -982,7 +987,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6 lg:px-10 py-8 flex flex-col md:flex-row items-center justify-between gap-5 text-xs">
           <div className="flex items-center gap-3">
             <Brain className="w-5 h-5" style={{ color: P.surf }} />
-            <span style={{ ...TRACK_NAV, color: P.cloud }}>PSYCHPRO</span>
+            <span style={{ ...TRACK_NAV, color: P.cloud, fontFamily: '"Saira", "Outfit", "Inter", system-ui, sans-serif', fontWeight: 200 }}>PSYCHPRO</span>
           </div>
           <div className="flex items-center gap-7 font-light">
             <a
