@@ -27,8 +27,6 @@ import {
   Gift,
 } from "lucide-react";
 import { useGetTopics } from "@workspace/api-client-react";
-import cloudsBackground from "@/assets/generated_images/landing_page.png";
-import landingVideo from "@/assets/generated_images/landingpage_bg.mp4";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -140,21 +138,7 @@ export default function LandingPage() {
         fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
       }}
     >
-      {/* Hero background video. Must be muted + playsInline + autoPlay for
-          browsers to permit autoplay without user interaction. The PNG
-          stays as a poster so there's no flash of black on first paint
-          or if the codec fails. */}
-      <video
-        className="landing-bg-video"
-        src={landingVideo}
-        poster={cloudsBackground}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        aria-hidden
-      />
+      {/* Hero background intentionally removed — assets to be re-added. */}
       <style>{`
         /* Landing canvas — hero-bound cerulean-clouds composition.
            The image paints ONCE at the top of the page (sized to the

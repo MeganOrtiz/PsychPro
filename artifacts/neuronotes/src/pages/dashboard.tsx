@@ -34,9 +34,11 @@ import { useGetDashboardSummary, useGetTopics, useGetLeaderboard } from "@worksp
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import featuredWorkImage from "@/assets/generated_images/dashboard.png";
-import spotlightAvatarImage from "@assets/Screenshot_2026-04-28_at_8.01.18_PM_1779409357019.png";
-import spotlightCloudImage from "@assets/Screenshot_2026-05-10_at_3.03.20_PM_1778443775551.png";
+// Spotlight & featured-work imagery intentionally removed — re-add when
+// fresh assets land. Render fallbacks below keep the layout intact.
+const spotlightCloudImage: string | undefined = undefined;
+const spotlightAvatarImage: string | undefined = undefined;
+const featuredWorkImage: string | undefined = undefined;
 import TodayReviews from "@/components/learning/today-reviews";
 import { StudySurface } from "@/components/study/study-surface";
 import { NotificationsBell } from "@/components/notifications-bell";
@@ -678,11 +680,21 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
         aria-hidden
         className="pointer-events-none absolute top-0 left-0 right-0 h-40 overflow-hidden rounded-t-2xl"
       >
-        <img
-          src={spotlightCloudImage}
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover opacity-90"
-        />
+        {spotlightCloudImage ? (
+          <img
+            src={spotlightCloudImage}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover opacity-90"
+          />
+        ) : (
+          <div
+            aria-hidden
+            className="absolute inset-0"
+            style={{
+              background: `linear-gradient(180deg, ${PALETTE.tealDeep}, ${PALETTE.surface})`,
+            }}
+          />
+        )}
         {/* Fade the cloud into the card body so the seam disappears. */}
         <div
           className="absolute inset-x-0 bottom-0 h-24"
@@ -725,11 +737,24 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
               boxShadow: `0 0 0 3px ${PALETTE.surf}aa, 0 0 28px 4px ${PALETTE.surf}55, inset 0 0 0 1px rgba(255,255,255,0.15)`,
             }}
           >
-            <img
-              src={spotlightAvatarImage}
-              alt="Featured spotlight"
-              className="absolute inset-0 w-full h-full object-cover"
-            />
+            {spotlightAvatarImage ? (
+              <img
+                src={spotlightAvatarImage}
+                alt="Featured spotlight"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            ) : (
+              <div
+                aria-hidden
+                className="absolute inset-0 flex items-center justify-center text-3xl font-light"
+                style={{
+                  background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
+                  color: PALETTE.cloud,
+                }}
+              >
+                {(featuredName ?? "?").slice(0, 1).toUpperCase()}
+              </div>
+            )}
           </div>
           <p className="text-xl font-bold tracking-tight text-center px-2">{featuredName}</p>
           {featuredRole && (
@@ -752,11 +777,21 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
 
         {/* Featured work — neuron image as prominent background */}
         <div className="relative overflow-hidden rounded-xl mb-4 ring-1 ring-white/15 shadow-xl">
-          <img
-            src={featuredWorkImage}
-            alt="Neural network — featured dissertation imagery"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
+          {featuredWorkImage ? (
+            <img
+              src={featuredWorkImage}
+              alt="Neural network — featured dissertation imagery"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          ) : (
+            <div
+              aria-hidden
+              className="absolute inset-0"
+              style={{
+                background: `linear-gradient(135deg, ${PALETTE.tealDeep}, ${PALETTE.teal})`,
+              }}
+            />
+          )}
           {/* Subtle bottom-weighted gradient — image stays visible, text remains legible */}
           <div
             aria-hidden
