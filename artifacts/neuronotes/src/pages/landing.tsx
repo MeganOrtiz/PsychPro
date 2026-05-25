@@ -14,24 +14,19 @@ import { useLocation } from "wouter";
 import { useState } from "react";
 import {
   Search,
-  GraduationCap,
-  FlaskConical,
-  Wrench,
   Users,
   BookOpen,
-  Award,
-  Globe,
-  Mail,
   Linkedin,
   Twitter,
   Instagram,
   Youtube,
   Brain,
   CheckCircle2,
-  Sparkles,
-  Star,
+  Layers,
   FileText,
+  Gift,
 } from "lucide-react";
+import { useGetTopics } from "@workspace/api-client-react";
 import cloudsBackground from "@/assets/generated_images/landing_page.png";
 import landingVideo from "@/assets/generated_images/landingpage_bg.mp4";
 // Palette comes from the shared single-source-of-truth file.
@@ -46,21 +41,21 @@ const TRACK_HERO = { letterSpacing: "0.52em" } as const;
 const NAV_LINKS = [
   { label: "HOME", href: "#" },
   { label: "COURSES", href: "#features" },
-  { label: "RESOURCES", href: "#trust" },
-  { label: "COMMUNITY", href: "#testimonial" },
-  { label: "ABOUT", href: "#about" },
+  { label: "RESOURCES", href: "#topics" },
+  { label: "COMMUNITY", href: "#topics" },
+  { label: "ABOUT", href: "#footer" },
 ];
 
 const FEATURE_CARDS = [
   {
-    icon: Sparkles,
+    icon: Layers,
     title: "FLASHCARDS / STUDY GUIDES / QUIZZES / EXAMS",
     body: "Reinforce your learning with interactive study tools.",
   },
   {
     icon: Brain,
     title: "EVIDENCE-BASED LEARNING TOOLS",
-    body: "Explore evidence-based content and practical learning tools.",
+    body: "Solidify knowledge with spaced, interleaved and retrieval practice, elaboration and concrete examples.",
   },
   {
     icon: FileText,
@@ -73,120 +68,59 @@ const FEATURE_CARDS = [
     body: "Collaborate, share insights, and grow together.",
   },
   {
-    icon: Star,
+    icon: Gift,
     title: "PSYCHPRO SPOTLIGHT",
     body: "Submit your dissertation, research, presentations for opportunities to be featured in the PsychPro Spotlight.",
   },
 ];
 
-const WHATS_INSIDE_CARDS = [
-  {
-    n: "01",
-    eyebrow: "STUDY SYSTEM",
-    headline: "Flashcards, study guides, quizzes & practice exams",
-    body: "Built around evidence-based learning principles — spaced repetition, active recall, and interleaving — so every minute of study earns long-term retention.",
-  },
-  {
-    n: "02",
-    eyebrow: "BREADTH",
-    headline: "39+ topics covered",
-    body: "Comprehensive coverage across clinical psychology: neuroscience, neuropsychology, psychopharmacology, assessment, psychotherapy, research methods, and more — curated for both coursework and board prep.",
-  },
-  {
-    n: "03",
-    eyebrow: "PERSONALIZATION",
-    headline: "Personalized dashboard with progress tracking",
-    body: "Streaks, performance analytics, and recommendations tailored to your goals, your degree path, and where you actually need work.",
-  },
-  {
-    n: "04",
-    eyebrow: "COMMUNITY",
-    headline: "Opt-in community connections",
-    body: "Match with peers who share your clinical interests, training stage, and learning goals — only if and when you want to.",
-  },
+// Topic ordering for the BROWSE TOPICS panel — mirrors the Topics tab so the
+// two stay consistent. Categories not in this list are appended alphabetically.
+const TOPIC_CATEGORY_ORDER = [
+  "Neuroscience",
+  "Psychology",
+  "Neuropsychology",
+  "Assessment",
+  "Psychotherapy",
+  "Research Methods",
+  "Special Topics",
 ];
 
-const TRUST_STATS = [
-  { icon: BookOpen, n: "39+", l: "TOPICS" },
-  { icon: GraduationCap, n: "1,612+", l: "FLASHCARDS" },
-  { icon: Award, n: "935+", l: "QUIZ QUESTIONS" },
-  { icon: Globe, n: "738+", l: "EXAM QUESTIONS" },
-];
-
-// All 39 topics PsychPro currently offers, grouped for the landing page.
-const TOPIC_CATEGORIES: Array<{ title: string; topics: string[] }> = [
-  {
-    title: "NEUROSCIENCE & NEUROANATOMY",
-    topics: [
-      "Brain Networks",
-      "Central Nervous System",
-      "Cranial Nerves",
-      "Endocrine System & Reproduction",
-      "Enteric Nervous System",
-      "Limbic System & Motivation",
-      "Neurophysiology",
-      "Peripheral Nervous System",
-      "Sensory Systems",
-      "Sleep & Circadian Rhythms",
-      "Vascular System of the Brain",
-    ],
-  },
-  {
-    title: "NEUROPSYCHOLOGY",
-    topics: [
-      "Apraxia & Agnosia",
-      "Executive Function",
-      "Forensic Neuropsychology",
-      "Language Processing & Aphasia",
-      "Neurocognitive Disorders",
-      "Neurodevelopmental Disorders",
-      "Neuroimaging & Neuromodulation",
-      "Neuropsychology Overview",
-      "Validity & Effort Testing",
-    ],
-  },
-  {
-    title: "CLINICAL & PHARMACOLOGY",
-    topics: [
-      "ADHD & Medications",
-      "Personality Disorders",
-      "Psychiatric Disorders",
-      "Psychopharmacology",
-      "Trauma-Focused Approaches",
-    ],
-  },
-  {
-    title: "THERAPY & COUNSELING",
-    topics: [
-      "Acceptance, Mindfulness, and Third-Wave Approaches",
-      "Adlerian, Humanistic, and Existential Approaches",
-      "Analytical Psychology — Jung",
-      "Behavior Therapy and Applied Behavior Analysis",
-      "Cognitive Therapy, CBT, and Schema Therapy",
-      "Family, Systems, and Couples Therapies",
-      "Foundations of Psychotherapy",
-      "Gestalt, Experiential, and Emotion-Focused Therapy",
-      "Psychoanalytic and Psychodynamic Approaches",
-    ],
-  },
-  {
-    title: "ASSESSMENT & RESEARCH",
-    topics: [
-      "Foundations in Statistics",
-      "Objective Measures",
-      "Qualitative Research Methods",
-      "Quantitative Research Methods",
-      "Subjective Measures & Rating Scales",
-    ],
-  },
-];
+interface LandingTopic {
+  id: number;
+  name: string;
+  category: string;
+}
 
 export default function LandingPage() {
   const [, navigate] = useLocation();
   const [activeNav, setActiveNav] = useState("HOME");
-  const [email, setEmail] = useState("");
+  const { data: topics, isLoading: topicsLoading, isError: topicsError } =
+    useGetTopics() as {
+      data: LandingTopic[] | undefined;
+      isLoading: boolean;
+      isError: boolean;
+    };
 
   const goToApp = () => navigate("/dashboard");
+
+  // Sort topics by the Topics-tab category order, then alphabetically within
+  // each category. The chip grid renders this flat list left-to-right,
+  // wrapping top-to-bottom within each column.
+  const sortedTopics: LandingTopic[] = (() => {
+    const list = (topics ?? []) as LandingTopic[];
+    const rank = (c: string) => {
+      const i = TOPIC_CATEGORY_ORDER.indexOf(c);
+      return i === -1 ? TOPIC_CATEGORY_ORDER.length : i;
+    };
+    return [...list].sort((a, b) => {
+      const r = rank(a.category) - rank(b.category);
+      if (r !== 0) return r;
+      const c = a.category.localeCompare(b.category);
+      if (c !== 0) return c;
+      return a.name.localeCompare(b.name);
+    });
+  })();
 
   // Reusable glass surface — translucent dark teal, thin cyan border, blur.
   const glass = {
@@ -563,59 +497,44 @@ export default function LandingPage() {
             application.
           </p>
 
-          {/* CTA cluster — primary (large), secondary (smaller), tertiary
-              text-link with glow that scroll-jumps to "WHAT'S INSIDE". */}
-          <div className="mt-10 flex flex-col items-center gap-4">
-            <div className="flex flex-col sm:flex-row gap-4 items-center">
-              <button
-                onClick={goToApp}
-                className="landing-glass-btn group inline-flex items-center gap-3 px-10 h-14 rounded-full text-sm font-light"
-                style={{
-                  ...TRACK_NAV,
-                  color: P.cloud,
-                  background: "rgba(10, 45, 61, 0.72)",
-                  border: `1px solid rgba(167, 243, 255, 0.55)`,
-                  backdropFilter: "blur(18px) saturate(140%)",
-                  WebkitBackdropFilter: "blur(18px) saturate(140%)",
-                  boxShadow: `0 0 22px rgba(118, 228, 247, 0.28), inset 0 0 14px rgba(118, 228, 247, 0.08)`,
-                }}
-                data-testid="cta-explore-courses"
-              >
-                <BookOpen className="w-4 h-4" style={{ color: P.surf }} />
-                EXPLORE COURSES
-              </button>
-              <button
-                onClick={goToApp}
-                className="landing-glass-btn group inline-flex items-center gap-3 px-7 h-11 rounded-full text-xs font-light"
-                style={{
-                  ...TRACK_NAV,
-                  color: P.cloud,
-                  background: "rgba(10, 45, 61, 0.55)",
-                  border: `1px solid rgba(118, 228, 247, 0.38)`,
-                  backdropFilter: "blur(18px) saturate(140%)",
-                  WebkitBackdropFilter: "blur(18px) saturate(140%)",
-                  boxShadow: `0 0 14px rgba(118, 228, 247, 0.18), inset 0 0 10px rgba(118, 228, 247, 0.04)`,
-                }}
-                data-testid="cta-join-community"
-              >
-                <Users className="w-4 h-4" style={{ color: P.surf }} />
-                JOIN COMMUNITY
-              </button>
-            </div>
-            <a
-              href="#whats-inside"
-              onClick={(e) => {
-                e.preventDefault();
-                document
-                  .getElementById("whats-inside")
-                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
+          {/* CTA pair — equal compact pill buttons, matching the comp.
+              Both share the same height and font scale; only the primary
+              gets a slightly brighter border to indicate emphasis. */}
+          <div className="mt-10 flex flex-col sm:flex-row gap-4 items-center justify-center">
+            <button
+              onClick={goToApp}
+              className="landing-glass-btn group inline-flex items-center gap-3 px-8 h-12 rounded-full text-xs font-light"
+              style={{
+                ...TRACK_NAV,
+                color: P.cloud,
+                background: "rgba(10, 45, 61, 0.72)",
+                border: `1px solid rgba(167, 243, 255, 0.55)`,
+                backdropFilter: "blur(18px) saturate(140%)",
+                WebkitBackdropFilter: "blur(18px) saturate(140%)",
+                boxShadow: `0 0 22px rgba(118, 228, 247, 0.28), inset 0 0 14px rgba(118, 228, 247, 0.08)`,
               }}
-              className="landing-glow-link text-[11px] font-light"
-              style={{ ...TRACK_NAV, color: P.inkSoft }}
-              data-testid="cta-see-inside"
+              data-testid="cta-explore-courses"
             >
-              → SEE WHAT'S INSIDE
-            </a>
+              <BookOpen className="w-4 h-4" style={{ color: P.surf }} />
+              EXPLORE COURSES
+            </button>
+            <button
+              onClick={goToApp}
+              className="landing-glass-btn group inline-flex items-center gap-3 px-8 h-12 rounded-full text-xs font-light"
+              style={{
+                ...TRACK_NAV,
+                color: P.cloud,
+                background: "rgba(10, 45, 61, 0.55)",
+                border: `1px solid rgba(118, 228, 247, 0.45)`,
+                backdropFilter: "blur(18px) saturate(140%)",
+                WebkitBackdropFilter: "blur(18px) saturate(140%)",
+                boxShadow: `0 0 14px rgba(118, 228, 247, 0.18), inset 0 0 10px rgba(118, 228, 247, 0.04)`,
+              }}
+              data-testid="cta-join-community"
+            >
+              <Users className="w-4 h-4" style={{ color: P.surf }} />
+              JOIN COMMUNITY
+            </button>
           </div>
         </div>
       </section>
@@ -687,321 +606,110 @@ export default function LandingPage() {
       </section>
 
       {/* ============================================================
-          WHAT'S INSIDE PSYCHPRO — numbered detail cards
-          ============================================================ */}
-      <section
-        id="whats-inside"
-        className="relative max-w-7xl mx-auto px-6 lg:px-10 pb-16"
-      >
-        <div className="text-center mb-10">
-          <p
-            className="text-xs font-light"
-            style={{ ...TRACK_NAV, color: P.surf }}
-          >
-            WHAT'S INSIDE PSYCHPRO
-          </p>
-          <h2
-            className="mt-3 font-light"
-            style={{
-              fontSize: "clamp(26px, 3.6vw, 40px)",
-              color: P.cloud,
-              letterSpacing: "0.01em",
-              textShadow: "0 1px 6px rgba(3, 21, 29, 0.65)",
-            }}
-          >
-            High-yield tools for deeper clinical understanding.
-          </h2>
-          <p
-            className="mt-3 mx-auto max-w-2xl text-sm md:text-[15px] leading-relaxed font-light"
-            style={{
-              color: P.inkSoft,
-              textShadow: "0 1px 6px rgba(3, 21, 29, 0.65)",
-            }}
-          >
-            A complete learning experience built for psychology students,
-            residents, and early-career professionals.
-          </p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {WHATS_INSIDE_CARDS.map((card, i) => (
-            <div
-              key={card.n}
-              className="group relative rounded-xl p-7 lg:p-8 transition-all duration-300 hover:-translate-y-1"
-              style={{
-                ...glass,
-                boxShadow: `0 24px 50px rgba(0,0,0,0.45), 0 0 0 1px rgba(118, 228, 247, 0.05)`,
-              }}
-              data-testid={`whats-inside-card-${i}`}
-            >
-              {/* Hover glow */}
-              <div
-                aria-hidden
-                className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                style={{
-                  boxShadow: `0 0 32px rgba(118, 228, 247, 0.32), inset 0 0 20px rgba(118, 228, 247, 0.06)`,
-                  border: `1px solid rgba(118, 228, 247, 0.72)`,
-                  borderRadius: "inherit",
-                }}
-              />
-              <div className="flex items-baseline gap-3 mb-4">
-                <span
-                  className="text-xs font-light"
-                  style={{ ...TRACK_NAV, color: P.surf }}
-                >
-                  {card.n}
-                </span>
-                <span
-                  aria-hidden
-                  className="flex-1 h-px"
-                  style={{ background: `rgba(118, 228, 247, 0.25)` }}
-                />
-                <span
-                  className="text-[10px] font-light"
-                  style={{ ...TRACK_NAV, color: P.inkSoft }}
-                >
-                  {card.eyebrow}
-                </span>
-              </div>
-              <h3
-                className="font-light mb-3"
-                style={{
-                  fontSize: "clamp(18px, 1.8vw, 22px)",
-                  color: P.cloud,
-                  letterSpacing: "0.01em",
-                }}
-              >
-                {card.headline}
-              </h3>
-              <p
-                className="text-sm leading-relaxed font-light"
-                style={{ color: P.inkSoft }}
-              >
-                {card.body}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ============================================================
-          STATS — full-width content library panel (real numbers only)
-          ============================================================ */}
-      <section
-        id="trust"
-        className="relative max-w-7xl mx-auto px-6 lg:px-10 pb-16"
-      >
-        <div
-          className="rounded-xl p-8 lg:p-12"
-          style={{
-            ...glass,
-            boxShadow: `0 24px 50px rgba(0,0,0,0.45)`,
-          }}
-          data-testid="trust-panel"
-        >
-          <h2
-            className="text-xs font-light mb-10 text-center"
-            style={{ ...TRACK_NAV, color: P.cloud }}
-          >
-            A COMPLETE STUDY LIBRARY
-          </h2>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {TRUST_STATS.map((s) => (
-              <div key={s.l} className="text-center">
-                <s.icon
-                  className="w-8 h-8 mx-auto mb-4"
-                  strokeWidth={1.25}
-                  style={{
-                    color: P.surf,
-                    filter: `drop-shadow(0 0 10px rgba(118, 228, 247, 0.5))`,
-                  }}
-                />
-                <div
-                  className="text-3xl lg:text-4xl font-light"
-                  style={{ color: P.cloud, letterSpacing: "0.04em" }}
-                >
-                  {s.n}
-                </div>
-                <div
-                  className="text-[10px] mt-2 font-light"
-                  style={{ ...TRACK_NAV, color: P.inkSoft }}
-                >
-                  {s.l}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================
-          ALL TOPICS — every subject PsychPro currently offers
+          BROWSE TOPICS — single bordered glass panel, 3-column chip
+          grid pulled live from the topics list hook so it stays in sync
+          with the database. Matches the approved landing comp.
           ============================================================ */}
       <section
         id="topics"
-        className="relative max-w-6xl mx-auto px-6 lg:px-10 pb-20"
+        className="relative max-w-7xl mx-auto px-6 lg:px-10 pb-16"
       >
-        <div className="text-center mb-12">
-          <h2
-            className="text-3xl md:text-4xl font-semibold tracking-tight"
-            style={{ color: P.cloud }}
-          >
-            The full clinical map.
-          </h2>
+        <div
+          className="rounded-xl p-6 lg:p-8"
+          style={{
+            ...glass,
+            boxShadow: `0 24px 50px rgba(0,0,0,0.45), 0 0 0 1px rgba(118, 228, 247, 0.05)`,
+          }}
+          data-testid="browse-topics-panel"
+        >
           <p
-            className="mt-4 text-sm md:text-base font-light max-w-2xl mx-auto leading-relaxed"
-            style={{ color: "rgba(244, 251, 255, 0.65)" }}
+            className="text-[11px] font-light mb-5"
+            style={{ ...TRACK_NAV, color: P.mist }}
           >
-            Foundations, assessment, intervention, research methods, and clinical specialties — all in one place.
+            BROWSE TOPICS
           </p>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-          {TOPIC_CATEGORIES.flatMap((c) => c.topics).map((t) => (
-            <div
-              key={t}
-              className="topic-pill flex items-center gap-3 px-4 h-12 rounded-lg text-sm font-light"
-              style={{
-                color: P.cloud,
-                background: "rgba(10, 45, 61, 0.55)",
-                border: "1px solid rgba(118, 228, 247, 0.22)",
-                backdropFilter: "blur(12px) saturate(135%)",
-                WebkitBackdropFilter: "blur(12px) saturate(135%)",
-              }}
-              data-testid={`topic-pill-${t.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
-            >
-              <CheckCircle2
-                className="w-4 h-4 flex-shrink-0"
-                style={{
-                  color: P.surf,
-                  filter: `drop-shadow(0 0 5px rgba(118, 228, 247, 0.55))`,
-                }}
-              />
-              <span className="truncate">{t}</span>
+          {topicsLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-2">
+              {Array.from({ length: 18 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="h-10 rounded-md"
+                  style={{
+                    background: "rgba(10, 45, 61, 0.45)",
+                    border: "1px solid rgba(118, 228, 247, 0.12)",
+                  }}
+                />
+              ))}
             </div>
-          ))}
-          {/* "More being added" pill — final cell, accent-styled */}
-          <div
-            className="topic-pill flex items-center gap-3 px-4 h-12 rounded-lg text-sm font-light"
-            style={{
-              color: P.mist,
-              background: "rgba(10, 45, 61, 0.62)",
-              border: "1px solid rgba(167, 243, 255, 0.55)",
-              backdropFilter: "blur(12px) saturate(135%)",
-              WebkitBackdropFilter: "blur(12px) saturate(135%)",
-              boxShadow: `0 0 18px rgba(118, 228, 247, 0.22), inset 0 0 10px rgba(118, 228, 247, 0.08)`,
-            }}
-            data-testid="topic-pill-more"
-          >
-            <Sparkles
-              className="w-4 h-4 flex-shrink-0"
-              style={{
-                color: P.mist,
-                filter: `drop-shadow(0 0 6px rgba(167, 243, 255, 0.85))`,
-              }}
-            />
-            <span className="truncate">+ More being added</span>
-          </div>
+          ) : topicsError || sortedTopics.length === 0 ? (
+            <p
+              className="text-sm font-light py-4"
+              style={{ color: P.inkSoft }}
+              data-testid="browse-topics-empty"
+            >
+              {topicsError
+                ? "Topics are temporarily unavailable. Please refresh."
+                : "No topics published yet."}
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-2">
+              {sortedTopics.map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => navigate(`/topics/${t.id}`)}
+                  className="topic-chip flex items-center gap-3 px-4 min-h-10 py-2 rounded-md text-left text-[13px] font-light"
+                  style={{
+                    color: P.cloud,
+                    background: "rgba(10, 45, 61, 0.45)",
+                    border: "1px solid rgba(118, 228, 247, 0.22)",
+                  }}
+                  data-testid={`topic-chip-${t.id}`}
+                >
+                  <CheckCircle2
+                    className="w-4 h-4 flex-shrink-0"
+                    strokeWidth={1.5}
+                    style={{
+                      color: P.surf,
+                      filter: `drop-shadow(0 0 5px rgba(118, 228, 247, 0.55))`,
+                    }}
+                  />
+                  <span className="leading-tight">{t.name}</span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <style>{`
-          .topic-pill {
-            transition: transform .25s cubic-bezier(.2,.8,.2,1),
-                        background .25s ease,
-                        border-color .25s ease,
-                        box-shadow .3s ease;
+          .topic-chip {
+            transition: transform .2s cubic-bezier(.2,.8,.2,1),
+                        background .2s ease,
+                        border-color .2s ease,
+                        box-shadow .25s ease;
           }
-          .topic-pill:hover {
+          .topic-chip:hover {
             transform: translateY(-1px);
-            background: rgba(10, 45, 61, 0.78) !important;
-            border-color: rgba(167, 243, 255, 0.7) !important;
+            background: rgba(10, 45, 61, 0.72) !important;
+            border-color: rgba(167, 243, 255, 0.55) !important;
             box-shadow:
-              0 0 0 1px rgba(167, 243, 255, 0.35),
-              0 0 22px rgba(118, 228, 247, 0.40),
-              inset 0 0 12px rgba(118, 228, 247, 0.12);
+              0 0 0 1px rgba(167, 243, 255, 0.28),
+              0 0 18px rgba(118, 228, 247, 0.32);
           }
         `}</style>
       </section>
 
-      {/* ============================================================
-          SUBSCRIBE
-          ============================================================ */}
-      <section className="relative max-w-7xl mx-auto px-6 lg:px-10 pb-16">
-        <div
-          className="rounded-xl p-6 lg:p-8 flex flex-col lg:flex-row items-center gap-6"
-          style={{
-            ...glass,
-            boxShadow: `0 24px 50px rgba(0,0,0,0.45)`,
-          }}
-          data-testid="subscribe-panel"
-        >
-          <div className="flex items-center gap-4 flex-shrink-0">
-            <Mail
-              className="w-6 h-6"
-              strokeWidth={1.5}
-              style={{
-                color: P.surf,
-                filter: `drop-shadow(0 0 8px rgba(118, 228, 247, 0.5))`,
-              }}
-            />
-            <div>
-              <div
-                className="text-xs font-light"
-                style={{ ...TRACK_NAV, color: P.cloud }}
-              >
-                STAY INSPIRED.
-              </div>
-              <div
-                className="text-sm mt-1 font-light"
-                style={{ color: P.inkSoft }}
-              >
-                Get expert insights and updates.
-              </div>
-            </div>
-          </div>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              setEmail("");
-            }}
-            className="flex-1 flex flex-col sm:flex-row gap-3 w-full lg:ml-auto lg:max-w-lg"
-          >
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Your email address"
-              className="flex-1 h-11 rounded-md px-4 text-sm font-light outline-none transition-all"
-              style={{
-                background: "rgba(6, 32, 44, 0.7)",
-                border: `1px solid rgba(118, 228, 247, 0.28)`,
-                color: P.cloud,
-              }}
-              data-testid="subscribe-email"
-            />
-            <button
-              type="submit"
-              className="landing-glass-btn h-11 px-7 rounded-md text-xs font-light"
-              style={{
-                ...TRACK_NAV,
-                color: P.cloud,
-                background: "rgba(10, 45, 61, 0.62)",
-                border: `1px solid rgba(118, 228, 247, 0.55)`,
-                boxShadow: `0 0 18px rgba(118, 228, 247, 0.28), inset 0 0 10px rgba(118, 228, 247, 0.08)`,
-              }}
-              data-testid="subscribe-submit"
-            >
-              SUBSCRIBE
-            </button>
-          </form>
-        </div>
-      </section>
+      {/* === Sections from the previous landing that aren't in the
+          approved comp (WHAT'S INSIDE numbered cards, TRUST stats,
+          legacy topics grid, email subscribe) were removed in this
+          redesign. Re-add only with product approval. === */}
 
       {/* ============================================================
           FOOTER
           ============================================================ */}
       <footer
-        id="about"
+        id="footer"
         className="relative border-t"
         style={{ borderColor: "rgba(118, 228, 247, 0.15)" }}
       >
