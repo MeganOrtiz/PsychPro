@@ -32,7 +32,6 @@ import {
   Star,
 } from "lucide-react";
 import cloudsBackground from "@/assets/generated_images/landing_page.png";
-import brainHero from "@/assets/generated_images/brain_hero.png";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -255,43 +254,6 @@ export default function LandingPage() {
           background-repeat: no-repeat, no-repeat, no-repeat;
           image-rendering: -webkit-optimize-contrast;
           pointer-events: none;
-        }
-        /* Floating isolated brain — transparent-PNG hero element that
-           sits centered over the cloud canvas. No rectangular edge,
-           soft cyan glow halo only. */
-        .landing-hero-brain {
-          display: flex;
-          justify-content: center;
-          align-items: flex-end;
-          width: 100%;
-          /* The source PNG is portrait with the brain occupying only the
-             upper ~45%; cap the *container* height and let the image
-             overflow downward-invisible so the brain reads compact. */
-          height: clamp(170px, 22vw, 280px);
-          overflow: visible;
-          margin-bottom: -8px;
-        }
-        .landing-hero-brain img {
-          width: clamp(200px, 28vw, 360px);
-          height: auto;
-          display: block;
-          /* Pull the image up so its visible brain region aligns with
-             the container. The source has roughly 55% empty space below
-             the brain. */
-          margin-bottom: -42%;
-          filter:
-            drop-shadow(0 0 24px rgba(118, 228, 247, 0.55))
-            drop-shadow(0 0 48px rgba(118, 228, 247, 0.30));
-          pointer-events: none;
-          user-select: none;
-          animation: brainFloat 7s ease-in-out infinite;
-        }
-        @keyframes brainFloat {
-          0%, 100% { transform: translateY(0); }
-          50%      { transform: translateY(-6px); }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .landing-hero-brain img { animation: none; }
         }
         .landing-glow-link {
           position: relative;
@@ -523,13 +485,6 @@ export default function LandingPage() {
           fills the viewport — there is NO gap above the brain. */}
       <section className="relative flex flex-col items-center justify-center pt-20 md:pt-24 lg:pt-28 pb-20 md:pb-28">
         <div className="max-w-5xl mx-auto px-6 lg:px-10 text-center relative z-10">
-          {/* Isolated transparent brain — sits above the wordmark.
-              The original baked brain in landing_page.png is cropped
-              off-screen by background-position: center bottom. */}
-          <div className="landing-hero-brain" aria-hidden>
-            <img src={brainHero} alt="" draggable={false} />
-          </div>
-
           {/* Wordmark — thin Proxima Nova / Outfit 200 */}
           <h1
             className="leading-none relative mt-2"
