@@ -251,15 +251,21 @@ export default function LandingPage() {
            PNG's own background). We keep the cerulean glow and the
            gentle breathing pulse so the brain feels alive against
            the clouds. */
+        /* IMPORTANT: do NOT set aspect-ratio:1/1 here. The brain-iso WebP
+           artwork is wider than it is tall, so forcing a square box with
+           object-fit:contain leaves a large band of transparent space
+           above AND below the brain, which on the live site reads as a
+           giant empty gap between the brain and the PSYCHPRO wordmark.
+           Letting height:auto take over makes the IMG hug the real
+           artwork edges. */
         .landing-canvas .landing-brain {
           position: relative;
           z-index: 2;
           display: block;
-          width: min(54vh, 72vw);
-          aspect-ratio: 1 / 1;
+          width: min(38vh, 60vw);
+          height: auto;
+          max-width: 480px;
           margin: 0 auto;
-          object-fit: contain;
-          object-position: center;
           pointer-events: none;
           user-select: none;
           filter:
@@ -269,7 +275,7 @@ export default function LandingPage() {
         }
         @media (max-width: 768px) {
           .landing-canvas .landing-brain {
-            width: min(46vh, 84vw);
+            width: min(34vh, 72vw);
           }
         }
 
