@@ -166,20 +166,38 @@ export default function LandingPage() {
            and the smoke wisps at the top/sides remain visible. A soft
            radial mask fades the rectangular edges of the PNG into the
            near-black page ground so there is no visible container edge. */
+        /* Brain element — the source PNG is a tall portrait with a long
+           smoke column trailing well below the brain itself. We render
+           it into a fixed-aspect wrapper and use object-fit:cover with
+           object-position centered on the upper-third (where the brain
+           lives) to crop out the bottom smoke tail. A soft radial mask
+           then dissolves the rectangular wrapper edges into the
+           near-black ground so the brain reads as floating in smoke. */
         .landing-canvas .landing-brain {
           display: block;
-          height: 40vh;
-          width: auto;
-          max-width: 90vw;
+          width: min(60vh, 78vw);
+          aspect-ratio: 1 / 1;
           margin: 0 auto;
-          object-fit: contain;
+          object-fit: cover;
+          object-position: center 28%;
           pointer-events: none;
           user-select: none;
-          filter: drop-shadow(0 0 60px rgba(58, 224, 236, 0.25));
+          filter: drop-shadow(0 0 80px rgba(58, 224, 236, 0.30));
           -webkit-mask-image:
-            radial-gradient(ellipse 75% 75% at 50% 50%, #000 55%, transparent 95%);
+            radial-gradient(circle at 50% 50%,
+              #000 45%,
+              rgba(0,0,0,0.55) 72%,
+              transparent 100%);
                   mask-image:
-            radial-gradient(ellipse 75% 75% at 50% 50%, #000 55%, transparent 95%);
+            radial-gradient(circle at 50% 50%,
+              #000 45%,
+              rgba(0,0,0,0.55) 72%,
+              transparent 100%);
+        }
+        @media (max-width: 768px) {
+          .landing-canvas .landing-brain {
+            width: min(52vh, 88vw);
+          }
         }
         .landing-glow-link {
           position: relative;
