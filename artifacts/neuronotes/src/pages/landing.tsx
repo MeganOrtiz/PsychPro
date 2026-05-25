@@ -5,10 +5,10 @@ import {
   Brain,
   Search,
   BookOpen,
-  Microscope,
-  Upload,
+  Layers,
+  FileText,
   Users,
-  ShieldCheck,
+  Award,
   Check,
   Linkedin,
   Twitter,
@@ -42,55 +42,81 @@ const NAV_ITEMS = [
   { label: "About", href: "#features" },
 ];
 
-const FEATURES = [
+const FEATURES_TOP = [
   {
-    icon: BookOpen,
-    title: "Flashcards · Study Guides · Quizzes · Exams",
-    body:
-      "Every modality you need to retain the material — spaced repetition, structured guides, and full mock exams.",
+    icon: Layers,
+    title: "Flashcards / Study Guides / Quizzes / Exams",
+    body: "Reinforce your learning with interactive study tools.",
   },
   {
-    icon: Microscope,
+    icon: Brain,
     title: "Evidence-Based Learning Tools",
     body:
-      "Grounded in cognitive science. Every interaction is tuned to how clinicians actually retain complex material.",
+      "Utilize specific tools for spaced repetition, interleaved learning and active recall.",
   },
   {
-    icon: Upload,
-    title: "Create Resources From Your Own Material",
+    icon: FileText,
+    title: "Create Learning Resources From Your Own Material",
     body:
-      "Upload your notes, PDFs, or readings. PsychPro turns them into flashcards, guides, and practice questions.",
-  },
-  {
-    icon: Users,
-    title: "Connect With Others",
-    body:
-      "A growing community of clinicians, researchers, and students sharing what they've learned along the way.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "PsychPro Spotlight",
-    body:
-      "Featured dissertations, case studies, and research from the next generation of clinical leaders.",
+      "Upload, organize, and transform your material into smart resources.",
   },
 ] as const;
 
-const TOPICS = [
-  "Brain Networks",
-  "Neurophysiology",
-  "Psychopharmacology",
-  "Limbic System",
-  "Sensory Systems",
-  "Behavioral Neuroscience",
-  "Cognitive Psychology",
-  "Clinical Assessment",
-  "Psychotherapy Modalities",
-  "Personality Disorders",
-  "Developmental Psychology",
-  "Social Psychology",
-  "Neuroanatomy",
-  "Mood Disorders",
-  "Anxiety & Trauma",
+const FEATURES_BOTTOM = [
+  {
+    icon: Users,
+    title: "Connect With Others",
+    body: "Collaborate, share insights, and grow together.",
+  },
+  {
+    icon: Award,
+    title: "PsychPro Spotlight",
+    body:
+      "Submit your dissertation, research, presentations for opportunities to be featured in the PsychPro Spotlight.",
+  },
+] as const;
+
+// Topics organized into 3 columns, read top-to-bottom by column.
+const TOPIC_COLUMNS: string[][] = [
+  [
+    "Brain Networks",
+    "Endocrine System & Reproduction",
+    "Neurophysiology",
+    "Sleep & Circadian Rhythms",
+    "Executive Function",
+    "Neurocognitive Disorders",
+    "Neuropsychology Overview",
+    "Personality Disorders",
+    "Trauma-Focused Approaches",
+    "Analytical Psychology — Jung",
+    "Family, Systems, and Couples Therapies",
+  ],
+  [
+    "Central Nervous System",
+    "Enteric Nervous System",
+    "Peripheral Nervous System",
+    "Vascular System of the Brain",
+    "Forensic Neuropsychology",
+    "Neurodevelopmental Disorders",
+    "Validity & Effort Testing",
+    "Psychiatric Disorders",
+    "Acceptance, Mindfulness, and Third-Wave Approaches",
+    "Behavior Therapy and Applied Behavior Analysis",
+    "Foundations of Psychotherapy",
+  ],
+  [
+    "Cranial Nerves",
+    "Limbic System & Motivation",
+    "Sensory Systems",
+    "Apraxia & Agnosia",
+    "Language Processing & Aphasia",
+    "Neuroimaging & Neuromodulation",
+    "ADHD & Medications",
+    "Psychopharmacology",
+    "Adlerian, Humanistic, and Existential Approaches",
+    "Cognitive Therapy, CBT, and Schema Therapy",
+    "Gestalt, Experiential, and Emotion-Focused Approaches",
+  ],
 ];
 
 const FOOTER_LINKS = [
@@ -195,26 +221,43 @@ export default function LandingPage() {
             <button
               type="button"
               onClick={goToApp}
-              className="landing-cta landing-cta-primary"
+              className="landing-cta landing-cta-ghost"
               data-testid="cta-join-now"
             >
-              Join Now
+              <BookOpen className="landing-cta-icon" aria-hidden />
+              <span>JOIN NOW</span>
             </button>
             <button
               type="button"
               onClick={goToTopics}
               className="landing-cta landing-cta-ghost"
-              data-testid="cta-explore-courses"
+              data-testid="cta-explore-topics"
             >
-              Explore Courses
+              <Users className="landing-cta-icon" aria-hidden />
+              <span>EXPLORE TOPICS</span>
             </button>
           </div>
         </section>
 
-        {/* ============== FEATURES ============== */}
+        {/* ============== FEATURES (3 above / 2 below) ============== */}
         <section id="features" className="landing-features">
-          <div className="landing-features-row">
-            {FEATURES.map(({ icon: Icon, title, body }) => (
+          <div className="landing-features-row landing-features-row--three">
+            {FEATURES_TOP.map(({ icon: Icon, title, body }) => (
+              <article
+                key={title}
+                className="landing-feature-card"
+                data-testid={`feature-${title.split(" ")[0].toLowerCase()}`}
+              >
+                <div className="landing-feature-icon-wrap">
+                  <Icon aria-hidden />
+                </div>
+                <h3 className="landing-feature-title">{title.toUpperCase()}</h3>
+                <p className="landing-feature-body">{body}</p>
+              </article>
+            ))}
+          </div>
+          <div className="landing-features-row landing-features-row--two">
+            {FEATURES_BOTTOM.map(({ icon: Icon, title, body }) => (
               <article
                 key={title}
                 className="landing-feature-card"
@@ -232,28 +275,30 @@ export default function LandingPage() {
 
         {/* ============== BROWSE TOPICS ============== */}
         <section id="topics" className="landing-topics">
-          <div className="landing-topics-header">
-            <h2 className="landing-topics-title">BROWSE TOPICS</h2>
-            <p className="landing-topics-sub">
-              A growing catalogue across neuroscience, clinical assessment, and
-              intervention.
-            </p>
-          </div>
-          <div className="landing-topics-grid">
-            {TOPICS.map((topic) => (
-              <button
-                key={topic}
-                type="button"
-                onClick={goToTopics}
-                className="landing-topic-pill"
-                data-testid={`topic-${topic.toLowerCase().replace(/\s+/g, "-")}`}
-              >
-                <span className="landing-topic-check" aria-hidden>
-                  <Check />
-                </span>
-                <span className="landing-topic-label">{topic}</span>
-              </button>
-            ))}
+          <div className="landing-topics-panel">
+            <div className="landing-topics-header">
+              <h2 className="landing-topics-title">BROWSE TOPICS</h2>
+            </div>
+            <div className="landing-topics-grid">
+              {TOPIC_COLUMNS.map((col, ci) => (
+                <div key={ci} className="landing-topics-col">
+                  {col.map((topic) => (
+                    <button
+                      key={topic}
+                      type="button"
+                      onClick={goToTopics}
+                      className="landing-topic-pill"
+                      data-testid={`topic-${topic.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`}
+                    >
+                      <span className="landing-topic-check" aria-hidden>
+                        <Check />
+                      </span>
+                      <span className="landing-topic-label">{topic}</span>
+                    </button>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -265,10 +310,15 @@ export default function LandingPage() {
               <span className="landing-brand-mark">PSYCHPRO</span>
             </a>
             <nav className="landing-footer-links" aria-label="Footer">
-              {FOOTER_LINKS.map((l) => (
-                <a key={l.label} href={l.href} className="landing-footer-link">
-                  {l.label.toUpperCase()}
-                </a>
+              {FOOTER_LINKS.map((l, i) => (
+                <span key={l.label} className="landing-footer-link-item">
+                  {i > 0 && (
+                    <span className="landing-footer-sep" aria-hidden>|</span>
+                  )}
+                  <a href={l.href} className="landing-footer-link">
+                    {l.label.toUpperCase()}
+                  </a>
+                </span>
               ))}
             </nav>
             <div className="landing-footer-social">
@@ -435,9 +485,12 @@ const styles = `
 /* ============== HERO ============== */
 .landing-hero {
   position: relative;
-  max-width: 1100px;
+  max-width: 1320px;
   margin: 0 auto;
-  padding: clamp(24px, 5vh, 56px) 24px clamp(56px, 8vh, 96px);
+  /* No top padding — brain bleeds off the top edge of the page.
+     The negative top margin pulls the brain slot up so its top edge
+     sits above the navbar baseline and reads as bleeding off-screen. */
+  padding: 0 24px clamp(56px, 8vh, 96px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -445,16 +498,21 @@ const styles = `
 }
 .landing-hero-brain {
   position: relative;
-  width: min(420px, 70vw);
-  height: min(340px, 42vh);
+  /* ~2× the previous size, spans the full hero width up to 1100px. */
+  width: min(1100px, 100vw);
+  height: clamp(440px, 62vh, 720px);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: clamp(16px, 3vh, 32px);
+  /* Pull the brain upward so it bleeds off the top of the page,
+     and tighten the gap to the wordmark below it. */
+  margin-top: clamp(-80px, -6vh, -32px);
+  margin-bottom: clamp(-72px, -5vh, -28px);
   opacity: 0;
   transform: translateY(12px);
   transition: opacity 1000ms cubic-bezier(0.16, 1, 0.3, 1), transform 1000ms cubic-bezier(0.16, 1, 0.3, 1);
   animation: heroBrainFloat 7s ease-in-out infinite;
+  pointer-events: none;
 }
 .landing-hero.is-mounted .landing-hero-brain {
   opacity: 1;
@@ -463,30 +521,36 @@ const styles = `
 .landing-hero-brain-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  /* Tight radial mask — crops the PNG's baked-in dark smoke clouds out so
-     only the glowing brain shows and the page-level smoke provides atmosphere. */
-  -webkit-mask-image: radial-gradient(ellipse 42% 42% at 50% 50%,
+  object-fit: contain;
+  object-position: center top;
+  /* Loose radial mask — keeps the brain crisp at center and lets the
+     wispy cyan smoke from the PNG extend wide and fade smoothly into
+     the page bg on the left, right, and top/bottom edges with no hard
+     rectangular halo. Horizontal radius slightly wider than vertical
+     so the smoke reads as a wide atmospheric band. */
+  -webkit-mask-image: radial-gradient(ellipse 70% 78% at 50% 50%,
     rgba(0,0,0,1) 0%,
-    rgba(0,0,0,0.95) 55%,
-    rgba(0,0,0,0.4) 80%,
+    rgba(0,0,0,1) 35%,
+    rgba(0,0,0,0.85) 60%,
+    rgba(0,0,0,0.45) 82%,
     rgba(0,0,0,0) 100%);
-  mask-image: radial-gradient(ellipse 42% 42% at 50% 50%,
+  mask-image: radial-gradient(ellipse 70% 78% at 50% 50%,
     rgba(0,0,0,1) 0%,
-    rgba(0,0,0,0.95) 55%,
-    rgba(0,0,0,0.4) 80%,
+    rgba(0,0,0,1) 35%,
+    rgba(0,0,0,0.85) 60%,
+    rgba(0,0,0,0.45) 82%,
     rgba(0,0,0,0) 100%);
   filter:
-    drop-shadow(0 0 28px ${C.cyan}66)
-    drop-shadow(0 0 80px ${C.cyanMid}44);
+    drop-shadow(0 0 32px ${C.cyan}55)
+    drop-shadow(0 0 90px ${C.cyanMid}33);
   animation: heroBrainPulse 4.2s ease-in-out infinite;
 }
 .landing-hero-aura {
   position: absolute;
-  inset: 18%;
+  inset: 22% 28%;
   border-radius: 50%;
-  background: radial-gradient(circle, ${C.cyan}44 0%, ${C.cyanMid}1c 40%, transparent 70%);
-  filter: blur(42px);
+  background: radial-gradient(circle, ${C.cyan}3a 0%, ${C.cyanMid}18 40%, transparent 70%);
+  filter: blur(48px);
   animation: heroBrainAura 4.2s ease-in-out infinite;
   z-index: -1;
 }
@@ -543,41 +607,36 @@ const styles = `
   margin-top: clamp(28px, 3.4vh, 40px);
 }
 .landing-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   font-family: inherit;
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.18em;
-  padding: 14px 30px;
+  letter-spacing: 0.22em;
+  padding: 14px 28px;
   border-radius: 8px;
   cursor: pointer;
   transition: all 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-.landing-cta-primary {
-  background: linear-gradient(180deg, #083240 0%, #061f2b 100%);
-  border: 1.5px solid ${C.cyan};
-  color: #fff;
-  box-shadow:
-    0 0 0 1px ${C.cyan}33 inset,
-    0 0 18px ${C.cyan}55,
-    0 8px 24px -10px ${C.cyan}66;
-}
-.landing-cta-primary:hover {
-  transform: translateY(-1px);
-  box-shadow:
-    0 0 0 1px ${C.cyan}55 inset,
-    0 0 28px ${C.cyan}88,
-    0 12px 32px -10px ${C.cyan}99;
+.landing-cta-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
 }
 .landing-cta-ghost {
   background: transparent;
-  border: 1.5px solid ${C.cyan}aa;
+  border: 1.5px solid ${C.cyan}cc;
   color: ${C.cyan};
+  box-shadow: 0 0 14px ${C.cyan}33, 0 0 0 1px ${C.cyan}1a inset;
 }
 .landing-cta-ghost:hover {
   background: ${C.cyan}14;
   color: #fff;
   border-color: ${C.cyan};
-  box-shadow: 0 0 22px ${C.cyan}55;
+  box-shadow: 0 0 24px ${C.cyan}66, 0 0 0 1px ${C.cyan}33 inset;
+  transform: translateY(-1px);
 }
 
 /* ============== FEATURES ============== */
@@ -591,16 +650,32 @@ const styles = `
   grid-template-columns: 1fr;
   gap: 16px;
 }
-@media (min-width: 640px) { .landing-features-row { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 980px) { .landing-features-row { grid-template-columns: repeat(5, 1fr); } }
+.landing-features-row + .landing-features-row {
+  margin-top: 16px;
+}
+@media (min-width: 640px) {
+  .landing-features-row--three { grid-template-columns: repeat(2, 1fr); }
+  .landing-features-row--two { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 980px) {
+  .landing-features-row--three { grid-template-columns: repeat(3, 1fr); }
+  /* 2-card row sits centered under the 3-card row above it. */
+  .landing-features-row--two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: calc((1320px - 64px) * 2 / 3 + 16px);
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+  }
+}
 
 .landing-feature-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-  padding: 22px 18px 22px;
+  align-items: center;
+  text-align: center;
+  padding: 26px 22px 26px;
   background: linear-gradient(180deg, ${C.bgPanel}, ${C.bgPanelStrong});
   border: 1px solid ${C.hairline};
   border-radius: 14px;
@@ -654,29 +729,41 @@ const styles = `
 .landing-topics {
   max-width: 1320px;
   margin: 0 auto;
-  padding: clamp(40px, 6vh, 80px) 32px;
+  padding: clamp(24px, 3vh, 40px) 32px clamp(40px, 6vh, 80px);
+}
+.landing-topics-panel {
+  position: relative;
+  background: linear-gradient(180deg, ${C.bgPanel}, ${C.bgPanelStrong});
+  border: 1px solid ${C.hairlineStrong};
+  border-radius: 18px;
+  padding: clamp(20px, 3vh, 32px) clamp(20px, 2.6vw, 36px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.02) inset,
+    0 24px 60px -30px rgba(0, 0, 0, 0.6),
+    0 0 32px ${C.cyan}10;
 }
 .landing-topics-header {
-  margin-bottom: clamp(20px, 2.4vh, 32px);
+  margin-bottom: clamp(16px, 2vh, 24px);
 }
 .landing-topics-title {
   margin: 0;
-  font-size: clamp(20px, 1.8vw, 26px);
+  font-size: clamp(18px, 1.4vw, 22px);
   font-weight: 600;
-  letter-spacing: 0.36em;
+  letter-spacing: 0.34em;
   color: #fff;
   text-shadow: 0 0 18px ${C.cyan}44;
-}
-.landing-topics-sub {
-  margin: 10px 0 0;
-  font-size: 13px;
-  letter-spacing: 0.04em;
-  color: rgba(199, 230, 240, 0.6);
 }
 .landing-topics-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 10px 18px;
+  gap: 18px;
+}
+.landing-topics-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 @media (min-width: 640px) { .landing-topics-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 980px) { .landing-topics-grid { grid-template-columns: repeat(3, 1fr); } }
@@ -686,13 +773,13 @@ const styles = `
   align-items: center;
   gap: 12px;
   width: 100%;
-  padding: 13px 16px;
-  background: ${C.bgPanel};
+  padding: 11px 14px;
+  background: rgba(3, 17, 24, 0.55);
   border: 1px solid ${C.hairline};
   border-radius: 10px;
   color: ${C.cyanSoft};
   font-family: inherit;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 500;
   text-align: left;
   cursor: pointer;
@@ -745,7 +832,19 @@ const styles = `
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 26px;
+  align-items: center;
+  gap: 0;
+}
+.landing-footer-link-item {
+  display: inline-flex;
+  align-items: center;
+}
+.landing-footer-sep {
+  display: inline-block;
+  padding: 0 18px;
+  color: rgba(199, 230, 240, 0.28);
+  font-weight: 300;
+  user-select: none;
 }
 .landing-footer-link {
   font-size: 11px;
