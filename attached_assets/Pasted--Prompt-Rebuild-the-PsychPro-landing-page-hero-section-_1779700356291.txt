@@ -1,0 +1,38 @@
+
+Prompt:
+Rebuild the PsychPro landing page hero section to match a more immersive, polished design. Here are the exact changes:
+Background & brain image:
+
+Remove the rectangular cropped panel that currently contains the brain image. The brain and its turquoise smoke must be a single full-bleed background layer spanning the entire viewport width — no visible container edges or seams.
+Set the hero background to background-size: cover, centered, so the glowing brain sits at the top-center and the smoke fades naturally into near-black at all edges.
+Make the base page background near-black (#04080c). Layer a radial vignette over the hero background to blend the smoke into the dark edges: radial-gradient(ellipse at center top, transparent 35%, #04080c 92%).
+
+Color palette:
+
+Base background: #04080c (nearly black, not slate/navy).
+Accent/glow color: turquoise in the #1ed4e0 to #3ae0ec range.
+Use the turquoise ONLY for glows, borders, and accents — do not wash the whole page in mid-tone blue. The darkness is what makes the cyan glow pop.
+
+Wordmark "PSYCHPRO":
+
+Move it BELOW the brain image, not overlaid across it.
+Use a thin/light font weight (200–300).
+Letter-spacing: ~0.35em, evenly tracked.
+Add a soft glow via text-shadow: 0 0 30px rgba(58,224,236,0.4).
+Place the "LEARN. EXPAND. CONNECT." tagline directly beneath it with wider letter-spacing and lower opacity (~0.7).
+
+Layout density:
+
+Tighten vertical spacing throughout the hero so the five feature cards AND the full "Browse Topics" grid pull up into view on the first screen.
+Feature cards: faint glassmorphic style — subtle turquoise border (1px solid rgba(58,224,236,0.15)), slight inner glow, semi-transparent dark fill.
+
+Navigation:
+
+Center the nav links, use a lighter font weight.
+Replace the circled search button with a plain search icon glyph.
+
+Footer:
+
+Add a footer with the PsychPro logo, Privacy Policy / Terms of Service / Contact links, and social icons (LinkedIn, Twitter/X, Instagram, YouTube).
+
+Keep the existing Vite + React + Framer Motion / GSAP / Three.js stack. Preserve all current content and navigation structure — this is a visual/layout refinement only.

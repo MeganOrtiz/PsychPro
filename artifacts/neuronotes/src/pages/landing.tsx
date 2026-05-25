@@ -121,12 +121,16 @@ export default function LandingPage() {
     });
   })();
 
-  // Reusable glass surface — translucent dark teal, thin cyan border, blur.
+  // Reusable glass surface — translucent dark teal, faint cyan border,
+  // blur. Border opacity intentionally low (0.15) so the cards read as
+  // glassmorphic accents against the near-black ground rather than as
+  // hard-bordered panels.
   const glass = {
-    background: "rgba(6, 32, 44, 0.58)",
-    border: `1px solid rgba(118, 228, 247, 0.38)`,
+    background: "rgba(4, 12, 18, 0.55)",
+    border: "1px solid rgba(58, 224, 236, 0.15)",
     backdropFilter: "blur(18px) saturate(140%)",
     WebkitBackdropFilter: "blur(18px) saturate(140%)",
+    boxShadow: "inset 0 0 24px rgba(58, 224, 236, 0.06)",
   } as const;
 
   return (
@@ -160,16 +164,21 @@ export default function LandingPage() {
            MUST stay background:transparent so the negative-z layers
            remain visible. DO NOT add a per-section background image
            elsewhere on this page. */
+        /* Near-black page ground. Hard-coded #04080c per the approved
+           comp — this is darker than P.ink and gives the turquoise glow
+           the contrast it needs to pop. */
         .landing-canvas::after {
           content: "";
           position: absolute;
           inset: 0;
           z-index: -60;
-          background-color: ${P.ink};
+          background-color: #04080c;
           pointer-events: none;
         }
-        /* Gradient overlay that sits ON TOP of the background video to
-           keep wordmark + CTAs readable. Hero-bound (100vh). */
+        /* Radial vignette that blends the brain image's turquoise smoke
+           into the near-black edges. Hero-bound (100vh) so it only
+           applies over the brain region; the rest of the page is the
+           solid #04080c ground. */
         .landing-canvas::before {
           content: "";
           position: absolute;
@@ -178,39 +187,41 @@ export default function LandingPage() {
           right: 0;
           height: 100vh;
           z-index: -50;
-          background-image:
+          background:
+            radial-gradient(ellipse 80% 70% at 50% 22%,
+              transparent 35%,
+              rgba(4, 8, 12, 0.55) 75%,
+              #04080c 92%),
             linear-gradient(180deg,
-              rgba(3, 21, 29, 0.00) 0%,
-              rgba(3, 21, 29, 0.00) 55%,
-              rgba(3, 21, 29, 0.45) 80%,
-              ${P.ink} 100%),
-            radial-gradient(ellipse 130% 115% at 50% 50%,
-              rgba(3, 21, 29, 0.00) 0%,
-              rgba(3, 21, 29, 0.08) 70%,
-              rgba(3, 21, 29, 0.25) 100%);
+              transparent 0%,
+              transparent 65%,
+              rgba(4, 8, 12, 0.7) 85%,
+              #04080c 100%);
           pointer-events: none;
         }
-        /* The actual background image — sits behind the gradient overlay
-           and in front of the solid ink ground. Hero-bound (100vh) so it
-           fades into the ink color for the rest of the scrollable page. */
+        /* Full-bleed background image — brain + turquoise smoke spans
+           the entire viewport width with NO rectangular container edge.
+           "cover" + object-position centered top crops the portrait so
+           the brain sits glowing at the top-center and the smoke fades
+           naturally into the vignette at all edges. */
         .landing-canvas > .landing-bg-image {
           position: absolute;
           top: 0;
-          left: 0;
+          left: 50%;
+          transform: translateX(-50%);
           width: 100%;
-          height: 100vh;
-          /* "contain" so the FULL portrait composition (brain + clouds
-             above and below) is always visible. The dark ink ground
-             painted by ::after fills the empty side bars naturally. */
-          object-fit: contain;
-          object-position: center top;
+          height: 95vh;
+          object-fit: cover;
+          object-position: center 18%;
           z-index: -55;
           pointer-events: none;
           user-select: none;
-          /* Soft fade at the very bottom so the image dissolves into the
-             ink ground rather than ending on a hard line. */
-          -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 88%, transparent 100%);
-                  mask-image: linear-gradient(180deg, #000 0%, #000 88%, transparent 100%);
+          /* Soft edge fade so the image dissolves into the vignette
+             on all sides rather than terminating on a hard rectangle. */
+          -webkit-mask-image:
+            radial-gradient(ellipse 85% 75% at 50% 35%, #000 45%, transparent 90%);
+                  mask-image:
+            radial-gradient(ellipse 85% 75% at 50% 35%, #000 45%, transparent 90%);
         }
         .landing-glow-link {
           position: relative;
@@ -373,8 +384,10 @@ export default function LandingPage() {
             </span>
           </div>
 
-          {/* Center nav */}
-          <nav className="hidden md:flex items-center gap-9">
+          {/* Center nav — absolutely positioned so the links read as
+              perfectly centered on the page regardless of the brand /
+              right-cluster widths. Lighter weight (200) per redesign. */}
+          <nav className="hidden md:flex items-center gap-9 absolute left-1/2 -translate-x-1/2">
             {NAV_LINKS.map((link) => {
               const isActive = activeNav === link.label;
               return (
@@ -382,9 +395,10 @@ export default function LandingPage() {
                   key={link.label}
                   href={link.href}
                   onClick={() => setActiveNav(link.label)}
-                  className="nav-text-link text-xs font-light"
+                  className="nav-text-link text-xs"
                   style={{
                     ...TRACK_NAV,
+                    fontWeight: 200,
                     color: isActive ? P.cloud : P.inkSoft,
                   }}
                   data-testid={`nav-${link.label.toLowerCase()}`}
@@ -394,8 +408,8 @@ export default function LandingPage() {
                     <span
                       className="absolute left-0 right-0 -bottom-2 h-px"
                       style={{
-                        background: P.surf,
-                        boxShadow: `0 0 10px ${P.surf}, 0 0 4px ${P.surf}`,
+                        background: "#3ae0ec",
+                        boxShadow: "0 0 10px #3ae0ec, 0 0 4px #3ae0ec",
                       }}
                     />
                   )}
@@ -406,18 +420,14 @@ export default function LandingPage() {
 
           {/* Right cluster */}
           <div className="flex items-center gap-4">
+            {/* Plain icon glyph — no circular pill — per the redesign. */}
             <button
               aria-label="Search"
-              className="landing-glass-icon-btn w-9 h-9 rounded-full flex items-center justify-center"
-              style={{
-                color: P.mist,
-                border: `1px solid rgba(118, 228, 247, 0.45)`,
-                background: "rgba(10, 45, 61, 0.55)",
-                boxShadow: `0 0 14px rgba(118, 228, 247, 0.18), inset 0 0 10px rgba(118, 228, 247, 0.06)`,
-              }}
+              className="nav-text-link p-1"
+              style={{ color: P.mist, background: "transparent", border: "none" }}
               data-testid="header-search"
             >
-              <Search className="w-4 h-4" />
+              <Search className="w-4 h-4" strokeWidth={1.5} />
             </button>
             <button
               onClick={goToApp}
@@ -441,11 +451,12 @@ export default function LandingPage() {
           HERO — floating isolated brain over the fixed cloud canvas,
           followed by wordmark, tagline, body copy and CTAs.
           ============================================================ */}
-      {/* Top padding is intentionally generous so the PSYCHPRO wordmark
-          drops down into the cloud composition, leaving the brain in the
-          fixed background visible centered above it. The fixed canvas
-          fills the viewport — there is NO gap above the brain. */}
-      <section className="relative flex flex-col items-center justify-center pt-20 md:pt-24 lg:pt-28 pb-20 md:pb-28">
+      {/* The brain image (z:-55, ~95vh tall, object-fit:cover) sits at the
+          top of the canvas. Hero text content uses a generous top padding
+          so the wordmark + tagline + CTAs all sit BELOW the brain, not
+          overlaid on it. Bottom padding tightened so the feature cards
+          and Browse Topics grid pull up into the first screen. */}
+      <section className="relative flex flex-col items-center justify-center pt-[58vh] sm:pt-[60vh] md:pt-[62vh] pb-8 md:pb-10">
         <div className="max-w-5xl mx-auto px-6 lg:px-10 text-center relative z-10">
           {/* Wordmark — Proxima Nova first (for users who have it locally
               via Adobe Creative Cloud), then a carefully chosen free
@@ -457,46 +468,46 @@ export default function LandingPage() {
               Optical tweaks below (font-stretch, optical-sizing) help
               align the substitute fonts to Proxima Nova's feel. */}
           <h1
-            className="leading-none relative mt-2"
+            className="leading-none relative"
             style={{
-              ...TRACK_HERO,
               fontFamily:
                 '"Proxima Nova", "proxima-nova", "Mukta", "Sofia Sans", "Montserrat", "Inter", system-ui, sans-serif',
-              fontWeight: 300,
-              fontSize: "clamp(44px, 7.5vw, 88px)",
+              fontWeight: 200,
+              fontSize: "clamp(40px, 6.8vw, 78px)",
+              letterSpacing: "0.35em",
               fontStretch: "95%",
               fontFeatureSettings: '"kern" 1, "liga" 1, "calt" 1',
               fontOpticalSizing: "auto",
-              color: P.cloud,
-              textShadow: `0 0 24px rgba(118, 228, 247, 0.30)`,
+              color: "#e8fcff",
+              // Soft turquoise glow per the redesign brief.
+              textShadow: "0 0 30px rgba(58, 224, 236, 0.4)",
             }}
           >
             PSYCHPRO
           </h1>
 
-          {/* Tagline — original color preserved; only a soft dark
-              text-shadow added so it reads against the cloud tile. */}
+          {/* Tagline — directly beneath the wordmark, wider tracking
+              and lower opacity (~0.7) per the redesign brief. */}
           <p
-            className="mt-4 text-sm md:text-base"
+            className="mt-3 text-xs md:text-sm"
             style={{
-              ...TRACK_WIDE,
               fontFamily: 'var(--app-font-sans), "Outfit", "Inter", system-ui, sans-serif',
               fontWeight: 200,
-              color: P.mist,
-              textShadow: `0 1px 6px rgba(3, 21, 29, 0.6)`,
+              color: "#e8fcff",
+              opacity: 0.7,
+              letterSpacing: "0.5em",
             }}
           >
             LEARN. EXPAND. CONNECT.
           </p>
 
-          {/* Body copy — lightly tightened tone, thin face for cohesion. */}
+          {/* Body copy — tightened. */}
           <p
-            className="mt-8 mx-auto max-w-2xl text-base md:text-[17px] leading-relaxed"
+            className="mt-5 mx-auto max-w-2xl text-sm md:text-[15px] leading-relaxed"
             style={{
               fontFamily: 'var(--app-font-sans), "Outfit", "Inter", system-ui, sans-serif',
               fontWeight: 300,
-              color: P.inkSoft,
-              textShadow: `0 1px 6px rgba(3, 21, 29, 0.65)`,
+              color: "rgba(232, 252, 255, 0.72)",
             }}
           >
             Master clinical psychology. Deeper understanding for topics in
@@ -504,10 +515,8 @@ export default function LandingPage() {
             application.
           </p>
 
-          {/* CTA pair — equal compact pill buttons, matching the comp.
-              Both share the same height and font scale; only the primary
-              gets a slightly brighter border to indicate emphasis. */}
-          <div className="mt-10 flex flex-col sm:flex-row gap-4 items-center justify-center">
+          {/* CTA pair — tightened margin so the feature row pulls up. */}
+          <div className="mt-6 flex flex-col sm:flex-row gap-4 items-center justify-center">
             <button
               onClick={goToApp}
               className="landing-glass-btn group inline-flex items-center gap-3 px-8 h-12 rounded-full text-xs font-light"
@@ -556,7 +565,7 @@ export default function LandingPage() {
           comfortably inside max-w-7xl without truncation. */}
       <section
         id="features"
-        className="relative max-w-7xl mx-auto px-6 lg:px-10 pb-14"
+        className="relative max-w-7xl mx-auto px-6 lg:px-10 pb-8"
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {FEATURE_CARDS.map((card, i) => (
@@ -619,7 +628,7 @@ export default function LandingPage() {
           ============================================================ */}
       <section
         id="topics"
-        className="relative max-w-7xl mx-auto px-6 lg:px-10 pb-16"
+        className="relative max-w-7xl mx-auto px-6 lg:px-10 pb-10"
       >
         <div
           className="rounded-xl p-6 lg:p-8"
