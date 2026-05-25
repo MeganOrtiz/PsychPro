@@ -1,4 +1,4 @@
-import { useMemo, type ReactNode } from "react";
+import { useMemo, type ComponentType, type ReactNode } from "react";
 import { useLocation, useSearch } from "wouter";
 import {
   Search,
@@ -7,6 +7,12 @@ import {
   Brain,
   ChevronRight,
   LibraryBig,
+  ClipboardList,
+  Activity,
+  Atom,
+  MessagesSquare,
+  BarChart3,
+  Sparkles,
 } from "lucide-react";
 import { useGetTopics } from "@workspace/api-client-react";
 import { Input } from "@/components/ui/input";
@@ -38,14 +44,27 @@ export default function TopicsPage() {
   const { data: topics, isLoading } = useGetTopics();
   const allTopics: Topic[] = topics ?? [];
 
-  // Single flat A→Z list. The previous chip-rail category navigation and
-  // per-category sections were removed at the user's request — topics are
-  // now a single alphabetical library, with the user's category still
-  // shown as a small label on each card for context.
+  // Flat A→Z list — used directly when the user is searching.
   const sortedTopics = useMemo(
     () => [...allTopics].sort((a, b) => a.name.localeCompare(b.name)),
     [allTopics],
   );
+
+  // Category hub — group topics by category, sort categories alphabetically,
+  // and sort topics within each category alphabetically. Shown when the user
+  // is NOT searching.
+  const categoryGroups = useMemo(() => {
+    const byCategory = new Map<string, Topic[]>();
+    for (const t of sortedTopics) {
+      const key = t.category || "Other";
+      const list = byCategory.get(key) ?? [];
+      list.push(t);
+      byCategory.set(key, list);
+    }
+    return Array.from(byCategory.entries())
+      .map(([name, items]) => ({ name, items }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [sortedTopics]);
 
   const showSearchResults = search.trim().length > 0;
   const visibleTopics = useMemo(() => {
@@ -101,23 +120,140 @@ export default function TopicsPage() {
                 <Skeleton key={i} className="h-36 rounded-xl" />
               ))}
           </div>
-        ) : visibleTopics.length === 0 ? (
-          <div className="text-center py-16">
-            <Brain className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
-            <p className="text-muted-foreground">No topics found</p>
-          </div>
+        ) : showSearchResults ? (
+          visibleTopics.length === 0 ? (
+            <div className="text-center py-16">
+              <Brain className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+              <p className="text-muted-foreground">No topics found</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {visibleTopics.map(topic => (
+                <TopicCard
+                  key={topic.id}
+                  topic={topic}
+                  onClick={() => navigate(`/topics/${topic.id}`)}
+                  showCategory
+                />
+              ))}
+            </div>
+          )
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {visibleTopics.map(topic => (
-              <TopicCard
-                key={topic.id}
-                topic={topic}
-                onClick={() => navigate(`/topics/${topic.id}`)}
-                showCategory
+            {categoryGroups.map(group => (
+              <CategoryCard
+                key={group.name}
+                name={group.name}
+                items={group.items}
+                onTopicClick={id => navigate(`/topics/${id}`)}
               />
             ))}
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+// =============================================================================
+// CategoryCard
+// -----------------------------------------------------------------------------
+// Resting state: cerulean line-art icon + category name + "N topics" count.
+// On hover or keyboard focus, an absolutely-positioned glass panel slides in
+// below the card showing the category's topics as a bulleted list. Each
+// bullet is a clickable button that routes to the topic detail page.
+// =============================================================================
+
+const CATEGORY_ICONS: Record<string, ComponentType<{ className?: string; style?: React.CSSProperties }>> = {
+  Assessment: ClipboardList,
+  Neuropsychology: Activity,
+  Neuroscience: Atom,
+  Psychology: Brain,
+  Psychotherapy: MessagesSquare,
+  "Research Methods": BarChart3,
+  "Special Topics": Sparkles,
+};
+
+interface CategoryCardProps {
+  name: string;
+  items: Topic[];
+  onTopicClick: (id: number) => void;
+}
+
+function CategoryCard({ name, items, onTopicClick }: CategoryCardProps) {
+  const Icon = CATEGORY_ICONS[name] ?? LibraryBig;
+  return (
+    <div
+      className="group relative"
+      data-testid={`category-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+    >
+      <div
+        className="bg-card border border-border rounded-xl p-5 cursor-default transition-all group-hover:border-primary/50 group-focus-within:border-primary/50 group-hover:-translate-y-0.5 group-hover:shadow-[0_10px_28px_-12px_rgba(118,228,247,0.45)]"
+      >
+        <div className="flex flex-col items-center text-center">
+          <div
+            aria-hidden
+            className="w-14 h-14 rounded-lg flex items-center justify-center border mb-3"
+            style={{
+              background:
+                "radial-gradient(circle at 50% 40%, rgba(58,224,236,0.18), rgba(10,45,61,0.65) 70%)",
+              borderColor: "rgba(118,228,247,0.32)",
+              boxShadow:
+                "inset 0 0 14px rgba(118,228,247,0.10), 0 0 18px -6px rgba(58,224,236,0.35)",
+            }}
+          >
+            <Icon
+              className="w-7 h-7"
+              style={{
+                color: STUDY_PALETTE.surf,
+                filter:
+                  "drop-shadow(0 0 3px rgba(118,228,247,0.65)) drop-shadow(0 0 9px rgba(58,224,236,0.45))",
+              }}
+            />
+          </div>
+          <h3 className="font-semibold text-foreground leading-tight">{name}</h3>
+          <p className="text-xs text-muted-foreground mt-1">
+            {items.length} {items.length === 1 ? "topic" : "topics"}
+          </p>
+        </div>
+      </div>
+
+      {/* Hover/focus reveal panel — bulleted alphabetical topic list. */}
+      <div
+        className="absolute left-0 right-0 top-full mt-2 z-30 opacity-0 pointer-events-none translate-y-1 transition-all duration-150 group-hover:opacity-100 group-hover:pointer-events-auto group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:pointer-events-auto group-focus-within:translate-y-0"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(8,32,42,0.92), rgba(6,28,38,0.96))",
+          border: "1px solid rgba(118,228,247,0.32)",
+          borderRadius: "12px",
+          backdropFilter: "blur(14px)",
+          WebkitBackdropFilter: "blur(14px)",
+          boxShadow:
+            "0 24px 60px -22px rgba(0,0,0,0.7), 0 0 24px rgba(118,228,247,0.18)",
+        }}
+        role="menu"
+        aria-label={`${name} topics`}
+      >
+        <ul className="py-2 max-h-80 overflow-y-auto">
+          {items.map(t => (
+            <li key={t.id}>
+              <button
+                type="button"
+                onClick={() => onTopicClick(t.id)}
+                className="w-full text-left px-4 py-1.5 text-[13px] text-foreground/85 hover:text-foreground hover:bg-primary/10 focus:outline-none focus-visible:bg-primary/10 transition-colors flex items-baseline gap-2"
+                role="menuitem"
+                data-testid={`category-topic-${t.id}`}
+              >
+                <span
+                  aria-hidden
+                  className="inline-block w-1.5 h-1.5 rounded-full mt-1.5 shrink-0"
+                  style={{ background: STUDY_PALETTE.surf, boxShadow: "0 0 6px rgba(118,228,247,0.7)" }}
+                />
+                <span className="leading-snug">{t.name}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
