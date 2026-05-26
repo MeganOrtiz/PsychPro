@@ -309,15 +309,25 @@
   position: fixed;
   inset: 0;
   z-index: -2;
+  /* Cinematic full-bleed brain-clouds backdrop. The image is portrait
+     (576×1024) so on landscape viewports the clouds fan out edge-to-edge
+     via background-size:cover while the brain stays centered. A subtle
+     radial darkening sits on top to keep page text readable without
+     killing the ethereal cyan glow. */
   background-image:
-    radial-gradient(ellipse 130% 115% at 50% 38%,
-      rgba(2, 13, 18, 0.55) 0%,
-      rgba(2, 13, 18, 0.78) 55%,
-      rgba(2, 13, 18, 0.95) 100%),
-    url("./assets/bg/smoke-full.png");
+    radial-gradient(ellipse 140% 120% at 50% 50%,
+      rgba(2, 13, 18, 0.10) 0%,
+      rgba(2, 13, 18, 0.35) 60%,
+      rgba(2, 13, 18, 0.70) 100%),
+    url("./assets/bg/brain-clouds.png");
+  /* Anchor the image to the bottom so on landscape viewports the lower
+     cloud bank fans out edge-to-edge while the brain in the upper third
+     of the source image is pushed above the fold. The foreground hero
+     element renders the brain reliably centered on every viewport. */
   background-size: cover, cover;
-  background-position: center, center;
+  background-position: center, center bottom;
   background-repeat: no-repeat, no-repeat;
+  background-attachment: fixed, fixed;
   background-color: #020d12;
   pointer-events: none;
 }

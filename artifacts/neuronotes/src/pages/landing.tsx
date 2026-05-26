@@ -15,7 +15,7 @@ import {
   Instagram,
   Youtube,
 } from "lucide-react";
-import brainSmoke from "@/assets/hero/brain-smoke.png";
+import brainSmoke from "@/assets/bg/brain-clouds.png";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 
 // =============================================================================
@@ -498,16 +498,17 @@ const styles = `
 }
 .landing-hero-brain {
   position: relative;
-  /* ~2× the previous size, spans the full hero width up to 1100px. */
-  width: min(1100px, 100vw);
-  height: clamp(440px, 62vh, 720px);
+  /* Portrait-shaped stage that matches the source image's native
+     aspect (576×1024 ≈ 9:16). The whole brain-clouds composition
+     renders cinematically with the brain centered in the upper
+     portion and cloud bank trailing below, exactly as in the source. */
+  width: clamp(360px, 56vw, 620px);
+  height: clamp(560px, 82vh, 980px);
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Pull the brain upward so it bleeds off the top of the page,
-     and tighten the gap to the wordmark below it. */
-  margin-top: clamp(-80px, -6vh, -32px);
-  margin-bottom: clamp(-72px, -5vh, -28px);
+  margin-top: clamp(-48px, -4vh, -16px);
+  margin-bottom: clamp(-180px, -16vh, -120px);
   opacity: 0;
   transform: translateY(12px);
   transition: opacity 1000ms cubic-bezier(0.16, 1, 0.3, 1), transform 1000ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -521,24 +522,25 @@ const styles = `
 .landing-hero-brain-img {
   width: 100%;
   height: 100%;
+  /* Show the WHOLE image at native aspect — brain centered upper,
+     clouds fanning out below, with all four edges feathered so the
+     composition dissolves into the surrounding page-bg clouds for
+     one continuous ethereal atmosphere with no visible seams. */
   object-fit: contain;
-  object-position: center top;
-  /* Loose radial mask — keeps the brain crisp at center and lets the
-     wispy cyan smoke from the PNG extend wide and fade smoothly into
-     the page bg on the left, right, and top/bottom edges with no hard
-     rectangular halo. Horizontal radius slightly wider than vertical
-     so the smoke reads as a wide atmospheric band. */
-  -webkit-mask-image: radial-gradient(ellipse 70% 78% at 50% 50%,
+  object-position: center center;
+  -webkit-mask-image: radial-gradient(ellipse 62% 78% at 50% 42%,
     rgba(0,0,0,1) 0%,
-    rgba(0,0,0,1) 35%,
-    rgba(0,0,0,0.85) 60%,
-    rgba(0,0,0,0.45) 82%,
+    rgba(0,0,0,1) 32%,
+    rgba(0,0,0,0.92) 55%,
+    rgba(0,0,0,0.55) 75%,
+    rgba(0,0,0,0.18) 90%,
     rgba(0,0,0,0) 100%);
-  mask-image: radial-gradient(ellipse 70% 78% at 50% 50%,
+  mask-image: radial-gradient(ellipse 62% 78% at 50% 42%,
     rgba(0,0,0,1) 0%,
-    rgba(0,0,0,1) 35%,
-    rgba(0,0,0,0.85) 60%,
-    rgba(0,0,0,0.45) 82%,
+    rgba(0,0,0,1) 32%,
+    rgba(0,0,0,0.92) 55%,
+    rgba(0,0,0,0.55) 75%,
+    rgba(0,0,0,0.18) 90%,
     rgba(0,0,0,0) 100%);
   filter:
     drop-shadow(0 0 32px ${C.cyan}55)
