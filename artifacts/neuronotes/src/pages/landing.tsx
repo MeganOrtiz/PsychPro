@@ -35,44 +35,48 @@ import { STUDY_PALETTE as P } from "@/lib/study-theme";
 // reads, and the surrounding atmosphere comes from the page background.
 // =============================================================================
 
-const FEATURES_TOP = [
+const DISSERTATION_TOPIC =
+  "SOCIAL COGNITION IN CHILDREN WITH AUTISM SPECTRUM DISORDER: EXPLORING CORRELATES BETWEEN OBJECTIVE NEUROPSYCHOLOGICAL MEASURES AND PARENT REPORTS";
+
+// All five feature cards render in one row, matching the reference comp.
+// Each gets its own subtle accent hue so the row reads as a spectrum
+// rather than five identical tiles — but every accent stays inside the
+// brand's cool cyan/teal/mint family.
+const FEATURES = [
   {
     icon: Layers,
     title: "Flashcards / Study Guides / Quizzes / Exams",
     body: "Reinforce your learning with interactive study tools.",
+    accent: "#76E4F7", // surf — bright cyan
   },
   {
     icon: Brain,
     title: "Evidence-Based Learning Tools",
     body:
       "Utilize specific tools for spaced repetition, interleaved learning and active recall.",
+    accent: "#5EB0C8", // teal
   },
   {
     icon: FileText,
     title: "Create Learning Resources From Your Own Material",
     body:
       "Upload, organize, and transform your material into smart resources.",
+    accent: "#A7F3FF", // mist — icy
   },
-] as const;
-
-const DISSERTATION_TOPIC =
-  "SOCIAL COGNITION IN CHILDREN WITH AUTISM SPECTRUM DISORDER: EXPLORING CORRELATES BETWEEN OBJECTIVE NEUROPSYCHOLOGICAL MEASURES AND PARENT REPORTS";
-
-const FEATURES_BOTTOM = [
   {
     icon: Users,
     title: "Connect With Others",
     body: "Collaborate, share insights, and grow together.",
-    portrait: undefined as string | undefined,
-    dissertationTopic: undefined as string | undefined,
+    accent: "#7DD8C2", // mint
   },
   {
     icon: Award,
     title: "PsychPro Spotlight",
     body:
       "Submit your dissertation, research, presentations for opportunities to be featured in the PsychPro Spotlight.",
-    portrait: spotlightPortrait as string | undefined,
-    dissertationTopic: DISSERTATION_TOPIC as string | undefined,
+    accent: "#9AB8FF", // periwinkle highlight
+    portrait: spotlightPortrait,
+    dissertationTopic: DISSERTATION_TOPIC,
   },
 ] as const;
 
@@ -227,53 +231,45 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ============== FEATURES (3 above / 2 below) ============== */}
+        {/* ============== FEATURES (single 5-card row) ============== */}
         <section id="features" className="landing-features">
-          <div className="landing-features-row landing-features-row--three">
-            {FEATURES_TOP.map(({ icon: Icon, title, body }) => (
-              <article
-                key={title}
-                className="landing-feature-card"
-                data-testid={`feature-${title.split(" ")[0].toLowerCase()}`}
-              >
-                <div className="landing-feature-icon-wrap">
-                  <Icon aria-hidden />
-                </div>
-                <h3 className="landing-feature-title">{title.toUpperCase()}</h3>
-                <p className="landing-feature-body">{body}</p>
-              </article>
-            ))}
-          </div>
-          <div className="landing-features-row landing-features-row--two">
-            {FEATURES_BOTTOM.map(({ icon: Icon, title, body, portrait, dissertationTopic }) => (
-              <article
-                key={title}
-                className={`landing-feature-card${portrait ? " landing-feature-card--spotlight" : ""}`}
-                data-testid={`feature-${title.split(" ")[0].toLowerCase()}`}
-              >
-                {portrait ? (
-                  <div className="landing-spotlight-portrait">
-                    <img src={portrait} alt="Featured PsychPro Spotlight researcher" />
-                  </div>
-                ) : (
-                  <div className="landing-feature-icon-wrap">
-                    <Icon aria-hidden />
-                  </div>
-                )}
-                <h3 className="landing-feature-title">{title.toUpperCase()}</h3>
-                <p className="landing-feature-body">{body}</p>
-                {dissertationTopic && (
-                  <div className="landing-spotlight-dissertation">
-                    <p className="landing-spotlight-dissertation-label">
-                      DISSERTATION TOPIC
-                    </p>
-                    <p className="landing-spotlight-dissertation-text">
-                      {dissertationTopic}
-                    </p>
-                  </div>
-                )}
-              </article>
-            ))}
+          <div className="landing-features-row">
+            {FEATURES.map((f) => {
+              const Icon = f.icon;
+              const portrait = "portrait" in f ? f.portrait : undefined;
+              const dissertationTopic =
+                "dissertationTopic" in f ? f.dissertationTopic : undefined;
+              return (
+                <article
+                  key={f.title}
+                  className={`landing-feature-card${portrait ? " landing-feature-card--spotlight" : ""}`}
+                  style={{ ["--accent" as any]: f.accent }}
+                  data-testid={`feature-${f.title.split(" ")[0].toLowerCase()}`}
+                >
+                  {portrait ? (
+                    <div className="landing-spotlight-portrait">
+                      <img src={portrait} alt="Featured PsychPro Spotlight researcher" />
+                    </div>
+                  ) : (
+                    <div className="landing-feature-icon-wrap">
+                      <Icon aria-hidden />
+                    </div>
+                  )}
+                  <h3 className="landing-feature-title">{f.title.toUpperCase()}</h3>
+                  <p className="landing-feature-body">{f.body}</p>
+                  {dissertationTopic && (
+                    <div className="landing-spotlight-dissertation">
+                      <p className="landing-spotlight-dissertation-label">
+                        DISSERTATION TOPIC
+                      </p>
+                      <p className="landing-spotlight-dissertation-text">
+                        {dissertationTopic}
+                      </p>
+                    </div>
+                  )}
+                </article>
+              );
+            })}
           </div>
         </section>
 
@@ -660,34 +656,29 @@ const styles = `
 .landing-features-row {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 16px;
-}
-.landing-features-row + .landing-features-row {
-  margin-top: 16px;
+  gap: 14px;
+  align-items: stretch;
 }
 @media (min-width: 640px) {
-  .landing-features-row--three { grid-template-columns: repeat(2, 1fr); }
-  .landing-features-row--two { grid-template-columns: repeat(2, 1fr); }
+  .landing-features-row { grid-template-columns: repeat(2, 1fr); }
 }
-@media (min-width: 980px) {
-  .landing-features-row--three { grid-template-columns: repeat(3, 1fr); }
-  /* 2-card row sits centered under the 3-card row above it. */
-  .landing-features-row--two {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    max-width: calc((1320px - 64px) * 2 / 3 + 16px);
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
-  }
+@media (min-width: 900px) {
+  .landing-features-row { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 1024px) {
+  /* Single 5-card row at standard laptop widths and up, matching the
+     reference comp. Below this we fall back to 3-then-2 wrapping. */
+  .landing-features-row { grid-template-columns: repeat(5, 1fr); }
 }
 
 .landing-feature-card {
+  --accent: ${C.cyan};
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 26px 22px 26px;
+  padding: 24px 18px 22px;
   background: linear-gradient(180deg, ${C.bgPanel}, ${C.bgPanelStrong});
   border: 1px solid ${C.hairline};
   border-radius: 14px;
@@ -696,47 +687,49 @@ const styles = `
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.02) inset,
     0 18px 36px -22px rgba(0, 0, 0, 0.6),
-    0 0 18px ${C.cyan}10;
+    0 0 18px color-mix(in srgb, var(--accent) 12%, transparent);
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
-  min-height: 220px;
+  min-height: 260px;
 }
 .landing-feature-card:hover {
-  transform: translateY(-2px);
-  border-color: ${C.hairlineStrong};
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
   box-shadow:
-    0 0 0 1px ${C.cyan}22 inset,
-    0 24px 44px -22px rgba(0, 0, 0, 0.7),
-    0 0 28px ${C.cyan}33;
+    0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent) inset,
+    0 26px 48px -22px rgba(0, 0, 0, 0.7),
+    0 0 32px color-mix(in srgb, var(--accent) 40%, transparent);
 }
 .landing-feature-icon-wrap {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: ${C.cyan}10;
-  border: 1px solid ${C.hairlineStrong};
-  color: ${C.cyan};
-  margin-bottom: 16px;
-  box-shadow: 0 0 14px ${C.cyan}33;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  color: var(--accent);
+  margin-bottom: 18px;
+  box-shadow:
+    0 0 18px color-mix(in srgb, var(--accent) 35%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--accent) 14%, transparent);
 }
-.landing-feature-icon-wrap svg { width: 18px; height: 18px; }
+.landing-feature-icon-wrap svg { width: 20px; height: 20px; }
 .landing-feature-title {
-  margin: 0 0 12px;
-  font-size: 12.5px;
+  margin: 0 0 10px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.18em;
-  line-height: 1.4;
+  line-height: 1.45;
   color: #ffffff;
   text-shadow: 0 1px 10px rgba(2, 13, 18, 0.55);
 }
 .landing-feature-body {
   margin: 0;
-  font-size: 13.5px;
+  font-size: 12.5px;
   line-height: 1.6;
   font-weight: 400;
-  color: rgba(225, 244, 250, 0.88);
+  color: rgba(225, 244, 250, 0.85);
 }
 
 /* PsychPro Spotlight — landing variant. Card grows to accommodate the
@@ -748,21 +741,21 @@ const styles = `
 }
 .landing-spotlight-portrait {
   position: relative;
-  width: 84px;
-  height: 84px;
+  width: 64px;
+  height: 64px;
   border-radius: 999px;
   overflow: hidden;
   margin-bottom: 16px;
   box-shadow:
-    0 0 0 2px ${C.cyan}cc,
-    0 0 24px 4px ${C.cyan}55,
+    0 0 0 2px var(--accent),
+    0 0 22px 4px color-mix(in srgb, var(--accent) 55%, transparent),
     inset 0 0 0 1px rgba(255, 255, 255, 0.18);
 }
 .landing-spotlight-portrait::before {
   content: "";
   position: absolute;
   inset: -40%;
-  background: radial-gradient(circle, ${C.cyan}33 0%, transparent 65%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 30%, transparent) 0%, transparent 65%);
   filter: blur(12px);
   pointer-events: none;
   z-index: -1;
@@ -774,25 +767,25 @@ const styles = `
   display: block;
 }
 .landing-spotlight-dissertation {
-  margin-top: 16px;
-  padding-top: 14px;
+  margin-top: 14px;
+  padding-top: 12px;
   width: 100%;
-  border-top: 1px solid ${C.hairline};
+  border-top: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
 }
 .landing-spotlight-dissertation-label {
   margin: 0 0 6px;
-  font-size: 10px;
+  font-size: 9.5px;
   font-weight: 700;
   letter-spacing: 0.28em;
-  color: ${C.cyan};
-  text-shadow: 0 0 12px ${C.cyan}55;
+  color: var(--accent);
+  text-shadow: 0 0 12px color-mix(in srgb, var(--accent) 55%, transparent);
 }
 .landing-spotlight-dissertation-text {
   margin: 0;
-  font-size: 11.5px;
+  font-size: 10.5px;
   line-height: 1.55;
   font-weight: 500;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   color: rgba(225, 244, 250, 0.92);
   text-shadow: 0 1px 8px rgba(2, 13, 18, 0.5);
 }
