@@ -255,7 +255,7 @@ export default function DashboardPage() {
               size="sm"
               onClick={() => navigate("/subscription")}
               data-testid="button-upgrade-banner"
-              className="glass-button rounded-md px-4"
+              className="rounded-md px-4"
             >
               Upgrade
             </Button>
@@ -289,7 +289,7 @@ export default function DashboardPage() {
               variant="outline"
               onClick={() => navigate("/subscription")}
               data-testid="button-upgrade-approaching"
-              className="glass-button rounded-md px-4 border-0"
+              className="rounded-md px-4"
             >
               Upgrade
             </Button>
@@ -331,7 +331,7 @@ export default function DashboardPage() {
                   <Button
                     onClick={() => navigate(`/topics/${continueTopic.topicId}`)}
                     data-testid="button-continue-studying"
-                    className="glass-button rounded-md px-5"
+                    className="rounded-md px-5"
                   >
                     Continue Studying
                     <ArrowUpRight className="w-4 h-4 ml-1" />
@@ -346,7 +346,7 @@ export default function DashboardPage() {
                   <Button
                     onClick={() => navigate("/topics")}
                     data-testid="button-begin-journey"
-                    className="glass-button rounded-md px-5"
+                    className="rounded-md px-5"
                   >
                     Browse Topics
                     <ArrowUpRight className="w-4 h-4 ml-1" />
@@ -429,13 +429,15 @@ export default function DashboardPage() {
                     <Trophy className="w-4 h-4" style={{ color: PALETTE.tealDeep }} />
                     <h2 className="font-semibold" style={{ color: PALETTE.mist }}>Leaderboard</h2>
                   </div>
-                  <button
+                  <Button
+                    size="sm"
+                    variant="outline"
                     onClick={() => navigate("/leaderboard")}
-                    className="glass-button text-xs rounded-full px-3 h-7"
+                    className="text-xs rounded-full px-3 h-7"
                     data-testid="button-view-leaderboard"
                   >
                     View all
-                  </button>
+                  </Button>
                 </div>
                 {!leaderboard ? (
                   <div className="space-y-2">

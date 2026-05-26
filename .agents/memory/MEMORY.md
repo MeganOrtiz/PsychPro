@@ -1,0 +1,2 @@
+- [Don't claim what you haven't verified](claims-discipline.md) — never state work is done/sitewide/fixed without observing the result; say "I changed X, expected Y, haven't verified" instead.
+- [PsychPro duplicate glass-button systems](psychpro-glass-buttons.md) — landing/Button use `.btn-glass-strong`; dashboard hardcoded older `.glass-button`. Pick one source of truth before claiming sitewide.
