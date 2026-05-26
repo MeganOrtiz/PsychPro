@@ -15,7 +15,7 @@ import {
   Instagram,
   Youtube,
 } from "lucide-react";
-import brainSmoke from "@/assets/bg/brain-clouds.png";
+import brainSmoke from "@/assets/hero/brain.png";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 
 // =============================================================================

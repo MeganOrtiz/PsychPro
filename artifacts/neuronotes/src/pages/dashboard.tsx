@@ -35,7 +35,7 @@ import {
   ArrowUpRight,
   Share2,
 } from "lucide-react";
-import smokeBg from "@/assets/bg/smoke-full.png";
+import smokeBg from "@/assets/bg/brain-clouds.png";
 import { useGetDashboardSummary, useGetTopics, useGetLeaderboard } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
