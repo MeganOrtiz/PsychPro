@@ -34,14 +34,6 @@ import { STUDY_PALETTE as P } from "@/lib/study-theme";
 // reads, and the surrounding atmosphere comes from the page background.
 // =============================================================================
 
-const NAV_ITEMS = [
-  { label: "Home", href: "#home", active: true },
-  { label: "Courses", href: "#features" },
-  { label: "Resources", href: "#topics" },
-  { label: "Community", href: "#topics" },
-  { label: "About", href: "#features" },
-];
-
 const FEATURES_TOP = [
   {
     icon: Layers,
@@ -159,18 +151,6 @@ export default function LandingPage() {
               />
               <span className="landing-brand-mark">PSYCHPRO</span>
             </a>
-            <nav className="landing-nav-links" aria-label="Primary">
-              {NAV_ITEMS.map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className={`landing-nav-link${item.active ? " is-active" : ""}`}
-                  data-testid={`nav-${item.label.toLowerCase()}`}
-                >
-                  {item.label.toUpperCase()}
-                </a>
-              ))}
-            </nav>
             <div className="landing-nav-actions">
               <button
                 type="button"
