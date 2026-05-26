@@ -216,9 +216,8 @@ export default function DashboardPage() {
     >
       <div className="max-w-[1400px] mx-auto p-4 md:p-6 lg:p-8">
         {/* Top header — notifications bell + canonical BrandBanner.
-            Tagline is overridden to match the reference comp: the
-            authenticated dashboard reads "advance your mind. elevate care."
-            while the landing wordmark keeps "learn. expand. connect." */}
+            Uses the BrandBanner's canonical "learn. expand. connect."
+            tagline so the dashboard and the landing hero stay in sync. */}
         <header className="relative mb-8 py-4">
           <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-3">
             <NotificationsBell />
@@ -226,7 +225,6 @@ export default function DashboardPage() {
           <BrandBanner
             size="lg"
             greeting={greetingText}
-            tagline="advance your mind. elevate care."
             className="mt-6 mb-8"
           />
         </header>
