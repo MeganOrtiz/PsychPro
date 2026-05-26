@@ -280,7 +280,11 @@
 .study-page-bg,
 .study-page-aurora {
   position: relative;
-  background-color: #03151D;
+  /* Transparent — the cinematic brain-clouds image lives on the ::before
+     pseudo-element (z-index: -2). A solid background-color here would
+     overpaint that image and leave the page dark. The page-bg color
+     fallback is on the ::before itself. */
+  background-color: transparent;
 }
 
 /* ============================================================
@@ -314,18 +318,22 @@
      via background-size:cover while the brain stays centered. A subtle
      radial darkening sits on top to keep page text readable without
      killing the ethereal cyan glow. */
+  /* Very light vignette only — let the cyan clouds glow through across
+     the whole viewport. Edges get a slight darken to keep CTA text
+     readable; the center is nearly transparent. */
   background-image:
-    radial-gradient(ellipse 140% 120% at 50% 50%,
-      rgba(2, 13, 18, 0.10) 0%,
-      rgba(2, 13, 18, 0.35) 60%,
-      rgba(2, 13, 18, 0.70) 100%),
+    radial-gradient(ellipse 150% 130% at 50% 55%,
+      rgba(2, 13, 18, 0.00) 0%,
+      rgba(2, 13, 18, 0.10) 55%,
+      rgba(2, 13, 18, 0.40) 100%),
     url("./assets/bg/brain-clouds.png");
-  /* Anchor the image to the bottom so on landscape viewports the lower
-     cloud bank fans out edge-to-edge while the brain in the upper third
-     of the source image is pushed above the fold. The foreground hero
-     element renders the brain reliably centered on every viewport. */
+  /* Anchor center-center so the densest atmospheric cloud band — the
+     middle of the source image, right around the brain — fills the
+     viewport edge-to-edge on landscape. Top of the source (sparse
+     upper clouds) and very bottom (sparse trailing clouds) get cropped
+     off; the rich cyan smoke fills every pixel. */
   background-size: cover, cover;
-  background-position: center, center bottom;
+  background-position: center, center center;
   background-repeat: no-repeat, no-repeat;
   background-attachment: fixed, fixed;
   background-color: #020d12;
