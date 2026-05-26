@@ -66,6 +66,7 @@ type SerializedSubmission = {
     displayName: string;
     role: string | null;
     institution: string | null;
+    profilePhotoUrl: string | null;
     isAnonymous: boolean;
   };
 };
@@ -84,7 +85,7 @@ function parseTags(raw: string | null | undefined): string[] {
 
 function serialize(
   row: FeaturedWorkRow,
-  submitterProfile: { displayName: string | null; role: string | null; institution: string | null; prefShowOnFeaturedWork: boolean } | null,
+  submitterProfile: { displayName: string | null; role: string | null; institution: string | null; profilePhotoUrl: string | null; prefShowOnFeaturedWork: boolean } | null,
   viewerIsOwnerOrAdmin: boolean,
 ): SerializedSubmission {
   const showProfile = submitterProfile?.prefShowOnFeaturedWork ?? true;
@@ -119,13 +120,14 @@ function serialize(
         : (submitterProfile?.displayName ?? row.displayName),
       role: hideIdentity ? null : submitterProfile?.role ?? null,
       institution: hideIdentity ? null : submitterProfile?.institution ?? null,
+      profilePhotoUrl: hideIdentity ? null : submitterProfile?.profilePhotoUrl ?? null,
       isAnonymous: hideIdentity,
     },
   };
 }
 
 async function loadSubmitterProfiles(userIds: string[]) {
-  if (userIds.length === 0) return new Map<string, { displayName: string | null; role: string | null; institution: string | null; prefShowOnFeaturedWork: boolean }>();
+  if (userIds.length === 0) return new Map<string, { displayName: string | null; role: string | null; institution: string | null; profilePhotoUrl: string | null; prefShowOnFeaturedWork: boolean }>();
   const unique = Array.from(new Set(userIds));
   const rows = await db
     .select({
@@ -133,6 +135,7 @@ async function loadSubmitterProfiles(userIds: string[]) {
       displayName: userProfilesTable.displayName,
       currentRole: userProfilesTable.currentRole,
       institution: userProfilesTable.institution,
+      profilePhotoUrl: userProfilesTable.profilePhotoUrl,
       prefShowOnFeaturedWork: userProfilesTable.prefShowOnFeaturedWork,
     })
     .from(userProfilesTable)
@@ -141,12 +144,13 @@ async function loadSubmitterProfiles(userIds: string[]) {
         ? eq(userProfilesTable.userId, unique[0])
         : sql`${userProfilesTable.userId} = ANY(${unique})`,
     );
-  const map = new Map<string, { displayName: string | null; role: string | null; institution: string | null; prefShowOnFeaturedWork: boolean }>();
+  const map = new Map<string, { displayName: string | null; role: string | null; institution: string | null; profilePhotoUrl: string | null; prefShowOnFeaturedWork: boolean }>();
   for (const r of rows) {
     map.set(r.userId, {
       displayName: r.displayName,
       role: r.currentRole,
       institution: r.institution,
+      profilePhotoUrl: r.profilePhotoUrl,
       prefShowOnFeaturedWork: r.prefShowOnFeaturedWork,
     });
   }

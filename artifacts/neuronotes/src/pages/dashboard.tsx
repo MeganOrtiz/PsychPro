@@ -540,8 +540,23 @@ type SpotlightSubmission = {
   workType: string;
   title: string;
   abstract: string;
-  submitter: { displayName: string; role: string | null; institution: string | null };
+  submitter: {
+    displayName: string;
+    role: string | null;
+    institution: string | null;
+    profilePhotoUrl: string | null;
+  };
 };
+
+// Mirror of profilePhotoSrc in app-layout: object-storage paths (`/objects/...`)
+// must be prefixed with `/api/storage` so the dev/prod proxy routes them to
+// the api-server's storage endpoint. Absolute http(s) URLs pass through.
+function resolveSpotlightPhoto(path: string | null | undefined): string | undefined {
+  if (!path) return undefined;
+  if (path.startsWith("http")) return path;
+  if (path.startsWith("/objects/")) return `/api/storage${path}`;
+  return path;
+}
 
 function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
   const [spot, setSpot] = useState<SpotlightSubmission | null>(null);
@@ -569,7 +584,14 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
   const featuredInstitution = spot
     ? (spot.submitter.institution ?? "")
     : "Clinical Neuropsychology";
-  const avatarImage = spot ? undefined : viewerAvatar;
+  // When a spotlight submission exists, prefer the featured submitter's
+  // uploaded profile photo. Fall back to the signed-in viewer's avatar only
+  // when no submission has been chosen yet (so the card never feels empty).
+  // When the featured user hasn't uploaded a photo, drop through to the
+  // initial-letter fallback rather than mis-attributing the viewer's avatar.
+  const avatarImage = spot
+    ? resolveSpotlightPhoto(spot.submitter.profilePhotoUrl)
+    : viewerAvatar;
 
   return (
     <StudySurface tone="dark" innerClassName="relative overflow-hidden p-7 text-white">
