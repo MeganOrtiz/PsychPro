@@ -625,16 +625,19 @@ const styles = `
   flex-shrink: 0;
 }
 .landing-cta-ghost {
-  background: transparent;
+  background: ${C.cyan}1f;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1.5px solid ${C.cyan}cc;
-  color: ${C.cyan};
-  box-shadow: 0 0 14px ${C.cyan}33, 0 0 0 1px ${C.cyan}1a inset;
+  color: #ffffff;
+  box-shadow: 0 0 22px ${C.cyan}55, 0 0 0 1px ${C.cyan}33 inset,
+    0 8px 24px -8px ${C.cyan}66;
 }
 .landing-cta-ghost:hover {
-  background: ${C.cyan}14;
-  color: #fff;
+  background: ${C.cyan}33;
   border-color: ${C.cyan};
-  box-shadow: 0 0 24px ${C.cyan}66, 0 0 0 1px ${C.cyan}33 inset;
+  box-shadow: 0 0 32px ${C.cyan}88, 0 0 0 1px ${C.cyan}55 inset,
+    0 12px 32px -6px ${C.cyan}88;
   transform: translateY(-1px);
 }
 

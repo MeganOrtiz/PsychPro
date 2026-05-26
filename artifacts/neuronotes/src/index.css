@@ -275,6 +275,53 @@
   --accent: 188 90% 72%;             /* #76E4F7 surf (bright-cyan) */
   --accent-foreground: 200 75% 9%;
   --ring: 188 90% 72%;
+  /* Shared cyan glow token for glass buttons + nav items so every
+     interactive surface reads from the same accent. */
+  --btn-glow: 188 90% 72%;
+}
+
+/* ============================================================
+   GLASS + GLOW BUTTON UTILITIES
+   ============================================================
+   Applied via the shadcn Button component variants below and via
+   the .btn-glass / .btn-glass-strong utility classes for the raw
+   <button> elements scattered across pages. Mirrors the sidebar
+   nav-item treatment (translucent fill, subtle border, soft cyan
+   glow that intensifies on hover/active).
+   ============================================================ */
+.btn-glass,
+.btn-glass-strong {
+  position: relative;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: background-color 160ms ease, border-color 160ms ease,
+    box-shadow 220ms ease, transform 120ms ease;
+}
+.btn-glass {
+  background-color: hsl(var(--btn-glow) / 0.05);
+  border: 1px solid hsl(var(--btn-glow) / 0.18);
+  box-shadow: 0 6px 18px -12px hsl(var(--btn-glow) / 0.35);
+}
+.btn-glass:hover {
+  background-color: hsl(var(--btn-glow) / 0.10);
+  border-color: hsl(var(--btn-glow) / 0.45);
+  box-shadow: 0 10px 28px -10px hsl(var(--btn-glow) / 0.55);
+}
+.btn-glass-strong {
+  background-color: hsl(var(--btn-glow) / 0.14);
+  border: 1px solid hsl(var(--btn-glow) / 0.55);
+  box-shadow: 0 10px 28px -10px hsl(var(--btn-glow) / 0.55);
+  color: #ffffff;
+}
+.btn-glass-strong:hover {
+  background-color: hsl(var(--btn-glow) / 0.22);
+  border-color: hsl(var(--btn-glow) / 0.75);
+  box-shadow: 0 14px 36px -8px hsl(var(--btn-glow) / 0.7);
+}
+.btn-glass:disabled,
+.btn-glass-strong:disabled {
+  opacity: 0.55;
+  box-shadow: none;
 }
 
 .study-page-bg,
