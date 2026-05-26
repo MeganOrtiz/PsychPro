@@ -250,7 +250,10 @@ router.post(
         const ALLOWED_FLASHCARDS = [15, 25, 40];
         const ALLOWED_QUIZ = [10, 15, 25];
         const ALLOWED_EXAM = [15, 25, 50];
-        const ALLOWED_CLOZE = [0, 10, 20];
+        // Must mirror CLOZE_OPTIONS in artifacts/neuronotes/src/pages/my-decks-new.tsx.
+        // If they drift, the UI silently downshifts the user's pick to the
+        // default (e.g. user selects 30 cloze items but backend produces 10).
+        const ALLOWED_CLOZE = [10, 20, 30];
         const parseChoice = (raw: unknown, allowed: number[], fallback: number): number => {
           const n = parseInt(String(raw ?? ""), 10);
           return allowed.includes(n) ? n : fallback;

@@ -96,18 +96,23 @@ function QuizView({ questions, isExam, examLength, timed }: { questions: QuizQue
   useEffect(() => {
     if (!isExam || !timed || submitted) return;
     timerRef.current = setInterval(() => {
-      setSecondsLeft((s) => {
-        if (s <= 1) {
-          if (timerRef.current) clearInterval(timerRef.current);
-          setSubmitted(true);
-          setIndex(examQuestions.length);
-          return 0;
-        }
-        return s - 1;
-      });
+      // Updater must be pure — React invokes it twice in dev StrictMode for
+      // purity checks, so any side effects inside (setSubmitted, setIndex)
+      // would double-fire. Just decrement here; the auto-submit effect below
+      // observes secondsLeft hitting zero and triggers the end-of-exam state.
+      setSecondsLeft((s) => (s <= 0 ? 0 : s - 1));
     }, 1000);
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [isExam, timed, submitted, examQuestions.length]);
+  }, [isExam, timed, submitted]);
+
+  // Auto-submit when the timer runs out. Kept separate from the tick effect so
+  // the state updater above can stay pure (see comment in tick effect).
+  useEffect(() => {
+    if (!isExam || !timed || submitted) return;
+    if (secondsLeft > 0) return;
+    setSubmitted(true);
+    setIndex(examQuestions.length);
+  }, [isExam, timed, submitted, secondsLeft, examQuestions.length]);
 
   function reset() {
     setAnswers({}); setSubmitted(false); setIndex(0);

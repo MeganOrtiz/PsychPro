@@ -110,9 +110,14 @@ export default function MyDecksPage() {
         </div>
       ) : (
         <div className="space-y-3">
-          {decks.map((deck) => (
-            <Link key={deck.id} href={deck.status === "ready" ? `/my-decks/${deck.id}` : "#"}>
-              <div className={`bg-card border border-border rounded-xl p-5 flex items-center justify-between gap-3 transition-all ${deck.status === "ready" ? "hover:border-primary/40 hover:shadow-sm cursor-pointer" : "opacity-70"}`}>
+          {decks.map((deck) => {
+            // Only "ready" decks navigate. Wrapping a processing/error deck in
+            // <Link href="#"> previously made the entire row a focusable anchor
+            // that jumped to top-of-page on click — surprising + no feedback.
+            // Render as a non-interactive div in those states so the delete
+            // button stays clickable but the card itself doesn't navigate.
+            const cardBody = (
+              <div className={`bg-card border border-border rounded-xl p-5 flex items-center justify-between gap-3 transition-all ${deck.status === "ready" ? "hover:border-primary/40 hover:shadow-sm cursor-pointer" : "opacity-70 cursor-default"}`}>
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <p className="font-medium text-foreground truncate">{deck.title}</p>
@@ -138,8 +143,13 @@ export default function MyDecksPage() {
                   {deleting === deck.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
                 </button>
               </div>
-            </Link>
-          ))}
+            );
+            return deck.status === "ready" ? (
+              <Link key={deck.id} href={`/my-decks/${deck.id}`}>{cardBody}</Link>
+            ) : (
+              <div key={deck.id}>{cardBody}</div>
+            );
+          })}
         </div>
       )}
       </div>
