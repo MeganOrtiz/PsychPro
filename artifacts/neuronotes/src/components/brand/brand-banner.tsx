@@ -21,6 +21,7 @@ interface BrandBannerProps {
   size?: "lg" | "sm";
   showIcon?: boolean;
   greeting?: string;
+  tagline?: string;
   className?: string;
 }
 
@@ -28,6 +29,7 @@ export function BrandBanner({
   size = "lg",
   showIcon = true,
   greeting,
+  tagline = "learn. expand. connect.",
   className,
 }: BrandBannerProps) {
   const isLg = size === "lg";
@@ -70,7 +72,7 @@ export function BrandBanner({
         }}
         data-testid="brand-banner-tagline"
       >
-        learn. expand. connect.
+        {tagline}
       </p>
       {greeting !== undefined && (
         <p

@@ -1,0 +1,19 @@
+Redesign the dashboard page to exactly match the attached reference (@assets/Screenshot_2026-05-10_at_3.02.38_PM_1779754513306.png). Use the existing landing page's palette and typography system — same STUDY_PALETTE (P.surf cyan, P.cloud, P.mist, P.inkSoft), same Montserrat with 0.22em tracking on caps, same #04080c smoky teal background with the atmospheric brain-smoke fog overlay used on the landing hero. Do not introduce new colors or fonts.
+
+Overall layout (three-column, full-bleed, no app chrome above):
+
+Top center: PSYCHPRO wordmark, light weight, wide-tracked caps; tagline below in smaller tracked caps: ADVANCE YOUR MIND. ELEVATE CARE. Bell notification icon top-right.
+Left sidebar (~220px, dark glass column, full height): section group headers in tiny tracked caps with low-opacity ink (STUDY, TOOLKIT, COMMUNITY). Nav items as icon + label rows. Active item (Dashboard) gets a cyan-tinted background + right-chevron. Items:
+STUDY: Dashboard, Topics, Study Lab, Brain Lab, Progress, Resources
+TOOLKIT: My Tools, Standard Tools, Pro Tools — each with a small cyan PRO pill on the right
+COMMUNITY: (existing entries)
+Main column (center, flex-1): stacked glassmorphism cards with subtle cyan border (1px solid rgba(118,228,247,0.18)), translucent dark fill (rgba(8,18,26,0.55)), rounded ~14px:
+Begin Your Journey — rocket emoji + title, one-line description ("Pick a topic to start your first study session. We'll keep track of your progress from here."), and a pill CTA Browse Topics →.
+Recommended for You — title with Based on your goals and progress subtext, then a 2×2 grid of inner pill-cards: Psychopharmacology / Neurophysiology / Sensory Systems / Limbic System & Motivation. Each inner card: small left icon in a rounded cyan-tinted square, two lines (title + short tagline), right chevron.
+Bottom row, two cards side-by-side:
+Your Streak 🔥 — big number 1, label day streak, with a small inline area-chart sparkline on the right.
+Leaderboard — title + View all link top-right, then a single row: gold trophy 1, username Scholar 7135, You badge, and stat counters (0, 1 with flame).
+Right column (~280px, full-height card): a single tall Spotlight card with the same brain-smoke atmosphere baked into its background. Top: small star icon and Spotlight heading, with subtext Highlighting the next generation of clinicians and researchers. Center: circular profile photo. Below photo: Sarah K. (large), PsyD Candidate, Clinical Neuropsychology. Bottom: tiny tracked caps FEATURED WORK and an upload/share icon in the lower-right corner.
+Behavior: wire the sidebar nav to existing routes (/dashboard, /topics, /study-lab, /brain-lab, /progress, /resources, etc.). The Spotlight card should pull from the existing featured-work data (use the first/current featured work entry); fall back gracefully if none exists. Browse Topics CTA navigates to /topics. Recommended cards link to their respective topic detail routes. Streak number and leaderboard row read from existing progress / leaderboard data — don't hardcode.
+
+Match the reference pixel-for-pixel on: spacing rhythm, the soft cyan glow on active states, the muted ink hierarchy (titles brighter, body text in P.mist, meta in P.inkSoft), and the smoky background continuity across all three columns. Use real data; no placeholders.

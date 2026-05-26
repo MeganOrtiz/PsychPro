@@ -30,13 +30,13 @@ function navItemClass(isActive: boolean) {
 const workshopNav: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/topics", label: "Topics", icon: BookOpen },
+  { href: "/study-lab", label: "Study Lab", icon: Beaker },
+  { href: "/brain-lab", label: "Brain Lab", icon: Brain },
   { href: "/progress", label: "Progress", icon: Trophy },
   { href: "/resources", label: "Resources", icon: Library },
 ];
 
 const labNav: NavItem[] = [
-  { href: "/study-lab", label: "Study Lab", icon: Beaker },
-  { href: "/brain-lab", label: "Brain Lab", icon: Brain },
   { href: "/reflections", label: "Reflections", icon: Lightbulb },
 ];
 
