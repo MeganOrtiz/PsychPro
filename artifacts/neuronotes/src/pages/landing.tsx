@@ -16,6 +16,7 @@ import {
   Youtube,
 } from "lucide-react";
 import brainSmoke from "@/assets/hero/brain.png";
+import spotlightPortrait from "@/assets/spotlight/featured.png";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 
 // =============================================================================
@@ -54,17 +55,24 @@ const FEATURES_TOP = [
   },
 ] as const;
 
+const DISSERTATION_TOPIC =
+  "SOCIAL COGNITION IN CHILDREN WITH AUTISM SPECTRUM DISORDER: EXPLORING CORRELATES BETWEEN OBJECTIVE NEUROPSYCHOLOGICAL MEASURES AND PARENT REPORTS";
+
 const FEATURES_BOTTOM = [
   {
     icon: Users,
     title: "Connect With Others",
     body: "Collaborate, share insights, and grow together.",
+    portrait: undefined as string | undefined,
+    dissertationTopic: undefined as string | undefined,
   },
   {
     icon: Award,
     title: "PsychPro Spotlight",
     body:
       "Submit your dissertation, research, presentations for opportunities to be featured in the PsychPro Spotlight.",
+    portrait: spotlightPortrait as string | undefined,
+    dissertationTopic: DISSERTATION_TOPIC as string | undefined,
   },
 ] as const;
 
@@ -237,17 +245,33 @@ export default function LandingPage() {
             ))}
           </div>
           <div className="landing-features-row landing-features-row--two">
-            {FEATURES_BOTTOM.map(({ icon: Icon, title, body }) => (
+            {FEATURES_BOTTOM.map(({ icon: Icon, title, body, portrait, dissertationTopic }) => (
               <article
                 key={title}
-                className="landing-feature-card"
+                className={`landing-feature-card${portrait ? " landing-feature-card--spotlight" : ""}`}
                 data-testid={`feature-${title.split(" ")[0].toLowerCase()}`}
               >
-                <div className="landing-feature-icon-wrap">
-                  <Icon aria-hidden />
-                </div>
+                {portrait ? (
+                  <div className="landing-spotlight-portrait">
+                    <img src={portrait} alt="Featured PsychPro Spotlight researcher" />
+                  </div>
+                ) : (
+                  <div className="landing-feature-icon-wrap">
+                    <Icon aria-hidden />
+                  </div>
+                )}
                 <h3 className="landing-feature-title">{title.toUpperCase()}</h3>
                 <p className="landing-feature-body">{body}</p>
+                {dissertationTopic && (
+                  <div className="landing-spotlight-dissertation">
+                    <p className="landing-spotlight-dissertation-label">
+                      DISSERTATION TOPIC
+                    </p>
+                    <p className="landing-spotlight-dissertation-text">
+                      {dissertationTopic}
+                    </p>
+                  </div>
+                )}
               </article>
             ))}
           </div>
@@ -344,7 +368,10 @@ const styles = `
   min-height: 100vh;
   min-height: 100dvh;
   color: ${C.cyanSoft};
-  font-family: "Proxima Nova", "Inter", "Montserrat", system-ui, -apple-system, sans-serif;
+  /* Match the dashboard typography. The BrandBanner wordmark uses Outfit;
+     adopting it for the whole landing page unifies the type system across
+     the app. */
+  font-family: "Outfit", "Inter", system-ui, -apple-system, sans-serif;
   font-feature-settings: "ss01", "cv11";
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -577,11 +604,12 @@ const styles = `
 }
 .landing-blurb {
   margin: clamp(20px, 2.6vh, 32px) auto 0;
-  max-width: 620px;
-  font-size: clamp(15px, 1.2vw, 17px);
-  line-height: 1.65;
+  max-width: 640px;
+  font-size: clamp(16px, 1.25vw, 18px);
+  line-height: 1.7;
   font-weight: 400;
-  color: rgba(199, 230, 240, 0.78);
+  color: rgba(225, 244, 250, 0.92);
+  text-shadow: 0 1px 12px rgba(2, 13, 18, 0.55);
 }
 .landing-cta-row {
   display: flex;
@@ -695,18 +723,78 @@ const styles = `
 }
 .landing-feature-icon-wrap svg { width: 18px; height: 18px; }
 .landing-feature-title {
-  margin: 0 0 10px;
-  font-size: 11px;
+  margin: 0 0 12px;
+  font-size: 12.5px;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
   line-height: 1.4;
-  color: #fff;
+  color: #ffffff;
+  text-shadow: 0 1px 10px rgba(2, 13, 18, 0.55);
 }
 .landing-feature-body {
   margin: 0;
-  font-size: 12.5px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  font-weight: 400;
+  color: rgba(225, 244, 250, 0.88);
+}
+
+/* PsychPro Spotlight — landing variant. Card grows to accommodate the
+   featured portrait and the dissertation-topic block. The portrait uses
+   the same cyan corona treatment as the dashboard SpotlightCard so the
+   two surfaces feel cut from the same atmosphere. */
+.landing-feature-card--spotlight {
+  min-height: 320px;
+}
+.landing-spotlight-portrait {
+  position: relative;
+  width: 84px;
+  height: 84px;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  box-shadow:
+    0 0 0 2px ${C.cyan}cc,
+    0 0 24px 4px ${C.cyan}55,
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+.landing-spotlight-portrait::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(circle, ${C.cyan}33 0%, transparent 65%);
+  filter: blur(12px);
+  pointer-events: none;
+  z-index: -1;
+}
+.landing-spotlight-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.landing-spotlight-dissertation {
+  margin-top: 16px;
+  padding-top: 14px;
+  width: 100%;
+  border-top: 1px solid ${C.hairline};
+}
+.landing-spotlight-dissertation-label {
+  margin: 0 0 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  color: ${C.cyan};
+  text-shadow: 0 0 12px ${C.cyan}55;
+}
+.landing-spotlight-dissertation-text {
+  margin: 0;
+  font-size: 11.5px;
   line-height: 1.55;
-  color: rgba(199, 230, 240, 0.7);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: rgba(225, 244, 250, 0.92);
+  text-shadow: 0 1px 8px rgba(2, 13, 18, 0.5);
 }
 
 /* ============== BROWSE TOPICS ============== */

@@ -387,12 +387,7 @@ export default function DashboardPage() {
                       <button
                         key={t.id}
                         onClick={() => navigate(`/topics/${t.topicId}`)}
-                        className="group w-full flex items-center gap-3 p-3 rounded-lg text-left border transition-all hover:-translate-y-0.5"
-                        style={{
-                          background: "rgba(8,43,58,0.55)",
-                          borderColor: "rgba(94,176,200,0.18)",
-                          boxShadow: `0 6px 18px -12px ${PALETTE.teal}66`,
-                        }}
+                        className="recommended-tile group w-full flex items-center gap-3 p-3 rounded-lg text-left border transition-all hover:-translate-y-0.5"
                         data-testid={`recommended-${t.topicId}`}
                       >
                         <div
