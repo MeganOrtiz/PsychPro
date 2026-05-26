@@ -89,10 +89,16 @@ app.use(express.urlencoded({ extended: true }));
 // `replit.md` § Auth Pattern, and `threat_model.md` § Spoofing). If Clerk
 // credentials are missing the middleware no-ops and protected routes will
 // respond `401 Unauthorized`.
+// In dev, prefer the CLERK_*_OVERRIDE pair (a dev Clerk instance) so the
+// Replit dev origin can authenticate. In production we always use the
+// non-override prod keys (they're domain-locked to auth.psychprosuite.com).
+const isDev = process.env.NODE_ENV !== "production";
+const clerkPk = (isDev && process.env.CLERK_PK_OVERRIDE) || process.env.CLERK_PUBLISHABLE_KEY;
+const clerkSk = (isDev && process.env.CLERK_SK_OVERRIDE) || process.env.CLERK_SECRET_KEY;
 app.use(
   clerkMiddleware({
-    publishableKey: process.env.CLERK_PUBLISHABLE_KEY,
-    secretKey: process.env.CLERK_SECRET_KEY,
+    publishableKey: clerkPk,
+    secretKey: clerkSk,
   }),
 );
 

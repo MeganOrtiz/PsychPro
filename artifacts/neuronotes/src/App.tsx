@@ -53,7 +53,16 @@ const queryClient = new QueryClient({
   },
 });
 
-const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined;
+// In dev builds, prefer VITE_CLERK_PUBLISHABLE_KEY_DEV when set so the
+// Replit dev domain can use a dev Clerk instance instead of the production
+// keys (which reject any origin other than auth.psychprosuite.com). Falls
+// back to the prod publishable key when the dev override is not set, so
+// production builds and existing dev setups are unaffected.
+const devClerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY_DEV as string | undefined;
+const prodClerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined;
+const clerkPublishableKey: string | undefined = import.meta.env.DEV
+  ? devClerkPublishableKey || prodClerkPublishableKey
+  : prodClerkPublishableKey;
 if (!clerkPublishableKey) {
   throw new Error("Missing VITE_CLERK_PUBLISHABLE_KEY environment variable");
 }
