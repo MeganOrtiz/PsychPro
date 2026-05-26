@@ -27,12 +27,19 @@ async function getUser(userId: string) {
   return user ?? null;
 }
 
+const PAID_SUBSCRIPTION_STATUSES = new Set([
+  "scholar",
+  "active",
+  "pro",
+  "trialing",
+]);
+
 async function requireScholar(req: Request, res: Response, next: NextFunction): Promise<void> {
   const userId = requireUserId(req, res);
   if (!userId) return;
   const user = await getUser(userId);
-  if (!user || user.subscriptionStatus !== "scholar") {
-    res.status(403).json({ error: "Scholar subscription required" });
+  if (!user || !PAID_SUBSCRIPTION_STATUSES.has(user.subscriptionStatus)) {
+    res.status(403).json({ error: "An active subscription is required to generate study materials." });
     return;
   }
   (req as Request & { scholarUser: typeof user }).scholarUser = user;
@@ -353,7 +360,18 @@ router.post(
         }
       } catch (err) {
         req.log.error({ err }, "Error creating custom deck");
-        res.status(500).json({ error: "Failed to generate study materials. Please try again." });
+        const raw = err instanceof Error ? err.message : String(err);
+        const friendly =
+          /timeout|ETIMEDOUT|ECONNRESET/i.test(raw)
+            ? "The AI took too long to respond. Try a shorter source or fewer items."
+            : /rate.?limit|429/i.test(raw)
+            ? "AI rate limit hit. Please wait a moment and try again."
+            : /pdf|mammoth|extract/i.test(raw)
+            ? "We couldn't read text from that file. Try a different PDF/DOCX or paste text directly."
+            : /api key|unauthorized|401|invalid_api_key/i.test(raw)
+            ? "AI service is not configured correctly. Please contact support."
+            : "Failed to generate study materials. Please try again.";
+        res.status(500).json({ error: friendly });
       }
     } catch (err) {
       req.log.error({ err }, "Error checking quota");
