@@ -12,36 +12,6 @@ uri = "file://artifacts/neuronotes/src/assets/bg/smoke-full.png"
 type = "image"
 title = "dark teal smoke background"
 
-[[generated]]
-id = "wQzfgGPQs-8UM0lmk1w6k"
-uri = "file://artifacts/mockup-sandbox/public/images/cinematic-brain.png"
-type = "image"
-title = "generated_image"
-
-[[generated]]
-id = "mqH6MGN0j-ZKo83D8A9Yj"
-uri = "file://artifacts/mockup-sandbox/public/images/cinematic-backdrop.png"
-type = "image"
-title = "generated_image"
-
-[[generated]]
-id = "a-aqYy9vHTEinpw9B2Vip"
-uri = "file://artifacts/mockup-sandbox/public/images/luminous-brain.png"
-type = "image"
-title = "generated_image"
-
-[[generated]]
-id = "cAG3GEEIW7jb4GRW5DQNJ"
-uri = "file://artifacts/mockup-sandbox/public/images/luminous-backdrop.png"
-type = "image"
-title = "generated_image"
-
-[[generated]]
-id = "OS7UaOo53eK0280SQQDwx"
-uri = "file://artifacts/mockup-sandbox/public/images/luminous-synapse.png"
-type = "image"
-title = "generated_image"
-
 [[outputs]]
 id = "aKKI8N7WseM8lzrKZFEEq"
 uri = "file://.local/exports/brain-lab-code.tar.gz"
