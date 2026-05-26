@@ -5,8 +5,9 @@ export const modules: ModuleMap = {
   "./components/mockups/dashboard-hero-slot/StreakFocus.tsx": () => import("../components/mockups/dashboard-hero-slot/StreakFocus.tsx"),
   "./components/mockups/dashboard-hero-slot/TopicOfTheDay.tsx": () => import("../components/mockups/dashboard-hero-slot/TopicOfTheDay.tsx"),
   "./components/mockups/dashboard-hero-slot/WeeklySummary.tsx": () => import("../components/mockups/dashboard-hero-slot/WeeklySummary.tsx"),
-  "./components/mockups/psychpro-aesthetic/Landing.tsx": () => import("../components/mockups/psychpro-aesthetic/Landing.tsx"),
   "./components/mockups/psychpro-cinematic/Landing.tsx": () => import("../components/mockups/psychpro-cinematic/Landing.tsx"),
+  "./components/mockups/psychpro-luminous/Hero.tsx": () => import("../components/mockups/psychpro-luminous/Hero.tsx"),
+  "./components/mockups/psychpro-aesthetic/Landing.tsx": () => import("../components/mockups/psychpro-aesthetic/Landing.tsx"),
   "./components/mockups/psychpro-polished/Dashboard.tsx": () => import("../components/mockups/psychpro-polished/Dashboard.tsx"),
   "./components/mockups/psychpro-polished/Landing.tsx": () => import("../components/mockups/psychpro-polished/Landing.tsx")
 };
