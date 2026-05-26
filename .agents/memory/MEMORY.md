@@ -1,2 +1,3 @@
-- [Don't claim what you haven't verified](claims-discipline.md) — never state work is done/sitewide/fixed without observing the result; say "I changed X, expected Y, haven't verified" instead.
-- [PsychPro duplicate glass-button systems](psychpro-glass-buttons.md) — landing/Button use `.btn-glass-strong`; dashboard hardcoded older `.glass-button`. Pick one source of truth before claiming sitewide.
+- [Claims discipline](claims-discipline.md) — never report a fix as "done" until it's been verified end-to-end; user has called this out repeatedly.
+- [PsychPro glass buttons](psychpro-glass-buttons.md) — landing/marketing button styling convention.
+- [PsychPro custom-deck subscription gate](psychpro-custom-decks-subscription-gate.md) — "upload broken" reports are usually the paid-tier 403 gate firing, not the upload itself.
