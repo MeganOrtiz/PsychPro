@@ -10,10 +10,6 @@ import {
   Users,
   Award,
   Check,
-  Linkedin,
-  Twitter,
-  Instagram,
-  Youtube,
 } from "lucide-react";
 import brainSmoke from "@/assets/hero/brain.png";
 import spotlightPortrait from "@/assets/spotlight/featured.png";
@@ -129,13 +125,6 @@ const FOOTER_LINKS = [
   { label: "Contact", href: "mailto:admin@psychprosuites.com" },
 ];
 
-const SOCIAL = [
-  { Icon: Linkedin, label: "LinkedIn" },
-  { Icon: Twitter, label: "Twitter" },
-  { Icon: Instagram, label: "Instagram" },
-  { Icon: Youtube, label: "YouTube" },
-] as const;
-
 export default function LandingPage() {
   const [, navigate] = useLocation();
   const { isSignedIn } = useAuth();
@@ -148,6 +137,16 @@ export default function LandingPage() {
 
   const goToApp = () => navigate(isSignedIn ? "/dashboard" : "/sign-in");
   const goToTopics = () => navigate(isSignedIn ? "/topics" : "/sign-in");
+  // Pill click deep-links into the topics page with the pill's label
+  // pre-filled as the search query, so users land on a filtered view
+  // instead of the full catalog.
+  const goToTopicPill = (topic: string) => {
+    if (!isSignedIn) {
+      navigate("/sign-in");
+      return;
+    }
+    navigate(`/topics?q=${encodeURIComponent(topic)}`);
+  };
 
   return (
     <>
@@ -166,8 +165,9 @@ export default function LandingPage() {
             <div className="landing-nav-actions">
               <button
                 type="button"
+                onClick={goToTopics}
                 className="landing-nav-search"
-                aria-label="Search"
+                aria-label="Search topics"
                 data-testid="nav-search"
               >
                 <Search aria-hidden />
@@ -286,7 +286,7 @@ export default function LandingPage() {
                     <button
                       key={topic}
                       type="button"
-                      onClick={goToTopics}
+                      onClick={() => goToTopicPill(topic)}
                       className="landing-topic-pill"
                       data-testid={`topic-${topic.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`}
                     >
@@ -321,18 +321,9 @@ export default function LandingPage() {
                 </span>
               ))}
             </nav>
-            <div className="landing-footer-social">
-              {SOCIAL.map(({ Icon, label }) => (
-                <a
-                  key={label}
-                  href="#"
-                  aria-label={label}
-                  className="landing-footer-social-link"
-                >
-                  <Icon aria-hidden />
-                </a>
-              ))}
-            </div>
+            {/* Social icons removed — no live profile URLs to point them at,
+                and broken href="#" anchors were trapping focus and scrolling
+                the user back to the top of the page. */}
           </div>
           <p className="landing-footer-fineprint">
             © {new Date().getFullYear()} PsychPro. All rights reserved.
@@ -919,27 +910,6 @@ const styles = `
   transition: color 180ms ease;
 }
 .landing-footer-link:hover { color: ${C.cyan}; }
-.landing-footer-social {
-  display: flex;
-  gap: 12px;
-}
-.landing-footer-social-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 999px;
-  border: 1px solid ${C.hairline};
-  color: ${C.cyanSoft};
-  transition: all 180ms ease;
-}
-.landing-footer-social-link:hover {
-  color: ${C.cyan};
-  border-color: ${C.cyan};
-  box-shadow: 0 0 12px ${C.cyan}66;
-}
-.landing-footer-social-link svg { width: 15px; height: 15px; }
 .landing-footer-fineprint {
   margin: 0;
   padding: 0 32px 22px;
