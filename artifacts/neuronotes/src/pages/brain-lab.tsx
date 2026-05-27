@@ -661,6 +661,7 @@ function WireframeBrain({
               role="button"
               aria-label={`Highlight ${r.label}`}
               tabIndex={0}
+              className="focus:outline-none focus-visible:[outline:2px_solid_white] focus-visible:[outline-offset:2px]"
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();

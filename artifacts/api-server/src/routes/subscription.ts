@@ -64,6 +64,21 @@ router.post("/subscription/checkout", async (req: Request, res: Response): Promi
       return;
     }
     let [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
+
+    // Pre-launch guard: block a second Checkout Session when the user is
+    // already on an active paid tier. Without this, a user who hits Subscribe
+    // twice (or a stale frontend that doesn't reflect a recent purchase) can
+    // generate overlapping subscriptions and double-charge themselves. Active
+    // tiers mirror the mapping in GET /subscription/status — keep in sync.
+    const ACTIVE_STATUSES = new Set(["active", "pro", "scholar", "trialing"]);
+    if (user?.subscriptionStatus && ACTIVE_STATUSES.has(user.subscriptionStatus)) {
+      res.status(409).json({
+        error: "You already have an active subscription. Manage it from the billing portal.",
+        code: "already_subscribed",
+      });
+      return;
+    }
+
     const stripe = await getUncachableStripeClient();
 
     // Validate that the submitted priceId belongs to an approved PsychPro plan.
@@ -86,12 +101,17 @@ router.post("/subscription/checkout", async (req: Request, res: Response): Promi
       return;
     }
 
+    // Idempotency keys protect against network retries. A double-tap on
+    // Subscribe (or a transient timeout that triggers the SDK's auto-retry)
+    // would otherwise create duplicate Stripe Customers for the same user.
+    // Keying customer creation by userId is safe — at most one Customer per
+    // user exists in our model.
     let customerId = user?.stripeCustomerId;
     if (!customerId) {
-      const customer = await stripe.customers.create({
-        email: user?.email ?? undefined,
-        metadata: { userId },
-      });
+      const customer = await stripe.customers.create(
+        { email: user?.email ?? undefined, metadata: { userId } },
+        { idempotencyKey: `customer-create:${userId}` },
+      );
       customerId = customer.id;
       if (!user) {
         [user] = await db
@@ -104,14 +124,20 @@ router.post("/subscription/checkout", async (req: Request, res: Response): Promi
     }
 
     const baseUrl = `https://${process.env.REPLIT_DOMAINS?.split(",")[0]}`;
-    const session = await stripe.checkout.sessions.create({
-      customer: customerId,
-      payment_method_types: ["card"],
-      line_items: [{ price: priceId, quantity: 1 }],
-      mode: "subscription",
-      success_url: `${baseUrl}/subscription?success=true`,
-      cancel_url: `${baseUrl}/subscription?canceled=true`,
-    });
+    // Idempotency key for the Checkout Session is scoped by user + price so
+    // a retry within Stripe's idempotency window (24h) returns the same
+    // session, but switching plans cleanly creates a new one.
+    const session = await stripe.checkout.sessions.create(
+      {
+        customer: customerId,
+        payment_method_types: ["card"],
+        line_items: [{ price: priceId, quantity: 1 }],
+        mode: "subscription",
+        success_url: `${baseUrl}/subscription?success=true`,
+        cancel_url: `${baseUrl}/subscription?canceled=true`,
+      },
+      { idempotencyKey: `checkout:${userId}:${priceId}` },
+    );
 
     res.json({ url: session.url });
   } catch (err) {

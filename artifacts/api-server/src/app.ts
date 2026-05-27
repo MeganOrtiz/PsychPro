@@ -44,7 +44,56 @@ app.use(
   }),
 );
 
-app.use(cors());
+// Expose pino-http's generated request id as `X-Request-Id` on every
+// response. Clients (the ErrorBoundary fallback, support tooling) can copy
+// this ID when reporting an issue so we can correlate the report with the
+// server-side log line without the user having to describe what they were
+// doing. Must come AFTER pinoHttp — that's the middleware that assigns
+// req.id.
+app.use((req, res, next) => {
+  const id = (req as unknown as { id?: string | number }).id;
+  if (id !== undefined) res.setHeader("X-Request-Id", String(id));
+  next();
+});
+
+// CORS lockdown. Production: only the canonical site origin and the Clerk
+// auth subdomain may send credentialed requests. Dev: allow the Replit dev
+// origin (REPLIT_DEV_DOMAIN) plus localhost so workspace previews still
+// work. Additional origins can be supplied via CORS_ALLOWED_ORIGINS
+// (comma-separated) for staging or custom domains without a code change.
+// Server-to-server callers (curl, Stripe webhooks, MCP token exchanges)
+// send no Origin header and are unaffected by CORS — this only locks down
+// browser-initiated cross-origin requests.
+const isProd = process.env.NODE_ENV === "production";
+const explicitOrigins = (process.env.CORS_ALLOWED_ORIGINS ?? "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter((s) => s.length > 0);
+const allowedOrigins = new Set<string>([
+  "https://psychprosuite.com",
+  "https://www.psychprosuite.com",
+  "https://auth.psychprosuite.com",
+  ...explicitOrigins,
+]);
+if (!isProd) {
+  if (process.env.REPLIT_DEV_DOMAIN) {
+    allowedOrigins.add(`https://${process.env.REPLIT_DEV_DOMAIN}`);
+  }
+  allowedOrigins.add("http://localhost:5173");
+  allowedOrigins.add("http://localhost:5000");
+  allowedOrigins.add("http://127.0.0.1:5173");
+}
+app.use(
+  cors({
+    origin(origin, cb) {
+      // No Origin header → not a browser cross-origin request; allow.
+      if (!origin) return cb(null, true);
+      if (allowedOrigins.has(origin)) return cb(null, true);
+      return cb(null, false);
+    },
+    credentials: true,
+  }),
+);
 
 app.post(
   "/api/stripe/webhook",
@@ -70,9 +119,14 @@ app.post(
       await handleStripeWebhookEvent(event, logger);
       res.json({ received: true });
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Webhook verification failed";
+      // Do not echo err.message back to the caller — Stripe's
+      // constructEvent throws SignatureVerificationError messages that can
+      // leak internal config detail (header layout, tolerance window,
+      // expected secret prefix). Log the full error server-side, return a
+      // generic 400 to the caller. Stripe only inspects the status code
+      // for retry purposes; the body is informational.
       logger.error({ err }, "Stripe webhook error");
-      res.status(400).json({ error: message });
+      res.status(400).json({ error: "Webhook verification failed" });
     }
   }
 );

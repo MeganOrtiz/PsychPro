@@ -51,7 +51,7 @@ export default function PublicProfilePage() {
               {profile.profilePhotoUrl ? (
                 <img
                   src={profile.profilePhotoUrl.startsWith("/objects/") ? `/api/storage${profile.profilePhotoUrl}` : profile.profilePhotoUrl}
-                  alt=""
+                  alt={`Profile photo of ${profile.displayName ?? "contributor"}`}
                   className="w-20 h-20 rounded-full object-cover border border-border"
                 />
               ) : (

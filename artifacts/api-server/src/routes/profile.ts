@@ -259,14 +259,45 @@ router.patch("/profile/me", async (req: Request, res: Response): Promise<void> =
         });
         return;
       }
+      // Server-side enforcement: re-fetch the uploaded object's metadata and
+      // verify content-type + size. The /storage/uploads/request-url endpoint
+      // only sees client-claimed metadata at signing time, so without this
+      // check a caller could request a signed URL with claimed image/png and
+      // then PUT arbitrary bytes (PDF, executable, oversized payload) before
+      // flipping the ACL public. This is the authoritative check.
       try {
+        const objectFile = await objectStorageService.getObjectEntityFile(normalized);
+        const [metadata] = await objectFile.getMetadata();
+        const contentType = String(metadata.contentType ?? "").toLowerCase();
+        const sizeBytes = Number(metadata.size ?? 0);
+        const ALLOWED_PHOTO_TYPES = new Set([
+          "image/png",
+          "image/jpeg",
+          "image/jpg",
+          "image/webp",
+        ]);
+        const MAX_PHOTO_BYTES = 10 * 1024 * 1024; // 10 MB is plenty for a portrait
+        if (!ALLOWED_PHOTO_TYPES.has(contentType)) {
+          res.status(400).json({
+            error: "Validation failed",
+            fieldErrors: { profilePhotoUrl: "Photo must be a PNG, JPEG, or WebP image." },
+          });
+          return;
+        }
+        if (sizeBytes <= 0 || sizeBytes > MAX_PHOTO_BYTES) {
+          res.status(400).json({
+            error: "Validation failed",
+            fieldErrors: { profilePhotoUrl: "Photo must be larger than 0 and at most 10 MB." },
+          });
+          return;
+        }
         values.profilePhotoUrl = await objectStorageService.trySetObjectEntityAclPolicy(
           normalized,
           { owner: userId, visibility: "public" },
         );
         consumeUpload(normalized);
       } catch (aclErr) {
-        req.log.warn({ err: aclErr }, "Failed to set ACL on profile photo");
+        req.log.warn({ err: aclErr }, "Failed to verify/attach profile photo");
         res.status(400).json({
           error: "Validation failed",
           fieldErrors: { profilePhotoUrl: "Could not attach uploaded photo. Please re-upload." },

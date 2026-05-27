@@ -367,11 +367,26 @@ function IncomingRequestModal({
   onRespond: (action: "accept" | "decline" | "block") => void;
   busy: boolean;
 }) {
+  // Esc-to-close — WCAG 2.1 expectation for any dialog. Listening on window
+  // ensures focus inside any inner control still dismisses the modal.
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.stopPropagation();
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onClose]);
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
       onClick={onClose}
       data-testid="incoming-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="incoming-request-title"
     >
       <div
         className="bg-card rounded-2xl max-w-xl w-full max-h-[90vh] overflow-y-auto"
@@ -383,7 +398,7 @@ function IncomingRequestModal({
               <p className="text-xs uppercase tracking-wide text-primary font-semibold mb-1">
                 Connection request
               </p>
-              <h2 className="text-xl font-bold text-foreground">{request.requesterDisplayName}</h2>
+              <h2 id="incoming-request-title" className="text-xl font-bold text-foreground">{request.requesterDisplayName}</h2>
               {(request.requesterRole || request.requesterInstitution) && (
                 <p className="text-sm text-muted-foreground mt-1">
                   {[request.requesterRole, request.requesterInstitution].filter(Boolean).join(" · ")}

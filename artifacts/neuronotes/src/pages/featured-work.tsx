@@ -284,8 +284,27 @@ function SubmissionCard({ s, onOpen }: { s: Submission; onOpen: () => void }) {
 
 function DetailModal({ submission, onClose }: { submission: Submission; onClose: () => void }) {
   const fileHref = objectsUrl(submission.fileUrl);
+  // Esc-to-close is the keyboard equivalent of the backdrop click. Listening
+  // on window (not the dialog div) so focus inside any inner control still
+  // dismisses the modal — this is the WCAG 2.1 expectation for a modal.
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.stopPropagation();
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onClose]);
   return (
-    <div className="fixed inset-0 z-50 flex items-start md:items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-50 flex items-start md:items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="submission-detail-title"
+    >
       <div
         className="bg-card border border-border rounded-2xl w-full max-w-2xl my-8 p-6 md:p-8 relative"
         onClick={(e) => e.stopPropagation()}
@@ -304,7 +323,7 @@ function DetailModal({ submission, onClose }: { submission: Submission; onClose:
             {new Date(submission.approvedAt ?? submission.createdAt).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })}
           </span>
         </div>
-        <h2 className="text-xl md:text-2xl font-bold text-foreground mb-3">{submission.title}</h2>
+        <h2 id="submission-detail-title" className="text-xl md:text-2xl font-bold text-foreground mb-3">{submission.title}</h2>
         <div className="flex items-center gap-3 mb-5 text-sm">
           <div className="w-10 h-10 rounded-full bg-primary/15 flex items-center justify-center"><UserIcon className="w-5 h-5 text-primary" /></div>
           <div>

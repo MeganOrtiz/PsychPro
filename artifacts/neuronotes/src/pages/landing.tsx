@@ -194,13 +194,13 @@ export default function LandingPage() {
             <img src={brainSmoke} alt="" className="landing-hero-brain-img" />
           </div>
 
-          <h1 className="landing-wordmark" style={{ ["--delay" as any]: "120ms" }}>
+          <h1 className="landing-wordmark" style={{ "--delay": "120ms" } as React.CSSProperties}>
             PSYCHPRO
           </h1>
-          <p className="landing-tagline" style={{ ["--delay" as any]: "240ms" }}>
+          <p className="landing-tagline" style={{ "--delay": "240ms" } as React.CSSProperties}>
             LEARN. EXPAND. CONNECT.
           </p>
-          <p className="landing-blurb" style={{ ["--delay" as any]: "360ms" }}>
+          <p className="landing-blurb" style={{ "--delay": "360ms" } as React.CSSProperties}>
             Master clinical psychology. Deeper understanding for topics in
             psychology, neuroscience, and intervention for real-world clinical
             application.
@@ -208,7 +208,7 @@ export default function LandingPage() {
 
           <div
             className="landing-cta-row"
-            style={{ ["--delay" as any]: "480ms" }}
+            style={{ "--delay": "480ms" } as React.CSSProperties}
           >
             <button
               type="button"
@@ -243,7 +243,7 @@ export default function LandingPage() {
                 <article
                   key={f.title}
                   className={`landing-feature-card${portrait ? " landing-feature-card--spotlight" : ""}`}
-                  style={{ ["--accent" as any]: f.accent }}
+                  style={{ "--accent": f.accent } as React.CSSProperties}
                   data-testid={`feature-${f.title.split(" ")[0].toLowerCase()}`}
                 >
                   {portrait ? (

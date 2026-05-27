@@ -99,10 +99,18 @@ export default function OnboardingPage() {
           onboardingComplete: true,
         },
       });
+      navigate("/dashboard");
     } catch {
-      // silent
+      // If marking onboardingComplete fails, navigating to /dashboard would
+      // bounce the user right back to /onboarding (the route guard checks
+      // the flag), trapping them in a loop. Surface the failure and stay on
+      // the current step so the user can retry instead of silently looping.
+      toast({
+        title: "Could not skip",
+        description: "We could not save your progress. Please try again.",
+        variant: "destructive",
+      });
     }
-    navigate("/dashboard");
   };
 
   return (

@@ -8,6 +8,7 @@ import {
   issueTokens,
   rotateRefreshToken,
 } from "../lib/oauthStore";
+import { oauthRegisterRateLimit } from "../middlewares/oauthRegisterRateLimit";
 
 /**
  * OAuth 2.1 + PKCE endpoints for the MCP route.
@@ -71,7 +72,7 @@ router.get("/.well-known/oauth-authorization-server", handleDiscovery);
  * in memory — the trust boundary is the PKCE-bound auth code + the
  * registered redirect_uri, not the client_id itself.
  */
-router.post("/oauth/register", async (req: Request, res: Response): Promise<void> => {
+router.post("/oauth/register", oauthRegisterRateLimit, async (req: Request, res: Response): Promise<void> => {
   const body = req.body;
   if (!body || typeof body !== "object") {
     res.status(400).json({ error: "invalid_client_metadata", error_description: "Expected JSON object body" });

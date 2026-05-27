@@ -96,8 +96,26 @@ router.post("/progress/:topicId", async (req: Request, res: Response): Promise<v
   try {
     const userId = requireUserId(req, res);
     if (!userId) return;
-    const topicId = parseInt(String(req.params.topicId));
-    const { score } = req.body as { score: number };
+    // Strict path-param parsing: reject anything that isn't a pure decimal
+    // integer. parseInt would silently accept "12abc" → 12, masking client
+    // bugs and letting partial garbage through to the DB lookup.
+    const rawTopicId = String(req.params.topicId);
+    const topicId = /^\d+$/.test(rawTopicId) ? Number(rawTopicId) : NaN;
+    if (!Number.isInteger(topicId) || topicId <= 0) {
+      res.status(400).json({ error: "topicId must be a positive integer" });
+      return;
+    }
+    // Strict body validation: score must arrive as a JSON number in [0,100].
+    // We deliberately reject strings ("80"), NaN, Infinity, booleans, etc.
+    // — the raw value flows straight into the DB row, so any laxness here
+    // corrupts downstream dashboard stats (averageScore, weakAreas,
+    // completion threshold).
+    const rawScore = (req.body as { score?: unknown } | null)?.score;
+    if (typeof rawScore !== "number" || !Number.isInteger(rawScore) || rawScore < 0 || rawScore > 100) {
+      res.status(400).json({ error: "score must be a JSON integer between 0 and 100" });
+      return;
+    }
+    const score = rawScore;
     const [topic] = await db.select().from(topicsTable).where(eq(topicsTable.id, topicId));
     const existing = await db
       .select()
