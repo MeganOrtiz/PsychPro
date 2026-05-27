@@ -219,12 +219,15 @@ export default function QuizPage({ params }: Props) {
                 // Cerulean glow on hover — `quiz-option-hover` class is
                 // defined in index.css and ramps up the box-shadow + adds
                 // a subtle border-color shift on :hover.
+                // Lightened deep-cerulean glass so the option pills match the
+                // Study Mode tiles and rail buttons elsewhere in the app
+                // (instead of the previous near-white card).
                 cls += " hover:-translate-y-0.5 quiz-option-hover";
                 style = {
-                  background: `linear-gradient(135deg, ${P.surface}f2, ${P.bg}f2)`,
-                  borderColor: `${P.surf}40`,
-                  color: P.mist,
-                  boxShadow: `0 6px 18px -10px ${P.teal}55`,
+                  background: "linear-gradient(135deg, #15506E 0%, #0E3A50 100%)",
+                  borderColor: `${P.surf}55`,
+                  color: P.cloud,
+                  boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(255,255,255,0.06)`,
                 };
               } else if (isCorrect) {
                 // Correct answer turns emerald green, mirroring the red
@@ -245,9 +248,9 @@ export default function QuizPage({ params }: Props) {
               } else {
                 cls += " opacity-55";
                 style = {
-                  background: `linear-gradient(135deg, ${P.surface}cc, ${P.bg}cc)`,
+                  background: "linear-gradient(135deg, #15506E 0%, #0E3A50 100%)",
                   borderColor: `${P.surf}25`,
-                  color: `${P.mist}aa`,
+                  color: `${P.cloud}aa`,
                 };
               }
 
@@ -267,10 +270,10 @@ export default function QuizPage({ params }: Props) {
                     )}
                     style={
                       !selected
-                        ? { background: "rgba(189,229,255,0.55)", color: P.tealDeep, borderColor: `${P.surf}66` }
+                        ? { background: "rgba(118,228,247,0.20)", color: P.surf, borderColor: `${P.surf}88` }
                         : isSelected || isCorrect
                           ? { background: "rgba(255,255,255,0.22)", color: "#FFFFFF" }
-                          : { background: "rgba(189,229,255,0.35)", color: P.tealDeep, borderColor: `${P.surf}33` }
+                          : { background: "rgba(118,228,247,0.14)", color: P.surf, borderColor: `${P.surf}55` }
                     }
                   >
                     {key}

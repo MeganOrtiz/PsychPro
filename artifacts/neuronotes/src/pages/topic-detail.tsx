@@ -134,7 +134,7 @@ export default function TopicDetailPage({ params }: Props) {
                     background: `
                       radial-gradient(120% 90% at 100% 0%, ${mode.accent}3D 0%, transparent 55%),
                       radial-gradient(80% 110% at 0% 100%, ${mode.accentDeep}40 0%, transparent 60%),
-                      linear-gradient(135deg, #0E2D3F 0%, #0A2030 100%)
+                      linear-gradient(135deg, #15506E 0%, #0E3A50 100%)
                     `,
                     borderColor: `${mode.accent}55`,
                     // Two-layer shadow: a tight rim of accent color hugging

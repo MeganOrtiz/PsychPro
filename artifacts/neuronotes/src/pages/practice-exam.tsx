@@ -263,48 +263,56 @@ export default function PracticeExamPage({ params }: Props) {
             <button
               onClick={() => setQuestionCount(Math.min(25, examAvailable) as QuestionCount)}
               data-testid={`button-count-${examAvailable}`}
-              className="rounded-xl border p-5 text-left transition-all bg-white hover:-translate-y-0.5"
-              style={{ borderColor: `${P.surf}55`, boxShadow: `0 6px 18px -10px ${P.teal}44` }}
+              className="rounded-xl border p-5 text-left transition-all hover:-translate-y-0.5"
+              style={{
+                background: "linear-gradient(135deg, #15506E 0%, #0E3A50 100%)",
+                borderColor: `${P.surf}55`,
+                boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(255,255,255,0.06)`,
+              }}
             >
               <div className="flex items-center gap-2.5 mb-2">
-                <BookOpen className="w-5 h-5" style={{ color: P.tealDeep }} />
-                <span className="text-xl font-bold text-foreground">{examAvailable} Questions</span>
+                <BookOpen className="w-5 h-5" style={{ color: P.surf }} />
+                <span className="text-xl font-bold" style={{ color: P.cloud }}>{examAvailable} Questions</span>
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs" style={{ color: `${P.mist}cc` }}>
                 All available exam questions for this topic
               </p>
             </button>
           )}
-          {availableCounts.map(n => (
-            <button
-              key={n}
-              onClick={() => setQuestionCount(n)}
-              data-testid={`button-count-${n}`}
-              className="rounded-xl border p-5 text-left transition-all bg-white hover:-translate-y-0.5"
-              style={
-                questionCount === n
-                  ? {
-                      borderColor: P.teal,
-                      boxShadow: `0 0 0 3px rgba(47,160,198,0.18), 0 14px 32px -16px ${P.teal}88`,
-                      background: `linear-gradient(180deg, #FFFFFF, ${P.paperSoft})`,
-                    }
-                  : {
-                      borderColor: `${P.surf}55`,
-                      boxShadow: `0 6px 18px -10px ${P.teal}44`,
-                    }
-              }
-            >
-              <div className="flex items-center gap-2.5 mb-2">
-                {n === 25
-                  ? <BookOpen className="w-5 h-5" style={{ color: P.tealDeep }} />
-                  : <FileText className="w-5 h-5" style={{ color: P.tealDeep }} />}
-                <span className="text-xl font-bold text-foreground">{n} Questions</span>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                {n === 25 ? "Standard exam • ~37 minutes" : "Full exam • ~75 minutes"}
-              </p>
-            </button>
-          ))}
+          {availableCounts.map(n => {
+            const isSelected = questionCount === n;
+            return (
+              <button
+                key={n}
+                onClick={() => setQuestionCount(n)}
+                data-testid={`button-count-${n}`}
+                className="rounded-xl border p-5 text-left transition-all hover:-translate-y-0.5"
+                style={
+                  isSelected
+                    ? {
+                        background: "linear-gradient(135deg, #1A6182 0%, #114862 100%)",
+                        borderColor: P.surf,
+                        boxShadow: `0 0 0 2px ${P.surf}55, 0 14px 32px -14px ${P.teal}99, inset 0 1px 0 0 rgba(255,255,255,0.10)`,
+                      }
+                    : {
+                        background: "linear-gradient(135deg, #15506E 0%, #0E3A50 100%)",
+                        borderColor: `${P.surf}55`,
+                        boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(255,255,255,0.06)`,
+                      }
+                }
+              >
+                <div className="flex items-center gap-2.5 mb-2">
+                  {n === 25
+                    ? <BookOpen className="w-5 h-5" style={{ color: P.surf }} />
+                    : <FileText className="w-5 h-5" style={{ color: P.surf }} />}
+                  <span className="text-xl font-bold" style={{ color: P.cloud }}>{n} Questions</span>
+                </div>
+                <p className="text-xs" style={{ color: `${P.mist}cc` }}>
+                  {n === 25 ? "Standard exam • ~37 minutes" : "Full exam • ~75 minutes"}
+                </p>
+              </button>
+            );
+          })}
         </div>
 
         {isLoading && questionCount !== null ? (
