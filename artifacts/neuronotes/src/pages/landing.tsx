@@ -12,7 +12,6 @@ import {
   Check,
 } from "lucide-react";
 import brainSmoke from "@/assets/hero/brain.png";
-import spotlightPortrait from "@/assets/spotlight/featured.png";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 
 // =============================================================================
@@ -34,18 +33,26 @@ import { STUDY_PALETTE as P } from "@/lib/study-theme";
 const DISSERTATION_TOPIC =
   "SOCIAL COGNITION IN CHILDREN WITH AUTISM SPECTRUM DISORDER: EXPLORING CORRELATES BETWEEN OBJECTIVE NEUROPSYCHOLOGICAL MEASURES AND PARENT REPORTS";
 
-// All five feature cards render in one row, matching the reference comp.
-// Each gets its own subtle accent hue so the row reads as a spectrum
-// rather than five identical tiles — but every accent stays inside the
-// brand's cool cyan/teal/mint family.
+// Five feature tiles rendered in an asymmetric bento grid (rebuilt 2026-05-27).
+// Layout intent: the first tile is a hero showpiece (the core flashcards /
+// quizzes / exams loop is what brings users in), with four supporting tiles
+// orbiting it in a 2x2 sub-grid. Each tile carries its own bespoke SVG visual
+// rather than a generic icon-in-a-box, so the section reads as a constellation
+// of distinct capabilities rather than five identical chips. Accent hues stay
+// inside the brand's cyan/teal/mint family so the variety reads as a spectrum,
+// not as competing palettes.
 const FEATURES = [
   {
+    id: "flashcards",
+    layout: "hero" as const,
     icon: Layers,
     title: "Flashcards / Study Guides / Quizzes / Exams",
     body: "Reinforce your learning with interactive study tools.",
     accent: "#76E4F7", // surf — bright cyan
   },
   {
+    id: "evidence",
+    layout: "tile" as const,
     icon: Brain,
     title: "Evidence-Based Learning Tools",
     body:
@@ -53,6 +60,8 @@ const FEATURES = [
     accent: "#5EB0C8", // teal
   },
   {
+    id: "create",
+    layout: "tile" as const,
     icon: FileText,
     title: "Create Learning Resources From Your Own Material",
     body:
@@ -60,21 +69,240 @@ const FEATURES = [
     accent: "#A7F3FF", // mist — icy
   },
   {
+    id: "connect",
+    layout: "tile" as const,
     icon: Users,
     title: "Connect With Others",
     body: "Collaborate, share insights, and grow together.",
     accent: "#7DD8C2", // mint
   },
   {
+    id: "spotlight",
+    layout: "tile" as const,
     icon: Award,
     title: "PsychPro Spotlight",
     body:
       "Submit your dissertation, research, presentations for opportunities to be featured in the PsychPro Spotlight.",
     accent: "#9AB8FF", // periwinkle highlight
-    portrait: spotlightPortrait,
     dissertationTopic: DISSERTATION_TOPIC,
   },
 ] as const;
+
+type FeatureId = (typeof FEATURES)[number]["id"];
+
+// =============================================================================
+// Per-feature visuals. Each is a self-contained inline SVG scene that "earns"
+// its tile — fanned flashcards, a spaced-repetition curve, a transform pipeline,
+// a connection graph, a spotlight beam. All drawn with currentColor / the
+// tile's --accent CSS variable so they inherit the tile's hue automatically.
+// =============================================================================
+
+function FlashcardsVisual() {
+  return (
+    <svg
+      className="visual-svg visual-flashcards"
+      viewBox="0 0 280 200"
+      aria-hidden
+    >
+      <defs>
+        <linearGradient id="fc-card" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="rgba(255,255,255,0.10)" />
+          <stop offset="100%" stopColor="rgba(255,255,255,0.02)" />
+        </linearGradient>
+      </defs>
+      {/* Back card */}
+      <g transform="translate(40 38) rotate(-9 100 60)">
+        <rect width="200" height="120" rx="14" fill="url(#fc-card)"
+          stroke="currentColor" strokeOpacity="0.35" strokeWidth="1" />
+        <rect x="18" y="20" width="60" height="6" rx="3" fill="currentColor" opacity="0.4" />
+        <rect x="18" y="36" width="120" height="4" rx="2" fill="currentColor" opacity="0.18" />
+        <rect x="18" y="46" width="100" height="4" rx="2" fill="currentColor" opacity="0.18" />
+      </g>
+      {/* Middle card */}
+      <g transform="translate(48 26) rotate(-2 100 60)">
+        <rect width="200" height="120" rx="14" fill="url(#fc-card)"
+          stroke="currentColor" strokeOpacity="0.5" strokeWidth="1.2" />
+        <rect x="18" y="20" width="80" height="6" rx="3" fill="currentColor" opacity="0.55" />
+        <rect x="18" y="36" width="150" height="4" rx="2" fill="currentColor" opacity="0.22" />
+        <rect x="18" y="46" width="130" height="4" rx="2" fill="currentColor" opacity="0.22" />
+        <rect x="18" y="56" width="100" height="4" rx="2" fill="currentColor" opacity="0.22" />
+      </g>
+      {/* Top card with Q/A preview */}
+      <g className="visual-flashcards-top" transform="translate(56 14) rotate(5 100 60)">
+        <rect width="200" height="120" rx="14"
+          fill="rgba(8,32,42,0.85)"
+          stroke="currentColor" strokeOpacity="0.85" strokeWidth="1.4" />
+        <text x="18" y="34" fill="currentColor" fontSize="10" fontWeight="700"
+          letterSpacing="2" opacity="0.85">Q.</text>
+        <rect x="38" y="26" width="140" height="6" rx="3" fill="currentColor" opacity="0.85" />
+        <rect x="38" y="38" width="110" height="5" rx="2.5" fill="currentColor" opacity="0.55" />
+        <line x1="18" y1="60" x2="182" y2="60" stroke="currentColor" strokeOpacity="0.25" strokeDasharray="3 4" />
+        <text x="18" y="82" fill="currentColor" fontSize="10" fontWeight="700"
+          letterSpacing="2" opacity="0.85">A.</text>
+        <rect x="38" y="74" width="130" height="5" rx="2.5" fill="currentColor" opacity="0.4" />
+        <rect x="38" y="86" width="90" height="5" rx="2.5" fill="currentColor" opacity="0.4" />
+      </g>
+    </svg>
+  );
+}
+
+function EvidenceVisual() {
+  // Spaced-repetition / forgetting curve: each peak is a review session, the
+  // curve flattens over time as retention strengthens. A literal visual of
+  // the method the tile describes.
+  return (
+    <svg className="visual-svg visual-evidence" viewBox="0 0 220 110" aria-hidden>
+      <defs>
+        <linearGradient id="ev-fill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="currentColor" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <line x1="10" y1="90" x2="210" y2="90" stroke="currentColor" strokeOpacity="0.25" strokeWidth="0.8" />
+      <path
+        d="M10 60 Q35 78 60 84 Q70 30 90 50 Q108 74 130 80 Q140 28 160 48 Q176 70 195 74 Q205 32 215 38"
+        fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"
+        opacity="0.95"
+      />
+      <path
+        d="M10 60 Q35 78 60 84 Q70 30 90 50 Q108 74 130 80 Q140 28 160 48 Q176 70 195 74 Q205 32 215 38 L215 90 L10 90 Z"
+        fill="url(#ev-fill)"
+      />
+      {[60, 90, 130, 160, 195].map((x, i) => (
+        <circle key={i} cx={x} cy={[84, 50, 80, 48, 74][i]} r="3.2"
+          fill="currentColor" opacity="0.95" />
+      ))}
+    </svg>
+  );
+}
+
+function CreateVisual() {
+  // Three-step pipeline: source document → sparkle/transform → smart card.
+  return (
+    <svg className="visual-svg visual-create" viewBox="0 0 220 110" aria-hidden>
+      {/* Source doc */}
+      <g transform="translate(14 22)">
+        <rect width="46" height="62" rx="5" fill="rgba(255,255,255,0.05)"
+          stroke="currentColor" strokeOpacity="0.55" strokeWidth="1.2" />
+        <path d="M34 0 L46 12 L34 12 Z" fill="currentColor" opacity="0.35" />
+        <rect x="8" y="22" width="30" height="3" rx="1.5" fill="currentColor" opacity="0.45" />
+        <rect x="8" y="30" width="26" height="3" rx="1.5" fill="currentColor" opacity="0.35" />
+        <rect x="8" y="38" width="22" height="3" rx="1.5" fill="currentColor" opacity="0.3" />
+        <rect x="8" y="46" width="28" height="3" rx="1.5" fill="currentColor" opacity="0.3" />
+      </g>
+      {/* Arrow + sparkle */}
+      <g transform="translate(72 50)" className="visual-create-spark">
+        <path d="M0 6 L36 6 M28 0 L36 6 L28 12" fill="none"
+          stroke="currentColor" strokeOpacity="0.7" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+        <g transform="translate(18 -16)">
+          <path d="M0 -6 L1.6 -1.6 L6 0 L1.6 1.6 L0 6 L-1.6 1.6 L-6 0 L-1.6 -1.6 Z"
+            fill="currentColor" opacity="0.9" />
+        </g>
+        <g transform="translate(8 18)">
+          <path d="M0 -3 L0.8 -0.8 L3 0 L0.8 0.8 L0 3 L-0.8 0.8 L-3 0 L-0.8 -0.8 Z"
+            fill="currentColor" opacity="0.6" />
+        </g>
+      </g>
+      {/* Target smart card */}
+      <g transform="translate(124 22)">
+        <rect width="82" height="62" rx="8" fill="rgba(8,32,42,0.7)"
+          stroke="currentColor" strokeOpacity="0.85" strokeWidth="1.4" />
+        <rect x="10" y="12" width="36" height="5" rx="2.5" fill="currentColor" opacity="0.9" />
+        <rect x="10" y="22" width="62" height="3.5" rx="1.75" fill="currentColor" opacity="0.4" />
+        <rect x="10" y="30" width="54" height="3.5" rx="1.75" fill="currentColor" opacity="0.4" />
+        <rect x="10" y="38" width="58" height="3.5" rx="1.75" fill="currentColor" opacity="0.4" />
+        <circle cx="68" cy="50" r="6" fill="none" stroke="currentColor"
+          strokeOpacity="0.9" strokeWidth="1.4" />
+        <path d="M64.5 50 L67 52.5 L71.5 47.5" fill="none" stroke="currentColor"
+          strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+      </g>
+    </svg>
+  );
+}
+
+function ConnectVisual() {
+  // Five orbs linked by glowing connectors — an abstract social/research graph.
+  return (
+    <svg className="visual-svg visual-connect" viewBox="0 0 220 110" aria-hidden>
+      <g stroke="currentColor" strokeOpacity="0.45" strokeWidth="1.1" fill="none" strokeLinecap="round">
+        <line x1="46" y1="34" x2="110" y2="58" />
+        <line x1="46" y1="34" x2="84" y2="84" />
+        <line x1="110" y1="58" x2="170" y2="32" />
+        <line x1="110" y1="58" x2="174" y2="80" />
+        <line x1="84" y1="84" x2="174" y2="80" />
+        <line x1="170" y1="32" x2="174" y2="80" />
+      </g>
+      {[
+        { x: 46, y: 34, r: 11 },
+        { x: 110, y: 58, r: 14 },
+        { x: 84, y: 84, r: 10 },
+        { x: 170, y: 32, r: 10 },
+        { x: 174, y: 80, r: 11 },
+      ].map((n, i) => (
+        <g key={i} className="visual-connect-node">
+          <circle cx={n.x} cy={n.y} r={n.r + 5} fill="currentColor" opacity="0.15" />
+          <circle cx={n.x} cy={n.y} r={n.r} fill="rgba(8,32,42,0.9)"
+            stroke="currentColor" strokeOpacity="0.9" strokeWidth="1.4" />
+          <circle cx={n.x} cy={n.y - n.r * 0.25} r={n.r * 0.35} fill="currentColor" opacity="0.75" />
+          <path
+            d={`M ${n.x - n.r * 0.6} ${n.y + n.r * 0.4} Q ${n.x} ${n.y - n.r * 0.05} ${n.x + n.r * 0.6} ${n.y + n.r * 0.4}`}
+            fill="currentColor" opacity="0.55"
+          />
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+function SpotlightVisual() {
+  // Replaces the prior face portrait: a beam of light shining down on an
+  // award/trophy silhouette. Same conceptual payoff (recognition / featured
+  // work) without the personal photo.
+  return (
+    <svg className="visual-svg visual-spotlight" viewBox="0 0 160 110" aria-hidden>
+      <defs>
+        <linearGradient id="sp-beam" x1="0.5" y1="0" x2="0.5" y2="1">
+          <stop offset="0%" stopColor="currentColor" stopOpacity="0.55" />
+          <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+        </linearGradient>
+        <radialGradient id="sp-glow" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0%" stopColor="currentColor" stopOpacity="0.55" />
+          <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      {/* Light beam */}
+      <path d="M68 0 L92 0 L122 96 L38 96 Z" fill="url(#sp-beam)" />
+      {/* Floor glow */}
+      <ellipse cx="80" cy="96" rx="48" ry="6" fill="url(#sp-glow)" />
+      {/* Trophy */}
+      <g transform="translate(80 52)" className="visual-spotlight-trophy">
+        {/* Cup */}
+        <path d="M -16 -18 L 16 -18 L 14 6 Q 0 14 -14 6 Z"
+          fill="rgba(8,32,42,0.85)" stroke="currentColor" strokeOpacity="0.9" strokeWidth="1.6" />
+        {/* Handles */}
+        <path d="M -16 -14 Q -26 -14 -26 -6 Q -26 2 -18 2" fill="none"
+          stroke="currentColor" strokeOpacity="0.75" strokeWidth="1.4" />
+        <path d="M 16 -14 Q 26 -14 26 -6 Q 26 2 18 2" fill="none"
+          stroke="currentColor" strokeOpacity="0.75" strokeWidth="1.4" />
+        {/* Star inside cup */}
+        <path d="M0 -12 L2.4 -4.5 L10 -4.5 L3.8 -0.2 L6.4 7 L0 2.6 L-6.4 7 L-3.8 -0.2 L-10 -4.5 L-2.4 -4.5 Z"
+          fill="currentColor" opacity="0.95" />
+        {/* Stem */}
+        <rect x="-3" y="6" width="6" height="10" fill="currentColor" opacity="0.7" />
+        {/* Base */}
+        <rect x="-14" y="16" width="28" height="6" rx="2" fill="currentColor" opacity="0.75" />
+      </g>
+    </svg>
+  );
+}
+
+const VISUAL_BY_ID: Record<FeatureId, () => React.ReactElement> = {
+  flashcards: FlashcardsVisual,
+  evidence: EvidenceVisual,
+  create: CreateVisual,
+  connect: ConnectVisual,
+  spotlight: SpotlightVisual,
+};
 
 // Topics organized into 3 columns, read top-to-bottom by column.
 const TOPIC_COLUMNS: string[][] = [
@@ -231,42 +459,41 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ============== FEATURES (single 5-card row) ============== */}
+        {/* ============== FEATURES (asymmetric bento grid) ============== */}
         <section id="features" className="landing-features">
-          <div className="landing-features-row">
+          <div className="landing-features-bento">
             {FEATURES.map((f) => {
               const Icon = f.icon;
-              const portrait = "portrait" in f ? f.portrait : undefined;
+              const Visual = VISUAL_BY_ID[f.id];
               const dissertationTopic =
                 "dissertationTopic" in f ? f.dissertationTopic : undefined;
               return (
                 <article
-                  key={f.title}
-                  className={`landing-feature-card${portrait ? " landing-feature-card--spotlight" : ""}`}
+                  key={f.id}
+                  className={`landing-bento-card landing-bento-card--${f.layout} landing-bento-card--${f.id}`}
                   style={{ "--accent": f.accent } as React.CSSProperties}
                   data-testid={`feature-${f.title.split(" ")[0].toLowerCase()}`}
                 >
-                  {portrait ? (
-                    <div className="landing-spotlight-portrait">
-                      <img src={portrait} alt="Featured PsychPro Spotlight researcher" />
+                  <div className="landing-bento-visual" aria-hidden>
+                    <Visual />
+                  </div>
+                  <div className="landing-bento-body">
+                    <div className="landing-bento-icon" aria-hidden>
+                      <Icon />
                     </div>
-                  ) : (
-                    <div className="landing-feature-icon-wrap">
-                      <Icon aria-hidden />
-                    </div>
-                  )}
-                  <h3 className="landing-feature-title">{f.title.toUpperCase()}</h3>
-                  <p className="landing-feature-body">{f.body}</p>
-                  {dissertationTopic && (
-                    <div className="landing-spotlight-dissertation">
-                      <p className="landing-spotlight-dissertation-label">
-                        DISSERTATION TOPIC
-                      </p>
-                      <p className="landing-spotlight-dissertation-text">
-                        {dissertationTopic}
-                      </p>
-                    </div>
-                  )}
+                    <h3 className="landing-bento-title">{f.title.toUpperCase()}</h3>
+                    <p className="landing-bento-copy">{f.body}</p>
+                    {dissertationTopic && (
+                      <div className="landing-bento-dissertation">
+                        <p className="landing-bento-dissertation-label">
+                          DISSERTATION TOPIC
+                        </p>
+                        <p className="landing-bento-dissertation-text">
+                          {dissertationTopic}
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </article>
               );
             })}
@@ -641,76 +868,127 @@ const styles = `
   transform: translateY(-1px);
 }
 
-/* ============== FEATURES ============== */
+/* ============== FEATURES — asymmetric bento ============== */
+/* Layout rationale: the original five identical chips read as a uniform row
+   with no hierarchy. The bento turns Flashcards/Quizzes/Exams into a hero
+   showpiece (the core loop new users come for), with four supporting tiles
+   in a 2x2 sub-grid. Each tile gets a bespoke SVG scene that "earns" its
+   space. Below 1024px we fall back to a single column so nothing crowds. */
 .landing-features {
   max-width: 1320px;
   margin: 0 auto;
   padding: clamp(40px, 6vh, 72px) 32px;
 }
-.landing-features-row {
+.landing-features-bento {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 14px;
+  gap: 16px;
   align-items: stretch;
 }
-@media (min-width: 640px) {
-  .landing-features-row { grid-template-columns: repeat(2, 1fr); }
-}
-@media (min-width: 900px) {
-  .landing-features-row { grid-template-columns: repeat(3, 1fr); }
+@media (min-width: 720px) {
+  .landing-features-bento {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 @media (min-width: 1024px) {
-  /* Single 5-card row at standard laptop widths and up, matching the
-     reference comp. Below this we fall back to 3-then-2 wrapping. */
-  .landing-features-row { grid-template-columns: repeat(5, 1fr); }
+  .landing-features-bento {
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: minmax(210px, auto);
+  }
+  .landing-bento-card--flashcards { grid-column: span 6; grid-row: span 2; }
+  .landing-bento-card--evidence   { grid-column: span 3; grid-row: span 1; }
+  .landing-bento-card--create     { grid-column: span 3; grid-row: span 1; }
+  .landing-bento-card--connect    { grid-column: span 3; grid-row: span 1; }
+  .landing-bento-card--spotlight  { grid-column: span 3; grid-row: span 1; }
 }
 
-.landing-feature-card {
+.landing-bento-card {
   --accent: ${C.cyan};
   position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 24px 18px 22px;
-  background: linear-gradient(180deg, ${C.bgPanel}, ${C.bgPanelStrong});
+  padding: 20px 22px 22px;
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--accent) 14%, transparent) 0%, transparent 55%),
+    linear-gradient(180deg, ${C.bgPanel}, ${C.bgPanelStrong});
   border: 1px solid ${C.hairline};
-  border-radius: 14px;
+  border-radius: 18px;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.02) inset,
-    0 18px 36px -22px rgba(0, 0, 0, 0.6),
-    0 0 18px color-mix(in srgb, var(--accent) 12%, transparent);
-  transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
-  min-height: 260px;
+    0 18px 40px -22px rgba(0, 0, 0, 0.65),
+    0 0 22px color-mix(in srgb, var(--accent) 12%, transparent);
+  transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 240ms ease, box-shadow 320ms ease, background 320ms ease;
+  color: var(--accent);
 }
-.landing-feature-card:hover {
+.landing-bento-card::before {
+  /* Top-edge hairline glow seeded by --accent so each tile feels lit from
+     above by its own hue. */
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 80%, transparent), transparent);
+  opacity: 0.55;
+  pointer-events: none;
+}
+.landing-bento-card:hover {
   transform: translateY(-3px);
   border-color: color-mix(in srgb, var(--accent) 55%, transparent);
   box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent) inset,
-    0 26px 48px -22px rgba(0, 0, 0, 0.7),
-    0 0 32px color-mix(in srgb, var(--accent) 40%, transparent);
+    0 0 0 1px color-mix(in srgb, var(--accent) 24%, transparent) inset,
+    0 28px 52px -22px rgba(0, 0, 0, 0.72),
+    0 0 38px color-mix(in srgb, var(--accent) 42%, transparent);
 }
-.landing-feature-icon-wrap {
+
+.landing-bento-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex-shrink: 0;
+  margin-bottom: 16px;
+  color: var(--accent);
+  filter: drop-shadow(0 0 14px color-mix(in srgb, var(--accent) 45%, transparent));
+  transition: transform 360ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.landing-bento-card:hover .landing-bento-visual {
+  transform: translateY(-2px);
+}
+.visual-svg {
+  width: 100%;
+  height: auto;
+  max-height: 120px;
+  display: block;
+}
+
+.landing-bento-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  flex: 1;
+  min-height: 0;
+}
+.landing-bento-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
   border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
   color: var(--accent);
-  margin-bottom: 18px;
-  box-shadow:
-    0 0 18px color-mix(in srgb, var(--accent) 35%, transparent),
-    inset 0 0 0 1px color-mix(in srgb, var(--accent) 14%, transparent);
+  margin-bottom: 12px;
+  box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 30%, transparent);
 }
-.landing-feature-icon-wrap svg { width: 20px; height: 20px; }
-.landing-feature-title {
-  margin: 0 0 10px;
+.landing-bento-icon svg { width: 16px; height: 16px; }
+.landing-bento-title {
+  margin: 0 0 8px;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.18em;
@@ -718,7 +996,7 @@ const styles = `
   color: #ffffff;
   text-shadow: 0 1px 10px rgba(2, 13, 18, 0.55);
 }
-.landing-feature-body {
+.landing-bento-copy {
   margin: 0;
   font-size: 12.5px;
   line-height: 1.6;
@@ -726,47 +1004,36 @@ const styles = `
   color: rgba(225, 244, 250, 0.85);
 }
 
-/* PsychPro Spotlight — landing variant. Card grows to accommodate the
-   featured portrait and the dissertation-topic block. The portrait uses
-   the same cyan corona treatment as the dashboard SpotlightCard so the
-   two surfaces feel cut from the same atmosphere. */
-.landing-feature-card--spotlight {
-  min-height: 320px;
+/* Hero tile gets larger visual real-estate and a slightly bigger title so it
+   reads as the showpiece of the section. */
+.landing-bento-card--hero {
+  padding: 28px 28px 26px;
 }
-.landing-spotlight-portrait {
-  position: relative;
-  width: 64px;
-  height: 64px;
-  border-radius: 999px;
-  overflow: hidden;
-  margin-bottom: 16px;
-  box-shadow:
-    0 0 0 2px var(--accent),
-    0 0 22px 4px color-mix(in srgb, var(--accent) 55%, transparent),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+.landing-bento-card--hero .visual-svg {
+  max-height: none;
+  height: auto;
 }
-.landing-spotlight-portrait::before {
-  content: "";
-  position: absolute;
-  inset: -40%;
-  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 30%, transparent) 0%, transparent 65%);
-  filter: blur(12px);
-  pointer-events: none;
-  z-index: -1;
+.landing-bento-card--hero .landing-bento-visual {
+  flex: 1;
+  margin-bottom: 22px;
 }
-.landing-spotlight-portrait img {
+.landing-bento-card--hero .landing-bento-title {
+  font-size: 13.5px;
+  letter-spacing: 0.2em;
+}
+.landing-bento-card--hero .landing-bento-copy {
+  font-size: 13.5px;
+  max-width: 44ch;
+}
+
+/* Spotlight tile — dissertation block replaces the old portrait. */
+.landing-bento-dissertation {
+  margin-top: 12px;
+  padding-top: 10px;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+  border-top: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
 }
-.landing-spotlight-dissertation {
-  margin-top: 14px;
-  padding-top: 12px;
-  width: 100%;
-  border-top: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
-}
-.landing-spotlight-dissertation-label {
+.landing-bento-dissertation-label {
   margin: 0 0 6px;
   font-size: 9.5px;
   font-weight: 700;
@@ -774,7 +1041,7 @@ const styles = `
   color: var(--accent);
   text-shadow: 0 0 12px color-mix(in srgb, var(--accent) 55%, transparent);
 }
-.landing-spotlight-dissertation-text {
+.landing-bento-dissertation-text {
   margin: 0;
   font-size: 10.5px;
   line-height: 1.55;
@@ -782,6 +1049,48 @@ const styles = `
   letter-spacing: 0.03em;
   color: rgba(225, 244, 250, 0.92);
   text-shadow: 0 1px 8px rgba(2, 13, 18, 0.5);
+}
+
+/* Per-visual fine-tuning. */
+.visual-flashcards { max-height: 280px; }
+.visual-flashcards-top {
+  transform-origin: 50% 50%;
+  animation: bentoCardFloat 6.5s ease-in-out infinite;
+}
+.visual-connect-node { transform-origin: center; }
+.visual-connect-node circle:first-child {
+  animation: bentoNodePulse 3.6s ease-in-out infinite;
+}
+.visual-connect-node:nth-of-type(2) circle:first-child { animation-delay: 0.4s; }
+.visual-connect-node:nth-of-type(3) circle:first-child { animation-delay: 0.8s; }
+.visual-connect-node:nth-of-type(4) circle:first-child { animation-delay: 1.2s; }
+.visual-connect-node:nth-of-type(5) circle:first-child { animation-delay: 1.6s; }
+.visual-spotlight-trophy { animation: bentoTrophyGlow 4.2s ease-in-out infinite; }
+.visual-create-spark { animation: bentoSparkPulse 3.6s ease-in-out infinite; }
+
+@keyframes bentoCardFloat {
+  0%, 100% { transform: translate(56px, 14px) rotate(5deg); }
+  50%      { transform: translate(56px, 8px)  rotate(5deg); }
+}
+@keyframes bentoNodePulse {
+  0%, 100% { opacity: 0.15; }
+  50%      { opacity: 0.45; }
+}
+@keyframes bentoTrophyGlow {
+  0%, 100% { filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent) 35%, transparent)); }
+  50%      { filter: drop-shadow(0 0 14px color-mix(in srgb, var(--accent) 70%, transparent)); }
+}
+@keyframes bentoSparkPulse {
+  0%, 100% { opacity: 0.7; }
+  50%      { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .visual-flashcards-top,
+  .visual-connect-node circle:first-child,
+  .visual-spotlight-trophy,
+  .visual-create-spark {
+    animation: none !important;
+  }
 }
 
 /* ============== BROWSE TOPICS ============== */
