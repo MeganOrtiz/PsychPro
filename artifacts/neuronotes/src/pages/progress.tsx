@@ -166,7 +166,7 @@ export default function ProgressPage() {
             style={{ color: STUDY_PALETTE.inkSoft }}
           />
           <h2 className="text-lg font-semibold text-foreground mb-2">No progress yet</h2>
-          <p className="text-sm text-muted-foreground mb-4 max-w-sm mx-auto">
+          <p className="text-sm text-white/70 mb-4 max-w-sm mx-auto">
             Start a topic and your scores, streaks, and strengths will track here.
           </p>
           <Button
@@ -183,7 +183,7 @@ export default function ProgressPage() {
         <div className="grid grid-cols-3 gap-4 mb-6">
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <div className="text-2xl font-bold text-foreground">{studied.length}</div>
-            <div className="text-xs text-muted-foreground mt-0.5">Topics Studied</div>
+            <div className="text-xs text-white/70 mt-0.5">Topics Studied</div>
           </div>
           <div className="bg-card border border-border rounded-xl p-4 text-center">
             <div
@@ -198,11 +198,11 @@ export default function ProgressPage() {
             >
               {`${avgScore}%`}
             </div>
-            <div className="text-xs text-muted-foreground mt-0.5">Average Score</div>
+            <div className="text-xs text-white/70 mt-0.5">Average Score</div>
           </div>
           <div className="bg-card border border-border rounded-xl p-4 text-center">
-            <div className="text-2xl font-bold text-muted-foreground">{notStarted.length}</div>
-            <div className="text-xs text-muted-foreground mt-0.5">Not Started</div>
+            <div className="text-2xl font-bold text-white/70">{notStarted.length}</div>
+            <div className="text-xs text-white/70 mt-0.5">Not Started</div>
           </div>
         </div>
       )}
@@ -301,7 +301,7 @@ export default function ProgressPage() {
               className={`text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
                 active
                   ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-card text-muted-foreground border-border hover:text-foreground"
+                  : "bg-card text-white/70 border-border hover:text-foreground"
               }`}
             >
               {p.label}
@@ -322,7 +322,7 @@ export default function ProgressPage() {
             <div key={category} className="bg-card border border-border rounded-xl overflow-hidden">
               <div className="px-4 py-3 border-b border-border bg-muted/30 flex items-center justify-between">
                 <h2 className="font-semibold text-sm text-foreground">{category}</h2>
-                <span className="text-xs text-muted-foreground">{catStudied}/{catTopics.length} studied</span>
+                <span className="text-xs text-white/70">{catStudied}/{catTopics.length} studied</span>
               </div>
               <div className="divide-y divide-border">
                 {catTopics.map(t => (
@@ -342,9 +342,9 @@ export default function ProgressPage() {
                           <AlertCircle className="w-4 h-4 flex-shrink-0" style={{ color: P.surf }} />
                         )
                       ) : (
-                        <Circle className="w-4 h-4 text-muted-foreground/40 flex-shrink-0" />
+                        <Circle className="w-4 h-4 text-white/70/40 flex-shrink-0" />
                       )}
-                      <span className={`text-sm truncate ${t.progress ? "text-foreground" : "text-muted-foreground"}`}>
+                      <span className={`text-sm truncate ${t.progress ? "text-foreground" : "text-white/70"}`}>
                         {t.name}
                       </span>
                     </div>
@@ -353,15 +353,15 @@ export default function ProgressPage() {
                         <>
                           <ScoreBadge score={t.progress.score ?? 0} />
                           {t.progress.lastAccessed && (
-                            <span className="text-[11px] text-muted-foreground hidden sm:inline">
+                            <span className="text-[11px] text-white/70 hidden sm:inline">
                               {timeAgo(t.progress.lastAccessed)}
                             </span>
                           )}
                         </>
                       ) : (
-                        <span className="text-xs text-muted-foreground">Not started</span>
+                        <span className="text-xs text-white/70">Not started</span>
                       )}
-                      <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />
+                      <ChevronRight className="w-3.5 h-3.5 text-white/70" />
                     </div>
                   </div>
                 ))}

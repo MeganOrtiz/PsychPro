@@ -109,7 +109,7 @@ function TopicGridSingle({
             )}
           >
             <div className="text-sm font-medium text-foreground">{t.name}</div>
-            <div className="text-[11px] text-muted-foreground mt-0.5">
+            <div className="text-[11px] text-white/70 mt-0.5">
               {t.flashcardCount ?? 0} cards · {t.quizCount ?? 0} quiz Qs
             </div>
           </button>
@@ -170,7 +170,7 @@ function TopicGridMulti({
               </span>
               <div className="min-w-0">
                 <div className="text-sm font-medium text-foreground truncate">{t.name}</div>
-                <div className="text-[11px] text-muted-foreground mt-0.5">
+                <div className="text-[11px] text-white/70 mt-0.5">
                   {t.flashcardCount ?? 0} cards
                 </div>
               </div>
@@ -188,8 +188,8 @@ function EmptyTopics({ message }: { message: string }) {
       className="rounded-lg border border-dashed border-border bg-muted/30 p-6 text-center"
       data-testid="topic-picker-empty"
     >
-      <BookOpen className="w-6 h-6 text-muted-foreground mx-auto mb-2" />
-      <p className="text-sm text-muted-foreground mb-3">{message}</p>
+      <BookOpen className="w-6 h-6 text-white/70 mx-auto mb-2" />
+      <p className="text-sm text-white/70 mb-3">{message}</p>
       <Link href="/topics">
         <Button variant="outline" size="sm" data-testid="empty-topics-cta">
           Browse topics
@@ -203,7 +203,7 @@ function HowToBanner({ children }: { children: React.ReactNode }) {
   return (
     <div className="mb-4 flex items-start gap-2 rounded-lg border border-border bg-muted/40 px-3 py-2">
       <Info className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-      <p className="text-xs text-muted-foreground leading-snug">{children}</p>
+      <p className="text-xs text-white/70 leading-snug">{children}</p>
     </div>
   );
 }
@@ -254,7 +254,7 @@ function ActiveRecallView({ topics, howToUse }: { topics: Topic[]; howToUse: str
   const current = cards[recallIndex % cards.length];
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+      <div className="flex items-center gap-2 text-xs text-white/70">
         <span>Recalling from</span>
         <span className="font-medium text-foreground">{topic?.name}</span>
         <span className="ml-auto">
@@ -297,7 +297,7 @@ function SpacedView({ topics, howToUse }: { topics: Topic[]; howToUse: string })
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+      <div className="flex items-center gap-2 text-xs text-white/70">
         <span>Scheduling</span>
         <span className="font-medium text-foreground">{topic.name}</span>
         <button
@@ -367,7 +367,7 @@ function MixedView({ topics, howToUse }: { topics: Topic[]; howToUse: string }) 
         <HowToBanner>{howToUse}</HowToBanner>
         <div className="flex items-center justify-between">
           <h4 className="text-sm font-semibold text-foreground">Pick topics to interleave</h4>
-          <span className="text-xs text-muted-foreground">
+          <span className="text-xs text-white/70">
             {selected.size} selected · max 6
           </span>
         </div>
@@ -399,7 +399,7 @@ function MixedView({ topics, howToUse }: { topics: Topic[]; howToUse: string }) 
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+      <div className="flex items-center gap-2 text-xs text-white/70">
         <span>Interleaving</span>
         <span className="font-medium text-foreground">
           {selectedIds.length} topic{selectedIds.length === 1 ? "" : "s"} ·{" "}
@@ -433,7 +433,7 @@ function ElaborationView({ topics, howToUse }: { topics: Topic[]; howToUse: stri
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+      <div className="flex items-center gap-2 text-xs text-white/70">
         <span>Elaborating on</span>
         <span className="font-medium text-foreground">{topic.name}</span>
         <button
@@ -467,7 +467,7 @@ export default function StudyLabPage() {
         <div className="max-w-3xl mx-auto p-4 md:p-6 lg:p-8">
           <button
             onClick={() => setActive(null)}
-            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-4 font-medium"
+            className="flex items-center gap-1 text-sm text-white/70 hover:text-foreground mb-4 font-medium"
             data-testid="back-to-techniques"
           >
             <ChevronLeft className="w-4 h-4" />
@@ -480,7 +480,7 @@ export default function StudyLabPage() {
             </div>
             <div className="min-w-0">
               <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">{tech.title}</h1>
-              <p className="text-sm text-muted-foreground mt-1">{tech.longBlurb}</p>
+              <p className="text-sm text-white/70 mt-1">{tech.longBlurb}</p>
             </div>
           </header>
 
@@ -525,7 +525,7 @@ export default function StudyLabPage() {
                 <t.icon className="w-6 h-6 text-primary" />
               </div>
               <h3 className="text-base font-semibold text-foreground mb-1.5">{t.title}</h3>
-              <p className="text-sm text-muted-foreground mb-4 leading-snug">{t.blurb}</p>
+              <p className="text-sm text-white/70 mb-4 leading-snug">{t.blurb}</p>
               <span className="inline-flex items-center gap-1 text-sm font-medium text-primary">
                 Start <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
               </span>
@@ -537,7 +537,7 @@ export default function StudyLabPage() {
           <h2 className="text-lg md:text-xl font-semibold text-foreground mb-2">
             Create Custom Tools
           </h2>
-          <p className="text-sm text-muted-foreground mb-4 max-w-xl mx-auto">
+          <p className="text-sm text-white/70 mb-4 max-w-xl mx-auto">
             Generate flashcards, quizzes, study guides, and practice exams from your own notes or text.
           </p>
           <Link href="/my-decks/new?tier=standard">

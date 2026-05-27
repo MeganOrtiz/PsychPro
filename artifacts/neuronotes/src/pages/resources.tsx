@@ -229,7 +229,7 @@ export default function ResourcesPage() {
       />
 
       <div className="relative mb-6">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/70" />
         <Input
           placeholder="Search resources..."
           value={query}
@@ -240,7 +240,7 @@ export default function ResourcesPage() {
       </div>
 
       {filteredSections.length === 0 ? (
-        <div className="bg-card border border-border rounded-xl p-8 text-center text-sm text-muted-foreground" data-testid="resources-empty">
+        <div className="bg-card border border-border rounded-xl p-8 text-center text-sm text-white/70" data-testid="resources-empty">
           No resources match "{query}".
         </div>
       ) : (
@@ -253,7 +253,7 @@ export default function ResourcesPage() {
                   <Icon className="w-4 h-4 text-primary" />
                   <h2 className="font-semibold text-foreground">{section.title}</h2>
                 </div>
-                <p className="text-sm text-muted-foreground mb-4">{section.blurb}</p>
+                <p className="text-sm text-white/70 mb-4">{section.blurb}</p>
 
                 <div className="grid gap-3 sm:grid-cols-2">
                   {section.resources.map((r) => (
@@ -269,9 +269,9 @@ export default function ResourcesPage() {
                         <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors leading-snug">
                           {r.name}
                         </h3>
-                        <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-primary flex-shrink-0 mt-1" />
+                        <ExternalLink className="w-4 h-4 text-white/70 group-hover:text-primary flex-shrink-0 mt-1" />
                       </div>
-                      <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
+                      <p className="text-sm text-white/70 leading-relaxed line-clamp-3">
                         {r.description}
                       </p>
                     </a>
@@ -291,7 +291,7 @@ export default function ResourcesPage() {
           className="w-4 h-4 flex-shrink-0 mt-0.5"
           style={{ color: STUDY_PALETTE.tealDeep }}
         />
-        <p className="text-sm text-muted-foreground leading-relaxed">
+        <p className="text-sm text-white/70 leading-relaxed">
           <span className="font-semibold text-foreground">A note on scope.</span> PsychPro's content is built from publicly available diagnostic frameworks, peer-reviewed neuroscience, and clinical practice references. It is intended as an educational study aid for students and clinicians — not a substitute for clinical judgment, supervision, or the original source materials. Always consult primary sources and current guidelines for clinical decision-making.
         </p>
       </div>

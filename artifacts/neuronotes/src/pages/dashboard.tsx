@@ -627,14 +627,15 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
   //   stable user id we can match against.
   //   When no submission has loaded: fall back to the viewer's own profile
   //   photo, then their Clerk avatar, so the card never feels empty.
-  //   Final safety net: the bundled spotlight portrait — restores the face
-  //   the user expects on the dashboard whenever neither the API submission
-  //   nor the viewer profile has a usable image. Without this we render an
-  //   initial-letter circle, which the user explicitly does not want.
-  const avatarImage =
-    (spot
-      ? resolveSpotlightPhoto(spot.submitter.profilePhotoUrl)
-      : viewerProfilePhotoSrc ?? viewerAvatar) ?? spotlightPortrait;
+  //   When NO spotlight is loaded, end the chain with the bundled
+  //   spotlightPortrait so the card never collapses to an initial-letter
+  //   circle — that empty state is what the user reported. When a real
+  //   spotlight submission IS loaded, we deliberately do NOT bake the
+  //   portrait in: showing Megan's face for a different submitter would
+  //   be wrong, so we let the initials branch render instead.
+  const avatarImage = spot
+    ? resolveSpotlightPhoto(spot.submitter.profilePhotoUrl)
+    : viewerProfilePhotoSrc ?? viewerAvatar ?? spotlightPortrait;
 
   return (
     <StudySurface tone="dark" innerClassName="relative overflow-hidden p-7 text-white">

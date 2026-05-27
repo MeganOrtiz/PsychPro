@@ -103,9 +103,9 @@ export default function MyDecksPage() {
         </div>
       ) : decks.length === 0 ? (
         <div className="text-center py-16 bg-card border border-border rounded-xl">
-          <BookMarked className="w-10 h-10 mx-auto mb-3 text-muted-foreground opacity-50" />
+          <BookMarked className="w-10 h-10 mx-auto mb-3 text-white/70 opacity-50" />
           <p className="font-semibold text-foreground mb-1">No toolkits yet</p>
-          <p className="text-sm text-muted-foreground mb-5">Choose Standard or Pro Tools above to upload your study materials and generate your first toolkit.</p>
+          <p className="text-sm text-white/70 mb-5">Choose Standard or Pro Tools above to upload your study materials and generate your first toolkit.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -128,7 +128,7 @@ export default function MyDecksPage() {
                   </div>
                   <div className="flex items-center gap-3 mt-1">
                     <StatusBadge status={deck.status} />
-                    <span className="text-xs text-muted-foreground flex items-center gap-1">
+                    <span className="text-xs text-white/70 flex items-center gap-1">
                       <Clock className="w-3 h-3" />
                       {new Date(deck.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
                     </span>
@@ -137,7 +137,7 @@ export default function MyDecksPage() {
                 <button
                   onClick={(e) => deleteDeck(deck.id, e)}
                   disabled={deleting === deck.id}
-                  className="p-2 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex-shrink-0"
+                  className="p-2 rounded-lg text-white/70 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex-shrink-0"
                 >
                   {deleting === deck.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
                 </button>
