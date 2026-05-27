@@ -1,4 +1,4 @@
-import { useMemo, type ComponentType, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ComponentType, type ReactNode } from "react";
 import { useLocation, useSearch } from "wouter";
 import {
   Search,
@@ -75,9 +75,30 @@ export default function TopicsPage() {
     );
   }, [sortedTopics, search, showSearchResults]);
 
+  // Which course is open in the right-hand pane. Default to the first
+  // category once data loads. Persisted in URL via ?c= so deep links work.
+  const courseParam = params.get("c");
+  const [activeCourse, setActiveCourse] = useState<string | null>(courseParam);
+  useEffect(() => {
+    if (activeCourse) return;
+    if (categoryGroups.length > 0) setActiveCourse(categoryGroups[0].name);
+  }, [categoryGroups, activeCourse]);
+
+  const selectCourse = (name: string) => {
+    setActiveCourse(name);
+    const next = new URLSearchParams();
+    next.set("c", name);
+    navigate(`/topics?${next.toString()}`);
+  };
+
+  const activeGroup = useMemo(
+    () => categoryGroups.find(g => g.name === activeCourse) ?? categoryGroups[0],
+    [categoryGroups, activeCourse],
+  );
+
   return (
     <div className="min-h-full study-page-bg" data-testid="topics-page">
-      <div className="max-w-6xl mx-auto p-4 md:p-6 lg:p-8">
+      <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
         {/* Page header */}
         <div className="mb-5">
           <div className="flex items-center gap-3 mb-2">
@@ -90,12 +111,12 @@ export default function TopicsPage() {
             >
               <LibraryBig className="w-5 h-5" style={{ color: STUDY_PALETTE.surf }} />
             </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">Topics</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">Courses</h1>
           </div>
           <p className="text-sm text-muted-foreground">
             {showSearchResults
-              ? `Searching all topics for "${search}"`
-              : `Browse the full library — ${allTopics.length} topics, A to Z`}
+              ? `Searching all lessons for "${search}"`
+              : `${categoryGroups.length} courses · ${allTopics.length} lessons`}
           </p>
         </div>
 
@@ -103,7 +124,7 @@ export default function TopicsPage() {
         <div className="relative mb-6">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
-            placeholder="Search topics..."
+            placeholder="Search lessons..."
             value={search}
             onChange={e => setSearch(e.target.value)}
             className="pl-9 bg-card border-border text-foreground placeholder:text-muted-foreground focus-visible:ring-primary/40"
@@ -113,18 +134,19 @@ export default function TopicsPage() {
 
         {/* Body */}
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {Array(9)
-              .fill(0)
-              .map((_, i) => (
+          <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-4">
+            <Skeleton className="h-96 rounded-xl hidden lg:block" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {Array(6).fill(0).map((_, i) => (
                 <Skeleton key={i} className="h-36 rounded-xl" />
               ))}
+            </div>
           </div>
         ) : showSearchResults ? (
           visibleTopics.length === 0 ? (
             <div className="text-center py-16">
               <Brain className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
-              <p className="text-muted-foreground">No topics found</p>
+              <p className="text-muted-foreground">No lessons found</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -139,17 +161,200 @@ export default function TopicsPage() {
             </div>
           )
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {categoryGroups.map(group => (
-              <CategoryCard
-                key={group.name}
-                name={group.name}
-                items={group.items}
-                onTopicClick={id => navigate(`/topics/${id}`)}
-              />
-            ))}
+          <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-5">
+            {/* Left rail — courses */}
+            <CourseRail
+              courses={categoryGroups}
+              activeName={activeGroup?.name ?? null}
+              onSelect={selectCourse}
+            />
+
+            {/* Right pane — lessons in the active course */}
+            <div className="min-w-0">
+              {activeGroup ? (
+                <CourseLessons
+                  group={activeGroup}
+                  onLessonClick={id => navigate(`/topics/${id}`)}
+                />
+              ) : null}
+            </div>
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+// =============================================================================
+// CourseRail — vertical list of courses (left column on desktop, horizontal
+// scrollable chip strip on mobile).
+// =============================================================================
+function CourseRail({
+  courses,
+  activeName,
+  onSelect,
+}: {
+  courses: { name: string; items: Topic[] }[];
+  activeName: string | null;
+  onSelect: (name: string) => void;
+}) {
+  return (
+    <>
+      {/* Desktop: vertical sticky rail */}
+      <aside
+        className="hidden lg:flex flex-col gap-1.5 p-2 rounded-xl bg-card/60 border border-border h-fit lg:sticky lg:top-4"
+        aria-label="Courses"
+        data-testid="course-rail"
+      >
+        {courses.map(c => (
+          <CourseRailButton
+            key={c.name}
+            name={c.name}
+            count={c.items.length}
+            active={c.name === activeName}
+            onClick={() => onSelect(c.name)}
+          />
+        ))}
+      </aside>
+
+      {/* Mobile/tablet: horizontal scrolling strip */}
+      <div
+        className="lg:hidden flex gap-2 overflow-x-auto pb-2 -mx-1 px-1"
+        style={{ scrollbarWidth: "thin" }}
+        data-testid="course-rail-mobile"
+      >
+        {courses.map(c => {
+          const Icon = CATEGORY_ICONS[c.name] ?? LibraryBig;
+          const isActive = c.name === activeName;
+          return (
+            <button
+              key={c.name}
+              type="button"
+              onClick={() => onSelect(c.name)}
+              className={`shrink-0 px-3 py-2 rounded-lg border flex items-center gap-2 text-sm transition-colors ${
+                isActive
+                  ? "bg-primary/15 border-primary/50 text-foreground"
+                  : "bg-card border-border text-muted-foreground hover:text-foreground hover:border-primary/30"
+              }`}
+              data-testid={`course-pill-${c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+            >
+              <Icon className="w-4 h-4" style={{ color: STUDY_PALETTE.surf }} />
+              <span className="font-medium whitespace-nowrap">{c.name}</span>
+              <span className="text-[11px] opacity-70">{c.items.length}</span>
+            </button>
+          );
+        })}
+      </div>
+    </>
+  );
+}
+
+function CourseRailButton({
+  name,
+  count,
+  active,
+  onClick,
+}: {
+  name: string;
+  count: number;
+  active: boolean;
+  onClick: () => void;
+}) {
+  const Icon = CATEGORY_ICONS[name] ?? LibraryBig;
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      data-testid={`course-rail-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+      className={`group w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all border ${
+        active
+          ? "bg-primary/15 border-primary/50 text-foreground shadow-[0_6px_18px_-12px_rgba(118,228,247,0.6)]"
+          : "bg-transparent border-transparent text-muted-foreground hover:text-foreground hover:bg-primary/5 hover:border-border"
+      }`}
+    >
+      <div
+        className="w-9 h-9 rounded-md flex items-center justify-center border shrink-0"
+        style={{
+          background: active
+            ? "rgba(118,228,247,0.18)"
+            : "rgba(118,228,247,0.08)",
+          borderColor: active
+            ? "rgba(118,228,247,0.45)"
+            : "rgba(118,228,247,0.2)",
+        }}
+      >
+        <Icon
+          className="w-4 h-4"
+          style={{
+            color: STUDY_PALETTE.surf,
+            filter: active
+              ? "drop-shadow(0 0 4px rgba(118,228,247,0.8))"
+              : undefined,
+          }}
+        />
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="font-medium text-sm leading-tight truncate">{name}</div>
+        <div className="text-[11px] opacity-70 mt-0.5">
+          {count} {count === 1 ? "lesson" : "lessons"}
+        </div>
+      </div>
+      <ChevronRight
+        className={`w-4 h-4 shrink-0 transition-opacity ${
+          active ? "opacity-90" : "opacity-0 group-hover:opacity-60"
+        }`}
+      />
+    </button>
+  );
+}
+
+// =============================================================================
+// CourseLessons — right pane: course header + grid of lesson cards.
+// =============================================================================
+function CourseLessons({
+  group,
+  onLessonClick,
+}: {
+  group: { name: string; items: Topic[] };
+  onLessonClick: (id: number) => void;
+}) {
+  const Icon = CATEGORY_ICONS[group.name] ?? LibraryBig;
+  return (
+    <div data-testid={`course-pane-${group.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}>
+      {/* Course header */}
+      <div className="flex items-center gap-3 mb-4 pb-3 border-b border-border">
+        <div
+          className="w-11 h-11 rounded-lg flex items-center justify-center border"
+          style={{
+            background:
+              "radial-gradient(circle at 50% 40%, rgba(58,224,236,0.18), rgba(10,45,61,0.65) 70%)",
+            borderColor: "rgba(118,228,247,0.32)",
+          }}
+        >
+          <Icon
+            className="w-5 h-5"
+            style={{
+              color: STUDY_PALETTE.surf,
+              filter: "drop-shadow(0 0 4px rgba(118,228,247,0.7))",
+            }}
+          />
+        </div>
+        <div className="min-w-0">
+          <h2 className="text-lg md:text-xl font-bold text-foreground leading-tight truncate">
+            {group.name}
+          </h2>
+          <p className="text-xs text-muted-foreground">
+            {group.items.length} {group.items.length === 1 ? "lesson" : "lessons"}
+          </p>
+        </div>
+      </div>
+
+      {/* Lessons grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {group.items.map(t => (
+          <TopicCard key={t.id} topic={t} onClick={() => onLessonClick(t.id)} />
+        ))}
       </div>
     </div>
   );
@@ -173,91 +378,6 @@ const CATEGORY_ICONS: Record<string, ComponentType<{ className?: string; style?:
   "Research Methods": BarChart3,
   "Special Topics": Sparkles,
 };
-
-interface CategoryCardProps {
-  name: string;
-  items: Topic[];
-  onTopicClick: (id: number) => void;
-}
-
-function CategoryCard({ name, items, onTopicClick }: CategoryCardProps) {
-  const Icon = CATEGORY_ICONS[name] ?? LibraryBig;
-  return (
-    <div
-      className="group relative"
-      data-testid={`category-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
-    >
-      <div
-        className="bg-card border border-border rounded-xl p-5 cursor-default transition-all group-hover:border-primary/50 group-focus-within:border-primary/50 group-hover:-translate-y-0.5 group-hover:shadow-[0_10px_28px_-12px_rgba(118,228,247,0.45)]"
-      >
-        <div className="flex flex-col items-center text-center">
-          <div
-            aria-hidden
-            className="w-14 h-14 rounded-lg flex items-center justify-center border mb-3"
-            style={{
-              background:
-                "radial-gradient(circle at 50% 40%, rgba(58,224,236,0.18), rgba(10,45,61,0.65) 70%)",
-              borderColor: "rgba(118,228,247,0.32)",
-              boxShadow:
-                "inset 0 0 14px rgba(118,228,247,0.10), 0 0 18px -6px rgba(58,224,236,0.35)",
-            }}
-          >
-            <Icon
-              className="w-7 h-7"
-              style={{
-                color: STUDY_PALETTE.surf,
-                filter:
-                  "drop-shadow(0 0 3px rgba(118,228,247,0.65)) drop-shadow(0 0 9px rgba(58,224,236,0.45))",
-              }}
-            />
-          </div>
-          <h3 className="font-semibold text-foreground leading-tight">{name}</h3>
-          <p className="text-xs text-muted-foreground mt-1">
-            {items.length} {items.length === 1 ? "topic" : "topics"}
-          </p>
-        </div>
-      </div>
-
-      {/* Hover/focus reveal panel — bulleted alphabetical topic list. */}
-      <div
-        className="absolute left-0 right-0 top-full mt-2 z-30 opacity-0 pointer-events-none translate-y-1 transition-all duration-150 group-hover:opacity-100 group-hover:pointer-events-auto group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:pointer-events-auto group-focus-within:translate-y-0"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(8,32,42,0.92), rgba(6,28,38,0.96))",
-          border: "1px solid rgba(118,228,247,0.32)",
-          borderRadius: "12px",
-          backdropFilter: "blur(14px)",
-          WebkitBackdropFilter: "blur(14px)",
-          boxShadow:
-            "0 24px 60px -22px rgba(0,0,0,0.7), 0 0 24px rgba(118,228,247,0.18)",
-        }}
-        role="menu"
-        aria-label={`${name} topics`}
-      >
-        <ul className="py-2 max-h-80 overflow-y-auto">
-          {items.map(t => (
-            <li key={t.id}>
-              <button
-                type="button"
-                onClick={() => onTopicClick(t.id)}
-                className="w-full text-left px-4 py-1.5 text-[13px] text-foreground/85 hover:text-foreground hover:bg-primary/10 focus:outline-none focus-visible:bg-primary/10 transition-colors flex items-baseline gap-2"
-                role="menuitem"
-                data-testid={`category-topic-${t.id}`}
-              >
-                <span
-                  aria-hidden
-                  className="inline-block w-1.5 h-1.5 rounded-full mt-1.5 shrink-0"
-                  style={{ background: STUDY_PALETTE.surf, boxShadow: "0 0 6px rgba(118,228,247,0.7)" }}
-                />
-                <span className="leading-snug">{t.name}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
-}
 
 interface TopicCardProps {
   topic: Topic;
