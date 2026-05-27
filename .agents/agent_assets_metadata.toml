@@ -34,7 +34,7 @@ title = "brain sagittal view"
 id = "gwx_qG-wG57-WeufPu4WX"
 uri = "file://attached_assets/generated_images/brain_posterior.png"
 type = "image"
-title = "brain posterior view"
+title = "brain posterior view no ring"
 
 [[generated]]
 id = "6BYr79RlMHe_pNPJ5q1Nm"
@@ -82,7 +82,7 @@ title = "Sagittal (Lateral)"
 id = "_KCXUXlM4BIoYNl1ZjlJt"
 uri = "file://attached_assets/generated_images/brain_posterior.png"
 type = "image"
-title = "Posterior (Back)"
+title = "Posterior (Back) — no ring"
 
 [[outputs]]
 id = "OpE1KUJvvszTOEasUDN8Z"
