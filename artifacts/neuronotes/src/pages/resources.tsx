@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { STUDY_PALETTE } from "@/lib/study-theme";
+import { PageTitle } from "@/components/brand/page-title";
 
 type Resource = {
   name: string;
@@ -221,17 +222,11 @@ export default function ResourcesPage() {
   return (
     <div className="min-h-full study-page-bg" data-testid="resources-page">
       <div className="max-w-5xl mx-auto p-4 md:p-6 lg:p-8">
-      <div className="mb-6">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-            <Library className="w-5 h-5 text-primary" />
-          </div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Resources & References</h1>
-        </div>
-        <p className="text-sm text-muted-foreground">
-          The primary sources, clinical frameworks, and research databases that inform PsychPro's study content. All links open in a new tab.
-        </p>
-      </div>
+      <PageTitle
+        title="Resources & References"
+        icon={Library}
+        subtitle="The primary sources, clinical frameworks, and research databases that inform PsychPro's study content. All links open in a new tab."
+      />
 
       <div className="relative mb-6">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />

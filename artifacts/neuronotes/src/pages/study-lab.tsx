@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { PageTitle } from "@/components/brand/page-title";
 import BrainDump from "@/components/learning/brain-dump";
 import SpacedRepetitionScheduler from "@/components/learning/spaced-repetition";
 import InterleavingMode, { type InterleaveCard } from "@/components/learning/interleaving-mode";
@@ -505,17 +506,12 @@ export default function StudyLabPage() {
   return (
     <div className="min-h-full study-page-bg" data-testid="study-lab-page">
       <div className="max-w-6xl mx-auto p-4 md:p-6 lg:p-8">
-        <header className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
-              <Beaker className="w-5 h-5 text-primary" />
-            </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">Study Lab</h1>
-          </div>
-          <p className="text-sm md:text-base text-muted-foreground max-w-3xl">
-            Four evidence-based techniques applied to <span className="font-semibold text-foreground">your</span> topics. Pick a technique to get started.
-          </p>
-        </header>
+        <PageTitle
+          title="Study Lab"
+          icon={Beaker}
+          subtitle="Four evidence-based techniques applied to your topics. Pick a technique to get started."
+          className="mb-8"
+        />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {TECHNIQUES.map((t) => (

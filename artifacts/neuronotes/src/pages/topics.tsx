@@ -18,6 +18,7 @@ import { useGetTopics } from "@workspace/api-client-react";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { STUDY_PALETTE } from "@/lib/study-theme";
+import { PageTitle } from "@/components/brand/page-title";
 
 interface Topic {
   id: number;
@@ -99,26 +100,15 @@ export default function TopicsPage() {
   return (
     <div className="min-h-full study-page-bg" data-testid="topics-page">
       <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
-        {/* Page header */}
-        <div className="mb-5">
-          <div className="flex items-center gap-3 mb-2">
-            <div
-              className="w-10 h-10 rounded-lg flex items-center justify-center border"
-              style={{
-                background: "rgba(118,228,247,0.14)",
-                borderColor: "rgba(118,228,247,0.35)",
-              }}
-            >
-              <LibraryBig className="w-5 h-5" style={{ color: STUDY_PALETTE.surf }} />
-            </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">Courses</h1>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            {showSearchResults
+        <PageTitle
+          title="Courses"
+          icon={LibraryBig}
+          subtitle={
+            showSearchResults
               ? `Searching all lessons for "${search}"`
-              : `${categoryGroups.length} courses · ${allTopics.length} lessons`}
-          </p>
-        </div>
+              : `${categoryGroups.length} courses · ${allTopics.length} lessons`
+          }
+        />
 
         {/* Search */}
         <div className="relative mb-6">
@@ -200,9 +190,15 @@ function CourseRail({
 }) {
   return (
     <>
-      {/* Desktop: vertical sticky rail */}
+      {/* Desktop: vertical sticky rail — wrapped div carries --nav-glow so the
+          glass-button-glow language matches the sidebar nav exactly. */}
       <aside
-        className="hidden lg:flex flex-col gap-1.5 p-2 rounded-xl bg-card/60 border border-border h-fit lg:sticky lg:top-4"
+        className="hidden lg:flex flex-col gap-2 p-2.5 rounded-xl backdrop-blur-md border h-fit lg:sticky lg:top-4"
+        style={{
+          background: "rgba(255,255,255,0.03)",
+          borderColor: "rgba(255,255,255,0.08)",
+          ["--nav-glow" as never]: STUDY_PALETTE.surf,
+        }}
         aria-label="Courses"
         data-testid="course-rail"
       >
@@ -249,6 +245,20 @@ function CourseRail({
   );
 }
 
+// Mirrors the glass-button-with-glow language used by the sidebar nav items
+// (see NAV_ITEM_BASE/IDLE/ACTIVE in app-layout). The parent <aside> sets
+// --nav-glow so the shadow/border tint is consistent with the rest of the
+// shell.
+const RAIL_BASE =
+  "group relative w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all duration-200 border backdrop-blur-md cursor-pointer";
+const RAIL_IDLE =
+  "text-white/80 bg-white/[0.04] border-white/10 " +
+  "hover:bg-white/[0.10] hover:border-[color:var(--nav-glow)]/60 hover:text-white " +
+  "hover:shadow-[0_10px_30px_-10px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.12)]";
+const RAIL_ACTIVE =
+  "text-white bg-white/[0.12] border-[color:var(--nav-glow)]/65 " +
+  "shadow-[0_12px_32px_-10px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.16)]";
+
 function CourseRailButton({
   name,
   count,
@@ -267,36 +277,23 @@ function CourseRailButton({
       onClick={onClick}
       aria-pressed={active}
       data-testid={`course-rail-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
-      className={`group w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all border ${
-        active
-          ? "bg-primary/15 border-primary/50 text-foreground shadow-[0_6px_18px_-12px_rgba(118,228,247,0.6)]"
-          : "bg-transparent border-transparent text-muted-foreground hover:text-foreground hover:bg-primary/5 hover:border-border"
-      }`}
+      className={`${RAIL_BASE} ${active ? RAIL_ACTIVE : RAIL_IDLE}`}
     >
-      <div
-        className="w-9 h-9 rounded-md flex items-center justify-center border shrink-0"
+      <Icon
+        className="w-4 h-4 shrink-0"
         style={{
-          background: active
-            ? "rgba(118,228,247,0.18)"
-            : "rgba(118,228,247,0.08)",
-          borderColor: active
-            ? "rgba(118,228,247,0.45)"
-            : "rgba(118,228,247,0.2)",
+          color: STUDY_PALETTE.surf,
+          filter: active
+            ? "drop-shadow(0 0 6px rgba(118,228,247,0.85))"
+            : undefined,
         }}
-      >
-        <Icon
-          className="w-4 h-4"
-          style={{
-            color: STUDY_PALETTE.surf,
-            filter: active
-              ? "drop-shadow(0 0 4px rgba(118,228,247,0.8))"
-              : undefined,
-          }}
-        />
-      </div>
+      />
       <div className="flex-1 min-w-0">
         <div className="font-medium text-sm leading-tight truncate">{name}</div>
-        <div className="text-[11px] opacity-70 mt-0.5">
+        <div
+          className="text-[11px] mt-0.5"
+          style={{ color: active ? `${STUDY_PALETTE.mist}cc` : `${STUDY_PALETTE.mist}99` }}
+        >
           {count} {count === 1 ? "lesson" : "lessons"}
         </div>
       </div>
@@ -322,8 +319,12 @@ function CourseLessons({
   const Icon = CATEGORY_ICONS[group.name] ?? LibraryBig;
   return (
     <div data-testid={`course-pane-${group.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}>
-      {/* Course header */}
-      <div className="flex items-center gap-3 mb-4 pb-3 border-b border-border">
+      {/* Course header — pulled into the same dark-cerulean voice as the
+          lesson cards below so the right pane reads as one unit. */}
+      <div
+        className="flex items-center gap-3 mb-4 pb-3 border-b"
+        style={{ borderColor: "rgba(118,228,247,0.18)" }}
+      >
         <div
           className="w-11 h-11 rounded-lg flex items-center justify-center border"
           style={{
@@ -341,10 +342,13 @@ function CourseLessons({
           />
         </div>
         <div className="min-w-0">
-          <h2 className="text-lg md:text-xl font-bold text-foreground leading-tight truncate">
+          <h2
+            className="text-lg md:text-xl font-semibold leading-tight truncate"
+            style={{ color: STUDY_PALETTE.cloud }}
+          >
             {group.name}
           </h2>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs" style={{ color: `${STUDY_PALETTE.mist}cc` }}>
             {group.items.length} {group.items.length === 1 ? "lesson" : "lessons"}
           </p>
         </div>
@@ -386,12 +390,35 @@ interface TopicCardProps {
 }
 
 function TopicCard({ topic, onClick, showCategory }: TopicCardProps) {
+  // Dark-cerulean panel with white/near-white text — replaces the previous
+  // `bg-card + text-muted-foreground` combo that was hard to read against
+  // the smoky page background. Colors sourced from STUDY_PALETTE.
   return (
     <button
       type="button"
       onClick={onClick}
       data-testid={`card-topic-${topic.id}`}
-      className="group text-left bg-card border border-border rounded-xl p-4 cursor-pointer hover:border-primary/40 hover:-translate-y-0.5 hover:shadow-[0_10px_28px_-12px_rgba(118,228,247,0.45)] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+      className="group text-left rounded-xl p-4 cursor-pointer transition-all border backdrop-blur-md hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2"
+      style={{
+        background:
+          "linear-gradient(135deg, rgba(10,45,61,0.78), rgba(2,13,18,0.86))",
+        borderColor: "rgba(118,228,247,0.22)",
+        boxShadow: "inset 0 1px 0 0 rgba(255,255,255,0.06)",
+        // Use CSS custom-property so :hover can shift box-shadow cheaply.
+        ["--card-glow" as never]: "rgba(118,228,247,0.55)",
+      }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLButtonElement).style.borderColor =
+          "rgba(118,228,247,0.55)";
+        (e.currentTarget as HTMLButtonElement).style.boxShadow =
+          "0 14px 36px -14px rgba(118,228,247,0.55), inset 0 1px 0 0 rgba(255,255,255,0.10)";
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLButtonElement).style.borderColor =
+          "rgba(118,228,247,0.22)";
+        (e.currentTarget as HTMLButtonElement).style.boxShadow =
+          "inset 0 1px 0 0 rgba(255,255,255,0.06)";
+      }}
     >
       <div className="flex items-start gap-3">
         <TopicThumbnail topic={topic} />
@@ -399,20 +426,35 @@ function TopicCard({ topic, onClick, showCategory }: TopicCardProps) {
           <div className="flex items-start justify-between gap-2 mb-1">
             <div className="min-w-0">
               {showCategory ? (
-                <span className="block text-[11px] text-muted-foreground mb-0.5">
+                <span
+                  className="block text-[11px] mb-0.5 uppercase tracking-wider"
+                  style={{ color: STUDY_PALETTE.surf }}
+                >
                   {topic.category}
                 </span>
               ) : null}
-              <h3 className="font-semibold text-foreground leading-tight truncate">
+              <h3
+                className="font-semibold leading-tight truncate"
+                style={{ color: STUDY_PALETTE.cloud }}
+              >
                 {topic.name}
               </h3>
             </div>
-            <ChevronRight className="w-4 h-4 mt-0.5 shrink-0 text-muted-foreground group-hover:text-foreground transition-colors" />
+            <ChevronRight
+              className="w-4 h-4 mt-0.5 shrink-0 transition-colors"
+              style={{ color: STUDY_PALETTE.surf }}
+            />
           </div>
-          <p className="text-[13px] text-muted-foreground line-clamp-2 mb-3">
+          <p
+            className="text-[13px] line-clamp-2 mb-3 leading-relaxed"
+            style={{ color: `${STUDY_PALETTE.mist}ee` }}
+          >
             {topic.description}
           </p>
-          <div className="flex gap-4 text-xs text-muted-foreground">
+          <div
+            className="flex gap-4 text-xs"
+            style={{ color: `${STUDY_PALETTE.mist}cc` }}
+          >
             <span className="flex items-center gap-1">
               <Layers className="w-3.5 h-3.5" />
               {topic.flashcardCount} flashcards

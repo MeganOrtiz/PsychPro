@@ -5,6 +5,7 @@ import { useGetTopics } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { StudySurface } from "@/components/study/study-surface";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
+import { PageTitle } from "@/components/brand/page-title";
 import {
   listAllReflections,
   deleteReflection,
@@ -74,14 +75,12 @@ export default function ReflectionsPage() {
           </Button>
         </Link>
 
-        <div className="flex items-center gap-3 mb-2">
-          <Lightbulb className="w-6 h-6" style={{ color: P.surf }} />
-          <h1 className="text-2xl md:text-3xl font-bold">Reflections</h1>
-        </div>
-        <p className="text-sm mb-8" style={{ color: `${P.mist}99` }}>
-          Every "Lock it in" note you've saved during a quiz, grouped by topic.
-          These live on this device only — they're never sent to a server.
-        </p>
+        <PageTitle
+          title="Reflections"
+          icon={Lightbulb}
+          subtitle="Every &ldquo;Lock it in&rdquo; note you've saved during a quiz, grouped by topic. These live on this device only — they're never sent to a server."
+          className="mb-8"
+        />
 
         {!hydrated ? (
           <div

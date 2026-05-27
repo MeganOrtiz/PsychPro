@@ -36,6 +36,7 @@ import {
   Share2,
 } from "lucide-react";
 import smokeBg from "@/assets/bg/brain-clouds.png";
+import spotlightPortrait from "@/assets/spotlight/featured.png";
 import { useGetDashboardSummary, useGetTopics, useGetLeaderboard } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -626,9 +627,14 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
   //   stable user id we can match against.
   //   When no submission has loaded: fall back to the viewer's own profile
   //   photo, then their Clerk avatar, so the card never feels empty.
-  const avatarImage = spot
-    ? resolveSpotlightPhoto(spot.submitter.profilePhotoUrl)
-    : viewerProfilePhotoSrc ?? viewerAvatar;
+  //   Final safety net: the bundled spotlight portrait — restores the face
+  //   the user expects on the dashboard whenever neither the API submission
+  //   nor the viewer profile has a usable image. Without this we render an
+  //   initial-letter circle, which the user explicitly does not want.
+  const avatarImage =
+    (spot
+      ? resolveSpotlightPhoto(spot.submitter.profilePhotoUrl)
+      : viewerProfilePhotoSrc ?? viewerAvatar) ?? spotlightPortrait;
 
   return (
     <StudySurface tone="dark" innerClassName="relative overflow-hidden p-7 text-white">

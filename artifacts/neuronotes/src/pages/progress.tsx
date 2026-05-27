@@ -21,6 +21,7 @@ import { useGetUserProgress, useGetTopics } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { STUDY_PALETTE } from "@/lib/study-theme";
+import { PageTitle } from "@/components/brand/page-title";
 
 // B-9: shared score thresholds. Centralized so the strong/weak split, the
 // per-topic icon color, and the score-badge color tier never disagree.
@@ -151,17 +152,11 @@ export default function ProgressPage() {
   return (
     <div className="min-h-full study-page-bg" data-testid="progress-page">
       <div className="max-w-4xl mx-auto p-4 md:p-6 lg:p-8">
-      <div className="mb-6">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-            <BarChart3 className="w-5 h-5 text-primary" />
-          </div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">My Progress</h1>
-        </div>
-        <p className="text-sm text-muted-foreground">
-          {studied.length} of {topicsWithProgress.length} topics studied
-        </p>
-      </div>
+      <PageTitle
+        title="My Progress"
+        icon={BarChart3}
+        subtitle={`${studied.length} of ${topicsWithProgress.length} topics studied`}
+      />
 
       {/* Empty state (X-4) */}
       {isEmpty && (

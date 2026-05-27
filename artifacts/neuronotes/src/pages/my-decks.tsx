@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { authHeaders } from "@/lib/auth-headers";
+import { PageTitle } from "@/components/brand/page-title";
 
 type DeckSummary = {
   id: number;
@@ -76,14 +77,12 @@ export default function MyDecksPage() {
   return (
     <div className="min-h-full study-page-bg" data-testid="my-decks-page">
       <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
+      <PageTitle
+        title="My Tools"
+        icon={BookMarked}
+        subtitle="Tools generated from your own materials"
+      />
       <div className="mb-6">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-            <BookMarked className="w-5 h-5 text-primary" />
-          </div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">My Tools</h1>
-        </div>
-        <p className="text-sm text-muted-foreground mb-4">Tools generated from your own materials</p>
         <div className="grid grid-cols-2 gap-2">
           <Link href="/my-decks/new?tier=standard">
             <Button variant="outline" className="w-full gap-2 justify-center">
