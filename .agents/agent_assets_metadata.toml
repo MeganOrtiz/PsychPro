@@ -12,6 +12,42 @@ uri = "file://artifacts/neuronotes/src/assets/bg/smoke-full.png"
 type = "image"
 title = "dark teal smoke background"
 
+[[generated]]
+id = "mYqG9L3w7mnqahzSl-9xb"
+uri = "file://attached_assets/generated_images/brain_anterior.png"
+type = "image"
+title = "brain anterior view"
+
+[[generated]]
+id = "Cwlt1NShlx3aATa3DEZDj"
+uri = "file://attached_assets/generated_images/brain_superior.png"
+type = "image"
+title = "brain superior view"
+
+[[generated]]
+id = "LtfctadiVcilojGFtMYGN"
+uri = "file://attached_assets/generated_images/brain_sagittal.png"
+type = "image"
+title = "brain sagittal view"
+
+[[generated]]
+id = "gwx_qG-wG57-WeufPu4WX"
+uri = "file://attached_assets/generated_images/brain_posterior.png"
+type = "image"
+title = "brain posterior view"
+
+[[generated]]
+id = "6BYr79RlMHe_pNPJ5q1Nm"
+uri = "file://attached_assets/generated_images/brain_inferior.png"
+type = "image"
+title = "brain inferior view"
+
+[[generated]]
+id = "U2ZMnveoAdhiOwRqOdM4s"
+uri = "file://attached_assets/generated_images/brain_cranial_nerves.png"
+type = "image"
+title = "cranial nerves diagram"
+
 [[outputs]]
 id = "aKKI8N7WseM8lzrKZFEEq"
 uri = "file://.local/exports/brain-lab-code.tar.gz"
@@ -23,3 +59,39 @@ id = "tqOL_ZVSGI9BkOoUQ9kmW"
 uri = "file://attached_assets/topics_9_53_export.txt"
 type = "text"
 title = "Topics 9 & 53 — Full Content Export"
+
+[[outputs]]
+id = "q-qarQCZWmBkHPpftfRAj"
+uri = "file://attached_assets/generated_images/brain_anterior.png"
+type = "image"
+title = "Anterior (Front)"
+
+[[outputs]]
+id = "6azMCTFgs3PoWP18XcmOf"
+uri = "file://attached_assets/generated_images/brain_superior.png"
+type = "image"
+title = "Superior (Top)"
+
+[[outputs]]
+id = "6vTV6GsNFngnpixJbz-GB"
+uri = "file://attached_assets/generated_images/brain_sagittal.png"
+type = "image"
+title = "Sagittal (Lateral)"
+
+[[outputs]]
+id = "_KCXUXlM4BIoYNl1ZjlJt"
+uri = "file://attached_assets/generated_images/brain_posterior.png"
+type = "image"
+title = "Posterior (Back)"
+
+[[outputs]]
+id = "OpE1KUJvvszTOEasUDN8Z"
+uri = "file://attached_assets/generated_images/brain_inferior.png"
+type = "image"
+title = "Inferior (Base)"
+
+[[outputs]]
+id = "rFDk_EDPTrI1RPMLUSNu_"
+uri = "file://attached_assets/generated_images/brain_cranial_nerves.png"
+type = "image"
+title = "Cranial Nerves Diagram"
