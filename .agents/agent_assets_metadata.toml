@@ -16,37 +16,37 @@ title = "dark teal smoke background"
 id = "mYqG9L3w7mnqahzSl-9xb"
 uri = "file://attached_assets/generated_images/brain_anterior.png"
 type = "image"
-title = "brain anterior view"
+title = "brain anterior matte"
 
 [[generated]]
 id = "Cwlt1NShlx3aATa3DEZDj"
 uri = "file://attached_assets/generated_images/brain_superior.png"
 type = "image"
-title = "brain superior cyan halo"
+title = "brain superior matte"
 
 [[generated]]
 id = "LtfctadiVcilojGFtMYGN"
 uri = "file://attached_assets/generated_images/brain_sagittal.png"
 type = "image"
-title = "brain sagittal cyan halo"
+title = "brain sagittal matte"
 
 [[generated]]
 id = "gwx_qG-wG57-WeufPu4WX"
 uri = "file://attached_assets/generated_images/brain_posterior.png"
 type = "image"
-title = "brain posterior cyan halo"
+title = "brain posterior matte"
 
 [[generated]]
 id = "6BYr79RlMHe_pNPJ5q1Nm"
 uri = "file://attached_assets/generated_images/brain_inferior.png"
 type = "image"
-title = "brain inferior cyan halo"
+title = "brain inferior matte"
 
 [[generated]]
 id = "U2ZMnveoAdhiOwRqOdM4s"
 uri = "file://attached_assets/generated_images/brain_cranial_nerves.png"
 type = "image"
-title = "brain cranial nerves cyan halo"
+title = "brain cranial nerves matte"
 
 [[outputs]]
 id = "aKKI8N7WseM8lzrKZFEEq"
