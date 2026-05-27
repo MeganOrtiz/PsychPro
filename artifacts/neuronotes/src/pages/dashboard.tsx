@@ -214,18 +214,19 @@ export default function DashboardPage() {
       className="min-h-full study-page-bg"
       data-testid="dashboard-page"
     >
-      <div className="max-w-[1400px] mx-auto p-4 md:p-6 lg:p-8">
+      <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 pt-3 pb-4 md:pb-6 lg:pb-8">
         {/* Top header — notifications bell + canonical BrandBanner.
-            Uses the BrandBanner's canonical "learn. expand. connect."
-            tagline so the dashboard and the landing hero stay in sync. */}
-        <header className="relative mb-8 py-4">
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-3">
+            Tight vertical rhythm: the bell sits flush top-right and the
+            brand banner is pulled up so the journey card lands above the
+            fold on a standard laptop. */}
+        <header className="relative mb-4">
+          <div className="absolute right-0 top-0 flex items-center gap-3">
             <NotificationsBell />
           </div>
           <BrandBanner
             size="lg"
             greeting={greetingText}
-            className="mt-6 mb-8"
+            className="mt-1 mb-2"
           />
         </header>
 
@@ -548,6 +549,17 @@ type SpotlightSubmission = {
   };
 };
 
+// Pretty-print the workType taxonomy slug ("dissertation", "case_study", …)
+// so the spotlight badge reads naturally without a separate lookup table.
+function formatWorkType(slug: string | undefined | null): string {
+  if (!slug) return "Featured";
+  return slug
+    .split(/[_\s-]+/)
+    .filter(Boolean)
+    .map((w) => w[0]!.toUpperCase() + w.slice(1).toLowerCase())
+    .join(" ");
+}
+
 // Mirror of profilePhotoSrc in app-layout: object-storage paths (`/objects/...`)
 // must be prefixed with `/api/storage` so the dev/prod proxy routes them to
 // the api-server's storage endpoint. Absolute http(s) URLs pass through.
@@ -560,6 +572,7 @@ function resolveSpotlightPhoto(path: string | null | undefined): string | undefi
 
 function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
   const [spot, setSpot] = useState<SpotlightSubmission | null>(null);
+  const [viewerProfilePhoto, setViewerProfilePhoto] = useState<string | null>(null);
   const { user } = useUser();
 
   useEffect(() => {
@@ -571,6 +584,25 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
     return () => { cancelled = true; };
   }, []);
 
+  // Pull the viewer's own /api/profile/me photo so the no-spotlight fallback
+  // can use their uploaded portrait before resorting to the Clerk avatar.
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        const res = await fetch("/api/profile/me", { headers: await authHeaders() });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (cancelled) return;
+        setViewerProfilePhoto(typeof data?.profilePhotoUrl === "string" ? data.profilePhotoUrl : null);
+      } catch {
+        /* silent — avatar falls through to Clerk image or initial */
+      }
+    }
+    load();
+    return () => { cancelled = true; };
+  }, []);
+
   const viewerName =
     user?.fullName ||
     [user?.firstName, user?.lastName].filter(Boolean).join(" ").trim() ||
@@ -578,20 +610,25 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
     user?.primaryEmailAddress?.emailAddress?.split("@")[0] ||
     "PsychPro Member";
   const viewerAvatar = user?.imageUrl ?? undefined;
+  const viewerProfilePhotoSrc = resolveSpotlightPhoto(viewerProfilePhoto);
 
   const featuredName = spot ? spot.submitter.displayName : viewerName;
   const featuredRole = spot ? (spot.submitter.role ?? "Contributor") : "PsyD Candidate";
   const featuredInstitution = spot
     ? (spot.submitter.institution ?? "")
     : "Clinical Neuropsychology";
-  // When a spotlight submission exists, prefer the featured submitter's
-  // uploaded profile photo. Fall back to the signed-in viewer's avatar only
-  // when no submission has been chosen yet (so the card never feels empty).
-  // When the featured user hasn't uploaded a photo, drop through to the
-  // initial-letter fallback rather than mis-attributing the viewer's avatar.
+
+  // Avatar fallback chain:
+  //   When a spotlight submission exists: use ONLY the submitter's uploaded
+  //   portrait (or the initial-letter circle when absent). We deliberately do
+  //   NOT mix in the viewer's photo here — display-name equality isn't a
+  //   reliable identity check, and the spotlight payload doesn't expose a
+  //   stable user id we can match against.
+  //   When no submission has loaded: fall back to the viewer's own profile
+  //   photo, then their Clerk avatar, so the card never feels empty.
   const avatarImage = spot
     ? resolveSpotlightPhoto(spot.submitter.profilePhotoUrl)
-    : viewerAvatar;
+    : viewerProfilePhotoSrc ?? viewerAvatar;
 
   return (
     <StudySurface tone="dark" innerClassName="relative overflow-hidden p-7 text-white">
@@ -623,22 +660,37 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
       />
 
       <div className="relative">
-        {/* Outlined star */}
+        {/* Glass pill title — mirrors the active sidebar nav tile so the
+            spotlight header reads as part of the same UI language. */}
         <div className="flex items-center justify-center mb-3">
-          <Star className="w-7 h-7 text-white" strokeWidth={1.5} />
+          <div
+            className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border backdrop-blur-md"
+            style={{
+              background: "rgba(255,255,255,0.08)",
+              borderColor: `${PALETTE.surf}55`,
+              boxShadow: `0 12px 32px -12px ${PALETTE.surf}, inset 0 1px 0 0 rgba(255,255,255,0.16)`,
+            }}
+            data-testid="spotlight-title-pill"
+          >
+            <Star
+              className="w-4 h-4"
+              strokeWidth={1.75}
+              style={{ color: PALETTE.surf, filter: `drop-shadow(0 0 6px ${PALETTE.surf}aa)` }}
+            />
+            <span
+              className="text-base text-white"
+              style={{
+                fontFamily: '"Italiana", "Julius Sans One", serif',
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+              }}
+            >
+              Spotlight
+            </span>
+          </div>
         </div>
-        <h3
-          className="text-2xl text-center text-white"
-          style={{
-            fontFamily: '"Italiana", "Julius Sans One", serif',
-            letterSpacing: "0.04em",
-            textShadow: "0 2px 12px rgba(0,0,0,0.55)",
-          }}
-        >
-          Spotlight
-        </h3>
         <p
-          className="text-xs text-center mt-2 mb-8 leading-relaxed px-2"
+          className="text-xs text-center mt-2 mb-6 leading-relaxed px-2"
           style={{
             color: `${PALETTE.mist}cc`,
             textShadow: "0 1px 6px rgba(0,0,0,0.5)",
@@ -724,6 +776,58 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
             </p>
           )}
         </div>
+
+        {/* Submission details — work-type chip + title + truncated abstract.
+            Only renders when a real spotlight submission has loaded so the
+            empty/fallback state stays clean. The whole block is clickable
+            and links into /featured-work?submission=<id>. */}
+        {spot && (spot.title || spot.abstract) && (
+          <button
+            type="button"
+            onClick={() => onCta(spot.id)}
+            className="group block w-full mt-6 text-left rounded-xl border backdrop-blur-md p-4 transition-all hover:bg-white/[0.08] hover:border-[color:var(--nav-glow,#76e4f7)]/55"
+            style={{
+              background: "rgba(255,255,255,0.04)",
+              borderColor: `${PALETTE.surf}33`,
+              boxShadow: "inset 0 1px 0 0 rgba(255,255,255,0.08)",
+            }}
+            data-testid="spotlight-submission-detail"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <span
+                className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] px-2 py-0.5 rounded-full border"
+                style={{
+                  background: `${PALETTE.surf}1c`,
+                  borderColor: `${PALETTE.surf}55`,
+                  color: PALETTE.mist,
+                }}
+              >
+                <Sparkles className="w-2.5 h-2.5" />
+                {formatWorkType(spot.workType)}
+              </span>
+              <ArrowUpRight
+                className="w-4 h-4 opacity-60 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                style={{ color: PALETTE.mist }}
+              />
+            </div>
+            {spot.title && (
+              <p
+                className="text-sm font-semibold leading-snug text-white line-clamp-2"
+                style={{ textShadow: "0 1px 6px rgba(0,0,0,0.45)" }}
+              >
+                {spot.title}
+              </p>
+            )}
+            {spot.abstract && (
+              <p
+                className="text-xs mt-1.5 leading-relaxed line-clamp-3"
+                style={{ color: `${PALETTE.mist}b8` }}
+              >
+                {spot.abstract}
+              </p>
+            )}
+          </button>
+        )}
 
         {/* Footer — muted FEATURED WORK label on the left, share icon right.
             Both targets link into /featured-work (deep-linked to the

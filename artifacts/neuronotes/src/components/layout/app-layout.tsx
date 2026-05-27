@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useSearch } from "wouter";
-import { Brain, LayoutDashboard, BookOpen, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck, BookMarked, Library, Wrench, Sparkles, Star, Beaker, Lightbulb, Users } from "lucide-react";
+import { Brain, LayoutDashboard, BookOpen, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck, BookMarked, Library, Wrench, Sparkles, Star, Beaker, Lightbulb, Users, Lock } from "lucide-react";
 import { UserButton } from "@clerk/clerk-react";
 import { authHeaders } from "@/lib/auth-headers";
 import { Button } from "@/components/ui/button";
@@ -11,12 +11,20 @@ type NavItem = { href: string; label: string; icon: React.ComponentType<{ classN
 
 // Shared glass tile styling for sidebar nav items — translucent surface
 // with a soft teal glow on hover, mirroring the landing page chip styling.
+// Sidebar nav tile — translucent glass surface with a layered teal glow on
+// hover. We use two shadows: a tight inner highlight (inset white) so the
+// pill reads as actual glass, plus a generous outer drop-shadow tinted with
+// --nav-glow so the whole row lifts off the dark sidebar. The active state
+// is the same recipe at a slightly higher intensity.
 const NAV_ITEM_BASE =
-  "group relative flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all border backdrop-blur-sm";
+  "group relative flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all duration-200 border backdrop-blur-md";
 const NAV_ITEM_IDLE =
-  "text-sidebar-foreground/85 bg-white/[0.03] border-white/5 hover:bg-white/[0.07] hover:border-[color:var(--nav-glow)]/45 hover:text-white hover:shadow-[0_8px_24px_-12px_var(--nav-glow)]";
+  "text-sidebar-foreground/85 bg-white/[0.04] border-white/10 " +
+  "hover:bg-white/[0.10] hover:border-[color:var(--nav-glow)]/60 hover:text-white " +
+  "hover:shadow-[0_10px_30px_-10px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.12)]";
 const NAV_ITEM_ACTIVE =
-  "text-white bg-white/[0.10] border-[color:var(--nav-glow)]/55 shadow-[0_8px_24px_-10px_var(--nav-glow)]";
+  "text-white bg-white/[0.12] border-[color:var(--nav-glow)]/65 " +
+  "shadow-[0_12px_32px_-10px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.16)]";
 
 function navItemClass(isActive: boolean) {
   return cn(NAV_ITEM_BASE, isActive ? NAV_ITEM_ACTIVE : NAV_ITEM_IDLE);
@@ -265,54 +273,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
               </Link>
             );
           })}
-          <Link
-            href="/my-decks"
-            onClick={() => setSidebarOpen(false)}
-            data-testid="nav-my-tools"
-          >
-            <div className={navItemClass(isOnMyDecksList)}>
-              <BookMarked className="w-5 h-5 flex-shrink-0" />
-              <span className="text-sm font-medium">My Tools</span>
-              {!isScholar && !isOnMyDecksList && (
-                <span className="ml-auto text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded bg-white/10 text-white/70 border border-white/10">
-                  Pro
-                </span>
-              )}
-              {isOnMyDecksList && <ChevronRight className="w-4 h-4 ml-auto" />}
-            </div>
-          </Link>
-          <Link
-            href="/my-decks/new?tier=standard"
-            onClick={() => setSidebarOpen(false)}
-            data-testid="nav-standard-tools"
-          >
-            <div className={navItemClass(isOnStandardTools)}>
-              <Wrench className="w-5 h-5 flex-shrink-0" />
-              <span className="text-sm font-medium">Standard Tools</span>
-              {!isScholar && !isOnStandardTools && (
-                <span className="ml-auto text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded bg-white/10 text-white/70 border border-white/10">
-                  Pro
-                </span>
-              )}
-              {isOnStandardTools && <ChevronRight className="w-4 h-4 ml-auto" />}
-            </div>
-          </Link>
-          <Link
-            href="/my-decks/new?tier=pro"
-            onClick={() => setSidebarOpen(false)}
-            data-testid="nav-pro-tools"
-          >
-            <div className={navItemClass(isOnProTools)}>
-              <Sparkles className="w-5 h-5 flex-shrink-0" />
-              <span className="text-sm font-medium">Pro Tools</span>
-              {!isScholar && !isOnProTools && (
-                <span className="ml-auto text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded bg-white/10 text-white/70 border border-white/10">
-                  Pro
-                </span>
-              )}
-              {isOnProTools && <ChevronRight className="w-4 h-4 ml-auto" />}
-            </div>
-          </Link>
+          <ToolsStudio
+            isScholar={isScholar}
+            isOnMyDecksList={isOnMyDecksList}
+            isOnStandardTools={isOnStandardTools}
+            isOnProTools={isOnProTools}
+            onNavigate={() => setSidebarOpen(false)}
+          />
 
           <div className="px-3 pt-3 pb-1">
             <p className="text-xs font-semibold text-white/45 uppercase tracking-wider">Community</p>
@@ -455,6 +422,124 @@ export default function AppLayout({ children }: AppLayoutProps) {
         <main className="flex-1 overflow-y-auto" data-testid="main-content">
           {children}
         </main>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// ToolsStudio — single bordered "studio" tile that groups the three deck-
+// builder entries (My Tools / Standard Tools / Pro Tools). Each row gets a
+// tier-color dot on the left edge instead of a repeated "Pro" pill, and the
+// whole card shows ONE consolidated lock when the user isn't on Scholar.
+// Keeps the sidebar feeling editorial instead of bullet-list-of-CTAs.
+// ---------------------------------------------------------------------------
+function ToolsStudio({
+  isScholar,
+  isOnMyDecksList,
+  isOnStandardTools,
+  isOnProTools,
+  onNavigate,
+}: {
+  isScholar: boolean;
+  isOnMyDecksList: boolean;
+  isOnStandardTools: boolean;
+  isOnProTools: boolean;
+  onNavigate: () => void;
+}) {
+  const anyActive = isOnMyDecksList || isOnStandardTools || isOnProTools;
+  type Tier = {
+    href: string;
+    label: string;
+    icon: React.ComponentType<{ className?: string }>;
+    dot: string;
+    isActive: boolean;
+    testId: string;
+  };
+  const tiers: Tier[] = [
+    {
+      href: "/my-decks",
+      label: "My Tools",
+      icon: BookMarked,
+      dot: STUDY_PALETTE.surf,
+      isActive: isOnMyDecksList,
+      testId: "nav-my-tools",
+    },
+    {
+      href: "/my-decks/new?tier=standard",
+      label: "Standard Tools",
+      icon: Wrench,
+      dot: STUDY_PALETTE.teal,
+      isActive: isOnStandardTools,
+      testId: "nav-standard-tools",
+    },
+    {
+      href: "/my-decks/new?tier=pro",
+      label: "Pro Tools",
+      icon: Sparkles,
+      dot: STUDY_PALETTE.tealDeep,
+      isActive: isOnProTools,
+      testId: "nav-pro-tools",
+    },
+  ];
+
+  return (
+    <div
+      className={cn(
+        "relative mt-1 rounded-xl border backdrop-blur-md p-1.5 transition-all",
+        anyActive
+          ? "bg-white/[0.08] border-[color:var(--nav-glow)]/45 shadow-[0_10px_30px_-12px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.10)]"
+          : "bg-white/[0.04] border-white/10 hover:border-[color:var(--nav-glow)]/35",
+      )}
+    >
+      <div className="flex items-center justify-between px-2 pt-1 pb-1.5">
+        <p className="text-[10px] font-semibold tracking-[0.22em] uppercase text-white/55">
+          Tools Studio
+        </p>
+        {!isScholar && (
+          <span
+            className="inline-flex items-center gap-1 text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-white/10 text-white/70 border border-white/15"
+            title="Upgrade to Scholar to unlock all tools"
+          >
+            <Lock className="w-2.5 h-2.5" />
+            Pro
+          </span>
+        )}
+      </div>
+      <div className="space-y-1">
+        {tiers.map((t) => {
+          const Icon = t.icon;
+          return (
+            <Link
+              key={t.href}
+              href={t.href}
+              onClick={onNavigate}
+              data-testid={t.testId}
+            >
+              <div
+                className={cn(
+                  "group relative flex items-center gap-3 pl-3 pr-2 py-2 rounded-lg cursor-pointer transition-all border",
+                  t.isActive
+                    ? "bg-white/[0.10] border-[color:var(--nav-glow)]/55 text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.12)]"
+                    : "bg-white/[0.02] border-white/[0.06] text-white/80 hover:bg-white/[0.08] hover:text-white hover:border-[color:var(--nav-glow)]/40",
+                )}
+              >
+                {/* Tier color dot — left edge accent */}
+                <span
+                  aria-hidden
+                  className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full"
+                  style={{
+                    background: t.dot,
+                    boxShadow: t.isActive ? `0 0 10px ${t.dot}` : "none",
+                  }}
+                />
+                <Icon className="w-4 h-4 flex-shrink-0" />
+                <span className="text-sm font-medium flex-1 min-w-0 truncate">{t.label}</span>
+                {t.isActive && <ChevronRight className="w-4 h-4 flex-shrink-0" />}
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
