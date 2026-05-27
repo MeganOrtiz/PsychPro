@@ -119,7 +119,7 @@ export function NotificationsBell() {
 
       {open && (
         <div
-          className="absolute right-0 top-12 w-80 max-h-[70vh] overflow-y-auto rounded-2xl z-50 shadow-2xl"
+          className="absolute right-0 top-12 w-80 max-h-[70vh] overflow-y-auto rounded-2xl z-[60] shadow-2xl"
           style={{
             background: "rgba(6, 32, 44, 0.95)",
             border: "1px solid rgba(118, 228, 247, 0.28)",

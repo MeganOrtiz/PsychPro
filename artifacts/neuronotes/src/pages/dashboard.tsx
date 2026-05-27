@@ -221,7 +221,12 @@ export default function DashboardPage() {
             brand banner is pulled up so the journey card lands above the
             fold on a standard laptop. */}
         <header className="relative mb-4">
-          <div className="absolute right-0 top-0 flex items-center gap-3">
+          {/* z-20 is required: the BrandBanner below is a later sibling in
+              the same `relative` header, so without an explicit z it stacks
+              above this absolutely-positioned wrapper and swallows the
+              bell's click events (the BrandBanner outer flex container is
+              full-width even though its text is centered). */}
+          <div className="absolute right-0 top-0 z-20 flex items-center gap-3">
             <NotificationsBell />
           </div>
           <BrandBanner
