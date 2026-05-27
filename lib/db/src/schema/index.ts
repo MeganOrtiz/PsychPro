@@ -257,6 +257,60 @@ export const adminTokensTable = pgTable("admin_tokens", {
 export type AdminToken = typeof adminTokensTable.$inferSelect;
 
 // =============================================================================
+// OAuth 2.1 + PKCE (RFC 7591 dynamic client registration) for the MCP route.
+//
+// Persisted to Postgres so registered clients and issued tokens survive
+// server restarts and horizontal scaling (Autoscale). The in-memory version
+// previously caused "invalid_client / Unknown client_id" errors whenever a
+// new instance handled `/authorize` after `/register` landed on a sibling.
+// =============================================================================
+
+export const oauthClientsTable = pgTable("oauth_clients", {
+  clientId: text("client_id").primaryKey(),
+  clientIdIssuedAt: integer("client_id_issued_at").notNull(),
+  redirectUrisJson: text("redirect_uris_json").notNull(),
+  metadataJson: text("metadata_json").notNull().default("{}"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+export type OauthClient = typeof oauthClientsTable.$inferSelect;
+
+export const oauthAuthCodesTable = pgTable(
+  "oauth_auth_codes",
+  {
+    code: text("code").primaryKey(),
+    clientId: text("client_id").notNull(),
+    redirectUri: text("redirect_uri").notNull(),
+    codeChallenge: text("code_challenge").notNull(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  },
+  (table) => [index("oauth_auth_codes_expires_idx").on(table.expiresAt)],
+);
+export type OauthAuthCode = typeof oauthAuthCodesTable.$inferSelect;
+
+export const oauthAccessTokensTable = pgTable(
+  "oauth_access_tokens",
+  {
+    token: text("token").primaryKey(),
+    clientId: text("client_id").notNull(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  },
+  (table) => [index("oauth_access_tokens_expires_idx").on(table.expiresAt)],
+);
+export type OauthAccessToken = typeof oauthAccessTokensTable.$inferSelect;
+
+export const oauthRefreshTokensTable = pgTable(
+  "oauth_refresh_tokens",
+  {
+    token: text("token").primaryKey(),
+    clientId: text("client_id").notNull(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    currentAccessToken: text("current_access_token"),
+  },
+  (table) => [index("oauth_refresh_tokens_expires_idx").on(table.expiresAt)],
+);
+export type OauthRefreshToken = typeof oauthRefreshTokensTable.$inferSelect;
+
+// =============================================================================
 // Community: user profiles & connect preferences (task #65)
 //
 // Foundation for the Community surface. Backs the Profile page and exposes

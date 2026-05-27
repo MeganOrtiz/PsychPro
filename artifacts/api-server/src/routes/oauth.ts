@@ -71,7 +71,7 @@ router.get("/.well-known/oauth-authorization-server", handleDiscovery);
  * in memory — the trust boundary is the PKCE-bound auth code + the
  * registered redirect_uri, not the client_id itself.
  */
-router.post("/oauth/register", (req: Request, res: Response): void => {
+router.post("/oauth/register", async (req: Request, res: Response): Promise<void> => {
   const body = req.body;
   if (!body || typeof body !== "object") {
     res.status(400).json({ error: "invalid_client_metadata", error_description: "Expected JSON object body" });
@@ -114,7 +114,7 @@ router.post("/oauth/register", (req: Request, res: Response): void => {
     }
     redirectUris.push(u);
   }
-  const client = registerClient({
+  const client = await registerClient({
     redirectUris,
     metadata: body as Record<string, unknown>,
   });
@@ -163,12 +163,12 @@ function paramsFromQuery(q: Record<string, string | undefined>): AuthorizeParams
  * an unverified URI. Once redirect_uri is verified, parameter errors are
  * reported via the standard OAuth error redirect.
  */
-function completeAuthorize(res: Response, p: AuthorizeParams): void {
+async function completeAuthorize(res: Response, p: AuthorizeParams): Promise<void> {
   if (!p.clientId) {
     res.status(400).json({ error: "invalid_request", error_description: "Missing client_id" });
     return;
   }
-  const client = getClient(p.clientId);
+  const client = await getClient(p.clientId);
   if (!client) {
     res.status(400).json({ error: "invalid_client", error_description: "Unknown client_id" });
     return;
@@ -194,18 +194,18 @@ function completeAuthorize(res: Response, p: AuthorizeParams): void {
     redirectWithError(res, p.redirectUri, state, "invalid_request", "code_challenge missing or wrong length");
     return;
   }
-  const code = issueAuthCode({ clientId: p.clientId, redirectUri: p.redirectUri, codeChallenge: p.codeChallenge });
+  const code = await issueAuthCode({ clientId: p.clientId, redirectUri: p.redirectUri, codeChallenge: p.codeChallenge });
   const target = new URL(p.redirectUri);
   target.searchParams.set("code", code);
   if (state) target.searchParams.set("state", state);
   res.redirect(302, target.toString());
 }
 
-router.get("/oauth/authorize", (req: Request, res: Response): void => {
-  completeAuthorize(res, paramsFromQuery(req.query as Record<string, string | undefined>));
+router.get("/oauth/authorize", async (req: Request, res: Response): Promise<void> => {
+  await completeAuthorize(res, paramsFromQuery(req.query as Record<string, string | undefined>));
 });
 
-router.post("/oauth/token", (req: Request, res: Response): void => {
+router.post("/oauth/token", async (req: Request, res: Response): Promise<void> => {
   res.set("Cache-Control", "no-store");
   // Token endpoint accepts both form-encoded (per RFC 6749) and JSON bodies —
   // the global `express.urlencoded({ extended: true })` and `express.json()`
@@ -218,7 +218,7 @@ router.post("/oauth/token", (req: Request, res: Response): void => {
     res.status(400).json({ error: "invalid_request", error_description: "Missing client_id" });
     return;
   }
-  if (!getClient(clientId)) {
+  if (!(await getClient(clientId))) {
     res.status(400).json({ error: "invalid_client", error_description: "Unknown client_id" });
     return;
   }
@@ -231,12 +231,12 @@ router.post("/oauth/token", (req: Request, res: Response): void => {
       res.status(400).json({ error: "invalid_request", error_description: "Missing code, redirect_uri, or code_verifier" });
       return;
     }
-    const result = consumeAuthCode({ code, clientId, redirectUri, codeVerifier });
+    const result = await consumeAuthCode({ code, clientId, redirectUri, codeVerifier });
     if (!result.ok) {
       res.status(400).json({ error: result.error, error_description: result.description });
       return;
     }
-    const tokens = issueTokens(clientId);
+    const tokens = await issueTokens(clientId);
     res.json({
       access_token: tokens.accessToken,
       token_type: "Bearer",
@@ -253,7 +253,7 @@ router.post("/oauth/token", (req: Request, res: Response): void => {
       res.status(400).json({ error: "invalid_request", error_description: "Missing refresh_token" });
       return;
     }
-    const result = rotateRefreshToken({ refreshToken, clientId });
+    const result = await rotateRefreshToken({ refreshToken, clientId });
     if (!result.ok) {
       res.status(400).json({ error: result.error, error_description: result.description });
       return;

@@ -1,21 +1,23 @@
 import { randomBytes, randomUUID, createHash, timingSafeEqual } from "node:crypto";
+import {
+  db,
+  oauthClientsTable,
+  oauthAuthCodesTable,
+  oauthAccessTokensTable,
+  oauthRefreshTokensTable,
+} from "@workspace/db";
+import { and, eq, lt } from "drizzle-orm";
 
 /**
- * Single-user OAuth 2.1 + PKCE store for the MCP route.
+ * OAuth 2.1 + PKCE store for the MCP route — Postgres-backed.
  *
- * Why this exists: Claude.ai's web "Add custom connector" dialog only supports
- * OAuth (no plain bearer-token field), so we expose an OAuth-compliant flow on
- * top of our existing MCP server. Because the only legitimate operator is the
- * site owner, the authorization endpoint auto-approves without a consent
- * screen — PKCE S256 + a short-lived auth code + a registered redirect_uri
- * still keep an attacker who only sees the redirect from completing the
- * exchange.
- *
- * Storage is in-memory `Map`s. That's intentional: this server runs as a
- * single instance, the only client is Claude (which re-registers and re-auths
- * if its tokens vanish), and persisting OAuth state to Postgres would add
- * surface area for a feature one human uses. If we ever scale horizontally or
- * add multi-user OAuth, swap the maps for a DB-backed store.
+ * Why DB-backed: Claude.ai's "Add custom connector" dialog does OAuth dynamic
+ * client registration (RFC 7591) against this server. The auto-approve
+ * authorization flow auto-issues PKCE-bound auth codes without a consent
+ * screen (single-owner deployment). When state was held in-memory, prod
+ * (Autoscale + occasional restarts) returned "invalid_client / Unknown
+ * client_id" whenever `/authorize` landed on a different instance than the
+ * `/register` call. Persisting to Postgres fixes that.
  *
  * Tokens issued here are bearer tokens prefixed `ppmcp_oauth_` so the MCP
  * route can tell them apart from the existing `ppmcp_` admin tokens minted
@@ -37,44 +39,19 @@ export interface RegisteredClient {
   metadata: Record<string, unknown>;
 }
 
-interface AuthCode {
-  code: string;
-  clientId: string;
-  redirectUri: string;
-  codeChallenge: string;
-  codeChallengeMethod: "S256";
-  expiresAt: number;
-}
-
-interface AccessToken {
-  token: string;
-  clientId: string;
-  expiresAt: number;
-}
-
-interface RefreshToken {
-  token: string;
-  clientId: string;
-  expiresAt: number;
-  // The currently-active access token issued from this refresh chain. When the
-  // refresh token is rotated, the previously-issued access token is revoked.
-  currentAccessToken: string | null;
-}
-
-const clients = new Map<string, RegisteredClient>();
-const authCodes = new Map<string, AuthCode>();
-const accessTokens = new Map<string, AccessToken>();
-const refreshTokens = new Map<string, RefreshToken>();
-
 let lastSweep = 0;
 const SWEEP_INTERVAL_MS = 60_000;
 
-function sweepIfStale(now: number): void {
+async function sweepExpired(now: number): Promise<void> {
   if (now - lastSweep < SWEEP_INTERVAL_MS) return;
   lastSweep = now;
-  for (const [k, v] of authCodes) if (v.expiresAt <= now) authCodes.delete(k);
-  for (const [k, v] of accessTokens) if (v.expiresAt <= now) accessTokens.delete(k);
-  for (const [k, v] of refreshTokens) if (v.expiresAt <= now) refreshTokens.delete(k);
+  const cutoff = new Date(now);
+  // Fire-and-forget — sweeps should never block a hot request.
+  void Promise.all([
+    db.delete(oauthAuthCodesTable).where(lt(oauthAuthCodesTable.expiresAt, cutoff)),
+    db.delete(oauthAccessTokensTable).where(lt(oauthAccessTokensTable.expiresAt, cutoff)),
+    db.delete(oauthRefreshTokensTable).where(lt(oauthRefreshTokensTable.expiresAt, cutoff)),
+  ]).catch(() => undefined);
 }
 
 function constantTimeStringEquals(a: string, b: string): boolean {
@@ -94,23 +71,57 @@ export function verifyPkceS256(verifier: string, expectedChallenge: string): boo
   return constantTimeStringEquals(computed, expectedChallenge);
 }
 
-export function registerClient(input: {
+export async function registerClient(input: {
   redirectUris: string[];
   metadata: Record<string, unknown>;
-}): RegisteredClient {
+}): Promise<RegisteredClient> {
   const clientId = randomUUID();
-  const record: RegisteredClient = {
+  const issuedAt = Math.floor(Date.now() / 1000);
+  await db.insert(oauthClientsTable).values({
     clientId,
-    clientIdIssuedAt: Math.floor(Date.now() / 1000),
+    clientIdIssuedAt: issuedAt,
+    redirectUrisJson: JSON.stringify(input.redirectUris),
+    metadataJson: JSON.stringify(input.metadata ?? {}),
+  });
+  return {
+    clientId,
+    clientIdIssuedAt: issuedAt,
     redirectUris: input.redirectUris,
     metadata: input.metadata,
   };
-  clients.set(clientId, record);
-  return record;
 }
 
-export function getClient(clientId: string): RegisteredClient | null {
-  return clients.get(clientId) ?? null;
+function rowToClient(row: typeof oauthClientsTable.$inferSelect): RegisteredClient {
+  let redirectUris: string[] = [];
+  let metadata: Record<string, unknown> = {};
+  try {
+    const parsed = JSON.parse(row.redirectUrisJson);
+    if (Array.isArray(parsed)) redirectUris = parsed.filter((u): u is string => typeof u === "string");
+  } catch {
+    /* tolerate corrupt rows by treating as no redirect uris */
+  }
+  try {
+    const parsed = JSON.parse(row.metadataJson);
+    if (parsed && typeof parsed === "object") metadata = parsed as Record<string, unknown>;
+  } catch {
+    /* ignore */
+  }
+  return {
+    clientId: row.clientId,
+    clientIdIssuedAt: row.clientIdIssuedAt,
+    redirectUris,
+    metadata,
+  };
+}
+
+export async function getClient(clientId: string): Promise<RegisteredClient | null> {
+  if (!clientId) return null;
+  const [row] = await db
+    .select()
+    .from(oauthClientsTable)
+    .where(eq(oauthClientsTable.clientId, clientId))
+    .limit(1);
+  return row ? rowToClient(row) : null;
 }
 
 export function clientAllowsRedirectUri(client: RegisteredClient, redirectUri: string): boolean {
@@ -118,48 +129,50 @@ export function clientAllowsRedirectUri(client: RegisteredClient, redirectUri: s
   return client.redirectUris.some((u) => u === redirectUri);
 }
 
-export function issueAuthCode(input: {
+export async function issueAuthCode(input: {
   clientId: string;
   redirectUri: string;
   codeChallenge: string;
-}): string {
-  sweepIfStale(Date.now());
+}): Promise<string> {
+  await sweepExpired(Date.now());
   const code = randomBytes(32).toString("base64url");
-  authCodes.set(code, {
+  await db.insert(oauthAuthCodesTable).values({
     code,
     clientId: input.clientId,
     redirectUri: input.redirectUri,
     codeChallenge: input.codeChallenge,
-    codeChallengeMethod: "S256",
-    expiresAt: Date.now() + AUTH_CODE_TTL_MS,
+    expiresAt: new Date(Date.now() + AUTH_CODE_TTL_MS),
   });
   return code;
 }
 
 export type ConsumeAuthCodeResult =
-  | { ok: true; code: AuthCode }
+  | { ok: true }
   | { ok: false; error: "invalid_grant"; description: string };
 
 /** Single-use: deletes the code regardless of validity outcome. */
-export function consumeAuthCode(input: {
+export async function consumeAuthCode(input: {
   code: string;
   clientId: string;
   redirectUri: string;
   codeVerifier: string;
-}): ConsumeAuthCodeResult {
+}): Promise<ConsumeAuthCodeResult> {
   const now = Date.now();
-  sweepIfStale(now);
-  const entry = authCodes.get(input.code);
+  await sweepExpired(now);
+  // Atomic single-use: DELETE … RETURNING ensures only one caller wins.
+  const deleted = await db
+    .delete(oauthAuthCodesTable)
+    .where(eq(oauthAuthCodesTable.code, input.code))
+    .returning();
+  const entry = deleted[0];
   if (!entry) return { ok: false, error: "invalid_grant", description: "Unknown or already-used authorization code" };
-  // Always remove on lookup — auth codes are single-use even when validation fails.
-  authCodes.delete(input.code);
-  if (entry.expiresAt <= now) return { ok: false, error: "invalid_grant", description: "Authorization code has expired" };
+  if (entry.expiresAt.getTime() <= now) return { ok: false, error: "invalid_grant", description: "Authorization code has expired" };
   if (entry.clientId !== input.clientId) return { ok: false, error: "invalid_grant", description: "client_id mismatch" };
   if (entry.redirectUri !== input.redirectUri) return { ok: false, error: "invalid_grant", description: "redirect_uri mismatch" };
   if (!verifyPkceS256(input.codeVerifier, entry.codeChallenge)) {
     return { ok: false, error: "invalid_grant", description: "PKCE verification failed" };
   }
-  return { ok: true, code: entry };
+  return { ok: true };
 }
 
 export interface IssuedTokens {
@@ -168,19 +181,19 @@ export interface IssuedTokens {
   expiresIn: number;
 }
 
-export function issueTokens(clientId: string): IssuedTokens {
+export async function issueTokens(clientId: string): Promise<IssuedTokens> {
   const now = Date.now();
   const accessToken = `${OAUTH_TOKEN_PREFIX}${randomBytes(32).toString("base64url")}`;
   const refreshToken = `${REFRESH_TOKEN_PREFIX}${randomBytes(32).toString("base64url")}`;
-  accessTokens.set(accessToken, {
+  await db.insert(oauthAccessTokensTable).values({
     token: accessToken,
     clientId,
-    expiresAt: now + ACCESS_TOKEN_TTL_MS,
+    expiresAt: new Date(now + ACCESS_TOKEN_TTL_MS),
   });
-  refreshTokens.set(refreshToken, {
+  await db.insert(oauthRefreshTokensTable).values({
     token: refreshToken,
     clientId,
-    expiresAt: now + REFRESH_TOKEN_TTL_MS,
+    expiresAt: new Date(now + REFRESH_TOKEN_TTL_MS),
     currentAccessToken: accessToken,
   });
   return {
@@ -199,16 +212,25 @@ export type RotateRefreshResult =
  * token it most recently issued, then issues a fresh pair. OAuth 2.1 §6.1
  * mandates this rotation pattern for public clients.
  */
-export function rotateRefreshToken(input: { refreshToken: string; clientId: string }): RotateRefreshResult {
+export async function rotateRefreshToken(input: { refreshToken: string; clientId: string }): Promise<RotateRefreshResult> {
   const now = Date.now();
-  sweepIfStale(now);
-  const entry = refreshTokens.get(input.refreshToken);
+  await sweepExpired(now);
+  // Atomic single-use rotation via DELETE … RETURNING.
+  const deleted = await db
+    .delete(oauthRefreshTokensTable)
+    .where(eq(oauthRefreshTokensTable.token, input.refreshToken))
+    .returning();
+  const entry = deleted[0];
   if (!entry) return { ok: false, error: "invalid_grant", description: "Unknown refresh token" };
-  refreshTokens.delete(input.refreshToken);
-  if (entry.expiresAt <= now) return { ok: false, error: "invalid_grant", description: "Refresh token has expired" };
+  if (entry.expiresAt.getTime() <= now) return { ok: false, error: "invalid_grant", description: "Refresh token has expired" };
   if (entry.clientId !== input.clientId) return { ok: false, error: "invalid_grant", description: "client_id mismatch" };
-  if (entry.currentAccessToken) accessTokens.delete(entry.currentAccessToken);
-  return { ok: true, tokens: issueTokens(input.clientId) };
+  if (entry.currentAccessToken) {
+    await db
+      .delete(oauthAccessTokensTable)
+      .where(eq(oauthAccessTokensTable.token, entry.currentAccessToken));
+  }
+  const tokens = await issueTokens(input.clientId);
+  return { ok: true, tokens };
 }
 
 export interface VerifiedAccessToken {
@@ -221,35 +243,41 @@ export interface VerifiedAccessToken {
  * Hash the token text to a stable 31-bit integer so the same OAuth token
  * lands in the same rate-limit bucket across calls without colliding with
  * admin-token row ids (which are sequential small integers). We deliberately
- * use the high bit / negate to keep OAuth keys in negative-int space.
+ * keep OAuth keys in negative-int space.
  */
 function rateLimitKeyForOauthToken(token: string): number {
   let h = 0;
   for (let i = 0; i < token.length; i++) {
     h = ((h << 5) - h + token.charCodeAt(i)) | 0;
   }
-  // Force negative so we never collide with positive admin-token row ids.
   return h >= 0 ? -h - 1 : h;
 }
 
-export function verifyOauthAccessToken(token: string): VerifiedAccessToken | null {
+export async function verifyOauthAccessToken(token: string): Promise<VerifiedAccessToken | null> {
   if (!token.startsWith(OAUTH_TOKEN_PREFIX)) return null;
   const now = Date.now();
-  sweepIfStale(now);
-  const entry = accessTokens.get(token);
-  if (!entry) return null;
-  if (entry.expiresAt <= now) {
-    accessTokens.delete(token);
+  await sweepExpired(now);
+  const [row] = await db
+    .select()
+    .from(oauthAccessTokensTable)
+    .where(eq(oauthAccessTokensTable.token, token))
+    .limit(1);
+  if (!row) return null;
+  if (row.expiresAt.getTime() <= now) {
+    await db.delete(oauthAccessTokensTable).where(eq(oauthAccessTokensTable.token, token));
     return null;
   }
-  return { clientId: entry.clientId, rateLimitKey: rateLimitKeyForOauthToken(token) };
+  return { clientId: row.clientId, rateLimitKey: rateLimitKeyForOauthToken(token) };
 }
 
 /** Test-only utility — never invoked in production code paths. */
-export function __resetOauthStoreForTests(): void {
-  clients.clear();
-  authCodes.clear();
-  accessTokens.clear();
-  refreshTokens.clear();
+export async function __resetOauthStoreForTests(): Promise<void> {
+  await db.delete(oauthClientsTable);
+  await db.delete(oauthAuthCodesTable);
+  await db.delete(oauthAccessTokensTable);
+  await db.delete(oauthRefreshTokensTable);
   lastSweep = 0;
 }
+
+// Silence unused-import warnings when only some operators are used.
+void and;

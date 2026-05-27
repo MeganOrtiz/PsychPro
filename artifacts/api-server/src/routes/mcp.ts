@@ -43,7 +43,7 @@ async function authenticate(req: Request): Promise<{ rateLimitKey: number } | nu
   // Then OAuth-issued short-lived tokens (Claude.ai web custom connector).
   if (header && header.toLowerCase().startsWith("bearer ")) {
     const token = header.slice(7).trim();
-    const oauth = verifyOauthAccessToken(token);
+    const oauth = await verifyOauthAccessToken(token);
     if (oauth) return { rateLimitKey: oauth.rateLimitKey };
   }
   return null;
