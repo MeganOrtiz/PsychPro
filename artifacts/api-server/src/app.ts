@@ -71,7 +71,6 @@ const explicitOrigins = (process.env.CORS_ALLOWED_ORIGINS ?? "")
   .filter((s) => s.length > 0);
 const allowedOrigins = new Set<string>([
   "https://psychprosuite.com",
-  "https://www.psychprosuite.com",
   "https://auth.psychprosuite.com",
   ...explicitOrigins,
 ]);
