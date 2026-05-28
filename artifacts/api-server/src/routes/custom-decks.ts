@@ -11,6 +11,7 @@ import {
 import { eq, desc, and, gte, count } from "drizzle-orm";
 import { openai } from "@workspace/integrations-openai-ai-server";
 import { requireUserId } from "../lib/userId";
+import { isCallerAdmin } from "../lib/isAdmin";
 import { parseIntParam } from "../lib/params";
 
 const router = Router();
@@ -37,13 +38,17 @@ const PAID_SUBSCRIPTION_STATUSES = new Set([
 async function requireScholar(req: Request, res: Response, next: NextFunction): Promise<void> {
   const userId = requireUserId(req, res);
   if (!userId) return;
-  const user = await getUser(userId);
-  if (!user || !PAID_SUBSCRIPTION_STATUSES.has(user.subscriptionStatus)) {
-    req.log.warn(
-      { userId, userExists: !!user, subscriptionStatus: user?.subscriptionStatus ?? null },
-      "requireScholar denied",
-    );
+  let user = await getUser(userId);
+  const isAdmin = await isCallerAdmin(req);
+  if (!isAdmin && (!user || !PAID_SUBSCRIPTION_STATUSES.has(user.subscriptionStatus))) {
     res.status(403).json({ error: "An active subscription is required to generate study materials." });
+    return;
+  }
+  // isCallerAdmin self-heals the users row (email-allowlist admins), so re-fetch
+  // if it was missing — downstream code relies on scholarUser.id.
+  if (!user) user = await getUser(userId);
+  if (!user) {
+    res.status(404).json({ error: "User record not found." });
     return;
   }
   (req as Request & { scholarUser: typeof user }).scholarUser = user;
