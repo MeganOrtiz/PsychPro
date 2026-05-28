@@ -688,12 +688,8 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
               style={{ color: PALETTE.surf, filter: `drop-shadow(0 0 6px ${PALETTE.surf}aa)` }}
             />
             <span
-              className="text-base text-white"
-              style={{
-                fontFamily: '"Italiana", "Julius Sans One", serif',
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-              }}
+              className="text-xs font-semibold text-white uppercase tracking-wider"
+              style={{ letterSpacing: "0.18em" }}
             >
               Spotlight
             </span>

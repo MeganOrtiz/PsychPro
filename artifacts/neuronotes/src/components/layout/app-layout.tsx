@@ -19,9 +19,10 @@ type NavItem = { href: string; label: string; icon: React.ComponentType<{ classN
 const NAV_ITEM_BASE =
   "group relative flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all duration-200 border backdrop-blur-md";
 const NAV_ITEM_IDLE =
-  "text-sidebar-foreground/85 bg-white/[0.04] border-white/10 " +
-  "hover:bg-white/[0.10] hover:border-[color:var(--nav-glow)]/60 hover:text-white " +
-  "hover:shadow-[0_10px_30px_-10px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.12)]";
+  "text-sidebar-foreground/90 bg-white/[0.07] border-[color:var(--nav-glow)]/25 " +
+  "shadow-[0_6px_18px_-12px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.08)] " +
+  "hover:bg-white/[0.12] hover:border-[color:var(--nav-glow)]/65 hover:text-white " +
+  "hover:shadow-[0_12px_32px_-10px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.14)]";
 const NAV_ITEM_ACTIVE =
   "text-white bg-white/[0.12] border-[color:var(--nav-glow)]/65 " +
   "shadow-[0_12px_32px_-10px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.16)]";
@@ -180,8 +181,11 @@ export default function AppLayout({ children }: AppLayoutProps) {
         style={{
           // CSS var consumed by NAV_ITEM_* tokens for the teal hover glow.
           ["--nav-glow" as never]: STUDY_PALETTE.surf,
-          background: `linear-gradient(180deg, ${STUDY_PALETTE.ink} 0%, ${STUDY_PALETTE.bg} 100%)`,
-          borderRight: "1px solid rgba(118, 228, 247, 0.12)",
+          // Match the middle-column card surface tone so the sidebar reads as
+          // the same material as the dashboard cards instead of a darker void.
+          // Cards use surface (#0A2D3D) → bg (#061F2B); we mirror that here.
+          background: `linear-gradient(180deg, ${STUDY_PALETTE.surface} 0%, ${STUDY_PALETTE.bg} 100%)`,
+          borderRight: "1px solid rgba(118, 228, 247, 0.15)",
         }}
         data-testid="sidebar"
       >
