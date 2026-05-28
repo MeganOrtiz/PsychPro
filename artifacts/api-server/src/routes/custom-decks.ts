@@ -39,6 +39,10 @@ async function requireScholar(req: Request, res: Response, next: NextFunction): 
   if (!userId) return;
   const user = await getUser(userId);
   if (!user || !PAID_SUBSCRIPTION_STATUSES.has(user.subscriptionStatus)) {
+    req.log.warn(
+      { userId, userExists: !!user, subscriptionStatus: user?.subscriptionStatus ?? null },
+      "requireScholar denied",
+    );
     res.status(403).json({ error: "An active subscription is required to generate study materials." });
     return;
   }
