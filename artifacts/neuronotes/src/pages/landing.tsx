@@ -457,8 +457,7 @@ function InteractiveFlashcard() {
           <div
             className="try-card-face try-card-face--front"
             aria-hidden={flipped}
-            // @ts-expect-error — `inert` is valid HTML but not yet in React's types
-            inert={flipped ? "" : undefined}
+            inert={flipped || undefined}
           >
             <div className="try-card-meta">
               <span className="try-topic-pill">{card.topic}</span>
@@ -474,8 +473,7 @@ function InteractiveFlashcard() {
           <div
             className="try-card-face try-card-face--back"
             aria-hidden={!flipped}
-            // @ts-expect-error — `inert` is valid HTML but not yet in React's types
-            inert={!flipped ? "" : undefined}
+            inert={!flipped || undefined}
           >
             <div className="try-card-meta">
               <span className="try-topic-pill try-topic-pill--answer">
@@ -1697,19 +1695,20 @@ const styles = `
   margin: 0 auto;
 }
 .try-stage {
+  position: relative;
   perspective: 1600px;
   width: 100%;
-  /* Use min-height so the longer back-face answer text can grow the card
-     on narrow widths instead of overflowing its container. */
+  /* Use min-height so long answer text can grow the card on narrow
+     widths instead of overflowing. The card itself fills the stage
+     via position:absolute (below) so percentage-height isn't needed. */
   min-height: clamp(300px, 38vh, 360px);
 }
 @media (max-width: 480px) {
   .try-stage { min-height: 400px; }
 }
 .try-card {
-  position: relative;
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  inset: 0;
   cursor: pointer;
   background: transparent;
   border: 0;
