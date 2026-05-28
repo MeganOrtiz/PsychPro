@@ -2,3 +2,4 @@
 - [PsychPro glass buttons](psychpro-glass-buttons.md) — landing/marketing button styling convention.
 - [PsychPro custom-deck subscription gate](psychpro-custom-decks-subscription-gate.md) — "upload broken" reports are usually the paid-tier 403 gate firing, not the upload itself.
 - [OAuth/MCP state persistence](oauth-mcp-persistence.md) — dynamic-client-registration + auth codes + tokens must be in Postgres; in-memory Maps break across Autoscale instances and restarts.
+- [Clerk account deletion](psychpro-clerk-account-deletion.md) — Clerk browser flows are broken on this instance; deletion is app-owned server-side; never report removed unless clerkDeleted is true.

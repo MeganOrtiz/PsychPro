@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { User as UserIcon, Save, Camera, Loader2 } from "lucide-react";
+import { User as UserIcon, Save, Camera, Loader2, AlertTriangle, Trash2 } from "lucide-react";
+import { useClerk } from "@clerk/clerk-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
@@ -272,6 +273,7 @@ export default function ProfilePage() {
             Loading your profile…
           </div>
         ) : (
+          <>
           <form onSubmit={handleSubmit} className="space-y-6" noValidate>
             <div className="bg-card p-5 space-y-5">
               <div className="flex items-center gap-4">
@@ -535,6 +537,9 @@ export default function ProfilePage() {
               </Button>
             </div>
           </form>
+
+          <DangerZone />
+          </>
         )}
       </div>
     </div>
@@ -563,6 +568,230 @@ function PreferenceToggle({
         className="mt-1 flex-shrink-0"
         data-testid={`switch-${id}`}
       />
+    </div>
+  );
+}
+
+type DuplicateAccount = {
+  id: string;
+  email: string | null;
+  subscriptionStatus: string;
+  isAdmin: boolean;
+  createdAt: string | null;
+};
+
+type DeletionResult = {
+  deleted: boolean;
+  stripeCanceled: boolean;
+  stripeCancelFailed: boolean;
+  clerkDeleted: boolean;
+};
+
+function DangerZone() {
+  const { signOut } = useClerk();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [confirmText, setConfirmText] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  const [duplicates, setDuplicates] = useState<DuplicateAccount[]>([]);
+  const [dupLoading, setDupLoading] = useState(false);
+  const [dupChecked, setDupChecked] = useState(false);
+  const [removingId, setRemovingId] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/feedback/is-admin", { headers: await authHeaders() });
+        if (!res.ok) return;
+        const d = (await res.json()) as { isAdmin?: boolean };
+        if (!cancelled) setIsAdmin(d.isAdmin ?? false);
+      } catch {
+        /* not admin / signed out — leave false */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  async function handleDeleteAccount() {
+    if (confirmText.trim().toUpperCase() !== "DELETE") {
+      toast.error('Type "DELETE" to confirm.');
+      return;
+    }
+    setDeleting(true);
+    try {
+      const res = await fetch("/api/users/me", { method: "DELETE", headers: await authHeaders() });
+      if (!res.ok) throw new Error(`delete failed: ${res.status}`);
+      const body = (await res.json().catch(() => ({}))) as Partial<DeletionResult>;
+      if (body.stripeCancelFailed) {
+        toast.warning(
+          "Your account data was removed, but we couldn't cancel your subscription automatically. Please contact support to avoid further charges.",
+          { duration: 8000 },
+        );
+      } else {
+        toast.success("Your account has been deleted. Signing you out…");
+      }
+      await signOut({ redirectUrl: import.meta.env.BASE_URL.replace(/\/$/, "") || "/" });
+    } catch (err) {
+      console.error("[profile] delete account error", err);
+      toast.error("Couldn't delete your account. Please try again in a minute.");
+      setDeleting(false);
+    }
+  }
+
+  async function loadDuplicates() {
+    setDupLoading(true);
+    try {
+      const res = await fetch("/api/users/duplicates", { headers: await authHeaders() });
+      if (!res.ok) throw new Error(`duplicates failed: ${res.status}`);
+      const d = (await res.json()) as { duplicates: DuplicateAccount[] };
+      setDuplicates(d.duplicates ?? []);
+      setDupChecked(true);
+      if ((d.duplicates ?? []).length === 0) {
+        toast.success("No duplicate accounts found for your email.");
+      }
+    } catch (err) {
+      console.error("[profile] load duplicates error", err);
+      toast.error("Couldn't check for duplicate accounts.");
+    } finally {
+      setDupLoading(false);
+    }
+  }
+
+  async function removeDuplicate(id: string) {
+    setRemovingId(id);
+    try {
+      const res = await fetch(`/api/users/${encodeURIComponent(id)}`, {
+        method: "DELETE",
+        headers: await authHeaders(),
+      });
+      if (!res.ok) throw new Error(`remove failed: ${res.status}`);
+      const body = (await res.json().catch(() => ({}))) as Partial<DeletionResult>;
+      if (body.clerkDeleted === false) {
+        // The app data was removed, but the login identity survived. Because a
+        // surviving Clerk identity can recreate local rows on next sign-in,
+        // keep it visible and warn instead of claiming success.
+        toast.warning(
+          "Removed this account's data, but its login identity couldn't be deleted. It may reappear — please remove it from the Clerk dashboard.",
+          { duration: 9000 },
+        );
+      } else {
+        setDuplicates((prev) => prev.filter((u) => u.id !== id));
+        if (body.stripeCancelFailed) {
+          toast.warning(
+            "Account removed, but its subscription couldn't be canceled automatically. Cancel it in Stripe to avoid further charges.",
+            { duration: 9000 },
+          );
+        } else {
+          toast.success("Duplicate account removed.");
+        }
+      }
+    } catch (err) {
+      console.error("[profile] remove duplicate error", err);
+      toast.error("Couldn't remove that account. Please try again.");
+    } finally {
+      setRemovingId(null);
+    }
+  }
+
+  const canDelete = confirmText.trim().toUpperCase() === "DELETE" && !deleting;
+
+  return (
+    <div className="mt-8 rounded-lg border border-red-500/30 bg-red-500/[0.04] p-5 space-y-5" data-testid="danger-zone">
+      <div className="flex items-center gap-2">
+        <AlertTriangle className="w-5 h-5 text-red-400" />
+        <h2 className="text-lg font-semibold text-foreground">Danger zone</h2>
+      </div>
+
+      {isAdmin && (
+        <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4 space-y-3">
+          <div>
+            <h3 className="text-sm font-medium text-foreground">Duplicate accounts</h3>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              If your email has more than one account, you can remove the extras here. This permanently
+              deletes the selected account and cancels any subscription attached to it.
+            </p>
+          </div>
+          {!dupChecked ? (
+            <Button
+              type="button"
+              variant="outline"
+              className="gap-2"
+              onClick={loadDuplicates}
+              disabled={dupLoading}
+              data-testid="button-check-duplicates"
+            >
+              {dupLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+              {dupLoading ? "Checking…" : "Check for duplicates"}
+            </Button>
+          ) : duplicates.length === 0 ? (
+            <p className="text-xs text-muted-foreground">No duplicate accounts found.</p>
+          ) : (
+            <ul className="space-y-2">
+              {duplicates.map((u) => (
+                <li
+                  key={u.id}
+                  className="flex items-center justify-between gap-3 rounded-lg border border-white/10 bg-white/[0.02] p-3"
+                  data-testid={`duplicate-${u.id}`}
+                >
+                  <div className="min-w-0 text-xs">
+                    <p className="font-mono text-foreground truncate">{u.id}</p>
+                    <p className="text-muted-foreground mt-0.5">
+                      {u.subscriptionStatus}
+                      {u.isAdmin ? " · admin" : ""}
+                      {u.createdAt ? ` · created ${new Date(u.createdAt).toLocaleDateString()}` : ""}
+                    </p>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    className="gap-1.5 flex-shrink-0"
+                    onClick={() => removeDuplicate(u.id)}
+                    disabled={removingId === u.id}
+                    data-testid={`button-remove-${u.id}`}
+                  >
+                    {removingId === u.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                    Remove
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+
+      <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4 space-y-3">
+        <div>
+          <h3 className="text-sm font-medium text-foreground">Delete my account</h3>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            This permanently deletes your account, your study data, and cancels any active subscription.
+            This can't be undone. Type <span className="font-semibold text-foreground">DELETE</span> to confirm.
+          </p>
+        </div>
+        <input
+          type="text"
+          value={confirmText}
+          onChange={(e) => setConfirmText(e.target.value)}
+          placeholder="DELETE"
+          className="w-full max-w-xs rounded-lg border border-border px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-red-400/60"
+          data-testid="input-confirm-delete"
+        />
+        <div>
+          <Button
+            type="button"
+            variant="destructive"
+            className="gap-2"
+            onClick={handleDeleteAccount}
+            disabled={!canDelete}
+            data-testid="button-delete-account"
+          >
+            {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+            {deleting ? "Deleting…" : "Delete account"}
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
