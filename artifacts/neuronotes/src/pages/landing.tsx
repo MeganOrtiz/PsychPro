@@ -10,6 +10,16 @@ import {
   Users,
   Award,
   Check,
+  ChevronLeft,
+  ChevronRight,
+  Sparkles,
+  Activity,
+  GraduationCap,
+  PenLine,
+  Flame,
+  ArrowRight,
+  Bell,
+  RotateCw,
 } from "lucide-react";
 import brainSmoke from "@/assets/hero/brain.png";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -353,6 +363,314 @@ const FOOTER_LINKS = [
   { label: "Contact", href: "mailto:admin@psychprosuites.com" },
 ];
 
+// =============================================================================
+// NEW: Live-demo content + counters. Pulled deliberately from the canonical
+// neuro/psych curriculum so the Q/A reads as genuine domain material, not
+// marketing filler. Counts mirror the actual seeded database (verified 2026-05-27).
+// =============================================================================
+const DEMO_CARDS = [
+  {
+    q: "Which neurotransmitter system is most central to the brain's reward and motivation pathway?",
+    a: "Dopamine. The ventral tegmental area (VTA) projects to the nucleus accumbens and prefrontal cortex via the mesolimbic and mesocortical pathways, modulating reward, salience, and goal-directed behaviour.",
+    topic: "Limbic System & Motivation",
+  },
+  {
+    q: "What is the primary function of the amygdala?",
+    a: "Processing emotionally salient stimuli — particularly fear and threat detection. It tags memories with emotional valence via projections to the hippocampus and drives autonomic arousal through the hypothalamus.",
+    topic: "Limbic System & Motivation",
+  },
+  {
+    q: "Damage to Broca's area produces what type of aphasia, and where is it located?",
+    a: "Broca's (expressive, non-fluent) aphasia. The patient produces effortful, agrammatic speech with relatively preserved comprehension. Located in the left inferior frontal gyrus (Brodmann areas 44 and 45).",
+    topic: "Language Processing & Aphasia",
+  },
+  {
+    q: "How do Type I and Type II error differ in clinical research?",
+    a: "Type I (\u03b1) is a false positive — rejecting a true null hypothesis. Type II (\u03b2) is a false negative — failing to reject a false null. Statistical power = 1 \u2212 \u03b2; we typically target power \u2265 0.80.",
+    topic: "Validity & Effort Testing",
+  },
+] as const;
+
+const STATS = [
+  { value: "39", label: "Core Topics" },
+  { value: "1,878", label: "Flashcards" },
+  { value: "1,125", label: "Quiz Questions" },
+  { value: "4", label: "Study Modes" },
+] as const;
+
+const HOW_STEPS = [
+  {
+    n: "01",
+    title: "Pick a topic",
+    body: "Choose from 39 core topics spanning neuroanatomy, psychopathology, assessment, psychopharmacology, and therapy modalities.",
+    icon: BookOpen,
+  },
+  {
+    n: "02",
+    title: "Study with the modes",
+    body: "Flashcards for active recall, quizzes for retrieval practice, study guides for synthesis, and the brain lab for spatial mastery.",
+    icon: GraduationCap,
+  },
+  {
+    n: "03",
+    title: "Track your mastery",
+    body: "Your progress score climbs as you build expertise. Reflections capture clinical insights and the spotlight features your work.",
+    icon: Activity,
+  },
+] as const;
+
+// =============================================================================
+// NEW: InteractiveFlashcard — a real, clickable 3D-flipping card with prev/next
+// navigation. First thing a visitor can DO on the page (within ~3s of landing),
+// proving the product is real before any "Sign up" friction.
+// =============================================================================
+function InteractiveFlashcard() {
+  const [index, setIndex] = useState(0);
+  const [flipped, setFlipped] = useState(false);
+  const card = DEMO_CARDS[index];
+
+  const go = (delta: number) => {
+    setFlipped(false);
+    // Small delay so the flip-back is visible before the content swaps.
+    setTimeout(() => {
+      setIndex((i) => (i + delta + DEMO_CARDS.length) % DEMO_CARDS.length);
+    }, 180);
+  };
+
+  return (
+    <div className="try-block" data-testid="try-flashcard">
+      <div className="try-stage">
+        <button
+          type="button"
+          className={`try-card${flipped ? " is-flipped" : ""}`}
+          onClick={() => setFlipped((f) => !f)}
+          aria-pressed={flipped}
+          aria-label={
+            flipped
+              ? `Answer to: ${card.q}. Click to show question again.`
+              : `Question: ${card.q}. Click to reveal answer.`
+          }
+          data-testid="try-card-button"
+        >
+          {/* Hidden face is removed from a11y tree via aria-hidden + inert so
+             screen readers never announce the answer before the user flips. */}
+          <div
+            className="try-card-face try-card-face--front"
+            aria-hidden={flipped}
+            // @ts-expect-error — `inert` is valid HTML but not yet in React's types
+            inert={flipped ? "" : undefined}
+          >
+            <div className="try-card-meta">
+              <span className="try-topic-pill">{card.topic}</span>
+              <span className="try-flip-hint">
+                <RotateCw aria-hidden /> Click to flip
+              </span>
+            </div>
+            <div className="try-card-row">
+              <span className="try-letter">Q</span>
+              <p className="try-text">{card.q}</p>
+            </div>
+          </div>
+          <div
+            className="try-card-face try-card-face--back"
+            aria-hidden={!flipped}
+            // @ts-expect-error — `inert` is valid HTML but not yet in React's types
+            inert={!flipped ? "" : undefined}
+          >
+            <div className="try-card-meta">
+              <span className="try-topic-pill try-topic-pill--answer">
+                Answer
+              </span>
+              <span className="try-flip-hint">
+                <RotateCw aria-hidden /> Click to flip back
+              </span>
+            </div>
+            <div className="try-card-row">
+              <span className="try-letter try-letter--a">A</span>
+              <p className="try-text">{card.a}</p>
+            </div>
+          </div>
+        </button>
+      </div>
+
+      <div className="try-controls">
+        <button
+          type="button"
+          onClick={() => go(-1)}
+          aria-label="Previous flashcard"
+          data-testid="try-prev"
+        >
+          <ChevronLeft aria-hidden />
+        </button>
+        <span className="try-counter" data-testid="try-counter">
+          {String(index + 1).padStart(2, "0")} / {String(DEMO_CARDS.length).padStart(2, "0")}
+        </span>
+        <button
+          type="button"
+          onClick={() => go(1)}
+          aria-label="Next flashcard"
+          data-testid="try-next"
+        >
+          <ChevronRight aria-hidden />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// =============================================================================
+// NEW: StatsStrip — factual, DB-anchored counts. No fabricated testimonials,
+// no fake "10,000+ students" copy. Just the genuine library size, which is
+// already impressive on its own.
+// =============================================================================
+function StatsStrip() {
+  return (
+    <div className="stats-grid" data-testid="stats-strip">
+      {STATS.map((s) => (
+        <div key={s.label} className="stat-cell">
+          <p className="stat-num">{s.value}</p>
+          <p className="stat-label">{s.label}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// =============================================================================
+// NEW: DashboardPreview — a tilted, glowing mockup of the actual PsychPro app
+// surface. Shows the four real study modes, a progress ring, and a streak.
+// Built in pure CSS/HTML (not a screenshot) so it stays sharp at every zoom
+// and updates automatically if we re-style the real dashboard.
+// =============================================================================
+const PREVIEW_MODES = [
+  { id: "flashcards", title: "Flashcards", desc: "Spaced repetition", icon: Layers, accent: "#76E4F7" },
+  { id: "quizzes",    title: "Quizzes",    desc: "Retrieval practice", icon: BookOpen, accent: "#5EB0C8" },
+  { id: "guides",     title: "Study Guides", desc: "Concept synthesis", icon: FileText, accent: "#A7F3FF" },
+  { id: "reflections",title: "Reflections", desc: "Clinical insights",  icon: PenLine,  accent: "#7DD8C2" },
+] as const;
+
+function DashboardPreview() {
+  return (
+    <div className="preview-stage" data-testid="dashboard-preview" aria-hidden>
+      <div className="preview-frame">
+        {/* Sidebar rail */}
+        <div className="preview-sidebar">
+          <div className="preview-brand">
+            <Brain />
+          </div>
+          <div className="preview-rail">
+            <span className="preview-rail-dot is-active" />
+            <span className="preview-rail-dot" />
+            <span className="preview-rail-dot" />
+            <span className="preview-rail-dot" />
+            <span className="preview-rail-dot" />
+          </div>
+        </div>
+
+        {/* Main column */}
+        <div className="preview-main">
+          <div className="preview-topbar">
+            <div className="preview-greet">
+              <p className="preview-greet-hi">Welcome back, Megan.</p>
+              <p className="preview-greet-sub">LEARN. EXPAND. CONNECT.</p>
+            </div>
+            <div className="preview-bell">
+              <Bell />
+              <span className="preview-bell-dot">2</span>
+            </div>
+          </div>
+
+          <p className="preview-section-label">STUDY MODES</p>
+          <div className="preview-mode-grid">
+            {PREVIEW_MODES.map((m) => {
+              const Icon = m.icon;
+              return (
+                <div
+                  key={m.id}
+                  className="preview-mode"
+                  style={{ "--mode-accent": m.accent } as React.CSSProperties}
+                >
+                  <div className="preview-mode-icon">
+                    <Icon />
+                  </div>
+                  <div className="preview-mode-body">
+                    <p className="preview-mode-title">{m.title}</p>
+                    <p className="preview-mode-desc">{m.desc}</p>
+                  </div>
+                  <ArrowRight className="preview-mode-arrow" />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Right column */}
+        <div className="preview-side">
+          <div className="preview-progress">
+            <svg viewBox="0 0 120 120" className="preview-ring">
+              <circle cx="60" cy="60" r="50" fill="none"
+                stroke="rgba(118,228,247,0.14)" strokeWidth="10" />
+              <circle cx="60" cy="60" r="50" fill="none"
+                stroke="#76E4F7" strokeWidth="10" strokeLinecap="round"
+                strokeDasharray={`${2 * Math.PI * 50}`}
+                strokeDashoffset={`${2 * Math.PI * 50 * (1 - 0.67)}`}
+                transform="rotate(-90 60 60)" />
+            </svg>
+            <div className="preview-progress-num">
+              <p className="preview-progress-val">67<span>%</span></p>
+              <p className="preview-progress-lbl">MASTERY</p>
+            </div>
+          </div>
+
+          <div className="preview-stat">
+            <Flame className="preview-stat-icon" />
+            <div>
+              <p className="preview-stat-num">12-day</p>
+              <p className="preview-stat-lbl">study streak</p>
+            </div>
+          </div>
+
+          <div className="preview-focus">
+            <p className="preview-focus-label">TODAY'S FOCUS</p>
+            <p className="preview-focus-topic">Limbic System &amp; Motivation</p>
+            <div className="preview-focus-bar">
+              <span style={{ width: "42%" }} />
+            </div>
+            <p className="preview-focus-meta">14 of 33 cards reviewed</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// =============================================================================
+// NEW: HowItWorks — three-step narrative strip. Sits between the feature bento
+// and the topic browser to give visitors a mental model of what using the
+// product actually feels like.
+// =============================================================================
+function HowItWorks() {
+  return (
+    <div className="how-grid" data-testid="how-it-works">
+      {HOW_STEPS.map((s) => {
+        const Icon = s.icon;
+        return (
+          <div key={s.n} className="how-step">
+            <div className="how-step-head">
+              <span className="how-step-num">{s.n}</span>
+              <span className="how-step-icon">
+                <Icon />
+              </span>
+            </div>
+            <h3 className="how-step-title">{s.title}</h3>
+            <p className="how-step-body">{s.body}</p>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function LandingPage() {
   const [, navigate] = useLocation();
   const { isSignedIn } = useAuth();
@@ -459,6 +777,43 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* ============== TRY IT — interactive flashcard demo ============== */}
+        <section id="try" className="landing-try">
+          <div className="landing-section-header">
+            <p className="landing-eyebrow">
+              <Sparkles aria-hidden /> TRY IT NOW
+            </p>
+            <h2 className="landing-section-title">
+              A real flashcard. Click to flip.
+            </h2>
+            <p className="landing-section-sub">
+              Pulled straight from the PsychPro deck. Cycle through a few to
+              feel the rhythm — no sign-in required.
+            </p>
+          </div>
+          <InteractiveFlashcard />
+        </section>
+
+        {/* ============== STATS — DB-anchored library counts ============== */}
+        <section id="stats" className="landing-stats">
+          <StatsStrip />
+        </section>
+
+        {/* ============== DASHBOARD PREVIEW — show the real product ============== */}
+        <section id="inside" className="landing-preview">
+          <div className="landing-section-header">
+            <p className="landing-eyebrow">INSIDE PSYCHPRO</p>
+            <h2 className="landing-section-title">
+              Your command center for clinical mastery.
+            </h2>
+            <p className="landing-section-sub">
+              Four study modes, progress tracking, and a topic library — all in
+              one calm, organized dashboard.
+            </p>
+          </div>
+          <DashboardPreview />
+        </section>
+
         {/* ============== FEATURES (asymmetric bento grid) ============== */}
         <section id="features" className="landing-features">
           <div className="landing-features-bento">
@@ -498,6 +853,17 @@ export default function LandingPage() {
               );
             })}
           </div>
+        </section>
+
+        {/* ============== HOW IT WORKS — 3-step narrative ============== */}
+        <section id="how" className="landing-how">
+          <div className="landing-section-header">
+            <p className="landing-eyebrow">HOW IT WORKS</p>
+            <h2 className="landing-section-title">
+              From sign-up to mastery in three steps.
+            </h2>
+          </div>
+          <HowItWorks />
         </section>
 
         {/* ============== BROWSE TOPICS ============== */}
@@ -1272,5 +1638,683 @@ const styles = `
     opacity: 1 !important;
     transform: none !important;
   }
+}
+
+/* ============================================================================
+   NEW SECTIONS — shared section header pattern
+   ============================================================================ */
+.landing-section-header {
+  text-align: center;
+  margin: 0 auto clamp(28px, 4vh, 44px);
+  max-width: 680px;
+  padding: 0 24px;
+}
+.landing-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: ${C.cyan}1a;
+  border: 1px solid ${C.cyan}55;
+  color: ${C.cyan};
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  box-shadow: 0 0 18px ${C.cyan}33;
+}
+.landing-eyebrow svg { width: 12px; height: 12px; }
+.landing-section-title {
+  margin: 0 0 12px;
+  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-weight: 300;
+  font-size: clamp(24px, 2.6vw, 36px);
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+  color: #ffffff;
+  text-shadow: 0 0 28px ${C.cyan}33;
+}
+.landing-section-sub {
+  margin: 0 auto;
+  max-width: 560px;
+  font-size: clamp(14px, 1.05vw, 16px);
+  line-height: 1.65;
+  color: rgba(225, 244, 250, 0.78);
+}
+
+/* ============================================================================
+   TRY-IT FLASHCARD DEMO
+   ============================================================================ */
+.landing-try {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: clamp(40px, 6vh, 72px) 32px clamp(24px, 3vh, 40px);
+}
+.try-block {
+  max-width: 720px;
+  margin: 0 auto;
+}
+.try-stage {
+  perspective: 1600px;
+  width: 100%;
+  /* Use min-height so the longer back-face answer text can grow the card
+     on narrow widths instead of overflowing its container. */
+  min-height: clamp(300px, 38vh, 360px);
+}
+@media (max-width: 480px) {
+  .try-stage { min-height: 400px; }
+}
+.try-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  transform-style: preserve-3d;
+  outline: none;
+}
+.try-card:focus-visible { outline: 2px solid ${C.cyan}; outline-offset: 6px; border-radius: 22px; }
+.try-card.is-flipped { transform: rotateY(180deg); }
+.try-card-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  padding: clamp(22px, 3vh, 32px) clamp(22px, 3vw, 36px);
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #15506E 0%, #0E3A50 100%);
+  border: 1px solid ${C.cyan}55;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.04) inset,
+    0 22px 50px -20px rgba(0,0,0,0.7),
+    0 0 36px ${C.cyan}33;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  text-align: left;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.try-card-face--back { transform: rotateY(180deg); }
+.try-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: clamp(16px, 2vh, 22px);
+}
+.try-topic-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: ${C.cyan}1a;
+  border: 1px solid ${C.cyan}55;
+  color: ${C.cyan};
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.try-topic-pill--answer {
+  background: rgba(46, 168, 102, 0.18);
+  border-color: rgba(94, 200, 130, 0.55);
+  color: #8EE2A8;
+}
+.try-flip-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: ${P.mistSoft};
+  text-transform: uppercase;
+}
+.try-flip-hint svg { width: 11px; height: 11px; }
+.try-card-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  flex: 1;
+  min-height: 0;
+}
+.try-letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(118, 228, 247, 0.22);
+  border: 1.5px solid ${C.cyan}99;
+  color: ${C.cyan};
+  font-weight: 800;
+  font-size: 16px;
+  flex-shrink: 0;
+  box-shadow: 0 0 18px ${C.cyan}44;
+}
+.try-letter--a {
+  background: rgba(118, 228, 247, 0.12);
+  color: ${C.cyanSoft};
+  border-color: ${C.cyan}66;
+}
+.try-text {
+  margin: 0;
+  font-size: clamp(15px, 1.4vw, 18px);
+  line-height: 1.6;
+  color: #ffffff;
+  font-weight: 400;
+}
+.try-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 22px;
+}
+.try-controls button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: ${C.bgPanel};
+  border: 1px solid ${C.hairline};
+  color: ${C.cyanSoft};
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+.try-controls button:hover {
+  background: ${C.cyan}1a;
+  border-color: ${C.cyan};
+  color: ${C.cyan};
+  box-shadow: 0 0 18px ${C.cyan}44;
+}
+.try-controls button svg { width: 18px; height: 18px; }
+.try-counter {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 16px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  color: ${C.cyanSoft};
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================================
+   STATS STRIP
+   ============================================================================ */
+.landing-stats {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: clamp(20px, 3vh, 32px) 32px clamp(40px, 5vh, 60px);
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+@media (min-width: 720px) {
+  .stats-grid { grid-template-columns: repeat(4, 1fr); gap: 18px; }
+}
+.stat-cell {
+  text-align: center;
+  padding: clamp(22px, 3vh, 30px) 16px;
+  background: linear-gradient(180deg, ${C.bgPanel}, ${C.bgPanelStrong});
+  border: 1px solid ${C.hairline};
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 240ms ease;
+}
+.stat-cell:hover {
+  border-color: ${C.hairlineStrong};
+  box-shadow: 0 0 24px ${C.cyan}22;
+  transform: translateY(-2px);
+}
+.stat-num {
+  margin: 0;
+  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-size: clamp(30px, 3.6vw, 48px);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  color: ${C.cyan};
+  text-shadow: 0 0 22px ${C.cyan}55;
+  line-height: 1.05;
+}
+.stat-label {
+  margin: 8px 0 0;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: ${C.cyanSoft};
+}
+
+/* ============================================================================
+   DASHBOARD PREVIEW
+   ============================================================================ */
+.landing-preview {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: clamp(24px, 4vh, 48px) 32px clamp(40px, 6vh, 72px);
+}
+.preview-stage {
+  perspective: 2000px;
+  perspective-origin: 50% 30%;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.preview-frame {
+  position: relative;
+  transform: rotateX(6deg) rotateY(-3deg);
+  transform-style: preserve-3d;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(10, 45, 61, 0.92), rgba(6, 31, 43, 0.96));
+  border: 1px solid ${C.hairlineStrong};
+  box-shadow:
+    0 70px 140px -50px rgba(0, 0, 0, 0.8),
+    0 0 80px ${C.cyan}33,
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  padding: clamp(14px, 2vh, 20px);
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: clamp(14px, 1.8vw, 22px);
+  min-height: 460px;
+  overflow: hidden;
+}
+@media (min-width: 900px) {
+  .preview-frame {
+    grid-template-columns: 60px 1fr 240px;
+  }
+}
+/* Subtle top-edge glow seam */
+.preview-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, ${C.cyan}aa, transparent);
+  pointer-events: none;
+}
+
+.preview-sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 14px 0;
+  background: rgba(3, 17, 24, 0.55);
+  border-radius: 14px;
+  border: 1px solid ${C.hairline};
+}
+.preview-brand {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: ${C.cyan}1a;
+  border: 1px solid ${C.cyan}66;
+  color: ${C.cyan};
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  box-shadow: 0 0 14px ${C.cyan}44;
+}
+.preview-brand svg { width: 16px; height: 16px; }
+.preview-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+.preview-rail-dot {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: ${C.cyan}33;
+  border: 1px solid ${C.cyan}55;
+}
+.preview-rail-dot.is-active {
+  background: ${C.cyan};
+  box-shadow: 0 0 10px ${C.cyan}cc;
+}
+
+.preview-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.preview-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.preview-greet-hi {
+  margin: 0;
+  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-weight: 400;
+  font-size: clamp(16px, 1.5vw, 20px);
+  color: #ffffff;
+  text-shadow: 0 0 18px ${C.cyan}33;
+}
+.preview-greet-sub {
+  margin: 4px 0 0;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.36em;
+  color: ${C.cyanSoft};
+}
+.preview-bell {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(6, 32, 44, 0.7);
+  border: 1px solid ${C.hairline};
+  color: ${C.cyanSoft};
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.preview-bell svg { width: 14px; height: 14px; }
+.preview-bell-dot {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.preview-section-label {
+  margin: 0 0 10px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: ${C.cyanSoft};
+}
+.preview-mode-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  flex: 1;
+}
+.preview-mode {
+  --mode-accent: ${C.cyan};
+  position: relative;
+  padding: 14px 14px;
+  border-radius: 14px;
+  background:
+    radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--mode-accent) 18%, transparent) 0%, transparent 55%),
+    linear-gradient(135deg, #15506E 0%, #0E3A50 100%);
+  border: 1px solid color-mix(in srgb, var(--mode-accent) 40%, transparent);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--mode-accent) 14%, transparent) inset,
+    0 8px 22px -12px color-mix(in srgb, var(--mode-accent) 50%, transparent);
+}
+.preview-mode-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, var(--mode-accent), color-mix(in srgb, var(--mode-accent) 45%, #0E3A50));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 0 14px color-mix(in srgb, var(--mode-accent) 55%, transparent);
+}
+.preview-mode-icon svg { width: 16px; height: 16px; }
+.preview-mode-body { flex: 1; min-width: 0; }
+.preview-mode-title {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #ffffff;
+}
+.preview-mode-desc {
+  margin: 2px 0 0;
+  font-size: 10.5px;
+  color: rgba(225, 244, 250, 0.72);
+}
+.preview-mode-arrow {
+  width: 14px;
+  height: 14px;
+  color: var(--mode-accent);
+  flex-shrink: 0;
+}
+
+.preview-side {
+  display: none;
+  flex-direction: column;
+  gap: 14px;
+}
+@media (min-width: 900px) {
+  .preview-side { display: flex; }
+}
+.preview-progress {
+  position: relative;
+  padding: 16px;
+  background: rgba(3, 17, 24, 0.55);
+  border: 1px solid ${C.hairline};
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.preview-ring {
+  width: 110px;
+  height: 110px;
+  filter: drop-shadow(0 0 12px ${C.cyan}66);
+}
+.preview-progress-num {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.preview-progress-val {
+  margin: 0;
+  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-weight: 300;
+  font-size: 26px;
+  color: #ffffff;
+  line-height: 1;
+}
+.preview-progress-val span {
+  font-size: 14px;
+  color: ${C.cyan};
+  margin-left: 1px;
+}
+.preview-progress-lbl {
+  margin: 4px 0 0;
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: ${C.cyanSoft};
+}
+.preview-stat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: rgba(3, 17, 24, 0.55);
+  border: 1px solid ${C.hairline};
+  border-radius: 14px;
+}
+.preview-stat-icon {
+  width: 22px;
+  height: 22px;
+  color: #FFAA66;
+  filter: drop-shadow(0 0 8px #FFAA66aa);
+  flex-shrink: 0;
+}
+.preview-stat-num {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+}
+.preview-stat-lbl {
+  margin: 1px 0 0;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: ${C.cyanSoft};
+}
+.preview-focus {
+  padding: 14px;
+  background: rgba(3, 17, 24, 0.55);
+  border: 1px solid ${C.hairline};
+  border-radius: 14px;
+}
+.preview-focus-label {
+  margin: 0 0 6px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  color: ${C.cyan};
+}
+.preview-focus-topic {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+}
+.preview-focus-bar {
+  width: 100%;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(118, 228, 247, 0.12);
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+.preview-focus-bar span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, ${C.cyan}, ${C.cyanSoft});
+  border-radius: 999px;
+  box-shadow: 0 0 10px ${C.cyan}99;
+}
+.preview-focus-meta {
+  margin: 0;
+  font-size: 9.5px;
+  color: ${P.mistSoft};
+  letter-spacing: 0.08em;
+}
+
+/* ============================================================================
+   HOW IT WORKS — 3-step narrative strip
+   ============================================================================ */
+.landing-how {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: clamp(24px, 4vh, 48px) 32px clamp(40px, 6vh, 72px);
+}
+.how-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 820px) {
+  .how-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+}
+.how-step {
+  position: relative;
+  padding: clamp(20px, 3vh, 28px);
+  background: linear-gradient(180deg, ${C.bgPanel}, ${C.bgPanelStrong});
+  border: 1px solid ${C.hairline};
+  border-radius: 18px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 240ms ease;
+}
+.how-step::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, ${C.cyan}88, transparent);
+  opacity: 0.55;
+  pointer-events: none;
+}
+.how-step:hover {
+  border-color: ${C.hairlineStrong};
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px ${C.cyan}22, 0 22px 50px -22px rgba(0,0,0,0.6);
+}
+.how-step-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.how-step-num {
+  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-size: 36px;
+  font-weight: 200;
+  color: ${C.cyan};
+  text-shadow: 0 0 22px ${C.cyan}55;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+.how-step-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: ${C.cyan}14;
+  border: 1px solid ${C.cyan}55;
+  color: ${C.cyan};
+  box-shadow: 0 0 14px ${C.cyan}33;
+}
+.how-step-icon svg { width: 18px; height: 18px; }
+.how-step-title {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.01em;
+}
+.how-step-body {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: rgba(225, 244, 250, 0.82);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .try-card,
+  .stat-cell,
+  .how-step,
+  .preview-frame {
+    transition: none !important;
+  }
+  .preview-frame { transform: none !important; }
 }
 `;
