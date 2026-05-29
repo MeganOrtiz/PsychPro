@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, lazy, Suspense } from "react";
 import { Link } from "wouter";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
@@ -16,6 +16,8 @@ import {
   Activity,
   Network,
   Compass,
+  Box,
+  Layers,
 } from "lucide-react";
 import {
   BRAIN_STRUCTURES,
@@ -27,6 +29,12 @@ import {
 import brainLateral from "@/assets/brain-views/lateral.png";
 import brainMidsagittal from "@/assets/brain-views/midsagittal.png";
 import brainCoronal from "@/assets/brain-views/coronal.png";
+
+// Heavy 3D view (three.js + 16MB GLB) is code-split so it only loads when
+// the user opens the 3D tab — the Sections/image view stays instant.
+const Brain3DView = lazy(() => import("@/components/brain/brain-3d-view"));
+
+type ViewMode = "3d" | "sections";
 
 // =============================================================================
 // Brain Lab (image-driven rewrite)
@@ -883,9 +891,20 @@ function writeFocusToHash(id: string | null) {
 export default function BrainLabPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<TabGroup | "all">("all");
+  const [viewMode, setViewMode] = useState<ViewMode>("3d");
   const [searchOpen, setSearchOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [showMobileDetail, setShowMobileDetail] = useState(false);
+
+  // Structures visible as clickable markers in the 3D view — mirrors the
+  // GroupChips filter so the active tab governs what's highlighted.
+  const view3dStructures = useMemo(
+    () =>
+      activeTab === "all"
+        ? BRAIN_STRUCTURES
+        : BRAIN_STRUCTURES.filter((s) => TAB_GROUPS[activeTab].systems.includes(s.system)),
+    [activeTab],
+  );
 
   // Init from media queries + URL hash
   useEffect(() => {
@@ -977,6 +996,35 @@ export default function BrainLabPage() {
           </div>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
+          {/* View toggle — interactive 3D brain vs. anatomical section images */}
+          <div
+            className="flex items-center p-0.5 rounded-xl border"
+            style={{ background: `${PALETTE.surface}cc`, borderColor: `${PALETTE.steel}99` }}
+            data-testid="brain-view-toggle"
+          >
+            {([
+              { mode: "3d" as ViewMode, label: "3D", icon: Box },
+              { mode: "sections" as ViewMode, label: "Sections", icon: Layers },
+            ]).map(({ mode, label, icon: Icon }) => {
+              const on = viewMode === mode;
+              return (
+                <button
+                  key={mode}
+                  onClick={() => setViewMode(mode)}
+                  className="px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all"
+                  style={{
+                    background: on ? `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})` : "transparent",
+                    color: on ? PALETTE.bg : PALETTE.mist,
+                  }}
+                  data-testid={`button-view-${mode}`}
+                  aria-pressed={on}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">{label}</span>
+                </button>
+              );
+            })}
+          </div>
           <button
             onClick={() => setSearchOpen(true)}
             className="px-3 py-1.5 rounded-xl text-xs font-medium border flex items-center gap-2 transition-all hover:-translate-y-0.5"
@@ -1029,11 +1077,37 @@ export default function BrainLabPage() {
             }}
             data-testid="brain-diagram-wrap"
           >
-            <BrainDiagram
-              activeTab={activeTab}
-              selectedId={selectedId}
-              onSelect={handleSelect}
-            />
+            {viewMode === "3d" ? (
+              <Suspense
+                fallback={
+                  <div
+                    className="h-full w-full flex flex-col items-center justify-center gap-3"
+                    data-testid="brain-3d-loading"
+                  >
+                    <Brain
+                      className="w-8 h-8 animate-pulse"
+                      style={{ color: PALETTE.surf }}
+                    />
+                    <p className="text-xs" style={{ color: `${PALETTE.mist}99` }}>
+                      Loading 3D brain…
+                    </p>
+                  </div>
+                }
+              >
+                <Brain3DView
+                  structures={view3dStructures}
+                  selectedId={selectedId}
+                  onSelect={handleSelect}
+                  isMobile={isMobile}
+                />
+              </Suspense>
+            ) : (
+              <BrainDiagram
+                activeTab={activeTab}
+                selectedId={selectedId}
+                onSelect={handleSelect}
+              />
+            )}
 
             {/* Search overlay */}
             {searchOpen && (
