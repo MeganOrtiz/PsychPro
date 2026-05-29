@@ -26,6 +26,7 @@ import {
 } from "../data/brain-structures";
 import brainLateral from "@/assets/brain-views/lateral.png";
 import brainMidsagittal from "@/assets/brain-views/midsagittal.png";
+import brainCoronal from "@/assets/brain-views/coronal.png";
 
 // =============================================================================
 // Brain Lab (image-driven rewrite)
@@ -592,7 +593,7 @@ const BRAIN_VIEWS: Record<
     caption: "Limbic system — hippocampus, amygdala, cingulate",
   },
   subcortical: {
-    src: null,
+    src: brainCoronal,
     viewName: "Coronal section",
     caption: "Subcortical — thalamus, basal ganglia, ventricles",
   },
