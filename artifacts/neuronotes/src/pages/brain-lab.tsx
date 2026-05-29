@@ -560,9 +560,10 @@ function EmptyDetail() {
       </div>
       <h3 className="text-base font-semibold text-white mb-1.5">Pick a structure</h3>
       <p className="text-sm leading-relaxed max-w-xs" style={{ color: `${PALETTE.mist}99` }}>
-        Pick a region tab and chip below, or search by name or symptom. Each
-        structure opens an overview, its primary functions, network
-        connections, and the clinical conditions it's tied to.
+        Tap a glowing marker on the brain, pick a region tab and chip below, or
+        search by name or symptom. Each structure opens an overview, its primary
+        functions, network connections, and the clinical conditions it's tied
+        to.
       </p>
     </div>
   );
@@ -609,10 +610,173 @@ const BRAIN_VIEWS: Record<
   },
 };
 
+// Clickable region markers overlaid on each view. Coordinates are percentages
+// of the rendered image box (x = left→right, y = top→bottom) and are tuned to
+// the current view images in src/assets/brain-views. Each tab shows only the
+// structures that are actually visible in its image, so the markers always sit
+// on real anatomy. Clicking a marker selects that structure — its name pins to
+// the brain and its full detail opens in the panel on the right.
+type Hotspot = { id: string; x: number; y: number };
+
+const HOTSPOTS: Record<TabGroup | "all", Hotspot[]> = {
+  // Lateral view (brain faces left) — cortical surface
+  all: [
+    { id: "prefrontal-cortex", x: 14, y: 46 },
+    { id: "frontal-lobe", x: 25, y: 34 },
+    { id: "motor-cortex", x: 41, y: 20 },
+    { id: "somatosensory-cortex", x: 49, y: 20 },
+    { id: "parietal-lobe", x: 60, y: 28 },
+    { id: "occipital-lobe", x: 82, y: 42 },
+    { id: "temporal-lobe", x: 44, y: 66 },
+    { id: "orbitofrontal-cortex", x: 20, y: 60 },
+  ],
+  cortex: [
+    { id: "prefrontal-cortex", x: 14, y: 46 },
+    { id: "frontal-lobe", x: 25, y: 34 },
+    { id: "motor-cortex", x: 41, y: 20 },
+    { id: "somatosensory-cortex", x: 49, y: 20 },
+    { id: "parietal-lobe", x: 60, y: 28 },
+    { id: "occipital-lobe", x: 82, y: 42 },
+    { id: "temporal-lobe", x: 44, y: 66 },
+    { id: "orbitofrontal-cortex", x: 20, y: 60 },
+  ],
+  // Midsagittal view (brain faces left) — deep medial structures
+  limbic: [
+    { id: "posterior-cingulate", x: 57, y: 34 },
+    { id: "fornix", x: 41, y: 47 },
+    { id: "mammillary-bodies", x: 42, y: 57 },
+    { id: "hippocampus", x: 36, y: 62 },
+    { id: "amygdala", x: 30, y: 60 },
+  ],
+  brainstem: [
+    { id: "midbrain", x: 51, y: 57 },
+    { id: "locus-coeruleus", x: 53, y: 62 },
+    { id: "pons", x: 50, y: 66 },
+    { id: "medulla", x: 49, y: 77 },
+    { id: "cerebellum", x: 71, y: 69 },
+  ],
+  whitematter: [
+    { id: "corpus-callosum", x: 47, y: 39 },
+    { id: "fornix", x: 41, y: 47 },
+  ],
+  // Coronal section — subcortical nuclei & ventricles
+  subcortical: [
+    { id: "lateral-ventricles", x: 48, y: 40 },
+    { id: "caudate", x: 44, y: 41 },
+    { id: "globus-pallidus", x: 40, y: 50 },
+    { id: "putamen", x: 34, y: 48 },
+    { id: "thalamus", x: 45, y: 53 },
+  ],
+};
+
+// A single clickable region marker. Pulses when selected, reveals its label on
+// hover, and keeps the label pinned once chosen so the name stays "next to" the
+// region while its detail is open on the right.
+function HotspotMarker({
+  struct,
+  x,
+  y,
+  selected,
+  onSelect,
+}: {
+  struct: BrainStructure;
+  x: number;
+  y: number;
+  selected: boolean;
+  onSelect: (id: string) => void;
+}) {
+  const flipLeft = x > 58; // keep labels from running off the right edge
+  return (
+    <button
+      type="button"
+      onClick={(e) => {
+        e.stopPropagation();
+        onSelect(struct.id);
+      }}
+      className="group absolute z-10 flex items-center justify-center outline-none"
+      style={{
+        left: `${x}%`,
+        top: `${y}%`,
+        width: 36,
+        height: 36,
+        transform: "translate(-50%, -50%)",
+      }}
+      aria-label={struct.name}
+      aria-pressed={selected}
+      data-testid={`hotspot-${struct.id}`}
+    >
+      {/* Pulse ring (selected only) */}
+      <span
+        className="absolute left-1/2 top-1/2 rounded-full animate-ping"
+        style={{
+          width: 22,
+          height: 22,
+          marginLeft: -11,
+          marginTop: -11,
+          background: `${struct.color}66`,
+          opacity: selected ? 1 : 0,
+        }}
+      />
+      {/* Dot — visible focus ring for keyboard users */}
+      <span
+        className="block rounded-full transition-transform duration-150 group-hover:scale-125 group-focus-visible:scale-125"
+        style={{
+          width: selected ? 16 : 12,
+          height: selected ? 16 : 12,
+          background: struct.color,
+          border: "2px solid #fff",
+          boxShadow: selected
+            ? `0 0 0 3px ${PALETTE.bg}aa, 0 0 14px 3px ${struct.color}`
+            : `0 0 0 3px ${PALETTE.bg}aa, 0 0 12px 2px ${struct.color}`,
+          outline: "2px solid transparent",
+        }}
+      />
+      {/* Keyboard focus halo */}
+      <span
+        className="pointer-events-none absolute left-1/2 top-1/2 rounded-full opacity-0 transition-opacity group-focus-visible:opacity-100"
+        style={{
+          width: 26,
+          height: 26,
+          marginLeft: -13,
+          marginTop: -13,
+          border: `2px solid #fff`,
+        }}
+      />
+      {/* Name label — always shown when selected, on hover/focus otherwise */}
+      <span
+        className={`pointer-events-none absolute top-1/2 -translate-y-1/2 whitespace-nowrap rounded-md px-2 py-0.5 text-[11px] font-semibold transition-opacity duration-150 ${
+          selected
+            ? "opacity-100"
+            : "opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100"
+        }`}
+        style={{
+          [flipLeft ? "right" : "left"]: "calc(100% + 8px)",
+          background: `${PALETTE.surfaceElev}f2`,
+          color: "#fff",
+          border: `1px solid ${struct.color}cc`,
+          boxShadow: `0 6px 18px -6px ${PALETTE.bg}`,
+        }}
+      >
+        {struct.shortName || struct.name}
+      </span>
+    </button>
+  );
+}
+
 // Diagram pane. Shows the brain view image for the active region tab, or an
 // elegant placeholder for groups whose view image hasn't been added yet.
-function BrainDiagram({ activeTab }: { activeTab: TabGroup | "all" }) {
+// Clickable markers sit on top of the image for each visible structure.
+function BrainDiagram({
+  activeTab,
+  selectedId,
+  onSelect,
+}: {
+  activeTab: TabGroup | "all";
+  selectedId: string | null;
+  onSelect: (id: string) => void;
+}) {
   const view = BRAIN_VIEWS[activeTab];
+  const hotspots = HOTSPOTS[activeTab] ?? [];
 
   return (
     <div
@@ -620,20 +784,37 @@ function BrainDiagram({ activeTab }: { activeTab: TabGroup | "all" }) {
       data-testid="brain-diagram"
     >
       {view.src ? (
-        <img
-          src={view.src}
-          alt={`${view.viewName} — ${view.caption}`}
-          className="max-h-full max-w-full object-contain select-none"
-          draggable={false}
-          style={{
-            // Normalize every source image to the same clean grey 3D-model
-            // look so views stay congruent in color regardless of whether the
-            // source was a grey render or a warm anatomical photo. Any future
-            // view (e.g. the coronal section) inherits this automatically.
-            filter: `grayscale(1) contrast(1.05) brightness(1.03) drop-shadow(0 24px 60px ${PALETTE.bg}) drop-shadow(0 0 40px ${PALETTE.teal}55)`,
-          }}
-          data-testid={`brain-view-${activeTab}`}
-        />
+        <div className="relative max-h-full max-w-full">
+          <img
+            src={view.src}
+            alt={`${view.viewName} — ${view.caption}`}
+            className="block max-h-full max-w-full object-contain select-none"
+            draggable={false}
+            style={{
+              // Normalize every source image to the same clean grey 3D-model
+              // look so views stay congruent in color regardless of whether the
+              // source was a grey render or a warm anatomical photo. Any future
+              // view (e.g. the coronal section) inherits this automatically.
+              filter: `grayscale(1) contrast(1.05) brightness(1.03) drop-shadow(0 24px 60px ${PALETTE.bg}) drop-shadow(0 0 40px ${PALETTE.teal}55)`,
+            }}
+            data-testid={`brain-view-${activeTab}`}
+          />
+          {/* Clickable region markers, positioned over the rendered image */}
+          {hotspots.map((h) => {
+            const struct = STRUCTURE_INDEX[h.id];
+            if (!struct) return null;
+            return (
+              <HotspotMarker
+                key={h.id}
+                struct={struct}
+                x={h.x}
+                y={h.y}
+                selected={selectedId === h.id}
+                onSelect={onSelect}
+              />
+            );
+          })}
+        </div>
       ) : (
         <div
           className="flex flex-col items-center justify-center text-center gap-3 px-6"
@@ -713,11 +894,19 @@ export default function BrainLabPage() {
     setIsMobile(mqMobile.matches);
 
     const initial = readFocusFromHash();
-    if (initial) setSelectedId(initial);
+    if (initial) {
+      setSelectedId(initial);
+      const s = STRUCTURE_INDEX[initial];
+      if (s) setActiveTab(tabForSystem(s.system));
+    }
 
     const onHash = () => {
       const f = readFocusFromHash();
       setSelectedId(f);
+      if (f) {
+        const s = STRUCTURE_INDEX[f];
+        if (s) setActiveTab(tabForSystem(s.system));
+      }
     };
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
@@ -840,7 +1029,11 @@ export default function BrainLabPage() {
             }}
             data-testid="brain-diagram-wrap"
           >
-            <BrainDiagram activeTab={activeTab} />
+            <BrainDiagram
+              activeTab={activeTab}
+              selectedId={selectedId}
+              onSelect={handleSelect}
+            />
 
             {/* Search overlay */}
             {searchOpen && (
