@@ -257,7 +257,7 @@ function ClozeView({ items }: { items: ClozeItem[] }) {
       <div className="bg-card border border-border rounded-xl p-5 space-y-3">
         <p className="text-foreground leading-relaxed">
           {parts[0]}
-          <span className={`inline-block min-w-[80px] px-2 py-0.5 mx-1 rounded border-b-2 font-semibold ${
+          <span className={`inline-block min-w-[80px] px-2 py-0.5 mx-1 border-b-2 text-center font-semibold ${
             revealed ? (correct ? "border-green-500 text-green-700 dark:text-green-400" : "border-red-400 text-red-600") : "border-primary text-primary"
           }`}>
             {revealed ? item.answer : (guess || "______")}
