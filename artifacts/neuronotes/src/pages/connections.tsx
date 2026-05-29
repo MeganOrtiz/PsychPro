@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { Users, Sparkles, X, Loader2, Check, Ban, UserMinus } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { PageTitle } from "@/components/brand/page-title";
 import { authHeaders as buildAuthHeaders, jsonAuthHeaders } from "@/lib/auth-headers";
 
 type Suggestion = {
@@ -165,18 +166,12 @@ export default function ConnectionsPage() {
   return (
     <div className="min-h-full study-page-bg" data-testid="connections-page">
       <div className="max-w-5xl mx-auto p-4 md:p-6 lg:p-8">
-        <div className="mb-6">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Users className="w-5 h-5 text-primary" />
-            </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">Connections</h1>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            Find collaborators in your areas of interest and stay in touch with the PsychPro team.
-            Introductions are double opt-in and happen by email — your address is never shown in the app.
-          </p>
-        </div>
+        <PageTitle
+          title="Connections"
+          icon={Users}
+          subtitle="Find collaborators in your areas of interest and stay in touch with the PsychPro team. Introductions are double opt-in and happen by email — your address is never shown in the app."
+          className="mb-6"
+        />
 
         {incoming.length > 0 && (
           <div className="bg-card rounded-2xl p-5 mb-6" data-testid="incoming-requests-banner">

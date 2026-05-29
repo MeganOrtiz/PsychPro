@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { Users, Shield, AlertTriangle } from "lucide-react";
+import { Shield, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { PageTitle } from "@/components/brand/page-title";
 import { authHeaders, jsonAuthHeaders } from "@/lib/auth-headers";
 
 type Stats = {
@@ -78,19 +79,12 @@ export default function AdminConnectionsPage() {
   return (
     <div className="min-h-full study-page-bg" data-testid="admin-connections-page">
       <div className="max-w-4xl mx-auto p-4 md:p-6 lg:p-8">
-        <div className="mb-6">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Shield className="w-5 h-5 text-primary" />
-            </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">Connection Requests</h1>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            Aggregate-only stats. Individual users and message content are not shown — and never
-            should be — under normal moderation. Use Investigate abuse only when there is a
-            credible safety concern; every reveal is audit-logged.
-          </p>
-        </div>
+        <PageTitle
+          title="Connection Requests"
+          icon={Shield}
+          subtitle="Aggregate-only stats. Individual users and message content are not shown — and never should be — under normal moderation. Use Investigate abuse only when there is a credible safety concern; every reveal is audit-logged."
+          className="mb-6"
+        />
 
         <div className="flex gap-2 mb-6">
           {RANGES.map((r) => (

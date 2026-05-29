@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { ShieldCheck, RefreshCw, Check, X, MessageCircle, ExternalLink, FileText, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PageTitle } from "@/components/brand/page-title";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { workTypeLabel } from "@workspace/community";
@@ -103,14 +104,13 @@ export default function AdminFeaturedWorkPage() {
   return (
     <div className="min-h-full study-page-bg" data-testid="admin-featured-work-page">
       <div className="max-w-4xl mx-auto p-4 md:p-6 lg:p-8">
-        <div className="flex items-start justify-between gap-3 mb-6 flex-wrap">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center"><ShieldCheck className="w-5 h-5 text-primary" /></div>
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-foreground">Manage Featured Work</h1>
-              <p className="text-sm text-muted-foreground">{entries.length} total submission{entries.length !== 1 ? "s" : ""}</p>
-            </div>
-          </div>
+        <PageTitle
+          title="Manage Featured Work"
+          icon={ShieldCheck}
+          subtitle={`${entries.length} total submission${entries.length !== 1 ? "s" : ""}`}
+          className="mb-4"
+        />
+        <div className="flex justify-center mb-6">
           <Button variant="outline" size="sm" onClick={load} className="gap-1.5"><RefreshCw className="w-3.5 h-3.5" />Refresh</Button>
         </div>
 

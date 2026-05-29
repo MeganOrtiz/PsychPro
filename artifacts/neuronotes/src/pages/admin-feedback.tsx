@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { MessageSquare, Clock, CheckCheck, Bug, Lightbulb, Sparkles, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { PageTitle } from "@/components/brand/page-title";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { authHeaders, jsonAuthHeaders } from "@/lib/auth-headers";
@@ -77,21 +77,13 @@ export default function AdminFeedbackPage() {
   return (
     <div className="min-h-full study-page-bg" data-testid="admin-feedback-page">
       <div className="max-w-3xl mx-auto p-4 md:p-6 lg:p-8">
-      <div className="flex items-start justify-between gap-3 mb-6">
-        <div>
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-              <MessageSquare className="w-5 h-5 text-primary" />
-            </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">Feedback Inbox</h1>
-            {unreadCount > 0 && (
-              <span className="bg-primary text-primary-foreground text-xs font-bold px-2 py-0.5 rounded-full">
-                {unreadCount}
-              </span>
-            )}
-          </div>
-          <p className="text-sm text-muted-foreground">{entries.length} total submission{entries.length !== 1 ? "s" : ""}</p>
-        </div>
+      <PageTitle
+        title="Feedback Inbox"
+        icon={MessageSquare}
+        subtitle={`${entries.length} total submission${entries.length !== 1 ? "s" : ""}${unreadCount > 0 ? ` · ${unreadCount} unread` : ""}`}
+        className="mb-4"
+      />
+      <div className="flex justify-center mb-6">
         <Button variant="outline" size="sm" onClick={load} className="gap-1.5 flex-shrink-0">
           <RefreshCw className="w-3.5 h-3.5" />
           Refresh

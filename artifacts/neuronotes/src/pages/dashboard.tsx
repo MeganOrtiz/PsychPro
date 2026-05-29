@@ -214,6 +214,7 @@ export default function DashboardPage() {
     <div
       className="min-h-full study-page-bg"
       data-testid="dashboard-page"
+      style={{ background: `linear-gradient(180deg, ${PALETTE.surface} 0%, ${PALETTE.bg} 100%)` }}
     >
       <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 pt-3 pb-4 md:pb-6 lg:pb-8">
         {/* Top header — notifications bell + canonical BrandBanner.

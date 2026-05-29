@@ -3,6 +3,7 @@ import { useLocation, useSearch } from "wouter";
 import { Check, Zap, Crown, Loader2, BookMarked, Sparkles, Settings } from "lucide-react";
 import { useGetSubscriptionPlans, useGetSubscriptionStatus, useCreateCheckoutSession, useCreatePortalSession } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
+import { PageTitle } from "@/components/brand/page-title";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -95,15 +96,12 @@ export default function SubscriptionPage() {
   return (
     <div className="min-h-full study-page-bg" data-testid="subscription-page">
       <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
-      <div className="mb-6">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-            <Crown className="w-5 h-5 text-primary" />
-          </div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Upgrade</h1>
-        </div>
-        <p className="text-sm text-muted-foreground">Choose the plan that fits your study goals</p>
-      </div>
+      <PageTitle
+        title="Upgrade"
+        icon={Crown}
+        subtitle="Choose the plan that fits your study goals"
+        className="mb-6"
+      />
 
       {(isPro || isScholar) && (
         <div

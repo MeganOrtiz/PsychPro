@@ -4,6 +4,7 @@ import {
   Star, Send, Search, Filter, Upload, FileText, ExternalLink, X, Loader2, User as UserIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PageTitle } from "@/components/brand/page-title";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import {
@@ -100,22 +101,18 @@ export default function FeaturedWorkPage() {
   return (
     <div className="min-h-full study-page-bg" data-testid="featured-work-page">
       <div className="max-w-6xl mx-auto p-4 md:p-6 lg:p-8 space-y-6">
-        <div className="flex items-start justify-between gap-4 flex-wrap">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                <Star className="w-5 h-5 text-primary" />
-              </div>
-              <h1 className="text-2xl md:text-3xl font-bold text-foreground">Featured Work</h1>
-            </div>
-            <p className="text-sm text-muted-foreground max-w-xl">
-              Share your work, get featured, and discover what others in the PsychPro community are creating.
-              Approved submissions appear in the archive below and are eligible for the dashboard spotlight.
-            </p>
+        <div>
+          <PageTitle
+            title="Featured Work"
+            icon={Star}
+            subtitle="Share your work, get featured, and discover what others in the PsychPro community are creating. Approved submissions appear in the archive below and are eligible for the dashboard spotlight."
+            className="mb-4"
+          />
+          <div className="flex justify-center">
+            <Button onClick={() => setTab("submit")} className="gap-2" data-testid="button-open-submit">
+              <Send className="w-4 h-4" /> Submit Your Work
+            </Button>
           </div>
-          <Button onClick={() => setTab("submit")} className="gap-2" data-testid="button-open-submit">
-            <Send className="w-4 h-4" /> Submit Your Work
-          </Button>
         </div>
 
         <div className="flex gap-2 border-b border-border">

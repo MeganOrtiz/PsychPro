@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
-import { Lightbulb, Trash2, ChevronLeft, BookOpen } from "lucide-react";
+import { Lightbulb, Trash2, BookOpen } from "lucide-react";
 import { useGetTopics } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { StudySurface } from "@/components/study/study-surface";
@@ -64,17 +64,6 @@ export default function ReflectionsPage() {
       data-testid="reflections-page"
     >
       <div className="max-w-4xl mx-auto">
-        <Link href="/my-decks">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="mb-4 -ml-2 text-white/70 hover:text-white"
-            data-testid="back-to-tools"
-          >
-            <ChevronLeft className="w-4 h-4 mr-1" /> My Tools
-          </Button>
-        </Link>
-
         <PageTitle
           title="Reflections"
           icon={Lightbulb}
