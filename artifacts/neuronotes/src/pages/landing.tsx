@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { useAuth } from "@clerk/clerk-react";
 import {
@@ -521,14 +521,87 @@ function InteractiveFlashcard() {
 // no fake "10,000+ students" copy. Just the genuine library size, which is
 // already impressive on its own.
 // =============================================================================
-function StatsStrip() {
+// Eases a number from 0 → target once `active` flips true, so the library
+// counts climb into view as a cinematic flourish (not a static drop-in).
+function useCountUp(target: number, active: boolean, duration = 1500) {
+  const [val, setVal] = useState(0);
+  useEffect(() => {
+    if (!active) return;
+    // Honor reduced-motion: snap straight to the final value, no animation.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setVal(target);
+      return;
+    }
+    let raf = 0;
+    let start: number | null = null;
+    const step = (t: number) => {
+      if (start === null) start = t;
+      const p = Math.min((t - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setVal(Math.round(eased * target));
+      if (p < 1) raf = requestAnimationFrame(step);
+      else setVal(target);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [target, active, duration]);
+  return val;
+}
+
+function StatCell({
+  value,
+  label,
+  active,
+}: {
+  value: string;
+  label: string;
+  active: boolean;
+}) {
+  // Keep any non-numeric formatting (commas) by deriving the target from the
+  // digits only, then re-formatting the animated value with the same locale.
+  const target = Number(value.replace(/[^0-9.]/g, "")) || 0;
+  const display = useCountUp(target, active);
   return (
-    <div className="stats-grid" data-testid="stats-strip">
+    <div className="stat-cell">
+      <p className="stat-num">{display.toLocaleString()}</p>
+      <p className="stat-label">{label}</p>
+    </div>
+  );
+}
+
+function StatsStrip() {
+  const [active, setActive] = useState(false);
+  const ref = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    if (reduce) {
+      setActive(true);
+      return;
+    }
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            setActive(true);
+            io.disconnect();
+          }
+        });
+      },
+      { threshold: 0.4 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <div className="stats-grid" data-testid="stats-strip" ref={ref}>
       {STATS.map((s) => (
-        <div key={s.label} className="stat-cell">
-          <p className="stat-num">{s.value}</p>
-          <p className="stat-label">{s.label}</p>
-        </div>
+        <StatCell key={s.label} value={s.value} label={s.label} active={active} />
       ))}
     </div>
   );
@@ -677,6 +750,46 @@ export default function LandingPage() {
   useEffect(() => {
     const id = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(id);
+  }, []);
+
+  // Cinematic scroll-reveal: the content surfaces below the hero fade-rise into
+  // view as they enter the viewport. Opt-in via JS so without it (or with
+  // reduced-motion) everything stays visible — never hidden behind a missing
+  // animation. The hero/background are deliberately excluded.
+  useEffect(() => {
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    if (reduce) return;
+    const selector = [
+      ".landing-section-header",
+      ".stat-cell",
+      ".landing-bento-card",
+      ".how-step",
+      ".preview-stage",
+      ".landing-topics-panel",
+      ".try-block",
+    ].join(",");
+    const els = Array.from(
+      document.querySelectorAll<HTMLElement>(selector),
+    );
+    // If IntersectionObserver is unavailable, leave everything visible rather
+    // than hiding content behind an animation that can never fire.
+    if (typeof IntersectionObserver === "undefined") return;
+    els.forEach((el) => el.classList.add("landing-reveal"));
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("is-revealed");
+            io.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
   }, []);
 
   const goToApp = () => navigate(isSignedIn ? "/dashboard" : "/sign-in");
@@ -2315,5 +2428,152 @@ const styles = `
     transition: none !important;
   }
   .preview-frame { transform: none !important; }
+}
+
+/* ============================================================================
+   CINEMATIC LAYER — scroll-reveal entrances, hover sheens, refined buttons.
+   Additive only: nothing here touches the hero, brain, wordmark, or page bg.
+   ============================================================================ */
+
+/* --- Scroll-reveal: surfaces fade-rise as they enter the viewport. The base
+   .landing-reveal only sets opacity:0; the animation uses backwards fill so
+   that once it completes the element reverts to its own styles (transform:none)
+   and hover lifts keep working. --- */
+.landing-reveal { opacity: 0; }
+.landing-reveal.is-revealed {
+  opacity: 1;
+  animation: landingReveal 760ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+@keyframes landingReveal {
+  from { opacity: 0; transform: translateY(26px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+/* Staggered cascades within each group so the cards ripple in rather than
+   snapping as one block. */
+.stats-grid .stat-cell:nth-child(2) { animation-delay: 80ms; }
+.stats-grid .stat-cell:nth-child(3) { animation-delay: 160ms; }
+.stats-grid .stat-cell:nth-child(4) { animation-delay: 240ms; }
+.landing-features-bento .landing-bento-card:nth-child(2) { animation-delay: 70ms; }
+.landing-features-bento .landing-bento-card:nth-child(3) { animation-delay: 140ms; }
+.landing-features-bento .landing-bento-card:nth-child(4) { animation-delay: 210ms; }
+.landing-features-bento .landing-bento-card:nth-child(5) { animation-delay: 280ms; }
+.how-grid .how-step:nth-child(2) { animation-delay: 110ms; }
+.how-grid .how-step:nth-child(3) { animation-delay: 220ms; }
+
+/* --- Hover sheen: a soft light bar sweeps across the info surfaces on hover,
+   echoing the glassy cyan aesthetic. Surfaces need clip + stacking context. --- */
+.stat-cell { position: relative; overflow: hidden; }
+.how-step { overflow: hidden; }
+.landing-bento-card::after,
+.how-step::after,
+.stat-cell::after,
+.landing-topics-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    115deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.10) 48%,
+    rgba(167, 243, 255, 0.06) 52%,
+    transparent 68%
+  );
+  transform: translateX(-130%);
+  transition: transform 760ms cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 1;
+}
+.landing-topics-panel { overflow: hidden; }
+.landing-bento-card:hover::after,
+.how-step:hover::after,
+.stat-cell:hover::after,
+.landing-topics-panel:hover::after {
+  transform: translateX(130%);
+}
+/* Keep card text/visuals above the sweeping sheen. */
+.landing-bento-visual,
+.landing-bento-body,
+.how-step-head,
+.how-step-title,
+.how-step-body,
+.stat-num,
+.stat-label,
+.landing-topics-header,
+.landing-topics-grid { position: relative; z-index: 2; }
+
+/* --- Button sheen: hero CTAs + LOG IN get the same light sweep on hover,
+   while their resting appearance stays identical so the hero is unchanged. --- */
+.landing-cta { position: relative; overflow: hidden; }
+.landing-nav-login { position: relative; overflow: hidden; }
+.landing-cta::after,
+.landing-nav-login::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.28) 50%,
+    transparent 65%
+  );
+  transform: translateX(-135%);
+  transition: transform 720ms cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+.landing-cta:hover::after,
+.landing-nav-login:hover::after { transform: translateX(135%); }
+.landing-cta > * { position: relative; z-index: 1; }
+
+/* --- Topic pills: a glowing cyan accent bar wipes in from the left on hover,
+   reinforcing the "selected" feel beyond the existing nudge. --- */
+.landing-topic-pill { position: relative; overflow: hidden; }
+.landing-topic-pill::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: ${C.cyan};
+  box-shadow: 0 0 12px ${C.cyan}cc;
+  transform: scaleY(0);
+  transform-origin: center;
+  transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.landing-topic-pill:hover::before { transform: scaleY(1); }
+
+/* --- Demo nav + footer micro-polish. --- */
+.try-controls button:hover { transform: scale(1.08); }
+.try-controls button:active { transform: scale(0.96); }
+.landing-footer-link { position: relative; }
+.landing-footer-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1px;
+  background: ${C.cyan};
+  box-shadow: 0 0 8px ${C.cyan}aa;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 240ms ease;
+}
+.landing-footer-link:hover::after { transform: scaleX(1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-reveal,
+  .landing-reveal.is-revealed { opacity: 1 !important; animation: none !important; }
+  .landing-bento-card::after,
+  .how-step::after,
+  .stat-cell::after,
+  .landing-topics-panel::after,
+  .landing-cta::after,
+  .landing-nav-login::after,
+  .landing-topic-pill::before,
+  .landing-footer-link::after { transition: none !important; }
+  .try-controls button:hover,
+  .try-controls button:active { transform: none !important; }
 }
 `;
