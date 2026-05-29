@@ -220,7 +220,7 @@ export default function DashboardPage() {
             Tight vertical rhythm: the bell sits flush top-right and the
             brand banner is pulled up so the journey card lands above the
             fold on a standard laptop. */}
-        <header className="relative mb-4">
+        <header className="relative mb-8 md:mb-10">
           {/* z-20 is required: the BrandBanner below is a later sibling in
               the same `relative` header, so without an explicit z it stacks
               above this absolutely-positioned wrapper and swallows the
@@ -229,11 +229,48 @@ export default function DashboardPage() {
           <div className="absolute right-0 top-0 z-20 flex items-center gap-3">
             <NotificationsBell />
           </div>
-          <BrandBanner
-            size="lg"
-            greeting={greetingText}
-            className="mt-1 mb-2"
-          />
+
+          {/* Stage — the centered wordmark is lit as if on a stage: an
+              overhead spotlight cone washes down from the top, a thin glowing
+              light-line reads as the stage edge, and a soft floor glow pools
+              beneath it. All decorative layers sit behind the protected
+              BrandBanner (z-10) and are pointer-events-none. */}
+          <div className="relative flex justify-center pt-7 md:pt-10 pb-4">
+            <div
+              aria-hidden
+              className="pointer-events-none absolute left-1/2 -top-3 -translate-x-1/2"
+              style={{
+                width: "min(760px, 94%)",
+                height: "280px",
+                background: `radial-gradient(58% 80% at 50% 0%, ${PALETTE.surf}30 0%, ${PALETTE.teal}16 42%, transparent 72%)`,
+              }}
+            />
+            <div
+              aria-hidden
+              className="pointer-events-none absolute left-1/2 bottom-1 -translate-x-1/2 translate-y-1/2"
+              style={{
+                width: "min(440px, 72%)",
+                height: "76px",
+                background: `radial-gradient(50% 100% at 50% 0%, ${PALETTE.surf}24 0%, transparent 72%)`,
+                filter: "blur(4px)",
+              }}
+            />
+            <div
+              aria-hidden
+              className="pointer-events-none absolute left-1/2 bottom-1 -translate-x-1/2"
+              style={{
+                width: "min(560px, 84%)",
+                height: "1px",
+                background: `linear-gradient(90deg, transparent, ${PALETTE.surf}80, transparent)`,
+                boxShadow: `0 0 20px ${PALETTE.surf}66`,
+              }}
+            />
+            <BrandBanner
+              size="lg"
+              greeting={greetingText}
+              className="relative z-10"
+            />
+          </div>
         </header>
 
         {isOverLimit && (

@@ -212,26 +212,16 @@ export default function AppLayout({ children }: AppLayoutProps) {
           style={{ background: `radial-gradient(closest-side, ${STUDY_PALETTE.teal}2e, transparent)` }}
         />
 
-        <div
-          className="relative flex items-center gap-3 p-5 border-b"
-          style={{ borderColor: "rgba(118, 228, 247, 0.15)" }}
-        >
-          <Brain
-            className="w-6 h-6 flex-shrink-0"
-            style={{
-              color: STUDY_PALETTE.surf,
-              filter: `drop-shadow(0 0 8px ${STUDY_PALETTE.surf}aa)`,
-            }}
-          />
-          <span
-            className="text-white font-light text-sm"
-            style={{ letterSpacing: "0.28em", color: STUDY_PALETTE.cloud }}
-          >
-            PSYCHPRO
-          </span>
+        {/* Brand wordmark intentionally removed from the sidebar — the
+            canonical PSYCHPRO title now lives centered on the page (dashboard
+            BrandBanner / PageTitle), so a second top-left logo was redundant.
+            We keep a slim top bar so the mobile close button still has a home
+            and the nav gets a little breathing room on desktop. */}
+        <div className="relative flex items-center justify-end px-4 pt-4 pb-1">
           <button
-            className="ml-auto md:hidden text-white/80"
+            className="md:hidden text-white/80"
             onClick={() => setSidebarOpen(false)}
+            aria-label="Close menu"
           >
             <X className="w-5 h-5" />
           </button>
