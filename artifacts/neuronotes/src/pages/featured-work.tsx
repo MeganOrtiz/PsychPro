@@ -350,23 +350,25 @@ function DetailModal({ submission, onClose }: { submission: Submission; onClose:
         )}
         <div className="flex flex-wrap gap-2">
           {fileHref && (
-            <a href={fileHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium" data-testid="link-pdf">
-              <FileText className="w-4 h-4" /> Download PDF
-            </a>
+            <Button asChild size="sm" data-testid="link-pdf">
+              <a href={fileHref} target="_blank" rel="noopener noreferrer">
+                <FileText className="w-4 h-4" /> Download PDF
+              </a>
+            </Button>
           )}
           {submission.externalLink && (
-            <a href={submission.externalLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-input bg-card text-sm font-medium text-foreground" data-testid="link-external">
-              <ExternalLink className="w-4 h-4" /> Open link
-            </a>
+            <Button asChild variant="outline" size="sm" data-testid="link-external">
+              <a href={submission.externalLink} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="w-4 h-4" /> Open link
+              </a>
+            </Button>
           )}
           {!submission.submitter.isAnonymous && submission.userId && (
-            <a
-              href={`/u/${encodeURIComponent(submission.userId)}`}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-input bg-card text-sm font-medium text-foreground"
-              data-testid="link-submitter-profile"
-            >
-              <UserIcon className="w-4 h-4" /> View submitter profile
-            </a>
+            <Button asChild variant="outline" size="sm" data-testid="link-submitter-profile">
+              <a href={`/u/${encodeURIComponent(submission.userId)}`}>
+                <UserIcon className="w-4 h-4" /> View submitter profile
+              </a>
+            </Button>
           )}
         </div>
       </div>
