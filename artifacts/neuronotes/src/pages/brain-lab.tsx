@@ -1039,7 +1039,18 @@ export default function BrainLabPage() {
             <Brain className="w-5 h-5" />
           </div>
           <div className="min-w-0">
-            <h1 className="text-base md:text-lg font-bold text-white truncate">Brain Lab</h1>
+            <h1
+              className="font-light uppercase truncate leading-none"
+              style={{
+                fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
+                fontSize: "clamp(15px, 2.2vw, 19px)",
+                letterSpacing: "0.22em",
+                color: PALETTE.cloud,
+                textShadow: `0 0 18px ${PALETTE.surf}55`,
+              }}
+            >
+              Brain Lab
+            </h1>
             <p className="text-xs hidden sm:block" style={{ color: `${PALETTE.mist}99` }}>
               Explore the brain. Understand the mind.
             </p>
