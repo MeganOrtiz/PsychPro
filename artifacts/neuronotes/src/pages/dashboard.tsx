@@ -2,7 +2,7 @@
 // Dashboard — PROTECTED.
 // ---------------------------------------------------------------------------
 // Layout matches the 2026-05 reference: header (PSYCHPRO wordmark + tagline
-// "advance your mind. elevate care."), then a two-column main area with
+// "learn. expand. connect."), then a two-column main area with
 //   Left:  Begin/Continue Your Journey · Recommended for You (2x2)
 //          · Streak + Leaderboard row
 //   Right: Spotlight rail (smoky, circular photo, FEATURED WORK label)
@@ -235,7 +235,7 @@ export default function DashboardPage() {
               letters, and two faint orbiting glints for energy. No straight
               lines. Every decorative layer sits behind the protected
               BrandBanner (z-10) and is pointer-events-none. */}
-          <div className="relative flex justify-center pt-10 md:pt-14 pb-7 md:pb-9">
+          <div className="relative flex justify-center pt-3 md:pt-5 pb-5 md:pb-7">
             {/* Wide ambient halo — sets the atmosphere */}
             <div
               aria-hidden
@@ -999,7 +999,7 @@ function StreakCard({
               {animated}
             </span>
             <span className="text-sm" style={{ color: PALETTE.mistSoft }}>
-              day{streak === 1 ? "" : "s"}
+              day{animated === 1 ? "" : "s"}
             </span>
           </div>
           <p
