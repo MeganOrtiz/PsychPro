@@ -24,6 +24,7 @@ import {
   type BrainStructure,
   type BrainSystem,
 } from "../data/brain-structures";
+import brainLateral from "@/assets/brain-views/lateral.png";
 
 // =============================================================================
 // Brain Lab (image-driven rewrite)
@@ -565,153 +566,104 @@ function EmptyDetail() {
   );
 }
 
-// Simple SVG wireframe brain. Each of the 5 region groups is a clickable
-// shape that glows in its system color when the user clicks it OR when the
-// currently-selected structure belongs to that group. Clicking a region
-// promotes that group to the active tab so its chip strip is visible.
-const REGION_PATHS: Record<
-  TabGroup,
-  {
-    d: string;
-    testid: string;
-    label: string;
-    color: string;
-    labelPos: [number, number];
-  }
+// Image-driven brain views. Each region tab swaps the diagram to the brain
+// view that best exposes that group's structures. As new view images are
+// added, drop them into src/assets/brain-views and wire them up here — any
+// group still set to `src: null` renders an elegant "coming soon" placeholder
+// so the page never breaks while the image library is being filled in.
+const BRAIN_VIEWS: Record<
+  TabGroup | "all",
+  { src: string | null; viewName: string; caption: string }
 > = {
-  cortex: {
-    d:
-      "M 70 145 C 60 95, 95 45, 185 40 C 275 36, 335 70, 338 125 " +
-      "C 340 155, 322 175, 292 178 L 118 178 C 90 178, 70 168, 70 145 Z " +
-      "M 95 95 C 110 80, 130 75, 145 90 M 150 75 C 170 65, 195 65, 215 80 " +
-      "M 225 65 C 250 60, 280 70, 295 90 M 305 110 C 320 120, 322 140, 312 155",
-    testid: "wireframe-cortex",
-    label: "Cortex",
-    color: SYSTEM_META.cortex.color,
-    labelPos: [200, 65],
+  all: {
+    src: brainLateral,
+    viewName: "Lateral view",
+    caption: "The brain's outer surface — side profile",
   },
-  whitematter: {
-    d: "M 112 138 C 140 108, 270 108, 296 138",
-    testid: "wireframe-whitematter",
-    label: "White Matter",
-    color: SYSTEM_META["white-matter"].color,
-    labelPos: [200, 102],
+  cortex: {
+    src: brainLateral,
+    viewName: "Lateral view",
+    caption: "Cerebral cortex — the folded outer surface",
   },
   limbic: {
-    d:
-      "M 170 158 C 168 142, 198 138, 218 150 C 232 160, 222 174, 200 172 " +
-      "C 184 170, 170 168, 170 158 Z",
-    testid: "wireframe-limbic",
-    label: "Limbic",
-    color: SYSTEM_META.limbic.color,
-    labelPos: [195, 195],
+    src: null,
+    viewName: "Midsagittal view",
+    caption: "Limbic system — hippocampus, amygdala, cingulate",
   },
   subcortical: {
-    d:
-      "M 232 156 C 232 146, 272 146, 272 159 C 272 170, 232 170, 232 156 Z",
-    testid: "wireframe-subcortical",
-    label: "Subcortical",
-    color: SYSTEM_META.diencephalon.color,
-    labelPos: [252, 138],
+    src: null,
+    viewName: "Coronal section",
+    caption: "Subcortical — thalamus, basal ganglia, ventricles",
   },
   brainstem: {
-    d:
-      "M 218 178 L 213 240 L 247 240 L 242 178 Z " +
-      "M 248 180 C 292 180, 322 200, 322 222 C 322 242, 296 252, 272 246 " +
-      "C 252 240, 248 222, 248 200 Z",
-    testid: "wireframe-brainstem",
-    label: "Brainstem",
-    color: SYSTEM_META.brainstem.color,
-    labelPos: [285, 268],
+    src: null,
+    viewName: "Midsagittal view",
+    caption: "Brainstem & cerebellum",
+  },
+  whitematter: {
+    src: null,
+    viewName: "Midsagittal view",
+    caption: "White matter tracts — corpus callosum & pathways",
   },
 };
 
-function WireframeBrain({
-  activeTab,
-  selectedSystem,
-  onPickGroup,
-}: {
-  activeTab: TabGroup | "all";
-  selectedSystem: BrainSystem | null;
-  onPickGroup: (group: TabGroup) => void;
-}) {
-  const selectedGroup = selectedSystem ? tabForSystem(selectedSystem) : null;
+// Diagram pane. Shows the brain view image for the active region tab, or an
+// elegant placeholder for groups whose view image hasn't been added yet.
+function BrainDiagram({ activeTab }: { activeTab: TabGroup | "all" }) {
+  const view = BRAIN_VIEWS[activeTab];
 
   return (
     <div
       className="relative h-full w-full flex items-center justify-center p-4 md:p-6"
-      data-testid="brain-wireframe"
+      data-testid="brain-diagram"
     >
-      <svg
-        viewBox="0 0 400 280"
-        className="w-full h-full max-w-2xl"
-        role="img"
-        aria-label="Interactive wireframe brain — click a region to highlight it"
+      {view.src ? (
+        <img
+          src={view.src}
+          alt={`${view.viewName} — ${view.caption}`}
+          className="max-h-full max-w-full object-contain select-none"
+          draggable={false}
+          style={{ filter: `drop-shadow(0 24px 60px ${PALETTE.bg}) drop-shadow(0 0 40px ${PALETTE.teal}55)` }}
+          data-testid={`brain-view-${activeTab}`}
+        />
+      ) : (
+        <div
+          className="flex flex-col items-center justify-center text-center gap-3 px-6"
+          data-testid={`brain-view-placeholder-${activeTab}`}
+        >
+          <div
+            className="w-16 h-16 rounded-2xl flex items-center justify-center"
+            style={{
+              background: `linear-gradient(135deg, ${PALETTE.surface}, ${PALETTE.surfaceElev})`,
+              border: `1px solid ${PALETTE.steel}99`,
+              boxShadow: `0 0 30px -8px ${PALETTE.teal}66`,
+            }}
+          >
+            <Brain className="w-7 h-7" style={{ color: PALETTE.surf }} />
+          </div>
+          <p className="text-sm font-semibold text-white">{view.viewName} coming soon</p>
+          <p className="text-xs max-w-xs" style={{ color: `${PALETTE.mist}99` }}>
+            This view will show the {view.caption.toLowerCase()}. For now, pick a
+            structure from the chips below to open its detail.
+          </p>
+        </div>
+      )}
+
+      {/* View caption */}
+      <div
+        className="absolute bottom-3 left-0 right-0 flex items-center justify-center gap-2 px-4 text-center"
+        style={{ pointerEvents: "none" }}
       >
-        {TAB_KEYS.map((key) => {
-          const r = REGION_PATHS[key];
-          const isActive = activeTab === key || selectedGroup === key;
-          const baseStroke = `${PALETTE.surf}55`;
-          return (
-            <g
-              key={key}
-              onClick={() => onPickGroup(key)}
-              style={{ cursor: "pointer" }}
-              data-testid={r.testid}
-              role="button"
-              aria-label={`Highlight ${r.label}`}
-              tabIndex={0}
-              className="focus:outline-none focus-visible:[outline:2px_solid_white] focus-visible:[outline-offset:2px]"
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  onPickGroup(key);
-                }
-              }}
-            >
-              <path
-                d={r.d}
-                fill={isActive ? `${r.color}26` : "transparent"}
-                stroke={isActive ? r.color : baseStroke}
-                strokeWidth={isActive ? 2.2 : 1.2}
-                strokeLinejoin="round"
-                strokeLinecap="round"
-                style={{
-                  transition:
-                    "fill 0.25s ease, stroke 0.25s ease, stroke-width 0.25s ease, filter 0.25s ease",
-                  filter: isActive
-                    ? `drop-shadow(0 0 6px ${r.color}) drop-shadow(0 0 14px ${r.color}88)`
-                    : undefined,
-                }}
-              />
-              {isActive && (
-                <text
-                  x={r.labelPos[0]}
-                  y={r.labelPos[1]}
-                  textAnchor="middle"
-                  fontSize={9}
-                  fontWeight={700}
-                  fill={r.color}
-                  style={{
-                    pointerEvents: "none",
-                    letterSpacing: "1.2px",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  {r.label}
-                </text>
-              )}
-            </g>
-          );
-        })}
-      </svg>
-      <p
-        className="absolute bottom-3 left-0 right-0 text-center text-[11px]"
-        style={{ color: `${PALETTE.mist}66` }}
-      >
-        Click a region to highlight it, then pick a structure from the chips
-        below.
-      </p>
+        <span
+          className="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full"
+          style={{ background: `${PALETTE.surface}cc`, color: PALETTE.surf }}
+        >
+          {view.viewName}
+        </span>
+        <span className="text-[11px]" style={{ color: `${PALETTE.mist}88` }}>
+          {view.caption}
+        </span>
+      </div>
     </div>
   );
 }
@@ -880,17 +832,7 @@ export default function BrainLabPage() {
             }}
             data-testid="brain-diagram-wrap"
           >
-            <WireframeBrain
-              activeTab={activeTab}
-              selectedSystem={selected?.system ?? null}
-              onPickGroup={(g) => {
-                // Clicking a wireframe region promotes that group to the
-                // active tab so its chip strip is visible. We intentionally
-                // don't auto-select a specific structure — the user picks
-                // from the chips below.
-                setActiveTab(g);
-              }}
-            />
+            <BrainDiagram activeTab={activeTab} />
 
             {/* Search overlay */}
             {searchOpen && (
