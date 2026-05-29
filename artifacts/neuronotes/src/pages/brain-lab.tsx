@@ -25,6 +25,7 @@ import {
   type BrainSystem,
 } from "../data/brain-structures";
 import brainLateral from "@/assets/brain-views/lateral.png";
+import brainMidsagittal from "@/assets/brain-views/midsagittal.png";
 
 // =============================================================================
 // Brain Lab (image-driven rewrite)
@@ -586,7 +587,7 @@ const BRAIN_VIEWS: Record<
     caption: "Cerebral cortex — the folded outer surface",
   },
   limbic: {
-    src: null,
+    src: brainMidsagittal,
     viewName: "Midsagittal view",
     caption: "Limbic system — hippocampus, amygdala, cingulate",
   },
@@ -596,12 +597,12 @@ const BRAIN_VIEWS: Record<
     caption: "Subcortical — thalamus, basal ganglia, ventricles",
   },
   brainstem: {
-    src: null,
+    src: brainMidsagittal,
     viewName: "Midsagittal view",
     caption: "Brainstem & cerebellum",
   },
   whitematter: {
-    src: null,
+    src: brainMidsagittal,
     viewName: "Midsagittal view",
     caption: "White matter tracts — corpus callosum & pathways",
   },
