@@ -125,6 +125,31 @@ const FOOTER_LINKS = [
   { label: "Contact", href: "mailto:admin@psychprosuites.com" },
 ];
 
+function useScrollReveal() {
+  useEffect(() => {
+    const els = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-reveal]"),
+    );
+    if (typeof IntersectionObserver === "undefined") {
+      els.forEach((el) => el.classList.add("is-visible"));
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+}
+
 export default function LandingPage() {
   const [, navigate] = useLocation();
   const { isSignedIn } = useAuth();
@@ -134,6 +159,8 @@ export default function LandingPage() {
     const id = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(id);
   }, []);
+
+  useScrollReveal();
 
   const goToApp = () => navigate(isSignedIn ? "/dashboard" : "/sign-in");
   const goToTopics = () => navigate(isSignedIn ? "/topics" : "/sign-in");
@@ -223,8 +250,18 @@ export default function LandingPage() {
 
         {/* ============== FEATURES (single 5-card row) ============== */}
         <section id="features" className="landing-features">
+          <div className="landing-section-head" data-reveal>
+            <p className="landing-eyebrow">WHY PSYCHPRO</p>
+            <h2 className="landing-section-title">
+              Built for depth, not memorization
+            </h2>
+            <p className="landing-section-sub">
+              A rigorous, evidence-based environment for serious students of the
+              mind — engineered around how experts actually learn.
+            </p>
+          </div>
           <div className="landing-features-row">
-            {FEATURES.map((f) => {
+            {FEATURES.map((f, i) => {
               const Icon = f.icon;
               const portrait = "portrait" in f ? f.portrait : undefined;
               const dissertationTopic =
@@ -233,7 +270,11 @@ export default function LandingPage() {
                 <article
                   key={f.title}
                   className={`landing-feature-card${portrait ? " landing-feature-card--spotlight" : ""}`}
-                  style={{ ["--accent" as any]: f.accent }}
+                  style={{
+                    ["--accent" as any]: f.accent,
+                    ["--reveal-delay" as any]: `${i * 90}ms`,
+                  }}
+                  data-reveal
                   data-testid={`feature-${f.title.split(" ")[0].toLowerCase()}`}
                 >
                   {portrait ? (
@@ -265,10 +306,17 @@ export default function LandingPage() {
 
         {/* ============== BROWSE TOPICS ============== */}
         <section id="topics" className="landing-topics">
-          <div className="landing-topics-panel">
-            <div className="landing-topics-header">
-              <h2 className="landing-topics-title">BROWSE TOPICS</h2>
-            </div>
+          <div className="landing-section-head" data-reveal>
+            <p className="landing-eyebrow">THE CURRICULUM</p>
+            <h2 className="landing-section-title">
+              From neuroanatomy to clinical practice
+            </h2>
+            <p className="landing-section-sub">
+              Comprehensive, expertly structured coverage across neuroscience,
+              assessment, and the major schools of psychotherapy.
+            </p>
+          </div>
+          <div className="landing-topics-panel" data-reveal>
             <div className="landing-topics-grid">
               {TOPIC_COLUMNS.map((col, ci) => (
                 <div key={ci} className="landing-topics-col">
@@ -594,11 +642,75 @@ const styles = `
   transform: translateY(-1px);
 }
 
+/* ============== SCROLL REVEAL ============== */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 820ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms),
+    transform 820ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ============== SECTION HEADERS ============== */
+.landing-section-head {
+  max-width: 760px;
+  margin: 0 auto clamp(32px, 4.5vh, 56px);
+  text-align: center;
+}
+.landing-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 16px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.4em;
+  padding-left: 0.4em;
+  color: ${C.cyan};
+  text-shadow: 0 0 16px ${C.cyan}66;
+}
+.landing-eyebrow::before,
+.landing-eyebrow::after {
+  content: "";
+  width: clamp(20px, 4vw, 40px);
+  height: 1px;
+}
+.landing-eyebrow::before {
+  background: linear-gradient(90deg, transparent, ${C.cyan}aa);
+}
+.landing-eyebrow::after {
+  background: linear-gradient(90deg, ${C.cyan}aa, transparent);
+}
+.landing-section-title {
+  margin: 0;
+  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-weight: 300;
+  font-size: clamp(26px, 3.4vw, 44px);
+  letter-spacing: 0.01em;
+  line-height: 1.14;
+  color: #F4FBFF;
+  text-shadow: 0 0 34px ${C.cyan}30;
+}
+.landing-section-sub {
+  margin: clamp(14px, 1.8vh, 20px) auto 0;
+  max-width: 600px;
+  font-size: clamp(14px, 1.05vw, 16.5px);
+  line-height: 1.72;
+  font-weight: 400;
+  color: rgba(225, 244, 250, 0.74);
+  text-shadow: 0 1px 10px rgba(2, 13, 18, 0.45);
+}
+
 /* ============== FEATURES ============== */
 .landing-features {
   max-width: 1320px;
   margin: 0 auto;
-  padding: clamp(40px, 6vh, 72px) 32px;
+  padding: clamp(56px, 9vh, 104px) 32px clamp(40px, 6vh, 72px);
 }
 .landing-features-row {
   display: grid;
@@ -756,17 +868,6 @@ const styles = `
     0 24px 60px -30px rgba(0, 0, 0, 0.6),
     0 0 32px ${C.cyan}10;
 }
-.landing-topics-header {
-  margin-bottom: clamp(16px, 2vh, 24px);
-}
-.landing-topics-title {
-  margin: 0;
-  font-size: clamp(18px, 1.4vw, 22px);
-  font-weight: 600;
-  letter-spacing: 0.34em;
-  color: #fff;
-  text-shadow: 0 0 18px ${C.cyan}44;
-}
 .landing-topics-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -911,7 +1012,8 @@ const styles = `
   .landing-tagline,
   .landing-blurb,
   .landing-cta-row,
-  .landing-hero-brain {
+  .landing-hero-brain,
+  [data-reveal] {
     transition: none !important;
     opacity: 1 !important;
     transform: none !important;
