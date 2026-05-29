@@ -467,6 +467,39 @@
     0 0 30px rgba(118, 228, 247, 0.08);
 }
 
+/* Sidebar nav glass — translucent cerulean-tinted gradient so each nav
+   pill reads as frosted glass cut from the same material as the cards,
+   instead of a flat matte gray overlay. Idle is subtle; hover/active
+   lift with a brighter surface and stronger cyan tint. */
+.nav-glass-idle {
+  background-image: linear-gradient(
+    145deg,
+    rgba(118, 228, 247, 0.10),
+    rgba(10, 45, 61, 0.28)
+  );
+}
+.nav-glass-idle:hover {
+  background-image: linear-gradient(
+    145deg,
+    rgba(118, 228, 247, 0.20),
+    rgba(14, 58, 78, 0.40)
+  );
+}
+.nav-glass-idle:active {
+  background-image: linear-gradient(
+    145deg,
+    rgba(118, 228, 247, 0.26),
+    rgba(14, 58, 78, 0.46)
+  );
+}
+.nav-glass-active {
+  background-image: linear-gradient(
+    145deg,
+    rgba(118, 228, 247, 0.24),
+    rgba(14, 58, 78, 0.44)
+  );
+}
+
 /* Glassy cerulean buttons — translucent dark-teal base with a cerulean
    tint overlay, frosted backdrop blur, soft cyan hairline, and a layered
    cerulean glow that intensifies on hover. Applies to primary, secondary,

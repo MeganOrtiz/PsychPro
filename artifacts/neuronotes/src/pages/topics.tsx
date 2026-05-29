@@ -101,7 +101,6 @@ export default function TopicsPage() {
     <div
       className="min-h-full study-page-bg"
       data-testid="topics-page"
-      style={{ background: `linear-gradient(180deg, ${STUDY_PALETTE.surface} 0%, ${STUDY_PALETTE.bg} 100%)` }}
     >
       <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
         <PageTitle

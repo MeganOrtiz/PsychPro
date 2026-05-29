@@ -17,16 +17,16 @@ type NavItem = { href: string; label: string; icon: React.ComponentType<{ classN
 // --nav-glow so the whole row lifts off the dark sidebar. The active state
 // is the same recipe at a slightly higher intensity.
 const NAV_ITEM_BASE =
-  "group relative flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all duration-200 border backdrop-blur-md";
+  "nav-glass group relative flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all duration-200 border backdrop-blur-xl";
 const NAV_ITEM_IDLE =
-  "text-sidebar-foreground/90 bg-white/[0.11] border-[color:var(--nav-glow)]/30 " +
+  "nav-glass-idle text-sidebar-foreground/90 border-[color:var(--nav-glow)]/25 " +
   "shadow-[0_6px_18px_-12px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.10)] " +
-  "hover:bg-white/[0.18] hover:border-[color:var(--nav-glow)]/70 hover:text-white " +
+  "hover:border-[color:var(--nav-glow)]/70 hover:text-white " +
   "hover:shadow-[0_12px_32px_-10px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.16)] " +
-  "active:bg-white/[0.20] active:border-[color:var(--nav-glow)]/80 " +
+  "active:border-[color:var(--nav-glow)]/80 " +
   "active:shadow-[0_14px_36px_-8px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.18)]";
 const NAV_ITEM_ACTIVE =
-  "text-white bg-white/[0.18] border-[color:var(--nav-glow)]/70 " +
+  "nav-glass-active text-white border-[color:var(--nav-glow)]/70 " +
   "shadow-[0_12px_32px_-10px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.18)]";
 
 function navItemClass(isActive: boolean) {
