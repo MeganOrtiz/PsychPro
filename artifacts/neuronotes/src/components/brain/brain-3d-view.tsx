@@ -1,6 +1,6 @@
 import { Suspense, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Environment, Html, useGLTF } from "@react-three/drei";
+import { OrbitControls, Html, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
 import type { BrainStructure } from "../../data/brain-structures";
@@ -173,9 +173,6 @@ function Scene({
       <directionalLight position={[-5, 3, -2]} intensity={0.5} color={PALETTE.surf} />
       <directionalLight position={[0, 1, -6]} intensity={0.85} color={PALETTE.surf} />
       <pointLight position={[0, -3, 4]} intensity={0.5} color={PALETTE.teal} />
-      <Suspense fallback={null}>
-        <Environment preset="night" />
-      </Suspense>
 
       <Spin enabled={autoSpin && selectedId === null}>
         <group rotation={[0, -0.3, 0]} position={[0, 0.1, 0]}>

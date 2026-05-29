@@ -4,3 +4,4 @@
 - [OAuth/MCP state persistence](oauth-mcp-persistence.md) — dynamic-client-registration + auth codes + tokens must be in Postgres; in-memory Maps break across Autoscale instances and restarts.
 - [Clerk account deletion](psychpro-clerk-account-deletion.md) — Clerk browser flows are broken on this instance; deletion is app-owned server-side; never report removed unless clerkDeleted is true.
 - [Image hotspot overlays](image-hotspot-overlays.md) — to keep clickable markers aligned on an object-contain <img>, wrap img+overlay in a shrink-to-fit div and position by %.
+- [Brain Lab 3D crash safety](brain-lab-3d-crash-safety.md) — keep the lazy WebGL view behind an error boundary and avoid remote runtime asset fetches (stale chunks / CDN HDR white-screen the page).

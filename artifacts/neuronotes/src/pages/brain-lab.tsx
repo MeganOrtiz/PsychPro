@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, lazy, Suspense } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, lazy, Suspense, Component, type ReactNode } from "react";
 import { Link } from "wouter";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
@@ -33,6 +33,56 @@ import brainCoronal from "@/assets/brain-views/coronal.png";
 // Heavy 3D view (three.js + 16MB GLB) is code-split so it only loads when
 // the user opens the 3D tab — the Sections/image view stays instant.
 const Brain3DView = lazy(() => import("@/components/brain/brain-3d-view"));
+
+// Contains any failure inside the WebGL/3D subtree — a stale lazy chunk after a
+// redeploy, a WebGL context failure, or a runtime error in three.js — so it
+// degrades to a graceful "switch to Sections" prompt instead of white-screening
+// the whole Brain Lab page.
+class Brain3DErrorBoundary extends Component<
+  { onFallback: () => void; children: ReactNode },
+  { hasError: boolean }
+> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: unknown) {
+    console.error("Brain3DView crashed, offering Sections fallback:", error);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div
+          className="h-full w-full flex flex-col items-center justify-center text-center gap-3 px-6"
+          data-testid="brain-3d-error"
+        >
+          <p className="text-sm font-semibold text-white">3D view couldn't load</p>
+          <p className="text-xs max-w-xs" style={{ color: `${PALETTE.mist}99` }}>
+            The interactive 3D brain failed to start on this device. You can keep
+            exploring every structure in the Sections view.
+          </p>
+          <button
+            type="button"
+            onClick={this.props.onFallback}
+            className="mt-1 text-xs font-semibold px-3 py-1.5 rounded-full"
+            style={{
+              background: `${PALETTE.surf}22`,
+              color: PALETTE.surf,
+              border: `1px solid ${PALETTE.surf}55`,
+            }}
+            data-testid="brain-3d-error-fallback"
+          >
+            Switch to Sections view
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 type ViewMode = "3d" | "sections";
 
@@ -1078,29 +1128,31 @@ export default function BrainLabPage() {
             data-testid="brain-diagram-wrap"
           >
             {viewMode === "3d" ? (
-              <Suspense
-                fallback={
-                  <div
-                    className="h-full w-full flex flex-col items-center justify-center gap-3"
-                    data-testid="brain-3d-loading"
-                  >
-                    <Brain
-                      className="w-8 h-8 animate-pulse"
-                      style={{ color: PALETTE.surf }}
-                    />
-                    <p className="text-xs" style={{ color: `${PALETTE.mist}99` }}>
-                      Loading 3D brain…
-                    </p>
-                  </div>
-                }
-              >
-                <Brain3DView
-                  structures={view3dStructures}
-                  selectedId={selectedId}
-                  onSelect={handleSelect}
-                  isMobile={isMobile}
-                />
-              </Suspense>
+              <Brain3DErrorBoundary onFallback={() => setViewMode("sections")}>
+                <Suspense
+                  fallback={
+                    <div
+                      className="h-full w-full flex flex-col items-center justify-center gap-3"
+                      data-testid="brain-3d-loading"
+                    >
+                      <Brain
+                        className="w-8 h-8 animate-pulse"
+                        style={{ color: PALETTE.surf }}
+                      />
+                      <p className="text-xs" style={{ color: `${PALETTE.mist}99` }}>
+                        Loading 3D brain…
+                      </p>
+                    </div>
+                  }
+                >
+                  <Brain3DView
+                    structures={view3dStructures}
+                    selectedId={selectedId}
+                    onSelect={handleSelect}
+                    isMobile={isMobile}
+                  />
+                </Suspense>
+              </Brain3DErrorBoundary>
             ) : (
               <BrainDiagram
                 activeTab={activeTab}
