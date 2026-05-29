@@ -5,9 +5,11 @@ import {
   Layers, BookMarked, GraduationCap, Timer, Pencil, Wrench, Shuffle, Repeat,
   ArrowRight, ChevronLeft,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { authHeaders } from "@/lib/auth-headers";
+import { PageTitle } from "@/components/brand/page-title";
 
 type InputMode = "text" | "file";
 type AiMode = "strict" | "enhance";
@@ -197,15 +199,7 @@ export default function NewDeckPage() {
             Back to Tools
           </button>
 
-          <header className="mb-6 flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
-              <tool.icon className="w-6 h-6 text-primary" />
-            </div>
-            <div className="min-w-0">
-              <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">{tool.label}</h1>
-              <p className="text-sm text-muted-foreground mt-1">{tool.longBlurb}</p>
-            </div>
-          </header>
+          <PageTitle title={tool.label} icon={tool.icon as LucideIcon} subtitle={tool.longBlurb} />
 
           {generating ? (
             <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
@@ -495,23 +489,16 @@ export default function NewDeckPage() {
   return (
     <div className="min-h-full study-page-bg" data-testid="my-decks-new-page">
       <div className="max-w-6xl mx-auto p-4 md:p-6 lg:p-8">
-        <header className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
-              {isPro
-                ? <Sparkles className="w-5 h-5 text-primary" />
-                : <Wrench className="w-5 h-5 text-primary" />}
-            </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-              {isPro ? "Pro Tools" : "Standard Tools"}
-            </h1>
-          </div>
-          <p className="text-sm md:text-base text-muted-foreground max-w-3xl">
-            {isPro
+        <PageTitle
+          title={isPro ? "Pro Tools" : "Standard Tools"}
+          icon={isPro ? Sparkles : Wrench}
+          subtitle={
+            isPro
               ? "Three advanced tools to deepen mastery. Choose one to generate from your notes."
-              : "Four core tools to study any material in PsychPro. Choose one to generate from your notes."}
-          </p>
-        </header>
+              : "Four core tools to study any material in PsychPro. Choose one to generate from your notes."
+          }
+          className="mb-8"
+        />
 
         <div
           className={`grid grid-cols-1 sm:grid-cols-2 ${isPro ? "lg:grid-cols-3" : "lg:grid-cols-4"} gap-4 mb-8`}

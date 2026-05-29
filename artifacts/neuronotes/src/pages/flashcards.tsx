@@ -12,6 +12,7 @@ import ElaborationPanel from "@/components/learning/elaboration-panel";
 import { StudySurface } from "@/components/study/study-surface";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { useEntitlements } from "@/lib/use-entitlements";
+import { PageTitle } from "@/components/brand/page-title";
 
 interface Props {
   params: { id: string };
@@ -82,22 +83,20 @@ export default function FlashcardsPage({ params }: Props) {
         { label: topic?.name ?? "Topic", href: `/topics/${topicId}` },
         { label: "Flashcards" },
       ]} />
-      <div className="flex items-center gap-3 mb-6">
-        <div
-          className="w-10 h-10 rounded-lg flex items-center justify-center border"
-          style={{ background: `linear-gradient(135deg, ${P.teal}, ${P.surf})`, borderColor: `${P.tealDeep}` }}
-        >
-          <Layers className="w-5 h-5 text-white" />
-        </div>
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Flashcards</h1>
-          {!isLoading && (
-            <p className="text-sm text-muted-foreground">
-              {isCapped ? `Showing ${total} of ${totalAvailable} cards` : `${total} cards`}
-            </p>
-          )}
-        </div>
-        <div className="ml-auto flex items-center gap-1">
+      <div className="relative mb-6">
+        <PageTitle
+          title="Flashcards"
+          icon={Layers}
+          subtitle={
+            !isLoading
+              ? isCapped
+                ? `Showing ${total} of ${totalAvailable} cards`
+                : `${total} cards`
+              : undefined
+          }
+          className="mb-0"
+        />
+        <div className="absolute right-0 top-0 flex items-center gap-1">
           <Tooltip>
             <TooltipTrigger asChild>
               <button

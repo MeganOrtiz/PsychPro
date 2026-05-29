@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import UpgradePrompt from "@/components/upgrade-prompt";
 import { StudySurface } from "@/components/study/study-surface";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
+import { PageTitle } from "@/components/brand/page-title";
 import { loadReflectionText, saveReflection } from "@/lib/reflections";
 
 interface Props {
@@ -158,18 +159,11 @@ export default function QuizPage({ params }: Props) {
         { label: topic?.name ?? "Topic", href: `/topics/${topicId}` },
         { label: "Quiz" },
       ]} />
-      <div className="flex items-center gap-3 mb-6">
-        <div
-          className="w-10 h-10 rounded-lg flex items-center justify-center border"
-          style={{ background: `linear-gradient(135deg, ${P.teal}, ${P.surf})`, borderColor: P.tealDeep }}
-        >
-          <BookOpen className="w-5 h-5 text-white" />
-        </div>
-        <div className="flex-1">
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Quiz</h1>
-        </div>
-        <span className="text-xs font-semibold tracking-wider uppercase" style={{ color: P.tealDeep }}>{index + 1}/{total}</span>
-      </div>
+      <PageTitle
+        title="Quiz"
+        icon={BookOpen}
+        subtitle={`Question ${index + 1} of ${total}`}
+      />
 
       <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "rgba(47,160,198,0.12)" }}>
         <div

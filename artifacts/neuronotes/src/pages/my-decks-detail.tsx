@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { shuffle } from "@/lib/shuffle";
 import { authHeaders } from "@/lib/auth-headers";
+import { PageTitle } from "@/components/brand/page-title";
 
 type Deck = { id: number; title: string; studyGuide: string | null; status: string; tier?: "standard" | "pro"; tools?: string[]; examQuestionCount?: number; examTimed?: boolean };
 type Flashcard = { id: number; front: string; back: string; difficulty: string; cardOrder: number };
@@ -602,15 +603,15 @@ export default function MyDeckDetailPage() {
       </button>
 
       <div className="mb-5">
-        <div className="flex items-center gap-2 flex-wrap">
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">{deck.title}</h1>
+        <PageTitle title={deck.title} className="mb-3" />
+        <div className="flex items-center gap-2 flex-wrap justify-center">
           {deck.tier === "pro" ? (
             <Badge className="bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 border-purple-200">Pro Tools</Badge>
           ) : (
             <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border-blue-200">Standard Tools</Badge>
           )}
         </div>
-        <div className="flex gap-3 mt-1 text-sm text-muted-foreground">
+        <div className="flex gap-3 mt-2 text-sm text-muted-foreground justify-center">
           {deck.tier === "pro" ? (
             <>
               <span>{flashcards.length} cards</span>

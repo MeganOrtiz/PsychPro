@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Beaker, Brain, CalendarDays, Shuffle, Lightbulb, ArrowRight, ChevronLeft, BookOpen, Info } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { Link } from "wouter";
 import { useQueries } from "@tanstack/react-query";
 import {
@@ -474,15 +475,7 @@ export default function StudyLabPage() {
             Back to Techniques
           </button>
 
-          <header className="mb-6 flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
-              <tech.icon className="w-6 h-6 text-primary" />
-            </div>
-            <div className="min-w-0">
-              <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">{tech.title}</h1>
-              <p className="text-sm text-white/70 mt-1">{tech.longBlurb}</p>
-            </div>
-          </header>
+          <PageTitle title={tech.title} icon={tech.icon as LucideIcon} subtitle={tech.longBlurb} />
 
           {isLoading || !topics ? (
             <Skeleton className="h-64 w-full rounded-2xl" />

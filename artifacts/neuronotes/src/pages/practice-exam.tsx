@@ -16,6 +16,7 @@ import UpgradePrompt from "@/components/upgrade-prompt";
 import ElaborationPanel from "@/components/learning/elaboration-panel";
 import { StudySurface } from "@/components/study/study-surface";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
+import { PageTitle } from "@/components/brand/page-title";
 
 interface Props {
   params: { id: string };
@@ -244,16 +245,12 @@ export default function PracticeExamPage({ params }: Props) {
           { label: topic?.name ?? "Topic", href: `/topics/${topicId}` },
           { label: "Practice Exam" },
         ]} />
-        <div className="flex items-center gap-3 mb-2">
-          <div
-            className="w-10 h-10 rounded-lg flex items-center justify-center border"
-            style={{ background: `linear-gradient(135deg, #1F4F66, ${P.tealDeep})`, borderColor: P.tealDeep }}
-          >
-            <GraduationCap className="w-5 h-5 text-white" />
-          </div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Practice Exam</h1>
-        </div>
-        <p className="text-sm text-muted-foreground mb-8">Choose your exam length to get started</p>
+        <PageTitle
+          title="Practice Exam"
+          icon={GraduationCap}
+          subtitle="Choose your exam length to get started"
+          className="mb-8"
+        />
 
         {/* Question count selector — only counts the topic can actually
             satisfy are rendered (see B-5 note above). If the topic has fewer

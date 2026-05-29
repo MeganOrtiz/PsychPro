@@ -3,7 +3,7 @@ import { Layers, BookOpen, FileText, GraduationCap, Beaker, ArrowRight, Lock } f
 import { useGetTopic } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import SpacedRepetitionScheduler from "@/components/learning/spaced-repetition";
-import CategoryHero from "@/components/learning/category-hero";
+import { PageTitle } from "@/components/brand/page-title";
 import { Breadcrumbs, type BreadcrumbItem } from "@/components/breadcrumbs";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { useEntitlements } from "@/lib/use-entitlements";
@@ -106,10 +106,10 @@ export default function TopicDetailPage({ params }: Props) {
           <div className="text-center py-16 text-muted-foreground">Topic not found.</div>
         ) : (
           <>
-            <CategoryHero category={topic.category} topicName={topic.name} />
-            <p className="text-muted-foreground mb-4">{topic.description}</p>
+            <PageTitle title={topic.name} subtitle={topic.category} className="mb-4" />
+            <p className="text-muted-foreground mb-4 text-center">{topic.description}</p>
 
-            <div className="flex gap-4 mb-6 text-sm text-muted-foreground">
+            <div className="flex gap-4 mb-6 text-sm text-muted-foreground justify-center">
               <span className="flex items-center gap-1.5"><Layers className="w-4 h-4" />{topic.flashcardCount} flashcards</span>
               <span className="flex items-center gap-1.5"><BookOpen className="w-4 h-4" />{topic.quizCount} questions</span>
             </div>

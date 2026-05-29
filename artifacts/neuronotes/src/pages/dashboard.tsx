@@ -230,41 +230,66 @@ export default function DashboardPage() {
             <NotificationsBell />
           </div>
 
-          {/* Stage — the centered wordmark is lit as if on a stage: an
-              overhead spotlight cone washes down from the top, a thin glowing
-              light-line reads as the stage edge, and a soft floor glow pools
-              beneath it. All decorative layers sit behind the protected
-              BrandBanner (z-10) and are pointer-events-none. */}
-          <div className="relative flex justify-center pt-7 md:pt-10 pb-4">
+          {/* Centerpiece — the wordmark emerges from a luminous cyan bloom:
+              a wide ambient halo for depth, a tighter bright core that hugs the
+              letters, and two faint orbiting glints for energy. No straight
+              lines. Every decorative layer sits behind the protected
+              BrandBanner (z-10) and is pointer-events-none. */}
+          <div className="relative flex justify-center pt-10 md:pt-14 pb-7 md:pb-9">
+            {/* Wide ambient halo — sets the atmosphere */}
             <div
               aria-hidden
-              className="pointer-events-none absolute left-1/2 -top-3 -translate-x-1/2"
+              className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
               style={{
-                width: "min(760px, 94%)",
-                height: "280px",
-                background: `radial-gradient(58% 80% at 50% 0%, ${PALETTE.surf}30 0%, ${PALETTE.teal}16 42%, transparent 72%)`,
+                width: "min(880px, 100%)",
+                height: "360px",
+                background: `radial-gradient(60% 60% at 50% 50%, ${PALETTE.surf}26 0%, ${PALETTE.teal}14 38%, transparent 70%)`,
+                filter: "blur(6px)",
               }}
             />
+            {/* Bright core bloom — concentrates light directly on the wordmark */}
             <div
               aria-hidden
-              className="pointer-events-none absolute left-1/2 bottom-1 -translate-x-1/2 translate-y-1/2"
+              className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
               style={{
-                width: "min(440px, 72%)",
-                height: "76px",
-                background: `radial-gradient(50% 100% at 50% 0%, ${PALETTE.surf}24 0%, transparent 72%)`,
-                filter: "blur(4px)",
+                width: "min(520px, 88%)",
+                height: "200px",
+                background: `radial-gradient(55% 60% at 50% 50%, ${PALETTE.surf}4d 0%, ${PALETTE.surf}1f 45%, transparent 72%)`,
               }}
             />
+            {/* Orbiting glints — a couple of soft sparks for a sense of motion */}
             <div
               aria-hidden
-              className="pointer-events-none absolute left-1/2 bottom-1 -translate-x-1/2"
+              className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
               style={{
-                width: "min(560px, 84%)",
-                height: "1px",
-                background: `linear-gradient(90deg, transparent, ${PALETTE.surf}80, transparent)`,
-                boxShadow: `0 0 20px ${PALETTE.surf}66`,
+                width: "560px",
+                maxWidth: "94%",
+                height: "150px",
               }}
-            />
+            >
+              <span
+                className="absolute rounded-full"
+                style={{
+                  left: "8%",
+                  top: "30%",
+                  width: "7px",
+                  height: "7px",
+                  background: PALETTE.surf,
+                  boxShadow: `0 0 16px 4px ${PALETTE.surf}aa`,
+                }}
+              />
+              <span
+                className="absolute rounded-full"
+                style={{
+                  right: "10%",
+                  bottom: "26%",
+                  width: "5px",
+                  height: "5px",
+                  background: PALETTE.cloud,
+                  boxShadow: `0 0 14px 3px ${PALETTE.surf}99`,
+                }}
+              />
+            </div>
             <BrandBanner
               size="lg"
               greeting={greetingText}
@@ -341,7 +366,7 @@ export default function DashboardPage() {
         )}
 
         {/* Two-column: main + spotlight rail */}
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-6 items-start">
           <div className="min-w-0 space-y-6">
             {/* Begin/Continue Your Journey (full width, top) */}
             <StudySurface tone="light" glow innerClassName="p-5">
