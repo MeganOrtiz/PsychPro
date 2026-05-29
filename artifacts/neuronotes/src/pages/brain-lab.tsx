@@ -624,7 +624,13 @@ function BrainDiagram({ activeTab }: { activeTab: TabGroup | "all" }) {
           alt={`${view.viewName} — ${view.caption}`}
           className="max-h-full max-w-full object-contain select-none"
           draggable={false}
-          style={{ filter: `drop-shadow(0 24px 60px ${PALETTE.bg}) drop-shadow(0 0 40px ${PALETTE.teal}55)` }}
+          style={{
+            // Normalize every source image to the same clean grey 3D-model
+            // look so views stay congruent in color regardless of whether the
+            // source was a grey render or a warm anatomical photo. Any future
+            // view (e.g. the coronal section) inherits this automatically.
+            filter: `grayscale(1) contrast(1.05) brightness(1.03) drop-shadow(0 24px 60px ${PALETTE.bg}) drop-shadow(0 0 40px ${PALETTE.teal}55)`,
+          }}
           data-testid={`brain-view-${activeTab}`}
         />
       ) : (
