@@ -125,44 +125,8 @@ export default function TopicDetailPage({ params }: Props) {
                   onClick={mode.onClick}
                   data-testid={mode.testId}
                   aria-label={mode.locked ? `${mode.title} — locked, requires PsychPro Master` : mode.title}
-                  className="group relative flex items-center gap-4 p-5 rounded-xl text-left transition-all duration-300 hover:-translate-y-0.5 overflow-hidden border"
-                  style={{
-                    // Layered background: a deep navy base + the per-mode
-                    // accent fading in as a radial glow from the top-right
-                    // corner. This gives every card depth and identity
-                    // without losing the unified cerulean theme.
-                    background: `
-                      radial-gradient(120% 90% at 100% 0%, ${mode.accent}3D 0%, transparent 55%),
-                      radial-gradient(80% 110% at 0% 100%, ${mode.accentDeep}40 0%, transparent 60%),
-                      linear-gradient(135deg, #15506E 0%, #0E3A50 100%)
-                    `,
-                    borderColor: `${mode.accent}55`,
-                    // Two-layer shadow: a tight rim of accent color hugging
-                    // the card + a wide, soft drop that lifts it off the page.
-                    boxShadow: `
-                      0 0 0 1px ${mode.accent}1A inset,
-                      0 1px 0 0 ${mode.accent}22 inset,
-                      0 18px 45px -18px ${mode.accentDeep}cc,
-                      0 6px 18px -10px ${mode.accent}55
-                    `,
-                    color: "#FFFFFF",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow = `
-                      0 0 0 1px ${mode.accent}55 inset,
-                      0 1px 0 0 ${mode.accent}55 inset,
-                      0 22px 55px -16px ${mode.accentDeep}ee,
-                      0 8px 28px -8px ${mode.accent}88
-                    `;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = `
-                      0 0 0 1px ${mode.accent}1A inset,
-                      0 1px 0 0 ${mode.accent}22 inset,
-                      0 18px 45px -18px ${mode.accentDeep}cc,
-                      0 6px 18px -10px ${mode.accent}55
-                    `;
-                  }}
+                  className="recommended-tile group relative flex items-center gap-4 p-5 rounded-xl text-left border hover:-translate-y-0.5 active:translate-y-0 overflow-hidden"
+                  style={{ color: "#FFFFFF" }}
                 >
                   {/* Animated sheen — a faint diagonal highlight that drifts
                       across on hover, the way a glossy button catches light. */}
