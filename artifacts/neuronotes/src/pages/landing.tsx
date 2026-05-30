@@ -6,77 +6,120 @@ import {
   Search,
   BookOpen,
   Layers,
-  FileText,
-  Users,
-  Award,
+  ClipboardList,
+  GraduationCap,
+  Target,
+  Repeat,
+  Shuffle,
+  Upload,
+  Sparkles,
+  LineChart,
+  Compass,
+  Wallet,
+  ArrowRight,
   Check,
 } from "lucide-react";
 import brainSmoke from "@/assets/hero/brain.png";
-import spotlightPortrait from "@/assets/spotlight/featured.png";
+import brainLateral from "@/assets/brain-views/lateral.png";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 
 // =============================================================================
-// Landing — structured premium portal (rebuilt 2026-05-25 per new spec).
+// Landing — restructured 2026-05-30.
 // -----------------------------------------------------------------------------
-// Layout sections:
-//   1. Top navbar (logo + primary nav + search + LOG IN)
-//   2. Hero  (brain centerpiece, PSYCHPRO wordmark, tagline, paragraph, CTAs)
-//   3. Feature row — 5 glassmorphism cards
-//   4. Browse Topics — 3-column dark-pill grid with cyan checkmarks
-//   5. Footer
+// Keeps the established dark cinematic "neuroscience portal" brand (midnight
+// teal, cyan glow, glassmorphism, the floating brain motif, Outfit/Inter type)
+// but presents the product through a deeper, multi-section narrative:
+//   1. Navbar (logo + in-page nav + search + LOG IN)
+//   2. Hero (brain centerpiece, wordmark, tagline, value prop, CTAs, stat strip)
+//   3. Positioning band (serious prep, without the four-figure price tag)
+//   4. Study tools (flashcards / quizzes / study guides / practice exams)
+//   5. Learning science (active recall / spaced repetition / interleaving)
+//   6. Curriculum (39 topics across 6 domains + representative topics)
+//   7. Brain Lab (interactive 3D neuroanatomy)
+//   8. Dashboard (personalized progress, what to study next)
+//   9. Scholar tier (turn your own notes/PDFs into study material with AI)
+//  10. Final CTA
+//  11. Footer
 //
-// Background: page-level smoke (.study-page-bg::before, deep teal). The brain
-// PNG itself ships with baked-in dark smoke clouds, so its radial mask is
-// pulled in tight (45% radius) to crop those out — only the glowing brain
-// reads, and the surrounding atmosphere comes from the page background.
+// COPY RULES (from the user): only true facts. No "expert-made" / "built by
+// clinicians" claims, no fabricated testimonials, logos, ratings, or user
+// counts. Verified facts only (39 topics, 6 domains, the four study formats,
+// the learning-science methods, the Brain Lab, the dashboard, Scholar AI).
 // =============================================================================
 
-const DISSERTATION_TOPIC =
-  "SOCIAL COGNITION IN CHILDREN WITH AUTISM SPECTRUM DISORDER: EXPLORING CORRELATES BETWEEN OBJECTIVE NEUROPSYCHOLOGICAL MEASURES AND PARENT REPORTS";
+const STAT_STRIP = [
+  { value: "39", label: "Topics" },
+  { value: "6", label: "Domains" },
+  { value: "4", label: "Study formats" },
+] as const;
 
-// All five feature cards render in one row, matching the reference comp.
-// Each gets its own subtle accent hue so the row reads as a spectrum
-// rather than five identical tiles — but every accent stays inside the
-// brand's cool cyan/teal/mint family.
-const FEATURES = [
+// The four built-in study formats. Each gets a brand-family accent so the row
+// reads as a cool cyan spectrum rather than four identical tiles.
+const STUDY_TOOLS = [
   {
     icon: Layers,
-    title: "Flashcards / Study Guides / Quizzes / Exams",
-    body: "Reinforce your learning with interactive study tools.",
-    accent: "#76E4F7", // surf — bright cyan
-  },
-  {
-    icon: Brain,
-    title: "Evidence-Based Learning Tools",
+    title: "Flashcards that teach",
     body:
-      "Utilize specific tools for spaced repetition, interleaved learning and active recall.",
-    accent: "#5EB0C8", // teal
+      "More than front-and-back recall — cards built to develop real understanding, not rote memorization.",
+    accent: "#76E4F7",
   },
   {
-    icon: FileText,
-    title: "Create Learning Resources From Your Own Material",
+    icon: ClipboardList,
+    title: "Quizzes with full explanations",
     body:
-      "Upload, organize, and transform your material into smart resources.",
-    accent: "#A7F3FF", // mist — icy
+      "Every question comes with a complete explanation, so each answer is a chance to learn — not just to score.",
+    accent: "#5EB0C8",
   },
   {
-    icon: Users,
-    title: "Connect With Others",
-    body: "Collaborate, share insights, and grow together.",
-    accent: "#7DD8C2", // mint
-  },
-  {
-    icon: Award,
-    title: "PsychPro Spotlight",
+    icon: BookOpen,
+    title: "In-depth study guides",
     body:
-      "Submit your dissertation, research, presentations for opportunities to be featured in the PsychPro Spotlight.",
-    accent: "#9AB8FF", // periwinkle highlight
-    portrait: spotlightPortrait,
-    dissertationTopic: DISSERTATION_TOPIC,
+      "Structured, comprehensive guides for every topic — the reasoning behind the facts, in one place.",
+    accent: "#A7F3FF",
+  },
+  {
+    icon: GraduationCap,
+    title: "Full-length practice exams",
+    body:
+      "Timed, full-length, exam-style practice so you can build stamina and walk into licensure prepared.",
+    accent: "#6FC9DF",
   },
 ] as const;
 
-// Topics organized into 3 columns, read top-to-bottom by column.
+// Evidence-based learning principles the platform is built around.
+const LEARNING_SCIENCE = [
+  {
+    icon: Target,
+    title: "Active recall",
+    body:
+      "Retrieve, don't reread. Every tool is designed to make you pull knowledge from memory — the way it sticks.",
+  },
+  {
+    icon: Repeat,
+    title: "Spaced repetition",
+    body:
+      "Review at the right moment so what you learn today is still there on exam day, and in practice.",
+  },
+  {
+    icon: Shuffle,
+    title: "Interleaving",
+    body:
+      "Mix related topics instead of cramming one at a time to build flexible, durable clinical knowledge.",
+  },
+] as const;
+
+// The six domains the curriculum spans.
+const DOMAINS = [
+  "Neuroscience",
+  "Neuropsychology",
+  "Psychopharmacology",
+  "Assessment",
+  "Psychotherapy",
+  "Research Methods",
+] as const;
+
+// Representative real topics, organized into 3 columns (read top-to-bottom by
+// column). A sample of the catalog — not the full 39 — shown to convey breadth.
 const TOPIC_COLUMNS: string[][] = [
   [
     "Brain Networks",
@@ -88,36 +131,45 @@ const TOPIC_COLUMNS: string[][] = [
     "Neuropsychology Overview",
     "Personality Disorders",
     "Trauma-Focused Approaches",
-    "Analytical Psychology — Jung",
-    "Family, Systems, and Couples Therapies",
   ],
   [
     "Central Nervous System",
-    "Enteric Nervous System",
     "Peripheral Nervous System",
     "Vascular System of the Brain",
     "Forensic Neuropsychology",
-    "Neurodevelopmental Disorders",
     "Validity & Effort Testing",
     "Psychiatric Disorders",
-    "Acceptance, Mindfulness, and Third-Wave Approaches",
-    "Behavior Therapy and Applied Behavior Analysis",
+    "Behavior Therapy & ABA",
     "Foundations of Psychotherapy",
+    "Family, Systems & Couples Therapies",
   ],
   [
     "Cranial Nerves",
     "Limbic System & Motivation",
     "Sensory Systems",
-    "Apraxia & Agnosia",
     "Language Processing & Aphasia",
     "Neuroimaging & Neuromodulation",
     "ADHD & Medications",
     "Psychopharmacology",
-    "Adlerian, Humanistic, and Existential Approaches",
-    "Cognitive Therapy, CBT, and Schema Therapy",
-    "Gestalt, Experiential, and Emotion-Focused Therapy",
+    "Cognitive Therapy, CBT & Schema Therapy",
+    "Gestalt & Emotion-Focused Therapy",
   ],
 ];
+
+// What the Scholar tier adds — mirrors src/pages/subscription.tsx SCHOLAR_FEATURES.
+const SCHOLAR_POINTS = [
+  "Upload your own PDFs, DOCX, TXT, or pasted notes",
+  "AI builds flashcards, quizzes, and study guides from your content only",
+  "Generate practice exams from your own material",
+  "Unlimited custom study decks",
+] as const;
+
+// What the personalized dashboard surfaces — all real app features.
+const DASHBOARD_POINTS = [
+  "Progress tracked across every topic you study",
+  "A clear recommendation for what to study next",
+  "Study streaks that keep your momentum going",
+] as const;
 
 const FOOTER_LINKS = [
   { label: "Privacy Policy", href: "/privacy" },
@@ -162,8 +214,10 @@ export default function LandingPage() {
 
   useScrollReveal();
 
-  const goToApp = () => navigate(isSignedIn ? "/dashboard" : "/sign-in");
-  const goToTopics = () => navigate(isSignedIn ? "/topics" : "/sign-in");
+  // Gated app routes fall back to sign-in when the visitor isn't signed in.
+  const navTo = (path: string) => navigate(isSignedIn ? path : "/sign-in");
+  const goToApp = () => navTo("/dashboard");
+  const goToTopics = () => navTo("/topics");
 
   return (
     <>
@@ -173,12 +227,17 @@ export default function LandingPage() {
         <header className="landing-nav">
           <div className="landing-nav-inner">
             <a href="#home" className="landing-brand" aria-label="PsychPro home">
-              <Brain
-                className="landing-brand-icon"
-                aria-hidden
-              />
+              <Brain className="landing-brand-icon" aria-hidden />
               <span className="landing-brand-mark">PSYCHPRO</span>
             </a>
+
+            <nav className="landing-nav-links" aria-label="Sections">
+              <a href="#tools" className="landing-nav-link">Study Tools</a>
+              <a href="#curriculum" className="landing-nav-link">Curriculum</a>
+              <a href="#brain-lab" className="landing-nav-link">Brain Lab</a>
+              <a href="#scholar" className="landing-nav-link">Scholar</a>
+            </nav>
+
             <div className="landing-nav-actions">
               <button
                 type="button"
@@ -214,23 +273,27 @@ export default function LandingPage() {
           <h1 className="landing-wordmark" style={{ ["--delay" as any]: "120ms" }}>
             PSYCHPRO
           </h1>
-          <p className="landing-tagline" style={{ ["--delay" as any]: "240ms" }}>
-            LEARN. EXPAND. CONNECT.
+          <p className="landing-tagline" style={{ ["--delay" as any]: "220ms" }}>
+            DEPTH OVER MEMORIZATION
           </p>
-          <p className="landing-blurb" style={{ ["--delay" as any]: "360ms" }}>
-            Master clinical psychology. Deeper understanding for topics in
-            psychology, neuroscience, and intervention for real-world clinical
-            application.
+          <p className="landing-headline" style={{ ["--delay" as any]: "320ms" }}>
+            The serious study platform for clinical psychology.
+          </p>
+          <p className="landing-blurb" style={{ ["--delay" as any]: "420ms" }}>
+            In-depth flashcards, quizzes, study guides, and full-length practice
+            exams across 39 topics — built on the science of how people actually
+            learn. Made for students, residents, and early-career clinicians,
+            without the four-figure price tag of traditional prep.
           </p>
 
           <div
             className="landing-cta-row"
-            style={{ ["--delay" as any]: "480ms" }}
+            style={{ ["--delay" as any]: "520ms" }}
           >
             <button
               type="button"
               onClick={goToApp}
-              className="landing-cta landing-cta-ghost"
+              className="landing-cta landing-cta-primary"
               data-testid="cta-join-now"
             >
               <BookOpen className="landing-cta-icon" aria-hidden />
@@ -242,81 +305,129 @@ export default function LandingPage() {
               className="landing-cta landing-cta-ghost"
               data-testid="cta-explore-topics"
             >
-              <Users className="landing-cta-icon" aria-hidden />
+              <Compass className="landing-cta-icon" aria-hidden />
               <span>EXPLORE TOPICS</span>
             </button>
           </div>
+
+          <div className="landing-stat-strip" style={{ ["--delay" as any]: "620ms" }}>
+            {STAT_STRIP.map((s, i) => (
+              <div key={s.label} className="landing-stat-item">
+                {i > 0 && <span className="landing-stat-sep" aria-hidden />}
+                <span className="landing-stat-num">{s.value}</span>
+                <span className="landing-stat-label">{s.label}</span>
+              </div>
+            ))}
+          </div>
         </section>
 
-        {/* ============== FEATURES (single 5-card row) ============== */}
-        <section id="features" className="landing-features">
-          <div className="landing-section-head" data-reveal>
-            <p className="landing-eyebrow">WHY PSYCHPRO</p>
-            <h2 className="landing-section-title">
-              Built for depth, not memorization
-            </h2>
-            <p className="landing-section-sub">
-              A rigorous, evidence-based environment for serious students of the
-              mind — engineered around how experts actually learn.
+        {/* ============== POSITIONING BAND ============== */}
+        <section className="landing-band" data-reveal>
+          <div className="landing-band-inner">
+            <Wallet className="landing-band-icon" aria-hidden />
+            <p className="landing-band-text">
+              A serious, modern alternative to thousand-dollar licensure prep
+              programs — in-depth preparation,{" "}
+              <strong>without the four-figure price tag.</strong>
             </p>
           </div>
-          <div className="landing-features-row">
-            {FEATURES.map((f, i) => {
+        </section>
+
+        {/* ============== STUDY TOOLS ============== */}
+        <section id="tools" className="landing-section landing-tools">
+          <div className="landing-section-head" data-reveal>
+            <p className="landing-eyebrow">WHAT'S INSIDE</p>
+            <h2 className="landing-section-title">
+              Four ways to learn it — and keep it
+            </h2>
+            <p className="landing-section-sub">
+              Every topic comes with the same complete toolkit, so you can move
+              from first exposure all the way to exam-ready.
+            </p>
+          </div>
+          <div className="landing-tools-grid">
+            {STUDY_TOOLS.map((f, i) => {
               const Icon = f.icon;
-              const portrait = "portrait" in f ? f.portrait : undefined;
-              const dissertationTopic =
-                "dissertationTopic" in f ? f.dissertationTopic : undefined;
               return (
                 <article
                   key={f.title}
-                  className={`landing-feature-card${portrait ? " landing-feature-card--spotlight" : ""}`}
+                  className="landing-feature-card"
                   style={{
                     ["--accent" as any]: f.accent,
                     ["--reveal-delay" as any]: `${i * 90}ms`,
                   }}
                   data-reveal
-                  data-testid={`feature-${f.title.split(" ")[0].toLowerCase()}`}
+                  data-testid={`tool-${i}`}
                 >
-                  {portrait ? (
-                    <div className="landing-spotlight-portrait">
-                      <img src={portrait} alt="Featured PsychPro Spotlight researcher" />
-                    </div>
-                  ) : (
-                    <div className="landing-feature-icon-wrap">
-                      <Icon aria-hidden />
-                    </div>
-                  )}
-                  <h3 className="landing-feature-title">{f.title.toUpperCase()}</h3>
+                  <div className="landing-feature-icon-wrap">
+                    <Icon aria-hidden />
+                  </div>
+                  <h3 className="landing-feature-title">{f.title}</h3>
                   <p className="landing-feature-body">{f.body}</p>
-                  {dissertationTopic && (
-                    <div className="landing-spotlight-dissertation">
-                      <p className="landing-spotlight-dissertation-label">
-                        DISSERTATION TOPIC
-                      </p>
-                      <p className="landing-spotlight-dissertation-text">
-                        {dissertationTopic}
-                      </p>
-                    </div>
-                  )}
                 </article>
               );
             })}
           </div>
         </section>
 
-        {/* ============== BROWSE TOPICS ============== */}
-        <section id="topics" className="landing-topics">
+        {/* ============== LEARNING SCIENCE ============== */}
+        <section id="science" className="landing-section landing-science">
+          <div className="landing-section-head" data-reveal>
+            <p className="landing-eyebrow">THE METHOD</p>
+            <h2 className="landing-section-title">
+              Built on how learning actually works
+            </h2>
+            <p className="landing-section-sub">
+              PsychPro is designed around evidence-based learning principles, so
+              the hours you put in turn into knowledge that lasts.
+            </p>
+          </div>
+          <div className="landing-science-grid">
+            {LEARNING_SCIENCE.map((s, i) => {
+              const Icon = s.icon;
+              return (
+                <article
+                  key={s.title}
+                  className="landing-science-item"
+                  style={{ ["--reveal-delay" as any]: `${i * 90}ms` }}
+                  data-reveal
+                >
+                  <div className="landing-science-icon">
+                    <Icon aria-hidden />
+                  </div>
+                  <div>
+                    <h3 className="landing-science-title">{s.title}</h3>
+                    <p className="landing-science-body">{s.body}</p>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* ============== CURRICULUM ============== */}
+        <section id="curriculum" className="landing-section landing-curriculum">
           <div className="landing-section-head" data-reveal>
             <p className="landing-eyebrow">THE CURRICULUM</p>
             <h2 className="landing-section-title">
-              From neuroanatomy to clinical practice
+              39 topics across six domains
             </h2>
             <p className="landing-section-sub">
-              Comprehensive, expertly structured coverage across neuroscience,
-              assessment, and the major schools of psychotherapy.
+              From the biology of the brain to the clinic — structured coverage
+              you can actually finish.
             </p>
           </div>
+
+          <div className="landing-domain-row" data-reveal>
+            {DOMAINS.map((d) => (
+              <span key={d} className="landing-domain-pill">
+                {d}
+              </span>
+            ))}
+          </div>
+
           <div className="landing-topics-panel" data-reveal>
+            <p className="landing-topics-caption">A sample of the catalog</p>
             <div className="landing-topics-grid">
               {TOPIC_COLUMNS.map((col, ci) => (
                 <div key={ci} className="landing-topics-col">
@@ -326,7 +437,10 @@ export default function LandingPage() {
                       type="button"
                       onClick={goToTopics}
                       className="landing-topic-pill"
-                      data-testid={`topic-${topic.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`}
+                      data-testid={`topic-${topic
+                        .toLowerCase()
+                        .replace(/[^a-z0-9]+/g, "-")
+                        .replace(/^-|-$/g, "")}`}
                     >
                       <span className="landing-topic-check" aria-hidden>
                         <Check />
@@ -337,6 +451,144 @@ export default function LandingPage() {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* ============== BRAIN LAB (split) ============== */}
+        <section id="brain-lab" className="landing-section landing-split" data-reveal>
+          <div className="landing-split-media landing-split-media--brain">
+            <div className="landing-split-glow" aria-hidden />
+            <img
+              src={brainLateral}
+              alt="Interactive 3D brain anatomy view"
+              className="landing-split-img"
+            />
+          </div>
+          <div className="landing-split-body">
+            <p className="landing-eyebrow landing-eyebrow--left">INTERACTIVE 3D</p>
+            <h2 className="landing-split-title">
+              Make neuroanatomy tangible
+            </h2>
+            <p className="landing-split-text">
+              Explore an interactive 3D brain lab built for clinicians-in-training.
+              Rotate the model, open any structure, and connect anatomy to its
+              functions and clinical relevance — so neuroscience stops being
+              abstract.
+            </p>
+            <button
+              type="button"
+              onClick={() => navTo("/brain-lab")}
+              className="landing-cta landing-cta-ghost"
+              data-testid="cta-brain-lab"
+            >
+              <Brain className="landing-cta-icon" aria-hidden />
+              <span>OPEN THE BRAIN LAB</span>
+            </button>
+          </div>
+        </section>
+
+        {/* ============== DASHBOARD (split, reversed) ============== */}
+        <section className="landing-section landing-split landing-split--reverse" data-reveal>
+          <div className="landing-split-media">
+            <div className="landing-dash-card" aria-hidden="true">
+              <div className="landing-dash-card-head">
+                <LineChart className="landing-dash-card-icon" aria-hidden />
+                <span>Your progress</span>
+              </div>
+              <ul className="landing-dash-rows">
+                {DOMAINS.slice(0, 4).map((d, i) => (
+                  <li key={d} className="landing-dash-row">
+                    <span className="landing-dash-row-label">{d}</span>
+                    <span className="landing-dash-track" aria-hidden>
+                      <span
+                        className="landing-dash-fill"
+                        style={{ width: `${[68, 44, 82, 30][i]}%` }}
+                      />
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <p className="landing-dash-note" aria-hidden>
+                Illustration
+              </p>
+            </div>
+          </div>
+          <div className="landing-split-body">
+            <p className="landing-eyebrow landing-eyebrow--left">YOUR DASHBOARD</p>
+            <h2 className="landing-split-title">
+              Always know what to study next
+            </h2>
+            <p className="landing-split-text">
+              A personalized dashboard keeps your studying on track and tells you
+              where to go next — no guesswork, no wasted sessions.
+            </p>
+            <ul className="landing-checklist">
+              {DASHBOARD_POINTS.map((point) => (
+                <li key={point} className="landing-checklist-item">
+                  <Check className="landing-checklist-check" aria-hidden />
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        {/* ============== SCHOLAR TIER ============== */}
+        <section id="scholar" className="landing-section landing-scholar" data-reveal>
+          <div className="landing-scholar-card">
+            <div className="landing-scholar-head">
+              <div className="landing-scholar-icon">
+                <Sparkles aria-hidden />
+              </div>
+              <div>
+                <p className="landing-eyebrow landing-eyebrow--left">SCHOLAR TIER</p>
+                <h2 className="landing-split-title landing-scholar-title">
+                  Turn your own material into study tools
+                </h2>
+              </div>
+            </div>
+            <p className="landing-split-text">
+              Scholar members bring their own content — lecture notes, articles,
+              and PDFs — and use AI to generate custom flashcards, quizzes, study
+              guides, and practice exams built only from what they upload.
+            </p>
+            <ul className="landing-checklist landing-checklist--grid">
+              {SCHOLAR_POINTS.map((point) => (
+                <li key={point} className="landing-checklist-item">
+                  <Upload className="landing-checklist-check" aria-hidden />
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
+            <button
+              type="button"
+              onClick={() => navTo("/subscription")}
+              className="landing-cta landing-cta-ghost"
+              data-testid="cta-scholar"
+            >
+              <Sparkles className="landing-cta-icon" aria-hidden />
+              <span>SEE SCHOLAR PLANS</span>
+            </button>
+          </div>
+        </section>
+
+        {/* ============== FINAL CTA ============== */}
+        <section className="landing-section landing-final" data-reveal>
+          <h2 className="landing-final-title">Start studying deeper today</h2>
+          <p className="landing-final-sub">
+            Try it free — every topic includes a preview, and no credit card is
+            required to start.
+          </p>
+          <div className="landing-cta-row landing-cta-row--center">
+            <button
+              type="button"
+              onClick={goToApp}
+              className="landing-cta landing-cta-primary"
+              data-testid="cta-final-join"
+            >
+              <span>GET STARTED FREE</span>
+              <ArrowRight className="landing-cta-icon" aria-hidden />
+            </button>
           </div>
         </section>
 
@@ -370,8 +622,8 @@ export default function LandingPage() {
 }
 
 // CSS embedded so the landing page stays self-contained. Brand hex values
-// pulled from STUDY_PALETTE via the JS `P` import where rendered inline; the
-// rest are stable CSS tokens used only on this page.
+// pulled from STUDY_PALETTE via the JS `P` import; the rest are stable CSS
+// tokens used only on this page.
 const C = {
   cyan: P.surf,        // #76E4F7 — primary glow
   cyanSoft: P.mist,    // #A7F3FF — icy text
@@ -390,9 +642,6 @@ const styles = `
   min-height: 100vh;
   min-height: 100dvh;
   color: ${C.cyanSoft};
-  /* Match the dashboard typography. The BrandBanner wordmark uses Outfit;
-     adopting it for the whole landing page unifies the type system across
-     the app. */
   font-family: "Outfit", "Inter", system-ui, -apple-system, sans-serif;
   font-feature-settings: "ss01", "cv11";
   -webkit-font-smoothing: antialiased;
@@ -436,6 +685,28 @@ const styles = `
   letter-spacing: 0.32em;
   font-size: 13px;
   color: #F4FBFF;
+}
+.landing-nav-links {
+  display: none;
+  align-items: center;
+  gap: 28px;
+  margin: 0 auto;
+}
+.landing-nav-link {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(199, 230, 240, 0.66);
+  text-decoration: none;
+  transition: color 180ms ease, text-shadow 180ms ease;
+}
+.landing-nav-link:hover {
+  color: ${C.cyan};
+  text-shadow: 0 0 14px ${C.cyan}66;
+}
+@media (min-width: 920px) {
+  .landing-nav-links { display: flex; }
 }
 .landing-nav-actions {
   margin-left: auto;
@@ -485,10 +756,7 @@ const styles = `
   position: relative;
   max-width: 1320px;
   margin: 0 auto;
-  /* No top padding — brain bleeds off the top edge of the page.
-     The negative top margin pulls the brain slot up so its top edge
-     sits above the navbar baseline and reads as bleeding off-screen. */
-  padding: 0 24px clamp(56px, 8vh, 96px);
+  padding: 0 24px clamp(40px, 6vh, 72px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -496,17 +764,13 @@ const styles = `
 }
 .landing-hero-brain {
   position: relative;
-  /* Portrait-shaped stage that matches the source image's native
-     aspect (576×1024 ≈ 9:16). The whole brain-clouds composition
-     renders cinematically with the brain centered in the upper
-     portion and cloud bank trailing below, exactly as in the source. */
-  width: clamp(360px, 56vw, 620px);
-  height: clamp(560px, 82vh, 980px);
+  width: clamp(340px, 52vw, 580px);
+  height: clamp(520px, 74vh, 880px);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: clamp(-48px, -4vh, -16px);
-  margin-bottom: clamp(-180px, -16vh, -120px);
+  margin-bottom: clamp(-190px, -17vh, -130px);
   opacity: 0;
   transform: translateY(12px);
   transition: opacity 1000ms cubic-bezier(0.16, 1, 0.3, 1), transform 1000ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -520,10 +784,6 @@ const styles = `
 .landing-hero-brain-img {
   width: 100%;
   height: 100%;
-  /* Show the WHOLE image at native aspect — brain centered upper,
-     clouds fanning out below, with all four edges feathered so the
-     composition dissolves into the surrounding page-bg clouds for
-     one continuous ethereal atmosphere with no visible seams. */
   object-fit: contain;
   object-position: center center;
   -webkit-mask-image: radial-gradient(ellipse 62% 78% at 50% 42%,
@@ -557,8 +817,10 @@ const styles = `
 
 .landing-wordmark,
 .landing-tagline,
+.landing-headline,
 .landing-blurb,
-.landing-cta-row {
+.landing-cta-row,
+.landing-stat-strip {
   opacity: 0;
   transform: translateY(18px);
   transition:
@@ -567,15 +829,16 @@ const styles = `
 }
 .landing-hero.is-mounted .landing-wordmark,
 .landing-hero.is-mounted .landing-tagline,
+.landing-hero.is-mounted .landing-headline,
 .landing-hero.is-mounted .landing-blurb,
-.landing-hero.is-mounted .landing-cta-row {
+.landing-hero.is-mounted .landing-cta-row,
+.landing-hero.is-mounted .landing-stat-strip {
   opacity: 1;
   transform: translateY(0);
 }
 
 .landing-wordmark {
   margin: 0;
-  /* Match the dashboard BrandBanner wordmark typeface. */
   font-family: "Outfit", "Inter", system-ui, sans-serif;
   font-weight: 300;
   font-size: clamp(40px, 7.5vw, 92px);
@@ -583,7 +846,7 @@ const styles = `
   line-height: 1;
   color: #F4FBFF;
   text-shadow: 0 0 40px ${C.cyan}55, 0 0 12px ${C.cyan}33;
-  padding-left: 0.32em; /* optical centering compensation for tracking */
+  padding-left: 0.32em;
 }
 .landing-tagline {
   margin: clamp(10px, 1.4vh, 18px) 0 0;
@@ -593,13 +856,23 @@ const styles = `
   color: ${C.cyanSoft};
   padding-left: 0.42em;
 }
+.landing-headline {
+  margin: clamp(18px, 2.4vh, 28px) auto 0;
+  max-width: 720px;
+  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-weight: 300;
+  font-size: clamp(22px, 2.8vw, 36px);
+  line-height: 1.2;
+  color: #F4FBFF;
+  text-shadow: 0 0 30px ${C.cyan}30;
+}
 .landing-blurb {
-  margin: clamp(20px, 2.6vh, 32px) auto 0;
-  max-width: 640px;
-  font-size: clamp(16px, 1.25vw, 18px);
+  margin: clamp(16px, 2vh, 24px) auto 0;
+  max-width: 660px;
+  font-size: clamp(15px, 1.2vw, 17.5px);
   line-height: 1.7;
   font-weight: 400;
-  color: rgba(225, 244, 250, 0.92);
+  color: rgba(225, 244, 250, 0.88);
   text-shadow: 0 1px 12px rgba(2, 13, 18, 0.55);
 }
 .landing-cta-row {
@@ -607,8 +880,9 @@ const styles = `
   flex-wrap: wrap;
   justify-content: center;
   gap: 14px;
-  margin-top: clamp(28px, 3.4vh, 40px);
+  margin-top: clamp(24px, 3vh, 36px);
 }
+.landing-cta-row--center { margin-top: clamp(28px, 3.4vh, 40px); }
 .landing-cta {
   display: inline-flex;
   align-items: center;
@@ -641,22 +915,64 @@ const styles = `
   box-shadow: 0 0 24px ${C.cyan}66, 0 0 0 1px ${C.cyan}33 inset;
   transform: translateY(-1px);
 }
-
-/* ============== SCROLL REVEAL ============== */
-[data-reveal] {
-  opacity: 0;
-  transform: translateY(30px);
-  transition:
-    opacity 820ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms),
-    transform 820ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms);
-  will-change: opacity, transform;
+/* Primary CTA — filled cyan-teal gradient so the main action dominates. */
+.landing-cta-primary {
+  background: linear-gradient(135deg, ${C.cyan}, ${C.cyanMid});
+  border: 1.5px solid ${C.cyan};
+  color: #021018;
+  box-shadow: 0 10px 30px -10px ${C.cyan}aa, 0 0 22px ${C.cyan}3a;
 }
-[data-reveal].is-visible {
-  opacity: 1;
-  transform: none;
+.landing-cta-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 40px -10px ${C.cyan}cc, 0 0 34px ${C.cyan}66;
 }
 
-/* ============== SECTION HEADERS ============== */
+/* ============== HERO STAT STRIP ============== */
+.landing-stat-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0;
+  margin-top: clamp(30px, 4vh, 48px);
+}
+.landing-stat-item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 0 clamp(18px, 3vw, 34px);
+  position: relative;
+}
+.landing-stat-sep {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 26px;
+  background: linear-gradient(180deg, transparent, ${C.cyan}55, transparent);
+}
+.landing-stat-num {
+  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-weight: 300;
+  font-size: clamp(26px, 3vw, 38px);
+  color: #F4FBFF;
+  text-shadow: 0 0 22px ${C.cyan}55;
+}
+.landing-stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(199, 230, 240, 0.6);
+}
+
+/* ============== SHARED SECTION SCAFFOLD ============== */
+.landing-section {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: clamp(56px, 9vh, 104px) 32px;
+}
 .landing-section-head {
   max-width: 760px;
   margin: 0 auto clamp(32px, 4.5vh, 56px);
@@ -686,6 +1002,9 @@ const styles = `
 .landing-eyebrow::after {
   background: linear-gradient(90deg, ${C.cyan}aa, transparent);
 }
+/* Left-aligned eyebrow (split sections) — single trailing rule only. */
+.landing-eyebrow--left { gap: 12px; padding-left: 0; }
+.landing-eyebrow--left::before { display: none; }
 .landing-section-title {
   margin: 0;
   font-family: "Outfit", "Inter", system-ui, sans-serif;
@@ -706,41 +1025,70 @@ const styles = `
   text-shadow: 0 1px 10px rgba(2, 13, 18, 0.45);
 }
 
-/* ============== FEATURES ============== */
-.landing-features {
-  max-width: 1320px;
+/* ============== POSITIONING BAND ============== */
+.landing-band {
+  max-width: 1180px;
   margin: 0 auto;
-  padding: clamp(56px, 9vh, 104px) 32px clamp(40px, 6vh, 72px);
+  padding: clamp(8px, 2vh, 20px) 32px 0;
 }
-.landing-features-row {
+.landing-band-inner {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  max-width: 920px;
+  margin: 0 auto;
+  padding: clamp(20px, 3vh, 30px) clamp(22px, 3vw, 38px);
+  background: linear-gradient(145deg, ${C.bgPanel}, ${C.bgPanelStrong});
+  border: 1px solid ${C.hairlineStrong};
+  border-radius: 18px;
+  backdrop-filter: blur(14px) saturate(125%);
+  -webkit-backdrop-filter: blur(14px) saturate(125%);
+  box-shadow: 0 24px 60px -34px rgba(0,0,0,0.6), 0 0 30px ${C.cyan}12;
+}
+.landing-band-icon {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  color: ${C.cyan};
+  filter: drop-shadow(0 0 12px ${C.cyan}66);
+}
+.landing-band-text {
+  margin: 0;
+  font-size: clamp(15px, 1.4vw, 19px);
+  line-height: 1.55;
+  font-weight: 400;
+  color: rgba(232, 247, 252, 0.9);
+}
+.landing-band-text strong {
+  color: #fff;
+  font-weight: 600;
+  text-shadow: 0 0 18px ${C.cyan}55;
+}
+
+/* ============== STUDY TOOLS / FEATURE CARDS ============== */
+.landing-tools-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 14px;
+  gap: 16px;
   align-items: stretch;
 }
 @media (min-width: 640px) {
-  .landing-features-row { grid-template-columns: repeat(2, 1fr); }
-}
-@media (min-width: 900px) {
-  .landing-features-row { grid-template-columns: repeat(3, 1fr); }
+  .landing-tools-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (min-width: 1024px) {
-  /* Single 5-card row at standard laptop widths and up, matching the
-     reference comp. Below this we fall back to 3-then-2 wrapping. */
-  .landing-features-row { grid-template-columns: repeat(5, 1fr); }
+  .landing-tools-grid { grid-template-columns: repeat(4, 1fr); }
 }
-
 .landing-feature-card {
   --accent: ${C.cyan};
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 24px 18px 22px;
+  align-items: flex-start;
+  text-align: left;
+  padding: 26px 22px 24px;
   background: linear-gradient(180deg, ${C.bgPanel}, ${C.bgPanelStrong});
   border: 1px solid ${C.hairline};
-  border-radius: 14px;
+  border-radius: 16px;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   box-shadow:
@@ -748,7 +1096,7 @@ const styles = `
     0 18px 36px -22px rgba(0, 0, 0, 0.6),
     0 0 18px color-mix(in srgb, var(--accent) 12%, transparent);
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
-  min-height: 260px;
+  min-height: 230px;
 }
 .landing-feature-card:hover {
   transform: translateY(-3px);
@@ -762,8 +1110,8 @@ const styles = `
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
   border-radius: 12px;
   background: color-mix(in srgb, var(--accent) 12%, transparent);
   border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
@@ -773,87 +1121,94 @@ const styles = `
     0 0 18px color-mix(in srgb, var(--accent) 35%, transparent),
     inset 0 0 0 1px color-mix(in srgb, var(--accent) 14%, transparent);
 }
-.landing-feature-icon-wrap svg { width: 20px; height: 20px; }
+.landing-feature-icon-wrap svg { width: 21px; height: 21px; }
 .landing-feature-title {
   margin: 0 0 10px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  line-height: 1.45;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.3;
   color: #ffffff;
   text-shadow: 0 1px 10px rgba(2, 13, 18, 0.55);
 }
 .landing-feature-body {
   margin: 0;
-  font-size: 12.5px;
-  line-height: 1.6;
+  font-size: 13.5px;
+  line-height: 1.62;
   font-weight: 400;
-  color: rgba(225, 244, 250, 0.85);
+  color: rgba(225, 244, 250, 0.8);
 }
 
-/* PsychPro Spotlight — landing variant. Card grows to accommodate the
-   featured portrait and the dissertation-topic block. The portrait uses
-   the same cyan corona treatment as the dashboard SpotlightCard so the
-   two surfaces feel cut from the same atmosphere. */
-.landing-feature-card--spotlight {
-  min-height: 320px;
+/* ============== LEARNING SCIENCE ============== */
+.landing-science-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
 }
-.landing-spotlight-portrait {
-  position: relative;
-  width: 64px;
-  height: 64px;
-  border-radius: 999px;
-  overflow: hidden;
-  margin-bottom: 16px;
-  box-shadow:
-    0 0 0 2px var(--accent),
-    0 0 22px 4px color-mix(in srgb, var(--accent) 55%, transparent),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+@media (min-width: 860px) {
+  .landing-science-grid { grid-template-columns: repeat(3, 1fr); }
 }
-.landing-spotlight-portrait::before {
-  content: "";
-  position: absolute;
-  inset: -40%;
-  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 30%, transparent) 0%, transparent 65%);
-  filter: blur(12px);
-  pointer-events: none;
-  z-index: -1;
+.landing-science-item {
+  display: flex;
+  gap: 16px;
+  padding: 22px 20px;
+  border-radius: 16px;
+  border: 1px solid ${C.hairline};
+  background: linear-gradient(180deg, rgba(8,32,42,0.4), rgba(6,28,38,0.55));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-.landing-spotlight-portrait img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+.landing-science-item:hover {
+  border-color: ${C.hairlineStrong};
+  box-shadow: 0 0 26px ${C.cyan}18;
 }
-.landing-spotlight-dissertation {
-  margin-top: 14px;
-  padding-top: 12px;
-  width: 100%;
-  border-top: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+.landing-science-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: 11px;
+  background: ${C.cyan}14;
+  border: 1px solid ${C.cyan}3a;
+  color: ${C.cyan};
+  box-shadow: 0 0 16px ${C.cyan}33;
 }
-.landing-spotlight-dissertation-label {
-  margin: 0 0 6px;
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: 0.28em;
-  color: var(--accent);
-  text-shadow: 0 0 12px color-mix(in srgb, var(--accent) 55%, transparent);
+.landing-science-icon svg { width: 20px; height: 20px; }
+.landing-science-title {
+  margin: 2px 0 6px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
 }
-.landing-spotlight-dissertation-text {
+.landing-science-body {
   margin: 0;
-  font-size: 10.5px;
-  line-height: 1.55;
-  font-weight: 500;
-  letter-spacing: 0.03em;
-  color: rgba(225, 244, 250, 0.92);
-  text-shadow: 0 1px 8px rgba(2, 13, 18, 0.5);
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: rgba(225, 244, 250, 0.78);
 }
 
-/* ============== BROWSE TOPICS ============== */
-.landing-topics {
-  max-width: 1320px;
-  margin: 0 auto;
-  padding: clamp(24px, 3vh, 40px) 32px clamp(40px, 6vh, 80px);
+/* ============== CURRICULUM ============== */
+.landing-domain-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 0 auto clamp(28px, 4vh, 40px);
+  max-width: 860px;
+}
+.landing-domain-pill {
+  padding: 9px 18px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: ${C.cyanSoft};
+  background: linear-gradient(145deg, rgba(10,45,61,0.55), rgba(6,28,38,0.65));
+  border: 1px solid ${C.hairlineStrong};
+  box-shadow: 0 0 18px ${C.cyan}12;
 }
 .landing-topics-panel {
   position: relative;
@@ -867,6 +1222,15 @@ const styles = `
     0 0 0 1px rgba(255, 255, 255, 0.02) inset,
     0 24px 60px -30px rgba(0, 0, 0, 0.6),
     0 0 32px ${C.cyan}10;
+}
+.landing-topics-caption {
+  margin: 0 0 16px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba(199, 230, 240, 0.5);
+  text-align: center;
 }
 .landing-topics-grid {
   display: grid;
@@ -923,6 +1287,202 @@ const styles = `
   flex: 1;
   min-width: 0;
   letter-spacing: 0.04em;
+}
+
+/* ============== SPLIT SECTIONS (Brain Lab / Dashboard) ============== */
+.landing-split {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(28px, 4vw, 56px);
+  align-items: center;
+}
+@media (min-width: 900px) {
+  .landing-split { grid-template-columns: 1fr 1fr; }
+  .landing-split--reverse .landing-split-media { order: 2; }
+}
+.landing-split-media {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+}
+.landing-split-glow {
+  position: absolute;
+  inset: 8% 12%;
+  border-radius: 50%;
+  background: radial-gradient(circle, ${C.cyan}33 0%, ${C.cyanMid}14 45%, transparent 72%);
+  filter: blur(46px);
+  z-index: 0;
+}
+.landing-split-img {
+  position: relative;
+  z-index: 1;
+  max-width: 100%;
+  max-height: 380px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 30px ${C.cyan}44) drop-shadow(0 0 70px ${C.cyanMid}2a);
+}
+.landing-split-body { max-width: 520px; }
+.landing-split-title {
+  margin: 6px 0 0;
+  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-weight: 300;
+  font-size: clamp(24px, 3vw, 38px);
+  line-height: 1.16;
+  color: #F4FBFF;
+  text-shadow: 0 0 30px ${C.cyan}30;
+}
+.landing-split-text {
+  margin: clamp(14px, 1.8vh, 20px) 0 clamp(20px, 2.6vh, 28px);
+  font-size: clamp(14px, 1.1vw, 16.5px);
+  line-height: 1.72;
+  color: rgba(225, 244, 250, 0.82);
+}
+
+/* Dashboard illustration card */
+.landing-dash-card {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 18px;
+  padding: 22px 22px 16px;
+  background: linear-gradient(145deg, rgba(10,45,61,0.72), rgba(6,28,38,0.85));
+  border: 1px solid ${C.hairlineStrong};
+  backdrop-filter: blur(18px) saturate(130%);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+  box-shadow: 0 30px 70px -34px rgba(0,0,0,0.7), 0 0 34px ${C.cyan}14;
+}
+.landing-dash-card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: ${C.cyanSoft};
+}
+.landing-dash-card-icon { width: 18px; height: 18px; color: ${C.cyan}; }
+.landing-dash-rows { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+.landing-dash-row { display: flex; flex-direction: column; gap: 7px; }
+.landing-dash-row-label {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: rgba(225, 244, 250, 0.82);
+}
+.landing-dash-track {
+  position: relative;
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(2, 13, 18, 0.6);
+  overflow: hidden;
+}
+.landing-dash-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, ${C.cyanMid}, ${C.cyan});
+  box-shadow: 0 0 14px ${C.cyan}66;
+}
+.landing-dash-note {
+  margin: 14px 0 0;
+  text-align: right;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(199, 230, 240, 0.34);
+}
+
+/* Checklists */
+.landing-checklist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.landing-checklist--grid { gap: 12px; }
+@media (min-width: 640px) {
+  .landing-checklist--grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 22px; }
+}
+.landing-checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(225, 244, 250, 0.86);
+}
+.landing-checklist-check {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: ${C.cyan};
+  filter: drop-shadow(0 0 6px ${C.cyan}66);
+}
+
+/* ============== SCHOLAR TIER ============== */
+.landing-scholar { max-width: 1020px; }
+.landing-scholar-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  padding: clamp(28px, 4vw, 48px);
+  background: linear-gradient(150deg, rgba(14,60,80,0.6), rgba(6,28,38,0.82));
+  border: 1px solid ${C.hairlineStrong};
+  backdrop-filter: blur(20px) saturate(130%);
+  -webkit-backdrop-filter: blur(20px) saturate(130%);
+  box-shadow: 0 36px 90px -40px rgba(0,0,0,0.75), 0 0 40px ${C.cyan}16;
+}
+.landing-scholar-card::before {
+  content: "";
+  position: absolute;
+  top: -40%;
+  right: -10%;
+  width: 60%;
+  height: 120%;
+  background: radial-gradient(circle, ${C.cyan}22 0%, transparent 60%);
+  pointer-events: none;
+}
+.landing-scholar-head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+.landing-scholar-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  background: ${C.cyan}18;
+  border: 1px solid ${C.cyan}55;
+  color: ${C.cyan};
+  box-shadow: 0 0 22px ${C.cyan}44;
+}
+.landing-scholar-icon svg { width: 24px; height: 24px; }
+.landing-scholar-title { margin: 4px 0 0; }
+.landing-scholar .landing-split-text { position: relative; max-width: 720px; }
+.landing-scholar .landing-checklist { position: relative; margin-bottom: clamp(22px, 3vh, 30px); }
+
+/* ============== FINAL CTA ============== */
+.landing-final { text-align: center; max-width: 760px; }
+.landing-final-title {
+  margin: 0;
+  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-weight: 300;
+  font-size: clamp(28px, 4vw, 50px);
+  line-height: 1.1;
+  color: #F4FBFF;
+  text-shadow: 0 0 40px ${C.cyan}3a;
+}
+.landing-final-sub {
+  margin: clamp(14px, 2vh, 20px) auto 0;
+  max-width: 520px;
+  font-size: clamp(14px, 1.1vw, 16.5px);
+  line-height: 1.7;
+  color: rgba(225, 244, 250, 0.78);
 }
 
 /* ============== FOOTER ============== */
@@ -984,6 +1544,27 @@ const styles = `
   }
 }
 
+/* In-page anchor nav: smooth scroll + offset so the sticky navbar doesn't
+   overlap the target section heading. */
+html { scroll-behavior: smooth; }
+#home, #tools, #science, #curriculum, #brain-lab, #scholar {
+  scroll-margin-top: 84px;
+}
+
+/* ============== SCROLL REVEAL ============== */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 760ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms),
+    transform 760ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
 /* ============== KEYFRAMES ============== */
 @keyframes heroBrainFloat {
   0%, 100% { transform: translateY(0); }
@@ -1010,8 +1591,10 @@ const styles = `
   }
   .landing-wordmark,
   .landing-tagline,
+  .landing-headline,
   .landing-blurb,
   .landing-cta-row,
+  .landing-stat-strip,
   .landing-hero-brain,
   [data-reveal] {
     transition: none !important;
