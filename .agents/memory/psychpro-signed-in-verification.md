@@ -5,14 +5,13 @@ description: How to visually verify auth-gated PsychPro (neuronotes) pages when 
 
 # Verifying signed-in PsychPro (neuronotes) pages
 
-The neuronotes app sits behind **external Clerk** auth. On this instance the Clerk
-browser flow does NOT work in the automated test/preview harness: blank `/sign-in`,
-rejected `redirect_url`, prod-key domain error. No `VITE_CLERK_PUBLISHABLE_KEY_DEV`
-is set, so the dev-key branch in `src/App.tsx` is inert. Restarting the web workflow
-does not help.
+The neuronotes app sits behind **external Clerk** auth. Auth-gated pages cannot be
+exercised in this environment by EITHER path: the preview/manual browser Clerk flow
+fails, AND the testing harness's programmatic helper (`runTest` with
+`testClerkAuth: true`) fails with `Unprocessable Entity` from `signInClerkUser`.
 
 **Consequence:** you cannot screenshot the live signed-in dashboard (or any logged-in
-page) in this environment.
+page) here. Don't keep retrying Clerk login — reach for the surrogate below.
 
 **Verification path that works:** reproduce the exact edited CSS/markup in an isolated
 `mockup-sandbox` component (copy the real glass classes + the JSX slice verbatim into a
