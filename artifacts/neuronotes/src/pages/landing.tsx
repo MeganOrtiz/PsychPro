@@ -756,7 +756,7 @@ const styles = `
   position: relative;
   max-width: 1320px;
   margin: 0 auto;
-  padding: 0 24px clamp(40px, 6vh, 72px);
+  padding: 0 24px clamp(24px, 4vh, 44px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -971,11 +971,11 @@ const styles = `
 .landing-section {
   max-width: 1180px;
   margin: 0 auto;
-  padding: clamp(56px, 9vh, 104px) 32px;
+  padding: clamp(36px, 5.5vh, 64px) 32px;
 }
 .landing-section-head {
   max-width: 760px;
-  margin: 0 auto clamp(32px, 4.5vh, 56px);
+  margin: 0 auto clamp(20px, 3vh, 36px);
   text-align: center;
 }
 .landing-eyebrow {
@@ -1488,7 +1488,7 @@ const styles = `
 /* ============== FOOTER ============== */
 .landing-footer {
   border-top: 1px solid ${C.hairline};
-  margin-top: clamp(40px, 6vh, 72px);
+  margin-top: clamp(28px, 4vh, 48px);
   background: linear-gradient(180deg, rgba(2, 13, 18, 0.4), rgba(2, 13, 18, 0.85));
   backdrop-filter: blur(8px);
 }
