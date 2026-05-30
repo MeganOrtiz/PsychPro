@@ -533,14 +533,14 @@ export default function DashboardPage() {
                       >
                         <div
                           className={cn(
-                            "w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0",
+                            "w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 border backdrop-blur-md",
                             e.rank === 1
-                              ? "bg-yellow-500/15 text-yellow-600"
+                              ? "bg-yellow-400/20 text-yellow-200 border-yellow-300/40"
                               : e.rank === 2
-                              ? "bg-slate-400/15 text-slate-500"
+                              ? "bg-slate-200/15 text-slate-100 border-slate-200/30"
                               : e.rank === 3
-                              ? "bg-amber-700/15 text-amber-700"
-                              : "bg-slate-100 text-slate-500"
+                              ? "bg-amber-500/20 text-amber-200 border-amber-300/35"
+                              : "bg-cyan-400/10 text-cyan-100 border-cyan-300/25"
                           )}
                         >
                           {e.rank}
@@ -568,7 +568,7 @@ export default function DashboardPage() {
                               "w-3 h-3",
                               e.streak > 0
                                 ? "text-orange-500 fill-orange-500"
-                                : "text-slate-300"
+                                : "text-white/25"
                             )}
                           />
                           <span className="text-xs font-semibold tabular-nums" style={{ color: PALETTE.mist }}>
