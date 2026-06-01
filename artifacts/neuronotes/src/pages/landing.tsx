@@ -18,6 +18,10 @@ import {
   Wallet,
   ArrowRight,
   Check,
+  Award,
+  Wand2,
+  Gamepad2,
+  Lightbulb,
 } from "lucide-react";
 import brainSmoke from "@/assets/hero/brain.png";
 import brainLateral from "@/assets/brain-views/lateral.png";
@@ -43,46 +47,53 @@ import { STUDY_PALETTE as P } from "@/lib/study-theme";
 //
 // COPY RULES (from the user): only true facts. No "expert-made" / "built by
 // clinicians" claims, no fabricated testimonials, logos, ratings, or user
-// counts. Verified facts only (39 topics, 6 domains, the four study formats,
+// counts. Verified facts only (39 topics, 6 domains, the five study formats,
 // the learning-science methods, the Brain Lab, the dashboard, Scholar AI).
 // =============================================================================
 
 const STAT_STRIP = [
   { value: "39", label: "Topics" },
   { value: "6", label: "Domains" },
-  { value: "4", label: "Study formats" },
+  { value: "5", label: "Study formats" },
 ] as const;
 
-// The four built-in study formats. Each gets a brand-family accent so the row
-// reads as a cool cyan spectrum rather than four identical tiles.
+// The five built-in study formats. Each gets a brand-family accent so the row
+// reads as a cool cyan spectrum rather than identical tiles.
 const STUDY_TOOLS = [
   {
     icon: Layers,
-    title: "Flashcards that teach",
+    title: "Flashcards Built for Understanding",
     body:
-      "More than front-and-back recall — cards built to develop real understanding, not rote memorization.",
+      "More than simple recall. Every card is designed to strengthen conceptual understanding, clinical reasoning, and long-term retention.",
     accent: "#76E4F7",
   },
   {
     icon: ClipboardList,
-    title: "Quizzes with full explanations",
+    title: "Quizzes That Reinforce Learning",
     body:
-      "Every question comes with a complete explanation, so each answer is a chance to learn — not just to score.",
+      "Every question includes detailed explanations that transform assessment into another opportunity to learn.",
     accent: "#5EB0C8",
   },
   {
     icon: BookOpen,
-    title: "In-depth study guides",
+    title: "Comprehensive Study Guides",
     body:
-      "Structured, comprehensive guides for every topic — the reasoning behind the facts, in one place.",
+      "Structured, high-yield content that brings together essential concepts, clinical applications, and key details in one place.",
     accent: "#A7F3FF",
   },
   {
     icon: GraduationCap,
-    title: "Full-length practice exams",
+    title: "Exam-Style Practice Tests",
     body:
-      "Timed, full-length, exam-style practice so you can build stamina and walk into licensure prepared.",
+      "Build confidence, identify knowledge gaps, and apply what you've learned under realistic testing conditions.",
     accent: "#6FC9DF",
+  },
+  {
+    icon: Award,
+    title: "Course Mastery Exam",
+    body:
+      "Solidify your understanding of every topic in a course with the final Course Mastery Exam.",
+    accent: "#9AD9E8",
   },
 ] as const;
 
@@ -118,43 +129,27 @@ const DOMAINS = [
   "Research Methods",
 ] as const;
 
-// Representative real topics, organized into 3 columns (read top-to-bottom by
-// column). A sample of the catalog — not the full 39 — shown to convey breadth.
-const TOPIC_COLUMNS: string[][] = [
-  [
-    "Brain Networks",
-    "Endocrine System & Reproduction",
-    "Neurophysiology",
-    "Sleep & Circadian Rhythms",
-    "Executive Function",
-    "Neurocognitive Disorders",
-    "Neuropsychology Overview",
-    "Personality Disorders",
-    "Trauma-Focused Approaches",
-  ],
-  [
-    "Central Nervous System",
-    "Peripheral Nervous System",
-    "Vascular System of the Brain",
-    "Forensic Neuropsychology",
-    "Validity & Effort Testing",
-    "Psychiatric Disorders",
-    "Behavior Therapy & ABA",
-    "Foundations of Psychotherapy",
-    "Family, Systems & Couples Therapies",
-  ],
-  [
-    "Cranial Nerves",
-    "Limbic System & Motivation",
-    "Sensory Systems",
-    "Language Processing & Aphasia",
-    "Neuroimaging & Neuromodulation",
-    "ADHD & Medications",
-    "Psychopharmacology",
-    "Cognitive Therapy, CBT & Schema Therapy",
-    "Gestalt & Emotion-Focused Therapy",
-  ],
-];
+// Product capabilities highlighted in the "Features" section.
+const FEATURES = [
+  {
+    icon: Wand2,
+    title: "Custom study tools",
+    body:
+      "Create your own flashcards, quizzes, and study guides from your own material.",
+  },
+  {
+    icon: Gamepad2,
+    title: "Go beyond traditional learning",
+    body:
+      "Sharpen recall with advanced tools — matching games, fill-in-the-blank, and spaced review.",
+  },
+  {
+    icon: Lightbulb,
+    title: "Reflections",
+    body:
+      "Reflect on what you've learned and lock it in with the Reflections feature.",
+  },
+] as const;
 
 // What the Scholar tier adds — mirrors src/pages/subscription.tsx SCHOLAR_FEATURES.
 const SCHOLAR_POINTS = [
@@ -233,7 +228,7 @@ export default function LandingPage() {
 
             <nav className="landing-nav-links" aria-label="Sections">
               <a href="#tools" className="landing-nav-link">Study Tools</a>
-              <a href="#curriculum" className="landing-nav-link">Curriculum</a>
+              <a href="#features" className="landing-nav-link">Features</a>
               <a href="#brain-lab" className="landing-nav-link">Brain Lab</a>
               <a href="#scholar" className="landing-nav-link">Scholar</a>
             </nav>
@@ -274,16 +269,17 @@ export default function LandingPage() {
             PSYCHPRO
           </h1>
           <p className="landing-tagline" style={{ ["--delay" as any]: "220ms" }}>
-            DEPTH OVER MEMORIZATION
+            learn. expand. connect.
           </p>
           <p className="landing-headline" style={{ ["--delay" as any]: "320ms" }}>
-            The serious study platform for clinical psychology.
+            Master Topics in Clinical Psychology, Neuropsychology,
+            Neuroscience, Assessment, Psychotherapy, and More
           </p>
           <p className="landing-blurb" style={{ ["--delay" as any]: "420ms" }}>
-            In-depth flashcards, quizzes, study guides, and full-length practice
-            exams across 39 topics — built on the science of how people actually
-            learn. Made for students, residents, and early-career clinicians,
-            without the four-figure price tag of traditional prep.
+            PsychPro combines evidence-based learning strategies with
+            comprehensive educational content to create a modern learning
+            experience for psychology students, professionals, and life-long
+            learners.
           </p>
 
           <div
@@ -306,7 +302,7 @@ export default function LandingPage() {
               data-testid="cta-explore-topics"
             >
               <Compass className="landing-cta-icon" aria-hidden />
-              <span>EXPLORE TOPICS</span>
+              <span>BROWSE COURSES</span>
             </button>
           </div>
 
@@ -338,11 +334,11 @@ export default function LandingPage() {
           <div className="landing-section-head" data-reveal>
             <p className="landing-eyebrow">WHAT'S INSIDE</p>
             <h2 className="landing-section-title">
-              Four ways to learn it — and keep it
+              Learn, apply, retain, and revisit
             </h2>
             <p className="landing-section-sub">
-              Every topic comes with the same complete toolkit, so you can move
-              from first exposure all the way to exam-ready.
+              A complete learning system that uses evidence-based learning
+              strategies to build lasting knowledge.
             </p>
           </div>
           <div className="landing-tools-grid">
@@ -405,52 +401,37 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ============== CURRICULUM ============== */}
-        <section id="curriculum" className="landing-section landing-curriculum">
+        {/* ============== FEATURES ============== */}
+        <section id="features" className="landing-section landing-features">
           <div className="landing-section-head" data-reveal>
-            <p className="landing-eyebrow">THE CURRICULUM</p>
+            <p className="landing-eyebrow">FEATURES</p>
             <h2 className="landing-section-title">
-              39 topics across six domains
+              Use all of PsychPro's tools
             </h2>
             <p className="landing-section-sub">
-              From the biology of the brain to the clinic — structured coverage
-              you can actually finish.
+              Go further than flashcards and quizzes — make the platform your
+              own and learn in the ways that work best for you.
             </p>
           </div>
-
-          <div className="landing-domain-row" data-reveal>
-            {DOMAINS.map((d) => (
-              <span key={d} className="landing-domain-pill">
-                {d}
-              </span>
-            ))}
-          </div>
-
-          <div className="landing-topics-panel" data-reveal>
-            <p className="landing-topics-caption">A sample of the catalog</p>
-            <div className="landing-topics-grid">
-              {TOPIC_COLUMNS.map((col, ci) => (
-                <div key={ci} className="landing-topics-col">
-                  {col.map((topic) => (
-                    <button
-                      key={topic}
-                      type="button"
-                      onClick={goToTopics}
-                      className="landing-topic-pill"
-                      data-testid={`topic-${topic
-                        .toLowerCase()
-                        .replace(/[^a-z0-9]+/g, "-")
-                        .replace(/^-|-$/g, "")}`}
-                    >
-                      <span className="landing-topic-check" aria-hidden>
-                        <Check />
-                      </span>
-                      <span className="landing-topic-label">{topic}</span>
-                    </button>
-                  ))}
-                </div>
-              ))}
-            </div>
+          <div className="landing-features-grid">
+            {FEATURES.map((f, i) => {
+              const Icon = f.icon;
+              return (
+                <article
+                  key={f.title}
+                  className="landing-feature-card"
+                  style={{ ["--reveal-delay" as any]: `${i * 90}ms` }}
+                  data-reveal
+                  data-testid={`feature-${i}`}
+                >
+                  <div className="landing-feature-icon-wrap">
+                    <Icon aria-hidden />
+                  </div>
+                  <h3 className="landing-feature-title">{f.title}</h3>
+                  <p className="landing-feature-body">{f.body}</p>
+                </article>
+              );
+            })}
           </div>
         </section>
 
@@ -467,13 +448,13 @@ export default function LandingPage() {
           <div className="landing-split-body">
             <p className="landing-eyebrow landing-eyebrow--left">INTERACTIVE 3D</p>
             <h2 className="landing-split-title">
-              Make neuroanatomy tangible
+              Interactive Brain Lab
             </h2>
             <p className="landing-split-text">
-              Explore an interactive 3D brain lab built for clinicians-in-training.
-              Rotate the model, open any structure, and connect anatomy to its
-              functions and clinical relevance — so neuroscience stops being
-              abstract.
+              Study the structures and functions of the brain with our
+              interactive Brain Lab — built for visual learning. Rotate the
+              model, open any structure, and connect anatomy to its function and
+              clinical relevance.
             </p>
             <button
               type="button"
@@ -516,11 +497,12 @@ export default function LandingPage() {
           <div className="landing-split-body">
             <p className="landing-eyebrow landing-eyebrow--left">YOUR DASHBOARD</p>
             <h2 className="landing-split-title">
-              Always know what to study next
+              Track progress, prioritize learning, and connect
             </h2>
             <p className="landing-split-text">
-              A personalized dashboard keeps your studying on track and tells you
-              where to go next — no guesswork, no wasted sessions.
+              Your personalized dashboard keeps your studying on track, shows you
+              what to prioritize next, and connects you with the wider PsychPro
+              community.
             </p>
             <ul className="landing-checklist">
               {DASHBOARD_POINTS.map((point) => (
@@ -574,10 +556,12 @@ export default function LandingPage() {
 
         {/* ============== FINAL CTA ============== */}
         <section className="landing-section landing-final" data-reveal>
-          <h2 className="landing-final-title">Start studying deeper today</h2>
+          <h2 className="landing-final-title">
+            Explore topics designed for real-world clinical application
+          </h2>
           <p className="landing-final-sub">
-            Try it free — every topic includes a preview, and no credit card is
-            required to start.
+            Built for in-depth understanding you can take from study to the
+            clinic. Try it free — no credit card required to start.
           </p>
           <div className="landing-cta-row landing-cta-row--center">
             <button
@@ -1067,24 +1051,33 @@ const styles = `
 
 /* ============== STUDY TOOLS / FEATURE CARDS ============== */
 .landing-tools-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+}
+.landing-tools-grid > .landing-feature-card {
+  flex: 1 1 200px;
+  min-width: 200px;
+  max-width: 320px;
+}
+/* Features grid — 1 / 3 columns */
+.landing-features-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 16px;
   align-items: stretch;
 }
-@media (min-width: 640px) {
-  .landing-tools-grid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (min-width: 1024px) {
-  .landing-tools-grid { grid-template-columns: repeat(4, 1fr); }
+@media (min-width: 760px) {
+  .landing-features-grid { grid-template-columns: repeat(3, 1fr); }
 }
 .landing-feature-card {
   --accent: ${C.cyan};
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
+  align-items: center;
+  text-align: center;
   padding: 26px 22px 24px;
   background: linear-gradient(180deg, ${C.bgPanel}, ${C.bgPanelStrong});
   border: 1px solid ${C.hairline};
@@ -1188,105 +1181,6 @@ const styles = `
   font-size: 13.5px;
   line-height: 1.6;
   color: rgba(225, 244, 250, 0.78);
-}
-
-/* ============== CURRICULUM ============== */
-.landing-domain-row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  margin: 0 auto clamp(28px, 4vh, 40px);
-  max-width: 860px;
-}
-.landing-domain-pill {
-  padding: 9px 18px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: ${C.cyanSoft};
-  background: linear-gradient(145deg, rgba(10,45,61,0.55), rgba(6,28,38,0.65));
-  border: 1px solid ${C.hairlineStrong};
-  box-shadow: 0 0 18px ${C.cyan}12;
-}
-.landing-topics-panel {
-  position: relative;
-  background: linear-gradient(180deg, ${C.bgPanel}, ${C.bgPanelStrong});
-  border: 1px solid ${C.hairlineStrong};
-  border-radius: 18px;
-  padding: clamp(20px, 3vh, 32px) clamp(20px, 2.6vw, 36px);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.02) inset,
-    0 24px 60px -30px rgba(0, 0, 0, 0.6),
-    0 0 32px ${C.cyan}10;
-}
-.landing-topics-caption {
-  margin: 0 0 16px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  color: rgba(199, 230, 240, 0.5);
-  text-align: center;
-}
-.landing-topics-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 18px;
-}
-.landing-topics-col {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-@media (min-width: 640px) { .landing-topics-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 980px) { .landing-topics-grid { grid-template-columns: repeat(3, 1fr); } }
-
-.landing-topic-pill {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  padding: 11px 14px;
-  background: rgba(3, 17, 24, 0.55);
-  border: 1px solid ${C.hairline};
-  border-radius: 10px;
-  color: ${C.cyanSoft};
-  font-family: inherit;
-  font-size: 13.5px;
-  font-weight: 500;
-  text-align: left;
-  cursor: pointer;
-  transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-.landing-topic-pill:hover {
-  background: ${C.bgPanelStrong};
-  border-color: ${C.hairlineStrong};
-  transform: translateX(2px);
-  box-shadow: 0 0 22px ${C.cyan}22;
-  color: #fff;
-}
-.landing-topic-check {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  border-radius: 999px;
-  border: 1.5px solid ${C.cyan};
-  background: ${C.cyan}1f;
-  color: ${C.cyan};
-  flex-shrink: 0;
-  box-shadow: 0 0 10px ${C.cyan}66;
-}
-.landing-topic-check svg { width: 12px; height: 12px; stroke-width: 3; }
-.landing-topic-label {
-  flex: 1;
-  min-width: 0;
-  letter-spacing: 0.04em;
 }
 
 /* ============== SPLIT SECTIONS (Brain Lab / Dashboard) ============== */
@@ -1547,7 +1441,7 @@ const styles = `
 /* In-page anchor nav: smooth scroll + offset so the sticky navbar doesn't
    overlap the target section heading. */
 html { scroll-behavior: smooth; }
-#home, #tools, #science, #curriculum, #brain-lab, #scholar {
+#home, #tools, #science, #features, #brain-lab, #scholar {
   scroll-margin-top: 84px;
 }
 
