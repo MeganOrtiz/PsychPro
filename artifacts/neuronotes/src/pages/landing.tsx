@@ -36,9 +36,9 @@ import { STUDY_PALETTE as P } from "@/lib/study-theme";
 //   1. Navbar (logo + in-page nav + search + LOG IN)
 //   2. Hero (brain centerpiece, wordmark, tagline, value prop, CTAs, stat strip)
 //   3. Positioning band (serious prep, without the four-figure price tag)
-//   4. Study tools (flashcards / quizzes / study guides / practice exams)
+//   4. Study tools (flashcards / quizzes / study guides / practice tests / course mastery exam)
 //   5. Learning science (active recall / spaced repetition / interleaving)
-//   6. Curriculum (39 topics across 6 domains + representative topics)
+//   6. Features (custom study tools, beyond traditional learning, reflections)
 //   7. Brain Lab (interactive 3D neuroanatomy)
 //   8. Dashboard (personalized progress, what to study next)
 //   9. Scholar tier (turn your own notes/PDFs into study material with AI)
@@ -949,6 +949,11 @@ const styles = `
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: rgba(199, 230, 240, 0.6);
+}
+@media (max-width: 480px) {
+  .landing-stat-item { padding: 0 12px; gap: 7px; }
+  .landing-stat-label { letter-spacing: 0.12em; }
+  .landing-stat-sep { height: 20px; }
 }
 
 /* ============== SHARED SECTION SCAFFOLD ============== */
