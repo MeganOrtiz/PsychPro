@@ -22,7 +22,9 @@ import {
   Wand2,
   Gamepad2,
   Lightbulb,
+  CheckCircle2,
 } from "lucide-react";
+import { useGetTopics } from "@workspace/api-client-react";
 import brainSmoke from "@/assets/hero/brain.png";
 import brainLateral from "@/assets/brain-views/lateral.png";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -172,6 +174,25 @@ const FOOTER_LINKS = [
   { label: "Contact", href: "mailto:admin@psychprosuites.com" },
 ];
 
+// Category ordering for the "All topics" list at the bottom — mirrors the
+// Topics tab so the two stay consistent. Categories not in this list are
+// appended alphabetically.
+const TOPIC_CATEGORY_ORDER = [
+  "Neuroscience",
+  "Psychology",
+  "Neuropsychology",
+  "Assessment",
+  "Psychotherapy",
+  "Research Methods",
+  "Special Topics",
+];
+
+interface LandingTopic {
+  id: number;
+  name: string;
+  category: string;
+}
+
 function useScrollReveal() {
   useEffect(() => {
     const els = Array.from(
@@ -213,6 +234,30 @@ export default function LandingPage() {
   const navTo = (path: string) => navigate(isSignedIn ? path : "/sign-in");
   const goToApp = () => navTo("/dashboard");
   const goToTopics = () => navTo("/topics");
+
+  // Full topic list for the "All topics" section at the bottom. Pulled live
+  // from the topics hook so it stays in sync with the database, sorted by the
+  // Topics-tab category order then alphabetically within each category.
+  const { data: topicsData, isLoading: topicsLoading, isError: topicsError } =
+    useGetTopics() as {
+      data: LandingTopic[] | undefined;
+      isLoading: boolean;
+      isError: boolean;
+    };
+  const sortedTopics: LandingTopic[] = (() => {
+    const list = (topicsData ?? []) as LandingTopic[];
+    const rank = (c: string) => {
+      const i = TOPIC_CATEGORY_ORDER.indexOf(c);
+      return i === -1 ? TOPIC_CATEGORY_ORDER.length : i;
+    };
+    return [...list].sort((a, b) => {
+      const r = rank(a.category) - rank(b.category);
+      if (r !== 0) return r;
+      const c = (a.category || "").localeCompare(b.category || "");
+      if (c !== 0) return c;
+      return a.name.localeCompare(b.name);
+    });
+  })();
 
   return (
     <>
@@ -574,6 +619,58 @@ export default function LandingPage() {
               <ArrowRight className="landing-cta-icon" aria-hidden />
             </button>
           </div>
+        </section>
+
+        {/* ============== ALL TOPICS ============== */}
+        <section id="topics" className="landing-section landing-topics" data-reveal>
+          <div className="landing-section-head">
+            <p className="landing-eyebrow">ALL TOPICS</p>
+            <h2 className="landing-section-title">
+              Browse the complete topic library
+            </h2>
+            <p className="landing-section-sub">
+              The full library of topics you can study on PsychPro — flashcards,
+              quizzes, study guides, and practice exams for each.
+            </p>
+          </div>
+
+          {topicsLoading ? (
+            <div
+              className="landing-topics-grid"
+              role="status"
+              aria-live="polite"
+              aria-label="Loading topics"
+            >
+              {Array.from({ length: 18 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="landing-topic-chip landing-topic-chip--skeleton"
+                  aria-hidden
+                />
+              ))}
+            </div>
+          ) : topicsError || sortedTopics.length === 0 ? (
+            <p className="landing-topics-empty" data-testid="landing-topics-empty">
+              {topicsError
+                ? "Topics are temporarily unavailable. Please refresh."
+                : "No topics published yet."}
+            </p>
+          ) : (
+            <div className="landing-topics-grid" data-testid="landing-topics-grid">
+              {sortedTopics.map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => navTo(`/topics/${t.id}`)}
+                  className="landing-topic-chip"
+                  data-testid={`landing-topic-chip-${t.id}`}
+                >
+                  <CheckCircle2 className="landing-topic-chip-icon" aria-hidden />
+                  <span>{t.name}</span>
+                </button>
+              ))}
+            </div>
+          )}
         </section>
 
         {/* ============== FOOTER ============== */}
@@ -1382,6 +1479,77 @@ const styles = `
   font-size: clamp(14px, 1.1vw, 16.5px);
   line-height: 1.7;
   color: rgba(225, 244, 250, 0.78);
+}
+
+/* ============== ALL TOPICS ============== */
+.landing-topics-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  max-width: 1040px;
+  margin: 0 auto;
+}
+@media (min-width: 640px) {
+  .landing-topics-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 980px) {
+  .landing-topics-grid { grid-template-columns: 1fr 1fr 1fr; }
+}
+.landing-topic-chip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  text-align: left;
+  font-family: "Inter", "Outfit", system-ui, sans-serif;
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: ${C.cyanSoft};
+  background: ${C.bgPanel};
+  border: 1px solid ${C.hairline};
+  cursor: pointer;
+  transition: transform 200ms cubic-bezier(.2,.8,.2,1),
+              background 200ms ease, border-color 200ms ease,
+              box-shadow 250ms ease;
+}
+.landing-topic-chip:hover {
+  transform: translateY(-1px);
+  background: ${C.bgPanelStrong};
+  border-color: ${C.hairlineStrong};
+  box-shadow: 0 0 0 1px ${C.cyan}28, 0 0 18px ${C.cyan}30;
+}
+.landing-topic-chip:focus-visible {
+  outline: none;
+  border-color: ${C.cyanSoft};
+  box-shadow: 0 0 0 2px ${C.cyan}55;
+}
+.landing-topic-chip-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: ${C.cyan};
+  filter: drop-shadow(0 0 5px ${C.cyan}88);
+}
+.landing-topic-chip--skeleton {
+  min-height: 44px;
+  opacity: 0.5;
+  pointer-events: none;
+  animation: landing-topic-pulse 1.4s ease-in-out infinite;
+}
+@keyframes landing-topic-pulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.6; }
+}
+.landing-topics-empty {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(225, 244, 250, 0.7);
+  padding: 12px 0;
 }
 
 /* ============== FOOTER ============== */
