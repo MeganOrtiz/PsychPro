@@ -740,7 +740,7 @@ const styles = `
   position: relative;
   max-width: 1320px;
   margin: 0 auto;
-  padding: 0 24px clamp(24px, 4vh, 44px);
+  padding: 0 24px clamp(14px, 2.4vh, 28px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -833,7 +833,7 @@ const styles = `
   padding-left: 0.32em;
 }
 .landing-tagline {
-  margin: clamp(10px, 1.4vh, 18px) 0 0;
+  margin: clamp(6px, 1vh, 12px) 0 0;
   font-weight: 500;
   font-size: clamp(11px, 1.1vw, 14px);
   letter-spacing: 0.42em;
@@ -841,7 +841,7 @@ const styles = `
   padding-left: 0.42em;
 }
 .landing-headline {
-  margin: clamp(18px, 2.4vh, 28px) auto 0;
+  margin: clamp(12px, 1.6vh, 20px) auto 0;
   max-width: 720px;
   font-family: "Outfit", "Inter", system-ui, sans-serif;
   font-weight: 300;
@@ -851,7 +851,7 @@ const styles = `
   text-shadow: 0 0 30px ${C.cyan}30;
 }
 .landing-blurb {
-  margin: clamp(16px, 2vh, 24px) auto 0;
+  margin: clamp(10px, 1.4vh, 18px) auto 0;
   max-width: 660px;
   font-size: clamp(15px, 1.2vw, 17.5px);
   line-height: 1.7;
@@ -864,9 +864,9 @@ const styles = `
   flex-wrap: wrap;
   justify-content: center;
   gap: 14px;
-  margin-top: clamp(24px, 3vh, 36px);
+  margin-top: clamp(16px, 2.2vh, 26px);
 }
-.landing-cta-row--center { margin-top: clamp(28px, 3.4vh, 40px); }
+.landing-cta-row--center { margin-top: clamp(18px, 2.4vh, 28px); }
 .landing-cta {
   display: inline-flex;
   align-items: center;
@@ -918,7 +918,7 @@ const styles = `
   justify-content: center;
   flex-wrap: wrap;
   gap: 0;
-  margin-top: clamp(30px, 4vh, 48px);
+  margin-top: clamp(20px, 2.6vh, 32px);
 }
 .landing-stat-item {
   display: inline-flex;
@@ -955,18 +955,18 @@ const styles = `
 .landing-section {
   max-width: 1180px;
   margin: 0 auto;
-  padding: clamp(36px, 5.5vh, 64px) 32px;
+  padding: clamp(22px, 3.4vh, 42px) 32px;
 }
 .landing-section-head {
   max-width: 760px;
-  margin: 0 auto clamp(20px, 3vh, 36px);
+  margin: 0 auto clamp(14px, 2vh, 24px);
   text-align: center;
 }
 .landing-eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  margin: 0 0 16px;
+  margin: 0 0 10px;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.4em;
