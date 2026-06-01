@@ -365,8 +365,11 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Two-column: main + spotlight rail */}
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-6 items-start">
+        {/* Two-column: main + spotlight rail.
+            items-stretch makes the right rail match the full height of the
+            left content stack so the Spotlight box top aligns with "Begin
+            Your Journey" and its footer aligns with the Streak/Leaderboard row. */}
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-6 items-stretch">
           <div className="min-w-0 space-y-6">
             {/* Begin/Continue Your Journey (full width, top) */}
             <StudySurface tone="light" glow innerClassName="p-5">
@@ -583,8 +586,8 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Spotlight rail */}
-          <aside className="lg:sticky lg:top-6 self-start">
+          {/* Spotlight rail — fills the column height (see grid items-stretch) */}
+          <aside className="min-w-0">
             <SpotlightCard onCta={(id) => navigate(id ? `/featured-work?submission=${id}` : "/featured-work")} />
           </aside>
         </div>
@@ -703,7 +706,7 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
       : viewerProfilePhotoSrc ?? viewerAvatar) ?? spotlightPortrait;
 
   return (
-    <StudySurface tone="dark" innerClassName="relative overflow-hidden p-7 text-white">
+    <StudySurface tone="dark" fillHeight className="w-full" innerClassName="relative overflow-hidden p-7 text-white flex flex-col">
       {/* Smoky brain backdrop bleeds through the entire card — same atmosphere
           as the page background so the spotlight reads as cut from the
           surrounding smoke continuum. */}
@@ -731,34 +734,24 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
         style={{ background: `radial-gradient(closest-side, ${PALETTE.teal}30, transparent)` }}
       />
 
-      <div className="relative">
-        {/* Glass pill title — mirrors the active sidebar nav tile so the
-            spotlight header reads as part of the same UI language. */}
-        <div className="flex items-center justify-center mb-3">
-          <div
-            className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border backdrop-blur-md"
-            style={{
-              background: "rgba(255,255,255,0.08)",
-              borderColor: `${PALETTE.surf}55`,
-              boxShadow: `0 12px 32px -12px ${PALETTE.surf}, inset 0 1px 0 0 rgba(255,255,255,0.16)`,
-            }}
-            data-testid="spotlight-title-pill"
+      <div className="relative flex flex-1 flex-col">
+        {/* Spotlight header — a single star above the wordmark, matching the
+            reference comp (no surrounding pill). */}
+        <div className="flex flex-col items-center" data-testid="spotlight-title-pill">
+          <Star
+            className="w-6 h-6"
+            strokeWidth={1.5}
+            style={{ color: PALETTE.surf, filter: `drop-shadow(0 0 8px ${PALETTE.surf}aa)` }}
+          />
+          <span
+            className="mt-2 text-lg font-semibold text-white tracking-wide"
+            style={{ textShadow: "0 2px 10px rgba(0,0,0,0.5)" }}
           >
-            <Star
-              className="w-4 h-4"
-              strokeWidth={1.75}
-              style={{ color: PALETTE.surf, filter: `drop-shadow(0 0 6px ${PALETTE.surf}aa)` }}
-            />
-            <span
-              className="text-xs font-semibold text-white uppercase tracking-wider"
-              style={{ letterSpacing: "0.18em" }}
-            >
-              Spotlight
-            </span>
-          </div>
+            Spotlight
+          </span>
         </div>
         <p
-          className="text-xs text-center mt-2 mb-6 leading-relaxed px-2"
+          className="text-xs text-center mt-2 leading-relaxed px-2"
           style={{
             color: `${PALETTE.mist}cc`,
             textShadow: "0 1px 6px rgba(0,0,0,0.5)",
@@ -767,8 +760,10 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
           Highlighting the next generation of clinicians and researchers.
         </p>
 
-        {/* Featured person — circular avatar with cyan spotlight glow */}
-        <div className="flex flex-col items-center">
+        {/* Featured person — circular avatar with cyan spotlight glow.
+            flex-1 + justify-center vertically centers this block so the
+            portrait sits at the optical center of the full-height card. */}
+        <div className="flex flex-1 flex-col items-center justify-center">
           <div className="relative mb-5">
             <div
               aria-hidden
