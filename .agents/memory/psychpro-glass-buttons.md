@@ -11,3 +11,5 @@ description: Which CSS class governs glass+glow buttons in the PsychPro (neurono
 - When restyling buttons, grep `rg "glass-button|cta-|btn-"` first to surface every competing class.
 - Prefer dropping `className` overrides on `<Button>` — let the variant carry the style.
 - If a page needs a custom button look, extend the variant map in `button.tsx`, don't add a parallel utility class.
+
+**Sidebar nav glass gotcha:** A "glass/frosted" surface needs a translucent **background fill** (`bg-white/[0.06]`-ish), not just `backdrop-blur` + border + shadow. The sidebar nav tiles (`NAV_ITEM_IDLE` in `src/components/layout/app-layout.tsx`) had blur+border+shadow but no idle fill, so they read as merely *outlined* and the user repeatedly reported them as "not glass/opaque." Adding an idle `bg-white/[…]` fill (matching the Tools Studio tile which already had one) fixes it. **Why:** blur over a dark sidebar with nothing behind the tile produces almost no visible frosting.

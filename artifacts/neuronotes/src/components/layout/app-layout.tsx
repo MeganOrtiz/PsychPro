@@ -19,14 +19,14 @@ type NavItem = { href: string; label: string; icon: React.ComponentType<{ classN
 const NAV_ITEM_BASE =
   "nav-glass group relative flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all duration-200 border backdrop-blur-xl";
 const NAV_ITEM_IDLE =
-  "nav-glass-idle text-sidebar-foreground/90 border-[color:var(--nav-glow)]/25 " +
+  "nav-glass-idle bg-white/[0.06] text-sidebar-foreground/90 border-[color:var(--nav-glow)]/25 " +
   "shadow-[0_6px_18px_-12px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.10)] " +
-  "hover:border-[color:var(--nav-glow)]/70 hover:text-white " +
+  "hover:bg-white/[0.12] hover:border-[color:var(--nav-glow)]/70 hover:text-white " +
   "hover:shadow-[0_12px_32px_-10px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.16)] " +
-  "active:border-[color:var(--nav-glow)]/80 " +
+  "active:bg-white/[0.14] active:border-[color:var(--nav-glow)]/80 " +
   "active:shadow-[0_14px_36px_-8px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.18)]";
 const NAV_ITEM_ACTIVE =
-  "nav-glass-active text-white border-[color:var(--nav-glow)]/70 " +
+  "nav-glass-active bg-white/[0.12] text-white border-[color:var(--nav-glow)]/70 " +
   "shadow-[0_12px_32px_-10px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.18)]";
 
 function navItemClass(isActive: boolean) {
