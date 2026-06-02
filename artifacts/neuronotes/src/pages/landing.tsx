@@ -368,10 +368,6 @@ export default function LandingPage() {
             <h2 className="landing-section-title">
               Learn, apply, retain, and revisit
             </h2>
-            <p className="landing-section-sub">
-              A complete learning system that uses evidence-based learning
-              strategies to build lasting knowledge.
-            </p>
           </div>
           <div className="landing-tools-grid">
             {STUDY_TOOLS.map((f, i) => {
