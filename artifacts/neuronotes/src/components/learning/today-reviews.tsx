@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { CalendarDays, ArrowRight, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { StudySurface } from "@/components/study/study-surface";
+import { STUDY_PALETTE as P } from "@/lib/study-theme";
 
 const INTERVALS = [1, 3, 7, 14] as const;
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -101,22 +103,26 @@ export default function TodayReviews({ topics }: TodayReviewsProps) {
   if (!ready) return null;
 
   return (
-    <section
-      className="bg-card border border-border rounded-xl p-5"
-      data-testid="today-reviews"
-    >
+    <StudySurface tone="light" innerClassName="p-5" testId="today-reviews">
       <div className="flex items-center gap-2 mb-3">
-        <CalendarDays className="w-4 h-4 text-primary" />
-        <h2 className="font-semibold text-foreground">Today's Reviews</h2>
+        <CalendarDays className="w-4 h-4" style={{ color: P.tealDeep }} />
+        <h2 className="font-semibold" style={{ color: P.mist }}>Today's Reviews</h2>
         {items.length > 0 && (
-          <span className="ml-auto text-[11px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full bg-primary text-primary-foreground">
+          <span
+            className="ml-auto text-[11px] font-semibold px-2 py-0.5 rounded-full border"
+            style={{
+              background: "rgba(94,176,200,0.16)",
+              color: P.surf,
+              borderColor: "rgba(118,228,247,0.30)",
+            }}
+          >
             {items.length}
           </span>
         )}
       </div>
       {items.length === 0 ? (
-        <div className="flex items-start gap-2 text-xs text-muted-foreground">
-          <Sparkles className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+        <div className="flex items-start gap-2 text-xs" style={{ color: P.mistSoft }}>
+          <Sparkles className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: P.tealDeep }} />
           <p>
             No reviews due. As you study a topic and mark its retention plan, we'll surface it here on the day it's due.
           </p>
@@ -127,35 +133,45 @@ export default function TodayReviews({ topics }: TodayReviewsProps) {
             <li key={item.topicId}>
               <button
                 onClick={() => navigate(`/topics/${item.topicId}`)}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded-lg border border-border bg-background hover:bg-muted transition-colors text-left"
+                className="recommended-tile w-full flex items-center gap-3 px-3 py-2 rounded-lg border text-left transition-all hover:-translate-y-0.5"
                 data-testid={`review-item-${item.topicId}`}
               >
-                <span className={cn(
-                  "shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold",
-                  item.isOverdue
-                    ? "bg-primary text-primary-foreground ring-2 ring-primary/30"
-                    : "bg-primary/10 text-primary",
-                )}>
+                <span
+                  className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold border"
+                  style={
+                    item.isOverdue
+                      ? {
+                          background: `linear-gradient(135deg, ${P.teal}, ${P.surf})`,
+                          color: "#04222E",
+                          borderColor: P.tealDeep,
+                        }
+                      : {
+                          background: "rgba(94,176,200,0.14)",
+                          color: P.surf,
+                          borderColor: "rgba(118,228,247,0.30)",
+                        }
+                  }
+                >
                   {item.stage}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-foreground truncate">{item.topicName}</p>
-                  <p className="text-[11px] text-muted-foreground">
+                  <p className="text-sm font-medium truncate" style={{ color: P.mist }}>{item.topicName}</p>
+                  <p className="text-[11px]" style={{ color: P.mistSoft }}>
                     {item.isOverdue ? `${item.ageDays + 1} day${item.ageDays === 0 ? "" : "s"} overdue` : "Ready now"}
                     {" · "}stage {item.stage} of {item.totalStages}
                   </p>
                 </div>
-                <ArrowRight className="w-4 h-4 text-muted-foreground shrink-0" />
+                <ArrowRight className="w-4 h-4 shrink-0" style={{ color: P.tealDeep }} />
               </button>
             </li>
           ))}
           {items.length > 5 && (
-            <li className="text-xs text-muted-foreground text-center pt-1">
+            <li className="text-xs text-center pt-1" style={{ color: P.mistSoft }}>
               +{items.length - 5} more due
             </li>
           )}
         </ul>
       )}
-    </section>
+    </StudySurface>
   );
 }

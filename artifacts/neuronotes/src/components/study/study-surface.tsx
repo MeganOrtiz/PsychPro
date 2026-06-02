@@ -48,16 +48,19 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
       };
     case "light":
     default:
-      // "light" tone now uses the user-supplied .study-card recipe so
-      // dashboard tiles match every other shadcn Card on the dark theme.
-      // Diagonal dark-teal gradient, cerulean hairline border, deep drop
-      // shadow with faint outer cerulean glow, Frost-White text.
+      // Refined translucent frosted glass matching the IMG_2548 reference:
+      // a dark-teal fill that lets the page's brain-clouds backdrop show
+      // through, a faint cerulean hairline, and a soft drop shadow (no heavy
+      // cyan halo). A real backdrop blur makes it read as frosted glass
+      // rather than a flat opaque box.
       return {
         background:
-          "linear-gradient(145deg, rgba(10,45,61,0.95), rgba(6,32,44,0.98))",
-        borderColor: "rgba(94,176,200,0.15)",
+          "linear-gradient(145deg, rgba(10,45,61,0.58), rgba(6,28,40,0.66))",
+        borderColor: "rgba(118,228,247,0.14)",
+        backdropFilter: "blur(18px) saturate(130%)",
+        WebkitBackdropFilter: "blur(18px) saturate(130%)",
         boxShadow:
-          "0 0 0 1px rgba(94,176,200,0.06), 0 20px 40px rgba(0,0,0,0.35), 0 0 30px rgba(94,176,200,0.06)",
+          "inset 0 1px 0 rgba(167,243,255,0.06), 0 18px 40px -24px rgba(0,0,0,0.55)",
         color: P.mist,
       };
   }

@@ -14,9 +14,13 @@
 //     personalized or omitted (never a placeholder name).
 //   - Hardcode brand hex codes — use STUDY_PALETTE tokens.
 //   - Replace StudySurface cards with raw bg-card / glass divs.
-//   - Re-introduce StudyAnalytics / RecentActivity / Achievements /
-//     TodayReviews cards on this page — they don't belong in the
-//     reference layout. Those metrics live on /progress.
+//
+// METRIC ROW (bottom): a full-width row of four glass cards sits below the
+// Streak + Leaderboard row — Study Analytics, Recent Activity, Achievements,
+// and Today's Reviews. They reuse data the dashboard already fetches
+// (recent topics, weekly activity / activity series) plus the existing
+// TodayReviews component; Achievements is derived client-side from existing
+// stats (no backend). Keep these wrapped in StudySurface so they match.
 // =============================================================================
 import { useEffect, useMemo, useRef, useState } from "react";
 import { authHeaders } from "@/lib/auth-headers";
@@ -34,6 +38,9 @@ import {
   Sparkles,
   ArrowUpRight,
   Share2,
+  Activity,
+  Award,
+  Clock,
 } from "lucide-react";
 import smokeBg from "@/assets/bg/brain-clouds.png";
 import spotlightPortrait from "@/assets/spotlight/featured.png";
@@ -42,12 +49,17 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { StudySurface } from "@/components/study/study-surface";
+import TodayReviews from "@/components/learning/today-reviews";
 import { BrandBanner } from "@/components/brand/brand-banner";
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
 import {
   ResponsiveContainer,
   LineChart,
   Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
 } from "recharts";
 
 const DAY_LABELS = ["S", "M", "T", "W", "T", "F", "S"];
@@ -182,6 +194,43 @@ export default function DashboardPage() {
   // Pick the first recent topic that isn't fully mastered; fall back to the
   // most-recent entry so returning students always see something to resume.
   const continueTopic = recent.find((r) => r.score < 100) ?? recent[0];
+
+  // Achievements are derived entirely client-side from stats the dashboard
+  // already has (streak, topics studied, mastery count, average score) — no
+  // new backend. Each badge is "earned" once its threshold is crossed.
+  const achievements = useMemo(() => {
+    const topicsStudied = recent.length;
+    const mastered = recent.filter((r) => r.score >= 80).length;
+    const avgScore = topicsStudied
+      ? Math.round(recent.reduce((sum, r) => sum + r.score, 0) / topicsStudied)
+      : 0;
+    return [
+      {
+        icon: Flame,
+        label: "Streak Starter",
+        hint: "3-day streak",
+        earned: streak >= 3,
+      },
+      {
+        icon: BookOpen,
+        label: "Explorer",
+        hint: "Study 5 topics",
+        earned: topicsStudied >= 5,
+      },
+      {
+        icon: Star,
+        label: "Scholar",
+        hint: "Master 3 topics",
+        earned: mastered >= 3,
+      },
+      {
+        icon: TrendingUp,
+        label: "Sharp Mind",
+        hint: "80% avg score",
+        earned: avgScore >= 80,
+      },
+    ];
+  }, [recent, streak]);
 
   const recommended = useMemo(() => {
     const seen = new Set<number>();
@@ -545,6 +594,158 @@ export default function DashboardPage() {
           <aside className="min-w-0">
             <SpotlightCard onCta={(id) => navigate(id ? `/featured-work?submission=${id}` : "/featured-work")} />
           </aside>
+        </div>
+
+        {/* Bottom metric row — full-width grid of four glass cards. */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mt-6">
+          {/* Study Analytics — activity/score trend */}
+          <StudySurface tone="light" innerClassName="p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <Activity className="w-4 h-4" style={{ color: PALETTE.tealDeep }} />
+              <h2 className="font-semibold" style={{ color: PALETTE.mist }}>Study Analytics</h2>
+            </div>
+            {isLoading ? (
+              <Skeleton className="h-[140px] rounded-lg" />
+            ) : (
+              <div style={{ height: 140 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={activitySeries} margin={{ top: 8, right: 8, bottom: 0, left: -22 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(118,228,247,0.12)" vertical={false} />
+                    <XAxis
+                      dataKey="day"
+                      tickLine={false}
+                      axisLine={false}
+                      tick={{ fontSize: 11, fill: PALETTE.mistSoft }}
+                    />
+                    <YAxis
+                      tickLine={false}
+                      axisLine={false}
+                      tick={{ fontSize: 11, fill: PALETTE.mistSoft }}
+                      width={36}
+                    />
+                    <Tooltip
+                      cursor={{ stroke: PALETTE.teal, strokeOpacity: 0.25 }}
+                      contentStyle={{
+                        background: "rgba(6,28,40,0.92)",
+                        border: "1px solid rgba(118,228,247,0.25)",
+                        borderRadius: 10,
+                        color: PALETTE.mist,
+                        fontSize: 12,
+                      }}
+                      labelStyle={{ color: PALETTE.mistSoft }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="score"
+                      stroke={PALETTE.surf}
+                      strokeWidth={2.5}
+                      dot={{ r: 2.5, fill: PALETTE.teal }}
+                      activeDot={{ r: 4 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+          </StudySurface>
+
+          {/* Recent Activity — most recently studied topics */}
+          <StudySurface tone="light" innerClassName="p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <Clock className="w-4 h-4" style={{ color: PALETTE.tealDeep }} />
+              <h2 className="font-semibold" style={{ color: PALETTE.mist }}>Recent Activity</h2>
+            </div>
+            {isLoading ? (
+              <div className="space-y-2">
+                <Skeleton className="h-9 rounded-lg" />
+                <Skeleton className="h-9 rounded-lg" />
+                <Skeleton className="h-9 rounded-lg" />
+              </div>
+            ) : recent.length === 0 ? (
+              <p className="text-xs" style={{ color: PALETTE.mistSoft }}>
+                Study a topic and it'll show up here so you can pick up where you left off.
+              </p>
+            ) : (
+              <ul className="space-y-2">
+                {recent.slice(0, 5).map((r) => (
+                  <li key={r.id}>
+                    <button
+                      onClick={() => navigate(`/topics/${r.topicId}`)}
+                      className="recommended-tile w-full flex items-center gap-3 px-3 py-2 rounded-lg border text-left transition-all hover:-translate-y-0.5"
+                      data-testid={`recent-activity-${r.topicId}`}
+                    >
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate" style={{ color: PALETTE.mist }}>
+                          {r.topicName}
+                        </p>
+                      </div>
+                      <span className="text-xs font-semibold tabular-nums flex-shrink-0" style={{ color: PALETTE.tealDeep }}>
+                        {r.score}%
+                      </span>
+                      <ChevronRight className="w-4 h-4 flex-shrink-0" style={{ color: PALETTE.tealDeep }} />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </StudySurface>
+
+          {/* Achievements — milestone badges derived from existing stats */}
+          <StudySurface tone="light" innerClassName="p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <Award className="w-4 h-4" style={{ color: PALETTE.tealDeep }} />
+              <h2 className="font-semibold" style={{ color: PALETTE.mist }}>Achievements</h2>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              {achievements.map((a) => {
+                const Icon = a.icon;
+                return (
+                  <div
+                    key={a.label}
+                    className="flex flex-col items-center text-center gap-1.5 p-3 rounded-lg border transition-all"
+                    style={
+                      a.earned
+                        ? {
+                            background: "rgba(94,176,200,0.14)",
+                            borderColor: "rgba(118,228,247,0.35)",
+                          }
+                        : {
+                            background: "rgba(6,28,40,0.4)",
+                            borderColor: "rgba(118,228,247,0.10)",
+                            opacity: 0.55,
+                          }
+                    }
+                    data-testid={`achievement-${a.earned ? "earned" : "locked"}`}
+                  >
+                    <div
+                      className="w-9 h-9 rounded-full flex items-center justify-center border"
+                      style={
+                        a.earned
+                          ? {
+                              background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
+                              borderColor: PALETTE.tealDeep,
+                            }
+                          : {
+                              background: "rgba(94,176,200,0.10)",
+                              borderColor: "rgba(118,228,247,0.20)",
+                            }
+                      }
+                    >
+                      <Icon className="w-4 h-4" style={{ color: a.earned ? "#04222E" : PALETTE.mistSoft }} />
+                    </div>
+                    <p className="text-[11px] font-semibold leading-tight" style={{ color: PALETTE.mist }}>
+                      {a.label}
+                    </p>
+                    <p className="text-[10px] leading-tight" style={{ color: PALETTE.mistSoft }}>
+                      {a.hint}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </StudySurface>
+
+          {/* Today's Reviews — due spaced-repetition queue (own glass surface) */}
+          <TodayReviews topics={allTopics} />
         </div>
       </div>
     </div>
