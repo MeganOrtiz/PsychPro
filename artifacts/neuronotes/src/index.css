@@ -298,15 +298,15 @@
     border-color 160ms ease, box-shadow 220ms ease, transform 120ms ease;
 }
 /* Solid frosted glass — dark teal fill at the same opacity as the
-   .recommended-tile surface so buttons never read as see-through. The
-   cyan border/glow stays as the brand accent. */
+   .recommended-tile surface so buttons never read as see-through. Faint
+   neutral frost hairline, no cyan glow (reference comp IMG_2548). */
 .btn-glass {
   background-image: linear-gradient(
     145deg,
     rgba(10, 45, 61, 0.5),
     rgba(6, 28, 38, 0.6)
   );
-  border: 1px solid hsl(var(--btn-glow) / 0.32);
+  border: 1px solid rgba(182, 220, 231, 0.16);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
     0 8px 20px -14px rgba(0, 0, 0, 0.6);
@@ -317,11 +317,10 @@
     rgba(14, 58, 78, 0.62),
     rgba(8, 36, 50, 0.72)
   );
-  border-color: hsl(var(--btn-glow) / 0.5);
+  border-color: rgba(196, 232, 242, 0.26);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.07),
-    0 10px 24px -12px rgba(0, 0, 0, 0.65),
-    0 0 14px hsl(var(--btn-glow) / 0.14);
+    0 10px 24px -12px rgba(0, 0, 0, 0.65);
 }
 .btn-glass:active {
   background-image: linear-gradient(
@@ -329,25 +328,23 @@
     rgba(16, 64, 86, 0.72),
     rgba(9, 40, 55, 0.8)
   );
-  border-color: hsl(var(--btn-glow) / 0.62);
+  border-color: rgba(196, 232, 242, 0.34);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 12px 28px -10px rgba(0, 0, 0, 0.7),
-    0 0 18px hsl(var(--btn-glow) / 0.2);
+    0 12px 28px -10px rgba(0, 0, 0, 0.7);
 }
-/* Primary CTA — a slightly brighter teal frosted fill and a cleaner cyan
-   hairline so it reads as the dominant action without a heavy halo. */
+/* Primary CTA — a slightly brighter teal frosted fill with a faint NEUTRAL
+   frost hairline (reference comp IMG_2548). No cyan border or glow halo. */
 .btn-glass-strong {
   background-image: linear-gradient(
     145deg,
     rgba(14, 58, 78, 0.6),
     rgba(8, 36, 50, 0.7)
   );
-  border: 1px solid hsl(var(--btn-glow) / 0.45);
+  border: 1px solid rgba(182, 220, 231, 0.2);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.07),
-    0 10px 24px -14px rgba(0, 0, 0, 0.65),
-    0 0 0 1px hsl(var(--btn-glow) / 0.04);
+    0 10px 24px -14px rgba(0, 0, 0, 0.65);
   color: #ffffff;
 }
 .btn-glass-strong:hover {
@@ -356,11 +353,10 @@
     rgba(18, 72, 96, 0.72),
     rgba(10, 46, 64, 0.82)
   );
-  border-color: hsl(var(--btn-glow) / 0.6);
+  border-color: rgba(196, 232, 242, 0.3);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.09),
-    0 14px 30px -12px rgba(0, 0, 0, 0.7),
-    0 0 18px hsl(var(--btn-glow) / 0.18);
+    0 14px 30px -12px rgba(0, 0, 0, 0.7);
 }
 .btn-glass-strong:active {
   background-image: linear-gradient(
@@ -368,16 +364,24 @@
     rgba(20, 84, 110, 0.8),
     rgba(11, 54, 74, 0.88)
   );
-  border-color: hsl(var(--btn-glow) / 0.72);
+  border-color: rgba(196, 232, 242, 0.38);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 16px 34px -10px rgba(0, 0, 0, 0.75),
-    0 0 22px hsl(var(--btn-glow) / 0.24);
+    0 16px 34px -10px rgba(0, 0, 0, 0.75);
 }
 .btn-glass:disabled,
 .btn-glass-strong:disabled {
   opacity: 0.55;
   box-shadow: none;
+}
+
+/* Neutral focus ring on study-page buttons — the global study --ring is
+   cyan (188 90% 72%), which would put a cyan halo on keyboard-focused
+   buttons. Scope a faint frost ring to buttons only so no cyan appears in
+   any state (reference comp IMG_2548). Inputs/other surfaces keep --ring. */
+.study-page-bg button,
+.study-page-aurora button {
+  --ring: 194 30% 82%;
 }
 
 .study-page-bg,
@@ -458,32 +462,30 @@
     rgba(10, 45, 61, 0.5),
     rgba(6, 28, 38, 0.6)
   );
-  border-color: rgba(118, 228, 247, 0.14);
+  border-color: rgba(182, 220, 231, 0.12);
   backdrop-filter: blur(14px) saturate(130%);
   -webkit-backdrop-filter: blur(14px) saturate(130%);
   box-shadow:
-    inset 0 1px 0 rgba(167, 243, 255, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
     0 8px 22px -16px rgba(0, 0, 0, 0.55);
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .recommended-tile:hover {
-  border-color: rgba(118, 228, 247, 0.4);
+  border-color: rgba(196, 232, 242, 0.24);
   background: linear-gradient(
     145deg,
     rgba(14, 58, 78, 0.6),
     rgba(8, 36, 50, 0.68)
   );
   box-shadow:
-    inset 0 1px 0 rgba(167, 243, 255, 0.1),
-    0 12px 26px -16px rgba(0, 0, 0, 0.6),
-    0 0 18px rgba(118, 228, 247, 0.16);
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 12px 26px -16px rgba(0, 0, 0, 0.6);
 }
 .recommended-tile:active {
-  border-color: rgba(118, 228, 247, 0.55);
+  border-color: rgba(196, 232, 242, 0.34);
   box-shadow:
-    inset 0 1px 0 rgba(167, 243, 255, 0.12),
-    0 14px 30px -16px rgba(0, 0, 0, 0.65),
-    0 0 24px rgba(118, 228, 247, 0.22);
+    inset 0 1px 0 rgba(255, 255, 255, 0.09),
+    0 14px 30px -16px rgba(0, 0, 0, 0.65);
 }
 
 /* User-supplied .study-card recipe — applied to every shadcn Card
@@ -537,6 +539,7 @@
     rgba(118, 228, 247, 0.24),
     rgba(118, 228, 247, 0.16)
   );
+  border: 1px solid rgba(182, 220, 231, 0.16);
 }
 
 /* Legacy bg-primary/bg-secondary button glass — scoped to actual <button>
@@ -554,15 +557,14 @@
   );
   background-color: rgba(6, 28, 40, 0.6);
   color: #E4F4F6;
-  border: 1px solid hsl(var(--btn-glow) / 0.45);
+  border: 1px solid rgba(182, 220, 231, 0.2);
   border-radius: 14px;
   backdrop-filter: blur(14px) saturate(130%);
   -webkit-backdrop-filter: blur(14px) saturate(130%);
   transition: all 0.25s ease;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.07),
-    0 10px 24px -14px rgba(0, 0, 0, 0.65),
-    0 0 0 1px hsl(var(--btn-glow) / 0.04);
+    0 10px 24px -14px rgba(0, 0, 0, 0.65);
 }
 
 .study-page-bg button.bg-primary:hover,
@@ -572,11 +574,10 @@
     rgba(18, 72, 96, 0.72),
     rgba(10, 46, 64, 0.82)
   );
-  border-color: hsl(var(--btn-glow) / 0.6);
+  border-color: rgba(196, 232, 242, 0.3);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.09),
-    0 14px 30px -12px rgba(0, 0, 0, 0.7),
-    0 0 18px hsl(var(--btn-glow) / 0.18);
+    0 14px 30px -12px rgba(0, 0, 0, 0.7);
 }
 
 /* Secondary buttons — softer glass, scoped to actual buttons. */
@@ -584,7 +585,7 @@
 .study-page-aurora button.bg-secondary {
   background: rgba(6, 28, 38, 0.6);
   color: #E4F4F6;
-  border: 1px solid hsl(var(--btn-glow) / 0.32);
+  border: 1px solid rgba(182, 220, 231, 0.16);
   border-radius: 14px;
   backdrop-filter: blur(14px) saturate(130%);
   -webkit-backdrop-filter: blur(14px) saturate(130%);
@@ -597,11 +598,10 @@
 .study-page-bg button.bg-secondary:hover,
 .study-page-aurora button.bg-secondary:hover {
   background: rgba(10, 45, 61, 0.7);
-  border-color: hsl(var(--btn-glow) / 0.5);
+  border-color: rgba(196, 232, 242, 0.26);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.07),
-    0 10px 24px -12px rgba(0, 0, 0, 0.65),
-    0 0 14px hsl(var(--btn-glow) / 0.14);
+    0 10px 24px -12px rgba(0, 0, 0, 0.65);
 }
 
 /* Outline buttons — transparent glass with a cerulean hairline.
@@ -610,7 +610,7 @@
 .study-page-bg button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive),
 .study-page-aurora button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive) {
   background: rgba(6, 28, 38, 0.4);
-  border-color: hsl(var(--btn-glow) / 0.3) !important;
+  border-color: rgba(182, 220, 231, 0.18) !important;
   color: #E4F4F6;
   border-radius: 14px;
   backdrop-filter: blur(12px) saturate(130%);
@@ -624,11 +624,10 @@
 .study-page-bg button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive):hover,
 .study-page-aurora button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive):hover {
   background: rgba(10, 45, 61, 0.6);
-  border-color: hsl(var(--btn-glow) / 0.5) !important;
+  border-color: rgba(196, 232, 242, 0.28) !important;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.07),
-    0 10px 24px -12px rgba(0, 0, 0, 0.65),
-    0 0 14px hsl(var(--btn-glow) / 0.14);
+    0 10px 24px -12px rgba(0, 0, 0, 0.65);
 }
 
 /* User-supplied .input recipe — translucent dark teal, cerulean
