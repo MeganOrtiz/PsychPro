@@ -11,6 +11,7 @@
 - [GLB asset corruption](glb-asset-corruption.md) — 3D brain "couldn't load" = brain.glb mangled by text-encoding (EF BF BD bytes) + three r184 dropping KHR spec-gloss; recover from git, strip required ext.
 - [Brain Lab 3D crash safety](brain-lab-3d-crash-safety.md) — keep the lazy WebGL view behind an error boundary and avoid remote runtime asset fetches (stale chunks / CDN HDR white-screen the page).
 - [PsychPro bg-primary wildcard](psychpro-bg-primary-wildcard.md) — never use [class*="bg-primary"] in study-page button-glass CSS; it hijacks every bg-primary/NN tint chip. Scope to button.bg-primary.
+- [PsychPro sidebar nav mint-cyan](psychpro-sidebar-nav-mint-cyan.md) — sidebar nav glow uses owner-specified #5EEAD4 (greener than locked palette) on purpose; don't revert to palette cyan.
 - [Reverting worktree edits](reverting-worktree-edits.md) — main agent shell blocks destructive git; use `git show <ref>:<path>` + write. Checkpoints auto-commit edits, so HEAD may already contain them.
 - [Replit secrets quirks](replit-secrets-quirks.md) — can't programmatically fix a secret-stored value (deleteEnvVars no-ops, setEnvVars refuses); normalize bad pasted keys in code instead.
 - [Clerk dev vs prod keys](psychpro-clerk-dev-keys.md) — preview needs pk_test/sk_test in VITE_CLERK_PUBLISHABLE_KEY_DEV + CLERK_SK_OVERRIDE (dev-gated); prod pk_live rejects the Replit dev origin.

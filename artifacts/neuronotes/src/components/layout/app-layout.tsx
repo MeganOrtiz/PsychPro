@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useSearch } from "wouter";
-import { Brain, LayoutDashboard, BookOpen, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck, BookMarked, Library, Wrench, Sparkles, Star, Beaker, Lightbulb, Users, Lock } from "lucide-react";
+import { Brain, LayoutDashboard, BookOpen, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck, BookMarked, Library, Wrench, Sparkles, Star, Beaker, Lightbulb, Users } from "lucide-react";
 import { UserButton } from "@clerk/clerk-react";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { authHeaders } from "@/lib/auth-headers";
@@ -12,25 +12,15 @@ import smokeBg from "@/assets/bg/brain-clouds.png";
 
 type NavItem = { href: string; label: string; icon: React.ComponentType<{ className?: string }> };
 
-// Shared glass tile styling for sidebar nav items — translucent surface
-// with a soft teal glow on hover, mirroring the landing page chip styling.
-// Sidebar nav tile — translucent glass surface with a layered teal glow on
-// hover. We use two shadows: a tight inner highlight (inset white) so the
-// pill reads as actual glass, plus a generous outer drop-shadow tinted with
-// --nav-glow so the whole row lifts off the dark sidebar. The active state
-// is the same recipe at a slightly higher intensity.
+// Sidebar nav tile — compact luminous dark-glass pill (2026-06 spec). Layout
+// (size, padding, radius, blur) lives in the tokens here; the surface color,
+// border, outer glow, and the glowing active left-bar live in the
+// .nav-glass-* rules in index.css. Idle text is muted icy-blue and brightens
+// to luminous cyan (#A7F3E8) on hover/active.
 const NAV_ITEM_BASE =
-  "nav-glass group relative flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all duration-200 border backdrop-blur-xl";
-const NAV_ITEM_IDLE =
-  "nav-glass-idle text-sidebar-foreground/90 border-[color:var(--nav-glow)]/30 " +
-  "shadow-[0_6px_18px_-12px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.20)] " +
-  "hover:border-[color:var(--nav-glow)]/75 hover:text-white " +
-  "hover:shadow-[0_0_20px_-1px_var(--nav-glow),0_14px_34px_-10px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.28)] " +
-  "active:border-[color:var(--nav-glow)]/90 " +
-  "active:shadow-[0_0_28px_0_var(--nav-glow),0_16px_38px_-8px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.32)]";
-const NAV_ITEM_ACTIVE =
-  "nav-glass-active text-white border-[color:var(--nav-glow)]/80 " +
-  "shadow-[0_0_22px_-1px_var(--nav-glow),0_14px_34px_-10px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.30)]";
+  "nav-glass group relative flex items-center gap-2.5 px-3 py-2 rounded-[8px] cursor-pointer transition-all duration-200 ease-in-out border backdrop-blur-md";
+const NAV_ITEM_IDLE = "nav-glass-idle text-[#B9D2DA] hover:text-[#A7F3E8]";
+const NAV_ITEM_ACTIVE = "nav-glass-active text-[#A7F3E8]";
 
 function navItemClass(isActive: boolean) {
   return cn(NAV_ITEM_BASE, isActive ? NAV_ITEM_ACTIVE : NAV_ITEM_IDLE);
@@ -241,7 +231,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
         <nav className="relative flex-1 p-3 space-y-1 overflow-y-auto">
           <div className="px-3 pt-1 pb-1">
-            <p className="text-xs font-semibold text-white/45 uppercase tracking-wider">Learn</p>
+            <p className="text-[11px] font-semibold text-[#94B8C2]/60 uppercase tracking-[1.2px]">Learn</p>
           </div>
           {workshopNav.map((item) => {
             const isActive = location === item.href || location.startsWith(item.href + "/");
@@ -253,7 +243,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 data-testid={`nav-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
               >
                 <div className={navItemClass(isActive)}>
-                  <item.icon className="w-5 h-5 flex-shrink-0" />
+                  <item.icon className="w-4 h-4 flex-shrink-0" />
                   <span className="text-sm font-medium">{item.label}</span>
                   {isActive && <ChevronRight className="w-4 h-4 ml-auto" />}
                 </div>
@@ -261,8 +251,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
             );
           })}
 
-          <div className="px-3 pt-3 pb-1">
-            <p className="text-xs font-semibold text-white/45 uppercase tracking-wider">Expand</p>
+          <div className="px-3 pt-4 pb-1">
+            <p className="text-[11px] font-semibold text-[#94B8C2]/60 uppercase tracking-[1.2px]">Expand</p>
           </div>
           {labNav.map((item) => {
             const isActive = location === item.href || location.startsWith(item.href + "/");
@@ -274,7 +264,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 data-testid={`nav-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
               >
                 <div className={navItemClass(isActive)}>
-                  <item.icon className="w-5 h-5 flex-shrink-0" />
+                  <item.icon className="w-4 h-4 flex-shrink-0" />
                   <span className="text-sm font-medium">{item.label}</span>
                   {isActive && <ChevronRight className="w-4 h-4 ml-auto" />}
                 </div>
@@ -289,8 +279,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
             onNavigate={() => setSidebarOpen(false)}
           />
 
-          <div className="px-3 pt-3 pb-1">
-            <p className="text-xs font-semibold text-white/45 uppercase tracking-wider">Connect</p>
+          <div className="px-3 pt-4 pb-1">
+            <p className="text-[11px] font-semibold text-[#94B8C2]/60 uppercase tracking-[1.2px]">Connect</p>
           </div>
           {studioNav.map((item) => {
             const isActive = location === item.href || location.startsWith(item.href + "/");
@@ -302,7 +292,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 data-testid={`nav-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
               >
                 <div className={navItemClass(isActive)}>
-                  <item.icon className="w-5 h-5 flex-shrink-0" />
+                  <item.icon className="w-4 h-4 flex-shrink-0" />
                   <span className="text-sm font-medium">{item.label}</span>
                   {isActive && <ChevronRight className="w-4 h-4 ml-auto" />}
                 </div>
@@ -319,7 +309,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 data-testid={`nav-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
               >
                 <div className={navItemClass(isActive)}>
-                  <item.icon className="w-5 h-5 flex-shrink-0" />
+                  <item.icon className="w-4 h-4 flex-shrink-0" />
                   <span className="text-sm font-medium">{item.label}</span>
                   {isActive && <ChevronRight className="w-4 h-4 ml-auto" />}
                 </div>
@@ -329,8 +319,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
           {!isScholar && (
             <>
-              <div className="px-3 pt-3 pb-1">
-                <p className="text-xs font-semibold text-white/45 uppercase tracking-wider">Account</p>
+              <div className="px-3 pt-4 pb-1">
+                <p className="text-[11px] font-semibold text-[#94B8C2]/60 uppercase tracking-[1.2px]">Account</p>
               </div>
               {accountNav.map((item) => {
                 const isActive = location === item.href || location.startsWith(item.href + "/");
@@ -342,7 +332,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                     data-testid={`nav-${item.label.toLowerCase()}`}
                   >
                     <div className={navItemClass(isActive)}>
-                      <item.icon className="w-5 h-5 flex-shrink-0" />
+                      <item.icon className="w-4 h-4 flex-shrink-0" />
                       <span className="text-sm font-medium">{item.label}</span>
                       {isActive && <ChevronRight className="w-4 h-4 ml-auto" />}
                     </div>
@@ -354,8 +344,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
           {isAdmin && (
             <>
-              <div className="px-3 pt-3 pb-1">
-                <p className="text-xs font-semibold text-white/45 uppercase tracking-wider">Admin</p>
+              <div className="px-3 pt-4 pb-1">
+                <p className="text-[11px] font-semibold text-[#94B8C2]/60 uppercase tracking-[1.2px]">Admin</p>
               </div>
               <Link
                 href="/admin/feedback"
@@ -363,7 +353,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 data-testid="nav-admin-feedback"
               >
                 <div className={navItemClass(location === "/admin/feedback")}>
-                  <ShieldCheck className="w-5 h-5 flex-shrink-0" />
+                  <ShieldCheck className="w-4 h-4 flex-shrink-0" />
                   <span className="text-sm font-medium">Feedback Inbox</span>
                   {location === "/admin/feedback" && <ChevronRight className="w-4 h-4 ml-auto" />}
                 </div>
@@ -374,7 +364,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 data-testid="nav-admin-featured-work"
               >
                 <div className={navItemClass(location === "/admin/featured-work")}>
-                  <Star className="w-5 h-5 flex-shrink-0" />
+                  <Star className="w-4 h-4 flex-shrink-0" />
                   <span className="text-sm font-medium">Featured Work</span>
                   {location === "/admin/featured-work" && <ChevronRight className="w-4 h-4 ml-auto" />}
                 </div>
@@ -385,7 +375,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 data-testid="nav-admin-connections"
               >
                 <div className={navItemClass(location === "/admin/connections")}>
-                  <Users className="w-5 h-5 flex-shrink-0" />
+                  <Users className="w-4 h-4 flex-shrink-0" />
                   <span className="text-sm font-medium">Connection Requests</span>
                   {location === "/admin/connections" && <ChevronRight className="w-4 h-4 ml-auto" />}
                 </div>
@@ -440,10 +430,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
 // ---------------------------------------------------------------------------
 // ToolsStudio — labeled group of the three deck-builder entries (My Tools /
-// Standard Tools / Pro Tools). Rows share the same glass treatment as the
-// rest of the nav (navItemClass) and get a tier-color dot on the left edge
-// instead of a repeated "Pro" pill; the group header shows ONE consolidated
-// lock when the user isn't on Scholar.
+// Standard Tools / Pro Tools). Rows share the same compact luminous glass
+// treatment as the rest of the nav (navItemClass) and show a right-aligned
+// "PRO" badge when the user isn't on Scholar.
 // ---------------------------------------------------------------------------
 function ToolsStudio({
   isScholar,
@@ -462,7 +451,6 @@ function ToolsStudio({
     href: string;
     label: string;
     icon: React.ComponentType<{ className?: string }>;
-    dot: string;
     isActive: boolean;
     testId: string;
   };
@@ -471,7 +459,6 @@ function ToolsStudio({
       href: "/my-decks",
       label: "My Tools",
       icon: BookMarked,
-      dot: STUDY_PALETTE.surf,
       isActive: isOnMyDecksList,
       testId: "nav-my-tools",
     },
@@ -479,7 +466,6 @@ function ToolsStudio({
       href: "/my-decks/new?tier=standard",
       label: "Standard Tools",
       icon: Wrench,
-      dot: STUDY_PALETTE.teal,
       isActive: isOnStandardTools,
       testId: "nav-standard-tools",
     },
@@ -487,7 +473,6 @@ function ToolsStudio({
       href: "/my-decks/new?tier=pro",
       label: "Pro Tools",
       icon: Sparkles,
-      dot: STUDY_PALETTE.tealDeep,
       isActive: isOnProTools,
       testId: "nav-pro-tools",
     },
@@ -495,19 +480,10 @@ function ToolsStudio({
 
   return (
     <div className="relative mt-1">
-      <div className="flex items-center justify-between px-3 pt-3 pb-1">
-        <p className="text-[10px] font-semibold tracking-[0.22em] uppercase text-white/55">
+      <div className="px-3 pt-4 pb-1">
+        <p className="text-[11px] font-semibold tracking-[1.2px] uppercase text-[#94B8C2]/60">
           Tools Studio
         </p>
-        {!isScholar && (
-          <span
-            className="inline-flex items-center gap-1 text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-white/10 text-white/70 border border-white/15"
-            title="Upgrade to Scholar to unlock all tools"
-          >
-            <Lock className="w-2.5 h-2.5" />
-            Pro
-          </span>
-        )}
       </div>
       <div className="space-y-1">
         {tiers.map((t) => {
@@ -520,17 +496,13 @@ function ToolsStudio({
               data-testid={t.testId}
             >
               <div className={navItemClass(t.isActive)}>
-                {/* Tier color dot — left edge accent */}
-                <span
-                  aria-hidden
-                  className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full"
-                  style={{
-                    background: t.dot,
-                    boxShadow: t.isActive ? `0 0 10px ${t.dot}` : "none",
-                  }}
-                />
                 <Icon className="w-4 h-4 flex-shrink-0" />
                 <span className="text-sm font-medium flex-1 min-w-0 truncate">{t.label}</span>
+                {!isScholar && (
+                  <span className="inline-flex items-center text-[10px] font-semibold tracking-wide px-1.5 py-0.5 rounded-full text-[#A7F3E8] border border-[#5EEAD4]/30 shadow-[0_0_8px_rgba(94,234,212,0.18)]">
+                    PRO
+                  </span>
+                )}
                 {t.isActive && <ChevronRight className="w-4 h-4 flex-shrink-0" />}
               </div>
             </Link>
