@@ -1333,7 +1333,8 @@ const styles = `
 .landing-scholar .landing-checklist { position: relative; margin-bottom: clamp(22px, 3vh, 30px); }
 
 /* ============== FINAL CTA ============== */
-.landing-final { text-align: center; max-width: 760px; }
+.landing-final { text-align: center; max-width: 760px; padding-bottom: clamp(6px, 0.8vh, 10px); }
+.landing-topics { padding-top: clamp(6px, 0.8vh, 10px); }
 .landing-final-title {
   margin: 0;
   font-family: "Outfit", "Inter", system-ui, sans-serif;
