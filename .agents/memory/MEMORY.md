@@ -15,3 +15,4 @@
 - [Reverting worktree edits](reverting-worktree-edits.md) — main agent shell blocks destructive git; use `git show <ref>:<path>` + write. Checkpoints auto-commit edits, so HEAD may already contain them.
 - [Replit secrets quirks](replit-secrets-quirks.md) — can't programmatically fix a secret-stored value (deleteEnvVars no-ops, setEnvVars refuses); normalize bad pasted keys in code instead.
 - [Clerk dev vs prod keys](psychpro-clerk-dev-keys.md) — preview needs pk_test/sk_test in VITE_CLERK_PUBLISHABLE_KEY_DEV + CLERK_SK_OVERRIDE (dev-gated); prod pk_live rejects the Replit dev origin.
+- [Brain Lab 3D marker depth](brain-lab-3d-marker-depth.md) — fade <Html> markers by camera-facing (not hard occlude); hard occlusion hides interior structures.

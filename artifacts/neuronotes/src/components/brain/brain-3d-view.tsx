@@ -11,11 +11,18 @@ import brainGlbUrl from "@/assets/models/brain.glb?url";
 //
 // The brain.glb shell is normalized (Box3-fit) and re-skinned with a clean
 // near-white physical material so it reads like a real anatomical model
-// rather than the source's pink tissue. Floating clickable markers sit at
-// each structure's anatomical position; clicking one opens the shared
+// rather than the source's pink tissue. Clickable markers sit at each
+// structure's anatomical position; clicking one opens the shared
 // StructureDetail panel via `onSelect`. Markers and the brain live in the
 // SAME transform group so the dots always track the right region no matter
 // how the user rotates or zooms.
+//
+// To make the dots read as *pinned to the surface* instead of floating in
+// front, each marker fades every frame based on whether it currently faces
+// the camera: front-facing dots stay bright and clickable, dots that rotate
+// to the far side recede to faint + click-through, and deep central
+// structures (which have no real front/back face) stay readable. Selecting a
+// marker dims the rest so the chosen region stands out.
 // =============================================================================
 
 const BRAIN_GLB_URL = brainGlbUrl;
@@ -72,20 +79,81 @@ function FittedBrain() {
 function Marker({
   struct,
   selected,
+  anySelected,
   onSelect,
 }: {
   struct: BrainStructure;
   selected: boolean;
+  anySelected: boolean;
   onSelect: (id: string) => void;
 }) {
+  const groupRef = useRef<THREE.Group>(null);
+  const btnRef = useRef<HTMLButtonElement>(null);
+  const dotRef = useRef<HTMLSpanElement>(null);
   const [hovered, setHovered] = useState(false);
   const active = selected || hovered;
   const pos = struct.position;
 
+  // Pre-allocated scratch vectors so the per-frame facing math allocates
+  // nothing — this runs for every marker on every frame.
+  const tmp = useMemo(
+    () => ({
+      cam: new THREE.Vector3(),
+      p: new THREE.Vector3(),
+      n: new THREE.Vector3(),
+      toCam: new THREE.Vector3(),
+    }),
+    [],
+  );
+
+  // Fade markers that have rotated to the far side so the dots read as pinned
+  // to the surface. Styles are mutated directly (not via React state) to avoid
+  // a re-render storm at 60fps.
+  useFrame((state) => {
+    const g = groupRef.current;
+    const btn = btnRef.current;
+    const dot = dotRef.current;
+    if (!g || !btn || !g.parent) return;
+
+    // A hovered/selected marker is always fully lit and interactive.
+    if (active) {
+      btn.style.opacity = "1";
+      btn.style.pointerEvents = "auto";
+      if (dot) dot.style.transform = "scale(1.3)";
+      return;
+    }
+
+    const p = tmp.p.set(pos[0], pos[1], pos[2]);
+    const depth = p.length();
+
+    let facing: number;
+    if (depth < 0.4) {
+      // Deep/central structure — no meaningful front/back face; keep readable.
+      facing = 0.45;
+    } else {
+      // Camera in the brain group's local space, then compare the marker's
+      // outward normal (its direction from the brain center) with the
+      // direction to the camera. > 0 means it faces the viewer.
+      const camLocal = tmp.cam.copy(state.camera.position);
+      g.parent.worldToLocal(camLocal);
+      const n = tmp.n.copy(p).normalize();
+      const toCam = tmp.toCam.copy(camLocal).sub(p).normalize();
+      facing = n.dot(toCam);
+    }
+
+    const t = THREE.MathUtils.clamp((facing + 0.25) / 1.25, 0, 1);
+    let opacity = 0.1 + 0.9 * t;
+    if (anySelected) opacity *= 0.45; // spotlight the selected region
+    btn.style.opacity = opacity.toFixed(3);
+    btn.style.pointerEvents = facing > 0 ? "auto" : "none";
+    if (dot) dot.style.transform = `scale(${(0.65 + 0.35 * t).toFixed(3)})`;
+  });
+
   return (
-    <group position={pos}>
-      <Html center distanceFactor={8} zIndexRange={[20, 0]}>
+    <group position={pos} ref={groupRef}>
+      <Html center distanceFactor={8} zIndexRange={[40, 0]}>
         <button
+          ref={btnRef}
           type="button"
           onClick={(e) => {
             e.stopPropagation();
@@ -104,20 +172,22 @@ function Marker({
             alignItems: "center",
             gap: 6,
             whiteSpace: "nowrap",
+            willChange: "opacity",
           }}
           data-testid={`brain3d-marker-${struct.id}`}
         >
           <span
+            ref={dotRef}
             style={{
-              width: active ? 16 : 12,
-              height: active ? 16 : 12,
+              width: 13,
+              height: 13,
               borderRadius: "9999px",
               background: struct.color,
               border: `2px solid ${PALETTE.cloud}`,
               boxShadow: active
                 ? `0 0 0 4px ${struct.color}55, 0 0 16px ${struct.color}`
                 : `0 0 8px ${struct.color}aa`,
-              transition: "all 160ms ease",
+              transition: "background 160ms ease, box-shadow 160ms ease",
               flexShrink: 0,
             }}
           />
@@ -184,6 +254,7 @@ function Scene({
               key={s.id}
               struct={s}
               selected={selectedId === s.id}
+              anySelected={selectedId !== null}
               onSelect={onSelect}
             />
           ))}
