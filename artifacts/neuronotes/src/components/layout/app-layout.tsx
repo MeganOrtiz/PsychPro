@@ -168,7 +168,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const isOnProTools = location === "/my-decks/new" && currentTier === "pro";
 
   return (
-    <div className="study-page-bg flex h-screen overflow-hidden">
+    <div className="study-page-bg flex min-h-screen">
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-30 md:hidden"
@@ -178,7 +178,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 w-64 flex flex-col transition-transform duration-300 md:relative md:translate-x-0 overflow-hidden m-4 rounded-2xl",
+          "fixed inset-y-0 left-0 z-40 w-64 flex flex-col transition-transform duration-300 md:sticky md:top-4 md:bottom-auto md:self-start md:h-[calc(100vh-2rem)] md:translate-x-0 overflow-hidden m-4 rounded-2xl",
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
         style={{
