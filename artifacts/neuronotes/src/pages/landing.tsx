@@ -15,7 +15,6 @@ import {
   Sparkles,
   LineChart,
   Compass,
-  Wallet,
   ArrowRight,
   Check,
   Award,
@@ -359,18 +358,6 @@ export default function LandingPage() {
                 <span className="landing-stat-label">{s.label}</span>
               </div>
             ))}
-          </div>
-        </section>
-
-        {/* ============== POSITIONING BAND ============== */}
-        <section className="landing-band" data-reveal>
-          <div className="landing-band-inner">
-            <Wallet className="landing-band-icon" aria-hidden />
-            <p className="landing-band-text">
-              A serious, modern alternative to thousand-dollar licensure prep
-              programs — in-depth preparation,{" "}
-              <strong>without the four-figure price tag.</strong>
-            </p>
           </div>
         </section>
 
@@ -1109,46 +1096,6 @@ const styles = `
   font-weight: 400;
   color: rgba(225, 244, 250, 0.74);
   text-shadow: 0 1px 10px rgba(2, 13, 18, 0.45);
-}
-
-/* ============== POSITIONING BAND ============== */
-.landing-band {
-  max-width: 1180px;
-  margin: 0 auto;
-  padding: clamp(8px, 2vh, 20px) 32px 0;
-}
-.landing-band-inner {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  max-width: 920px;
-  margin: 0 auto;
-  padding: clamp(20px, 3vh, 30px) clamp(22px, 3vw, 38px);
-  background: linear-gradient(145deg, ${C.bgPanel}, ${C.bgPanelStrong});
-  border: 1px solid ${C.hairlineStrong};
-  border-radius: 18px;
-  backdrop-filter: blur(14px) saturate(125%);
-  -webkit-backdrop-filter: blur(14px) saturate(125%);
-  box-shadow: 0 24px 60px -34px rgba(0,0,0,0.6), 0 0 30px ${C.cyan}12;
-}
-.landing-band-icon {
-  width: 30px;
-  height: 30px;
-  flex-shrink: 0;
-  color: ${C.cyan};
-  filter: drop-shadow(0 0 12px ${C.cyan}66);
-}
-.landing-band-text {
-  margin: 0;
-  font-size: clamp(15px, 1.4vw, 19px);
-  line-height: 1.55;
-  font-weight: 400;
-  color: rgba(232, 247, 252, 0.9);
-}
-.landing-band-text strong {
-  color: #fff;
-  font-weight: 600;
-  text-shadow: 0 0 18px ${C.cyan}55;
 }
 
 /* ============== STUDY TOOLS / FEATURE CARDS ============== */
