@@ -22,15 +22,15 @@ type NavItem = { href: string; label: string; icon: React.ComponentType<{ classN
 const NAV_ITEM_BASE =
   "nav-glass group relative flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all duration-200 border backdrop-blur-xl";
 const NAV_ITEM_IDLE =
-  "nav-glass-idle bg-white/[0.12] text-sidebar-foreground/90 border-[color:var(--nav-glow)]/35 " +
-  "shadow-[0_6px_18px_-12px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.18)] " +
-  "hover:bg-white/[0.20] hover:border-[color:var(--nav-glow)]/70 hover:text-white " +
-  "hover:shadow-[0_12px_32px_-10px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.24)] " +
-  "active:bg-white/[0.24] active:border-[color:var(--nav-glow)]/80 " +
-  "active:shadow-[0_14px_36px_-8px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.26)]";
+  "nav-glass-idle text-sidebar-foreground/90 border-[color:var(--nav-glow)]/30 " +
+  "shadow-[0_6px_18px_-12px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.20)] " +
+  "hover:border-[color:var(--nav-glow)]/75 hover:text-white " +
+  "hover:shadow-[0_0_20px_-1px_var(--nav-glow),0_14px_34px_-10px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.28)] " +
+  "active:border-[color:var(--nav-glow)]/90 " +
+  "active:shadow-[0_0_28px_0_var(--nav-glow),0_16px_38px_-8px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.32)]";
 const NAV_ITEM_ACTIVE =
-  "nav-glass-active bg-white/[0.22] text-white border-[color:var(--nav-glow)]/75 " +
-  "shadow-[0_12px_32px_-10px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.26)]";
+  "nav-glass-active text-white border-[color:var(--nav-glow)]/80 " +
+  "shadow-[0_0_22px_-1px_var(--nav-glow),0_14px_34px_-10px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.30)]";
 
 function navItemClass(isActive: boolean) {
   return cn(NAV_ITEM_BASE, isActive ? NAV_ITEM_ACTIVE : NAV_ITEM_IDLE);
