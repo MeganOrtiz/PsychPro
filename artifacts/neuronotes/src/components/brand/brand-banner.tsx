@@ -65,7 +65,7 @@ export function BrandBanner({
         </h1>
       </div>
       <p
-        className={cn("mt-2 font-light", isLg ? "text-xs" : "text-[10px]")}
+        className={cn("font-light", isLg ? "mt-2 text-xs" : "mt-1 text-[10px]")}
         style={{
           letterSpacing: "0.32em",
           color: P.mist,
@@ -76,7 +76,7 @@ export function BrandBanner({
       </p>
       {greeting !== undefined && (
         <p
-          className={cn("mt-3 font-light", isLg ? "text-sm" : "text-xs")}
+          className={cn("font-light", isLg ? "mt-3 text-sm" : "mt-1 text-xs")}
           style={{ color: P.mistSoft }}
           data-testid="brand-banner-greeting"
         >
