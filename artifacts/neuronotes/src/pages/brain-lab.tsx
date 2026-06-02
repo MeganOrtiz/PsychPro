@@ -18,6 +18,7 @@ import {
   Compass,
   Box,
   Layers,
+  GraduationCap,
 } from "lucide-react";
 import {
   BRAIN_STRUCTURES,
@@ -29,6 +30,7 @@ import {
 import brainLateral from "@/assets/brain-views/lateral.png";
 import brainMidsagittal from "@/assets/brain-views/midsagittal.png";
 import brainCoronal from "@/assets/brain-views/coronal.png";
+import BrainQuiz, { type QuizItem } from "@/components/brain/brain-quiz";
 
 // Heavy 3D view (three.js + 16MB GLB) is code-split so it only loads when
 // the user opens the 3D tab — the Sections/image view stays instant.
@@ -84,7 +86,7 @@ class Brain3DErrorBoundary extends Component<
   }
 }
 
-type ViewMode = "3d" | "sections";
+type ViewMode = "3d" | "sections" | "quiz";
 
 // =============================================================================
 // Brain Lab (image-driven rewrite)
@@ -687,6 +689,11 @@ const HOTSPOTS: Record<TabGroup | "all", Hotspot[]> = {
     { id: "occipital-lobe", x: 82, y: 42 },
     { id: "temporal-lobe", x: 44, y: 66 },
     { id: "orbitofrontal-cortex", x: 20, y: 60 },
+    { id: "broca-area", x: 27, y: 52 },
+    { id: "wernicke-area", x: 58, y: 54 },
+    { id: "auditory-cortex", x: 49, y: 57 },
+    { id: "supramarginal-gyrus", x: 61, y: 40 },
+    { id: "angular-gyrus", x: 67, y: 45 },
   ],
   cortex: [
     { id: "prefrontal-cortex", x: 14, y: 46 },
@@ -697,6 +704,11 @@ const HOTSPOTS: Record<TabGroup | "all", Hotspot[]> = {
     { id: "occipital-lobe", x: 82, y: 42 },
     { id: "temporal-lobe", x: 44, y: 66 },
     { id: "orbitofrontal-cortex", x: 20, y: 60 },
+    { id: "broca-area", x: 27, y: 52 },
+    { id: "wernicke-area", x: 58, y: 54 },
+    { id: "auditory-cortex", x: 49, y: 57 },
+    { id: "supramarginal-gyrus", x: 61, y: 40 },
+    { id: "angular-gyrus", x: 67, y: 45 },
   ],
   // Midsagittal view (brain faces left) — deep medial structures
   limbic: [
@@ -712,10 +724,12 @@ const HOTSPOTS: Record<TabGroup | "all", Hotspot[]> = {
     { id: "pons", x: 50, y: 66 },
     { id: "medulla", x: 49, y: 77 },
     { id: "cerebellum", x: 71, y: 69 },
+    { id: "pineal-gland", x: 55, y: 49 },
   ],
   whitematter: [
     { id: "corpus-callosum", x: 47, y: 39 },
     { id: "fornix", x: 41, y: 47 },
+    { id: "optic-chiasm", x: 33, y: 57 },
   ],
   // Coronal section — subcortical nuclei & ventricles
   subcortical: [
@@ -724,6 +738,7 @@ const HOTSPOTS: Record<TabGroup | "all", Hotspot[]> = {
     { id: "globus-pallidus", x: 40, y: 50 },
     { id: "putamen", x: 34, y: 48 },
     { id: "thalamus", x: 45, y: 53 },
+    { id: "internal-capsule", x: 42, y: 46 },
   ],
 };
 
@@ -956,6 +971,35 @@ export default function BrainLabPage() {
     [activeTab],
   );
 
+  // Flat pool for the "label each part" quiz — every hotspot that sits on a real
+  // view image, deduped by structure and grouped by the diagram it appears on
+  // (so "find the part" distractors and "name the part" choices stay plausible).
+  const quizItems = useMemo<QuizItem[]>(() => {
+    const seen = new Set<string>();
+    const out: QuizItem[] = [];
+    for (const tab of Object.keys(HOTSPOTS) as (TabGroup | "all")[]) {
+      const view = BRAIN_VIEWS[tab];
+      if (!view.src) continue;
+      for (const h of HOTSPOTS[tab]) {
+        if (seen.has(h.id)) continue;
+        const s = STRUCTURE_INDEX[h.id];
+        if (!s) continue;
+        seen.add(h.id);
+        out.push({
+          id: s.id,
+          name: s.name,
+          shortName: s.shortName,
+          viewKey: view.src,
+          viewSrc: view.src,
+          viewName: view.viewName,
+          x: h.x,
+          y: h.y,
+        });
+      }
+    }
+    return out;
+  }, []);
+
   // Init from media queries + URL hash
   useEffect(() => {
     if (typeof window === "undefined" || !window.matchMedia) return;
@@ -1066,6 +1110,7 @@ export default function BrainLabPage() {
             {([
               { mode: "3d" as ViewMode, label: "3D", icon: Box },
               { mode: "sections" as ViewMode, label: "Sections", icon: Layers },
+              { mode: "quiz" as ViewMode, label: "Quiz", icon: GraduationCap },
             ]).map(({ mode, label, icon: Icon }) => {
               const on = viewMode === mode;
               return (
@@ -1164,6 +1209,12 @@ export default function BrainLabPage() {
                   />
                 </Suspense>
               </Brain3DErrorBoundary>
+            ) : viewMode === "quiz" ? (
+              <BrainQuiz
+                items={quizItems}
+                isMobile={isMobile}
+                onExit={() => setViewMode("sections")}
+              />
             ) : (
               <BrainDiagram
                 activeTab={activeTab}
