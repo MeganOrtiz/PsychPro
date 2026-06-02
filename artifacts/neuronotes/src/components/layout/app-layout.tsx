@@ -235,7 +235,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
         <nav className="relative flex-1 p-3 space-y-1 overflow-y-auto">
           <div className="px-3 pt-1 pb-1">
-            <p className="text-xs font-semibold text-white/45 uppercase tracking-wider">Study</p>
+            <p className="text-xs font-semibold text-white/45 uppercase tracking-wider">Learn</p>
           </div>
           {workshopNav.map((item) => {
             const isActive = location === item.href || location.startsWith(item.href + "/");
@@ -256,7 +256,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           })}
 
           <div className="px-3 pt-3 pb-1">
-            <p className="text-xs font-semibold text-white/45 uppercase tracking-wider">Toolkit</p>
+            <p className="text-xs font-semibold text-white/45 uppercase tracking-wider">Expand</p>
           </div>
           {labNav.map((item) => {
             const isActive = location === item.href || location.startsWith(item.href + "/");
@@ -284,7 +284,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           />
 
           <div className="px-3 pt-3 pb-1">
-            <p className="text-xs font-semibold text-white/45 uppercase tracking-wider">Community</p>
+            <p className="text-xs font-semibold text-white/45 uppercase tracking-wider">Connect</p>
           </div>
           {studioNav.map((item) => {
             const isActive = location === item.href || location.startsWith(item.href + "/");
