@@ -121,15 +121,14 @@ function App() {
   const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
   return (
     <ErrorBoundary>
-      {/* <ClerkProvider 
-        publishableKey={...}
+      <ClerkProvider
+        publishableKey={clerkPublishableKey!}
         signInUrl={`${basePath}/sign-in`}
         signUpUrl={`${basePath}/sign-up`}
-        signInFallbackRedirectUrl={...}
-        signUpFallbackRedirectUrl={...}
-        afterSignOutUrl={...}
-      > */}
-      {/* <ClerkTokenBridge /> */}
+        signInFallbackRedirectUrl={`${basePath}/dashboard`}
+        signUpFallbackRedirectUrl={`${basePath}/dashboard`}
+      >
+        <ClerkTokenBridge />
         <QueryClientProvider client={queryClient}>
           <TooltipProvider>
             <WouterRouter base={basePath}>
@@ -139,7 +138,7 @@ function App() {
             <SonnerToaster />
           </TooltipProvider>
         </QueryClientProvider>
-    {/* </ClerkProvider> */}
+      </ClerkProvider>
     </ErrorBoundary>
   );
 }
