@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import { Brain, LayoutDashboard, BookOpen, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck, BookMarked, Library, Wrench, Sparkles, Star, Beaker, Lightbulb, Users, Lock } from "lucide-react";
 import { UserButton } from "@clerk/clerk-react";
+import { NotificationsBell } from "@/components/notifications-bell";
 import { authHeaders } from "@/lib/auth-headers";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { STUDY_PALETTE } from "@/lib/study-theme";
@@ -150,6 +152,10 @@ interface AppLayoutProps {
 export default function AppLayout({ children }: AppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [location] = useLocation();
+  // One NotificationsBell at a time: the mobile and desktop headers both live
+  // in the DOM (toggled by CSS), so gate the bell by breakpoint to avoid two
+  // instances mounting and double-polling /api/notifications.
+  const isMobile = useIsMobile();
   // Reactive query-string read. Wouter's `useLocation` returns pathname
   // only, so the previous `window.location.search` read at render time was
   // never reactive — clicking from Standard Tools → Pro Tools wouldn't
@@ -403,19 +409,22 @@ export default function AppLayout({ children }: AppLayoutProps) {
           </Button>
           <Brain className="w-6 h-6 text-primary" />
           <span className="font-bold text-foreground">PsychPro</span>
-          <div className="ml-auto">
+          <div className="ml-auto flex items-center gap-3">
+            {isMobile && <NotificationsBell />}
             <UserButton afterSignOutUrl={import.meta.env.BASE_URL.replace(/\/$/, "") || "/"} />
           </div>
         </header>
 
-        {/* Desktop top bar: Clerk UserButton lives in the top-right so users
-            can manage their account and sign out from any page. */}
-        <header className="hidden md:flex items-center justify-end px-6 py-2 border-b border-white/5">
+        {/* Desktop top bar: unified right-side cluster — the notifications
+            bell sits next to the Clerk UserButton so account + alerts read as
+            one consistent control group on every page. */}
+        <header className="hidden md:flex items-center justify-end gap-3 px-6 py-3 border-b border-white/5">
+          {!isMobile && <NotificationsBell />}
           <UserButton
             afterSignOutUrl={import.meta.env.BASE_URL.replace(/\/$/, "") || "/"}
             appearance={{
               elements: {
-                avatarBox: "w-8 h-8",
+                avatarBox: "w-10 h-10 rounded-full ring-1 ring-[#76E4F7]/40",
               },
             }}
           />

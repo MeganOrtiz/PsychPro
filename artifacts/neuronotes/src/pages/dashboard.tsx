@@ -42,7 +42,6 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { StudySurface } from "@/components/study/study-surface";
-import { NotificationsBell } from "@/components/notifications-bell";
 import { BrandBanner } from "@/components/brand/brand-banner";
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
 import {
@@ -216,24 +215,13 @@ export default function DashboardPage() {
       data-testid="dashboard-page"
     >
       <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 pt-3 pb-4 md:pb-6 lg:pb-8">
-        {/* Top header — notifications bell + canonical BrandBanner.
-            Tight vertical rhythm: the bell sits flush top-right and the
-            brand banner is pulled up so the journey card lands above the
-            fold on a standard laptop. */}
-        <header className="relative mb-2">
-          {/* z-20 is required: the BrandBanner below is a later sibling in
-              the same `relative` header, so without an explicit z it stacks
-              above this absolutely-positioned wrapper and swallows the
-              bell's click events (the BrandBanner outer flex container is
-              full-width even though its text is centered). */}
-          <div className="absolute right-0 top-0 z-20 flex items-center gap-3">
-            <NotificationsBell />
-          </div>
-
+        {/* Top header — one bold, centered PSYCHPRO statement. The
+            notification bell + profile avatar live together in the shared
+            app top bar, so nothing competes with the wordmark here. */}
+        <header className="relative mb-3">
           {/* Centerpiece — the wordmark emerges from a luminous cyan bloom:
-              a wide ambient halo for depth, a tighter bright core that hugs the
-              letters, and two faint orbiting glints for energy. No straight
-              lines. Every decorative layer sits behind the protected
+              a wide ambient halo for depth and a tighter bright core that hugs
+              the letters. Every decorative layer sits behind the protected
               BrandBanner (z-10) and is pointer-events-none. */}
           <div className="relative flex justify-center pt-0 pb-0">
             {/* Wide ambient halo — sets the atmosphere */}
@@ -257,41 +245,8 @@ export default function DashboardPage() {
                 background: `radial-gradient(55% 60% at 50% 50%, ${PALETTE.surf}4d 0%, ${PALETTE.surf}1f 45%, transparent 72%)`,
               }}
             />
-            {/* Orbiting glints — a couple of soft sparks for a sense of motion */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-              style={{
-                width: "560px",
-                maxWidth: "94%",
-                height: "150px",
-              }}
-            >
-              <span
-                className="absolute rounded-full"
-                style={{
-                  left: "8%",
-                  top: "30%",
-                  width: "7px",
-                  height: "7px",
-                  background: PALETTE.surf,
-                  boxShadow: `0 0 16px 4px ${PALETTE.surf}aa`,
-                }}
-              />
-              <span
-                className="absolute rounded-full"
-                style={{
-                  right: "10%",
-                  bottom: "26%",
-                  width: "5px",
-                  height: "5px",
-                  background: PALETTE.cloud,
-                  boxShadow: `0 0 14px 3px ${PALETTE.surf}99`,
-                }}
-              />
-            </div>
             <BrandBanner
-              size="sm"
+              size="lg"
               greeting={greetingText}
               className="relative z-10"
             />
