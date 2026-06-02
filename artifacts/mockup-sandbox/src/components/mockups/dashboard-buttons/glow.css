@@ -1,0 +1,52 @@
+/* CYAN GLOW — strong cyan corona so buttons clearly pop off the cards. */
+.v-glow .btn-glass-strong {
+  background-image: linear-gradient(145deg, rgba(16, 70, 92, 0.42), rgba(10, 44, 60, 0.50));
+  color: #ffffff;
+  border: 1px solid rgba(118, 228, 247, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 0 0 1px rgba(118, 228, 247, 0.18),
+    0 0 34px 0 rgba(118, 228, 247, 0.65),
+    0 0 60px 6px rgba(94, 176, 200, 0.30),
+    0 12px 26px -14px rgba(0, 0, 0, 0.6);
+}
+.v-glow .btn-glass-strong:hover {
+  transform: translateY(-1px);
+  border-color: rgba(167, 243, 255, 0.75);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.26),
+    0 0 0 1px rgba(118, 228, 247, 0.28),
+    0 0 44px 4px rgba(118, 228, 247, 0.80),
+    0 0 80px 12px rgba(94, 176, 200, 0.40),
+    0 14px 30px -12px rgba(0, 0, 0, 0.65);
+}
+
+.v-glow .btn-glass {
+  border: 1px solid rgba(118, 228, 247, 0.45);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 0 26px -2px rgba(118, 228, 247, 0.55),
+    0 8px 20px -14px rgba(0, 0, 0, 0.6);
+}
+.v-glow .btn-glass:hover {
+  border-color: rgba(167, 243, 255, 0.65);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.20),
+    0 0 34px 0 rgba(118, 228, 247, 0.7),
+    0 10px 24px -12px rgba(0, 0, 0, 0.65);
+}
+
+.v-glow .recommended-tile {
+  border-color: rgba(118, 228, 247, 0.40);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 0 26px -2px rgba(118, 228, 247, 0.50),
+    0 8px 22px -16px rgba(0, 0, 0, 0.55);
+}
+.v-glow .recommended-tile:hover {
+  border-color: rgba(167, 243, 255, 0.60);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 0 40px 2px rgba(118, 228, 247, 0.70),
+    0 12px 26px -16px rgba(0, 0, 0, 0.6);
+}
