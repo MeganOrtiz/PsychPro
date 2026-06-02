@@ -661,6 +661,7 @@ const styles = `
   border-bottom: 1px solid ${C.hairline};
 }
 .landing-nav-inner {
+  position: relative;
   max-width: 1320px;
   margin: 0 auto;
   display: flex;
@@ -691,7 +692,14 @@ const styles = `
   display: none;
   align-items: center;
   gap: 28px;
-  margin: 0 auto;
+}
+@media (min-width: 920px) {
+  .landing-nav-links {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
 .landing-nav-link {
   font-size: 11px;
