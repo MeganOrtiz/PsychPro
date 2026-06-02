@@ -58,8 +58,21 @@ const queryClient = new QueryClient({
 // keys (which reject any origin other than auth.psychprosuite.com). Falls
 // back to the prod publishable key when the dev override is not set, so
 // production builds and existing dev setups are unaffected.
-const devClerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY_DEV as string | undefined;
-const prodClerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined;
+// Tolerate values accidentally pasted with their env-var name prefix
+// (e.g. "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...") or wrapped in
+// quotes/whitespace, by extracting the bare pk_test_/pk_live_ token.
+function normalizeClerkKey(value: string | undefined): string | undefined {
+  if (!value) return value;
+  const match = value.match(/pk_(?:test|live)_[^\s"']+/);
+  return match ? match[0] : value.trim();
+}
+
+const devClerkPublishableKey = normalizeClerkKey(
+  import.meta.env.VITE_CLERK_PUBLISHABLE_KEY_DEV as string | undefined,
+);
+const prodClerkPublishableKey = normalizeClerkKey(
+  import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined,
+);
 const clerkPublishableKey: string | undefined = import.meta.env.DEV
   ? devClerkPublishableKey || prodClerkPublishableKey
   : prodClerkPublishableKey;
