@@ -220,7 +220,7 @@ export default function DashboardPage() {
             Tight vertical rhythm: the bell sits flush top-right and the
             brand banner is pulled up so the journey card lands above the
             fold on a standard laptop. */}
-        <header className="relative mb-8 md:mb-10">
+        <header className="relative mb-3 md:mb-4">
           {/* z-20 is required: the BrandBanner below is a later sibling in
               the same `relative` header, so without an explicit z it stacks
               above this absolutely-positioned wrapper and swallows the
@@ -235,7 +235,7 @@ export default function DashboardPage() {
               letters, and two faint orbiting glints for energy. No straight
               lines. Every decorative layer sits behind the protected
               BrandBanner (z-10) and is pointer-events-none. */}
-          <div className="relative flex justify-center pt-3 md:pt-5 pb-5 md:pb-7">
+          <div className="relative flex justify-center pt-0 pb-1">
             {/* Wide ambient halo — sets the atmosphere */}
             <div
               aria-hidden
@@ -291,7 +291,7 @@ export default function DashboardPage() {
               />
             </div>
             <BrandBanner
-              size="lg"
+              size="sm"
               greeting={greetingText}
               className="relative z-10"
             />
