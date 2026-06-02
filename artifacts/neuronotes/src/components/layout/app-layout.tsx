@@ -6,6 +6,7 @@ import { authHeaders } from "@/lib/auth-headers";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { STUDY_PALETTE } from "@/lib/study-theme";
+import smokeBg from "@/assets/bg/brain-clouds.png";
 
 type NavItem = { href: string; label: string; icon: React.ComponentType<{ className?: string }> };
 
@@ -177,17 +178,22 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 w-64 flex flex-col transition-transform duration-300 md:relative md:translate-x-0 overflow-hidden",
+          "fixed inset-y-0 left-0 z-40 w-64 flex flex-col transition-transform duration-300 md:relative md:translate-x-0 overflow-hidden m-4 rounded-2xl",
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
         style={{
           // CSS var consumed by NAV_ITEM_* tokens for the teal hover glow.
           ["--nav-glow" as never]: STUDY_PALETTE.surf,
-          // Match the middle-column card surface tone so the sidebar reads as
-          // the same material as the dashboard cards instead of a darker void.
-          // Cards use surface (#0A2D3D) → bg (#061F2B); we mirror that here.
-          background: `linear-gradient(180deg, ${STUDY_PALETTE.surface} 0%, ${STUDY_PALETTE.bg} 100%)`,
-          borderRight: "1px solid rgba(118, 228, 247, 0.15)",
+          // Match the Spotlight card's backdrop: the same brain-clouds smoke
+          // image painted inside with a dark gradient overlay, over the
+          // StudySurface "dark" base gradient — so the smoky cloud continuum
+          // bleeds through the sidebar exactly like it does through the card.
+          background: `linear-gradient(180deg, rgba(2,13,18,0.35) 0%, rgba(2,13,18,0.55) 55%, rgba(2,13,18,0.8) 100%), url(${smokeBg}), linear-gradient(180deg, ${STUDY_PALETTE.surfaceElev}, ${STUDY_PALETTE.surface})`,
+          backgroundSize: "cover, cover, cover",
+          backgroundPosition: "center, center, center",
+          backgroundRepeat: "no-repeat, no-repeat, no-repeat",
+          border: `1px solid ${STUDY_PALETTE.surf}55`,
+          boxShadow: `0 20px 60px -20px ${STUDY_PALETTE.teal}77`,
         }}
         data-testid="sidebar"
       >
