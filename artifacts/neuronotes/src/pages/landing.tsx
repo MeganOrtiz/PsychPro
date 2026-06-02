@@ -18,9 +18,6 @@ import {
   ArrowRight,
   Check,
   Award,
-  Wand2,
-  Gamepad2,
-  Lightbulb,
   CheckCircle2,
 } from "lucide-react";
 import { useGetTopics } from "@workspace/api-client-react";
@@ -128,28 +125,6 @@ const DOMAINS = [
   "Assessment",
   "Psychotherapy",
   "Research Methods",
-] as const;
-
-// Product capabilities highlighted in the "Features" section.
-const FEATURES = [
-  {
-    icon: Wand2,
-    title: "Custom study tools",
-    body:
-      "Create your own flashcards, quizzes, and study guides from your own material.",
-  },
-  {
-    icon: Gamepad2,
-    title: "Go beyond traditional learning",
-    body:
-      "Sharpen recall with advanced tools — matching games, fill-in-the-blank, and spaced review.",
-  },
-  {
-    icon: Lightbulb,
-    title: "Reflections",
-    body:
-      "Reflect on what you've learned and lock it in with the Reflections feature.",
-  },
 ] as const;
 
 // What the Scholar tier adds — mirrors src/pages/subscription.tsx SCHOLAR_FEATURES.
@@ -423,40 +398,6 @@ export default function LandingPage() {
                     <h3 className="landing-science-title">{s.title}</h3>
                     <p className="landing-science-body">{s.body}</p>
                   </div>
-                </article>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* ============== FEATURES ============== */}
-        <section id="features" className="landing-section landing-features">
-          <div className="landing-section-head" data-reveal>
-            <p className="landing-eyebrow">FEATURES</p>
-            <h2 className="landing-section-title">
-              Use all of PsychPro's tools
-            </h2>
-            <p className="landing-section-sub">
-              Go further than flashcards and quizzes — make the platform your
-              own and learn in the ways that work best for you.
-            </p>
-          </div>
-          <div className="landing-features-grid">
-            {FEATURES.map((f, i) => {
-              const Icon = f.icon;
-              return (
-                <article
-                  key={f.title}
-                  className="landing-feature-card"
-                  style={{ ["--reveal-delay" as any]: `${i * 90}ms` }}
-                  data-reveal
-                  data-testid={`feature-${i}`}
-                >
-                  <div className="landing-feature-icon-wrap">
-                    <Icon aria-hidden />
-                  </div>
-                  <h3 className="landing-feature-title">{f.title}</h3>
-                  <p className="landing-feature-body">{f.body}</p>
                 </article>
               );
             })}
@@ -1105,16 +1046,6 @@ const styles = `
   flex: 1 1 200px;
   min-width: 200px;
   max-width: 320px;
-}
-/* Features grid — 1 / 3 columns */
-.landing-features-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-  align-items: stretch;
-}
-@media (min-width: 760px) {
-  .landing-features-grid { grid-template-columns: repeat(3, 1fr); }
 }
 .landing-feature-card {
   --accent: ${C.cyan};
