@@ -528,10 +528,6 @@ export default function LandingPage() {
           <h2 className="landing-final-title">
             Explore topics designed for real-world clinical application
           </h2>
-          <p className="landing-final-sub">
-            Built for in-depth understanding you can take from study to the
-            clinic. Try it free — no credit card required to start.
-          </p>
           <div className="landing-cta-row landing-cta-row--center">
             <button
               type="button"
@@ -1347,14 +1343,6 @@ const styles = `
   color: #F4FBFF;
   text-shadow: 0 0 40px ${C.cyan}3a;
 }
-.landing-final-sub {
-  margin: clamp(14px, 2vh, 20px) auto 0;
-  max-width: 520px;
-  font-size: clamp(14px, 1.1vw, 16.5px);
-  line-height: 1.7;
-  color: rgba(225, 244, 250, 0.78);
-}
-
 /* ============== ALL TOPICS ============== */
 .landing-topics-grid {
   display: grid;
