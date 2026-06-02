@@ -1,4 +1,4 @@
-import { Suspense, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Html, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
@@ -11,18 +11,17 @@ import brainGlbUrl from "@/assets/models/brain.glb?url";
 //
 // The brain.glb shell is normalized (Box3-fit) and re-skinned with a clean
 // near-white physical material so it reads like a real anatomical model
-// rather than the source's pink tissue. Clickable markers sit at each
-// structure's anatomical position; clicking one opens the shared
-// StructureDetail panel via `onSelect`. Markers and the brain live in the
-// SAME transform group so the dots always track the right region no matter
-// how the user rotates or zooms.
+// rather than the source's pink tissue. Instead of hard dots, each structure
+// lights up as a soft CERULEAN GLOW PATCH on the brain surface — an invisible
+// sphere provides the click/hover hit-area and the glow eases up to full when
+// the region is hovered or selected. Clicking opens the shared StructureDetail
+// panel via `onSelect`. Glows and the brain live in the SAME transform group
+// so they always track the right region no matter how the user rotates/zooms.
 //
-// To make the dots read as *pinned to the surface* instead of floating in
-// front, each marker fades every frame based on whether it currently faces
-// the camera: front-facing dots stay bright and clickable, dots that rotate
-// to the far side recede to faint + click-through, and deep central
-// structures (which have no real front/back face) stay readable. Selecting a
-// marker dims the rest so the chosen region stands out.
+// Each region also fades by whether it currently faces the camera: front and
+// deep/central structures stay live (hoverable + clickable), regions rotated
+// to the far side fade out and disable their hit-area. Deep structures glow
+// through the surface (depth-test off) so interior regions still light up.
 // =============================================================================
 
 const BRAIN_GLB_URL = brainGlbUrl;
@@ -76,6 +75,42 @@ function FittedBrain() {
   return <primitive object={fitted} />;
 }
 
+// Soft radial "glow patch" texture: a white core fading to transparent. It's
+// tinted cerulean by the sprite material's color and drawn with additive
+// blending so each active structure reads as the brain luminously lighting up
+// at that spot. Built once and shared by every marker.
+let GLOW_TEXTURE: THREE.CanvasTexture | null = null;
+function getGlowTexture(): THREE.CanvasTexture | null {
+  if (typeof document === "undefined") return null;
+  if (!GLOW_TEXTURE) {
+    const size = 128;
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = size;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return null;
+    const grad = ctx.createRadialGradient(
+      size / 2,
+      size / 2,
+      0,
+      size / 2,
+      size / 2,
+      size / 2,
+    );
+    grad.addColorStop(0, "rgba(255,255,255,1)");
+    grad.addColorStop(0.22, "rgba(255,255,255,0.8)");
+    grad.addColorStop(0.55, "rgba(255,255,255,0.25)");
+    grad.addColorStop(1, "rgba(255,255,255,0)");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, size, size);
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    GLOW_TEXTURE = tex;
+  }
+  return GLOW_TEXTURE;
+}
+
+const GLOW_COLOR = new THREE.Color(PALETTE.surf); // bright cerulean primary glow
+
 function Marker({
   struct,
   selected,
@@ -88,11 +123,22 @@ function Marker({
   onSelect: (id: string) => void;
 }) {
   const groupRef = useRef<THREE.Group>(null);
-  const btnRef = useRef<HTMLButtonElement>(null);
-  const dotRef = useRef<HTMLSpanElement>(null);
+  const hitRef = useRef<THREE.Mesh>(null);
+  const glowRef = useRef<THREE.Sprite>(null);
+  const matRef = useRef<THREE.SpriteMaterial>(null);
+  const intensity = useRef(0);
   const [hovered, setHovered] = useState(false);
   const active = selected || hovered;
   const pos = struct.position;
+  const glowTex = useMemo(() => getGlowTexture(), []);
+
+  // Reset the shared cursor if this marker unmounts while still hovered (e.g.
+  // tab switch), so it never gets stuck on the pointer style.
+  useEffect(() => {
+    return () => {
+      if (typeof document !== "undefined") document.body.style.cursor = "auto";
+    };
+  }, []);
 
   // Pre-allocated scratch vectors so the per-frame facing math allocates
   // nothing — this runs for every marker on every frame.
@@ -106,109 +152,121 @@ function Marker({
     [],
   );
 
-  // Fade markers that have rotated to the far side so the dots read as pinned
-  // to the surface. Styles are mutated directly (not via React state) to avoid
-  // a re-render storm at 60fps.
-  useFrame((state) => {
+  useFrame((state, dt) => {
     const g = groupRef.current;
-    const btn = btnRef.current;
-    const dot = dotRef.current;
-    if (!g || !btn || !g.parent) return;
-
-    // A hovered/selected marker is always fully lit and interactive.
-    if (active) {
-      btn.style.opacity = "1";
-      btn.style.pointerEvents = "auto";
-      if (dot) dot.style.transform = "scale(1.3)";
-      return;
-    }
+    const hit = hitRef.current;
+    const glow = glowRef.current;
+    const mat = matRef.current;
+    if (!g || !hit || !glow || !mat || !g.parent) return;
 
     const p = tmp.p.set(pos[0], pos[1], pos[2]);
     const depth = p.length();
+    const deep = depth < 0.4;
 
-    let facing: number;
-    if (depth < 0.4) {
-      // Deep/central structure — no meaningful front/back face; keep readable.
-      facing = 0.45;
-    } else {
-      // Camera in the brain group's local space, then compare the marker's
-      // outward normal (its direction from the brain center) with the
-      // direction to the camera. > 0 means it faces the viewer.
+    // Is this region facing the camera? Deep/central structures have no real
+    // front/back face, so they stay live. Camera is taken into the brain
+    // group's local (rotated) space, then we compare the region's outward
+    // normal with the direction to the camera.
+    let facing = 0.45;
+    if (!deep) {
       const camLocal = tmp.cam.copy(state.camera.position);
       g.parent.worldToLocal(camLocal);
       const n = tmp.n.copy(p).normalize();
       const toCam = tmp.toCam.copy(camLocal).sub(p).normalize();
       facing = n.dot(toCam);
     }
+    const live = deep || facing > 0;
 
-    const t = THREE.MathUtils.clamp((facing + 0.25) / 1.25, 0, 1);
-    let opacity = 0.1 + 0.9 * t;
-    if (anySelected) opacity *= 0.45; // spotlight the selected region
-    btn.style.opacity = opacity.toFixed(3);
-    btn.style.pointerEvents = facing > 0 ? "auto" : "none";
-    if (dot) dot.style.transform = `scale(${(0.65 + 0.35 * t).toFixed(3)})`;
+    // Toggling the invisible hit-sphere's visibility also turns its raycast
+    // on/off, so far-side regions can't be hovered/clicked through the brain.
+    hit.visible = live || active;
+
+    // Ease the glow toward its target so hover/select feels soft. Live regions
+    // rest at a faint ambient shimmer so they're discoverable without the old
+    // "dot soup"; the active region pulses gently at full strength.
+    let target = 0;
+    if (active) target = 1;
+    else if (live) target = anySelected ? 0.06 : 0.18;
+    intensity.current += (target - intensity.current) * Math.min(1, dt * 8);
+    const i = intensity.current;
+
+    const pulse = selected
+      ? 1 + Math.sin(state.clock.elapsedTime * 3) * 0.07
+      : 1;
+    glow.scale.setScalar((0.7 + 0.7 * i) * pulse);
+    mat.opacity = i;
+    glow.visible = i > 0.01;
   });
 
   return (
     <group position={pos} ref={groupRef}>
-      <Html center distanceFactor={8} zIndexRange={[40, 0]}>
-        <button
-          ref={btnRef}
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onSelect(struct.id);
-          }}
-          onPointerOver={() => setHovered(true)}
-          onPointerOut={() => setHovered(false)}
-          aria-label={struct.name}
-          style={{
-            transform: "translate(-50%, -50%)",
-            cursor: "pointer",
-            background: "transparent",
-            border: "none",
-            padding: 0,
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-            whiteSpace: "nowrap",
-            willChange: "opacity",
-          }}
-          data-testid={`brain3d-marker-${struct.id}`}
+      {/* Invisible hit-area: opacity 0 but raycastable while visible. */}
+      <mesh
+        ref={hitRef}
+        onClick={(e) => {
+          e.stopPropagation();
+          onSelect(struct.id);
+        }}
+        onPointerOver={(e) => {
+          e.stopPropagation();
+          setHovered(true);
+          if (typeof document !== "undefined")
+            document.body.style.cursor = "pointer";
+        }}
+        onPointerOut={() => {
+          setHovered(false);
+          if (typeof document !== "undefined")
+            document.body.style.cursor = "auto";
+        }}
+        data-testid={`brain3d-marker-${struct.id}`}
+      >
+        <sphereGeometry args={[0.42, 16, 16]} />
+        <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+      </mesh>
+
+      {/* Cerulean glow patch — additive, depth-test off so deep structures
+          still light up through the surface when chosen. */}
+      <sprite ref={glowRef} scale={0.7}>
+        <spriteMaterial
+          ref={matRef}
+          map={glowTex ?? undefined}
+          color={GLOW_COLOR}
+          transparent
+          opacity={0}
+          depthWrite={false}
+          depthTest={false}
+          blending={THREE.AdditiveBlending}
+          toneMapped={false}
+        />
+      </sprite>
+
+      {/* Label only while active, floated just above the glow. */}
+      {active && (
+        <Html
+          center
+          distanceFactor={8}
+          zIndexRange={[40, 0]}
+          style={{ pointerEvents: "none" }}
         >
           <span
-            ref={dotRef}
             style={{
-              width: 13,
-              height: 13,
-              borderRadius: "9999px",
-              background: struct.color,
-              border: `2px solid ${PALETTE.cloud}`,
-              boxShadow: active
-                ? `0 0 0 4px ${struct.color}55, 0 0 16px ${struct.color}`
-                : `0 0 8px ${struct.color}aa`,
-              transition: "background 160ms ease, box-shadow 160ms ease",
-              flexShrink: 0,
+              display: "inline-block",
+              transform: "translateY(-26px)",
+              fontSize: 11,
+              fontWeight: 600,
+              color: PALETTE.cloud,
+              background: `${PALETTE.bg}d9`,
+              border: `1px solid ${PALETTE.steel}`,
+              borderRadius: 9999,
+              padding: "2px 8px",
+              backdropFilter: "blur(6px)",
+              whiteSpace: "nowrap",
             }}
-          />
-          {active && (
-            <span
-              style={{
-                fontSize: 11,
-                fontWeight: 600,
-                color: PALETTE.cloud,
-                background: `${PALETTE.bg}d9`,
-                border: `1px solid ${PALETTE.steel}`,
-                borderRadius: 9999,
-                padding: "2px 8px",
-                backdropFilter: "blur(6px)",
-              }}
-            >
-              {struct.shortName || struct.name}
-            </span>
-          )}
-        </button>
-      </Html>
+          >
+            {struct.shortName || struct.name}
+          </span>
+        </Html>
+      )}
     </group>
   );
 }
