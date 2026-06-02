@@ -430,11 +430,11 @@ export default function AppLayout({ children }: AppLayoutProps) {
 }
 
 // ---------------------------------------------------------------------------
-// ToolsStudio — single bordered "studio" tile that groups the three deck-
-// builder entries (My Tools / Standard Tools / Pro Tools). Each row gets a
-// tier-color dot on the left edge instead of a repeated "Pro" pill, and the
-// whole card shows ONE consolidated lock when the user isn't on Scholar.
-// Keeps the sidebar feeling editorial instead of bullet-list-of-CTAs.
+// ToolsStudio — labeled group of the three deck-builder entries (My Tools /
+// Standard Tools / Pro Tools). Rows share the same glass treatment as the
+// rest of the nav (navItemClass) and get a tier-color dot on the left edge
+// instead of a repeated "Pro" pill; the group header shows ONE consolidated
+// lock when the user isn't on Scholar.
 // ---------------------------------------------------------------------------
 function ToolsStudio({
   isScholar,
@@ -449,7 +449,6 @@ function ToolsStudio({
   isOnProTools: boolean;
   onNavigate: () => void;
 }) {
-  const anyActive = isOnMyDecksList || isOnStandardTools || isOnProTools;
   type Tier = {
     href: string;
     label: string;
@@ -486,15 +485,8 @@ function ToolsStudio({
   ];
 
   return (
-    <div
-      className={cn(
-        "relative mt-1 rounded-xl border backdrop-blur-md p-1.5 transition-all",
-        anyActive
-          ? "bg-white/[0.08] border-[color:var(--nav-glow)]/45 shadow-[0_10px_30px_-12px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.10)]"
-          : "bg-white/[0.04] border-white/10 hover:border-[color:var(--nav-glow)]/35",
-      )}
-    >
-      <div className="flex items-center justify-between px-2 pt-1 pb-1.5">
+    <div className="relative mt-1">
+      <div className="flex items-center justify-between px-3 pt-3 pb-1">
         <p className="text-[10px] font-semibold tracking-[0.22em] uppercase text-white/55">
           Tools Studio
         </p>
@@ -518,14 +510,7 @@ function ToolsStudio({
               onClick={onNavigate}
               data-testid={t.testId}
             >
-              <div
-                className={cn(
-                  "group relative flex items-center gap-3 pl-3 pr-2 py-2 rounded-lg cursor-pointer transition-all border",
-                  t.isActive
-                    ? "bg-white/[0.10] border-[color:var(--nav-glow)]/55 text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.12)]"
-                    : "bg-white/[0.02] border-white/[0.06] text-white/80 hover:bg-white/[0.08] hover:text-white hover:border-[color:var(--nav-glow)]/40",
-                )}
-              >
+              <div className={navItemClass(t.isActive)}>
                 {/* Tier color dot — left edge accent */}
                 <span
                   aria-hidden
@@ -557,14 +542,7 @@ function SidebarProfileLink({ onNavigate }: { onNavigate: () => void }) {
   return (
     <div className="relative p-4 border-t border-white/10 z-10">
       <Link href="/profile" onClick={onNavigate} data-testid="nav-profile">
-        <div
-          className={cn(
-            "flex items-center gap-3 rounded-lg p-2 border transition-colors cursor-pointer",
-            isActive
-              ? "bg-white/[0.08] border-[color:var(--nav-glow)]/55 shadow-[0_8px_24px_-10px_var(--nav-glow)]"
-              : "bg-white/[0.03] border-white/8 hover:bg-white/[0.07] hover:border-[color:var(--nav-glow)]/45",
-          )}
-        >
+        <div className={navItemClass(isActive)}>
           {photoUrl ? (
             <img
               src={photoUrl}
