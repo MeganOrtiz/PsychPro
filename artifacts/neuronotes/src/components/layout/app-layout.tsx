@@ -16,11 +16,11 @@ type NavItem = { href: string; label: string; icon: React.ComponentType<{ classN
 // (size, padding, radius, blur) lives in the tokens here; the surface color,
 // border, outer glow, and the glowing active left-bar live in the
 // .nav-glass-* rules in index.css. Idle text is muted icy-blue and brightens
-// to luminous cyan (#A7F3E8) on hover/active.
+// to luminous cyan (#A7F3FF) on hover/active.
 const NAV_ITEM_BASE =
   "nav-glass group relative flex items-center gap-2.5 px-3 py-2 rounded-[8px] cursor-pointer transition-all duration-200 ease-in-out border backdrop-blur-md";
-const NAV_ITEM_IDLE = "nav-glass-idle text-[#B9D2DA] hover:text-[#A7F3E8]";
-const NAV_ITEM_ACTIVE = "nav-glass-active text-[#A7F3E8]";
+const NAV_ITEM_IDLE = "nav-glass-idle text-[#B9D2DA] hover:text-[#A7F3FF]";
+const NAV_ITEM_ACTIVE = "nav-glass-active text-[#A7F3FF]";
 
 function navItemClass(isActive: boolean) {
   return cn(NAV_ITEM_BASE, isActive ? NAV_ITEM_ACTIVE : NAV_ITEM_IDLE);
@@ -499,7 +499,7 @@ function ToolsStudio({
                 <Icon className="w-4 h-4 flex-shrink-0" />
                 <span className="text-sm font-medium flex-1 min-w-0 truncate">{t.label}</span>
                 {!isScholar && (
-                  <span className="inline-flex items-center text-[10px] font-semibold tracking-wide px-1.5 py-0.5 rounded-full text-[#A7F3E8] border border-[#5EEAD4]/30 shadow-[0_0_8px_rgba(94,234,212,0.18)]">
+                  <span className="inline-flex items-center text-[10px] font-semibold tracking-wide px-1.5 py-0.5 rounded-full text-[#A7F3FF] border border-[#76E4F7]/30 shadow-[0_0_8px_rgba(118,228,247,0.18)]">
                     PRO
                   </span>
                 )}

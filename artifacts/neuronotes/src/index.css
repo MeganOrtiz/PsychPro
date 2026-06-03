@@ -493,35 +493,35 @@
    Idle is a very dark teal at low opacity; hover/active/pressed brighten the
    surface and intensify the cyan outer glow. The active (current-route) row
    also gets a glowing cyan left bar via ::before. All glow colors use the
-   owner-specified mint-cyan #5EEAD4 / rgb(94,234,212). These plain rules sit
+   locked cerulean #76E4F7 / rgb(118,228,247). These plain rules sit
    outside @layer so they override the Tailwind border/background utilities on
    the nav tokens. */
 .nav-glass-idle {
   background: rgba(12, 28, 38, 0.55);
-  border: 1px solid rgba(94, 234, 212, 0.12);
+  border: 1px solid rgba(118, 228, 247, 0.12);
   box-shadow:
-    0 0 12px rgba(94, 234, 212, 0.08),
+    0 0 12px rgba(118, 228, 247, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 .nav-glass-idle:hover {
-  background: rgba(94, 234, 212, 0.06);
-  border-color: rgba(94, 234, 212, 0.20);
+  background: rgba(118, 228, 247, 0.06);
+  border-color: rgba(118, 228, 247, 0.20);
   box-shadow:
-    0 0 14px rgba(94, 234, 212, 0.18),
+    0 0 14px rgba(118, 228, 247, 0.18),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 .nav-glass-idle:active {
-  background: rgba(94, 234, 212, 0.10);
-  border-color: rgba(94, 234, 212, 0.24);
+  background: rgba(118, 228, 247, 0.10);
+  border-color: rgba(118, 228, 247, 0.24);
   box-shadow:
-    0 0 16px rgba(94, 234, 212, 0.22),
+    0 0 16px rgba(118, 228, 247, 0.22),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 .nav-glass-active {
-  background: rgba(94, 234, 212, 0.08);
-  border: 1px solid rgba(94, 234, 212, 0.18);
+  background: rgba(118, 228, 247, 0.08);
+  border: 1px solid rgba(118, 228, 247, 0.18);
   box-shadow:
-    0 0 16px rgba(94, 234, 212, 0.25),
+    0 0 16px rgba(118, 228, 247, 0.25),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 .nav-glass-active::before {
@@ -532,8 +532,8 @@
   bottom: 6px;
   width: 2px;
   border-radius: 0 2px 2px 0;
-  background: #5EEAD4;
-  box-shadow: 0 0 8px #5EEAD4;
+  background: #76E4F7;
+  box-shadow: 0 0 8px #76E4F7;
 }
 
 /* Legacy bg-primary/bg-secondary button glass — scoped to actual <button>
