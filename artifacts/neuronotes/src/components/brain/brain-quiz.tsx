@@ -23,6 +23,7 @@ export type QuizItem = {
   viewName: string;
   x: number;
   y: number;
+  blurb?: string; // one-line function, shown on reveal so the quiz teaches
 };
 
 type QType = "identify" | "find";
@@ -419,6 +420,24 @@ export default function BrainQuiz({
                 </button>
               );
             })}
+          </div>
+        )}
+
+        {/* Teaching reveal — turns every answer into a micro-lesson */}
+        {answered && q.item.blurb && (
+          <div
+            className="mt-3 rounded-xl px-3 py-2 flex items-start gap-2"
+            style={{
+              background: `${PALETTE.surf}14`,
+              border: `1px solid ${PALETTE.surf}40`,
+            }}
+            data-testid="quiz-teach"
+          >
+            <HelpCircle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: PALETTE.surf }} />
+            <p className="text-xs leading-snug" style={{ color: PALETTE.mist }}>
+              <span className="font-semibold" style={{ color: "#fff" }}>{q.item.name}:</span>{" "}
+              {q.item.blurb}
+            </p>
           </div>
         )}
 

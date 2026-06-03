@@ -689,7 +689,7 @@ const HOTSPOTS: Record<TabGroup | "all", Hotspot[]> = {
     { id: "occipital-lobe", x: 82, y: 42 },
     { id: "temporal-lobe", x: 44, y: 66 },
     { id: "orbitofrontal-cortex", x: 20, y: 60 },
-    { id: "broca-area", x: 27, y: 52 },
+    { id: "broca-area", x: 34, y: 53 },
     { id: "wernicke-area", x: 58, y: 54 },
     { id: "auditory-cortex", x: 49, y: 57 },
     { id: "supramarginal-gyrus", x: 61, y: 40 },
@@ -704,7 +704,7 @@ const HOTSPOTS: Record<TabGroup | "all", Hotspot[]> = {
     { id: "occipital-lobe", x: 82, y: 42 },
     { id: "temporal-lobe", x: 44, y: 66 },
     { id: "orbitofrontal-cortex", x: 20, y: 60 },
-    { id: "broca-area", x: 27, y: 52 },
+    { id: "broca-area", x: 34, y: 53 },
     { id: "wernicke-area", x: 58, y: 54 },
     { id: "auditory-cortex", x: 49, y: 57 },
     { id: "supramarginal-gyrus", x: 61, y: 40 },
@@ -729,7 +729,7 @@ const HOTSPOTS: Record<TabGroup | "all", Hotspot[]> = {
   whitematter: [
     { id: "corpus-callosum", x: 47, y: 39 },
     { id: "fornix", x: 41, y: 47 },
-    { id: "optic-chiasm", x: 33, y: 57 },
+    { id: "optic-chiasm", x: 31, y: 61 },
   ],
   // Coronal section — subcortical nuclei & ventricles
   subcortical: [
@@ -738,7 +738,7 @@ const HOTSPOTS: Record<TabGroup | "all", Hotspot[]> = {
     { id: "globus-pallidus", x: 40, y: 50 },
     { id: "putamen", x: 34, y: 48 },
     { id: "thalamus", x: 45, y: 53 },
-    { id: "internal-capsule", x: 42, y: 46 },
+    { id: "internal-capsule", x: 41, y: 48 },
   ],
 };
 
@@ -994,6 +994,7 @@ export default function BrainLabPage() {
           viewName: view.viewName,
           x: h.x,
           y: h.y,
+          blurb: s.functions[0] ?? s.overview,
         });
       }
     }
