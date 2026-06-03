@@ -451,11 +451,11 @@ export default function TermsPage() {
                 PsychPro is a registered literary work under the Digital
                 Millennium Copyright Act (DMCA). Send notices to{" "}
                 <a
-                  href="mailto:admin@psychprosuites.com"
+                  href="mailto:admin@psychprosuite.com"
                   className="underline"
                   style={{ color: P.surf }}
                 >
-                  admin@psychprosuites.com
+                  admin@psychprosuite.com
                 </a>
                 .
               </p>

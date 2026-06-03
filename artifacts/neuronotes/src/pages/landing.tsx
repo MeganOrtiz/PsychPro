@@ -145,7 +145,7 @@ const DASHBOARD_POINTS = [
 const FOOTER_LINKS = [
   { label: "Privacy Policy", href: "/privacy" },
   { label: "Terms of Service", href: "/terms" },
-  { label: "Contact", href: "mailto:admin@psychprosuites.com" },
+  { label: "Contact", href: "mailto:admin@psychprosuite.com" },
 ];
 
 // Category ordering for the "All topics" list at the bottom — mirrors the

@@ -440,11 +440,11 @@ export default function PrivacyPage() {
               </p>
               <p className="mt-1 font-light" style={{ color: P.mist }}>
                 <a
-                  href="mailto:admin@psychprosuites.com"
+                  href="mailto:admin@psychprosuite.com"
                   className="underline"
                   style={{ color: P.surf }}
                 >
-                  admin@psychprosuites.com
+                  admin@psychprosuite.com
                 </a>
               </p>
             </div>
