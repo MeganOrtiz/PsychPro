@@ -17,8 +17,8 @@ then later said the left column "gives a green vibe" and asked to fix it. So the
 override was *retracted* — the sidebar now conforms to the locked surf-cyan palette like
 the rest of the app.
 
-**How to apply:** Do NOT re-introduce `#5EEAD4` / `rgb(94,234,212)` / `#A7F3E8` in the
-sidebar nav. Keep it on the locked cyan. NOTE: the same mint still exists in the GLOBAL
-button glass (`.btn-glass`, `.btn-glass-strong`, `button.bg-primary/secondary`, outline
-buttons) in index.css — those were left as-is because the owner scoped the fix to the
-left column only. If the owner later complains buttons look green, shift those too.
+**How to apply:** Do NOT re-introduce `#5EEAD4` / `rgb(94,234,212)` / `#A7F3E8` ANYWHERE.
+The owner later said "mint needs to be all the way out," so the mint was also removed from
+the GLOBAL button glass (`.btn-glass`, `.btn-glass-strong`, `button.bg-primary/secondary`,
+outline buttons) in index.css — all of it is now `rgb(118,228,247)` / `#76E4F7`. As of
+2026-06-03 there are ZERO mint references in `artifacts/neuronotes/src`. Keep it that way.
