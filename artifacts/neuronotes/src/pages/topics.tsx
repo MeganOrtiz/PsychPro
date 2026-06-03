@@ -248,20 +248,12 @@ function CourseRail({
   );
 }
 
-// Mirrors the glass-button-with-glow language used by the sidebar nav items
-// (see NAV_ITEM_BASE/IDLE/ACTIVE in app-layout). The parent <aside> sets
-// --nav-glow so the shadow/border tint is consistent with the rest of the
-// shell.
-const RAIL_BASE =
-  "group relative w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all duration-200 border backdrop-blur-md cursor-pointer";
-const RAIL_IDLE =
-  "text-white/80 bg-white/[0.04] border-white/10 " +
-  "hover:bg-white/[0.10] hover:border-[color:var(--nav-glow)]/60 hover:text-white " +
-  "hover:shadow-[0_10px_30px_-10px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.12)]";
-const RAIL_ACTIVE =
-  "text-white bg-white/[0.12] border-[color:var(--nav-glow)]/65 " +
-  "shadow-[0_12px_32px_-10px_var(--nav-glow),inset_0_1px_0_0_rgba(255,255,255,0.16)]";
-
+// Crisp dark-cerulean glass — same voice as TopicCard and the sidebar nav, so
+// the course rail reads as solid, legible panels instead of the washed-out
+// white-tint glass that let the smoky brain background bleed through. Idle is a
+// deep teal gradient with a faint cerulean hairline; active brightens the fill,
+// border, and glow; hover lifts the border + glow without disturbing the active
+// item. Long course names wrap to two lines instead of truncating.
 function CourseRailButton({
   name,
   count,
@@ -274,28 +266,68 @@ function CourseRailButton({
   onClick: () => void;
 }) {
   const Icon = CATEGORY_ICONS[name] ?? LibraryBig;
+
+  const idleBg = "linear-gradient(135deg, rgba(10,45,61,0.78), rgba(2,13,18,0.86))";
+  const activeBg = "linear-gradient(135deg, rgba(118,228,247,0.15), rgba(10,45,61,0.90))";
+  const idleBorder = "rgba(118,228,247,0.20)";
+  const activeBorder = "rgba(118,228,247,0.55)";
+  const hoverBorder = "rgba(118,228,247,0.45)";
+  const idleShadow = "inset 0 1px 0 0 rgba(255,255,255,0.05)";
+  const activeShadow =
+    "0 14px 34px -14px rgba(118,228,247,0.55), inset 0 1px 0 0 rgba(255,255,255,0.10)";
+  const hoverShadow =
+    "0 12px 30px -14px rgba(118,228,247,0.45), inset 0 1px 0 0 rgba(255,255,255,0.10)";
+
   return (
     <button
       type="button"
       onClick={onClick}
       aria-pressed={active}
       data-testid={`course-rail-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
-      className={`${RAIL_BASE} ${active ? RAIL_ACTIVE : RAIL_IDLE}`}
+      className="group relative w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all duration-200 border backdrop-blur-md cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--nav-glow)]/50"
+      style={{
+        background: active ? activeBg : idleBg,
+        borderColor: active ? activeBorder : idleBorder,
+        boxShadow: active ? activeShadow : idleShadow,
+      }}
+      onMouseEnter={(e) => {
+        if (active) return;
+        e.currentTarget.style.borderColor = hoverBorder;
+        e.currentTarget.style.boxShadow = hoverShadow;
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = active ? activeBorder : idleBorder;
+        e.currentTarget.style.boxShadow = active ? activeShadow : idleShadow;
+      }}
     >
-      <Icon
-        className="w-4 h-4 shrink-0"
+      <span
+        className="w-9 h-9 shrink-0 rounded-lg flex items-center justify-center border"
         style={{
-          color: STUDY_PALETTE.surf,
-          filter: active
-            ? "drop-shadow(0 0 6px rgba(118,228,247,0.85))"
-            : undefined,
+          background:
+            "radial-gradient(circle at 50% 40%, rgba(118,228,247,0.18), rgba(10,45,61,0.55) 70%)",
+          borderColor: "rgba(118,228,247,0.28)",
         }}
-      />
+      >
+        <Icon
+          className="w-4 h-4"
+          style={{
+            color: STUDY_PALETTE.surf,
+            filter: active
+              ? "drop-shadow(0 0 6px rgba(118,228,247,0.85))"
+              : "drop-shadow(0 0 3px rgba(118,228,247,0.45))",
+          }}
+        />
+      </span>
       <div className="flex-1 min-w-0">
-        <div className="font-medium text-sm leading-tight truncate">{name}</div>
+        <div
+          className="font-medium text-sm leading-snug line-clamp-2"
+          style={{ color: active ? STUDY_PALETTE.cloud : "rgba(244,251,255,0.92)" }}
+        >
+          {name}
+        </div>
         <div
           className="text-[11px] mt-0.5"
-          style={{ color: active ? `${STUDY_PALETTE.mist}cc` : `${STUDY_PALETTE.mist}99` }}
+          style={{ color: active ? `${STUDY_PALETTE.mist}dd` : `${STUDY_PALETTE.mist}aa` }}
         >
           {count} {count === 1 ? "lesson" : "lessons"}
         </div>
@@ -304,6 +336,7 @@ function CourseRailButton({
         className={`w-4 h-4 shrink-0 transition-opacity ${
           active ? "opacity-90" : "opacity-0 group-hover:opacity-60"
         }`}
+        style={{ color: STUDY_PALETTE.surf }}
       />
     </button>
   );

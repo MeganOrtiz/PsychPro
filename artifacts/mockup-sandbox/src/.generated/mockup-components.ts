@@ -6,6 +6,7 @@ export const modules: ModuleMap = {
   "./components/mockups/brain-quiz/CalMidsagittal.tsx": () => import("../components/mockups/brain-quiz/CalMidsagittal.tsx"),
   "./components/mockups/brain-quiz/Quiz.tsx": () => import("../components/mockups/brain-quiz/Quiz.tsx"),
   "./components/mockups/cerulean-buttons/Showcase.tsx": () => import("../components/mockups/cerulean-buttons/Showcase.tsx"),
+  "./components/mockups/course-cards/BeforeAfter.tsx": () => import("../components/mockups/course-cards/BeforeAfter.tsx"),
   "./components/mockups/dashboard-buttons/BrightFrosted.tsx": () => import("../components/mockups/dashboard-buttons/BrightFrosted.tsx"),
   "./components/mockups/dashboard-buttons/Refined.tsx": () => import("../components/mockups/dashboard-buttons/Refined.tsx"),
   "./components/mockups/dashboard-buttons/StrongGlow.tsx": () => import("../components/mockups/dashboard-buttons/StrongGlow.tsx"),
