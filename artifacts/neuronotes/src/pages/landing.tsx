@@ -828,7 +828,9 @@ const styles = `
 .landing-tagline,
 .landing-headline,
 .landing-blurb,
-.landing-cta-row,
+/* Hero-scoped: .landing-cta-row is reused by the FINAL CTA section, so this
+   pre-animation opacity:0 must NOT apply globally or that button stays hidden. */
+.landing-hero .landing-cta-row,
 .landing-stat-strip {
   opacity: 0;
   transform: translateY(18px);

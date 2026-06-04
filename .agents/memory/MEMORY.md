@@ -11,6 +11,7 @@
 - [GLB asset corruption](glb-asset-corruption.md) — 3D brain "couldn't load" = brain.glb mangled by text-encoding (EF BF BD bytes) + three r184 dropping KHR spec-gloss; recover from git, strip required ext.
 - [Brain Lab 3D crash safety](brain-lab-3d-crash-safety.md) — keep the lazy WebGL view behind an error boundary and avoid remote runtime asset fetches (stale chunks / CDN HDR white-screen the page).
 - [PsychPro bg-primary wildcard](psychpro-bg-primary-wildcard.md) — never use [class*="bg-primary"] in study-page button-glass CSS; it hijacks every bg-primary/NN tint chip. Scope to button.bg-primary.
+- [PsychPro hero animation shared class](psychpro-hero-animation-shared-class.md) — landing "extra space/gap" near a button usually = hero opacity:0 entrance rule leaking onto a class (.landing-cta-row) reused outside .landing-hero; check parent row opacity.
 - [PsychPro Brain Lab 2D hotspots](psychpro-brain-2d-hotspots.md) — 2D HOTSPOTS (% coords) and 3D position data are independent; "wrong label" = bad coord value, not letterbox; verify via throwaway DEV route screenshot.
 - [Brain Lab view cutouts](brain-lab-view-cutouts.md) — view PNGs must be transparent cutouts; the grayscale+glow filter can't strip a baked-in background box.
 - [PsychPro mint fully removed](psychpro-sidebar-nav-mint-cyan.md) — owner RETRACTED mint #5EEAD4 app-wide (sidebar + all buttons); everything now uses locked cerulean #76E4F7. Never reintroduce mint.
