@@ -712,24 +712,24 @@ const HOTSPOTS: Record<TabGroup | "all", Hotspot[]> = {
   ],
   // Midsagittal view (brain faces left) — deep medial structures
   limbic: [
-    { id: "posterior-cingulate", x: 57, y: 34 },
-    { id: "fornix", x: 41, y: 47 },
-    { id: "mammillary-bodies", x: 42, y: 57 },
-    { id: "hippocampus", x: 36, y: 62 },
-    { id: "amygdala", x: 30, y: 60 },
+    { id: "posterior-cingulate", x: 56, y: 35 },
+    { id: "fornix", x: 42, y: 47 },
+    { id: "mammillary-bodies", x: 41, y: 55 },
+    { id: "hippocampus", x: 37, y: 63 },
+    { id: "amygdala", x: 33, y: 61 },
   ],
   brainstem: [
-    { id: "midbrain", x: 51, y: 57 },
-    { id: "locus-coeruleus", x: 53, y: 62 },
-    { id: "pons", x: 50, y: 66 },
-    { id: "medulla", x: 49, y: 77 },
-    { id: "cerebellum", x: 71, y: 69 },
-    { id: "pineal-gland", x: 55, y: 49 },
+    { id: "midbrain", x: 52, y: 58 },
+    { id: "locus-coeruleus", x: 51, y: 63 },
+    { id: "pons", x: 49, y: 68 },
+    { id: "medulla", x: 48, y: 82 },
+    { id: "cerebellum", x: 72, y: 72 },
+    { id: "pineal-gland", x: 54, y: 53 },
   ],
   whitematter: [
-    { id: "corpus-callosum", x: 47, y: 39 },
-    { id: "fornix", x: 41, y: 47 },
-    { id: "optic-chiasm", x: 31, y: 61 },
+    { id: "corpus-callosum", x: 45, y: 37 },
+    { id: "fornix", x: 42, y: 47 },
+    { id: "optic-chiasm", x: 38, y: 59 },
   ],
   // Coronal section — subcortical nuclei & ventricles
   subcortical: [
