@@ -69,6 +69,13 @@ function FittedBrain() {
     wrapper.add(obj);
     obj.position.sub(center);
     wrapper.scale.setScalar(s);
+    // The structure marker coords use +Z = anterior (front of brain), but this
+    // GLB is exported with its anterior facing -Z, so without this the occipital
+    // marker (z=-1.45) lands on the frontal lobe and every label reads
+    // front/back-swapped. Rotate the mesh 180° about Y so its anterior aligns
+    // with the marker coordinate space. (Markers are siblings, not children, so
+    // this rotates the mesh relative to them.)
+    wrapper.rotation.y = Math.PI;
     return wrapper;
   }, [scene]);
 

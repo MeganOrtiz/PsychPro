@@ -27,6 +27,17 @@ fine without an envMap, just less reflective). Keep the lazy 3D view inside its
 error boundary so chunk-load and three.js runtime errors fall back instead of
 blanking the page.
 
+**Mesh orientation vs marker coords:** Structure marker positions in
+`data/brain-structures.ts` use **+Z = anterior (front)**, +Y = up (e.g.
+frontal/prefrontal/orbitofrontal have z>0; occipital z=-1.45). The shipped
+brain.glb is exported with its anterior facing **-Z**, so `FittedBrain` applies
+`wrapper.rotation.y = Math.PI` to align the mesh to that coord space. Symptom if
+this is missing/wrong: labels read front/back-swapped (occipital marker sits on
+the frontal lobe). Markers are SIBLINGS of the mesh inside the shared spin group,
+so any orientation fix must rotate the mesh wrapper, never the shared group (that
+would move markers too). If the GLB is ever re-exported/replaced, re-check this
+rotation rather than editing the data.
+
 **Empty-brain ≠ corruption:** A report of "3D panel shows only faint marker
 glows, no white brain mesh" with NO error fallback shown is almost always the
 ~13MB brain.glb caught mid-download, NOT a corrupt asset. Markers render
