@@ -26,3 +26,16 @@ remote-HDR `Environment`; rely on in-scene lights (MeshPhysicalMaterial renders
 fine without an envMap, just less reflective). Keep the lazy 3D view inside its
 error boundary so chunk-load and three.js runtime errors fall back instead of
 blanking the page.
+
+**Empty-brain ≠ corruption:** A report of "3D panel shows only faint marker
+glows, no white brain mesh" with NO error fallback shown is almost always the
+~13MB brain.glb caught mid-download, NOT a corrupt asset. Markers render
+instantly (they live outside Suspense); the brain is under an inner
+`<Suspense fallback={null}>` so it shows nothing until the GLB streams in. Before
+chasing corruption, validate the GLB header (magic/total==filesize/BIN chunk) —
+if valid, the fix is a visible loading state, not a re-export. We added a
+`LoadingOverlay` (drei `useProgress`, rendered OUTSIDE `<Canvas>` in the DOM —
+the hook is a global loading-manager store, works without Canvas context) showing
+"Loading 3D brain… N%". Safe because the GLB is the only three.js-loader asset on
+the page (the section PNGs are plain `<img>`), so `useProgress.active` won't fire
+spuriously.

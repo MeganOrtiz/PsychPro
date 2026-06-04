@@ -1,6 +1,6 @@
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Html, useGLTF } from "@react-three/drei";
+import { OrbitControls, Html, useGLTF, useProgress } from "@react-three/drei";
 import * as THREE from "three";
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
 import type { BrainStructure } from "../../data/brain-structures";
@@ -345,6 +345,32 @@ function hasWebGL(): boolean {
   }
 }
 
+// Shows progress while the heavy (~13MB) GLB downloads. Lives OUTSIDE the
+// <Canvas> in the DOM (drei's useProgress is a plain store hook) so the user
+// sees a clear "loading" state instead of an empty 3D area that looks broken
+// while the model streams in.
+function LoadingOverlay() {
+  const { active, progress } = useProgress();
+  if (!active) return null;
+  return (
+    <div
+      className="absolute inset-0 flex flex-col items-center justify-center gap-3 pointer-events-none"
+      data-testid="brain-3d-loading"
+    >
+      <div
+        className="h-9 w-9 rounded-full border-2 animate-spin"
+        style={{
+          borderColor: `${PALETTE.surf}33`,
+          borderTopColor: PALETTE.surf,
+        }}
+      />
+      <p className="text-xs font-medium" style={{ color: `${PALETTE.mist}cc` }}>
+        Loading 3D brain… {Math.round(progress)}%
+      </p>
+    </div>
+  );
+}
+
 export default function Brain3DView({
   structures,
   selectedId,
@@ -397,6 +423,8 @@ export default function Brain3DView({
           autoSpin={!userInteracted}
         />
       </Canvas>
+
+      <LoadingOverlay />
 
       {/* Hint overlay */}
       <div
