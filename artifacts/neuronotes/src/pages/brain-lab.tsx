@@ -11,7 +11,6 @@ import {
   ChevronRight,
   BookOpen,
   Target,
-  Heart,
   Boxes,
   Activity,
   Network,
@@ -25,11 +24,11 @@ import {
   STRUCTURE_INDEX,
   SYSTEM_META,
   type BrainStructure,
-  type BrainSystem,
 } from "../data/brain-structures";
 import brainLateral from "@/assets/brain-views/lateral.png";
 import brainMidsagittal from "@/assets/brain-views/midsagittal.png";
 import brainCoronal from "@/assets/brain-views/coronal.png";
+import brainVentralNerves from "@/assets/brain-views/ventral-nerves.png";
 import BrainQuiz, { type QuizItem } from "@/components/brain/brain-quiz";
 
 // Heavy 3D view (three.js + 16MB GLB) is code-split so it only loads when
@@ -104,50 +103,38 @@ type ViewMode = "3d" | "sections" | "quiz";
 //   - Mobile detail drawer + region-tab auto-switching on selection
 // =============================================================================
 
-// 5 high-level tab groups that consolidate the 8 anatomical systems —
-// matches how clinicians actually think about regions vs. the granular
-// data model.
-const TAB_GROUPS = {
-  cortex: {
-    label: "Cortex",
-    icon: Brain,
-    systems: ["cortex"] as BrainSystem[],
-  },
-  limbic: {
-    label: "Limbic",
-    icon: Heart,
-    systems: ["limbic"] as BrainSystem[],
-  },
-  subcortical: {
-    label: "Subcortical",
-    icon: Boxes,
-    systems: ["diencephalon", "basal-ganglia", "ventricle"] as BrainSystem[],
-  },
-  brainstem: {
-    label: "Brainstem",
-    icon: Activity,
-    systems: ["brainstem", "cerebellum"] as BrainSystem[],
-  },
-  whitematter: {
-    label: "White Matter",
-    icon: Network,
-    systems: ["white-matter"] as BrainSystem[],
-  },
+// The Brain Lab is organized by anatomical VIEW (how you're looking at the
+// brain) rather than by structure category. Each view maps to a diagram image
+// and the structures visible from that angle. Views without an image yet render
+// an elegant "coming soon" placeholder (see BRAIN_VIEWS / BrainDiagram).
+const VIEWS = {
+  lateral: { label: "Lateral", icon: Compass },
+  medial: { label: "Medial", icon: Layers },
+  midsagittal: { label: "Midsagittal", icon: Activity },
+  coronal: { label: "Coronal", icon: Boxes },
+  dorsal: { label: "Dorsal", icon: Target },
+  ventral: { label: "Ventral", icon: Box },
+  ventralNerves: { label: "Cranial Nerves", icon: Network },
 } as const;
-type TabGroup = keyof typeof TAB_GROUPS;
-const TAB_KEYS: TabGroup[] = [
-  "cortex",
-  "limbic",
-  "subcortical",
-  "brainstem",
-  "whitematter",
+type ViewKey = keyof typeof VIEWS;
+const VIEW_KEYS: ViewKey[] = [
+  "lateral",
+  "medial",
+  "midsagittal",
+  "coronal",
+  "dorsal",
+  "ventral",
+  "ventralNerves",
 ];
 
-function tabForSystem(system: BrainSystem): TabGroup {
-  for (const key of TAB_KEYS) {
-    if (TAB_GROUPS[key].systems.includes(system)) return key;
+// Which view best shows a given structure — used to jump to the right diagram
+// when a structure is picked from search or a chip. Returns null when the
+// structure isn't placed on any current view image.
+function viewForStructure(id: string): ViewKey | null {
+  for (const key of VIEW_KEYS) {
+    if (HOTSPOTS[key].some((h) => h.id === id)) return key;
   }
-  return "cortex";
+  return null;
 }
 
 // ──────────────────────────── UI: search ────────────────────────────
@@ -269,17 +256,13 @@ function StructureSearch({
 
 // ──────────────────────────── UI: 5-group top tabs ────────────────────────────
 
-function TopTabs({
+function ViewTabs({
   active,
-  setActive,
+  onPick,
 }: {
-  active: TabGroup | "all";
-  setActive: (g: TabGroup | "all") => void;
+  active: ViewKey;
+  onPick: (v: ViewKey) => void;
 }) {
-  const items: { value: TabGroup | "all"; label: string; Icon: React.ComponentType<{ className?: string }> }[] = [
-    { value: "all", label: "All", Icon: Compass },
-    ...TAB_KEYS.map((k) => ({ value: k, label: TAB_GROUPS[k].label, Icon: TAB_GROUPS[k].icon })),
-  ];
   return (
     <div
       className="inline-flex items-center gap-1 p-1 rounded-2xl border overflow-x-auto"
@@ -288,17 +271,18 @@ function TopTabs({
         borderColor: `${PALETTE.steel}99`,
       }}
       role="tablist"
-      aria-label="Brain region tabs"
+      aria-label="Brain view tabs"
       data-testid="brain-top-tabs"
     >
-      {items.map(({ value, label, Icon }) => {
+      {VIEW_KEYS.map((value) => {
+        const { label, icon: Icon } = VIEWS[value];
         const isActive = active === value;
         return (
           <button
             key={value}
             role="tab"
             aria-selected={isActive}
-            onClick={() => setActive(value)}
+            onClick={() => onPick(value)}
             className="px-3 md:px-4 py-1.5 rounded-xl text-xs md:text-sm font-medium flex items-center gap-1.5 whitespace-nowrap transition-all"
             style={
               isActive
@@ -330,14 +314,18 @@ function GroupChips({
   selectedId,
   onPick,
 }: {
-  active: TabGroup | "all";
+  active: ViewKey;
   selectedId: string | null;
   onPick: (id: string) => void;
 }) {
-  const items =
-    active === "all"
-      ? BRAIN_STRUCTURES
-      : BRAIN_STRUCTURES.filter((s) => TAB_GROUPS[active].systems.includes(s.system));
+  // Structures placed on the active view's diagram. When a view has no image/
+  // hotspots yet, fall back to the full library so the strip stays useful.
+  const viewHotspots = HOTSPOTS[active] ?? [];
+  const items: BrainStructure[] = viewHotspots.length
+    ? viewHotspots
+        .map((h) => STRUCTURE_INDEX[h.id])
+        .filter((s): s is BrainStructure => Boolean(s))
+    : BRAIN_STRUCTURES;
 
   return (
     <div
@@ -635,38 +623,43 @@ function EmptyDetail() {
 // group still set to `src: null` renders an elegant "coming soon" placeholder
 // so the page never breaks while the image library is being filled in.
 const BRAIN_VIEWS: Record<
-  TabGroup | "all",
+  ViewKey,
   { src: string | null; viewName: string; caption: string }
 > = {
-  all: {
+  lateral: {
     src: brainLateral,
     viewName: "Lateral view",
     caption: "The brain's outer surface — side profile",
   },
-  cortex: {
-    src: brainLateral,
-    viewName: "Lateral view",
-    caption: "Cerebral cortex — the folded outer surface",
+  medial: {
+    src: null,
+    viewName: "Medial view",
+    caption: "The medial surface of the hemisphere",
   },
-  limbic: {
+  midsagittal: {
     src: brainMidsagittal,
     viewName: "Midsagittal view",
-    caption: "Limbic system — hippocampus, amygdala, cingulate",
+    caption: "Cut down the midline — deep medial structures",
   },
-  subcortical: {
+  coronal: {
     src: brainCoronal,
     viewName: "Coronal section",
-    caption: "Subcortical — thalamus, basal ganglia, ventricles",
+    caption: "Frontal slice — subcortical nuclei & ventricles",
   },
-  brainstem: {
-    src: brainMidsagittal,
-    viewName: "Midsagittal view",
-    caption: "Brainstem & cerebellum",
+  dorsal: {
+    src: null,
+    viewName: "Dorsal (superior) view",
+    caption: "Top-down view of the cerebral hemispheres",
   },
-  whitematter: {
-    src: brainMidsagittal,
-    viewName: "Midsagittal view",
-    caption: "White matter tracts — corpus callosum & pathways",
+  ventral: {
+    src: null,
+    viewName: "Ventral (inferior) view",
+    caption: "The underside of the brain",
+  },
+  ventralNerves: {
+    src: brainVentralNerves,
+    viewName: "Ventral view — cranial nerves",
+    caption: "The underside of the brain showing the cranial nerves",
   },
 };
 
@@ -678,9 +671,9 @@ const BRAIN_VIEWS: Record<
 // the brain and its full detail opens in the panel on the right.
 type Hotspot = { id: string; x: number; y: number };
 
-const HOTSPOTS: Record<TabGroup | "all", Hotspot[]> = {
+const HOTSPOTS: Record<ViewKey, Hotspot[]> = {
   // Lateral view (brain faces left) — cortical surface
-  all: [
+  lateral: [
     { id: "prefrontal-cortex", x: 14, y: 46 },
     { id: "frontal-lobe", x: 25, y: 34 },
     { id: "motor-cortex", x: 41, y: 20 },
@@ -695,50 +688,49 @@ const HOTSPOTS: Record<TabGroup | "all", Hotspot[]> = {
     { id: "supramarginal-gyrus", x: 61, y: 40 },
     { id: "angular-gyrus", x: 67, y: 45 },
   ],
-  cortex: [
-    { id: "prefrontal-cortex", x: 14, y: 46 },
-    { id: "frontal-lobe", x: 25, y: 34 },
-    { id: "motor-cortex", x: 41, y: 20 },
-    { id: "somatosensory-cortex", x: 49, y: 20 },
-    { id: "parietal-lobe", x: 60, y: 28 },
-    { id: "occipital-lobe", x: 82, y: 42 },
-    { id: "temporal-lobe", x: 44, y: 66 },
-    { id: "orbitofrontal-cortex", x: 20, y: 60 },
-    { id: "broca-area", x: 34, y: 53 },
-    { id: "wernicke-area", x: 58, y: 54 },
-    { id: "auditory-cortex", x: 49, y: 57 },
-    { id: "supramarginal-gyrus", x: 61, y: 40 },
-    { id: "angular-gyrus", x: 67, y: 45 },
-  ],
-  // Midsagittal view (brain faces left) — deep medial structures
-  limbic: [
+  // No dedicated medial-surface image yet — placeholder view.
+  medial: [],
+  // Midsagittal view (brain faces left) — deep medial structures spanning the
+  // limbic system, brainstem/cerebellum, and midline white-matter tracts.
+  midsagittal: [
+    { id: "corpus-callosum", x: 45, y: 37 },
     { id: "posterior-cingulate", x: 56, y: 35 },
     { id: "fornix", x: 42, y: 47 },
     { id: "mammillary-bodies", x: 41, y: 55 },
     { id: "hippocampus", x: 37, y: 63 },
     { id: "amygdala", x: 33, y: 61 },
-  ],
-  brainstem: [
+    { id: "pineal-gland", x: 54, y: 53 },
     { id: "midbrain", x: 52, y: 58 },
+    { id: "optic-chiasm", x: 38, y: 59 },
     { id: "locus-coeruleus", x: 51, y: 63 },
     { id: "pons", x: 49, y: 68 },
     { id: "medulla", x: 48, y: 82 },
     { id: "cerebellum", x: 72, y: 72 },
-    { id: "pineal-gland", x: 54, y: 53 },
-  ],
-  whitematter: [
-    { id: "corpus-callosum", x: 45, y: 37 },
-    { id: "fornix", x: 42, y: 47 },
-    { id: "optic-chiasm", x: 38, y: 59 },
   ],
   // Coronal section — subcortical nuclei & ventricles
-  subcortical: [
+  coronal: [
     { id: "lateral-ventricles", x: 48, y: 40 },
     { id: "caudate", x: 44, y: 41 },
     { id: "globus-pallidus", x: 40, y: 50 },
     { id: "putamen", x: 34, y: 48 },
     { id: "thalamus", x: 45, y: 53 },
     { id: "internal-capsule", x: 41, y: 48 },
+  ],
+  // Placeholder views — no image / hotspots wired yet.
+  dorsal: [],
+  ventral: [],
+  // Ventral (inferior) surface showing the cranial-nerve roots — markers sit on
+  // the midline structures and lobes visible from below.
+  ventralNerves: [
+    { id: "frontal-lobe", x: 50, y: 13 },
+    { id: "orbitofrontal-cortex", x: 40, y: 19 },
+    { id: "temporal-lobe", x: 28, y: 46 },
+    { id: "optic-chiasm", x: 49, y: 36 },
+    { id: "mammillary-bodies", x: 49, y: 43 },
+    { id: "midbrain", x: 49, y: 50 },
+    { id: "pons", x: 49, y: 58 },
+    { id: "medulla", x: 49, y: 67 },
+    { id: "cerebellum", x: 40, y: 77 },
   ],
 };
 
@@ -840,16 +832,16 @@ function HotspotMarker({
 // elegant placeholder for groups whose view image hasn't been added yet.
 // Clickable markers sit on top of the image for each visible structure.
 function BrainDiagram({
-  activeTab,
+  activeView,
   selectedId,
   onSelect,
 }: {
-  activeTab: TabGroup | "all";
+  activeView: ViewKey;
   selectedId: string | null;
   onSelect: (id: string) => void;
 }) {
-  const view = BRAIN_VIEWS[activeTab];
-  const hotspots = HOTSPOTS[activeTab] ?? [];
+  const view = BRAIN_VIEWS[activeView];
+  const hotspots = HOTSPOTS[activeView] ?? [];
 
   return (
     <div
@@ -870,7 +862,7 @@ function BrainDiagram({
               // view (e.g. the coronal section) inherits this automatically.
               filter: `grayscale(1) contrast(1.05) brightness(1.03) drop-shadow(0 24px 60px ${PALETTE.bg}) drop-shadow(0 0 40px ${PALETTE.teal}55)`,
             }}
-            data-testid={`brain-view-${activeTab}`}
+            data-testid={`brain-view-${activeView}`}
           />
           {/* Clickable region markers, positioned over the rendered image */}
           {hotspots.map((h) => {
@@ -891,7 +883,7 @@ function BrainDiagram({
       ) : (
         <div
           className="flex flex-col items-center justify-center text-center gap-3 px-6"
-          data-testid={`brain-view-placeholder-${activeTab}`}
+          data-testid={`brain-view-placeholder-${activeView}`}
         >
           <div
             className="w-16 h-16 rounded-2xl flex items-center justify-center"
@@ -955,21 +947,14 @@ function writeFocusToHash(id: string | null) {
 
 export default function BrainLabPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<TabGroup | "all">("all");
-  const [viewMode, setViewMode] = useState<ViewMode>("3d");
+  const [activeView, setActiveView] = useState<ViewKey>("lateral");
+  const [viewMode, setViewMode] = useState<ViewMode>("sections");
   const [searchOpen, setSearchOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [showMobileDetail, setShowMobileDetail] = useState(false);
 
-  // Structures visible as clickable markers in the 3D view — mirrors the
-  // GroupChips filter so the active tab governs what's highlighted.
-  const view3dStructures = useMemo(
-    () =>
-      activeTab === "all"
-        ? BRAIN_STRUCTURES
-        : BRAIN_STRUCTURES.filter((s) => TAB_GROUPS[activeTab].systems.includes(s.system)),
-    [activeTab],
-  );
+  // The 3D model shows every structure; the anatomical views drive the 2D atlas.
+  const view3dStructures = BRAIN_STRUCTURES;
 
   // Flat pool for the "label each part" quiz — every hotspot that sits on a real
   // view image, deduped by structure and grouped by the diagram it appears on
@@ -977,7 +962,7 @@ export default function BrainLabPage() {
   const quizItems = useMemo<QuizItem[]>(() => {
     const seen = new Set<string>();
     const out: QuizItem[] = [];
-    for (const tab of Object.keys(HOTSPOTS) as (TabGroup | "all")[]) {
+    for (const tab of VIEW_KEYS) {
       const view = BRAIN_VIEWS[tab];
       if (!view.src) continue;
       for (const h of HOTSPOTS[tab]) {
@@ -1010,16 +995,16 @@ export default function BrainLabPage() {
     const initial = readFocusFromHash();
     if (initial) {
       setSelectedId(initial);
-      const s = STRUCTURE_INDEX[initial];
-      if (s) setActiveTab(tabForSystem(s.system));
+      const v = viewForStructure(initial);
+      if (v) setActiveView(v);
     }
 
     const onHash = () => {
       const f = readFocusFromHash();
       setSelectedId(f);
       if (f) {
-        const s = STRUCTURE_INDEX[f];
-        if (s) setActiveTab(tabForSystem(s.system));
+        const v = viewForStructure(f);
+        if (v) setActiveView(v);
       }
     };
     window.addEventListener("hashchange", onHash);
@@ -1034,8 +1019,8 @@ export default function BrainLabPage() {
     setSearchOpen(false);
     writeFocusToHash(id);
     setShowMobileDetail(true);
-    const struct = STRUCTURE_INDEX[id];
-    if (struct) setActiveTab(tabForSystem(struct.system));
+    const v = viewForStructure(id);
+    if (v) setActiveView(v);
   }, []);
 
   const handleClose = useCallback(() => {
@@ -1163,7 +1148,13 @@ export default function BrainLabPage() {
           background: `linear-gradient(180deg, ${PALETTE.surface}66, transparent)`,
         }}
       >
-        <TopTabs active={activeTab} setActive={setActiveTab} />
+        <ViewTabs
+          active={activeView}
+          onPick={(v) => {
+            setActiveView(v);
+            setViewMode("sections");
+          }}
+        />
       </div>
 
       {/* Body — 2-pane: diagram canvas / detail */}
@@ -1218,7 +1209,7 @@ export default function BrainLabPage() {
               />
             ) : (
               <BrainDiagram
-                activeTab={activeTab}
+                activeView={activeView}
                 selectedId={selectedId}
                 onSelect={handleSelect}
               />
@@ -1238,7 +1229,7 @@ export default function BrainLabPage() {
               borderColor: `${PALETTE.steel}99`,
             }}
           >
-            <GroupChips active={activeTab} selectedId={selectedId} onPick={handleSelect} />
+            <GroupChips active={activeView} selectedId={selectedId} onPick={handleSelect} />
           </div>
         </div>
 
