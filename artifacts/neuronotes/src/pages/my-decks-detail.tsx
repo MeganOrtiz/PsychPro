@@ -669,21 +669,13 @@ export default function MyDeckDetailPage() {
             <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border-blue-200">Standard Tools</Badge>
           )}
         </div>
-        <div className="flex gap-3 mt-2 text-sm text-muted-foreground justify-center">
-          {deck.tier === "pro" ? (
-            <>
-              <span>{flashcards.length} cards</span>
-              <span>·</span>
-              <span>{clozeItems.length} fill-in items</span>
-            </>
-          ) : (
-            <>
-              <span>{flashcards.length} flashcards</span>
-              <span>·</span>
-              <span>{quizQuestions.length} quiz questions</span>
-            </>
-          )}
-        </div>
+        {deck.tier !== "pro" && (
+          <div className="flex gap-3 mt-2 text-sm text-muted-foreground justify-center">
+            <span>{flashcards.length} flashcards</span>
+            <span>·</span>
+            <span>{quizQuestions.length} quiz questions</span>
+          </div>
+        )}
       </div>
 
       <div className="flex gap-1 bg-muted/60 rounded-xl p-1 mb-5 overflow-x-auto">
