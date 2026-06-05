@@ -107,6 +107,40 @@ export interface PracticeExam {
   questions: QuizQuestion[];
 }
 
+export interface CourseMasteryExam {
+  category: string;
+  title: string;
+  /** Percentage required to pass the mastery exam (90). */
+  passingScore: number;
+  /**
+   * Total exam time budget in seconds. 0 or null means untimed.
+   * @nullable
+   */
+  timeLimit?: number | null;
+  /** Total quiz questions pooled across the course's topics. */
+  availableCount: number;
+  totalTopics?: number;
+  questions: QuizQuestion[];
+}
+
+export interface RecordCourseMasteryAttemptBody {
+  category: string;
+  /** Percentage score (0-100). */
+  score: number;
+  correct: number;
+  total: number;
+}
+
+export interface CourseMasteryAttemptRecord {
+  id: number;
+  category: string;
+  score: number;
+  correct: number;
+  total: number;
+  passed: boolean;
+  completedAt: string;
+}
+
 export interface UserProfile {
   id: string;
   /** @nullable */

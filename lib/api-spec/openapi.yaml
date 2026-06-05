@@ -174,6 +174,49 @@ paths:
         "404":
           description: Exam not found
 
+  /courses/{category}/mastery-exam:
+    get:
+      operationId: getCourseMasteryExam
+      tags: [practiceExams]
+      summary: Get the course mastery exam for a category
+      description: "Aggregates quiz questions across every topic in the category. Requires that ALL topics in the course are completed (progress score >= 70), otherwise returns 403."
+      parameters:
+        - name: category
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Course mastery exam with questions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CourseMasteryExam"
+        "403":
+          description: Course not yet completed
+        "404":
+          description: Course or questions not found
+
+  /course-mastery-attempts:
+    post:
+      operationId: recordCourseMasteryAttempt
+      tags: [progress]
+      summary: Record a completed course mastery exam attempt for the current user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RecordCourseMasteryAttemptBody"
+      responses:
+        "200":
+          description: Recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CourseMasteryAttemptRecord"
+
   /users/profile:
     get:
       operationId: getUserProfile
@@ -593,6 +636,79 @@ components:
         - topicId
         - title
         - questions
+
+    CourseMasteryExam:
+      type: object
+      properties:
+        category:
+          type: string
+        title:
+          type: string
+        passingScore:
+          type: integer
+          description: "Percentage required to pass the mastery exam (90)."
+        timeLimit:
+          type: ["integer", "null"]
+          description: "Total exam time budget in seconds. 0 or null means untimed."
+        availableCount:
+          type: integer
+          description: "Total quiz questions pooled across the course's topics."
+        totalTopics:
+          type: integer
+        questions:
+          type: array
+          items:
+            $ref: "#/components/schemas/QuizQuestion"
+      required:
+        - category
+        - title
+        - passingScore
+        - availableCount
+        - questions
+
+    RecordCourseMasteryAttemptBody:
+      type: object
+      properties:
+        category:
+          type: string
+        score:
+          type: integer
+          description: "Percentage score (0-100)."
+        correct:
+          type: integer
+        total:
+          type: integer
+      required:
+        - category
+        - score
+        - correct
+        - total
+
+    CourseMasteryAttemptRecord:
+      type: object
+      properties:
+        id:
+          type: integer
+        category:
+          type: string
+        score:
+          type: integer
+        correct:
+          type: integer
+        total:
+          type: integer
+        passed:
+          type: boolean
+        completedAt:
+          type: string
+      required:
+        - id
+        - category
+        - score
+        - correct
+        - total
+        - passed
+        - completedAt
 
     UserProfile:
       type: object

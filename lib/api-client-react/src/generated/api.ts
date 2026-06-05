@@ -19,6 +19,8 @@ import type {
 import type {
   AttemptRecord,
   CheckoutSessionResponse,
+  CourseMasteryAttemptRecord,
+  CourseMasteryExam,
   CreateCheckoutSessionBody,
   DashboardSummary,
   Flashcard,
@@ -29,6 +31,7 @@ import type {
   PracticeExam,
   QuizQuestion,
   RecordAttemptBody,
+  RecordCourseMasteryAttemptBody,
   StudyGuide,
   SubscriptionPlan,
   SubscriptionStatus,
@@ -661,6 +664,186 @@ export function useGetPracticeExamByTopic<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+/**
+ * Aggregates quiz questions across every topic in the category. Requires that ALL topics in the course are completed (progress score >= 70), otherwise returns 403.
+ * @summary Get the course mastery exam for a category
+ */
+export const getGetCourseMasteryExamUrl = (category: string) => {
+  return `/api/courses/${category}/mastery-exam`;
+};
+
+export const getCourseMasteryExam = async (
+  category: string,
+  options?: RequestInit,
+): Promise<CourseMasteryExam> => {
+  return customFetch<CourseMasteryExam>(getGetCourseMasteryExamUrl(category), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetCourseMasteryExamQueryKey = (category: string) => {
+  return [`/api/courses/${category}/mastery-exam`] as const;
+};
+
+export const getGetCourseMasteryExamQueryOptions = <
+  TData = Awaited<ReturnType<typeof getCourseMasteryExam>>,
+  TError = ErrorType<void>,
+>(
+  category: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getCourseMasteryExam>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetCourseMasteryExamQueryKey(category);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getCourseMasteryExam>>
+  > = ({ signal }) =>
+    getCourseMasteryExam(category, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!category,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getCourseMasteryExam>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetCourseMasteryExamQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getCourseMasteryExam>>
+>;
+export type GetCourseMasteryExamQueryError = ErrorType<void>;
+
+/**
+ * @summary Get the course mastery exam for a category
+ */
+
+export function useGetCourseMasteryExam<
+  TData = Awaited<ReturnType<typeof getCourseMasteryExam>>,
+  TError = ErrorType<void>,
+>(
+  category: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getCourseMasteryExam>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetCourseMasteryExamQueryOptions(category, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Record a completed course mastery exam attempt for the current user
+ */
+export const getRecordCourseMasteryAttemptUrl = () => {
+  return `/api/course-mastery-attempts`;
+};
+
+export const recordCourseMasteryAttempt = async (
+  recordCourseMasteryAttemptBody: RecordCourseMasteryAttemptBody,
+  options?: RequestInit,
+): Promise<CourseMasteryAttemptRecord> => {
+  return customFetch<CourseMasteryAttemptRecord>(
+    getRecordCourseMasteryAttemptUrl(),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(recordCourseMasteryAttemptBody),
+    },
+  );
+};
+
+export const getRecordCourseMasteryAttemptMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof recordCourseMasteryAttempt>>,
+    TError,
+    { data: BodyType<RecordCourseMasteryAttemptBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof recordCourseMasteryAttempt>>,
+  TError,
+  { data: BodyType<RecordCourseMasteryAttemptBody> },
+  TContext
+> => {
+  const mutationKey = ["recordCourseMasteryAttempt"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof recordCourseMasteryAttempt>>,
+    { data: BodyType<RecordCourseMasteryAttemptBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return recordCourseMasteryAttempt(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type RecordCourseMasteryAttemptMutationResult = NonNullable<
+  Awaited<ReturnType<typeof recordCourseMasteryAttempt>>
+>;
+export type RecordCourseMasteryAttemptMutationBody =
+  BodyType<RecordCourseMasteryAttemptBody>;
+export type RecordCourseMasteryAttemptMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Record a completed course mastery exam attempt for the current user
+ */
+export const useRecordCourseMasteryAttempt = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof recordCourseMasteryAttempt>>,
+    TError,
+    { data: BodyType<RecordCourseMasteryAttemptBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof recordCourseMasteryAttempt>>,
+  TError,
+  { data: BodyType<RecordCourseMasteryAttemptBody> },
+  TContext
+> => {
+  return useMutation(getRecordCourseMasteryAttemptMutationOptions(options));
+};
 
 /**
  * @summary Get the current user profile

@@ -19,3 +19,4 @@
 - [Replit secrets quirks](replit-secrets-quirks.md) — can't programmatically fix a secret-stored value (deleteEnvVars no-ops, setEnvVars refuses); normalize bad pasted keys in code instead.
 - [Clerk dev vs prod keys](psychpro-clerk-dev-keys.md) — preview needs pk_test/sk_test in VITE_CLERK_PUBLISHABLE_KEY_DEV + CLERK_SK_OVERRIDE (dev-gated); prod pk_live rejects the Replit dev origin.
 - [Brain Lab 3D marker depth](brain-lab-3d-marker-depth.md) — fade <Html> markers by camera-facing (not hard occlude); hard occlusion hides interior structures.
+- [api-server route-auth matrix](api-server-route-auth-matrix.md) — every new Express route must be classified in routeAuthMatrix.test.ts; test stops at first failed check, hiding later drift.

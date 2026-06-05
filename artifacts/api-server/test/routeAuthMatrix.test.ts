@@ -52,6 +52,18 @@ const PROTECTED = new Set<string>([
   "GET /api/dashboard/summary",
   "POST /api/quiz-attempts",
   "POST /api/exam-attempts",
+  // course mastery exam
+  "GET /api/courses/:category/mastery-exam",
+  "POST /api/course-mastery-attempts",
+  // topic content (auth-gated behind free-tier entitlements)
+  "GET /api/topics/:topicId/flashcards",
+  "GET /api/topics/:topicId/quizzes",
+  "GET /api/topics/:topicId/practice-exam",
+  // users (account management + admin)
+  "DELETE /api/users/me",
+  "DELETE /api/users/:userId",
+  "GET /api/users/duplicates",
+  "GET /api/users/entitlements",
   // subscription
   "POST /api/subscription/checkout",
   "POST /api/subscription/portal",
@@ -104,9 +116,6 @@ const ANONYMOUS = new Set<string>([
   // topics (read-only catalog)
   "GET /api/topics",
   "GET /api/topics/:topicId",
-  "GET /api/topics/:topicId/flashcards",
-  "GET /api/topics/:topicId/quizzes",
-  "GET /api/topics/:topicId/practice-exam",
   // client error reporter (anonymous-tolerant, rate-limited)
   "POST /api/client-errors",
   // leaderboard

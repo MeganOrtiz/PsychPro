@@ -13,8 +13,10 @@ import {
   MessagesSquare,
   BarChart3,
   Sparkles,
+  GraduationCap,
+  Lock,
 } from "lucide-react";
-import { useGetTopics } from "@workspace/api-client-react";
+import { useGetTopics, useGetUserProgress } from "@workspace/api-client-react";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { STUDY_PALETTE } from "@/lib/study-theme";
@@ -396,7 +398,123 @@ function CourseLessons({
           <TopicCard key={t.id} topic={t} onClick={() => onLessonClick(t.id)} />
         ))}
       </div>
+
+      {/* Course Mastery Exam — capstone. Unlocks once every lesson above is
+          completed (progress score >= 70). */}
+      <CourseMasteryButton group={group} />
     </div>
+  );
+}
+
+// =============================================================================
+// CourseMasteryButton — full-width glass capstone button at the bottom of the
+// right pane. Mirrors the rail/card cerulean glass voice. Locked (with a lock
+// icon + progress) until all lessons in the course are completed.
+// =============================================================================
+const COURSE_COMPLETION_THRESHOLD = 70;
+
+function CourseMasteryButton({ group }: { group: { name: string; items: Topic[] } }) {
+  const [, navigate] = useLocation();
+  const { data: progress } = useGetUserProgress();
+
+  const completedIds = useMemo(() => {
+    const s = new Set<number>();
+    for (const p of progress ?? []) {
+      if (p.score >= COURSE_COMPLETION_THRESHOLD) s.add(p.topicId);
+    }
+    return s;
+  }, [progress]);
+
+  const total = group.items.length;
+  const completedCount = group.items.filter(t => completedIds.has(t.id)).length;
+  const unlocked = total > 0 && completedCount >= total;
+
+  const lockedBg = "linear-gradient(135deg, rgba(10,45,61,0.78), rgba(2,13,18,0.86))";
+  const unlockedBg = "linear-gradient(135deg, rgba(118,228,247,0.16), rgba(10,45,61,0.92))";
+  const lockedBorder = "rgba(118,228,247,0.18)";
+  const unlockedBorder = "rgba(118,228,247,0.55)";
+  const lockedShadow = "inset 0 1px 0 0 rgba(255,255,255,0.05)";
+  const unlockedShadow =
+    "0 16px 38px -14px rgba(118,228,247,0.55), inset 0 1px 0 0 rgba(255,255,255,0.10)";
+  const hoverBorder = "rgba(118,228,247,0.75)";
+  const hoverShadow =
+    "0 18px 44px -12px rgba(118,228,247,0.7), inset 0 1px 0 0 rgba(255,255,255,0.12)";
+
+  const Marker = unlocked ? GraduationCap : Lock;
+
+  return (
+    <button
+      type="button"
+      disabled={!unlocked}
+      onClick={() => {
+        if (!unlocked) return;
+        navigate(`/courses/${encodeURIComponent(group.name)}/mastery-exam`);
+      }}
+      data-testid={`course-mastery-${group.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+      className={`group relative w-full mt-5 flex items-center gap-4 px-4 py-4 rounded-xl text-left transition-all duration-200 border backdrop-blur-md focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--nav-glow,#76E4F7)]/50 ${
+        unlocked ? "cursor-pointer" : "cursor-not-allowed"
+      }`}
+      style={{
+        ["--nav-glow" as never]: STUDY_PALETTE.surf,
+        background: unlocked ? unlockedBg : lockedBg,
+        borderColor: unlocked ? unlockedBorder : lockedBorder,
+        boxShadow: unlocked ? unlockedShadow : lockedShadow,
+        opacity: unlocked ? 1 : 0.85,
+      }}
+      onMouseEnter={(e) => {
+        if (!unlocked) return;
+        e.currentTarget.style.borderColor = hoverBorder;
+        e.currentTarget.style.boxShadow = hoverShadow;
+      }}
+      onMouseLeave={(e) => {
+        if (!unlocked) return;
+        e.currentTarget.style.borderColor = unlockedBorder;
+        e.currentTarget.style.boxShadow = unlockedShadow;
+      }}
+    >
+      <span
+        className="w-11 h-11 shrink-0 rounded-lg flex items-center justify-center border"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 40%, rgba(118,228,247,0.18), rgba(10,45,61,0.55) 70%)",
+          borderColor: "rgba(118,228,247,0.28)",
+        }}
+      >
+        <Marker
+          className="w-5 h-5"
+          style={{
+            color: STUDY_PALETTE.surf,
+            filter: unlocked
+              ? "drop-shadow(0 0 6px rgba(118,228,247,0.85))"
+              : "drop-shadow(0 0 3px rgba(118,228,247,0.4))",
+          }}
+        />
+      </span>
+      <div className="flex-1 min-w-0">
+        <div
+          className="font-semibold text-sm md:text-base leading-snug"
+          style={{ color: unlocked ? STUDY_PALETTE.cloud : "rgba(244,251,255,0.9)" }}
+        >
+          Course Mastery Exam
+        </div>
+        <div
+          className="text-[11px] md:text-xs mt-0.5"
+          style={{ color: unlocked ? `${STUDY_PALETTE.mist}dd` : `${STUDY_PALETTE.mist}aa` }}
+        >
+          {unlocked
+            ? "Comprehensive exam · 90% to pass"
+            : `Complete all ${total} ${total === 1 ? "lesson" : "lessons"} to unlock · ${completedCount}/${total} done`}
+        </div>
+      </div>
+      {unlocked ? (
+        <ChevronRight
+          className="w-5 h-5 shrink-0 opacity-70 group-hover:opacity-100 transition-opacity"
+          style={{ color: STUDY_PALETTE.surf }}
+        />
+      ) : (
+        <Lock className="w-4 h-4 shrink-0 opacity-50" style={{ color: STUDY_PALETTE.surf }} />
+      )}
+    </button>
   );
 }
 

@@ -193,6 +193,63 @@ export const GetPracticeExamByTopicResponse = zod.object({
 });
 
 /**
+ * Aggregates quiz questions across every topic in the category. Requires that ALL topics in the course are completed (progress score >= 70), otherwise returns 403.
+ * @summary Get the course mastery exam for a category
+ */
+export const GetCourseMasteryExamParams = zod.object({
+  category: zod.coerce.string(),
+});
+
+export const GetCourseMasteryExamResponse = zod.object({
+  category: zod.string(),
+  title: zod.string(),
+  passingScore: zod
+    .number()
+    .describe("Percentage required to pass the mastery exam (90)."),
+  timeLimit: zod
+    .number()
+    .nullish()
+    .describe("Total exam time budget in seconds. 0 or null means untimed."),
+  availableCount: zod
+    .number()
+    .describe("Total quiz questions pooled across the course's topics."),
+  totalTopics: zod.number().optional(),
+  questions: zod.array(
+    zod.object({
+      id: zod.number(),
+      topicId: zod.number(),
+      question: zod.string(),
+      optionA: zod.string(),
+      optionB: zod.string(),
+      optionC: zod.string(),
+      optionD: zod.string(),
+      correctAnswer: zod.enum(["A", "B", "C", "D"]),
+      explanation: zod.string(),
+    }),
+  ),
+});
+
+/**
+ * @summary Record a completed course mastery exam attempt for the current user
+ */
+export const RecordCourseMasteryAttemptBody = zod.object({
+  category: zod.string(),
+  score: zod.number().describe("Percentage score (0-100)."),
+  correct: zod.number(),
+  total: zod.number(),
+});
+
+export const RecordCourseMasteryAttemptResponse = zod.object({
+  id: zod.number(),
+  category: zod.string(),
+  score: zod.number(),
+  correct: zod.number(),
+  total: zod.number(),
+  passed: zod.boolean(),
+  completedAt: zod.string(),
+});
+
+/**
  * @summary Get the current user profile
  */
 export const GetUserProfileResponse = zod.object({

@@ -1,6 +1,7 @@
 import { Router, type IRouter } from "express";
 import healthRouter from "./health";
 import topicsRouter from "./topics";
+import courseMasteryRouter from "./course-mastery";
 import usersRouter from "./users";
 import entitlementsRouter from "./entitlements";
 import progressRouter from "./progress";
@@ -28,6 +29,7 @@ const router: IRouter = Router();
 // also add `{ v2Router: "/v2" }` to that test's `buildKnownPrefixes()`.
 router.use(healthRouter);
 router.use(topicsRouter);
+router.use(courseMasteryRouter);
 router.use(usersRouter);
 router.use(entitlementsRouter);
 router.use(progressRouter);

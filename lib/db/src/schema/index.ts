@@ -219,6 +219,26 @@ export const insertExamAttemptSchema = createInsertSchema(examAttemptsTable).omi
 export type InsertExamAttempt = z.infer<typeof insertExamAttemptSchema>;
 export type ExamAttempt = typeof examAttemptsTable.$inferSelect;
 
+// Capstone "Course Mastery Exam" attempts. A "course" is the set of topics
+// sharing a `topics.category` value — there is no separate courses table — so
+// these attempts key off the category string rather than a topicId. score is
+// the percentage (0–100); passed reflects the 90% mastery threshold at the
+// time of the attempt.
+export const courseMasteryAttemptsTable = pgTable("course_mastery_attempts", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull().references(() => usersTable.id),
+  category: text("category").notNull(),
+  score: integer("score").notNull(),
+  correct: integer("correct").notNull(),
+  total: integer("total").notNull(),
+  passed: boolean("passed").notNull().default(false),
+  completedAt: timestamp("completed_at").notNull().defaultNow(),
+});
+
+export const insertCourseMasteryAttemptSchema = createInsertSchema(courseMasteryAttemptsTable).omit({ id: true, completedAt: true });
+export type InsertCourseMasteryAttempt = z.infer<typeof insertCourseMasteryAttemptSchema>;
+export type CourseMasteryAttempt = typeof courseMasteryAttemptsTable.$inferSelect;
+
 export const clientErrorRateHitsTable = pgTable(
   "client_error_rate_hits",
   {
