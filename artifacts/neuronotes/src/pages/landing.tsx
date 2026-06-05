@@ -23,6 +23,7 @@ import {
 import { useGetTopics } from "@workspace/api-client-react";
 import brainSmoke from "@/assets/hero/brain.png";
 import brainLateral from "@/assets/brain-views/lateral.png";
+import founderMegan from "@/assets/founder/megan.png";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 
 // =============================================================================
@@ -366,6 +367,54 @@ export default function LandingPage() {
                 </article>
               );
             })}
+          </div>
+        </section>
+
+        {/* ============== MEET THE FOUNDER ============== */}
+        <section id="founder" className="landing-section landing-founder" data-reveal>
+          <div className="landing-founder-card">
+            <div className="landing-founder-media">
+              <div className="landing-founder-glow" aria-hidden />
+              <img
+                src={founderMegan}
+                alt="Megan, founder of PsychPro"
+                className="landing-founder-img"
+              />
+            </div>
+            <div className="landing-founder-body">
+              <p className="landing-eyebrow landing-eyebrow--left">
+                MEET THE FOUNDER
+              </p>
+              <h2 className="landing-split-title">Hi everyone, I'm Megan</h2>
+              <div className="landing-founder-text">
+                <p>
+                  I created PsychPro out of a need for a better way to learn and
+                  retain the vast amount of information presented throughout
+                  clinical psychology training. As a clinical psychology
+                  doctoral student, I experienced firsthand how challenging it
+                  can be to not only learn complex material, but also retain and
+                  apply it over time.
+                </p>
+                <p>
+                  PsychPro was built to support deeper understanding rather than
+                  short-term memorization. The platform offers a variety of
+                  evidence-based learning tools, including flashcards, study
+                  guides, quizzes, practice exams, and comprehensive mastery
+                  courses designed to reinforce knowledge through active learning
+                  and repeated retrieval.
+                </p>
+                <p>
+                  Our content spans a wide range of topics relevant to
+                  psychology, neuroscience, assessment, intervention, and related
+                  disciplines. Whether you're a student, trainee, professional,
+                  or lifelong learner, PsychPro is designed to help you build
+                  lasting knowledge and confidence in the material you're
+                  studying. Thank you for being here, and I look forward to
+                  learning alongside you.
+                </p>
+              </div>
+              <p className="landing-founder-sign">— Megan, Founder of PsychPro</p>
+            </div>
           </div>
         </section>
 
@@ -1214,6 +1263,79 @@ const styles = `
   font-size: clamp(14px, 1.1vw, 16.5px);
   line-height: 1.72;
   color: rgba(225, 244, 250, 0.82);
+}
+
+/* ============== MEET THE FOUNDER ============== */
+.landing-founder-card {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(28px, 4vw, 52px);
+  align-items: center;
+  padding: clamp(26px, 3.4vw, 44px);
+  border-radius: 22px;
+  border: 1px solid ${C.hairlineStrong};
+  background: linear-gradient(150deg, rgba(10,45,61,0.62), rgba(6,28,38,0.82));
+  backdrop-filter: blur(18px) saturate(130%);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+  box-shadow:
+    0 30px 80px -38px rgba(0, 0, 0, 0.72),
+    0 0 36px ${C.cyan}14,
+    0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+}
+@media (min-width: 880px) {
+  .landing-founder-card { grid-template-columns: 320px 1fr; }
+}
+.landing-founder-media {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  width: 100%;
+  max-width: 320px;
+}
+.landing-founder-glow {
+  position: absolute;
+  inset: -6%;
+  border-radius: 50%;
+  background: radial-gradient(circle, ${C.cyan}3a 0%, ${C.cyanMid}14 48%, transparent 72%);
+  filter: blur(40px);
+  z-index: 0;
+}
+.landing-founder-img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: center top;
+  border-radius: 18px;
+  border: 1px solid ${C.hairlineStrong};
+  box-shadow:
+    0 24px 54px -26px rgba(0, 0, 0, 0.75),
+    0 0 28px ${C.cyan}26;
+}
+.landing-founder-body { max-width: 640px; }
+.landing-founder-text {
+  margin: clamp(14px, 1.8vh, 18px) 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.landing-founder-text p {
+  margin: 0;
+  font-size: clamp(13.5px, 1vw, 15.5px);
+  line-height: 1.74;
+  color: rgba(225, 244, 250, 0.82);
+}
+.landing-founder-sign {
+  margin: 18px 0 0;
+  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  color: ${C.cyanSoft};
+  text-shadow: 0 0 22px ${C.cyan}33;
 }
 
 /* Dashboard illustration card */
