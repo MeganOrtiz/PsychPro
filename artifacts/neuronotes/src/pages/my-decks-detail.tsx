@@ -166,7 +166,10 @@ function QuizView({ questions, isExam, examLength, timed }: { questions: QuizQue
             if (correct) cls = "border-green-500 bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-300";
             else if (selected && !correct) cls = "border-red-400 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300";
           } else if (selected) {
-            cls = "border-primary bg-primary/10 text-primary";
+            // Keep the same dark-glass background as an unanswered option; only a
+            // cerulean border marks the pick. Correctness (green/red) is shown
+            // after submit.
+            cls = "border-primary bg-card text-foreground";
           }
 
           return (
