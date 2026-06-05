@@ -273,25 +273,26 @@ export default function DashboardPage() {
               the letters. Every decorative layer sits behind the protected
               BrandBanner (z-10) and is pointer-events-none. */}
           <div className="relative flex justify-center pt-0 pb-0">
-            {/* Wide ambient halo — sets the atmosphere */}
+            {/* Wide ambient halo — sets the atmosphere. Kept low and soft so
+                it reads as depth, not a spotlight. */}
             <div
               aria-hidden
               className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
               style={{
-                width: "min(880px, 100%)",
-                height: "360px",
-                background: `radial-gradient(60% 60% at 50% 50%, ${PALETTE.surf}26 0%, ${PALETTE.teal}14 38%, transparent 70%)`,
-                filter: "blur(6px)",
+                width: "min(820px, 100%)",
+                height: "300px",
+                background: `radial-gradient(60% 60% at 50% 50%, ${PALETTE.surf}17 0%, ${PALETTE.teal}0d 40%, transparent 72%)`,
+                filter: "blur(10px)",
               }}
             />
-            {/* Bright core bloom — concentrates light directly on the wordmark */}
+            {/* Bright core bloom — a restrained glow that hugs the wordmark. */}
             <div
               aria-hidden
               className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
               style={{
-                width: "min(520px, 88%)",
-                height: "200px",
-                background: `radial-gradient(55% 60% at 50% 50%, ${PALETTE.surf}4d 0%, ${PALETTE.surf}1f 45%, transparent 72%)`,
+                width: "min(460px, 84%)",
+                height: "170px",
+                background: `radial-gradient(55% 60% at 50% 50%, ${PALETTE.surf}30 0%, ${PALETTE.surf}12 46%, transparent 74%)`,
               }}
             />
             <BrandBanner

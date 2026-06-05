@@ -408,7 +408,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
         {/* Desktop top bar: unified right-side cluster — the notifications
             bell sits next to the Clerk UserButton so account + alerts read as
             one consistent control group on every page. */}
-        <header className="hidden md:flex items-center justify-end gap-3 px-6 py-3 border-b border-white/5">
+        <header
+          className="hidden md:flex items-center justify-end gap-3 px-6 py-3 border-b backdrop-blur-sm"
+          style={{
+            borderColor: `${STUDY_PALETTE.surf}1f`,
+            background: `linear-gradient(180deg, ${STUDY_PALETTE.ink}33 0%, transparent 100%)`,
+          }}
+        >
           {!isMobile && <NotificationsBell />}
           <UserButton
             afterSignOutUrl={import.meta.env.BASE_URL.replace(/\/$/, "") || "/"}

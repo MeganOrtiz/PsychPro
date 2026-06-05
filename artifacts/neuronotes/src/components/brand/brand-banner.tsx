@@ -38,13 +38,13 @@ export function BrandBanner({
       className={cn("relative flex flex-col items-center text-center", className)}
       data-testid="brand-banner"
     >
-      <div className="flex items-center justify-center gap-3">
+      <div className={cn("flex items-center justify-center", isLg ? "gap-3.5" : "gap-2.5")}>
         {showIcon && (
           <Brain
             className={isLg ? "w-7 h-7" : "w-5 h-5"}
             style={{
               color: P.surf,
-              filter: `drop-shadow(0 0 8px ${P.surf}aa)`,
+              filter: `drop-shadow(0 0 6px ${P.surf}66)`,
             }}
           />
         )}
@@ -56,8 +56,11 @@ export function BrandBanner({
               ? "clamp(28px, 4vw, 44px)"
               : "clamp(18px, 2.2vw, 24px)",
             letterSpacing: "0.42em",
+            // Compensate the trailing letter-spacing so the all-caps wordmark
+            // sits optically centered next to the icon instead of drifting left.
+            textIndent: "0.42em",
             color: P.cloud,
-            textShadow: `0 0 24px ${P.surf}52`,
+            textShadow: `0 0 20px ${P.surf}3d`,
           }}
           data-testid="brand-banner-wordmark"
         >
@@ -65,9 +68,10 @@ export function BrandBanner({
         </h1>
       </div>
       <p
-        className={cn("font-light", isLg ? "mt-2 text-xs" : "mt-1 text-[10px]")}
+        className={cn("font-light", isLg ? "mt-2.5 text-xs" : "mt-1 text-[10px]")}
         style={{
-          letterSpacing: "0.32em",
+          letterSpacing: "0.34em",
+          textIndent: "0.34em",
           color: P.mist,
         }}
         data-testid="brand-banner-tagline"
@@ -75,13 +79,24 @@ export function BrandBanner({
         {tagline}
       </p>
       {greeting !== undefined && (
-        <p
-          className={cn("font-light", isLg ? "mt-3 text-sm" : "mt-1 text-xs")}
-          style={{ color: P.mistSoft }}
-          data-testid="brand-banner-greeting"
-        >
-          {greeting}
-        </p>
+        <div className={cn("flex flex-col items-center", isLg ? "mt-3.5" : "mt-1.5")}>
+          {isLg && (
+            <span
+              aria-hidden
+              className="block h-px w-9 mb-3"
+              style={{
+                background: `linear-gradient(90deg, transparent, ${P.surf}59, transparent)`,
+              }}
+            />
+          )}
+          <p
+            className={cn("font-light", isLg ? "text-sm" : "text-xs")}
+            style={{ color: P.mistSoft, letterSpacing: "0.02em" }}
+            data-testid="brand-banner-greeting"
+          >
+            {greeting}
+          </p>
+        </div>
       )}
     </div>
   );
