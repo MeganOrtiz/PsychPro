@@ -548,7 +548,7 @@ export default function PracticeExamPage({ params }: Props) {
       </div>
 
       <StudySurface tone="light" glow pill={{ text: "Question" }} innerClassName="p-6 md:p-7 mb-6">
-        <p className="text-base md:text-lg font-medium leading-relaxed pr-20" style={{ color: P.ink }} data-testid="text-exam-question">{q.question}</p>
+        <p className="text-base md:text-lg font-medium leading-relaxed pr-20 text-white" data-testid="text-exam-question">{q.question}</p>
       </StudySurface>
 
       <div className="space-y-2.5 mb-6">
@@ -561,10 +561,18 @@ export default function PracticeExamPage({ params }: Props) {
           const isSelected = answers[q.id] === key;
           const isAnswered = !!answers[q.id];
           let style: React.CSSProperties = {};
-          let cls = "w-full text-left px-4 py-3.5 rounded-xl border text-sm transition-all flex items-center gap-3 bg-white";
+          let cls = "w-full text-left px-4 py-3.5 rounded-xl border text-sm transition-all flex items-center gap-3";
           if (!isAnswered) {
-            cls += " text-foreground hover:-translate-y-0.5";
-            style = { borderColor: `${P.surf}55`, boxShadow: `0 6px 18px -10px ${P.teal}55` };
+            // Match the quiz's cerulean glass option (index.css quiz-option-hover
+            // ramps the glow + border on :hover).
+            cls += " hover:-translate-y-0.5 quiz-option-hover";
+            style = {
+              background:
+                "linear-gradient(135deg, rgba(10,45,61,0.78), rgba(2,13,18,0.86))",
+              borderColor: `${P.surf}55`,
+              color: P.cloud,
+              boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(255,255,255,0.06)`,
+            };
           } else if (isSelected) {
             cls += " text-white font-medium";
             style = {
@@ -573,8 +581,13 @@ export default function PracticeExamPage({ params }: Props) {
               boxShadow: `0 14px 32px -16px ${P.tealDeep}cc`,
             };
           } else {
-            cls += " text-muted-foreground opacity-65";
-            style = { borderColor: `${P.surf}33` };
+            cls += " opacity-55";
+            style = {
+              background:
+                "linear-gradient(135deg, rgba(10,45,61,0.78), rgba(2,13,18,0.86))",
+              borderColor: `${P.surf}25`,
+              color: `${P.cloud}aa`,
+            };
           }
           return (
             <button
@@ -589,10 +602,10 @@ export default function PracticeExamPage({ params }: Props) {
                 className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 border"
                 style={
                   !isAnswered
-                    ? { background: "rgba(189,229,255,0.55)", color: P.tealDeep, borderColor: `${P.surf}66` }
+                    ? { background: "rgba(118,228,247,0.20)", color: P.surf, borderColor: `${P.surf}88` }
                     : isSelected
                       ? { background: "rgba(255,255,255,0.22)", color: "#FFFFFF", borderColor: "rgba(255,255,255,0.4)" }
-                      : { background: "rgba(189,229,255,0.35)", color: P.tealDeep, borderColor: `${P.surf}33` }
+                      : { background: "rgba(118,228,247,0.14)", color: P.surf, borderColor: `${P.surf}55` }
                 }
               >{key}</span>
               {text}
