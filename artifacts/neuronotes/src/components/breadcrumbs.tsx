@@ -27,7 +27,7 @@ export function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
             {isLast || !item.href ? (
               <span
                 className="truncate"
-                style={{ color: P.mist }}
+                style={{ color: P.paper }}
                 data-testid="crumb-current"
                 aria-current="page"
               >
@@ -37,7 +37,7 @@ export function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
               <Link href={item.href}>
                 <span
                   className="hover:underline cursor-pointer truncate"
-                  style={{ color: P.tealDeep }}
+                  style={{ color: P.paper }}
                   data-testid={`crumb-${idx}`}
                 >
                   {item.label}
