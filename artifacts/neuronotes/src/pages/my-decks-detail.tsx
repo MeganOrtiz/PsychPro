@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useLocation } from "wouter";
-import { BookMarked, Layers, FileText, GraduationCap, ChevronLeft, ChevronRight, RotateCcw, CheckCircle, XCircle, AlertCircle, Timer, Pencil, Shuffle, Repeat } from "lucide-react";
+import { BookMarked, Layers, FileText, GraduationCap, ChevronLeft, ChevronRight, RotateCcw, CheckCircle, XCircle, AlertCircle, Timer, Pencil, Shuffle, Repeat, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -511,11 +511,64 @@ function ReviewView({ deckId, cards }: { deckId: number; cards: Flashcard[] }) {
   );
 }
 
-function StudyGuideView({ content }: { content: string }) {
+function StudyGuideView({ content, title }: { content: string; title: string }) {
+  const ref = useRef<HTMLDivElement>(null);
   if (!content) return <p className="text-muted-foreground text-center py-8">No study guide generated.</p>;
+
+  const docTitle = title?.trim() || "Study Guide";
+
+  const handleDownload = () => {
+    const esc = (s: string) =>
+      s
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    const safeTitle = esc(docTitle);
+    const body = ref.current?.innerHTML ?? "";
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${safeTitle}</title>
+<style>
+  body{font-family:Georgia,'Times New Roman',serif;color:#16242b;max-width:760px;margin:48px auto;padding:0 28px;line-height:1.65;}
+  h1,h2,h3,h4{font-family:Arial,Helvetica,sans-serif;color:#0b2a36;line-height:1.25;margin-top:1.5em;}
+  h1{font-size:26px;border-bottom:2px solid #0b2a36;padding-bottom:8px;margin-top:0;}
+  h2{font-size:20px;} h3{font-size:16px;}
+  ul,ol{padding-left:22px;} li{margin:5px 0;}
+  strong{color:#0b2a36;} code{background:#f1f3f4;padding:1px 5px;border-radius:3px;font-family:Menlo,Consolas,monospace;}
+  blockquote{border-left:3px solid #c8d2d6;margin:1em 0;padding-left:14px;color:#4a5b62;}
+  table{border-collapse:collapse;width:100%;} th,td{border:1px solid #c8d2d6;padding:6px 10px;text-align:left;}
+</style></head>
+<body><h1>${safeTitle}</h1>${body}</body></html>`;
+    const blob = new Blob(["\uFEFF", html], { type: "application/msword" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    const safeName = docTitle.replace(/[^\w\- ]+/g, "").trim() || "study-guide";
+    a.download = `${safeName}.doc`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  };
+
   return (
-    <div className="prose prose-sm dark:prose-invert max-w-none">
-      <ReactMarkdown>{content}</ReactMarkdown>
+    <div>
+      <div className="flex justify-end mb-3">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleDownload}
+          data-testid="button-download-study-guide"
+        >
+          <Download className="w-4 h-4 mr-1.5" /> Download
+        </Button>
+      </div>
+      <div
+        ref={ref}
+        className="prose prose-sm prose-invert max-w-none [--tw-prose-invert-body:#ffffff] [--tw-prose-invert-headings:#ffffff] [--tw-prose-invert-lead:#ffffff] [--tw-prose-invert-bold:#ffffff] [--tw-prose-invert-counters:#ffffff] [--tw-prose-invert-bullets:#ffffff] [--tw-prose-invert-links:#ffffff] [--tw-prose-invert-quotes:#ffffff] [--tw-prose-invert-captions:#ffffff] [--tw-prose-invert-code:#ffffff] [--tw-prose-invert-hr:rgba(255,255,255,0.22)] [--tw-prose-invert-quote-borders:rgba(255,255,255,0.3)] [--tw-prose-invert-th-borders:rgba(255,255,255,0.3)] [--tw-prose-invert-td-borders:rgba(255,255,255,0.2)]"
+      >
+        <ReactMarkdown>{content}</ReactMarkdown>
+      </div>
     </div>
   );
 }
@@ -648,7 +701,7 @@ export default function MyDeckDetailPage() {
         {activeTab === "cloze" && <ClozeView items={clozeItems} />}
         {activeTab === "match" && <MatchingView cards={flashcards} />}
         {activeTab === "review" && <ReviewView deckId={deck.id} cards={flashcards} />}
-        {activeTab === "study-guide" && <StudyGuideView content={deck.studyGuide ?? ""} />}
+        {activeTab === "study-guide" && <StudyGuideView content={deck.studyGuide ?? ""} title={deck.title} />}
         {activeTab === "exam" && (
           <QuizView
             questions={quizQuestions}
