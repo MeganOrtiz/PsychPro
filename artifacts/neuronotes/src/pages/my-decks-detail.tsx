@@ -563,11 +563,13 @@ function StudyGuideView({ content, title }: { content: string; title: string }) 
           <Download className="w-4 h-4 mr-1.5" /> Download
         </Button>
       </div>
-      <div
-        ref={ref}
-        className="prose prose-sm prose-invert max-w-none [--tw-prose-invert-body:#ffffff] [--tw-prose-invert-headings:#ffffff] [--tw-prose-invert-lead:#ffffff] [--tw-prose-invert-bold:#ffffff] [--tw-prose-invert-counters:#ffffff] [--tw-prose-invert-bullets:#ffffff] [--tw-prose-invert-links:#ffffff] [--tw-prose-invert-quotes:#ffffff] [--tw-prose-invert-captions:#ffffff] [--tw-prose-invert-code:#ffffff] [--tw-prose-invert-hr:rgba(255,255,255,0.22)] [--tw-prose-invert-quote-borders:rgba(255,255,255,0.3)] [--tw-prose-invert-th-borders:rgba(255,255,255,0.3)] [--tw-prose-invert-td-borders:rgba(255,255,255,0.2)]"
-      >
-        <ReactMarkdown>{content}</ReactMarkdown>
+      <div className="bg-card border border-border rounded-xl p-6 md:p-8">
+        <div
+          ref={ref}
+          className="prose prose-sm prose-invert max-w-none [--tw-prose-invert-body:#ffffff] [--tw-prose-invert-headings:#ffffff] [--tw-prose-invert-lead:#ffffff] [--tw-prose-invert-bold:#ffffff] [--tw-prose-invert-counters:#ffffff] [--tw-prose-invert-bullets:#ffffff] [--tw-prose-invert-links:#ffffff] [--tw-prose-invert-quotes:#ffffff] [--tw-prose-invert-captions:#ffffff] [--tw-prose-invert-code:#ffffff] [--tw-prose-invert-hr:rgba(255,255,255,0.22)] [--tw-prose-invert-quote-borders:rgba(255,255,255,0.3)] [--tw-prose-invert-th-borders:rgba(255,255,255,0.3)] [--tw-prose-invert-td-borders:rgba(255,255,255,0.2)]"
+        >
+          <ReactMarkdown>{content}</ReactMarkdown>
+        </div>
       </div>
     </div>
   );
