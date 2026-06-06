@@ -26,8 +26,11 @@ import {
   type BrainStructure,
 } from "../data/brain-structures";
 import brainLateral from "@/assets/brain-views/lateral.webp";
+import brainMedial from "@/assets/brain-views/medial.webp";
 import brainMidsagittal from "@/assets/brain-views/midsagittal.webp";
 import brainCoronal from "@/assets/brain-views/coronal.webp";
+import brainDorsal from "@/assets/brain-views/dorsal.webp";
+import brainVentral from "@/assets/brain-views/ventral.webp";
 import brainVentralNerves from "@/assets/brain-views/ventral-nerves.webp";
 import BrainQuiz, { type QuizItem } from "@/components/brain/brain-quiz";
 
@@ -128,9 +131,12 @@ const VIEW_KEYS: ViewKey[] = [
 ];
 
 // Which view best shows a given structure — used to jump to the right diagram
-// when a structure is picked from search or a chip. Returns null when the
-// structure isn't placed on any current view image.
-function viewForStructure(id: string): ViewKey | null {
+// when a structure is picked from search or a chip. When `preferred` already
+// contains the structure (e.g. the user clicked a marker on the active diagram,
+// or a structure shown on several views), stay there instead of snapping to the
+// first matching view. Returns null when the structure isn't placed anywhere.
+function viewForStructure(id: string, preferred?: ViewKey): ViewKey | null {
+  if (preferred && HOTSPOTS[preferred].some((h) => h.id === id)) return preferred;
   for (const key of VIEW_KEYS) {
     if (HOTSPOTS[key].some((h) => h.id === id)) return key;
   }
@@ -632,7 +638,7 @@ const BRAIN_VIEWS: Record<
     caption: "The brain's outer surface — side profile",
   },
   medial: {
-    src: null,
+    src: brainMedial,
     viewName: "Medial view",
     caption: "The medial surface of the hemisphere",
   },
@@ -647,12 +653,12 @@ const BRAIN_VIEWS: Record<
     caption: "Frontal slice — subcortical nuclei & ventricles",
   },
   dorsal: {
-    src: null,
+    src: brainDorsal,
     viewName: "Dorsal (superior) view",
     caption: "Top-down view of the cerebral hemispheres",
   },
   ventral: {
-    src: null,
+    src: brainVentral,
     viewName: "Ventral (inferior) view",
     caption: "The underside of the brain",
   },
@@ -688,37 +694,70 @@ const HOTSPOTS: Record<ViewKey, Hotspot[]> = {
     { id: "supramarginal-gyrus", x: 61, y: 40 },
     { id: "angular-gyrus", x: 67, y: 45 },
   ],
-  // No dedicated medial-surface image yet — placeholder view.
-  medial: [],
+  // Medial surface (brain faces left) — cortical medial regions plus the midline
+  // white-matter/limbic landmarks and the brainstem/cerebellum.
+  medial: [
+    { id: "prefrontal-cortex", x: 14, y: 42 },
+    { id: "frontal-lobe", x: 24, y: 24 },
+    { id: "corpus-callosum", x: 43, y: 38 },
+    { id: "posterior-cingulate", x: 56, y: 31 },
+    { id: "parietal-lobe", x: 62, y: 20 },
+    { id: "occipital-lobe", x: 82, y: 40 },
+    { id: "fornix", x: 40, y: 46 },
+    { id: "thalamus", x: 48, y: 47 },
+    { id: "midbrain", x: 50, y: 55 },
+    { id: "pons", x: 49, y: 63 },
+    { id: "medulla", x: 48, y: 73 },
+    { id: "cerebellum", x: 67, y: 62 },
+  ],
   // Midsagittal view (brain faces left) — deep medial structures spanning the
   // limbic system, brainstem/cerebellum, and midline white-matter tracts.
   midsagittal: [
-    { id: "corpus-callosum", x: 45, y: 37 },
-    { id: "posterior-cingulate", x: 56, y: 35 },
-    { id: "fornix", x: 42, y: 47 },
-    { id: "mammillary-bodies", x: 41, y: 55 },
-    { id: "hippocampus", x: 37, y: 63 },
-    { id: "amygdala", x: 33, y: 61 },
-    { id: "pineal-gland", x: 54, y: 53 },
-    { id: "midbrain", x: 52, y: 58 },
-    { id: "optic-chiasm", x: 38, y: 59 },
-    { id: "locus-coeruleus", x: 51, y: 63 },
-    { id: "pons", x: 49, y: 68 },
-    { id: "medulla", x: 48, y: 82 },
-    { id: "cerebellum", x: 72, y: 72 },
+    { id: "corpus-callosum", x: 42, y: 38 },
+    { id: "posterior-cingulate", x: 55, y: 32 },
+    { id: "fornix", x: 40, y: 45 },
+    { id: "mammillary-bodies", x: 42, y: 54 },
+    { id: "hippocampus", x: 44, y: 57 },
+    { id: "amygdala", x: 38, y: 56 },
+    { id: "pineal-gland", x: 56, y: 47 },
+    { id: "midbrain", x: 50, y: 54 },
+    { id: "optic-chiasm", x: 35, y: 55 },
+    { id: "locus-coeruleus", x: 51, y: 60 },
+    { id: "pons", x: 49, y: 63 },
+    { id: "medulla", x: 48, y: 73 },
+    { id: "cerebellum", x: 66, y: 61 },
   ],
   // Coronal section — subcortical nuclei & ventricles
   coronal: [
-    { id: "lateral-ventricles", x: 48, y: 40 },
-    { id: "caudate", x: 44, y: 41 },
-    { id: "globus-pallidus", x: 40, y: 50 },
-    { id: "putamen", x: 34, y: 48 },
-    { id: "thalamus", x: 45, y: 53 },
-    { id: "internal-capsule", x: 41, y: 48 },
+    { id: "lateral-ventricles", x: 50, y: 33 },
+    { id: "caudate", x: 45, y: 37 },
+    { id: "globus-pallidus", x: 42, y: 47 },
+    { id: "putamen", x: 38, y: 45 },
+    { id: "thalamus", x: 48, y: 51 },
+    { id: "internal-capsule", x: 44, y: 45 },
   ],
-  // Placeholder views — no image / hotspots wired yet.
-  dorsal: [],
-  ventral: [],
+  // Dorsal (superior) view — front at top, occipital at bottom. Lobe markers run
+  // down the left hemisphere from the frontal pole to the occipital pole.
+  dorsal: [
+    { id: "prefrontal-cortex", x: 35, y: 10 },
+    { id: "frontal-lobe", x: 35, y: 25 },
+    { id: "motor-cortex", x: 38, y: 40 },
+    { id: "somatosensory-cortex", x: 38, y: 50 },
+    { id: "parietal-lobe", x: 38, y: 62 },
+    { id: "occipital-lobe", x: 40, y: 85 },
+  ],
+  // Ventral (inferior) surface — front at top, cerebellum at bottom. Markers sit
+  // on the midline brainstem column plus the orbital/temporal lobes.
+  ventral: [
+    { id: "orbitofrontal-cortex", x: 47, y: 13 },
+    { id: "temporal-lobe", x: 27, y: 38 },
+    { id: "optic-chiasm", x: 49, y: 34 },
+    { id: "mammillary-bodies", x: 49, y: 41 },
+    { id: "midbrain", x: 49, y: 48 },
+    { id: "pons", x: 49, y: 55 },
+    { id: "medulla", x: 49, y: 62 },
+    { id: "cerebellum", x: 46, y: 80 },
+  ],
   // Ventral (inferior) surface showing the cranial-nerve roots — markers sit on
   // the midline structures and lobes visible from below.
   ventralNerves: [
@@ -1019,8 +1058,10 @@ export default function BrainLabPage() {
     setSearchOpen(false);
     writeFocusToHash(id);
     setShowMobileDetail(true);
-    const v = viewForStructure(id);
-    if (v) setActiveView(v);
+    // Keep the user on the current tab when the structure already lives there
+    // (marker click / chip on the active view); only snap views for picks that
+    // aren't visible on the current diagram (e.g. global search).
+    setActiveView((current) => viewForStructure(id, current) ?? current);
   }, []);
 
   const handleClose = useCallback(() => {
