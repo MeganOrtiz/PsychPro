@@ -25,13 +25,13 @@ import {
   SYSTEM_META,
   type BrainStructure,
 } from "../data/brain-structures";
-import brainLateral from "@/assets/brain-views/lateral.png";
-import brainMidsagittal from "@/assets/brain-views/midsagittal.png";
-import brainCoronal from "@/assets/brain-views/coronal.png";
-import brainVentralNerves from "@/assets/brain-views/ventral-nerves.png";
+import brainLateral from "@/assets/brain-views/lateral.webp";
+import brainMidsagittal from "@/assets/brain-views/midsagittal.webp";
+import brainCoronal from "@/assets/brain-views/coronal.webp";
+import brainVentralNerves from "@/assets/brain-views/ventral-nerves.webp";
 import BrainQuiz, { type QuizItem } from "@/components/brain/brain-quiz";
 
-// Heavy 3D view (three.js + 16MB GLB) is code-split so it only loads when
+// Heavy 3D view (three.js + ~1.8MB meshopt-compressed GLB) is code-split so it only loads when
 // the user opens the 3D tab — the Sections/image view stays instant.
 const Brain3DView = lazy(() => import("@/components/brain/brain-3d-view"));
 

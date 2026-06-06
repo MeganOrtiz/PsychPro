@@ -25,14 +25,19 @@ import brainGlbUrl from "@/assets/models/brain.glb?url";
 // =============================================================================
 
 const BRAIN_GLB_URL = brainGlbUrl;
-useGLTF.preload(BRAIN_GLB_URL);
+// The model ships meshopt-compressed (EXT_meshopt_compression + mesh
+// quantization). drei decodes meshopt with the decoder bundled in three-stdlib
+// (local, no network). We pass useDraco=false so drei never instantiates its
+// DRACOLoader, which otherwise points at a gstatic CDN — a remote runtime fetch
+// we deliberately avoid (it can white-screen the lab if the CDN is unreachable).
+useGLTF.preload(BRAIN_GLB_URL, false, true);
 
 // Anatomical-space extent the structure positions were authored against.
 // The GLB is scaled to match so marker coords line up with the mesh.
 const TARGET_SIZE = 3.4;
 
 function FittedBrain() {
-  const { scene } = useGLTF(BRAIN_GLB_URL);
+  const { scene } = useGLTF(BRAIN_GLB_URL, false, true);
 
   const fitted = useMemo(() => {
     const obj = scene.clone(true);
@@ -158,6 +163,19 @@ function Marker({
     }),
     [],
   );
+  // Cache the camera-facing result and the camera position it was computed for.
+  // Facing only changes when either the camera moves (OrbitControls) or the
+  // brain group's world transform moves (the Spin auto-rotate before the user
+  // interacts). When neither has changed we skip the worldToLocal + normalize +
+  // dot work entirely and reuse the last result. Reading parent.matrixWorld is
+  // free (three keeps it updated, and the worldToLocal below already relies on
+  // it). lastTf is a cheap weighted fingerprint of the parent's world matrix;
+  // both refs are seeded with sentinels so the first frame always computes.
+  const liveRef = useRef(true);
+  const lastCam = useRef<THREE.Vector3>(
+    new THREE.Vector3(Infinity, Infinity, Infinity),
+  );
+  const lastTf = useRef(Infinity);
 
   useFrame((state, dt) => {
     const g = groupRef.current;
@@ -172,17 +190,30 @@ function Marker({
 
     // Is this region facing the camera? Deep/central structures have no real
     // front/back face, so they stay live. Camera is taken into the brain
-    // group's local (rotated) space, then we compare the region's outward
-    // normal with the direction to the camera.
-    let facing = 0.45;
-    if (!deep) {
-      const camLocal = tmp.cam.copy(state.camera.position);
-      g.parent.worldToLocal(camLocal);
-      const n = tmp.n.copy(p).normalize();
-      const toCam = tmp.toCam.copy(camLocal).sub(p).normalize();
-      facing = n.dot(toCam);
+    // group's local space, then we compare the region's outward normal with the
+    // direction to the camera. Only recomputed when the camera or the brain's
+    // world transform has actually changed since the last evaluation.
+    if (deep) {
+      liveRef.current = true;
+    } else {
+      const e = g.parent.matrixWorld.elements;
+      const tf =
+        e[0] + e[2] * 1.7 + e[8] * 2.3 + e[10] * 3.1 +
+        e[12] * 0.7 + e[13] * 0.9 + e[14] * 1.1;
+      const camMoved =
+        lastCam.current.distanceToSquared(state.camera.position) > 1e-9;
+      const tfMoved = Math.abs(tf - lastTf.current) > 1e-9;
+      if (camMoved || tfMoved) {
+        lastCam.current.copy(state.camera.position);
+        lastTf.current = tf;
+        const camLocal = tmp.cam.copy(state.camera.position);
+        g.parent.worldToLocal(camLocal);
+        const n = tmp.n.copy(p).normalize();
+        const toCam = tmp.toCam.copy(camLocal).sub(p).normalize();
+        liveRef.current = n.dot(toCam) > 0;
+      }
     }
-    const live = deep || facing > 0;
+    const live = liveRef.current;
 
     // Toggling the invisible hit-sphere's visibility also turns its raycast
     // on/off, so far-side regions can't be hovered/clicked through the brain.

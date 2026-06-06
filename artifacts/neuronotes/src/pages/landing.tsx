@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import { useGetTopics } from "@workspace/api-client-react";
 import brainSmoke from "@/assets/hero/brain.png";
-import brainLateral from "@/assets/brain-views/lateral.png";
+import brainLateral from "@/assets/brain-views/lateral.webp";
 import founderMegan from "@/assets/founder/megan.png";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 
