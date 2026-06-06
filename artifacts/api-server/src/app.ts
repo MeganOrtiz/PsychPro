@@ -3,7 +3,7 @@ import cors from "cors";
 import pinoHttp from "pino-http";
 import { clerkMiddleware } from "@clerk/express";
 import router from "./routes";
-import { handleDiscovery } from "./routes/oauth";
+import { handleDiscovery, handleProtectedResource } from "./routes/oauth";
 import { MCP_ENABLED } from "./lib/mcpEnabled";
 import { logger } from "./lib/logger";
 import { getUncachableStripeClient } from "./stripeClient";
@@ -163,6 +163,13 @@ app.use(
 // base.
 if (MCP_ENABLED) {
   app.get("/.well-known/oauth-authorization-server", handleDiscovery);
+  // RFC 9728 Protected Resource Metadata, served at the root (not just under
+  // `/api`) and registered in artifact.toml `paths` so the platform router
+  // forwards it here instead of letting it fall through to the SPA (which
+  // would return HTML and break Claude.ai's connector discovery). Both the
+  // base path and the resource-specific `/api/mcp` suffix are published.
+  app.get("/.well-known/oauth-protected-resource", handleProtectedResource);
+  app.get("/.well-known/oauth-protected-resource/api/mcp", handleProtectedResource);
 }
 
 app.use("/api", router);

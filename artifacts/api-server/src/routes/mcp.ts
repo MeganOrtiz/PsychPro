@@ -3,6 +3,7 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import { verifyBearerToken } from "../lib/adminTokens";
 import { verifyOauthAccessToken } from "../lib/oauthStore";
 import { buildMcpServer } from "../lib/mcpServer";
+import { issuerForRequest } from "./oauth";
 
 const router = Router();
 
@@ -55,10 +56,10 @@ async function handleMcp(req: Request, res: Response): Promise<void> {
     // Per MCP / OAuth 2.0 §3, advertise the protected-resource metadata via
     // WWW-Authenticate so OAuth-aware clients (claude.ai) can kick off the
     // dynamic-registration + PKCE flow on a 401.
-    const issuer = `${req.protocol}://${req.get("host")}`;
+    const issuer = issuerForRequest(req);
     res.set(
       "WWW-Authenticate",
-      `Bearer realm="psychpro-mcp", resource_metadata="${issuer}/.well-known/oauth-authorization-server"`,
+      `Bearer realm="psychpro-mcp", resource_metadata="${issuer}/.well-known/oauth-protected-resource"`,
     );
     res.status(401).json({
       jsonrpc: "2.0",

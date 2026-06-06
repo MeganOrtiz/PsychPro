@@ -35,7 +35,7 @@ import { oauthRegisterRateLimit } from "../middlewares/oauthRegisterRateLimit";
 
 const router = Router();
 
-function issuerForRequest(req: Request): string {
+export function issuerForRequest(req: Request): string {
   const override = process.env.OAUTH_ISSUER;
   if (override) return override.replace(/\/$/, "");
   // `trust proxy = 1` (set in app.ts) makes req.protocol / req.hostname honor
@@ -65,7 +65,37 @@ export function handleDiscovery(req: Request, res: Response): void {
   res.json(discoveryDocument(req));
 }
 
+/**
+ * OAuth 2.0 Protected Resource Metadata (RFC 9728).
+ *
+ * The MCP authorization spec requires the resource server (this `/api/mcp`
+ * endpoint) to publish a protected-resource document pointing at the
+ * authorization server(s) that issue tokens for it. Claude.ai's web custom
+ * connector fetches `/.well-known/oauth-protected-resource` (and the
+ * resource-specific `/.well-known/oauth-protected-resource/api/mcp` variant)
+ * and follows `resource_metadata` from a 401 `WWW-Authenticate` here. If this
+ * path isn't served by the api-server it falls through to the SPA, which
+ * returns `text/html` and breaks the client's discovery (the connector then
+ * reports it can't connect).
+ */
+function protectedResourceDocument(req: Request): Record<string, unknown> {
+  const issuer = issuerForRequest(req);
+  return {
+    resource: `${issuer}/api/mcp`,
+    authorization_servers: [issuer],
+    scopes_supported: ["mcp"],
+    bearer_methods_supported: ["header"],
+  };
+}
+
+export function handleProtectedResource(req: Request, res: Response): void {
+  res.set("Cache-Control", "no-store");
+  res.json(protectedResourceDocument(req));
+}
+
 router.get("/.well-known/oauth-authorization-server", handleDiscovery);
+router.get("/.well-known/oauth-protected-resource", handleProtectedResource);
+router.get("/.well-known/oauth-protected-resource/api/mcp", handleProtectedResource);
 
 /**
  * Dynamic client registration (RFC 7591). We accept any client and persist it
