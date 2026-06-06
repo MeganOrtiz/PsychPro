@@ -583,7 +583,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
     segments: 6,
     color: "#7DD8E8",
     overview:
-      "Sits between the frontal and occipital lobes, bounded by the central sulcus anteriorly. Integrates somatosensory, visual, and auditory streams into a coherent map of body and space.",
+      "Occupies the superior posterior region of each hemisphere, bounded by the central sulcus anteriorly and the Sylvian fissure inferiorly. It houses the primary somatosensory cortex and the somatosensory association cortex, anchors the dorsal 'where/how' visual stream for visually guided action, and supports spatial attention, the body schema, praxis, number processing, and — in the dominant hemisphere — reading, writing, and calculation. As a result it is central to neglect, the apraxias, Gerstmann and Bálint syndromes, and the cortical sensory deficits.",
     functions: [
       "Primary somatosensation (postcentral gyrus)",
       "Spatial attention and visuospatial mapping",
@@ -604,6 +604,362 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Apraxia syndromes",
     ],
     topicHints: ["Apraxia & Agnosia", "Visuospatial Processing"],
+    detail: {
+      anatomy: [
+        { h: "Boundaries" },
+        {
+          p: "The parietal lobe occupies the superior posterior region of each cerebral hemisphere. Its anterior border is the central sulcus, separating it from the frontal lobe; the lateral (Sylvian) fissure forms the inferior border, separating it from the temporal lobe. Posteriorly, the parieto-occipital sulcus marks the boundary with the occipital lobe on the medial surface, while on the lateral surface an arbitrary line from the preoccipital notch to the parieto-occipital sulcus serves as the conventional boundary.",
+        },
+        { h: "Major gyri and sulci" },
+        {
+          p: "The lateral surface is organized around two key sulci — the postcentral sulcus and the intraparietal sulcus (IPS) — which divide the lobe into three principal regions:",
+        },
+        {
+          ul: [
+            "Postcentral gyrus — between the central and postcentral sulci; contains primary somatosensory cortex",
+            "Superior parietal lobule (SPL) — above the intraparietal sulcus; somatosensory association and dorsal-stream visuospatial processing",
+            "Inferior parietal lobule (IPL) — below the intraparietal sulcus; subdivided into the supramarginal gyrus (wrapping the posterior end of the lateral fissure) and the angular gyrus (wrapping the posterior end of the superior temporal sulcus)",
+          ],
+        },
+        {
+          p: "The medial surface contains the precuneus, bounded anteriorly by the marginal branch of the cingulate sulcus and posteriorly by the parieto-occipital sulcus. The medial extension of the postcentral gyrus forms the posterior portion of the paracentral lobule, containing the somatosensory representation of the lower extremity.",
+        },
+        { h: "Functional subdivisions" },
+        {
+          dl: [
+            { term: "Primary somatosensory cortex (S1)", desc: "Postcentral gyrus — tactile, proprioceptive, and pain/temperature processing; somatotopic homunculus" },
+            { term: "Somatosensory association cortex", desc: "Superior parietal lobule — higher-order tactile processing, stereognosis, body schema" },
+            { term: "Posterior parietal cortex (dorsal stream)", desc: "SPL and IPS — visuospatial attention, visually guided action, \"where/how\" processing" },
+            { term: "Supramarginal gyrus (dominant)", desc: "Anterior IPL — phonological processing, ideomotor praxis, articulatory rehearsal" },
+            { term: "Angular gyrus (dominant)", desc: "Posterior IPL — reading, writing, calculation, semantic integration" },
+            { term: "Inferior parietal lobule (non-dominant)", desc: "Right IPL, especially temporoparietal junction — spatial attention, body awareness, social cognition" },
+            { term: "Intraparietal sulcus (IPS)", desc: "Sulcus dividing SPL from IPL — number processing, saccadic eye movements, attention shifting" },
+            { term: "Precuneus", desc: "Medial parietal — default mode network, self-referential processing, episodic memory retrieval, visuospatial imagery" },
+            { term: "Temporoparietal junction (TPJ)", desc: "Posterior STG / IPL border — theory of mind, agency, reorienting attention" },
+          ],
+        },
+        { h: "Vascular supply" },
+        {
+          ul: [
+            "Middle cerebral artery (MCA) — lateral parietal cortex including the lateral postcentral gyrus (face/upper-extremity sensory), supramarginal and angular gyri; superior division supplies superior parietal regions, inferior division the inferior parietal cortex",
+            "Anterior cerebral artery (ACA) — medial parietal cortex including the precuneus and the medial postcentral gyrus (lower-extremity sensory)",
+            "Posterior cerebral artery (PCA) — small contribution to posterior medial parietal cortex; parieto-occipital junction territory",
+            "MCA-PCA watershed — posterior parietal cortex sits at this watershed and is vulnerable in hypoperfusion, producing Bálint's syndrome features and (with dominant involvement) transcortical sensory aphasia",
+          ],
+        },
+        { h: "Key white matter tracts" },
+        {
+          ul: [
+            "Superior longitudinal fasciculus (SLF) — connects parietal to frontal cortex; dorsal subdivisions support visuospatial attention, ventral subdivisions phonological/articulatory processing",
+            "Arcuate fasciculus — passes through parietal white matter linking Wernicke's and Broca's areas; damage produces conduction aphasia",
+            "Inferior fronto-occipital fasciculus (IFOF) — long association tract passing through parietal white matter",
+            "Internal capsule (posterior limb) — carries somatosensory thalamocortical projections from VPL/VPM thalamus to S1",
+            "Cingulum — runs through medial parietal white matter connecting precuneus and posterior cingulate to frontal and temporal regions",
+            "Optic radiations (parietal portion / Baum's loop) — superior optic radiations carrying inferior visual field information; lesions produce contralateral inferior quadrantanopia",
+          ],
+        },
+        { h: "Developmental note" },
+        {
+          p: "Parietal cortex undergoes prolonged development, with the inferior parietal lobule among the last cortical regions to reach full structural maturity. The protracted development of parietal-frontal connectivity supports the maturation of visuospatial attention, working memory, and mathematical cognition across childhood and adolescence. Pediatric parietal dysfunction can manifest as developmental coordination disorder, dyscalculia, or nonverbal learning profiles.",
+        },
+      ],
+      functions: [
+        { h: "Somatosensory processing" },
+        {
+          ul: [
+            "Primary somatosensory cortex (S1) processes tactile, proprioceptive, vibratory, and pain/temperature information from the contralateral body, with somatotopic organization (sensory homunculus)",
+            "Somatosensory association cortex in the SPL integrates basic sensory features for higher-order percepts: stereognosis (tactile object recognition), graphesthesia (tactile letter/number identification), and two-point discrimination",
+          ],
+        },
+        { h: "Body schema and proprioception" },
+        {
+          p: "The parietal lobe, particularly the right inferior parietal cortex, maintains the internal representation of the body in space — the body schema. This includes awareness of limb position, ownership of body parts, and the spatial relationship of the body to the environment.",
+        },
+        { h: "Visuospatial attention" },
+        {
+          ul: [
+            "Right parietal cortex is preferentially engaged in spatial attention across both hemifields, which is why right parietal lesions produce dense contralateral neglect while left parietal lesions typically do not produce comparable right-sided neglect",
+            "The dorsal attention network (intraparietal sulcus, superior parietal lobule, frontal eye fields) supports top-down, goal-directed attention",
+            "The ventral attention network (temporoparietal junction, ventral frontal cortex; right-lateralized) supports stimulus-driven reorienting",
+          ],
+        },
+        { h: "Dorsal visual stream" },
+        {
+          p: "The dorsal \"where/how\" stream projects from primary visual cortex through posterior parietal cortex and supports visually guided reaching and grasping, spatial localization of objects, and visuomotor transformation (translating vision into action). Optic ataxia results from disruption of this pathway.",
+        },
+        { h: "Praxis" },
+        {
+          ul: [
+            "Left inferior parietal cortex (particularly supramarginal gyrus) stores motor programs (\"praxicons\") for skilled, learned movements",
+            "Damage produces ideomotor apraxia — impaired execution of learned gestures despite intact motor and sensory function",
+            "The praxis system follows a left-hemisphere dominant organization in most right-handed individuals, regardless of which hand performs the action",
+          ],
+        },
+        { h: "Language and academic functions (dominant hemisphere)" },
+        {
+          ul: [
+            "Supramarginal gyrus supports phonological processing and the phonological-loop component of working memory",
+            "Angular gyrus supports reading (visual-to-phonological mapping), writing, calculation, and semantic integration",
+            "The dominant parietal lobe is critical for the cross-modal integration required for literacy and numeracy",
+          ],
+        },
+        { h: "Number processing" },
+        {
+          p: "The intraparietal sulcus bilaterally houses representations of numerical magnitude (the \"number sense\") and supports both symbolic and non-symbolic numerical comparison. Calculation engages a broader parietal network including the angular gyrus for verbal arithmetic facts and the intraparietal sulcus for quantity manipulation.",
+        },
+        { h: "Self-referential and default mode processing" },
+        {
+          p: "The precuneus is a hub of the default mode network and supports self-referential processing, episodic memory retrieval, visuospatial imagery, and conscious self-awareness. It is among the most metabolically active regions of the resting brain.",
+        },
+        { h: "Lateralization" },
+        {
+          ul: [
+            "Left (dominant) parietal lobe — language-related parietal functions (reading, writing, calculation), praxis, phonological working memory, finger gnosis, right-left orientation",
+            "Right (non-dominant) parietal lobe — spatial attention, body schema, constructional ability, prosodic comprehension, face-processing contributions, mental rotation, awareness of deficits",
+          ],
+        },
+      ],
+      clinical: [
+        { h: "Right (non-dominant) parietal syndromes" },
+        { h: "Hemispatial neglect (left neglect)" },
+        {
+          p: "Failure to attend, respond to, or report stimuli on the contralateral (left) side of space, not attributable to primary sensory or motor deficit. Most severe and persistent with right inferior parietal or temporoparietal junction lesions. Manifestations include:",
+        },
+        {
+          ul: [
+            "Visual neglect on cancellation, line bisection, and drawing tasks (omission of left-sided detail)",
+            "Personal neglect (failure to groom or dress the left body)",
+            "Representational neglect (failure to describe left-sided detail of imagined scenes)",
+            "Extinction to double simultaneous stimulation",
+            "Reading neglect (dyslexia for left side of text or word)",
+          ],
+        },
+        { h: "Anosognosia for hemiplegia (Babinski's syndrome)" },
+        {
+          p: "Denial or unawareness of motor (and sometimes sensory) deficit following right hemisphere damage, classically right parietal and insular regions. Patients may insist they can move a paralyzed limb or rationalize the deficit. Often co-occurs with neglect but is dissociable.",
+        },
+        { h: "Asomatognosia and somatoparaphrenia" },
+        {
+          ul: [
+            "Asomatognosia — loss of awareness or recognition of one half of the body",
+            "Somatoparaphrenia — delusional misidentification of the affected limb (denial of ownership, attribution to another person)",
+          ],
+        },
+        { h: "Constructional apraxia" },
+        {
+          p: "Impaired ability to draw, copy, or assemble two- and three-dimensional designs. Right parietal lesions classically produce disorganized, fragmented constructions with loss of spatial relationships; left parietal lesions produce simplified constructions with preserved spatial layout.",
+        },
+        { h: "Dressing apraxia" },
+        {
+          p: "Difficulty orienting clothing to the body, typically associated with right parietal damage; reflects body schema and visuospatial dysfunction rather than true apraxia.",
+        },
+        { h: "Topographic disorientation (egocentric type)" },
+        {
+          p: "Right posterior parietal lesions can disrupt the egocentric (self-centered) spatial reference frame, producing disorientation in familiar environments distinct from landmark agnosia or hippocampal-based disorientation.",
+        },
+        { h: "Misoplegia and pusher syndrome" },
+        {
+          ul: [
+            "Misoplegia — hatred toward, or hostility directed at, the paralyzed limb",
+            "Pusher syndrome (contraversive pushing) — active pushing toward the hemiparetic side with resistance to passive correction; associated with right posterior parietal lesions",
+          ],
+        },
+        { h: "Left (dominant) parietal syndromes" },
+        { h: "Gerstmann syndrome" },
+        {
+          p: "A tetrad classically attributed to left angular gyrus damage: (1) acalculia (specifically anarithmetria), (2) agraphia (writing impairment, not purely motor), (3) finger agnosia (inability to identify, name, or differentiate fingers), and (4) right-left disorientation. Pure Gerstmann syndrome is rare; partial presentations and association with other left parietal features (aphasia, alexia) are more common.",
+        },
+        { h: "Ideomotor apraxia" },
+        {
+          p: "Impaired performance of learned skilled movements to verbal command or imitation, despite preserved comprehension, motor function, and object recognition. Includes spatial, temporal, and content errors in pantomimed actions. Most prominent with left parietal lesions, often involving the supramarginal gyrus.",
+        },
+        { h: "Conduction aphasia" },
+        {
+          p: "Fluent speech with relatively preserved comprehension but disproportionate impairment of repetition and frequent phonemic paraphasias. Lesion: supramarginal gyrus or underlying arcuate fasciculus.",
+        },
+        { h: "Alexia with agraphia" },
+        {
+          p: "Acquired impairment of both reading and writing with relatively preserved oral language. Classic lesion: left angular gyrus, distinguishing it from pure alexia (alexia without agraphia) of the occipitotemporal region.",
+        },
+        { h: "Ideational apraxia" },
+        {
+          p: "Impairment in sequencing multi-step actions and using objects appropriately, often associated with bilateral or diffuse parietal damage.",
+        },
+        { h: "Bilateral parietal syndromes" },
+        { h: "Bálint's syndrome" },
+        {
+          p: "Triad following bilateral posterior parietal damage (typically MCA-PCA watershed territory):",
+        },
+        {
+          ul: [
+            "Simultanagnosia — inability to perceive more than one object or aspect of a scene at a time",
+            "Optic ataxia — impaired visually guided reaching despite preserved visual perception and motor function",
+            "Oculomotor apraxia (psychic gaze paralysis) — inability to voluntarily redirect gaze to a new visual target",
+          ],
+        },
+        { h: "Posterior cortical atrophy (Benson syndrome)" },
+        {
+          p: "Neurodegenerative syndrome with predominant posterior (parietal, occipital, posterior temporal) atrophy, most commonly underlying Alzheimer disease pathology. Features include visuospatial dysfunction, Bálint's and Gerstmann syndrome features, environmental disorientation, alexia, and apperceptive visual agnosia, with relatively preserved memory and behavior early in the course.",
+        },
+        { h: "Cortical sensory syndromes" },
+        {
+          p: "With preserved primary sensation, parietal damage produces deficits in higher-order somatosensory processing:",
+        },
+        {
+          ul: [
+            "Astereognosis (tactile agnosia) — inability to identify objects by touch",
+            "Agraphesthesia — inability to identify numbers or letters traced on the skin",
+            "Impaired two-point discrimination",
+            "Impaired tactile localization",
+            "Extinction to double simultaneous stimulation — failure to perceive the contralesional stimulus when both sides are stimulated, even with intact single-stimulus detection",
+          ],
+        },
+        { h: "Visual field defects" },
+        {
+          p: "Contralateral inferior quadrantanopia (\"pie on the floor\") — damage to the superior optic radiations (Baum's loop) passing through deep parietal white matter.",
+        },
+        { h: "Stroke syndromes" },
+        {
+          ul: [
+            "MCA superior division (parietal extension) — contralateral cortical sensory loss in face and arm, contralateral hemiparesis (with frontal extension), aphasic features if dominant, neglect if non-dominant",
+            "MCA inferior division (dominant) — Wernicke's aphasia with parietal extension producing alexia with agraphia and conduction aphasia features",
+            "MCA inferior division (non-dominant) — dense left neglect, anosognosia, constructional and dressing apraxia",
+            "ACA infarct (medial parietal extension) — contralateral lower-extremity sensory loss",
+            "Watershed infarct (MCA-PCA) — Bálint's syndrome, transcortical sensory aphasia (dominant hemisphere)",
+          ],
+        },
+        { h: "Neurodegenerative localization" },
+        {
+          ul: [
+            "Alzheimer disease — parietotemporal hypometabolism and atrophy in the typical amnestic presentation; predominant parietal involvement underlies emerging visuospatial and praxis deficits",
+            "Posterior cortical atrophy (Benson syndrome) — posterior cortical phenotype of AD (most commonly) with predominant parietal and occipital atrophy",
+            "Logopenic variant PPA — left posterior temporoparietal atrophy producing word-retrieval deficits, sentence-repetition impairment, and phonological errors; AD pathology in most cases",
+            "Corticobasal syndrome (CBS) — asymmetric parietal and frontal atrophy producing limb apraxia, cortical sensory loss, alien limb phenomenon, and asymmetric parkinsonism; multiple underlying pathologies (CBD, AD, PSP)",
+            "Creutzfeldt-Jakob disease (Heidenhain variant) — predominant occipitoparietal involvement with cortical visual disturbance and rapidly progressive dementia",
+          ],
+        },
+        { h: "Traumatic brain injury" },
+        {
+          p: "The parietal lobes are less commonly a predilection site for contusion than the frontal and temporal lobes, but diffuse axonal injury can disrupt parietal white matter tracts (particularly the SLF and IFOF), contributing to the attention, working memory, and processing-speed deficits common after moderate-to-severe TBI.",
+        },
+      ],
+      assessment: [
+        { h: "Cortical sensory testing" },
+        {
+          p: "Bedside examination with eyes closed:",
+        },
+        {
+          ul: [
+            "Stereognosis — identification of objects placed in the hand (coin, key, paperclip)",
+            "Graphesthesia — identification of numbers or letters traced on the palm",
+            "Two-point discrimination — minimum separation perceived as two stimuli",
+            "Tactile localization — pointing to where one was touched",
+            "Double simultaneous stimulation — testing for tactile extinction",
+            "Joint position sense (proprioception) and vibratory sense — primarily peripheral, but also engage parietal processing",
+          ],
+        },
+        { h: "Visuospatial and constructional measures" },
+        {
+          dl: [
+            { term: "Judgment of Line Orientation (JLO)", desc: "Matching line angles to a standard array; right parietal sensitive" },
+            { term: "Hooper Visual Organization Test", desc: "Mental reassembly of fragmented object pictures" },
+            { term: "Visual Object and Space Perception Battery (VOSP)", desc: "Separate object perception and space perception subtests" },
+            { term: "Rey-Osterrieth Complex Figure (copy)", desc: "Constructional ability, organizational strategy" },
+            { term: "WAIS Block Design", desc: "Visuospatial construction and analysis" },
+            { term: "WAIS Visual Puzzles", desc: "Mental rotation and visuospatial reasoning" },
+            { term: "WAIS Matrix Reasoning", desc: "Non-verbal abstract reasoning with a visuospatial component" },
+            { term: "Clock Drawing Test", desc: "Construction, planning, neglect; multiple scoring systems" },
+            { term: "Bender Gestalt-II", desc: "Visuomotor integration" },
+            { term: "Beery VMI", desc: "Visual-motor integration, including pediatric forms" },
+          ],
+        },
+        { h: "Neglect screening" },
+        {
+          dl: [
+            { term: "Line Bisection", desc: "Marking the midpoint of horizontal lines" },
+            { term: "Albert's Test", desc: "Cancellation of randomly distributed lines" },
+            { term: "Star Cancellation", desc: "Identification of small targets among distractors" },
+            { term: "Letter or Bell Cancellation", desc: "Visual search tasks for neglect detection" },
+            { term: "Behavioral Inattention Test (BIT)", desc: "Conventional and behavioral subtests of neglect" },
+            { term: "Catherine Bergego Scale", desc: "Observational assessment of neglect in everyday activities" },
+            { term: "Drawing tasks (clock, daisy, scene copy)", desc: "Spontaneous drawing for left-sided omissions" },
+            { term: "Reading and writing samples", desc: "Detection of left-sided neglect dyslexia and dysgraphia" },
+          ],
+        },
+        { h: "Praxis testing" },
+        {
+          ul: [
+            "Ideomotor praxis — pantomime of tool use, gesture imitation, transitive and intransitive movements",
+            "Ideational praxis — multi-step sequenced tasks (e.g., letter-in-envelope)",
+            "Buccofacial praxis — facial gestures and oral movements",
+            "Limb-kinetic praxis — fine motor dexterity (finger tapping, Grooved Pegboard)",
+            "Florida Apraxia Battery — standardized praxis assessment",
+            "Western Aphasia Battery Apraxia subtest — screening within aphasia evaluation",
+          ],
+        },
+        { h: "Number processing and calculation" },
+        {
+          ul: [
+            "WAIS-5 / WAIS-IV Arithmetic — verbally administered mental arithmetic",
+            "WIAT-4 Math subtests — Numerical Operations, Math Problem Solving",
+            "Woodcock-Johnson IV Math subtests — Calculation, Math Facts Fluency, Applied Problems",
+            "Wide Range Achievement Test-5 (WRAT-5) Math Computation",
+            "NEPSY-II Math subtests (pediatric)",
+            "Number comparison and approximate magnitude tasks — for dyscalculia assessment",
+            "Written calculation — bedside assessment of acalculia",
+          ],
+        },
+        { h: "Reading and writing" },
+        {
+          ul: [
+            "WIAT-4 Reading and Writing subtests — Word Reading, Pseudoword Decoding, Reading Comprehension, Spelling, Sentence Composition",
+            "Woodcock-Johnson IV Achievement — Letter-Word Identification, Passage Comprehension, Spelling",
+            "Gray Oral Reading Tests-5 (GORT-5) — oral reading fluency and comprehension",
+            "Test of Written Language (TOWL-4)",
+            "Spontaneous writing samples — for spatial dysgraphia and neglect dysgraphia",
+            "Oral reading — for assessment of acquired alexias",
+          ],
+        },
+        { h: "Gerstmann screen and related measures" },
+        {
+          ul: [
+            "Finger naming and finger localization — examiner touches or indicates fingers for naming",
+            "Right-left orientation — on self, on examiner, and with crossed commands (e.g., \"touch your left ear with your right hand\")",
+            "Calculation — written and mental arithmetic",
+            "Writing to dictation and spontaneous writing",
+            "These four tasks can be administered together as a brief Gerstmann screen",
+          ],
+        },
+        { h: "Body schema and self-awareness" },
+        {
+          ul: [
+            "Anosognosia rating scales (e.g., Bisiach scale, Anosognosia Questionnaire)",
+            "Self vs. other localization tasks — pointing to body parts on self and examiner",
+            "Personal neglect assessments — comb-and-razor test, fluff test",
+          ],
+        },
+        { h: "Social cognition (TPJ-relevant)" },
+        {
+          ul: [
+            "Reading the Mind in the Eyes Test — engages temporoparietal regions",
+            "False belief tasks (e.g., Strange Stories, faux pas recognition) — theory of mind",
+          ],
+        },
+        { h: "Bedside screening for parietal dysfunction" },
+        {
+          ul: [
+            "Cortical sensory examination (stereognosis, graphesthesia, two-point discrimination, double simultaneous stimulation)",
+            "Drawing tasks (clock, daisy, three-dimensional cube, intersecting pentagons)",
+            "Line bisection and simple cancellation",
+            "Mental arithmetic (serial subtraction, single calculations)",
+            "Praxis screen — pantomime to command (e.g., \"show me how you would brush your teeth\")",
+            "Finger gnosis and right-left orientation",
+            "Reading aloud and spontaneous writing sample",
+            "Spatial scanning during conversation and history-taking — observation for spontaneous neglect of one side",
+          ],
+        },
+      ],
+    },
   },
   {
     id: "temporal-lobe",
