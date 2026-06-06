@@ -12,7 +12,7 @@ export const modules: ModuleMap = {
   "./components/mockups/dashboard-hero-slot/WeeklySummary.tsx": () => import("../components/mockups/dashboard-hero-slot/WeeklySummary.tsx"),
   "./components/mockups/landing-redesign/Cinematic.tsx": () => import("../components/mockups/landing-redesign/Cinematic.tsx"),
   "./components/mockups/landing-redesign/TighterBolder.tsx": () => import("../components/mockups/landing-redesign/TighterBolder.tsx"),
-  "./components/mockups/psychpro-aesthetic/Landing.tsx": () => import("../components/mockups/psychpro-aesthetic/Landing.tsx"),
   "./components/mockups/psychpro-polished/Dashboard.tsx": () => import("../components/mockups/psychpro-polished/Dashboard.tsx"),
-  "./components/mockups/psychpro-polished/Landing.tsx": () => import("../components/mockups/psychpro-polished/Landing.tsx")
+  "./components/mockups/psychpro-polished/Landing.tsx": () => import("../components/mockups/psychpro-polished/Landing.tsx"),
+  "./components/mockups/psychpro-aesthetic/Landing.tsx": () => import("../components/mockups/psychpro-aesthetic/Landing.tsx")
 };

@@ -920,6 +920,7 @@ const HOTSPOTS: Record<ViewKey, Hotspot[]> = {
     { id: "uncus", x: 42, y: 42, lx: 10, ly: 80, side: "left" },
     { id: "orbitofrontal-cortex", x: 53, y: 14, lx: 86, ly: 10, side: "right" },
     { id: "optic-chiasm", x: 49, y: 34, lx: 86, ly: 24, side: "right" },
+    { id: "pituitary", x: 50, y: 38, lx: 86, ly: 30, side: "right" },
     { id: "mammillary-bodies", x: 49, y: 41, lx: 86, ly: 36, side: "right" },
     { id: "midbrain", x: 49, y: 48, lx: 86, ly: 48, side: "right" },
     { id: "pons", x: 49, y: 56, lx: 86, ly: 60, side: "right" },
