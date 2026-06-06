@@ -23,7 +23,9 @@ import {
   BRAIN_STRUCTURES,
   STRUCTURE_INDEX,
   SYSTEM_META,
+  CATEGORY_META,
   type BrainStructure,
+  type PartCategory,
 } from "../data/brain-structures";
 import brainLateral from "@/assets/brain-views/lateral.webp";
 import brainMedial from "@/assets/brain-views/medial.webp";
@@ -675,195 +677,347 @@ const BRAIN_VIEWS: Record<
 // structures that are actually visible in its image, so the markers always sit
 // on real anatomy. Clicking a marker selects that structure — its name pins to
 // the brain and its full detail opens in the panel on the right.
-type Hotspot = { id: string; x: number; y: number };
+// Each label is drawn as a thin leader line from a precise anatomical anchor
+// (x, y — % of the rendered image box) out to a label box (lx, ly). `side`
+// controls which way the label box extends from its (lx, ly) attach point:
+// "left" means the box grows leftward (text right-aligned, right edge at lx),
+// "right" means it grows rightward (left edge at lx). When lx/ly are omitted the
+// label sits just beside the anchor (legacy fallback).
+type Hotspot = {
+  id: string;
+  x: number;
+  y: number;
+  lx?: number;
+  ly?: number;
+  side?: "left" | "right";
+};
 
 const HOTSPOTS: Record<ViewKey, Hotspot[]> = {
   // Lateral view (brain faces left) — cortical surface
   lateral: [
-    { id: "prefrontal-cortex", x: 14, y: 46 },
-    { id: "frontal-lobe", x: 25, y: 34 },
-    { id: "motor-cortex", x: 41, y: 20 },
-    { id: "somatosensory-cortex", x: 49, y: 20 },
-    { id: "parietal-lobe", x: 60, y: 28 },
-    { id: "occipital-lobe", x: 82, y: 42 },
-    { id: "temporal-lobe", x: 44, y: 66 },
-    { id: "orbitofrontal-cortex", x: 20, y: 60 },
-    { id: "broca-area", x: 34, y: 53 },
-    { id: "wernicke-area", x: 58, y: 54 },
-    { id: "auditory-cortex", x: 49, y: 57 },
-    { id: "supramarginal-gyrus", x: 61, y: 40 },
-    { id: "angular-gyrus", x: 67, y: 45 },
+    // Top — sensorimotor strip (labels above the vertex)
+    { id: "precentral-gyrus", x: 44, y: 15, lx: 32, ly: 3, side: "left" },
+    { id: "central-sulcus", x: 46, y: 13, lx: 44, ly: 9, side: "right" },
+    { id: "postcentral-gyrus", x: 50, y: 15, lx: 62, ly: 3, side: "right" },
+    // Left margin — frontal gyri, Broca's pars subdivisions, temporal gyri
+    { id: "superior-frontal-gyrus", x: 34, y: 15, lx: 18, ly: 6, side: "left" },
+    { id: "middle-frontal-gyrus", x: 29, y: 25, lx: 16, ly: 14, side: "left" },
+    { id: "inferior-frontal-gyrus", x: 25, y: 38, lx: 14, ly: 22, side: "left" },
+    { id: "pars-opercularis", x: 32, y: 44, lx: 14, ly: 30, side: "left" },
+    { id: "pars-triangularis", x: 27, y: 46, lx: 13, ly: 38, side: "left" },
+    { id: "pars-orbitalis", x: 21, y: 48, lx: 12, ly: 46, side: "left" },
+    { id: "broca-area", x: 30, y: 51, lx: 13, ly: 54, side: "left" },
+    { id: "lateral-sulcus", x: 40, y: 51, lx: 12, ly: 61, side: "left" },
+    { id: "temporal-pole", x: 17, y: 61, lx: 10, ly: 68, side: "left" },
+    { id: "superior-temporal-gyrus", x: 41, y: 60, lx: 12, ly: 75, side: "left" },
+    { id: "superior-temporal-sulcus", x: 44, y: 63, lx: 13, ly: 82, side: "left" },
+    { id: "middle-temporal-gyrus", x: 45, y: 66, lx: 15, ly: 89, side: "left" },
+    { id: "inferior-temporal-gyrus", x: 48, y: 71, lx: 17, ly: 96, side: "left" },
+    // Right margin — parietal lobules/gyri, occipital, cerebellum
+    { id: "intraparietal-sulcus", x: 59, y: 24, lx: 82, ly: 12, side: "right" },
+    { id: "superior-parietal-lobule", x: 60, y: 20, lx: 84, ly: 20, side: "right" },
+    { id: "supramarginal-gyrus", x: 63, y: 36, lx: 86, ly: 28, side: "right" },
+    { id: "angular-gyrus", x: 68, y: 44, lx: 88, ly: 36, side: "right" },
+    { id: "inferior-parietal-lobule", x: 66, y: 40, lx: 88, ly: 44, side: "right" },
+    { id: "wernicke-area", x: 61, y: 52, lx: 86, ly: 52, side: "right" },
+    { id: "occipital-pole", x: 86, y: 46, lx: 91, ly: 60, side: "right" },
+    { id: "lateral-occipital-cortex", x: 80, y: 53, lx: 90, ly: 68, side: "right" },
+    { id: "cerebellar-hemisphere", x: 79, y: 73, lx: 88, ly: 76, side: "right" },
+    // Bottom — auditory cortex tucked in the Sylvian fissure
+    { id: "auditory-cortex", x: 50, y: 57, lx: 42, ly: 90, side: "left" },
   ],
   // Medial surface (brain faces left) — cortical medial regions plus the midline
   // white-matter/limbic landmarks and the brainstem/cerebellum.
   medial: [
-    { id: "prefrontal-cortex", x: 14, y: 42 },
-    { id: "frontal-lobe", x: 24, y: 24 },
-    { id: "corpus-callosum", x: 43, y: 38 },
-    { id: "posterior-cingulate", x: 56, y: 31 },
-    { id: "parietal-lobe", x: 62, y: 20 },
-    { id: "occipital-lobe", x: 82, y: 40 },
-    { id: "fornix", x: 40, y: 46 },
-    { id: "thalamus", x: 48, y: 47 },
-    { id: "midbrain", x: 50, y: 55 },
-    { id: "pons", x: 49, y: 63 },
-    { id: "medulla", x: 48, y: 73 },
-    { id: "cerebellum", x: 67, y: 62 },
+    // Left margin — frontal, cingulate, midline white matter, brainstem
+    { id: "frontal-lobe", x: 22, y: 24, lx: 10, ly: 10, side: "left" },
+    { id: "cingulate-sulcus", x: 38, y: 27, lx: 9, ly: 18, side: "left" },
+    { id: "cingulate-gyrus", x: 40, y: 33, lx: 9, ly: 26, side: "left" },
+    { id: "corpus-callosum", x: 43, y: 39, lx: 8, ly: 34, side: "left" },
+    { id: "prefrontal-cortex", x: 15, y: 44, lx: 7, ly: 42, side: "left" },
+    { id: "fornix", x: 40, y: 46, lx: 8, ly: 50, side: "left" },
+    { id: "thalamus", x: 48, y: 47, lx: 9, ly: 58, side: "left" },
+    { id: "midbrain", x: 50, y: 55, lx: 10, ly: 66, side: "left" },
+    { id: "pons", x: 49, y: 63, lx: 10, ly: 74, side: "left" },
+    { id: "medulla", x: 48, y: 72, lx: 11, ly: 82, side: "left" },
+    // Right margin — paracentral, parietal, precuneus, occipital, cerebellum
+    { id: "paracentral-lobule", x: 50, y: 18, lx: 58, ly: 8, side: "right" },
+    { id: "parietal-lobe", x: 62, y: 20, lx: 80, ly: 14, side: "right" },
+    { id: "posterior-cingulate", x: 56, y: 31, lx: 84, ly: 24, side: "right" },
+    { id: "precuneus", x: 64, y: 28, lx: 86, ly: 34, side: "right" },
+    { id: "parieto-occipital-sulcus", x: 70, y: 30, lx: 88, ly: 44, side: "right" },
+    { id: "cuneus", x: 76, y: 38, lx: 90, ly: 54, side: "right" },
+    { id: "occipital-lobe", x: 82, y: 40, lx: 91, ly: 64, side: "right" },
+    { id: "calcarine-sulcus", x: 74, y: 46, lx: 88, ly: 72, side: "right" },
+    { id: "lingual-gyrus", x: 72, y: 52, lx: 86, ly: 80, side: "right" },
+    { id: "cerebellum", x: 67, y: 62, lx: 86, ly: 88, side: "right" },
   ],
   // Midsagittal view (brain faces left) — deep medial structures spanning the
   // limbic system, brainstem/cerebellum, and midline white-matter tracts.
   midsagittal: [
-    { id: "corpus-callosum", x: 42, y: 38 },
-    { id: "posterior-cingulate", x: 55, y: 32 },
-    { id: "fornix", x: 40, y: 45 },
-    { id: "mammillary-bodies", x: 42, y: 54 },
-    { id: "hippocampus", x: 44, y: 57 },
-    { id: "amygdala", x: 38, y: 56 },
-    { id: "pineal-gland", x: 56, y: 47 },
-    { id: "midbrain", x: 50, y: 54 },
-    { id: "optic-chiasm", x: 35, y: 55 },
-    { id: "locus-coeruleus", x: 51, y: 60 },
-    { id: "pons", x: 49, y: 63 },
-    { id: "medulla", x: 48, y: 73 },
-    { id: "cerebellum", x: 66, y: 61 },
+    // Left margin — midline limbic / brainstem column
+    { id: "cingulate-gyrus", x: 40, y: 33, lx: 8, ly: 12, side: "left" },
+    { id: "corpus-callosum", x: 42, y: 38, lx: 7, ly: 20, side: "left" },
+    { id: "fornix", x: 40, y: 45, lx: 7, ly: 28, side: "left" },
+    { id: "optic-chiasm", x: 35, y: 55, lx: 7, ly: 36, side: "left" },
+    { id: "amygdala", x: 38, y: 56, lx: 8, ly: 44, side: "left" },
+    { id: "mammillary-bodies", x: 42, y: 54, lx: 8, ly: 52, side: "left" },
+    { id: "hippocampus", x: 44, y: 58, lx: 9, ly: 60, side: "left" },
+    { id: "midbrain", x: 50, y: 54, lx: 9, ly: 68, side: "left" },
+    { id: "pons", x: 49, y: 63, lx: 10, ly: 76, side: "left" },
+    { id: "medulla", x: 48, y: 73, lx: 11, ly: 84, side: "left" },
+    // Right margin — medial parietal/occipital + deep midline glands
+    { id: "paracentral-lobule", x: 50, y: 20, lx: 58, ly: 8, side: "right" },
+    { id: "posterior-cingulate", x: 55, y: 32, lx: 84, ly: 18, side: "right" },
+    { id: "precuneus", x: 62, y: 30, lx: 86, ly: 28, side: "right" },
+    { id: "parieto-occipital-sulcus", x: 68, y: 32, lx: 88, ly: 38, side: "right" },
+    { id: "cuneus", x: 74, y: 40, lx: 90, ly: 48, side: "right" },
+    { id: "calcarine-sulcus", x: 72, y: 47, lx: 88, ly: 58, side: "right" },
+    { id: "pineal-gland", x: 56, y: 47, lx: 86, ly: 66, side: "right" },
+    { id: "locus-coeruleus", x: 51, y: 60, lx: 86, ly: 74, side: "right" },
+    { id: "cerebellum", x: 66, y: 61, lx: 86, ly: 84, side: "right" },
   ],
-  // Coronal section — subcortical nuclei & ventricles
+  // Coronal section — subcortical nuclei, capsules & ventricles
   coronal: [
-    { id: "lateral-ventricles", x: 50, y: 33 },
-    { id: "caudate", x: 45, y: 37 },
-    { id: "globus-pallidus", x: 42, y: 47 },
-    { id: "putamen", x: 38, y: 45 },
-    { id: "thalamus", x: 48, y: 51 },
-    { id: "internal-capsule", x: 44, y: 45 },
+    // Left side of the slice
+    { id: "corpus-callosum", x: 50, y: 28, lx: 14, ly: 12, side: "left" },
+    { id: "caudate", x: 45, y: 36, lx: 12, ly: 22, side: "left" },
+    { id: "putamen", x: 38, y: 45, lx: 10, ly: 32, side: "left" },
+    { id: "external-capsule", x: 35, y: 46, lx: 9, ly: 42, side: "left" },
+    { id: "claustrum", x: 34, y: 48, lx: 9, ly: 52, side: "left" },
+    { id: "insular-cortex", x: 33, y: 50, lx: 9, ly: 62, side: "left" },
+    // Right side of the slice
+    { id: "lateral-ventricles", x: 52, y: 33, lx: 84, ly: 16, side: "right" },
+    { id: "internal-capsule", x: 46, y: 45, lx: 86, ly: 28, side: "right" },
+    { id: "globus-pallidus", x: 43, y: 47, lx: 86, ly: 40, side: "right" },
+    { id: "thalamus", x: 48, y: 52, lx: 86, ly: 52, side: "right" },
+    { id: "third-ventricle", x: 50, y: 50, lx: 86, ly: 64, side: "right" },
   ],
-  // Dorsal (superior) view — front at top, occipital at bottom. Lobe markers run
-  // down the left hemisphere from the frontal pole to the occipital pole.
+  // Dorsal (superior) view — front at top, occipital at bottom. Left hemisphere
+  // labels on the left, right hemisphere + midline on the right.
   dorsal: [
-    { id: "prefrontal-cortex", x: 35, y: 10 },
-    { id: "frontal-lobe", x: 35, y: 25 },
-    { id: "motor-cortex", x: 38, y: 40 },
-    { id: "somatosensory-cortex", x: 38, y: 50 },
-    { id: "parietal-lobe", x: 38, y: 62 },
-    { id: "occipital-lobe", x: 40, y: 85 },
+    { id: "prefrontal-cortex", x: 38, y: 12, lx: 12, ly: 8, side: "left" },
+    { id: "frontal-lobe", x: 36, y: 25, lx: 10, ly: 22, side: "left" },
+    { id: "superior-frontal-gyrus", x: 40, y: 30, lx: 10, ly: 36, side: "left" },
+    { id: "precentral-gyrus", x: 40, y: 42, lx: 10, ly: 50, side: "left" },
+    { id: "postcentral-gyrus", x: 42, y: 52, lx: 10, ly: 64, side: "left" },
+    { id: "parietal-lobe", x: 38, y: 64, lx: 10, ly: 78, side: "left" },
+    { id: "occipital-lobe", x: 42, y: 86, lx: 12, ly: 90, side: "left" },
+    { id: "longitudinal-fissure", x: 50, y: 30, lx: 72, ly: 12, side: "right" },
+    { id: "central-sulcus", x: 44, y: 47, lx: 88, ly: 30, side: "right" },
+    { id: "motor-cortex", x: 58, y: 42, lx: 88, ly: 46, side: "right" },
+    { id: "somatosensory-cortex", x: 58, y: 52, lx: 88, ly: 60, side: "right" },
+    { id: "superior-parietal-lobule", x: 58, y: 64, lx: 88, ly: 76, side: "right" },
   ],
-  // Ventral (inferior) surface — front at top, cerebellum at bottom. Markers sit
-  // on the midline brainstem column plus the orbital/temporal lobes.
+  // Ventral (inferior) surface — front at top, cerebellum at bottom.
   ventral: [
-    { id: "orbitofrontal-cortex", x: 47, y: 13 },
-    { id: "temporal-lobe", x: 27, y: 38 },
-    { id: "optic-chiasm", x: 49, y: 34 },
-    { id: "mammillary-bodies", x: 49, y: 41 },
-    { id: "midbrain", x: 49, y: 48 },
-    { id: "pons", x: 49, y: 55 },
-    { id: "medulla", x: 49, y: 62 },
-    { id: "cerebellum", x: 46, y: 80 },
+    { id: "gyrus-rectus", x: 45, y: 16, lx: 14, ly: 8, side: "left" },
+    { id: "temporal-pole", x: 33, y: 26, lx: 10, ly: 20, side: "left" },
+    { id: "olfactory-bulb", x: 46, y: 22, lx: 12, ly: 32, side: "left" },
+    { id: "temporal-lobe", x: 27, y: 40, lx: 8, ly: 44, side: "left" },
+    { id: "parahippocampal-gyrus", x: 38, y: 46, lx: 9, ly: 56, side: "left" },
+    { id: "fusiform-gyrus", x: 35, y: 52, lx: 9, ly: 68, side: "left" },
+    { id: "uncus", x: 42, y: 42, lx: 10, ly: 80, side: "left" },
+    { id: "orbitofrontal-cortex", x: 53, y: 14, lx: 86, ly: 10, side: "right" },
+    { id: "optic-chiasm", x: 49, y: 34, lx: 86, ly: 24, side: "right" },
+    { id: "mammillary-bodies", x: 49, y: 41, lx: 86, ly: 36, side: "right" },
+    { id: "midbrain", x: 49, y: 48, lx: 86, ly: 48, side: "right" },
+    { id: "pons", x: 49, y: 56, lx: 86, ly: 60, side: "right" },
+    { id: "medulla", x: 49, y: 63, lx: 86, ly: 72, side: "right" },
+    { id: "cerebellum", x: 46, y: 82, lx: 86, ly: 84, side: "right" },
   ],
-  // Ventral (inferior) surface showing the cranial-nerve roots — markers sit on
-  // the midline structures and lobes visible from below.
+  // Ventral (inferior) surface showing the cranial-nerve roots.
   ventralNerves: [
-    { id: "frontal-lobe", x: 50, y: 13 },
-    { id: "orbitofrontal-cortex", x: 40, y: 19 },
-    { id: "temporal-lobe", x: 28, y: 46 },
-    { id: "optic-chiasm", x: 49, y: 36 },
-    { id: "mammillary-bodies", x: 49, y: 43 },
-    { id: "midbrain", x: 49, y: 50 },
-    { id: "pons", x: 49, y: 58 },
-    { id: "medulla", x: 49, y: 67 },
-    { id: "cerebellum", x: 40, y: 77 },
+    { id: "gyrus-rectus", x: 46, y: 16, lx: 12, ly: 8, side: "left" },
+    { id: "olfactory-bulb", x: 45, y: 24, lx: 11, ly: 22, side: "left" },
+    { id: "temporal-pole", x: 33, y: 30, lx: 9, ly: 36, side: "left" },
+    { id: "temporal-lobe", x: 28, y: 46, lx: 8, ly: 50, side: "left" },
+    { id: "orbitofrontal-cortex", x: 40, y: 20, lx: 8, ly: 64, side: "left" },
+    { id: "frontal-lobe", x: 52, y: 13, lx: 86, ly: 10, side: "right" },
+    { id: "optic-chiasm", x: 50, y: 36, lx: 86, ly: 24, side: "right" },
+    { id: "mammillary-bodies", x: 49, y: 43, lx: 86, ly: 36, side: "right" },
+    { id: "midbrain", x: 49, y: 50, lx: 86, ly: 48, side: "right" },
+    { id: "pons", x: 49, y: 58, lx: 86, ly: 60, side: "right" },
+    { id: "medulla", x: 49, y: 67, lx: 86, ly: 72, side: "right" },
+    { id: "cerebellum", x: 41, y: 78, lx: 86, ly: 84, side: "right" },
   ],
 };
 
-// A single clickable region marker. Pulses when selected, reveals its label on
-// hover, and keeps the label pinned once chosen so the name stays "next to" the
-// region while its detail is open on the right.
-function HotspotMarker({
+// A leader-line label. A thin line runs from a precise anatomical anchor (x, y)
+// out to a label box (lx, ly) sitting in the margin, color-coded by the
+// structure's anatomical TYPE (category). The anchor dot and the label box are
+// both clickable; selecting brightens the whole leader and opens the detail.
+// The connecting line itself is drawn in the shared SVG overlay (LeaderLines)
+// so it scales exactly with the image box.
+function LeaderLabel({
   struct,
-  x,
-  y,
+  hotspot,
   selected,
   onSelect,
 }: {
   struct: BrainStructure;
-  x: number;
-  y: number;
+  hotspot: Hotspot;
   selected: boolean;
   onSelect: (id: string) => void;
 }) {
-  const flipLeft = x > 58; // keep labels from running off the right edge
+  const { x, y } = hotspot;
+  const lx = hotspot.lx ?? x;
+  const ly = hotspot.ly ?? y;
+  const side = hotspot.side ?? (lx < x ? "left" : "right");
   return (
-    <button
-      type="button"
-      onClick={(e) => {
-        e.stopPropagation();
-        onSelect(struct.id);
-      }}
-      className="group absolute z-10 flex items-center justify-center outline-none"
-      style={{
-        left: `${x}%`,
-        top: `${y}%`,
-        width: 36,
-        height: 36,
-        transform: "translate(-50%, -50%)",
-      }}
-      aria-label={struct.name}
-      aria-pressed={selected}
-      data-testid={`hotspot-${struct.id}`}
-    >
-      {/* Pulse ring (selected only) */}
-      <span
-        className="absolute left-1/2 top-1/2 rounded-full animate-ping"
-        style={{
-          width: 22,
-          height: 22,
-          marginLeft: -11,
-          marginTop: -11,
-          background: `${struct.color}66`,
-          opacity: selected ? 1 : 0,
+    <>
+      {/* Anchor dot — sits exactly on the anatomy */}
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onSelect(struct.id);
         }}
-      />
-      {/* Dot — visible focus ring for keyboard users */}
-      <span
-        className="block rounded-full transition-transform duration-150 group-hover:scale-125 group-focus-visible:scale-125"
+        className="group absolute z-20 outline-none"
         style={{
-          width: selected ? 16 : 12,
-          height: selected ? 16 : 12,
-          background: struct.color,
-          border: "2px solid #fff",
-          boxShadow: selected
-            ? `0 0 0 3px ${PALETTE.bg}aa, 0 0 14px 3px ${struct.color}`
-            : `0 0 0 3px ${PALETTE.bg}aa, 0 0 12px 2px ${struct.color}`,
-          outline: "2px solid transparent",
+          left: `${x}%`,
+          top: `${y}%`,
+          width: 16,
+          height: 16,
+          transform: "translate(-50%, -50%)",
         }}
-      />
-      {/* Keyboard focus halo */}
-      <span
-        className="pointer-events-none absolute left-1/2 top-1/2 rounded-full opacity-0 transition-opacity group-focus-visible:opacity-100"
-        style={{
-          width: 26,
-          height: 26,
-          marginLeft: -13,
-          marginTop: -13,
-          border: `2px solid #fff`,
+        aria-label={struct.name}
+        aria-pressed={selected}
+        data-testid={`hotspot-${struct.id}`}
+        title={struct.name}
+      >
+        <span
+          className="block rounded-full transition-transform duration-150 group-hover:scale-125 group-focus-visible:scale-125 mx-auto"
+          style={{
+            width: selected ? 9 : 6,
+            height: selected ? 9 : 6,
+            background: struct.color,
+            border: "1.5px solid #fff",
+            boxShadow: selected
+              ? `0 0 0 2px ${PALETTE.bg}aa, 0 0 12px 3px ${struct.color}`
+              : `0 0 0 2px ${PALETTE.bg}aa, 0 0 6px 1px ${struct.color}`,
+          }}
+        />
+      </button>
+
+      {/* Label box — sits in the margin at the far end of the leader line */}
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onSelect(struct.id);
         }}
-      />
-      {/* Name label — always shown when selected, on hover/focus otherwise */}
-      <span
-        className={`pointer-events-none absolute top-1/2 -translate-y-1/2 whitespace-nowrap rounded-md px-2 py-0.5 text-[11px] font-semibold transition-opacity duration-150 ${
-          selected
-            ? "opacity-100"
-            : "opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100"
-        }`}
+        className="group absolute z-20 whitespace-nowrap rounded-md px-1.5 py-0.5 text-[10px] md:text-[11px] font-semibold leading-tight outline-none transition-all duration-150 hover:z-30"
         style={{
-          [flipLeft ? "right" : "left"]: "calc(100% + 8px)",
-          background: `${PALETTE.surfaceElev}f2`,
+          left: `${lx}%`,
+          top: `${ly}%`,
+          transform: `translate(${side === "left" ? "-100%" : "0"}, -50%)`,
+          textAlign: side === "left" ? "right" : "left",
+          background: selected ? `${struct.color}26` : `${PALETTE.surfaceElev}f2`,
           color: "#fff",
-          border: `1px solid ${struct.color}cc`,
-          boxShadow: `0 6px 18px -6px ${PALETTE.bg}`,
+          border: `1px solid ${struct.color}${selected ? "ff" : "cc"}`,
+          boxShadow: selected
+            ? `0 0 0 1px ${struct.color}66, 0 6px 18px -6px ${PALETTE.bg}, 0 0 14px -2px ${struct.color}`
+            : `0 6px 16px -8px ${PALETTE.bg}`,
         }}
+        aria-label={struct.name}
+        aria-pressed={selected}
+        data-testid={`label-${struct.id}`}
+        title={struct.name}
       >
         {struct.shortName || struct.name}
-      </span>
-    </button>
+      </button>
+    </>
+  );
+}
+
+// Shared SVG overlay that draws every leader line for the active view. Uses a
+// 0–100 viewBox stretched to the image box (preserveAspectRatio="none") so line
+// endpoints line up with the % coordinates, while vector-effect keeps the stroke
+// a constant, hair-thin width regardless of the non-uniform scaling.
+function LeaderLines({
+  hotspots,
+  selectedId,
+}: {
+  hotspots: Hotspot[];
+  selectedId: string | null;
+}) {
+  return (
+    <svg
+      className="pointer-events-none absolute inset-0 h-full w-full z-10"
+      viewBox="0 0 100 100"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+    >
+      {hotspots.map((h) => {
+        const struct = STRUCTURE_INDEX[h.id];
+        if (!struct) return null;
+        const lx = h.lx ?? h.x;
+        const ly = h.ly ?? h.y;
+        const selected = selectedId === h.id;
+        return (
+          <line
+            key={h.id}
+            x1={lx}
+            y1={ly}
+            x2={h.x}
+            y2={h.y}
+            stroke={struct.color}
+            strokeWidth={selected ? 1.6 : 1}
+            strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
+            opacity={selected ? 1 : 0.6}
+          />
+        );
+      })}
+    </svg>
+  );
+}
+
+// Compact key showing the anatomical part TYPES present in the active view, with
+// their color swatches, so the type-based color coding is self-explanatory.
+function CategoryLegend({ hotspots }: { hotspots: Hotspot[] }) {
+  const categories = useMemo(() => {
+    const present = new Set<PartCategory>();
+    for (const h of hotspots) {
+      const s = STRUCTURE_INDEX[h.id];
+      if (s) present.add(s.category);
+    }
+    // Stable order matching CATEGORY_META declaration order.
+    return (Object.keys(CATEGORY_META) as PartCategory[]).filter((c) => present.has(c));
+  }, [hotspots]);
+
+  if (categories.length === 0) return null;
+
+  return (
+    <div
+      className="absolute left-2 top-2 z-30 flex max-w-[44%] flex-wrap gap-1 rounded-lg p-1.5"
+      style={{
+        background: `${PALETTE.surface}d9`,
+        border: `1px solid ${PALETTE.steel}66`,
+        backdropFilter: "blur(8px)",
+      }}
+      data-testid="category-legend"
+    >
+      {categories.map((cat) => (
+        <span
+          key={cat}
+          className="flex items-center gap-1 rounded px-1 py-0.5 text-[9px] md:text-[10px] font-medium"
+          style={{ color: `${PALETTE.mist}` }}
+        >
+          <span
+            className="inline-block rounded-sm"
+            style={{
+              width: 8,
+              height: 8,
+              background: CATEGORY_META[cat].color,
+              boxShadow: `0 0 5px ${CATEGORY_META[cat].color}aa`,
+            }}
+          />
+          {CATEGORY_META[cat].label}
+        </span>
+      ))}
+    </div>
   );
 }
 
@@ -887,6 +1041,7 @@ function BrainDiagram({
       className="relative h-full w-full flex items-center justify-center p-4 md:p-6"
       data-testid="brain-diagram"
     >
+      {view.src ? <CategoryLegend hotspots={hotspots} /> : null}
       {view.src ? (
         <div className="relative max-h-full max-w-full">
           <img
@@ -903,16 +1058,16 @@ function BrainDiagram({
             }}
             data-testid={`brain-view-${activeView}`}
           />
-          {/* Clickable region markers, positioned over the rendered image */}
+          {/* Leader lines (SVG), then the clickable anchor dots + labels on top */}
+          <LeaderLines hotspots={hotspots} selectedId={selectedId} />
           {hotspots.map((h) => {
             const struct = STRUCTURE_INDEX[h.id];
             if (!struct) return null;
             return (
-              <HotspotMarker
+              <LeaderLabel
                 key={h.id}
                 struct={struct}
-                x={h.x}
-                y={h.y}
+                hotspot={h}
                 selected={selectedId === h.id}
                 onSelect={onSelect}
               />
@@ -992,8 +1147,13 @@ export default function BrainLabPage() {
   const [isMobile, setIsMobile] = useState(false);
   const [showMobileDetail, setShowMobileDetail] = useState(false);
 
-  // The 3D model shows every structure; the anatomical views drive the 2D atlas.
-  const view3dStructures = BRAIN_STRUCTURES;
+  // The 3D model is the high-level orientation view: it shows ONLY the four
+  // cortical lobes, each a clickable glow that opens its detail. All the finer
+  // named anatomy lives in the labeled 2D atlas views.
+  const view3dStructures = useMemo(
+    () => BRAIN_STRUCTURES.filter((s) => s.category === "lobe"),
+    [],
+  );
 
   // Flat pool for the "label each part" quiz — every hotspot that sits on a real
   // view image, deduped by structure and grouped by the diagram it appears on

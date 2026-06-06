@@ -475,7 +475,7 @@ export default function Brain3DView({
           3D Brain
         </span>
         <span className="text-[11px]" style={{ color: `${PALETTE.mist}88` }}>
-          Drag to rotate · scroll to zoom · tap a marker
+          Drag to rotate · scroll to zoom · tap a lobe
         </span>
       </div>
     </div>
