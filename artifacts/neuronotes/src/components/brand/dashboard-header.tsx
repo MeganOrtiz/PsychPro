@@ -2,17 +2,18 @@
 // DashboardHeader — dashboard-LOCAL styled banner around the protected
 // BrandBanner wordmark.
 //
-// This component owns ONLY the decorative framing for the dashboard's top
-// header: a contained glass banner, a refined cyan bloom, a hairline top
-// accent, and a soft separator beneath. It renders the canonical, protected
-// <BrandBanner/> untouched, so the wordmark, the "learn. expand. connect."
-// tagline, and the "Welcome back, {name}." / "Welcome back." greeting rules
-// are preserved exactly (pass greeting={undefined} while the profile loads so
-// only the wordmark + tagline show).
+// Concept: "Synaptic Aurora". A compact, living header — slow-drifting cyan
+// auroras, a field of twinkling synapse dots, and a periodic light-sweep — that
+// turns the static glass card into something that quietly breathes. It renders
+// the canonical, protected <BrandBanner/> untouched, so the wordmark, the
+// "learn. expand. connect." tagline, and the "Welcome back, {name}." /
+// "Welcome back." greeting rules are preserved exactly (pass greeting={undefined}
+// while the profile loads so only the wordmark + tagline show).
 //
 // All brand colors come from STUDY_PALETTE — locked cerulean #76E4F7 family,
 // never mint. Every decorative layer is pointer-events-none and sits behind
-// the BrandBanner (z-10).
+// the BrandBanner (z-10). Animations are scoped under .dashhdr-* in index.css
+// and disabled under prefers-reduced-motion.
 // =============================================================================
 import { BrandBanner } from "@/components/brand/brand-banner";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -21,40 +22,67 @@ interface DashboardHeaderProps {
   greeting?: string;
 }
 
+// Hand-placed synapse positions (% of the banner box). Staggered delays/durations
+// keep the twinkle from looking like a synced grid.
+const SYNAPSE_DOTS: Array<{ left: string; top: string; delay: string; dur: string }> = [
+  { left: "9%", top: "30%", delay: "0s", dur: "3.2s" },
+  { left: "19%", top: "68%", delay: "1.1s", dur: "4.1s" },
+  { left: "31%", top: "22%", delay: "2.0s", dur: "3.6s" },
+  { left: "73%", top: "26%", delay: "0.6s", dur: "3.9s" },
+  { left: "84%", top: "64%", delay: "1.7s", dur: "3.3s" },
+  { left: "92%", top: "38%", delay: "2.4s", dur: "4.3s" },
+];
+
 export function DashboardHeader({ greeting }: DashboardHeaderProps) {
   return (
     <header className="relative mb-6 md:mb-8" data-testid="dashboard-header">
       <div
-        className="relative mx-auto max-w-2xl overflow-hidden rounded-[26px] px-6 py-8 md:px-12 md:py-10"
+        className="dashhdr-card relative mx-auto max-w-2xl overflow-hidden rounded-[22px] px-6 py-6 md:px-10 md:py-7"
         style={{
-          background: `linear-gradient(160deg, rgba(10,45,61,0.50) 0%, rgba(6,28,40,0.60) 100%)`,
-          border: `1px solid ${P.surf}24`,
-          backdropFilter: "blur(20px) saturate(130%)",
-          WebkitBackdropFilter: "blur(20px) saturate(130%)",
-          boxShadow: `inset 0 1px 0 rgba(167,243,255,0.08), 0 26px 60px -34px rgba(0,0,0,0.7), 0 0 44px -14px ${P.surf}1f`,
+          background: `linear-gradient(150deg, rgba(8,40,55,0.55) 0%, rgba(5,24,34,0.66) 100%)`,
+          border: `1px solid ${P.surf}26`,
+          backdropFilter: "blur(22px) saturate(135%)",
+          WebkitBackdropFilter: "blur(22px) saturate(135%)",
+          boxShadow: `inset 0 1px 0 rgba(167,243,255,0.10), 0 26px 60px -34px rgba(0,0,0,0.7), 0 0 50px -16px ${P.surf}24`,
         }}
       >
-        {/* Top hairline accent — a thin cyan rule that catches the eye and
-            gives the banner a crafted, finished edge. */}
-        <span
-          aria-hidden
-          className="pointer-events-none absolute inset-x-10 top-0 h-px"
-          style={{
-            background: `linear-gradient(90deg, transparent, ${P.surf}73, transparent)`,
-          }}
-        />
-        {/* Refined bloom — a single soft cyan core centered on the wordmark.
-            Reads as ambient depth rather than a flat wash or hard spotlight. */}
+        {/* Aurora field — two slow, independently drifting cyan blooms that bleed
+            in from the top corners. Reads as ambient, shifting depth. */}
         <div
           aria-hidden
-          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+          className="dashhdr-aurora dashhdr-aurora-a pointer-events-none absolute"
+          style={{ background: `radial-gradient(circle, ${P.surf}33 0%, transparent 68%)` }}
+        />
+        <div
+          aria-hidden
+          className="dashhdr-aurora dashhdr-aurora-b pointer-events-none absolute"
+          style={{ background: `radial-gradient(circle, ${P.teal}2b 0%, transparent 70%)` }}
+        />
+
+        {/* Synapse dots — tiny cyan nodes that twinkle on staggered timers, a
+            subtle nod to the neural / "connect" theme without being literal. */}
+        {SYNAPSE_DOTS.map((d, i) => (
+          <span
+            key={i}
+            aria-hidden
+            className="dashhdr-dot pointer-events-none"
+            style={{ left: d.left, top: d.top, animationDelay: d.delay, animationDuration: d.dur }}
+          />
+        ))}
+
+        {/* Light-sweep — a soft sheen that crosses the banner on a long loop,
+            catching the wordmark like a passing reflection on glass. */}
+        <span aria-hidden className="dashhdr-sweep pointer-events-none absolute inset-0" />
+
+        {/* Top hairline accent — a thin cyan rule for a crafted, finished edge. */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-x-8 top-0 h-px"
           style={{
-            width: "min(540px, 92%)",
-            height: "220px",
-            background: `radial-gradient(58% 60% at 50% 44%, ${P.surf}24 0%, ${P.teal}10 42%, transparent 74%)`,
-            filter: "blur(8px)",
+            background: `linear-gradient(90deg, transparent, ${P.surf}82, transparent)`,
           }}
         />
+
         <BrandBanner size="lg" greeting={greeting} className="relative z-10" />
       </div>
       {/* Separator — a faint cyan-to-transparent rule that closes the banner
