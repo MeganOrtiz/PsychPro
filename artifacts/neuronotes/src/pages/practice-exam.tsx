@@ -260,11 +260,10 @@ export default function PracticeExamPage({ params }: Props) {
             <button
               onClick={() => setQuestionCount(Math.min(25, examAvailable) as QuestionCount)}
               data-testid={`button-count-${examAvailable}`}
-              className="rounded-xl border p-5 text-left transition-all hover:-translate-y-0.5"
+              className="rounded-xl border p-5 text-left transition-all hover:-translate-y-0.5 bg-card"
               style={{
-                background: "linear-gradient(135deg, #15506E 0%, #0E3A50 100%)",
                 borderColor: `${P.surf}55`,
-                boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(255,255,255,0.06)`,
+                boxShadow: `0 8px 22px -12px ${P.teal}66`,
               }}
             >
               <div className="flex items-center gap-2.5 mb-2">
@@ -283,18 +282,16 @@ export default function PracticeExamPage({ params }: Props) {
                 key={n}
                 onClick={() => setQuestionCount(n)}
                 data-testid={`button-count-${n}`}
-                className="rounded-xl border p-5 text-left transition-all hover:-translate-y-0.5"
+                className="rounded-xl border p-5 text-left transition-all hover:-translate-y-0.5 bg-card"
                 style={
                   isSelected
                     ? {
-                        background: "linear-gradient(135deg, #1A6182 0%, #114862 100%)",
                         borderColor: P.surf,
-                        boxShadow: `0 0 0 2px ${P.surf}55, 0 14px 32px -14px ${P.teal}99, inset 0 1px 0 0 rgba(255,255,255,0.10)`,
+                        boxShadow: `0 0 0 2px ${P.surf}55, 0 14px 32px -14px ${P.teal}99`,
                       }
                     : {
-                        background: "linear-gradient(135deg, #15506E 0%, #0E3A50 100%)",
                         borderColor: `${P.surf}55`,
-                        boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(255,255,255,0.06)`,
+                        boxShadow: `0 8px 22px -12px ${P.teal}66`,
                       }
                 }
               >
