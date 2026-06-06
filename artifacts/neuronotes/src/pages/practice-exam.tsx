@@ -196,7 +196,7 @@ export default function PracticeExamPage({ params }: Props) {
             return (
               <div
                 key={q.id}
-                className="rounded-xl border p-4 bg-white"
+                className="rounded-xl border p-4 bg-card"
                 style={{
                   borderColor: isCorrect ? `${P.surf}66` : "rgba(224,114,96,0.45)",
                   boxShadow: isCorrect
