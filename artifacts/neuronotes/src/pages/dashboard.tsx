@@ -50,7 +50,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { StudySurface } from "@/components/study/study-surface";
 import TodayReviews from "@/components/learning/today-reviews";
-import { BrandBanner } from "@/components/brand/brand-banner";
+import { DashboardHeader } from "@/components/brand/dashboard-header";
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
 import {
   ResponsiveContainer,
@@ -264,44 +264,12 @@ export default function DashboardPage() {
       data-testid="dashboard-page"
     >
       <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 pt-3 pb-4 md:pb-6 lg:pb-8">
-        {/* Top header — one bold, centered PSYCHPRO statement. The
+        {/* Top header — a contained, premium PSYCHPRO banner. The
             notification bell + profile avatar live together in the shared
-            app top bar, so nothing competes with the wordmark here. */}
-        <header className="relative mb-3">
-          {/* Centerpiece — the wordmark emerges from a luminous cyan bloom:
-              a wide ambient halo for depth and a tighter bright core that hugs
-              the letters. Every decorative layer sits behind the protected
-              BrandBanner (z-10) and is pointer-events-none. */}
-          <div className="relative flex justify-center pt-0 pb-0">
-            {/* Wide ambient halo — sets the atmosphere. Kept low and soft so
-                it reads as depth, not a spotlight. */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-              style={{
-                width: "min(820px, 100%)",
-                height: "300px",
-                background: `radial-gradient(60% 60% at 50% 50%, ${PALETTE.surf}17 0%, ${PALETTE.teal}0d 40%, transparent 72%)`,
-                filter: "blur(10px)",
-              }}
-            />
-            {/* Bright core bloom — a restrained glow that hugs the wordmark. */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-              style={{
-                width: "min(460px, 84%)",
-                height: "170px",
-                background: `radial-gradient(55% 60% at 50% 50%, ${PALETTE.surf}30 0%, ${PALETTE.surf}12 46%, transparent 74%)`,
-              }}
-            />
-            <BrandBanner
-              size="lg"
-              greeting={greetingText}
-              className="relative z-10"
-            />
-          </div>
-        </header>
+            app top bar, so nothing competes with the wordmark here. The
+            decorative framing lives in DashboardHeader; the protected
+            BrandBanner (wordmark + tagline + greeting) is rendered untouched. */}
+        <DashboardHeader greeting={greetingText} />
 
         {isOverLimit && (
           <div
