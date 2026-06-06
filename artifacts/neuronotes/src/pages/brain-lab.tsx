@@ -26,6 +26,7 @@ import {
   CATEGORY_META,
   type BrainStructure,
   type PartCategory,
+  type DetailBlock,
 } from "../data/brain-structures";
 import brainLateral from "@/assets/brain-views/lateral.webp";
 import brainMedial from "@/assets/brain-views/medial.webp";
@@ -414,7 +415,81 @@ function DetailSection({
   );
 }
 
-type DetailTab = "overview" | "functions" | "connections" | "clinical";
+// Renders the optional rich, structured long-form content (DetailBlock[]) for the
+// in-depth structures (e.g. the four lobes). Handles sub-headings, paragraphs,
+// bullet lists, and "term — description" pairs (the anatomical/assessment tables).
+function RichBlocks({ blocks, accent }: { blocks: DetailBlock[]; accent: string }) {
+  return (
+    <div className="space-y-3">
+      {blocks.map((block, i) => {
+        if ("h" in block) {
+          return (
+            <h4
+              key={i}
+              className="text-[11px] font-semibold uppercase tracking-wider pt-1.5"
+              style={{ color: PALETTE.surf }}
+            >
+              {block.h}
+            </h4>
+          );
+        }
+        if ("p" in block) {
+          return (
+            <p key={i} className="text-sm leading-relaxed" style={{ color: `${PALETTE.mist}dd` }}>
+              {block.p}
+            </p>
+          );
+        }
+        if ("ul" in block) {
+          return (
+            <ul key={i} className="space-y-1.5">
+              {block.ul.map((item, j) => (
+                <li
+                  key={j}
+                  className="flex items-start gap-2 text-sm leading-relaxed"
+                  style={{ color: `${PALETTE.mist}dd` }}
+                >
+                  <span
+                    className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0"
+                    style={{ background: accent }}
+                  />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          );
+        }
+        // term / description pairs
+        return (
+          <dl key={i} className="space-y-2">
+            {block.dl.map((row, j) => (
+              <div
+                key={j}
+                className="rounded-lg px-3 py-2"
+                style={{ background: `${PALETTE.surface}99`, border: `1px solid ${PALETTE.steel}55` }}
+              >
+                <dt className="text-[13px] font-semibold" style={{ color: PALETTE.surf }}>
+                  {row.term}
+                </dt>
+                <dd className="text-[13px] leading-relaxed mt-0.5" style={{ color: `${PALETTE.mist}cc` }}>
+                  {row.desc}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        );
+      })}
+    </div>
+  );
+}
+
+type DetailTab =
+  | "overview"
+  | "anatomy"
+  | "functions"
+  | "connections"
+  | "clinical"
+  | "assessment";
 
 function StructureDetail({
   struct,
@@ -431,11 +506,16 @@ function StructureDetail({
     setTab("overview");
   }, [struct.id]);
 
+  const detail = struct.detail;
+  // Anatomy and Assessment tabs only appear for in-depth structures that supply
+  // that rich content; the four core tabs are always present. Order is fixed.
   const tabs: { value: DetailTab; label: string }[] = [
     { value: "overview", label: "Overview" },
+    ...(detail?.anatomy ? [{ value: "anatomy" as DetailTab, label: "Anatomy" }] : []),
     { value: "functions", label: "Functions" },
     { value: "connections", label: "Connections" },
     { value: "clinical", label: "Clinical" },
+    ...(detail?.assessment ? [{ value: "assessment" as DetailTab, label: "Assessment" }] : []),
   ];
 
   return (
@@ -517,12 +597,20 @@ function StructureDetail({
           </p>
         )}
 
-        {tab === "functions" && (
-          <DetailSection title="Key Functions" items={struct.functions} bullet={PALETTE.surf} />
+        {tab === "anatomy" && detail?.anatomy && (
+          <RichBlocks blocks={detail.anatomy} accent={struct.color} />
         )}
+
+        {tab === "functions" &&
+          (detail?.functions ? (
+            <RichBlocks blocks={detail.functions} accent={PALETTE.surf} />
+          ) : (
+            <DetailSection title="Key Functions" items={struct.functions} bullet={PALETTE.surf} />
+          ))}
 
         {tab === "connections" && (
           <>
+            {detail?.connections && <RichBlocks blocks={detail.connections} accent={struct.color} />}
             <div>
               <h4
                 className="text-[11px] font-semibold uppercase tracking-wider mb-2"
@@ -555,19 +643,26 @@ function StructureDetail({
           </>
         )}
 
-        {tab === "clinical" && (
-          <>
-            <DetailSection
-              title="Role in Neuropsychology"
-              items={struct.neuropsych}
-              bullet={struct.color}
-            />
-            <DetailSection
-              title="Clinical Conditions"
-              items={struct.conditions}
-              bullet={PALETTE.mist}
-            />
-          </>
+        {tab === "clinical" &&
+          (detail?.clinical ? (
+            <RichBlocks blocks={detail.clinical} accent={struct.color} />
+          ) : (
+            <>
+              <DetailSection
+                title="Role in Neuropsychology"
+                items={struct.neuropsych}
+                bullet={struct.color}
+              />
+              <DetailSection
+                title="Clinical Conditions"
+                items={struct.conditions}
+                bullet={PALETTE.mist}
+              />
+            </>
+          ))}
+
+        {tab === "assessment" && detail?.assessment && (
+          <RichBlocks blocks={detail.assessment} accent={struct.color} />
         )}
       </div>
 

@@ -29,6 +29,25 @@ export type PartCategory =
   | "brainstem"
   | "cerebellum";
 
+// Rich, structured long-form content for the detail panel. Each block is a small
+// tagged shape so the renderer can lay out prose, bullet lists, sub-headings, and
+// "term — description" pairs (used for the anatomical/assessment tables) without
+// any markdown parsing. Optional — only the in-depth structures (e.g. the four
+// lobes) supply it; everything else keeps the concise four-field format.
+export type DetailBlock =
+  | { h: string } // sub-heading within a section
+  | { p: string } // paragraph
+  | { ul: string[] } // bullet list
+  | { dl: { term: string; desc: string }[] }; // term/description pairs (tables)
+
+export interface RichDetail {
+  anatomy?: DetailBlock[];
+  functions?: DetailBlock[];
+  connections?: DetailBlock[];
+  clinical?: DetailBlock[];
+  assessment?: DetailBlock[];
+}
+
 export interface BrainStructure {
   id: string;
   name: string;
@@ -49,6 +68,8 @@ export interface BrainStructure {
   neuropsych: string[];
   conditions: string[];
   topicHints: string[];
+  // Optional in-depth reference content shown in the detail panel tabs.
+  detail?: RichDetail;
 }
 
 export const SYSTEM_META: Record<BrainSystem, { label: string; color: string; description: string }> = {
@@ -275,7 +296,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
     segments: 6,
     color: "#58C9F3",
     overview:
-      "The largest cortical lobe, occupying the anterior third of each hemisphere. Houses primary motor cortex, premotor cortex, and the prefrontal regions that define personality, planning, and self-regulation.",
+      "The largest cortical lobe, occupying the anterior third of each hemisphere. It spans from the central sulcus (posteriorly) and the lateral fissure (inferiorly) to the frontal pole, and houses the primary motor cortex, premotor cortex, and supplementary motor area alongside the prefrontal regions that define personality, planning, and self-regulation. As the seat of executive function, expressive language, and social-emotional control, it is the cortical region most often implicated in neuropsychological syndromes — and the last to fully mature, with development continuing into the mid-twenties.",
     functions: [
       "Voluntary motor planning and execution",
       "Expressive language (Broca's area, dominant hemisphere)",
@@ -296,6 +317,257 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Schizophrenia — hypofrontality on functional imaging",
     ],
     topicHints: ["Neuropsychology Overview", "Executive Function & Frontal Lobe Syndromes"],
+    detail: {
+      anatomy: [
+        { h: "Boundaries" },
+        {
+          p: "The frontal lobe occupies the anterior third of each cerebral hemisphere. Its posterior border is the central sulcus (sulcus of Rolando), which separates it from the parietal lobe. Inferiorly, the lateral (Sylvian) fissure divides it from the temporal lobe. Medially, the longitudinal fissure separates the two frontal lobes, and the cingulate sulcus marks the boundary between frontal cortex and the underlying cingulate gyrus on the medial surface.",
+        },
+        { h: "Major gyri and sulci" },
+        {
+          p: "The lateral surface is divided by the precentral sulcus, superior frontal sulcus, and inferior frontal sulcus into four major gyri:",
+        },
+        {
+          ul: [
+            "Precentral gyrus — anterior to the central sulcus; houses primary motor cortex",
+            "Superior frontal gyrus — above the superior frontal sulcus",
+            "Middle frontal gyrus — between the superior and inferior frontal sulci",
+            "Inferior frontal gyrus (IFG) — below the inferior frontal sulcus; subdivided into pars opercularis, pars triangularis, and pars orbitalis",
+          ],
+        },
+        {
+          p: "The orbital (inferior) surface contains the orbital gyri and the medial gyrus rectus. The medial surface includes the medial extension of the superior frontal gyrus, the paracentral lobule (containing medial M1 and medial premotor regions), and the anterior cingulate gyrus.",
+        },
+        { h: "Functional subdivisions" },
+        {
+          dl: [
+            { term: "Primary motor cortex (M1)", desc: "Precentral gyrus — voluntary movement execution; somatotopic homunculus" },
+            { term: "Premotor cortex (PMC)", desc: "Lateral premotor strip, anterior to M1 — externally guided movement, motor planning, mirror system" },
+            { term: "Supplementary motor area (SMA)", desc: "Medial premotor cortex — internally generated movement, sequencing, bimanual coordination" },
+            { term: "Frontal eye fields (FEF)", desc: "Posterior middle frontal gyrus — voluntary saccades, attentional control" },
+            { term: "Broca's area (dominant)", desc: "Pars opercularis and pars triangularis of IFG — expressive language, syntactic processing, articulatory planning" },
+            { term: "Dorsolateral prefrontal cortex (DLPFC)", desc: "Middle frontal gyrus — executive function, working memory, cognitive control" },
+            { term: "Ventromedial prefrontal cortex (vmPFC)", desc: "Medial inferior frontal cortex — value-based decision-making, emotional regulation, self-referential processing" },
+            { term: "Orbitofrontal cortex (OFC)", desc: "Orbital surface — reward processing, social behavior, response inhibition" },
+            { term: "Anterior cingulate cortex (ACC)", desc: "Medial frontal, dorsal to corpus callosum — conflict monitoring, error detection, motivational drive" },
+            { term: "Frontopolar cortex", desc: "Anterior pole of frontal lobe — prospective memory, multitasking, abstract relational reasoning" },
+          ],
+        },
+        { h: "Vascular supply" },
+        {
+          ul: [
+            "Anterior cerebral artery (ACA): medial frontal cortex, including SMA, the medial strip of M1 (lower extremity representation), medial prefrontal regions, and the anterior cingulate",
+            "Middle cerebral artery (MCA): lateral frontal cortex, including the lateral aspect of M1 (face and upper extremity), premotor cortex, Broca's area, and dorsolateral prefrontal cortex",
+            "Anterior communicating artery (ACoA) territory: medial-basal frontal cortex; aneurysm rupture commonly produces a distinctive amnestic-confabulatory-disinhibition syndrome",
+          ],
+        },
+        { h: "Key white matter tracts" },
+        {
+          ul: [
+            "Superior longitudinal fasciculus (SLF) — connects frontal cortex to parietal and temporal regions; the arcuate fasciculus component links Broca's and Wernicke's areas",
+            "Uncinate fasciculus — connects orbitofrontal and ventrolateral prefrontal cortex to anterior temporal lobe; implicated in semantic memory and social-emotional processing",
+            "Cingulum bundle — runs within the cingulate gyrus; links prefrontal cortex to limbic and parahippocampal structures",
+            "Frontal aslant tract — connects pre-SMA/SMA to inferior frontal gyrus; supports speech initiation and verbal fluency",
+            "Corticospinal tract — descending motor output from M1 (and contributions from premotor cortex)",
+            "Frontostriatal-thalamocortical loops — five parallel circuits (motor, oculomotor, dorsolateral prefrontal, lateral orbitofrontal, anterior cingulate) integrating prefrontal cortex with basal ganglia and thalamus",
+          ],
+        },
+        { h: "Developmental note" },
+        {
+          p: "The frontal lobes, particularly the prefrontal cortex, are the last cortical regions to fully myelinate and reach structural maturity, with development continuing into the mid-twenties. This protracted maturation underlies the developmental trajectory of executive function and is clinically relevant in pediatric and adolescent assessment.",
+        },
+      ],
+      functions: [
+        { h: "Motor" },
+        {
+          ul: [
+            "M1 executes voluntary movement, with somatotopic organization following the classic motor homunculus (medial-to-lateral: lower extremity → trunk → upper extremity → face)",
+            "Premotor cortex supports externally cued movement, action observation, and reaching/grasping under sensory guidance",
+            "SMA governs internally generated and sequenced movement, bimanual coordination, and preparation for self-initiated action",
+            "Frontal eye fields generate voluntary saccades and contribute to top-down attentional shifts",
+          ],
+        },
+        { h: "Executive function" },
+        {
+          p: "Executive functions are predominantly mediated by the dorsolateral prefrontal cortex and its connections, and encompass:",
+        },
+        {
+          ul: [
+            "Working memory — active manipulation of information, not merely passive maintenance",
+            "Cognitive flexibility / set-shifting — switching between rules, response sets, or task demands",
+            "Response inhibition — suppression of prepotent or automatic responses",
+            "Planning and problem-solving — generating, sequencing, and executing goal-directed steps",
+            "Abstract reasoning and concept formation",
+            "Sustained and divided attention",
+            "Verbal and design fluency — generative output under retrieval constraint",
+            "Self-monitoring — evaluating performance against goals",
+          ],
+        },
+        { h: "Language (dominant hemisphere)" },
+        {
+          ul: [
+            "Broca's area supports expressive language, including syntactic construction and articulatory motor planning",
+            "Frontal aslant tract and pre-SMA contribute to speech initiation and fluency",
+            "Dominant frontal cortex also contributes to verbal fluency, lexical retrieval, and discourse organization",
+          ],
+        },
+        { h: "Social-emotional and decision-making" },
+        {
+          p: "Mediated primarily by orbitofrontal, ventromedial prefrontal, and anterior cingulate cortices:",
+        },
+        {
+          ul: [
+            "Reward valuation and reinforcement learning — encoding subjective value of stimuli and outcomes",
+            "Decision-making under uncertainty — integrating somatic-emotional signals (somatic marker hypothesis)",
+            "Social cognition — theory of mind, perspective-taking, empathy",
+            "Emotional regulation — top-down modulation of limbic activity",
+            "Behavioral inhibition — suppression of socially inappropriate or impulsive responses",
+          ],
+        },
+        { h: "Motivation and drive" },
+        {
+          p: "The anterior cingulate cortex and medial frontal cortex support:",
+        },
+        {
+          ul: [
+            "Behavioral initiation and drive",
+            "Conflict monitoring and error detection",
+            "Effort allocation and cost-benefit weighting",
+            "Sustained motivation toward goals",
+          ],
+        },
+        { h: "Lateralization" },
+        {
+          ul: [
+            "Left (dominant) frontal lobe is preferentially engaged in verbal working memory, verbal fluency, language production, and approach-related affect",
+            "Right (non-dominant) frontal lobe is preferentially engaged in design fluency, visuospatial working memory, sustained attention/vigilance, and avoidance/withdrawal-related affect; right frontal dysfunction is also more associated with anosognosia and certain disinhibition presentations",
+          ],
+        },
+      ],
+      clinical: [
+        { h: "The three classical prefrontal syndromes" },
+        { h: "Dorsolateral prefrontal syndrome (dysexecutive)" },
+        {
+          p: "The \"cognitive\" frontal syndrome. Features include impaired planning and problem-solving, working memory deficits, cognitive inflexibility with perseveration, reduced verbal and design fluency, impaired abstract reasoning, and stimulus-bound behavior. Personality is often relatively preserved compared to other frontal syndromes.",
+        },
+        { h: "Orbitofrontal syndrome (disinhibited)" },
+        {
+          p: "Characterized by behavioral disinhibition, impulsivity, socially inappropriate conduct, emotional lability, poor judgment, and reward-driven decision-making. Utilization behavior (automatic, environment-triggered use of objects) and acquired sociopathy can occur in severe cases. The Phineas Gage case remains the prototypical presentation. Basic cognitive abilities on structured testing may appear intact, masking the severity of real-world dysfunction.",
+        },
+        { h: "Medial frontal / anterior cingulate syndrome (apathetic)" },
+        {
+          p: "Marked by apathy and abulia — diminished spontaneous behavior, speech, and emotional expression. Severe bilateral medial frontal damage can produce akinetic mutism, in which the patient is awake but immobile and silent despite preserved arousal. Transcortical motor aphasia can occur with left medial frontal lesions affecting SMA or pre-SMA. Anterior cerebral artery infarcts are the prototypical etiology.",
+        },
+        { h: "Aphasia syndromes" },
+        {
+          ul: [
+            "Broca's aphasia — non-fluent, effortful speech with agrammatism; relatively preserved auditory comprehension; impaired repetition; often accompanied by right hemiparesis (face and arm)",
+            "Transcortical motor aphasia — non-fluent with preserved repetition; associated with SMA or watershed lesions sparing perisylvian language cortex",
+            "Apraxia of speech / aphemia — impaired motor planning of speech with relatively preserved language",
+          ],
+        },
+        { h: "Frontal release signs (primitive reflexes)" },
+        {
+          p: "Reemergence of developmentally early reflexes suggests bilateral frontal dysfunction and loss of cortical inhibition:",
+        },
+        {
+          ul: [
+            "Grasp reflex",
+            "Palmomental reflex",
+            "Snout reflex",
+            "Rooting reflex",
+            "Glabellar (Myerson's) sign",
+          ],
+        },
+        { h: "Stroke syndromes" },
+        {
+          ul: [
+            "Anterior cerebral artery infarct — contralateral lower extremity weakness greater than arm/face, abulia, urinary incontinence, transcortical motor aphasia (dominant hemisphere), grasp reflex",
+            "Middle cerebral artery superior division infarct — contralateral face and upper extremity weakness, Broca's aphasia (dominant hemisphere), conjugate gaze deviation toward the lesion, contralateral neglect (non-dominant)",
+            "Anterior communicating artery aneurysm rupture — basal forebrain and orbitomedial frontal damage producing amnesia, confabulation, and personality change",
+          ],
+        },
+        { h: "Neurodegenerative localization" },
+        {
+          ul: [
+            "Behavioral variant frontotemporal dementia (bvFTD) — predominant orbitofrontal, ventromedial prefrontal, and anterior cingulate atrophy; core features include behavioral disinhibition, apathy, loss of empathy, perseverative or compulsive behavior, hyperorality, and dysexecutive cognition",
+            "Non-fluent / agrammatic variant primary progressive aphasia (nfvPPA) — left inferior frontal gyrus and insular atrophy; agrammatism and apraxia of speech",
+            "Progressive supranuclear palsy (PSP) and corticobasal syndrome (CBS) — frontostriatal degeneration with executive dysfunction, behavioral change, and motor features (vertical gaze palsy in PSP; limb apraxia and alien limb in CBS)",
+            "Alzheimer disease — though primarily temporoparietal, can show prefrontal involvement later in the disease, contributing to executive and behavioral changes",
+          ],
+        },
+        { h: "Traumatic brain injury" },
+        {
+          p: "The orbitofrontal cortex and anterior temporal poles are predilection sites for contusion in closed-head injury due to the bony irregularities of the anterior and middle cranial fossae. Post-TBI executive dysfunction, disinhibition, apathy, and emotional dysregulation are common regardless of injury mechanism.",
+        },
+        { h: "Other frontal-localized presentations" },
+        {
+          ul: [
+            "Pseudobulbar affect — pathological laughing or crying with bilateral corticobulbar involvement",
+            "Witzelsucht — inappropriate facetious humor associated with orbitofrontal lesions, particularly right-sided",
+            "Environmental dependency syndrome — utilization and imitation behavior with bilateral orbitofrontal/medial frontal damage",
+            "Anosognosia for hemiplegia — denial of motor deficit, more common with right frontal involvement",
+          ],
+        },
+      ],
+      assessment: [
+        { h: "Executive function measures" },
+        {
+          dl: [
+            { term: "Set-shifting / cognitive flexibility", desc: "Wisconsin Card Sorting Test (WCST), Trail Making Test Part B, D-KEFS Trail Making (Number-Letter Switching), D-KEFS Color-Word Interference (Switching), D-KEFS Sorting" },
+            { term: "Response inhibition", desc: "Stroop Color-Word, D-KEFS Color-Word Interference (Inhibition), Go/No-Go, Hayling Sentence Completion, Conners CPT-3" },
+            { term: "Working memory", desc: "WAIS-5 / WAIS-IV Digit Span (Backward, Sequencing), Letter-Number Sequencing, WMS-IV Spatial Addition, n-back paradigms" },
+            { term: "Planning / problem-solving", desc: "Tower of London, D-KEFS Tower Test, NAB Mazes, Porteus Mazes" },
+            { term: "Verbal fluency", desc: "Controlled Oral Word Association Test (FAS), category fluency (animals, supermarket items), D-KEFS Verbal Fluency" },
+            { term: "Design fluency", desc: "D-KEFS Design Fluency, Ruff Figural Fluency Test" },
+            { term: "Abstract reasoning / concept formation", desc: "WAIS Similarities, WAIS Matrix Reasoning, D-KEFS Twenty Questions, D-KEFS Proverb" },
+            { term: "Decision-making under uncertainty", desc: "Iowa Gambling Task (IGT)" },
+            { term: "Composite executive batteries", desc: "Delis-Kaplan Executive Function System (D-KEFS), Frontal Assessment Battery (FAB), Behavioral Assessment of the Dysexecutive Syndrome (BADS), NEPSY-II (pediatric)" },
+          ],
+        },
+        { h: "Behavioral rating scales" },
+        {
+          ul: [
+            "BRIEF-2 and BRIEF-A / BRIEF-SR — Behavior Rating Inventory of Executive Function; parent, teacher, and self-report forms across ages",
+            "FrSBe — Frontal Systems Behavior Scale; assesses apathy, disinhibition, and executive dysfunction with self and family-rated forms",
+            "DEX — Dysexecutive Questionnaire (part of the BADS)",
+            "NPI — Neuropsychiatric Inventory; commonly used in dementia evaluations to capture frontally mediated behavioral change",
+            "CBI-R — Cambridge Behavioural Inventory-Revised; sensitive to bvFTD-related behavioral change",
+          ],
+        },
+        { h: "Motor, praxis, and lateralizing measures" },
+        {
+          ul: [
+            "Luria sequences — fist-edge-palm, alternating hand sequences",
+            "Apraxia screens — limb-kinetic, ideomotor, ideational praxis examination",
+            "Bimanual coordination tasks — sensitive to SMA dysfunction",
+            "Finger Tapping Test and Grooved Pegboard — lateralizing motor speed and dexterity",
+            "Reciprocal motor programs — Go/No-Go tapping paradigms",
+          ],
+        },
+        { h: "Language measures (frontal-relevant)" },
+        {
+          ul: [
+            "Boston Diagnostic Aphasia Examination (BDAE)",
+            "Western Aphasia Battery-Revised (WAB-R)",
+            "Boston Naming Test — confrontation naming with frontal contribution to retrieval",
+            "Apraxia of Speech Rating Scale",
+            "Connected speech sampling — evaluation of grammar, fluency, and discourse organization (e.g., Cookie Theft picture description)",
+          ],
+        },
+        { h: "Bedside screening for frontal dysfunction" },
+        {
+          ul: [
+            "Luria three-step (fist-edge-palm)",
+            "Go/No-Go tapping (e.g., \"tap twice when I tap once; do not tap when I tap twice\")",
+            "Frontal release signs examination",
+            "Phonemic fluency at bedside (FAS or single-letter)",
+            "Frontal Assessment Battery (FAB) — six-item bedside screen including similarities, fluency, motor sequencing, conflicting instructions, Go/No-Go, and prehension behavior",
+            "Cookie Theft picture description for discourse, fluency, and agrammatism",
+          ],
+        },
+      ],
+    },
   },
   {
     id: "parietal-lobe",
