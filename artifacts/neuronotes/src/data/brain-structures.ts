@@ -1331,7 +1331,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
     segments: 5,
     color: "#9DEAFF",
     overview:
-      "Posterior cortical lobe dedicated almost entirely to vision. Receives input from the retinas via the lateral geniculate nucleus and routes it through hierarchical visual association areas.",
+      "The smallest and most functionally specialized of the four lobes, occupying the posterior aspect of each hemisphere and devoted almost entirely to vision. It houses the primary visual cortex (V1) in the calcarine sulcus, organized retinotopically with marked cortical magnification of the central field, and launches the ventral 'what' and dorsal 'where/how' streams through hierarchical extrastriate areas (V2–V5/MT, LOC, V4, FFA, VWFA). As a result it is central to the homonymous field defects, cortical blindness and Anton syndrome, achromatopsia, akinetopsia, the visual agnosias, prosopagnosia, and pure alexia.",
     functions: [
       "Primary visual processing (V1, calcarine cortex)",
       "Feature detection — orientation, motion, color, depth",
@@ -1351,6 +1351,320 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Charles Bonnet syndrome (visual hallucinations after vision loss)",
     ],
     topicHints: ["Visual System & Agnosia", "Vascular Syndromes"],
+    detail: {
+      anatomy: [
+        { h: "Boundaries" },
+        {
+          p: "The occipital lobe occupies the posterior aspect of each cerebral hemisphere. Its anterior border on the medial surface is the parieto-occipital sulcus, which separates it from the parietal lobe. On the lateral surface, an arbitrary line from the preoccipital notch to the parieto-occipital sulcus marks the boundary with parietal and temporal cortex. The occipital pole forms the posterior tip. It is the smallest of the four lobes and the most functionally specialized — nearly the entire lobe is devoted to visual processing.",
+        },
+        { h: "Major gyri and sulci" },
+        {
+          p: "The calcarine sulcus is the defining anatomical feature on the medial surface. Running anteroposteriorly, it divides the medial occipital cortex into:",
+        },
+        {
+          ul: [
+            "Cuneus — wedge-shaped gyrus above the calcarine sulcus, representing the inferior contralateral visual field",
+            "Lingual gyrus — below the calcarine sulcus, representing the superior contralateral visual field",
+          ],
+        },
+        {
+          p: "The lateral surface contains less distinctly demarcated lateral occipital gyri (superior, middle, and inferior), which house higher-order visual processing regions. The inferior (basal) surface contains the posterior fusiform (occipitotemporal) gyrus, which continues forward into the temporal lobe and houses category-selective regions for words, faces, and other visual objects.",
+        },
+        { h: "Functional subdivisions" },
+        {
+          dl: [
+            { term: "Primary visual cortex (V1, striate)", desc: "Calcarine sulcus (cuneus above, lingual below) — retinotopic processing of orientation, spatial frequency, contrast, ocular dominance" },
+            { term: "V2 (secondary visual cortex)", desc: "Surrounding V1 — contour integration, simple form, figure-ground segregation" },
+            { term: "V3 / V3A", desc: "Dorsolateral occipital — dynamic form, motion-defined contours" },
+            { term: "V4", desc: "Ventral occipital, fusiform/lingual region — color processing, complex form" },
+            { term: "V5 / MT (middle temporal complex)", desc: "Lateral occipitotemporal junction — motion processing, motion-defined shape" },
+            { term: "Lateral occipital complex (LOC)", desc: "Lateral occipital cortex — object recognition, shape processing" },
+            { term: "Visual word form area (VWFA)", desc: "Left mid-fusiform / occipitotemporal — orthographic word recognition" },
+            { term: "Fusiform face area (FFA)", desc: "Mid-fusiform, typically right-lateralized — face recognition" },
+            { term: "Occipital pole", desc: "Posterior tip — central (macular) visual field representation, with disproportionate cortical magnification" },
+          ],
+        },
+        {
+          p: "Visual cortex is organized retinotopically — adjacent retinal locations map to adjacent cortical locations — and shows substantial cortical magnification of the central visual field, with the macula occupying a disproportionately large portion of V1.",
+        },
+        { h: "Vascular supply" },
+        {
+          ul: [
+            "Posterior cerebral artery (PCA) — primary supply; the calcarine artery branch supplies V1 and adjacent visual cortex",
+            "Middle cerebral artery (MCA) — supplies a small lateral portion of the occipital lobe in some individuals",
+            "Occipital pole / macular sparing — the pole representing the central field may receive partial collateral supply, producing macular sparing in PCA infarcts (preserved central vision within an otherwise complete homonymous hemianopia); PCA-MCA collateralization is one proposed contributor",
+            "Top of the basilar syndrome — occlusion at the basilar apex compromises bilateral PCA territories, producing bilateral occipital infarction with cortical blindness, often with thalamic and midbrain features",
+          ],
+        },
+        { h: "Key white matter tracts" },
+        {
+          ul: [
+            "Optic radiations (geniculocalcarine tract) — carry visual information from the lateral geniculate nucleus to V1, with three subdivisions",
+            "Upper division (Baum's loop) — through parietal white matter; inferior visual field; lesions produce contralateral inferior quadrantanopia (\"pie on the floor\")",
+            "Lower division (Meyer's loop) — courses anteriorly through temporal white matter before turning posteriorly; superior visual field; lesions produce contralateral superior quadrantanopia (\"pie in the sky\")",
+            "Central division — most direct path to V1",
+            "Inferior longitudinal fasciculus (ILF) — connects occipital cortex to anterior temporal lobe; visual object recognition and visual-semantic integration",
+            "Inferior fronto-occipital fasciculus (IFOF) — occipital/posterior temporal to inferior frontal cortex; semantic processing",
+            "Vertical occipital fasciculus (VOF) — connects dorsal and ventral occipital cortex; communication between the two visual streams",
+            "Splenium of the corpus callosum / forceps major — interhemispheric occipital projections; splenial lesions can disconnect right visual cortex from left language cortex, producing pure alexia",
+          ],
+        },
+        { h: "Developmental note" },
+        {
+          p: "The visual system shows among the earliest and most rapid postnatal cortical development of any sensory system, with V1 reaching near-adult structural maturity within the first year of life. Critical periods in infancy underlie deprivation amblyopia and the time-limited window for treating strabismus and refractive errors. Higher-order visual areas (face processing, reading) continue to specialize across childhood; the visual word form area becomes literacy-tuned only as reading is acquired.",
+        },
+      ],
+      functions: [
+        { h: "Primary visual processing" },
+        {
+          p: "V1 (primary visual cortex) performs the initial cortical analysis of visual input. Each V1 neuron has a small receptive field tuned to:",
+        },
+        {
+          ul: [
+            "Orientation (line and edge orientation)",
+            "Spatial frequency (fine vs. coarse detail)",
+            "Ocular dominance (organized into alternating columns)",
+            "Contrast and luminance",
+            "Direction of motion (a subset of neurons)",
+          ],
+        },
+        {
+          p: "V1 is organized retinotopically with cortical magnification of the central visual field. Surrounding V2 elaborates contour, figure-ground separation, and simple form.",
+        },
+        { h: "Two visual streams" },
+        {
+          ul: [
+            "Ventral \"what\" stream — projects through V4 and lateral occipital cortex into the temporal lobe; object recognition, color perception, face recognition, word recognition, and scene recognition",
+            "Dorsal \"where/how\" stream — projects through V3, V3A, and V5/MT into the posterior parietal cortex; motion perception, spatial localization, and visually guided action",
+          ],
+        },
+        { h: "Specialized visual processing" },
+        {
+          ul: [
+            "V4 is selectively engaged in color processing and complex form; damage produces cerebral achromatopsia",
+            "V5/MT is selectively engaged in motion processing; damage produces akinetopsia",
+            "Lateral occipital complex (LOC) supports object recognition independent of view, lighting, or size",
+            "Fusiform face area (FFA) supports face recognition with right-hemisphere predominance",
+            "Visual word form area (VWFA) supports orthographic recognition in left occipitotemporal cortex and becomes specialized with literacy acquisition",
+          ],
+        },
+        { h: "Higher-order visual processing" },
+        {
+          ul: [
+            "Visual mental imagery — V1 and adjacent cortex are engaged in vivid visual imagery, with content-specific overlap with perception",
+            "Visual attention — bottom-up modulation by salience and top-down modulation by parietal and frontal attention networks",
+            "Reading — coordinated activity across VWFA, V4, and broader ventral-stream regions, integrated with language cortex through the ILF and IFOF",
+          ],
+        },
+        { h: "Lateralization" },
+        {
+          ul: [
+            "Left occipital cortex — preferentially processes the right visual field, the visual word form area, and reading",
+            "Right occipital cortex — preferentially processes the left visual field and face processing (FFA)",
+          ],
+        },
+      ],
+      clinical: [
+        { h: "Visual field defects" },
+        {
+          p: "The occipital lobe is the most common substrate of clinically encountered homonymous visual field defects:",
+        },
+        {
+          ul: [
+            "Homonymous hemianopia — loss of vision in the contralateral half of each eye's visual field; complete V1 lesion of one hemisphere",
+            "Macular sparing — preservation of central vision within an otherwise complete hemianopia; characteristic of PCA-territory infarcts",
+            "Superior quadrantanopia (\"pie in the sky\") — lingual gyrus lesion below the calcarine sulcus (or Meyer's loop in temporal white matter)",
+            "Inferior quadrantanopia (\"pie on the floor\") — cuneus lesion above the calcarine sulcus (or Baum's loop in parietal white matter)",
+            "Cortical blindness — bilateral occipital damage; complete loss of visual perception with preserved pupillary reflexes and ocular motility",
+            "Riddoch phenomenon — preserved perception of motion within an otherwise blind hemifield, attributed to preserved V5/MT or extrageniculate pathways",
+          ],
+        },
+        { h: "Anton syndrome (visual anosognosia)" },
+        {
+          p: "Denial of cortical blindness: patients are unaware of their visual loss and confabulate visual experience. Classic presentation following bilateral occipital infarction. Patients may describe their environment in detail despite being completely blind, walk into furniture, and reject suggestions that they cannot see.",
+        },
+        { h: "Cerebral achromatopsia" },
+        {
+          p: "Loss of color perception following damage to V4 in the ventral occipitotemporal cortex (lingual and fusiform gyri). Can be bilateral (complete) or unilateral (hemiachromatopsia). Distinct from peripheral color blindness; achromatopsia is acquired and accompanied by other visual disturbances.",
+        },
+        { h: "Akinetopsia (motion blindness)" },
+        {
+          p: "Loss of motion perception following bilateral V5/MT damage. Patients perceive motion as a series of static images (\"snapshots\"), with severe functional consequences (e.g., difficulty pouring liquid, crossing the street).",
+        },
+        { h: "Visual object agnosia" },
+        {
+          p: "Impaired recognition of visually presented objects despite preserved primary visual function and intact object knowledge through other modalities. Two classical subtypes:",
+        },
+        {
+          ul: [
+            "Apperceptive agnosia — impaired perceptual integration of visual features; patients cannot copy or match objects they cannot name; associated with diffuse occipital damage (e.g., carbon monoxide poisoning)",
+            "Associative agnosia — preserved perception but inability to associate the percept with meaning; patients can copy or match without recognizing; associated with bilateral occipitotemporal lesions",
+          ],
+        },
+        { h: "Prosopagnosia" },
+        {
+          p: "Impaired face recognition following bilateral or right-lateralized fusiform damage. Acquired prosopagnosia is distinct from the developmental form. Patients may recognize people by voice, gait, or distinctive features without recognizing the face itself.",
+        },
+        { h: "Pure alexia (alexia without agraphia)" },
+        {
+          p: "Acquired impairment of reading with preserved writing, distinct from the alexia of left angular gyrus damage. Classic lesion: left occipital cortex with extension into the splenium of the corpus callosum, disconnecting right visual cortex from left language cortex. Patients can write fluently but cannot read what they have written.",
+        },
+        { h: "Visual hallucinations" },
+        {
+          ul: [
+            "Simple visual hallucinations (flashes, geometric patterns, photopsias) — primary visual cortex involvement; common in occipital epilepsy and migraine aura",
+            "Complex visual hallucinations (people, animals, scenes) — visual association cortex involvement",
+            "Charles Bonnet syndrome — complex visual hallucinations in the setting of significant peripheral or central visual loss, with preserved insight; occurs in macular degeneration, glaucoma, and post-stroke hemianopia",
+          ],
+        },
+        { h: "Occipital epilepsy" },
+        {
+          p: "Visual auras are the hallmark, including:",
+        },
+        {
+          ul: [
+            "Elementary visual hallucinations — flashes, colored lights, geometric shapes (contrast with the migraine fortification spectrum, typically longer and more elaborate)",
+            "Ictal blindness or visual field defects",
+            "Eye deviation and forced eye movements",
+            "Postictal headache (can be difficult to distinguish from migraine)",
+          ],
+        },
+        { h: "Bálint's syndrome (parieto-occipital)" },
+        {
+          p: "Although classically attributed to bilateral parieto-occipital damage, the syndrome can be discussed in the context of either lobe. The triad of simultanagnosia, optic ataxia, and oculomotor apraxia reflects disruption of the dorsal visual stream and posterior parietal-occipital integration.",
+        },
+        { h: "Stroke syndromes" },
+        {
+          ul: [
+            "PCA infarct (unilateral) — contralateral homonymous hemianopia, often with macular sparing; if dominant (left), may include alexia without agraphia, color anomia, and verbal memory impairment with extension to medial temporal structures",
+            "PCA infarct (bilateral) / top of the basilar syndrome — cortical blindness, Anton syndrome, amnesia (if bilateral hippocampi involved), and variable thalamic and brainstem features",
+            "MCA-PCA watershed — Bálint's syndrome features (when bilateral)",
+            "Cardioembolic stroke — PCA territory is a common destination for cardiac emboli traversing the vertebrobasilar system",
+          ],
+        },
+        { h: "Neurodegenerative localization" },
+        {
+          ul: [
+            "Posterior cortical atrophy (Benson syndrome) — predominant posterior cortical degeneration (occipital, parietal, posterior temporal), most commonly AD pathology; visuospatial dysfunction, Bálint's and Gerstmann features, environmental disorientation, apperceptive agnosia, alexia, with relatively preserved memory and behavior early",
+            "Creutzfeldt-Jakob disease (Heidenhain variant) — predominant occipital and parieto-occipital involvement with cortical visual disturbance, agnosia, and rapidly progressive dementia",
+            "Dementia with Lewy bodies (DLB) — posterior cortical involvement contributes to characteristic complex visual hallucinations (often well-formed people or animals) and visuospatial dysfunction",
+            "Alzheimer disease — although typically parietotemporal early, posterior cortical features can predominate in the PCA variant",
+          ],
+        },
+        { h: "Other localized presentations" },
+        {
+          ul: [
+            "Migraine with aura — visual aura (scintillating scotoma, fortification spectra) reflects cortical spreading depression beginning in occipital cortex",
+            "Posterior reversible encephalopathy syndrome (PRES) — posterior-predominant vasogenic edema producing cortical visual disturbance, headache, seizures, and altered mentation; associated with hypertension, eclampsia, and immunosuppressants",
+            "Sturge-Weber syndrome — leptomeningeal angiomatosis often involving the occipital region, with cortical calcification, seizures, and visual field defects",
+            "Hemianopic dyslexia — reading impairment caused by a visual field defect interfering with normal saccadic reading strategy, dissociable from pure alexia",
+          ],
+        },
+        { h: "Traumatic brain injury" },
+        {
+          p: "The occipital lobes are less commonly the primary site of contusion than the frontal and temporal lobes (which sit against bony irregularities), but the occipital cortex can be injured by contrecoup mechanisms following frontal impact. Post-traumatic visual disturbances, including visual field defects and higher-order visual processing deficits, occur and are sometimes underrecognized.",
+        },
+      ],
+      assessment: [
+        { h: "Visual field testing" },
+        {
+          ul: [
+            "Confrontation testing — bedside assessment of all four quadrants, single and double simultaneous stimulation",
+            "Automated perimetry (Humphrey, Goldmann) — formal mapping of visual field defects",
+            "Tangent screen and kinetic perimetry — when automated perimetry is unavailable or inappropriate",
+            "Visual extinction testing — double simultaneous visual stimulation for cortical visual extinction",
+          ],
+        },
+        { h: "Higher visual function batteries" },
+        {
+          dl: [
+            { term: "Visual Object and Space Perception Battery (VOSP)", desc: "Separate object perception (shape detection, silhouettes, object decision, progressive silhouettes) and space perception (dot counting, position discrimination, number location, cube analysis) subtests" },
+            { term: "Birmingham Object Recognition Battery (BORB)", desc: "Comprehensive battery for visual recognition, including length, size, orientation matching and object decision" },
+            { term: "Cortical Vision Screening Test (CORVIST)", desc: "Brief screen for cortical visual dysfunction, useful in PCA workup" },
+            { term: "Hooper Visual Organization Test", desc: "Mental reassembly of fragmented object images" },
+            { term: "Benton Facial Recognition Test (BFRT)", desc: "Perceptual face matching, sensitive to ventral occipitotemporal damage" },
+            { term: "Cambridge Face Memory Test (CFMT)", desc: "Memory for unfamiliar faces" },
+          ],
+        },
+        { h: "Color perception" },
+        {
+          ul: [
+            "Ishihara plates — screening for color discrimination (originally for congenital deficits, but useful for hemiachromatopsia detection)",
+            "Farnsworth-Munsell 100 Hue Test — fine color discrimination across the spectrum",
+            "Color naming and pointing — for color anomia",
+            "Color sorting tasks",
+          ],
+        },
+        { h: "Motion perception" },
+        {
+          p: "Formal motion testing is rare in clinical practice; functional inquiry into difficulties with moving stimuli (pouring liquid, crossing traffic, watching television) is more commonly used to detect akinetopsia.",
+        },
+        { h: "Reading assessment (occipitotemporal)" },
+        {
+          ul: [
+            "Letter, word, and pseudoword reading — assessing alexia type and severity",
+            "Gray Oral Reading Tests-5 (GORT-5) — fluency and comprehension",
+            "WIAT-4 Word Reading and Pseudoword Decoding",
+            "Tachistoscopic word presentation — for hemialexia detection",
+            "Reading aloud with field-defect awareness — observing whether errors track with hemianopic dyslexia versus pure alexia",
+          ],
+        },
+        { h: "Visuoconstructional measures (shared with parietal)" },
+        {
+          ul: [
+            "WAIS Block Design",
+            "WAIS Visual Puzzles",
+            "Rey-Osterrieth Complex Figure copy",
+            "Clock drawing",
+            "Cube and intersecting pentagons drawing",
+          ],
+        },
+        { h: "Visual memory measures (shared with temporal)" },
+        {
+          p: "BVMT-R, Rey-Osterrieth memory trials, WMS-5 Visual Reproduction, and WMS-5 Designs — for visual memory contributions involving occipital-temporal interactions.",
+        },
+        { h: "Visual scanning and attention" },
+        {
+          ul: [
+            "Trail Making Test Part A — visual scanning under sequencing demand",
+            "Cancellation tasks (Letter, Star, Bell) — visual search and inattention",
+            "Visual search paradigms — feature and conjunction search",
+          ],
+        },
+        { h: "Hallucination assessment" },
+        {
+          ul: [
+            "Open-ended interview about visual hallucinations — content, frequency, duration, insight, and triggers",
+            "Charles Bonnet syndrome screen — visual hallucinations in the context of vision loss with preserved insight",
+            "North-East Visual Hallucinations Interview (NEVHI) — structured assessment used in DLB workup",
+          ],
+        },
+        { h: "Anton syndrome screening" },
+        {
+          p: "When cortical blindness is suspected:",
+        },
+        {
+          ul: [
+            "Compare reported visual perception against examiner observations (e.g., walking into objects)",
+            "Ask the patient to describe details of the immediate environment, the examiner's clothing, or a worn watch face",
+            "Confront the discrepancy gently; insight is characteristically absent",
+          ],
+        },
+        { h: "Bedside screening for occipital dysfunction" },
+        {
+          ul: [
+            "Visual field confrontation including double simultaneous stimulation",
+            "Acuity with near card (rule out non-cortical contribution)",
+            "Reading aloud a sentence or paragraph",
+            "Color naming for common items (banana, sky, blood, grass)",
+            "Object naming to confrontation versus naming to description (dissociating agnosia from anomia)",
+            "Famous face recognition",
+            "Clock drawing and pentagon copy for visuospatial contribution",
+            "Description of a complex scene (Cookie Theft) for inattention and simultanagnosia",
+          ],
+        },
+      ],
+    },
   },
 
   // ──────────────── CORTICAL SUBREGIONS (6) ────────────────
