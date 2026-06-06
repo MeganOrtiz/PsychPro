@@ -82,15 +82,46 @@ if (!isProd) {
   allowedOrigins.add("http://localhost:5000");
   allowedOrigins.add("http://127.0.0.1:5173");
 }
+
+// Claude's web client performs MCP/OAuth requests from the browser, so its
+// origins must be allowed or the browser blocks the response (no ACAO header)
+// and the "Add custom connector" flow fails before our server can act. We
+// trust these origins ONLY on the MCP + OAuth discovery/flow endpoints — not
+// the rest of the API — to avoid widening the credentialed CORS trust boundary.
+const mcpClientOrigins = new Set<string>(["https://claude.ai", "https://claude.com"]);
+function isMcpScopedPath(path: string): boolean {
+  return (
+    path === "/api/mcp" ||
+    path.startsWith("/api/oauth/") ||
+    path.startsWith("/.well-known/oauth") ||
+    path.startsWith("/api/.well-known/oauth")
+  );
+}
+
 app.use(
-  cors({
-    origin(origin, cb) {
-      // No Origin header → not a browser cross-origin request; allow.
-      if (!origin) return cb(null, true);
-      if (allowedOrigins.has(origin)) return cb(null, true);
-      return cb(null, false);
-    },
-    credentials: true,
+  cors((req, cb) => {
+    const mcpScoped = isMcpScopedPath(req.path);
+    cb(null, {
+      origin(origin, originCb) {
+        // No Origin header → not a browser cross-origin request; allow.
+        if (!origin) return originCb(null, true);
+        if (allowedOrigins.has(origin)) return originCb(null, true);
+        if (mcpScoped && mcpClientOrigins.has(origin)) return originCb(null, true);
+        return originCb(null, false);
+      },
+      credentials: true,
+      // MCP clients (and OAuth-aware browsers) must be able to read these on the
+      // response: WWW-Authenticate kicks off the OAuth flow on a 401, and
+      // Mcp-Session-Id / Mcp-Protocol-Version are part of the MCP HTTP transport.
+      exposedHeaders: ["WWW-Authenticate", "Mcp-Session-Id", "Mcp-Protocol-Version"],
+      allowedHeaders: [
+        "Content-Type",
+        "Authorization",
+        "Mcp-Session-Id",
+        "Mcp-Protocol-Version",
+        "Accept",
+      ],
+    });
   }),
 );
 
