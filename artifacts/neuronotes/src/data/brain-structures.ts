@@ -620,7 +620,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
     segments: 6,
     color: "#3FB6D9",
     overview:
-      "Lateral lobes situated below the Sylvian fissure. Process auditory input, name and recognize objects, and house the hippocampus and amygdala on their medial surfaces.",
+      "Lateral lobes situated below the Sylvian fissure, occupying the inferolateral aspect of each hemisphere from the temporal pole back to the occipital boundary. They house the primary auditory cortex and (on the dominant side) Wernicke's area for language comprehension, the ventral 'what' visual stream for object, face, and word recognition, and — on their medial surfaces — the hippocampus, entorhinal/perirhinal cortex, and amygdala that form the core of the declarative memory and emotional-salience systems. As a result the temporal lobe is central to aphasia, amnesia, the agnosias, and temporal-lobe epilepsy.",
     functions: [
       "Primary auditory cortex (Heschl's gyrus)",
       "Receptive language (Wernicke's area, dominant side)",
@@ -641,6 +641,325 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Prosopagnosia (right fusiform damage)",
     ],
     topicHints: ["Language Processing & Aphasia", "Memory Systems"],
+    detail: {
+      anatomy: [
+        { h: "Boundaries" },
+        {
+          p: "The temporal lobe occupies the inferolateral aspect of each cerebral hemisphere. Its superior border is the lateral (Sylvian) fissure, which separates it from the frontal and parietal lobes. Posteriorly it transitions into the occipital lobe along a less distinct boundary — on the lateral surface the convention is the temporo-occipital line (from the preoccipital notch to the parieto-occipital sulcus), and on the medial surface the boundary follows the collateral sulcus and the isthmus of the cingulate gyrus. The anterior temporal pole is the rostral tip.",
+        },
+        { h: "Major gyri and sulci" },
+        {
+          p: "The lateral surface is organized by the superior and inferior temporal sulci into three parallel gyri running anteroposteriorly:",
+        },
+        {
+          ul: [
+            "Superior temporal gyrus (STG) — above the superior temporal sulcus; contains auditory cortex and, in the dominant hemisphere, Wernicke's area",
+            "Middle temporal gyrus (MTG) — between the superior and inferior temporal sulci; language semantics, multimodal integration, and biological-motion perception",
+            "Inferior temporal gyrus (ITG) — below the inferior temporal sulcus; ventral visual stream and object recognition",
+          ],
+        },
+        {
+          p: "The superior temporal plane (upper surface of the STG, hidden within the Sylvian fissure) contains Heschl's gyrus (transverse temporal gyrus / primary auditory cortex), the planum temporale (auditory association cortex posterior to Heschl's, typically larger on the left and a critical substrate of Wernicke's area), and the planum polare anteriorly.",
+        },
+        {
+          p: "The inferior (basal) surface contains, from lateral to medial: the inferior temporal gyrus (wrapping from the lateral surface), the fusiform (occipitotemporal) gyrus (ventral-stream face and word recognition), the parahippocampal gyrus (containing entorhinal and perirhinal cortices anteriorly), and the uncus — the medially curled anterior end of the parahippocampal gyrus, overlying the amygdala.",
+        },
+        { h: "Functional subdivisions" },
+        {
+          dl: [
+            { term: "Primary auditory cortex (A1)", desc: "Heschl's gyrus — tonotopic processing of sound" },
+            { term: "Auditory association cortex", desc: "Superior temporal plane and STG surrounding Heschl's — pitch, timbre, complex sound and music processing" },
+            { term: "Wernicke's area (dominant)", desc: "Posterior STG extending onto the planum temporale — auditory-verbal comprehension, phonological processing" },
+            { term: "Anterior temporal lobe (ATL)", desc: "Temporal pole and anterior MTG/ITG — semantic memory hub; person and concept knowledge" },
+            { term: "Fusiform face area (FFA)", desc: "Mid-fusiform gyrus, typically right-lateralized — face recognition, expert visual category processing" },
+            { term: "Visual word form area (VWFA)", desc: "Left mid-fusiform / occipitotemporal cortex — orthographic word recognition" },
+            { term: "Parahippocampal place area (PPA)", desc: "Parahippocampal gyrus — scene and place recognition, spatial context" },
+            { term: "Hippocampus", desc: "Medial temporal lobe, within the temporal horn of the lateral ventricle — episodic and relational memory encoding and retrieval" },
+            { term: "Entorhinal cortex", desc: "Anterior parahippocampal gyrus — gateway to the hippocampus; convergent neocortical input" },
+            { term: "Perirhinal cortex", desc: "Lateral to entorhinal along the rhinal sulcus — object/item familiarity and recognition memory" },
+            { term: "Amygdala", desc: "Anterior medial temporal lobe, deep to the uncus — emotional processing, fear learning, salience" },
+            { term: "Superior temporal sulcus (STS)", desc: "Sulcus between STG and MTG — biological motion, gaze and face dynamics, social perception" },
+          ],
+        },
+        { h: "Vascular supply" },
+        {
+          ul: [
+            "Middle cerebral artery (MCA), inferior division — lateral temporal cortex including STG (Wernicke's area), MTG, and lateral ITG",
+            "Posterior cerebral artery (PCA) — medial and inferior temporal lobe, including hippocampus, parahippocampal gyrus, fusiform gyrus, and uncus; anterior temporal branches also supply the temporal pole",
+            "Anterior choroidal artery — uncus, anterior hippocampus, and amygdala; small infarcts can produce memory and emotional changes",
+          ],
+        },
+        { h: "Key white matter tracts" },
+        {
+          ul: [
+            "Inferior longitudinal fasciculus (ILF) — connects occipital cortex to anterior temporal lobe; visual object recognition and visual-semantic integration",
+            "Uncinate fasciculus — hooks from anterior temporal lobe to orbitofrontal and ventrolateral prefrontal cortex; semantic memory, social-emotional processing",
+            "Arcuate fasciculus / superior longitudinal fasciculus — connects posterior temporal cortex (Wernicke's) with inferior frontal cortex (Broca's); damage produces conduction aphasia",
+            "Inferior fronto-occipital fasciculus (IFOF) — long association tract from occipital/posterior temporal cortex to inferior frontal cortex; semantic processing",
+            "Fornix — major hippocampal output to mammillary bodies, anterior thalamus, and septal nuclei (Papez circuit); lesions produce amnesia",
+            "Cingulum — runs above the corpus callosum and curves into the parahippocampal gyrus; links medial temporal memory structures to cingulate and frontal cortex",
+          ],
+        },
+        { h: "Developmental note" },
+        {
+          p: "The medial temporal lobe undergoes rapid early development, supporting the emergence of explicit memory across the second year of life. The hippocampus shows continued structural maturation into adolescence, and the protracted development of MTL-prefrontal connectivity is relevant to the maturation of strategic memory and source monitoring across childhood and adolescence.",
+        },
+      ],
+      functions: [
+        { h: "Auditory processing" },
+        {
+          ul: [
+            "Primary auditory cortex (A1) is tonotopically organized; processes basic acoustic features (frequency, intensity, temporal structure)",
+            "Auditory association cortex supports recognition of complex sounds, music, environmental sounds, and prosody",
+            "Right STG shows relative specialization for music, pitch, and prosody",
+            "Left STG shows relative specialization for speech-sound (phonological) processing",
+          ],
+        },
+        { h: "Language comprehension (dominant hemisphere)" },
+        {
+          ul: [
+            "Wernicke's area supports auditory-verbal comprehension and phonological-to-lexical mapping",
+            "MTG and ITG contribute to lexical-semantic retrieval and word meaning",
+            "Anterior temporal lobe functions as a semantic memory hub, integrating multimodal conceptual knowledge",
+          ],
+        },
+        { h: "Memory" },
+        {
+          p: "The medial temporal lobe (MTL) memory system supports declarative (explicit) memory:",
+        },
+        {
+          ul: [
+            "Hippocampus — encoding and retrieval of episodic memories; binding of multimodal features into coherent representations; spatial/relational memory",
+            "Entorhinal cortex — major bidirectional gateway between hippocampus and neocortex",
+            "Perirhinal cortex — item-level familiarity and recognition; visual object memory",
+            "Parahippocampal cortex — scene and contextual memory",
+          ],
+        },
+        {
+          p: "The MTL system is selectively involved in declarative memory; procedural, motor, and emotional learning depend on other systems (basal ganglia, cerebellum, amygdala).",
+        },
+        { h: "Visual recognition (ventral stream)" },
+        {
+          p: "The ventral occipitotemporal cortex constitutes the \"what\" pathway:",
+        },
+        {
+          ul: [
+            "Object recognition in lateral occipital and inferior temporal cortex",
+            "Face recognition in the fusiform face area",
+            "Place and scene recognition in the parahippocampal place area",
+            "Word recognition in the left occipitotemporal visual word form area",
+          ],
+        },
+        { h: "Social and emotional" },
+        {
+          ul: [
+            "Amygdala — fear conditioning, emotional salience detection, modulation of memory for emotional events, processing of facial expressions of emotion",
+            "Superior temporal sulcus — biological motion, gaze direction, facial movement, theory of mind",
+            "Anterior temporal lobe — person-specific semantic knowledge, social concept representation",
+          ],
+        },
+        { h: "Lateralization" },
+        {
+          ul: [
+            "Left (dominant) temporal lobe is preferentially engaged in language comprehension, verbal memory, and verbal semantic processing",
+            "Right (non-dominant) temporal lobe is preferentially engaged in visuospatial memory, face recognition, music processing, and prosody",
+          ],
+        },
+      ],
+      clinical: [
+        { h: "Aphasia syndromes (dominant hemisphere)" },
+        { h: "Wernicke's aphasia" },
+        {
+          p: "Fluent, well-articulated speech that is empty of content, with frequent paraphasic errors (phonemic and semantic) and neologisms. Auditory comprehension, repetition, and naming are all impaired, and patients often lack awareness of their deficits. Lesion: posterior STG and adjacent supramarginal gyrus (MCA inferior-division territory).",
+        },
+        { h: "Transcortical sensory aphasia" },
+        {
+          p: "Fluent with impaired comprehension but preserved repetition; patients may echo what is said without understanding it. Lesion: temporoparietal watershed, sparing perisylvian cortex.",
+        },
+        { h: "Conduction aphasia" },
+        {
+          p: "Fluent speech with relatively preserved comprehension but disproportionate impairment of repetition, particularly for unfamiliar phrases, with prominent phonemic paraphasias. Lesion: arcuate fasciculus or supramarginal gyrus.",
+        },
+        { h: "Pure word deafness" },
+        {
+          p: "Selective impairment of auditory-verbal comprehension with preserved reading, writing, and recognition of nonverbal sounds. Lesion: bilateral STG, or a unilateral dominant subcortical lesion disconnecting A1 from Wernicke's area.",
+        },
+        { h: "Semantic variant PPA (semantic dementia)" },
+        {
+          p: "Progressive loss of semantic knowledge with anomia, impaired single-word comprehension, and surface dyslexia; speech is fluent but empty. Lesion: bilateral anterior temporal atrophy, typically left-predominant.",
+        },
+        { h: "Memory disorders" },
+        { h: "Bilateral medial temporal lobe amnesia" },
+        {
+          p: "The prototype is the case of H.M. (Henry Molaison), who developed dense anterograde amnesia after bilateral MTL resection. Hallmarks: severe anterograde amnesia for declarative material; variable retrograde amnesia with a temporal gradient (Ribot's law); preserved working memory and procedural learning; and preserved semantic knowledge acquired before injury.",
+        },
+        { h: "Material-specific memory deficits" },
+        {
+          ul: [
+            "Left MTL — verbal memory deficits (word lists, story recall)",
+            "Right MTL — visuospatial memory deficits (figure recall, spatial layouts, face recognition)",
+          ],
+        },
+        { h: "Transient global amnesia (TGA)" },
+        {
+          p: "Sudden-onset, time-limited (typically < 24 hours) anterograde amnesia with repetitive questioning and preserved personal identity and remote memory. Hippocampal/MTL involvement is implicated; the course is benign.",
+        },
+        { h: "Diencephalic amnesia (e.g., Korsakoff syndrome)" },
+        {
+          p: "Although not temporal in origin, mammillary body and anterior thalamic damage produces amnesia clinically similar to MTL amnesia and is part of the broader Papez circuit.",
+        },
+        { h: "Temporal lobe epilepsy (TLE)" },
+        {
+          p: "The most common focal epilepsy in adults. Key features:",
+        },
+        {
+          ul: [
+            "Mesial temporal sclerosis is the most common pathology — hippocampal atrophy and gliosis",
+            "Auras include rising epigastric sensation, déjà vu, jamais vu, fear, olfactory or gustatory hallucinations, and complex visual or auditory experiences",
+            "Complex partial seizures with impaired awareness, oroalimentary or manual automatisms, and post-ictal confusion",
+            "Interictal memory dysfunction is common, lateralized by side of seizure focus",
+            "Geschwind syndrome — described interictal personality features (hyperreligiosity, hypergraphia, hyposexuality, viscosity); controversial as a syndrome",
+          ],
+        },
+        { h: "Visual recognition disorders" },
+        {
+          ul: [
+            "Prosopagnosia — impaired face recognition with preserved other visual recognition; bilateral or right fusiform lesions",
+            "Visual object agnosia — apperceptive (cannot integrate visual features) vs. associative (cannot link percept to meaning); occipitotemporal lesions",
+            "Pure alexia (alexia without agraphia) — impaired reading with preserved writing; left occipitotemporal lesion damaging the visual word form area or its connections",
+            "Topographic disorientation / landmark agnosia — parahippocampal place area damage",
+          ],
+        },
+        { h: "Klüver-Bucy syndrome" },
+        {
+          p: "Following bilateral anterior temporal lobe damage (including the amygdala): placidity and reduced fear response, hyperorality (oral examination of objects), hypersexuality, visual agnosia (\"psychic blindness\"), hypermetamorphosis (compulsive attention to environmental stimuli), and dietary changes. The full syndrome is rare in humans; partial features occur after bilateral temporal damage from herpes encephalitis, TBI, or bvFTD.",
+        },
+        { h: "Stroke syndromes" },
+        {
+          ul: [
+            "MCA inferior-division infarct (dominant) — Wernicke's aphasia; contralateral superior quadrantanopia (Meyer's loop) with deeper extension",
+            "MCA inferior-division infarct (non-dominant) — visuospatial deficits, prosody-comprehension deficits, sometimes a confusional state",
+            "PCA infarct (medial temporal) — amnesia (if bilateral or dominant hippocampus), homonymous hemianopia, alexia without agraphia (left occipitotemporal)",
+            "Anterior choroidal artery infarct — small lesions of uncus, anterior hippocampus, and amygdala can produce memory and emotional changes",
+          ],
+        },
+        { h: "Neurodegenerative localization" },
+        {
+          ul: [
+            "Alzheimer disease — earliest pathology in transentorhinal/entorhinal cortex with early hippocampal atrophy; progressive amnestic syndrome",
+            "Semantic variant PPA — bilateral anterior temporal atrophy, left-predominant; progressive semantic loss",
+            "Logopenic variant PPA — left posterior temporal and inferior parietal atrophy; word-retrieval and sentence-repetition deficits; often Alzheimer pathology",
+            "Right temporal variant FTD — right anterior temporal atrophy; prosopagnosia, loss of person knowledge, behavioral and emotional change",
+            "Limbic-predominant age-related TDP-43 encephalopathy (LATE) — amnestic dementia of older adults with hippocampal involvement, often mimicking AD",
+          ],
+        },
+        { h: "Other localized presentations" },
+        {
+          ul: [
+            "Herpes simplex encephalitis (HSE) — predilection for medial/inferior temporal lobes and orbitofrontal cortex; severe amnesia and personality change",
+            "Limbic encephalitis — autoimmune or paraneoplastic; bilateral medial temporal involvement with subacute amnesia, seizures, and psychiatric symptoms",
+            "Auditory hallucinations — superior temporal cortex involvement in primary psychotic disorders and some seizure phenomena",
+            "Musicogenic epilepsy — rare seizure type triggered by music, often with a right temporal focus",
+          ],
+        },
+        { h: "Traumatic brain injury" },
+        {
+          p: "The anterior temporal poles are vulnerable to contusion in closed-head injury alongside the orbitofrontal cortex, due to bony irregularities of the middle cranial fossa. Memory dysfunction, particularly for new learning, is among the most common persistent cognitive sequelae of moderate-to-severe TBI.",
+        },
+      ],
+      assessment: [
+        { h: "Verbal memory (left MTL-sensitive)" },
+        {
+          dl: [
+            { term: "California Verbal Learning Test-3 (CVLT-3)", desc: "16-word list learning with semantic structure; learning, interference, delay, recognition" },
+            { term: "Hopkins Verbal Learning Test-Revised (HVLT-R)", desc: "12-word list, three categories; briefer alternative" },
+            { term: "Rey Auditory Verbal Learning Test (RAVLT)", desc: "15-word list learning" },
+            { term: "WMS-IV / WMS-V Logical Memory", desc: "Story recall, immediate and delayed" },
+            { term: "WMS-IV / WMS-V Verbal Paired Associates", desc: "Word-pair associative learning" },
+            { term: "NAB List Learning", desc: "Word list with three trials" },
+            { term: "RBANS List Learning / Story Memory", desc: "Brief screening" },
+            { term: "Selective Reminding Test", desc: "Verbal list learning with selective-reminding methodology" },
+          ],
+        },
+        { h: "Visuospatial memory (right MTL-sensitive)" },
+        {
+          dl: [
+            { term: "Brief Visuospatial Memory Test-Revised (BVMT-R)", desc: "Six geometric figures; learning and delayed recall" },
+            { term: "Rey-Osterrieth Complex Figure (memory trials)", desc: "Copy followed by immediate and delayed recall" },
+            { term: "WMS-IV / WMS-V Visual Reproduction or Designs", desc: "Geometric design recall" },
+            { term: "Continuous Visual Memory Test", desc: "Recognition-based visual memory" },
+            { term: "Doors and People Test", desc: "Verbal and visual recall and recognition" },
+            { term: "Camden Memory Tests", desc: "Recognition memory for faces, scenes, words" },
+          ],
+        },
+        { h: "Recognition memory and item familiarity" },
+        {
+          ul: [
+            "Warrington Recognition Memory Test — words and faces",
+            "Camden Memory Tests — including Topographical Recognition Memory",
+            "CVLT-3 / HVLT-R / BVMT-R recognition trials — embedded recognition measures contrasting encoding with retrieval failure",
+          ],
+        },
+        { h: "Language (temporal-relevant)" },
+        {
+          ul: [
+            "Boston Naming Test (BNT) — 60-item confrontation naming",
+            "Multilingual Naming Test (MINT) — naming measure with cultural breadth",
+            "Token Test — auditory-verbal comprehension under varying syntactic demand",
+            "Peabody Picture Vocabulary Test-5 (PPVT-5) — receptive vocabulary",
+            "Boston Diagnostic Aphasia Examination (BDAE) — comprehensive aphasia battery",
+            "Western Aphasia Battery-Revised (WAB-R) — aphasia classification and severity",
+            "Semantic (category) fluency — animals, supermarket items; sensitive to temporal-semantic dysfunction (vs. more frontal phonemic fluency)",
+          ],
+        },
+        { h: "Semantic processing" },
+        {
+          ul: [
+            "Pyramids and Palm Trees Test — semantic association across pictures and words",
+            "Camel and Cactus Test — semantic association",
+            "Word-picture matching tasks — embedded in PPA assessment protocols",
+            "Famous faces and famous names tests — person-specific semantic knowledge, sensitive to anterior temporal dysfunction",
+          ],
+        },
+        { h: "Visual recognition and face processing" },
+        {
+          ul: [
+            "Benton Facial Recognition Test (BFRT) — perceptual face matching",
+            "Cambridge Face Memory Test (CFMT) — face memory",
+            "Visual Object and Space Perception Battery (VOSP) — separate object and space perception subtests",
+            "Famous Faces Test — recognition and naming of familiar faces",
+          ],
+        },
+        { h: "Auditory processing" },
+        {
+          ul: [
+            "Speech-Sounds Perception Test (Halstead-Reitan) — phoneme discrimination",
+            "Seashore Rhythm Test (Halstead-Reitan) — auditory pattern perception, right temporal sensitivity",
+            "Dichotic listening paradigms — hemispheric specialization for auditory-verbal material",
+          ],
+        },
+        { h: "Social cognition (temporal-relevant)" },
+        {
+          ul: [
+            "Reading the Mind in the Eyes Test — mental-state inference from the eye region",
+            "The Awareness of Social Inference Test (TASIT) — comprehension of social cues, sarcasm, emotion",
+            "Emotion recognition tasks (Ekman 60 Faces, NimStim) — facial emotion identification, amygdala-sensitive",
+          ],
+        },
+        { h: "Bedside screening for temporal dysfunction" },
+        {
+          ul: [
+            "Three- and five-word delayed recall — basic episodic memory screen",
+            "Story recall at bedside (e.g., the Babcock Story)",
+            "Naming to confrontation — common and low-frequency object naming",
+            "Single-word and sentence comprehension — point-to commands of varying complexity",
+            "Repetition — single words, phrases, low-probability sentences",
+            "Category fluency (animals in 60 seconds) — sensitive to semantic and MTL dysfunction",
+            "Famous face recognition — quick semantic memory screen for anterior temporal function",
+          ],
+        },
+      ],
+    },
   },
   {
     id: "occipital-lobe",
