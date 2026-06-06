@@ -179,12 +179,20 @@ app.use(express.urlencoded({ extended: true }));
 const isDev = process.env.NODE_ENV !== "production";
 const clerkPk = (isDev && process.env.CLERK_PK_OVERRIDE) || process.env.CLERK_PUBLISHABLE_KEY;
 const clerkSk = (isDev && process.env.CLERK_SK_OVERRIDE) || process.env.CLERK_SECRET_KEY;
-app.use(
-  clerkMiddleware({
-    publishableKey: clerkPk,
-    secretKey: clerkSk,
-  }),
-);
+const clerk = clerkMiddleware({
+  publishableKey: clerkPk,
+  secretKey: clerkSk,
+});
+app.use((req, res, next) => {
+  // OAuth + MCP endpoints have their own auth model (PKCE for the OAuth flow,
+  // bearer tokens for /api/mcp) and must NOT pass through Clerk's session
+  // handshake. The authorize step happens in the user's logged-in browser, so
+  // it carries Clerk cookies — letting Clerk run would trigger a session
+  // handshake 307 that breaks the authorization-code flow and Claude never
+  // receives a token ("Connection has expired").
+  if (isMcpScopedPath(req.path)) return next();
+  return clerk(req, res, next);
+});
 
 // Root-level OAuth discovery alias. The platform router forwards this exact
 // path to the api-server (see `paths` in artifact.toml) so we have a stable
