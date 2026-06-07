@@ -352,7 +352,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
           />
         </div>
 
-        <StudySurface tone="light" glow pill={{ text: "Question" }} innerClassName="p-6 md:p-7 mb-6">
+        <StudySurface tone="light" glow innerClassName="p-6 md:p-7 mb-6">
           <p className="text-base md:text-lg font-medium leading-relaxed text-white" data-testid="text-mastery-question">{q.question}</p>
         </StudySurface>
 
