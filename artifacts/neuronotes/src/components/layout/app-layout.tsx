@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useSearch } from "wouter";
-import { Brain, LayoutDashboard, BookOpen, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck, BookMarked, Library, Wrench, Sparkles, Star, Beaker, Lightbulb, Users } from "lucide-react";
+import { Brain, LayoutDashboard, BookOpen, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck, BookMarked, Library, Wrench, Sparkles, Star, Beaker, Lightbulb, Users, GraduationCap } from "lucide-react";
 import { UserButton } from "@clerk/clerk-react";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { authHeaders } from "@/lib/auth-headers";
@@ -399,7 +399,18 @@ export default function AppLayout({ children }: AppLayoutProps) {
           </Button>
           <Brain className="w-6 h-6 text-primary" />
           <span className="font-bold text-foreground">PsychPro</span>
-          <div className="ml-auto flex items-center gap-3">
+          <div className="ml-auto flex items-center gap-2.5">
+            <Link
+              href="/eppp"
+              className="eppp-launch-btn eppp-launch-btn--compact"
+              data-testid="eppp-launch-mobile"
+              onClick={() => setSidebarOpen(false)}
+            >
+              <span className="eppp-launch-btn__inner">
+                <GraduationCap aria-hidden />
+                <span>EPPP</span>
+              </span>
+            </Link>
             {isMobile && <NotificationsBell />}
             <UserButton afterSignOutUrl={import.meta.env.BASE_URL.replace(/\/$/, "") || "/"} />
           </div>
@@ -415,6 +426,16 @@ export default function AppLayout({ children }: AppLayoutProps) {
             background: `linear-gradient(180deg, ${STUDY_PALETTE.ink}33 0%, transparent 100%)`,
           }}
         >
+          <Link
+            href="/eppp"
+            className="eppp-launch-btn"
+            data-testid="eppp-launch-desktop"
+          >
+            <span className="eppp-launch-btn__inner">
+              <GraduationCap aria-hidden />
+              <span>EPPP Mastery System</span>
+            </span>
+          </Link>
           {!isMobile && <NotificationsBell />}
           <UserButton
             afterSignOutUrl={import.meta.env.BASE_URL.replace(/\/$/, "") || "/"}
