@@ -274,19 +274,14 @@ export default function CourseMasteryExamPage({ params }: Props) {
             className="mb-8"
           />
 
-          <div
-            className="rounded-xl border p-5 mb-6"
-            style={{
-              background: "linear-gradient(135deg, #15506E 0%, #0E3A50 100%)",
-              borderColor: `${P.surf}55`,
-              boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(255,255,255,0.06)`,
-            }}
-          >
-            <div className="flex items-center gap-2.5 mb-3">
-              <BookOpen className="w-5 h-5" style={{ color: P.surf }} />
-              <span className="text-xl font-bold" style={{ color: P.cloud }}>{total} Questions</span>
+          <div className="rounded-2xl border border-border bg-card p-5 mb-6 shadow-sm">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">
+                <BookOpen className="w-6 h-6 text-primary" />
+              </div>
+              <span className="text-xl font-bold text-foreground">{total} Questions</span>
             </div>
-            <ul className="space-y-1.5 text-sm" style={{ color: `${P.mist}dd` }}>
+            <ul className="space-y-1.5 text-sm text-white/70">
               <li>Drawn from every lesson in this course</li>
               <li>{passingScore}% required to pass</li>
               <li>{examIsTimeable ? `~${estMinutes} minutes when timed` : "Untimed"}</li>
