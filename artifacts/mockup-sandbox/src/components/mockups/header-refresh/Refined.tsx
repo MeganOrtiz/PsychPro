@@ -1,12 +1,15 @@
 import { Brain, Bell, GraduationCap } from "lucide-react";
 
 // Verification mockup for the refined PsychPro headers (top bar + dashboard
-// brand banner). Calm/cohesive direction: glass EPPP pill matching the bell,
-// balanced top bar with a left section title, and a decluttered banner with a
-// single soft glow (no twinkles / sweep / drifting auroras). Locked cerulean.
+// brand banner). Direction v2 (per feedback): NOT stripped down — richer and
+// cohesive, with the wordmark/tagline matching the LANDING PAGE treatment
+// exactly (Outfit 300, 0.32em tracking, strong cyan glow; tagline 500 / 0.42em).
+// One smooth cohesive aura behind the wordmark instead of choppy stacked
+// decorative layers. Locked cerulean.
 
 const P = {
   ink: "#03151D",
+  teal: "#5EB0C8",
   surf: "#76E4F7",
   mist: "#A7F3FF",
   cloud: "#F4FBFF",
@@ -21,9 +24,10 @@ export function Refined() {
       {/* ===== Refined global top bar ===== */}
       <header className="hdr-topbar">
         <div className="hdr-topbar__left">
-          <span className="hdr-crumb">PsychPro</span>
-          <span className="hdr-crumb-sep">/</span>
-          <span className="hdr-crumb hdr-crumb--current">Dashboard</span>
+          <Brain className="hdr-crumb-icon" aria-hidden />
+          <span className="hdr-crumb-mark">PSYCHPRO</span>
+          <span className="hdr-crumb-sep" aria-hidden />
+          <span className="hdr-crumb-page">Dashboard</span>
         </div>
         <div className="hdr-topbar__right">
           <button className="eppp-launch-btn" type="button">
@@ -44,7 +48,7 @@ export function Refined() {
       <main className="hdr-main">
         <header className="dashhdr">
           <div className="dashhdr-card">
-            <div className="dashhdr-glow" aria-hidden />
+            <div className="dashhdr-aura" aria-hidden />
             <div className="brandbanner">
               <div className="brandbanner-row">
                 <Brain className="brandbanner-icon" />
@@ -57,7 +61,6 @@ export function Refined() {
               </div>
             </div>
           </div>
-          <span className="dashhdr-sep" aria-hidden />
         </header>
 
         {/* faint content placeholder for context */}
@@ -75,7 +78,7 @@ const styles = `
 .hdr-root {
   min-height: 100vh;
   background:
-    radial-gradient(1200px 600px at 50% -10%, rgba(118,228,247,0.08), transparent 60%),
+    radial-gradient(1200px 620px at 50% -8%, rgba(118,228,247,0.10), transparent 62%),
     linear-gradient(180deg, #061F2B 0%, #04161F 100%);
   color: ${P.mist};
   font-family: "Inter", system-ui, sans-serif;
@@ -88,20 +91,33 @@ const styles = `
   justify-content: space-between;
   height: 64px;
   padding: 0 clamp(16px, 3vw, 28px);
-  border-bottom: 1px solid rgba(118,228,247,0.12);
-  background: linear-gradient(180deg, rgba(3,21,29,0.5) 0%, transparent 100%);
+  border-bottom: 1px solid rgba(118,228,247,0.1);
+  background: linear-gradient(180deg, rgba(3,21,29,0.55) 0%, transparent 100%);
   backdrop-filter: blur(10px);
 }
-.hdr-topbar__left {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  font-size: 13px;
-  letter-spacing: 0.04em;
+.hdr-topbar__left { display: flex; align-items: center; gap: 11px; }
+.hdr-crumb-icon {
+  width: 20px; height: 20px;
+  color: ${P.surf};
+  filter: drop-shadow(0 0 9px rgba(118,228,247,0.6));
 }
-.hdr-crumb { color: ${P.mistSoft}; font-weight: 500; }
-.hdr-crumb-sep { color: rgba(127,191,208,0.4); }
-.hdr-crumb--current { color: ${P.cloud}; font-weight: 600; }
+.hdr-crumb-mark {
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  font-size: 13px;
+  text-indent: 0.32em;
+  color: ${P.cloud};
+}
+.hdr-crumb-sep {
+  width: 1px; height: 18px;
+  background: rgba(118,228,247,0.28);
+}
+.hdr-crumb-page {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: ${P.mistSoft};
+}
 .hdr-topbar__right { display: flex; align-items: center; gap: 12px; }
 
 /* shared glass control sizing for cohesion */
@@ -179,26 +195,27 @@ const styles = `
 }
 
 /* ===== Main + banner ===== */
-.hdr-main { padding: clamp(28px, 4vw, 48px) clamp(16px, 4vw, 40px); }
-.dashhdr { position: relative; margin-bottom: 22px; }
+.hdr-main { padding: clamp(40px, 6vw, 72px) clamp(16px, 4vw, 40px) clamp(24px, 4vw, 40px); }
+.dashhdr { position: relative; margin-bottom: 30px; }
 .dashhdr-card {
   position: relative;
   margin: 0 auto;
-  max-width: 42rem;
-  overflow: hidden;
-  padding: 6px 40px 16px;
+  max-width: 46rem;
+  padding: 10px 24px 18px;
 }
-.dashhdr-glow {
+/* one smooth, cohesive aura behind the wordmark (mirrors landing hero aura) */
+.dashhdr-aura {
   position: absolute;
-  top: -120px;
+  top: -90px;
   left: 50%;
   transform: translateX(-50%);
-  width: 460px;
-  height: 320px;
+  width: 620px;
+  max-width: 120%;
+  height: 360px;
   border-radius: 9999px;
-  filter: blur(34px);
+  filter: blur(52px);
   pointer-events: none;
-  background: radial-gradient(circle, rgba(118,228,247,0.16) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(118,228,247,0.26) 0%, rgba(94,176,200,0.12) 42%, transparent 72%);
 }
 .brandbanner {
   position: relative;
@@ -208,46 +225,41 @@ const styles = `
   align-items: center;
   text-align: center;
 }
-.brandbanner-row { display: flex; align-items: center; justify-content: center; gap: 14px; }
+.brandbanner-row { display: flex; align-items: center; justify-content: center; gap: 16px; }
 .brandbanner-icon {
-  width: 28px; height: 28px;
+  width: 34px; height: 34px;
   color: ${P.surf};
-  filter: drop-shadow(0 0 6px rgba(118,228,247,0.4));
+  filter: drop-shadow(0 0 12px rgba(118,228,247,0.55));
 }
+/* wordmark — matches .landing-wordmark exactly (Outfit 300 / 0.32em / cyan glow) */
 .brandbanner-word {
   margin: 0;
   font-family: "Outfit", "Inter", system-ui, sans-serif;
   font-weight: 300;
   line-height: 1;
-  font-size: clamp(28px, 4vw, 44px);
-  letter-spacing: 0.42em;
-  text-indent: 0.42em;
+  font-size: clamp(34px, 5.4vw, 60px);
+  letter-spacing: 0.32em;
+  padding-left: 0.32em;
   color: ${P.cloud};
-  text-shadow: 0 0 20px rgba(118,228,247,0.24);
+  text-shadow: 0 0 40px rgba(118,228,247,0.33), 0 0 12px rgba(118,228,247,0.2);
 }
+/* tagline — matches .landing-tagline (500 / 0.42em / icy soft-cyan) */
 .brandbanner-tag {
-  margin: 10px 0 0;
-  font-weight: 300;
-  font-size: 12px;
-  letter-spacing: 0.34em;
-  text-indent: 0.34em;
+  margin: 14px 0 0;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.42em;
+  padding-left: 0.42em;
   color: ${P.mist};
 }
-.brandbanner-greet { display: flex; flex-direction: column; align-items: center; margin-top: 14px; }
+.brandbanner-greet { display: flex; flex-direction: column; align-items: center; margin-top: 18px; }
 .brandbanner-rule {
   display: block;
-  height: 1px; width: 36px;
-  margin-bottom: 12px;
-  background: linear-gradient(90deg, transparent, rgba(118,228,247,0.35), transparent);
+  height: 1px; width: 40px;
+  margin-bottom: 14px;
+  background: linear-gradient(90deg, transparent, rgba(118,228,247,0.4), transparent);
 }
-.brandbanner-greet-text { margin: 0; font-weight: 300; font-size: 14px; color: ${P.mistSoft}; }
-.dashhdr-sep {
-  display: block;
-  height: 1px;
-  width: 14rem;
-  margin: 20px auto 0;
-  background: linear-gradient(90deg, transparent, rgba(118,228,247,0.24), transparent);
-}
+.brandbanner-greet-text { margin: 0; font-weight: 300; font-size: 15px; color: ${P.mistSoft}; }
 
 /* placeholder grid */
 .hdr-placeholder {

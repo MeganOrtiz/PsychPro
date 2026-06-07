@@ -95,3 +95,9 @@ id = "rFDk_EDPTrI1RPMLUSNu_"
 uri = "file://attached_assets/generated_images/brain_cranial_nerves.png"
 type = "image"
 title = "Cranial Nerves Diagram"
+
+[[outputs]]
+id = "Z_dhYrhJ66oR4-aXEUFVx"
+uri = "file://screenshots/header-refined.jpg"
+type = "image"
+title = "Refined headers — top bar + dashboard banner (landing-matched title)"
