@@ -41,10 +41,20 @@ import {
   Activity,
   Award,
   Clock,
+  GraduationCap,
+  Lock,
+  CheckCircle2,
 } from "lucide-react";
+import { useQueries } from "@tanstack/react-query";
 import smokeBg from "@/assets/bg/brain-clouds.png";
 import spotlightPortrait from "@/assets/spotlight/featured.png";
-import { useGetDashboardSummary, useGetTopics, useGetLeaderboard } from "@workspace/api-client-react";
+import {
+  useGetDashboardSummary,
+  useGetTopics,
+  useGetLeaderboard,
+  getCourseMasteryStatus,
+  getGetCourseMasteryStatusQueryKey,
+} from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -231,6 +241,12 @@ export default function DashboardPage() {
       },
     ];
   }, [recent, streak]);
+
+  const courseCategories = useMemo(() => {
+    const set = new Set<string>();
+    (allTopics ?? []).forEach((t) => set.add(t.category || "Other"));
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [allTopics]);
 
   const recommended = useMemo(() => {
     const seen = new Set<number>();
@@ -458,6 +474,10 @@ export default function DashboardPage() {
                 </p>
               )}
             </StudySurface>
+
+            {/* Course Mastery — one tile per course; dull until its mastery
+                exam is passed, then it lights up and glows. */}
+            <CourseMasterySection categories={courseCategories} navigate={navigate} />
 
             {/* Streak (left) + Leaderboard (right) */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1076,6 +1096,123 @@ function useCountUp(target: number, durationMs = 1100) {
     };
   }, [target, durationMs]);
   return value;
+}
+
+function CourseMasterySection({
+  categories,
+  navigate,
+}: {
+  categories: string[];
+  navigate: (to: string) => void;
+}) {
+  // One status request per course, fetched in parallel. The query key matches
+  // the per-course mastery-status hook so the cache is shared with the topics
+  // page (no duplicate fetches when navigating between them).
+  const queries = useQueries({
+    queries: categories.map((category) => ({
+      queryKey: getGetCourseMasteryStatusQueryKey(category),
+      queryFn: () => getCourseMasteryStatus(category),
+      staleTime: 60_000,
+    })),
+  });
+
+  if (categories.length === 0) return null;
+
+  const masteredCount = queries.filter((q) => q.data?.mastered).length;
+
+  return (
+    <StudySurface tone="light" innerClassName="p-5">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <GraduationCap className="w-4 h-4" style={{ color: PALETTE.tealDeep }} />
+          <h2 className="font-semibold" style={{ color: PALETTE.mist }}>
+            Course Mastery
+          </h2>
+        </div>
+        <span
+          className="text-xs font-semibold tabular-nums"
+          style={{ color: PALETTE.tealDeep }}
+        >
+          {masteredCount}/{categories.length} mastered
+        </span>
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        {categories.map((category, i) => {
+          const status = queries[i]?.data;
+          const isLoading = queries[i]?.isLoading;
+          const mastered = !!status?.mastered;
+          if (isLoading && !status) {
+            return <Skeleton key={category} className="h-[104px] rounded-xl" />;
+          }
+          const slug = category.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+          return (
+            <button
+              key={category}
+              onClick={() =>
+                navigate(`/courses/${encodeURIComponent(category)}/mastery-exam`)
+              }
+              className={cn(
+                "course-mastery-tile group relative flex flex-col items-center justify-center gap-2 p-4 rounded-xl border text-center min-h-[104px]",
+                mastered
+                  ? "course-mastery-tile--mastered"
+                  : "course-mastery-tile--locked",
+              )}
+              data-testid={`course-mastery-tile-${slug}`}
+              title={
+                mastered
+                  ? `${category} — mastered`
+                  : status?.unlocked
+                    ? `${category} — mastery exam ready`
+                    : `${category} — ${status?.passedTopics ?? 0}/${status?.totalTopics ?? 0} lessons passed`
+              }
+            >
+              {mastered && (
+                <CheckCircle2
+                  className="absolute top-2 right-2 w-4 h-4 text-white"
+                  aria-hidden
+                />
+              )}
+              <div
+                className="w-10 h-10 rounded-lg flex items-center justify-center"
+                style={
+                  mastered
+                    ? { background: "rgba(255,255,255,0.16)" }
+                    : {
+                        background: "rgba(255,255,255,0.04)",
+                        border: "1px solid rgba(255,255,255,0.08)",
+                      }
+                }
+              >
+                {mastered ? (
+                  <GraduationCap className="w-5 h-5 text-white" />
+                ) : (
+                  <Lock className="w-5 h-5" style={{ color: PALETTE.mistSoft }} />
+                )}
+              </div>
+              <span
+                className="text-sm font-semibold leading-tight line-clamp-2"
+                style={{ color: mastered ? "#fff" : PALETTE.mist }}
+              >
+                {category}
+              </span>
+              <span
+                className="text-[11px] font-medium"
+                style={{
+                  color: mastered ? "rgba(255,255,255,0.85)" : PALETTE.mistSoft,
+                }}
+              >
+                {mastered
+                  ? "Mastered"
+                  : status?.unlocked
+                    ? "Exam ready"
+                    : `${status?.passedTopics ?? 0}/${status?.totalTopics ?? 0} lessons`}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </StudySurface>
+  );
 }
 
 function StreakCard({
