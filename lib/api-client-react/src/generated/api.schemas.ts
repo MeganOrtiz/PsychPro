@@ -123,6 +123,37 @@ export interface CourseMasteryExam {
   questions: QuizQuestion[];
 }
 
+export interface CourseMasteryLesson {
+  topicId: number;
+  name: string;
+  /**
+   * Best practice-exam percentage the user has scored on this lesson, or null if never attempted.
+   * @nullable
+   */
+  bestExamPct: number | null;
+  /** True when bestExamPct >= 90. */
+  passed: boolean;
+}
+
+export interface CourseMasteryStatus {
+  category: string;
+  /** True when every lesson's practice exam has been passed at >= 90%. */
+  unlocked: boolean;
+  /** True when the Course Mastery Exam has been passed at >= 90%. */
+  mastered: boolean;
+  /** Percentage required to pass the mastery exam (90). */
+  passingScore: number;
+  totalTopics: number;
+  /** Number of lessons whose practice exam has been passed at >= 90%. */
+  passedTopics: number;
+  /**
+   * Best Course Mastery Exam percentage, or null if never attempted.
+   * @nullable
+   */
+  bestMasteryScore: number | null;
+  lessons: CourseMasteryLesson[];
+}
+
 export interface RecordCourseMasteryAttemptBody {
   category: string;
   /** Percentage score (0-100). */

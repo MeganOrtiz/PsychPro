@@ -12,6 +12,8 @@ export * from "./clientErrorsRateLimitCleanupConfig";
 export * from "./clientErrorsRateLimitConfig";
 export * from "./courseMasteryAttemptRecord";
 export * from "./courseMasteryExam";
+export * from "./courseMasteryLesson";
+export * from "./courseMasteryStatus";
 export * from "./createCheckoutSessionBody";
 export * from "./dashboardSummary";
 export * from "./dashboardSummaryWeeklyActivityItem";

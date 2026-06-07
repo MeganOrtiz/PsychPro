@@ -174,12 +174,34 @@ paths:
         "404":
           description: Exam not found
 
+  /courses/{category}/mastery-status:
+    get:
+      operationId: getCourseMasteryStatus
+      tags: [practiceExams]
+      summary: Get unlock/mastery status for a course
+      description: "Returns whether the Course Mastery Exam is unlocked (every lesson's practice exam passed at >= 90%) plus per-lesson best practice-exam scores and whether the course has been mastered."
+      parameters:
+        - name: category
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Course mastery status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CourseMasteryStatus"
+        "404":
+          description: Course not found
+
   /courses/{category}/mastery-exam:
     get:
       operationId: getCourseMasteryExam
       tags: [practiceExams]
       summary: Get the course mastery exam for a category
-      description: "Aggregates quiz questions across every topic in the category. Requires that ALL topics in the course are completed (progress score >= 70), otherwise returns 403."
+      description: "Aggregates quiz questions across every topic in the category. Requires that EVERY lesson's practice exam has been passed at >= 90%, otherwise returns 403."
       parameters:
         - name: category
           in: path
@@ -194,7 +216,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/CourseMasteryExam"
         "403":
-          description: Course not yet completed
+          description: Course not yet unlocked
         "404":
           description: Course or questions not found
 
@@ -665,6 +687,61 @@ components:
         - passingScore
         - availableCount
         - questions
+
+    CourseMasteryLesson:
+      type: object
+      properties:
+        topicId:
+          type: integer
+        name:
+          type: string
+        bestExamPct:
+          type: ["integer", "null"]
+          description: "Best practice-exam percentage the user has scored on this lesson, or null if never attempted."
+        passed:
+          type: boolean
+          description: "True when bestExamPct >= 90."
+      required:
+        - topicId
+        - name
+        - bestExamPct
+        - passed
+
+    CourseMasteryStatus:
+      type: object
+      properties:
+        category:
+          type: string
+        unlocked:
+          type: boolean
+          description: "True when every lesson's practice exam has been passed at >= 90%."
+        mastered:
+          type: boolean
+          description: "True when the Course Mastery Exam has been passed at >= 90%."
+        passingScore:
+          type: integer
+          description: "Percentage required to pass the mastery exam (90)."
+        totalTopics:
+          type: integer
+        passedTopics:
+          type: integer
+          description: "Number of lessons whose practice exam has been passed at >= 90%."
+        bestMasteryScore:
+          type: ["integer", "null"]
+          description: "Best Course Mastery Exam percentage, or null if never attempted."
+        lessons:
+          type: array
+          items:
+            $ref: "#/components/schemas/CourseMasteryLesson"
+      required:
+        - category
+        - unlocked
+        - mastered
+        - passingScore
+        - totalTopics
+        - passedTopics
+        - bestMasteryScore
+        - lessons
 
     RecordCourseMasteryAttemptBody:
       type: object

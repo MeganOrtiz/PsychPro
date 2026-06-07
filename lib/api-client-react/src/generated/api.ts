@@ -21,6 +21,7 @@ import type {
   CheckoutSessionResponse,
   CourseMasteryAttemptRecord,
   CourseMasteryExam,
+  CourseMasteryStatus,
   CreateCheckoutSessionBody,
   DashboardSummary,
   Flashcard,
@@ -666,7 +667,100 @@ export function useGetPracticeExamByTopic<
 }
 
 /**
- * Aggregates quiz questions across every topic in the category. Requires that ALL topics in the course are completed (progress score >= 70), otherwise returns 403.
+ * Returns whether the Course Mastery Exam is unlocked (every lesson's practice exam passed at >= 90%) plus per-lesson best practice-exam scores and whether the course has been mastered.
+ * @summary Get unlock/mastery status for a course
+ */
+export const getGetCourseMasteryStatusUrl = (category: string) => {
+  return `/api/courses/${category}/mastery-status`;
+};
+
+export const getCourseMasteryStatus = async (
+  category: string,
+  options?: RequestInit,
+): Promise<CourseMasteryStatus> => {
+  return customFetch<CourseMasteryStatus>(
+    getGetCourseMasteryStatusUrl(category),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export const getGetCourseMasteryStatusQueryKey = (category: string) => {
+  return [`/api/courses/${category}/mastery-status`] as const;
+};
+
+export const getGetCourseMasteryStatusQueryOptions = <
+  TData = Awaited<ReturnType<typeof getCourseMasteryStatus>>,
+  TError = ErrorType<void>,
+>(
+  category: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getCourseMasteryStatus>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetCourseMasteryStatusQueryKey(category);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getCourseMasteryStatus>>
+  > = ({ signal }) =>
+    getCourseMasteryStatus(category, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!category,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getCourseMasteryStatus>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetCourseMasteryStatusQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getCourseMasteryStatus>>
+>;
+export type GetCourseMasteryStatusQueryError = ErrorType<void>;
+
+/**
+ * @summary Get unlock/mastery status for a course
+ */
+
+export function useGetCourseMasteryStatus<
+  TData = Awaited<ReturnType<typeof getCourseMasteryStatus>>,
+  TError = ErrorType<void>,
+>(
+  category: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getCourseMasteryStatus>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetCourseMasteryStatusQueryOptions(category, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * Aggregates quiz questions across every topic in the category. Requires that EVERY lesson's practice exam has been passed at >= 90%, otherwise returns 403.
  * @summary Get the course mastery exam for a category
  */
 export const getGetCourseMasteryExamUrl = (category: string) => {

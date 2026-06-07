@@ -193,7 +193,55 @@ export const GetPracticeExamByTopicResponse = zod.object({
 });
 
 /**
- * Aggregates quiz questions across every topic in the category. Requires that ALL topics in the course are completed (progress score >= 70), otherwise returns 403.
+ * Returns whether the Course Mastery Exam is unlocked (every lesson's practice exam passed at >= 90%) plus per-lesson best practice-exam scores and whether the course has been mastered.
+ * @summary Get unlock/mastery status for a course
+ */
+export const GetCourseMasteryStatusParams = zod.object({
+  category: zod.coerce.string(),
+});
+
+export const GetCourseMasteryStatusResponse = zod.object({
+  category: zod.string(),
+  unlocked: zod
+    .boolean()
+    .describe(
+      "True when every lesson's practice exam has been passed at >= 90%.",
+    ),
+  mastered: zod
+    .boolean()
+    .describe("True when the Course Mastery Exam has been passed at >= 90%."),
+  passingScore: zod
+    .number()
+    .describe("Percentage required to pass the mastery exam (90)."),
+  totalTopics: zod.number(),
+  passedTopics: zod
+    .number()
+    .describe(
+      "Number of lessons whose practice exam has been passed at >= 90%.",
+    ),
+  bestMasteryScore: zod
+    .number()
+    .nullable()
+    .describe(
+      "Best Course Mastery Exam percentage, or null if never attempted.",
+    ),
+  lessons: zod.array(
+    zod.object({
+      topicId: zod.number(),
+      name: zod.string(),
+      bestExamPct: zod
+        .number()
+        .nullable()
+        .describe(
+          "Best practice-exam percentage the user has scored on this lesson, or null if never attempted.",
+        ),
+      passed: zod.boolean().describe("True when bestExamPct >= 90."),
+    }),
+  ),
+});
+
+/**
+ * Aggregates quiz questions across every topic in the category. Requires that EVERY lesson's practice exam has been passed at >= 90%, otherwise returns 403.
  * @summary Get the course mastery exam for a category
  */
 export const GetCourseMasteryExamParams = zod.object({

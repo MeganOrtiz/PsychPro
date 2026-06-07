@@ -3,7 +3,7 @@ import { db } from "@workspace/db";
 import {
   topicsTable,
   quizQuestionsTable,
-  progressTable,
+  examAttemptsTable,
   courseMasteryAttemptsTable,
 } from "@workspace/db";
 import { eq, and, inArray } from "drizzle-orm";
@@ -12,14 +12,121 @@ import { shuffle } from "../lib/shuffle";
 
 const router = Router();
 
-// A topic is "completed" once its progress score reaches this threshold —
-// mirrors COMPLETION_THRESHOLD in progress.ts.
-const COMPLETION_THRESHOLD = 70;
-// Mastery exams require a higher bar than the per-topic 70% pass mark.
+// A lesson's PRACTICE EXAM must be passed at this percentage before it counts
+// toward unlocking the Course Mastery Exam. Owner-defined gate: every lesson in
+// the course must have a practice-exam attempt scoring >= this.
+const PRACTICE_EXAM_PASS_PCT = 90;
+// The Course Mastery Exam itself must be passed at this percentage for the
+// course to be considered "mastered".
 const MASTERY_PASSING_SCORE = 90;
 // Question pool is clamped to this ceiling; the floor (50) is naturally honored
 // whenever the course has at least that many questions available.
 const MASTERY_MAX_QUESTIONS = 100;
+
+interface LessonStatus {
+  topicId: number;
+  name: string;
+  bestExamPct: number | null;
+  passed: boolean;
+}
+
+interface CourseMasteryStatus {
+  category: string;
+  unlocked: boolean;
+  mastered: boolean;
+  passingScore: number;
+  totalTopics: number;
+  passedTopics: number;
+  bestMasteryScore: number | null;
+  lessons: LessonStatus[];
+}
+
+// Single source of truth for unlock/mastery state, shared by both the
+// mastery-exam gate and the status endpoint so the UI and the server can never
+// disagree about whether a course is unlocked.
+async function computeCourseMasteryStatus(
+  userId: string,
+  category: string,
+): Promise<CourseMasteryStatus | null> {
+  const topics = await db.select().from(topicsTable).where(eq(topicsTable.category, category));
+  if (topics.length === 0) return null;
+  const topicIds = topics.map((t) => t.id);
+
+  // Best practice-exam percentage per topic. examAttempts.score is the raw
+  // correct count (0..total), so the percentage is correct/total.
+  const attempts = await db
+    .select({
+      topicId: examAttemptsTable.topicId,
+      score: examAttemptsTable.score,
+      total: examAttemptsTable.total,
+    })
+    .from(examAttemptsTable)
+    .where(and(eq(examAttemptsTable.userId, userId), inArray(examAttemptsTable.topicId, topicIds)));
+  // Track the best EXACT ratio (correct/total) per topic. The pass decision must
+  // use the exact ratio, not a rounded percentage — rounding would let 89.6%
+  // round up to 90 and wrongly unlock a lesson that did not truly hit >= 90%.
+  const bestRatio = new Map<number, number>();
+  for (const a of attempts) {
+    if (!a.total || a.total <= 0) continue;
+    const ratio = a.score / a.total;
+    const prev = bestRatio.get(a.topicId);
+    if (prev === undefined || ratio > prev) bestRatio.set(a.topicId, ratio);
+  }
+
+  const lessons: LessonStatus[] = topics.map((t) => {
+    const ratio = bestRatio.has(t.id) ? bestRatio.get(t.id)! : null;
+    return {
+      topicId: t.id,
+      name: t.name,
+      // Rounded percentage purely for display.
+      bestExamPct: ratio === null ? null : Math.round(ratio * 100),
+      // Exact-ratio comparison for the gate.
+      passed: ratio !== null && ratio * 100 >= PRACTICE_EXAM_PASS_PCT,
+    };
+  });
+  const passedTopics = lessons.filter((l) => l.passed).length;
+  const unlocked = lessons.length > 0 && passedTopics === lessons.length;
+
+  const masteryRows = await db
+    .select({ score: courseMasteryAttemptsTable.score, passed: courseMasteryAttemptsTable.passed })
+    .from(courseMasteryAttemptsTable)
+    .where(and(eq(courseMasteryAttemptsTable.userId, userId), eq(courseMasteryAttemptsTable.category, category)));
+  const mastered = masteryRows.some((r) => r.passed);
+  const bestMasteryScore = masteryRows.length
+    ? Math.max(...masteryRows.map((r) => r.score))
+    : null;
+
+  return {
+    category,
+    unlocked,
+    mastered,
+    passingScore: MASTERY_PASSING_SCORE,
+    totalTopics: topics.length,
+    passedTopics,
+    bestMasteryScore,
+    lessons,
+  };
+}
+
+// Lightweight unlock/mastery summary for a course. Drives the mastery-exam
+// button's locked/unlocked state and the per-lesson progress display without
+// fetching the (potentially large) exam itself.
+router.get("/courses/:category/mastery-status", async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = requireUserId(req, res);
+    if (!userId) return;
+    const category = decodeURIComponent(String(req.params.category));
+    const status = await computeCourseMasteryStatus(userId, category);
+    if (!status) {
+      res.status(404).json({ error: "Course not found" });
+      return;
+    }
+    res.json(status);
+  } catch (err) {
+    req.log.error({ err }, "Error getting course mastery status");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 router.get("/courses/:category/mastery-exam", async (req: Request, res: Response): Promise<void> => {
   try {
@@ -27,33 +134,27 @@ router.get("/courses/:category/mastery-exam", async (req: Request, res: Response
     if (!userId) return;
     const category = decodeURIComponent(String(req.params.category));
 
-    const topics = await db.select().from(topicsTable).where(eq(topicsTable.category, category));
-    if (topics.length === 0) {
+    const status = await computeCourseMasteryStatus(userId, category);
+    if (!status) {
       res.status(404).json({ error: "Course not found" });
       return;
     }
-    const topicIds = topics.map((t) => t.id);
 
-    // Gate: EVERY topic in the course must be completed before the mastery
-    // exam unlocks. Enforced server-side so the lock can't be bypassed by
-    // navigating straight to the URL.
-    const progressRows = await db
-      .select({ topicId: progressTable.topicId, score: progressTable.score })
-      .from(progressTable)
-      .where(and(eq(progressTable.userId, userId), inArray(progressTable.topicId, topicIds)));
-    const completed = new Set(
-      progressRows.filter((r) => r.score >= COMPLETION_THRESHOLD).map((r) => r.topicId),
-    );
-    const completedCount = topicIds.filter((id) => completed.has(id)).length;
-    if (completedCount < topicIds.length) {
+    // Gate: EVERY lesson in the course must have its PRACTICE EXAM passed at
+    // >= 90% before the mastery exam unlocks. Enforced server-side so the lock
+    // can't be bypassed by navigating straight to the URL.
+    if (!status.unlocked) {
       res.status(403).json({
-        error: "Course not yet completed",
-        message: `Complete all ${topicIds.length} lessons in ${category} to unlock the Course Mastery Exam.`,
-        completedTopics: completedCount,
-        totalTopics: topicIds.length,
+        error: "Course not yet unlocked",
+        message: `Score ${PRACTICE_EXAM_PASS_PCT}% or higher on the practice exam for all ${status.totalTopics} lessons in ${category} to unlock the Course Mastery Exam.`,
+        passedTopics: status.passedTopics,
+        totalTopics: status.totalTopics,
       });
       return;
     }
+
+    const topics = await db.select().from(topicsTable).where(eq(topicsTable.category, category));
+    const topicIds = topics.map((t) => t.id);
 
     // Pool every quiz question across the course's topics. Comprehensive by
     // design — the mastery exam draws from the entire course, not one topic.

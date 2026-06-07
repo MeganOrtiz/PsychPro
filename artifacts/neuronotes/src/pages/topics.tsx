@@ -16,7 +16,7 @@ import {
   GraduationCap,
   Lock,
 } from "lucide-react";
-import { useGetTopics, useGetUserProgress } from "@workspace/api-client-react";
+import { useGetTopics, useGetCourseMasteryStatus } from "@workspace/api-client-react";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { STUDY_PALETTE } from "@/lib/study-theme";
@@ -399,8 +399,8 @@ function CourseLessons({
         ))}
       </div>
 
-      {/* Course Mastery Exam — capstone. Unlocks once every lesson above is
-          completed (progress score >= 70). */}
+      {/* Course Mastery Exam — capstone. Unlocks once every lesson above has
+          its practice exam passed at >= 90%. */}
       <CourseMasteryButton group={group} />
     </div>
   );
@@ -409,25 +409,16 @@ function CourseLessons({
 // =============================================================================
 // CourseMasteryButton — full-width glass capstone button at the bottom of the
 // right pane. Mirrors the rail/card cerulean glass voice. Locked (with a lock
-// icon + progress) until all lessons in the course are completed.
+// icon + progress) until every lesson's practice exam is passed at >= 90%.
 // =============================================================================
-const COURSE_COMPLETION_THRESHOLD = 70;
-
 function CourseMasteryButton({ group }: { group: { name: string; items: Topic[] } }) {
   const [, navigate] = useLocation();
-  const { data: progress } = useGetUserProgress();
+  const { data: status } = useGetCourseMasteryStatus(group.name);
 
-  const completedIds = useMemo(() => {
-    const s = new Set<number>();
-    for (const p of progress ?? []) {
-      if (p.score >= COURSE_COMPLETION_THRESHOLD) s.add(p.topicId);
-    }
-    return s;
-  }, [progress]);
-
-  const total = group.items.length;
-  const completedCount = group.items.filter(t => completedIds.has(t.id)).length;
-  const unlocked = total > 0 && completedCount >= total;
+  const total = status?.totalTopics ?? group.items.length;
+  const completedCount = status?.passedTopics ?? 0;
+  const unlocked = status?.unlocked ?? false;
+  const mastered = status?.mastered ?? false;
 
   const lockedBg = "linear-gradient(135deg, rgba(10,45,61,0.78), rgba(2,13,18,0.86))";
   const unlockedBg = "linear-gradient(135deg, rgba(118,228,247,0.16), rgba(10,45,61,0.92))";
@@ -501,9 +492,11 @@ function CourseMasteryButton({ group }: { group: { name: string; items: Topic[] 
           className="text-[11px] md:text-xs mt-0.5"
           style={{ color: unlocked ? `${STUDY_PALETTE.mist}dd` : `${STUDY_PALETTE.mist}aa` }}
         >
-          {unlocked
-            ? "Comprehensive exam · 90% to pass"
-            : `Complete all ${total} ${total === 1 ? "lesson" : "lessons"} to unlock · ${completedCount}/${total} done`}
+          {mastered
+            ? `Course mastered · ${status?.bestMasteryScore ?? 90}%`
+            : unlocked
+              ? "Comprehensive exam · 90% to pass"
+              : `Pass each lesson's practice exam at 90% · ${completedCount}/${total} ready`}
         </div>
       </div>
       {unlocked ? (

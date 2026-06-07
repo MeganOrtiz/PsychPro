@@ -53,6 +53,7 @@ const PROTECTED = new Set<string>([
   "POST /api/quiz-attempts",
   "POST /api/exam-attempts",
   // course mastery exam
+  "GET /api/courses/:category/mastery-status",
   "GET /api/courses/:category/mastery-exam",
   "POST /api/course-mastery-attempts",
   // topic content (auth-gated behind free-tier entitlements)
@@ -139,8 +140,11 @@ const ANONYMOUS = new Set<string>([
   "POST /api/oauth/register",
   "GET /api/oauth/authorize",
   "POST /api/oauth/token",
-  // OAuth discovery document
+  // OAuth discovery documents (public by design — clients fetch these
+  // unauthenticated to discover the auth server / protected-resource metadata)
   "GET /api/.well-known/oauth-authorization-server",
+  "GET /api/.well-known/oauth-protected-resource",
+  "GET /api/.well-known/oauth-protected-resource/api/mcp",
   // MCP transport stubs (return 405; not auth-gated, just method-rejected)
   "GET /api/mcp",
   "DELETE /api/mcp",
@@ -166,6 +170,8 @@ const SPECIAL = new Map<string, { expectedStatuses: number[]; reason: string }>(
 // Root-level (non-/api) routes app.ts registers when MCP is enabled.
 const ROOT_ANONYMOUS = new Set<string>([
   "GET /.well-known/oauth-authorization-server",
+  "GET /.well-known/oauth-protected-resource",
+  "GET /.well-known/oauth-protected-resource/api/mcp",
 ]);
 
 // ---------------------------------------------------------------------

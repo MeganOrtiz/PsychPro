@@ -108,7 +108,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
           </div>
           <h2 className="text-xl font-semibold text-foreground mb-2">Mastery exam locked</h2>
           <p className="text-sm text-muted-foreground mb-6">
-            Complete every lesson in {category} (score 70% or higher on each) to unlock the Course Mastery Exam.
+            Score 90% or higher on the practice exam for every lesson in {category} to unlock the Course Mastery Exam.
           </p>
           <Button onClick={() => navigate("/topics")} data-testid="button-back-locked">
             Back to Courses
