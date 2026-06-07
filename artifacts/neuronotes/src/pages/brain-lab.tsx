@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, lazy, Suspense, Component, type ReactNode } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, lazy, Suspense, Component, type ReactNode, type CSSProperties } from "react";
 import { Link } from "wouter";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
@@ -872,8 +872,8 @@ function EmptyDetail() {
       </div>
       <h3 className="text-base font-semibold text-white mb-1.5">Pick a structure</h3>
       <p className="text-sm leading-relaxed max-w-xs" style={{ color: `${PALETTE.mist}99` }}>
-        Tap a glowing region on the model, switch to Sections for the full
-        labeled atlas, or search by name or symptom.
+        Click any label around the brain to open its full detail here. Switch
+        views above, or search by name or symptom.
       </p>
     </div>
   );
@@ -1160,6 +1160,287 @@ function BrainDiagram({
       <div
         className="absolute bottom-3 left-0 right-0 flex items-center justify-center gap-2 px-4 text-center"
         style={{ pointerEvents: "none" }}
+      >
+        <span
+          className="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full"
+          style={{ background: `${PALETTE.surface}cc`, color: PALETTE.surf }}
+        >
+          {view.viewName}
+        </span>
+        <span className="text-[11px]" style={{ color: `${PALETTE.mist}88` }}>
+          {view.caption}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+// =============================================================================
+// Labeled atlas diagram (desktop) — instead of numbered dots + a side key, every
+// visible structure gets a TEXT LABEL parked in the left/right gutter, joined to
+// its precise anatomical anchor (x, y — % of the rendered image box) by a thin
+// leader line. Clicking a label opens that structure's full detail in the right
+// panel. Labels are auto-laid-out: split left/right by which half of the image
+// the anchor sits in, sorted by anchor height, then nudged apart so they never
+// overlap. The layout is measured from the live rendered image rect so leader
+// lines stay glued to anatomy at any size.
+// =============================================================================
+const LABEL_GUTTER = 176; // px reserved on each side for the label columns
+const LEADER_ELBOW = 14; // px from image edge to where the leader meets the label
+
+type LabelLayoutItem = {
+  id: string;
+  name: string;
+  color: string;
+  ax: number; // anchor x (px, relative to wrap)
+  ay: number; // anchor y (px)
+  side: "left" | "right";
+  labelY: number; // resolved, collision-free label y (px)
+};
+
+function LabeledBrainDiagram({
+  activeView,
+  selectedId,
+  hoveredId,
+  onSelect,
+  onHover,
+}: {
+  activeView: ViewKey;
+  selectedId: string | null;
+  hoveredId: string | null;
+  onSelect: (id: string) => void;
+  onHover: (id: string | null) => void;
+}) {
+  const view = BRAIN_VIEWS[activeView];
+  const hotspots = HOTSPOTS[activeView] ?? [];
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const imgBoxRef = useRef<HTMLDivElement>(null);
+  const [box, setBox] = useState<
+    { l: number; t: number; w: number; h: number; wrapW: number; wrapH: number } | null
+  >(null);
+
+  const measure = useCallback(() => {
+    const wrap = wrapRef.current;
+    const imgBox = imgBoxRef.current;
+    if (!wrap || !imgBox) return;
+    const wr = wrap.getBoundingClientRect();
+    const ir = imgBox.getBoundingClientRect();
+    if (ir.width === 0 || ir.height === 0) return;
+    setBox({
+      l: ir.left - wr.left,
+      t: ir.top - wr.top,
+      w: ir.width,
+      h: ir.height,
+      wrapW: wr.width,
+      wrapH: wr.height,
+    });
+  }, []);
+
+  useLayoutEffect(() => {
+    measure();
+    const wrap = wrapRef.current;
+    const imgBox = imgBoxRef.current;
+    if (!wrap || !imgBox) return;
+    const ro = new ResizeObserver(measure);
+    ro.observe(wrap);
+    ro.observe(imgBox);
+    return () => ro.disconnect();
+  }, [measure, activeView]);
+
+  // Auto-layout: anchors in px, split by image half, stacked without overlap.
+  const layout = useMemo<LabelLayoutItem[]>(() => {
+    if (!box) return [];
+    const items: LabelLayoutItem[] = [];
+    const midX = box.l + box.w / 2;
+    for (const h of hotspots) {
+      const s = STRUCTURE_INDEX[h.id];
+      if (!s) continue;
+      const ax = box.l + (h.x / 100) * box.w;
+      const ay = box.t + (h.y / 100) * box.h;
+      items.push({
+        id: s.id,
+        name: s.name,
+        color: s.color,
+        ax,
+        ay,
+        side: ax < midX ? "left" : "right",
+        labelY: ay,
+      });
+    }
+    const top = 14;
+    const bottom = box.wrapH - 28;
+    const available = Math.max(0, bottom - top);
+    for (const side of ["left", "right"] as const) {
+      const arr = items.filter((i) => i.side === side).sort((a, b) => a.ay - b.ay);
+      // Shrink the gap when a side has too many labels to fit at the ideal
+      // spacing, so top/bottom labels never get clamped off the canvas.
+      const minGap =
+        arr.length > 1 ? Math.min(30, available / (arr.length - 1)) : 30;
+      for (const it of arr) it.labelY = Math.min(Math.max(it.ay, top), bottom);
+      for (let i = 1; i < arr.length; i++) {
+        if (arr[i].labelY < arr[i - 1].labelY + minGap) arr[i].labelY = arr[i - 1].labelY + minGap;
+      }
+      if (arr.length && arr[arr.length - 1].labelY > bottom) {
+        arr[arr.length - 1].labelY = bottom;
+        for (let i = arr.length - 2; i >= 0; i--) {
+          if (arr[i].labelY > arr[i + 1].labelY - minGap) arr[i].labelY = arr[i + 1].labelY - minGap;
+        }
+      }
+    }
+    return items;
+  }, [box, hotspots]);
+
+  return (
+    <div ref={wrapRef} className="relative h-full w-full" data-testid="brain-diagram">
+      {view.src ? (
+        <>
+          {/* Centered image, with gutters reserved for the label columns */}
+          <div
+            className="absolute inset-0 flex items-center justify-center"
+            style={{ paddingLeft: LABEL_GUTTER, paddingRight: LABEL_GUTTER, paddingTop: 14, paddingBottom: 42 }}
+          >
+            <div ref={imgBoxRef} className="relative max-h-full max-w-full">
+              <img
+                src={view.src}
+                alt={`${view.viewName} — ${view.caption}`}
+                className="block max-h-full max-w-full object-contain select-none"
+                draggable={false}
+                onLoad={measure}
+                style={{
+                  filter: `grayscale(1) contrast(1.05) brightness(1.03) drop-shadow(0 24px 60px ${PALETTE.bg}) drop-shadow(0 0 40px ${PALETTE.teal}55)`,
+                }}
+                data-testid={`brain-view-${activeView}`}
+              />
+            </div>
+          </div>
+
+          {/* Leader lines + anchor dots */}
+          {box && (
+            <svg
+              className="absolute inset-0 pointer-events-none"
+              width="100%"
+              height="100%"
+              style={{ zIndex: 10 }}
+            >
+              {layout.map((it) => {
+                const cx = it.side === "left" ? box.l - LEADER_ELBOW : box.l + box.w + LEADER_ELBOW;
+                const active = selectedId === it.id;
+                const emphasized = active || hoveredId === it.id;
+                const dim = selectedId !== null && !active;
+                const stub = it.side === "left" ? cx - 7 : cx + 7;
+                return (
+                  <g key={it.id} opacity={dim ? 0.3 : 1}>
+                    <line
+                      x1={it.ax}
+                      y1={it.ay}
+                      x2={cx}
+                      y2={it.labelY}
+                      stroke={it.color}
+                      strokeWidth={emphasized ? 1.6 : 1}
+                      strokeOpacity={emphasized ? 1 : 0.55}
+                    />
+                    <line
+                      x1={cx}
+                      y1={it.labelY}
+                      x2={stub}
+                      y2={it.labelY}
+                      stroke={it.color}
+                      strokeWidth={emphasized ? 1.6 : 1}
+                      strokeOpacity={emphasized ? 1 : 0.55}
+                    />
+                    <circle
+                      cx={it.ax}
+                      cy={it.ay}
+                      r={emphasized ? 4 : 2.6}
+                      fill={it.color}
+                      stroke={PALETTE.bg}
+                      strokeWidth={1}
+                      style={emphasized ? { filter: `drop-shadow(0 0 6px ${it.color})` } : undefined}
+                    />
+                  </g>
+                );
+              })}
+            </svg>
+          )}
+
+          {/* Clickable text labels in the gutters */}
+          {box &&
+            layout.map((it) => {
+              const cx = it.side === "left" ? box.l - LEADER_ELBOW : box.l + box.w + LEADER_ELBOW;
+              const active = selectedId === it.id;
+              const emphasized = active || hoveredId === it.id;
+              const dim = selectedId !== null && !active;
+              const base: CSSProperties = {
+                position: "absolute",
+                top: it.labelY,
+                transform: "translateY(-50%)",
+                maxWidth: LABEL_GUTTER - 18,
+                zIndex: emphasized ? 30 : 20,
+                opacity: dim ? 0.45 : 1,
+              };
+              const sideStyle: CSSProperties =
+                it.side === "left"
+                  ? { right: box.wrapW - cx + 9, textAlign: "right" }
+                  : { left: cx + 9, textAlign: "left" };
+              return (
+                <button
+                  key={it.id}
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelect(it.id);
+                  }}
+                  onMouseEnter={() => onHover(it.id)}
+                  onMouseLeave={() => onHover(null)}
+                  onFocus={() => onHover(it.id)}
+                  onBlur={() => onHover(null)}
+                  className="rounded-md px-2 py-1 text-[11px] font-semibold leading-tight outline-none transition-all focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-1 focus-visible:ring-offset-transparent"
+                  style={{
+                    ...base,
+                    ...sideStyle,
+                    background: emphasized ? `${PALETTE.surfaceElev}f5` : `${PALETTE.surface}d9`,
+                    color: emphasized ? "#fff" : PALETTE.mist,
+                    border: `1px solid ${emphasized ? it.color : `${it.color}66`}`,
+                    boxShadow: emphasized
+                      ? `0 6px 18px -6px ${PALETTE.bg}, 0 0 12px -2px ${it.color}`
+                      : "none",
+                  }}
+                  aria-pressed={active}
+                  data-testid={`hotspot-${it.id}`}
+                  title={it.name}
+                >
+                  {it.name}
+                </button>
+              );
+            })}
+        </>
+      ) : (
+        <div
+          className="absolute inset-0 flex flex-col items-center justify-center text-center gap-3 px-6"
+          data-testid={`brain-view-placeholder-${activeView}`}
+        >
+          <div
+            className="w-16 h-16 rounded-2xl flex items-center justify-center"
+            style={{
+              background: `linear-gradient(135deg, ${PALETTE.surface}, ${PALETTE.surfaceElev})`,
+              border: `1px solid ${PALETTE.steel}99`,
+              boxShadow: `0 0 30px -8px ${PALETTE.teal}66`,
+            }}
+          >
+            <Brain className="w-7 h-7" style={{ color: PALETTE.surf }} />
+          </div>
+          <p className="text-sm font-semibold text-white">{view.viewName} coming soon</p>
+          <p className="text-xs max-w-xs" style={{ color: `${PALETTE.mist}99` }}>
+            This view will show the {view.caption.toLowerCase()}. For now, search by
+            name or symptom to open any structure's detail.
+          </p>
+        </div>
+      )}
+
+      {/* View caption */}
+      <div
+        className="absolute bottom-3 left-0 right-0 flex items-center justify-center gap-2 px-4 text-center"
+        style={{ pointerEvents: "none", zIndex: 5 }}
       >
         <span
           className="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full"
@@ -1468,8 +1749,16 @@ export default function BrainLabPage() {
                 isMobile={isMobile}
                 onExit={() => setViewMode("sections")}
               />
-            ) : (
+            ) : isMobile ? (
               <BrainDiagram
+                activeView={activeView}
+                selectedId={selectedId}
+                hoveredId={hoveredId}
+                onSelect={handleSelect}
+                onHover={setHoveredId}
+              />
+            ) : (
+              <LabeledBrainDiagram
                 activeView={activeView}
                 selectedId={selectedId}
                 hoveredId={hoveredId}
@@ -1504,14 +1793,6 @@ export default function BrainLabPage() {
           <aside className="overflow-hidden">
             {selected ? (
               <StructureDetail struct={selected} onClose={handleClose} />
-            ) : viewMode === "sections" ? (
-              <NumberedKey
-                activeView={activeView}
-                selectedId={selectedId}
-                hoveredId={hoveredId}
-                onSelect={handleSelect}
-                onHover={setHoveredId}
-              />
             ) : (
               <EmptyDetail />
             )}
