@@ -5,8 +5,18 @@ description: How the Course Mastery Exam unlock/mastery state is computed and wh
 
 # Course Mastery Exam gating
 
-The Course Mastery Exam for a course (a course = `topics.category`; there is no
-courses table) UNLOCKS only when EVERY lesson's PRACTICE EXAM has been passed at
+NOTE — TWO PARALLEL SYSTEMS NOW COEXIST:
+1. LEGACY (this doc): course = `topics.category` STRING; routes in
+   `routes/course-mastery.ts` (`/courses/:category/mastery-status`,
+   `/courses/:category/mastery-exam`); gating source of truth = `examAttemptsTable`.
+2. NEW courseId-based: first-class `coursesTable` + `masteryExamsTable` /
+   `masteryExamQuestionsTable` / `masteryExamAttemptsTable`; routes in
+   `routes/mastery-exams.ts` (`/courses/:courseId/...`). The owner-authored new
+   handler computes unlock from `progress.score`, which CONTRADICTS rule below.
+   Reconcile to `examAttemptsTable` when the frontend is wired (still pending).
+
+The Course Mastery Exam for a course (legacy: a course = `topics.category`)
+UNLOCKS only when EVERY lesson's PRACTICE EXAM has been passed at
 >= 90%. A course is MASTERED when its mastery exam is passed at >= 90%.
 
 **Source of truth = `examAttemptsTable`, never `progress.score`.**

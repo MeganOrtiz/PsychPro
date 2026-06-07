@@ -24,4 +24,5 @@
 - [Brain Lab 3D facing-cache](brain-lab-3d-facing-cache.md) — caching per-marker facing must invalidate on parent transform too (brain auto-spins), not just camera movement.
 - [api-server route-auth matrix](api-server-route-auth-matrix.md) — every new Express route must be classified in routeAuthMatrix.test.ts; test stops at first failed check, hiding later drift.
 - [Brain Lab view-switch on select](brain-lab-view-switch-on-select.md) — clicking a hotspot/chip must keep the current tab; viewForStructure first-match jumps views for structures shown on several views — pass `preferred`.
+- [Course route collision](psychpro-course-route-collision.md) — new courseId GET /courses/:x/mastery-exam is shadowed by legacy :category route (mounted first); unreachable until path disambiguated.
 - [Course mastery gate](psychpro-course-mastery-gate.md) — unlock = every lesson's practice exam ≥90% from exam_attempts (NOT progress.score, written by both quizzes+exams); one shared helper; compare exact ratio, round only for display.

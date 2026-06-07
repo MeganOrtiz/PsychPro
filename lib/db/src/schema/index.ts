@@ -29,6 +29,10 @@ export const topicsTable = pgTable("topics", {
   name: text("name").notNull().unique(),
   category: text("category").notNull(),
   description: text("description").notNull(),
+  // Links a topic ("lesson") to its first-class course. Added alongside the
+  // courseId-based Course Mastery Exams system. `category` is kept as a
+  // denormalized shim during migration — see coursesTable below.
+  courseId: integer("course_id").references(() => coursesTable.id),
 });
 
 export const insertTopicSchema = createInsertSchema(topicsTable).omit({ id: true });
@@ -546,3 +550,89 @@ export const connectionsAuditLogTable = pgTable(
 );
 
 export type ConnectionsAuditLog = typeof connectionsAuditLogTable.$inferSelect;
+
+// =============================================================================
+// Course Mastery Exams (courseId-based system)
+//
+// Promotes the `topics.category` string to a first-class `courses` entity and
+// adds one capstone "Mastery Exam" per course. This is a PARALLEL system to
+// the older `courseMasteryAttemptsTable` (which keys off the category string);
+// both coexist while the frontend is migrated in separate, later work.
+// =============================================================================
+
+export const coursesTable = pgTable("courses", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull().unique(),
+  description: text("description"),
+  displayOrder: integer("display_order").notNull().default(0),
+  iconAsset: text("icon_asset"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export type Course = typeof coursesTable.$inferSelect;
+
+// One mastery exam per course. Thresholds are configurable per-exam so an
+// individual course can be tuned without a code change.
+export const masteryExamsTable = pgTable("mastery_exams", {
+  id: serial("id").primaryKey(),
+  courseId: integer("course_id")
+    .notNull()
+    .unique()
+    .references(() => coursesTable.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  questionCount: integer("question_count").notNull().default(75),
+  timeLimitMinutes: integer("time_limit_minutes").notNull().default(120),
+  passingScore: integer("passing_score").notNull().default(70),
+  masteryScore: integer("mastery_score").notNull().default(90),
+  // Lesson-level practice-exam score required to unlock this mastery exam.
+  unlockThreshold: integer("unlock_threshold").notNull().default(90),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export type MasteryExam = typeof masteryExamsTable.$inferSelect;
+
+// Many-to-many between mastery exams and quiz questions. Mastery-only
+// integrative questions live in quiz_questions with examOnly=true and are
+// linked here exclusively (never appear in topic quizzes / practice exams).
+export const masteryExamQuestionsTable = pgTable(
+  "mastery_exam_questions",
+  {
+    masteryExamId: integer("mastery_exam_id")
+      .notNull()
+      .references(() => masteryExamsTable.id, { onDelete: "cascade" }),
+    questionId: integer("question_id")
+      .notNull()
+      .references(() => quizQuestionsTable.id, { onDelete: "cascade" }),
+    questionOrder: integer("question_order").notNull().default(0),
+  },
+  (t) => [
+    primaryKey({ columns: [t.masteryExamId, t.questionId] }),
+    index("mastery_exam_questions_exam_idx").on(t.masteryExamId, t.questionOrder),
+  ],
+);
+
+export type MasteryExamQuestion = typeof masteryExamQuestionsTable.$inferSelect;
+
+// One row per completed attempt. Best-score-wins is computed at query time.
+export const masteryExamAttemptsTable = pgTable(
+  "mastery_exam_attempts",
+  {
+    id: serial("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => usersTable.id, { onDelete: "cascade" }),
+    masteryExamId: integer("mastery_exam_id")
+      .notNull()
+      .references(() => masteryExamsTable.id, { onDelete: "cascade" }),
+    score: integer("score").notNull(), // raw correct count
+    total: integer("total").notNull(), // total questions served
+    percentage: integer("percentage").notNull(), // pre-computed for fast best-score queries
+    completedAt: timestamp("completed_at").notNull().defaultNow(),
+  },
+  (t) => [
+    index("mastery_exam_attempts_user_exam_idx").on(t.userId, t.masteryExamId),
+    index("mastery_exam_attempts_user_best_idx").on(t.userId, t.percentage),
+  ],
+);
+
+export type MasteryExamAttempt = typeof masteryExamAttemptsTable.$inferSelect;

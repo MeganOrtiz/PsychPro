@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import healthRouter from "./health";
 import topicsRouter from "./topics";
 import courseMasteryRouter from "./course-mastery";
+import masteryExamsRouter from "./mastery-exams";
 import usersRouter from "./users";
 import entitlementsRouter from "./entitlements";
 import progressRouter from "./progress";
@@ -30,6 +31,10 @@ const router: IRouter = Router();
 router.use(healthRouter);
 router.use(topicsRouter);
 router.use(courseMasteryRouter);
+// Mounted AFTER courseMasteryRouter so the legacy `GET /courses/:category/...`
+// routes keep precedence over the new `GET /courses/:courseId/...` routes while
+// the frontend still depends on the category-based system.
+router.use(masteryExamsRouter);
 router.use(usersRouter);
 router.use(entitlementsRouter);
 router.use(progressRouter);

@@ -56,6 +56,10 @@ const PROTECTED = new Set<string>([
   "GET /api/courses/:category/mastery-status",
   "GET /api/courses/:category/mastery-exam",
   "POST /api/course-mastery-attempts",
+  // course mastery exams (parallel courseId-based system)
+  "GET /api/courses/:courseId/mastery-exam",
+  "POST /api/courses/:courseId/mastery-exam/attempt",
+  "GET /api/users/me/course-mastery",
   // topic content (auth-gated behind free-tier entitlements)
   "GET /api/topics/:topicId/flashcards",
   "GET /api/topics/:topicId/quizzes",
@@ -121,6 +125,10 @@ const ANONYMOUS = new Set<string>([
   "POST /api/client-errors",
   // leaderboard
   "GET /api/leaderboard",
+  // courses (read-only catalog + anonymous-tolerant mastery state)
+  "GET /api/courses",
+  "GET /api/courses/:courseId",
+  "GET /api/courses/:courseId/mastery-state",
   // feedback admin-flag probe (returns {isAdmin:false} for anon)
   "GET /api/feedback/is-admin",
   // profile public view
