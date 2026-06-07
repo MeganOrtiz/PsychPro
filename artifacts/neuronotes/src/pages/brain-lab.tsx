@@ -103,7 +103,7 @@ type ViewMode = "3d" | "sections" | "quiz";
 // region that opens the structure detail panel.
 //
 // EVERYTHING else stays exactly as it was so no information is lost:
-//   - BRAIN_STRUCTURES data, search, tabs, chip strip
+//   - BRAIN_STRUCTURES data, search, tabs, numbered key
 //   - StructureDetail (Overview / Functions / Connections / Clinical tabs)
 //   - URL hash sync for shareable focus links
 //   - Mobile detail drawer + region-tab auto-switching on selection
@@ -134,7 +134,7 @@ const VIEW_KEYS: ViewKey[] = [
 ];
 
 // Which view best shows a given structure — used to jump to the right diagram
-// when a structure is picked from search or a chip. When `preferred` already
+// when a structure is picked from search or the key. When `preferred` already
 // contains the structure (e.g. the user clicked a marker on the active diagram,
 // or a structure shown on several views), stay there instead of snapping to the
 // first matching view. Returns null when the structure isn't placed anywhere.
@@ -309,67 +309,6 @@ function ViewTabs({
           >
             <Icon className="w-3.5 h-3.5" />
             {label}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
-// Horizontal chip strip — shows structures inside the active tab group so
-// users can pick by name without ever opening the search modal.
-function GroupChips({
-  active,
-  selectedId,
-  onPick,
-}: {
-  active: ViewKey;
-  selectedId: string | null;
-  onPick: (id: string) => void;
-}) {
-  // Structures placed on the active view's diagram. When a view has no image/
-  // hotspots yet, fall back to the full library so the strip stays useful.
-  const viewHotspots = HOTSPOTS[active] ?? [];
-  const items: BrainStructure[] = viewHotspots.length
-    ? viewHotspots
-        .map((h) => STRUCTURE_INDEX[h.id])
-        .filter((s): s is BrainStructure => Boolean(s))
-    : BRAIN_STRUCTURES;
-
-  return (
-    <div
-      className="flex gap-1.5 overflow-x-auto py-1 px-1 -mx-1"
-      style={{ scrollbarWidth: "thin" }}
-      data-testid="brain-group-chips"
-    >
-      {items.map((s) => {
-        const isActive = selectedId === s.id;
-        return (
-          <button
-            key={s.id}
-            onClick={() => onPick(s.id)}
-            className="px-2.5 py-1 rounded-full text-[11px] font-medium border whitespace-nowrap flex items-center gap-1.5 transition-all hover:-translate-y-0.5"
-            style={
-              isActive
-                ? {
-                    background: `${s.color}33`,
-                    borderColor: s.color,
-                    color: PALETTE.mist,
-                    boxShadow: `0 0 12px -2px ${s.color}aa`,
-                  }
-                : {
-                    background: `${PALETTE.surface}aa`,
-                    borderColor: `${PALETTE.steel}99`,
-                    color: `${PALETTE.mist}bb`,
-                  }
-            }
-            data-testid={`chip-${s.id}`}
-          >
-            <span
-              className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-              style={{ background: s.color, boxShadow: `0 0 6px ${s.color}` }}
-            />
-            {s.shortName || s.name}
           </button>
         );
       })}
@@ -691,35 +630,6 @@ function StructureDetail({
   );
 }
 
-function EmptyDetail() {
-  return (
-    <div
-      className="rounded-2xl border p-6 h-full flex flex-col items-center justify-center text-center"
-      style={{
-        background: `linear-gradient(180deg, ${PALETTE.surface}, ${PALETTE.bg})`,
-        borderColor: `${PALETTE.steel}99`,
-      }}
-    >
-      <div
-        className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
-        style={{
-          background: `linear-gradient(135deg, ${PALETTE.teal}33, ${PALETTE.surf}22)`,
-          border: `1px solid ${PALETTE.surf}44`,
-        }}
-      >
-        <Target className="w-7 h-7" style={{ color: PALETTE.surf }} />
-      </div>
-      <h3 className="text-base font-semibold text-white mb-1.5">Pick a structure</h3>
-      <p className="text-sm leading-relaxed max-w-xs" style={{ color: `${PALETTE.mist}99` }}>
-        Tap a glowing marker on the brain, pick a region tab and chip below, or
-        search by name or symptom. Each structure opens an overview, its primary
-        functions, network connections, and the clinical conditions it's tied
-        to.
-      </p>
-    </div>
-  );
-}
-
 // Image-driven brain views. Each region tab swaps the diagram to the brain
 // view that best exposes that group's structures. As new view images are
 // added, drop them into src/assets/brain-views and wire them up here — any
@@ -944,180 +854,174 @@ const HOTSPOTS: Record<ViewKey, Hotspot[]> = {
   ],
 };
 
-// A leader-line label. A thin line runs from a precise anatomical anchor (x, y)
-// out to a label box (lx, ly) sitting in the margin, color-coded by the
-// structure's anatomical TYPE (category). The anchor dot and the label box are
-// both clickable; selecting brightens the whole leader and opens the detail.
-// The connecting line itself is drawn in the shared SVG overlay (LeaderLines)
-// so it scales exactly with the image box.
-function LeaderLabel({
-  struct,
-  hotspot,
-  selected,
-  onSelect,
-}: {
-  struct: BrainStructure;
-  hotspot: Hotspot;
-  selected: boolean;
-  onSelect: (id: string) => void;
-}) {
-  const { x, y } = hotspot;
-  const lx = hotspot.lx ?? x;
-  const ly = hotspot.ly ?? y;
-  const side = hotspot.side ?? (lx < x ? "left" : "right");
+// Shown in the detail pane for view modes that don't use the numbered key
+// (the 3D model and the quiz) when nothing is selected yet.
+function EmptyDetail() {
   return (
-    <>
-      {/* Anchor dot — sits exactly on the anatomy */}
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          onSelect(struct.id);
-        }}
-        className="group absolute z-20 outline-none"
-        style={{
-          left: `${x}%`,
-          top: `${y}%`,
-          width: 16,
-          height: 16,
-          transform: "translate(-50%, -50%)",
-        }}
-        aria-label={struct.name}
-        aria-pressed={selected}
-        data-testid={`hotspot-${struct.id}`}
-        title={struct.name}
-      >
-        <span
-          className="block rounded-full transition-transform duration-150 group-hover:scale-125 group-focus-visible:scale-125 mx-auto"
-          style={{
-            width: selected ? 9 : 6,
-            height: selected ? 9 : 6,
-            background: struct.color,
-            border: "1.5px solid #fff",
-            boxShadow: selected
-              ? `0 0 0 2px ${PALETTE.bg}aa, 0 0 12px 3px ${struct.color}`
-              : `0 0 0 2px ${PALETTE.bg}aa, 0 0 6px 1px ${struct.color}`,
-          }}
-        />
-      </button>
-
-      {/* Label box — sits in the margin at the far end of the leader line */}
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          onSelect(struct.id);
-        }}
-        className="group absolute z-20 whitespace-nowrap rounded-md px-1.5 py-0.5 text-[10px] md:text-[11px] font-semibold leading-tight outline-none transition-all duration-150 hover:z-30"
-        style={{
-          left: `${lx}%`,
-          top: `${ly}%`,
-          transform: `translate(${side === "left" ? "-100%" : "0"}, -50%)`,
-          textAlign: side === "left" ? "right" : "left",
-          background: selected ? `${struct.color}26` : `${PALETTE.surfaceElev}f2`,
-          color: "#fff",
-          border: `1px solid ${struct.color}${selected ? "ff" : "cc"}`,
-          boxShadow: selected
-            ? `0 0 0 1px ${struct.color}66, 0 6px 18px -6px ${PALETTE.bg}, 0 0 14px -2px ${struct.color}`
-            : `0 6px 16px -8px ${PALETTE.bg}`,
-        }}
-        aria-label={struct.name}
-        aria-pressed={selected}
-        data-testid={`label-${struct.id}`}
-        title={struct.name}
-      >
-        {struct.shortName || struct.name}
-      </button>
-    </>
-  );
-}
-
-// Shared SVG overlay that draws every leader line for the active view. Uses a
-// 0–100 viewBox stretched to the image box (preserveAspectRatio="none") so line
-// endpoints line up with the % coordinates, while vector-effect keeps the stroke
-// a constant, hair-thin width regardless of the non-uniform scaling.
-function LeaderLines({
-  hotspots,
-  selectedId,
-}: {
-  hotspots: Hotspot[];
-  selectedId: string | null;
-}) {
-  return (
-    <svg
-      className="pointer-events-none absolute inset-0 h-full w-full z-10"
-      viewBox="0 0 100 100"
-      preserveAspectRatio="none"
-      aria-hidden="true"
+    <div
+      className="rounded-2xl border p-6 h-full flex flex-col items-center justify-center text-center"
+      style={{
+        background: `linear-gradient(180deg, ${PALETTE.surface}, ${PALETTE.bg})`,
+        borderColor: `${PALETTE.steel}99`,
+      }}
+      data-testid="empty-detail"
     >
-      {hotspots.map((h) => {
-        const struct = STRUCTURE_INDEX[h.id];
-        if (!struct) return null;
-        const lx = h.lx ?? h.x;
-        const ly = h.ly ?? h.y;
-        const selected = selectedId === h.id;
-        return (
-          <line
-            key={h.id}
-            x1={lx}
-            y1={ly}
-            x2={h.x}
-            y2={h.y}
-            stroke={struct.color}
-            strokeWidth={selected ? 1.6 : 1}
-            strokeLinecap="round"
-            vectorEffect="non-scaling-stroke"
-            opacity={selected ? 1 : 0.6}
-          />
-        );
-      })}
-    </svg>
+      <div
+        className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
+        style={{
+          background: `linear-gradient(135deg, ${PALETTE.teal}33, ${PALETTE.surf}22)`,
+          border: `1px solid ${PALETTE.surf}44`,
+        }}
+      >
+        <Target className="w-7 h-7" style={{ color: PALETTE.surf }} />
+      </div>
+      <h3 className="text-base font-semibold text-white mb-1.5">Pick a structure</h3>
+      <p className="text-sm leading-relaxed max-w-xs" style={{ color: `${PALETTE.mist}99` }}>
+        Tap a glowing region on the model, switch to Sections for the full
+        labeled atlas, or search by name or symptom.
+      </p>
+    </div>
   );
 }
 
-// Compact key showing the anatomical part TYPES present in the active view, with
-// their color swatches, so the type-based color coding is self-explanatory.
-function CategoryLegend({ hotspots }: { hotspots: Hotspot[] }) {
+// Interactive numbered key shown beside the brain. Each row is a numbered,
+// color-coded (by anatomical TYPE) entry whose number matches a marker on the
+// diagram. Hovering a row lights up its marker on the brain (and vice-versa);
+// clicking opens the structure's detail. An inline legend explains the type
+// colors. Scales cleanly to ~40 entries — the brain stays uncluttered.
+function NumberedKey({
+  activeView,
+  selectedId,
+  hoveredId,
+  onSelect,
+  onHover,
+}: {
+  activeView: ViewKey;
+  selectedId: string | null;
+  hoveredId: string | null;
+  onSelect: (id: string) => void;
+  onHover: (id: string | null) => void;
+}) {
+  const hotspots = HOTSPOTS[activeView] ?? [];
+  const view = BRAIN_VIEWS[activeView];
+  const listRef = useRef<HTMLOListElement>(null);
+
   const categories = useMemo(() => {
     const present = new Set<PartCategory>();
     for (const h of hotspots) {
       const s = STRUCTURE_INDEX[h.id];
       if (s) present.add(s.category);
     }
-    // Stable order matching CATEGORY_META declaration order.
     return (Object.keys(CATEGORY_META) as PartCategory[]).filter((c) => present.has(c));
   }, [hotspots]);
 
-  if (categories.length === 0) return null;
+  // Keep the active/hovered row visible as the user moves across the diagram.
+  useEffect(() => {
+    const id = hoveredId ?? selectedId;
+    if (!id || !listRef.current) return;
+    const el = listRef.current.querySelector<HTMLElement>(
+      `[data-row-id="${CSS.escape(id)}"]`,
+    );
+    el?.scrollIntoView({ block: "nearest" });
+  }, [hoveredId, selectedId]);
 
   return (
     <div
-      className="absolute left-2 top-2 z-30 flex max-w-[44%] flex-wrap gap-1 rounded-lg p-1.5"
+      className="rounded-2xl border h-full flex flex-col overflow-hidden"
       style={{
-        background: `${PALETTE.surface}d9`,
-        border: `1px solid ${PALETTE.steel}66`,
-        backdropFilter: "blur(8px)",
+        background: `linear-gradient(180deg, ${PALETTE.surfaceElev}, ${PALETTE.surface})`,
+        borderColor: `${PALETTE.steel}99`,
       }}
-      data-testid="category-legend"
+      data-testid="brain-key"
     >
-      {categories.map((cat) => (
-        <span
-          key={cat}
-          className="flex items-center gap-1 rounded px-1 py-0.5 text-[9px] md:text-[10px] font-medium"
-          style={{ color: `${PALETTE.mist}` }}
-        >
-          <span
-            className="inline-block rounded-sm"
-            style={{
-              width: 8,
-              height: 8,
-              background: CATEGORY_META[cat].color,
-              boxShadow: `0 0 5px ${CATEGORY_META[cat].color}aa`,
-            }}
-          />
-          {CATEGORY_META[cat].label}
-        </span>
-      ))}
+      {/* Header — view name, count, and inline type legend */}
+      <div className="px-4 pt-3 pb-2 border-b" style={{ borderColor: `${PALETTE.steel}66` }}>
+        <div className="flex items-baseline justify-between gap-2">
+          <h3 className="text-sm font-semibold text-white">{view.viewName} — Key</h3>
+          <span className="text-[11px]" style={{ color: `${PALETTE.mist}99` }}>
+            {hotspots.length} structures
+          </span>
+        </div>
+        {categories.length > 0 && (
+          <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
+            {categories.map((cat) => (
+              <span
+                key={cat}
+                className="flex items-center gap-1 text-[10px]"
+                style={{ color: `${PALETTE.mist}cc` }}
+              >
+                <span
+                  className="inline-block rounded-sm"
+                  style={{
+                    width: 8,
+                    height: 8,
+                    background: CATEGORY_META[cat].color,
+                    boxShadow: `0 0 5px ${CATEGORY_META[cat].color}aa`,
+                  }}
+                />
+                {CATEGORY_META[cat].label}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Scrollable numbered list */}
+      <ol
+        ref={listRef}
+        className="flex-1 min-h-0 overflow-y-auto px-2 py-2"
+        style={{ scrollbarWidth: "thin" }}
+        data-testid="brain-key-list"
+      >
+        {hotspots.map((h, i) => {
+          const s = STRUCTURE_INDEX[h.id];
+          if (!s) return null;
+          const n = i + 1;
+          const active = selectedId === h.id;
+          const hot = hoveredId === h.id;
+          const emphasized = active || hot;
+          return (
+            <li key={h.id}>
+              <button
+                type="button"
+                data-row-id={s.id}
+                onClick={() => onSelect(s.id)}
+                onMouseEnter={() => onHover(s.id)}
+                onMouseLeave={() => onHover(null)}
+                onFocus={() => onHover(s.id)}
+                onBlur={() => onHover(null)}
+                className="w-full flex items-center gap-2.5 rounded-lg px-2 py-1.5 text-left transition-colors"
+                style={{
+                  background: emphasized ? `${s.color}1f` : "transparent",
+                  boxShadow: active ? `inset 0 0 0 1px ${s.color}aa` : "none",
+                }}
+                aria-pressed={active}
+                data-testid={`key-row-${s.id}`}
+              >
+                <span
+                  className="flex-shrink-0 flex items-center justify-center rounded-full font-bold"
+                  style={{
+                    width: 20,
+                    height: 20,
+                    fontSize: 10,
+                    background: s.color,
+                    color: PALETTE.bg,
+                    boxShadow: emphasized ? `0 0 10px 1px ${s.color}` : "none",
+                  }}
+                >
+                  {n}
+                </span>
+                <span
+                  className="text-[13px] leading-tight"
+                  style={{ color: emphasized ? "#fff" : PALETTE.mist }}
+                >
+                  {s.name}
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ol>
     </div>
   );
 }
@@ -1128,11 +1032,15 @@ function CategoryLegend({ hotspots }: { hotspots: Hotspot[] }) {
 function BrainDiagram({
   activeView,
   selectedId,
+  hoveredId,
   onSelect,
+  onHover,
 }: {
   activeView: ViewKey;
   selectedId: string | null;
+  hoveredId: string | null;
   onSelect: (id: string) => void;
+  onHover: (id: string | null) => void;
 }) {
   const view = BRAIN_VIEWS[activeView];
   const hotspots = HOTSPOTS[activeView] ?? [];
@@ -1142,7 +1050,6 @@ function BrainDiagram({
       className="relative h-full w-full flex items-center justify-center p-4 md:p-6"
       data-testid="brain-diagram"
     >
-      {view.src ? <CategoryLegend hotspots={hotspots} /> : null}
       {view.src ? (
         <div className="relative max-h-full max-w-full">
           <img
@@ -1159,19 +1066,75 @@ function BrainDiagram({
             }}
             data-testid={`brain-view-${activeView}`}
           />
-          {/* Leader lines (SVG), then the clickable anchor dots + labels on top */}
-          <LeaderLines hotspots={hotspots} selectedId={selectedId} />
-          {hotspots.map((h) => {
+          {/* Numbered markers — the number matches the side key; hovering or
+              selecting one glows it and reveals the structure's name. */}
+          {hotspots.map((h, i) => {
             const struct = STRUCTURE_INDEX[h.id];
             if (!struct) return null;
+            const n = i + 1;
+            const active = selectedId === h.id;
+            const hot = hoveredId === h.id;
+            const emphasized = active || hot;
+            const tipBelow = h.y < 18;
             return (
-              <LeaderLabel
+              <div
                 key={h.id}
-                struct={struct}
-                hotspot={h}
-                selected={selectedId === h.id}
-                onSelect={onSelect}
-              />
+                className="absolute"
+                style={{
+                  left: `${h.x}%`,
+                  top: `${h.y}%`,
+                  transform: "translate(-50%, -50%)",
+                  zIndex: emphasized ? 30 : 20,
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelect(struct.id);
+                  }}
+                  onMouseEnter={() => onHover(struct.id)}
+                  onMouseLeave={() => onHover(null)}
+                  onFocus={() => onHover(struct.id)}
+                  onBlur={() => onHover(null)}
+                  className="flex items-center justify-center rounded-full font-bold outline-none transition-all duration-150"
+                  style={{
+                    width: emphasized ? 24 : 19,
+                    height: emphasized ? 24 : 19,
+                    fontSize: emphasized ? 12 : 10,
+                    background: struct.color,
+                    color: PALETTE.bg,
+                    border: "1.5px solid #fff",
+                    boxShadow: emphasized
+                      ? `0 0 0 2px ${PALETTE.bg}aa, 0 0 14px 3px ${struct.color}`
+                      : `0 0 0 2px ${PALETTE.bg}99, 0 0 6px 1px ${struct.color}aa`,
+                  }}
+                  aria-label={struct.name}
+                  aria-pressed={active}
+                  data-testid={`hotspot-${struct.id}`}
+                  title={struct.name}
+                >
+                  {n}
+                </button>
+                {emphasized && (
+                  <span
+                    className="pointer-events-none absolute left-1/2 whitespace-nowrap rounded-md px-1.5 py-0.5 text-[11px] font-semibold"
+                    style={{
+                      ...(tipBelow
+                        ? { top: "calc(100% + 6px)" }
+                        : { bottom: "calc(100% + 6px)" }),
+                      transform: "translateX(-50%)",
+                      background: `${PALETTE.surfaceElev}f2`,
+                      color: "#fff",
+                      border: `1px solid ${struct.color}cc`,
+                      boxShadow: `0 6px 18px -6px ${PALETTE.bg}`,
+                      zIndex: 40,
+                    }}
+                  >
+                    {struct.name}
+                  </span>
+                )}
+              </div>
             );
           })}
         </div>
@@ -1193,7 +1156,7 @@ function BrainDiagram({
           <p className="text-sm font-semibold text-white">{view.viewName} coming soon</p>
           <p className="text-xs max-w-xs" style={{ color: `${PALETTE.mist}99` }}>
             This view will show the {view.caption.toLowerCase()}. For now, pick a
-            structure from the chips below to open its detail.
+            structure from the key to open its detail.
           </p>
         </div>
       )}
@@ -1247,6 +1210,7 @@ export default function BrainLabPage() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [showMobileDetail, setShowMobileDetail] = useState(false);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   // The 3D model is the high-level orientation view: it shows ONLY the four
   // cortical lobes, each a clickable glow that opens its detail. All the finer
@@ -1311,7 +1275,7 @@ export default function BrainLabPage() {
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
 
-  // Selection handler — syncs the active region tab so the chip strip
+  // Selection handler — syncs the active region tab so the numbered key
   // highlights the picked structure, and writes the hash so the URL
   // remains shareable.
   const handleSelect = useCallback((id: string) => {
@@ -1320,7 +1284,7 @@ export default function BrainLabPage() {
     writeFocusToHash(id);
     setShowMobileDetail(true);
     // Keep the user on the current tab when the structure already lives there
-    // (marker click / chip on the active view); only snap views for picks that
+    // (marker click / key row on the active view); only snap views for picks that
     // aren't visible on the current diagram (e.g. global search).
     setActiveView((current) => viewForStructure(id, current) ?? current);
   }, []);
@@ -1466,7 +1430,7 @@ export default function BrainLabPage() {
           gridTemplateColumns: isMobile ? "1fr" : "1fr minmax(340px, 420px)",
         }}
       >
-        {/* Center: diagram placeholder + chip strip below */}
+        {/* Center: brain diagram + numbered key below (mobile) */}
         <div className="flex flex-col gap-3 min-h-0 min-w-0">
           <div
             className="relative rounded-2xl border overflow-hidden flex-1 min-h-0"
@@ -1513,7 +1477,9 @@ export default function BrainLabPage() {
               <BrainDiagram
                 activeView={activeView}
                 selectedId={selectedId}
+                hoveredId={hoveredId}
                 onSelect={handleSelect}
+                onHover={setHoveredId}
               />
             )}
 
@@ -1523,16 +1489,19 @@ export default function BrainLabPage() {
             )}
           </div>
 
-          {/* Group chip strip — quick pick within the active tab */}
-          <div
-            className="flex-shrink-0 min-w-0 overflow-hidden rounded-2xl border px-3 py-2"
-            style={{
-              background: `${PALETTE.surface}aa`,
-              borderColor: `${PALETTE.steel}99`,
-            }}
-          >
-            <GroupChips active={activeView} selectedId={selectedId} onPick={handleSelect} />
-          </div>
+          {/* Numbered key — mobile only, Sections mode only (sits below the
+              brain). On desktop the key lives in the right pane. */}
+          {isMobile && viewMode === "sections" && (
+            <div className="flex-shrink-0" style={{ height: "40vh" }}>
+              <NumberedKey
+                activeView={activeView}
+                selectedId={selectedId}
+                hoveredId={hoveredId}
+                onSelect={handleSelect}
+                onHover={setHoveredId}
+              />
+            </div>
+          )}
         </div>
 
         {/* Right: detail panel (desktop) */}
@@ -1540,6 +1509,14 @@ export default function BrainLabPage() {
           <aside className="overflow-hidden">
             {selected ? (
               <StructureDetail struct={selected} onClose={handleClose} />
+            ) : viewMode === "sections" ? (
+              <NumberedKey
+                activeView={activeView}
+                selectedId={selectedId}
+                hoveredId={hoveredId}
+                onSelect={handleSelect}
+                onHover={setHoveredId}
+              />
             ) : (
               <EmptyDetail />
             )}
