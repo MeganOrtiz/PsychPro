@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, lazy, Suspense, Component, type ReactNode, type CSSProperties } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, lazy, Suspense, Component, type ReactNode } from "react";
 import { Link } from "wouter";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
@@ -23,9 +23,7 @@ import {
   BRAIN_STRUCTURES,
   STRUCTURE_INDEX,
   SYSTEM_META,
-  CATEGORY_META,
   type BrainStructure,
-  type PartCategory,
   type DetailBlock,
 } from "../data/brain-structures";
 import brainLateral from "@/assets/brain-views/lateral.webp";
@@ -901,15 +899,6 @@ function NumberedKey({
   const view = BRAIN_VIEWS[activeView];
   const listRef = useRef<HTMLOListElement>(null);
 
-  const categories = useMemo(() => {
-    const present = new Set<PartCategory>();
-    for (const h of hotspots) {
-      const s = STRUCTURE_INDEX[h.id];
-      if (s) present.add(s.category);
-    }
-    return (Object.keys(CATEGORY_META) as PartCategory[]).filter((c) => present.has(c));
-  }, [hotspots]);
-
   // Keep the active/hovered row visible as the user moves across the diagram.
   useEffect(() => {
     const id = hoveredId ?? selectedId;
@@ -937,28 +926,6 @@ function NumberedKey({
             {hotspots.length} structures
           </span>
         </div>
-        {categories.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
-            {categories.map((cat) => (
-              <span
-                key={cat}
-                className="flex items-center gap-1 text-[10px]"
-                style={{ color: `${PALETTE.mist}cc` }}
-              >
-                <span
-                  className="inline-block rounded-sm"
-                  style={{
-                    width: 8,
-                    height: 8,
-                    background: CATEGORY_META[cat].color,
-                    boxShadow: `0 0 5px ${CATEGORY_META[cat].color}aa`,
-                  }}
-                />
-                {CATEGORY_META[cat].label}
-              </span>
-            ))}
-          </div>
-        )}
       </div>
 
       {/* Scrollable numbered list */}
@@ -987,8 +954,8 @@ function NumberedKey({
                 onBlur={() => onHover(null)}
                 className="w-full flex items-center gap-2.5 rounded-lg px-2 py-1.5 text-left transition-colors"
                 style={{
-                  background: emphasized ? `${s.color}1f` : "transparent",
-                  boxShadow: active ? `inset 0 0 0 1px ${s.color}aa` : "none",
+                  background: emphasized ? `${GLOW}1f` : "transparent",
+                  boxShadow: active ? `inset 0 0 0 1px ${GLOW}aa` : "none",
                 }}
                 aria-pressed={active}
                 data-testid={`key-row-${s.id}`}
@@ -999,9 +966,9 @@ function NumberedKey({
                     width: 20,
                     height: 20,
                     fontSize: 10,
-                    background: s.color,
+                    background: GLOW,
                     color: PALETTE.bg,
-                    boxShadow: emphasized ? `0 0 10px 1px ${s.color}` : "none",
+                    boxShadow: emphasized ? `0 0 10px 1px ${GLOW}` : "none",
                   }}
                 >
                   {n}
@@ -1097,12 +1064,12 @@ function BrainDiagram({
                     width: emphasized ? 24 : 19,
                     height: emphasized ? 24 : 19,
                     fontSize: emphasized ? 12 : 10,
-                    background: struct.color,
+                    background: GLOW,
                     color: PALETTE.bg,
                     border: "1.5px solid #fff",
                     boxShadow: emphasized
-                      ? `0 0 0 2px ${PALETTE.bg}aa, 0 0 14px 3px ${struct.color}`
-                      : `0 0 0 2px ${PALETTE.bg}99, 0 0 6px 1px ${struct.color}aa`,
+                      ? `0 0 0 2px ${PALETTE.bg}aa, 0 0 16px 4px ${GLOW}`
+                      : `0 0 0 2px ${PALETTE.bg}99, 0 0 6px 1px ${GLOW}aa`,
                   }}
                   aria-label={struct.name}
                   aria-pressed={active}
@@ -1121,7 +1088,7 @@ function BrainDiagram({
                       transform: "translateX(-50%)",
                       background: `${PALETTE.surfaceElev}f2`,
                       color: "#fff",
-                      border: `1px solid ${struct.color}cc`,
+                      border: `1px solid ${GLOW}cc`,
                       boxShadow: `0 6px 18px -6px ${PALETTE.bg}`,
                       zIndex: 40,
                     }}
@@ -1176,26 +1143,29 @@ function BrainDiagram({
 }
 
 // =============================================================================
-// Labeled atlas diagram (desktop) — instead of numbered dots + a side key, every
-// visible structure gets a TEXT LABEL parked in the left/right gutter, joined to
-// its precise anatomical anchor (x, y — % of the rendered image box) by a thin
-// leader line. Clicking a label opens that structure's full detail in the right
-// panel. Labels are auto-laid-out: split left/right by which half of the image
-// the anchor sits in, sorted by anchor height, then nudged apart so they never
-// overlap. The layout is measured from the live rendered image rect so leader
-// lines stay glued to anatomy at any size.
+// Labeled atlas diagram (desktop) — every visible structure gets a TEXT LABEL
+// parked AROUND the brain (left & right columns plus slim top & bottom rows),
+// joined to its precise anatomical anchor (x, y — % of the rendered image box)
+// by a thin leader line whose far end tucks under the opaque chip. Each label is
+// assigned to one of the four edges by the anchor's direction from the image
+// centre, so a crowded view spreads across all sides instead of stacking down
+// one. Columns de-overlap vertically, rows de-overlap horizontally. Hover /
+// selection lights a single uniform cerulean glow — no per-structure colour.
 // =============================================================================
-const LABEL_GUTTER = 176; // px reserved on each side for the label columns
-const LEADER_ELBOW = 14; // px from image edge to where the leader meets the label
+const SIDE_GUTTER = 158; // px reserved on the left & right for vertical label columns
+const GLOW = PALETTE.surf; // single uniform cerulean glow for every label / marker
 
+type LabelEdge = "left" | "right" | "top" | "bottom";
 type LabelLayoutItem = {
   id: string;
   name: string;
-  color: string;
   ax: number; // anchor x (px, relative to wrap)
   ay: number; // anchor y (px)
-  side: "left" | "right";
-  labelY: number; // resolved, collision-free label y (px)
+  edge: LabelEdge;
+  lx: number; // resolved label-centre x (px)
+  ly: number; // resolved label-centre y (px)
+  w: number; // estimated label width (px)
+  h: number; // estimated label height (px)
 };
 
 function LabeledBrainDiagram({
@@ -1247,43 +1217,102 @@ function LabeledBrainDiagram({
     return () => ro.disconnect();
   }, [measure, activeView]);
 
-  // Auto-layout: anchors in px, split by image half, stacked without overlap.
+  // Auto-layout: assign each label to one of the four edges by the anchor's
+  // direction from the image centre, then de-overlap (columns vertically, rows
+  // horizontally) so nothing collides.
   const layout = useMemo<LabelLayoutItem[]>(() => {
     if (!box) return [];
+    const cx0 = box.l + box.w / 2;
+    const cy0 = box.t + box.h / 2;
     const items: LabelLayoutItem[] = [];
-    const midX = box.l + box.w / 2;
     for (const h of hotspots) {
       const s = STRUCTURE_INDEX[h.id];
       if (!s) continue;
       const ax = box.l + (h.x / 100) * box.w;
       const ay = box.t + (h.y / 100) * box.h;
-      items.push({
-        id: s.id,
-        name: s.name,
-        color: s.color,
-        ax,
-        ay,
-        side: ax < midX ? "left" : "right",
-        labelY: ay,
-      });
+      const w = Math.min(150, Math.max(56, s.name.length * 6.1 + 20));
+      const hgt = s.name.length * 6.1 + 20 > 150 ? 32 : 22;
+      const deg = (Math.atan2(ay - cy0, ax - cx0) * 180) / Math.PI;
+      let edge: LabelEdge;
+      // Narrow top/bottom wedges (60°) keep those slim rows from overflowing;
+      // the roomier left/right columns (120°) absorb the rest.
+      if (deg >= -60 && deg < 60) edge = "right";
+      else if (deg >= 60 && deg < 120) edge = "bottom";
+      else if (deg >= -120 && deg < -60) edge = "top";
+      else edge = "left";
+      items.push({ id: s.id, name: s.name, ax, ay, edge, lx: ax, ly: ay, w, h: hgt });
     }
-    const top = 14;
-    const bottom = box.wrapH - 28;
-    const available = Math.max(0, bottom - top);
-    for (const side of ["left", "right"] as const) {
-      const arr = items.filter((i) => i.side === side).sort((a, b) => a.ay - b.ay);
-      // Shrink the gap when a side has too many labels to fit at the ideal
-      // spacing, so top/bottom labels never get clamped off the canvas.
-      const minGap =
-        arr.length > 1 ? Math.min(30, available / (arr.length - 1)) : 30;
-      for (const it of arr) it.labelY = Math.min(Math.max(it.ay, top), bottom);
-      for (let i = 1; i < arr.length; i++) {
-        if (arr[i].labelY < arr[i - 1].labelY + minGap) arr[i].labelY = arr[i - 1].labelY + minGap;
+
+    // Top/bottom are slim rows with limited width — keep only the labels that
+    // fit there (preferring the ones sitting most directly above/below the
+    // brain) and spill the rest into the roomier side columns.
+    const rowLeft = SIDE_GUTTER + 12;
+    const rowRight = box.wrapW - SIDE_GUTTER - 12;
+    const rowAvail = Math.max(0, rowRight - rowLeft);
+    const rowGap = 10;
+    for (const edge of ["top", "bottom"] as const) {
+      const row = items.filter((i) => i.edge === edge);
+      const needed = () =>
+        row.reduce((sum, it) => sum + it.w, 0) + rowGap * Math.max(0, row.length - 1);
+      while (row.length > 0 && needed() > rowAvail) {
+        let idx = 0;
+        let far = -1;
+        for (let k = 0; k < row.length; k++) {
+          const d = Math.abs(row[k].ax - cx0);
+          if (d > far) {
+            far = d;
+            idx = k;
+          }
+        }
+        row[idx].edge = row[idx].ax < cx0 ? "left" : "right";
+        row.splice(idx, 1);
       }
-      if (arr.length && arr[arr.length - 1].labelY > bottom) {
-        arr[arr.length - 1].labelY = bottom;
+    }
+
+    // Vertical columns (left / right): x pinned to the gutter centre, y = clamped
+    // anchor y, then nudged apart top→bottom (and pulled back up if we overflow).
+    const colTop = 14;
+    const colBottom = box.wrapH - 14;
+    for (const edge of ["left", "right"] as const) {
+      const arr = items.filter((i) => i.edge === edge).sort((a, b) => a.ay - b.ay);
+      const colX = edge === "left" ? box.l - SIDE_GUTTER / 2 + 2 : box.l + box.w + SIDE_GUTTER / 2 - 2;
+      for (const it of arr) {
+        it.lx = colX;
+        it.ly = Math.min(Math.max(it.ay, colTop + it.h / 2), colBottom - it.h / 2);
+      }
+      const gap = 6;
+      for (let i = 1; i < arr.length; i++) {
+        const minY = arr[i - 1].ly + arr[i - 1].h / 2 + gap + arr[i].h / 2;
+        if (arr[i].ly < minY) arr[i].ly = minY;
+      }
+      const last = arr[arr.length - 1];
+      if (last && last.ly + last.h / 2 > colBottom) {
+        last.ly = colBottom - last.h / 2;
         for (let i = arr.length - 2; i >= 0; i--) {
-          if (arr[i].labelY > arr[i + 1].labelY - minGap) arr[i].labelY = arr[i + 1].labelY - minGap;
+          const maxY = arr[i + 1].ly - arr[i + 1].h / 2 - gap - arr[i].h / 2;
+          if (arr[i].ly > maxY) arr[i].ly = Math.max(maxY, colTop + arr[i].h / 2);
+        }
+      }
+    }
+
+    // Horizontal rows (top / bottom): y pinned to the slim gutter, x = clamped
+    // anchor x, then nudged apart left→right.
+    for (const edge of ["top", "bottom"] as const) {
+      const arr = items.filter((i) => i.edge === edge).sort((a, b) => a.ax - b.ax);
+      for (const it of arr) {
+        it.ly = edge === "top" ? 14 + it.h / 2 : box.wrapH - 44 - it.h / 2;
+        it.lx = Math.min(Math.max(it.ax, rowLeft + it.w / 2), rowRight - it.w / 2);
+      }
+      for (let i = 1; i < arr.length; i++) {
+        const minX = arr[i - 1].lx + arr[i - 1].w / 2 + rowGap + arr[i].w / 2;
+        if (arr[i].lx < minX) arr[i].lx = minX;
+      }
+      const last = arr[arr.length - 1];
+      if (last && last.lx + last.w / 2 > rowRight) {
+        last.lx = rowRight - last.w / 2;
+        for (let i = arr.length - 2; i >= 0; i--) {
+          const maxX = arr[i + 1].lx - arr[i + 1].w / 2 - rowGap - arr[i].w / 2;
+          if (arr[i].lx > maxX) arr[i].lx = Math.max(maxX, rowLeft + arr[i].w / 2);
         }
       }
     }
@@ -1297,7 +1326,7 @@ function LabeledBrainDiagram({
           {/* Centered image, with gutters reserved for the label columns */}
           <div
             className="absolute inset-0 flex items-center justify-center"
-            style={{ paddingLeft: LABEL_GUTTER, paddingRight: LABEL_GUTTER, paddingTop: 14, paddingBottom: 42 }}
+            style={{ paddingLeft: SIDE_GUTTER, paddingRight: SIDE_GUTTER, paddingTop: 44, paddingBottom: 56 }}
           >
             <div ref={imgBoxRef} className="relative max-h-full max-w-full">
               <img
@@ -1323,39 +1352,31 @@ function LabeledBrainDiagram({
               style={{ zIndex: 10 }}
             >
               {layout.map((it) => {
-                const cx = it.side === "left" ? box.l - LEADER_ELBOW : box.l + box.w + LEADER_ELBOW;
                 const active = selectedId === it.id;
                 const emphasized = active || hoveredId === it.id;
                 const dim = selectedId !== null && !active;
-                const stub = it.side === "left" ? cx - 7 : cx + 7;
                 return (
-                  <g key={it.id} opacity={dim ? 0.3 : 1}>
+                  <g key={it.id} opacity={dim ? 0.28 : 1}>
+                    {/* Straight leader from the anatomical anchor to the chip
+                        centre; the far end tucks under the opaque chip. */}
                     <line
                       x1={it.ax}
                       y1={it.ay}
-                      x2={cx}
-                      y2={it.labelY}
-                      stroke={it.color}
-                      strokeWidth={emphasized ? 1.6 : 1}
-                      strokeOpacity={emphasized ? 1 : 0.55}
-                    />
-                    <line
-                      x1={cx}
-                      y1={it.labelY}
-                      x2={stub}
-                      y2={it.labelY}
-                      stroke={it.color}
-                      strokeWidth={emphasized ? 1.6 : 1}
-                      strokeOpacity={emphasized ? 1 : 0.55}
+                      x2={it.lx}
+                      y2={it.ly}
+                      stroke={GLOW}
+                      strokeWidth={emphasized ? 1.8 : 1}
+                      strokeOpacity={emphasized ? 1 : 0.4}
+                      style={emphasized ? { filter: `drop-shadow(0 0 5px ${GLOW})` } : undefined}
                     />
                     <circle
                       cx={it.ax}
                       cy={it.ay}
-                      r={emphasized ? 4 : 2.6}
-                      fill={it.color}
+                      r={emphasized ? 4.5 : 2.6}
+                      fill={emphasized ? GLOW : `${GLOW}cc`}
                       stroke={PALETTE.bg}
                       strokeWidth={1}
-                      style={emphasized ? { filter: `drop-shadow(0 0 6px ${it.color})` } : undefined}
+                      style={emphasized ? { filter: `drop-shadow(0 0 7px ${GLOW})` } : undefined}
                     />
                   </g>
                 );
@@ -1363,25 +1384,13 @@ function LabeledBrainDiagram({
             </svg>
           )}
 
-          {/* Clickable text labels in the gutters */}
+          {/* Clickable text chips parked around the brain */}
           {box &&
             layout.map((it) => {
-              const cx = it.side === "left" ? box.l - LEADER_ELBOW : box.l + box.w + LEADER_ELBOW;
               const active = selectedId === it.id;
               const emphasized = active || hoveredId === it.id;
               const dim = selectedId !== null && !active;
-              const base: CSSProperties = {
-                position: "absolute",
-                top: it.labelY,
-                transform: "translateY(-50%)",
-                maxWidth: LABEL_GUTTER - 18,
-                zIndex: emphasized ? 30 : 20,
-                opacity: dim ? 0.45 : 1,
-              };
-              const sideStyle: CSSProperties =
-                it.side === "left"
-                  ? { right: box.wrapW - cx + 9, textAlign: "right" }
-                  : { left: cx + 9, textAlign: "left" };
+              const horizontal = it.edge === "top" || it.edge === "bottom";
               return (
                 <button
                   key={it.id}
@@ -1394,16 +1403,20 @@ function LabeledBrainDiagram({
                   onMouseLeave={() => onHover(null)}
                   onFocus={() => onHover(it.id)}
                   onBlur={() => onHover(null)}
-                  className="rounded-md px-2 py-1 text-[11px] font-semibold leading-tight outline-none transition-all focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-1 focus-visible:ring-offset-transparent"
+                  className="absolute rounded-md px-2 py-1 text-[11px] font-semibold leading-tight text-center outline-none transition-all focus-visible:ring-2 focus-visible:ring-white/80"
                   style={{
-                    ...base,
-                    ...sideStyle,
-                    background: emphasized ? `${PALETTE.surfaceElev}f5` : `${PALETTE.surface}d9`,
+                    left: it.lx,
+                    top: it.ly,
+                    transform: "translate(-50%, -50%)",
+                    maxWidth: horizontal ? 150 : SIDE_GUTTER - 12,
+                    zIndex: emphasized ? 30 : 20,
+                    opacity: dim ? 0.42 : 1,
+                    background: emphasized ? `${PALETTE.surfaceElev}f7` : `${PALETTE.surface}d9`,
                     color: emphasized ? "#fff" : PALETTE.mist,
-                    border: `1px solid ${emphasized ? it.color : `${it.color}66`}`,
+                    border: `1px solid ${emphasized ? GLOW : `${PALETTE.steel}aa`}`,
                     boxShadow: emphasized
-                      ? `0 6px 18px -6px ${PALETTE.bg}, 0 0 12px -2px ${it.color}`
-                      : "none",
+                      ? `0 0 0 1px ${GLOW}, 0 0 18px 2px ${GLOW}cc, 0 6px 18px -6px ${PALETTE.bg}`
+                      : `0 2px 8px -4px ${PALETTE.bg}`,
                   }}
                   aria-pressed={active}
                   data-testid={`hotspot-${it.id}`}
@@ -1695,6 +1708,12 @@ export default function BrainLabPage() {
           onPick={(v) => {
             setActiveView(v);
             setViewMode("sections");
+            // Switching views resets the panel to the top / "pick a structure"
+            // so the previous view's selection doesn't linger.
+            setSelectedId(null);
+            setHoveredId(null);
+            writeFocusToHash(null);
+            setShowMobileDetail(false);
           }}
         />
       </div>
@@ -1792,7 +1811,7 @@ export default function BrainLabPage() {
         {!isMobile && (
           <aside className="overflow-hidden">
             {selected ? (
-              <StructureDetail struct={selected} onClose={handleClose} />
+              <StructureDetail key={selected.id} struct={selected} onClose={handleClose} />
             ) : (
               <EmptyDetail />
             )}

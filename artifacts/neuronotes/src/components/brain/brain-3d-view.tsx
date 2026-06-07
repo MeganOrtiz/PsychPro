@@ -357,13 +357,16 @@ function Scene({
         </group>
       </Spin>
 
+      {/* Zoom is clamped to a gentle band so the brain can never be scrolled
+          into an unreadable gyri close-up (the old min of 2.8 let the camera
+          dive inside the cortex). Pan stays off so it always re-centres. */}
       <OrbitControls
         enablePan={false}
         enableZoom
-        minDistance={2.8}
-        maxDistance={8}
+        minDistance={4.3}
+        maxDistance={7.5}
         rotateSpeed={0.7}
-        zoomSpeed={0.7}
+        zoomSpeed={0.5}
         target={[0, 0, 0]}
         onStart={onInteract}
       />
