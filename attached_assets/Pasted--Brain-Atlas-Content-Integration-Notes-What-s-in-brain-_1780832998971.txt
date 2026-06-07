@@ -1,0 +1,107 @@
+# Brain Atlas Content — Integration Notes
+
+## What's in `brain_atlas_content.json`
+
+86 unique structures covering every label across all 7 atlas views (Lateral, Midsagittal, Sagittal, Coronal, Dorsal, Ventral, Cranial Nerves). Structures that appear in multiple views (e.g., Thalamus, Pons, Corpus Callosum, Cerebellum) are defined once — the same content is reused wherever they're labeled.
+
+Each structure has six fields:
+
+| Field | Maps to UI | Type |
+|---|---|---|
+| `name` | Structure title | string |
+| `category` | Uppercase label above the title (e.g., "CEREBRAL CORTEX") | string |
+| `functions` | **Functions** tab — bulleted list | string[] |
+| `connections` | **Connections** tab — bulleted list | string[] |
+| `neuropsych` | **Clinical** tab → "Role in Neuropsychology" bullets | string[] |
+| `conditions` | **Clinical** tab → "Clinical Conditions" bullets | string[] |
+
+## ⚠️ Schema change required
+
+The existing `BrainStructure` interface in `artifacts/neuronotes/src/data/brain-structures.ts` does **not** have a `connections` field — but the Connections tab is already rendered in `brain-lab.tsx`. Add this to the interface:
+
+```ts
+export interface BrainStructure {
+  // ...existing fields
+  connections: string[];   // NEW
+}
+```
+
+And in the tab renderer (`brain-lab.tsx`, around the `clinical` block), add a parallel `connections` case if it isn't there yet:
+
+```tsx
+{tab === "connections" && (
+  <DetailSection
+    title="Network Connections"
+    items={struct.connections}
+    bullet={struct.color}
+  />
+)}
+```
+
+## Category → existing system mapping
+
+The atlas uses more granular categories than `BrainSystem`. Suggested mapping if you want to keep the existing system color/icon logic:
+
+| Atlas `category` | Existing `BrainSystem` |
+|---|---|
+| Cerebral Cortex | `cortex` |
+| White Matter | `white-matter` |
+| Limbic System | `limbic` |
+| Diencephalon | `diencephalon` |
+| Basal Ganglia | `basal-ganglia` |
+| Brainstem | `brainstem` |
+| Cerebellum | `cerebellum` |
+| Ventricles & CSF | `ventricle` |
+| Cranial Nerves | new — needs its own system + color (suggest a soft violet/lavender to match the cranial-nerves view tint) |
+| Olfactory System | could fold into `cortex` or new `cranial-nerves` |
+| Visual Pathway | could fold into `white-matter` or new `cranial-nerves` |
+| Endocrine | could fold into `diencephalon` or get its own |
+
+## Coverage breakdown
+
+```
+Cerebral Cortex:    42    (gyri, sulci, lobes, cortical regions)
+Cranial Nerves:     12    (CN I–XII)
+White Matter:        6    (corpus callosum + subregions, fornix, internal/external capsule, anterior commissure)
+Diencephalon:        5    (thalamus, hypothalamus, mammillary bodies, interthalamic adhesion, optic chiasm)
+Basal Ganglia:       4    (caudate, putamen, globus pallidus, claustrum)
+Limbic System:       4    (cingulate gyrus, septum pellucidum, subcallosal area, fornix overlap)
+Ventricles & CSF:    4    (lateral, third, fourth, cerebral aqueduct)
+Brainstem:           2    (pons, medulla)
+Cerebellum:          2    (cerebellum, cerebellar hemisphere)
+Olfactory System:    2    (olfactory bulb & tract, olfactory tract)
+Endocrine:           2    (pituitary, pineal)
+Visual Pathway:      1    (optic tract)
+                    ───
+                    86
+```
+
+## Content posture
+
+- **EPPP-grade**: every entry includes the classic syndromes, lesion correlations, and lab/test pairings a candidate is expected to know (e.g., Wernicke vs Korsakoff, Balint vs Gerstmann, Bell's palsy vs central facial weakness, pupil-sparing vs pupil-involving CN III palsy, Wallenberg topography, Anton vs Bálint vs prosopagnosia by lesion site).
+- **Anatomy first, then clinical**: Functions and Connections describe the structure; Role in Neuropsychology and Clinical Conditions describe what happens when it goes wrong.
+- **Pure sulci/fissures**: kept appropriately brief — most of their value is as anatomical landmarks, so the clinical sections lean on bordering structures.
+
+## Quick integration script (Node)
+
+If you want to merge this into the existing data file rather than seeding a DB:
+
+```js
+import atlas from './brain_atlas_content.json' assert { type: 'json' };
+import { BRAIN_STRUCTURES } from './brain-structures.ts';
+
+// Index existing structures by name for lookup
+const byName = new Map(BRAIN_STRUCTURES.map(s => [s.name, s]));
+
+for (const a of atlas.structures) {
+  const existing = byName.get(a.name);
+  if (existing) {
+    existing.functions = a.functions;
+    existing.connections = a.connections;
+    existing.neuropsych = a.neuropsych;
+    existing.conditions = a.conditions;
+  }
+  // For new structures, you'll need to add the geometry fields
+  // (position, scale, shape, color, etc.) appropriate to the 2D atlas.
+}
+```

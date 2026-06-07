@@ -337,6 +337,28 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* ============== EPPP MASTERY SYSTEM ============== */}
+        <section id="mastery" className="landing-section landing-mastery" data-reveal>
+          <div className="landing-mastery-card">
+            <div className="landing-mastery-icon">
+              <GraduationCap aria-hidden />
+            </div>
+            <p className="landing-eyebrow">THE SYSTEM</p>
+            <h2 className="landing-section-title">
+              The PsychPro EPPP Mastery System&trade;
+            </h2>
+            <p className="landing-mastery-text">
+              The PsychPro EPPP Mastery System&trade; is a system of learning
+              resources designed to promote mastery of EPPP content through
+              conceptual understanding, critical thinking, and active
+              application. Featuring structured lessons in each domain, clinical
+              integration case examples, and full-length practice exams, the
+              system equips learners with the knowledge and confidence needed
+              for both EPPP success and real-world clinical practice.
+            </p>
+          </div>
+        </section>
+
         {/* ============== STUDY TOOLS ============== */}
         <section id="tools" className="landing-section landing-tools">
           <div className="landing-section-head" data-reveal>
@@ -1464,6 +1486,58 @@ const styles = `
 .landing-scholar .landing-split-text { position: relative; max-width: 720px; }
 .landing-scholar .landing-checklist { position: relative; margin-bottom: clamp(22px, 3vh, 30px); }
 
+/* ============== EPPP MASTERY SYSTEM ============== */
+.landing-mastery { max-width: 1020px; }
+.landing-mastery-card {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  border-radius: 22px;
+  padding: clamp(30px, 4.4vw, 52px);
+  background: linear-gradient(150deg, rgba(14,60,80,0.6), rgba(6,28,38,0.82));
+  border: 1px solid ${C.hairlineStrong};
+  backdrop-filter: blur(20px) saturate(130%);
+  -webkit-backdrop-filter: blur(20px) saturate(130%);
+  box-shadow: 0 36px 90px -40px rgba(0,0,0,0.75), 0 0 40px ${C.cyan}16;
+}
+.landing-mastery-card::before {
+  content: "";
+  position: absolute;
+  top: -45%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  height: 120%;
+  background: radial-gradient(circle, ${C.cyan}22 0%, transparent 60%);
+  pointer-events: none;
+}
+.landing-mastery-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 18px;
+  border-radius: 15px;
+  background: ${C.cyan}18;
+  border: 1px solid ${C.cyan}55;
+  color: ${C.cyan};
+  box-shadow: 0 0 22px ${C.cyan}44;
+}
+.landing-mastery-icon svg { width: 26px; height: 26px; }
+.landing-mastery .landing-eyebrow,
+.landing-mastery .landing-section-title { position: relative; }
+.landing-mastery-text {
+  position: relative;
+  margin: clamp(16px, 2vh, 22px) auto 0;
+  max-width: 760px;
+  font-size: clamp(14px, 1.1vw, 16.5px);
+  line-height: 1.78;
+  color: rgba(225, 244, 250, 0.84);
+  text-shadow: 0 1px 10px rgba(2, 13, 18, 0.45);
+}
+
 /* ============== FINAL CTA ============== */
 .landing-final { text-align: center; max-width: 760px; padding-bottom: clamp(6px, 0.8vh, 10px); }
 .landing-topics { padding-top: clamp(6px, 0.8vh, 10px); }
@@ -1609,7 +1683,7 @@ const styles = `
 /* In-page anchor nav: smooth scroll + offset so the sticky navbar doesn't
    overlap the target section heading. */
 html { scroll-behavior: smooth; }
-#home, #tools, #science, #features, #brain-lab, #scholar {
+#home, #mastery, #tools, #science, #features, #brain-lab, #scholar {
   scroll-margin-top: 84px;
 }
 
