@@ -475,10 +475,6 @@ export default function DashboardPage() {
               )}
             </StudySurface>
 
-            {/* Course Mastery — one tile per course; dull until its mastery
-                exam is passed, then it lights up and glows. */}
-            <CourseMasterySection categories={courseCategories} navigate={navigate} />
-
             {/* Streak (left) + Leaderboard (right) */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <StreakCard
@@ -735,6 +731,13 @@ export default function DashboardPage() {
 
           {/* Today's Reviews — due spaced-repetition queue (own glass surface) */}
           <TodayReviews topics={allTopics} />
+        </div>
+
+        {/* Course Mastery — full-width capstone row, below all other boxes. One
+            tile per course; dull until its mastery exam is passed, then it
+            lights up and glows. */}
+        <div className="mt-6">
+          <CourseMasterySection categories={courseCategories} navigate={navigate} />
         </div>
       </div>
     </div>
