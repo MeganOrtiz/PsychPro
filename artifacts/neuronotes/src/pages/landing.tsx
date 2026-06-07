@@ -370,54 +370,6 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ============== MEET THE FOUNDER ============== */}
-        <section id="founder" className="landing-section landing-founder" data-reveal>
-          <div className="landing-founder-card">
-            <div className="landing-founder-media">
-              <div className="landing-founder-glow" aria-hidden />
-              <img
-                src={founderMegan}
-                alt="Megan, founder of PsychPro"
-                className="landing-founder-img"
-              />
-            </div>
-            <div className="landing-founder-body">
-              <p className="landing-eyebrow landing-eyebrow--left">
-                MEET THE FOUNDER
-              </p>
-              <h2 className="landing-split-title">Hi everyone, I'm Megan</h2>
-              <div className="landing-founder-text">
-                <p>
-                  I created PsychPro out of a need for a better way to learn and
-                  retain the vast amount of information presented throughout
-                  clinical psychology training. As a clinical psychology
-                  doctoral student, I experienced firsthand how challenging it
-                  can be to not only learn complex material, but also retain and
-                  apply it over time.
-                </p>
-                <p>
-                  PsychPro was built to support deeper understanding rather than
-                  short-term memorization. The platform offers a variety of
-                  evidence-based learning tools, including flashcards, study
-                  guides, quizzes, practice exams, and comprehensive mastery
-                  courses designed to reinforce knowledge through active learning
-                  and repeated retrieval.
-                </p>
-                <p>
-                  Our content spans a wide range of topics relevant to
-                  psychology, neuroscience, assessment, intervention, and related
-                  disciplines. Whether you're a student, trainee, professional,
-                  or lifelong learner, PsychPro is designed to help you build
-                  lasting knowledge and confidence in the material you're
-                  studying. Thank you for being here, and I look forward to
-                  learning alongside you.
-                </p>
-              </div>
-              <p className="landing-founder-sign">— Megan, Founder of PsychPro</p>
-            </div>
-          </div>
-        </section>
-
         {/* ============== LEARNING SCIENCE ============== */}
         <section id="science" className="landing-section landing-science">
           <div className="landing-section-head" data-reveal>
@@ -640,6 +592,54 @@ export default function LandingPage() {
               ))}
             </div>
           )}
+        </section>
+
+        {/* ============== MEET THE FOUNDER ============== */}
+        <section id="founder" className="landing-section landing-founder" data-reveal>
+          <div className="landing-founder-card">
+            <div className="landing-founder-media">
+              <div className="landing-founder-glow" aria-hidden />
+              <img
+                src={founderMegan}
+                alt="Megan, founder of PsychPro"
+                className="landing-founder-img"
+              />
+            </div>
+            <div className="landing-founder-body">
+              <p className="landing-eyebrow landing-eyebrow--left">
+                MEET THE FOUNDER
+              </p>
+              <h2 className="landing-split-title">Hey everyone, I'm Megan</h2>
+              <div className="landing-founder-text">
+                <p>
+                  I created PsychPro out of a need for a better way to learn and
+                  retain the vast amount of information presented throughout
+                  clinical psychology training. As a clinical psychology
+                  doctoral student, I experienced firsthand how challenging it
+                  can be to not only learn complex material, but also retain and
+                  apply it over time.
+                </p>
+                <p>
+                  PsychPro was built to support deeper understanding rather than
+                  short-term memorization. The platform offers a variety of
+                  evidence-based learning tools, including flashcards, study
+                  guides, quizzes, practice exams, and comprehensive mastery
+                  courses designed to reinforce knowledge through active learning
+                  and repeated retrieval.
+                </p>
+                <p>
+                  Our content spans a wide range of topics relevant to
+                  psychology, neuroscience, assessment, intervention, and related
+                  disciplines. Whether you're a student, trainee, professional,
+                  or lifelong learner, PsychPro is designed to help you build
+                  lasting knowledge and confidence in the material you're
+                  studying. Thank you for being here, and I look forward to
+                  learning alongside you.
+                </p>
+              </div>
+              <p className="landing-founder-sign">— Megan, Founder of PsychPro</p>
+            </div>
+          </div>
         </section>
 
         {/* ============== FOOTER ============== */}
