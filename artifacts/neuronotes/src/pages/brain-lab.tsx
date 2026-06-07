@@ -550,7 +550,17 @@ function StructureDetail({
 
         {tab === "connections" && (
           <>
-            {detail?.connections && <RichBlocks blocks={detail.connections} accent={struct.color} />}
+            {detail?.connections ? (
+              <RichBlocks blocks={detail.connections} accent={struct.color} />
+            ) : (
+              struct.connections.length > 0 && (
+                <DetailSection
+                  title="Network Connections"
+                  items={struct.connections}
+                  bullet={struct.color}
+                />
+              )
+            )}
             <div>
               <h4
                 className="text-[11px] font-semibold uppercase tracking-wider mb-2"

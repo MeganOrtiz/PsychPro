@@ -66,6 +66,7 @@ export interface BrainStructure {
   color: string;
   overview: string;
   functions: string[];
+  connections: string[];
   neuropsych: string[];
   conditions: string[];
   topicHints: string[];
@@ -331,23 +332,29 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The largest cortical lobe, occupying the anterior third of each hemisphere. It spans from the central sulcus (posteriorly) and the lateral fissure (inferiorly) to the frontal pole, and houses the primary motor cortex, premotor cortex, and supplementary motor area alongside the prefrontal regions that define personality, planning, and self-regulation. As the seat of executive function, expressive language, and social-emotional control, it is the cortical region most often implicated in neuropsychological syndromes — and the last to fully mature, with development continuing into the mid-twenties.",
     functions: [
-      "Voluntary motor planning and execution",
+      "Largest cortical lobe — anterior third of each hemisphere",
+      "Voluntary motor planning and execution (motor and premotor cortex)",
       "Expressive language (Broca's area, dominant hemisphere)",
-      "Working memory and attentional control",
-      "Personality, judgment, and impulse regulation",
-      "Goal-directed behavior and decision making",
+      "Executive function: working memory, planning, judgment, impulse control",
+      "Personality, social behavior, and goal-directed action",
+    ],
+    connections: [
+      "Reciprocally connected to all other cortical lobes via long association fibers",
+      "Cortico-striato-thalamo-cortical loops with basal ganglia and thalamus",
+      "Uncinate fasciculus to anterior temporal lobe",
+      "Frontopolar regions integrate with default mode network",
     ],
     neuropsych: [
-      "Anchors the central executive — the cognitive system most often assessed in neuropsych batteries (Stroop, Trails, Wisconsin Card Sort)",
+      "Most often assessed in neuropsych batteries: Stroop, Trail Making, Wisconsin Card Sort, FAS verbal fluency",
       "Frontal release signs (grasp, snout, palmomental) suggest diffuse frontal pathology",
-      "Distinguishes 'apathetic' vs 'disinhibited' frontal syndromes depending on which subregion is affected",
+      "Distinguishes 'apathetic' (medial/dorsolateral) vs 'disinhibited' (orbitofrontal) frontal syndromes",
       "Late maturation (~age 25) explains heightened risk-taking in adolescents",
     ],
     conditions: [
       "Frontotemporal dementia (behavioral variant)",
-      "Traumatic brain injury — most vulnerable to coup/contrecoup damage",
-      "ADHD — reduced frontal volume and connectivity",
-      "Schizophrenia — hypofrontality on functional imaging",
+      "Traumatic brain injury (most vulnerable to coup/contrecoup)",
+      "ADHD (reduced volume and connectivity)",
+      "Schizophrenia (hypofrontality)",
     ],
     topicHints: ["Neuropsychology Overview", "Executive Function & Frontal Lobe Syndromes"],
     detail: {
@@ -624,8 +631,14 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Body schema and self-localization",
       "Cross-modal sensory integration",
     ],
+    connections: [
+      "Superior longitudinal fasciculus to frontal cortex (frontoparietal attention network)",
+      "Receives thalamic input (VPL, VPM, pulvinar)",
+      "Dorsal visual stream from occipital cortex",
+      "Cingulum to PCC/precuneus",
+    ],
     neuropsych: [
-      "Right parietal damage produces hemispatial neglect — patients fail to attend to the left half of space and may deny the deficit (anosognosia)",
+      "Right parietal damage produces hemispatial neglect — patients fail to attend to the left half of space; may deny the deficit (anosognosia)",
       "Left parietal damage may yield Gerstmann syndrome (agraphia, acalculia, finger agnosia, left-right disorientation)",
       "Constructional apraxia is assessed with clock-drawing and Rey-Osterrieth figure copying",
       "Posterior parietal cortex underlies visuospatial working memory",
@@ -1017,6 +1030,12 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Verbal and non-verbal memory consolidation",
       "Emotional and social-cue processing",
     ],
+    connections: [
+      "Medial temporal structures (hippocampus, amygdala) integrate memory and emotion",
+      "Inferior longitudinal fasciculus from occipital lobe",
+      "Uncinate fasciculus to orbitofrontal cortex",
+      "Arcuate fasciculus to inferior frontal gyrus",
+    ],
     neuropsych: [
       "Left temporal lesions impair verbal memory (Logical Memory, RAVLT); right temporal lesions impair visual/figural memory",
       "Wernicke's aphasia presents as fluent but meaningless speech with poor comprehension",
@@ -1371,9 +1390,15 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Visual association and object recognition",
       "Initiation of dorsal ('where') and ventral ('what') streams",
     ],
+    connections: [
+      "Input from retinas via lateral geniculate nucleus and optic radiations",
+      "Output via dorsal stream (to parietal) and ventral stream (to temporal)",
+      "Splenium of corpus callosum carries visual interhemispheric transfer",
+      "Reciprocal with pulvinar for attention",
+    ],
     neuropsych: [
-      "Bilateral occipital damage produces cortical blindness; with anosognosia this is Anton syndrome",
-      "Visual field cuts (homonymous hemianopia, quadrantanopia) localize precisely to optic radiations",
+      "Bilateral damage produces cortical blindness; with anosognosia this is Anton syndrome",
+      "Visual field cuts (homonymous hemianopia, quadrantanopia) localize precisely",
       "Visual agnosia (apperceptive vs associative) tested with copying and naming tasks",
       "Achromatopsia and akinetopsia point to specific extrastriate damage",
     ],
@@ -1381,7 +1406,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Cortical blindness from PCA stroke",
       "Anton syndrome",
       "Posterior cortical atrophy",
-      "Charles Bonnet syndrome (visual hallucinations after vision loss)",
+      "Charles Bonnet syndrome",
     ],
     topicHints: ["Visual System & Agnosia", "Vascular Syndromes"],
     detail: {
@@ -1723,6 +1748,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Top-down attentional control",
       "Planning and prospective memory",
     ],
+    connections: [],
     neuropsych: [
       "DLPFC dysfunction is the core mechanism behind perseverative errors on the Wisconsin Card Sorting Test",
       "Reduced DLPFC activity is one of the most replicated findings in major depression — also the FDA-approved target for rTMS",
@@ -1759,6 +1785,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Linking emotion to consequence prediction",
       "Olfactory processing (secondary)",
     ],
+    connections: [],
     neuropsych: [
       "OFC damage produces 'pseudopsychopathic' personality change — the Phineas Gage pattern of disinhibition without intellectual loss",
       "The Iowa Gambling Task is the classic OFC measure: damaged patients keep choosing high-reward/high-loss decks",
@@ -1794,6 +1821,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Fine motor control (especially hand and face)",
       "Origin of corticospinal and corticobulbar tracts",
     ],
+    connections: [],
     neuropsych: [
       "Lesions produce contralateral upper-motor-neuron weakness — hyperreflexia, spasticity, Babinski sign",
       "The size of each body region on the homunculus reflects motor precision, not body size — hands and lips are huge",
@@ -1829,6 +1857,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Two-point discrimination",
       "Stereognosis (object recognition by touch)",
     ],
+    connections: [],
     neuropsych: [
       "Lesions produce contralateral cortical sensory loss — preserved crude touch but lost discrimination, stereognosis, graphesthesia",
       "Tested clinically with two-point discrimination, stereognosis, and double simultaneous stimulation (extinction)",
@@ -1865,6 +1894,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Autonomic regulation (heart rate, blood pressure)",
       "Social pain and rejection processing",
     ],
+    connections: [],
     neuropsych: [
       "ACC produces the error-related negativity (ERN) on EEG — exaggerated in OCD, blunted in psychopathy",
       "Akinetic mutism (failure to initiate speech or movement) follows bilateral ACC damage",
@@ -1895,16 +1925,22 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "Hidden cortical lobe buried within the lateral sulcus, beneath the temporal lobe's overhang. Acts as the brain's 'interoceptive cortex' — the seat of bodily self-awareness.",
     functions: [
-      "Interoception — perception of heart rate, hunger, breathing",
-      "Taste processing (primary gustatory cortex)",
+      "Hidden cortical lobe buried within the lateral sulcus, beneath the temporal lobe's overhang",
+      "Brain's interoceptive cortex — perception of heart rate, hunger, breathing, bladder fullness",
+      "Primary gustatory cortex (taste)",
       "Emotional awareness and empathy",
       "Visceral autonomic integration",
       "Disgust generation and recognition",
     ],
+    connections: [
+      "Receives input from VPM thalamus (taste, visceral), amygdala",
+      "Connected to ACC for autonomic-emotional integration",
+      "Reciprocal with orbitofrontal cortex",
+    ],
     neuropsych: [
       "Anterior insula activity predicts subjective emotional intensity in fMRI",
-      "Hyperactive insula is implicated in panic disorder and somatic symptom disorders",
-      "Insular damage can abolish nicotine cravings — 'forgetting' addiction",
+      "Hyperactive insula is implicated in panic disorder and somatic symptom disorder",
+      "Insular damage can abolish nicotine cravings — 'forgetting' addiction (Naqvi et al. 2007 finding)",
       "Reduced insular gray matter is found in alexithymia (difficulty identifying feelings)",
     ],
     conditions: [
@@ -1912,6 +1948,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Somatic symptom disorder",
       "Addiction (smoking cessation after insular stroke)",
       "Alexithymia",
+      "Frontotemporal dementia (right insular atrophy in semantic variant)",
     ],
     topicHints: ["Emotion & Interoception", "Anxiety Disorders"],
   },
@@ -1940,6 +1977,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Adult neurogenesis (one of the few neurogenic regions)",
       "Stress regulation via HPA-axis feedback",
     ],
+    connections: [],
     neuropsych: [
       "Bilateral hippocampal damage produces dense anterograde amnesia (the H.M. case) with preserved working memory and procedural learning",
       "Hippocampal atrophy is the earliest structural marker of Alzheimer's disease",
@@ -1976,6 +2014,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Triggering autonomic fear responses (HPA, sympathetic)",
       "Reward learning (in concert with NAcc)",
     ],
+    connections: [],
     neuropsych: [
       "Bilateral amygdala damage produces Klüver-Bucy syndrome — placidity, hyperorality, hypersexuality, impaired threat recognition",
       "Hyperactive amygdala on fMRI is a defining feature of PTSD, anxiety disorders, and acute stress",
@@ -2011,6 +2050,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Spatial orientation and visuospatial memory",
       "Monitoring the external environment for changes",
     ],
+    connections: [],
     neuropsych: [
       "PCC hypometabolism on FDG-PET is one of the earliest signs of Alzheimer's disease",
       "Excessive PCC activity is linked to depressive rumination — calmed by mindfulness training",
@@ -2041,20 +2081,27 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "C-shaped white-matter bundle that arches from each hippocampus forward and down to the mammillary bodies. The hippocampus's principal output highway.",
     functions: [
-      "Carries hippocampal output to mammillary bodies and septal nuclei",
-      "Closes the Papez circuit of memory",
-      "Modulates hippocampal theta rhythm via septal projections",
+      "Main output tract of the hippocampus",
+      "C-shaped white matter bundle arching from hippocampus → mammillary bodies → anterior thalamic nuclei",
+      "Critical for declarative memory consolidation",
+      "Part of the Papez circuit",
+    ],
+    connections: [
+      "Hippocampus (origin) → fimbria → fornix → mammillary bodies",
+      "Also projects to septal nuclei, anterior thalamus, and hypothalamus",
+      "Crosses midline via hippocampal commissure",
     ],
     neuropsych: [
-      "Fornix lesions produce dense anterograde amnesia even when the hippocampus itself is intact",
-      "Atrophy of the fornix is one of the earliest white-matter findings in Alzheimer's disease",
-      "Surgical injury during third-ventricle tumor resection is a classic cause of acute amnesia",
-      "Diffusion tensor imaging of the fornix is a research biomarker for prodromal dementia",
+      "Bilateral fornix damage produces dense anterograde amnesia, similar to hippocampal lesions",
+      "Surgical transection (e.g., for colloid cysts) is a known cause of acquired amnesia",
+      "Fornix DTI metrics decline early in mild cognitive impairment and Alzheimer's",
+      "Key conduit in the Papez memory circuit",
     ],
     conditions: [
+      "Amnesia (post-surgical or vascular)",
       "Alzheimer's disease (early DTI changes)",
-      "Postoperative amnesia",
-      "Colloid cyst-related amnesia",
+      "Colloid cyst of the third ventricle (can compress fornix)",
+      "Korsakoff syndrome (includes fornix involvement)",
     ],
     topicHints: ["Memory Circuits", "White Matter Disease"],
   },
@@ -2074,19 +2121,28 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "Two small spherical nuclei on the underside of the brain, just behind the pituitary stalk. The output station of the hippocampal–fornix–thalamic memory loop.",
     functions: [
-      "Relay memory signals from hippocampus to anterior thalamus",
-      "Component of the Papez circuit",
-      "Contribute to spatial and contextual memory",
+      "Paired round nuclei on the inferior surface of the hypothalamus",
+      "Receive major input from hippocampus via fornix",
+      "Output to anterior thalamic nuclei via mammillothalamic tract",
+      "Critical node in the Papez memory circuit",
+      "Spatial and episodic memory consolidation",
+    ],
+    connections: [
+      "Fornix in (from hippocampus)",
+      "Mammillothalamic tract out (to anterior thalamus)",
+      "Mammillotegmental tract to brainstem",
     ],
     neuropsych: [
-      "Mammillary atrophy is the diagnostic lesion of Wernicke-Korsakoff syndrome — chronic thiamine deficiency in alcohol use disorder",
-      "Korsakoff patients show profound anterograde amnesia with confabulation — a classic neuropsych presentation",
-      "Often spared imaging finding in early dementia, helping distinguish from Korsakoff",
+      "Bilateral mammillary body atrophy is pathognomonic for Korsakoff syndrome (thiamine deficiency, chronic alcoholism)",
+      "Lesions cause severe anterograde amnesia with confabulation",
+      "Visible on MRI as petechial hemorrhages in acute Wernicke encephalopathy",
+      "Together with fornix and anterior thalamus, make up the diencephalic memory system",
     ],
     conditions: [
-      "Wernicke-Korsakoff syndrome",
-      "Thiamine deficiency states",
-      "Bariatric surgery complications",
+      "Korsakoff syndrome",
+      "Wernicke encephalopathy",
+      "Thiamine deficiency states (bariatric surgery, hyperemesis gravidarum)",
+      "Bilateral fornix/mammillary infarcts",
     ],
     topicHints: ["Memory Circuits", "Substance-Related Cognitive Disorders"],
   },
@@ -2108,23 +2164,29 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "Egg-shaped pair of nuclei at the brain's geometric center. Almost every sensory pathway except olfaction, and every cortical loop, is gated through here — earning it the title 'gateway to the cortex.'",
     functions: [
-      "Relay sensory input to primary cortical areas",
-      "Modulate cortical arousal and consciousness",
-      "Coordinate motor signals (VL, VA nuclei)",
-      "Mediate cortico-striato-thalamo-cortical loops",
-      "Pulvinar contributes to visual attention",
+      "Major relay hub — virtually all sensory pathways (except olfaction) synapse here before reaching cortex",
+      "Motor and cognitive relay via specific nuclei (VL for cerebellar/basal ganglia, MD for prefrontal)",
+      "Regulates cortical arousal and consciousness (intralaminar nuclei, reticular nucleus)",
+      "Memory contributions via anterior nucleus (Papez circuit) and mediodorsal nucleus",
+    ],
+    connections: [
+      "Reciprocal thalamocortical loops with every cortical area",
+      "Internal capsule carries thalamocortical projections",
+      "Receives input from cerebellum (VL), basal ganglia (VA/VL), spinal cord (VPL), trigeminal system (VPM)",
+      "Pulvinar handles visual attention",
     ],
     neuropsych: [
-      "Bilateral medial thalamic strokes can cause 'thalamic dementia' with profound apathy and amnesia",
-      "Thalamic pain syndrome (Dejerine-Roussy) follows VPL infarct — burning contralateral pain",
-      "Disrupted thalamocortical oscillations are central to fatal familial insomnia and absence seizures",
-      "Thalamic volume loss is found in schizophrenia and contributes to sensory gating deficits",
+      "Bilateral medial thalamic lesions produce profound amnesia (e.g., paramedian thalamic stroke; Korsakoff syndrome involves mediodorsal nucleus)",
+      "Fatal familial insomnia targets thalamic neurons selectively",
+      "Thalamic strokes can cause aphasia, neglect, or visual field deficits depending on territory",
+      "Central post-stroke pain (Dejerine-Roussy syndrome) from VPL lesions",
     ],
     conditions: [
-      "Thalamic stroke (Dejerine-Roussy)",
-      "Fatal familial insomnia (prion disease)",
-      "Absence epilepsy",
-      "Schizophrenia",
+      "Korsakoff syndrome (mediodorsal and anterior nuclei)",
+      "Paramedian thalamic stroke (amnesia, somnolence)",
+      "Fatal familial insomnia",
+      "Thalamic pain syndrome (Dejerine-Roussy)",
+      "Essential tremor (DBS target: VIM nucleus)",
     ],
     topicHints: ["Sensory Gating", "Disorders of Consciousness"],
   },
@@ -2144,23 +2206,31 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "Small but mighty cluster of nuclei beneath the thalamus, forming the floor of the third ventricle. Master regulator of homeostasis and the hormonal command center of the body.",
     functions: [
-      "Regulates appetite, thirst, body temperature, and sleep–wake cycle",
-      "Controls the autonomic nervous system",
-      "Drives the HPA stress axis (CRH → ACTH → cortisol)",
-      "Releases oxytocin and vasopressin via the posterior pituitary",
-      "Houses the suprachiasmatic nucleus — the body's master clock",
+      "Master regulator of homeostasis — temperature, hunger, thirst, sleep-wake, autonomic tone",
+      "Controls the pituitary gland (anterior via portal system; posterior via direct neural projection)",
+      "Drives circadian rhythm (suprachiasmatic nucleus)",
+      "Generates emotional behaviors (rage, sexual behavior, fear responses)",
+      "Houses key nuclei: SCN, paraventricular, supraoptic, arcuate, ventromedial, lateral",
+    ],
+    connections: [
+      "Receives fornix input from hippocampus",
+      "Stria terminalis from amygdala",
+      "Mammillothalamic tract to anterior thalamus",
+      "Median forebrain bundle — extensive monoaminergic traffic",
+      "Direct projections to pituitary",
     ],
     neuropsych: [
-      "Chronic HPA-axis hyperactivity is a core neurobiological feature of major depression and PTSD",
-      "Hypothalamic damage causes hyperphagia/obesity (ventromedial) or anorexia (lateral) — historic 'dual-center' model",
-      "Suprachiasmatic dysfunction underlies seasonal affective disorder and shift-work disorder",
-      "Plays a central role in the neurobiology of attachment via oxytocin",
+      "Lateral hypothalamic lesions cause aphagia; ventromedial lesions cause hyperphagia (classic Brobeck experiments)",
+      "Anterior hypothalamus regulates sleep; posterior regulates wake",
+      "SCN damage abolishes circadian rhythm",
+      "Wernicke encephalopathy targets mammillary bodies in this region",
     ],
     conditions: [
-      "Cushing's disease",
-      "Diabetes insipidus",
-      "Eating disorders (hypothalamic dysfunction)",
-      "Circadian rhythm disorders",
+      "Wernicke-Korsakoff syndrome",
+      "Diabetes insipidus (posterior pituitary axis)",
+      "Kleine-Levin syndrome (hypersomnia, hyperphagia)",
+      "Hypothalamic obesity (post-surgical)",
+      "Narcolepsy (loss of orexin/hypocretin neurons)",
     ],
     topicHints: ["Stress & HPA Axis", "Sleep & Circadian Rhythms"],
   },
@@ -2180,21 +2250,28 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "Pea-sized endocrine gland hanging from the hypothalamus on a thin stalk. The 'master gland' — its anterior and posterior lobes secrete hormones that govern growth, reproduction, stress, and metabolism.",
     functions: [
-      "Anterior lobe releases ACTH, TSH, GH, FSH, LH, prolactin",
-      "Posterior lobe stores and releases oxytocin and vasopressin",
-      "Translates hypothalamic signals into endocrine action",
+      "Master endocrine gland, suspended below the hypothalamus on the infundibulum",
+      "Anterior pituitary (adenohypophysis): secretes ACTH, TSH, FSH, LH, GH, prolactin",
+      "Posterior pituitary (neurohypophysis): releases oxytocin and vasopressin (ADH) made in the hypothalamus",
+      "Sits within the sella turcica of the sphenoid bone",
+    ],
+    connections: [
+      "Hypothalamic-pituitary portal system carries releasing hormones to anterior lobe",
+      "Direct neural projection from supraoptic and paraventricular nuclei to posterior lobe",
+      "Surrounded by cavernous sinuses (containing CN III, IV, V1, V2, VI)",
     ],
     neuropsych: [
-      "Pituitary adenomas can present neuropsychiatrically with mood changes, fatigue, and psychosis",
-      "Hyperprolactinemia (prolactinoma or antipsychotic-induced) causes depression-like fatigue and sexual dysfunction",
-      "Cushing's disease (ACTH-secreting adenoma) produces depression in over half of patients",
-      "Pituitary apoplexy is a neurosurgical emergency presenting with sudden headache, vision loss, and hormonal crash",
+      "Pituitary adenomas can present with hormonal symptoms (Cushing's, acromegaly, hyperprolactinemia) or with bitemporal hemianopia from chiasmal compression",
+      "Sheehan syndrome — postpartum pituitary infarction",
+      "Pituitary apoplexy is a neurosurgical emergency",
+      "Empty sella syndrome — herniation of CSF into the pituitary fossa",
     ],
     conditions: [
-      "Pituitary adenoma",
-      "Cushing's disease",
+      "Pituitary adenoma (prolactinoma, Cushing's disease, acromegaly)",
       "Sheehan syndrome",
-      "Antipsychotic-induced hyperprolactinemia",
+      "Pituitary apoplexy",
+      "Diabetes insipidus (posterior pituitary dysfunction)",
+      "Empty sella syndrome",
     ],
     topicHints: ["Endocrine-Behavioral Interactions", "Medication Side Effects"],
   },
@@ -2217,22 +2294,28 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "C-shaped nucleus that arches alongside the lateral ventricle. Forms the 'associative' input zone of the basal ganglia, weighing context against goals.",
     functions: [
-      "Goal-directed action selection",
-      "Cognitive flexibility and rule learning",
-      "Reward-prediction signaling (with putamen)",
-      "Inhibition of competing motor programs",
+      "C-shaped nucleus arching alongside the lateral ventricle (head, body, tail)",
+      "Associative basal ganglia — cognitive and executive aspects of behavior",
+      "Goal-directed action learning",
+      "Working memory contribution via dorsolateral prefrontal loop",
+      "Suppression of inappropriate behavior",
+    ],
+    connections: [
+      "Major input from associative cortex (DLPFC) — associative cortico-striatal loop",
+      "Projects to globus pallidus and substantia nigra",
+      "Receives dopaminergic input from substantia nigra pars compacta",
     ],
     neuropsych: [
-      "Caudate atrophy is the pathognomonic imaging finding in Huntington's disease — flattens the lateral ventricle wall",
-      "Hyperactive caudate is part of the OCD circuit (with OFC and ACC)",
-      "Caudate stroke produces abulia — profound loss of motivation without depressed mood",
-      "Reduced caudate volume is found in ADHD",
+      "Caudate atrophy is the defining MRI feature of Huntington's disease (boxcar ventricles)",
+      "Hyperactivity in caudate-OFC loops is central to OCD models",
+      "Caudate stroke can produce abulia, apathy, and executive dysfunction",
+      "Activity here correlates with goal-pursuit and reward-prediction learning",
     ],
     conditions: [
       "Huntington's disease",
-      "OCD",
-      "ADHD",
-      "Vascular abulia",
+      "OCD (caudate hyperactivity)",
+      "Sydenham chorea / PANDAS",
+      "Caudate stroke (abulia, neglect)",
     ],
     topicHints: ["Movement Disorders", "OCD & Compulsivity"],
   },
@@ -2252,22 +2335,28 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "Largest basal ganglion, sitting lateral to the globus pallidus. The 'sensorimotor' input nucleus that drives habit learning and well-practiced movements.",
     functions: [
-      "Habit learning and procedural memory",
-      "Smooth execution of overlearned movements",
-      "Implicit sequence learning",
-      "Reinforcement learning via dopaminergic input",
+      "Largest component of the striatum, lateral to the globus pallidus",
+      "Sensorimotor basal ganglia — controls habitual and automatic movements",
+      "Motor learning of stimulus-response habits",
+      "Procedural memory (with caudate tail)",
+      "Together with caudate forms the dorsal striatum",
+    ],
+    connections: [
+      "Major input from motor and somatosensory cortex (motor cortico-striatal loop)",
+      "Projects to globus pallidus (internal and external segments)",
+      "Dopaminergic input from substantia nigra pars compacta",
     ],
     neuropsych: [
-      "Putamen lesions can produce hemiballismus or dystonia",
-      "Reduced putamen volume is one of the most consistent findings in Tourette syndrome",
-      "Putaminal hyperactivity is implicated in addiction — habit-driven drug seeking",
-      "Striatal beta oscillations are a target for deep brain stimulation in Parkinson's",
+      "Dopaminergic denervation of putamen is the core motor lesion of Parkinson's disease",
+      "Hemiballismus classically follows damage to the subthalamic nucleus that disinhibits the putamen-pallidum circuit",
+      "Putaminal hemorrhage is a common site of hypertensive intracerebral bleeds",
+      "Habit-learning tasks (rotary pursuit, mirror tracing) depend on intact putamen",
     ],
     conditions: [
       "Parkinson's disease",
-      "Tourette syndrome",
-      "Substance use disorders",
-      "Hemiballismus",
+      "Putaminal hemorrhage (hypertensive)",
+      "Wilson's disease (copper deposition shows in putamen)",
+      "Multiple system atrophy (parkinsonian variant)",
     ],
     topicHints: ["Habit Learning", "Movement Disorders"],
   },
@@ -2287,22 +2376,28 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "Pale-staining nucleus medial to the putamen, divided into external (GPe) and internal (GPi) segments. The basal ganglia's main output gateway, releasing or applying the brakes on thalamocortical motor loops.",
     functions: [
-      "GPi: tonic inhibition of the thalamus (motor brake)",
-      "GPe: modulates indirect-pathway output",
-      "Final integration point of basal-ganglia signals",
-      "Targets the ventrolateral thalamus and motor cortex",
+      "Pale-staining nucleus medial to the putamen, divided into external (GPe) and internal (GPi) segments",
+      "Main output nucleus of the basal ganglia (GPi)",
+      "Tonically inhibits the thalamus — disinhibition allows movement",
+      "Direct pathway: cortex → striatum → GPi (inhibits) → less thalamic inhibition → more movement",
+      "Indirect pathway: cortex → striatum → GPe → STN → GPi (excites) → more thalamic inhibition → less movement",
+    ],
+    connections: [
+      "GPe ↔ subthalamic nucleus (indirect pathway loop)",
+      "GPi → ventral lateral and ventral anterior thalamus → motor cortex",
+      "Receives input from putamen and caudate",
     ],
     neuropsych: [
-      "GPi is the most common deep brain stimulation target for Parkinson's disease and dystonia",
-      "Bilateral GP lesions (e.g., carbon monoxide poisoning) produce parkinsonism with apathy and obsessive-compulsive symptoms",
-      "Pallidal damage is a recognized cause of acquired stuttering",
-      "Pallidal calcification (Fahr disease) presents with movement disorders and psychiatric symptoms",
+      "GPi is the primary DBS target for Parkinson's disease and dystonia",
+      "Bilateral globus pallidus damage (e.g., from CO poisoning) produces parkinsonism and apathy",
+      "Pallidotomy was the historical lesional treatment for PD before DBS",
+      "Pallidal injury can produce abulia and akinetic mutism",
     ],
     conditions: [
       "Parkinson's disease (DBS target)",
-      "Dystonia",
-      "Carbon monoxide poisoning sequelae",
-      "Fahr disease",
+      "Dystonia (DBS target)",
+      "Carbon monoxide poisoning",
+      "Hallervorden-Spatz disease (NBIA) — iron deposition",
     ],
     topicHints: ["Movement Disorders", "Deep Brain Stimulation"],
   },
@@ -2327,6 +2422,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Modulates movement initiation and reinforcement learning",
       "Encodes reward-prediction error signals",
     ],
+    connections: [],
     neuropsych: [
       "SNc neuron loss is the defining lesion of Parkinson's disease — symptoms emerge once ~60–70% are gone",
       "Lewy bodies in SNc are pathognomonic of Parkinson's and Lewy body dementia",
@@ -2362,6 +2458,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Integrates limbic input (amygdala, hippocampus, vmPFC)",
       "Modulates effort-based decision making",
     ],
+    connections: [],
     neuropsych: [
       "All major drugs of abuse converge on increasing NAcc dopamine",
       "Blunted NAcc activation to reward (Monetary Incentive Delay task) is a transdiagnostic marker of anhedonia",
@@ -2394,22 +2491,29 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The largest white-matter tract in the brain — a thick C-shaped band of ~200 million axons connecting homologous regions of the two hemispheres.",
     functions: [
+      "Largest white matter tract — ~200 million axons connecting homologous regions of the two hemispheres",
       "Interhemispheric transfer of sensory, motor, and cognitive information",
       "Coordinates bilateral motor activity",
       "Permits unified perception across both visual fields",
-      "Splenium (posterior) carries visual; genu (anterior) carries frontal",
+      "Topographically organized: genu (frontal), body (motor/sensory), splenium (visual)",
+    ],
+    connections: [
+      "Fibers radiate to all four cortical lobes",
+      "Genu connects prefrontal cortices",
+      "Body connects motor, sensory, and parietal cortices",
+      "Splenium connects occipital and temporal cortices",
     ],
     neuropsych: [
-      "Surgical 'split-brain' (corpus callosotomy for epilepsy) produces the famous Sperry/Gazzaniga findings — left hemisphere can't name objects shown to the right hemisphere alone",
+      "Surgical 'split-brain' (corpus callosotomy for epilepsy) produces the famous Sperry/Gazzaniga findings — left hemisphere can't name objects shown only to the right hemisphere",
       "Alien hand syndrome can follow anterior callosal damage",
-      "Callosal agenesis often presents with subtle social and language deficits resembling autism",
+      "Callosal agenesis often presents with subtle social and language deficits",
       "Marchiafava-Bignami disease — selective callosal demyelination from chronic alcoholism",
     ],
     conditions: [
       "Split-brain syndrome",
       "Marchiafava-Bignami disease",
       "Callosal agenesis",
-      "Multiple sclerosis (callosal plaques)",
+      "Multiple sclerosis (callosal plaques are highly characteristic)",
     ],
     topicHints: ["Hemispheric Specialization", "White Matter Disease"],
   },
@@ -2437,6 +2541,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Houses the periaqueductal gray for pain modulation",
       "Reticular formation contributes to arousal",
     ],
+    connections: [],
     neuropsych: [
       "Periaqueductal gray is the brain's endogenous opioid analgesia center — target of placebo and meditation effects",
       "Midbrain dopaminergic neurons in the VTA project to NAcc and PFC, driving reward and motivation",
@@ -2467,23 +2572,29 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "Bulging middle segment of the brainstem. Acts as a neural switchboard — its name means 'bridge' — relaying signals between the cerebrum and cerebellum.",
     functions: [
-      "Houses cranial nerve nuclei V (trigeminal), VI (abducens), VII (facial), VIII (vestibulocochlear)",
-      "Pontine nuclei relay cortical input to the cerebellum",
-      "Pontine respiratory centers fine-tune breathing rhythm",
-      "Locus coeruleus is the brain's main source of norepinephrine",
-      "REM sleep generation (pontine tegmentum)",
+      "Bulging middle segment of the brainstem ('bridge' in Latin)",
+      "Relays cortical signals to cerebellum (cortico-pontocerebellar pathway)",
+      "Houses cranial nerve nuclei V, VI, VII, VIII",
+      "Pneumotaxic and apneustic centers help regulate breathing rhythm",
+      "Contains the locus coeruleus (norepinephrine source) and raphe nuclei (serotonin source)",
+    ],
+    connections: [
+      "Receives massive corticopontine input → projects to contralateral cerebellum via middle cerebellar peduncle",
+      "Long ascending sensory and descending motor tracts pass through",
+      "Locus coeruleus projects to nearly all cortex (NE)",
+      "Raphe nuclei project widely (5-HT)",
     ],
     neuropsych: [
-      "Locus coeruleus dysfunction is implicated in depression, anxiety, and PTSD hyperarousal",
-      "Ventral pontine stroke can produce locked-in syndrome — full consciousness with only vertical eye movements preserved",
-      "Central pontine myelinolysis follows rapid sodium correction in alcoholic or malnourished patients",
-      "Pontine reticular formation generates the 'pontine waves' of REM sleep",
+      "Ventral pontine infarct produces locked-in syndrome — quadriplegia and mutism with preserved consciousness and vertical eye movements",
+      "Pontine hemorrhage often causes coma, pinpoint pupils, and high mortality",
+      "Central pontine myelinolysis (osmotic demyelination) from rapid sodium correction",
+      "Locus coeruleus degeneration is part of the prodromal phase of Parkinson's and Alzheimer's",
     ],
     conditions: [
       "Locked-in syndrome",
-      "Central pontine myelinolysis",
       "Pontine hemorrhage",
-      "REM sleep behavior disorder",
+      "Central pontine myelinolysis",
+      "Multiple sclerosis (common plaque location)",
     ],
     topicHints: ["Sleep Architecture", "Disorders of Consciousness"],
   },
@@ -2503,20 +2614,26 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "Lowest segment of the brainstem, continuous with the spinal cord. Contains the autonomic centers that keep us alive — cardiac, respiratory, vasomotor, and reflex.",
     functions: [
-      "Cardiac and respiratory rhythm generation",
+      "Lowest brainstem segment, continuous with spinal cord",
+      "Cardiac and respiratory rhythm generation (vital centers)",
       "Vasomotor control (blood pressure)",
       "Reflexes — coughing, swallowing, vomiting, sneezing",
-      "Pyramidal decussation (motor crossover)",
+      "Pyramidal decussation (motor crossover) at the cervicomedullary junction",
       "Houses cranial nerve nuclei IX, X, XI, XII",
     ],
+    connections: [
+      "Continues as the spinal cord caudally",
+      "Receives input from cerebellum via inferior cerebellar peduncle",
+      "Output: corticospinal tract, dorsal column-medial lemniscus, spinothalamic",
+    ],
     neuropsych: [
-      "Lateral medullary (Wallenberg) syndrome produces a classic crossed sensory pattern: ipsilateral facial / contralateral body numbness",
-      "Brainstem death is defined by loss of medullary reflexes — apnea testing targets the medullary respiratory center",
-      "Chronic opioid use depresses medullary respiratory drive — the mechanism of overdose death",
+      "Lateral medullary (Wallenberg) syndrome from PICA occlusion: ipsilateral facial sensory loss, contralateral body sensory loss, ipsilateral Horner's, vertigo, dysphagia, ataxia",
+      "Brainstem death is defined by loss of medullary reflexes — apnea testing targets the respiratory center",
+      "Opioid overdose kills via medullary respiratory depression",
       "Area postrema (chemoreceptor trigger zone) is the substrate of chemotherapy-induced nausea",
     ],
     conditions: [
-      "Wallenberg syndrome",
+      "Wallenberg (lateral medullary) syndrome",
       "Brainstem death",
       "Opioid overdose (respiratory depression)",
       "Arnold-Chiari malformation",
@@ -2546,6 +2663,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Sets the gain on attention and signal-to-noise across cortex",
       "Promotes wakefulness and suppresses REM sleep",
     ],
+    connections: [],
     neuropsych: [
       "Hyperactive locus coeruleus underlies the hyperarousal cluster of PTSD — the rationale for prazosin (alpha-1 blocker) for trauma nightmares",
       "LC dysregulation contributes to the somatic anxiety response (panic, palpitations, tremor)",
@@ -2578,23 +2696,30 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The 'little brain' tucked beneath the occipital lobe and behind the brainstem. Holds more neurons than the cerebrum despite being a fraction of its size — and increasingly recognized as a contributor to cognition and emotion.",
     functions: [
-      "Coordinates voluntary movement and timing",
-      "Maintains posture and balance",
-      "Motor learning and adaptation (e.g., adjusting to prism glasses)",
-      "Cognitive sequencing and timing of thought",
-      "Modulates emotional regulation (vermis)",
+      "Coordinates voluntary movement, posture, and balance",
+      "Motor learning and adaptation",
+      "Cognitive sequencing, timing of thought, and language support",
+      "Modulates emotional regulation via the vermis (limbic cerebellum)",
+      "Contains more neurons than the cerebrum despite being a fraction of its size",
+    ],
+    connections: [
+      "Three peduncles: superior (output to thalamus), middle (input from pons), inferior (input from medulla and spinal cord)",
+      "Crossed cerebrocerebellar pathway — left brain ↔ right cerebellum",
+      "Climbing fibers from inferior olive carry error signals",
+      "Mossy fibers from pontine and spinal sources",
     ],
     neuropsych: [
-      "Cerebellar Cognitive-Affective Syndrome (Schmahmann syndrome) presents with executive, visuospatial, language, and emotional changes — without classic motor signs",
-      "Reduced cerebellar volume is found in autism, schizophrenia, and ADHD",
-      "Tested clinically with finger-to-nose, heel-to-shin, rapid alternating movements, and tandem gait",
-      "Cerebellar damage in childhood (e.g., posterior fossa surgery) impairs language and social cognition",
+      "Cerebellar Cognitive-Affective Syndrome (Schmahmann syndrome): executive dysfunction, visuospatial impairment, language deficits, blunted affect",
+      "Reduced cerebellar volume found in autism, schizophrenia, and ADHD",
+      "Tested clinically with finger-to-nose, heel-to-shin, rapid alternating movements, tandem gait",
+      "Vermis damage causes truncal ataxia; hemisphere damage causes limb ataxia",
     ],
     conditions: [
       "Spinocerebellar ataxias",
-      "Alcoholic cerebellar degeneration",
+      "Alcoholic cerebellar degeneration (vermis)",
       "Cerebellar Cognitive-Affective Syndrome",
-      "Posterior fossa syndrome",
+      "Posterior fossa syndrome (cerebellar mutism, post-surgical)",
+      "Friedreich ataxia",
     ],
     topicHints: ["Motor Learning", "Cerebellum & Cognition"],
   },
@@ -2616,22 +2741,26 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "Paired C-shaped CSF-filled cavities curving through each hemisphere. Their size and shape provide one of the most visible imaging windows into brain pathology.",
     functions: [
-      "Produce and circulate cerebrospinal fluid (via choroid plexus)",
-      "Provide buoyancy and shock absorption",
-      "Glymphatic clearance of metabolic waste during sleep",
-      "Connect to the third and fourth ventricles via the foramen of Monro",
+      "Paired C-shaped CSF-filled cavities, one in each cerebral hemisphere",
+      "Frontal horn, body, atrium (trigone), occipital horn, temporal horn",
+      "Contain choroid plexus, which produces most CSF",
+      "CSF circulation: lateral → third (via foramen of Monro) → fourth ventricle → subarachnoid space",
+    ],
+    connections: [
+      "Drain to third ventricle via interventricular foramen of Monro",
+      "Bordered by caudate (lateral wall of frontal horn) and thalamus (floor of body)",
     ],
     neuropsych: [
-      "Ventricular enlargement (ex vacuo) reflects surrounding brain atrophy — used as an Alzheimer's biomarker",
-      "Enlarged ventricles is one of the most replicated structural findings in schizophrenia",
-      "Normal pressure hydrocephalus presents with the classic triad: gait apraxia, urinary incontinence, dementia ('wet, wobbly, wacky')",
-      "Periventricular white-matter hyperintensities on MRI correlate with vascular cognitive impairment",
+      "Ventricular enlargement is a nonspecific but sensitive marker of brain atrophy or hydrocephalus",
+      "Frontal horn enlargement and 'boxcar' shape characterize Huntington's caudate atrophy",
+      "Normal pressure hydrocephalus: enlarged ventricles + classic triad of gait disturbance, urinary incontinence, dementia",
+      "Evans index (ventricle width / brain width) is a clinical measurement",
     ],
     conditions: [
-      "Normal pressure hydrocephalus",
-      "Schizophrenia (enlarged ventricles)",
-      "Alzheimer's disease (ex vacuo dilation)",
-      "Obstructive hydrocephalus",
+      "Hydrocephalus (communicating and non-communicating)",
+      "Normal pressure hydrocephalus (Hakim's triad)",
+      "Colloid cyst (blocks foramen of Monro → acute hydrocephalus, sudden death)",
+      "Ventriculomegaly in schizophrenia (one of the most replicated findings)",
     ],
     topicHints: ["Neuroimaging Findings", "Vascular Cognitive Impairment"],
   },
@@ -2653,15 +2782,28 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "A region of the inferior frontal gyrus in the dominant (usually left) hemisphere that drives the motor planning of speech. Damage produces effortful, non-fluent output with relatively preserved comprehension.",
     functions: [
-      "Speech production and articulation planning",
-      "Grammar and syntactic processing",
-      "Sequencing the motor program for language output",
+      "Expressive (motor) language production in the dominant hemisphere (left in ~95% of right-handers, ~70% of left-handers)",
+      "Combines pars opercularis (BA 44) and pars triangularis (BA 45)",
+      "Articulatory planning and grammatical sequencing",
+      "Right-hemisphere homologue handles prosody (emotional tone of speech)",
+    ],
+    connections: [
+      "Connected to Wernicke's area via the arcuate fasciculus (dorsal language stream)",
+      "Receives input from premotor cortex; outputs to face/tongue motor cortex",
+      "Linked to basal ganglia for speech motor control",
     ],
     neuropsych: [
-      "Broca's (expressive) aphasia: halting, telegraphic speech with intact comprehension and frustrating awareness of the deficit",
-      "Frequently co-occurs with right-sided weakness given the adjacent motor cortex",
+      "Broca's aphasia: non-fluent, effortful, agrammatic speech with relatively preserved comprehension — patient is typically aware of the deficit (frustration common)",
+      "Mute initially, then telegraphic speech; repetition impaired",
+      "Discovered by Paul Broca in patient 'Tan' (1861) — historical anchor of localizationism",
+      "Often co-occurs with right hemiparesis (adjacent motor cortex)",
     ],
-    conditions: ["Expressive (Broca's) aphasia", "Left MCA stroke"],
+    conditions: [
+      "Broca's aphasia from left MCA superior division stroke",
+      "Primary progressive aphasia (non-fluent variant)",
+      "Brain tumors in left inferior frontal lobe",
+      "Apraxia of speech (often co-occurring)",
+    ],
     topicHints: ["Language & Aphasia", "Neuropsychology Overview"],
   },
   {
@@ -2680,15 +2822,27 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "A region of the posterior superior temporal gyrus in the dominant hemisphere responsible for language comprehension. Damage yields fluent but meaningless speech and poor understanding.",
     functions: [
+      "Receptive (sensory) language area in the dominant (usually left) hemisphere",
+      "Located at the posterior superior temporal gyrus (~Brodmann area 22)",
       "Comprehension of spoken and written language",
-      "Mapping words onto meaning",
-      "Monitoring one's own speech for sense",
+      "Selection of phonological representations during speech production",
+    ],
+    connections: [
+      "Connected to Broca's area via the arcuate fasciculus (dorsal language stream)",
+      "Receives input from primary auditory cortex",
+      "Links to angular and supramarginal gyri",
     ],
     neuropsych: [
-      "Wernicke's (receptive) aphasia: fluent but nonsensical speech ('word salad') with impaired comprehension and limited insight",
-      "Linked to Broca's area by the arcuate fasciculus — damage to that tract causes conduction aphasia (poor repetition)",
+      "Wernicke's aphasia: fluent but meaningless 'word salad' speech, severely impaired comprehension, poor repetition",
+      "Patients are often unaware of their deficit (lack of insight) — can appear paranoid or psychotic",
+      "Neologisms and paraphasias are characteristic",
+      "Caused most commonly by left MCA inferior division stroke",
     ],
-    conditions: ["Receptive (Wernicke's) aphasia", "Left posterior temporal stroke"],
+    conditions: [
+      "Wernicke's aphasia",
+      "Logopenic variant primary progressive aphasia",
+      "Transcortical sensory aphasia (sparing of Wernicke's proper)",
+    ],
     topicHints: ["Language & Aphasia", "Neuropsychology Overview"],
   },
   {
@@ -2707,15 +2861,29 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "Sitting on the superior temporal gyrus (Heschl's gyrus), this is the first cortical destination for sound. It is tonotopically organized, mapping sound frequencies across its surface.",
     functions: [
-      "Processes pitch, loudness, and the timing of sound",
-      "Tonotopic frequency mapping",
-      "Feeds auditory input to language and association areas",
+      "Conscious perception of sound — pitch, loudness, timing, location",
+      "Located on Heschl's gyrus within the lateral sulcus (Brodmann areas 41/42)",
+      "Tonotopic organization: high frequencies posteromedial, low frequencies anterolateral",
+      "Each ear projects bilaterally — unilateral lesions don't cause deafness",
+    ],
+    connections: [
+      "Receives input from medial geniculate nucleus of thalamus",
+      "Projects to auditory association cortex (Wernicke's area)",
+      "Reciprocal with belt and parabelt areas for complex sound processing",
+      "Corticocortical connections via arcuate fasciculus",
     ],
     neuropsych: [
-      "Bilateral damage can cause cortical deafness or auditory agnosia despite intact ears",
-      "Auditory hallucinations in schizophrenia involve aberrant activity in this region",
+      "Bilateral lesions produce cortical deafness (rare due to bilateral input)",
+      "Unilateral damage causes subtle auditory deficits — sound localization, temporal processing",
+      "Auditory hallucinations in schizophrenia involve aberrant activation of A1 and association areas",
+      "Tinnitus involves maladaptive plasticity here",
     ],
-    conditions: ["Auditory agnosia", "Cortical deafness"],
+    conditions: [
+      "Cortical deafness (bilateral lesions)",
+      "Auditory agnosia",
+      "Tinnitus",
+      "Schizophrenia (auditory hallucinations)",
+    ],
     topicHints: ["Sensory Processing", "Neuropsychology Overview"],
   },
   {
@@ -2734,15 +2902,28 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "Part of the inferior parietal lobule wrapping the posterior end of the lateral sulcus. A hub for phonological processing, skilled movement, and integrating touch with action.",
     functions: [
-      "Phonological processing of language",
-      "Spatial and limb praxis (skilled movement)",
-      "Integrates sensory input for the body schema",
+      "Phonological processing and verbal working memory (left side)",
+      "Tool use and praxis representations",
+      "Right SMG involved in spatial attention and emotional regulation",
+      "Part of the inferior parietal lobule with the angular gyrus",
+    ],
+    connections: [
+      "Arcuate fasciculus terminates here (dorsal language stream)",
+      "Connected to Broca's and Wernicke's areas",
+      "Reciprocal with premotor cortex for skilled action",
     ],
     neuropsych: [
-      "A component of Gerstmann syndrome when the dominant inferior parietal lobule is damaged",
-      "Lesions contribute to ideomotor apraxia and phonological reading errors",
+      "Left SMG damage produces conduction aphasia: fluent speech and good comprehension but markedly impaired repetition with phonemic paraphasias",
+      "Lesions can cause ideomotor apraxia — inability to perform learned movements on command",
+      "Right SMG damage contributes to hemispatial neglect",
+      "Activated by phonological awareness tasks",
     ],
-    conditions: ["Gerstmann syndrome", "Conduction aphasia"],
+    conditions: [
+      "Conduction aphasia",
+      "Ideomotor apraxia",
+      "Hemispatial neglect",
+      "Developmental dyslexia (left SMG abnormalities)",
+    ],
     topicHints: ["Parietal Function", "Language & Aphasia"],
   },
   {
@@ -2761,15 +2942,29 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "A posterior inferior parietal region at the junction of the temporal, parietal, and occipital lobes. It binds multisensory information for reading, arithmetic, and abstract concept retrieval.",
     functions: [
-      "Reading and writing (mapping symbols to meaning)",
-      "Number processing and calculation",
-      "Semantic memory and metaphor comprehension",
+      "Multimodal cross-modal integration (semantic, spatial, social)",
+      "Mathematical computation, especially exact arithmetic",
+      "Reading comprehension and semantic access",
+      "Default mode network core node",
+      "Self-projection — episodic future thinking, theory of mind",
+    ],
+    connections: [
+      "Convergence of inferior longitudinal, middle longitudinal, and superior longitudinal fasciculi",
+      "Default mode network hub with medial PFC and PCC",
+      "Connected to hippocampus via cingulum",
     ],
     neuropsych: [
-      "Classic site of Gerstmann syndrome: agraphia, acalculia, finger agnosia, and left-right disorientation",
-      "Damage can produce alexia and semantic-level reading errors",
+      "Left angular gyrus damage produces Gerstmann syndrome: dysgraphia, dyscalculia, finger agnosia, left-right confusion",
+      "Also produces alexia with agraphia",
+      "Reduced AG-hippocampal connectivity correlates with episodic memory decline in aging",
+      "Stimulation can elicit out-of-body experiences and autoscopic phenomena",
     ],
-    conditions: ["Gerstmann syndrome", "Alexia with agraphia"],
+    conditions: [
+      "Gerstmann syndrome",
+      "Alexia with agraphia",
+      "Alzheimer's disease (early atrophy)",
+      "Developmental dyslexia",
+    ],
     topicHints: ["Parietal Function", "Language & Aphasia"],
   },
 
@@ -2790,15 +2985,29 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "A compact band of white matter between the caudate/thalamus and the lentiform nucleus. It funnels nearly all motor and sensory fibers traveling between the cortex and the body.",
     functions: [
-      "Carries corticospinal (motor) fibers to the body",
-      "Relays thalamocortical sensory projections",
-      "Conveys corticobulbar fibers to brainstem nuclei",
+      "Major white matter tract carrying nearly all ascending and descending cortical fibers",
+      "Anterior limb: connects thalamus and frontal cortex (frontopontine fibers)",
+      "Genu: corticobulbar fibers (face motor)",
+      "Posterior limb: corticospinal fibers (arm anteriorly, leg posteriorly), thalamocortical sensory fibers, optic and auditory radiations",
+      "Compact bottleneck — small lesions cause large deficits",
+    ],
+    connections: [
+      "Carries corticospinal, corticobulbar, corticopontine, and thalamocortical fibers",
+      "Fibers converge from corona radiata above and continue as cerebral peduncles below",
+      "Lies between caudate/thalamus (medially) and lentiform nucleus (laterally)",
     ],
     neuropsych: [
-      "A tiny lacunar stroke here can cause a dense pure-motor hemiparesis far out of proportion to the lesion size",
-      "Disruption of frontal-subcortical loops can drive executive and emotional change",
+      "Lacunar stroke in the posterior limb produces 'pure motor stroke' — contralateral hemiparesis without sensory or cognitive deficits",
+      "Lacunar stroke in the posterior limb (thalamocortical fibers) can produce pure sensory stroke",
+      "Knee (genu) lesions cause contralateral lower facial weakness",
+      "Posterior limb lesions can produce dense hemiplegia, sensory loss, and homonymous hemianopia together",
     ],
-    conditions: ["Lacunar (pure motor) stroke", "Capsular warning syndrome"],
+    conditions: [
+      "Lacunar stroke (most common location)",
+      "Capsular warning syndrome (recurrent transient hemiparesis)",
+      "Hypertensive small-vessel disease",
+      "Multiple sclerosis (capsular plaques)",
+    ],
     topicHints: ["Neuroanatomy of Stroke", "Motor Pathways"],
   },
   {
@@ -2817,14 +3026,28 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The X-shaped crossing where the optic nerves meet and nasal retinal fibers decussate. Its position just above the pituitary makes it vulnerable to sellar lesions.",
     functions: [
-      "Crosses nasal retinal fibers to the opposite hemisphere",
-      "Routes the visual field toward cortical processing",
+      "X-shaped crossing of the optic nerves at the base of the brain, just anterior to the pituitary stalk",
+      "Nasal retinal fibers (representing temporal visual field) decussate to the opposite side",
+      "Temporal retinal fibers remain ipsilateral",
+      "Result: each optic tract carries information from the contralateral visual field of both eyes",
+    ],
+    connections: [
+      "Receives optic nerves (CN II) from both eyes",
+      "Output: paired optic tracts to lateral geniculate nucleus",
+      "Sits in the suprasellar cistern above the pituitary fossa",
     ],
     neuropsych: [
-      "Compression (classically a pituitary adenoma) causes bitemporal hemianopia — loss of both outer visual fields",
-      "The precise lesion site predicts the pattern of visual field loss",
+      "Compression by a pituitary adenoma produces the classic bitemporal hemianopia (loss of peripheral vision in both eyes)",
+      "Lesion of one optic nerve before the chiasm → monocular blindness",
+      "Lesion just posterior to the chiasm (optic tract) → homonymous hemianopia",
+      "Important landmark on every brain MRI",
     ],
-    conditions: ["Pituitary adenoma", "Craniopharyngioma"],
+    conditions: [
+      "Pituitary adenoma with bitemporal hemianopia",
+      "Craniopharyngioma",
+      "Optic chiasm glioma",
+      "Suprasellar meningioma",
+    ],
     topicHints: ["Visual Pathways", "Neuroanatomy"],
   },
   {
@@ -2843,14 +3066,27 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "A small midline endocrine gland behind the thalamus that secretes melatonin in response to darkness, anchoring the body's circadian rhythm.",
     functions: [
-      "Secretes melatonin to regulate the sleep-wake cycle",
-      "Synchronizes circadian rhythm to the light-dark cycle",
+      "Small midline endocrine gland in the epithalamus, posterior to the third ventricle",
+      "Secretes melatonin in response to darkness (signal from SCN via the sympathetic nervous system)",
+      "Regulates circadian rhythm and sleep-wake cycle",
+      "Calcifies with age — useful midline imaging landmark",
+      "Once philosophically dubbed the 'seat of the soul' by Descartes",
+    ],
+    connections: [
+      "Receives input from SCN of hypothalamus via superior cervical ganglion (sympathetic)",
+      "Releases melatonin into bloodstream",
     ],
     neuropsych: [
-      "Often calcifies with age, serving as a useful midline landmark on imaging",
-      "Pineal-region tumors can compress the midbrain and cause Parinaud syndrome (upgaze palsy)",
+      "Pineal tumors compress the dorsal midbrain → Parinaud syndrome (vertical gaze palsy, light-near dissociation, convergence-retraction nystagmus)",
+      "Melatonin supplementation modulates circadian rhythm in jet lag and shift work",
+      "Calcification is normal after age ~20; used as a midline shift marker",
+      "Pineal volume reductions reported in some mood and sleep disorders",
     ],
-    conditions: ["Pineal tumors / pinealoma", "Circadian rhythm disruption"],
+    conditions: [
+      "Pineal region tumors (germinoma, pineoblastoma)",
+      "Parinaud syndrome",
+      "Circadian rhythm disorders",
+    ],
     topicHints: ["Sleep & Circadian Rhythm", "Neuroendocrine Systems"],
   },
 
@@ -2871,15 +3107,29 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The uppermost frontal gyrus, running along the dorsomedial edge of the frontal lobe above the superior frontal sulcus. Its posterior end contains the supplementary motor area and the frontal eye fields.",
     functions: [
-      "Supplementary motor planning of complex, self-initiated movement",
-      "Frontal eye fields — voluntary saccades and gaze shifts",
-      "Contributes to working memory and self-awareness networks",
+      "Self-awareness and introspection (anterior portion)",
+      "Working memory (mid-SFG overlaps DLPFC)",
+      "Supplementary motor area lies on its posterior-medial surface — sequencing of voluntary movement",
+      "Contributes to laughter, voluntary motor inhibition, and Bereitschaftspotential generation",
+    ],
+    connections: [
+      "Strong intralobar fibers to middle frontal gyrus and precentral gyrus",
+      "Connected to anterior cingulate via cingulum bundle",
+      "Projects to striatum and thalamus (cortico-striato-thalamo-cortical loops)",
+      "Default mode network association (anterior SFG)",
     ],
     neuropsych: [
-      "Medial SFG (SMA) lesions cause akinesia and the alien-hand phenomenon",
-      "Posterior SFG damage disrupts voluntary gaze and visual search strategy",
+      "SMA (posterior SFG) lesions cause transient akinesia and 'alien hand' phenomena",
+      "Right SFG implicated in self-referential processing",
+      "Atrophy correlates with apathy in frontotemporal dementia",
+      "DLPFC overlap means SFG is part of working memory and executive networks",
     ],
-    conditions: ["Supplementary motor area syndrome", "Frontal gaze palsy"],
+    conditions: [
+      "Stroke involving anterior cerebral artery (medial SFG → leg weakness, abulia)",
+      "Frontotemporal dementia",
+      "Schizophrenia (working memory deficits)",
+      "Major depression (reduced metabolism)",
+    ],
     topicHints: ["Motor Pathways", "Executive Function & Frontal Lobe Syndromes"],
   },
   {
@@ -2898,15 +3148,30 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The broad central frontal gyrus between the superior and inferior frontal sulci. Houses much of the dorsolateral prefrontal cortex — the executive core — and the posterior frontal eye field.",
     functions: [
-      "Dorsolateral prefrontal executive control and working memory",
-      "Cognitive set-shifting and planning",
-      "Reorienting attention to behaviorally relevant stimuli",
+      "Houses dorsolateral prefrontal cortex (DLPFC) — the brain's executive control center",
+      "Working memory maintenance and manipulation",
+      "Cognitive flexibility and set-shifting",
+      "Top-down attentional control",
+      "Frontal eye field (posterior MFG) — voluntary saccades",
+    ],
+    connections: [
+      "Reciprocally connected with parietal cortex via superior longitudinal fasciculus (frontoparietal network)",
+      "Heavy connections to mediodorsal thalamus",
+      "Cortico-striatal projections to head of caudate",
+      "Links to ACC for conflict monitoring",
     ],
     neuropsych: [
-      "Lesions impair Wisconsin Card Sort and n-back performance (dysexecutive syndrome)",
-      "A key rTMS target for treatment-resistant depression",
+      "DLPFC dysfunction underlies perseverative errors on the Wisconsin Card Sorting Test",
+      "Hypofrontality during n-back tasks is a hallmark of schizophrenia",
+      "FDA-approved rTMS target for treatment-resistant depression (left DLPFC)",
+      "Frontal eye field damage causes contralateral gaze deviation acutely",
     ],
-    conditions: ["Dysexecutive syndrome", "Major depressive disorder (rTMS target)"],
+    conditions: [
+      "Major Depressive Disorder (rTMS target)",
+      "Schizophrenia (working memory deficits)",
+      "ADHD",
+      "Frontal-lobe injury executive dysfunction",
+    ],
     topicHints: ["Executive Function & Frontal Lobe Syndromes", "Mood Disorders & Neuromodulation"],
   },
   {
@@ -2925,15 +3190,30 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The lowest frontal gyrus, just above the lateral sulcus. On the dominant (usually left) hemisphere its posterior portions form Broca's area; it is divided into the pars opercularis, triangularis, and orbitalis.",
     functions: [
-      "Speech production and grammatical processing (dominant side)",
-      "Response inhibition and motor stopping (right IFG)",
-      "Hierarchical sequencing of language and action",
+      "Contains Broca's area on the left (pars opercularis + pars triangularis)",
+      "Expressive language production (left hemisphere dominant)",
+      "Response inhibition — right IFG is critical for stopping prepotent responses",
+      "Mirror neuron system involvement (action understanding)",
+      "Syntactic processing",
+    ],
+    connections: [
+      "Connected to superior temporal gyrus via arcuate fasciculus (dorsal language stream)",
+      "Reciprocal links to premotor and motor cortex",
+      "Right IFG connects to subthalamic nucleus via hyperdirect pathway for stopping",
+      "Frontal aslant tract to pre-SMA",
     ],
     neuropsych: [
-      "Left IFG damage produces Broca's (non-fluent, effortful) aphasia",
-      "Right IFG is central to the stop-signal model of impulse control, weak in ADHD",
+      "Left IFG damage produces Broca's (expressive) aphasia: non-fluent, agrammatic speech with preserved comprehension",
+      "Right IFG lesions impair the Stop-Signal Reaction Time task",
+      "Co-activated during empathy and observation of others' actions",
+      "Reduced gray matter in right IFG associated with ADHD",
     ],
-    conditions: ["Broca's aphasia", "Impulse-control deficits / ADHD"],
+    conditions: [
+      "Broca's aphasia (left MCA stroke)",
+      "Primary progressive aphasia (non-fluent variant)",
+      "ADHD (right IFG)",
+      "Stuttering (altered IFG connectivity)",
+    ],
     topicHints: ["Language Processing & Aphasia", "Executive Function & Frontal Lobe Syndromes"],
   },
   {
@@ -2956,6 +3236,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Posterior end approximates the frontal eye field",
       "Guides localization of dorsal attention regions",
     ],
+    connections: [],
     neuropsych: [
       "Used as an fMRI landmark when mapping spatial-attention and saccade networks",
       "Sulcal morphology is studied as a developmental marker in neurodevelopmental disorders",
@@ -2983,6 +3264,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Separates executive (DLPFC) from language cortex",
       "Reference for parcellating lateral prefrontal subregions",
     ],
+    connections: [],
     neuropsych: [
       "Helps distinguish DLPFC from Broca's-area activation in language fMRI",
       "Sulcal pattern variability informs individualized cortical mapping",
@@ -3006,15 +3288,30 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The gyrus immediately anterior to the central sulcus, carrying the primary motor cortex (M1) and its motor homunculus. Origin of the corticospinal tract.",
     functions: [
-      "Execution of voluntary movement via Betz cells",
-      "Somatotopic motor map — disproportionate hand and face representation",
-      "Source of the corticospinal and corticobulbar tracts",
+      "Primary motor cortex (M1, Brodmann area 4)",
+      "Initiation of voluntary movement",
+      "Houses the motor homunculus — disproportionate representation of hands, face, and tongue",
+      "Origin of corticospinal and corticobulbar tracts",
+      "Contains giant Betz cells in layer V",
+    ],
+    connections: [
+      "Receives planning input from premotor cortex and SMA",
+      "Output via corticospinal tract through internal capsule (posterior limb)",
+      "Receives sensory feedback from postcentral gyrus via short U-fibers",
+      "Thalamic input from ventral lateral nucleus",
     ],
     neuropsych: [
-      "Lesions cause contralateral upper-motor-neuron weakness, spasticity, and Babinski sign",
-      "Focal irritation produces a Jacksonian motor march",
+      "Lesions produce contralateral upper motor neuron weakness: hyperreflexia, spasticity, Babinski sign",
+      "Hand and face area are MCA territory; leg area is ACA territory",
+      "Constraint-induced movement therapy exploits cortical reorganization here",
+      "TMS over M1 is used to map motor function pre-surgically",
     ],
-    conditions: ["Middle cerebral artery stroke", "Cortical (Jacksonian) seizures"],
+    conditions: [
+      "Middle cerebral artery stroke (hand/face weakness)",
+      "Anterior cerebral artery stroke (leg weakness)",
+      "ALS (upper motor neuron loss)",
+      "Jacksonian motor seizures (somatotopic march)",
+    ],
     topicHints: ["Motor Pathways", "Stroke Syndromes"],
   },
   {
@@ -3033,15 +3330,24 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The deep fissure dividing the frontal lobe from the parietal lobe — and the motor cortex (in front) from the somatosensory cortex (behind). The single most important cortical landmark.",
     functions: [
-      "Separates the precentral (motor) from postcentral (sensory) gyrus",
-      "Marks the frontal–parietal boundary",
-      "Primary reference for localizing the sensorimotor strip",
+      "Anatomical boundary between the frontal and parietal lobes",
+      "Separates the primary motor cortex (precentral gyrus, anteriorly) from the primary somatosensory cortex (postcentral gyrus, posteriorly)",
+      "Key landmark for surgical and imaging localization",
+    ],
+    connections: [
+      "Crossed by U-fibers connecting M1 and S1 directly",
+      "Marks the somatotopic divide between motor and sensory homunculi",
     ],
     neuropsych: [
-      "Identifying the central sulcus is the first step in pre-surgical sensorimotor mapping",
-      "Its 'inverted omega' hand knob localizes the motor hand area",
+      "Identified on imaging by the 'omega' or 'hand-knob' sign — the hand motor area",
+      "Crucial reference point in pre-surgical planning to spare motor/sensory cortex",
+      "Tumors crossing the central sulcus pose extra surgical risk to both motor and sensory function",
     ],
-    conditions: ["(Landmark — guides peri-Rolandic surgical planning)"],
+    conditions: [
+      "Peri-rolandic gliomas",
+      "Focal cortical dysplasia (often epileptogenic)",
+      "Used in awake craniotomy mapping",
+    ],
     topicHints: ["Neuroanatomy Landmarks", "Motor Pathways"],
   },
   {
@@ -3060,15 +3366,27 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The posterior cap of the inferior frontal gyrus (Brodmann 44). Together with the pars triangularis it forms Broca's area on the dominant hemisphere.",
     functions: [
-      "Articulatory and phonological assembly of speech",
-      "Syntactic processing (with pars triangularis)",
-      "Part of the mirror-neuron system for action understanding",
+      "Posterior part of Broca's area (Brodmann area 44) on the left",
+      "Phonological processing and articulation planning",
+      "Right-hemisphere homologue contributes to prosody and response inhibition",
+      "Mirror neuron activity during action observation",
+    ],
+    connections: [
+      "Connected to posterior superior temporal gyrus via arcuate fasciculus",
+      "Strong links to ventral premotor cortex",
+      "Projects to basal ganglia via frontostriatal loops",
     ],
     neuropsych: [
-      "Damage contributes to the effortful, agrammatic output of Broca's aphasia",
-      "Activated during covert speech and verbal working-memory rehearsal",
+      "Damage contributes to Broca's aphasia, particularly articulatory difficulty",
+      "Stimulation here during awake mapping produces speech arrest",
+      "Activated by phonological working memory tasks (rhyme judgment)",
+      "Right pars opercularis lesions impair stop-signal performance",
     ],
-    conditions: ["Broca's aphasia", "Apraxia of speech"],
+    conditions: [
+      "Broca's aphasia",
+      "Apraxia of speech",
+      "Primary progressive aphasia (non-fluent variant)",
+    ],
     topicHints: ["Language Processing & Aphasia", "Executive Function & Frontal Lobe Syndromes"],
   },
   {
@@ -3087,15 +3405,26 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The wedge-shaped middle subdivision of the inferior frontal gyrus (Brodmann 45), the anterior half of Broca's area.",
     functions: [
-      "Semantic selection and controlled retrieval of words",
-      "Syntactic and grammatical processing",
-      "Integration of meaning during sentence comprehension",
+      "Anterior part of Broca's area (Brodmann area 45) on the left",
+      "Syntactic and semantic processing of language",
+      "Selection among competing semantic representations",
+      "Working memory for verbal material",
+    ],
+    connections: [
+      "Connected to middle and inferior temporal gyri via inferior fronto-occipital fasciculus and uncinate fasciculus (ventral language stream)",
+      "Reciprocal with pars opercularis (intralobar)",
+      "Links to ACC and DLPFC",
     ],
     neuropsych: [
-      "Implicated in verbal fluency tasks (FAS, category fluency)",
-      "Hypoactivation is associated with word-finding difficulty in aphasia and dementia",
+      "Lesions impair syntactic comprehension of complex sentences",
+      "Activated by tasks requiring selection among semantic alternatives (verb generation)",
+      "Reduced gray matter in semantic variant of primary progressive aphasia",
     ],
-    conditions: ["Broca's / transcortical motor aphasia", "Primary progressive aphasia"],
+    conditions: [
+      "Broca's aphasia (syntactic features)",
+      "Semantic variant primary progressive aphasia",
+      "Developmental language disorders",
+    ],
     topicHints: ["Language Processing & Aphasia", "Neurodegeneration"],
   },
   {
@@ -3114,15 +3443,26 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The anterior-inferior subdivision of the inferior frontal gyrus (Brodmann 47), transitioning toward the orbitofrontal surface.",
     functions: [
-      "Semantic processing and controlled language retrieval",
-      "Bridges language cortex with orbitofrontal valuation",
-      "Contributes to emotional prosody comprehension",
+      "Most anterior portion of inferior frontal gyrus (Brodmann area 47)",
+      "Semantic processing and lexical retrieval",
+      "Reward valuation overlap with orbitofrontal cortex",
+      "Emotional regulation and reappraisal",
+    ],
+    connections: [
+      "Strong links to orbitofrontal cortex",
+      "Ventral language stream via uncinate fasciculus to anterior temporal lobe",
+      "Connects to amygdala for emotion regulation",
     ],
     neuropsych: [
-      "Engaged in tasks requiring effortful semantic selection",
-      "Atrophy here features in the semantic variant of primary progressive aphasia",
+      "Activated during cognitive reappraisal of negative emotional stimuli",
+      "Reduced activity in depression during emotion regulation tasks",
+      "Involved in retrieval of semantic and autobiographical information",
     ],
-    conditions: ["Semantic dementia", "Aphasia syndromes"],
+    conditions: [
+      "Major depressive disorder",
+      "Frontotemporal dementia",
+      "Semantic memory deficits",
+    ],
     topicHints: ["Language Processing & Aphasia", "Decision Making & Reward"],
   },
   {
@@ -3141,15 +3481,29 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The anterior tip of the frontal lobe (Brodmann 10) — the most anterior and evolutionarily newest cortex. Supports the highest-order integration of goals and self-generated thought.",
     functions: [
-      "Prospective memory and multitasking (holding goals while doing subtasks)",
-      "Metacognition and self-monitoring",
-      "Abstract reasoning and relational integration",
+      "Prospective cognition — imagining and evaluating future scenarios",
+      "Multitasking and metacognition (thinking about one's own thinking)",
+      "Holding higher-order goals 'on the shelf' while pursuing subgoals",
+      "Integration of internally generated thought with external task demands",
+    ],
+    connections: [
+      "Reciprocally connected with dorsolateral and ventrolateral PFC via short association fibers",
+      "Links to anterior cingulate cortex for cognitive control",
+      "Receives mediodorsal thalamic input",
+      "Default mode network hub (medial frontopolar cortex)",
     ],
     neuropsych: [
-      "Lesions impair multitasking despite intact basic executive tests (the 'Multiple Errands' deficit)",
-      "Particularly vulnerable in traumatic brain injury and behavioral-variant FTD",
+      "Largest in humans relative to other primates — last region to fully myelinate (mid-20s)",
+      "Lesions impair multitasking despite preserved performance on single tasks",
+      "Frontopolar activation predicts exploration vs exploitation choices in decision tasks",
+      "Implicated in reduced future-thinking in depression and schizophrenia",
     ],
-    conditions: ["Traumatic brain injury", "Frontotemporal dementia (behavioral variant)"],
+    conditions: [
+      "Frontotemporal dementia (behavioral variant)",
+      "Traumatic brain injury — vulnerable to coup/contrecoup damage",
+      "Schizophrenia (impaired prospective memory)",
+      "Apathy syndromes",
+    ],
     topicHints: ["Executive Function & Frontal Lobe Syndromes", "Traumatic Brain Injury"],
   },
 
@@ -3170,15 +3524,30 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The gyrus immediately behind the central sulcus, carrying the primary somatosensory cortex (S1) and its sensory homunculus. Receives touch, proprioception, and temperature from the contralateral body.",
     functions: [
-      "Conscious perception of touch, vibration, and proprioception",
-      "Somatotopic sensory map mirroring the motor homunculus",
+      "Primary somatosensory cortex (S1, Brodmann areas 3, 1, 2)",
+      "Conscious perception of touch, pressure, vibration, proprioception",
       "Two-point discrimination and stereognosis",
+      "Contains the sensory homunculus — hands and lips greatly magnified",
+      "Pain localization (though affective pain is processed in insula/ACC)",
+    ],
+    connections: [
+      "Receives thalamic input from ventral posterolateral (body) and ventral posteromedial (face) nuclei",
+      "Projects to posterior parietal cortex for higher-order spatial processing",
+      "Reciprocal connections with M1 across the central sulcus",
+      "Sends fibers via superior longitudinal fasciculus",
     ],
     neuropsych: [
-      "Lesions cause contralateral cortical sensory loss with preserved crude touch",
-      "Tested by stereognosis, graphesthesia, and double-simultaneous stimulation (extinction)",
+      "Lesions produce contralateral cortical sensory loss: preserved crude touch but lost discrimination",
+      "Astereognosis (inability to identify objects by touch) and agraphesthesia point to S1 damage",
+      "Tested with two-point discrimination, double simultaneous stimulation (extinction)",
+      "Phantom limb sensation reflects cortical remapping after amputation",
     ],
-    conditions: ["Cortical sensory loss", "Sensory seizures"],
+    conditions: [
+      "Cortical sensory loss",
+      "Tactile agnosia (astereognosis)",
+      "Phantom limb syndrome",
+      "Focal sensory seizures",
+    ],
     topicHints: ["Sensory Pathways", "Cortical Mapping"],
   },
   {
@@ -3197,15 +3566,29 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The upper parietal region above the intraparietal sulcus (Brodmann 5/7). A core node of the dorsal 'where/how' stream for spatial attention and visually guided action.",
     functions: [
-      "Visuospatial attention and spatial working memory",
-      "Visually guided reaching and grasping",
-      "Integration of body position with the external world",
+      "Higher-order somatosensory and visuospatial processing (Brodmann areas 5, 7)",
+      "Dorsal 'where/how' visual stream — visually guided action",
+      "Mental rotation and spatial transformations",
+      "Spatial attention and shifting of attention",
+    ],
+    connections: [
+      "Superior longitudinal fasciculus to DLPFC (frontoparietal attention network)",
+      "Receives somatosensory input from postcentral gyrus",
+      "Visual input from occipital cortex (dorsal stream)",
+      "Projects to premotor cortex for reaching/grasping",
     ],
     neuropsych: [
-      "Damage contributes to optic ataxia and impaired reaching under visual guidance",
-      "Bilateral lesions are part of Bálint syndrome (simultanagnosia, optic ataxia, ocular apraxia)",
+      "Damage impairs visually guided reaching (optic ataxia)",
+      "Part of Balint syndrome (with bilateral lesions): simultanagnosia, optic ataxia, oculomotor apraxia",
+      "Reduced activation during mental rotation tasks in spatial deficits",
+      "Right SPL key for visuospatial working memory",
     ],
-    conditions: ["Bálint syndrome", "Optic ataxia"],
+    conditions: [
+      "Balint syndrome (bilateral parietal damage)",
+      "Optic ataxia",
+      "Visuospatial neglect (less common than from IPL damage)",
+      "Posterior cortical atrophy",
+    ],
     topicHints: ["Visuospatial Processing", "Apraxia & Agnosia"],
   },
   {
@@ -3224,15 +3607,29 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The lower parietal region below the intraparietal sulcus, comprising the supramarginal and angular gyri. A multimodal convergence zone for language, number, and the body schema.",
     functions: [
-      "Cross-modal integration of language, space, and number",
-      "Tool use and gesture (praxis)",
-      "Part of the temporoparietal junction for social cognition",
+      "Comprised of supramarginal and angular gyri",
+      "Multimodal integration — somatosensation, vision, audition",
+      "Self-other distinction and agency",
+      "Body schema and limb position awareness",
+      "Default mode network component",
+    ],
+    connections: [
+      "Convergence zone for all sensory association cortices",
+      "Superior longitudinal fasciculus to frontal cortex",
+      "Heavy connections to PCC/precuneus",
     ],
     neuropsych: [
-      "Left-side damage yields Gerstmann syndrome (agraphia, acalculia, finger agnosia, L/R confusion)",
-      "Right-side damage produces hemispatial neglect",
+      "Right IPL damage is the classic cause of hemispatial neglect — failure to attend to left space",
+      "Patients may deny the deficit (anosognosia) or even deny ownership of left limbs (somatoparaphrenia)",
+      "Left IPL lesions contribute to Gerstmann syndrome and apraxia",
+      "Out-of-body experiences can be elicited by stimulation here",
     ],
-    conditions: ["Gerstmann syndrome", "Hemispatial neglect"],
+    conditions: [
+      "Hemispatial neglect (right MCA stroke)",
+      "Gerstmann syndrome (left IPL)",
+      "Anosognosia",
+      "Apraxia syndromes",
+    ],
     topicHints: ["Apraxia & Agnosia", "Visuospatial Processing"],
   },
   {
@@ -3251,15 +3648,27 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The groove dividing the superior and inferior parietal lobules. Its banks form the human homologue of the macaque parietal reach and attention regions.",
     functions: [
-      "Top-down control of spatial attention (dorsal attention network)",
-      "Numerical magnitude representation",
-      "Coordinate transformations for eye and hand movements",
+      "Separates the superior and inferior parietal lobules",
+      "Houses multiple specialized 'parietal eye field' and reaching/grasping regions",
+      "Numerical magnitude processing (number sense)",
+      "Visuospatial attention and saccadic control",
+    ],
+    connections: [
+      "Frontal eye field via superior longitudinal fasciculus (oculomotor network)",
+      "Connected to premotor and motor cortex",
+      "Visual cortex input for spatial coding",
     ],
     neuropsych: [
-      "Activity here scales with attentional load and number comparison",
-      "Disruption is linked to dyscalculia and attentional deficits",
+      "Disruption (e.g., by TMS) impairs subitizing and approximate number comparison",
+      "Reduced IPS activation in developmental dyscalculia",
+      "Critical node of the dorsal attention network",
+      "Damage contributes to Gerstmann syndrome (with surrounding parietal damage)",
     ],
-    conditions: ["Developmental dyscalculia", "Attention disorders"],
+    conditions: [
+      "Developmental dyscalculia",
+      "Gerstmann syndrome",
+      "Visuospatial attention deficits",
+    ],
     topicHints: ["Attention Networks", "Visuospatial Processing"],
   },
 
@@ -3281,15 +3690,29 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The uppermost temporal gyrus bordering the lateral sulcus. Contains the primary auditory cortex (Heschl's gyrus) and, posteriorly on the dominant side, Wernicke's area.",
     functions: [
-      "Primary and association auditory processing",
-      "Receptive language and speech-sound analysis (dominant side)",
-      "Voice and prosody perception",
+      "Auditory association cortex — interprets sound meaning",
+      "Houses Wernicke's area on the posterior left (language comprehension)",
+      "Voice and speech perception",
+      "Social-cue processing in superior temporal sulcus area",
+    ],
+    connections: [
+      "Receives input from primary auditory cortex",
+      "Connected to Broca's area via arcuate fasciculus",
+      "Links to inferior parietal lobule (cross-modal integration)",
+      "Reciprocal with amygdala (emotional voice processing)",
     ],
     neuropsych: [
-      "Posterior left STG damage produces Wernicke's (fluent, paraphasic) aphasia",
-      "STG abnormalities are among the most replicated findings in schizophrenia (auditory hallucinations)",
+      "Left posterior STG damage causes Wernicke's (receptive) aphasia",
+      "Right STG damage impairs prosody perception (aprosodia)",
+      "Reduced STG gray matter in schizophrenia correlates with auditory hallucination severity",
+      "Activated by hearing one's own name and emotionally salient voices",
     ],
-    conditions: ["Wernicke's aphasia", "Schizophrenia (auditory hallucinations)"],
+    conditions: [
+      "Wernicke's aphasia",
+      "Schizophrenia",
+      "Pure word deafness",
+      "Auditory verbal hallucinations",
+    ],
     topicHints: ["Language Processing & Aphasia", "Psychotic Disorders"],
   },
   {
@@ -3309,15 +3732,28 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The central temporal gyrus between the superior and inferior temporal sulci. A hub for semantic memory, lexical retrieval, and the visual motion area (V5/MT) at its posterior end.",
     functions: [
-      "Lexical-semantic knowledge and word meaning",
-      "Visual motion perception (area MT/V5)",
-      "Integration of language with conceptual knowledge",
+      "Semantic memory and word retrieval",
+      "Visual motion processing (area V5/MT extends onto its posterior portion)",
+      "Action and verb knowledge",
+      "Multimodal semantic integration",
+    ],
+    connections: [
+      "Inferior longitudinal fasciculus links to occipital cortex",
+      "Middle longitudinal fasciculus to angular gyrus",
+      "Reciprocal connections with inferior frontal gyrus via ventral language stream",
     ],
     neuropsych: [
-      "Posterior MTV5 damage causes akinetopsia (motion blindness)",
-      "Degeneration contributes to anomia and semantic loss in dementia",
+      "Lesions produce anomia (word-finding difficulty) and transcortical sensory aphasia",
+      "Area V5/MT damage produces akinetopsia (motion blindness)",
+      "Selectively activated by action verbs over object nouns",
+      "Reduced volume in semantic dementia",
     ],
-    conditions: ["Akinetopsia", "Semantic dementia"],
+    conditions: [
+      "Transcortical sensory aphasia",
+      "Akinetopsia",
+      "Semantic dementia",
+      "Alzheimer's disease (atrophy pattern)",
+    ],
     topicHints: ["Language Processing & Aphasia", "Visual System & Agnosia"],
   },
   {
@@ -3337,15 +3773,28 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The lowest gyrus on the lateral temporal surface, part of the ventral 'what' stream for high-level visual recognition of objects and forms.",
     functions: [
-      "High-level visual object recognition (ventral stream)",
-      "Form and feature integration into recognizable wholes",
-      "Links visual percepts to semantic knowledge",
+      "High-level visual object recognition (ventral 'what' stream endpoint)",
+      "Houses the fusiform face area on its medial surface",
+      "Color processing (V4) on adjacent fusiform gyrus",
+      "Reading network (visual word form area)",
+    ],
+    connections: [
+      "Inferior longitudinal fasciculus from occipital lobe",
+      "Inferior fronto-occipital fasciculus to inferior frontal gyrus",
+      "Heavy reciprocal with hippocampus via perirhinal cortex",
     ],
     neuropsych: [
-      "Damage contributes to visual (associative) agnosia",
-      "Part of the ventral pathway disrupted in posterior cortical atrophy",
+      "Right ITG/fusiform damage produces prosopagnosia (face blindness)",
+      "Left fusiform damage produces pure alexia (cannot read but can write)",
+      "Bilateral lesions cause visual object agnosia",
+      "Activated by category-specific recognition tasks (faces, places, words)",
     ],
-    conditions: ["Visual agnosia", "Posterior cortical atrophy"],
+    conditions: [
+      "Prosopagnosia",
+      "Pure alexia (alexia without agraphia)",
+      "Visual object agnosia",
+      "Posterior cortical atrophy",
+    ],
     topicHints: ["Visual System & Agnosia", "Memory Systems"],
   },
   {
@@ -3365,15 +3814,27 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The long groove between the superior and middle temporal gyri. A central hub of the 'social brain' for processing biological motion and others' intentions.",
     functions: [
-      "Perception of biological motion and gaze direction",
-      "Theory of mind and intention attribution",
-      "Multisensory (audiovisual) speech integration",
+      "Multimodal integration site — vision, audition, somatosensation converge here",
+      "Biological motion perception (point-light walkers)",
+      "Theory of mind processing (especially right pSTS)",
+      "Face processing complementary to fusiform face area",
+    ],
+    connections: [
+      "Convergence zone receiving input from all sensory association areas",
+      "Connected to medial PFC for social cognition",
+      "Links to fusiform face area",
     ],
     neuropsych: [
-      "Dysfunction is implicated in the social-perception deficits of autism spectrum disorder",
-      "Activity tracks the perceived animacy and intentionality of stimuli",
+      "Right pSTS hypoactivation is one of the most replicated findings in autism spectrum disorder",
+      "Damage impairs biological motion perception",
+      "Activated by gaze direction and eye contact",
+      "Key node in the 'social brain' network",
     ],
-    conditions: ["Autism spectrum disorder", "Social cognition deficits"],
+    conditions: [
+      "Autism spectrum disorder",
+      "Social cognition deficits in schizophrenia",
+      "Right hemisphere stroke (social-perceptual deficits)",
+    ],
     topicHints: ["Social Cognition", "Language Processing & Aphasia"],
   },
   {
@@ -3397,6 +3858,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Borders ventral-stream object-recognition cortex",
       "Reference for parcellating lateral temporal regions",
     ],
+    connections: [],
     neuropsych: [
       "Used as an anatomical landmark in temporal-lobe surgical planning",
       "Sulcal depth here is studied in neurodevelopmental imaging",
@@ -3421,15 +3883,24 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The deep, prominent fissure separating the frontal and parietal lobes from the temporal lobe. The insula lies hidden in its depths, and the middle cerebral artery runs within it.",
     functions: [
-      "Separates the temporal lobe from the frontal and parietal lobes",
-      "Overlies the buried insular cortex",
-      "Houses the middle cerebral artery and its branches",
+      "Deepest and most prominent cortical sulcus, separating the frontal/parietal lobes from the temporal lobe",
+      "Contains the insular cortex within its depths",
+      "Houses the middle cerebral artery (MCA) along its length",
+    ],
+    connections: [
+      "Borders Wernicke's area (posterior end) and Heschl's gyrus (within)",
+      "MCA branches arise from within and supply most of the lateral cortex",
     ],
     neuropsych: [
-      "A key landmark for localizing peri-Sylvian language cortex (Broca's and Wernicke's areas)",
-      "MCA strokes within it cause the classic aphasia-plus-hemiparesis syndromes",
+      "Asymmetric in most brains — typically longer/more horizontal on the left, related to language lateralization",
+      "Key surgical landmark for accessing the insula",
+      "Site of perisylvian language network — its damage produces aphasia syndromes",
     ],
-    conditions: ["Middle cerebral artery stroke", "Peri-Sylvian aphasias"],
+    conditions: [
+      "Middle cerebral artery stroke (most common large-vessel stroke)",
+      "Sylvian fissure arachnoid cysts",
+      "Perisylvian polymicrogyria (causes congenital pseudobulbar palsy)",
+    ],
     topicHints: ["Neuroanatomy Landmarks", "Stroke Syndromes"],
   },
   {
@@ -3448,15 +3919,27 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The rounded anterior tip of the temporal lobe (Brodmann 38). A convergence zone binding sensory experience with emotion and social meaning — sometimes called the 'semantic hub.'",
     functions: [
-      "Amodal semantic integration (the 'hub' of the hub-and-spoke model)",
-      "Linking concepts to emotional and social significance",
-      "Person-identity and famous-face knowledge",
+      "Anterior tip of the temporal lobe (Brodmann area 38)",
+      "Semantic memory hub — knowledge of word meanings, person identity, object concepts",
+      "Social and emotional processing",
+      "Person-specific knowledge (proper nouns, biographical facts)",
+    ],
+    connections: [
+      "Uncinate fasciculus connects to orbitofrontal cortex",
+      "Strong links to amygdala and hippocampus",
+      "Receives auditory and visual association input",
     ],
     neuropsych: [
-      "Bilateral atrophy is the signature of semantic dementia — loss of word and object meaning",
-      "Highly susceptible in temporal-lobe epilepsy and herpes encephalitis",
+      "Bilateral atrophy is the defining lesion of semantic dementia (semantic variant PPA)",
+      "Patients lose word meanings while retaining fluent speech and syntax",
+      "Right > left atrophy causes loss of person recognition (famous faces, family members)",
+      "Surgical resection for temporal lobe epilepsy can produce naming deficits",
     ],
-    conditions: ["Semantic dementia", "Temporal-lobe epilepsy"],
+    conditions: [
+      "Semantic dementia / semantic variant PPA",
+      "Temporal lobe epilepsy (anterior temporal lobectomy)",
+      "Herpes simplex encephalitis",
+    ],
     topicHints: ["Memory Systems", "Language Processing & Aphasia"],
   },
 
@@ -3477,15 +3960,28 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The posterior tip of the occipital lobe, containing the foveal (central-vision) representation of the primary visual cortex.",
     functions: [
-      "Central (foveal) visual field representation in V1",
-      "High-acuity detail and reading vision",
-      "Gateway to the dorsal and ventral visual streams",
+      "Most posterior tip of the cerebral hemisphere",
+      "Houses the central macular representation of primary visual cortex (V1)",
+      "Highest visual acuity processing — foveal vision",
+      "Disproportionately large cortical representation of the central few degrees",
+    ],
+    connections: [
+      "Primary input from lateral geniculate nucleus via optic radiations",
+      "Connected to extrastriate areas (V2-V4) via short U-fibers",
+      "Origin of dorsal and ventral visual streams",
     ],
     neuropsych: [
-      "Watershed location — vulnerable to hypotensive injury causing macular-sparing/involving field loss",
-      "PCA strokes here produce homonymous hemianopia, often with macular sparing",
+      "Lesions cause contralateral homonymous hemianopia with macular sparing (collateral blood supply from MCA)",
+      "Bilateral damage produces cortical blindness; Anton syndrome if anosognosia present",
+      "Migraine aura often begins in occipital cortex",
+      "Charles Bonnet syndrome — visual hallucinations after vision loss",
     ],
-    conditions: ["Posterior cerebral artery stroke", "Cortical visual impairment"],
+    conditions: [
+      "Posterior cerebral artery stroke",
+      "Cortical blindness",
+      "Anton syndrome",
+      "Migraine with visual aura",
+    ],
     topicHints: ["Visual System & Agnosia", "Vascular Syndromes"],
   },
   {
@@ -3504,15 +4000,26 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "Higher-order visual cortex on the lateral occipital surface (the lateral occipital complex), specialized for recognizing object shape.",
     functions: [
-      "Object-shape and form recognition",
-      "Figure-ground segmentation",
-      "Bridges early visual areas with the ventral 'what' stream",
+      "Object recognition — shape and structure processing",
+      "Object-selective regions (LOC complex) respond preferentially to whole objects vs scrambled images",
+      "Bridge between early visual cortex and high-level recognition in fusiform gyrus",
+      "Three-dimensional shape from shading, contour, and motion",
+    ],
+    connections: [
+      "Inferior longitudinal fasciculus to inferior temporal cortex",
+      "Reciprocal connections with V1/V2",
+      "Dorsal stream connections to parietal cortex",
     ],
     neuropsych: [
-      "Damage contributes to apperceptive visual agnosia (failure to perceive whole forms)",
-      "Activity distinguishes objects from scrambled images in fMRI",
+      "Lesions cause apperceptive visual agnosia — patients can see but not recognize objects, even by copying",
+      "TMS over LOC impairs object recognition without affecting basic vision",
+      "Spared in many cortical blindness cases, allowing 'blindsight' phenomena",
     ],
-    conditions: ["Apperceptive agnosia", "Visual object recognition deficits"],
+    conditions: [
+      "Apperceptive visual agnosia",
+      "Posterior cortical atrophy",
+      "Developmental visual agnosia",
+    ],
     topicHints: ["Visual System & Agnosia", "Apraxia & Agnosia"],
   },
 
@@ -3533,15 +4040,30 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The large lateral lobe of the cerebellum flanking the vermis. The lateral (neocerebellar) zones coordinate the timing and precision of skilled limb movement and contribute to cognition.",
     functions: [
-      "Coordination and timing of skilled, ipsilateral limb movement",
-      "Motor learning and error correction",
-      "Cerebellar contribution to language, working memory, and affect",
+      "Lateral cerebellar hemispheres — fine motor coordination, especially of distal limbs",
+      "Motor learning and adaptation (e.g., adjusting to prism glasses)",
+      "Cognitive sequencing and timing of thought (especially right hemisphere)",
+      "Language processing support (right cerebellar hemisphere connects to left language cortex)",
+    ],
+    connections: [
+      "Receives cortical input via pons (cortico-pontocerebellar pathway)",
+      "Output via dentate nucleus → superior cerebellar peduncle → contralateral thalamus → motor cortex",
+      "Crossed cerebrocerebellar pathway — left brain ↔ right cerebellum",
+      "Climbing fibers from inferior olive carry error signals",
     ],
     neuropsych: [
-      "Hemisphere lesions cause ipsilateral ataxia, dysmetria, and intention tremor",
-      "Posterior-lobe damage produces the cerebellar cognitive-affective syndrome (Schmahmann)",
+      "Damage produces ipsilateral incoordination — dysmetria, intention tremor, dysdiadochokinesia",
+      "Tested with finger-to-nose, heel-to-shin, rapid alternating movements",
+      "Cerebellar Cognitive-Affective Syndrome (Schmahmann syndrome): executive dysfunction, visuospatial impairment, language deficits, blunted affect — without classic motor signs",
+      "Right cerebellar damage can produce aphasia-like deficits",
     ],
-    conditions: ["Cerebellar ataxia", "Cerebellar cognitive-affective syndrome"],
+    conditions: [
+      "Spinocerebellar ataxias",
+      "Alcoholic cerebellar degeneration (vermis especially)",
+      "Cerebellar stroke",
+      "Cerebellar Cognitive-Affective Syndrome",
+      "Posterior fossa syndrome (post-surgical, in children)",
+    ],
     topicHints: ["Motor Pathways", "Cerebellar Function & Ataxia"],
   },
   {
@@ -3564,6 +4086,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "House the uniform granule–Purkinje cell microcircuit",
       "Give the cerebellum its 'tree of life' (arbor vitae) appearance",
     ],
+    connections: [],
     neuropsych: [
       "Foliar atrophy on MRI is a hallmark of the spinocerebellar ataxias",
       "Purkinje-cell loss within the folia underlies alcoholic cerebellar degeneration",
@@ -3591,6 +4114,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Landmark separating the posterior-lobe lobules",
       "Reference for cerebellar lobular parcellation",
     ],
+    connections: [],
     neuropsych: [
       "Used as a landmark when localizing cerebellar lesions on imaging",
       "Bounds the posterior lobe most associated with cognition and affect",
@@ -3618,6 +4142,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Mediates stretch and withdrawal reflexes",
       "Houses autonomic (sympathetic/parasympathetic) outflow",
     ],
+    connections: [],
     neuropsych: [
       "Cord lesions dissociate motor, pain/temperature, and proprioceptive pathways (e.g. Brown-Séquard)",
       "Dorsal-column disease impairs proprioception, producing sensory ataxia",
@@ -3643,15 +4168,29 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The long arched gyrus wrapping around the corpus callosum on the medial surface. The cortical backbone of the limbic system, spanning the anterior (emotional) and posterior (default-mode) cingulate.",
     functions: [
-      "Links emotion, cognition, and autonomic control",
-      "Conflict and error monitoring (anterior portion)",
-      "Self-referential thought and memory (posterior portion)",
+      "Major limbic structure arching above the corpus callosum",
+      "Anterior cingulate (ACC): conflict monitoring, error detection, effort allocation, pain affect, autonomic regulation",
+      "Posterior cingulate (PCC): self-referential thought, autobiographical memory retrieval, default mode network hub",
+      "Mid-cingulate: motor and cognitive control",
+    ],
+    connections: [
+      "Cingulum bundle — major association tract connecting all cingulate subdivisions",
+      "Reciprocal with prefrontal cortex, parahippocampal region, thalamus",
+      "PCC is heavily connected to precuneus and medial PFC (default mode network)",
+      "ACC connects to amygdala and brainstem autonomic nuclei",
     ],
     neuropsych: [
-      "Anterior cingulate damage can cause akinetic mutism and apathy",
-      "Cingulate dysfunction features in depression, OCD, and chronic pain",
+      "ACC produces the error-related negativity (ERN) on EEG — exaggerated in OCD, blunted in psychopathy",
+      "Akinetic mutism follows bilateral ACC damage",
+      "Subgenual ACC (Brodmann 25) is the deep brain stimulation target for treatment-resistant depression",
+      "PCC is one of the earliest sites of amyloid deposition in Alzheimer's disease",
     ],
-    conditions: ["Treatment-resistant depression", "OCD"],
+    conditions: [
+      "Treatment-resistant depression (subgenual ACC DBS)",
+      "OCD",
+      "Alzheimer's disease (PCC hypometabolism on FDG-PET)",
+      "Akinetic mutism",
+    ],
     topicHints: ["Default Mode Network", "Mood Disorders & Neuromodulation"],
   },
   {
@@ -3670,15 +4209,22 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The groove arching above the cingulate gyrus, separating it from the superior frontal gyrus and the paracentral lobule on the medial surface.",
     functions: [
-      "Separates the cingulate gyrus from the medial frontal cortex",
-      "Its marginal branch is a landmark for the paracentral lobule",
-      "Reference for locating medial sensorimotor cortex",
+      "Separates the cingulate gyrus (inferior) from the medial frontal/parietal gyri (superior)",
+      "Anatomical landmark running parallel to the corpus callosum on the medial surface",
+      "Its marginal branch (pars marginalis) identifies the central sulcus on axial imaging",
+    ],
+    connections: [
+      "Borders ACC anteriorly and PCC posteriorly",
+      "Adjacent cortex receives cingulum bundle fibers",
     ],
     neuropsych: [
-      "The marginal ramus helps localize the central sulcus on midline imaging",
-      "Used in parcellating cingulate subregions for connectivity studies",
+      "Used to localize functional cingulate subregions in imaging studies",
+      "Marginal ramus is the most reliable midline landmark for identifying motor cortex on MRI",
+      "Variability in cingulate sulcus pattern correlates with cognitive control performance",
     ],
-    conditions: ["(Landmark — not a primary lesion site)"],
+    conditions: [
+      "Surrounding cingulate cortex implicated in depression, OCD, anxiety, ADHD",
+    ],
     topicHints: ["Neuroanatomy Landmarks", "Default Mode Network"],
   },
   {
@@ -3697,15 +4243,28 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The deep medial occipital groove that houses the primary visual cortex (V1). Its banks above and below carry the lower and upper contralateral visual quadrants.",
     functions: [
-      "Site of the primary visual cortex (striate cortex, V1)",
-      "Retinotopic map of the contralateral visual field",
-      "Splits upper (lingual) and lower (cuneus) field representation",
+      "Horizontal sulcus on the medial occipital lobe containing primary visual cortex (V1)",
+      "Macular representation at the occipital pole; peripheral visual field anteriorly",
+      "Upper bank: lower visual field; lower bank: upper visual field",
+      "Retinotopic organization is the most precisely studied in the brain",
+    ],
+    connections: [
+      "Optic radiations terminate here (geniculocalcarine tract)",
+      "Output to extrastriate V2, V3, V4, V5/MT",
+      "Splenium of corpus callosum interconnects bilateral V1",
     ],
     neuropsych: [
-      "Lesions cause homonymous hemianopia; partial lesions cause quadrantanopia",
-      "Bilateral calcarine damage produces cortical blindness (± Anton syndrome)",
+      "Unilateral lesions produce contralateral homonymous hemianopia (with macular sparing if PCA stroke)",
+      "Bilateral damage causes cortical blindness",
+      "Migraine visual auras often originate here as spreading depression",
+      "Site of phosphene generation by occipital TMS",
     ],
-    conditions: ["Homonymous hemianopia", "Cortical blindness / Anton syndrome"],
+    conditions: [
+      "Posterior cerebral artery stroke (most common occipital stroke)",
+      "Cortical blindness",
+      "Anton syndrome",
+      "Occipital lobe epilepsy",
+    ],
     topicHints: ["Visual System & Agnosia", "Vascular Syndromes"],
   },
   {
@@ -3724,15 +4283,21 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The deep medial fissure marking the boundary between the parietal and occipital lobes. With the calcarine sulcus it bounds the wedge-shaped cuneus.",
     functions: [
-      "Separates the parietal lobe from the occipital lobe medially",
-      "Bounds the cuneus and precuneus",
-      "Landmark for the medial parieto-occipital cortex",
+      "Deep sulcus on the medial hemispheric surface marking the boundary between parietal and occipital lobes",
+      "Separates the precuneus (anteriorly) from the cuneus (posteriorly)",
+      "Anatomical landmark for posterior cerebral artery territory",
+    ],
+    connections: [
+      "Borders dorsal stream regions transitioning from visual to spatial processing",
+      "Receives short U-fiber connections between parietal and occipital cortex",
     ],
     neuropsych: [
-      "Used to delineate occipital from parietal contributions on imaging",
-      "Borders precuneus regions implicated in consciousness and self-processing",
+      "Used as a localization landmark on midsagittal imaging",
+      "Surrounding cortex contributes to visuospatial integration",
     ],
-    conditions: ["(Landmark — not a primary lesion site)"],
+    conditions: [
+      "PCA strokes affecting calcarine cortex spare or involve parieto-occipital cortex depending on extent",
+    ],
     topicHints: ["Neuroanatomy Landmarks", "Visuospatial Processing"],
   },
   {
@@ -3751,15 +4316,26 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The wedge of medial occipital cortex between the calcarine and parieto-occipital sulci. Processes the lower contralateral visual field as part of the extended visual cortex.",
     functions: [
-      "Visual processing of the lower contralateral visual field",
-      "Basic feature and visual-attention modulation",
-      "Relays to higher visual association areas",
+      "Wedge-shaped region on the medial occipital lobe above the calcarine sulcus",
+      "Processes input from the inferior visual field (contralateral)",
+      "Part of primary visual cortex (V1) and adjacent V2",
+      "Contributes to extrastriate visual processing",
+    ],
+    connections: [
+      "Receives lower visual field input from upper optic radiations",
+      "Reciprocal with lateral occipital cortex",
+      "Splenium of corpus callosum links left and right cunei",
     ],
     neuropsych: [
-      "Lesions contribute to an inferior quadrantanopia",
-      "Altered cuneus activity is reported in depression and migraine with aura",
+      "Lesions cause contralateral inferior quadrantanopia ('pie on the floor')",
+      "Activated during visual mental imagery",
+      "Reduced cuneus volume in some psychotic disorders",
     ],
-    conditions: ["Quadrantanopia", "Visual processing disturbance"],
+    conditions: [
+      "Inferior quadrantanopia (PCA stroke)",
+      "Cortical visual deficits",
+      "Occipital lobe epilepsy",
+    ],
     topicHints: ["Visual System & Agnosia", "Vascular Syndromes"],
   },
   {
@@ -3778,15 +4354,28 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The medial parietal cortex in front of the parieto-occipital sulcus. A richly connected core of the default-mode network central to self-awareness and episodic memory.",
     functions: [
-      "Self-referential processing and first-person perspective taking",
-      "Episodic memory retrieval and mental imagery",
-      "Hub of the default-mode network and conscious awareness",
+      "Medial parietal lobe between the marginal ramus of the cingulate sulcus and the parieto-occipital sulcus",
+      "Self-referential mental imagery and autobiographical memory retrieval",
+      "Visuospatial imagery and mental rotation",
+      "Core default mode network hub (with PCC and medial PFC)",
+      "Consciousness — among the most metabolically active regions at rest",
+    ],
+    connections: [
+      "Heavy reciprocal connections with PCC and medial PFC",
+      "Connected to lateral parietal cortex (angular gyrus)",
+      "Cingulum bundle connectivity",
     ],
     neuropsych: [
-      "Among the first regions to lose metabolism in early Alzheimer's disease",
-      "Deactivates under anesthesia and in disorders of consciousness",
+      "Deactivates during external task focus; reactivates during self-referential thought",
+      "One of the most metabolically reduced regions in disorders of consciousness (coma, vegetative state)",
+      "Early site of amyloid deposition in Alzheimer's disease",
+      "Hypoactivation in depression's altered self-referential processing",
     ],
-    conditions: ["Alzheimer's disease", "Disorders of consciousness"],
+    conditions: [
+      "Alzheimer's disease (early hypometabolism)",
+      "Disorders of consciousness",
+      "Major depression",
+    ],
     topicHints: ["Default Mode Network", "Neurodegeneration"],
   },
   {
@@ -3805,15 +4394,29 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The medial extension of the pre- and postcentral gyri, wrapping over the top of the hemisphere. Contains the motor and sensory representation of the contralateral lower limb and the cortical control of continence.",
     functions: [
-      "Motor and sensory control of the contralateral leg and foot",
-      "Voluntary control of bladder and bowel sphincters",
-      "Medial somatotopic continuation of the sensorimotor strip",
+      "Medial continuation of the precentral and postcentral gyri",
+      "Motor and sensory representation of the contralateral lower limb and genitalia",
+      "Voluntary control of urination and defecation",
+      "Wraps around the central sulcus on the medial surface",
+    ],
+    connections: [
+      "Receives somatosensory input via VPL nucleus of thalamus",
+      "Output via corticospinal tract to lower limb motor neurons",
+      "Connected to supplementary motor area for postural control",
+      "Anterior cerebral artery is its blood supply",
     ],
     neuropsych: [
-      "Lesions (e.g. parasagittal meningioma, ACA stroke) cause leg-predominant weakness",
-      "Bilateral involvement produces urinary incontinence",
+      "Lesions cause contralateral leg weakness and sensory loss",
+      "Urinary incontinence is a classic sign of bilateral paracentral lobule damage",
+      "Anterior cerebral artery stroke is the typical etiology",
+      "Site of foot/leg motor mapping in pre-surgical planning",
     ],
-    conditions: ["Anterior cerebral artery stroke", "Parasagittal meningioma"],
+    conditions: [
+      "Anterior cerebral artery stroke",
+      "Parasagittal meningioma",
+      "Normal pressure hydrocephalus (gait/incontinence from compression)",
+      "Spastic paraparesis",
+    ],
     topicHints: ["Motor Pathways", "Stroke Syndromes"],
   },
   {
@@ -3832,15 +4435,29 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "A medial occipitotemporal gyrus below the calcarine sulcus, part of the ventral visual stream. Processes the upper contralateral visual field and complex visual features like words and color.",
     functions: [
-      "Visual processing of the upper contralateral visual field",
-      "Word-form and letter recognition (with adjacent fusiform)",
-      "Color and complex feature analysis",
+      "Tongue-shaped gyrus on the inferior medial occipital lobe, below the calcarine sulcus",
+      "Processes upper visual field information",
+      "Color perception (V4 lies on the medial fusiform/lingual border)",
+      "Word reading (visual word form area extends here)",
+      "Dreaming — high activity during REM sleep",
+    ],
+    connections: [
+      "Inferior optic radiations terminate here",
+      "Inferior longitudinal fasciculus to inferior temporal cortex",
+      "Reciprocal with fusiform gyrus",
     ],
     neuropsych: [
-      "Lesions contribute to superior quadrantanopia and pure alexia",
-      "Implicated in visual memory and dream imagery",
+      "Lesions cause contralateral superior quadrantanopia ('pie in the sky')",
+      "Damage can produce achromatopsia (acquired color blindness)",
+      "Right lingual lesions impair topographic memory (landmark agnosia)",
+      "Left lingual damage contributes to pure alexia",
     ],
-    conditions: ["Superior quadrantanopia", "Pure alexia"],
+    conditions: [
+      "Superior quadrantanopia",
+      "Achromatopsia",
+      "Pure alexia (with splenial involvement)",
+      "Landmark agnosia",
+    ],
     topicHints: ["Visual System & Agnosia", "Language Processing & Aphasia"],
   },
 
@@ -3865,6 +4482,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Social and moral decision-making",
       "Autonomic correlates of emotional states",
     ],
+    connections: [],
     neuropsych: [
       "Damage (e.g. anterior communicating artery aneurysm) causes disinhibition and confabulation",
       "Part of the vmPFC network linked to the Iowa Gambling Task",
@@ -3892,6 +4510,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Visual word-form recognition for fluent reading",
       "Category-specific recognition of objects and bodies",
     ],
+    connections: [],
     neuropsych: [
       "Right-side damage produces prosopagnosia (face blindness)",
       "Left-side damage to the visual word-form area causes pure alexia",
@@ -3919,6 +4538,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Encoding of spatial context and scenes (place area)",
       "Recognition memory for environmental context",
     ],
+    connections: [],
     neuropsych: [
       "Entorhinal cortex shows the earliest neurofibrillary tangles in Alzheimer's disease",
       "Damage contributes to topographical disorientation and amnesia",
@@ -3946,6 +4566,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
       "Links smell with emotion and memory via the amygdala",
       "Part of the medial temporal memory circuitry",
     ],
+    connections: [],
     neuropsych: [
       "Seizure foci here cause 'uncinate fits' with olfactory/gustatory hallucinations",
       "Uncal herniation compresses CN III and the midbrain — a neurosurgical emergency",
@@ -3969,15 +4590,29 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The flattened bulb and tract on the ventral frontal surface that carry the sense of smell. The only sensory pathway that reaches the cortex without first relaying through the thalamus.",
     functions: [
-      "First relay for olfactory signals from the nasal epithelium",
-      "Direct projection to piriform cortex and amygdala",
-      "Adult neurogenesis site (rodent; debated in humans)",
+      "Olfactory bulb sits on the cribriform plate of the ethmoid bone",
+      "Receives axons from olfactory receptor neurons in the nasal mucosa (CN I)",
+      "Olfactory tract projects directly to primary olfactory cortex (piriform cortex), bypassing the thalamus — unique among sensory systems",
+      "Smell is the only sensory modality with such direct cortical access",
+    ],
+    connections: [
+      "Receives CN I from nasal mucosa via cribriform plate",
+      "Projects via olfactory tract to piriform cortex, amygdala, and entorhinal cortex",
+      "No thalamic relay (unlike all other senses)",
     ],
     neuropsych: [
-      "Anosmia is an early non-motor marker of Parkinson's and Alzheimer's disease",
-      "Olfactory-groove meningiomas can cause anosmia with frontal personality change",
+      "Anosmia is an early sign of Parkinson's disease and Alzheimer's disease — often preceding motor or cognitive symptoms by years",
+      "COVID-19 famously causes acute hyposmia/anosmia",
+      "Olfactory bulb is one of the few sites of adult neurogenesis in the human brain",
+      "Direct connection to amygdala explains powerful emotional and memory associations with smell (Proustian phenomena)",
     ],
-    conditions: ["Hyposmia/anosmia in neurodegeneration", "Olfactory-groove meningioma"],
+    conditions: [
+      "Parkinson's disease (prodromal anosmia)",
+      "Alzheimer's disease (early olfactory dysfunction)",
+      "COVID-19 anosmia",
+      "Head trauma (olfactory nerve shearing at cribriform plate)",
+      "Kallmann syndrome (anosmia with hypogonadism)",
+    ],
     topicHints: ["Neurodegeneration", "Emotion & Interoception"],
   },
 
@@ -3998,15 +4633,25 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The deep midline cleft dividing the two cerebral hemispheres, into which the falx cerebri descends. The corpus callosum bridges across its floor.",
     functions: [
-      "Separates the left and right cerebral hemispheres",
-      "Holds the falx cerebri dural fold",
-      "Floor is crossed by the corpus callosum",
+      "Deep midline fissure separating the two cerebral hemispheres",
+      "Contains the falx cerebri (dural fold) and the superior sagittal sinus",
+      "Spans from the frontal pole to the occipital pole",
+      "Floor formed by the corpus callosum",
+    ],
+    connections: [
+      "Crossed only by commissural fibers (corpus callosum, anterior commissure, hippocampal commissure)",
+      "Superior sagittal sinus drains cortical veins and CSF (via arachnoid granulations)",
     ],
     neuropsych: [
-      "A central landmark for assessing midline shift on imaging after mass lesions",
-      "Falcine meningiomas arise along it and may cause bilateral leg weakness",
+      "Falcine meningiomas grow along the falx and can compress medial frontal/parietal cortex",
+      "Superior sagittal sinus thrombosis causes bilateral leg weakness and headaches",
+      "Used as a midline landmark in imaging for hemispheric symmetry assessment",
     ],
-    conditions: ["Midline shift (mass effect)", "Falcine meningioma"],
+    conditions: [
+      "Falcine meningioma",
+      "Superior sagittal sinus thrombosis",
+      "Holoprosencephaly (failure of midline separation)",
+    ],
     topicHints: ["Neuroanatomy Landmarks", "Stroke Syndromes"],
   },
 
@@ -4027,15 +4672,26 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "A thin sheet of grey matter between the insula and the putamen, separated by the external and extreme capsules. One of the most densely connected structures in the brain, with proposed roles in awareness.",
     functions: [
-      "Widespread reciprocal connections with nearly all cortex",
-      "Proposed role in coordinating conscious perception",
-      "Cross-modal binding and salience integration",
+      "Thin sheet of gray matter between the insula and putamen",
+      "Reciprocally connected to virtually every cortical region — uniquely widespread connectivity",
+      "Proposed integrator of cortical activity into unified conscious experience (Crick & Koch hypothesis)",
+      "Possible role in attention and salience",
+    ],
+    connections: [
+      "Reciprocal with all sensory, motor, and association cortices",
+      "Connected to amygdala and hippocampus",
+      "Receives modulatory input from neuromodulatory brainstem nuclei",
     ],
     neuropsych: [
-      "Electrical stimulation near the claustrum has been reported to interrupt consciousness",
-      "Implicated as a target in seizures and disorders of awareness research",
+      "Stimulation in one famous case (Koubeissi 2014) produced loss of consciousness — leading to speculation as the 'consciousness switch'",
+      "Activated by salience and attention tasks",
+      "Lesions are rare in isolation; usually involve adjacent capsules and basal ganglia",
     ],
-    conditions: ["(Research target — consciousness & epilepsy)"],
+    conditions: [
+      "Implicated in disorders of consciousness",
+      "Schizophrenia (altered connectivity)",
+      "Status epilepticus (in some animal models)",
+    ],
     topicHints: ["Disorders of Consciousness", "Neuroanatomy Landmarks"],
   },
   {
@@ -4054,15 +4710,23 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "A thin white-matter lamina between the putamen and the claustrum, carrying corticocortical association fibers including part of the uncinate and inferior fronto-occipital fasciculi.",
     functions: [
-      "Carries association fibers linking frontal, temporal, and occipital cortex",
-      "Conveys cholinergic projections toward the cortex",
-      "Bounds the lateral edge of the lentiform nucleus",
+      "Thin white matter sheet between the putamen and the claustrum",
+      "Carries some corticocortical association fibers",
+      "Pathway for some claustrocortical connections",
+      "Less functionally significant than the internal capsule",
+    ],
+    connections: [
+      "Borders putamen medially and claustrum laterally",
+      "Contains some cholinergic fibers projecting from basal forebrain to cortex",
     ],
     neuropsych: [
-      "Lacunar infarcts here can disrupt fronto-temporal connectivity",
-      "Involved in some leukodystrophies and small-vessel disease patterns",
+      "Damage is rarely isolated; usually involves adjacent putamen/claustrum",
+      "Carries some inferior fronto-occipital fasciculus and uncinate fibers in some parcellations",
     ],
-    conditions: ["Lacunar stroke", "Small-vessel white-matter disease"],
+    conditions: [
+      "Affected in putaminal hemorrhage",
+      "Lacunar infarcts of capsular region",
+    ],
     topicHints: ["White Matter Disease", "Stroke Syndromes"],
   },
   {
@@ -4081,15 +4745,29 @@ const STRUCTURE_DEFS: StructureDef[] = [
     overview:
       "The thin midline CSF cavity between the two thalami, bounded by the diencephalon. It connects to the lateral ventricles via the foramina of Monro and to the fourth ventricle via the cerebral aqueduct.",
     functions: [
-      "Channels cerebrospinal fluid along the midline",
-      "Bounded by the thalamus, hypothalamus, and their nuclei",
-      "Choroid plexus in its roof produces CSF",
+      "Narrow midline slit between the two thalami",
+      "Connects to lateral ventricles via the foramen of Monro (anteriorly)",
+      "Drains via the cerebral aqueduct (posteriorly) to the fourth ventricle",
+      "Walls contain hypothalamic and thalamic nuclei",
+    ],
+    connections: [
+      "Anterior: lamina terminalis, anterior commissure",
+      "Floor: hypothalamus, optic chiasm, infundibulum, mammillary bodies",
+      "Roof: tela choroidea with choroid plexus",
+      "Posterior: pineal recess, habenular commissure",
     ],
     neuropsych: [
-      "Colloid cysts at the foramen of Monro cause positional headaches and acute hydrocephalus",
-      "Third-ventricle enlargement is a structural correlate in schizophrenia and dementia",
+      "Colloid cyst classically arises in the roof of the third ventricle and can cause acute obstruction with positional headache, syncope, and risk of sudden death",
+      "Tumors here (craniopharyngioma, germinoma) affect hypothalamic-pituitary axis",
+      "Surgical access is technically difficult — multiple approaches",
+      "Aqueductal stenosis distal to the third ventricle causes triventricular hydrocephalus",
     ],
-    conditions: ["Obstructive hydrocephalus", "Colloid cyst"],
+    conditions: [
+      "Colloid cyst of the third ventricle",
+      "Craniopharyngioma",
+      "Aqueductal stenosis (obstructive hydrocephalus)",
+      "Germinoma (in pineal region)",
+    ],
     topicHints: ["Ventricular System & CSF", "Neuroanatomy Landmarks"],
   },
 
@@ -4114,9 +4792,27 @@ const STRUCTURE_DEFS: StructureDef[] = [
     color: "#BDE5FF",
     overview:
       "A thin, paired translucent membrane along the midline that separates the front horns of the two lateral ventricles.",
-    functions: ["Description coming soon."],
-    neuropsych: ["Description coming soon."],
-    conditions: ["Description coming soon."],
+    functions: [
+      "Thin double-layered membrane separating the anterior horns of the lateral ventricles",
+      "Forms the medial wall of each lateral ventricle",
+      "Contains the septal nuclei at its base (involved in reward, memory, and limbic regulation)",
+    ],
+    connections: [
+      "Septal nuclei project to hippocampus via fornix (septal-hippocampal pathway, key for theta rhythm)",
+      "Receives input from medial forebrain bundle",
+      "Connected to amygdala and hypothalamus via stria terminalis",
+    ],
+    neuropsych: [
+      "Cavum septi pellucidi (a persistent cavity between the leaflets) is common in boxers and other repeat-head-trauma populations",
+      "Cavum is increased in schizophrenia and may be a developmental marker",
+      "Septal nucleus stimulation produces pleasurable sensations (Heath's controversial 1950s experiments)",
+      "Septal lesions can produce septal rage syndrome in animal models",
+    ],
+    conditions: [
+      "Cavum septi pellucidi (CTE, boxing-related)",
+      "Septo-optic dysplasia (de Morsier syndrome)",
+      "Schizophrenia (developmental association)",
+    ],
     topicHints: ["Neuroanatomy Landmarks"],
   },
   {
@@ -4134,9 +4830,30 @@ const STRUCTURE_DEFS: StructureDef[] = [
     color: "#BDE5FF",
     overview:
       "A diamond-shaped CSF-filled cavity between the pons and medulla in front and the cerebellum behind, linking the cerebral aqueduct above to the central canal below.",
-    functions: ["Description coming soon."],
-    neuropsych: ["Description coming soon."],
-    conditions: ["Description coming soon."],
+    functions: [
+      "Diamond-shaped CSF cavity between the pons/medulla (anteriorly) and cerebellum (posteriorly)",
+      "Receives CSF from the cerebral aqueduct above",
+      "Outflow: median aperture (foramen of Magendie) and lateral apertures (foramina of Luschka) into subarachnoid space",
+      "Floor (rhomboid fossa) contains nuclei of CN V-XII",
+    ],
+    connections: [
+      "Connected superiorly to cerebral aqueduct",
+      "Connected inferiorly to central canal of spinal cord",
+      "Lined by choroid plexus contributing to CSF production",
+    ],
+    neuropsych: [
+      "Outflow obstruction (e.g., Chiari I/II, Dandy-Walker, ependymoma) causes hydrocephalus",
+      "Lesions of the floor affect cranial nerve nuclei → multiple cranial neuropathies",
+      "Medulloblastoma is the most common posterior fossa tumor in children — arises here",
+      "Post-fossa surgery near the fourth ventricle can cause cerebellar mutism (posterior fossa syndrome)",
+    ],
+    conditions: [
+      "Medulloblastoma",
+      "Ependymoma",
+      "Chiari malformation",
+      "Dandy-Walker syndrome",
+      "Posterior fossa syndrome (cerebellar mutism)",
+    ],
     topicHints: ["Ventricular System & CSF"],
   },
   {
@@ -4154,9 +4871,27 @@ const STRUCTURE_DEFS: StructureDef[] = [
     color: "#BDE5FF",
     overview:
       "The narrow CSF channel (aqueduct of Sylvius) running through the midbrain that connects the third and fourth ventricles.",
-    functions: ["Description coming soon."],
-    neuropsych: ["Description coming soon."],
-    conditions: ["Description coming soon."],
+    functions: [
+      "Narrow channel through the midbrain connecting third and fourth ventricles",
+      "Also called aqueduct of Sylvius",
+      "Surrounded by the periaqueductal gray matter",
+      "Pathway for CSF flow from third to fourth ventricle",
+    ],
+    connections: [
+      "Connects third ventricle (above) to fourth ventricle (below)",
+      "Surrounded by periaqueductal gray and oculomotor/trochlear nuclei",
+    ],
+    neuropsych: [
+      "Aqueductal stenosis is the most common cause of congenital obstructive hydrocephalus",
+      "Tumors at this level (pineal region, midbrain) often present with hydrocephalus",
+      "Periaqueductal gray is a major opioid analgesia center — target of placebo and meditation effects",
+    ],
+    conditions: [
+      "Aqueductal stenosis (congenital or acquired)",
+      "Pineal region tumors",
+      "Tectal glioma",
+      "Obstructive hydrocephalus",
+    ],
     topicHints: ["Ventricular System & CSF"],
   },
   {
@@ -4174,9 +4909,26 @@ const STRUCTURE_DEFS: StructureDef[] = [
     color: "#BDE5FF",
     overview:
       "A compact white-matter tract crossing the midline in front of the fornix, linking the two temporal lobes and olfactory regions.",
-    functions: ["Description coming soon."],
-    neuropsych: ["Description coming soon."],
-    conditions: ["Description coming soon."],
+    functions: [
+      "Small white matter bundle anterior to the columns of the fornix",
+      "Connects anterior temporal lobes (including amygdalae) and parts of olfactory cortex",
+      "Smaller secondary commissure between hemispheres",
+      "Important landmark for stereotaxis (AC-PC line)",
+    ],
+    connections: [
+      "Bilateral amygdalae",
+      "Anterior temporal cortex",
+      "Olfactory cortex",
+    ],
+    neuropsych: [
+      "Enables some interhemispheric transfer after corpus callosotomy — explains residual cross-hemispheric function in split-brain patients",
+      "AC-PC line is the standard reference for stereotactic neurosurgery (DBS targeting)",
+      "Sexual dimorphism reported (larger in females), though controversial",
+    ],
+    conditions: [
+      "Surgical sparing in callosotomy preserves some bilateral function",
+      "Affected in some leukodystrophies",
+    ],
     topicHints: ["White Matter Tracts"],
   },
   {
@@ -4194,9 +4946,28 @@ const STRUCTURE_DEFS: StructureDef[] = [
     color: "#76E4F7",
     overview:
       "A small cortical region on the medial frontal lobe just below the rostrum of the corpus callosum, part of the limbic paraterminal region.",
-    functions: ["Description coming soon."],
-    neuropsych: ["Description coming soon."],
-    conditions: ["Description coming soon."],
+    functions: [
+      "Cortex inferior to the rostrum of the corpus callosum (Brodmann area 25)",
+      "Subgenual anterior cingulate cortex — key node in mood regulation",
+      "Autonomic regulation of emotional state",
+      "Strong serotonergic and dopaminergic innervation",
+    ],
+    connections: [
+      "Reciprocal with amygdala, hypothalamus, brainstem autonomic nuclei",
+      "Connected to nucleus accumbens (reward) and orbitofrontal cortex",
+      "Part of the default mode network anchor",
+    ],
+    neuropsych: [
+      "Brodmann area 25 (subgenual ACC) is the deep brain stimulation target for treatment-resistant depression (Helen Mayberg's pioneering work)",
+      "Hyperactivity in major depression — normalizes with successful antidepressant treatment",
+      "Smaller volume associated with familial depression",
+      "Involved in the autonomic accompaniment of sadness",
+    ],
+    conditions: [
+      "Treatment-resistant major depressive disorder (DBS target)",
+      "Bipolar disorder",
+      "Suicide risk (altered subgenual activity)",
+    ],
     topicHints: ["Limbic System"],
   },
   {
@@ -4214,9 +4985,24 @@ const STRUCTURE_DEFS: StructureDef[] = [
     color: "#7E8CE8",
     overview:
       "A variable grey-matter bridge (massa intermedia) that connects the two thalami across the third ventricle.",
-    functions: ["Description coming soon."],
-    neuropsych: ["Description coming soon."],
-    conditions: ["Description coming soon."],
+    functions: [
+      "Bridge of gray matter connecting the two thalami across the third ventricle",
+      "Also called massa intermedia",
+      "Present in ~70% of brains; absent in remainder (no clinical significance)",
+      "Probably non-functional commissural tissue",
+    ],
+    connections: [
+      "Spans midline between left and right thalamus",
+    ],
+    neuropsych: [
+      "Absence has been correlated with schizophrenia in some studies, though findings are inconsistent",
+      "Sexual dimorphism reported (more common in females), with debated significance",
+      "Used as a midline imaging landmark",
+    ],
+    conditions: [
+      "Absence variably reported in schizophrenia studies",
+      "No specific clinical syndrome attributable to its absence",
+    ],
     topicHints: ["Diencephalon"],
   },
   {
@@ -4234,9 +5020,31 @@ const STRUCTURE_DEFS: StructureDef[] = [
     color: "#7FB3FF",
     overview:
       "The medial-surface continuation of the frontal gyri, lying above the cingulate gyrus on the inner face of the frontal lobe.",
-    functions: ["Description coming soon."],
-    neuropsych: ["Description coming soon."],
-    conditions: ["Description coming soon."],
+    functions: [
+      "Self-referential thought and autobiographical retrieval",
+      "Social cognition and theory of mind",
+      "Decision making under uncertainty",
+      "Default mode network 'core' along with PCC and angular gyrus",
+      "Voluntary motor initiation via pre-SMA",
+    ],
+    connections: [
+      "Tight reciprocal links with anterior cingulate cortex below",
+      "Connects to PCC/precuneus via cingulum (default mode backbone)",
+      "Projects to amygdala for emotion regulation",
+      "Mediodorsal thalamic inputs",
+    ],
+    neuropsych: [
+      "Hyperactive in rumination and worry",
+      "Reduced volume correlates with poor social cognition in autism spectrum",
+      "Decreased medial PFC activity during self-referential processing in depression",
+      "Damage produces abulia, apathy, and 'medial frontal syndrome'",
+    ],
+    conditions: [
+      "Major depression",
+      "Autism spectrum disorder",
+      "Anterior cerebral artery stroke",
+      "Frontotemporal dementia",
+    ],
     topicHints: ["Neuroanatomy Landmarks"],
   },
   {
@@ -4254,9 +5062,22 @@ const STRUCTURE_DEFS: StructureDef[] = [
     color: "#B79CF2",
     overview:
       "A short sulcus on the medial frontal surface near the rostrum of the corpus callosum (the rostral sulcus).",
-    functions: ["Description coming soon."],
-    neuropsych: ["Description coming soon."],
-    conditions: ["Description coming soon."],
+    functions: [
+      "Small sulcus on the medial frontal lobe, anterior and inferior to the cingulate sulcus",
+      "Separates the medial frontal gyrus from the rostral subgenual region",
+      "Anatomical landmark for ventromedial prefrontal subregions",
+    ],
+    connections: [
+      "Borders ventromedial PFC regions involved in default mode network",
+      "Adjacent to subgenual ACC (Brodmann area 25)",
+    ],
+    neuropsych: [
+      "Used as a landmark for surgical targeting and imaging studies of vmPFC",
+      "Surrounding cortex is engaged in self-referential processing and emotional regulation",
+    ],
+    conditions: [
+      "Surrounding vmPFC implicated in depression, PTSD, and frontotemporal dementia",
+    ],
     topicHints: ["Neuroanatomy Landmarks"],
   },
   {
@@ -4274,9 +5095,27 @@ const STRUCTURE_DEFS: StructureDef[] = [
     color: "#BDE5FF",
     overview:
       "The anterior, sharply curved 'knee' of the corpus callosum where its fibers bend forward into the frontal lobes.",
-    functions: ["Description coming soon."],
-    neuropsych: ["Description coming soon."],
-    conditions: ["Description coming soon."],
+    functions: [
+      "Anterior bend ('knee') of the corpus callosum",
+      "Carries fibers connecting left and right prefrontal cortices (forceps minor)",
+      "Critical for executive function transfer between hemispheres",
+      "Among the latest-myelinating callosal regions",
+    ],
+    connections: [
+      "Bilateral prefrontal cortices",
+      "Receives blood supply from anterior cerebral artery branches",
+      "Surrounded by ACC and subgenual cortex",
+    ],
+    neuropsych: [
+      "Damage impairs interhemispheric prefrontal coordination — affects executive function and bimanual tasks",
+      "Genu thinning is an early MRI marker in vascular cognitive impairment",
+      "DTI of the genu correlates with processing speed and executive measures in aging",
+    ],
+    conditions: [
+      "Vascular cognitive impairment",
+      "Alzheimer's disease (DTI changes)",
+      "Multiple sclerosis",
+    ],
     topicHints: ["White Matter Tracts"],
   },
   {
@@ -4294,9 +5133,25 @@ const STRUCTURE_DEFS: StructureDef[] = [
     color: "#BDE5FF",
     overview:
       "The thin, tapering anterior-inferior tip of the corpus callosum, continuous with the lamina terminalis.",
-    functions: ["Description coming soon."],
-    neuropsych: ["Description coming soon."],
-    conditions: ["Description coming soon."],
+    functions: [
+      "Most anterior, ventral portion of the corpus callosum, curving down to the lamina terminalis",
+      "Connects orbitofrontal and inferior frontal cortices bilaterally",
+      "Smallest and last-developing callosal region",
+    ],
+    connections: [
+      "Orbitofrontal cortex bilaterally",
+      "Adjacent to the lamina terminalis and the anterior commissure",
+    ],
+    neuropsych: [
+      "Rostrum hypoplasia is associated with disorders of frontal connectivity",
+      "May be partially or fully absent in callosal agenesis variants",
+      "Disconnection here may contribute to interhemispheric emotional integration deficits",
+    ],
+    conditions: [
+      "Partial callosal agenesis",
+      "Septo-optic dysplasia",
+      "Hypoplastic callosal variants",
+    ],
     topicHints: ["White Matter Tracts"],
   },
   {
@@ -4314,9 +5169,26 @@ const STRUCTURE_DEFS: StructureDef[] = [
     color: "#BDE5FF",
     overview:
       "The slender band of white matter on the underside of the frontal lobe that carries signals from the olfactory bulb to the olfactory cortex.",
-    functions: ["Description coming soon."],
-    neuropsych: ["Description coming soon."],
-    conditions: ["Description coming soon."],
+    functions: [
+      "White matter tract carrying signals from olfactory bulb to primary olfactory cortex",
+      "Divides into medial and lateral olfactory striae before reaching cortex",
+      "Lateral stria → piriform cortex and amygdala",
+      "Medial stria → contralateral olfactory bulb via anterior commissure",
+    ],
+    connections: [
+      "Origin: olfactory bulb",
+      "Termination: piriform cortex, amygdala, entorhinal cortex, anterior olfactory nucleus",
+    ],
+    neuropsych: [
+      "Olfactory groove meningiomas can compress the tract, causing ipsilateral anosmia (Foster Kennedy syndrome — ipsilateral optic atrophy + contralateral papilledema + anosmia)",
+      "Damage produces unilateral anosmia (often unnoticed by patient)",
+      "Smell testing (UPSIT, Sniffin' Sticks) is used in early dementia screening",
+    ],
+    conditions: [
+      "Olfactory groove meningioma",
+      "Foster Kennedy syndrome",
+      "Traumatic anosmia",
+    ],
     topicHints: ["Limbic System"],
   },
   {
@@ -4334,9 +5206,27 @@ const STRUCTURE_DEFS: StructureDef[] = [
     color: "#BDE5FF",
     overview:
       "The continuation of the visual pathway behind the optic chiasm, carrying retinal fibers toward the lateral geniculate nucleus of the thalamus.",
-    functions: ["Description coming soon."],
-    neuropsych: ["Description coming soon."],
-    conditions: ["Description coming soon."],
+    functions: [
+      "Carries visual information from the optic chiasm to the lateral geniculate nucleus",
+      "Each tract carries the contralateral visual field from both eyes",
+      "Some fibers branch to the pretectal area (pupillary light reflex) and superior colliculus (orienting reflex)",
+      "Smaller projections to suprachiasmatic nucleus (circadian) and accessory optic system",
+    ],
+    connections: [
+      "Origin: optic chiasm",
+      "Main termination: lateral geniculate nucleus (LGN)",
+      "Branches to pretectal nucleus, superior colliculus, suprachiasmatic nucleus, pulvinar",
+    ],
+    neuropsych: [
+      "Optic tract lesion produces incongruous contralateral homonymous hemianopia",
+      "Relative afferent pupillary defect (RAPD) may be subtle here",
+      "Tract lesions are rare — usually from compressive lesions or surgical injury",
+    ],
+    conditions: [
+      "Tumors of the temporal lobe or sellar region",
+      "Multiple sclerosis",
+      "Optic tract syndrome (homonymous hemianopia + RAPD)",
+    ],
     topicHints: ["Visual Pathway"],
   },
   {
@@ -4354,9 +5244,32 @@ const STRUCTURE_DEFS: StructureDef[] = [
     color: "#7FB3FF",
     overview:
       "The irregular gyri on the orbital (inferior) surface of the frontal lobe, resting above the bony orbits.",
-    functions: ["Description coming soon."],
-    neuropsych: ["Description coming soon."],
-    conditions: ["Description coming soon."],
+    functions: [
+      "Multiple gyri on the inferior (orbital) surface of the frontal lobe — superior to the eye orbits",
+      "Comprise the orbitofrontal cortex (OFC)",
+      "Encode subjective value of stimuli (reward valuation)",
+      "Inhibition of socially inappropriate impulses",
+      "Reversal learning when reward contingencies change",
+      "Secondary olfactory processing",
+    ],
+    connections: [
+      "Uncinate fasciculus to anterior temporal lobe and amygdala",
+      "Reciprocal with mediodorsal thalamus",
+      "Heavy connections to ventral striatum/nucleus accumbens",
+      "Receives olfactory input via piriform cortex",
+    ],
+    neuropsych: [
+      "OFC damage produces the classic Phineas Gage pattern — 'pseudopsychopathic' personality change with disinhibition, poor judgment, and impaired social conduct, but preserved IQ",
+      "The Iowa Gambling Task is the gold standard OFC measure — damaged patients keep choosing high-reward/high-loss decks",
+      "Hyperactivity in OFC–striatal loops is a leading model for OCD",
+      "Reduced OFC volume correlates with antisocial and borderline traits",
+    ],
+    conditions: [
+      "OCD (OFC-striatal hyperactivity)",
+      "Acquired sociopathy from OFC trauma",
+      "Frontotemporal dementia (behavioral variant)",
+      "Substance use disorders",
+    ],
     topicHints: ["Neuroanatomy Landmarks"],
   },
 
@@ -4378,9 +5291,31 @@ const STRUCTURE_DEFS: StructureDef[] = [
     color: "#D77BE0",
     overview:
       "Cranial nerve I — carries the sense of smell from the nasal epithelium to the olfactory bulb.",
-    functions: ["Description coming soon."],
-    neuropsych: ["Description coming soon."],
-    conditions: ["Description coming soon."],
+    functions: [
+      "Special sensory: smell",
+      "Only cranial nerve that does NOT synapse in the thalamus before reaching cortex",
+      "Olfactory receptor neurons in nasal mucosa send axons through the cribriform plate to synapse in the olfactory bulb",
+      "Only cranial nerve capable of adult neurogenesis",
+    ],
+    connections: [
+      "Origin: olfactory receptor neurons in olfactory epithelium",
+      "Synapse: olfactory bulb (true CN I terminates here)",
+      "Onward via olfactory tract to piriform cortex, amygdala, entorhinal cortex",
+    ],
+    neuropsych: [
+      "Tested with familiar odors (coffee, cinnamon, peppermint) — one nostril at a time",
+      "Bilateral anosmia is an early prodromal sign of Parkinson's and Alzheimer's disease, often preceding clinical symptoms by years",
+      "Unilateral anosmia suggests olfactory groove pathology (e.g., meningioma)",
+      "COVID-19 causes acute anosmia by infecting sustentacular cells in the olfactory epithelium",
+      "Olfactory hallucinations (parosmia, phantosmia) can precede temporal lobe seizures (uncinate fits)",
+    ],
+    conditions: [
+      "Anosmia (post-traumatic, post-viral)",
+      "Parkinson's disease (prodromal)",
+      "Alzheimer's disease",
+      "Kallmann syndrome",
+      "Olfactory groove meningioma",
+    ],
     topicHints: ["Cranial Nerves"],
   },
   {
@@ -4398,9 +5333,31 @@ const STRUCTURE_DEFS: StructureDef[] = [
     color: "#D77BE0",
     overview:
       "Cranial nerve II — transmits visual information from the retina toward the optic chiasm.",
-    functions: ["Description coming soon."],
-    neuropsych: ["Description coming soon."],
-    conditions: ["Description coming soon."],
+    functions: [
+      "Special sensory: vision",
+      "Carries axons of retinal ganglion cells from the eye to the optic chiasm",
+      "Technically a CNS tract (not a true peripheral nerve) — myelinated by oligodendrocytes, susceptible to MS",
+      "Mediates pupillary light reflex (afferent limb) and visual perception",
+    ],
+    connections: [
+      "Origin: retinal ganglion cells",
+      "Course: through the optic canal of the sphenoid bone",
+      "Termination: partial decussation at optic chiasm; continues as optic tract to LGN",
+      "Collaterals to pretectal area (pupillary reflex) and superior colliculus",
+    ],
+    neuropsych: [
+      "Tested with visual acuity (Snellen), visual fields (confrontation), pupillary response, fundoscopy",
+      "Optic neuritis (often first sign of MS): acute monocular vision loss with painful eye movements, RAPD, central scotoma",
+      "Papilledema (bilateral disc swelling from raised ICP) lacks visual symptoms initially",
+      "Optic atrophy after long-standing damage — pale disc",
+    ],
+    conditions: [
+      "Optic neuritis / multiple sclerosis",
+      "Anterior ischemic optic neuropathy (often from giant cell arteritis)",
+      "Glaucoma",
+      "Leber's hereditary optic neuropathy",
+      "Idiopathic intracranial hypertension (papilledema)",
+    ],
     topicHints: ["Cranial Nerves", "Visual Pathway"],
   },
   {
@@ -4418,9 +5375,30 @@ const STRUCTURE_DEFS: StructureDef[] = [
     color: "#D77BE0",
     overview:
       "Cranial nerve III — supplies most eye-movement muscles plus the pupil constrictor and eyelid elevator.",
-    functions: ["Description coming soon."],
-    neuropsych: ["Description coming soon."],
-    conditions: ["Description coming soon."],
+    functions: [
+      "Motor: levator palpebrae superioris (eyelid), superior rectus, medial rectus, inferior rectus, inferior oblique (eye movements)",
+      "Parasympathetic: pupillary constriction (sphincter pupillae) and lens accommodation (ciliary muscle)",
+      "Largest extraocular motor nerve, controls most eye movements",
+    ],
+    connections: [
+      "Nucleus: midbrain (at the level of superior colliculus)",
+      "Exits brainstem in the interpeduncular fossa",
+      "Passes between PCA and superior cerebellar artery — vulnerable to compression",
+      "Travels through cavernous sinus to enter the orbit via superior orbital fissure",
+    ],
+    neuropsych: [
+      "Complete CN III palsy: ptosis, 'down and out' eye position, fixed dilated pupil (parasympathetic fibers run on the outside, hit first by compression)",
+      "Pupillary involvement suggests compressive lesion (aneurysm, uncal herniation) — surgical emergency",
+      "Pupil-sparing third nerve palsy suggests ischemic etiology (diabetic mononeuritis) — typically resolves",
+      "Uncal herniation produces ipsilateral blown pupil (Hutchinson's pupil) — neurosurgical emergency",
+    ],
+    conditions: [
+      "Posterior communicating artery aneurysm",
+      "Uncal herniation",
+      "Diabetic CN III palsy (pupil-sparing)",
+      "Cavernous sinus thrombosis",
+      "Weber syndrome (midbrain stroke)",
+    ],
     topicHints: ["Cranial Nerves"],
   },
   {
@@ -4438,9 +5416,28 @@ const STRUCTURE_DEFS: StructureDef[] = [
     color: "#D77BE0",
     overview:
       "Cranial nerve IV — innervates the superior oblique muscle that turns the eye down and inward.",
-    functions: ["Description coming soon."],
-    neuropsych: ["Description coming soon."],
-    conditions: ["Description coming soon."],
+    functions: [
+      "Motor: superior oblique muscle (intorts, depresses, abducts the eye)",
+      "Only cranial nerve that exits the brainstem dorsally",
+      "Only cranial nerve with fibers that decussate before exiting",
+      "Smallest cranial nerve, has the longest intracranial course",
+    ],
+    connections: [
+      "Nucleus: midbrain (at level of inferior colliculus)",
+      "Exits brainstem on the dorsal aspect, decussating with the contralateral CN IV",
+      "Travels through cavernous sinus to enter orbit via superior orbital fissure",
+    ],
+    neuropsych: [
+      "CN IV palsy: vertical diplopia worse when looking down (e.g., reading, descending stairs), head tilt away from the affected side (compensates)",
+      "Bielschowsky head tilt test: tilting head toward the affected side worsens the deficit",
+      "Most common cause of vertical diplopia",
+      "Head trauma is the most common cause of acquired CN IV palsy (long dorsal course makes it vulnerable)",
+    ],
+    conditions: [
+      "Traumatic CN IV palsy (very common)",
+      "Congenital CN IV palsy",
+      "Microvascular CN IV palsy (diabetes, hypertension)",
+    ],
     topicHints: ["Cranial Nerves"],
   },
   {
@@ -4458,9 +5455,30 @@ const STRUCTURE_DEFS: StructureDef[] = [
     color: "#D77BE0",
     overview:
       "Cranial nerve V — the main facial sensory nerve and motor supply to the muscles of chewing.",
-    functions: ["Description coming soon."],
-    neuropsych: ["Description coming soon."],
-    conditions: ["Description coming soon."],
+    functions: [
+      "Sensation from the face, anterior scalp, sinuses, teeth, and anterior 2/3 of tongue (general sensation, NOT taste)",
+      "Motor to muscles of mastication (masseter, temporalis, pterygoids)",
+      "Three divisions: V1 (ophthalmic), V2 (maxillary), V3 (mandibular — only division with motor fibers)",
+      "Corneal reflex (afferent limb)",
+    ],
+    connections: [
+      "Nuclei: principal sensory (touch), spinal (pain/temperature), mesencephalic (proprioception), motor",
+      "Exits midpons, sensory ganglion (Gasserian) in Meckel's cave",
+      "V1 → superior orbital fissure; V2 → foramen rotundum; V3 → foramen ovale",
+    ],
+    neuropsych: [
+      "Trigeminal neuralgia: paroxysmal, electric-shock-like facial pain triggered by light touch — often from vascular loop compression at the root entry zone",
+      "Carbamazepine is first-line treatment",
+      "Sensory loss in trigeminal distribution helps localize brainstem lesions",
+      "Loss of corneal reflex is an early sign of acoustic neuroma (compresses adjacent CN V)",
+    ],
+    conditions: [
+      "Trigeminal neuralgia (tic douloureux)",
+      "Postherpetic neuralgia (after V1 zoster)",
+      "Acoustic neuroma (affects V via mass effect)",
+      "Cavernous sinus syndrome",
+      "Cluster headache (V1 distribution)",
+    ],
     topicHints: ["Cranial Nerves"],
   },
   {
@@ -4478,9 +5496,29 @@ const STRUCTURE_DEFS: StructureDef[] = [
     color: "#D77BE0",
     overview:
       "Cranial nerve VI — drives the lateral rectus muscle that abducts the eye.",
-    functions: ["Description coming soon."],
-    neuropsych: ["Description coming soon."],
-    conditions: ["Description coming soon."],
+    functions: [
+      "Motor: lateral rectus muscle (abducts the eye)",
+      "Single function — purely motor",
+      "Has the longest intracranial course of cranial nerves with brainstem origin",
+      "Sensitive to raised intracranial pressure (false localizing sign)",
+    ],
+    connections: [
+      "Nucleus: dorsal pons (adjacent to CN VII, which loops over it forming the facial colliculus)",
+      "Exits ventral pons at the pontomedullary junction",
+      "Long subarachnoid course, then through cavernous sinus to lateral rectus",
+    ],
+    neuropsych: [
+      "CN VI palsy: horizontal diplopia worse on lateral gaze toward the affected side; affected eye fails to abduct fully",
+      "Bilateral CN VI palsies are a classic false-localizing sign of raised ICP",
+      "Dorsal pontine lesions affect CN VI nucleus AND adjacent CN VII fibers — produces ipsilateral lateral rectus AND facial weakness (Foville syndrome variants)",
+      "Conjugate gaze palsy results from PPRF lesion adjacent to CN VI nucleus",
+    ],
+    conditions: [
+      "Raised intracranial pressure (false localizer)",
+      "Microvascular CN VI palsy (diabetes)",
+      "Cavernous sinus thrombosis",
+      "Pontine stroke (often with CN VII involvement)",
+    ],
     topicHints: ["Cranial Nerves"],
   },
   {
@@ -4498,9 +5536,32 @@ const STRUCTURE_DEFS: StructureDef[] = [
     color: "#D77BE0",
     overview:
       "Cranial nerve VII — controls the muscles of facial expression and carries taste from the front of the tongue.",
-    functions: ["Description coming soon."],
-    neuropsych: ["Description coming soon."],
-    conditions: ["Description coming soon."],
+    functions: [
+      "Motor: muscles of facial expression",
+      "Taste from anterior 2/3 of tongue (via chorda tympani)",
+      "Parasympathetic to lacrimal, submandibular, and sublingual glands",
+      "Sensation from small area near external auditory meatus",
+      "Stapedius muscle (dampens loud sounds)",
+    ],
+    connections: [
+      "Nucleus: pons (forms the facial colliculus by looping over the CN VI nucleus)",
+      "Exits at the cerebellopontine angle alongside CN VIII",
+      "Travels through internal auditory meatus → facial canal in temporal bone → exits stylomastoid foramen",
+      "Chorda tympani branch joins the lingual nerve (CN V3) for taste",
+    ],
+    neuropsych: [
+      "Bell's palsy: idiopathic LMN facial weakness — entire ipsilateral face affected (forehead does NOT spare, distinguishing from stroke)",
+      "Central (UMN) lesion above the facial nucleus spares the forehead because of bilateral input",
+      "Loss of taste on anterior 2/3 tongue and hyperacusis localize the lesion (proximal to chorda tympani / stapedius branch)",
+      "Ramsay Hunt syndrome: VZV reactivation in geniculate ganglion → facial palsy + vesicles in ear canal + sometimes hearing loss/vertigo",
+    ],
+    conditions: [
+      "Bell's palsy",
+      "Ramsay Hunt syndrome (herpes zoster oticus)",
+      "Acoustic neuroma (mass effect on CN VII at CP angle)",
+      "Parotid tumors (extracranial CN VII)",
+      "Möbius syndrome (congenital bilateral CN VI and VII palsy)",
+    ],
     topicHints: ["Cranial Nerves"],
   },
   {
@@ -4518,9 +5579,30 @@ const STRUCTURE_DEFS: StructureDef[] = [
     color: "#D77BE0",
     overview:
       "Cranial nerve VIII — carries hearing and balance information from the inner ear.",
-    functions: ["Description coming soon."],
-    neuropsych: ["Description coming soon."],
-    conditions: ["Description coming soon."],
+    functions: [
+      "Special sensory with two divisions:",
+      "Cochlear branch: hearing (from organ of Corti via spiral ganglion)",
+      "Vestibular branch: balance, head position, angular and linear acceleration (from semicircular canals and otolith organs)",
+      "Sensory only — no motor function",
+    ],
+    connections: [
+      "Exits at cerebellopontine angle alongside CN VII",
+      "Travels through internal auditory meatus",
+      "Cochlear nuclei (auditory) and vestibular nuclei (balance) in pontomedullary junction",
+    ],
+    neuropsych: [
+      "Acoustic neuroma (vestibular schwannoma) — most common cerebellopontine angle tumor; arises from vestibular branch but classically presents with sensorineural hearing loss and tinnitus, NOT vertigo",
+      "Bilateral acoustic neuromas are pathognomonic for neurofibromatosis type 2",
+      "Weber test (lateralizes to good ear in sensorineural loss, to bad ear in conductive loss); Rinne test",
+      "Caloric testing — useful for assessing vestibular function in comatose patients",
+    ],
+    conditions: [
+      "Acoustic neuroma (vestibular schwannoma)",
+      "Neurofibromatosis type 2",
+      "Meniere's disease",
+      "Vestibular neuritis",
+      "Sensorineural hearing loss (presbycusis, noise-induced)",
+    ],
     topicHints: ["Cranial Nerves"],
   },
   {
@@ -4538,9 +5620,29 @@ const STRUCTURE_DEFS: StructureDef[] = [
     color: "#D77BE0",
     overview:
       "Cranial nerve IX — supplies sensation and taste to the back of the tongue and throat and the stylopharyngeus muscle.",
-    functions: ["Description coming soon."],
-    neuropsych: ["Description coming soon."],
-    conditions: ["Description coming soon."],
+    functions: [
+      "Taste and sensation from posterior 1/3 of tongue",
+      "Sensation from pharynx, middle ear, eustachian tube",
+      "Carotid sinus and carotid body afferents (baroreceptor and chemoreceptor reflexes)",
+      "Parasympathetic to parotid gland",
+      "Motor to stylopharyngeus muscle (only)",
+      "Afferent limb of gag reflex",
+    ],
+    connections: [
+      "Nuclei: nucleus ambiguus (motor), nucleus solitarius (taste/visceral sensation), spinal trigeminal (general sensation), inferior salivatory (parasympathetic)",
+      "Exits medulla, leaves skull via jugular foramen with CN X and XI",
+    ],
+    neuropsych: [
+      "Tested with gag reflex (afferent = IX, efferent = X) and posterior tongue taste",
+      "Glossopharyngeal neuralgia: paroxysmal pain in the throat/ear triggered by swallowing — rare but disabling",
+      "Carotid sinus hypersensitivity: pressure on the carotid bifurcation triggers bradycardia and syncope (CN IX afferent)",
+      "Isolated CN IX lesions are rare — usually co-affected with CN X and XI at the jugular foramen",
+    ],
+    conditions: [
+      "Glossopharyngeal neuralgia",
+      "Jugular foramen syndrome (Vernet syndrome — affects CN IX, X, XI)",
+      "Carotid sinus hypersensitivity",
+    ],
     topicHints: ["Cranial Nerves"],
   },
   {
@@ -4558,9 +5660,32 @@ const STRUCTURE_DEFS: StructureDef[] = [
     color: "#D77BE0",
     overview:
       "Cranial nerve X — the wide-ranging parasympathetic nerve to the heart, lungs, and gut, plus throat muscles.",
-    functions: ["Description coming soon."],
-    neuropsych: ["Description coming soon."],
-    conditions: ["Description coming soon."],
+    functions: [
+      "Longest cranial nerve — 'vagus' means 'wandering'",
+      "Parasympathetic innervation of thoracic and abdominal viscera (to splenic flexure of colon)",
+      "Motor to palate, pharynx, larynx (phonation, swallowing)",
+      "Taste from epiglottis",
+      "Visceral sensation from heart, lungs, GI tract",
+      "Efferent limb of gag reflex",
+    ],
+    connections: [
+      "Nuclei: nucleus ambiguus (motor), nucleus solitarius (visceral afferent/taste), dorsal motor nucleus (parasympathetic)",
+      "Exits medulla via jugular foramen with CN IX and XI",
+      "Descends in carotid sheath, then branches widely to viscera",
+    ],
+    neuropsych: [
+      "Unilateral vagal lesion causes deviation of the uvula AWAY from the affected side (the intact muscles pull it across)",
+      "Hoarseness from recurrent laryngeal nerve palsy is a classic vagal sign (left RLN is especially vulnerable due to its arch under the aortic arch)",
+      "FDA-approved vagal nerve stimulation (VNS) for treatment-resistant depression and refractory epilepsy",
+      "Vasovagal syncope reflects exaggerated vagal output",
+    ],
+    conditions: [
+      "Vocal cord paralysis (recurrent laryngeal nerve palsy)",
+      "Vasovagal syncope",
+      "Treatment-resistant depression (VNS target)",
+      "Refractory epilepsy (VNS target)",
+      "Gastroparesis (autonomic vagal dysfunction)",
+    ],
     topicHints: ["Cranial Nerves"],
   },
   {
@@ -4578,9 +5703,28 @@ const STRUCTURE_DEFS: StructureDef[] = [
     color: "#D77BE0",
     overview:
       "Cranial nerve XI — motor supply to the sternocleidomastoid and trapezius muscles.",
-    functions: ["Description coming soon."],
-    neuropsych: ["Description coming soon."],
-    conditions: ["Description coming soon."],
+    functions: [
+      "Motor to sternocleidomastoid (turns head to opposite side) and trapezius (shrugs shoulders)",
+      "Unique origin: arises from upper cervical spinal cord (C1-C5) rather than the brainstem proper",
+      "Ascends through foramen magnum, then exits skull via jugular foramen",
+    ],
+    connections: [
+      "Spinal accessory nucleus in upper cervical cord (C1-C5/6)",
+      "Ascends through foramen magnum",
+      "Exits skull via jugular foramen with CN IX and X",
+      "Innervates SCM, then trapezius",
+    ],
+    neuropsych: [
+      "Tested by asking patient to shrug shoulders (trapezius) and turn head against resistance (SCM)",
+      "Lesions cause shoulder droop, winged scapula, weakness turning head AWAY from affected side",
+      "Often injured during lymph node biopsies in the posterior triangle of the neck",
+      "Jugular foramen syndromes (Vernet) involve CN XI alongside IX and X",
+    ],
+    conditions: [
+      "Iatrogenic CN XI injury (cervical lymph node biopsy)",
+      "Jugular foramen syndromes",
+      "Skull base tumors",
+    ],
     topicHints: ["Cranial Nerves"],
   },
   {
@@ -4598,9 +5742,29 @@ const STRUCTURE_DEFS: StructureDef[] = [
     color: "#D77BE0",
     overview:
       "Cranial nerve XII — controls the intrinsic and most extrinsic muscles of the tongue.",
-    functions: ["Description coming soon."],
-    neuropsych: ["Description coming soon."],
-    conditions: ["Description coming soon."],
+    functions: [
+      "Motor to all intrinsic and most extrinsic muscles of the tongue",
+      "Purely motor",
+      "Critical for speech articulation and swallowing",
+    ],
+    connections: [
+      "Hypoglossal nucleus in the medulla (near midline, ventral to fourth ventricle)",
+      "Exits ventral medulla between the pyramid and the olive",
+      "Leaves skull via hypoglossal canal",
+    ],
+    neuropsych: [
+      "Tested by tongue protrusion — deviates TOWARD the side of an LMN lesion (genioglossus on intact side pushes tongue across midline)",
+      "LMN lesion causes ipsilateral tongue atrophy and fasciculations",
+      "UMN lesion causes contralateral tongue deviation without atrophy",
+      "Bilateral lesions (e.g., in ALS) cause dysarthria and dysphagia (bulbar palsy)",
+      "Medial medullary syndrome involves CN XII alongside contralateral hemiparesis",
+    ],
+    conditions: [
+      "Medial medullary syndrome (vertebral artery stroke)",
+      "ALS (bulbar onset)",
+      "Skull base tumors",
+      "Hypoglossal canal pathology",
+    ],
     topicHints: ["Cranial Nerves"],
   },
 ];
