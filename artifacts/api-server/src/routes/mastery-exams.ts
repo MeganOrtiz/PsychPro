@@ -31,6 +31,7 @@ import {
 } from "@workspace/db";
 import { eq, and, count, asc, desc, sql, inArray, max } from "drizzle-orm";
 import { requireUserId, getUserId } from "../lib/userId";
+import { isCallerAdmin } from "../lib/isAdmin";
 
 const router = Router();
 
@@ -59,6 +60,7 @@ async function getCourseUnlockState(
   userId: string | null,
   courseId: number,
   unlockThreshold: number,
+  isAdmin = false,
 ) {
   const lessons = await db
     .select({ id: topicsTable.id, name: topicsTable.name })
@@ -101,7 +103,10 @@ async function getCourseUnlockState(
   });
 
   const masteredCount = lessonStates.filter((l) => l.mastered).length;
-  const unlocked = masteredCount === lessons.length;
+  // Admins (project owner / allowlisted staff) bypass the prerequisite so they
+  // can preview and test any course's mastery exam without first acing every
+  // lesson. Regular users still must master all lessons.
+  const unlocked = isAdmin || masteredCount === lessons.length;
 
   return { unlocked, totalLessons: lessons.length, masteredCount, lessonStates };
 }
@@ -155,6 +160,7 @@ function deriveCourseMasteryState(
 router.get("/courses", async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = getUserId(req);
+    const admin = await isCallerAdmin(req);
 
     const courses = await db
       .select()
@@ -183,6 +189,7 @@ router.get("/courses", async (req: Request, res: Response): Promise<void> => {
             userId,
             course.id,
             exam.unlockThreshold,
+            admin,
           );
           unlocked = unlockState.unlocked;
           masteredCount = unlockState.masteredCount;
@@ -239,6 +246,7 @@ router.get("/courses", async (req: Request, res: Response): Promise<void> => {
 router.get("/courses/:courseId", async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = getUserId(req);
+    const admin = await isCallerAdmin(req);
     const courseId = parseInt(String(req.params.courseId));
 
     const [course] = await db
@@ -256,7 +264,7 @@ router.get("/courses/:courseId", async (req: Request, res: Response): Promise<vo
       .where(eq(masteryExamsTable.courseId, courseId));
 
     const unlockThreshold = exam?.unlockThreshold ?? 90;
-    const unlockState = await getCourseUnlockState(userId, courseId, unlockThreshold);
+    const unlockState = await getCourseUnlockState(userId, courseId, unlockThreshold, admin);
 
     let bestPercentage: number | null = null;
     let attemptCount = 0;
@@ -311,6 +319,7 @@ router.get("/courses/:courseId", async (req: Request, res: Response): Promise<vo
 router.get("/courses/:courseId/mastery-state", async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = getUserId(req);
+    const admin = await isCallerAdmin(req);
     const courseId = parseInt(String(req.params.courseId));
 
     const [exam] = await db
@@ -323,7 +332,7 @@ router.get("/courses/:courseId/mastery-state", async (req: Request, res: Respons
       return;
     }
 
-    const unlockState = await getCourseUnlockState(userId, courseId, exam.unlockThreshold);
+    const unlockState = await getCourseUnlockState(userId, courseId, exam.unlockThreshold, admin);
     let bestPercentage: number | null = null;
     let attemptCount = 0;
     if (userId) {
@@ -362,8 +371,9 @@ router.get("/courses/:courseId/mastery-exam", async (req: Request, res: Response
     if (!userId) return;
 
     const courseId = parseInt(String(req.params.courseId));
+    const admin = await isCallerAdmin(req);
     const tier = await getUserTier(userId);
-    if (!PRO_TIERS.has(tier)) {
+    if (!admin && !PRO_TIERS.has(tier)) {
       res.status(402).json({
         error: "Mastery Exams require a paid plan",
         upgrade: true,
@@ -380,7 +390,7 @@ router.get("/courses/:courseId/mastery-exam", async (req: Request, res: Response
       return;
     }
 
-    const unlockState = await getCourseUnlockState(userId, courseId, exam.unlockThreshold);
+    const unlockState = await getCourseUnlockState(userId, courseId, exam.unlockThreshold, admin);
     if (!unlockState.unlocked) {
       res.status(403).json({
         error: "Mastery Exam locked",
@@ -462,8 +472,9 @@ router.post(
         return;
       }
 
+      const admin = await isCallerAdmin(req);
       const tier = await getUserTier(userId);
-      if (!PRO_TIERS.has(tier)) {
+      if (!admin && !PRO_TIERS.has(tier)) {
         res.status(402).json({ error: "Mastery Exams require a paid plan" });
         return;
       }
@@ -477,7 +488,7 @@ router.post(
         return;
       }
 
-      const unlockState = await getCourseUnlockState(userId, courseId, exam.unlockThreshold);
+      const unlockState = await getCourseUnlockState(userId, courseId, exam.unlockThreshold, admin);
       if (!unlockState.unlocked) {
         res.status(403).json({ error: "Mastery Exam locked", reason: "prerequisite_not_met" });
         return;
@@ -530,6 +541,7 @@ router.get("/users/me/course-mastery", async (req: Request, res: Response): Prom
   try {
     const userId = requireUserId(req, res);
     if (!userId) return;
+    const admin = await isCallerAdmin(req);
 
     const courses = await db
       .select()
@@ -555,7 +567,7 @@ router.get("/users/me/course-mastery", async (req: Request, res: Response): Prom
           };
         }
 
-        const unlockState = await getCourseUnlockState(userId, course.id, exam.unlockThreshold);
+        const unlockState = await getCourseUnlockState(userId, course.id, exam.unlockThreshold, admin);
         const best = await getBestAttempt(userId, exam.id);
         return {
           courseId: course.id,

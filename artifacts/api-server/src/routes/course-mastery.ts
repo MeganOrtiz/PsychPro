@@ -8,6 +8,7 @@ import {
 } from "@workspace/db";
 import { eq, and, inArray } from "drizzle-orm";
 import { requireUserId } from "../lib/userId";
+import { isCallerAdmin } from "../lib/isAdmin";
 import { shuffle } from "../lib/shuffle";
 
 const router = Router();
@@ -47,6 +48,7 @@ interface CourseMasteryStatus {
 async function computeCourseMasteryStatus(
   userId: string,
   category: string,
+  isAdmin = false,
 ): Promise<CourseMasteryStatus | null> {
   const topics = await db.select().from(topicsTable).where(eq(topicsTable.category, category));
   if (topics.length === 0) return null;
@@ -85,7 +87,9 @@ async function computeCourseMasteryStatus(
     };
   });
   const passedTopics = lessons.filter((l) => l.passed).length;
-  const unlocked = lessons.length > 0 && passedTopics === lessons.length;
+  // Admins (project owner / allowlisted staff) bypass the prerequisite so they
+  // can preview any course's mastery exam without acing every lesson first.
+  const unlocked = lessons.length > 0 && (isAdmin || passedTopics === lessons.length);
 
   const masteryRows = await db
     .select({ score: courseMasteryAttemptsTable.score, passed: courseMasteryAttemptsTable.passed })
@@ -116,7 +120,8 @@ router.get("/courses/:category/mastery-status", async (req: Request, res: Respon
     const userId = requireUserId(req, res);
     if (!userId) return;
     const category = decodeURIComponent(String(req.params.category));
-    const status = await computeCourseMasteryStatus(userId, category);
+    const admin = await isCallerAdmin(req);
+    const status = await computeCourseMasteryStatus(userId, category, admin);
     if (!status) {
       res.status(404).json({ error: "Course not found" });
       return;
@@ -134,7 +139,8 @@ router.get("/courses/:category/mastery-exam", async (req: Request, res: Response
     if (!userId) return;
     const category = decodeURIComponent(String(req.params.category));
 
-    const status = await computeCourseMasteryStatus(userId, category);
+    const admin = await isCallerAdmin(req);
+    const status = await computeCourseMasteryStatus(userId, category, admin);
     if (!status) {
       res.status(404).json({ error: "Course not found" });
       return;

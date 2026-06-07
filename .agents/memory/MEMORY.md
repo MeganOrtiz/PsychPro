@@ -25,5 +25,6 @@
 - [api-server route-auth matrix](api-server-route-auth-matrix.md) — every new Express route must be classified in routeAuthMatrix.test.ts; test stops at first failed check, hiding later drift.
 - [Brain Lab view-switch on select](brain-lab-view-switch-on-select.md) — clicking a hotspot/chip must keep the current tab; viewForStructure first-match jumps views for structures shown on several views — pass `preferred`.
 - [PsychPro prod course seeding](psychpro-prod-course-seeding.md) — prod DB is the content source of truth (dev lags); Publish applies schema not data; seed prod DATA via idempotent api-server startup backfill, never startup DDL.
+- [Mastery-exam admin bypass](psychpro-mastery-exam-admin-bypass.md) — owner/admin skips paywall+prerequisite on BOTH mastery-exam systems via isCallerAdmin; thread the bypass through every handler (incl. list/state endpoints) or UI shows "locked" inconsistently.
 - [Course route collision](psychpro-course-route-collision.md) — new courseId GET /courses/:x/mastery-exam is shadowed by legacy :category route (mounted first); unreachable until path disambiguated.
 - [Course mastery gate](psychpro-course-mastery-gate.md) — unlock = every lesson's practice exam ≥90% from exam_attempts (NOT progress.score, written by both quizzes+exams); one shared helper; compare exact ratio, round only for display.
