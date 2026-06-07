@@ -75,8 +75,8 @@ const ENTRY_POINTS: {
     icon: Sparkles,
     title: "Track your readiness",
     body: "See where you stand across domains and focus your time where it moves the needle most.",
-    href: "/progress",
-    cta: "Open progress",
+    href: "/eppp/dashboard",
+    cta: "Open dashboard",
   },
 ];
 
@@ -103,10 +103,10 @@ export default function EpppPage() {
             needed for both EPPP success and real-world clinical practice.
           </p>
           <div className="eppp-cta-row">
-            <Link href="/topics" className="eppp-btn eppp-btn--primary" data-testid="eppp-cta-start">
+            <Link href="/eppp/dashboard" className="eppp-btn eppp-btn--primary" data-testid="eppp-cta-start">
               Start studying <ArrowRight aria-hidden />
             </Link>
-            <Link href="/progress" className="eppp-btn eppp-btn--ghost" data-testid="eppp-cta-progress">
+            <Link href="/eppp/dashboard" className="eppp-btn eppp-btn--ghost" data-testid="eppp-cta-progress">
               View my progress
             </Link>
           </div>

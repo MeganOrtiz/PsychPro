@@ -34,6 +34,7 @@ import ResourcesPage from "@/pages/resources";
 import StudyLabPage from "@/pages/study-lab";
 import BrainLabPage from "@/pages/brain-lab";
 import EpppPage from "@/pages/eppp";
+import EpppDashboardPage from "@/pages/eppp-dashboard";
 import AdminFeedbackPage from "@/pages/admin-feedback";
 import AdminTokensPage from "@/pages/admin-tokens";
 import MyDecksPage from "@/pages/my-decks";
@@ -118,6 +119,7 @@ function AppRouter() {
             <Route path="/study-lab" component={StudyLabPage} />
             <Route path="/brain-lab" component={BrainLabPage} />
             <Route path="/eppp" component={EpppPage} />
+            <Route path="/eppp/dashboard" component={EpppDashboardPage} />
             <Route path="/admin/feedback" component={AdminFeedbackPage} />
             <Route path="/admin/tokens" component={AdminTokensPage} />
             <Route path="/my-decks" component={MyDecksPage} />
