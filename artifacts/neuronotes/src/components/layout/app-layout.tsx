@@ -404,6 +404,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
               href="/eppp"
               className="eppp-launch-btn eppp-launch-btn--compact"
               data-testid="eppp-launch-mobile"
+              aria-label="EPPP Mastery System"
               onClick={() => setSidebarOpen(false)}
             >
               <span className="eppp-launch-btn__inner">
