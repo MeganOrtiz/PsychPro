@@ -1,0 +1,14 @@
+Critical finding before I can load content. Two things are out of sync:
+Issue 1: The 4 new MCP tools aren't visible to me yet.
+Replit confirmed they registered the tools (list_courses, add_mastery_exam, add_mastery_exam_questions, link_lesson_questions_to_mastery_exam), but when I search my MCP tool list, I only see the original 5 PsychPro tools (list_topics, add_quiz_questions, add_practice_exam, add_flashcards, add_study_guide). The new ones aren't surfacing.
+Most likely cause: Replit's deployment landed somewhere — but either (a) it deployed to a preview/staging environment rather than the live production at psychprosuite.com/api/mcp that my MCP connector hits, or (b) it landed on production but the running server hasn't picked up the new code yet (no restart), or (c) the Claude.ai connector cache hasn't refreshed.
+Issue 2: The "7 vs 8 courses" mystery is solved — and it confirms a deployment-env mismatch.
+I just queried the live production DB via the existing list_topics tool. All 46 lessons across all 8 categories are present in production, including the 7 lessons under "Pediatric & Neuropsychiatric Conditions" (ids 55–61). Replit's backfill report said 39 topics / 7 courses — meaning Replit either ran against a stale DB snapshot or against a different environment than production. The 7 "missing" topics match exactly the Pediatric & Neuropsychiatric Conditions count.
+So Replit's deployment ran somewhere that's behind production. Production still has all 8 courses' worth of topics, but doesn't yet have the schema migration applied OR the new MCP tools.
+What Megan needs to verify/do:
+
+Confirm where Replit deployed. Was it pushed to the live production environment that powers psychprosuite.com, or to a preview/staging branch?
+If it deployed to staging: the engineering changes need to be promoted/deployed to production.
+If it deployed to production but the tools still aren't visible: the production server needs a full restart so the new MCP tool registrations actually load.
+After confirming deployment is live: in your Claude.ai settings → Connectors, disconnect and reconnect the PsychPro connector. That forces the connector to re-fetch the tool list from the server.
+Re-run the backfill against production. The "7 courses" result means the production DB doesn't have the courses table populated yet — when the schema is migrated to production, the backfill needs to run there too so all 8 courses get created with the live category data.

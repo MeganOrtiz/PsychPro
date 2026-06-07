@@ -1,4 +1,5 @@
 import app from "./app";
+import { db, backfillCoursesFromTopics } from "@workspace/db";
 import { logger } from "./lib/logger";
 import { logResolvedClientErrorsRateLimit } from "./startup";
 import { startClientErrorsRateLimitCleanup } from "./middlewares/clientErrorsRateLimit";
@@ -23,4 +24,24 @@ app.listen(port, "0.0.0.0", (err) => {
   }
 
   logger.info({ port }, "Server listening");
+
+  // After the server is accepting connections, ensure the `courses` lookup
+  // table is populated from existing topic categories. This is DATA seeding —
+  // the `courses` table and `topics.course_id` column themselves are created by
+  // Replit's publish-time schema flow, never here. It is idempotent and
+  // race-safe across autoscale instances. Running it here is the ONLY way
+  // production gets its courses, because the production database is read-only to
+  // tooling and seed.ts never runs in production. Run in the background so it
+  // never delays readiness or the startup health check; failures are logged but
+  // do not take the server down.
+  void backfillCoursesFromTopics(db)
+    .then((result) =>
+      logger.info(
+        result,
+        result.skipped
+          ? "Course backfill: already up to date"
+          : "Course backfill complete",
+      ),
+    )
+    .catch((err) => logger.error({ err }, "Course backfill failed"));
 });
