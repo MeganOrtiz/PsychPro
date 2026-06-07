@@ -1,0 +1,25 @@
+You're right on both counts. My table was wrong — I was treating alreadyLinked as additive to the pool when it's actually a count of sampled questions that got skipped (they aren't in the pool). The real pool sizes are what your query returns:
+
+Neuroscience: 20 + 53 = 73
+Psychotherapy: 20 + 51 = 71
+Neuropsychology: 20 + 51 = 71
+Pediatric & Neuropsychiatric: 20 + 47 = 67
+Research Methods: 20 + 48 = 68
+Assessment: 20 + 41 = 61
+Special Topics: 20 + 32 = 52
+Psychology: 20 + 30 = 50
+
+Two things worth investigating in parallel:
+1. Yes — please check the route handler. That tells us whether short pools are a real problem or a non-issue. The behavior we care about is in the GET /courses/:courseId/mastery-exam/start (or equivalent) handler. The three possibilities:
+
+Best case: handler does SELECT ... ORDER BY RANDOM() LIMIT question_count → returns whatever the pool has (so Psychology serves 50 unique questions, not 75). Pool sizes below 75 just become the de facto exam size. No bug, just a shorter exam.
+Acceptable case: handler caps at pool size and serves MIN(pool_size, question_count) with no repeats. Same outcome.
+Bad case: handler tries to fill 75 by sampling with replacement → questions repeat within a single attempt. That's broken UX.
+
+2. The link_lesson_questions_to_mastery_exam tool returned less than I requested. I asked for 55 across the board (40 for the smaller courses), and several came back well short. That suggests the tool's stratified sampler is hitting some constraint — possibly per-lesson caps, possibly something else. Worth understanding before we try to top up the pools.
+The likely fixes once we know how the handler behaves:
+
+If the handler gracefully serves MIN(pool, target): easiest is to set question_count per exam to roughly match the available pool (e.g., Psychology = 50, Special Topics = 52). Honest pool size, no shorting users.
+If the handler needs the full 75: we either need to figure out why the link tool is sampling short and rerun it, or author more mastery-only vignettes for the small courses (Psychology and Special Topics being the obvious ones — they have the fewest lesson-bank questions to draw from).
+
+Check the route handler first — that determines which fix path is right.
