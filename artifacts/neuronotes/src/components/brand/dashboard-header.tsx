@@ -35,16 +35,9 @@ const SYNAPSE_DOTS: Array<{ left: string; top: string; delay: string; dur: strin
 
 export function DashboardHeader({ greeting }: DashboardHeaderProps) {
   return (
-    <header className="relative mb-6 md:mb-8" data-testid="dashboard-header">
+    <header className="relative mb-5 md:mb-6" data-testid="dashboard-header">
       <div
-        className="dashhdr-card relative mx-auto max-w-2xl overflow-hidden rounded-[22px] px-6 py-6 md:px-10 md:py-7"
-        style={{
-          background: `linear-gradient(150deg, rgba(8,40,55,0.55) 0%, rgba(5,24,34,0.66) 100%)`,
-          border: `1px solid ${P.surf}26`,
-          backdropFilter: "blur(22px) saturate(135%)",
-          WebkitBackdropFilter: "blur(22px) saturate(135%)",
-          boxShadow: `inset 0 1px 0 rgba(167,243,255,0.10), 0 26px 60px -34px rgba(0,0,0,0.7), 0 0 50px -16px ${P.surf}24`,
-        }}
+        className="dashhdr-card relative mx-auto max-w-2xl overflow-hidden px-6 pt-1 pb-3 md:px-10 md:pt-2 md:pb-4"
       >
         {/* Aurora field — two slow, independently drifting cyan blooms that bleed
             in from the top corners. Reads as ambient, shifting depth. */}
@@ -73,15 +66,6 @@ export function DashboardHeader({ greeting }: DashboardHeaderProps) {
         {/* Light-sweep — a soft sheen that crosses the banner on a long loop,
             catching the wordmark like a passing reflection on glass. */}
         <span aria-hidden className="dashhdr-sweep pointer-events-none absolute inset-0" />
-
-        {/* Top hairline accent — a thin cyan rule for a crafted, finished edge. */}
-        <span
-          aria-hidden
-          className="pointer-events-none absolute inset-x-8 top-0 h-px"
-          style={{
-            background: `linear-gradient(90deg, transparent, ${P.surf}82, transparent)`,
-          }}
-        />
 
         <BrandBanner size="lg" greeting={greeting} className="relative z-10" />
       </div>
