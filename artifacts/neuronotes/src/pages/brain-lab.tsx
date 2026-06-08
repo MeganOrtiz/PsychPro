@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, lazy, Suspense, Component, type ReactNode } from "react";
+import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, lazy, Suspense, Component, type ReactNode } from "react";
 import { Link } from "wouter";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
@@ -1198,6 +1198,13 @@ function LabeledBrainDiagram({
   const [box, setBox] = useState<
     { l: number; t: number; w: number; h: number; wrapW: number; wrapH: number } | null
   >(null);
+  // Real measured label sizes (filled by the hidden measurement layer below).
+  // `sideH` = wrapped height inside a fixed-width side column; `rowW`/`rowH` =
+  // natural size as a single-line top/bottom row label.
+  const [sizes, setSizes] = useState<
+    Record<string, { sideH: number; rowW: number; rowH: number }>
+  >({});
+  const measureLayerRef = useRef<HTMLDivElement>(null);
 
   const measure = useCallback(() => {
     const wrap = wrapRef.current;
@@ -1227,6 +1234,56 @@ function LabeledBrainDiagram({
     return () => ro.disconnect();
   }, [measure, activeView]);
 
+  // Measure each label's REAL rendered size from a hidden layer that mirrors the
+  // exact font/width treatment of the live labels. Side columns use a fixed
+  // width so only the wrapped height varies; top/bottom rows size to content.
+  // Feeding these into the layout replaces the old character-count estimates so
+  // dense views space precisely (no estimator drift).
+  useLayoutEffect(() => {
+    const runMeasure = () => {
+      const layer = measureLayerRef.current;
+      if (!layer) return;
+      const next: Record<string, { sideH: number; rowW: number; rowH: number }> = {};
+      layer.querySelectorAll<HTMLElement>("[data-measure-id]").forEach((el) => {
+        const id = el.getAttribute("data-measure-id");
+        const kind = el.getAttribute("data-measure-kind");
+        if (!id) return;
+        const r = el.getBoundingClientRect();
+        const cur = next[id] ?? { sideH: 0, rowW: 0, rowH: 0 };
+        if (kind === "side") cur.sideH = Math.ceil(r.height);
+        else {
+          cur.rowW = Math.ceil(r.width);
+          cur.rowH = Math.ceil(r.height);
+        }
+        next[id] = cur;
+      });
+      setSizes((prev) => {
+        const keys = Object.keys(next);
+        let same = keys.length === Object.keys(prev).length;
+        if (same) {
+          for (const k of keys) {
+            const a = next[k];
+            const b = prev[k];
+            if (!b || a.sideH !== b.sideH || a.rowW !== b.rowW || a.rowH !== b.rowH) {
+              same = false;
+              break;
+            }
+          }
+        }
+        return same ? prev : next;
+      });
+    };
+    runMeasure();
+    // Re-measure once webfonts settle so late font swaps can't leave stale sizes.
+    let cancelled = false;
+    document.fonts?.ready.then(() => {
+      if (!cancelled) runMeasure();
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [activeView]);
+
   // Auto-layout: assign each label to one of the four edges by the anchor's
   // direction from the image centre, then de-overlap (columns vertically, rows
   // horizontally) so nothing collides.
@@ -1239,15 +1296,20 @@ function LabeledBrainDiagram({
     const colTextW = SIDE_GUTTER - 18;
     const charW = 5.85;
     const lineH = 13;
-    const sideSize = (name: string) => {
+    // Prefer the REAL measured size; fall back to a character-count estimate
+    // until the hidden measurement layer has reported (first paint only).
+    const sideSize = (id: string, name: string) => {
+      const m = sizes[id];
+      if (m && m.sideH) return { w: SIDE_GUTTER - 14, h: m.sideH + 4 };
       const full = name.length * charW;
       const lines = Math.min(3, Math.max(1, Math.ceil(full / colTextW)));
       return { w: Math.min(full, colTextW), h: lines * lineH + 6 };
     };
-    const rowSize = (name: string) => ({
-      w: Math.min(170, name.length * charW + 6),
-      h: 18,
-    });
+    const rowSize = (id: string, name: string) => {
+      const m = sizes[id];
+      if (m && m.rowW) return { w: m.rowW, h: m.rowH };
+      return { w: Math.min(170, name.length * charW + 6), h: 18 };
+    };
 
     const items: LabelLayoutItem[] = [];
     for (const h of hotspots) {
@@ -1263,7 +1325,7 @@ function LabeledBrainDiagram({
       else if (deg >= 42 && deg < 138) edge = "bottom";
       else if (deg >= -138 && deg < -42) edge = "top";
       else edge = "left";
-      const sz = edge === "top" || edge === "bottom" ? rowSize(s.name) : sideSize(s.name);
+      const sz = edge === "top" || edge === "bottom" ? rowSize(s.id, s.name) : sideSize(s.id, s.name);
       items.push({ id: s.id, name: s.name, ax, ay, edge, lx: ax, ly: ay, w: sz.w, h: sz.h });
     }
 
@@ -1290,7 +1352,7 @@ function LabeledBrainDiagram({
         }
         const it = row[idx];
         it.edge = it.ax < cx0 ? "left" : "right";
-        const sz = sideSize(it.name);
+        const sz = sideSize(it.id, it.name);
         it.w = sz.w;
         it.h = sz.h;
         row.splice(idx, 1);
@@ -1334,7 +1396,8 @@ function LabeledBrainDiagram({
     // clamped anchor y, then nudged apart top→bottom (pulled back up on
     // overflow).
     const colTop = 14;
-    const colBottom = box.wrapH - 14;
+    // Reserve the bottom strip for the view caption so columns never collide with it.
+    const colBottom = box.wrapH - 46;
     for (const edge of ["left", "right"] as const) {
       const arr = items.filter((i) => i.edge === edge).sort((a, b) => a.ay - b.ay);
       const colX = edge === "left" ? box.l - SIDE_GUTTER / 2 + 2 : box.l + box.w + SIDE_GUTTER / 2 - 2;
@@ -1378,10 +1441,44 @@ function LabeledBrainDiagram({
       }
     }
     return items;
-  }, [box, hotspots]);
+  }, [box, hotspots, sizes]);
 
   return (
     <div ref={wrapRef} className="relative h-full w-full" data-testid="brain-diagram">
+      {/* Hidden measurement layer — mirrors the live labels' font + width so we
+          can read each label's true rendered size before positioning. Never
+          visible; excluded from a11y and pointer events. */}
+      <div
+        ref={measureLayerRef}
+        aria-hidden
+        className="pointer-events-none"
+        style={{ position: "absolute", left: -99999, top: 0, visibility: "hidden" }}
+      >
+        {hotspots.map((h) => {
+          const s = STRUCTURE_INDEX[h.id];
+          if (!s) return null;
+          return (
+            <Fragment key={h.id}>
+              <div
+                data-measure-id={s.id}
+                data-measure-kind="side"
+                className="box-border px-0.5 text-[11px] font-semibold leading-tight"
+                style={{ width: SIDE_GUTTER - 14 }}
+              >
+                {s.name}
+              </div>
+              <div
+                data-measure-id={s.id}
+                data-measure-kind="row"
+                className="box-border inline-block px-0.5 text-[11px] font-semibold leading-tight"
+                style={{ maxWidth: 180 }}
+              >
+                {s.name}
+              </div>
+            </Fragment>
+          );
+        })}
+      </div>
       {view.src ? (
         <>
           {/* Centered image, with gutters reserved for the label columns */}
