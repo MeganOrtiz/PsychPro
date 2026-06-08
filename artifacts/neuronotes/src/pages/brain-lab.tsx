@@ -1162,7 +1162,7 @@ function BrainDiagram({
 // one. Columns de-overlap vertically, rows de-overlap horizontally. Hover /
 // selection lights a single uniform cerulean glow — no per-structure colour.
 // =============================================================================
-const SIDE_GUTTER = 158; // px reserved on the left & right for vertical label columns
+const SIDE_GUTTER = 132; // px reserved on the left & right for vertical label columns
 const GLOW = PALETTE.surf; // single uniform cerulean glow for every label / marker
 
 type LabelEdge = "left" | "right" | "top" | "bottom";
@@ -1234,32 +1234,46 @@ function LabeledBrainDiagram({
     if (!box) return [];
     const cx0 = box.l + box.w / 2;
     const cy0 = box.t + box.h / 2;
+    // Size estimates. Side-column labels wrap to up to 3 lines within the
+    // gutter; top/bottom labels stay on one line.
+    const colTextW = SIDE_GUTTER - 18;
+    const charW = 5.85;
+    const lineH = 13;
+    const sideSize = (name: string) => {
+      const full = name.length * charW;
+      const lines = Math.min(3, Math.max(1, Math.ceil(full / colTextW)));
+      return { w: Math.min(full, colTextW), h: lines * lineH + 6 };
+    };
+    const rowSize = (name: string) => ({
+      w: Math.min(170, name.length * charW + 6),
+      h: 18,
+    });
+
     const items: LabelLayoutItem[] = [];
     for (const h of hotspots) {
       const s = STRUCTURE_INDEX[h.id];
       if (!s) continue;
       const ax = box.l + (h.x / 100) * box.w;
       const ay = box.t + (h.y / 100) * box.h;
-      const w = Math.min(150, Math.max(56, s.name.length * 6.1 + 20));
-      const hgt = s.name.length * 6.1 + 20 > 150 ? 32 : 22;
       const deg = (Math.atan2(ay - cy0, ax - cx0) * 180) / Math.PI;
       let edge: LabelEdge;
-      // Narrow top/bottom wedges (60°) keep those slim rows from overflowing;
-      // the roomier left/right columns (120°) absorb the rest.
-      if (deg >= -60 && deg < 60) edge = "right";
-      else if (deg >= 60 && deg < 120) edge = "bottom";
-      else if (deg >= -120 && deg < -60) edge = "top";
+      // Narrow top/bottom wedges keep those slim rows from overflowing; the
+      // roomier left/right columns absorb the rest.
+      if (deg >= -55 && deg < 55) edge = "right";
+      else if (deg >= 55 && deg < 125) edge = "bottom";
+      else if (deg >= -125 && deg < -55) edge = "top";
       else edge = "left";
-      items.push({ id: s.id, name: s.name, ax, ay, edge, lx: ax, ly: ay, w, h: hgt });
+      const sz = edge === "top" || edge === "bottom" ? rowSize(s.name) : sideSize(s.name);
+      items.push({ id: s.id, name: s.name, ax, ay, edge, lx: ax, ly: ay, w: sz.w, h: sz.h });
     }
 
     // Top/bottom are slim rows with limited width — keep only the labels that
-    // fit there (preferring the ones sitting most directly above/below the
-    // brain) and spill the rest into the roomier side columns.
+    // fit (preferring those sitting most directly above/below the brain) and
+    // spill the rest into the roomier side columns.
     const rowLeft = SIDE_GUTTER + 12;
     const rowRight = box.wrapW - SIDE_GUTTER - 12;
     const rowAvail = Math.max(0, rowRight - rowLeft);
-    const rowGap = 10;
+    const rowGap = 14;
     for (const edge of ["top", "bottom"] as const) {
       const row = items.filter((i) => i.edge === edge);
       const needed = () =>
@@ -1274,13 +1288,51 @@ function LabeledBrainDiagram({
             idx = k;
           }
         }
-        row[idx].edge = row[idx].ax < cx0 ? "left" : "right";
+        const it = row[idx];
+        it.edge = it.ax < cx0 ? "left" : "right";
+        const sz = sideSize(it.name);
+        it.w = sz.w;
+        it.h = sz.h;
         row.splice(idx, 1);
       }
     }
 
-    // Vertical columns (left / right): x pinned to the gutter centre, y = clamped
-    // anchor y, then nudged apart top→bottom (and pulled back up if we overflow).
+    // Balance the side labels across both columns. Clearly-sided anchors stay
+    // put; centrally-anchored ones (e.g. the brainstem cranial nerves) are
+    // dealt to whichever column is currently shorter, so a clustered view
+    // spreads across both sides instead of stacking down one.
+    const gap = 7;
+    const band = box.w * 0.16;
+    let leftH = 0;
+    let rightH = 0;
+    const sideItems = items.filter((i) => i.edge === "left" || i.edge === "right");
+    for (const it of sideItems) {
+      if (Math.abs(it.ax - cx0) >= band) {
+        if (it.ax < cx0) {
+          it.edge = "left";
+          leftH += it.h + gap;
+        } else {
+          it.edge = "right";
+          rightH += it.h + gap;
+        }
+      }
+    }
+    const central = sideItems
+      .filter((i) => Math.abs(i.ax - cx0) < band)
+      .sort((a, b) => a.ay - b.ay);
+    for (const it of central) {
+      if (leftH <= rightH) {
+        it.edge = "left";
+        leftH += it.h + gap;
+      } else {
+        it.edge = "right";
+        rightH += it.h + gap;
+      }
+    }
+
+    // Vertical columns (left / right): x pinned to the gutter centre, y =
+    // clamped anchor y, then nudged apart top→bottom (pulled back up on
+    // overflow).
     const colTop = 14;
     const colBottom = box.wrapH - 14;
     for (const edge of ["left", "right"] as const) {
@@ -1290,7 +1342,6 @@ function LabeledBrainDiagram({
         it.lx = colX;
         it.ly = Math.min(Math.max(it.ay, colTop + it.h / 2), colBottom - it.h / 2);
       }
-      const gap = 6;
       for (let i = 1; i < arr.length; i++) {
         const minY = arr[i - 1].ly + arr[i - 1].h / 2 + gap + arr[i].h / 2;
         if (arr[i].ly < minY) arr[i].ly = minY;
@@ -1310,7 +1361,7 @@ function LabeledBrainDiagram({
     for (const edge of ["top", "bottom"] as const) {
       const arr = items.filter((i) => i.edge === edge).sort((a, b) => a.ax - b.ax);
       for (const it of arr) {
-        it.ly = edge === "top" ? 14 + it.h / 2 : box.wrapH - 44 - it.h / 2;
+        it.ly = edge === "top" ? 16 + it.h / 2 : box.wrapH - 40 - it.h / 2;
         it.lx = Math.min(Math.max(it.ax, rowLeft + it.w / 2), rowRight - it.w / 2);
       }
       for (let i = 1; i < arr.length; i++) {
@@ -1336,7 +1387,7 @@ function LabeledBrainDiagram({
           {/* Centered image, with gutters reserved for the label columns */}
           <div
             className="absolute inset-0 flex items-center justify-center"
-            style={{ paddingLeft: SIDE_GUTTER, paddingRight: SIDE_GUTTER, paddingTop: 44, paddingBottom: 56 }}
+            style={{ paddingLeft: SIDE_GUTTER, paddingRight: SIDE_GUTTER, paddingTop: 28, paddingBottom: 40 }}
           >
             <div ref={imgBoxRef} className="relative max-h-full max-w-full">
               <img
@@ -1365,15 +1416,24 @@ function LabeledBrainDiagram({
                 const active = selectedId === it.id;
                 const emphasized = active || hoveredId === it.id;
                 const dim = selectedId !== null && !active;
+                // Attach the leader to the inner edge of the (box-less) text so
+                // it clearly points from structure → its own label.
+                const boxHalf = (SIDE_GUTTER - 14) / 2;
+                let ex = it.lx;
+                let ey = it.ly;
+                if (it.edge === "left") ex = it.lx + boxHalf;
+                else if (it.edge === "right") ex = it.lx - boxHalf;
+                else if (it.edge === "top") ey = it.ly + it.h / 2;
+                else ey = it.ly - it.h / 2;
                 return (
-                  <g key={it.id} opacity={dim ? 0.28 : 1}>
-                    {/* Straight leader from the anatomical anchor to the chip
-                        centre; the far end tucks under the opaque chip. */}
+                  <g key={it.id} opacity={dim ? 0.22 : 1}>
+                    {/* Straight leader from the anatomical anchor to the inner
+                        edge of the text label. */}
                     <line
                       x1={it.ax}
                       y1={it.ay}
-                      x2={it.lx}
-                      y2={it.ly}
+                      x2={ex}
+                      y2={ey}
                       stroke={GLOW}
                       strokeWidth={emphasized ? 1.8 : 1}
                       strokeOpacity={emphasized ? 1 : 0.4}
@@ -1394,13 +1454,17 @@ function LabeledBrainDiagram({
             </svg>
           )}
 
-          {/* Clickable text chips parked around the brain */}
+          {/* Clickable text labels parked around the brain — no boxes, just
+              glowing text with a dark halo so they stay legible over the
+              artwork. */}
           {box &&
             layout.map((it) => {
               const active = selectedId === it.id;
               const emphasized = active || hoveredId === it.id;
               const dim = selectedId !== null && !active;
               const horizontal = it.edge === "top" || it.edge === "bottom";
+              const align: "left" | "right" | "center" =
+                it.edge === "left" ? "right" : it.edge === "right" ? "left" : "center";
               return (
                 <button
                   key={it.id}
@@ -1413,20 +1477,22 @@ function LabeledBrainDiagram({
                   onMouseLeave={() => onHover(null)}
                   onFocus={() => onHover(it.id)}
                   onBlur={() => onHover(null)}
-                  className="absolute rounded-md px-2 py-1 text-[11px] font-semibold leading-tight text-center outline-none transition-all focus-visible:ring-2 focus-visible:ring-white/80"
+                  className="absolute px-0.5 text-[11px] font-semibold leading-tight outline-none transition-all hover:brightness-125 focus-visible:rounded focus-visible:ring-2 focus-visible:ring-white/80"
                   style={{
                     left: it.lx,
                     top: it.ly,
                     transform: "translate(-50%, -50%)",
-                    maxWidth: horizontal ? 150 : SIDE_GUTTER - 12,
+                    width: horizontal ? "auto" : SIDE_GUTTER - 14,
+                    maxWidth: horizontal ? 180 : SIDE_GUTTER - 14,
+                    textAlign: align,
                     zIndex: emphasized ? 30 : 20,
-                    opacity: dim ? 0.42 : 1,
-                    background: emphasized ? `${PALETTE.surfaceElev}f7` : `${PALETTE.surface}d9`,
-                    color: emphasized ? "#fff" : PALETTE.mist,
-                    border: `1px solid ${emphasized ? GLOW : `${PALETTE.steel}aa`}`,
-                    boxShadow: emphasized
-                      ? `0 0 0 1px ${GLOW}, 0 0 18px 2px ${GLOW}cc, 0 6px 18px -6px ${PALETTE.bg}`
-                      : `0 2px 8px -4px ${PALETTE.bg}`,
+                    opacity: dim ? 0.4 : 1,
+                    background: "transparent",
+                    border: "none",
+                    color: emphasized ? "#ffffff" : PALETTE.mist,
+                    textShadow: emphasized
+                      ? `0 0 9px ${GLOW}, 0 0 16px ${GLOW}, 0 1px 2px ${PALETTE.bg}, 0 0 4px ${PALETTE.bg}`
+                      : `0 0 4px ${PALETTE.bg}, 0 1px 3px ${PALETTE.bg}, 0 0 9px ${PALETTE.bg}, 0 0 9px ${PALETTE.bg}`,
                   }}
                   aria-pressed={active}
                   data-testid={`hotspot-${it.id}`}
