@@ -24,7 +24,7 @@ import {
 import { groupEpppTopicsByCategory, isEpppTopic } from "@/lib/eppp-content";
 
 // ---------------------------------------------------------------------------
-// EPPP Mastery System dashboard — the working "how ready am I" home for the
+// EPPP Mastery Suite dashboard — the working "how ready am I" home for the
 // licensing-exam track, reached from the /eppp intro page's CTAs. Distinct from
 // the general /dashboard. Surfaces five things the user asked for:
 //   1. An overall exam-readiness score (mean lesson-mastery across domains)
@@ -191,7 +191,7 @@ export function EpppDashboardView({
         <header className="epd-head">
           <div className="epd-head-main">
             <p className="epd-eyebrow">
-              <GraduationCap aria-hidden /> EPPP MASTERY SYSTEM
+              <GraduationCap aria-hidden /> EPPP MASTERY SUITE
             </p>
             <h1 className="epd-title">
               EPPP Mastery Suite

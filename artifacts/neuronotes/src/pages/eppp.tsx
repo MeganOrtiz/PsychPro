@@ -10,8 +10,8 @@ import {
 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
-// EPPP Mastery System hub — the dedicated home for the licensing-exam track.
-// Reached from the glowing "EPPP Mastery System" button in the top header
+// EPPP Mastery Suite hub — the dedicated home for the licensing-exam track.
+// Reached from the glowing "EPPP Mastery Suite" button in the top header
 // (see app-layout.tsx). Mirrors the full PsychPro study concept but framed
 // specifically around the EPPP. Locked cerulean palette (#76E4F7); no mint.
 // ---------------------------------------------------------------------------
@@ -94,7 +94,7 @@ export default function EpppPage() {
           </div>
           <p className="eppp-eyebrow">FOR THE LICENSING EXAM</p>
           <h1 className="eppp-title">
-            The PsychPro EPPP Mastery System&trade;
+            The PsychPro EPPP Mastery Suite&trade;
           </h1>
           <p className="eppp-lede">
             A system of learning resources designed to promote mastery of EPPP
@@ -115,7 +115,7 @@ export default function EpppPage() {
         {/* Pillars */}
         <section className="eppp-section" data-testid="eppp-pillars">
           <p className="eppp-section-eyebrow">THE SYSTEM</p>
-          <h2 className="eppp-section-title">What the Mastery System includes</h2>
+          <h2 className="eppp-section-title">What the Mastery Suite includes</h2>
           <div className="eppp-grid eppp-grid--3">
             {PILLARS.map((p) => {
               const Icon = p.icon;

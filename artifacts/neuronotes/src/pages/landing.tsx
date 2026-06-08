@@ -340,7 +340,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ============== EPPP MASTERY SYSTEM ============== */}
+        {/* ============== EPPP MASTERY SUITE ============== */}
         <section id="mastery" className="landing-section landing-mastery" data-reveal>
           <div className="landing-mastery-card">
             <div className="landing-mastery-icon">
@@ -348,10 +348,10 @@ export default function LandingPage() {
             </div>
             <p className="landing-eyebrow">THE SYSTEM</p>
             <h2 className="landing-section-title">
-              The PsychPro EPPP Mastery System&trade;
+              The PsychPro EPPP Mastery Suite&trade;
             </h2>
             <p className="landing-mastery-text">
-              The PsychPro EPPP Mastery System&trade; is a system of learning
+              The PsychPro EPPP Mastery Suite&trade; is a system of learning
               resources designed to promote mastery of EPPP content through
               conceptual understanding, critical thinking, and active
               application. Featuring structured lessons in each domain, clinical

@@ -401,10 +401,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
           <span className="font-bold text-foreground">PsychPro</span>
           <div className="ml-auto flex items-center gap-2.5">
             <Link
-              href="/eppp"
+              href="/eppp/suite"
               className="eppp-launch-btn eppp-launch-btn--compact"
               data-testid="eppp-launch-mobile"
-              aria-label="EPPP Mastery System"
+              aria-label="EPPP Mastery Suite"
               onClick={() => setSidebarOpen(false)}
             >
               <span className="eppp-launch-btn__inner">
@@ -428,13 +428,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
           }}
         >
           <Link
-            href="/eppp"
+            href="/eppp/suite"
             className="eppp-launch-btn"
             data-testid="eppp-launch-desktop"
           >
             <span className="eppp-launch-btn__inner">
               <GraduationCap aria-hidden />
-              <span>EPPP Mastery System</span>
+              <span>EPPP Mastery Suite</span>
             </span>
           </Link>
           {!isMobile && <NotificationsBell />}

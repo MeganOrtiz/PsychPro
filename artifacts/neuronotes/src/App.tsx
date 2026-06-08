@@ -36,6 +36,7 @@ import BrainLabPage from "@/pages/brain-lab";
 import EpppPage from "@/pages/eppp";
 import EpppDashboardPage from "@/pages/eppp-dashboard";
 import EpppDomainsPage from "@/pages/eppp-domains";
+import EpppSuitePage from "@/pages/eppp-suite";
 import AdminFeedbackPage from "@/pages/admin-feedback";
 import AdminTokensPage from "@/pages/admin-tokens";
 import MyDecksPage from "@/pages/my-decks";
@@ -93,6 +94,13 @@ function AppRouter() {
       <Route path="/sign-in/*?" component={SignInPage} />
       <Route path="/sign-up/*?" component={SignUpPage} />
       {import.meta.env.DEV ? <Route path="/__crash-test" component={CrashTestPage} /> : null}
+      <Route path="/eppp/suite/:tab?">
+        {(params) => (
+          <RequireSignedIn>
+            <EpppSuitePage tab={params.tab} />
+          </RequireSignedIn>
+        )}
+      </Route>
       <Route>
         <RequireSignedIn>
           <AppLayout>

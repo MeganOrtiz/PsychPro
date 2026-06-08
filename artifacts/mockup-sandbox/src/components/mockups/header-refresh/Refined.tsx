@@ -33,7 +33,7 @@ export function Refined() {
           <button className="eppp-launch-btn" type="button">
             <span className="eppp-launch-btn__inner">
               <GraduationCap />
-              EPPP Mastery System
+              EPPP Mastery Suite
             </span>
           </button>
           <button className="hdr-icon-btn" type="button" aria-label="Notifications">
