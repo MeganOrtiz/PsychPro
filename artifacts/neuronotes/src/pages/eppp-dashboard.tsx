@@ -825,8 +825,11 @@ const styles = `
   border-radius: 16px;
   padding: 18px;
   text-decoration: none;
-  background: linear-gradient(145deg, rgba(10,45,61,0.5), rgba(6,28,40,0.62));
+  background: linear-gradient(145deg, rgba(10,45,61,0.6), rgba(6,28,40,0.7));
   border: 1px solid ${C.hairline};
+  backdrop-filter: blur(16px) saturate(125%);
+  -webkit-backdrop-filter: blur(16px) saturate(125%);
+  box-shadow: 0 24px 60px -42px rgba(0,0,0,0.72);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
 .epd-domain:hover { transform: translateY(-3px); border-color: ${C.cyan}66; box-shadow: 0 22px 56px -38px rgba(0,0,0,0.7), 0 0 24px -10px ${C.cyan}59; }
@@ -870,8 +873,11 @@ const styles = `
   padding: 14px 16px;
   text-align: left;
   cursor: pointer;
-  background: linear-gradient(145deg, rgba(10,45,61,0.5), rgba(6,28,40,0.6));
+  background: linear-gradient(145deg, rgba(10,45,61,0.6), rgba(6,28,40,0.7));
   border: 1px solid ${C.hairline};
+  backdrop-filter: blur(16px) saturate(125%);
+  -webkit-backdrop-filter: blur(16px) saturate(125%);
+  box-shadow: 0 24px 60px -42px rgba(0,0,0,0.72);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
 .epd-next:hover { transform: translateY(-2px); border-color: ${C.cyan}66; box-shadow: 0 0 24px -12px ${C.cyan}80; }
