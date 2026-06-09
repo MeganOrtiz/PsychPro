@@ -2,11 +2,9 @@ import { useMemo, useState, useEffect, useCallback } from "react";
 import { Link, useLocation } from "wouter";
 import { useUser } from "@clerk/clerk-react";
 import {
-  GraduationCap,
   Flame,
   CalendarClock,
   ArrowRight,
-  ArrowUpRight,
   Target,
   BookOpen,
   CheckCircle2,
@@ -22,6 +20,7 @@ import {
   getGetCourseMasteryStatusQueryKey,
 } from "@workspace/api-client-react";
 import { groupEpppTopicsByCategory, isEpppTopic } from "@/lib/eppp-content";
+import dashboardBrain from "@/assets/hero/dashboard-superior-brain.png";
 
 // ---------------------------------------------------------------------------
 // EPPP Mastery Suite dashboard — the working "how ready am I" home for the
@@ -181,6 +180,7 @@ export function EpppDashboardView({
 }: EpppDashboardViewProps) {
   const [editingDate, setEditingDate] = useState(false);
   const examDays = daysUntil(examDate);
+  void greetingName;
 
   return (
     <div className="study-page-bg epd-page" data-testid="eppp-dashboard-page">
@@ -189,26 +189,9 @@ export function EpppDashboardView({
       <div className="epd-shell">
         {/* Header */}
         <header className="epd-head">
-          <div className="epd-head-main">
-            <p className="epd-eyebrow">
-              <GraduationCap aria-hidden /> EPPP MASTERY SUITE
-            </p>
-            <h1 className="epd-title">
-              EPPP Mastery Suite
-            </h1>
-            <p className="epd-sub">
-              {greetingName ? `${greetingName}, track` : "Track"} readiness,
-              domain progress, and what to study next across every EPPP content
-              area.
-            </p>
-          </div>
-          <Link
-            href="/eppp"
-            className="epd-back"
-            data-testid="eppp-dashboard-back"
-          >
-            System overview <ArrowUpRight aria-hidden />
-          </Link>
+          <img className="epd-head-img" src={dashboardBrain} alt="" />
+          <div className="epd-head-shade" aria-hidden />
+          <h1 className="epd-title">EPPP Mastery Suite</h1>
         </header>
 
         {/* Stat row: readiness · streak · exam countdown */}
@@ -611,57 +594,48 @@ const styles = `
 
 /* ---- Header ---- */
 .epd-head {
+  position: relative;
+  min-height: clamp(260px, 26vw, 330px);
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-.epd-eyebrow {
-  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  margin: 0 0 10px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  color: ${C.mist};
+  justify-content: center;
+  overflow: hidden;
+  padding: clamp(42px, 6vw, 72px) clamp(22px, 4vw, 48px);
+  text-align: center;
+  border-radius: 24px;
+  border: 1px solid ${C.hairlineStrong};
+  background: linear-gradient(135deg, rgba(3,21,29,0.96), rgba(6,30,42,0.92));
+  box-shadow: 0 30px 90px -54px rgba(118,228,247,0.78), inset 0 1px 0 rgba(255,255,255,0.08);
 }
-.epd-eyebrow svg { width: 15px; height: 15px; color: ${C.cyan}; filter: drop-shadow(0 0 6px ${C.cyan}80); }
+.epd-head-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.72;
+  filter: saturate(1.06) contrast(1.04);
+}
+.epd-head-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(3,21,29,0.18) 0%, rgba(3,21,29,0.66) 54%, rgba(3,21,29,0.93) 100%),
+    linear-gradient(90deg, rgba(3,21,29,0.94), rgba(3,21,29,0.28) 48%, rgba(3,21,29,0.94));
+}
 .epd-title {
+  position: relative;
+  z-index: 1;
   margin: 0;
   font-family: "Outfit", "Inter", system-ui, sans-serif;
   font-weight: 300;
-  font-size: clamp(26px, 3.6vw, 42px);
-  line-height: 1.08;
-  letter-spacing: 0.01em;
+  font-size: clamp(42px, 6.8vw, 86px);
+  line-height: 0.98;
+  letter-spacing: 0;
   color: ${C.cloud};
-  text-shadow: 0 0 32px ${C.cyan}2e;
+  text-shadow: 0 0 22px ${C.ink}, 0 0 38px rgba(118,228,247,0.42);
 }
-.epd-sub {
-  margin: 12px 0 0;
-  max-width: 540px;
-  font-size: clamp(13px, 1vw, 15px);
-  line-height: 1.6;
-  color: ${C.body};
-}
-.epd-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 9px 16px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 600;
-  text-decoration: none;
-  color: ${C.mist};
-  border: 1px solid ${C.hairlineStrong};
-  background: rgba(12,28,38,0.5);
-  transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-  white-space: nowrap;
-}
-.epd-back svg { width: 15px; height: 15px; }
-.epd-back:hover { transform: translateY(-1px); border-color: ${C.cyan}80; color: ${C.cloud}; }
 
 /* ---- Shared card ---- */
 .epd-card {

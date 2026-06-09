@@ -1,72 +1,51 @@
 // =============================================================================
-// DashboardHeader — main PsychPro dashboard title block.
+// DashboardHeader — main PsychPro dashboard masthead.
 // -----------------------------------------------------------------------------
-// The dashboard needs a clear product title at the top. The previous decorative
-// banner made the page feel busy but flat; this version keeps the brand present
-// while letting the actual study surfaces do the work.
+// Title-only, centered, and visually aligned with the EPPP Suite dashboard.
 // =============================================================================
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
+import dashboardBrain from "@/assets/hero/dashboard-superior-brain.png";
 
 interface DashboardHeaderProps {
   greeting?: string;
 }
 
-export function DashboardHeader({ greeting }: DashboardHeaderProps) {
+export function DashboardHeader({ greeting: _greeting }: DashboardHeaderProps) {
   return (
-    <header className="relative mb-5 pt-5 md:mb-6" data-testid="dashboard-header">
+    <header className="relative mb-6 pt-5 md:mb-8" data-testid="dashboard-header">
       <div
-        className="relative overflow-hidden rounded-xl border px-5 py-4 md:px-6 md:py-5"
+        className="relative flex min-h-[260px] items-center justify-center overflow-hidden rounded-2xl border px-6 py-12 text-center md:min-h-[330px] md:px-10"
         style={{
-          background: `linear-gradient(135deg, ${P.surfaceElev}d9, ${P.surface}f2)`,
-          borderColor: `${P.surf}29`,
-          boxShadow: `0 24px 70px -46px ${P.surf}99, inset 0 1px 0 rgba(255,255,255,0.06)`,
+          background: `linear-gradient(135deg, ${P.ink}f2, ${P.surface}f5)`,
+          borderColor: `${P.surf}55`,
+          boxShadow: `0 30px 90px -54px ${P.surf}cc, inset 0 1px 0 rgba(255,255,255,0.08)`,
         }}
       >
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-y-0 left-0 w-1"
-          style={{ background: `linear-gradient(180deg, ${P.surf}, ${P.teal})` }}
+          className="absolute inset-0 bg-cover bg-center opacity-70"
+          style={{ backgroundImage: `url(${dashboardBrain})` }}
         />
-        <p
-          className="mb-1 text-[11px] font-semibold uppercase tracking-[0.22em]"
-          style={{ color: `${P.surf}cc` }}
+        <div
+          aria-hidden
+          className="absolute inset-0"
+          style={{
+            background: `radial-gradient(circle at 50% 50%, ${P.ink}2e 0%, ${P.ink}a6 52%, ${P.ink}ee 100%), linear-gradient(90deg, ${P.ink}f2, transparent 48%, ${P.ink}f2)`,
+          }}
+        />
+        <h1
+          className="relative z-10 font-light leading-none"
+          style={{
+            fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
+            fontSize: "clamp(48px, 8vw, 96px)",
+            letterSpacing: "0",
+            color: P.cloud,
+            textShadow: `0 0 22px ${P.ink}, 0 0 38px ${P.surf}55`,
+          }}
         >
-          Main Dashboard
-        </p>
-        <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
-          <div>
-            <h1
-              className="font-light leading-none"
-              style={{
-                fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
-                fontSize: "clamp(34px, 5vw, 58px)",
-                letterSpacing: "0",
-                color: P.cloud,
-                textShadow: `0 0 28px ${P.surf}24`,
-              }}
-            >
-              PsychPro
-            </h1>
-            <p className="mt-2 text-sm" style={{ color: `${P.mist}c7` }}>
-              {greeting ?? "Welcome back."}
-            </p>
-          </div>
-          <p
-            className="max-w-md text-sm leading-relaxed md:text-right"
-            style={{ color: `${P.mist}a8` }}
-          >
-            Your study hub for progress, practice, custom tools, and clinical
-            learning.
-          </p>
-        </div>
+          PsychPro
+        </h1>
       </div>
-      <span
-        aria-hidden
-        className="pointer-events-none mt-4 block h-px w-full"
-        style={{
-          background: `linear-gradient(90deg, ${P.surf}33, transparent)`,
-        }}
-      />
     </header>
   );
 }
