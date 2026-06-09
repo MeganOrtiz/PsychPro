@@ -35,8 +35,11 @@ import StudyLabPage from "@/pages/study-lab";
 import BrainLabPage from "@/pages/brain-lab";
 import EpppPage from "@/pages/eppp";
 import EpppDashboardPage from "@/pages/eppp-dashboard";
+<<<<<<< HEAD
 import EpppDomainsPage from "@/pages/eppp-domains";
 import EpppSuitePage from "@/pages/eppp-suite";
+=======
+>>>>>>> 822ceb6 (Save generated mockup updates)
 import AdminFeedbackPage from "@/pages/admin-feedback";
 import AdminTokensPage from "@/pages/admin-tokens";
 import MyDecksPage from "@/pages/my-decks";
@@ -44,6 +47,7 @@ import NewDeckPage from "@/pages/my-decks-new";
 import MyDeckDetailPage from "@/pages/my-decks-detail";
 import ReflectionsPage from "@/pages/reflections";
 import ProfilePage from "@/pages/profile";
+import EpppSuitePage from "@/pages/eppp-suite";
 import NotFound from "@/pages/not-found";
 import AppLayout from "@/components/layout/app-layout";
 import { ErrorBoundary } from "@/components/error-boundary";
