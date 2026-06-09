@@ -2,20 +2,20 @@
 type ModuleMap = Record<string, () => Promise<Record<string, unknown>>>;
 export const modules: ModuleMap = {
   "./components/mockups/cerulean-buttons/Showcase.tsx": () => import("../components/mockups/cerulean-buttons/Showcase.tsx"),
+  "./components/mockups/course-cards/BeforeAfter.tsx": () => import("../components/mockups/course-cards/BeforeAfter.tsx"),
   "./components/mockups/dash-header/Nebula.tsx": () => import("../components/mockups/dash-header/Nebula.tsx"),
   "./components/mockups/dash-header/Specimen.tsx": () => import("../components/mockups/dash-header/Specimen.tsx"),
   "./components/mockups/dash-header/SynapseCore.tsx": () => import("../components/mockups/dash-header/SynapseCore.tsx"),
-  "./components/mockups/course-cards/BeforeAfter.tsx": () => import("../components/mockups/course-cards/BeforeAfter.tsx"),
   "./components/mockups/dashboard-buttons/BrightFrosted.tsx": () => import("../components/mockups/dashboard-buttons/BrightFrosted.tsx"),
   "./components/mockups/dashboard-buttons/Refined.tsx": () => import("../components/mockups/dashboard-buttons/Refined.tsx"),
   "./components/mockups/dashboard-buttons/StrongGlow.tsx": () => import("../components/mockups/dashboard-buttons/StrongGlow.tsx"),
-  "./components/mockups/landing-redesign/Cinematic.tsx": () => import("../components/mockups/landing-redesign/Cinematic.tsx"),
-  "./components/mockups/landing-redesign/TighterBolder.tsx": () => import("../components/mockups/landing-redesign/TighterBolder.tsx"),
   "./components/mockups/dashboard-hero-slot/QuickStart.tsx": () => import("../components/mockups/dashboard-hero-slot/QuickStart.tsx"),
   "./components/mockups/dashboard-hero-slot/StreakFocus.tsx": () => import("../components/mockups/dashboard-hero-slot/StreakFocus.tsx"),
   "./components/mockups/dashboard-hero-slot/TopicOfTheDay.tsx": () => import("../components/mockups/dashboard-hero-slot/TopicOfTheDay.tsx"),
   "./components/mockups/dashboard-hero-slot/WeeklySummary.tsx": () => import("../components/mockups/dashboard-hero-slot/WeeklySummary.tsx"),
   "./components/mockups/header-refresh/Refined.tsx": () => import("../components/mockups/header-refresh/Refined.tsx"),
+  "./components/mockups/landing-redesign/Cinematic.tsx": () => import("../components/mockups/landing-redesign/Cinematic.tsx"),
+  "./components/mockups/landing-redesign/TighterBolder.tsx": () => import("../components/mockups/landing-redesign/TighterBolder.tsx"),
   "./components/mockups/psychpro-aesthetic/Landing.tsx": () => import("../components/mockups/psychpro-aesthetic/Landing.tsx"),
   "./components/mockups/psychpro-polished/Dashboard.tsx": () => import("../components/mockups/psychpro-polished/Dashboard.tsx"),
   "./components/mockups/psychpro-polished/Landing.tsx": () => import("../components/mockups/psychpro-polished/Landing.tsx")
