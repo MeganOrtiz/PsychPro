@@ -460,7 +460,7 @@ function StructureDetail({
 
   return (
     <div
-      className="rounded-2xl border overflow-hidden flex flex-col h-full"
+      className="rounded-2xl border overflow-hidden flex flex-col h-full min-h-0 max-h-full"
       style={{
         background: `linear-gradient(180deg, ${PALETTE.surfaceElev}, ${PALETTE.surface})`,
         borderColor: `${struct.color}66`,
@@ -470,7 +470,7 @@ function StructureDetail({
     >
       {/* Header */}
       <div
-        className="px-5 pt-4 pb-3 flex items-start justify-between gap-3 border-b"
+        className="px-5 pt-4 pb-3 flex flex-shrink-0 items-start justify-between gap-3 border-b"
         style={{ borderColor: `${PALETTE.steel}66` }}
       >
         <div className="min-w-0 flex-1">
@@ -500,7 +500,7 @@ function StructureDetail({
 
       {/* Tabs */}
       <div
-        className="flex items-center gap-1 px-3 pt-2 border-b"
+        className="flex flex-shrink-0 items-center gap-1 overflow-x-auto px-3 pt-2 border-b"
         style={{ borderColor: `${PALETTE.steel}66` }}
         role="tablist"
         aria-label="Structure detail sections"
@@ -530,7 +530,11 @@ function StructureDetail({
       </div>
 
       {/* Body */}
-      <div className="px-5 py-4 overflow-y-auto flex-1 space-y-5" data-testid={`detail-body-${tab}`}>
+      <div
+        className="min-h-0 flex-1 space-y-5 overflow-y-auto overscroll-contain px-5 py-4"
+        style={{ scrollbarWidth: "thin" }}
+        data-testid={`detail-body-${tab}`}
+      >
         {tab === "overview" && (
           <p className="text-sm leading-relaxed" style={{ color: PALETTE.mist }}>
             {struct.overview}
@@ -1019,7 +1023,7 @@ function BrainDiagram({
 
   return (
     <div
-      className="relative h-full w-full flex items-center justify-center p-4 md:p-6"
+      className="relative h-full w-full flex items-center justify-center p-2 md:p-3"
       data-testid="brain-diagram"
     >
       {view.src ? (
@@ -1162,7 +1166,7 @@ function BrainDiagram({
 // one. Columns de-overlap vertically, rows de-overlap horizontally. Hover /
 // selection lights a single uniform cerulean glow — no per-structure colour.
 // =============================================================================
-const SIDE_GUTTER = 112; // px reserved on the left & right for vertical label columns
+const SIDE_GUTTER = 100; // px reserved on the left & right for vertical label columns
 const GLOW = PALETTE.surf; // single uniform cerulean glow for every label / marker
 
 type LabelEdge = "left" | "right" | "top" | "bottom";
@@ -1484,7 +1488,7 @@ function LabeledBrainDiagram({
           {/* Centered image, with gutters reserved for the label columns */}
           <div
             className="absolute inset-0 flex items-center justify-center"
-            style={{ paddingLeft: SIDE_GUTTER, paddingRight: SIDE_GUTTER, paddingTop: 18, paddingBottom: 30 }}
+            style={{ paddingLeft: SIDE_GUTTER, paddingRight: SIDE_GUTTER, paddingTop: 8, paddingBottom: 24 }}
           >
             <div ref={imgBoxRef} className="relative max-h-full max-w-full">
               <img
@@ -1777,7 +1781,7 @@ export default function BrainLabPage() {
   }, [searchOpen, selectedId, handleClose]);
 
   return (
-    <div className="h-full overflow-hidden study-page-bg flex flex-col">
+    <div className="flex h-[calc(100vh-57px)] min-h-0 flex-col overflow-hidden study-page-bg">
       {/* Header */}
       <div
         className="flex-shrink-0 px-4 md:px-6 py-3 flex items-center justify-between gap-3 border-b"
@@ -1893,11 +1897,10 @@ export default function BrainLabPage() {
 
       {/* Body — 2-pane: diagram canvas / detail */}
       <div
-        className="flex-1 min-h-0 min-w-0 w-full overflow-hidden grid gap-3 p-3 md:p-4"
+        className="grid min-h-0 min-w-0 flex-1 grid-cols-1 overflow-hidden gap-3 p-3 md:p-4"
         style={{
           gridTemplateColumns: isMobile ? "1fr" : "minmax(0,1fr) minmax(360px, 430px)",
           gridTemplateRows: "minmax(0, 1fr)",
-          maxHeight: isMobile ? undefined : "calc(100vh - 132px)",
         }}
       >
         {/* Center: brain diagram + numbered key below (mobile) */}
@@ -1984,7 +1987,7 @@ export default function BrainLabPage() {
 
         {/* Right: detail panel (desktop) */}
         {!isMobile && (
-          <aside className="h-full min-h-0 overflow-hidden">
+          <aside className="h-full min-h-0 max-h-full overflow-hidden">
             {selected ? (
               <StructureDetail key={selected.id} struct={selected} onClose={handleClose} />
             ) : (
