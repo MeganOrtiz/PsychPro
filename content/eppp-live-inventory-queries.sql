@@ -105,3 +105,55 @@ where
   or t.category ilike '%Treatment%'
   or t.category ilike '%Research%'
 order by t.category, t.id;
+
+-- 6. First-pass content ownership classification.
+-- This does not replace product-owner review. It is a triage view that shows
+-- which rows are clearly EPPP, clearly main PsychPro, or ambiguous.
+select
+  t.id,
+  t.name,
+  t.category,
+  t.course_id,
+  c.name as linked_course_name,
+  case
+    when t.id between 62 and 81 then 'EPPP Primary - reported Claude live topic'
+    when t.category ilike '%EPPP%' then 'EPPP Primary'
+    when t.category ilike '%Ethic%'
+      or t.category ilike '%Legal%'
+      or t.category ilike '%Professional Issues%'
+      or t.category ilike '%Growth%'
+      or t.category ilike '%Lifespan%'
+      or t.category ilike '%Cognitive-Affective%'
+      or t.category ilike '%Social%Culture%'
+      or t.category ilike '%Biological Bases%'
+      or t.category ilike '%Assessment%Diagnosis%'
+      or t.category ilike '%Treatment%Intervention%'
+      or t.category ilike '%Research Methods%'
+    then 'EPPP Primary - category match'
+    when t.category in (
+      'Foundations',
+      'Neuroanatomy',
+      'Neuroscience',
+      'Neuropsychology',
+      'Neuropsychological Assessment'
+    ) then 'Main PsychPro / EPPP Support'
+    when t.category in (
+      'Clinical',
+      'Assessment',
+      'Psychotherapy',
+      'Research & Statistics'
+    ) then 'Needs Review - overlaps EPPP and main PsychPro'
+    else 'Needs Review - uncategorized or unknown grouping'
+  end as recommended_bucket,
+  count(distinct f.id) as flashcard_count,
+  count(distinct q.id) as quiz_question_count,
+  count(distinct sg.id) as study_guide_count,
+  count(distinct pe.id) as practice_exam_count
+from topics t
+left join courses c on c.id = t.course_id
+left join flashcards f on f.topic_id = t.id
+left join quiz_questions q on q.topic_id = t.id
+left join study_guides sg on sg.topic_id = t.id
+left join practice_exams pe on pe.topic_id = t.id
+group by t.id, t.name, t.category, t.course_id, c.name
+order by recommended_bucket, t.category, t.id;
