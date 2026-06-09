@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { STUDY_PALETTE } from "@/lib/study-theme";
 import { PageTitle } from "@/components/brand/page-title";
+import { isEpppTopic } from "@/lib/eppp-content";
 
 interface Topic {
   id: number;
@@ -45,7 +46,10 @@ export default function TopicsPage() {
   };
 
   const { data: topics, isLoading } = useGetTopics();
-  const allTopics: Topic[] = topics ?? [];
+  const allTopics: Topic[] = useMemo(
+    () => (topics ?? []).filter((topic) => !isEpppTopic(topic)),
+    [topics],
+  );
 
   // Flat A→Z list — used directly when the user is searching.
   const sortedTopics = useMemo(

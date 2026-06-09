@@ -280,11 +280,7 @@ export default function DashboardPage() {
       data-testid="dashboard-page"
     >
       <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 pt-0 pb-4 md:pb-6 lg:pb-8">
-        {/* Top header — a contained, premium PSYCHPRO banner. The
-            notification bell + profile avatar live together in the shared
-            app top bar, so nothing competes with the wordmark here. The
-            decorative framing lives in DashboardHeader; the protected
-            BrandBanner (wordmark + tagline + greeting) is rendered untouched. */}
+        {/* Top header — clear product title for the main PsychPro dashboard. */}
         <DashboardHeader greeting={greetingText} />
 
         {isOverLimit && (

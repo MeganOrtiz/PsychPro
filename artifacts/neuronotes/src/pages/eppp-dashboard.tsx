@@ -21,6 +21,7 @@ import {
   getCourseMasteryStatus,
   getGetCourseMasteryStatusQueryKey,
 } from "@workspace/api-client-react";
+import { groupEpppTopicsByCategory, isEpppTopic } from "@/lib/eppp-content";
 
 // ---------------------------------------------------------------------------
 // EPPP Mastery System dashboard — the working "how ready am I" home for the
@@ -110,6 +111,10 @@ function formatExamDate(iso: string): string {
   });
 }
 
+function slug(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+}
+
 // ---- readiness ring --------------------------------------------------------
 function ReadinessRing({ pct, loading }: { pct: number; loading: boolean }) {
   const r = 54;
@@ -189,12 +194,12 @@ export function EpppDashboardView({
               <GraduationCap aria-hidden /> EPPP MASTERY SYSTEM
             </p>
             <h1 className="epd-title">
-              {greetingName ? `${greetingName}, your` : "Your"} readiness
-              dashboard
+              EPPP Mastery Suite
             </h1>
             <p className="epd-sub">
-              Track how prepared you are for the licensing exam — across every
-              content area, all in one place.
+              {greetingName ? `${greetingName}, track` : "Track"} readiness,
+              domain progress, and what to study next across every EPPP content
+              area.
             </p>
           </div>
           <Link
@@ -319,11 +324,21 @@ export function EpppDashboardView({
             </span>
           </div>
 
-          {domainStats.length === 0 ? (
-            <div className="epd-empty">Loading your domains…</div>
-          ) : domainsLoading ? (
+          {domainsLoading ? (
             <div className="epd-domain-grid">
-              {domainStats.map((d) => (
+              {(domainStats.length > 0
+                ? domainStats
+                : [
+                    {
+                      category: "EPPP domains",
+                      total: 0,
+                      passed: 0,
+                      pct: 0,
+                      mastered: false,
+                      unlocked: false,
+                    },
+                  ]
+              ).map((d) => (
                 <div
                   key={d.category}
                   className="epd-domain epd-domain--loading"
@@ -343,12 +358,16 @@ export function EpppDashboardView({
                 </div>
               ))}
             </div>
+          ) : domainStats.length === 0 ? (
+            <div className="epd-empty">
+              No EPPP domains are loaded for this dashboard yet.
+            </div>
           ) : (
             <div className="epd-domain-grid">
               {domainStats.map((d) => {
                 const dest = d.unlocked
                   ? `/courses/${encodeURIComponent(d.category)}/mastery-exam`
-                  : "/topics";
+                  : `/eppp/domains#${slug(d.category)}`;
                 return (
                   <Link
                     key={d.category}
@@ -396,8 +415,8 @@ export function EpppDashboardView({
               <p className="epd-section-eyebrow">KEEP MOVING</p>
               <h2 className="epd-section-title">What to study next</h2>
             </div>
-            <Link href="/topics" className="epd-section-link">
-              Browse all <ArrowRight aria-hidden />
+            <Link href="/eppp/domains" className="epd-section-link">
+              Browse domains <ArrowRight aria-hidden />
             </Link>
           </div>
 
@@ -448,8 +467,8 @@ export function EpppDashboardView({
               content area at 90%+.
             </p>
           </div>
-          <Link href="/topics" className="epd-cta-btn">
-            Go to courses <ArrowRight aria-hidden />
+          <Link href="/eppp/domains" className="epd-cta-btn">
+            Go to domains <ArrowRight aria-hidden />
           </Link>
         </section>
       </div>
@@ -463,15 +482,24 @@ export default function EpppDashboardPage() {
   const userId = user?.id ?? "anon";
 
   const { data: summary, isLoading: summaryLoading } = useGetDashboardSummary();
-  const { data: allTopics } = useGetTopics();
+  const { data: allTopics, isLoading: topicsLoading } = useGetTopics();
   const { date: examDate, setDate: setExamDate } = useExamDate(userId);
+  const epppTopics = useMemo(
+    () => (allTopics ?? []).filter((topic) => isEpppTopic(topic)),
+    [allTopics],
+  );
+  const epppTopicIds = useMemo(
+    () => new Set(epppTopics.map((topic) => topic.id)),
+    [epppTopics],
+  );
 
-  // Domains (content areas) = distinct topic categories.
-  const categories = useMemo(() => {
-    const set = new Set<string>();
-    (allTopics ?? []).forEach((t) => set.add(t.category || "Other"));
-    return Array.from(set).sort((a, b) => a.localeCompare(b));
-  }, [allTopics]);
+  // Domains (content areas) = distinct EPPP topic categories. The general app
+  // also has categories like Foundations, Clinical, and Neuropsychology; those
+  // belong to the main Courses surface and should not appear as EPPP domains.
+  const categories = useMemo(
+    () => groupEpppTopicsByCategory(epppTopics).map((group) => group.name),
+    [epppTopics],
+  );
 
   // One mastery-status request per domain, in parallel (cache shared with the
   // topics + main dashboard pages via the same query key).
@@ -530,28 +558,31 @@ export default function EpppDashboardPage() {
       seen.add(t.topicId);
       out.push(t);
     };
-    (summary?.weakAreas ?? []).forEach((t) =>
-      push({ topicId: t.topicId, topicName: t.topicName, score: t.score }),
-    );
+    (summary?.weakAreas ?? [])
+      .filter((t) => epppTopicIds.has(t.topicId))
+      .forEach((t) =>
+        push({ topicId: t.topicId, topicName: t.topicName, score: t.score }),
+      );
     (summary?.recentTopics ?? [])
+      .filter((t) => epppTopicIds.has(t.topicId))
       .filter((t) => t.score < 80)
       .forEach((t) =>
         push({ topicId: t.topicId, topicName: t.topicName, score: t.score }),
       );
-    [...(allTopics ?? [])]
+    [...epppTopics]
       .sort((a, b) => a.name.localeCompare(b.name))
       .forEach((t) => push({ topicId: t.id, topicName: t.name, score: 0 }));
     return out;
-  }, [summary, allTopics]);
+  }, [summary, epppTopics, epppTopicIds]);
 
   return (
     <EpppDashboardView
       greetingName={user?.firstName ?? ""}
       readiness={readiness}
-      readinessLoading={masteryLoading || categories.length === 0}
+      readinessLoading={topicsLoading || masteryLoading || categories.length === 0}
       masteredCount={masteredCount}
       domainStats={domainStats}
-      domainsLoading={masteryLoading}
+      domainsLoading={topicsLoading || masteryLoading}
       avgScore={summary?.averageScore ?? 0}
       streak={summary?.currentStreak ?? 0}
       weekly={summary?.weeklyActivity ?? []}

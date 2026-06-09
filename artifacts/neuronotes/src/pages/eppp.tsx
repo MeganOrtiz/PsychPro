@@ -61,14 +61,14 @@ const ENTRY_POINTS: {
     icon: BookOpen,
     title: "Study the domains",
     body: "Work through structured lessons with flashcards, quizzes, and study guides across every EPPP content area.",
-    href: "/topics",
-    cta: "Browse courses",
+    href: "/eppp/domains",
+    cta: "Browse domains",
   },
   {
     icon: GraduationCap,
     title: "Prove mastery",
     body: "Unlock and sit the capstone mastery exams once you've reached 90% on each lesson's practice exam.",
-    href: "/topics",
+    href: "/eppp/domains",
     cta: "View mastery path",
   },
   {

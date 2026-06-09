@@ -25,6 +25,7 @@ import brainSmoke from "@/assets/hero/brain.png";
 import brainLateral from "@/assets/brain-views/lateral.webp";
 import founderMegan from "@/assets/founder/megan.png";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
+import { isEpppTopic } from "@/lib/eppp-content";
 
 // =============================================================================
 // Landing — restructured 2026-05-30.
@@ -220,7 +221,9 @@ export default function LandingPage() {
       isError: boolean;
     };
   const sortedTopics: LandingTopic[] = (() => {
-    const list = (topicsData ?? []) as LandingTopic[];
+    const list = ((topicsData ?? []) as LandingTopic[]).filter(
+      (topic) => !isEpppTopic(topic),
+    );
     const rank = (c: string) => {
       const i = TOPIC_CATEGORY_ORDER.indexOf(c);
       return i === -1 ? TOPIC_CATEGORY_ORDER.length : i;

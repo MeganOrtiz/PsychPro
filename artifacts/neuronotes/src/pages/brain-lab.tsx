@@ -1162,7 +1162,7 @@ function BrainDiagram({
 // one. Columns de-overlap vertically, rows de-overlap horizontally. Hover /
 // selection lights a single uniform cerulean glow — no per-structure colour.
 // =============================================================================
-const SIDE_GUTTER = 132; // px reserved on the left & right for vertical label columns
+const SIDE_GUTTER = 112; // px reserved on the left & right for vertical label columns
 const GLOW = PALETTE.surf; // single uniform cerulean glow for every label / marker
 
 type LabelEdge = "left" | "right" | "top" | "bottom";
@@ -1257,11 +1257,11 @@ function LabeledBrainDiagram({
       const ay = box.t + (h.y / 100) * box.h;
       const deg = (Math.atan2(ay - cy0, ax - cx0) * 180) / Math.PI;
       let edge: LabelEdge;
-      // Narrow top/bottom wedges keep those slim rows from overflowing; the
-      // roomier left/right columns absorb the rest.
-      if (deg >= -55 && deg < 55) edge = "right";
-      else if (deg >= 55 && deg < 125) edge = "bottom";
-      else if (deg >= -125 && deg < -55) edge = "top";
+      // Wider top/bottom wedges spread labels around the image rather than
+      // stacking most of them in side columns. Anchor coordinates are unchanged.
+      if (deg >= -42 && deg < 42) edge = "right";
+      else if (deg >= 42 && deg < 138) edge = "bottom";
+      else if (deg >= -138 && deg < -42) edge = "top";
       else edge = "left";
       const sz = edge === "top" || edge === "bottom" ? rowSize(s.name) : sideSize(s.name);
       items.push({ id: s.id, name: s.name, ax, ay, edge, lx: ax, ly: ay, w: sz.w, h: sz.h });
@@ -1270,8 +1270,8 @@ function LabeledBrainDiagram({
     // Top/bottom are slim rows with limited width — keep only the labels that
     // fit (preferring those sitting most directly above/below the brain) and
     // spill the rest into the roomier side columns.
-    const rowLeft = SIDE_GUTTER + 12;
-    const rowRight = box.wrapW - SIDE_GUTTER - 12;
+    const rowLeft = 24;
+    const rowRight = box.wrapW - 24;
     const rowAvail = Math.max(0, rowRight - rowLeft);
     const rowGap = 14;
     for (const edge of ["top", "bottom"] as const) {
@@ -1387,7 +1387,7 @@ function LabeledBrainDiagram({
           {/* Centered image, with gutters reserved for the label columns */}
           <div
             className="absolute inset-0 flex items-center justify-center"
-            style={{ paddingLeft: SIDE_GUTTER, paddingRight: SIDE_GUTTER, paddingTop: 28, paddingBottom: 40 }}
+            style={{ paddingLeft: SIDE_GUTTER, paddingRight: SIDE_GUTTER, paddingTop: 18, paddingBottom: 30 }}
           >
             <div ref={imgBoxRef} className="relative max-h-full max-w-full">
               <img
@@ -1798,13 +1798,15 @@ export default function BrainLabPage() {
       <div
         className="flex-1 min-h-0 min-w-0 w-full overflow-hidden grid gap-3 p-3 md:p-4"
         style={{
-          gridTemplateColumns: isMobile ? "1fr" : "1fr minmax(340px, 420px)",
+          gridTemplateColumns: isMobile ? "1fr" : "minmax(0,1fr) minmax(360px, 430px)",
+          gridTemplateRows: "minmax(0, 1fr)",
+          maxHeight: isMobile ? undefined : "calc(100vh - 132px)",
         }}
       >
         {/* Center: brain diagram + numbered key below (mobile) */}
-        <div className="flex flex-col gap-3 min-h-0 min-w-0">
+        <div className="flex flex-col gap-3 min-h-0 min-w-0 h-full overflow-hidden">
           <div
-            className="relative rounded-2xl border overflow-hidden flex-1 min-h-0"
+            className="relative rounded-2xl border overflow-hidden flex-1 min-h-0 h-full"
             style={{
               background: PALETTE.bg,
               borderColor: `${PALETTE.steel}99`,
@@ -1885,7 +1887,7 @@ export default function BrainLabPage() {
 
         {/* Right: detail panel (desktop) */}
         {!isMobile && (
-          <aside className="overflow-hidden">
+          <aside className="h-full min-h-0 overflow-hidden">
             {selected ? (
               <StructureDetail key={selected.id} struct={selected} onClose={handleClose} />
             ) : (

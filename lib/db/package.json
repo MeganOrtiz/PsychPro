@@ -11,6 +11,7 @@
     "push": "tsx scripts/push.ts",
     "push-force": "tsx scripts/push.ts",
     "seed": "tsx src/seed.ts",
+    "seed:eppp": "tsx src/seed-eppp-master-content.ts",
     "test:seed-idempotency": "tsx test/seed-idempotency.test.ts",
     "test:push-fresh-db": "tsx test/push-fresh-db.test.ts",
     "test:push-then-seed-fresh-db": "tsx test/push-then-seed-fresh-db.test.ts",

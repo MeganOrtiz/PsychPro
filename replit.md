@@ -45,6 +45,7 @@ OAuth security: PKCE S256 + exact-match `redirect_uri` + single-use 60-second au
 - `pnpm --filter @workspace/db run push` — push DB schema changes (non-interactive; safe on fresh and drifted DBs). Wrapper at `lib/db/scripts/push.ts` backfills the `topics_name_unique` constraint when missing, then runs `drizzle-kit push --force`. See PUBLISHING.md §4 for fresh-environment provisioning.
 - `pnpm --filter @workspace/api-server run dev` — run API server locally
 - `pnpm --filter @workspace/db run seed` — seed neuroscience content
+- `pnpm --filter @workspace/db run seed:eppp` — seed the EPPP Mastery source content as 8 domain courses, 71 KN chapter topics, and starter study guides without truncating the existing neuroscience content
 - `pnpm --filter @workspace/db run test:seed-idempotency` — verify the seed preserves users/progress/quiz_attempts/exam_attempts on re-run
 - `pnpm --filter @workspace/db run test:push-fresh-db` — provision a temp DB, run `push` against it (twice, for idempotency), and assert all tables/indexes/`topics_name_unique` exist; locks in the fresh-environment provisioning contract documented in PUBLISHING.md §4. Requires `CREATE DATABASE` privilege.
 - `pnpm --filter @workspace/db run test:push-then-seed-fresh-db` — provision a temp DB, run `push` then `seed` against it (the documented "first publish" sequence), and assert every content table is populated with no orphan FK rows. Requires `CREATE DATABASE` privilege.
@@ -76,6 +77,7 @@ A mobile-responsive neuroscience/neuropsychology study app.
 - `artifacts/neuronotes/src/pages/` — All 11 pages
 - `lib/db/src/schema/index.ts` — DB schema (users, topics, flashcards, quiz_questions, study_guides, progress)
 - `lib/db/src/seed.ts` — PsychPro content seed (39 topics, 1,612 flashcards, 935 quiz questions, 39 study guides, 39 practice exams with 738 join rows)
+- `lib/db/src/seed-eppp-master-content.ts` — EPPP Mastery starter content seed (8 domain courses, 71 KN chapter topics, starter study guides)
 
 ### Auth Pattern
 - **Clerk is the identity provider, and every protected route verifies the Clerk session server-side.**
