@@ -822,15 +822,33 @@ const styles = `
 /* ---- panel scaffold ---- */
 .eps-panel { min-height: 100%; padding: clamp(20px, 3.5vw, 44px) clamp(16px, 4vw, 48px) clamp(48px, 6vw, 88px); }
 .eps-shell { max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: clamp(20px, 2.6vw, 30px); }
-.eps-head { display: flex; flex-direction: column; }
-.eps-eyebrow { margin: 0 0 8px; font-size: 12px; font-weight: 700; letter-spacing: 0.18em; color: ${C.mist}; }
+.eps-head { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.eps-eyebrow {
+  margin: 0 0 10px;
+  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: ${C.mist};
+}
 .eps-title {
   margin: 0;
   font-family: "Outfit", "Inter", system-ui, sans-serif;
-  font-weight: 300; font-size: clamp(26px, 3.6vw, 42px); line-height: 1.08; letter-spacing: 0.01em;
+  font-weight: 300;
+  font-size: clamp(22px, 3.2vw, 36px);
+  line-height: 1.1;
+  letter-spacing: 0.32em;
+  padding-left: 0.32em;
+  text-transform: uppercase;
+  max-width: 100%;
+  overflow-wrap: anywhere;
   color: ${C.cloud}; text-shadow: 0 0 32px ${C.cyan}2e;
 }
-.eps-sub { margin: 12px 0 0; max-width: 640px; font-size: clamp(13px, 1vw, 15px); line-height: 1.6; color: ${C.body}; }
+.eps-sub { margin: 14px 0 0; max-width: 640px; font-size: clamp(13px, 1vw, 15px); line-height: 1.6; color: ${C.body}; }
+@media (max-width: 640px) {
+  .eps-title { letter-spacing: 0.18em; padding-left: 0.18em; }
+}
 
 .eps-section-head { display: flex; align-items: center; justify-content: flex-end; margin-top: -4px; }
 .eps-section-meta { font-size: 13px; font-weight: 600; color: ${C.mist}; }
@@ -904,7 +922,17 @@ const styles = `
 .eps-groups { display: flex; flex-direction: column; gap: clamp(20px, 2.6vw, 30px); }
 .eps-group-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
 .eps-group-icon { width: 16px; height: 16px; color: ${C.cyan}; flex-shrink: 0; }
-.eps-group-title { margin: 0; font-size: clamp(16px, 1.8vw, 20px); font-weight: 700; color: ${C.cloud}; }
+.eps-group-title {
+  margin: 0;
+  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-size: clamp(16px, 1.8vw, 21px);
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  line-height: 1.25;
+  text-transform: uppercase;
+  min-width: 0;
+  color: ${C.cloud};
+}
 .eps-group-count { margin-left: auto; font-size: 12px; font-weight: 600; color: ${C.muted}; }
 .eps-topic-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
 @media (max-width: 760px) { .eps-topic-grid { grid-template-columns: 1fr; } }

@@ -18,12 +18,17 @@ const EPPP_CATEGORY_MARKERS = [
   "assessment & diagnosis",
   "treatment, intervention",
   "treatment intervention",
-  "research methods",
-  "statistics",
+  "research methods and statistics",
+  "research methods & statistics",
   "ethical",
   "ethics",
   "legal",
   "professional issues",
+];
+
+const MAIN_SITE_ONLY_CATEGORIES = [
+  "research methods",
+  "research & statistics",
 ];
 
 function normalized(value: string | undefined): string {
@@ -33,6 +38,10 @@ function normalized(value: string | undefined): string {
 export function isEpppTopic(topic: EpppTopicLike): boolean {
   const category = normalized(topic.category);
   const name = normalized(topic.name);
+
+  if (MAIN_SITE_ONLY_CATEGORIES.includes(category)) {
+    return false;
+  }
 
   if (EPPP_CATEGORY_MARKERS.some((marker) => category.includes(marker))) {
     return true;
