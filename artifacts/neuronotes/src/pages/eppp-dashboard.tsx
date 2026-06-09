@@ -21,7 +21,7 @@ import {
 } from "@workspace/api-client-react";
 import { groupEpppTopicsByCategory, isEpppTopic } from "@/lib/eppp-content";
 import { epppDomainAnchor, epppMasteryExamPath, epppTopicPath } from "@/lib/eppp-routes";
-import dashboardBrain from "@/assets/hero/dashboard-superior-brain.png";
+import dashboardBrain from "@/assets/hero/dashboard-lateral-brain.png";
 
 // ---------------------------------------------------------------------------
 // EPPP Mastery Suite dashboard — the working "how ready am I" home for the
@@ -583,30 +583,30 @@ export default function EpppDashboardPage() {
 const styles = `
 .epd-page {
   min-height: 100%;
-  padding: clamp(20px, 3.5vw, 44px) clamp(16px, 4vw, 48px) clamp(48px, 6vw, 88px);
+  padding: clamp(14px, 2.4vw, 28px) clamp(16px, 4vw, 48px) clamp(48px, 6vw, 88px);
 }
 .epd-shell {
   max-width: 1120px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: clamp(24px, 3vw, 36px);
+  gap: clamp(18px, 2.4vw, 28px);
 }
 
 /* ---- Header ---- */
 .epd-head {
   position: relative;
-  min-height: clamp(260px, 26vw, 330px);
+  min-height: clamp(92px, 10vw, 112px);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: clamp(42px, 6vw, 72px) clamp(22px, 4vw, 48px);
+  padding: clamp(24px, 3vw, 32px) clamp(18px, 4vw, 40px);
   text-align: center;
-  border-radius: 24px;
+  border-radius: 16px;
   border: 1px solid ${C.hairlineStrong};
   background: linear-gradient(135deg, rgba(3,21,29,0.96), rgba(6,30,42,0.92));
-  box-shadow: 0 30px 90px -54px rgba(118,228,247,0.78), inset 0 1px 0 rgba(255,255,255,0.08);
+  box-shadow: 0 18px 54px -42px rgba(118,228,247,0.78), inset 0 1px 0 rgba(255,255,255,0.08);
 }
 .epd-head-img {
   position: absolute;
@@ -614,16 +614,16 @@ const styles = `
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
-  opacity: 0.72;
+  object-position: center 57%;
+  opacity: 0.62;
   filter: saturate(1.06) contrast(1.04);
 }
 .epd-head-shade {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 50% 50%, rgba(3,21,29,0.18) 0%, rgba(3,21,29,0.66) 54%, rgba(3,21,29,0.93) 100%),
-    linear-gradient(90deg, rgba(3,21,29,0.94), rgba(3,21,29,0.28) 48%, rgba(3,21,29,0.94));
+    radial-gradient(circle at 50% 52%, rgba(3,21,29,0.12) 0%, rgba(3,21,29,0.62) 55%, rgba(3,21,29,0.94) 100%),
+    linear-gradient(90deg, rgba(3,21,29,0.96), rgba(3,21,29,0.28) 48%, rgba(3,21,29,0.96));
 }
 .epd-title {
   position: relative;
@@ -631,11 +631,11 @@ const styles = `
   margin: 0;
   font-family: "Outfit", "Inter", system-ui, sans-serif;
   font-weight: 300;
-  font-size: clamp(42px, 6.8vw, 86px);
-  line-height: 0.98;
+  font-size: clamp(24px, 3.4vw, 34px);
+  line-height: 1;
   letter-spacing: 0;
   color: ${C.cloud};
-  text-shadow: 0 0 22px ${C.ink}, 0 0 38px rgba(118,228,247,0.42);
+  text-shadow: 0 0 18px ${C.ink}, 0 0 28px rgba(118,228,247,0.36);
 }
 
 /* ---- Shared card ---- */
