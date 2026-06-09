@@ -9,14 +9,17 @@ import { StudySurface } from "@/components/study/study-surface";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { useEntitlements } from "@/lib/use-entitlements";
 import { PageTitle } from "@/components/brand/page-title";
+import { epppTopicPath, isEpppRoute } from "@/lib/eppp-routes";
 
 interface Props {
   params: { id: string };
 }
 
 export default function StudyGuidePage({ params }: Props) {
-  const [, navigate] = useLocation();
+  const [location, navigate] = useLocation();
   const topicId = parseInt(params.id);
+  const inEppp = isEpppRoute(location);
+  const backToTopic = inEppp ? epppTopicPath(topicId) : `/topics/${topicId}`;
   // Single source of truth for "is this user allowed to see the guide".
   // Includes admin bypass + tier check. Previously this used
   // `subscriptionStatus` directly, which paywalled admins. (Bug fix.)
@@ -34,8 +37,8 @@ export default function StudyGuidePage({ params }: Props) {
     <div className="min-h-full study-page-bg" data-testid="study-guide-page">
       <div className="max-w-3xl mx-auto p-4 md:p-6 lg:p-8">
       <Breadcrumbs items={[
-        { label: "Topics", href: "/topics" },
-        { label: topic?.name ?? "Topic", href: `/topics/${topicId}` },
+        { label: inEppp ? "EPPP Domains" : "Topics", href: inEppp ? "/eppp/suite/domains" : "/topics" },
+        { label: topic?.name ?? "Topic", href: backToTopic },
         { label: "Study Guide" },
       ]} />
       <PageTitle title="Study Guide" icon={FileText} />
@@ -67,7 +70,7 @@ export default function StudyGuidePage({ params }: Props) {
             </Button>
             <Button
               variant="outline"
-              onClick={() => navigate(`/topics/${topicId}`)}
+              onClick={() => navigate(backToTopic)}
             >
               Back to Topic
             </Button>

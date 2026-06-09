@@ -101,6 +101,62 @@ function AppRouter() {
           </RequireSignedIn>
         )}
       </Route>
+      <Route path="/eppp/dashboard">
+        {() => (
+          <RequireSignedIn>
+            <EpppSuitePage tab="performance-analytics" />
+          </RequireSignedIn>
+        )}
+      </Route>
+      <Route path="/eppp/domains">
+        {() => (
+          <RequireSignedIn>
+            <EpppDomainsPage />
+          </RequireSignedIn>
+        )}
+      </Route>
+      <Route path="/eppp/topics/:id">
+        {(params) => (
+          <RequireSignedIn>
+            <TopicDetailPage params={params} />
+          </RequireSignedIn>
+        )}
+      </Route>
+      <Route path="/eppp/topics/:id/flashcards">
+        {(params) => (
+          <RequireSignedIn>
+            <FlashcardsPage params={params} />
+          </RequireSignedIn>
+        )}
+      </Route>
+      <Route path="/eppp/topics/:id/quiz">
+        {(params) => (
+          <RequireSignedIn>
+            <QuizPage params={params} />
+          </RequireSignedIn>
+        )}
+      </Route>
+      <Route path="/eppp/topics/:id/study-guide">
+        {(params) => (
+          <RequireSignedIn>
+            <StudyGuidePage params={params} />
+          </RequireSignedIn>
+        )}
+      </Route>
+      <Route path="/eppp/topics/:id/exam">
+        {(params) => (
+          <RequireSignedIn>
+            <PracticeExamPage params={params} />
+          </RequireSignedIn>
+        )}
+      </Route>
+      <Route path="/eppp/courses/:category/mastery-exam">
+        {(params) => (
+          <RequireSignedIn>
+            <CourseMasteryExamPage params={params} />
+          </RequireSignedIn>
+        )}
+      </Route>
       <Route>
         <RequireSignedIn>
           <AppLayout>

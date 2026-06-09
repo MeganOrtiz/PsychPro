@@ -7,14 +7,16 @@ import { PageTitle } from "@/components/brand/page-title";
 import { Breadcrumbs, type BreadcrumbItem } from "@/components/breadcrumbs";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { useEntitlements } from "@/lib/use-entitlements";
+import { epppDomainAnchor, epppTopicModePath, isEpppRoute } from "@/lib/eppp-routes";
 
 interface Props {
   params: { id: string };
 }
 
 export default function TopicDetailPage({ params }: Props) {
-  const [, navigate] = useLocation();
+  const [location, navigate] = useLocation();
   const topicId = parseInt(params.id);
+  const inEppp = isEpppRoute(location);
   const { data: topic, isLoading } = useGetTopic(topicId);
   // Free-tier model is now per-content (not per-topic). The topic page itself
   // is never blocked — locks live on the individual mode cards below.
@@ -32,7 +34,7 @@ export default function TopicDetailPage({ params }: Props) {
       description: ent?.flashcardsCapped
         ? `Preview the first ${ent.flashcardPreviewLimit} cards`
         : "Tap to flip and test your recall",
-      onClick: () => navigate(`/topics/${topicId}/flashcards`),
+      onClick: () => navigate(inEppp ? epppTopicModePath(topicId, "flashcards") : `/topics/${topicId}/flashcards`),
       testId: "button-flashcards",
       accent: "#5EB0C8",
       accentDeep: "#1F6B83",
@@ -44,7 +46,7 @@ export default function TopicDetailPage({ params }: Props) {
       description: ent?.quizLocked
         ? "Upgrade to Master for unlimited quizzes"
         : "Multiple-choice with explanations",
-      onClick: () => navigate(`/topics/${topicId}/quiz`),
+      onClick: () => navigate(inEppp ? epppTopicModePath(topicId, "quiz") : `/topics/${topicId}/quiz`),
       testId: "button-quiz",
       accent: "#5EB0C8",
       accentDeep: "#1F6B83",
@@ -56,7 +58,7 @@ export default function TopicDetailPage({ params }: Props) {
       description: ent?.studyGuideLocked
         ? "Master feature — comprehensive notes"
         : "Comprehensive scrollable notes",
-      onClick: () => navigate(`/topics/${topicId}/study-guide`),
+      onClick: () => navigate(inEppp ? epppTopicModePath(topicId, "study-guide") : `/topics/${topicId}/study-guide`),
       testId: "button-study-guide",
       accent: "#5EB0C8",
       accentDeep: "#1F6B83",
@@ -68,7 +70,7 @@ export default function TopicDetailPage({ params }: Props) {
       description: ent?.examLocked
         ? "Upgrade to Master for unlimited exams"
         : "Timed or untimed full exam",
-      onClick: () => navigate(`/topics/${topicId}/exam`),
+      onClick: () => navigate(inEppp ? epppTopicModePath(topicId, "exam") : `/topics/${topicId}/exam`),
       testId: "button-practice-exam",
       accent: "#5EB0C8",
       accentDeep: "#1F6B83",
@@ -77,12 +79,14 @@ export default function TopicDetailPage({ params }: Props) {
   ];
 
   const crumbs: BreadcrumbItem[] = [
-    { label: "Topics", href: "/topics" },
+    { label: inEppp ? "EPPP Domains" : "Topics", href: inEppp ? "/eppp/suite/domains" : "/topics" },
     ...(topic?.category
       ? [
           {
             label: topic.category,
-            href: `/topics#category-${topic.category.toLowerCase().replace(/\s+/g, "-")}`,
+            href: inEppp
+              ? epppDomainAnchor(topic.category)
+              : `/topics#category-${topic.category.toLowerCase().replace(/\s+/g, "-")}`,
           },
         ]
       : []),
@@ -182,7 +186,7 @@ export default function TopicDetailPage({ params }: Props) {
               </div>
               {/* Routes /study-lab in the Lab section, which is being relabeled
                   "Rounds" per the sidebar restructure brief. Route stays the same. */}
-              <Link href="/study-lab">
+              <Link href={inEppp ? "/eppp/suite/study-plan" : "/study-lab"}>
                 <span className="text-xs hover:underline cursor-pointer" style={{ color: P.tealDeep }}>
                   Why this works →
                 </span>

@@ -61,21 +61,21 @@ const ENTRY_POINTS: {
     icon: BookOpen,
     title: "Study the domains",
     body: "Work through structured lessons with flashcards, quizzes, and study guides across every EPPP content area.",
-    href: "/eppp/domains",
+    href: "/eppp/suite/domains",
     cta: "Browse domains",
   },
   {
     icon: GraduationCap,
     title: "Prove mastery",
     body: "Unlock and sit the capstone mastery exams once you've reached 90% on each lesson's practice exam.",
-    href: "/eppp/domains",
+    href: "/eppp/suite/domain-mastery-exams",
     cta: "View mastery path",
   },
   {
     icon: Sparkles,
     title: "Track your readiness",
     body: "See where you stand across domains and focus your time where it moves the needle most.",
-    href: "/eppp/dashboard",
+    href: "/eppp/suite/performance-analytics",
     cta: "Open dashboard",
   },
 ];
@@ -103,10 +103,10 @@ export default function EpppPage() {
             needed for both EPPP success and real-world clinical practice.
           </p>
           <div className="eppp-cta-row">
-            <Link href="/eppp/dashboard" className="eppp-btn eppp-btn--primary" data-testid="eppp-cta-start">
+            <Link href="/eppp/suite/domains" className="eppp-btn eppp-btn--primary" data-testid="eppp-cta-start">
               Start studying <ArrowRight aria-hidden />
             </Link>
-            <Link href="/eppp/dashboard" className="eppp-btn eppp-btn--ghost" data-testid="eppp-cta-progress">
+            <Link href="/eppp/suite/performance-analytics" className="eppp-btn eppp-btn--ghost" data-testid="eppp-cta-progress">
               View my progress
             </Link>
           </div>

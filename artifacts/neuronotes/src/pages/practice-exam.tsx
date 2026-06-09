@@ -17,6 +17,7 @@ import ElaborationPanel from "@/components/learning/elaboration-panel";
 import { StudySurface } from "@/components/study/study-surface";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PageTitle } from "@/components/brand/page-title";
+import { epppTopicPath, isEpppRoute } from "@/lib/eppp-routes";
 
 interface Props {
   params: { id: string };
@@ -30,8 +31,10 @@ type QuestionCount = 25 | 50;
 const QUESTION_COUNT_OPTIONS: QuestionCount[] = [25, 50];
 
 export default function PracticeExamPage({ params }: Props) {
-  const [, navigate] = useLocation();
+  const [location, navigate] = useLocation();
   const topicId = parseInt(params.id);
+  const inEppp = isEpppRoute(location);
+  const backToTopic = inEppp ? epppTopicPath(topicId) : `/topics/${topicId}`;
   const [questionCount, setQuestionCount] = useState<QuestionCount | null>(null);
   const [started, setStarted] = useState(false);
   const [timed, setTimed] = useState(true);
@@ -137,7 +140,7 @@ export default function PracticeExamPage({ params }: Props) {
   if (fetchError?.status === 402 || showUpgrade) {
     return <UpgradePrompt reason="exam" onDismiss={() => {
       if (showUpgrade) setShowUpgrade(false);
-      else navigate(`/topics/${topicId}`);
+      else navigate(backToTopic);
     }} />;
   }
 
@@ -162,7 +165,7 @@ export default function PracticeExamPage({ params }: Props) {
           <p className="text-sm text-muted-foreground mb-6">
             This topic doesn't have a practice exam set up yet. Please try again later or pick another topic.
           </p>
-          <Button onClick={() => navigate(`/topics/${topicId}`)} data-testid="button-back-empty">
+          <Button onClick={() => navigate(backToTopic)} data-testid="button-back-empty">
             Back to Topic
           </Button>
         </div>
@@ -228,7 +231,7 @@ export default function PracticeExamPage({ params }: Props) {
           })}
         </div>
         <div className="flex gap-3">
-          <Button variant="outline" onClick={() => navigate(`/topics/${topicId}`)} data-testid="button-back-to-topic">Back to Topic</Button>
+          <Button variant="outline" onClick={() => navigate(backToTopic)} data-testid="button-back-to-topic">Back to Topic</Button>
           <Button onClick={() => { submittedRef.current = false; setSubmitted(false); setStarted(false); setAnswers({}); setIndex(0); setQuestionCount(null); setWarmupActive(false); setWarmupText(""); setTimeLeft(0); }} data-testid="button-retake">Retake</Button>
         </div>
         </div>
@@ -241,8 +244,8 @@ export default function PracticeExamPage({ params }: Props) {
       <div className="min-h-full study-page-bg" data-testid="exam-setup">
         <div className="max-w-lg mx-auto p-4 md:p-6 lg:p-8">
         <Breadcrumbs items={[
-          { label: "Topics", href: "/topics" },
-          { label: topic?.name ?? "Topic", href: `/topics/${topicId}` },
+          { label: inEppp ? "EPPP Domains" : "Topics", href: inEppp ? "/eppp/suite/domains" : "/topics" },
+          { label: topic?.name ?? "Topic", href: backToTopic },
           { label: "Practice Exam" },
         ]} />
         <PageTitle
@@ -408,7 +411,7 @@ export default function PracticeExamPage({ params }: Props) {
                   A 60-second brain-dump before a test reliably raises your score — even when you don't peek at notes.
                 </p>
               </div>
-              <Link href="/study-lab">
+              <Link href={inEppp ? "/eppp/suite/study-plan" : "/study-lab"}>
                 <span
                   className="text-[11px] hover:underline cursor-pointer whitespace-nowrap"
                   style={{ color: P.surf }}
@@ -489,7 +492,7 @@ export default function PracticeExamPage({ params }: Props) {
           <Tooltip>
             <TooltipTrigger asChild>
               <button
-                onClick={() => navigate("/study-lab")}
+                onClick={() => navigate(inEppp ? "/eppp/suite/study-plan" : "/study-lab")}
                 className="text-muted-foreground hover:text-foreground p-1.5 rounded-md hover:bg-accent transition-colors"
                 data-testid="button-study-lab"
                 aria-label="Open Study Lab"

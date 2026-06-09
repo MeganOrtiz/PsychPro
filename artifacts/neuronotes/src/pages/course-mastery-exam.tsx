@@ -10,14 +10,18 @@ import { Label } from "@/components/ui/label";
 import { StudySurface } from "@/components/study/study-surface";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PageTitle } from "@/components/brand/page-title";
+import { epppDomainAnchor, isEpppRoute } from "@/lib/eppp-routes";
 
 interface Props {
   params: { category: string };
 }
 
 export default function CourseMasteryExamPage({ params }: Props) {
-  const [, navigate] = useLocation();
+  const [location, navigate] = useLocation();
   const category = decodeURIComponent(params.category);
+  const inEppp = isEpppRoute(location);
+  const backToCourseList = inEppp ? epppDomainAnchor(category) : "/topics";
+  const courseListLabel = inEppp ? "Back to EPPP Domains" : "Back to Courses";
 
   const [started, setStarted] = useState(false);
   const [timed, setTimed] = useState(true);
@@ -110,8 +114,8 @@ export default function CourseMasteryExamPage({ params }: Props) {
           <p className="text-sm text-muted-foreground mb-6">
             Score 90% or higher on the practice exam for every lesson in {category} to unlock the Course Mastery Exam.
           </p>
-          <Button onClick={() => navigate("/topics")} data-testid="button-back-locked">
-            Back to Courses
+          <Button onClick={() => navigate(backToCourseList)} data-testid="button-back-locked">
+            {courseListLabel}
           </Button>
         </div>
       </div>
@@ -135,8 +139,8 @@ export default function CourseMasteryExamPage({ params }: Props) {
           <p className="text-sm text-muted-foreground mb-6">
             This course doesn't have a mastery exam set up yet. Please try again later.
           </p>
-          <Button onClick={() => navigate("/topics")} data-testid="button-back-notfound">
-            Back to Courses
+          <Button onClick={() => navigate(backToCourseList)} data-testid="button-back-notfound">
+            {courseListLabel}
           </Button>
         </div>
       </div>
@@ -220,7 +224,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
             })}
           </div>
           <div className="flex gap-3">
-            <Button variant="outline" onClick={() => navigate("/topics")} data-testid="button-back-to-courses">Back to Courses</Button>
+            <Button variant="outline" onClick={() => navigate(backToCourseList)} data-testid="button-back-to-courses">{courseListLabel}</Button>
             <Button
               onClick={() => {
                 submittedRef.current = false;
@@ -248,7 +252,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
       <div className="min-h-full study-page-bg" data-testid="mastery-empty">
         <div className="max-w-lg mx-auto p-4 md:p-6 lg:p-8 text-center">
           <h2 className="text-xl font-semibold text-foreground mb-2">No questions available</h2>
-          <Button onClick={() => navigate("/topics")} className="mt-4">Back to Courses</Button>
+          <Button onClick={() => navigate(backToCourseList)} className="mt-4">{courseListLabel}</Button>
         </div>
       </div>
     );
@@ -263,8 +267,8 @@ export default function CourseMasteryExamPage({ params }: Props) {
       <div className="min-h-full study-page-bg" data-testid="mastery-setup">
         <div className="max-w-lg mx-auto p-4 md:p-6 lg:p-8">
           <Breadcrumbs items={[
-            { label: "Courses", href: "/topics" },
-            { label: category, href: "/topics" },
+            { label: inEppp ? "EPPP Domains" : "Courses", href: backToCourseList },
+            { label: category, href: backToCourseList },
             { label: "Mastery Exam" },
           ]} />
           <PageTitle

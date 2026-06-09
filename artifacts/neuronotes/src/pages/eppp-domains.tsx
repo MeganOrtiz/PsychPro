@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageTitle } from "@/components/brand/page-title";
 import { groupEpppTopicsByCategory } from "@/lib/eppp-content";
+import { epppTopicPath } from "@/lib/eppp-routes";
 
 type Topic = {
   id: number;
@@ -65,11 +66,11 @@ export default function EpppDomainsPage() {
       <style>{styles}</style>
       <div className="eppd-shell">
         <div className="eppd-topbar">
-          <Link href="/eppp/dashboard" className="eppd-back">
+          <Link href="/eppp/suite/performance-analytics" className="eppd-back">
             <ArrowLeft aria-hidden /> Dashboard
           </Link>
-          <Link href="/eppp" className="eppd-system-link">
-            System overview <ArrowRight aria-hidden />
+          <Link href="/eppp/suite/question-bank" className="eppd-system-link">
+            Question bank <ArrowRight aria-hidden />
           </Link>
         </div>
 
@@ -154,7 +155,7 @@ export default function EpppDomainsPage() {
                           key={topic.id}
                           type="button"
                           className="eppd-lesson"
-                          onClick={() => navigate(`/topics/${topic.id}`)}
+                          onClick={() => navigate(epppTopicPath(topic.id))}
                           data-testid={`eppp-lesson-${topic.id}`}
                         >
                           <span className="eppd-lesson-icon">

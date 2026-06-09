@@ -20,6 +20,7 @@ import {
   getGetCourseMasteryStatusQueryKey,
 } from "@workspace/api-client-react";
 import { groupEpppTopicsByCategory, isEpppTopic } from "@/lib/eppp-content";
+import { epppDomainAnchor, epppMasteryExamPath, epppTopicPath } from "@/lib/eppp-routes";
 import dashboardBrain from "@/assets/hero/dashboard-superior-brain.png";
 
 // ---------------------------------------------------------------------------
@@ -349,8 +350,8 @@ export function EpppDashboardView({
             <div className="epd-domain-grid">
               {domainStats.map((d) => {
                 const dest = d.unlocked
-                  ? `/courses/${encodeURIComponent(d.category)}/mastery-exam`
-                  : `/eppp/domains#${slug(d.category)}`;
+                  ? epppMasteryExamPath(d.category)
+                  : epppDomainAnchor(d.category);
                 return (
                   <Link
                     key={d.category}
@@ -398,7 +399,7 @@ export function EpppDashboardView({
               <p className="epd-section-eyebrow">KEEP MOVING</p>
               <h2 className="epd-section-title">What to study next</h2>
             </div>
-            <Link href="/eppp/domains" className="epd-section-link">
+            <Link href="/eppp/suite/domains" className="epd-section-link">
               Browse domains <ArrowRight aria-hidden />
             </Link>
           </div>
@@ -415,7 +416,7 @@ export function EpppDashboardView({
                 <button
                   key={t.topicId}
                   className="epd-next"
-                  onClick={() => onNavigate(`/topics/${t.topicId}`)}
+                  onClick={() => onNavigate(epppTopicPath(t.topicId))}
                   data-testid={`eppp-next-${t.topicId}`}
                 >
                   <span className="epd-next-icon">
@@ -450,7 +451,7 @@ export function EpppDashboardView({
               content area at 90%+.
             </p>
           </div>
-          <Link href="/eppp/domains" className="epd-cta-btn">
+          <Link href="/eppp/suite/domains" className="epd-cta-btn">
             Go to domains <ArrowRight aria-hidden />
           </Link>
         </section>

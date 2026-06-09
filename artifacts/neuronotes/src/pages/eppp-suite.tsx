@@ -36,9 +36,9 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { cn } from "@/lib/utils";
 import { groupEpppTopicsByCategory, isEpppTopic } from "@/lib/eppp-content";
+import { epppDomainAnchor, epppMasteryExamPath, epppTopicModePath } from "@/lib/eppp-routes";
 import smokeBg from "@/assets/bg/brain-clouds.png";
 import EpppDashboardPage from "@/pages/eppp-dashboard";
-import ResourcesPage from "@/pages/resources";
 
 // ---------------------------------------------------------------------------
 // EPPP Mastery Suite — a dedicated, EPPP-only workspace with its own left-column
@@ -47,10 +47,10 @@ import ResourcesPage from "@/pages/resources";
 // header. Styled congruently with the main dashboard/app (same dark-glass
 // sidebar, smoke backdrop, nav-glass pills, locked cerulean #76E4F7 — no mint).
 //
-// Wired tabs reuse existing content: Domains, Question Bank, Domain Mastery
-// Exams, Flashcards all surface the live topic/category + mastery data;
-// Performance Analytics folds in the existing /eppp/dashboard readiness view;
-// Resources reuses the Resources page. Net-new tabs (Study Plan, Clinical
+// Wired tabs reuse existing data but keep users inside the EPPP Suite:
+// Domains, Question Bank, Domain Mastery Exams, Flashcards all surface the
+// EPPP-only topic/category + mastery data; Performance Analytics folds in the
+// existing /eppp/dashboard readiness view. Net-new tabs (Study Plan, Clinical
 // Integration Cases, Full-Length Exams, Missed Questions, Rapid Review) are
 // on-brand "in development" placeholders.
 // ---------------------------------------------------------------------------
@@ -364,7 +364,7 @@ function SuiteContent({
     case "performance-analytics":
       return <EpppDashboardPage />;
     case "resources":
-      return <ResourcesPage />;
+      return <EpppResourcesPanel />;
     case "domains":
       return <DomainsPanel onNavigate={onNavigate} />;
     case "domain-mastery-exams":
@@ -378,7 +378,7 @@ function SuiteContent({
           icon={FileQuestion}
           countField="quizCount"
           countNoun="questions"
-          hrefFor={(id) => `/topics/${id}/quiz`}
+          hrefFor={(id) => epppTopicModePath(id, "quiz")}
           ctaLabel="Practice"
           emptyHint="No practice questions are available yet."
           onNavigate={onNavigate}
@@ -393,7 +393,7 @@ function SuiteContent({
           icon={BookMarked}
           countField="flashcardCount"
           countNoun="cards"
-          hrefFor={(id) => `/topics/${id}/flashcards`}
+          hrefFor={(id) => epppTopicModePath(id, "flashcards")}
           ctaLabel="Study deck"
           emptyHint="No flashcard decks are available yet."
           onNavigate={onNavigate}
@@ -441,7 +441,7 @@ function SuiteContent({
           eyebrow="REINFORCE"
           title="Rapid Review"
           icon={Zap}
-          description="Fast, high-yield refreshers across every domain — perfect for the final stretch before exam day."
+          description="Fast, focused refreshers across every domain — built for the final stretch before exam day."
         />
       );
     default:
@@ -496,8 +496,8 @@ function DomainsPanel({ onNavigate }: { onNavigate: (to: string) => void }) {
           <div className="eps-domain-grid">
             {domainStats.map((d) => {
               const dest = d.unlocked
-                ? `/courses/${encodeURIComponent(d.category)}/mastery-exam`
-                : `/eppp/domains#${slugify(d.category)}`;
+                ? epppMasteryExamPath(d.category)
+                : epppDomainAnchor(d.category);
               return (
                 <button
                   key={d.category}
@@ -600,7 +600,7 @@ function DomainMasteryExamsPanel({ onNavigate }: { onNavigate: (to: string) => v
                   {state === "locked" ? (
                     <button
                       className="eps-exam-cta eps-exam-cta--ghost"
-                      onClick={() => onNavigate(`/eppp/domains#${slugify(d.category)}`)}
+                      onClick={() => onNavigate(epppDomainAnchor(d.category))}
                       data-testid={`eppp-mastery-study-${slugify(d.category)}`}
                     >
                       Study lessons <ArrowRight aria-hidden />
@@ -609,7 +609,7 @@ function DomainMasteryExamsPanel({ onNavigate }: { onNavigate: (to: string) => v
                     <button
                       className="eps-exam-cta"
                       onClick={() =>
-                        onNavigate(`/courses/${encodeURIComponent(d.category)}/mastery-exam`)
+                        onNavigate(epppMasteryExamPath(d.category))
                       }
                       data-testid={`eppp-mastery-open-${slugify(d.category)}`}
                     >
@@ -716,6 +716,36 @@ function TopicDirectoryPanel({
             ))}
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+// ---- EPPP-only resources --------------------------------------------------
+function EpppResourcesPanel() {
+  return (
+    <div className="study-page-bg eps-panel" data-testid="eppp-panel-resources">
+      <div className="eps-shell">
+        <PanelHead
+          eyebrow="REFERENCE"
+          title="Resources"
+          subtitle="EPPP-only reference material will live here. Main PsychPro resources stay on the main site."
+        />
+        <div className="eps-soon" data-testid="eppp-resources-contained">
+          <div className="eps-soon-glow" aria-hidden />
+          <span className="eps-soon-icon">
+            <Library aria-hidden />
+          </span>
+          <span className="eps-soon-pill">
+            <Sparkles aria-hidden /> EPPP workspace
+          </span>
+          <h2 className="eps-soon-title">EPPP resources only</h2>
+          <p className="eps-soon-text">
+            This area is reserved for EPPP-specific references, decision trees,
+            formulas, and review assets. General PsychPro resources are not
+            shown inside the EPPP dashboard.
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -13,6 +13,7 @@ import { StudySurface } from "@/components/study/study-surface";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { useEntitlements } from "@/lib/use-entitlements";
 import { PageTitle } from "@/components/brand/page-title";
+import { epppTopicPath, isEpppRoute } from "@/lib/eppp-routes";
 
 interface Props {
   params: { id: string };
@@ -25,8 +26,10 @@ const difficultyStyles: Record<string, { bg: string; color: string; border: stri
 };
 
 export default function FlashcardsPage({ params }: Props) {
-  const [, navigate] = useLocation();
+  const [location, navigate] = useLocation();
   const topicId = parseInt(params.id);
+  const inEppp = isEpppRoute(location);
+  const backToTopic = inEppp ? epppTopicPath(topicId) : `/topics/${topicId}`;
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [showUpgrade, setShowUpgrade] = useState(false);
@@ -46,7 +49,7 @@ export default function FlashcardsPage({ params }: Props) {
 
   const fetchError = error as { status?: number } | null;
   if (fetchError?.status === 402) {
-    return <UpgradePrompt reason="flashcards" onDismiss={() => navigate(`/topics/${topicId}`)} />;
+    return <UpgradePrompt reason="flashcards" onDismiss={() => navigate(backToTopic)} />;
   }
 
   // Free-tier gating now happens once on the topic detail page (see
@@ -79,8 +82,8 @@ export default function FlashcardsPage({ params }: Props) {
     <div className="min-h-full study-page-bg" data-testid="flashcards-page">
       <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
       <Breadcrumbs items={[
-        { label: "Topics", href: "/topics" },
-        { label: topic?.name ?? "Topic", href: `/topics/${topicId}` },
+        { label: inEppp ? "EPPP Domains" : "Topics", href: inEppp ? "/eppp/suite/domains" : "/topics" },
+        { label: topic?.name ?? "Topic", href: backToTopic },
         { label: "Flashcards" },
       ]} />
       <div className="relative mb-6">
@@ -100,7 +103,7 @@ export default function FlashcardsPage({ params }: Props) {
           <Tooltip>
             <TooltipTrigger asChild>
               <button
-                onClick={() => navigate("/study-lab")}
+                onClick={() => navigate(inEppp ? "/eppp/suite/study-plan" : "/study-lab")}
                 className="text-muted-foreground hover:text-foreground p-1.5 rounded-md hover:bg-accent transition-colors"
                 data-testid="button-study-lab"
                 aria-label="Open Study Lab"

@@ -12,14 +12,17 @@ import { StudySurface } from "@/components/study/study-surface";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PageTitle } from "@/components/brand/page-title";
 import { loadReflectionText, saveReflection } from "@/lib/reflections";
+import { epppTopicPath, isEpppRoute } from "@/lib/eppp-routes";
 
 interface Props {
   params: { id: string };
 }
 
 export default function QuizPage({ params }: Props) {
-  const [, navigate] = useLocation();
+  const [location, navigate] = useLocation();
   const topicId = parseInt(params.id);
+  const inEppp = isEpppRoute(location);
+  const backToTopic = inEppp ? epppTopicPath(topicId) : `/topics/${topicId}`;
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
@@ -48,7 +51,7 @@ export default function QuizPage({ params }: Props) {
 
   const fetchError = error as { status?: number } | null;
   if (fetchError?.status === 402) {
-    return <UpgradePrompt onDismiss={() => navigate(`/topics/${topicId}`)} />;
+    return <UpgradePrompt onDismiss={() => navigate(backToTopic)} />;
   }
 
   const current = questions?.[index];
@@ -139,7 +142,7 @@ export default function QuizPage({ params }: Props) {
           <h2 className="text-2xl font-bold text-foreground mb-2">Quiz Complete!</h2>
           <p className="text-muted-foreground mb-8">You scored {score} out of {total} questions.</p>
           <div className="flex gap-3 justify-center">
-            <Button variant="outline" onClick={() => navigate(`/topics/${topicId}`)} data-testid="button-back-to-topic">
+            <Button variant="outline" onClick={() => navigate(backToTopic)} data-testid="button-back-to-topic">
               Back to Topic
             </Button>
             <Button onClick={handleRestart} data-testid="button-retake">
@@ -155,8 +158,8 @@ export default function QuizPage({ params }: Props) {
     <div className="min-h-full study-page-bg" data-testid="quiz-page">
       <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
       <Breadcrumbs items={[
-        { label: "Topics", href: "/topics" },
-        { label: topic?.name ?? "Topic", href: `/topics/${topicId}` },
+        { label: inEppp ? "EPPP Domains" : "Topics", href: inEppp ? "/eppp/suite/domains" : "/topics" },
+        { label: topic?.name ?? "Topic", href: backToTopic },
         { label: "Quiz" },
       ]} />
       <PageTitle
@@ -305,7 +308,7 @@ export default function QuizPage({ params }: Props) {
               <div className="flex items-center gap-2 mb-2">
                 <Lightbulb className="w-4 h-4" style={{ color: `${P.mist}cc` }} />
                 <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: P.mist }}>Reflect</p>
-                <Link href="/study-lab">
+                <Link href={inEppp ? "/eppp/suite/study-plan" : "/study-lab"}>
                   <span className="ml-auto text-[11px] hover:underline cursor-pointer" style={{ color: `${P.mist}99` }}>
                     Why this works →
                   </span>
@@ -335,13 +338,13 @@ export default function QuizPage({ params }: Props) {
               <div className="flex items-center justify-between mt-2 gap-3">
                 <p className="text-[11px]" style={{ color: `${P.mist}77` }}>
                   Saved to this device. Review anytime in{" "}
-                  <Link href="/reflections">
+                  <Link href={inEppp ? "/eppp/suite/missed-questions" : "/reflections"}>
                     <span
                       className="underline cursor-pointer hover:text-white"
                       style={{ color: `${P.mist}cc` }}
                       data-testid="link-my-tools-reflections"
                     >
-                      My Tools → Reflections
+                      {inEppp ? "Missed Questions" : "My Tools → Reflections"}
                     </span>
                   </Link>
                   .
