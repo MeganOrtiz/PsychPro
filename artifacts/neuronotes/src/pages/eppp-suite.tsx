@@ -35,6 +35,7 @@ import { STUDY_PALETTE } from "@/lib/study-theme";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { cn } from "@/lib/utils";
+import { groupEpppTopicsByCategory, isEpppTopic } from "@/lib/eppp-content";
 import smokeBg from "@/assets/bg/brain-clouds.png";
 import EpppDashboardPage from "@/pages/eppp-dashboard";
 import ResourcesPage from "@/pages/resources";
@@ -129,16 +130,18 @@ type DomainStat = {
 // status and therefore must not trigger the per-category status fan-out.
 function useEpppTopics() {
   const { data: allTopics, isLoading: topicsLoading } = useGetTopics();
-  return { allTopics: (allTopics ?? []) as Topic[], topicsLoading };
+  const epppTopics = useMemo(
+    () => ((allTopics ?? []) as Topic[]).filter((topic) => isEpppTopic(topic)),
+    [allTopics],
+  );
+  return { allTopics: epppTopics, topicsLoading };
 }
 
 function useEpppDomains() {
   const { allTopics, topicsLoading } = useEpppTopics();
 
   const categories = useMemo(() => {
-    const set = new Set<string>();
-    allTopics.forEach((t: Topic) => set.add(t.category || "Other"));
-    return Array.from(set).sort((a, b) => a.localeCompare(b));
+    return groupEpppTopicsByCategory(allTopics).map((group) => group.name);
   }, [allTopics]);
 
   const masteryQueries = useQueries({
@@ -494,7 +497,7 @@ function DomainsPanel({ onNavigate }: { onNavigate: (to: string) => void }) {
             {domainStats.map((d) => {
               const dest = d.unlocked
                 ? `/courses/${encodeURIComponent(d.category)}/mastery-exam`
-                : "/topics";
+                : `/eppp/domains#${slugify(d.category)}`;
               return (
                 <button
                   key={d.category}
@@ -597,7 +600,7 @@ function DomainMasteryExamsPanel({ onNavigate }: { onNavigate: (to: string) => v
                   {state === "locked" ? (
                     <button
                       className="eps-exam-cta eps-exam-cta--ghost"
-                      onClick={() => onNavigate("/topics")}
+                      onClick={() => onNavigate(`/eppp/domains#${slugify(d.category)}`)}
                       data-testid={`eppp-mastery-study-${slugify(d.category)}`}
                     >
                       Study lessons <ArrowRight aria-hidden />
