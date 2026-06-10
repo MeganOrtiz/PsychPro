@@ -105,7 +105,7 @@ const TABS: TabDef[] = [
   { slug: "full-length-exams", label: "Full-Length Exams", icon: ClipboardCheck, section: "Assess" },
   { slug: "missed-questions", label: "Missed Questions", icon: XCircle, section: "Review" },
   { slug: "flashcards", label: "Flashcards", icon: BookMarked, section: "Review" },
-  { slug: "rapid-review", label: "Rapid Review", icon: Zap, section: "Review" },
+  { slug: "rapid-review", label: "Quick Reference Guides", icon: Zap, section: "Review" },
   { slug: "performance-analytics", label: "Performance Analytics", icon: BarChart3, section: "Track" },
   { slug: "resources", label: "Resources", icon: Library, section: "Reference" },
 ];
@@ -878,7 +878,7 @@ function RapidReviewPanel({ onNavigate }: { onNavigate: (to: string) => void }) 
       <div className="eps-shell">
         <PanelHead
           eyebrow="REINFORCE"
-          title="Rapid Review"
+          title="Quick Reference Guides"
           subtitle="Concise, final-pass recall sheets for every domain. Skim the high-yield points, traps, and compare/contrast frames in the last stretch before exam day."
         />
 
