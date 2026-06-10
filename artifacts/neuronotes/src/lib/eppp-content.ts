@@ -53,6 +53,44 @@ const MAIN_SITE_ONLY_CATEGORIES = [
   "research & statistics",
 ];
 
+// Clinical integration cases are uploaded as topics whose category embeds this
+// phrase (e.g. "EPPP Part 1: Clinical Integration Cases: Biological Bases of
+// Behavior"). They must surface ONLY in the dedicated Clinical Integration
+// Cases tab — never in Part 1 domains, Part 2 skills, Question Bank, or
+// Flashcards — even though they remain EPPP content (kept out of the main site).
+const EPPP_CLINICAL_CASE_MARKER = "clinical integration cases";
+
+export function isEpppClinicalCase(topic: EpppTopicLike): boolean {
+  return normalized(topic.category).includes(EPPP_CLINICAL_CASE_MARKER);
+}
+
+export function getEpppClinicalCaseDomain(topic: EpppTopicLike): string {
+  const category = topic.category ?? "";
+  const idx = category.toLowerCase().lastIndexOf(`${EPPP_CLINICAL_CASE_MARKER}:`);
+  if (idx >= 0) {
+    const tail = category.slice(idx + EPPP_CLINICAL_CASE_MARKER.length + 1).trim();
+    if (tail) return tail;
+  }
+  return "Clinical Integration Cases";
+}
+
+export function groupEpppClinicalCases<T extends EpppTopicLike>(topics: T[]) {
+  const byDomain = new Map<string, T[]>();
+  for (const topic of topics.filter(isEpppClinicalCase)) {
+    const domain = getEpppClinicalCaseDomain(topic);
+    const existing = byDomain.get(domain) ?? [];
+    existing.push(topic);
+    byDomain.set(domain, existing);
+  }
+
+  return Array.from(byDomain.entries())
+    .map(([name, items]) => ({
+      name,
+      items: [...items].sort((a, b) => a.name.localeCompare(b.name)),
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
 function normalized(value: string | undefined): string {
   return (value ?? "").toLowerCase().replace(/\s+/g, " ").trim();
 }
@@ -62,6 +100,12 @@ export function getEpppExamPart(topic: EpppTopicLike): EpppExamPart | null {
   const name = normalized(topic.name);
 
   if (MAIN_SITE_ONLY_CATEGORIES.includes(category)) {
+    return null;
+  }
+
+  // Clinical integration cases belong only to their own tab, so they are never
+  // classified as Part 1 or Part 2 content.
+  if (isEpppClinicalCase(topic)) {
     return null;
   }
 
@@ -152,7 +196,9 @@ export function isEpppTopic(topic: EpppTopicLike): boolean {
 
 export function groupEpppTopicsByCategory<T extends EpppTopicLike>(topics: T[]) {
   const byCategory = new Map<string, T[]>();
-  for (const topic of topics.filter(isEpppTopic)) {
+  for (const topic of topics.filter(
+    (t) => isEpppTopic(t) && !isEpppClinicalCase(t),
+  )) {
     const category = getEpppDisplayCategory(topic);
     const existing = byCategory.get(category) ?? [];
     existing.push(topic);

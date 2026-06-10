@@ -36,6 +36,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { cn } from "@/lib/utils";
 import {
+  groupEpppClinicalCases,
   groupEpppTopicsByCategory,
   isEpppKnowledgeTopic,
   isEpppPart2Topic,
@@ -406,7 +407,7 @@ function SuiteContent({
         />
       );
     case "clinical-cases":
-      return <ClinicalCasesPanel />;
+      return <ClinicalCasesPanel onNavigate={onNavigate} />;
     case "full-length-exams":
       return (
         <ComingSoonPanel
@@ -814,24 +815,71 @@ const PART2_SKILL_PHASES = [
   "Clinical Reasoning and Applied Judgment",
 ];
 
-function ClinicalCasesPanel() {
+function ClinicalCasesPanel({ onNavigate }: { onNavigate: (to: string) => void }) {
+  const { data: allTopics, isLoading } = useGetTopics();
+
+  const grouped = useMemo(() => {
+    return groupEpppClinicalCases((allTopics ?? []) as Topic[]).map(
+      (group) => [group.name, group.items] as const,
+    );
+  }, [allTopics]);
+
   return (
-    <ContentCreationPanel
-      eyebrow="APPLY"
-      title="Clinical Integration Cases"
-      icon={Stethoscope}
-      part1Title="Part 1 cases first"
-      part1Description="Build cases from the Part 1 knowledge domains so learners practice applying core EPPP concepts before layering in Part 2 skill judgment."
-      part1Items={PART1_KNOWLEDGE_DOMAINS}
-      part2Title="Part 2 cases next"
-      part2Description="After Part 1 cases are loaded, add skill-heavy cases that emphasize judgment, communication, consultation, supervision, and ethics decision-making."
-      part2Items={PART2_SKILL_PHASES}
-      contractLines={[
-        "Use case stems with setting, client/context, presenting issue, and decision point.",
-        "Tag every case as Part 1 or Part 2 before upload.",
-        "Attach questions, rationales, competencies, and difficulty metadata to the case.",
-      ]}
-    />
+    <div className="study-page-bg eps-panel" data-testid="eppp-panel-clinical-integration-cases">
+      <div className="eps-shell">
+        <PanelHead
+          eyebrow="APPLY"
+          title="Clinical Integration Cases"
+          subtitle="Realistic clinical scenarios that put core EPPP concepts into practice. Work the case, then answer the integrated questions to test your reasoning."
+        />
+
+        {isLoading ? (
+          <div className="eps-empty">Loading cases…</div>
+        ) : grouped.length === 0 ? (
+          <div className="eps-empty">No clinical integration cases are available yet.</div>
+        ) : (
+          <div className="eps-groups">
+            {grouped.map(([domain, cases]) => (
+              <section key={domain} className="eps-group">
+                <div className="eps-group-head">
+                  <Stethoscope className="eps-group-icon" aria-hidden />
+                  <h2 className="eps-group-title">{domain}</h2>
+                  <span className="eps-group-count">{cases.length} cases</span>
+                </div>
+                <div className="eps-topic-grid">
+                  {cases.map((t) => {
+                    const questionCount = t.quizCount ?? 0;
+                    return (
+                      <button
+                        key={t.id}
+                        className="eps-topic"
+                        onClick={() => onNavigate(epppTopicModePath(t.id, "study-guide"))}
+                        data-testid={`eppp-clinical-case-${t.id}`}
+                      >
+                        <span className="eps-topic-icon">
+                          <Stethoscope aria-hidden />
+                        </span>
+                        <span className="eps-topic-body">
+                          <span className="eps-topic-name">{t.name}</span>
+                          <span className="eps-topic-meta">
+                            {questionCount > 0
+                              ? `${questionCount} integrated questions`
+                              : "Case study"}
+                          </span>
+                        </span>
+                        <span className="eps-topic-cta">
+                          Open case <ArrowRight aria-hidden />
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </section>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
