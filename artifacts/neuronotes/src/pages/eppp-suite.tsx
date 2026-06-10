@@ -1167,8 +1167,21 @@ const styles = `
 .eps-topic-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
 .eps-topic-name { font-size: 14px; font-weight: 600; color: ${C.cloud}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .eps-topic-meta { font-size: 12px; color: ${C.muted}; }
-.eps-topic-cta { display: inline-flex; align-items: center; gap: 5px; flex-shrink: 0; font-size: 12.5px; font-weight: 700; color: ${C.mist}; }
+.eps-topic-cta {
+  display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;
+  padding: 8px 14px; border-radius: 999px;
+  font-size: 12.5px; font-weight: 700; color: ${C.cloud};
+  background: rgba(118,228,247,0.16);
+  border: 1px solid ${C.hairlineStrong};
+  box-shadow: 0 0 18px -10px ${C.cyan}80;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
+}
 .eps-topic-cta svg { width: 14px; height: 14px; transition: transform 0.2s ease; }
+.eps-topic:hover:not(.is-disabled) .eps-topic-cta {
+  background: rgba(118,228,247,0.26);
+  border-color: ${C.cyan}80;
+  box-shadow: 0 0 22px -8px ${C.cyan}b3;
+}
 .eps-topic:hover:not(.is-disabled) .eps-topic-cta svg { transform: translateX(3px); }
 
 /* ---- Part 2 upload / skills shell ---- */
