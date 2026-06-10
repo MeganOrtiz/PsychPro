@@ -913,7 +913,7 @@ function ClinicalCasesPanel({ onNavigate }: { onNavigate: (to: string) => void }
           subtitle="Realistic clinical scenarios that put core EPPP concepts into practice. Work the case, then answer the integrated questions to test your reasoning."
         />
 
-        <div className="eps-subtabs" role="tablist" aria-label="Case parts">
+        <div className="eps-subtabs eps-subtabs--center" role="tablist" aria-label="Case parts">
           {CLINICAL_CASE_SUBTABS.map((t) => {
             const isActive = t.key === part;
             return (
@@ -1703,6 +1703,12 @@ const styles = `
   background: linear-gradient(135deg, ${C.mist} 0%, ${C.cyan} 48%, #38BDF8 100%);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 0 22px -4px ${C.cyan}b3;
 }
+/* Clinical Cases part toggle: centered, larger, squared (not pill) */
+.eps-subtabs--center { justify-content: center; }
+.eps-subtabs--center .eps-subtab {
+  border-radius: 12px; padding: 13px 26px; font-size: 15.5px; gap: 9px;
+}
+.eps-subtabs--center .eps-subtab svg { width: 18px; height: 18px; }
 
 /* ---- Part 2 upload / skills shell ---- */
 .eps-import-panel {
