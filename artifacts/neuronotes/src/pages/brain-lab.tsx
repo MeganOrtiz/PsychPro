@@ -1078,7 +1078,7 @@ function BrainDiagram({
                   onMouseLeave={() => onHover(null)}
                   onFocus={() => onHover(struct.id)}
                   onBlur={() => onHover(null)}
-                  className="flex items-center justify-center rounded-full font-bold outline-none transition-all duration-150"
+                  className="flex items-center justify-center rounded-lg font-bold outline-none transition-all duration-150"
                   style={{
                     width: emphasized ? 24 : 19,
                     height: emphasized ? 24 : 19,
