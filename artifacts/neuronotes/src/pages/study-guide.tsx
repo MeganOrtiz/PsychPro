@@ -10,7 +10,7 @@ import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { useEntitlements } from "@/lib/use-entitlements";
 import { PageTitle } from "@/components/brand/page-title";
 import { epppTopicPath, isEpppRoute } from "@/lib/eppp-routes";
-import { isEpppTopic } from "@/lib/eppp-content";
+import { isEpppTopic, isEpppQuickReference } from "@/lib/eppp-content";
 
 interface Props {
   params: { id: string };
@@ -48,7 +48,9 @@ export default function StudyGuidePage({ params }: Props) {
         { label: topic?.name ?? "Topic", href: backToTopic },
         { label: "Study Guide" },
       ]} />
-      <PageTitle title="Study Guide" icon={FileText} />
+      {!(topic && isEpppQuickReference(topic)) && (
+        <PageTitle title="Study Guide" icon={FileText} />
+      )}
 
       {isLoading && ent === undefined ? (
         <div className="space-y-4">
