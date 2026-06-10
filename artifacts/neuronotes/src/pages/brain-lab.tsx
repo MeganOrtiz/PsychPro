@@ -33,7 +33,7 @@ import brainCoronal from "@/assets/brain-views/coronal.webp";
 import brainDorsal from "@/assets/brain-views/dorsal.webp";
 import brainVentral from "@/assets/brain-views/ventral.webp";
 import brainVentralNerves from "@/assets/brain-views/ventral-nerves.webp";
-import BrainQuiz, { type QuizItem } from "@/components/brain/brain-quiz";
+import { useBrainQuiz, BrainQuizDiagram, BrainQuizPanel, type QuizItem } from "@/components/brain/brain-quiz";
 
 // Heavy 3D view (three.js + ~1.8MB meshopt-compressed GLB) is code-split so it only loads when
 // the user opens the 3D tab — the Sections/image view stays instant.
@@ -1716,6 +1716,16 @@ export default function BrainLabPage() {
     return out;
   }, []);
 
+  // Quiz state lives here so the quiz can render SPLIT: the diagram in the brain
+  // canvas (left) and the prompt + answers in the detail box (right).
+  const quiz = useBrainQuiz(quizItems);
+
+  // Start a fresh round each time the learner enters Quiz mode.
+  const restartQuiz = quiz.restart;
+  useEffect(() => {
+    if (viewMode === "quiz") restartQuiz();
+  }, [viewMode, restartQuiz]);
+
   // Init from media queries + URL hash
   useEffect(() => {
     if (typeof window === "undefined" || !window.matchMedia) return;
@@ -1941,11 +1951,7 @@ export default function BrainLabPage() {
                 </Suspense>
               </Brain3DErrorBoundary>
             ) : viewMode === "quiz" ? (
-              <BrainQuiz
-                items={quizItems}
-                isMobile={isMobile}
-                onExit={() => setViewMode("sections")}
-              />
+              <BrainQuizDiagram controller={quiz} isMobile={isMobile} />
             ) : isMobile ? (
               <BrainDiagram
                 activeView={activeView}
@@ -1983,12 +1989,22 @@ export default function BrainLabPage() {
               />
             </div>
           )}
+
+          {/* Quiz panel — mobile only (sits below the brain; on desktop it lives
+              in the right pane). */}
+          {isMobile && viewMode === "quiz" && (
+            <div className="flex-shrink-0" style={{ maxHeight: "46vh" }}>
+              <BrainQuizPanel controller={quiz} onExit={() => setViewMode("sections")} />
+            </div>
+          )}
         </div>
 
         {/* Right: detail panel (desktop) */}
         {!isMobile && (
           <aside className="h-full min-h-0 max-h-full overflow-hidden">
-            {selected ? (
+            {viewMode === "quiz" ? (
+              <BrainQuizPanel controller={quiz} onExit={() => setViewMode("sections")} />
+            ) : selected ? (
               <StructureDetail key={selected.id} struct={selected} onClose={handleClose} />
             ) : (
               <EmptyDetail />

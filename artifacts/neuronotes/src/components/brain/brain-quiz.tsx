@@ -82,6 +82,70 @@ function buildRound(items: QuizItem[]): Question[] {
   });
 }
 
+// ---------------------------------------------------------------------------
+// useBrainQuiz — owns all round/score/answer state. Lifted into a hook so the
+// quiz can be rendered SPLIT across two panes: the diagram lives in the brain
+// canvas (left) while the prompt + answers live in the detail box (right). Both
+// halves read/drive the same controller.
+// ---------------------------------------------------------------------------
+export type BrainQuizController = {
+  round: Question[];
+  q: Question | undefined;
+  idx: number;
+  score: number;
+  picked: string | null;
+  done: boolean;
+  answered: boolean;
+  isLast: boolean;
+  correctChosen: boolean;
+  answer: (chosenId: string) => void;
+  next: () => void;
+  restart: () => void;
+};
+
+export function useBrainQuiz(items: QuizItem[]): BrainQuizController {
+  const [roundKey, setRoundKey] = useState(0);
+  const round = useMemo(() => buildRound(items), [items, roundKey]);
+  const [idx, setIdx] = useState(0);
+  const [score, setScore] = useState(0);
+  // null = unanswered. For identify: the picked option id. For find: clicked id.
+  const [picked, setPicked] = useState<string | null>(null);
+  const [done, setDone] = useState(false);
+
+  const q = round[idx];
+  const answered = picked !== null;
+  const isLast = idx >= round.length - 1;
+  const correctChosen = answered && q != null && picked === q.item.id;
+
+  const restart = useCallback(() => {
+    setRoundKey((k) => k + 1);
+    setIdx(0);
+    setScore(0);
+    setPicked(null);
+    setDone(false);
+  }, []);
+
+  const answer = useCallback(
+    (chosenId: string) => {
+      if (picked !== null || !q) return;
+      setPicked(chosenId);
+      if (chosenId === q.item.id) setScore((s) => s + 1);
+    },
+    [picked, q],
+  );
+
+  const next = useCallback(() => {
+    if (isLast) {
+      setDone(true);
+      return;
+    }
+    setIdx((i) => i + 1);
+    setPicked(null);
+  }, [isLast]);
+
+  return { round, q, idx, score, picked, done, answered, isLast, correctChosen, answer, next, restart };
+}
+
 // Marker drawn over the diagram image. Variants change with quiz state so the
 // learner gets clear right/wrong/reveal feedback in the cerulean theme.
 function QuizMarker({
@@ -173,55 +237,41 @@ function QuizMarker({
   );
 }
 
-export default function BrainQuiz({
-  items,
+// ---------------------------------------------------------------------------
+// BrainQuizDiagram — the LEFT half: the section image with quiz markers. For
+// "find" questions the markers are the answer (clicking one calls answer); for
+// "identify" the single target pulses and the choices live in the panel.
+// ---------------------------------------------------------------------------
+export function BrainQuizDiagram({
+  controller,
   isMobile,
-  onExit,
 }: {
-  items: QuizItem[];
+  controller: BrainQuizController;
   isMobile?: boolean;
-  onExit?: () => void;
 }) {
-  const [roundKey, setRoundKey] = useState(0);
-  const round = useMemo(() => buildRound(items), [items, roundKey]);
-  const [idx, setIdx] = useState(0);
-  const [score, setScore] = useState(0);
-  // null = unanswered. For identify: the picked option id. For find: clicked id.
-  const [picked, setPicked] = useState<string | null>(null);
-  const [done, setDone] = useState(false);
+  const { q, answered, picked, done, answer } = controller;
 
-  const q = round[idx];
-  const answered = picked !== null;
-  const isLast = idx >= round.length - 1;
+  if (done) {
+    return (
+      <div className="h-full w-full flex flex-col items-center justify-center gap-3 p-6 text-center">
+        <div
+          className="w-16 h-16 rounded-2xl flex items-center justify-center"
+          style={{
+            background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
+            boxShadow: `0 0 40px -8px ${PALETTE.surf}`,
+          }}
+        >
+          <Trophy className="w-7 h-7" style={{ color: PALETTE.bg }} />
+        </div>
+        <p className="text-sm font-semibold text-white">Round complete</p>
+        <p className="text-xs" style={{ color: `${PALETTE.mist}99` }}>
+          Your score is in the panel.
+        </p>
+      </div>
+    );
+  }
 
-  const restart = useCallback(() => {
-    setRoundKey((k) => k + 1);
-    setIdx(0);
-    setScore(0);
-    setPicked(null);
-    setDone(false);
-  }, []);
-
-  const answer = useCallback(
-    (chosenId: string) => {
-      if (picked !== null) return;
-      setPicked(chosenId);
-      if (chosenId === q.item.id) setScore((s) => s + 1);
-    },
-    [picked, q],
-  );
-
-  const next = useCallback(() => {
-    if (isLast) {
-      setDone(true);
-      return;
-    }
-    setIdx((i) => i + 1);
-    setPicked(null);
-  }, [isLast]);
-
-  if (!q && !done) {
-    // Not enough quizzable structures (shouldn't happen with current data).
+  if (!q) {
     return (
       <div className="h-full w-full flex flex-col items-center justify-center gap-3 p-6 text-center">
         <HelpCircle className="w-8 h-8" style={{ color: PALETTE.surf }} />
@@ -233,65 +283,171 @@ export default function BrainQuiz({
     );
   }
 
-  if (done) {
-    const pct = Math.round((score / round.length) * 100);
-    const msg =
-      pct >= 90 ? "Outstanding recall." : pct >= 70 ? "Strong work — keep going." : pct >= 40 ? "Good start. Run it again to lock it in." : "Review the Sections, then try again.";
-    return (
-      <div className="h-full w-full flex flex-col items-center justify-center gap-5 p-6 text-center" data-testid="quiz-done">
-        <div
-          className="w-20 h-20 rounded-2xl flex items-center justify-center"
-          style={{
-            background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
-            boxShadow: `0 0 40px -6px ${PALETTE.surf}`,
-          }}
-        >
-          <Trophy className="w-9 h-9" style={{ color: PALETTE.bg }} />
-        </div>
-        <div>
-          <p className="text-3xl font-light text-white" data-testid="quiz-score">
-            {score}
-            <span style={{ color: `${PALETTE.mist}99` }}> / {round.length}</span>
-          </p>
-          <p className="text-sm mt-1" style={{ color: PALETTE.surf }}>
-            {pct}% correct
-          </p>
-          <p className="text-xs mt-2 max-w-xs" style={{ color: `${PALETTE.mist}aa` }}>
-            {msg}
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={restart}
-            className="px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2"
-            style={{ background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`, color: PALETTE.bg }}
-            data-testid="button-quiz-restart"
-          >
-            <RotateCcw className="w-4 h-4" />
-            New round
-          </button>
-          {onExit && (
-            <button
-              onClick={onExit}
-              className="px-4 py-2 rounded-xl text-sm font-medium border flex items-center gap-2"
-              style={{ background: `${PALETTE.surface}cc`, borderColor: `${PALETTE.steel}99`, color: PALETTE.mist }}
-              data-testid="button-quiz-exit"
-            >
-              <Compass className="w-4 h-4" />
-              Back to explore
-            </button>
-          )}
-        </div>
+  return (
+    <div className="h-full w-full flex items-center justify-center p-3 md:p-4" data-testid="brain-quiz-diagram">
+      <div className="relative max-h-full max-w-full">
+        <img
+          src={q.item.viewSrc}
+          alt={q.item.viewName}
+          className="block max-h-full max-w-full object-contain select-none"
+          draggable={false}
+          style={{ filter: IMG_FILTER, maxHeight: isMobile ? "38vh" : "100%" }}
+          data-testid="quiz-diagram"
+        />
+
+        {/* IDENTIFY: show only the target marker */}
+        {q.type === "identify" && (
+          <QuizMarker
+            x={q.item.x}
+            y={q.item.y}
+            variant={answered ? "correct" : "target"}
+            label={answered ? q.item.name : undefined}
+          />
+        )}
+
+        {/* FIND: show all sibling targets as clickable blanks */}
+        {q.type === "find" &&
+          q.options.map((opt) => {
+            let variant: "option" | "correct" | "wrong" | "muted" = "option";
+            let label: string | undefined;
+            if (answered) {
+              if (opt.id === q.item.id) {
+                variant = "correct";
+                label = q.item.name;
+              } else if (opt.id === picked) {
+                variant = "wrong";
+                label = opt.name;
+              } else {
+                variant = "muted";
+              }
+            }
+            return (
+              <QuizMarker
+                key={opt.id}
+                x={opt.x}
+                y={opt.y}
+                variant={variant}
+                label={label}
+                onClick={answered ? undefined : () => answer(opt.id)}
+              />
+            );
+          })}
       </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// BrainQuizPanel — the RIGHT half (the detail box): progress, the prompt, the
+// identify choices, the teaching reveal, and the feedback + Next control. Wraps
+// itself in the same surface as the "Pick a structure" empty state so it reads
+// as the same box.
+// ---------------------------------------------------------------------------
+function PanelSurface({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      className="rounded-2xl border h-full flex flex-col overflow-hidden"
+      style={{
+        background: `linear-gradient(180deg, ${PALETTE.surface}, ${PALETTE.bg})`,
+        borderColor: `${PALETTE.steel}99`,
+      }}
+      data-testid="brain-quiz"
+    >
+      {children}
+    </div>
+  );
+}
+
+export function BrainQuizPanel({
+  controller,
+  onExit,
+}: {
+  controller: BrainQuizController;
+  onExit?: () => void;
+}) {
+  const { round, q, idx, score, picked, done, answered, isLast, correctChosen, answer, next, restart } = controller;
+
+  if (!q && !done) {
+    return (
+      <PanelSurface>
+        <div className="flex-1 flex flex-col items-center justify-center gap-3 p-6 text-center">
+          <HelpCircle className="w-8 h-8" style={{ color: PALETTE.surf }} />
+          <p className="text-sm font-semibold text-white">Quiz unavailable</p>
+          <p className="text-xs" style={{ color: `${PALETTE.mist}99` }}>
+            No quizzable regions are loaded yet.
+          </p>
+        </div>
+      </PanelSurface>
     );
   }
 
-  const correctChosen = answered && picked === q.item.id;
+  if (done) {
+    const pct = Math.round((score / round.length) * 100);
+    const msg =
+      pct >= 90
+        ? "Outstanding recall."
+        : pct >= 70
+          ? "Strong work — keep going."
+          : pct >= 40
+            ? "Good start. Run it again to lock it in."
+            : "Review the Sections, then try again.";
+    return (
+      <PanelSurface>
+        <div className="flex-1 flex flex-col items-center justify-center gap-5 p-6 text-center" data-testid="quiz-done">
+          <div
+            className="w-20 h-20 rounded-2xl flex items-center justify-center"
+            style={{
+              background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
+              boxShadow: `0 0 40px -6px ${PALETTE.surf}`,
+            }}
+          >
+            <Trophy className="w-9 h-9" style={{ color: PALETTE.bg }} />
+          </div>
+          <div>
+            <p className="text-3xl font-light text-white" data-testid="quiz-score">
+              {score}
+              <span style={{ color: `${PALETTE.mist}99` }}> / {round.length}</span>
+            </p>
+            <p className="text-sm mt-1" style={{ color: PALETTE.surf }}>
+              {pct}% correct
+            </p>
+            <p className="text-xs mt-2 max-w-xs" style={{ color: `${PALETTE.mist}aa` }}>
+              {msg}
+            </p>
+          </div>
+          <div className="flex items-center gap-2 flex-wrap justify-center">
+            <button
+              onClick={restart}
+              className="px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2"
+              style={{ background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`, color: PALETTE.bg }}
+              data-testid="button-quiz-restart"
+            >
+              <RotateCcw className="w-4 h-4" />
+              New round
+            </button>
+            {onExit && (
+              <button
+                onClick={onExit}
+                className="px-4 py-2 rounded-xl text-sm font-medium border flex items-center gap-2"
+                style={{ background: `${PALETTE.surface}cc`, borderColor: `${PALETTE.steel}99`, color: PALETTE.mist }}
+                data-testid="button-quiz-exit"
+              >
+                <Compass className="w-4 h-4" />
+                Back to explore
+              </button>
+            )}
+          </div>
+        </div>
+      </PanelSurface>
+    );
+  }
+
+  if (!q) return null;
 
   return (
-    <div className="h-full w-full flex flex-col" data-testid="brain-quiz">
+    <PanelSurface>
       {/* Progress + score bar */}
-      <div className="flex-shrink-0 px-4 md:px-5 pt-3 pb-2">
+      <div className="flex-shrink-0 px-4 md:px-5 pt-4 pb-2">
         <div className="flex items-center justify-between mb-1.5">
           <span
             className="text-[11px] font-semibold uppercase tracking-wider flex items-center gap-1.5"
@@ -316,13 +472,13 @@ export default function BrainQuiz({
       </div>
 
       {/* Prompt */}
-      <div className="flex-shrink-0 px-4 md:px-5 pb-2 text-center">
-        <p className="text-sm md:text-base font-medium text-white" data-testid="quiz-prompt">
+      <div className="flex-shrink-0 px-4 md:px-5 pb-1">
+        <p className="text-base font-semibold text-white" data-testid="quiz-prompt">
           {q.type === "identify" ? (
             <>What is the highlighted region?</>
           ) : (
             <>
-              Click the <span style={{ color: PALETTE.surf, fontWeight: 700 }}>{q.item.name}</span>
+              Click the <span style={{ color: PALETTE.surf, fontWeight: 700 }}>{q.item.name}</span> on the brain
             </>
           )}
         </p>
@@ -331,62 +487,10 @@ export default function BrainQuiz({
         </p>
       </div>
 
-      {/* Diagram */}
-      <div className="flex-1 min-h-0 flex items-center justify-center p-3 md:p-4">
-        <div className="relative max-h-full max-w-full">
-          <img
-            src={q.item.viewSrc}
-            alt={q.item.viewName}
-            className="block max-h-full max-w-full object-contain select-none"
-            draggable={false}
-            style={{ filter: IMG_FILTER, maxHeight: isMobile ? "38vh" : "100%" }}
-            data-testid="quiz-diagram"
-          />
-
-          {/* IDENTIFY: show only the target marker */}
-          {q.type === "identify" && (
-            <QuizMarker
-              x={q.item.x}
-              y={q.item.y}
-              variant={answered ? "correct" : "target"}
-              label={answered ? q.item.name : undefined}
-            />
-          )}
-
-          {/* FIND: show all sibling targets as clickable blanks */}
-          {q.type === "find" &&
-            q.options.map((opt) => {
-              let variant: "option" | "correct" | "wrong" | "muted" = "option";
-              let label: string | undefined;
-              if (answered) {
-                if (opt.id === q.item.id) {
-                  variant = "correct";
-                  label = q.item.name;
-                } else if (opt.id === picked) {
-                  variant = "wrong";
-                  label = opt.name;
-                } else {
-                  variant = "muted";
-                }
-              }
-              return (
-                <QuizMarker
-                  key={opt.id}
-                  x={opt.x}
-                  y={opt.y}
-                  variant={variant}
-                  label={label}
-                  onClick={answered ? undefined : () => answer(opt.id)}
-                />
-              );
-            })}
-        </div>
-      </div>
-
-      {/* Answer area */}
-      <div className="flex-shrink-0 px-4 md:px-5 pb-4">
-        {q.type === "identify" && (
-          <div className="grid grid-cols-2 gap-2">
+      {/* Answer area (scrolls if tall) */}
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 md:px-5 py-2">
+        {q.type === "identify" ? (
+          <div className="grid grid-cols-1 gap-2">
             {q.options.map((opt) => {
               const isCorrect = opt.id === q.item.id;
               const isPicked = opt.id === picked;
@@ -421,6 +525,16 @@ export default function BrainQuiz({
               );
             })}
           </div>
+        ) : (
+          <div
+            className="rounded-xl px-3 py-2.5 flex items-start gap-2"
+            style={{ background: `${PALETTE.surf}10`, border: `1px solid ${PALETTE.surf}33` }}
+          >
+            <MousePointerClick className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: PALETTE.surf }} />
+            <p className="text-xs leading-snug" style={{ color: PALETTE.mist }}>
+              Click the marker on the brain to answer.
+            </p>
+          </div>
         )}
 
         {/* Teaching reveal — turns every answer into a micro-lesson */}
@@ -440,40 +554,68 @@ export default function BrainQuiz({
             </p>
           </div>
         )}
+      </div>
 
-        {/* Feedback + next */}
-        <div className="mt-3 flex items-center justify-between gap-3 min-h-[40px]">
-          <span
-            className="text-sm font-semibold flex items-center gap-1.5"
-            style={{ color: answered ? (correctChosen ? "#34D399" : "#F87171") : "transparent" }}
-            data-testid="quiz-feedback"
-          >
-            {answered &&
-              (correctChosen ? (
-                <>
-                  <Check className="w-4 h-4" /> Correct
-                </>
-              ) : (
-                <>
-                  <X className="w-4 h-4" /> It's the {q.item.name}
-                </>
-              ))}
-          </span>
-          <button
-            onClick={next}
-            disabled={!answered}
-            className="px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all"
-            style={{
-              background: answered ? `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})` : `${PALETTE.steel}66`,
-              color: answered ? PALETTE.bg : `${PALETTE.mist}66`,
-              cursor: answered ? "pointer" : "not-allowed",
-            }}
-            data-testid="button-quiz-next"
-          >
-            {isLast ? "Finish" : "Next"}
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </div>
+      {/* Feedback + next */}
+      <div
+        className="flex-shrink-0 px-4 md:px-5 py-3 border-t flex items-center justify-between gap-3 min-h-[56px]"
+        style={{ borderColor: `${PALETTE.steel}55` }}
+      >
+        <span
+          className="text-sm font-semibold flex items-center gap-1.5"
+          style={{ color: answered ? (correctChosen ? "#34D399" : "#F87171") : "transparent" }}
+          data-testid="quiz-feedback"
+        >
+          {answered &&
+            (correctChosen ? (
+              <>
+                <Check className="w-4 h-4" /> Correct
+              </>
+            ) : (
+              <>
+                <X className="w-4 h-4" /> It's the {q.item.name}
+              </>
+            ))}
+        </span>
+        <button
+          onClick={next}
+          disabled={!answered}
+          className="px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all"
+          style={{
+            background: answered ? `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})` : `${PALETTE.steel}66`,
+            color: answered ? PALETTE.bg : `${PALETTE.mist}66`,
+            cursor: answered ? "pointer" : "not-allowed",
+          }}
+          data-testid="button-quiz-next"
+        >
+          {isLast ? "Finish" : "Next"}
+          <ArrowRight className="w-4 h-4" />
+        </button>
+      </div>
+    </PanelSurface>
+  );
+}
+
+// Composite (stacked) quiz — diagram on top, panel below. Kept for any caller
+// that wants the quiz in a single column; Brain Lab now renders the two halves
+// split across its two panes via the named exports above.
+export default function BrainQuiz({
+  items,
+  isMobile,
+  onExit,
+}: {
+  items: QuizItem[];
+  isMobile?: boolean;
+  onExit?: () => void;
+}) {
+  const controller = useBrainQuiz(items);
+  return (
+    <div className="h-full w-full flex flex-col gap-3" data-testid="brain-quiz-stacked">
+      <div className="flex-1 min-h-0">
+        <BrainQuizDiagram controller={controller} isMobile={isMobile} />
+      </div>
+      <div className="flex-shrink-0">
+        <BrainQuizPanel controller={controller} onExit={onExit} />
       </div>
     </div>
   );
