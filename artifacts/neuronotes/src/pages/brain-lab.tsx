@@ -165,7 +165,7 @@ function StructureSearch({
 
   const matches = useMemo(() => {
     const term = q.trim().toLowerCase();
-    if (!term) return BRAIN_STRUCTURES.slice(0, 12);
+    if (!term) return [];
     return BRAIN_STRUCTURES.filter(
       (s) =>
         s.name.toLowerCase().includes(term) ||
@@ -253,7 +253,12 @@ function StructureSearch({
               </li>
             );
           })}
-          {matches.length === 0 && (
+          {matches.length === 0 && q.trim() === "" && (
+            <li className="px-4 py-6 text-center text-sm" style={{ color: `${PALETTE.mist}88` }}>
+              Start typing to search structures, functions, or conditions…
+            </li>
+          )}
+          {matches.length === 0 && q.trim() !== "" && (
             <li className="px-4 py-6 text-center text-sm" style={{ color: `${PALETTE.mist}88` }}>
               No structures match "{q}"
             </li>
