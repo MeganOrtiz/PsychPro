@@ -21,7 +21,6 @@ import {
 } from "@workspace/api-client-react";
 import { groupEpppTopicsByCategory, isEpppKnowledgeTopic } from "@/lib/eppp-content";
 import { epppDomainAnchor, epppMasteryExamPath, epppTopicPath } from "@/lib/eppp-routes";
-import dashboardBrain from "@/assets/hero/dashboard-lateral-brain.png";
 
 // ---------------------------------------------------------------------------
 // EPPP Mastery Suite dashboard — the working "how ready am I" home for the
@@ -188,13 +187,6 @@ export function EpppDashboardView({
       <style>{styles}</style>
 
       <div className="epd-shell">
-        {/* Header */}
-        <header className="epd-head">
-          <img className="epd-head-img" src={dashboardBrain} alt="" />
-          <div className="epd-head-shade" aria-hidden />
-          <h1 className="epd-title">EPPP Mastery Suite</h1>
-        </header>
-
         {/* Stat row: readiness · streak · exam countdown */}
         <section className="epd-stat-row">
           {/* Readiness */}

@@ -60,7 +60,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { StudySurface } from "@/components/study/study-surface";
 import TodayReviews from "@/components/learning/today-reviews";
-import { DashboardHeader } from "@/components/brand/dashboard-header";
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
 import { isEpppTopic } from "@/lib/eppp-content";
 import {
@@ -142,47 +141,6 @@ export default function DashboardPage() {
     summary !== undefined &&
     !isOverLimit &&
     summary.usageCount >= Math.ceil(summary.freeLimit * 0.8);
-
-  // Personalized greeting — pulls from /api/profile/me (same source the
-  // sidebar uses). While loading we pass greeting={undefined} so the banner
-  // shows only the wordmark + tagline (never a placeholder name).
-  const [profileDisplayName, setProfileDisplayName] = useState<string | null>(null);
-  const [isProfileLoading, setIsProfileLoading] = useState(true);
-  useEffect(() => {
-    let cancelled = false;
-    async function load() {
-      try {
-        const res = await fetch("/api/profile/me", {
-          headers: await authHeaders(),
-        });
-        if (!res.ok) {
-          if (!cancelled) setIsProfileLoading(false);
-          return;
-        }
-        const data = await res.json();
-        if (cancelled) return;
-        setProfileDisplayName(
-          typeof data?.displayName === "string" ? data.displayName : null,
-        );
-      } catch {
-        /* silent — greeting falls back to "Welcome back." */
-      } finally {
-        if (!cancelled) setIsProfileLoading(false);
-      }
-    }
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const greetingText = (() => {
-    if (isProfileLoading) return undefined;
-    const trimmed = (profileDisplayName ?? "").trim();
-    if (!trimmed) return "Welcome back.";
-    const firstName = trimmed.split(/\s+/)[0];
-    return `Welcome back, ${firstName}.`;
-  })();
 
   const recent = (summary?.recentTopics ?? []) as RecentTopic[];
   const weak = (summary?.weakAreas ?? []) as RecentTopic[];
@@ -296,10 +254,7 @@ export default function DashboardPage() {
       className="min-h-full study-page-bg"
       data-testid="dashboard-page"
     >
-      <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 pt-0 pb-4 md:pb-6 lg:pb-8">
-        {/* Top header — clear product title for the main PsychPro dashboard. */}
-        <DashboardHeader greeting={greetingText} />
-
+      <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 lg:pt-8 pb-4 md:pb-6 lg:pb-8">
         {isOverLimit && (
           <div
             className="rounded-xl p-4 mb-6 flex items-start gap-3 border"
