@@ -62,6 +62,7 @@ import { StudySurface } from "@/components/study/study-surface";
 import TodayReviews from "@/components/learning/today-reviews";
 import { DashboardHeader } from "@/components/brand/dashboard-header";
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
+import { isEpppTopic } from "@/lib/eppp-content";
 import {
   ResponsiveContainer,
   LineChart,
@@ -185,6 +186,22 @@ export default function DashboardPage() {
 
   const recent = (summary?.recentTopics ?? []) as RecentTopic[];
   const weak = (summary?.weakAreas ?? []) as RecentTopic[];
+  const mainTopics = useMemo(
+    () => (allTopics ?? []).filter((topic) => !isEpppTopic(topic)),
+    [allTopics],
+  );
+  const mainTopicIds = useMemo(
+    () => new Set(mainTopics.map((topic) => topic.id)),
+    [mainTopics],
+  );
+  const mainRecent = useMemo(
+    () => recent.filter((topic) => mainTopicIds.has(topic.topicId)),
+    [recent, mainTopicIds],
+  );
+  const mainWeak = useMemo(
+    () => weak.filter((topic) => mainTopicIds.has(topic.topicId)),
+    [weak, mainTopicIds],
+  );
 
   const streak = summary?.currentStreak ?? 0;
   const weeklyFlames = useMemo(() => {
@@ -199,20 +216,20 @@ export default function DashboardPage() {
       };
     });
   }, [summary?.weeklyActivity]);
-  const activitySeries = useMemo(() => buildActivitySeries(recent), [recent]);
+  const activitySeries = useMemo(() => buildActivitySeries(mainRecent), [mainRecent]);
 
   // Pick the first recent topic that isn't fully mastered; fall back to the
   // most-recent entry so returning students always see something to resume.
-  const continueTopic = recent.find((r) => r.score < 100) ?? recent[0];
+  const continueTopic = mainRecent.find((r) => r.score < 100) ?? mainRecent[0];
 
   // Achievements are derived entirely client-side from stats the dashboard
   // already has (streak, topics studied, mastery count, average score) — no
   // new backend. Each badge is "earned" once its threshold is crossed.
   const achievements = useMemo(() => {
-    const topicsStudied = recent.length;
-    const mastered = recent.filter((r) => r.score >= 80).length;
+    const topicsStudied = mainRecent.length;
+    const mastered = mainRecent.filter((r) => r.score >= 80).length;
     const avgScore = topicsStudied
-      ? Math.round(recent.reduce((sum, r) => sum + r.score, 0) / topicsStudied)
+      ? Math.round(mainRecent.reduce((sum, r) => sum + r.score, 0) / topicsStudied)
       : 0;
     return [
       {
@@ -240,13 +257,13 @@ export default function DashboardPage() {
         earned: avgScore >= 80,
       },
     ];
-  }, [recent, streak]);
+  }, [mainRecent, streak]);
 
   const courseCategories = useMemo(() => {
     const set = new Set<string>();
-    (allTopics ?? []).forEach((t) => set.add(t.category || "Other"));
+    mainTopics.forEach((t) => set.add(t.category || "Other"));
     return Array.from(set).sort((a, b) => a.localeCompare(b));
-  }, [allTopics]);
+  }, [mainTopics]);
 
   const recommended = useMemo(() => {
     const seen = new Set<number>();
@@ -256,23 +273,23 @@ export default function DashboardPage() {
       seen.add(t.topicId);
       out.push(t);
     };
-    const hasHistory = recent.length > 0 || weak.length > 0;
+    const hasHistory = mainRecent.length > 0 || mainWeak.length > 0;
     if (hasHistory) {
-      weak.forEach(push);
-      recent.filter((r) => r.score < 80).forEach(push);
+      mainWeak.forEach(push);
+      mainRecent.filter((r) => r.score < 80).forEach(push);
     }
     // For brand-new users (no history), recommend alphabetically-sorted starter
     // topics so we don't accidentally fall through to the empty state when we
     // actually have a full catalogue to show.
-    const catalogue = [...(allTopics ?? [])].sort((a, b) =>
+    const catalogue = [...mainTopics].sort((a, b) =>
       a.name.localeCompare(b.name)
     );
     catalogue.forEach((t) => {
       push({ id: t.id, topicId: t.id, topicName: t.name, score: 0, lastAccessed: null });
     });
-    recent.forEach(push);
+    mainRecent.forEach(push);
     return out;
-  }, [weak, recent, allTopics]);
+  }, [mainWeak, mainRecent, mainTopics]);
 
   return (
     <div
@@ -641,13 +658,13 @@ export default function DashboardPage() {
                 <Skeleton className="h-9 rounded-lg" />
                 <Skeleton className="h-9 rounded-lg" />
               </div>
-            ) : recent.length === 0 ? (
+            ) : mainRecent.length === 0 ? (
               <p className="text-xs" style={{ color: PALETTE.mistSoft }}>
                 Study a topic and it'll show up here so you can pick up where you left off.
               </p>
             ) : (
               <ul className="space-y-2">
-                {recent.slice(0, 5).map((r) => (
+                {mainRecent.slice(0, 5).map((r) => (
                   <li key={r.id}>
                     <button
                       onClick={() => navigate(`/topics/${r.topicId}`)}
@@ -726,7 +743,7 @@ export default function DashboardPage() {
           </StudySurface>
 
           {/* Today's Reviews — due spaced-repetition queue (own glass surface) */}
-          <TodayReviews topics={allTopics} />
+          <TodayReviews topics={mainTopics} />
         </div>
 
         {/* Course Mastery — full-width capstone row, below all other boxes. One

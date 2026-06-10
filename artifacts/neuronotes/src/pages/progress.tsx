@@ -22,6 +22,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { STUDY_PALETTE } from "@/lib/study-theme";
 import { PageTitle } from "@/components/brand/page-title";
+import { isEpppTopic } from "@/lib/eppp-content";
 
 // B-9: shared score thresholds. Centralized so the strong/weak split, the
 // per-topic icon color, and the score-badge color tier never disagree.
@@ -55,9 +56,22 @@ export default function ProgressPage() {
 
   const isLoading = progressLoading || topicsLoading;
 
-  const progressMap = new Map((progress ?? []).map(p => [p.topicId, p]));
+  const mainTopics = useMemo(
+    () => (topics ?? []).filter((topic) => !isEpppTopic(topic)),
+    [topics],
+  );
+  const mainTopicIds = useMemo(
+    () => new Set(mainTopics.map((topic) => topic.id)),
+    [mainTopics],
+  );
+  const mainProgress = useMemo(
+    () => (progress ?? []).filter((p) => mainTopicIds.has(p.topicId)),
+    [progress, mainTopicIds],
+  );
 
-  const topicsWithProgress = (topics ?? []).map(t => ({
+  const progressMap = new Map(mainProgress.map(p => [p.topicId, p]));
+
+  const topicsWithProgress = mainTopics.map(t => ({
     ...t,
     progress: progressMap.get(t.id) ?? null,
   }));
@@ -80,7 +94,7 @@ export default function ProgressPage() {
     .sort((a, b) => (a.progress?.score ?? 0) - (b.progress?.score ?? 0));
 
   const categories = Array.from(
-    new Set((topics ?? []).map(t => t.category)),
+    new Set(mainTopics.map(t => t.category)),
   ).filter(Boolean);
 
   // P-2: 14-day activity trend bucketed by day. Each bucket's avgScore is
@@ -95,7 +109,7 @@ export default function ProgressPage() {
     };
     const todayStart = startOfDay(now).getTime();
     const buckets = new Map<number, number[]>();
-    for (const p of progress ?? []) {
+    for (const p of mainProgress) {
       if (!p.lastAccessed) continue;
       const t = new Date(p.lastAccessed).getTime();
       const bucketStart = startOfDay(new Date(t)).getTime();
@@ -116,7 +130,7 @@ export default function ProgressPage() {
       days.push({ day: label, avgScore: avg });
     }
     return days;
-  }, [progress]);
+  }, [mainProgress]);
 
   const filteredCatTopics = (
     catTopics: typeof topicsWithProgress,
