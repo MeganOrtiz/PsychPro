@@ -93,6 +93,7 @@ type TabSlug =
   | "study-plan"
   | "domains"
   | "part-2-skills"
+  | "clinical-cases"
   | "domain-mastery-exams"
   | "full-length-exams"
   | "missed-questions"
@@ -113,6 +114,7 @@ const TABS: TabDef[] = [
   { slug: "performance-analytics", label: "Dashboard", icon: BarChart3, section: "Overview" },
   { slug: "domains", label: "Part 1: Knowledge", icon: Layers, section: "Learn" },
   { slug: "part-2-skills", label: "Part 2: Skills", icon: Brain, section: "Learn" },
+  { slug: "clinical-cases", label: "Clinical Integrated Cases", icon: Stethoscope, section: "Learn" },
   { slug: "domain-mastery-exams", label: "Domain Mastery Exams", icon: GraduationCap, section: "Assess" },
   { slug: "full-length-exams", label: "Full-Length Exams", icon: ClipboardCheck, section: "Assess" },
   { slug: "missed-questions", label: "Missed Questions", icon: XCircle, section: "Review" },
@@ -123,18 +125,12 @@ const TABS: TabDef[] = [
 
 const DEFAULT_TAB: TabSlug = "performance-analytics";
 
-// Question Bank and Clinical Integration Cases reach Part 1 via legacy
-// deep-links. Question Bank is retired as a sub-tab (it now opens the Knowledge
-// rail); Clinical Cases keeps its own sub-tab. Rapid Review / Quick Reference
-// Guides are now a dedicated top-level tab, not a Part 1 sub-tab.
+// Question Bank reaches Part 1 via a legacy deep-link (it was retired as a
+// sub-tab and now opens the Knowledge rail). Clinical Integration Cases is now
+// its own top-level tab ("clinical-cases"), and Rapid Review / Quick Reference
+// Guides are a dedicated top-level tab too — neither is a Part 1 sub-tab.
 const MOVED_INTO_PART1: Record<string, TabSlug> = {
   "question-bank": "domains",
-  "clinical-cases": "domains",
-};
-
-// When arriving via a legacy deep-link, open the matching Part 1 sub-tab.
-const MOVED_INTO_PART1_SUB: Record<string, Part1SubKey> = {
-  "clinical-cases": "clinical-cases",
 };
 
 // Reuse the main-app sidebar pill recipe (classes defined in index.css).
@@ -232,7 +228,6 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
   const activeSlug: TabSlug = TABS.some((t) => t.slug === requestedTab)
     ? (requestedTab as TabSlug)
     : DEFAULT_TAB;
-  const part1Sub = tab ? MOVED_INTO_PART1_SUB[tab] : undefined;
 
   return (
     <div className="study-page-bg flex min-h-screen" data-testid="eppp-suite">
@@ -367,12 +362,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
         </header>
 
         <main className="flex-1 overflow-y-auto" data-testid="eppp-suite-content">
-          <SuiteContent
-            slug={activeSlug}
-            rawTab={tab}
-            part1Sub={part1Sub}
-            onNavigate={navigate}
-          />
+          <SuiteContent slug={activeSlug} onNavigate={navigate} />
         </main>
       </div>
     </div>
@@ -384,13 +374,9 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
 // ===========================================================================
 function SuiteContent({
   slug,
-  rawTab,
-  part1Sub,
   onNavigate,
 }: {
   slug: TabSlug;
-  rawTab?: string;
-  part1Sub?: Part1SubKey;
   onNavigate: (to: string) => void;
 }) {
   switch (slug) {
@@ -399,15 +385,11 @@ function SuiteContent({
     case "resources":
       return <EpppResourcesPanel />;
     case "domains":
-      return (
-        <Part1Panel
-          key={rawTab ?? "domains"}
-          initialSub={part1Sub}
-          onNavigate={onNavigate}
-        />
-      );
+      return <Part1Panel onNavigate={onNavigate} />;
     case "part-2-skills":
       return <Part2SkillsPanel onNavigate={onNavigate} />;
+    case "clinical-cases":
+      return <ClinicalCasesPanel onNavigate={onNavigate} />;
     case "domain-mastery-exams":
       return <DomainMasteryExamsPanel onNavigate={onNavigate} />;
     case "rapid-review":
@@ -889,74 +871,33 @@ function ClinicalCasesBody({ onNavigate }: { onNavigate: (to: string) => void })
   );
 }
 
-// ---- Part 1 shell with sub-tabs -------------------------------------------
-type Part1SubKey = "knowledge" | "clinical-cases";
-
-const PART1_SUBTABS: {
-  key: Part1SubKey;
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-  eyebrow: string;
-  title: string;
-  subtitle: string;
-}[] = [
-  {
-    key: "knowledge",
-    label: "Knowledge",
-    icon: Layers,
-    eyebrow: "CONTENT AREAS",
-    title: "Knowledge",
-    subtitle:
-      "Your progress across every EPPP content area. Open a domain to work through its lessons — each lesson has flashcards, a quiz, a study guide, and a practice exam.",
-  },
-  {
-    key: "clinical-cases",
-    label: "Clinical Cases",
-    icon: Stethoscope,
-    eyebrow: "APPLY",
-    title: "Clinical Integration Cases",
-    subtitle:
-      "Realistic clinical scenarios that put core EPPP concepts into practice. Work the case, then answer the integrated questions to test your reasoning.",
-  },
-];
-
-function Part1Panel({
-  initialSub,
-  onNavigate,
-}: {
-  initialSub?: Part1SubKey;
-  onNavigate: (to: string) => void;
-}) {
-  const [sub, setSub] = useState<Part1SubKey>(initialSub ?? "knowledge");
-  const meta = PART1_SUBTABS.find((t) => t.key === sub) ?? PART1_SUBTABS[0];
-
+// ---- Part 1 shell (Knowledge only — Clinical Cases is its own top-level tab)
+function Part1Panel({ onNavigate }: { onNavigate: (to: string) => void }) {
   return (
     <div className="study-page-bg eps-panel" data-testid="eppp-panel-domains">
       <div className="eps-shell">
-        <PanelHead eyebrow={meta.eyebrow} title={meta.title} subtitle={meta.subtitle} />
+        <PanelHead
+          eyebrow="CONTENT AREAS"
+          title="Knowledge"
+          subtitle="Your progress across every EPPP content area. Open a domain to work through its lessons — each lesson has flashcards, a quiz, a study guide, and a practice exam."
+        />
+        <KnowledgeBody onNavigate={onNavigate} />
+      </div>
+    </div>
+  );
+}
 
-        <div className="eps-subtabs" role="tablist" aria-label="Part 1 sections">
-          {PART1_SUBTABS.map((t) => {
-            const isActive = t.key === sub;
-            return (
-              <button
-                key={t.key}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                className={cn("eps-subtab", isActive && "is-active")}
-                onClick={() => setSub(t.key)}
-                data-testid={`eppp-part1-subtab-${t.key}`}
-              >
-                <t.icon aria-hidden />
-                <span>{t.label}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {sub === "knowledge" && <KnowledgeBody onNavigate={onNavigate} />}
-        {sub === "clinical-cases" && <ClinicalCasesBody onNavigate={onNavigate} />}
+// ---- Clinical Integration Cases (top-level tab) ---------------------------
+function ClinicalCasesPanel({ onNavigate }: { onNavigate: (to: string) => void }) {
+  return (
+    <div className="study-page-bg eps-panel" data-testid="eppp-panel-clinical-cases">
+      <div className="eps-shell">
+        <PanelHead
+          eyebrow="APPLY"
+          title="Clinical Integration Cases"
+          subtitle="Realistic clinical scenarios that put core EPPP concepts into practice. Work the case, then answer the integrated questions to test your reasoning."
+        />
+        <ClinicalCasesBody onNavigate={onNavigate} />
       </div>
     </div>
   );
