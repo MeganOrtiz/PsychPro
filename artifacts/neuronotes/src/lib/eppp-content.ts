@@ -133,6 +133,23 @@ export function groupEpppRapidReview<T extends EpppTopicLike>(topics: T[]) {
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
+// Full-Length Exams are uploaded as topics whose category embeds this phrase
+// (e.g. "EPPP Part 1: Full-Length Exams", "EPPP Part 2: Full-Length Exams").
+// They must surface ONLY in the dedicated Full-Length Exams tab — never in
+// Part 1 domains, Part 2 skills, Question Bank, Flashcards, or Domain Mastery
+// Exams — even though they remain EPPP content (kept out of the main site).
+const EPPP_FULL_LENGTH_EXAM_MARKER = "full-length exam";
+
+export function isEpppFullLengthExam(topic: EpppTopicLike): boolean {
+  const category = normalized(topic.category);
+  // Match both the hyphenated convention and an un-hyphenated fallback so an
+  // incidental authoring variation cannot leak the exam back into a domain.
+  return (
+    category.includes(EPPP_FULL_LENGTH_EXAM_MARKER) ||
+    category.includes("full length exam")
+  );
+}
+
 function normalized(value: string | undefined): string {
   return (value ?? "").toLowerCase().replace(/\s+/g, " ").trim();
 }
@@ -145,9 +162,14 @@ export function getEpppExamPart(topic: EpppTopicLike): EpppExamPart | null {
     return null;
   }
 
-  // Clinical integration cases and rapid review sheets belong only to their own
-  // tabs, so they are never classified as Part 1 or Part 2 content.
-  if (isEpppClinicalCase(topic) || isEpppRapidReview(topic)) {
+  // Clinical integration cases, rapid review sheets, and full-length exams
+  // belong only to their own tabs, so they are never classified as Part 1 or
+  // Part 2 content.
+  if (
+    isEpppClinicalCase(topic) ||
+    isEpppRapidReview(topic) ||
+    isEpppFullLengthExam(topic)
+  ) {
     return null;
   }
 
@@ -239,7 +261,11 @@ export function isEpppTopic(topic: EpppTopicLike): boolean {
 export function groupEpppTopicsByCategory<T extends EpppTopicLike>(topics: T[]) {
   const byCategory = new Map<string, T[]>();
   for (const topic of topics.filter(
-    (t) => isEpppTopic(t) && !isEpppClinicalCase(t) && !isEpppRapidReview(t),
+    (t) =>
+      isEpppTopic(t) &&
+      !isEpppClinicalCase(t) &&
+      !isEpppRapidReview(t) &&
+      !isEpppFullLengthExam(t),
   )) {
     const category = getEpppDisplayCategory(topic);
     const existing = byCategory.get(category) ?? [];
