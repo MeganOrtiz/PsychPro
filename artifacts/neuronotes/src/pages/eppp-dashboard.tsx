@@ -287,7 +287,7 @@ export function EpppDashboardView({
 
         {/* Domain progress */}
         <section className="epd-section" data-testid="eppp-domain-progress">
-          <div className="epd-section-head">
+          <div className="epd-section-head epd-section-head--hero">
             <div>
               <p className="epd-section-eyebrow">CONTENT AREAS</p>
               <h2 className="epd-section-title">Progress by domain</h2>
@@ -748,6 +748,25 @@ const styles = `
   justify-content: space-between;
   gap: 16px;
   margin-bottom: clamp(14px, 2vw, 20px);
+}
+.epd-section-head--hero {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+}
+.epd-section-head--hero .epd-section-eyebrow {
+  color: #76e4f7;
+  text-shadow: 0 0 14px rgba(118, 228, 247, 0.55);
+}
+.epd-section-head--hero .epd-section-title {
+  font-size: clamp(24px, 3vw, 34px);
+  color: #ffffff;
+  text-shadow: 0 0 22px rgba(118, 228, 247, 0.45);
+}
+.epd-section-head--hero .epd-section-meta {
+  color: #bff4ff;
 }
 .epd-section-eyebrow {
   margin: 0 0 6px;
