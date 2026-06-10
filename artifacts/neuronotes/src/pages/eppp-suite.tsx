@@ -1079,7 +1079,7 @@ function FullLengthExamsPanel({ onNavigate }: { onNavigate: (to: string) => void
               </span>
             </div>
             <button
-              className="eps-fl-cta"
+              className="eps-fl-cta btn-glass-strong"
               onClick={() => onNavigate(`${epppTopicModePath(exam.id, "exam")}?full=1`)}
               data-testid={`eppp-full-length-start-${part}`}
             >
@@ -1858,14 +1858,14 @@ const styles = `
 
 /* ---- Full-Length Exams ---- */
 .eps-fl-card {
-  border-radius: 18px; padding: clamp(20px, 2.6vw, 30px);
+  border-radius: 18px; padding: clamp(20px, 2.6vw, 30px); text-align: center;
   background:
-    radial-gradient(circle at 18% 12%, ${C.cyan}1f, transparent 38%),
-    linear-gradient(145deg, rgba(10,45,61,0.55), rgba(6,28,40,0.72));
-  border: 1px solid ${C.hairlineStrong};
-  box-shadow: 0 24px 80px -52px rgba(0,0,0,0.8), inset 0 0 42px rgba(118,228,247,0.04);
+    radial-gradient(circle at 50% 0%, ${C.cyan}26, transparent 46%),
+    linear-gradient(160deg, rgba(9,34,47,0.9), rgba(4,17,26,0.95));
+  border: 1px solid rgba(118,228,247,0.3);
+  box-shadow: 0 24px 80px -50px rgba(0,0,0,0.85), inset 0 0 46px rgba(118,228,247,0.05);
 }
-.eps-fl-head { display: flex; align-items: center; gap: 16px; }
+.eps-fl-head { display: flex; align-items: center; justify-content: center; gap: 16px; }
 .eps-fl-icon {
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
   width: 52px; height: 52px; border-radius: 14px;
@@ -1875,20 +1875,17 @@ const styles = `
 .eps-fl-icon svg { width: 26px; height: 26px; }
 .eps-fl-head-text { min-width: 0; }
 .eps-fl-title { margin: 0; font-size: clamp(18px, 2.2vw, 23px); font-weight: 700; color: ${C.cloud}; }
-.eps-fl-meta { margin: 4px 0 0; font-size: 13.5px; color: ${C.body}; }
-.eps-fl-features { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 24px; }
+.eps-fl-meta { margin: 4px 0 0; font-size: 14px; color: ${C.mist}; }
+.eps-fl-features { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 20px 0 24px; }
 .eps-fl-feature {
   display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 600;
-  color: ${C.mist}; padding: 7px 12px; border-radius: 999px;
-  background: rgba(118,228,247,0.08); border: 1px solid ${C.hairline};
+  color: ${C.cloud}; padding: 7px 12px; border-radius: 999px;
+  background: rgba(118,228,247,0.14); border: 1px solid rgba(118,228,247,0.3);
 }
 .eps-fl-feature svg { width: 14px; height: 14px; }
 .eps-fl-cta {
   display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
-  padding: 12px 22px; border-radius: 12px; font-size: 14px; font-weight: 700;
-  color: ${C.ink}; border: 1px solid rgba(167,243,255,0.65);
-  background: linear-gradient(135deg, ${C.mist} 0%, ${C.cyan} 48%, #38BDF8 100%);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 0 26px -6px ${C.cyan}cc;
+  padding: 12px 22px; font-size: 14px; font-weight: 700;
   transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
 .eps-fl-cta svg { width: 16px; height: 16px; transition: transform 0.2s ease; }
