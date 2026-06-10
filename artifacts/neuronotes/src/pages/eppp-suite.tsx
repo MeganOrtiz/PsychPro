@@ -37,6 +37,7 @@ import { NotificationsBell } from "@/components/notifications-bell";
 import { cn } from "@/lib/utils";
 import {
   groupEpppClinicalCases,
+  groupEpppRapidReview,
   groupEpppTopicsByCategory,
   isEpppKnowledgeTopic,
   isEpppPart2Topic,
@@ -427,7 +428,7 @@ function SuiteContent({
         />
       );
     case "rapid-review":
-      return <RapidReviewPanel />;
+      return <RapidReviewPanel onNavigate={onNavigate} />;
     default:
       return <EpppDashboardPage />;
   }
@@ -794,27 +795,7 @@ function Part2SkillsPanel({ onNavigate }: { onNavigate: (to: string) => void }) 
   );
 }
 
-// ---- Clinical cases + rapid review foundations ---------------------------
-const PART1_KNOWLEDGE_DOMAINS = [
-  "Biological Bases of Behavior",
-  "Cognitive-Affective Bases of Behavior",
-  "Social and Cultural Bases of Behavior",
-  "Growth and Lifespan Development",
-  "Assessment and Diagnosis",
-  "Treatment, Intervention, Prevention, and Supervision",
-  "Research Methods and Statistics",
-  "Ethical, Legal, and Professional Issues",
-];
-
-const PART2_SKILL_PHASES = [
-  "Assessment and Intervention Skills",
-  "Consultation and Supervision Skills",
-  "Scientific Thinking and Evidence Use",
-  "Professional Ethics and Legal Decision-Making",
-  "Communication, Relationships, and Diversity",
-  "Clinical Reasoning and Applied Judgment",
-];
-
+// ---- Clinical cases + rapid review ----------------------------------------
 function ClinicalCasesPanel({ onNavigate }: { onNavigate: (to: string) => void }) {
   const { data: allTopics, isLoading } = useGetTopics();
 
@@ -883,100 +864,62 @@ function ClinicalCasesPanel({ onNavigate }: { onNavigate: (to: string) => void }
   );
 }
 
-function RapidReviewPanel() {
-  return (
-    <ContentCreationPanel
-      eyebrow="REINFORCE"
-      title="Rapid Review"
-      icon={Zap}
-      part1Title="Part 1 review first"
-      part1Description="Create concise recall sheets and final-pass review prompts for each Part 1 knowledge domain before adding Part 2 applied review."
-      part1Items={PART1_KNOWLEDGE_DOMAINS}
-      part2Title="Part 2 review next"
-      part2Description="Then create applied review drills for clinical reasoning, decision-making, supervision, consultation, ethics, and diversity-centered practice."
-      part2Items={PART2_SKILL_PHASES}
-      contractLines={[
-        "Keep Rapid Review separate from full chapters and flashcards.",
-        "Use concise bullets, traps, compare/contrast frames, and quick retrieval prompts.",
-        "Tag each review asset as Part 1 or Part 2 before upload.",
-      ]}
-    />
-  );
-}
+function RapidReviewPanel({ onNavigate }: { onNavigate: (to: string) => void }) {
+  const { data: allTopics, isLoading } = useGetTopics();
 
-function ContentCreationPanel({
-  eyebrow,
-  title,
-  icon: Icon,
-  part1Title,
-  part1Description,
-  part1Items,
-  part2Title,
-  part2Description,
-  part2Items,
-  contractLines,
-}: {
-  eyebrow: string;
-  title: string;
-  icon: React.ComponentType<{ className?: string }>;
-  part1Title: string;
-  part1Description: string;
-  part1Items: string[];
-  part2Title: string;
-  part2Description: string;
-  part2Items: string[];
-  contractLines: string[];
-}) {
+  const grouped = useMemo(() => {
+    return groupEpppRapidReview((allTopics ?? []) as Topic[]).map(
+      (group) => [group.name, group.items] as const,
+    );
+  }, [allTopics]);
+
   return (
-    <div className="study-page-bg eps-panel" data-testid={`eppp-panel-${title.toLowerCase().replace(/\s+/g, "-")}`}>
+    <div className="study-page-bg eps-panel" data-testid="eppp-panel-rapid-review">
       <div className="eps-shell">
         <PanelHead
-          eyebrow={eyebrow}
-          title={title}
-          subtitle="This section is ready to be built in sequence: Part 1 first, then Part 2. Content loaded here stays inside the EPPP Mastery Suite."
+          eyebrow="REINFORCE"
+          title="Rapid Review"
+          subtitle="Concise, final-pass recall sheets for every domain. Skim the high-yield points, traps, and compare/contrast frames in the last stretch before exam day."
         />
 
-        <div className="eps-build-grid">
-          <section className="eps-build-card is-active">
-            <div className="eps-build-kicker">
-              <Icon aria-hidden />
-              <span>Build now</span>
-            </div>
-            <h2>{part1Title}</h2>
-            <p>{part1Description}</p>
-            <div className="eps-build-list">
-              {part1Items.map((item) => (
-                <span key={item}>{item}</span>
-              ))}
-            </div>
-          </section>
-
-          <section className="eps-build-card">
-            <div className="eps-build-kicker">
-              <Brain aria-hidden />
-              <span>Build second</span>
-            </div>
-            <h2>{part2Title}</h2>
-            <p>{part2Description}</p>
-            <div className="eps-build-list">
-              {part2Items.map((item) => (
-                <span key={item}>{item}</span>
-              ))}
-            </div>
-          </section>
-        </div>
-
-        <section className="eps-contract-card">
-          <span className="eps-soon-pill">
-            <Sparkles aria-hidden /> Upload contract
-          </span>
-          <h2>Claude should create Part 1 content for this section first</h2>
-          <ul>
-            {contractLines.map((line) => (
-              <li key={line}>{line}</li>
+        {isLoading ? (
+          <div className="eps-empty">Loading review sheets…</div>
+        ) : grouped.length === 0 ? (
+          <div className="eps-empty">No rapid review sheets are available yet.</div>
+        ) : (
+          <div className="eps-groups">
+            {grouped.map(([domain, sheets]) => (
+              <section key={domain} className="eps-group">
+                <div className="eps-group-head">
+                  <Zap className="eps-group-icon" aria-hidden />
+                  <h2 className="eps-group-title">{domain}</h2>
+                  <span className="eps-group-count">{sheets.length} sheets</span>
+                </div>
+                <div className="eps-topic-grid">
+                  {sheets.map((t) => (
+                    <button
+                      key={t.id}
+                      className="eps-topic"
+                      onClick={() => onNavigate(epppTopicModePath(t.id, "study-guide"))}
+                      data-testid={`eppp-rapid-review-${t.id}`}
+                    >
+                      <span className="eps-topic-icon">
+                        <Zap aria-hidden />
+                      </span>
+                      <span className="eps-topic-body">
+                        <span className="eps-topic-name">{t.name}</span>
+                        <span className="eps-topic-meta">Final-pass review sheet</span>
+                      </span>
+                      <span className="eps-topic-cta">
+                        Open review <ArrowRight aria-hidden />
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </section>
             ))}
-          </ul>
-        </section>
+          </div>
+        )}
       </div>
     </div>
   );

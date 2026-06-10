@@ -61,7 +61,9 @@ const MAIN_SITE_ONLY_CATEGORIES = [
 const EPPP_CLINICAL_CASE_MARKER = "clinical integration cases";
 
 export function isEpppClinicalCase(topic: EpppTopicLike): boolean {
-  return normalized(topic.category).includes(EPPP_CLINICAL_CASE_MARKER);
+  // Anchor on the colon-delimited token ("...: Clinical Integration Cases: <Domain>")
+  // so incidental mentions of the phrase elsewhere cannot misroute a topic.
+  return normalized(topic.category).includes(`${EPPP_CLINICAL_CASE_MARKER}:`);
 }
 
 export function getEpppClinicalCaseDomain(topic: EpppTopicLike): string {
@@ -91,6 +93,46 @@ export function groupEpppClinicalCases<T extends EpppTopicLike>(topics: T[]) {
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
+// Rapid review sheets are uploaded as topics whose category embeds this phrase
+// (e.g. "EPPP Part 1: Rapid Review: Biological Bases of Behavior"). Like
+// clinical cases, they must surface ONLY in the dedicated Rapid Review tab —
+// never in Part 1 domains, Part 2 skills, Question Bank, or Flashcards — while
+// remaining EPPP content (kept out of the main site).
+const EPPP_RAPID_REVIEW_MARKER = "rapid review";
+
+export function isEpppRapidReview(topic: EpppTopicLike): boolean {
+  // Anchor on the colon-delimited token ("...: Rapid Review: <Domain>") so the
+  // generic phrase "rapid review" appearing elsewhere cannot misroute a topic.
+  return normalized(topic.category).includes(`${EPPP_RAPID_REVIEW_MARKER}:`);
+}
+
+export function getEpppRapidReviewDomain(topic: EpppTopicLike): string {
+  const category = topic.category ?? "";
+  const idx = category.toLowerCase().lastIndexOf(`${EPPP_RAPID_REVIEW_MARKER}:`);
+  if (idx >= 0) {
+    const tail = category.slice(idx + EPPP_RAPID_REVIEW_MARKER.length + 1).trim();
+    if (tail) return tail;
+  }
+  return "Rapid Review";
+}
+
+export function groupEpppRapidReview<T extends EpppTopicLike>(topics: T[]) {
+  const byDomain = new Map<string, T[]>();
+  for (const topic of topics.filter(isEpppRapidReview)) {
+    const domain = getEpppRapidReviewDomain(topic);
+    const existing = byDomain.get(domain) ?? [];
+    existing.push(topic);
+    byDomain.set(domain, existing);
+  }
+
+  return Array.from(byDomain.entries())
+    .map(([name, items]) => ({
+      name,
+      items: [...items].sort((a, b) => a.name.localeCompare(b.name)),
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
 function normalized(value: string | undefined): string {
   return (value ?? "").toLowerCase().replace(/\s+/g, " ").trim();
 }
@@ -103,9 +145,9 @@ export function getEpppExamPart(topic: EpppTopicLike): EpppExamPart | null {
     return null;
   }
 
-  // Clinical integration cases belong only to their own tab, so they are never
-  // classified as Part 1 or Part 2 content.
-  if (isEpppClinicalCase(topic)) {
+  // Clinical integration cases and rapid review sheets belong only to their own
+  // tabs, so they are never classified as Part 1 or Part 2 content.
+  if (isEpppClinicalCase(topic) || isEpppRapidReview(topic)) {
     return null;
   }
 
@@ -197,7 +239,7 @@ export function isEpppTopic(topic: EpppTopicLike): boolean {
 export function groupEpppTopicsByCategory<T extends EpppTopicLike>(topics: T[]) {
   const byCategory = new Map<string, T[]>();
   for (const topic of topics.filter(
-    (t) => isEpppTopic(t) && !isEpppClinicalCase(t),
+    (t) => isEpppTopic(t) && !isEpppClinicalCase(t) && !isEpppRapidReview(t),
   )) {
     const category = getEpppDisplayCategory(topic);
     const existing = byCategory.get(category) ?? [];
