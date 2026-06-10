@@ -332,11 +332,6 @@ export default function QuizPage({ params }: Props) {
               <div className="flex items-center gap-2 mb-2">
                 <Lightbulb className="w-4 h-4" style={{ color: `${P.mist}cc` }} />
                 <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: P.mist }}>Reflect</p>
-                <Link href={inEppp ? "/eppp/suite/study-plan" : "/study-lab"}>
-                  <span className="ml-auto text-[11px] hover:underline cursor-pointer" style={{ color: `${P.mist}99` }}>
-                    Why this works →
-                  </span>
-                </Link>
               </div>
               <p className="text-xs mb-2 leading-relaxed" style={{ color: `${P.mist}cc` }}>
                 Explain in one sentence why <span className="font-semibold" style={{ color: P.mist }}>{current.correctAnswer}</span> was correct (and what tripped you up). Writing it out, even briefly, locks the correction into memory.

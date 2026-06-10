@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Link, useLocation } from "wouter";
+import { useLocation } from "wouter";
 import { Layers, BookOpen, FileText, GraduationCap, Beaker, ArrowRight, Lock } from "lucide-react";
 import { useGetTopic } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -192,13 +192,6 @@ export default function TopicDetailPage({ params }: Props) {
                 <Beaker className="w-4 h-4" style={{ color: P.tealDeep }} />
                 <h2 className="font-semibold text-foreground">Retention Plan</h2>
               </div>
-              {/* Routes /study-lab in the Lab section, which is being relabeled
-                  "Rounds" per the sidebar restructure brief. Route stays the same. */}
-              <Link href={inEppp ? "/eppp/suite/study-plan" : "/study-lab"}>
-                <span className="text-xs hover:underline cursor-pointer" style={{ color: P.tealDeep }}>
-                  Why this works →
-                </span>
-              </Link>
             </div>
             <SpacedRepetitionScheduler
               storageKey={`topic-${topicId}`}
