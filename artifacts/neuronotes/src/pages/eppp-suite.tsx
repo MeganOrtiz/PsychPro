@@ -118,7 +118,7 @@ const TABS: TabDef[] = [
   { slug: "domain-mastery-exams", label: "Domain Mastery Exams", icon: GraduationCap, section: "Assess" },
   { slug: "full-length-exams", label: "Full-Length Exams", icon: ClipboardCheck, section: "Assess" },
   { slug: "missed-questions", label: "Missed Questions", icon: XCircle, section: "Review" },
-  { slug: "rapid-review", label: "Rapid Review", icon: Zap, section: "Review" },
+  { slug: "rapid-review", label: "Quick Reference Guide", icon: Zap, section: "Review" },
   { slug: "resources", label: "Resources", icon: Library, section: "Reference" },
   { slug: "study-plan", label: "Study Plan", icon: ClipboardList, section: "Plan" },
 ];
@@ -1088,11 +1088,11 @@ function RapidReviewPanel({ onNavigate }: { onNavigate: (to: string) => void }) 
       s.replace(/[&<>]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[ch] as string));
     const list = guides.map((g) => `<li>${esc(g.name)}</li>`).join("");
     w.document.write(
-      `<!doctype html><html><head><title>EPPP Rapid Review</title>` +
+      `<!doctype html><html><head><title>EPPP Quick Reference Guides</title>` +
         `<style>body{font-family:Georgia,serif;margin:40px;color:#111;line-height:1.55}` +
         `h1{font-size:22px}h2{font-size:16px;margin-top:28px}ul{padding-left:20px}` +
         `.notes{white-space:pre-wrap;border:1px solid #ccc;border-radius:8px;padding:16px;min-height:220px}` +
-        `</style></head><body><h1>EPPP Rapid Review</h1>` +
+        `</style></head><body><h1>EPPP Quick Reference Guides</h1>` +
         `<h2>Quick Reference Guides</h2><ul>${list}</ul>` +
         `<h2>My Notes</h2><div class="notes">${esc(notes)}</div></body></html>`,
     );
@@ -1106,7 +1106,7 @@ function RapidReviewPanel({ onNavigate }: { onNavigate: (to: string) => void }) 
       <div className="eps-shell">
         <PanelHead
           eyebrow="FINAL PASS"
-          title="Rapid Review"
+          title="Quick Reference Guides"
           subtitle="Consolidated Quick Reference Guides — one per Part 1 domain. Skim, print, and capture your own high-yield notes before exam day."
         />
 
