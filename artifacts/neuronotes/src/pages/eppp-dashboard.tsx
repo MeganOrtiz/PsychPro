@@ -10,7 +10,6 @@ import {
   CheckCircle2,
   Pencil,
   Sparkles,
-  Layers,
 } from "lucide-react";
 import { useQueries } from "@tanstack/react-query";
 import {
@@ -20,7 +19,7 @@ import {
   getGetCourseMasteryStatusQueryKey,
 } from "@workspace/api-client-react";
 import { groupEpppTopicsByCategory, isEpppKnowledgeTopic } from "@/lib/eppp-content";
-import { epppDomainAnchor, epppMasteryExamPath, epppTopicPath } from "@/lib/eppp-routes";
+import { epppTopicPath } from "@/lib/eppp-routes";
 
 // ---------------------------------------------------------------------------
 // EPPP Mastery Suite dashboard — the working "how ready am I" home for the
@@ -341,13 +340,10 @@ export function EpppDashboardView({
           ) : (
             <div className="epd-domain-grid">
               {domainStats.map((d) => {
-                const dest = d.unlocked
-                  ? epppMasteryExamPath(d.category)
-                  : epppDomainAnchor(d.category);
                 return (
                   <Link
                     key={d.category}
-                    href={dest}
+                    href="/eppp/domains"
                     className={`epd-domain${d.mastered ? " is-mastered" : ""}`}
                     data-testid={`eppp-domain-${d.category
                       .toLowerCase()
@@ -358,10 +354,6 @@ export function EpppDashboardView({
                       {d.mastered ? (
                         <span className="epd-badge epd-badge--mastered">
                           <CheckCircle2 aria-hidden /> Mastered
-                        </span>
-                      ) : d.unlocked ? (
-                        <span className="epd-badge epd-badge--ready">
-                          Exam ready
                         </span>
                       ) : null}
                     </div>
@@ -429,23 +421,6 @@ export function EpppDashboardView({
               ))}
             </div>
           )}
-        </section>
-
-        {/* Footer CTA */}
-        <section className="epd-cta">
-          <div className="epd-cta-icon">
-            <Layers aria-hidden />
-          </div>
-          <div className="epd-cta-text">
-            <h3>Ready for a full domain?</h3>
-            <p>
-              Sit a capstone mastery exam once you've passed every lesson in a
-              content area at 90%+.
-            </p>
-          </div>
-          <Link href="/eppp/suite/domains" className="epd-cta-btn">
-            Go to domains <ArrowRight aria-hidden />
-          </Link>
         </section>
       </div>
     </div>
@@ -843,7 +818,6 @@ const styles = `
 }
 .epd-badge svg { width: 12px; height: 12px; }
 .epd-badge--mastered { color: ${C.ink}; background: ${C.cyan}; }
-.epd-badge--ready { color: ${C.mist}; background: rgba(118,228,247,0.14); border: 1px solid ${C.hairlineStrong}; }
 .epd-bar { height: 7px; border-radius: 999px; background: rgba(118,228,247,0.1); overflow: hidden; }
 .epd-bar-fill {
   display: block; height: 100%; border-radius: 999px;
@@ -885,41 +859,4 @@ const styles = `
 .epd-next-meta { font-size: 12px; color: ${C.muted}; }
 .epd-next-arrow { width: 16px; height: 16px; color: ${C.mist}; flex-shrink: 0; transition: transform 0.2s ease; }
 .epd-next:hover .epd-next-arrow { transform: translateX(3px); }
-
-/* footer cta */
-.epd-cta {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  flex-wrap: wrap;
-  border-radius: 20px;
-  padding: clamp(20px, 2.4vw, 28px);
-  background: linear-gradient(135deg, rgba(14,60,80,0.6), rgba(6,28,38,0.82));
-  border: 1px solid ${C.hairlineStrong};
-  box-shadow: 0 0 48px ${C.cyan}1c;
-}
-.epd-cta-icon {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 52px; height: 52px; flex-shrink: 0;
-  border-radius: 14px;
-  background: ${C.cyan}1a; border: 1px solid ${C.cyan}59; color: ${C.cyan};
-  box-shadow: 0 0 22px ${C.cyan}40;
-}
-.epd-cta-icon svg { width: 26px; height: 26px; }
-.epd-cta-text { flex: 1; min-width: 220px; }
-.epd-cta-text h3 { margin: 0; font-size: 17px; font-weight: 700; color: ${C.cloud}; }
-.epd-cta-text p { margin: 5px 0 0; font-size: 13.5px; line-height: 1.6; color: ${C.body}; }
-.epd-cta-btn {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 11px 22px; border-radius: 999px;
-  font-size: 14px; font-weight: 700; text-decoration: none;
-  color: ${C.ink};
-  border: 1px solid rgba(167,243,255,0.65);
-  background: linear-gradient(135deg, ${C.mist} 0%, ${C.cyan} 48%, #38BDF8 100%);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 0 22px -4px ${C.cyan}b3;
-  transition: transform 0.2s ease, box-shadow 0.3s ease;
-  white-space: nowrap;
-}
-.epd-cta-btn svg { width: 16px; height: 16px; }
-.epd-cta-btn:hover { transform: translateY(-1px); box-shadow: inset 0 1px 0 rgba(255,255,255,0.55), 0 0 32px 0 ${C.cyan}d9; }
 `;
