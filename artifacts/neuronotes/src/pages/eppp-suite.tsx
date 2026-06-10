@@ -332,8 +332,11 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
             <span className="eps-crumb-page truncate">{active.label}</span>
           </div>
           <div className="flex items-center gap-3">
-            <Link href="/dashboard" className="eps-back-app" data-testid="eppp-suite-back-desktop">
-              <ArrowLeft aria-hidden /> Back to PsychPro
+            <Link href="/dashboard" className="eppp-launch-btn" data-testid="eppp-suite-back-desktop">
+              <span className="eppp-launch-btn__inner">
+                <ArrowLeft aria-hidden />
+                <span>Back to PsychPro</span>
+              </span>
             </Link>
             {!isMobile && <NotificationsBell />}
             <UserButton
