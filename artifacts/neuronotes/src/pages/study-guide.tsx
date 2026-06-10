@@ -1,6 +1,6 @@
 import { useEffect, type ReactElement } from "react";
 import { useLocation } from "wouter";
-import { BookOpen, Lock, FileText } from "lucide-react";
+import { BookOpen, Lock, FileText, Stethoscope } from "lucide-react";
 import { useGetStudyGuideByTopic, useGetTopic } from "@workspace/api-client-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -10,7 +10,26 @@ import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { useEntitlements } from "@/lib/use-entitlements";
 import { PageTitle } from "@/components/brand/page-title";
 import { epppTopicPath, isEpppRoute } from "@/lib/eppp-routes";
-import { isEpppTopic, isEpppQuickReference } from "@/lib/eppp-content";
+import { isEpppTopic, isEpppQuickReference, isEpppClinicalCase } from "@/lib/eppp-content";
+
+// Clinical Integration Cases are authored with a metadata preamble at the top of
+// the guide body (an "EPPP Part N — Clinical Integration Case" heading plus
+// examPart / contentType / domain / difficulty / competencyTags / reviewTags
+// lines). That frontmatter is for content management, not the reader, so we strip
+// the leading contiguous block of it and show only the actual case content.
+function stripClinicalCaseMeta(md: string): string {
+  const lines = md.split("\n");
+  const isMeta = (raw: string) => {
+    const t = raw.trim().replace(/^#+\s*/, "").replace(/\*\*/g, "");
+    if (t === "") return true;
+    if (/clinical integration case/i.test(t) && /eppp\s*part/i.test(t)) return true;
+    if (/^(examPart|contentType|domain|difficulty|competencyTags|reviewTags)\s*:/i.test(t)) return true;
+    return false;
+  };
+  let i = 0;
+  while (i < lines.length && isMeta(lines[i])) i++;
+  return lines.slice(i).join("\n").replace(/^\s+/, "");
+}
 
 interface Props {
   params: { id: string };
@@ -41,6 +60,7 @@ export default function StudyGuidePage({ params }: Props) {
     (ent !== undefined && ent.studyGuideLocked);
 
   const isQRG = !!(topic && isEpppQuickReference(topic));
+  const isClinicalCase = !!(topic && isEpppClinicalCase(topic));
 
   return (
     <div className="min-h-full study-page-bg" data-testid="study-guide-page">
@@ -48,10 +68,13 @@ export default function StudyGuidePage({ params }: Props) {
       <Breadcrumbs items={[
         { label: inEppp ? "EPPP Domains" : "Topics", href: inEppp ? "/eppp/suite/domains" : "/topics" },
         { label: topic?.name ?? "Topic", href: backToTopic },
-        { label: "Study Guide" },
+        { label: isClinicalCase ? "Clinical Integration Case" : "Study Guide" },
       ]} />
       {!isQRG && (
-        <PageTitle title="Study Guide" icon={FileText} />
+        <PageTitle
+          title={isClinicalCase ? "Clinical Integration Case" : "Study Guide"}
+          icon={isClinicalCase ? Stethoscope : FileText}
+        />
       )}
 
       {isLoading && ent === undefined ? (
@@ -116,7 +139,13 @@ export default function StudyGuidePage({ params }: Props) {
             className="prose prose-sm md:prose-base dark:prose-invert max-w-none prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground prose-table:text-sm"
             data-testid="study-guide-content"
           >
-            <MarkdownRenderer content={guide.content.replace(/^\s*#\s+.*\n+/, "")} />
+            <MarkdownRenderer
+              content={
+                isClinicalCase
+                  ? stripClinicalCaseMeta(guide.content.replace(/^\s*#\s+.*\n+/, ""))
+                  : guide.content.replace(/^\s*#\s+.*\n+/, "")
+              }
+            />
           </div>
         </StudySurface>
       )}
