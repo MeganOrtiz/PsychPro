@@ -296,21 +296,6 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
           })}
         </nav>
 
-        {/* Back to the main app — styled to match the EPPP launch button */}
-        <div className="relative p-4 border-t border-white/10 z-10">
-          <Link
-            href="/dashboard"
-            onClick={() => setSidebarOpen(false)}
-            data-testid="eppp-suite-exit"
-            className="eppp-launch-btn"
-            style={{ width: "100%" }}
-          >
-            <span className="eppp-launch-btn__inner">
-              <ArrowLeft aria-hidden />
-              <span>Back to PsychPro</span>
-            </span>
-          </Link>
-        </div>
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
