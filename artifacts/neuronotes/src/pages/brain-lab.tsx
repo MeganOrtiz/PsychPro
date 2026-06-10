@@ -1137,21 +1137,6 @@ function BrainDiagram({
         </div>
       )}
 
-      {/* View caption */}
-      <div
-        className="absolute bottom-3 left-0 right-0 flex items-center justify-center gap-2 px-4 text-center"
-        style={{ pointerEvents: "none" }}
-      >
-        <span
-          className="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full"
-          style={{ background: `${PALETTE.surface}cc`, color: PALETTE.surf }}
-        >
-          {view.viewName}
-        </span>
-        <span className="text-[11px]" style={{ color: `${PALETTE.mist}88` }}>
-          {view.caption}
-        </span>
-      </div>
     </div>
   );
 }
@@ -1627,21 +1612,6 @@ function LabeledBrainDiagram({
         </div>
       )}
 
-      {/* View caption */}
-      <div
-        className="absolute bottom-3 left-0 right-0 flex items-center justify-center gap-2 px-4 text-center"
-        style={{ pointerEvents: "none", zIndex: 5 }}
-      >
-        <span
-          className="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full"
-          style={{ background: `${PALETTE.surface}cc`, color: PALETTE.surf }}
-        >
-          {view.viewName}
-        </span>
-        <span className="text-[11px]" style={{ color: `${PALETTE.mist}88` }}>
-          {view.caption}
-        </span>
-      </div>
     </div>
   );
 }
