@@ -119,7 +119,7 @@ export default function AdminFeaturedWorkPage() {
             <button
               key={s}
               onClick={() => setFilter(s)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
                 filter === s ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card text-muted-foreground hover:bg-muted"
               }`}
               data-testid={`tab-status-${s}`}

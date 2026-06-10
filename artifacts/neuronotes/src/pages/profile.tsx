@@ -475,7 +475,7 @@ export default function ProfilePage() {
                             type="button"
                             onClick={() => toggleInterest(tag)}
                             disabled={disabled}
-                            className={`px-3 py-1.5 rounded-full border text-xs font-medium transition-colors ${
+                            className={`px-3 py-1.5 rounded-lg border text-xs font-medium transition-colors ${
                               selected
                                 ? "border-primary bg-primary/15 text-primary"
                                 : disabled

@@ -312,7 +312,7 @@ export default function ProgressPage() {
               key={p.id}
               onClick={() => setFilter(p.id)}
               data-testid={`filter-${p.id}`}
-              className={`text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
+              className={`text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors ${
                 active
                   ? "bg-primary text-primary-foreground border-primary"
                   : "bg-card text-white/70 border-border hover:text-foreground"

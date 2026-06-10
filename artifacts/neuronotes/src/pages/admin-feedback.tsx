@@ -95,7 +95,7 @@ export default function AdminFeedbackPage() {
           <button
             key={s}
             onClick={() => setFilter(s)}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors capitalize ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors capitalize ${
               filter === s
                 ? "border-primary bg-primary text-primary-foreground"
                 : "border-border bg-card text-muted-foreground hover:bg-muted"

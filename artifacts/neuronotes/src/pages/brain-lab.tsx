@@ -72,7 +72,7 @@ class Brain3DErrorBoundary extends Component<
           <button
             type="button"
             onClick={this.props.onFallback}
-            className="mt-1 text-xs font-semibold px-3 py-1.5 rounded-full"
+            className="mt-1 text-xs font-semibold px-3 py-1.5 rounded-lg"
             style={{
               background: `${PALETTE.surf}22`,
               color: PALETTE.surf,

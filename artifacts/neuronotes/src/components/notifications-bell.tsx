@@ -95,7 +95,7 @@ export function NotificationsBell() {
   return (
     <div className="relative" ref={dropdownRef}>
       <button
-        className="relative w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-105"
+        className="relative w-10 h-10 rounded-lg flex items-center justify-center transition-all hover:scale-105"
         style={{
           background: "rgba(6, 32, 44, 0.55)",
           border: "1px solid rgba(118, 228, 247, 0.28)",

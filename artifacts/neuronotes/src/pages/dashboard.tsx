@@ -462,7 +462,7 @@ export default function DashboardPage() {
                     size="sm"
                     variant="outline"
                     onClick={() => navigate("/leaderboard")}
-                    className="text-xs rounded-full px-3 h-7"
+                    className="text-xs rounded-lg px-3 h-7"
                     data-testid="button-view-leaderboard"
                   >
                     View all
@@ -1024,7 +1024,7 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
           <button
             type="button"
             onClick={() => onCta(spot?.id)}
-            className="w-8 h-8 rounded-full flex items-center justify-center transition-all border"
+            className="w-8 h-8 rounded-lg flex items-center justify-center transition-all border"
             style={{
               background: `${PALETTE.surf}14`,
               borderColor: `${PALETTE.surf}38`,
