@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Layers, BookOpen, FileText, GraduationCap, Beaker, ArrowRight, Lock } from "lucide-react";
 import { useGetTopic } from "@workspace/api-client-react";
@@ -7,7 +8,8 @@ import { PageTitle } from "@/components/brand/page-title";
 import { Breadcrumbs, type BreadcrumbItem } from "@/components/breadcrumbs";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { useEntitlements } from "@/lib/use-entitlements";
-import { epppDomainAnchor, epppTopicModePath, isEpppRoute } from "@/lib/eppp-routes";
+import { isEpppTopic } from "@/lib/eppp-content";
+import { epppDomainAnchor, epppTopicModePath, epppTopicPath, isEpppRoute } from "@/lib/eppp-routes";
 
 interface Props {
   params: { id: string };
@@ -21,6 +23,12 @@ export default function TopicDetailPage({ params }: Props) {
   // Free-tier model is now per-content (not per-topic). The topic page itself
   // is never blocked — locks live on the individual mode cards below.
   const { data: ent } = useEntitlements();
+
+  useEffect(() => {
+    if (!inEppp && topic && isEpppTopic(topic)) {
+      navigate(epppTopicPath(topicId));
+    }
+  }, [inEppp, navigate, topic, topicId]);
 
   // Per-mode accent palette. Each card gets its own glow color so the
   // four study modes read as distinct destinations instead of a flat

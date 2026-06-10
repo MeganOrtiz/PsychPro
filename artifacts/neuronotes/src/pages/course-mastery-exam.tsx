@@ -10,7 +10,8 @@ import { Label } from "@/components/ui/label";
 import { StudySurface } from "@/components/study/study-surface";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PageTitle } from "@/components/brand/page-title";
-import { epppDomainAnchor, isEpppRoute } from "@/lib/eppp-routes";
+import { isEpppTopic } from "@/lib/eppp-content";
+import { epppDomainAnchor, epppMasteryExamPath, isEpppRoute } from "@/lib/eppp-routes";
 
 interface Props {
   params: { category: string };
@@ -34,6 +35,12 @@ export default function CourseMasteryExamPage({ params }: Props) {
   const { data: exam, isLoading, error } = useGetCourseMasteryExam(category);
   const recordAttempt = useRecordCourseMasteryAttempt();
   const fetchError = error as { status?: number } | null;
+
+  useEffect(() => {
+    if (!inEppp && isEpppTopic({ id: -1, name: category, category })) {
+      navigate(epppMasteryExamPath(category));
+    }
+  }, [category, inEppp, navigate]);
 
   const questions = exam?.questions ?? [];
   const total = questions.length;

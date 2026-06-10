@@ -13,6 +13,7 @@ import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PageTitle } from "@/components/brand/page-title";
 import { loadReflectionText, saveReflection } from "@/lib/reflections";
 import { epppTopicPath, isEpppRoute } from "@/lib/eppp-routes";
+import { isEpppTopic } from "@/lib/eppp-content";
 
 interface Props {
   params: { id: string };
@@ -34,6 +35,12 @@ export default function QuizPage({ params }: Props) {
 
   const { data: questions, isLoading, error } = useGetQuizzesByTopic(topicId);
   const { data: topic } = useGetTopic(topicId);
+
+  useEffect(() => {
+    if (!inEppp && topic && isEpppTopic(topic)) {
+      navigate(`${epppTopicPath(topicId)}/quiz`);
+    }
+  }, [inEppp, navigate, topic, topicId]);
 
   // Persist reflections per-question to localStorage so they survive
   // moving between questions, finishing the quiz, and full page reloads.

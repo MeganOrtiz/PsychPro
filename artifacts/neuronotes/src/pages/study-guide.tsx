@@ -1,4 +1,4 @@
-import { type ReactElement } from "react";
+import { useEffect, type ReactElement } from "react";
 import { useLocation } from "wouter";
 import { BookOpen, Lock, FileText } from "lucide-react";
 import { useGetStudyGuideByTopic, useGetTopic } from "@workspace/api-client-react";
@@ -10,6 +10,7 @@ import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { useEntitlements } from "@/lib/use-entitlements";
 import { PageTitle } from "@/components/brand/page-title";
 import { epppTopicPath, isEpppRoute } from "@/lib/eppp-routes";
+import { isEpppTopic } from "@/lib/eppp-content";
 
 interface Props {
   params: { id: string };
@@ -27,6 +28,12 @@ export default function StudyGuidePage({ params }: Props) {
 
   const { data: guide, isLoading, error } = useGetStudyGuideByTopic(topicId);
   const { data: topic } = useGetTopic(topicId);
+
+  useEffect(() => {
+    if (!inEppp && topic && isEpppTopic(topic)) {
+      navigate(`${epppTopicPath(topicId)}/study-guide`);
+    }
+  }, [inEppp, navigate, topic, topicId]);
 
   const is402 =
     (error as any)?.status === 402 ||

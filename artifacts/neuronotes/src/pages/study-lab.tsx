@@ -17,6 +17,7 @@ import BrainDump from "@/components/learning/brain-dump";
 import SpacedRepetitionScheduler from "@/components/learning/spaced-repetition";
 import InterleavingMode, { type InterleaveCard } from "@/components/learning/interleaving-mode";
 import ElaborationPanel from "@/components/learning/elaboration-panel";
+import { isEpppTopic } from "@/lib/eppp-content";
 
 type TechId = "active-recall" | "spaced" | "mixed" | "elaboration";
 
@@ -460,6 +461,10 @@ function ElaborationView({ topics, howToUse }: { topics: Topic[]; howToUse: stri
 export default function StudyLabPage() {
   const [active, setActive] = useState<TechId | null>(null);
   const { data: topics, isLoading } = useGetTopics();
+  const mainTopics = useMemo(
+    () => (topics ?? []).filter((topic) => !isEpppTopic(topic)),
+    [topics],
+  );
 
   if (active) {
     const tech = TECHNIQUES.find((t) => t.id === active)!;
@@ -482,12 +487,12 @@ export default function StudyLabPage() {
           ) : (
             <>
               {active === "active-recall" && (
-                <ActiveRecallView topics={topics} howToUse={tech.howToUse} />
+                <ActiveRecallView topics={mainTopics} howToUse={tech.howToUse} />
               )}
-              {active === "spaced" && <SpacedView topics={topics} howToUse={tech.howToUse} />}
-              {active === "mixed" && <MixedView topics={topics} howToUse={tech.howToUse} />}
+              {active === "spaced" && <SpacedView topics={mainTopics} howToUse={tech.howToUse} />}
+              {active === "mixed" && <MixedView topics={mainTopics} howToUse={tech.howToUse} />}
               {active === "elaboration" && (
-                <ElaborationView topics={topics} howToUse={tech.howToUse} />
+                <ElaborationView topics={mainTopics} howToUse={tech.howToUse} />
               )}
             </>
           )}

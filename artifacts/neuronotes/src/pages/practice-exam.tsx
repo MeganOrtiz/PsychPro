@@ -18,6 +18,7 @@ import { StudySurface } from "@/components/study/study-surface";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PageTitle } from "@/components/brand/page-title";
 import { epppTopicPath, isEpppRoute } from "@/lib/eppp-routes";
+import { isEpppTopic } from "@/lib/eppp-content";
 
 interface Props {
   params: { id: string };
@@ -62,6 +63,12 @@ export default function PracticeExamPage({ params }: Props) {
   const updateProgress = useUpdateTopicProgress();
   const recordAttempt = useRecordExamAttempt();
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (!inEppp && topic && isEpppTopic(topic)) {
+      navigate(`${epppTopicPath(topicId)}/exam`);
+    }
+  }, [inEppp, navigate, topic, topicId]);
 
   const fetchError = error as { status?: number } | null;
 

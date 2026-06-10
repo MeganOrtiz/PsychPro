@@ -34,7 +34,6 @@ import ResourcesPage from "@/pages/resources";
 import StudyLabPage from "@/pages/study-lab";
 import BrainLabPage from "@/pages/brain-lab";
 import EpppPage from "@/pages/eppp";
-import EpppDashboardPage from "@/pages/eppp-dashboard";
 import EpppDomainsPage from "@/pages/eppp-domains";
 import AdminFeedbackPage from "@/pages/admin-feedback";
 import AdminTokensPage from "@/pages/admin-tokens";
@@ -94,6 +93,13 @@ function AppRouter() {
       <Route path="/sign-in/*?" component={SignInPage} />
       <Route path="/sign-up/*?" component={SignUpPage} />
       {import.meta.env.DEV ? <Route path="/__crash-test" component={CrashTestPage} /> : null}
+      <Route path="/eppp">
+        {() => (
+          <RequireSignedIn>
+            <EpppPage />
+          </RequireSignedIn>
+        )}
+      </Route>
       <Route path="/eppp/suite/:tab?">
         {(params) => (
           <RequireSignedIn>
@@ -204,9 +210,6 @@ function AppRouter() {
             <Route path="/resources" component={ResourcesPage} />
             <Route path="/study-lab" component={StudyLabPage} />
             <Route path="/brain-lab" component={BrainLabPage} />
-            <Route path="/eppp/dashboard" component={EpppDashboardPage} />
-            <Route path="/eppp/domains" component={EpppDomainsPage} />
-            <Route path="/eppp" component={EpppPage} />
             <Route path="/admin/feedback" component={AdminFeedbackPage} />
             <Route path="/admin/tokens" component={AdminTokensPage} />
             <Route path="/my-decks" component={MyDecksPage} />

@@ -11,10 +11,13 @@ import {
   deleteReflection,
   type ReflectionRecord,
 } from "@/lib/reflections";
+import { isEpppTopic } from "@/lib/eppp-content";
 
 interface TopicLike {
   id: number;
   name: string;
+  description?: string;
+  category?: string;
 }
 
 export default function ReflectionsPage() {
@@ -24,6 +27,14 @@ export default function ReflectionsPage() {
   // before useEffect runs on first paint.
   const [hydrated, setHydrated] = useState(false);
   const { data: topics } = useGetTopics();
+  const mainTopics = useMemo(
+    () => (topics as TopicLike[] | undefined)?.filter((t) => !isEpppTopic(t)) ?? [],
+    [topics],
+  );
+  const mainTopicIds = useMemo(
+    () => new Set(mainTopics.map((t) => t.id)),
+    [mainTopics],
+  );
 
   useEffect(() => {
     setRecords(listAllReflections());
@@ -32,15 +43,16 @@ export default function ReflectionsPage() {
 
   const topicNameById = useMemo(() => {
     const map = new Map<number, string>();
-    (topics as TopicLike[] | undefined)?.forEach((t) => map.set(t.id, t.name));
+    mainTopics.forEach((t) => map.set(t.id, t.name));
     return map;
-  }, [topics]);
+  }, [mainTopics]);
 
   // Group by topic so the page reads like a study journal organized by
   // subject rather than a flat dump of every saved note.
   const grouped = useMemo(() => {
     const byTopic = new Map<number, ReflectionRecord[]>();
     for (const r of records) {
+      if (!mainTopicIds.has(r.topicId)) continue;
       const arr = byTopic.get(r.topicId) ?? [];
       arr.push(r);
       byTopic.set(r.topicId, arr);
@@ -50,7 +62,7 @@ export default function ReflectionsPage() {
       topicName: topicNameById.get(topicId) ?? `Topic #${topicId}`,
       items,
     }));
-  }, [records, topicNameById]);
+  }, [records, mainTopicIds, topicNameById]);
 
   const handleDelete = (topicId: number, questionId: number) => {
     deleteReflection(topicId, questionId);

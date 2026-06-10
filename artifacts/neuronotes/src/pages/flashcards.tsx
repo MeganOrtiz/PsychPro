@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { ChevronLeft, ChevronRight, RotateCcw, Layers, Lightbulb, Beaker, Lock, Zap } from "lucide-react";
 import { useGetFlashcardsByTopic, useGetTopic } from "@workspace/api-client-react";
@@ -14,6 +14,7 @@ import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { useEntitlements } from "@/lib/use-entitlements";
 import { PageTitle } from "@/components/brand/page-title";
 import { epppTopicPath, isEpppRoute } from "@/lib/eppp-routes";
+import { isEpppTopic } from "@/lib/eppp-content";
 
 interface Props {
   params: { id: string };
@@ -37,6 +38,12 @@ export default function FlashcardsPage({ params }: Props) {
   const { data: flashcards, isLoading, error } = useGetFlashcardsByTopic(topicId);
   const { data: topic } = useGetTopic(topicId);
   const { data: ent } = useEntitlements();
+
+  useEffect(() => {
+    if (!inEppp && topic && isEpppTopic(topic)) {
+      navigate(`${epppTopicPath(topicId)}/flashcards`);
+    }
+  }, [inEppp, navigate, topic, topicId]);
 
   const current = flashcards?.[index];
   const total = flashcards?.length ?? 0;

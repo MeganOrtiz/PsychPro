@@ -8,7 +8,6 @@ import {
   Scale,
   Pill,
   Library,
-  GraduationCap,
   Search,
   Info,
 } from "lucide-react";
@@ -147,28 +146,6 @@ const SECTIONS: Section[] = [
         name: "Stahl's Essential Psychopharmacology (reference)",
         url: "https://www.cambridge.org/core/books/stahls-essential-psychopharmacology/",
         description: "Cambridge's landing page for Stephen Stahl's reference work — the standard textbook for clinical psychopharmacology mechanisms.",
-      },
-    ],
-  },
-  {
-    title: "Board & Licensure Exams",
-    icon: GraduationCap,
-    blurb: "Information on the major credentialing exams that PsychPro content supports.",
-    resources: [
-      {
-        name: "EPPP (ASPPB)",
-        url: "https://www.asppb.net/page/EPPP_1_About",
-        description: "Examination for Professional Practice in Psychology — required for licensure as a psychologist in most US/Canadian jurisdictions.",
-      },
-      {
-        name: "ABPN — Psychiatry Certification",
-        url: "https://www.abpn.com/become-certified/taking-a-subspecialty-exam/psychiatry/",
-        description: "American Board of Psychiatry and Neurology certification information for psychiatrists.",
-      },
-      {
-        name: "ABCN — Clinical Neuropsychology",
-        url: "https://abcn.theabpp.org/",
-        description: "American Board of Clinical Neuropsychology — credentialing pathway for board certification in clinical neuropsychology.",
       },
     ],
   },
