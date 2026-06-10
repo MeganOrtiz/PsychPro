@@ -2,10 +2,10 @@
 type ModuleMap = Record<string, () => Promise<Record<string, unknown>>>;
 export const modules: ModuleMap = {
   "./components/mockups/cerulean-buttons/Showcase.tsx": () => import("../components/mockups/cerulean-buttons/Showcase.tsx"),
-  "./components/mockups/course-cards/BeforeAfter.tsx": () => import("../components/mockups/course-cards/BeforeAfter.tsx"),
   "./components/mockups/dash-header/Nebula.tsx": () => import("../components/mockups/dash-header/Nebula.tsx"),
   "./components/mockups/dash-header/Specimen.tsx": () => import("../components/mockups/dash-header/Specimen.tsx"),
   "./components/mockups/dash-header/SynapseCore.tsx": () => import("../components/mockups/dash-header/SynapseCore.tsx"),
+  "./components/mockups/course-cards/BeforeAfter.tsx": () => import("../components/mockups/course-cards/BeforeAfter.tsx"),
   "./components/mockups/dashboard-buttons/BrightFrosted.tsx": () => import("../components/mockups/dashboard-buttons/BrightFrosted.tsx"),
   "./components/mockups/dashboard-buttons/Refined.tsx": () => import("../components/mockups/dashboard-buttons/Refined.tsx"),
   "./components/mockups/dashboard-buttons/StrongGlow.tsx": () => import("../components/mockups/dashboard-buttons/StrongGlow.tsx"),
