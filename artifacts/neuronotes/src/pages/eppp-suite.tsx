@@ -47,6 +47,7 @@ import {
   groupEpppClinicalCases,
   groupEpppTopicsByCategory,
   getEpppClinicalCaseDomain,
+  getEpppClinicalCasePart,
   getEpppDisplayCategory,
   getEpppExamPart,
   getEpppFullLengthExamPart,
@@ -813,20 +814,27 @@ function Part2SkillsPanel({ onNavigate }: { onNavigate: (to: string) => void }) 
 }
 
 // ---- Clinical Integration Cases (sub-tab body) ----------------------------
-function ClinicalCasesBody({ onNavigate }: { onNavigate: (to: string) => void }) {
+function ClinicalCasesBody({ part, onNavigate }: { part: EpppExamPart; onNavigate: (to: string) => void }) {
   const { data: allTopics, isLoading } = useGetTopics();
 
   const grouped = useMemo(() => {
-    return groupEpppClinicalCases((allTopics ?? []) as Topic[]).map(
+    const inPart = ((allTopics ?? []) as Topic[]).filter(
+      (t) => isEpppClinicalCase(t) && getEpppClinicalCasePart(t) === part,
+    );
+    return groupEpppClinicalCases(inPart).map(
       (group) => [group.name, group.items] as const,
     );
-  }, [allTopics]);
+  }, [allTopics, part]);
 
   if (isLoading) {
     return <div className="eps-empty">Loading cases…</div>;
   }
   if (grouped.length === 0) {
-    return <div className="eps-empty">No clinical integration cases are available yet.</div>;
+    return (
+      <div className="eps-empty">
+        No {part === "part1" ? "Part 1" : "Part 2"} clinical integration cases are available yet.
+      </div>
+    );
   }
   return (
     <div className="eps-groups">
@@ -888,7 +896,14 @@ function Part1Panel({ onNavigate }: { onNavigate: (to: string) => void }) {
 }
 
 // ---- Clinical Integration Cases (top-level tab) ---------------------------
+const CLINICAL_CASE_SUBTABS: { key: EpppExamPart; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
+  { key: "part1", label: "Part 1", icon: Layers },
+  { key: "part2", label: "Part 2", icon: Brain },
+];
+
 function ClinicalCasesPanel({ onNavigate }: { onNavigate: (to: string) => void }) {
+  const [part, setPart] = useState<EpppExamPart>("part1");
+
   return (
     <div className="study-page-bg eps-panel" data-testid="eppp-panel-clinical-cases">
       <div className="eps-shell">
@@ -897,7 +912,28 @@ function ClinicalCasesPanel({ onNavigate }: { onNavigate: (to: string) => void }
           title="Clinical Integration Cases"
           subtitle="Realistic clinical scenarios that put core EPPP concepts into practice. Work the case, then answer the integrated questions to test your reasoning."
         />
-        <ClinicalCasesBody onNavigate={onNavigate} />
+
+        <div className="eps-subtabs" role="tablist" aria-label="Case parts">
+          {CLINICAL_CASE_SUBTABS.map((t) => {
+            const isActive = t.key === part;
+            return (
+              <button
+                key={t.key}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                className={cn("eps-subtab", isActive && "is-active")}
+                onClick={() => setPart(t.key)}
+                data-testid={`eppp-clinical-subtab-${t.key}`}
+              >
+                <t.icon aria-hidden />
+                <span>{t.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        <ClinicalCasesBody key={part} part={part} onNavigate={onNavigate} />
       </div>
     </div>
   );
@@ -1187,7 +1223,7 @@ function missedQuestionPart(topic: MissedTopicLike): EpppExamPart | null {
   if (p) return p;
   const fl = getEpppFullLengthExamPart(topic);
   if (fl) return fl;
-  if (isEpppClinicalCase(topic)) return "part1";
+  if (isEpppClinicalCase(topic)) return getEpppClinicalCasePart(topic);
   return null;
 }
 

@@ -76,6 +76,10 @@ export function getEpppClinicalCaseDomain(topic: EpppTopicLike): string {
   return "Clinical Integration Cases";
 }
 
+export function getEpppClinicalCasePart(topic: EpppTopicLike): EpppExamPart {
+  return normalized(topic.category).includes("part 2") ? "part2" : "part1";
+}
+
 export function groupEpppClinicalCases<T extends EpppTopicLike>(topics: T[]) {
   const byDomain = new Map<string, T[]>();
   for (const topic of topics.filter(isEpppClinicalCase)) {
