@@ -236,13 +236,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 className="text-[18px] font-light"
                 style={{
                   fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
-                  letterSpacing: "0.14em",
-                  paddingLeft: "0.14em",
+                  letterSpacing: "0.22em",
+                  paddingLeft: "0.22em",
                   color: "#F4FBFF",
                   textShadow: "0 0 18px rgba(118,228,247,0.23)",
                 }}
               >
-                PsychPro
+                PSYCHPRO
               </span>
               <span
                 className="mt-[5px] text-[10px] font-bold uppercase whitespace-nowrap"
