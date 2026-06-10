@@ -96,9 +96,6 @@ export default function StudyGuidePage({ params }: Props) {
       ) : (
         <StudySurface tone="light" glow innerClassName="p-6 md:p-10">
           <div className="text-center mb-8 pb-6" style={{ borderBottom: `1px solid ${P.surf}44` }}>
-            {!isQRG && (
-              <p className="text-xs font-semibold tracking-[0.2em] uppercase mb-2" style={{ color: P.tealDeep }}>Study Guide</p>
-            )}
             <h2 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight leading-tight">
               {isQRG
                 ? guide.title.replace(/\s*[—–-]\s*Quick Reference Guide\s*$/i, "")
