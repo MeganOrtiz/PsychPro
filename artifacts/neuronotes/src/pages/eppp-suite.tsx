@@ -1596,11 +1596,11 @@ const styles = `
 .eps-kb-lesson-body { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
 .eps-kb-lesson-title { font-size: 14px; font-weight: 650; line-height: 1.25; color: ${C.cloud}; }
 .eps-kb-lesson-desc {
-  font-size: 12px; line-height: 1.45; color: ${C.body};
+  font-size: 12px; line-height: 1.45; color: ${C.mist}ee;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
-.eps-kb-lesson-meta { font-size: 11px; color: ${C.muted}; }
-.eps-kb-lesson-arrow { width: 17px; height: 17px; align-self: center; color: ${C.cyan}; opacity: 0.72; }
+.eps-kb-lesson-meta { font-size: 11px; color: ${C.mist}cc; }
+.eps-kb-lesson-arrow { width: 17px; height: 17px; align-self: center; color: ${C.cyan}; opacity: 1; }
 
 /* ---- mastery exam list ---- */
 .eps-exam-list { display: flex; flex-direction: column; gap: 12px; }
