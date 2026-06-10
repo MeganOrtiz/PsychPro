@@ -238,7 +238,7 @@ function StructureSearch({
                 >
                   <span
                     className="w-2 h-2 rounded-full flex-shrink-0"
-                    style={{ background: s.color, boxShadow: `0 0 8px ${s.color}` }}
+                    style={{ background: PALETTE.surf, boxShadow: `0 0 8px ${PALETTE.surf}` }}
                   />
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-semibold truncate" style={{ color: PALETTE.mist }}>
@@ -463,8 +463,8 @@ function StructureDetail({
       className="rounded-2xl border overflow-hidden flex flex-col h-full min-h-0 max-h-full"
       style={{
         background: `linear-gradient(180deg, ${PALETTE.surfaceElev}, ${PALETTE.surface})`,
-        borderColor: `${struct.color}66`,
-        boxShadow: `0 30px 80px -30px ${struct.color}aa`,
+        borderColor: `${PALETTE.steel}66`,
+        boxShadow: `0 30px 80px -30px ${PALETTE.teal}aa`,
       }}
       data-testid="structure-detail"
     >
@@ -542,7 +542,7 @@ function StructureDetail({
         )}
 
         {tab === "anatomy" && detail?.anatomy && (
-          <RichBlocks blocks={detail.anatomy} accent={struct.color} />
+          <RichBlocks blocks={detail.anatomy} accent={PALETTE.surf} />
         )}
 
         {tab === "functions" &&
@@ -555,13 +555,13 @@ function StructureDetail({
         {tab === "connections" && (
           <>
             {detail?.connections ? (
-              <RichBlocks blocks={detail.connections} accent={struct.color} />
+              <RichBlocks blocks={detail.connections} accent={PALETTE.surf} />
             ) : (
               struct.connections.length > 0 && (
                 <DetailSection
                   title="Network Connections"
                   items={struct.connections}
-                  bullet={struct.color}
+                  bullet={PALETTE.surf}
                 />
               )
             )}
@@ -599,13 +599,13 @@ function StructureDetail({
 
         {tab === "clinical" &&
           (detail?.clinical ? (
-            <RichBlocks blocks={detail.clinical} accent={struct.color} />
+            <RichBlocks blocks={detail.clinical} accent={PALETTE.surf} />
           ) : (
             <>
               <DetailSection
                 title="Role in Neuropsychology"
                 items={struct.neuropsych}
-                bullet={struct.color}
+                bullet={PALETTE.surf}
               />
               <DetailSection
                 title="Clinical Conditions"
@@ -616,7 +616,7 @@ function StructureDetail({
           ))}
 
         {tab === "assessment" && detail?.assessment && (
-          <RichBlocks blocks={detail.assessment} accent={struct.color} />
+          <RichBlocks blocks={detail.assessment} accent={PALETTE.surf} />
         )}
       </div>
 
