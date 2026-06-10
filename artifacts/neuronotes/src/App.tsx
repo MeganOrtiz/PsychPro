@@ -115,6 +115,20 @@ function AppRouter() {
           </RequireSignedIn>
         )}
       </Route>
+      <Route path="/eppp/clinical-cases">
+        {() => (
+          <RequireSignedIn>
+            <EpppSuitePage tab="clinical-cases" />
+          </RequireSignedIn>
+        )}
+      </Route>
+      <Route path="/eppp/rapid-review">
+        {() => (
+          <RequireSignedIn>
+            <EpppSuitePage tab="rapid-review" />
+          </RequireSignedIn>
+        )}
+      </Route>
       <Route path="/eppp/domains">
         {() => (
           <RequireSignedIn>

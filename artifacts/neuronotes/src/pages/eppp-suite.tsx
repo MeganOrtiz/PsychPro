@@ -425,14 +425,7 @@ function SuiteContent({
         />
       );
     case "clinical-cases":
-      return (
-        <ComingSoonPanel
-          eyebrow="APPLY"
-          title="Clinical Integration Cases"
-          icon={Stethoscope}
-          description="Realistic clinical scenarios that test how you apply concepts across domains — the way the EPPP does — so knowledge transfers to exam questions and real practice."
-        />
-      );
+      return <ClinicalCasesPanel />;
     case "full-length-exams":
       return (
         <ComingSoonPanel
@@ -452,14 +445,7 @@ function SuiteContent({
         />
       );
     case "rapid-review":
-      return (
-        <ComingSoonPanel
-          eyebrow="REINFORCE"
-          title="Rapid Review"
-          icon={Zap}
-          description="Fast, focused refreshers across every domain — built for the final stretch before exam day."
-        />
-      );
+      return <RapidReviewPanel />;
     default:
       return <EpppDashboardPage />;
   }
@@ -826,6 +812,147 @@ function Part2SkillsPanel({ onNavigate }: { onNavigate: (to: string) => void }) 
   );
 }
 
+// ---- Clinical cases + rapid review foundations ---------------------------
+const PART1_KNOWLEDGE_DOMAINS = [
+  "Biological Bases of Behavior",
+  "Cognitive-Affective Bases of Behavior",
+  "Social and Cultural Bases of Behavior",
+  "Growth and Lifespan Development",
+  "Assessment and Diagnosis",
+  "Treatment, Intervention, Prevention, and Supervision",
+  "Research Methods and Statistics",
+  "Ethical, Legal, and Professional Issues",
+];
+
+const PART2_SKILL_PHASES = [
+  "Assessment and Intervention Skills",
+  "Consultation and Supervision Skills",
+  "Scientific Thinking and Evidence Use",
+  "Professional Ethics and Legal Decision-Making",
+  "Communication, Relationships, and Diversity",
+  "Clinical Reasoning and Applied Judgment",
+];
+
+function ClinicalCasesPanel() {
+  return (
+    <ContentCreationPanel
+      eyebrow="APPLY"
+      title="Clinical Integration Cases"
+      icon={Stethoscope}
+      part1Title="Part 1 cases first"
+      part1Description="Build cases from the Part 1 knowledge domains so learners practice applying core EPPP concepts before layering in Part 2 skill judgment."
+      part1Items={PART1_KNOWLEDGE_DOMAINS}
+      part2Title="Part 2 cases next"
+      part2Description="After Part 1 cases are loaded, add skill-heavy cases that emphasize judgment, communication, consultation, supervision, and ethics decision-making."
+      part2Items={PART2_SKILL_PHASES}
+      contractLines={[
+        "Use case stems with setting, client/context, presenting issue, and decision point.",
+        "Tag every case as Part 1 or Part 2 before upload.",
+        "Attach questions, rationales, competencies, and difficulty metadata to the case.",
+      ]}
+    />
+  );
+}
+
+function RapidReviewPanel() {
+  return (
+    <ContentCreationPanel
+      eyebrow="REINFORCE"
+      title="Rapid Review"
+      icon={Zap}
+      part1Title="Part 1 review first"
+      part1Description="Create concise recall sheets and final-pass review prompts for each Part 1 knowledge domain before adding Part 2 applied review."
+      part1Items={PART1_KNOWLEDGE_DOMAINS}
+      part2Title="Part 2 review next"
+      part2Description="Then create applied review drills for clinical reasoning, decision-making, supervision, consultation, ethics, and diversity-centered practice."
+      part2Items={PART2_SKILL_PHASES}
+      contractLines={[
+        "Keep Rapid Review separate from full chapters and flashcards.",
+        "Use concise bullets, traps, compare/contrast frames, and quick retrieval prompts.",
+        "Tag each review asset as Part 1 or Part 2 before upload.",
+      ]}
+    />
+  );
+}
+
+function ContentCreationPanel({
+  eyebrow,
+  title,
+  icon: Icon,
+  part1Title,
+  part1Description,
+  part1Items,
+  part2Title,
+  part2Description,
+  part2Items,
+  contractLines,
+}: {
+  eyebrow: string;
+  title: string;
+  icon: React.ComponentType<{ className?: string }>;
+  part1Title: string;
+  part1Description: string;
+  part1Items: string[];
+  part2Title: string;
+  part2Description: string;
+  part2Items: string[];
+  contractLines: string[];
+}) {
+  return (
+    <div className="study-page-bg eps-panel" data-testid={`eppp-panel-${title.toLowerCase().replace(/\s+/g, "-")}`}>
+      <div className="eps-shell">
+        <PanelHead
+          eyebrow={eyebrow}
+          title={title}
+          subtitle="This section is ready to be built in sequence: Part 1 first, then Part 2. Content loaded here stays inside the EPPP Mastery Suite."
+        />
+
+        <div className="eps-build-grid">
+          <section className="eps-build-card is-active">
+            <div className="eps-build-kicker">
+              <Icon aria-hidden />
+              <span>Build now</span>
+            </div>
+            <h2>{part1Title}</h2>
+            <p>{part1Description}</p>
+            <div className="eps-build-list">
+              {part1Items.map((item) => (
+                <span key={item}>{item}</span>
+              ))}
+            </div>
+          </section>
+
+          <section className="eps-build-card">
+            <div className="eps-build-kicker">
+              <Brain aria-hidden />
+              <span>Build second</span>
+            </div>
+            <h2>{part2Title}</h2>
+            <p>{part2Description}</p>
+            <div className="eps-build-list">
+              {part2Items.map((item) => (
+                <span key={item}>{item}</span>
+              ))}
+            </div>
+          </section>
+        </div>
+
+        <section className="eps-contract-card">
+          <span className="eps-soon-pill">
+            <Sparkles aria-hidden /> Upload contract
+          </span>
+          <h2>Claude should create Part 1 content for this section first</h2>
+          <ul>
+            {contractLines.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ul>
+        </section>
+      </div>
+    </div>
+  );
+}
+
 // ---- EPPP-only resources --------------------------------------------------
 function EpppResourcesPanel() {
   return (
@@ -1105,6 +1232,80 @@ const styles = `
 }
 @media (max-width: 560px) {
   .eps-skill-shells { grid-template-columns: 1fr; }
+}
+
+/* ---- staged content creation panels ---- */
+.eps-build-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(14px, 2vw, 20px);
+}
+.eps-build-card,
+.eps-contract-card {
+  border-radius: 18px;
+  padding: clamp(18px, 2.4vw, 26px);
+  background: linear-gradient(145deg, rgba(10,45,61,0.48), rgba(6,28,40,0.7));
+  border: 1px solid ${C.hairline};
+  box-shadow: 0 22px 70px -54px rgba(0,0,0,0.82);
+}
+.eps-build-card.is-active {
+  background:
+    radial-gradient(circle at 18% 0%, ${C.cyan}22, transparent 36%),
+    linear-gradient(145deg, rgba(14,60,80,0.62), rgba(6,28,40,0.72));
+  border-color: ${C.hairlineStrong};
+}
+.eps-build-kicker {
+  display: inline-flex; align-items: center; gap: 7px;
+  margin-bottom: 14px;
+  font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+  color: ${C.mist};
+}
+.eps-build-kicker svg { width: 15px; height: 15px; color: ${C.cyan}; }
+.eps-build-card h2,
+.eps-contract-card h2 {
+  margin: 0;
+  font-size: clamp(18px, 2.1vw, 24px);
+  font-weight: 700;
+  color: ${C.cloud};
+}
+.eps-build-card p {
+  margin: 10px 0 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: ${C.body};
+}
+.eps-build-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+.eps-build-list span {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: rgba(118,228,247,0.1);
+  border: 1px solid ${C.hairline};
+  color: ${C.mist};
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+.eps-contract-card {
+  background:
+    linear-gradient(90deg, rgba(118,228,247,0.16), transparent 44%),
+    rgba(2,19,27,0.58);
+}
+.eps-contract-card ul {
+  margin: 16px 0 0;
+  padding-left: 18px;
+  color: ${C.body};
+  font-size: 13.5px;
+  line-height: 1.7;
+}
+.eps-contract-card li + li { margin-top: 7px; }
+@media (max-width: 820px) {
+  .eps-build-grid { grid-template-columns: 1fr; }
 }
 
 /* ---- coming soon ---- */

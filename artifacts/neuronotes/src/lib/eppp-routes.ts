@@ -21,6 +21,14 @@ export function epppSkillsPath(): string {
   return "/eppp/skills";
 }
 
+export function epppClinicalCasesPath(): string {
+  return "/eppp/clinical-cases";
+}
+
+export function epppRapidReviewPath(): string {
+  return "/eppp/rapid-review";
+}
+
 export function epppMasteryExamPath(category: string): string {
   return `/eppp/courses/${encodeURIComponent(category)}/mastery-exam`;
 }
