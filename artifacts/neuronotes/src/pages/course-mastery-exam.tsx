@@ -281,7 +281,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
           <PageTitle
             title="Course Mastery Exam"
             icon={GraduationCap}
-            subtitle={`${category} · comprehensive exam`}
+            subtitle={`${category} · Comprehensive Exam`}
             className="mb-8"
           />
 
