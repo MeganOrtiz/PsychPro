@@ -168,6 +168,17 @@ export default function PracticeExamPage({ params }: Props) {
   const examAvailable = topic?.examQuestionCount ?? Infinity;
   const availableCounts = QUESTION_COUNT_OPTIONS.filter((n) => n <= examAvailable);
 
+  // Auto-select a default exam length so the user can start immediately —
+  // no "choose a length" prompt or disabled "select length" placeholder.
+  useEffect(() => {
+    if (questionCount !== null) return;
+    if (availableCounts.length > 0) {
+      setQuestionCount(availableCounts[0]);
+    } else if (examAvailable > 0 && Number.isFinite(examAvailable)) {
+      setQuestionCount(Math.min(25, examAvailable) as QuestionCount);
+    }
+  }, [questionCount, availableCounts, examAvailable]);
+
   if (started && !isLoading && total === 0) {
     return (
       <div className="min-h-full study-page-bg" data-testid="exam-empty">
@@ -320,7 +331,6 @@ export default function PracticeExamPage({ params }: Props) {
         <PageTitle
           title="Practice Exam"
           icon={GraduationCap}
-          subtitle="Choose your exam length to get started"
           className="mb-8"
         />
 
@@ -432,7 +442,7 @@ export default function PracticeExamPage({ params }: Props) {
               data-testid="button-start-exam"
             >
               {questionCount === null
-                ? "Select exam length above"
+                ? "Start Exam"
                 : warmupEnabled
                 ? <><Brain className="w-4 h-4 mr-2" />Begin with warm-up</>
                 : timed
