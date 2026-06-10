@@ -1692,7 +1692,7 @@ const styles = `
 .eps-subtabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: clamp(20px, 2.4vw, 28px); }
 .eps-subtab {
   display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
-  padding: 9px 16px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap;
+  padding: 9px 16px; border-radius: 12px; font-size: 13px; font-weight: 600; white-space: nowrap;
   color: ${C.mist}; background: rgba(12,28,38,0.55); border: 1px solid ${C.hairlineStrong};
   transition: transform 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
