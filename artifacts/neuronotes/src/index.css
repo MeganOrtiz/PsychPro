@@ -354,10 +354,10 @@
   box-shadow: none;
 }
 
-/* Neutral focus ring on study-page buttons — the global study --ring is
-   cyan (188 90% 72%), which would put a cyan halo on keyboard-focused
-   buttons. Scope a faint frost ring to buttons only so no cyan appears in
-   any state (reference comp IMG_2548). Inputs/other surfaces keep --ring. */
+/* Softer focus ring on study-page buttons — the global study --ring is a
+   saturated cyan (188 90% 72%) that clashes with the cerulean button glow.
+   Scope a gentler ring to buttons only so keyboard focus reads cleanly over
+   the glow. Inputs/other surfaces keep the default --ring. */
 .study-page-bg button,
 .study-page-aurora button {
   --ring: 194 30% 82%;
