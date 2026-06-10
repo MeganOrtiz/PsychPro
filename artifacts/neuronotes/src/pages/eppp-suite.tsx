@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { UserButton } from "@clerk/clerk-react";
 import {
@@ -47,7 +47,7 @@ import {
   isEpppKnowledgeTopic,
   isEpppPart2Topic,
 } from "@/lib/eppp-content";
-import { epppDomainAnchor, epppMasteryExamPath, epppTopicModePath, epppTopicPath } from "@/lib/eppp-routes";
+import { epppDomainAnchor, epppDomainSlug, epppMasteryExamPath, epppTopicModePath, epppTopicPath } from "@/lib/eppp-routes";
 import smokeBg from "@/assets/bg/brain-clouds.png";
 import EpppDashboardPage from "@/pages/eppp-dashboard";
 
@@ -121,6 +121,14 @@ const MOVED_INTO_PART1: Record<string, TabSlug> = {
   "question-bank": "domains",
   "clinical-cases": "domains",
   "rapid-review": "domains",
+};
+
+// When arriving via one of those dedicated deep-link routes, also open the
+// matching Part 1 sub-tab (rapid review lives under "Quick Reference Guides").
+const MOVED_INTO_PART1_SUB: Record<string, Part1SubKey> = {
+  "question-bank": "question-bank",
+  "clinical-cases": "clinical-cases",
+  "rapid-review": "quick-reference",
 };
 
 // Reuse the main-app sidebar pill recipe (classes defined in index.css).
@@ -218,6 +226,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
   const activeSlug: TabSlug = TABS.some((t) => t.slug === requestedTab)
     ? (requestedTab as TabSlug)
     : DEFAULT_TAB;
+  const part1Sub = tab ? MOVED_INTO_PART1_SUB[tab] : undefined;
 
   return (
     <div className="study-page-bg flex min-h-screen" data-testid="eppp-suite">
@@ -352,7 +361,12 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
         </header>
 
         <main className="flex-1 overflow-y-auto" data-testid="eppp-suite-content">
-          <SuiteContent slug={activeSlug} onNavigate={navigate} />
+          <SuiteContent
+            slug={activeSlug}
+            rawTab={tab}
+            part1Sub={part1Sub}
+            onNavigate={navigate}
+          />
         </main>
       </div>
     </div>
@@ -364,9 +378,13 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
 // ===========================================================================
 function SuiteContent({
   slug,
+  rawTab,
+  part1Sub,
   onNavigate,
 }: {
   slug: TabSlug;
+  rawTab?: string;
+  part1Sub?: Part1SubKey;
   onNavigate: (to: string) => void;
 }) {
   switch (slug) {
@@ -375,7 +393,13 @@ function SuiteContent({
     case "resources":
       return <EpppResourcesPanel />;
     case "domains":
-      return <Part1Panel onNavigate={onNavigate} />;
+      return (
+        <Part1Panel
+          key={rawTab ?? "domains"}
+          initialSub={part1Sub}
+          onNavigate={onNavigate}
+        />
+      );
     case "part-2-skills":
       return <Part2SkillsPanel onNavigate={onNavigate} />;
     case "domain-mastery-exams":
@@ -490,6 +514,38 @@ function KnowledgeBody({ onNavigate }: { onNavigate: (to: string) => void }) {
   }, [domainStats]);
 
   const [activeDomain, setActiveDomain] = useState<string | null>(null);
+
+  // Honor a `#<domain-slug>` anchor (from epppDomainAnchor) so deep links and
+  // "back to domain" links open the matching domain in the rail.
+  const selectDomainFromHash = useMemo(
+    () => (slug: string) => {
+      if (!slug) return;
+      const match = groups.find((g) => epppDomainSlug(g.name) === slug);
+      if (match) setActiveDomain(match.name);
+    },
+    [groups],
+  );
+
+  // Apply the initial hash once topics have loaded (deep link / full reload).
+  // One-shot so a later topics refetch or a manual rail click isn't overridden.
+  const initialHashApplied = useRef(false);
+  useEffect(() => {
+    if (initialHashApplied.current || typeof window === "undefined") return;
+    if (groups.length === 0) return;
+    selectDomainFromHash(window.location.hash.replace(/^#/, ""));
+    initialHashApplied.current = true;
+  }, [groups, selectDomainFromHash]);
+
+  // React to genuine hash changes (browser back/forward, edited URL). These
+  // don't fire on manual rail clicks, which never touch the URL hash.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const onHashChange = () =>
+      selectDomainFromHash(window.location.hash.replace(/^#/, ""));
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, [selectDomainFromHash]);
+
   const activeName =
     activeDomain && groups.some((g) => g.name === activeDomain)
       ? activeDomain
@@ -1095,8 +1151,14 @@ const PART1_SUBTABS: {
   },
 ];
 
-function Part1Panel({ onNavigate }: { onNavigate: (to: string) => void }) {
-  const [sub, setSub] = useState<Part1SubKey>("knowledge");
+function Part1Panel({
+  initialSub,
+  onNavigate,
+}: {
+  initialSub?: Part1SubKey;
+  onNavigate: (to: string) => void;
+}) {
+  const [sub, setSub] = useState<Part1SubKey>(initialSub ?? "knowledge");
   const meta = PART1_SUBTABS.find((t) => t.key === sub) ?? PART1_SUBTABS[0];
 
   return (

@@ -19,7 +19,7 @@ import {
   getGetCourseMasteryStatusQueryKey,
 } from "@workspace/api-client-react";
 import { groupEpppTopicsByCategory, isEpppKnowledgeTopic } from "@/lib/eppp-content";
-import { epppTopicPath } from "@/lib/eppp-routes";
+import { epppDomainAnchor, epppTopicPath } from "@/lib/eppp-routes";
 
 // ---------------------------------------------------------------------------
 // EPPP Mastery Suite dashboard — the working "how ready am I" home for the
@@ -343,7 +343,7 @@ export function EpppDashboardView({
                 return (
                   <Link
                     key={d.category}
-                    href="/eppp/domains"
+                    href={epppDomainAnchor(d.category)}
                     className={`epd-domain${d.mastered ? " is-mastered" : ""}`}
                     data-testid={`eppp-domain-${d.category
                       .toLowerCase()

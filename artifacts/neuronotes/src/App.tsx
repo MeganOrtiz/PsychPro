@@ -34,7 +34,6 @@ import ResourcesPage from "@/pages/resources";
 import StudyLabPage from "@/pages/study-lab";
 import BrainLabPage from "@/pages/brain-lab";
 import EpppPage from "@/pages/eppp";
-import EpppDomainsPage from "@/pages/eppp-domains";
 import AdminFeedbackPage from "@/pages/admin-feedback";
 import AdminTokensPage from "@/pages/admin-tokens";
 import MyDecksPage from "@/pages/my-decks";
@@ -132,13 +131,6 @@ function AppRouter() {
         {() => (
           <RequireSignedIn>
             <EpppSuitePage tab="rapid-review" />
-          </RequireSignedIn>
-        )}
-      </Route>
-      <Route path="/eppp/domains">
-        {() => (
-          <RequireSignedIn>
-            <EpppDomainsPage />
           </RequireSignedIn>
         )}
       </Route>

@@ -13,8 +13,15 @@ export function epppTopicModePath(
   return `${epppTopicPath(topicId)}/${mode}`;
 }
 
+export function epppDomainSlug(category: string): string {
+  return category
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
 export function epppDomainAnchor(category: string): string {
-  return `/eppp/suite/domains#${category.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`;
+  return `/eppp/suite/domains#${epppDomainSlug(category)}`;
 }
 
 export function epppSkillsPath(): string {
