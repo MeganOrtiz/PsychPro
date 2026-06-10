@@ -214,14 +214,46 @@ export default function AppLayout({ children }: AppLayoutProps) {
           style={{ background: `radial-gradient(closest-side, ${STUDY_PALETTE.teal}2e, transparent)` }}
         />
 
-        {/* Brand wordmark intentionally removed from the sidebar — the
-            canonical PSYCHPRO title now lives centered on the page (dashboard
-            BrandBanner / PageTitle), so a second top-left logo was redundant.
-            We keep a slim top bar so the mobile close button still has a home
-            and the nav gets a little breathing room on desktop. */}
-        <div className="relative flex items-center justify-end px-4 pt-4 pb-1">
+        {/* Brand header — mirrors the EPPP suite sidebar wordmark (icon box +
+            word + eyebrow) so the main workspace carries a matching identity at
+            the top of the column. "learn. connect. expand." echoes the three
+            primary nav groups (Learn / Connect / Expand). */}
+        <div className="relative flex items-center justify-between px-4 pt-4 pb-2">
+          <div className="flex items-center gap-[11px]">
+            <span
+              className="inline-flex items-center justify-center w-9 h-9 flex-shrink-0 rounded-[11px]"
+              style={{
+                background: "rgba(118,228,247,0.09)",
+                border: "1px solid rgba(118,228,247,0.27)",
+                color: "#76E4F7",
+                boxShadow: "0 0 18px -4px rgba(118,228,247,0.5)",
+              }}
+            >
+              <Brain className="w-[18px] h-[18px]" />
+            </span>
+            <span className="flex flex-col leading-none">
+              <span
+                className="text-[18px] font-light"
+                style={{
+                  fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
+                  letterSpacing: "0.14em",
+                  paddingLeft: "0.14em",
+                  color: "#F4FBFF",
+                  textShadow: "0 0 18px rgba(118,228,247,0.23)",
+                }}
+              >
+                PsychPro
+              </span>
+              <span
+                className="mt-[5px] text-[10px] font-bold uppercase whitespace-nowrap"
+                style={{ letterSpacing: "0.1em", color: "#A7F3FF" }}
+              >
+                learn. connect. expand.
+              </span>
+            </span>
+          </div>
           <button
-            className="md:hidden text-white/80"
+            className="md:hidden text-white/80 mt-1"
             onClick={() => setSidebarOpen(false)}
             aria-label="Close menu"
           >
