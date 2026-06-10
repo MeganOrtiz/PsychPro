@@ -10,6 +10,7 @@ import {
   ClipboardList,
   XCircle,
   BookMarked,
+  BookOpen,
   Zap,
   BarChart3,
   Library,
@@ -19,6 +20,10 @@ import {
   Menu,
   X,
   Brain,
+  Atom,
+  Users,
+  Baby,
+  Scale,
   CheckCircle2,
   Lock,
   Sparkles,
@@ -42,7 +47,7 @@ import {
   isEpppKnowledgeTopic,
   isEpppPart2Topic,
 } from "@/lib/eppp-content";
-import { epppDomainAnchor, epppMasteryExamPath, epppTopicModePath } from "@/lib/eppp-routes";
+import { epppDomainAnchor, epppMasteryExamPath, epppTopicModePath, epppTopicPath } from "@/lib/eppp-routes";
 import smokeBg from "@/assets/bg/brain-clouds.png";
 import EpppDashboardPage from "@/pages/eppp-dashboard";
 
@@ -442,57 +447,194 @@ function PanelHead({
 }
 
 // ---- Part 1: Knowledge (sub-tab body) -------------------------------------
+// Map each EPPP content domain to a representative icon. Falls back to a
+// generic book glyph for any unrecognized domain name.
+function knowledgeDomainIcon(
+  name: string,
+): React.ComponentType<{ className?: string }> {
+  const n = name.toLowerCase();
+  if (n.includes("assessment") || n.includes("diagnosis")) return ClipboardList;
+  if (n.includes("biological")) return Atom;
+  if (n.includes("cognitive") || n.includes("affective")) return Brain;
+  if (n.includes("social") || n.includes("cultural")) return Users;
+  if (n.includes("growth") || n.includes("lifespan") || n.includes("development"))
+    return Baby;
+  if (
+    n.includes("treatment") ||
+    n.includes("intervention") ||
+    n.includes("prevention") ||
+    n.includes("supervision")
+  )
+    return Stethoscope;
+  if (n.includes("research") || n.includes("statistic")) return BarChart3;
+  if (n.includes("ethic") || n.includes("legal") || n.includes("professional"))
+    return Scale;
+  return BookOpen;
+}
+
+// Knowledge sub-tab — mirrors the main-site Courses page: a left rail of every
+// EPPP content domain and a right pane showing the selected domain's lessons as
+// cards. Default-selects the first domain; lessons open their topic page.
 function KnowledgeBody({ onNavigate }: { onNavigate: (to: string) => void }) {
-  const { domainStats, domainsLoading } = useEpppDomains();
+  const { allTopics, topicsLoading, domainStats, domainsLoading } =
+    useEpppDomains();
+
+  const groups = useMemo(
+    () => groupEpppTopicsByCategory(allTopics),
+    [allTopics],
+  );
+  const statByName = useMemo(() => {
+    const map = new Map<string, DomainStat>();
+    for (const stat of domainStats) map.set(stat.category, stat);
+    return map;
+  }, [domainStats]);
+
+  const [activeDomain, setActiveDomain] = useState<string | null>(null);
+  const activeName =
+    activeDomain && groups.some((g) => g.name === activeDomain)
+      ? activeDomain
+      : (groups[0]?.name ?? null);
+  const activeGroup = groups.find((g) => g.name === activeName) ?? null;
   const masteredCount = domainStats.filter((d) => d.mastered).length;
+
+  if (topicsLoading && groups.length === 0) {
+    return <div className="eps-empty">Loading your domains…</div>;
+  }
+  if (groups.length === 0) {
+    return <div className="eps-empty">No EPPP domains are available yet.</div>;
+  }
 
   return (
     <>
       <div className="eps-section-head">
         <span className="eps-section-meta">
-          {domainStats.length === 0
-            ? "Loading…"
-            : `${masteredCount}/${domainStats.length} mastered`}
+          {masteredCount}/{groups.length} mastered
         </span>
       </div>
 
-      {domainStats.length === 0 ? (
-        <div className="eps-empty">Loading your domains…</div>
-      ) : (
-        <div className="eps-domain-grid">
-          {domainStats.map((d) => (
-            <button
-              key={d.category}
-              className={cn("eps-domain", d.mastered && "is-mastered", domainsLoading && "is-loading")}
-              onClick={() => onNavigate("/eppp/domains")}
-              data-testid={`eppp-domain-${slugify(d.category)}`}
-            >
-              <div className="eps-domain-top">
-                <span className="eps-domain-name">{d.category}</span>
-                {d.mastered && (
-                  <span className="eps-badge eps-badge--mastered">
-                    <CheckCircle2 aria-hidden /> Mastered
-                  </span>
-                )}
-              </div>
-              <div className="eps-bar">
-                {domainsLoading ? (
-                  <span className="eps-bar-fill eps-bar-fill--idle" />
-                ) : (
-                  <span className="eps-bar-fill" style={{ width: `${d.pct}%` }} />
-                )}
-              </div>
-              <div className="eps-domain-foot">
-                <span>
-                  {domainsLoading ? "Checking progress…" : `${d.passed}/${d.total} lessons`}
+      <div className="eps-kb-grid">
+        <aside className="eps-kb-rail" aria-label="EPPP content domains">
+          {groups.map((group) => {
+            const stat = statByName.get(group.name);
+            const Icon = knowledgeDomainIcon(group.name);
+            const isActive = group.name === activeName;
+            const pct = stat?.pct ?? 0;
+            const mastered = !!stat?.mastered;
+            return (
+              <button
+                key={group.name}
+                type="button"
+                aria-pressed={isActive}
+                className={cn("eps-kb-rail-item", isActive && "is-active")}
+                onClick={() => setActiveDomain(group.name)}
+                data-testid={`eppp-knowledge-rail-${slugify(group.name)}`}
+              >
+                <span className="eps-kb-rail-icon">
+                  <Icon aria-hidden />
                 </span>
-                {!domainsLoading && <span className="eps-domain-pct">{d.pct}%</span>}
-              </div>
+                <span className="eps-kb-rail-text">
+                  <span className="eps-kb-rail-name">{group.name}</span>
+                  <span className="eps-kb-rail-meta">
+                    {group.items.length}{" "}
+                    {group.items.length === 1 ? "lesson" : "lessons"}
+                  </span>
+                  <span className="eps-kb-rail-bar">
+                    {domainsLoading ? (
+                      <span className="eps-kb-rail-bar-fill is-idle" />
+                    ) : (
+                      <span
+                        className="eps-kb-rail-bar-fill"
+                        style={{ width: `${pct}%` }}
+                      />
+                    )}
+                  </span>
+                </span>
+                <span className="eps-kb-rail-aside">
+                  {mastered ? (
+                    <CheckCircle2
+                      aria-label="Mastered"
+                      className="eps-kb-rail-check"
+                    />
+                  ) : domainsLoading ? null : (
+                    <span className="eps-kb-rail-pct">{pct}%</span>
+                  )}
+                </span>
+              </button>
+            );
+          })}
+        </aside>
+
+        <div className="eps-kb-content">
+          {activeGroup && (
+            <KnowledgeDomainPane
+              group={activeGroup}
+              stat={statByName.get(activeGroup.name)}
+              onNavigate={onNavigate}
+            />
+          )}
+        </div>
+      </div>
+    </>
+  );
+}
+
+function KnowledgeDomainPane({
+  group,
+  stat,
+  onNavigate,
+}: {
+  group: { name: string; items: Topic[] };
+  stat?: DomainStat;
+  onNavigate: (to: string) => void;
+}) {
+  const Icon = knowledgeDomainIcon(group.name);
+  return (
+    <div data-testid={`eppp-knowledge-pane-${slugify(group.name)}`}>
+      <div className="eps-kb-head">
+        <span className="eps-kb-head-icon">
+          <Icon aria-hidden />
+        </span>
+        <div className="eps-kb-head-text">
+          <h2 className="eps-kb-head-name">{group.name}</h2>
+          <p className="eps-kb-head-meta">
+            {group.items.length}{" "}
+            {group.items.length === 1 ? "lesson" : "lessons"}
+            {stat?.mastered ? " · Mastered" : ""}
+          </p>
+        </div>
+      </div>
+
+      {group.items.length === 0 ? (
+        <div className="eps-empty">No lessons in this domain yet.</div>
+      ) : (
+        <div className="eps-kb-lessons">
+          {group.items.map((topic) => (
+            <button
+              key={topic.id}
+              type="button"
+              className="eps-kb-lesson"
+              onClick={() => onNavigate(epppTopicPath(topic.id))}
+              data-testid={`eppp-knowledge-lesson-${topic.id}`}
+            >
+              <span className="eps-kb-lesson-icon">
+                <BookOpen aria-hidden />
+              </span>
+              <span className="eps-kb-lesson-body">
+                <span className="eps-kb-lesson-title">{topic.name}</span>
+                {topic.description && (
+                  <span className="eps-kb-lesson-desc">{topic.description}</span>
+                )}
+                <span className="eps-kb-lesson-meta">
+                  {topic.flashcardCount ?? 0} cards · {topic.quizCount ?? 0}{" "}
+                  questions
+                </span>
+              </span>
+              <ArrowRight aria-hidden className="eps-kb-lesson-arrow" />
             </button>
           ))}
         </div>
       )}
-    </>
+    </div>
   );
 }
 
@@ -1136,31 +1278,103 @@ const styles = `
   border: 1px dashed ${C.hairline}; background: rgba(6,28,40,0.4);
 }
 
-/* ---- domain grid ---- */
-.eps-domain-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: clamp(12px, 1.5vw, 18px); }
-@media (max-width: 900px) { .eps-domain-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
-@media (max-width: 560px) { .eps-domain-grid { grid-template-columns: 1fr; } }
-.eps-domain {
-  display: flex; flex-direction: column; gap: 12px; text-align: left; cursor: pointer;
-  border-radius: 16px; padding: 18px;
-  background: linear-gradient(145deg, rgba(10,45,61,0.5), rgba(6,28,40,0.62));
+/* ---- Knowledge sub-tab: course-style rail + lessons pane ---- */
+@keyframes eps-pulse { 0%,100% { opacity: 0.4; } 50% { opacity: 0.9; } }
+.eps-kb-grid { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: clamp(14px, 1.8vw, 20px); align-items: start; }
+@media (max-width: 900px) { .eps-kb-grid { grid-template-columns: 1fr; } }
+
+.eps-kb-rail {
+  position: sticky; top: 16px;
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 10px; border-radius: 14px;
+  border: 1px solid ${C.hairline};
+  background: linear-gradient(155deg, rgba(7,36,50,0.78), rgba(3,21,29,0.88));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+}
+@media (max-width: 900px) {
+  .eps-kb-rail {
+    position: static;
+    flex-direction: row; flex-wrap: nowrap;
+    overflow-x: auto; padding-bottom: 8px;
+    scrollbar-width: thin;
+  }
+  .eps-kb-rail-item { flex: 0 0 auto; min-width: 220px; }
+}
+.eps-kb-rail-item {
+  display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 11px; align-items: center;
+  text-align: left; cursor: pointer;
+  padding: 11px 12px; border-radius: 11px;
+  border: 1px solid rgba(118,228,247,0.10);
+  background: rgba(255,255,255,0.025);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease, background 0.2s ease;
+}
+.eps-kb-rail-item:hover { border-color: ${C.cyan}66; background: rgba(118,228,247,0.06); }
+.eps-kb-rail-item:focus-visible,
+.eps-kb-lesson:focus-visible { outline: 2px solid ${C.cyan}; outline-offset: 2px; }
+.eps-kb-rail-item.is-active {
+  border-color: ${C.cyan}8c;
+  background: linear-gradient(145deg, rgba(14,60,80,0.7), rgba(8,36,48,0.78));
+  box-shadow: 0 0 22px -10px ${C.cyan}b3, inset 0 1px 0 rgba(255,255,255,0.06);
+}
+.eps-kb-rail-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px;
+  background: ${C.cyan}16; border: 1px solid ${C.cyan}40; color: ${C.cyan};
+}
+.eps-kb-rail-icon svg { width: 17px; height: 17px; }
+.eps-kb-rail-text { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.eps-kb-rail-name {
+  font-size: 13.5px; font-weight: 600; color: ${C.cloud}; line-height: 1.25;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.eps-kb-rail-meta { font-size: 11px; color: ${C.mist}; }
+.eps-kb-rail-bar { height: 5px; border-radius: 999px; background: rgba(118,228,247,0.1); overflow: hidden; }
+.eps-kb-rail-bar-fill { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, ${C.cyan}, ${C.mist}); box-shadow: 0 0 8px ${C.cyan}80; transition: width 800ms cubic-bezier(0.16,1,0.3,1); }
+.eps-kb-rail-bar-fill.is-idle { width: 35%; background: rgba(118,228,247,0.28); box-shadow: none; animation: eps-pulse 1.3s ease-in-out infinite; }
+.eps-kb-rail-aside { display: inline-flex; align-items: center; justify-content: flex-end; min-width: 34px; }
+.eps-kb-rail-pct { font-size: 11.5px; font-weight: 700; color: ${C.mist}; }
+.eps-kb-rail-check { width: 17px; height: 17px; color: ${C.cyan}; }
+
+.eps-kb-content { min-width: 0; }
+.eps-kb-head {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 16px; padding-bottom: 13px;
+  border-bottom: 1px solid ${C.hairline};
+}
+.eps-kb-head-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px;
+  background: ${C.cyan}16; border: 1px solid ${C.cyan}40; color: ${C.cyan};
+}
+.eps-kb-head-icon svg { width: 20px; height: 20px; }
+.eps-kb-head-text { min-width: 0; }
+.eps-kb-head-name { margin: 0; font-size: clamp(17px, 2vw, 21px); font-weight: 600; line-height: 1.2; color: ${C.cloud}; }
+.eps-kb-head-meta { margin: 3px 0 0; font-size: 12.5px; color: ${C.muted}; }
+.eps-kb-lessons { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+@media (max-width: 1180px) { .eps-kb-lessons { grid-template-columns: 1fr; } }
+.eps-kb-lesson {
+  display: grid; grid-template-columns: 38px minmax(0, 1fr) 18px; gap: 12px; align-items: center;
+  text-align: left; cursor: pointer;
+  padding: 15px; border-radius: 14px;
+  background: linear-gradient(145deg, rgba(10,45,61,0.5), rgba(6,28,40,0.6));
   border: 1px solid ${C.hairline};
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
-.eps-domain:hover { transform: translateY(-3px); border-color: ${C.cyan}66; box-shadow: 0 22px 56px -38px rgba(0,0,0,0.7), 0 0 24px -10px ${C.cyan}59; }
-.eps-domain.is-mastered { border-color: ${C.cyan}5e; background: linear-gradient(145deg, rgba(14,60,80,0.62), rgba(8,36,48,0.7)); }
-.eps-domain.is-loading { opacity: 0.85; }
-.eps-domain-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
-.eps-domain-name { font-size: 14.5px; font-weight: 600; color: ${C.cloud}; line-height: 1.3; }
-.eps-badge { display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; padding: 3px 9px; border-radius: 999px; font-size: 10.5px; font-weight: 700; }
-.eps-badge svg { width: 12px; height: 12px; }
-.eps-badge--mastered { color: ${C.ink}; background: ${C.cyan}; }
-.eps-bar { height: 7px; border-radius: 999px; background: rgba(118,228,247,0.1); overflow: hidden; }
-.eps-bar-fill { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, ${C.cyan}, ${C.mist}); box-shadow: 0 0 8px ${C.cyan}80; transition: width 800ms cubic-bezier(0.16,1,0.3,1); }
-.eps-bar-fill--idle { width: 35%; background: rgba(118,228,247,0.28); box-shadow: none; animation: eps-pulse 1.3s ease-in-out infinite; }
-@keyframes eps-pulse { 0%,100% { opacity: 0.4; } 50% { opacity: 0.9; } }
-.eps-domain-foot { display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: ${C.muted}; }
-.eps-domain-pct { font-weight: 700; color: ${C.mist}; }
+.eps-kb-lesson:hover { transform: translateY(-2px); border-color: ${C.cyan}66; box-shadow: 0 0 24px -12px ${C.cyan}80; }
+.eps-kb-lesson-icon {
+  display: inline-flex; align-items: center; justify-content: center; align-self: start;
+  width: 38px; height: 38px; flex-shrink: 0; border-radius: 10px;
+  background: ${C.cyan}14; border: 1px solid ${C.cyan}38; color: ${C.cyan};
+}
+.eps-kb-lesson-icon svg { width: 17px; height: 17px; }
+.eps-kb-lesson-body { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.eps-kb-lesson-title { font-size: 14px; font-weight: 650; line-height: 1.25; color: ${C.cloud}; }
+.eps-kb-lesson-desc {
+  font-size: 12px; line-height: 1.45; color: ${C.body};
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.eps-kb-lesson-meta { font-size: 11px; color: ${C.muted}; }
+.eps-kb-lesson-arrow { width: 17px; height: 17px; align-self: center; color: ${C.cyan}; opacity: 0.72; }
 
 /* ---- mastery exam list ---- */
 .eps-exam-list { display: flex; flex-direction: column; gap: 12px; }
