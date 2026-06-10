@@ -1,5 +1,9 @@
 import app from "./app";
-import { db, backfillCoursesFromTopics } from "@workspace/db";
+import {
+  db,
+  backfillCoursesFromTopics,
+  backfillFullLengthExamTime,
+} from "@workspace/db";
 import { logger } from "./lib/logger";
 import { logResolvedClientErrorsRateLimit } from "./startup";
 import { startClientErrorsRateLimitCleanup } from "./middlewares/clientErrorsRateLimit";
@@ -44,4 +48,19 @@ app.listen(port, "0.0.0.0", (err) => {
       ),
     )
     .catch((err) => logger.error({ err }, "Course backfill failed"));
+
+  // Correct the EPPP full-length exam time budgets (255 min stored as 255 sec).
+  // Idempotent and race-safe; the ONLY path that fixes the production data.
+  void backfillFullLengthExamTime(db)
+    .then((result) =>
+      logger.info(
+        result,
+        result.skipped
+          ? "Full-length exam time backfill: already up to date"
+          : "Full-length exam time backfill complete",
+      ),
+    )
+    .catch((err) =>
+      logger.error({ err }, "Full-length exam time backfill failed"),
+    );
 });
