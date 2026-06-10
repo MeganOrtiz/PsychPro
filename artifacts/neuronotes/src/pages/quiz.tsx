@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { CheckCircle, XCircle, ChevronRight, BookOpen, Lightbulb } from "lucide-react";
 import { useGetQuizzesByTopic, useUpdateTopicProgress, useRecordQuizAttempt, useGetTopic } from "@workspace/api-client-react";
@@ -32,6 +32,9 @@ export default function QuizPage({ params }: Props) {
   const [showUpgrade, setShowUpgrade] = useState(false);
   const [reflection, setReflection] = useState("");
   const [reflectionSaved, setReflectionSaved] = useState(false);
+  // IDs of questions answered incorrectly this run — sent with the attempt so
+  // the EPPP "Missed Questions" tab can surface them for review.
+  const missedIdsRef = useRef<number[]>([]);
 
   const { data: questions, isLoading, error } = useGetQuizzesByTopic(topicId);
   const { data: topic } = useGetTopic(topicId);
@@ -81,6 +84,8 @@ export default function QuizPage({ params }: Props) {
     setShowExplanation(true);
     if (key === current?.correctAnswer) {
       setScore(s => s + 1);
+    } else if (current) {
+      missedIdsRef.current.push(current.id);
     }
   };
 
@@ -96,7 +101,7 @@ export default function QuizPage({ params }: Props) {
       }
       if (total > 0) {
         try {
-          await recordAttempt.mutateAsync({ data: { topicId, score, total } });
+          await recordAttempt.mutateAsync({ data: { topicId, score, total, missedQuestionIds: missedIdsRef.current } });
         } catch {
           // non-blocking — server still enforces the cap on the next attempt
         }
@@ -122,6 +127,7 @@ export default function QuizPage({ params }: Props) {
     setShowExplanation(false);
     setScore(0);
     setCompleted(false);
+    missedIdsRef.current = [];
   };
 
   if (showUpgrade) {

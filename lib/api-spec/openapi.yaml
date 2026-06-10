@@ -421,6 +421,19 @@ paths:
               schema:
                 $ref: "#/components/schemas/AttemptRecord"
 
+  /eppp/missed-questions:
+    get:
+      operationId: getEpppMissedQuestions
+      tags: [progress]
+      summary: Questions the current user has answered incorrectly (EPPP review)
+      responses:
+        "200":
+          description: Missed questions with their home topic for client-side part/domain grouping
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EpppMissedQuestionsResponse"
+
   /subscription/plans:
     get:
       operationId: getSubscriptionPlans
@@ -947,10 +960,66 @@ components:
           type: integer
         total:
           type: integer
+        missedQuestionIds:
+          type: array
+          items:
+            type: integer
+          description: IDs of questions answered incorrectly in this attempt.
       required:
         - topicId
         - score
         - total
+
+    EpppMissedQuestion:
+      type: object
+      properties:
+        id:
+          type: integer
+        question:
+          type: string
+        optionA:
+          type: string
+        optionB:
+          type: string
+        optionC:
+          type: string
+        optionD:
+          type: string
+        correctAnswer:
+          type: string
+        explanation:
+          type: string
+        topicId:
+          type: integer
+        topicName:
+          type: string
+        topicCategory:
+          type: string
+        timesMissed:
+          type: integer
+      required:
+        - id
+        - question
+        - optionA
+        - optionB
+        - optionC
+        - optionD
+        - correctAnswer
+        - explanation
+        - topicId
+        - topicName
+        - topicCategory
+        - timesMissed
+
+    EpppMissedQuestionsResponse:
+      type: object
+      properties:
+        questions:
+          type: array
+          items:
+            $ref: "#/components/schemas/EpppMissedQuestion"
+      required:
+        - questions
 
     AttemptRecord:
       type: object

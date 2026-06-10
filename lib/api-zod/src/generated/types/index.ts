@@ -17,6 +17,8 @@ export * from "./courseMasteryStatus";
 export * from "./createCheckoutSessionBody";
 export * from "./dashboardSummary";
 export * from "./dashboardSummaryWeeklyActivityItem";
+export * from "./epppMissedQuestion";
+export * from "./epppMissedQuestionsResponse";
 export * from "./flashcard";
 export * from "./flashcardDifficulty";
 export * from "./getPracticeExamByTopicParams";

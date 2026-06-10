@@ -247,6 +247,27 @@ export interface RecordAttemptBody {
   topicId: number;
   score: number;
   total: number;
+  /** IDs of questions answered incorrectly in this attempt. */
+  missedQuestionIds?: number[];
+}
+
+export interface EpppMissedQuestion {
+  id: number;
+  question: string;
+  optionA: string;
+  optionB: string;
+  optionC: string;
+  optionD: string;
+  correctAnswer: string;
+  explanation: string;
+  topicId: number;
+  topicName: string;
+  topicCategory: string;
+  timesMissed: number;
+}
+
+export interface EpppMissedQuestionsResponse {
+  questions: EpppMissedQuestion[];
 }
 
 export interface AttemptRecord {

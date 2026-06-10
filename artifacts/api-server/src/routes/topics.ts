@@ -171,8 +171,12 @@ router.get("/topics/:topicId/practice-exam", async (req: Request, res: Response)
       });
       return;
     }
+    // Standard practice exams cap at 50 questions; full-length EPPP exams
+    // (Part 1 / Part 2) need their entire linked pool, so allow up to 250 when
+    // a higher count is explicitly requested. The result is still clamped to
+    // the questions actually linked to this topic's exam (see finalCount below).
     const requestedCount = parseInt(String(req.query.count ?? "25")) || 25;
-    const count = Math.min(Math.max(requestedCount, 1), 50);
+    const count = Math.min(Math.max(requestedCount, 1), 250);
 
     const [exam] = await db.select().from(practiceExamsTable).where(eq(practiceExamsTable.topicId, topicId));
     if (!exam) {

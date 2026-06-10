@@ -4,12 +4,10 @@ import { UserButton } from "@clerk/clerk-react";
 import {
   GraduationCap,
   Layers,
-  FileQuestion,
   Stethoscope,
   ClipboardCheck,
   ClipboardList,
   XCircle,
-  BookMarked,
   BookOpen,
   Zap,
   BarChart3,
@@ -27,14 +25,19 @@ import {
   CheckCircle2,
   Lock,
   Sparkles,
+  Printer,
+  NotebookPen,
+  Timer,
 } from "lucide-react";
 import { useQueries } from "@tanstack/react-query";
 import {
   useGetTopics,
+  useGetEpppMissedQuestions,
   getCourseMasteryStatus,
   getGetCourseMasteryStatusQueryKey,
   type Topic,
   type CourseMasteryStatus,
+  type EpppMissedQuestion,
 } from "@workspace/api-client-react";
 import { STUDY_PALETTE } from "@/lib/study-theme";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -42,10 +45,18 @@ import { NotificationsBell } from "@/components/notifications-bell";
 import { cn } from "@/lib/utils";
 import {
   groupEpppClinicalCases,
-  groupEpppRapidReview,
   groupEpppTopicsByCategory,
+  getEpppClinicalCaseDomain,
+  getEpppDisplayCategory,
+  getEpppExamPart,
+  getEpppFullLengthExamPart,
+  getEpppQuickReferenceGuides,
+  isEpppClinicalCase,
+  isEpppFullLengthExam,
   isEpppKnowledgeTopic,
   isEpppPart2Topic,
+  isEpppTopic,
+  type EpppExamPart,
 } from "@/lib/eppp-content";
 import { epppDomainAnchor, epppDomainSlug, epppMasteryExamPath, epppTopicModePath, epppTopicPath } from "@/lib/eppp-routes";
 import smokeBg from "@/assets/bg/brain-clouds.png";
@@ -82,12 +93,9 @@ type TabSlug =
   | "study-plan"
   | "domains"
   | "part-2-skills"
-  | "question-bank"
-  | "clinical-cases"
   | "domain-mastery-exams"
   | "full-length-exams"
   | "missed-questions"
-  | "flashcards"
   | "rapid-review"
   | "performance-analytics"
   | "resources";
@@ -99,36 +107,34 @@ type TabDef = {
   section?: string;
 };
 
-// Exact order requested by the owner.
+// Exact order requested by the owner: Dashboard sits at the top, then the
+// learning lanes, assessments, review, reference, and the planning placeholder.
 const TABS: TabDef[] = [
-  { slug: "study-plan", label: "Study Plan", icon: ClipboardList, section: "Plan" },
+  { slug: "performance-analytics", label: "Dashboard", icon: BarChart3, section: "Overview" },
   { slug: "domains", label: "Part 1: Knowledge", icon: Layers, section: "Learn" },
   { slug: "part-2-skills", label: "Part 2: Skills", icon: Brain, section: "Learn" },
   { slug: "domain-mastery-exams", label: "Domain Mastery Exams", icon: GraduationCap, section: "Assess" },
   { slug: "full-length-exams", label: "Full-Length Exams", icon: ClipboardCheck, section: "Assess" },
   { slug: "missed-questions", label: "Missed Questions", icon: XCircle, section: "Review" },
-  { slug: "flashcards", label: "Flashcards", icon: BookMarked, section: "Review" },
-  { slug: "performance-analytics", label: "Performance Analytics", icon: BarChart3, section: "Track" },
+  { slug: "rapid-review", label: "Rapid Review", icon: Zap, section: "Review" },
   { slug: "resources", label: "Resources", icon: Library, section: "Reference" },
+  { slug: "study-plan", label: "Study Plan", icon: ClipboardList, section: "Plan" },
 ];
 
 const DEFAULT_TAB: TabSlug = "performance-analytics";
 
-// Question Bank, Clinical Integration Cases, and Quick Reference Guides now
-// live as sub-tabs inside Part 1. Keep their old deep-links working by routing
-// them to the Part 1 tab.
+// Question Bank and Clinical Integration Cases reach Part 1 via legacy
+// deep-links. Question Bank is retired as a sub-tab (it now opens the Knowledge
+// rail); Clinical Cases keeps its own sub-tab. Rapid Review / Quick Reference
+// Guides are now a dedicated top-level tab, not a Part 1 sub-tab.
 const MOVED_INTO_PART1: Record<string, TabSlug> = {
   "question-bank": "domains",
   "clinical-cases": "domains",
-  "rapid-review": "domains",
 };
 
-// When arriving via one of those dedicated deep-link routes, also open the
-// matching Part 1 sub-tab (rapid review lives under "Quick Reference Guides").
+// When arriving via a legacy deep-link, open the matching Part 1 sub-tab.
 const MOVED_INTO_PART1_SUB: Record<string, Part1SubKey> = {
-  "question-bank": "question-bank",
   "clinical-cases": "clinical-cases",
-  "rapid-review": "quick-reference",
 };
 
 // Reuse the main-app sidebar pill recipe (classes defined in index.css).
@@ -169,8 +175,8 @@ function useEpppTopics(part: "part1" | "part2" = "part1") {
   return { allTopics: epppTopics, topicsLoading };
 }
 
-function useEpppDomains() {
-  const { allTopics, topicsLoading } = useEpppTopics();
+function useEpppDomains(part: "part1" | "part2" = "part1") {
+  const { allTopics, topicsLoading } = useEpppTopics(part);
 
   const categories = useMemo(() => {
     return groupEpppTopicsByCategory(allTopics).map((group) => group.name);
@@ -404,21 +410,8 @@ function SuiteContent({
       return <Part2SkillsPanel onNavigate={onNavigate} />;
     case "domain-mastery-exams":
       return <DomainMasteryExamsPanel onNavigate={onNavigate} />;
-    case "flashcards":
-      return (
-        <TopicDirectoryPanel
-          eyebrow="ACTIVE RECALL"
-          title="Flashcards"
-          subtitle="Spaced-repetition flashcard decks for every lesson, organized by content area."
-          icon={BookMarked}
-          countField="flashcardCount"
-          countNoun="cards"
-          hrefFor={(id) => epppTopicModePath(id, "flashcards")}
-          ctaLabel="Study deck"
-          emptyHint="No flashcard decks are available yet."
-          onNavigate={onNavigate}
-        />
-      );
+    case "rapid-review":
+      return <RapidReviewPanel onNavigate={onNavigate} />;
     case "study-plan":
       return (
         <ComingSoonPanel
@@ -429,23 +422,9 @@ function SuiteContent({
         />
       );
     case "full-length-exams":
-      return (
-        <ComingSoonPanel
-          eyebrow="SIMULATE"
-          title="Full-Length Exams"
-          icon={ClipboardCheck}
-          description="Timed, full-length practice exams that mirror the scope and pacing of the EPPP, with detailed score reports across every content area."
-        />
-      );
+      return <FullLengthExamsPanel onNavigate={onNavigate} />;
     case "missed-questions":
-      return (
-        <ComingSoonPanel
-          eyebrow="REVIEW"
-          title="Missed Questions"
-          icon={XCircle}
-          description="Every question you've missed, gathered in one place for targeted review and spaced repetition until you've truly mastered it."
-        />
-      );
+      return <MissedQuestionsPanel onNavigate={onNavigate} />;
     default:
       return <EpppDashboardPage />;
   }
@@ -499,9 +478,15 @@ function knowledgeDomainIcon(
 // Knowledge sub-tab — mirrors the main-site Courses page: a left rail of every
 // EPPP content domain and a right pane showing the selected domain's lessons as
 // cards. Default-selects the first domain; lessons open their topic page.
-function KnowledgeBody({ onNavigate }: { onNavigate: (to: string) => void }) {
+function KnowledgeBody({
+  onNavigate,
+  part = "part1",
+}: {
+  onNavigate: (to: string) => void;
+  part?: "part1" | "part2";
+}) {
   const { allTopics, topicsLoading, domainStats, domainsLoading } =
-    useEpppDomains();
+    useEpppDomains(part);
 
   const groups = useMemo(
     () => groupEpppTopicsByCategory(allTopics),
@@ -695,9 +680,101 @@ function KnowledgeDomainPane({
 }
 
 // ---- Domain Mastery Exams -------------------------------------------------
-function DomainMasteryExamsPanel({ onNavigate }: { onNavigate: (to: string) => void }) {
-  const { domainStats, domainsLoading } = useEpppDomains();
+// Part 1 (8 knowledge domains) and Part 2 (6 skill domains) each get a sub-tab.
+// Every domain's 100-question capstone exam unlocks once all of its lessons are
+// passed at 90%+; mirrors the Knowledge rail's per-part domain set.
+function DomainMasteryBody({
+  part,
+  onNavigate,
+}: {
+  part: EpppExamPart;
+  onNavigate: (to: string) => void;
+}) {
+  const { domainStats, domainsLoading } = useEpppDomains(part);
   const masteredCount = domainStats.filter((d) => d.mastered).length;
+
+  return (
+    <>
+      <div className="eps-section-head">
+        <span className="eps-section-meta">
+          {domainStats.length === 0
+            ? "Loading…"
+            : `${masteredCount}/${domainStats.length} mastered`}
+        </span>
+      </div>
+
+      {domainStats.length === 0 ? (
+        <div className="eps-empty">Loading your domains…</div>
+      ) : (
+        <div className="eps-exam-list">
+          {domainStats.map((d) => {
+            const state = d.mastered
+              ? "mastered"
+              : d.unlocked
+                ? "ready"
+                : "locked";
+            return (
+              <div
+                key={d.category}
+                className={cn("eps-exam-row", `is-${state}`)}
+                data-testid={`eppp-mastery-${slugify(d.category)}`}
+              >
+                <span className="eps-exam-icon">
+                  {state === "mastered" ? (
+                    <CheckCircle2 aria-hidden />
+                  ) : state === "ready" ? (
+                    <GraduationCap aria-hidden />
+                  ) : (
+                    <Lock aria-hidden />
+                  )}
+                </span>
+                <div className="eps-exam-body">
+                  <span className="eps-exam-name">{d.category}</span>
+                  <span className="eps-exam-meta">
+                    {state === "mastered"
+                      ? "Mastered — passed at 90%+"
+                      : state === "ready"
+                        ? "Ready to sit · up to 100 questions"
+                        : domainsLoading
+                          ? "Checking progress…"
+                          : `${d.passed}/${d.total} lessons passed · 90%+ each to unlock`}
+                  </span>
+                </div>
+                {state === "locked" ? (
+                  <button
+                    className="eps-exam-cta eps-exam-cta--ghost"
+                    onClick={() => onNavigate(epppDomainAnchor(d.category))}
+                    data-testid={`eppp-mastery-study-${slugify(d.category)}`}
+                  >
+                    Study lessons <ArrowRight aria-hidden />
+                  </button>
+                ) : (
+                  <button
+                    className="eps-exam-cta"
+                    onClick={() =>
+                      onNavigate(epppMasteryExamPath(d.category))
+                    }
+                    data-testid={`eppp-mastery-open-${slugify(d.category)}`}
+                  >
+                    {state === "mastered" ? "Retake exam" : "Start exam"} <ArrowRight aria-hidden />
+                  </button>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </>
+  );
+}
+
+const MASTERY_SUBTABS: { key: EpppExamPart; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
+  { key: "part1", label: "Part 1: Knowledge", icon: Layers },
+  { key: "part2", label: "Part 2: Skills", icon: Brain },
+];
+
+function DomainMasteryExamsPanel({ onNavigate }: { onNavigate: (to: string) => void }) {
+  const [part, setPart] = useState<EpppExamPart>("part1");
 
   return (
     <div className="study-page-bg eps-panel" data-testid="eppp-panel-mastery-exams">
@@ -705,287 +782,49 @@ function DomainMasteryExamsPanel({ onNavigate }: { onNavigate: (to: string) => v
         <PanelHead
           eyebrow="PROVE MASTERY"
           title="Domain Mastery Exams"
-          subtitle="Capstone exams unlock once you've passed every lesson in a content area at 90%+. Pass the exam at 90%+ to master the domain."
+          subtitle="Capstone exams (up to 100 questions) unlock once you've passed every lesson in a content area at 90%+. Pass the exam at 90%+ to master the domain."
         />
 
-        <div className="eps-section-head">
-          <span className="eps-section-meta">
-            {domainStats.length === 0
-              ? "Loading…"
-              : `${masteredCount}/${domainStats.length} mastered`}
-          </span>
+        <div className="eps-subtabs" role="tablist" aria-label="Exam parts">
+          {MASTERY_SUBTABS.map((t) => {
+            const isActive = t.key === part;
+            return (
+              <button
+                key={t.key}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                className={cn("eps-subtab", isActive && "is-active")}
+                onClick={() => setPart(t.key)}
+                data-testid={`eppp-mastery-subtab-${t.key}`}
+              >
+                <t.icon aria-hidden />
+                <span>{t.label}</span>
+              </button>
+            );
+          })}
         </div>
 
-        {domainStats.length === 0 ? (
-          <div className="eps-empty">Loading your domains…</div>
-        ) : (
-          <div className="eps-exam-list">
-            {domainStats.map((d) => {
-              const state = d.mastered
-                ? "mastered"
-                : d.unlocked
-                  ? "ready"
-                  : "locked";
-              return (
-                <div
-                  key={d.category}
-                  className={cn("eps-exam-row", `is-${state}`)}
-                  data-testid={`eppp-mastery-${slugify(d.category)}`}
-                >
-                  <span className="eps-exam-icon">
-                    {state === "mastered" ? (
-                      <CheckCircle2 aria-hidden />
-                    ) : state === "ready" ? (
-                      <GraduationCap aria-hidden />
-                    ) : (
-                      <Lock aria-hidden />
-                    )}
-                  </span>
-                  <div className="eps-exam-body">
-                    <span className="eps-exam-name">{d.category}</span>
-                    <span className="eps-exam-meta">
-                      {state === "mastered"
-                        ? "Mastered — passed at 90%+"
-                        : state === "ready"
-                          ? "Ready to sit · all lessons passed"
-                          : domainsLoading
-                            ? "Checking progress…"
-                            : `${d.passed}/${d.total} lessons passed · 90%+ each to unlock`}
-                    </span>
-                  </div>
-                  {state === "locked" ? (
-                    <button
-                      className="eps-exam-cta eps-exam-cta--ghost"
-                      onClick={() => onNavigate(epppDomainAnchor(d.category))}
-                      data-testid={`eppp-mastery-study-${slugify(d.category)}`}
-                    >
-                      Study lessons <ArrowRight aria-hidden />
-                    </button>
-                  ) : (
-                    <button
-                      className="eps-exam-cta"
-                      onClick={() =>
-                        onNavigate(epppMasteryExamPath(d.category))
-                      }
-                      data-testid={`eppp-mastery-open-${slugify(d.category)}`}
-                    >
-                      {state === "mastered" ? "Retake exam" : "Start exam"} <ArrowRight aria-hidden />
-                    </button>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
+        <DomainMasteryBody key={part} part={part} onNavigate={onNavigate} />
       </div>
     </div>
-  );
-}
-
-// ---- Topic directory (Question Bank / Flashcards) -------------------------
-type TopicDirectoryBodyProps = {
-  icon: React.ComponentType<{ className?: string }>;
-  countField: "quizCount" | "flashcardCount";
-  countNoun: string;
-  hrefFor: (topicId: number) => string;
-  ctaLabel: string;
-  emptyHint: string;
-  onNavigate: (to: string) => void;
-};
-
-function TopicDirectoryBody({
-  icon: Icon,
-  countField,
-  countNoun,
-  hrefFor,
-  ctaLabel,
-  emptyHint,
-  onNavigate,
-}: TopicDirectoryBodyProps) {
-  const { allTopics, topicsLoading } = useEpppTopics();
-
-  const grouped = useMemo(() => {
-    return groupEpppTopicsByCategory(allTopics).map((group) => [group.name, group.items] as const);
-  }, [allTopics]);
-
-  if (topicsLoading) {
-    return <div className="eps-empty">Loading lessons…</div>;
-  }
-  if (grouped.length === 0) {
-    return <div className="eps-empty">{emptyHint}</div>;
-  }
-  return (
-    <div className="eps-groups">
-      {grouped.map(([category, topics]) => (
-        <section key={category} className="eps-group">
-          <div className="eps-group-head">
-            <Layers className="eps-group-icon" aria-hidden />
-            <h2 className="eps-group-title">{category}</h2>
-            <span className="eps-group-count">{topics.length} lessons</span>
-          </div>
-          <div className="eps-topic-grid">
-            {topics.map((t) => {
-              const count = (t[countField] as number) ?? 0;
-              const disabled = count <= 0;
-              return (
-                <button
-                  key={t.id}
-                  className={cn("eps-topic", disabled && "is-disabled")}
-                  onClick={() => !disabled && onNavigate(hrefFor(t.id))}
-                  disabled={disabled}
-                  data-testid={`eppp-topic-${t.id}`}
-                >
-                  <span className="eps-topic-icon">
-                    <Icon aria-hidden />
-                  </span>
-                  <span className="eps-topic-body">
-                    <span className="eps-topic-name">{t.name}</span>
-                    <span className="eps-topic-meta">
-                      {disabled ? `No ${countNoun} yet` : `${count} ${countNoun}`}
-                    </span>
-                  </span>
-                  {!disabled && (
-                    <span className="eps-topic-cta">
-                      {ctaLabel} <ArrowRight aria-hidden />
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </section>
-      ))}
-    </div>
-  );
-}
-
-function TopicDirectoryPanel({
-  eyebrow,
-  title,
-  subtitle,
-  ...body
-}: TopicDirectoryBodyProps & {
-  eyebrow: string;
-  title: string;
-  subtitle: string;
-}) {
-  return (
-    <div className="study-page-bg eps-panel" data-testid={`eppp-panel-${title.toLowerCase().replace(/\s+/g, "-")}`}>
-      <div className="eps-shell">
-        <PanelHead eyebrow={eyebrow} title={title} subtitle={subtitle} />
-        <TopicDirectoryBody {...body} />
-      </div>
-    </div>
-  );
-}
-
-// ---- Question Bank (sub-tab body) -----------------------------------------
-function QuestionBankBody({ onNavigate }: { onNavigate: (to: string) => void }) {
-  return (
-    <TopicDirectoryBody
-      icon={FileQuestion}
-      countField="quizCount"
-      countNoun="questions"
-      hrefFor={(id) => epppTopicModePath(id, "quiz")}
-      ctaLabel="Practice"
-      emptyHint="No practice questions are available yet."
-      onNavigate={onNavigate}
-    />
   );
 }
 
 // ---- Part 2 Skills --------------------------------------------------------
-const PART2_SKILL_SHELLS = [
-  "Assessment and Intervention Skills",
-  "Consultation and Supervision Skills",
-  "Scientific Thinking and Evidence Use",
-  "Professional Ethics and Legal Decision-Making",
-  "Communication, Relationships, and Diversity",
-  "Clinical Reasoning and Applied Judgment",
-];
-
+// Mirrors Part 1 exactly: a left rail of the six EPPP Part 2 skill domains and
+// a right pane of that domain's lessons. Each lesson opens its topic page with
+// the same flashcards / quiz / study-guide / practice-exam modes as Part 1.
 function Part2SkillsPanel({ onNavigate }: { onNavigate: (to: string) => void }) {
-  const { allTopics, topicsLoading } = useEpppTopics("part2");
-
-  const grouped = useMemo(() => {
-    return groupEpppTopicsByCategory(allTopics).map((group) => [group.name, group.items] as const);
-  }, [allTopics]);
-
   return (
     <div className="study-page-bg eps-panel" data-testid="eppp-panel-part-2-skills">
       <div className="eps-shell">
         <PanelHead
           eyebrow="APPLIED SKILLS"
           title="Part 2: Skills"
-          subtitle="Applied EPPP material belongs here: decision-making, clinical reasoning, communication, supervision, ethics judgment, and case-based skill practice."
+          subtitle="The applied EPPP skill domains. Open a domain to work through its lessons — each lesson has flashcards, a quiz, a study guide, and a practice exam."
         />
-
-        {topicsLoading ? (
-          <div className="eps-empty">Loading Part 2 skills…</div>
-        ) : grouped.length === 0 ? (
-          <div className="eps-import-panel" data-testid="eppp-part2-upload-contract">
-            <div className="eps-import-copy">
-              <span className="eps-soon-pill">
-                <Sparkles aria-hidden /> Ready for upload
-              </span>
-              <h2 className="eps-soon-title">Part 2 content has a home now</h2>
-              <p className="eps-soon-text">
-                Tell Claude to load each Part 2 lesson as EPPP content and prefix
-                its category with <strong>Part 2:</strong> or <strong>EPPP Skills:</strong>.
-                These lessons will appear here instead of mixing into Part 1 domains
-                or the main PsychPro course library.
-              </p>
-            </div>
-            <div className="eps-skill-shells" aria-label="Planned Part 2 skill domains">
-              {PART2_SKILL_SHELLS.map((domain) => (
-                <div key={domain} className="eps-skill-shell">
-                  <Brain aria-hidden />
-                  <span>{domain}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div className="eps-groups">
-            {grouped.map(([category, topics]) => (
-              <section key={category} className="eps-group">
-                <div className="eps-group-head">
-                  <Brain className="eps-group-icon" aria-hidden />
-                  <h2 className="eps-group-title">{category}</h2>
-                  <span className="eps-group-count">{topics.length} skills</span>
-                </div>
-                <div className="eps-topic-grid">
-                  {topics.map((t) => {
-                    const questionCount = t.quizCount ?? 0;
-                    return (
-                      <button
-                        key={t.id}
-                        className="eps-topic"
-                        onClick={() => onNavigate(epppTopicModePath(t.id, "study-guide"))}
-                        data-testid={`eppp-part2-skill-${t.id}`}
-                      >
-                        <span className="eps-topic-icon">
-                          <Brain aria-hidden />
-                        </span>
-                        <span className="eps-topic-body">
-                          <span className="eps-topic-name">{t.name}</span>
-                          <span className="eps-topic-meta">
-                            {questionCount > 0
-                              ? `${questionCount} applied questions`
-                              : "Skill lesson"}
-                          </span>
-                        </span>
-                        <span className="eps-topic-cta">
-                          Open skill <ArrowRight aria-hidden />
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </section>
-            ))}
-          </div>
-        )}
+        <KnowledgeBody onNavigate={onNavigate} part="part2" />
       </div>
     </div>
   );
@@ -1050,60 +889,8 @@ function ClinicalCasesBody({ onNavigate }: { onNavigate: (to: string) => void })
   );
 }
 
-// ---- Quick Reference Guides (sub-tab body) --------------------------------
-function QuickReferenceBody({ onNavigate }: { onNavigate: (to: string) => void }) {
-  const { data: allTopics, isLoading } = useGetTopics();
-
-  const grouped = useMemo(() => {
-    return groupEpppRapidReview((allTopics ?? []) as Topic[]).map(
-      (group) => [group.name, group.items] as const,
-    );
-  }, [allTopics]);
-
-  if (isLoading) {
-    return <div className="eps-empty">Loading review sheets…</div>;
-  }
-  if (grouped.length === 0) {
-    return <div className="eps-empty">No rapid review sheets are available yet.</div>;
-  }
-  return (
-    <div className="eps-groups">
-      {grouped.map(([domain, sheets]) => (
-        <section key={domain} className="eps-group">
-          <div className="eps-group-head">
-            <Zap className="eps-group-icon" aria-hidden />
-            <h2 className="eps-group-title">{domain}</h2>
-            <span className="eps-group-count">{sheets.length} sheets</span>
-          </div>
-          <div className="eps-topic-grid">
-            {sheets.map((t) => (
-              <button
-                key={t.id}
-                className="eps-topic"
-                onClick={() => onNavigate(epppTopicModePath(t.id, "study-guide"))}
-                data-testid={`eppp-rapid-review-${t.id}`}
-              >
-                <span className="eps-topic-icon">
-                  <Zap aria-hidden />
-                </span>
-                <span className="eps-topic-body">
-                  <span className="eps-topic-name">{t.name}</span>
-                  <span className="eps-topic-meta">Final-pass review sheet</span>
-                </span>
-                <span className="eps-topic-cta">
-                  Open review <ArrowRight aria-hidden />
-                </span>
-              </button>
-            ))}
-          </div>
-        </section>
-      ))}
-    </div>
-  );
-}
-
 // ---- Part 1 shell with sub-tabs -------------------------------------------
-type Part1SubKey = "knowledge" | "question-bank" | "quick-reference" | "clinical-cases";
+type Part1SubKey = "knowledge" | "clinical-cases";
 
 const PART1_SUBTABS: {
   key: Part1SubKey;
@@ -1120,25 +907,7 @@ const PART1_SUBTABS: {
     eyebrow: "CONTENT AREAS",
     title: "Knowledge",
     subtitle:
-      "Your progress across every EPPP content area. Open a domain to keep working through its lessons.",
-  },
-  {
-    key: "question-bank",
-    label: "Question Bank",
-    icon: FileQuestion,
-    eyebrow: "PRACTICE",
-    title: "Question Bank",
-    subtitle:
-      "Practice questions for every lesson, organized by content area. Drill a topic to sharpen recall and reasoning.",
-  },
-  {
-    key: "quick-reference",
-    label: "Quick Reference Guides",
-    icon: Zap,
-    eyebrow: "REINFORCE",
-    title: "Quick Reference Guides",
-    subtitle:
-      "Concise, final-pass recall sheets for every domain. Skim the high-yield points, traps, and compare/contrast frames in the last stretch before exam day.",
+      "Your progress across every EPPP content area. Open a domain to work through its lessons — each lesson has flashcards, a quiz, a study guide, and a practice exam.",
   },
   {
     key: "clinical-cases",
@@ -1187,8 +956,6 @@ function Part1Panel({
         </div>
 
         {sub === "knowledge" && <KnowledgeBody onNavigate={onNavigate} />}
-        {sub === "question-bank" && <QuestionBankBody onNavigate={onNavigate} />}
-        {sub === "quick-reference" && <QuickReferenceBody onNavigate={onNavigate} />}
         {sub === "clinical-cases" && <ClinicalCasesBody onNavigate={onNavigate} />}
       </div>
     </div>
@@ -1252,6 +1019,426 @@ function ComingSoonPanel({
           <h2 className="eps-soon-title">{title} is on the way</h2>
           <p className="eps-soon-text">{description}</p>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ---- Full-Length Exams ----------------------------------------------------
+// One timed, full-length simulation per part. Launches the practice-exam runner
+// in `?full=1` mode, which serves every question in the exam topic under a timer.
+function FullLengthExamsPanel({ onNavigate }: { onNavigate: (to: string) => void }) {
+  const { data: allTopics, isLoading } = useGetTopics();
+  const [part, setPart] = useState<EpppExamPart>("part1");
+
+  const examByPart = useMemo(() => {
+    const map: Record<EpppExamPart, Topic | null> = { part1: null, part2: null };
+    for (const t of (allTopics ?? []) as Topic[]) {
+      const p = getEpppFullLengthExamPart(t);
+      if (p && !map[p]) map[p] = t;
+    }
+    return map;
+  }, [allTopics]);
+
+  const exam = examByPart[part];
+
+  return (
+    <div className="study-page-bg eps-panel" data-testid="eppp-panel-full-length-exams">
+      <div className="eps-shell">
+        <PanelHead
+          eyebrow="EXAM SIMULATION"
+          title="Full-Length Exams"
+          subtitle="Sit a complete, timed EPPP simulation end-to-end. Build the stamina and pacing the real exam demands."
+        />
+
+        <div className="eps-subtabs" role="tablist" aria-label="Exam parts">
+          {MASTERY_SUBTABS.map((t) => {
+            const isActive = t.key === part;
+            return (
+              <button
+                key={t.key}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                className={cn("eps-subtab", isActive && "is-active")}
+                onClick={() => setPart(t.key)}
+                data-testid={`eppp-full-length-subtab-${t.key}`}
+              >
+                <t.icon aria-hidden />
+                <span>{t.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {isLoading ? (
+          <div className="eps-empty">Loading exam…</div>
+        ) : !exam ? (
+          <div className="eps-empty">
+            The {part === "part1" ? "Part 1" : "Part 2"} full-length exam isn't available yet.
+          </div>
+        ) : (
+          <div className="eps-fl-card" data-testid={`eppp-full-length-${part}`}>
+            <div className="eps-fl-head">
+              <span className="eps-fl-icon">
+                <ClipboardCheck aria-hidden />
+              </span>
+              <div className="eps-fl-head-text">
+                <h2 className="eps-fl-title">{exam.name}</h2>
+                <p className="eps-fl-meta">
+                  {exam.quizCount ?? 0} questions · timed simulation
+                </p>
+              </div>
+            </div>
+            <div className="eps-fl-features">
+              <span className="eps-fl-feature">
+                <Timer aria-hidden /> Real exam pacing
+              </span>
+              <span className="eps-fl-feature">
+                <ClipboardCheck aria-hidden /> Full question set
+              </span>
+              <span className="eps-fl-feature">
+                <XCircle aria-hidden /> Misses saved for review
+              </span>
+            </div>
+            <button
+              className="eps-fl-cta"
+              onClick={() => onNavigate(`${epppTopicModePath(exam.id, "exam")}?full=1`)}
+              data-testid={`eppp-full-length-start-${part}`}
+            >
+              Start full-length exam <ArrowRight aria-hidden />
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ---- Rapid Review (Quick Reference Guides) --------------------------------
+// The consolidated Quick Reference Guides (one per Part 1 domain), printable,
+// plus a write-in "My Notes" scratchpad persisted locally on the device.
+const RAPID_REVIEW_NOTES_KEY = "eppp:rapid-review:my-notes";
+
+function RapidReviewPanel({ onNavigate }: { onNavigate: (to: string) => void }) {
+  const { data: allTopics, isLoading } = useGetTopics();
+  const guides = useMemo(
+    () => getEpppQuickReferenceGuides((allTopics ?? []) as Topic[]),
+    [allTopics],
+  );
+
+  const [notes, setNotes] = useState("");
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setNotes(window.localStorage.getItem(RAPID_REVIEW_NOTES_KEY) ?? "");
+  }, []);
+  const handleNotesChange = (v: string) => {
+    setNotes(v);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(RAPID_REVIEW_NOTES_KEY, v);
+    }
+  };
+
+  const handlePrint = () => {
+    if (typeof window === "undefined") return;
+    const w = window.open("", "_blank", "width=820,height=900");
+    if (!w) return;
+    const esc = (s: string) =>
+      s.replace(/[&<>]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[ch] as string));
+    const list = guides.map((g) => `<li>${esc(g.name)}</li>`).join("");
+    w.document.write(
+      `<!doctype html><html><head><title>EPPP Rapid Review</title>` +
+        `<style>body{font-family:Georgia,serif;margin:40px;color:#111;line-height:1.55}` +
+        `h1{font-size:22px}h2{font-size:16px;margin-top:28px}ul{padding-left:20px}` +
+        `.notes{white-space:pre-wrap;border:1px solid #ccc;border-radius:8px;padding:16px;min-height:220px}` +
+        `</style></head><body><h1>EPPP Rapid Review</h1>` +
+        `<h2>Quick Reference Guides</h2><ul>${list}</ul>` +
+        `<h2>My Notes</h2><div class="notes">${esc(notes)}</div></body></html>`,
+    );
+    w.document.close();
+    w.focus();
+    w.print();
+  };
+
+  return (
+    <div className="study-page-bg eps-panel" data-testid="eppp-panel-rapid-review">
+      <div className="eps-shell">
+        <PanelHead
+          eyebrow="FINAL PASS"
+          title="Rapid Review"
+          subtitle="Consolidated Quick Reference Guides — one per Part 1 domain. Skim, print, and capture your own high-yield notes before exam day."
+        />
+
+        <div className="eps-section-head eps-section-head--split">
+          <span className="eps-section-meta">
+            {isLoading
+              ? "Loading…"
+              : `${guides.length} quick reference ${guides.length === 1 ? "guide" : "guides"}`}
+          </span>
+          <button className="eps-ghost-btn" onClick={handlePrint} data-testid="eppp-rapid-review-print">
+            <Printer aria-hidden /> Print
+          </button>
+        </div>
+
+        {isLoading ? (
+          <div className="eps-empty">Loading review sheets…</div>
+        ) : guides.length === 0 ? (
+          <div className="eps-empty">No quick reference guides are available yet.</div>
+        ) : (
+          <div className="eps-topic-grid">
+            {guides.map((t) => (
+              <button
+                key={t.id}
+                className="eps-topic"
+                onClick={() => onNavigate(epppTopicModePath(t.id, "study-guide"))}
+                data-testid={`eppp-quick-reference-${t.id}`}
+              >
+                <span className="eps-topic-icon">
+                  <Zap aria-hidden />
+                </span>
+                <span className="eps-topic-body">
+                  <span className="eps-topic-name">{t.name}</span>
+                  <span className="eps-topic-meta">Quick reference guide</span>
+                </span>
+                <span className="eps-topic-cta">
+                  Open <ArrowRight aria-hidden />
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
+
+        <section className="eps-notes" data-testid="eppp-rapid-review-notes">
+          <div className="eps-notes-head">
+            <span className="eps-notes-icon">
+              <NotebookPen aria-hidden />
+            </span>
+            <div>
+              <h2 className="eps-notes-title">My Notes</h2>
+              <p className="eps-notes-sub">
+                Your private, high-yield scratchpad. Saved automatically on this device.
+              </p>
+            </div>
+          </div>
+          <textarea
+            className="eps-notes-area"
+            value={notes}
+            onChange={(e) => handleNotesChange(e.target.value)}
+            placeholder="Jot down mnemonics, formulas, and the facts you keep forgetting…"
+            data-testid="eppp-rapid-review-notes-input"
+          />
+        </section>
+      </div>
+    </div>
+  );
+}
+
+// ---- Missed Questions -----------------------------------------------------
+// Every question answered incorrectly across quizzes and exams, bucketed
+// client-side by part + domain (the EPPP taxonomy lives in eppp-content.ts).
+// The backend returns each missed question with its home topic; we classify
+// here so filtering stays consistent with the rest of the suite.
+type MissedFilterPart = "all" | EpppExamPart;
+type MissedTopicLike = { id: number; name: string; category: string };
+
+function missedQuestionPart(topic: MissedTopicLike): EpppExamPart | null {
+  const p = getEpppExamPart(topic);
+  if (p) return p;
+  const fl = getEpppFullLengthExamPart(topic);
+  if (fl) return fl;
+  if (isEpppClinicalCase(topic)) return "part1";
+  return null;
+}
+
+function missedQuestionDomain(topic: MissedTopicLike): string {
+  if (isEpppClinicalCase(topic)) return getEpppClinicalCaseDomain(topic);
+  if (isEpppFullLengthExam(topic)) return "Full-Length Exam";
+  return getEpppDisplayCategory(topic);
+}
+
+const MISSED_PART_FILTERS: { key: MissedFilterPart; label: string }[] = [
+  { key: "all", label: "All parts" },
+  { key: "part1", label: "Part 1" },
+  { key: "part2", label: "Part 2" },
+];
+
+function MissedQuestionsPanel({ onNavigate }: { onNavigate: (to: string) => void }) {
+  const { data, isLoading } = useGetEpppMissedQuestions();
+  const [part, setPart] = useState<MissedFilterPart>("all");
+  const [domain, setDomain] = useState<string>("all");
+  const [revealed, setRevealed] = useState<Record<number, boolean>>({});
+
+  const decorated = useMemo(() => {
+    const list = (data?.questions ?? []) as EpppMissedQuestion[];
+    return list
+      .map((q) => {
+        const topic: MissedTopicLike = { id: q.topicId, name: q.topicName, category: q.topicCategory };
+        return {
+          q,
+          part: missedQuestionPart(topic),
+          domain: missedQuestionDomain(topic),
+          isEppp: isEpppTopic(topic) || isEpppClinicalCase(topic) || isEpppFullLengthExam(topic),
+        };
+      })
+      .filter((d) => d.isEppp);
+  }, [data]);
+
+  const partFiltered = useMemo(
+    () => decorated.filter((d) => part === "all" || d.part === part),
+    [decorated, part],
+  );
+
+  const domains = useMemo(() => {
+    const set = new Set<string>();
+    for (const d of partFiltered) set.add(d.domain);
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [partFiltered]);
+
+  useEffect(() => {
+    if (domain !== "all" && !domains.includes(domain)) setDomain("all");
+  }, [domains, domain]);
+
+  const visible = useMemo(
+    () => partFiltered.filter((d) => domain === "all" || d.domain === domain),
+    [partFiltered, domain],
+  );
+
+  return (
+    <div className="study-page-bg eps-panel" data-testid="eppp-panel-missed-questions">
+      <div className="eps-shell">
+        <PanelHead
+          eyebrow="REVIEW"
+          title="Missed Questions"
+          subtitle="Every question you've gotten wrong, gathered in one place. Filter by part and domain to target your weak spots."
+        />
+
+        {isLoading ? (
+          <div className="eps-empty">Loading your missed questions…</div>
+        ) : decorated.length === 0 ? (
+          <div className="eps-empty">
+            No missed questions yet. As you take quizzes and exams, the ones you miss
+            collect here for focused review.
+          </div>
+        ) : (
+          <>
+            <div className="eps-mq-filters">
+              <div className="eps-subtabs" role="tablist" aria-label="Filter by part">
+                {MISSED_PART_FILTERS.map((f) => (
+                  <button
+                    key={f.key}
+                    type="button"
+                    role="tab"
+                    aria-selected={part === f.key}
+                    className={cn("eps-subtab", part === f.key && "is-active")}
+                    onClick={() => setPart(f.key)}
+                    data-testid={`eppp-missed-part-${f.key}`}
+                  >
+                    <span>{f.label}</span>
+                  </button>
+                ))}
+              </div>
+              <label className="eps-mq-domain">
+                <span className="eps-mq-domain-label">Domain</span>
+                <select
+                  className="eps-mq-select"
+                  value={domain}
+                  onChange={(e) => setDomain(e.target.value)}
+                  data-testid="eppp-missed-domain-select"
+                >
+                  <option value="all">All domains</option>
+                  {domains.map((d) => (
+                    <option key={d} value={d}>
+                      {d}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+
+            <div className="eps-section-head">
+              <span className="eps-section-meta">
+                {visible.length} {visible.length === 1 ? "question" : "questions"}
+              </span>
+            </div>
+
+            {visible.length === 0 ? (
+              <div className="eps-empty">No missed questions match this filter.</div>
+            ) : (
+              <div className="eps-mq-list">
+                {visible.map(({ q, domain: dom, part: qp }) => {
+                  const open = !!revealed[q.id];
+                  const opts: { key: string; text: string }[] = [
+                    { key: "A", text: q.optionA },
+                    { key: "B", text: q.optionB },
+                    { key: "C", text: q.optionC },
+                    { key: "D", text: q.optionD },
+                  ];
+                  return (
+                    <article key={q.id} className="eps-mq-card" data-testid={`eppp-missed-question-${q.id}`}>
+                      <div className="eps-mq-tags">
+                        <span className="eps-mq-tag">
+                          {qp === "part2" ? "Part 2" : qp === "part1" ? "Part 1" : "EPPP"}
+                        </span>
+                        <span className="eps-mq-tag is-domain">{dom}</span>
+                        {q.timesMissed > 1 && (
+                          <span className="eps-mq-tag is-count">Missed {q.timesMissed}×</span>
+                        )}
+                      </div>
+                      <p className="eps-mq-q">{q.question}</p>
+                      {open ? (
+                        <>
+                          <div className="eps-mq-options">
+                            {opts.map((o) => (
+                              <div
+                                key={o.key}
+                                className={cn("eps-mq-option", o.key === q.correctAnswer && "is-correct")}
+                              >
+                                <span className="eps-mq-option-key">{o.key}</span>
+                                <span>{o.text}</span>
+                                {o.key === q.correctAnswer && (
+                                  <CheckCircle2 className="eps-mq-option-check" aria-hidden />
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                          {q.explanation && (
+                            <p className="eps-mq-explain">
+                              <strong>Why:</strong> {q.explanation}
+                            </p>
+                          )}
+                          <div className="eps-mq-actions">
+                            <button
+                              className="eps-ghost-btn"
+                              onClick={() => setRevealed((r) => ({ ...r, [q.id]: false }))}
+                              data-testid={`eppp-missed-hide-${q.id}`}
+                            >
+                              Hide answer
+                            </button>
+                            <button
+                              className="eps-mq-study"
+                              onClick={() => onNavigate(epppTopicPath(q.topicId))}
+                              data-testid={`eppp-missed-study-${q.id}`}
+                            >
+                              Study {q.topicName} <ArrowRight aria-hidden />
+                            </button>
+                          </div>
+                        </>
+                      ) : (
+                        <button
+                          className="eps-ghost-btn"
+                          onClick={() => setRevealed((r) => ({ ...r, [q.id]: true }))}
+                          data-testid={`eppp-missed-reveal-${q.id}`}
+                        >
+                          Show answer & explanation
+                        </button>
+                      )}
+                    </article>
+                  );
+                })}
+              </div>
+            )}
+          </>
+        )}
       </div>
     </div>
   );
@@ -1674,4 +1861,142 @@ const styles = `
 .eps-soon-pill svg { width: 13px; height: 13px; }
 .eps-soon-title { position: relative; margin: 0; font-size: clamp(20px, 2.6vw, 28px); font-weight: 700; color: #EAF7FB; }
 .eps-soon-text { position: relative; margin: 12px auto 0; max-width: 560px; font-size: 14.5px; line-height: 1.7; color: ${C.body}; }
+
+/* ---- Shared ghost button + split section head ---- */
+.eps-section-head--split { justify-content: space-between; }
+.eps-ghost-btn {
+  display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
+  padding: 8px 14px; border-radius: 999px; font-size: 13px; font-weight: 600;
+  color: ${C.mist}; background: rgba(12,28,38,0.55); border: 1px solid ${C.hairlineStrong};
+  transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.eps-ghost-btn svg { width: 15px; height: 15px; }
+.eps-ghost-btn:hover { color: ${C.cloud}; border-color: ${C.cyan}80; transform: translateY(-1px); }
+
+/* ---- Full-Length Exams ---- */
+.eps-fl-card {
+  border-radius: 18px; padding: clamp(20px, 2.6vw, 30px);
+  background:
+    radial-gradient(circle at 18% 12%, ${C.cyan}1f, transparent 38%),
+    linear-gradient(145deg, rgba(10,45,61,0.55), rgba(6,28,40,0.72));
+  border: 1px solid ${C.hairlineStrong};
+  box-shadow: 0 24px 80px -52px rgba(0,0,0,0.8), inset 0 0 42px rgba(118,228,247,0.04);
+}
+.eps-fl-head { display: flex; align-items: center; gap: 16px; }
+.eps-fl-icon {
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  width: 52px; height: 52px; border-radius: 14px;
+  color: ${C.ink}; background: linear-gradient(135deg, ${C.mist}, ${C.cyan} 60%, #38BDF8);
+  box-shadow: 0 0 26px -6px ${C.cyan}b3;
+}
+.eps-fl-icon svg { width: 26px; height: 26px; }
+.eps-fl-head-text { min-width: 0; }
+.eps-fl-title { margin: 0; font-size: clamp(18px, 2.2vw, 23px); font-weight: 700; color: ${C.cloud}; }
+.eps-fl-meta { margin: 4px 0 0; font-size: 13.5px; color: ${C.body}; }
+.eps-fl-features { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 24px; }
+.eps-fl-feature {
+  display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 600;
+  color: ${C.mist}; padding: 7px 12px; border-radius: 999px;
+  background: rgba(118,228,247,0.08); border: 1px solid ${C.hairline};
+}
+.eps-fl-feature svg { width: 14px; height: 14px; }
+.eps-fl-cta {
+  display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+  padding: 12px 22px; border-radius: 12px; font-size: 14px; font-weight: 700;
+  color: ${C.ink}; border: 1px solid rgba(167,243,255,0.65);
+  background: linear-gradient(135deg, ${C.mist} 0%, ${C.cyan} 48%, #38BDF8 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 0 26px -6px ${C.cyan}cc;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+.eps-fl-cta svg { width: 16px; height: 16px; transition: transform 0.2s ease; }
+.eps-fl-cta:hover { transform: translateY(-1px); }
+.eps-fl-cta:hover svg { transform: translateX(3px); }
+
+/* ---- Rapid Review notes ---- */
+.eps-notes {
+  margin-top: clamp(22px, 2.6vw, 32px); border-radius: 18px; padding: clamp(18px, 2.4vw, 26px);
+  background: linear-gradient(145deg, rgba(10,45,61,0.5), rgba(6,28,40,0.68));
+  border: 1px solid ${C.hairlineStrong};
+}
+.eps-notes-head { display: flex; align-items: center; gap: 13px; margin-bottom: 14px; }
+.eps-notes-icon {
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  width: 40px; height: 40px; border-radius: 11px;
+  color: ${C.cyan}; background: rgba(118,228,247,0.1); border: 1px solid ${C.hairlineStrong};
+}
+.eps-notes-icon svg { width: 20px; height: 20px; }
+.eps-notes-title { margin: 0; font-size: 16px; font-weight: 700; color: ${C.cloud}; }
+.eps-notes-sub { margin: 2px 0 0; font-size: 12.5px; color: ${C.muted}; }
+.eps-notes-area {
+  width: 100%; min-height: 180px; resize: vertical; box-sizing: border-box;
+  border-radius: 12px; padding: 14px 16px; font-size: 14px; line-height: 1.6;
+  color: ${C.cloud}; background: rgba(4,21,29,0.6); border: 1px solid ${C.hairlineStrong};
+  font-family: inherit;
+}
+.eps-notes-area::placeholder { color: ${C.muted}; }
+.eps-notes-area:focus { outline: none; border-color: ${C.cyan}80; box-shadow: 0 0 0 3px rgba(118,228,247,0.12); }
+
+/* ---- Missed Questions ---- */
+.eps-mq-filters { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 18px; }
+.eps-mq-filters .eps-subtabs { margin-bottom: 0; }
+.eps-mq-domain { display: inline-flex; align-items: center; gap: 9px; }
+.eps-mq-domain-label { font-size: 12.5px; font-weight: 600; color: ${C.muted}; }
+.eps-mq-select {
+  appearance: none; cursor: pointer; padding: 9px 30px 9px 14px; border-radius: 10px;
+  font-size: 13px; font-weight: 600; color: ${C.cloud};
+  background: rgba(12,28,38,0.7) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2376E4F7' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;
+  border: 1px solid ${C.hairlineStrong}; max-width: 280px;
+}
+.eps-mq-select:focus { outline: none; border-color: ${C.cyan}80; }
+.eps-mq-list { display: flex; flex-direction: column; gap: 14px; }
+.eps-mq-card {
+  border-radius: 16px; padding: clamp(16px, 2vw, 22px);
+  background: linear-gradient(145deg, rgba(10,45,61,0.46), rgba(6,28,40,0.64));
+  border: 1px solid ${C.hairline};
+}
+.eps-mq-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.eps-mq-tag {
+  display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 999px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase;
+  color: ${C.mist}; background: rgba(118,228,247,0.1); border: 1px solid ${C.hairline};
+}
+.eps-mq-tag.is-domain { text-transform: none; letter-spacing: 0; color: ${C.body}; }
+.eps-mq-tag.is-count { color: #FCA5A5; background: rgba(248,113,113,0.12); border-color: rgba(248,113,113,0.3); }
+.eps-mq-q { margin: 0 0 14px; font-size: 15px; line-height: 1.6; font-weight: 600; color: ${C.cloud}; }
+.eps-mq-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.eps-mq-option {
+  display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px;
+  font-size: 13.5px; line-height: 1.5; color: ${C.body};
+  background: rgba(4,21,29,0.5); border: 1px solid ${C.hairline};
+}
+.eps-mq-option.is-correct { color: ${C.cloud}; background: rgba(118,228,247,0.1); border-color: ${C.hairlineStrong}; }
+.eps-mq-option-key {
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  width: 24px; height: 24px; border-radius: 7px; font-size: 12px; font-weight: 700;
+  color: ${C.mist}; background: rgba(118,228,247,0.1);
+}
+.eps-mq-option.is-correct .eps-mq-option-key { color: ${C.ink}; background: ${C.cyan}; }
+.eps-mq-option-check { width: 16px; height: 16px; margin-left: auto; flex-shrink: 0; color: ${C.cyan}; }
+.eps-mq-explain {
+  margin: 0 0 14px; padding: 12px 14px; border-radius: 10px; font-size: 13px; line-height: 1.65;
+  color: ${C.body}; background: rgba(4,21,29,0.4); border: 1px solid ${C.hairline};
+}
+.eps-mq-explain strong { color: ${C.mist}; }
+.eps-mq-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.eps-mq-study {
+  display: inline-flex; align-items: center; gap: 7px; cursor: pointer; margin-left: auto;
+  padding: 9px 16px; border-radius: 10px; font-size: 13px; font-weight: 700;
+  color: ${C.ink}; border: 1px solid rgba(167,243,255,0.65);
+  background: linear-gradient(135deg, ${C.mist} 0%, ${C.cyan} 48%, #38BDF8 100%);
+  transition: transform 0.2s ease;
+}
+.eps-mq-study svg { width: 14px; height: 14px; transition: transform 0.2s ease; }
+.eps-mq-study:hover { transform: translateY(-1px); }
+.eps-mq-study:hover svg { transform: translateX(3px); }
+@media (max-width: 640px) {
+  .eps-mq-filters { flex-direction: column; align-items: stretch; }
+  .eps-mq-domain { justify-content: space-between; }
+  .eps-mq-select { max-width: none; flex: 1; }
+  .eps-mq-study { margin-left: 0; }
+}
 `;

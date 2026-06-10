@@ -150,6 +150,35 @@ export function isEpppFullLengthExam(topic: EpppTopicLike): boolean {
   );
 }
 
+export function getEpppFullLengthExamPart(topic: EpppTopicLike): EpppExamPart | null {
+  if (!isEpppFullLengthExam(topic)) return null;
+  const category = normalized(topic.category);
+  const name = normalized(topic.name);
+  if (category.includes("part 2") || category.includes("part ii") || name.includes("part 2")) {
+    return "part2";
+  }
+  return "part1";
+}
+
+// Quick Reference Guides are the consolidated, domain-spanning recall sheets
+// (one per Part 1 domain) authored under the single category
+// "EPPP Part 1: Quick Reference Guides". They power the dedicated Rapid Review
+// tab (printable, with write-in "My Notes" blocks) and must surface ONLY there
+// — never in the Part 1 Knowledge rail, Question Bank, or Flashcards — while
+// remaining EPPP content (kept out of the main site). They supersede the older
+// "Rapid Review: <domain>" topics, which stay excluded via isEpppRapidReview.
+const EPPP_QUICK_REFERENCE_MARKER = "quick reference";
+
+export function isEpppQuickReference(topic: EpppTopicLike): boolean {
+  return normalized(topic.category).includes(EPPP_QUICK_REFERENCE_MARKER);
+}
+
+export function getEpppQuickReferenceGuides<T extends EpppTopicLike>(topics: T[]): T[] {
+  return topics
+    .filter(isEpppQuickReference)
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
 function normalized(value: string | undefined): string {
   return (value ?? "").toLowerCase().replace(/\s+/g, " ").trim();
 }
@@ -168,7 +197,8 @@ export function getEpppExamPart(topic: EpppTopicLike): EpppExamPart | null {
   if (
     isEpppClinicalCase(topic) ||
     isEpppRapidReview(topic) ||
-    isEpppFullLengthExam(topic)
+    isEpppFullLengthExam(topic) ||
+    isEpppQuickReference(topic)
   ) {
     return null;
   }
@@ -265,7 +295,8 @@ export function groupEpppTopicsByCategory<T extends EpppTopicLike>(topics: T[]) 
       isEpppTopic(t) &&
       !isEpppClinicalCase(t) &&
       !isEpppRapidReview(t) &&
-      !isEpppFullLengthExam(t),
+      !isEpppFullLengthExam(t) &&
+      !isEpppQuickReference(t),
   )) {
     const category = getEpppDisplayCategory(topic);
     const existing = byCategory.get(category) ?? [];

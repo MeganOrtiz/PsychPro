@@ -488,6 +488,10 @@ export const RecordQuizAttemptBody = zod.object({
   topicId: zod.number(),
   score: zod.number(),
   total: zod.number(),
+  missedQuestionIds: zod
+    .array(zod.number())
+    .optional()
+    .describe("IDs of questions answered incorrectly in this attempt."),
 });
 
 export const RecordQuizAttemptResponse = zod.object({
@@ -505,6 +509,10 @@ export const RecordExamAttemptBody = zod.object({
   topicId: zod.number(),
   score: zod.number(),
   total: zod.number(),
+  missedQuestionIds: zod
+    .array(zod.number())
+    .optional()
+    .describe("IDs of questions answered incorrectly in this attempt."),
 });
 
 export const RecordExamAttemptResponse = zod.object({
@@ -513,6 +521,28 @@ export const RecordExamAttemptResponse = zod.object({
   score: zod.number(),
   total: zod.number(),
   completedAt: zod.string(),
+});
+
+/**
+ * @summary Questions the current user has answered incorrectly (EPPP review)
+ */
+export const GetEpppMissedQuestionsResponse = zod.object({
+  questions: zod.array(
+    zod.object({
+      id: zod.number(),
+      question: zod.string(),
+      optionA: zod.string(),
+      optionB: zod.string(),
+      optionC: zod.string(),
+      optionD: zod.string(),
+      correctAnswer: zod.string(),
+      explanation: zod.string(),
+      topicId: zod.number(),
+      topicName: zod.string(),
+      topicCategory: zod.string(),
+      timesMissed: zod.number(),
+    }),
+  ),
 });
 
 /**

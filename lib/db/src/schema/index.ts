@@ -203,6 +203,10 @@ export const quizAttemptsTable = pgTable("quiz_attempts", {
   topicId: integer("topic_id").notNull().references(() => topicsTable.id),
   score: integer("score").notNull(),
   total: integer("total").notNull(),
+  // IDs of the quiz_questions the user answered incorrectly in this attempt.
+  // Nullable for legacy rows recorded before per-question tracking existed.
+  // Powers the EPPP "Missed Questions" review tab.
+  missedQuestionIds: integer("missed_question_ids").array(),
   completedAt: timestamp("completed_at").notNull().defaultNow(),
 });
 
@@ -216,6 +220,10 @@ export const examAttemptsTable = pgTable("exam_attempts", {
   topicId: integer("topic_id").notNull().references(() => topicsTable.id),
   score: integer("score").notNull(),
   total: integer("total").notNull(),
+  // IDs of the quiz_questions the user answered incorrectly in this attempt.
+  // Nullable for legacy rows recorded before per-question tracking existed.
+  // Powers the EPPP "Missed Questions" review tab.
+  missedQuestionIds: integer("missed_question_ids").array(),
   completedAt: timestamp("completed_at").notNull().defaultNow(),
 });
 

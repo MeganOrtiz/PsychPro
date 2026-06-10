@@ -6,8 +6,11 @@ import {
   usersTable,
   quizAttemptsTable,
   examAttemptsTable,
+  quizQuestionsTable,
+  practiceExamsTable,
+  practiceExamQuestionsTable,
 } from "@workspace/db";
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and, desc, inArray } from "drizzle-orm";
 import { requireUserId } from "../lib/userId";
 import { getEntitlements } from "../lib/entitlements";
 
@@ -234,10 +237,17 @@ async function recordAttempt(
   try {
     const userId = requireUserId(req, res);
     if (!userId) return;
-    const body = req.body as { topicId?: number; score?: number; total?: number };
+    const body = req.body as { topicId?: number; score?: number; total?: number; missedQuestionIds?: unknown };
     const topicId = Number(body.topicId);
     const score = Number(body.score);
     const total = Number(body.total);
+    const rawMissedIds = Array.isArray(body.missedQuestionIds)
+      ? [...new Set(
+          body.missedQuestionIds
+            .map((n) => Number(n))
+            .filter((n) => Number.isInteger(n) && n > 0),
+        )]
+      : [];
     if (
       !Number.isInteger(topicId) || topicId <= 0 ||
       !Number.isInteger(total) || total <= 0 ||
@@ -269,9 +279,48 @@ async function recordAttempt(
       return;
     }
 
+    // Never trust client-supplied missed-question IDs. They are later resolved
+    // to full question text/options/explanations by GET /eppp/missed-questions,
+    // so a forged ID could leak content from unrelated or locked topics. Keep
+    // only IDs that actually belong to the question set this attempt could have
+    // served: quiz attempts -> the topic's quizzable questions; exam attempts ->
+    // the questions linked to the topic's practice/full-length exam.
+    let missedQuestionIds: number[] | undefined = undefined;
+    if (rawMissedIds.length > 0) {
+      let allowedRows: { id: number }[];
+      if (kind === "quiz") {
+        allowedRows = await db
+          .select({ id: quizQuestionsTable.id })
+          .from(quizQuestionsTable)
+          .where(
+            and(
+              eq(quizQuestionsTable.topicId, topicId),
+              inArray(quizQuestionsTable.id, rawMissedIds),
+            ),
+          );
+      } else {
+        allowedRows = await db
+          .select({ id: practiceExamQuestionsTable.questionId })
+          .from(practiceExamQuestionsTable)
+          .innerJoin(
+            practiceExamsTable,
+            eq(practiceExamQuestionsTable.examId, practiceExamsTable.id),
+          )
+          .where(
+            and(
+              eq(practiceExamsTable.topicId, topicId),
+              inArray(practiceExamQuestionsTable.questionId, rawMissedIds),
+            ),
+          );
+      }
+      const allowed = new Set(allowedRows.map((r) => r.id));
+      const valid = rawMissedIds.filter((id) => allowed.has(id));
+      missedQuestionIds = valid.length > 0 ? valid : undefined;
+    }
+
     const [row] = await db
       .insert(table)
-      .values({ userId, topicId, score, total })
+      .values({ userId, topicId, score, total, missedQuestionIds })
       .returning();
     res.json({
       id: row.id,
@@ -288,5 +337,69 @@ async function recordAttempt(
 
 router.post("/quiz-attempts", (req, res) => recordAttempt(req, res, quizAttemptsTable, "quiz"));
 router.post("/exam-attempts", (req, res) => recordAttempt(req, res, examAttemptsTable, "exam"));
+
+// Aggregate the questions this user has answered incorrectly across every
+// quiz AND practice/full-length exam attempt. We return each missed
+// question joined to its HOME topic (name + category) and a `timesMissed`
+// count; part/domain bucketing is done client-side so the EPPP taxonomy
+// stays in one place (eppp-content.ts). Legacy attempts with no
+// `missedQuestionIds` simply contribute nothing.
+router.get("/eppp/missed-questions", async (req, res) => {
+  try {
+    const userId = requireUserId(req, res);
+    if (!userId) return;
+
+    const [quizRows, examRows] = await Promise.all([
+      db
+        .select({ missed: quizAttemptsTable.missedQuestionIds })
+        .from(quizAttemptsTable)
+        .where(eq(quizAttemptsTable.userId, userId)),
+      db
+        .select({ missed: examAttemptsTable.missedQuestionIds })
+        .from(examAttemptsTable)
+        .where(eq(examAttemptsTable.userId, userId)),
+    ]);
+
+    const counts = new Map<number, number>();
+    for (const r of [...quizRows, ...examRows]) {
+      for (const id of r.missed ?? []) {
+        counts.set(id, (counts.get(id) ?? 0) + 1);
+      }
+    }
+
+    const ids = [...counts.keys()];
+    if (ids.length === 0) {
+      res.json({ questions: [] });
+      return;
+    }
+
+    const rows = await db
+      .select({
+        id: quizQuestionsTable.id,
+        question: quizQuestionsTable.question,
+        optionA: quizQuestionsTable.optionA,
+        optionB: quizQuestionsTable.optionB,
+        optionC: quizQuestionsTable.optionC,
+        optionD: quizQuestionsTable.optionD,
+        correctAnswer: quizQuestionsTable.correctAnswer,
+        explanation: quizQuestionsTable.explanation,
+        topicId: topicsTable.id,
+        topicName: topicsTable.name,
+        topicCategory: topicsTable.category,
+      })
+      .from(quizQuestionsTable)
+      .innerJoin(topicsTable, eq(quizQuestionsTable.topicId, topicsTable.id))
+      .where(inArray(quizQuestionsTable.id, ids));
+
+    const questions = rows
+      .map((r) => ({ ...r, timesMissed: counts.get(r.id) ?? 1 }))
+      .sort((a, b) => b.timesMissed - a.timesMissed);
+
+    res.json({ questions });
+  } catch (err) {
+    req.log.error({ err }, "Error fetching missed questions");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 export default router;

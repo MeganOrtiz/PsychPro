@@ -24,6 +24,7 @@ import type {
   CourseMasteryStatus,
   CreateCheckoutSessionBody,
   DashboardSummary,
+  EpppMissedQuestionsResponse,
   Flashcard,
   GetPracticeExamByTopicParams,
   HealthStatus,
@@ -1827,6 +1828,85 @@ export const useRecordExamAttempt = <
 > => {
   return useMutation(getRecordExamAttemptMutationOptions(options));
 };
+
+/**
+ * @summary Questions the current user has answered incorrectly (EPPP review)
+ */
+export const getGetEpppMissedQuestionsUrl = () => {
+  return `/api/eppp/missed-questions`;
+};
+
+export const getEpppMissedQuestions = async (
+  options?: RequestInit,
+): Promise<EpppMissedQuestionsResponse> => {
+  return customFetch<EpppMissedQuestionsResponse>(
+    getGetEpppMissedQuestionsUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export const getGetEpppMissedQuestionsQueryKey = () => {
+  return [`/api/eppp/missed-questions`] as const;
+};
+
+export const getGetEpppMissedQuestionsQueryOptions = <
+  TData = Awaited<ReturnType<typeof getEpppMissedQuestions>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getEpppMissedQuestions>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetEpppMissedQuestionsQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getEpppMissedQuestions>>
+  > = ({ signal }) => getEpppMissedQuestions({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getEpppMissedQuestions>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetEpppMissedQuestionsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getEpppMissedQuestions>>
+>;
+export type GetEpppMissedQuestionsQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Questions the current user has answered incorrectly (EPPP review)
+ */
+
+export function useGetEpppMissedQuestions<
+  TData = Awaited<ReturnType<typeof getEpppMissedQuestions>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getEpppMissedQuestions>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetEpppMissedQuestionsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
 
 /**
  * @summary Get available subscription plans from Stripe

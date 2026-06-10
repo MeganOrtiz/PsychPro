@@ -10,4 +10,6 @@ export interface RecordAttemptBody {
   topicId: number;
   score: number;
   total: number;
+  /** IDs of questions answered incorrectly in this attempt. */
+  missedQuestionIds?: number[];
 }

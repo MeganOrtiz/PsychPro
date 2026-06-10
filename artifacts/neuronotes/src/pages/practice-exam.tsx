@@ -36,6 +36,12 @@ export default function PracticeExamPage({ params }: Props) {
   const topicId = parseInt(params.id);
   const inEppp = isEpppRoute(location);
   const backToTopic = inEppp ? epppTopicPath(topicId) : `/topics/${topicId}`;
+  // Full-length mode (`?full=1`) is used by the EPPP Full-Length Exams tab: it
+  // serves every linked question (no 25/50 picker) and is always timed,
+  // mirroring the real EPPP sitting experience.
+  const fullMode =
+    typeof window !== "undefined" &&
+    new URLSearchParams(window.location.search).get("full") === "1";
   const [questionCount, setQuestionCount] = useState<QuestionCount | null>(null);
   const [started, setStarted] = useState(false);
   const [timed, setTimed] = useState(true);
@@ -54,7 +60,10 @@ export default function PracticeExamPage({ params }: Props) {
   // actually receives the number they selected. Before this fix the
   // picker was cosmetic — the server always returned its default. We
   // default to 25 before the user picks so the prefetch still hydrates.
-  const requestedCount = questionCount ?? 25;
+  // In full-length mode request a high count so the server returns every
+  // linked question (it clamps to the available pool). Otherwise honor the
+  // user's 25/50 pick.
+  const requestedCount = fullMode ? 250 : (questionCount ?? 25);
   const { data: exam, isLoading, error } = useGetPracticeExamByTopic(
     topicId,
     { count: requestedCount },
@@ -95,11 +104,12 @@ export default function PracticeExamPage({ params }: Props) {
     const qs = questionsRef.current;
     const ans = answersRef.current;
     const correct = qs.filter(q => ans[q.id] === q.correctAnswer).length;
+    const missedQuestionIds = qs.filter(q => ans[q.id] !== q.correctAnswer).map(q => q.id);
     const score = qs.length > 0 ? Math.round((correct / qs.length) * 100) : 0;
     updateProgress.mutate({ topicId, data: { score } });
     if (qs.length > 0) {
       recordAttempt.mutate(
-        { data: { topicId, score: correct, total: qs.length } },
+        { data: { topicId, score: correct, total: qs.length, missedQuestionIds } },
         {
           // Free-tier caps key off lifetime attempt counts. Invalidate so
           // the next render reflects the new lock immediately (otherwise
@@ -241,6 +251,58 @@ export default function PracticeExamPage({ params }: Props) {
           <Button variant="outline" onClick={() => navigate(backToTopic)} data-testid="button-back-to-topic">Back to Topic</Button>
           <Button onClick={() => { submittedRef.current = false; setSubmitted(false); setStarted(false); setAnswers({}); setIndex(0); setQuestionCount(null); setWarmupActive(false); setWarmupText(""); setTimeLeft(0); }} data-testid="button-retake">Retake</Button>
         </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!started && fullMode) {
+    const fullCount = total || topic?.examQuestionCount || 0;
+    return (
+      <div className="min-h-full study-page-bg" data-testid="exam-setup-full">
+        <div className="max-w-lg mx-auto p-4 md:p-6 lg:p-8">
+          <Breadcrumbs items={[
+            { label: "Full-Length Exams", href: "/eppp/suite/full-length-exams" },
+            { label: topic?.name ?? "Exam" },
+          ]} />
+          <PageTitle
+            title={topic?.name ?? "Full-Length Exam"}
+            icon={GraduationCap}
+            subtitle="A complete, timed simulation of the real EPPP sitting"
+            className="mb-8"
+          />
+          <StudySurface tone="light" innerClassName="p-6">
+            <div className="flex items-center gap-6 mb-5">
+              <div className="flex items-center gap-2.5">
+                <FileText className="w-5 h-5" style={{ color: P.surf }} />
+                <span className="text-lg font-bold text-foreground">
+                  {isLoading ? "…" : fullCount} questions
+                </span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <Clock className="w-5 h-5" style={{ color: P.surf }} />
+                <span className="text-lg font-bold text-foreground">
+                  {examIsTimeable ? `${formatTime(examTimeLimitSec)} limit` : "Untimed"}
+                </span>
+              </div>
+            </div>
+            <p className="text-sm text-muted-foreground mb-6">
+              {examIsTimeable
+                ? "The timer starts as soon as you begin and the exam auto-submits when it runs out. Set aside uninterrupted time — this mirrors the pacing of the real exam."
+                : "Work through every question at your own pace, then submit for a full score report across the content areas."}
+            </p>
+            <Button
+              size="lg"
+              className="w-full"
+              disabled={isLoading || fullCount === 0}
+              onClick={() => setStarted(true)}
+              data-testid="button-start-full-exam"
+            >
+              {examIsTimeable
+                ? <><Timer className="w-4 h-4 mr-2" />Start timed full-length exam</>
+                : <><GraduationCap className="w-4 h-4 mr-2" />Start full-length exam</>}
+            </Button>
+          </StudySurface>
         </div>
       </div>
     );

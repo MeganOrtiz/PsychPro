@@ -30,4 +30,5 @@
 - [Course route collision](psychpro-course-route-collision.md) — new courseId GET /courses/:x/mastery-exam is shadowed by legacy :category route (mounted first); unreachable until path disambiguated.
 - [Course mastery gate](psychpro-course-mastery-gate.md) — unlock = every lesson's practice exam ≥90% from exam_attempts (NOT progress.score, written by both quizzes+exams); one shared helper; compare exact ratio, round only for display.
 - [EPPP dashboard data gaps](psychpro-eppp-dashboard.md) — /eppp/dashboard is separate from /dashboard; NO stored exam-date (localStorage v1) and NO time-spent field — approximate honestly, never fabricate.
+- [Missed-questions trust boundary](psychpro-missed-questions-trust.md) — client-submitted missedQuestionIds resolve to full question content; ownership-validate at write or it's a content leak.
 - [EPPP special-category routing](psychpro-eppp-special-categories.md) — clinical cases / rapid review / full-length exams must be excluded at BOTH getEpppExamPart→null AND groupEpppTopicsByCategory, while isEpppTopic stays true.
