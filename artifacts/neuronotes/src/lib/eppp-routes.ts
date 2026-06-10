@@ -17,6 +17,10 @@ export function epppDomainAnchor(category: string): string {
   return `/eppp/suite/domains#${category.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`;
 }
 
+export function epppSkillsPath(): string {
+  return "/eppp/skills";
+}
+
 export function epppMasteryExamPath(category: string): string {
   return `/eppp/courses/${encodeURIComponent(category)}/mastery-exam`;
 }

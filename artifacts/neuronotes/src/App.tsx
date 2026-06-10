@@ -108,6 +108,13 @@ function AppRouter() {
           </RequireSignedIn>
         )}
       </Route>
+      <Route path="/eppp/skills">
+        {() => (
+          <RequireSignedIn>
+            <EpppSuitePage tab="part-2-skills" />
+          </RequireSignedIn>
+        )}
+      </Route>
       <Route path="/eppp/domains">
         {() => (
           <RequireSignedIn>

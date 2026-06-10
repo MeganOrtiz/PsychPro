@@ -19,7 +19,7 @@ import {
   getCourseMasteryStatus,
   getGetCourseMasteryStatusQueryKey,
 } from "@workspace/api-client-react";
-import { groupEpppTopicsByCategory, isEpppTopic } from "@/lib/eppp-content";
+import { groupEpppTopicsByCategory, isEpppKnowledgeTopic } from "@/lib/eppp-content";
 import { epppDomainAnchor, epppMasteryExamPath, epppTopicPath } from "@/lib/eppp-routes";
 import dashboardBrain from "@/assets/hero/dashboard-lateral-brain.png";
 
@@ -469,7 +469,7 @@ export default function EpppDashboardPage() {
   const { data: allTopics, isLoading: topicsLoading } = useGetTopics();
   const { date: examDate, setDate: setExamDate } = useExamDate(userId);
   const epppTopics = useMemo(
-    () => (allTopics ?? []).filter((topic) => isEpppTopic(topic)),
+    () => (allTopics ?? []).filter((topic) => isEpppKnowledgeTopic(topic)),
     [allTopics],
   );
   const epppTopicIds = useMemo(

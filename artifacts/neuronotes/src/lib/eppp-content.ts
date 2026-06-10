@@ -5,6 +5,8 @@ export type EpppTopicLike = {
   category?: string;
 };
 
+export type EpppExamPart = "part1" | "part2";
+
 const EPPP_CATEGORY_MARKERS = [
   "eppp",
   "biological bases",
@@ -26,6 +28,26 @@ const EPPP_CATEGORY_MARKERS = [
   "professional issues",
 ];
 
+const EPPP_PART2_CATEGORY_MARKERS = [
+  "part 2",
+  "part ii",
+  "eppp skills",
+  "skills domain",
+  "skills domains",
+  "applied skills",
+  "assessment intervention skills",
+  "assessment and intervention skills",
+  "consultation and supervision skills",
+  "scientific thinking",
+  "evidence use",
+  "professional ethics and legal decision-making",
+  "ethics and legal decision-making",
+  "communication relationships diversity",
+  "communication, relationships, and diversity",
+  "clinical reasoning",
+  "applied judgment",
+];
+
 const MAIN_SITE_ONLY_CATEGORIES = [
   "research methods",
   "research & statistics",
@@ -35,12 +57,51 @@ function normalized(value: string | undefined): string {
   return (value ?? "").toLowerCase().replace(/\s+/g, " ").trim();
 }
 
+export function getEpppExamPart(topic: EpppTopicLike): EpppExamPart | null {
+  const category = normalized(topic.category);
+  const name = normalized(topic.name);
+
+  if (MAIN_SITE_ONLY_CATEGORIES.includes(category)) {
+    return null;
+  }
+
+  if (
+    EPPP_PART2_CATEGORY_MARKERS.some(
+      (marker) => category.includes(marker) || name.includes(marker),
+    )
+  ) {
+    return "part2";
+  }
+
+  if (isEpppTopic(topic)) {
+    return "part1";
+  }
+
+  return null;
+}
+
+export function isEpppPart2Topic(topic: EpppTopicLike): boolean {
+  return getEpppExamPart(topic) === "part2";
+}
+
+export function isEpppKnowledgeTopic(topic: EpppTopicLike): boolean {
+  return getEpppExamPart(topic) === "part1";
+}
+
 export function isEpppTopic(topic: EpppTopicLike): boolean {
   const category = normalized(topic.category);
   const name = normalized(topic.name);
 
   if (MAIN_SITE_ONLY_CATEGORIES.includes(category)) {
     return false;
+  }
+
+  if (
+    EPPP_PART2_CATEGORY_MARKERS.some(
+      (marker) => category.includes(marker) || name.includes(marker),
+    )
+  ) {
+    return true;
   }
 
   if (EPPP_CATEGORY_MARKERS.some((marker) => category.includes(marker))) {
@@ -92,7 +153,7 @@ export function isEpppTopic(topic: EpppTopicLike): boolean {
 export function groupEpppTopicsByCategory<T extends EpppTopicLike>(topics: T[]) {
   const byCategory = new Map<string, T[]>();
   for (const topic of topics.filter(isEpppTopic)) {
-    const category = topic.category || "EPPP";
+    const category = getEpppDisplayCategory(topic);
     const existing = byCategory.get(category) ?? [];
     existing.push(topic);
     byCategory.set(category, existing);
@@ -104,4 +165,13 @@ export function groupEpppTopicsByCategory<T extends EpppTopicLike>(topics: T[]) 
       items: [...items].sort((a, b) => a.name.localeCompare(b.name)),
     }))
     .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+export function getEpppDisplayCategory(topic: EpppTopicLike): string {
+  const category = topic.category || "EPPP";
+  return category
+    .replace(/^eppp\s*[-:]\s*/i, "")
+    .replace(/^part\s*(?:2|ii)\s*[-:]\s*/i, "")
+    .replace(/^eppp\s+skills\s*[-:]\s*/i, "")
+    .trim() || "EPPP";
 }

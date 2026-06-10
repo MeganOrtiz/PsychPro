@@ -35,24 +35,29 @@ import { STUDY_PALETTE } from "@/lib/study-theme";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { cn } from "@/lib/utils";
-import { groupEpppTopicsByCategory, isEpppTopic } from "@/lib/eppp-content";
+import {
+  groupEpppTopicsByCategory,
+  isEpppKnowledgeTopic,
+  isEpppPart2Topic,
+} from "@/lib/eppp-content";
 import { epppDomainAnchor, epppMasteryExamPath, epppTopicModePath } from "@/lib/eppp-routes";
 import smokeBg from "@/assets/bg/brain-clouds.png";
 import EpppDashboardPage from "@/pages/eppp-dashboard";
 
 // ---------------------------------------------------------------------------
 // EPPP Mastery Suite — a dedicated, EPPP-only workspace with its own left-column
-// navigation (11 tabs) that replaces the main app sidebar while inside the
+// navigation that replaces the main app sidebar while inside the
 // Suite. Reached from the glowing "EPPP Mastery Suite" button in the top
 // header. Styled congruently with the main dashboard/app (same dark-glass
 // sidebar, smoke backdrop, nav-glass pills, locked cerulean #76E4F7 — no mint).
 //
 // Wired tabs reuse existing data but keep users inside the EPPP Suite:
-// Domains, Question Bank, Domain Mastery Exams, Flashcards all surface the
-// EPPP-only topic/category + mastery data; Performance Analytics folds in the
-// existing /eppp/dashboard readiness view. Net-new tabs (Study Plan, Clinical
-// Integration Cases, Full-Length Exams, Missed Questions, Rapid Review) are
-// on-brand "in development" placeholders.
+// Part 1 Knowledge, Question Bank, Domain Mastery Exams, Flashcards all surface
+// EPPP Part 1 topic/category + mastery data; Part 2 Skills is a separate
+// applied-skills lane ready for Claude uploads. Performance Analytics folds in
+// the existing /eppp/dashboard readiness view. Net-new tabs (Study Plan,
+// Clinical Integration Cases, Full-Length Exams, Missed Questions, Rapid Review)
+// are on-brand "in development" placeholders.
 // ---------------------------------------------------------------------------
 
 const C = {
@@ -69,6 +74,7 @@ const C = {
 type TabSlug =
   | "study-plan"
   | "domains"
+  | "part-2-skills"
   | "question-bank"
   | "clinical-cases"
   | "domain-mastery-exams"
@@ -83,21 +89,23 @@ type TabDef = {
   slug: TabSlug;
   label: string;
   icon: React.ComponentType<{ className?: string }>;
+  section?: string;
 };
 
 // Exact order requested by the owner.
 const TABS: TabDef[] = [
-  { slug: "study-plan", label: "Study Plan", icon: ClipboardList },
-  { slug: "domains", label: "Domains", icon: Layers },
-  { slug: "question-bank", label: "Question Bank", icon: FileQuestion },
-  { slug: "clinical-cases", label: "Clinical Integration Cases", icon: Stethoscope },
-  { slug: "domain-mastery-exams", label: "Domain Mastery Exams", icon: GraduationCap },
-  { slug: "full-length-exams", label: "Full-Length Exams", icon: ClipboardCheck },
-  { slug: "missed-questions", label: "Missed Questions", icon: XCircle },
-  { slug: "flashcards", label: "Flashcards", icon: BookMarked },
-  { slug: "rapid-review", label: "Rapid Review", icon: Zap },
-  { slug: "performance-analytics", label: "Performance Analytics", icon: BarChart3 },
-  { slug: "resources", label: "Resources", icon: Library },
+  { slug: "study-plan", label: "Study Plan", icon: ClipboardList, section: "Plan" },
+  { slug: "domains", label: "Part 1: Knowledge", icon: Layers, section: "Learn" },
+  { slug: "part-2-skills", label: "Part 2: Skills", icon: Brain, section: "Learn" },
+  { slug: "question-bank", label: "Question Bank", icon: FileQuestion, section: "Practice" },
+  { slug: "clinical-cases", label: "Clinical Integration Cases", icon: Stethoscope, section: "Practice" },
+  { slug: "domain-mastery-exams", label: "Domain Mastery Exams", icon: GraduationCap, section: "Assess" },
+  { slug: "full-length-exams", label: "Full-Length Exams", icon: ClipboardCheck, section: "Assess" },
+  { slug: "missed-questions", label: "Missed Questions", icon: XCircle, section: "Review" },
+  { slug: "flashcards", label: "Flashcards", icon: BookMarked, section: "Review" },
+  { slug: "rapid-review", label: "Rapid Review", icon: Zap, section: "Review" },
+  { slug: "performance-analytics", label: "Performance Analytics", icon: BarChart3, section: "Track" },
+  { slug: "resources", label: "Resources", icon: Library, section: "Reference" },
 ];
 
 const DEFAULT_TAB: TabSlug = "performance-analytics";
@@ -128,11 +136,14 @@ type DomainStat = {
 
 // Topics-only — used by Question Bank / Flashcards, which never need mastery
 // status and therefore must not trigger the per-category status fan-out.
-function useEpppTopics() {
+function useEpppTopics(part: "part1" | "part2" = "part1") {
   const { data: allTopics, isLoading: topicsLoading } = useGetTopics();
   const epppTopics = useMemo(
-    () => ((allTopics ?? []) as Topic[]).filter((topic) => isEpppTopic(topic)),
-    [allTopics],
+    () =>
+      ((allTopics ?? []) as Topic[]).filter((topic) =>
+        part === "part2" ? isEpppPart2Topic(topic) : isEpppKnowledgeTopic(topic),
+      ),
+    [allTopics, part],
   );
   return { allTopics: epppTopics, topicsLoading };
 }
@@ -263,21 +274,24 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
         </div>
 
         <nav className="relative flex-1 p-3 space-y-1 overflow-y-auto">
-          {TABS.map((t) => {
+          {TABS.map((t, index) => {
             const isActive = t.slug === activeSlug;
+            const showSection = t.section && t.section !== TABS[index - 1]?.section;
             return (
-              <Link
-                key={t.slug}
-                href={`/eppp/suite/${t.slug}`}
-                onClick={() => setSidebarOpen(false)}
-                data-testid={`eppp-tab-${t.slug}`}
-              >
-                <div className={navItemClass(isActive)}>
-                  <t.icon className="w-4 h-4 flex-shrink-0" />
-                  <span className="text-sm font-medium flex-1 min-w-0">{t.label}</span>
-                  {isActive && <ChevronRight className="w-4 h-4 flex-shrink-0" />}
-                </div>
-              </Link>
+              <div key={t.slug}>
+                {showSection && <p className="eps-nav-section">{t.section}</p>}
+                <Link
+                  href={`/eppp/suite/${t.slug}`}
+                  onClick={() => setSidebarOpen(false)}
+                  data-testid={`eppp-tab-${t.slug}`}
+                >
+                  <div className={navItemClass(isActive)}>
+                    <t.icon className="w-4 h-4 flex-shrink-0" />
+                    <span className="text-sm font-medium flex-1 min-w-0">{t.label}</span>
+                    {isActive && <ChevronRight className="w-4 h-4 flex-shrink-0" />}
+                  </div>
+                </Link>
+              </div>
             );
           })}
         </nav>
@@ -367,6 +381,8 @@ function SuiteContent({
       return <EpppResourcesPanel />;
     case "domains":
       return <DomainsPanel onNavigate={onNavigate} />;
+    case "part-2-skills":
+      return <Part2SkillsPanel onNavigate={onNavigate} />;
     case "domain-mastery-exams":
       return <DomainMasteryExamsPanel onNavigate={onNavigate} />;
     case "question-bank":
@@ -653,15 +669,7 @@ function TopicDirectoryPanel({
   const { allTopics, topicsLoading } = useEpppTopics();
 
   const grouped = useMemo(() => {
-    const map = new Map<string, Topic[]>();
-    [...allTopics]
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .forEach((t) => {
-        const cat = t.category || "Other";
-        if (!map.has(cat)) map.set(cat, []);
-        map.get(cat)!.push(t);
-      });
-    return Array.from(map.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+    return groupEpppTopicsByCategory(allTopics).map((group) => [group.name, group.items] as const);
   }, [allTopics]);
 
   return (
@@ -708,6 +716,103 @@ function TopicDirectoryPanel({
                             {ctaLabel} <ArrowRight aria-hidden />
                           </span>
                         )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </section>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ---- Part 2 Skills --------------------------------------------------------
+const PART2_SKILL_SHELLS = [
+  "Assessment and Intervention Skills",
+  "Consultation and Supervision Skills",
+  "Scientific Thinking and Evidence Use",
+  "Professional Ethics and Legal Decision-Making",
+  "Communication, Relationships, and Diversity",
+  "Clinical Reasoning and Applied Judgment",
+];
+
+function Part2SkillsPanel({ onNavigate }: { onNavigate: (to: string) => void }) {
+  const { allTopics, topicsLoading } = useEpppTopics("part2");
+
+  const grouped = useMemo(() => {
+    return groupEpppTopicsByCategory(allTopics).map((group) => [group.name, group.items] as const);
+  }, [allTopics]);
+
+  return (
+    <div className="study-page-bg eps-panel" data-testid="eppp-panel-part-2-skills">
+      <div className="eps-shell">
+        <PanelHead
+          eyebrow="APPLIED SKILLS"
+          title="Part 2: Skills"
+          subtitle="Applied EPPP material belongs here: decision-making, clinical reasoning, communication, supervision, ethics judgment, and case-based skill practice."
+        />
+
+        {topicsLoading ? (
+          <div className="eps-empty">Loading Part 2 skills…</div>
+        ) : grouped.length === 0 ? (
+          <div className="eps-import-panel" data-testid="eppp-part2-upload-contract">
+            <div className="eps-import-copy">
+              <span className="eps-soon-pill">
+                <Sparkles aria-hidden /> Ready for upload
+              </span>
+              <h2 className="eps-soon-title">Part 2 content has a home now</h2>
+              <p className="eps-soon-text">
+                Tell Claude to load each Part 2 lesson as EPPP content and prefix
+                its category with <strong>Part 2:</strong> or <strong>EPPP Skills:</strong>.
+                These lessons will appear here instead of mixing into Part 1 domains
+                or the main PsychPro course library.
+              </p>
+            </div>
+            <div className="eps-skill-shells" aria-label="Planned Part 2 skill domains">
+              {PART2_SKILL_SHELLS.map((domain) => (
+                <div key={domain} className="eps-skill-shell">
+                  <Brain aria-hidden />
+                  <span>{domain}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="eps-groups">
+            {grouped.map(([category, topics]) => (
+              <section key={category} className="eps-group">
+                <div className="eps-group-head">
+                  <Brain className="eps-group-icon" aria-hidden />
+                  <h2 className="eps-group-title">{category}</h2>
+                  <span className="eps-group-count">{topics.length} skills</span>
+                </div>
+                <div className="eps-topic-grid">
+                  {topics.map((t) => {
+                    const questionCount = t.quizCount ?? 0;
+                    return (
+                      <button
+                        key={t.id}
+                        className="eps-topic"
+                        onClick={() => onNavigate(epppTopicModePath(t.id, "study-guide"))}
+                        data-testid={`eppp-part2-skill-${t.id}`}
+                      >
+                        <span className="eps-topic-icon">
+                          <Brain aria-hidden />
+                        </span>
+                        <span className="eps-topic-body">
+                          <span className="eps-topic-name">{t.name}</span>
+                          <span className="eps-topic-meta">
+                            {questionCount > 0
+                              ? `${questionCount} applied questions`
+                              : "Skill lesson"}
+                          </span>
+                        </span>
+                        <span className="eps-topic-cta">
+                          Open skill <ArrowRight aria-hidden />
+                        </span>
                       </button>
                     );
                   })}
@@ -804,6 +909,15 @@ const styles = `
   margin-top: 5px; font-size: 10px; font-weight: 700; letter-spacing: 0.18em;
   text-transform: uppercase; color: ${C.mist};
 }
+.eps-nav-section {
+  margin: 14px 8px 6px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(167,243,255,0.58);
+}
+.eps-nav-section:first-child { margin-top: 4px; }
 
 /* ---- desktop crumb bar ---- */
 .eps-crumb-mark { font-weight: 600; letter-spacing: 0.18em; font-size: 12px; color: ${C.cloud}; }
@@ -957,6 +1071,41 @@ const styles = `
 .eps-topic-cta { display: inline-flex; align-items: center; gap: 5px; flex-shrink: 0; font-size: 12.5px; font-weight: 700; color: ${C.mist}; }
 .eps-topic-cta svg { width: 14px; height: 14px; transition: transform 0.2s ease; }
 .eps-topic:hover:not(.is-disabled) .eps-topic-cta svg { transform: translateX(3px); }
+
+/* ---- Part 2 upload / skills shell ---- */
+.eps-import-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(280px, 1.05fr);
+  gap: clamp(14px, 2vw, 22px);
+  border-radius: 18px;
+  padding: clamp(18px, 2.4vw, 26px);
+  background:
+    radial-gradient(circle at 18% 12%, ${C.cyan}24, transparent 34%),
+    linear-gradient(145deg, rgba(10,45,61,0.58), rgba(6,28,40,0.72));
+  border: 1px solid ${C.hairlineStrong};
+  box-shadow: 0 24px 80px -52px rgba(0,0,0,0.8), inset 0 0 42px rgba(118,228,247,0.04);
+}
+.eps-import-copy { display: flex; flex-direction: column; justify-content: center; gap: 12px; min-width: 0; }
+.eps-import-copy .eps-soon-text { max-width: 560px; }
+.eps-import-copy strong { color: ${C.mist}; font-weight: 700; }
+.eps-skill-shells { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+.eps-skill-shell {
+  display: flex; align-items: center; gap: 10px; min-width: 0;
+  border-radius: 13px; padding: 13px 14px;
+  background: rgba(2,19,27,0.54);
+  border: 1px solid ${C.hairline};
+  color: ${C.body};
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.eps-skill-shell svg { width: 16px; height: 16px; flex-shrink: 0; color: ${C.cyan}; }
+@media (max-width: 860px) {
+  .eps-import-panel { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .eps-skill-shells { grid-template-columns: 1fr; }
+}
 
 /* ---- coming soon ---- */
 .eps-soon {
