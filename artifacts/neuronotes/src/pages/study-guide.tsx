@@ -40,6 +40,8 @@ export default function StudyGuidePage({ params }: Props) {
     (error as any)?.response?.status === 402 ||
     (ent !== undefined && ent.studyGuideLocked);
 
+  const isQRG = !!(topic && isEpppQuickReference(topic));
+
   return (
     <div className="min-h-full study-page-bg" data-testid="study-guide-page">
       <div className="max-w-3xl mx-auto p-4 md:p-6 lg:p-8">
@@ -48,7 +50,7 @@ export default function StudyGuidePage({ params }: Props) {
         { label: topic?.name ?? "Topic", href: backToTopic },
         { label: "Study Guide" },
       ]} />
-      {!(topic && isEpppQuickReference(topic)) && (
+      {!isQRG && (
         <PageTitle title="Study Guide" icon={FileText} />
       )}
 
@@ -94,10 +96,19 @@ export default function StudyGuidePage({ params }: Props) {
       ) : (
         <StudySurface tone="light" glow innerClassName="p-6 md:p-10">
           <div className="text-center mb-8 pb-6" style={{ borderBottom: `1px solid ${P.surf}44` }}>
-            <p className="text-xs font-semibold tracking-[0.2em] uppercase mb-2" style={{ color: P.tealDeep }}>Study Guide</p>
+            {!isQRG && (
+              <p className="text-xs font-semibold tracking-[0.2em] uppercase mb-2" style={{ color: P.tealDeep }}>Study Guide</p>
+            )}
             <h2 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight leading-tight">
-              {guide.title.replace(/\s*[—–-]\s*Study Guide\s*$/i, "")}
+              {isQRG
+                ? guide.title.replace(/\s*[—–-]\s*Quick Reference Guide\s*$/i, "")
+                : guide.title.replace(/\s*[—–-]\s*Study Guide\s*$/i, "")}
             </h2>
+            {isQRG && (
+              <p className="mt-2 text-sm font-semibold tracking-[0.2em] uppercase" style={{ color: P.tealDeep }}>
+                Quick Reference Guide
+              </p>
+            )}
             <div className="mt-4 flex items-center justify-center gap-2" aria-hidden="true">
               <span className="h-px w-8" style={{ background: `${P.surf}66` }} />
               <span className="h-1.5 w-1.5 rounded-full" style={{ background: P.teal }} />
