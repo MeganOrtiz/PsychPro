@@ -204,7 +204,6 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
   const activeSlug: TabSlug = TABS.some((t) => t.slug === tab)
     ? (tab as TabSlug)
     : DEFAULT_TAB;
-  const active = TABS.find((t) => t.slug === activeSlug)!;
 
   return (
     <div className="study-page-bg flex min-h-screen" data-testid="eppp-suite">
@@ -318,19 +317,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
         </header>
 
         {/* Desktop top bar */}
-        <header
-          className="hidden md:flex items-center justify-between gap-3 px-6 py-3 border-b backdrop-blur-sm"
-          style={{
-            borderColor: `${STUDY_PALETTE.surf}1f`,
-            background: `linear-gradient(180deg, ${STUDY_PALETTE.ink}33 0%, transparent 100%)`,
-          }}
-        >
-          <div className="flex items-center gap-2 min-w-0">
-            <Brain className="w-4 h-4 flex-shrink-0" style={{ color: STUDY_PALETTE.surf }} />
-            <span className="eps-crumb-mark">EPPP MASTERY SUITE</span>
-            <span className="eps-crumb-sep" aria-hidden />
-            <span className="eps-crumb-page truncate">{active.label}</span>
-          </div>
+        <header className="hidden md:flex items-center justify-end gap-3 px-6 py-3">
           <div className="flex items-center gap-3">
             <Link href="/dashboard" className="eppp-launch-btn" data-testid="eppp-suite-back-desktop">
               <span className="eppp-launch-btn__inner">
