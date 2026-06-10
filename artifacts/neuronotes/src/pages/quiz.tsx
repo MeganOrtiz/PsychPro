@@ -181,6 +181,17 @@ export default function QuizPage({ params }: Props) {
         subtitle={`Question ${index + 1} of ${total}`}
       />
 
+      {inEppp ? (
+        <p
+          className="mx-auto max-w-md text-center text-xs font-light leading-relaxed -mt-3 mb-6"
+          style={{ color: `${P.mist}cc`, letterSpacing: "0.02em" }}
+          data-testid="quiz-eppp-note"
+        >
+          Quiz questions are randomized and pulled from a bank of 30 total
+          questions for each lesson for variability in learning over time.
+        </p>
+      ) : null}
+
       <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "rgba(47,160,198,0.12)" }}>
         <div
           className="h-1.5 rounded-full transition-all"
