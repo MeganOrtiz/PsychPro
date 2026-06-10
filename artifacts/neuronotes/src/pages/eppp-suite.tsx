@@ -886,7 +886,7 @@ function Part1Panel({ onNavigate }: { onNavigate: (to: string) => void }) {
       <div className="eps-shell">
         <PanelHead
           eyebrow="CONTENT AREAS"
-          title="Knowledge"
+          title="Part 1: Knowledge"
           subtitle="Your progress across every EPPP content area. Open a domain to work through its lessons — each lesson has flashcards, a quiz, a study guide, and a practice exam."
         />
         <KnowledgeBody onNavigate={onNavigate} />
