@@ -1,5 +1,4 @@
-import { Link } from "wouter";
-import { ChevronRight } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 
 export type BreadcrumbItem = {
@@ -7,46 +6,23 @@ export type BreadcrumbItem = {
   href?: string;
 };
 
-export function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
+// Replaces the old breadcrumb trail with a single "Back" control. It simply
+// returns the user to the previous page (browser history) when clicked, instead
+// of linking to a fixed parent route. The `items` prop is accepted but ignored
+// so existing callers keep compiling.
+export function Breadcrumbs(_props: { items?: BreadcrumbItem[] }) {
   return (
-    <nav
-      aria-label="Breadcrumb"
-      className="flex items-center gap-1.5 text-xs mb-4 flex-wrap"
-      data-testid="breadcrumbs"
-    >
-      {items.map((item, idx) => {
-        const isLast = idx === items.length - 1;
-        return (
-          <span key={idx} className="flex items-center gap-1.5 min-w-0">
-            {idx > 0 && (
-              <ChevronRight
-                className="w-3 h-3 flex-shrink-0"
-                style={{ color: P.inkSoft }}
-              />
-            )}
-            {isLast || !item.href ? (
-              <span
-                className="truncate"
-                style={{ color: P.paper }}
-                data-testid="crumb-current"
-                aria-current="page"
-              >
-                {item.label}
-              </span>
-            ) : (
-              <Link href={item.href}>
-                <span
-                  className="hover:underline cursor-pointer truncate"
-                  style={{ color: P.paper }}
-                  data-testid={`crumb-${idx}`}
-                >
-                  {item.label}
-                </span>
-              </Link>
-            )}
-          </span>
-        );
-      })}
+    <nav aria-label="Back" className="mb-4">
+      <button
+        type="button"
+        onClick={() => window.history.back()}
+        className="inline-flex items-center gap-1 text-sm hover:underline cursor-pointer"
+        style={{ color: P.paper }}
+        data-testid="button-back"
+      >
+        <ChevronLeft className="w-4 h-4 flex-shrink-0" />
+        Back
+      </button>
     </nav>
   );
 }
