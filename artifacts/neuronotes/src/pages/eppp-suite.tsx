@@ -1898,15 +1898,15 @@ const styles = `
   background: linear-gradient(145deg, rgba(10,45,61,0.5), rgba(6,28,40,0.68));
   border: 1px solid ${C.hairlineStrong};
 }
-.eps-notes-head { display: flex; align-items: center; gap: 13px; margin-bottom: 14px; }
+.eps-notes-head { display: flex; align-items: center; justify-content: center; text-align: center; gap: 13px; margin-bottom: 14px; }
 .eps-notes-icon {
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
   width: 40px; height: 40px; border-radius: 11px;
   color: ${C.cyan}; background: rgba(118,228,247,0.1); border: 1px solid ${C.hairlineStrong};
 }
 .eps-notes-icon svg { width: 20px; height: 20px; }
-.eps-notes-title { margin: 0; font-size: 16px; font-weight: 700; color: ${C.cloud}; }
-.eps-notes-sub { margin: 2px 0 0; font-size: 12.5px; color: ${C.muted}; }
+.eps-notes-title { margin: 0; font-size: 16px; font-weight: 800; color: ${C.cloud}; }
+.eps-notes-sub { margin: 2px 0 0; font-size: 12.5px; font-weight: 600; color: ${C.body}; }
 .eps-notes-area {
   width: 100%; min-height: 180px; resize: vertical; box-sizing: border-box;
   border-radius: 12px; padding: 14px 16px; font-size: 14px; line-height: 1.6;
