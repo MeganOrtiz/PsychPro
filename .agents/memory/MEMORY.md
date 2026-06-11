@@ -15,7 +15,7 @@
 - [PsychPro Brain Lab 2D hotspots](psychpro-brain-2d-hotspots.md) — 2D HOTSPOTS (% coords) and 3D position data are independent; "wrong label" = bad coord value, not letterbox; verify via throwaway DEV route screenshot.
 - [Brain Lab view cutouts](brain-lab-view-cutouts.md) — view PNGs must be transparent cutouts; the grayscale+glow filter can't strip a baked-in background box.
 - [PsychPro mint fully removed](psychpro-sidebar-nav-mint-cyan.md) — owner RETRACTED mint #5EEAD4 app-wide (sidebar + all buttons); everything now uses locked cerulean #76E4F7. Never reintroduce mint.
-- [PsychPro cerulean surface stack](psychpro-cerulean-surface-stack.md) — owner wanted "less dark teal"; surface tokens + inline rgba fills lifted to brighter deep cerulean; never restore old dark triplets; keep text-shadows near-black.
+- [PsychPro cerulean surface stack](psychpro-cerulean-surface-stack.md) — owner RETRACTED the lighter look; whole site is DEEPENED deep-cerulean rgba(11,54,70)→rgba(6,33,46); never re-lift; landing.tsx cards use their OWN bright family (deepen separately).
 - [Reverting worktree edits](reverting-worktree-edits.md) — main agent shell blocks destructive git; use `git show <ref>:<path>` + write. Checkpoints auto-commit edits, so HEAD may already contain them.
 - [Replit secrets quirks](replit-secrets-quirks.md) — can't programmatically fix a secret-stored value (deleteEnvVars no-ops, setEnvVars refuses); normalize bad pasted keys in code instead.
 - [Clerk dev vs prod keys](psychpro-clerk-dev-keys.md) — preview needs pk_test/sk_test in VITE_CLERK_PUBLISHABLE_KEY_DEV + CLERK_SK_OVERRIDE (dev-gated); prod pk_live rejects the Replit dev origin.

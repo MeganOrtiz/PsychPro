@@ -42,6 +42,16 @@ The brighter companion families (`rgba(20,100,128,...)`, hover/active tiers, fla
 accent/card-front in study-surface.tsx) are intentional elevated/interactive tiers — leave
 them unless specifically asked.
 
+**landing.tsx is its OWN island.** The marketing landing page does NOT use the
+`rgba(20,90,116)/rgba(11,62,82)` family the sweep targets — it has a separate bright card
+family that the site-wide sweep never touches, so it stays light after a global deepen and
+the owner re-reports "too light" for the landing only. Its surfaces: the `C.bgPanel`/
+`C.bgPanelStrong` tokens (drive `.landing-feature-card` + `.landing-topic-chip`), plus
+inline gradients on `.landing-science-item`, `.landing-founder-card`, `.landing-dash-card`,
+`.landing-scholar-card`, `.landing-mastery-card`. Deepen all of these to the canonical
+`rgba(11,54,70,~0.82–0.86)→rgba(6,33,46,0.90)`; keep the cyan hairlines/glows/shadows for
+radiance. Verify on the public `/` route (no auth gate).
+
 **Rule:**
 - Accent stays locked at cerulean `#76E4F7` (and `mint` stays fully removed — see
   psychpro-sidebar-nav-mint-cyan.md). Radiance comes from the locked cyan accents +
