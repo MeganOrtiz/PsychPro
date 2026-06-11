@@ -1839,7 +1839,7 @@ const styles = `
 .eps-topic {
   display: flex; align-items: center; gap: 14px; text-align: left; cursor: pointer;
   border-radius: 8px; padding: 14px 16px;
-  background: linear-gradient(145deg, rgba(12,67,85,0.5), rgba(9,48,63,0.6));
+  background: linear-gradient(145deg, rgba(10,53,69,0.93), rgba(6,32,43,0.96));
   border: 1px solid ${C.hairline};
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
