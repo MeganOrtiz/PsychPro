@@ -184,11 +184,17 @@ const styles = `
   text-align: center;
   border-radius: 26px;
   padding: clamp(32px, 5vw, 64px) clamp(22px, 4vw, 56px);
-  background: linear-gradient(150deg, rgba(27,118,150,0.62), rgba(14,78,100,0.84));
-  border: 1px solid ${C.hairlineStrong};
-  backdrop-filter: blur(20px) saturate(130%);
-  -webkit-backdrop-filter: blur(20px) saturate(130%);
-  box-shadow: 0 40px 100px -44px rgba(0,0,0,0.78), 0 0 48px ${C.cyan}1c;
+  background:
+    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0.00) 58%),
+    linear-gradient(150deg, rgba(22,96,124,0.46), rgba(12,68,90,0.58));
+  border: 1px solid rgba(196,232,242,0.22);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 0 48px -24px rgba(118,228,247,0.45),
+    0 0 48px ${C.cyan}1c,
+    0 40px 100px -44px rgba(0,0,0,0.76);
 }
 .eppp-hero-glow {
   position: absolute;
@@ -313,11 +319,17 @@ const styles = `
   gap: 10px;
   border-radius: 18px;
   padding: clamp(20px, 2.4vw, 26px);
-  background: linear-gradient(145deg, rgba(20,100,128,0.58), rgba(14,78,100,0.66));
-  border: 1px solid ${C.hairline};
-  backdrop-filter: blur(16px) saturate(125%);
-  -webkit-backdrop-filter: blur(16px) saturate(125%);
-  box-shadow: 0 24px 60px -40px rgba(0,0,0,0.7);
+  background:
+    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
+    linear-gradient(145deg, rgba(20,90,116,0.40), rgba(11,62,82,0.52));
+  border: 1px solid rgba(196,232,242,0.22);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 0 40px -22px rgba(118,228,247,0.42),
+    0 0 28px -6px rgba(118,228,247,0.30),
+    0 24px 60px -40px rgba(0,0,0,0.7);
 }
 .eppp-link-card {
   text-decoration: none;

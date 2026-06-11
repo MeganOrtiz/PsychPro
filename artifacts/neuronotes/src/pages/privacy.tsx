@@ -103,7 +103,8 @@ export default function PrivacyPage() {
           className="mt-10 mb-12 rounded-lg p-5"
           style={{
             border: "1px solid rgba(118,228,247,0.18)",
-            background: "rgba(8,18,26,0.55)",
+            background:
+              "linear-gradient(145deg, rgba(20,90,116,0.36), rgba(11,62,82,0.50))",
           }}
           aria-label="On this page"
         >
@@ -426,7 +427,8 @@ export default function PrivacyPage() {
               className="rounded-lg p-4 text-sm"
               style={{
                 border: "1px solid rgba(118,228,247,0.18)",
-                background: "rgba(8,18,26,0.55)",
+                background:
+              "linear-gradient(145deg, rgba(20,90,116,0.36), rgba(11,62,82,0.50))",
               }}
             >
               <p style={{ ...TRACK_NAV, fontSize: 11, color: P.cloud }}>

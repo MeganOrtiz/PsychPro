@@ -610,11 +610,17 @@ const styles = `
   position: relative;
   border-radius: 20px;
   padding: clamp(18px, 2vw, 24px);
-  background: linear-gradient(145deg, rgba(20,100,128,0.6), rgba(14,78,100,0.7));
-  border: 1px solid ${C.hairline};
-  backdrop-filter: blur(16px) saturate(125%);
-  -webkit-backdrop-filter: blur(16px) saturate(125%);
-  box-shadow: 0 24px 60px -42px rgba(0,0,0,0.72);
+  background:
+    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
+    linear-gradient(145deg, rgba(20,90,116,0.40), rgba(11,62,82,0.52));
+  border: 1px solid rgba(196,232,242,0.22);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 0 40px -22px rgba(118,228,247,0.42),
+    0 0 28px -6px rgba(118,228,247,0.30),
+    0 24px 60px -42px rgba(0,0,0,0.72);
 }
 .epd-card-label {
   display: inline-flex;
@@ -814,15 +820,26 @@ const styles = `
   border-radius: 16px;
   padding: 18px;
   text-decoration: none;
-  background: linear-gradient(145deg, rgba(20,100,128,0.6), rgba(14,78,100,0.7));
-  border: 1px solid ${C.hairline};
-  backdrop-filter: blur(16px) saturate(125%);
-  -webkit-backdrop-filter: blur(16px) saturate(125%);
-  box-shadow: 0 24px 60px -42px rgba(0,0,0,0.72);
+  background:
+    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
+    linear-gradient(145deg, rgba(20,90,116,0.40), rgba(11,62,82,0.52));
+  border: 1px solid rgba(196,232,242,0.22);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 0 40px -22px rgba(118,228,247,0.42),
+    0 0 24px -6px rgba(118,228,247,0.28),
+    0 24px 60px -42px rgba(0,0,0,0.72);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
 .epd-domain:hover { transform: translateY(-3px); border-color: ${C.cyan}66; box-shadow: 0 22px 56px -38px rgba(0,0,0,0.7), 0 0 24px -10px ${C.cyan}59; }
-.epd-domain.is-mastered { border-color: ${C.cyan}5e; background: linear-gradient(145deg, rgba(27,118,150,0.62), rgba(19,100,128,0.7)); }
+.epd-domain.is-mastered {
+  border-color: ${C.cyan}5e;
+  background:
+    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.16) 0%, rgba(118,228,247,0.00) 60%),
+    linear-gradient(145deg, rgba(28,116,146,0.52), rgba(16,84,108,0.60));
+}
 .epd-domain--loading { opacity: 0.85; }
 .epd-bar-fill--idle {
   display: block; height: 100%; width: 35%; border-radius: 999px;
@@ -861,11 +878,17 @@ const styles = `
   padding: 14px 16px;
   text-align: left;
   cursor: pointer;
-  background: linear-gradient(145deg, rgba(20,100,128,0.6), rgba(14,78,100,0.7));
-  border: 1px solid ${C.hairline};
-  backdrop-filter: blur(16px) saturate(125%);
-  -webkit-backdrop-filter: blur(16px) saturate(125%);
-  box-shadow: 0 24px 60px -42px rgba(0,0,0,0.72);
+  background:
+    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
+    linear-gradient(145deg, rgba(20,90,116,0.40), rgba(11,62,82,0.52));
+  border: 1px solid rgba(196,232,242,0.22);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 0 38px -22px rgba(118,228,247,0.40),
+    0 0 22px -6px rgba(118,228,247,0.26),
+    0 24px 60px -42px rgba(0,0,0,0.72);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
 .epd-next:hover { transform: translateY(-2px); border-color: ${C.cyan}66; box-shadow: 0 0 24px -12px ${C.cyan}80; }

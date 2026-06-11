@@ -55,12 +55,12 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
       // rather than a flat opaque box.
       return {
         background:
-          "linear-gradient(145deg, rgba(20,100,128,0.58), rgba(14,78,100,0.66))",
-        borderColor: "rgba(118,228,247,0.14)",
-        backdropFilter: "blur(18px) saturate(130%)",
-        WebkitBackdropFilter: "blur(18px) saturate(130%)",
+          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(20,90,116,0.40), rgba(11,62,82,0.52))",
+        borderColor: "rgba(118,228,247,0.22)",
+        backdropFilter: "blur(20px) saturate(135%)",
+        WebkitBackdropFilter: "blur(20px) saturate(135%)",
         boxShadow:
-          "inset 0 1px 0 rgba(167,243,255,0.06), 0 18px 40px -24px rgba(0,0,0,0.55)",
+          "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 40px -22px rgba(118,228,247,0.42), 0 0 26px -6px rgba(118,228,247,0.30), 0 18px 40px -24px rgba(0,0,0,0.6)",
         color: P.mist,
       };
   }
