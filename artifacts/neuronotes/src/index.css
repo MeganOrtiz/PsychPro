@@ -258,22 +258,22 @@
 .study-page-aurora {
   /* Mirrors STUDY_PALETTE in src/lib/study-theme.ts. Canonical palette
      = the landing-page cinematic neuroscience UI. */
-  --background: 200 75% 9%;          /* #061F2B bg */
+  --background: 196 76% 14%;         /* #09303F bg */
   --foreground: 188 100% 83%;        /* #A7F3FF mist (icy text) */
-  --card: 197 72% 14%;               /* #0A2D3D surface */
+  --card: 195 76% 19%;               /* #0C4355 surface */
   --card-foreground: 188 100% 83%;
-  --popover: 197 72% 14%;
+  --popover: 195 76% 19%;
   --popover-foreground: 188 100% 83%;
-  --muted: 195 78% 14%;              /* #083240 bgSoft */
+  --muted: 195 78% 19%;              /* #0B4356 bgSoft */
   --muted-foreground: 195 24% 73%;   /* #A9C6CF inkSoft */
-  --border: 192 52% 35%;             /* #2A7387 steel/cerulean */
-  --input: 195 78% 14%;              /* #083240 bgSoft */
-  --primary: 192 47% 58%;            /* #5EB0C8 teal */
-  --primary-foreground: 200 75% 9%;
-  --secondary: 192 52% 35%;          /* #2A7387 cerulean */
+  --border: 192 56% 44%;             /* #3196AF steel/cerulean */
+  --input: 195 78% 19%;              /* #0B4356 bgSoft */
+  --primary: 189 64% 64%;            /* #68CCDE teal */
+  --primary-foreground: 196 76% 14%;
+  --secondary: 192 56% 44%;          /* #3196AF cerulean */
   --secondary-foreground: 188 100% 83%;
   --accent: 188 90% 72%;             /* #76E4F7 surf (bright-cyan) */
-  --accent-foreground: 200 75% 9%;
+  --accent-foreground: 196 76% 14%;
   --ring: 188 90% 72%;
   /* Shared cyan glow token for glass buttons + nav items so every
      interactive surface reads from the same accent. */
@@ -302,7 +302,7 @@
    .nav-glass-idle recipe: flat dark teal fill, faint cerulean hairline, soft
    cyan glow that intensifies on hover/active. */
 .btn-glass {
-  background: rgba(20, 46, 60, 0.72);
+  background: rgba(26,72,93, 0.72);
   border: 1px solid rgba(118, 228, 247, 0.34);
   color: #e6fafe;
   box-shadow:
@@ -409,9 +409,9 @@
      readable; the center is nearly transparent. */
   background-image:
     radial-gradient(ellipse 150% 130% at 50% 55%,
-      rgba(2, 13, 18, 0.00) 0%,
-      rgba(2, 13, 18, 0.10) 55%,
-      rgba(2, 13, 18, 0.40) 100%),
+      rgba(8, 37, 48, 0.00) 0%,
+      rgba(8, 37, 48, 0.08) 55%,
+      rgba(8, 37, 48, 0.30) 100%),
     url("./assets/bg/brain-clouds.png");
   /* Anchor center-center so the densest atmospheric cloud band — the
      middle of the source image, right around the brain — fills the
@@ -422,7 +422,7 @@
   background-position: center, center center;
   background-repeat: no-repeat, no-repeat;
   background-attachment: fixed, fixed;
-  background-color: #020d12;
+  background-color: #061b23;
   pointer-events: none;
 }
 
@@ -438,8 +438,8 @@
 .recommended-tile {
   background: linear-gradient(
     145deg,
-    rgba(10, 45, 61, 0.32),
-    rgba(6, 28, 38, 0.4)
+    rgba(12,67,85, 0.32),
+    rgba(9,48,63, 0.4)
   );
   border-color: rgba(196, 232, 242, 0.22);
   backdrop-filter: blur(20px) saturate(135%);
@@ -623,8 +623,8 @@
 .study-page-aurora .bg-card {
   background-image: linear-gradient(
     145deg,
-    rgba(10, 45, 61, 0.58),
-    rgba(6, 28, 40, 0.66)
+    rgba(12,67,85, 0.58),
+    rgba(9,48,63, 0.66)
   );
   border: 1px solid rgba(118, 228, 247, 0.14);
   border-radius: 22px;
@@ -643,7 +643,7 @@
    outside @layer so they override the Tailwind border/background utilities on
    the nav tokens. */
 .nav-glass-idle {
-  background: rgba(12, 28, 38, 0.55);
+  background: rgba(16,55,72, 0.55);
   border: 1px solid rgba(118, 228, 247, 0.12);
   box-shadow:
     0 0 12px rgba(118, 228, 247, 0.08),
@@ -724,7 +724,7 @@
 /* Secondary buttons — subtle luminous dark glass, scoped to actual buttons. */
 .study-page-bg button.bg-secondary,
 .study-page-aurora button.bg-secondary {
-  background: rgba(20, 46, 60, 0.72);
+  background: rgba(26,72,93, 0.72);
   color: #e6fafe;
   border: 1px solid rgba(118, 228, 247, 0.34);
   border-radius: 8px;
@@ -759,7 +759,7 @@
    without a bg-* class. */
 .study-page-bg button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive),
 .study-page-aurora button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive) {
-  background: rgba(20, 46, 60, 0.6);
+  background: rgba(26,72,93, 0.6);
   border-color: rgba(118, 228, 247, 0.34) !important;
   color: #e6fafe;
   border-radius: 8px;

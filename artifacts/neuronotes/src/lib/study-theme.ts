@@ -2,7 +2,7 @@
 // SINGLE SOURCE OF TRUTH for the PsychPro color palette.
 //
 // Canonical palette = the LANDING PAGE reference (cinematic neuroscience UI):
-// deep midnight-teal bg, cerulean mid-tones, bright cyan accents, soft icy text.
+// deep cerulean bg, vivid turquoise/cerulean mid-tones, bright cyan accents, soft icy text.
 // All other pages must mirror this exactly — no royal blue, no flat navy,
 // no purple, no green-teal drift.
 //
@@ -27,18 +27,18 @@
 
 export const STUDY_PALETTE = {
   // Backgrounds — deep midnight-teal stack
-  ink: "#03151D",         // deepest anchor (sidebar / page floor)
-  bg: "#061F2B",          // page bg primary (bg-midnight)
-  bgSoft: "#083240",      // page bg secondary (bg-teal)
-  surface: "#0A2D3D",     // card surface (glass-strong)
-  surfaceElev: "#0E3C50", // card hover / lifted
+  ink: "#06232D",         // deepest anchor (sidebar / page floor)
+  bg: "#09303F",          // page bg primary (bg-midnight)
+  bgSoft: "#0B4356",      // page bg secondary (bg-teal)
+  surface: "#0C4355",     // card surface (glass-strong)
+  surfaceElev: "#11576F", // card hover / lifted
 
   // Mid-cerulean — borders, dividers, structural lines
-  steel: "#2A7387",       // cerulean
+  steel: "#3196AF",       // cerulean
 
   // Cyan accents — hue ~188–195, locked
-  tealDeep: "#2A7387",    // cerulean (alias)
-  teal: "#5EB0C8",        // cyan
+  tealDeep: "#3196AF",    // cerulean (alias)
+  teal: "#68CCDE",        // cyan
   surf: "#76E4F7",        // bright-cyan (primary glow)
   mist: "#A7F3FF",        // soft-cyan (icy text)
   mistSoft: "#7FBFD0",    // dimmer soft-cyan (muted icy text on dark surfaces)

@@ -19,7 +19,7 @@ import {
 const C = {
   cyan: "#76E4F7",
   mist: "#A7F3FF",
-  ink: "#03151D",
+  ink: "#06232D",
   hairline: "rgba(118,228,247,0.16)",
   hairlineStrong: "rgba(118,228,247,0.32)",
   body: "rgba(225,244,250,0.84)",
@@ -184,7 +184,7 @@ const styles = `
   text-align: center;
   border-radius: 26px;
   padding: clamp(32px, 5vw, 64px) clamp(22px, 4vw, 56px);
-  background: linear-gradient(150deg, rgba(14,60,80,0.62), rgba(6,28,38,0.84));
+  background: linear-gradient(150deg, rgba(17,87,111,0.62), rgba(9,48,63,0.84));
   border: 1px solid ${C.hairlineStrong};
   backdrop-filter: blur(20px) saturate(130%);
   -webkit-backdrop-filter: blur(20px) saturate(130%);
@@ -276,7 +276,7 @@ const styles = `
 .eppp-btn--ghost {
   color: ${C.mist};
   border: 1px solid ${C.hairlineStrong};
-  background: rgba(12,28,38,0.55);
+  background: rgba(16,55,72,0.55);
 }
 .eppp-btn--ghost:hover {
   transform: translateY(-1px);
@@ -313,7 +313,7 @@ const styles = `
   gap: 10px;
   border-radius: 18px;
   padding: clamp(20px, 2.4vw, 26px);
-  background: linear-gradient(145deg, rgba(10,45,61,0.58), rgba(6,28,40,0.66));
+  background: linear-gradient(145deg, rgba(12,67,85,0.58), rgba(9,48,63,0.66));
   border: 1px solid ${C.hairline};
   backdrop-filter: blur(16px) saturate(125%);
   -webkit-backdrop-filter: blur(16px) saturate(125%);

@@ -647,7 +647,7 @@ export default function PracticeExamPage({ params }: Props) {
             cls += " hover:-translate-y-0.5 quiz-option-hover";
             style = {
               background:
-                "linear-gradient(to bottom, rgba(10,45,61,0.78), rgba(2,13,18,0.86))",
+                "linear-gradient(to bottom, rgba(12,67,85,0.78), rgba(2,13,18,0.86))",
               borderColor: `${P.surf}55`,
               color: P.cloud,
               boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(255,255,255,0.06)`,
@@ -663,7 +663,7 @@ export default function PracticeExamPage({ params }: Props) {
             cls += " opacity-55";
             style = {
               background:
-                "linear-gradient(to bottom, rgba(10,45,61,0.78), rgba(2,13,18,0.86))",
+                "linear-gradient(to bottom, rgba(12,67,85,0.78), rgba(2,13,18,0.86))",
               borderColor: `${P.surf}25`,
               color: `${P.cloud}aa`,
             };

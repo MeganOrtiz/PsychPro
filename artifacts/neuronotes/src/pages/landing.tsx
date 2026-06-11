@@ -72,7 +72,7 @@ const STUDY_TOOLS = [
     title: "Quizzes That Reinforce Learning",
     body:
       "Every question includes detailed explanations that transform assessment into another opportunity to learn.",
-    accent: "#5EB0C8",
+    accent: "#68CCDE",
   },
   {
     icon: BookOpen,
@@ -702,11 +702,11 @@ export default function LandingPage() {
 const C = {
   cyan: P.surf,        // #76E4F7 — primary glow
   cyanSoft: P.mist,    // #A7F3FF — icy text
-  cyanMid: P.teal,     // #5EB0C8
-  cyanDeep: P.tealDeep,// #2A7387
-  bg: "#020d12",
-  bgPanel: "rgba(8, 32, 42, 0.55)",
-  bgPanelStrong: "rgba(6, 28, 38, 0.75)",
+  cyanMid: P.teal,     // #68CCDE
+  cyanDeep: P.tealDeep,// #3196AF
+  bg: "#061b23",
+  bgPanel: "rgba(11, 67, 86, 0.5)",
+  bgPanelStrong: "rgba(10, 53, 68, 0.72)",
   hairline: "rgba(118, 228, 247, 0.18)",
   hairlineStrong: "rgba(118, 228, 247, 0.32)",
 };
@@ -731,7 +731,7 @@ const styles = `
   width: 100%;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  background: linear-gradient(180deg, rgba(2, 13, 18, 0.72), rgba(2, 13, 18, 0.35));
+  background: linear-gradient(180deg, rgba(6, 27, 36, 0.58), rgba(6, 27, 36, 0.26));
   border-bottom: 1px solid ${C.hairline};
 }
 .landing-nav-inner {
@@ -1203,7 +1203,7 @@ const styles = `
   padding: 22px 20px;
   border-radius: 16px;
   border: 1px solid ${C.hairline};
-  background: linear-gradient(180deg, rgba(8,32,42,0.4), rgba(6,28,38,0.55));
+  background: linear-gradient(180deg, rgba(11,67,86,0.4), rgba(9,48,63,0.55));
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -1299,7 +1299,7 @@ const styles = `
   padding: clamp(26px, 3.4vw, 44px);
   border-radius: 22px;
   border: 1px solid ${C.hairlineStrong};
-  background: linear-gradient(150deg, rgba(10,45,61,0.62), rgba(6,28,38,0.82));
+  background: linear-gradient(150deg, rgba(12,67,85,0.62), rgba(9,48,63,0.82));
   backdrop-filter: blur(18px) saturate(130%);
   -webkit-backdrop-filter: blur(18px) saturate(130%);
   box-shadow:
@@ -1369,7 +1369,7 @@ const styles = `
   max-width: 420px;
   border-radius: 18px;
   padding: 22px 22px 16px;
-  background: linear-gradient(145deg, rgba(10,45,61,0.72), rgba(6,28,38,0.85));
+  background: linear-gradient(145deg, rgba(12,67,85,0.72), rgba(9,48,63,0.85));
   border: 1px solid ${C.hairlineStrong};
   backdrop-filter: blur(18px) saturate(130%);
   -webkit-backdrop-filter: blur(18px) saturate(130%);
@@ -1448,7 +1448,7 @@ const styles = `
   overflow: hidden;
   border-radius: 22px;
   padding: clamp(28px, 4vw, 48px);
-  background: linear-gradient(150deg, rgba(14,60,80,0.6), rgba(6,28,38,0.82));
+  background: linear-gradient(150deg, rgba(17,87,111,0.6), rgba(9,48,63,0.82));
   border: 1px solid ${C.hairlineStrong};
   backdrop-filter: blur(20px) saturate(130%);
   -webkit-backdrop-filter: blur(20px) saturate(130%);
@@ -1497,7 +1497,7 @@ const styles = `
   text-align: center;
   border-radius: 22px;
   padding: clamp(30px, 4.4vw, 52px);
-  background: linear-gradient(150deg, rgba(14,60,80,0.6), rgba(6,28,38,0.82));
+  background: linear-gradient(150deg, rgba(17,87,111,0.6), rgba(9,48,63,0.82));
   border: 1px solid ${C.hairlineStrong};
   backdrop-filter: blur(20px) saturate(130%);
   -webkit-backdrop-filter: blur(20px) saturate(130%);
@@ -1628,7 +1628,7 @@ const styles = `
 .landing-footer {
   border-top: 1px solid ${C.hairline};
   margin-top: clamp(28px, 4vh, 48px);
-  background: linear-gradient(180deg, rgba(2, 13, 18, 0.4), rgba(2, 13, 18, 0.85));
+  background: linear-gradient(180deg, rgba(6, 27, 36, 0.32), rgba(6, 27, 36, 0.7));
   backdrop-filter: blur(8px);
 }
 .landing-footer-inner {

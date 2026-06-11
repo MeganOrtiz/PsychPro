@@ -579,7 +579,7 @@ export default function DashboardPage() {
                     <Tooltip
                       cursor={{ stroke: PALETTE.teal, strokeOpacity: 0.25 }}
                       contentStyle={{
-                        background: "rgba(6,28,40,0.92)",
+                        background: "rgba(9,48,63,0.92)",
                         border: "1px solid rgba(118,228,247,0.25)",
                         borderRadius: 10,
                         color: PALETTE.mist,
@@ -662,7 +662,7 @@ export default function DashboardPage() {
                             borderColor: "rgba(118,228,247,0.35)",
                           }
                         : {
-                            background: "rgba(6,28,40,0.4)",
+                            background: "rgba(9,48,63,0.4)",
                             borderColor: "rgba(118,228,247,0.10)",
                             opacity: 0.55,
                           }

@@ -55,7 +55,7 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
       // rather than a flat opaque box.
       return {
         background:
-          "linear-gradient(145deg, rgba(10,45,61,0.58), rgba(6,28,40,0.66))",
+          "linear-gradient(145deg, rgba(12,67,85,0.58), rgba(9,48,63,0.66))",
         borderColor: "rgba(118,228,247,0.14)",
         backdropFilter: "blur(18px) saturate(130%)",
         WebkitBackdropFilter: "blur(18px) saturate(130%)",

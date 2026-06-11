@@ -90,7 +90,7 @@ const C = {
   cyan: "#76E4F7",
   mist: "#A7F3FF",
   cloud: "#F4FBFF",
-  ink: "#03151D",
+  ink: "#06232D",
   hairline: "rgba(118,228,247,0.16)",
   hairlineStrong: "rgba(118,228,247,0.32)",
   body: "rgba(225,244,250,0.84)",
@@ -267,7 +267,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
         )}
         style={{
           ["--nav-glow" as never]: STUDY_PALETTE.surf,
-          background: `linear-gradient(180deg, rgba(2,13,18,0.35) 0%, rgba(2,13,18,0.55) 55%, rgba(2,13,18,0.8) 100%), url(${smokeBg}), linear-gradient(180deg, ${STUDY_PALETTE.surfaceElev}, ${STUDY_PALETTE.surface})`,
+          background: `linear-gradient(180deg, rgba(8,37,48,0.26) 0%, rgba(8,37,48,0.44) 55%, rgba(8,37,48,0.66) 100%), url(${smokeBg}), linear-gradient(180deg, ${STUDY_PALETTE.surfaceElev}, ${STUDY_PALETTE.surface})`,
           backgroundSize: "cover, cover, cover",
           backgroundPosition: "center, center, center",
           backgroundRepeat: "no-repeat, no-repeat, no-repeat",
@@ -1626,7 +1626,7 @@ const styles = `
   display: inline-flex; align-items: center; gap: 6px;
   padding: 8px 14px; border-radius: 0;
   font-size: 12.5px; font-weight: 600; text-decoration: none; white-space: nowrap;
-  color: ${C.mist}; border: 1px solid ${C.hairlineStrong}; background: rgba(12,28,38,0.5);
+  color: ${C.mist}; border: 1px solid ${C.hairlineStrong}; background: rgba(16,55,72,0.5);
   transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 .eps-back-app svg { width: 14px; height: 14px; }
@@ -1667,7 +1667,7 @@ const styles = `
 .eps-section-meta { font-size: 13px; font-weight: 600; color: ${C.mist}; }
 .eps-empty {
   border-radius: 16px; padding: 28px; text-align: center; font-size: 14px; color: ${C.muted};
-  border: 1px dashed ${C.hairline}; background: rgba(6,28,40,0.4);
+  border: 1px dashed ${C.hairline}; background: rgba(9,48,63,0.4);
 }
 
 /* ---- Knowledge sub-tab: course-style rail + lessons pane ---- */
@@ -1680,7 +1680,7 @@ const styles = `
   display: flex; flex-direction: column; gap: 8px;
   padding: 10px; border-radius: 14px;
   border: 1px solid ${C.hairline};
-  background: linear-gradient(155deg, rgba(7,36,50,0.78), rgba(3,21,29,0.88));
+  background: linear-gradient(155deg, rgba(10,55,72,0.78), rgba(6,40,53,0.88));
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
 }
 @media (max-width: 900px) {
@@ -1705,7 +1705,7 @@ const styles = `
 .eps-kb-lesson:focus-visible { outline: 2px solid ${C.cyan}; outline-offset: 2px; }
 .eps-kb-rail-item.is-active {
   border-color: ${C.cyan}8c;
-  background: linear-gradient(145deg, rgba(14,60,80,0.7), rgba(8,36,48,0.78));
+  background: linear-gradient(145deg, rgba(17,87,111,0.7), rgba(11,67,86,0.78));
   box-shadow: 0 0 22px -10px ${C.cyan}b3, inset 0 1px 0 rgba(255,255,255,0.06);
 }
 .eps-kb-rail-icon {
@@ -1748,7 +1748,7 @@ const styles = `
   display: grid; grid-template-columns: 38px minmax(0, 1fr) 18px; gap: 12px; align-items: center;
   text-align: left; cursor: pointer;
   padding: 15px; border-radius: 0;
-  background: linear-gradient(145deg, rgba(10,45,61,0.5), rgba(6,28,40,0.6));
+  background: linear-gradient(145deg, rgba(12,67,85,0.5), rgba(9,48,63,0.6));
   border: 1px solid ${C.hairline};
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
@@ -1773,10 +1773,10 @@ const styles = `
 .eps-exam-row {
   display: flex; align-items: center; gap: 16px;
   border-radius: 16px; padding: 16px 18px;
-  background: linear-gradient(145deg, rgba(10,45,61,0.5), rgba(6,28,40,0.62));
+  background: linear-gradient(145deg, rgba(12,67,85,0.5), rgba(9,48,63,0.62));
   border: 1px solid ${C.hairline};
 }
-.eps-exam-row.is-mastered { border-color: ${C.cyan}5e; background: linear-gradient(145deg, rgba(14,60,80,0.6), rgba(8,36,48,0.68)); }
+.eps-exam-row.is-mastered { border-color: ${C.cyan}5e; background: linear-gradient(145deg, rgba(17,87,111,0.6), rgba(11,67,86,0.68)); }
 .eps-exam-row.is-locked { opacity: 0.9; }
 .eps-exam-icon {
   display: inline-flex; align-items: center; justify-content: center;
@@ -1799,7 +1799,7 @@ const styles = `
 .eps-exam-cta svg { width: 15px; height: 15px; }
 .eps-exam-cta:hover { transform: translateY(-1px); background: rgba(118,228,247,0.36); border-color: rgba(118,228,247,0.65); box-shadow: 0 0 28px rgba(118,228,247,0.55), inset 0 1px 0 rgba(255,255,255,0.12); }
 .eps-exam-cta--ghost {
-  color: ${C.mist}; background: rgba(12,28,38,0.55); border: 1px solid ${C.hairlineStrong}; box-shadow: none;
+  color: ${C.mist}; background: rgba(16,55,72,0.55); border: 1px solid ${C.hairlineStrong}; box-shadow: none;
 }
 .eps-exam-cta--ghost:hover { border-color: ${C.cyan}80; color: ${C.cloud}; box-shadow: none; }
 
@@ -1824,7 +1824,7 @@ const styles = `
 .eps-topic {
   display: flex; align-items: center; gap: 14px; text-align: left; cursor: pointer;
   border-radius: 0; padding: 14px 16px;
-  background: linear-gradient(145deg, rgba(10,45,61,0.5), rgba(6,28,40,0.6));
+  background: linear-gradient(145deg, rgba(12,67,85,0.5), rgba(9,48,63,0.6));
   border: 1px solid ${C.hairline};
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
@@ -1861,7 +1861,7 @@ const styles = `
 .eps-subtab {
   display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
   padding: 9px 16px; border-radius: 0; font-size: 13px; font-weight: 600; white-space: nowrap;
-  color: ${C.mist}; background: rgba(12,28,38,0.55); border: 1px solid ${C.hairlineStrong};
+  color: ${C.mist}; background: rgba(16,55,72,0.55); border: 1px solid ${C.hairlineStrong};
   transition: transform 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
 .eps-subtab svg { width: 15px; height: 15px; flex-shrink: 0; }
@@ -1887,7 +1887,7 @@ const styles = `
   padding: clamp(18px, 2.4vw, 26px);
   background:
     radial-gradient(circle at 18% 12%, ${C.cyan}24, transparent 34%),
-    linear-gradient(145deg, rgba(10,45,61,0.58), rgba(6,28,40,0.72));
+    linear-gradient(145deg, rgba(12,67,85,0.58), rgba(9,48,63,0.72));
   border: 1px solid ${C.hairlineStrong};
   box-shadow: 0 24px 80px -52px rgba(0,0,0,0.8), inset 0 0 42px rgba(118,228,247,0.04);
 }
@@ -1923,14 +1923,14 @@ const styles = `
 .eps-contract-card {
   border-radius: 18px;
   padding: clamp(18px, 2.4vw, 26px);
-  background: linear-gradient(145deg, rgba(10,45,61,0.48), rgba(6,28,40,0.7));
+  background: linear-gradient(145deg, rgba(12,67,85,0.48), rgba(9,48,63,0.7));
   border: 1px solid ${C.hairline};
   box-shadow: 0 22px 70px -54px rgba(0,0,0,0.82);
 }
 .eps-build-card.is-active {
   background:
     radial-gradient(circle at 18% 0%, ${C.cyan}22, transparent 36%),
-    linear-gradient(145deg, rgba(14,60,80,0.62), rgba(6,28,40,0.72));
+    linear-gradient(145deg, rgba(17,87,111,0.62), rgba(9,48,63,0.72));
   border-color: ${C.hairlineStrong};
 }
 .eps-build-kicker {
@@ -1992,7 +1992,7 @@ const styles = `
   position: relative; overflow: hidden;
   display: flex; flex-direction: column; align-items: center; text-align: center;
   border-radius: 22px; padding: clamp(40px, 6vw, 72px) clamp(24px, 4vw, 56px);
-  background: linear-gradient(150deg, rgba(14,60,80,0.55), rgba(6,28,38,0.8));
+  background: linear-gradient(150deg, rgba(17,87,111,0.55), rgba(9,48,63,0.8));
   border: 1px solid ${C.hairlineStrong};
   box-shadow: 0 40px 100px -52px rgba(0,0,0,0.78), 0 0 48px ${C.cyan}16;
 }
@@ -2018,7 +2018,7 @@ const styles = `
 .eps-ghost-btn {
   display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
   padding: 8px 14px; border-radius: 0; font-size: 13px; font-weight: 600;
-  color: ${C.cloud}; background: rgba(12,28,38,0.55); border: 1px solid ${C.cyan}40;
+  color: ${C.cloud}; background: rgba(16,55,72,0.55); border: 1px solid ${C.cyan}40;
   transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.3s ease;
 }
 .eps-ghost-btn svg { width: 15px; height: 15px; }
@@ -2030,7 +2030,7 @@ const styles = `
   border-radius: 18px; padding: clamp(20px, 2.6vw, 30px); text-align: center;
   background:
     radial-gradient(circle at 50% 0%, ${C.cyan}26, transparent 46%),
-    linear-gradient(160deg, rgba(9,34,47,0.9), rgba(4,17,26,0.95));
+    linear-gradient(160deg, rgba(11,55,72,0.9), rgba(6,32,43,0.95));
   border: 1px solid rgba(118,228,247,0.3);
   box-shadow: 0 24px 80px -50px rgba(0,0,0,0.85), inset 0 0 46px rgba(118,228,247,0.05);
 }
@@ -2064,7 +2064,7 @@ const styles = `
 /* ---- Rapid Review notes ---- */
 .eps-notes {
   margin-top: clamp(22px, 2.6vw, 32px); border-radius: 18px; padding: clamp(18px, 2.4vw, 26px);
-  background: linear-gradient(145deg, rgba(10,45,61,0.5), rgba(6,28,40,0.68));
+  background: linear-gradient(145deg, rgba(12,67,85,0.5), rgba(9,48,63,0.68));
   border: 1px solid ${C.hairlineStrong};
 }
 .eps-notes-head { display: flex; align-items: center; justify-content: center; text-align: center; gap: 13px; margin-bottom: 14px; }
@@ -2093,7 +2093,7 @@ const styles = `
 .eps-mq-select {
   appearance: none; cursor: pointer; padding: 9px 30px 9px 14px; border-radius: 10px;
   font-size: 13px; font-weight: 600; color: ${C.cloud};
-  background: rgba(12,28,38,0.7) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2376E4F7' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;
+  background: rgba(16,55,72,0.7) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2376E4F7' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;
   border: 1px solid ${C.hairlineStrong}; max-width: 280px;
 }
 .eps-mq-select:focus { outline: none; border-color: ${C.cyan}80; }

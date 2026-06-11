@@ -13,14 +13,14 @@ const Toaster = ({ ...props }: ToasterProps) => {
         classNames: {
           toast:
             "group toast !rounded-2xl !border !text-[#E4F4F6] " +
-            "!bg-[linear-gradient(145deg,rgba(10,45,61,0.82),rgba(6,32,44,0.90))] " +
+            "!bg-[linear-gradient(145deg,rgba(12,67,85,0.82),rgba(6,32,44,0.90))] " +
             "!border-[rgba(118,228,247,0.32)] " +
             "!shadow-[inset_0_1px_0_rgba(167,243,255,0.10),0_10px_30px_rgba(0,0,0,0.45),0_0_28px_rgba(118,228,247,0.22)] " +
             "backdrop-blur-xl backdrop-saturate-150",
           title: "!text-[#E4F4F6] !font-medium",
           description: "!text-[rgba(228,244,246,0.78)]",
           success:
-            "!bg-[linear-gradient(145deg,rgba(10,45,61,0.82),rgba(6,32,44,0.90))] " +
+            "!bg-[linear-gradient(145deg,rgba(12,67,85,0.82),rgba(6,32,44,0.90))] " +
             "!border-[rgba(118,228,247,0.45)] " +
             "!shadow-[inset_0_1px_0_rgba(167,243,255,0.14),0_10px_30px_rgba(0,0,0,0.45),0_0_32px_rgba(118,228,247,0.32)]",
           error:
