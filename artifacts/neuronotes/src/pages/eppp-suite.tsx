@@ -2183,8 +2183,14 @@ const styles = `
 .eps-mq-list { display: flex; flex-direction: column; gap: 14px; }
 .eps-mq-card {
   border-radius: 16px; padding: clamp(16px, 2vw, 22px);
-  background: linear-gradient(145deg, rgba(14,58,74,0.95), rgba(8,42,55,0.97));
-  border: 1px solid ${C.hairline};
+  background: linear-gradient(145deg, rgba(42,146,174,0.32), rgba(30,114,140,0.4));
+  border: 1px solid rgba(196,232,242,0.22);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    0 0 20px -2px rgba(118,228,247,0.3),
+    0 8px 22px -16px rgba(0,0,0,0.55);
 }
 .eps-mq-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
 .eps-mq-tag {
@@ -2199,7 +2205,7 @@ const styles = `
 .eps-mq-option {
   display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px;
   font-size: 13.5px; line-height: 1.5; color: ${C.body};
-  background: rgba(11,50,64,0.9); border: 1px solid ${C.hairline};
+  background: rgba(118,228,247,0.05); border: 1px solid ${C.hairline};
 }
 .eps-mq-option.is-correct { color: ${C.cloud}; background: rgba(118,228,247,0.1); border-color: ${C.hairlineStrong}; }
 .eps-mq-option-key {
@@ -2211,7 +2217,7 @@ const styles = `
 .eps-mq-option-check { width: 16px; height: 16px; margin-left: auto; flex-shrink: 0; color: ${C.cyan}; }
 .eps-mq-explain {
   margin: 0 0 14px; padding: 12px 14px; border-radius: 10px; font-size: 13px; line-height: 1.65;
-  color: ${C.body}; background: rgba(11,50,64,0.88); border: 1px solid ${C.hairline};
+  color: ${C.body}; background: rgba(118,228,247,0.08); border: 1px solid ${C.hairlineStrong};
 }
 .eps-mq-explain strong { color: ${C.mist}; }
 .eps-mq-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
