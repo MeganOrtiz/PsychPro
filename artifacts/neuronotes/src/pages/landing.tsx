@@ -924,8 +924,8 @@ const styles = `
 
 .landing-wordmark {
   margin: 0;
-  font-family: "Outfit", "Inter", system-ui, sans-serif;
-  font-weight: 300;
+  font-family: "Saira", "Outfit", "Inter", system-ui, sans-serif;
+  font-weight: 200;
   font-size: clamp(40px, 7.5vw, 92px);
   letter-spacing: 0.32em;
   line-height: 1;
