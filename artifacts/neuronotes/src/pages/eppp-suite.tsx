@@ -1791,13 +1791,13 @@ const styles = `
 .eps-exam-cta {
   display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; cursor: pointer;
   padding: 9px 16px; border-radius: 0; font-size: 13px; font-weight: 700; white-space: nowrap;
-  color: ${C.ink}; border: 1px solid rgba(167,243,255,0.65);
-  background: linear-gradient(135deg, ${C.mist} 0%, ${C.cyan} 48%, #38BDF8 100%);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 0 22px -4px ${C.cyan}b3;
-  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  color: ${C.cloud}; border: 1px solid rgba(118,228,247,0.5);
+  background: rgba(118,228,247,0.26);
+  box-shadow: 0 0 20px rgba(118,228,247,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
 .eps-exam-cta svg { width: 15px; height: 15px; }
-.eps-exam-cta:hover { transform: translateY(-1px); box-shadow: inset 0 1px 0 rgba(255,255,255,0.55), 0 0 26px -4px ${C.cyan}d9; }
+.eps-exam-cta:hover { transform: translateY(-1px); background: rgba(118,228,247,0.36); border-color: rgba(118,228,247,0.65); box-shadow: 0 0 28px rgba(118,228,247,0.55), inset 0 1px 0 rgba(255,255,255,0.12); }
 .eps-exam-cta--ghost {
   color: ${C.mist}; background: rgba(12,28,38,0.55); border: 1px solid ${C.hairlineStrong}; box-shadow: none;
 }
@@ -1842,18 +1842,19 @@ const styles = `
 .eps-topic-cta {
   display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;
   padding: 8px 14px; border-radius: 0;
-  font-size: 12.5px; font-weight: 700; color: ${C.ink};
-  background: linear-gradient(135deg, ${C.mist} 0%, ${C.cyan} 48%, #38BDF8 100%);
-  border: 1px solid rgba(167,243,255,0.65);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 0 22px -4px ${C.cyan}b3;
+  font-size: 12.5px; font-weight: 700; color: ${C.cloud};
+  background: rgba(118,228,247,0.26);
+  border: 1px solid rgba(118,228,247,0.5);
+  box-shadow: 0 0 20px rgba(118,228,247,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
   transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
 .eps-topic-cta svg { width: 14px; height: 14px; transition: transform 0.2s ease; }
 .eps-topic:hover:not(.is-disabled) .eps-topic-cta {
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.55), 0 0 26px -4px ${C.cyan}d9;
+  background: rgba(118,228,247,0.36); border-color: rgba(118,228,247,0.65);
+  box-shadow: 0 0 28px rgba(118,228,247,0.55), inset 0 1px 0 rgba(255,255,255,0.12);
 }
 .eps-topic:hover:not(.is-disabled) .eps-topic-cta svg { transform: translateX(3px); }
-.eps-topic:active:not(.is-disabled) .eps-topic-cta { box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 0 30px -4px ${C.cyan}f2; }
+.eps-topic:active:not(.is-disabled) .eps-topic-cta { background: rgba(118,228,247,0.42); box-shadow: 0 0 32px rgba(118,228,247,0.65), inset 0 1px 0 rgba(255,255,255,0.14); }
 
 /* ---- Part 1 sub-tabs ---- */
 .eps-subtabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: clamp(20px, 2.4vw, 28px); }
@@ -1866,9 +1867,9 @@ const styles = `
 .eps-subtab svg { width: 15px; height: 15px; flex-shrink: 0; }
 .eps-subtab:hover { color: ${C.cloud}; border-color: ${C.cyan}80; }
 .eps-subtab.is-active {
-  color: ${C.ink}; border-color: rgba(167,243,255,0.65);
-  background: linear-gradient(135deg, ${C.mist} 0%, ${C.cyan} 48%, #38BDF8 100%);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 0 22px -4px ${C.cyan}b3;
+  color: ${C.cloud}; border-color: rgba(118,228,247,0.6);
+  background: rgba(118,228,247,0.26);
+  box-shadow: 0 0 20px rgba(118,228,247,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
 }
 /* Clinical Cases part toggle: centered, larger, squared (not pill) */
 .eps-subtabs--center { justify-content: center; }
@@ -2037,8 +2038,8 @@ const styles = `
 .eps-fl-icon {
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
   width: 52px; height: 52px; border-radius: 14px;
-  color: ${C.ink}; background: linear-gradient(135deg, ${C.mist}, ${C.cyan} 60%, #38BDF8);
-  box-shadow: 0 0 26px -6px ${C.cyan}b3;
+  color: ${C.cyan}; background: ${C.cyan}1f; border: 1px solid ${C.cyan}45;
+  box-shadow: 0 0 26px -6px ${C.cyan}80;
 }
 .eps-fl-icon svg { width: 26px; height: 26px; }
 .eps-fl-head-text { min-width: 0; }
