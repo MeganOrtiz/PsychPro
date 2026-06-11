@@ -6,9 +6,9 @@ import { toast } from "sonner";
 import { jsonAuthHeaders } from "@/lib/auth-headers";
 
 const FEEDBACK_TYPES = [
-  { value: "bug", label: "🐛 Bug Report" },
-  { value: "content", label: "📚 Content Suggestion" },
-  { value: "general", label: "💬 General Feedback" },
+  { value: "bug", label: "Bug Report" },
+  { value: "content", label: "Content Suggestion" },
+  { value: "general", label: "General Feedback" },
 ];
 
 const MIN_MESSAGE_LENGTH = 20;
@@ -130,14 +130,14 @@ export default function FeedbackPage() {
 
       <form onSubmit={handleSubmit} className="space-y-5" noValidate>
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">Type</label>
-          <div className="grid grid-cols-2 gap-2">
+          <label className="block text-sm font-medium text-foreground mb-2 text-center">Type</label>
+          <div className="flex flex-wrap justify-center gap-2">
             {FEEDBACK_TYPES.map((ft) => (
               <button
                 key={ft.value}
                 type="button"
                 onClick={() => setType(ft.value)}
-                className={`px-3 py-2.5 rounded-lg border text-sm font-medium text-left transition-colors ${
+                className={`grow-0 shrink-0 basis-[calc(50%-0.25rem)] px-3 py-2.5 rounded-none border text-sm font-medium text-center transition-colors ${
                   type === ft.value
                     ? "border-primary bg-primary/10 text-primary"
                     : "border-border bg-card text-foreground hover:bg-muted"
