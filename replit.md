@@ -176,11 +176,17 @@ Two **independent** access dimensions that never write to each other:
    `subscription_status`, and a Master/Scholar subscription NEVER grants EPPP access
    (`computeEpppAccess` / `hasEpppAccess` / `getEntitlements({eppp:true})`).
 
-> Known divergence (NOT canonical): `routes/mastery-exams.ts` `getUserTier` treats only the
-> literal `pro`/`scholar` statuses as paid, so a Master subscriber stored as `active` would
-> read as free there. No live users are affected (0 active/pro rows). Reconcile to
-> `tierFromStatus` in a dedicated change (it alters access behavior, so out of scope for the
-> lock-in).
+**Mastery exam access gate.** The *reachable* course mastery-exam system is `routes/course-mastery.ts`
+(category-based: `GET /api/courses/:category/mastery-exam`, `POST /api/course-mastery-attempts`).
+The `:courseId`-based handlers in `routes/mastery-exams.ts` are **shadowed/dead** — `courseMasteryRouter`
+is mounted before `masteryExamsRouter` in `routes/index.ts`, and the frontend calls the category paths.
+`course-mastery.ts` enforces the entitlement boundary via `resolveMasteryAccess`:
+> **EPPP** courses require EPPP access (`hasEpppAccess`); **general/main-site** courses require a
+> Master/Scholar subscription (`PAID_MASTERY_TIERS` + canonical `tierFromStatus`); **admins** bypass
+> both. So a Master subscriber unlocks the main-site mastery exams but NOT the EPPP ones. Blocked
+> callers get `402 {upgrade:true, eppp}`; the frontend renders `UpgradePrompt`. The (dead)
+> `mastery-exams.ts` helper now also uses canonical `tierFromStatus`, so there is no remaining
+> tier-mapping divergence.
 
 ### DB Schema
 - `usersTable` — user profile, usage count, subscription status

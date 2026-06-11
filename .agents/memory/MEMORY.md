@@ -28,7 +28,7 @@
 - [Brain Lab four-edge labels](brain-lab-label-gutters.md) — desktop labels are leader-line chips on all 4 edges; slim top/bottom rows MUST spill overflow into side columns or dense views overlap/clip.
 - [PsychPro prod course seeding](psychpro-prod-course-seeding.md) — prod DB is the content source of truth (dev lags); Publish applies schema not data; seed prod DATA via idempotent api-server startup backfill, never startup DDL.
 - [Mastery-exam admin bypass](psychpro-mastery-exam-admin-bypass.md) — owner/admin skips paywall+prerequisite on BOTH mastery-exam systems via isCallerAdmin; thread the bypass through every handler (incl. list/state endpoints) or UI shows "locked" inconsistently.
-- [Course route collision](psychpro-course-route-collision.md) — new courseId GET /courses/:x/mastery-exam is shadowed by legacy :category route (mounted first); unreachable until path disambiguated.
+- [Course route collision](psychpro-course-route-collision.md) — mastery-exams.ts (:courseId) is DEAD CODE; the reachable mastery-exam gate is course-mastery.ts; same endpoints serve main+EPPP so gate on isEpppTopic, not URL.
 - [Course mastery gate](psychpro-course-mastery-gate.md) — unlock = every lesson's practice exam ≥90% from exam_attempts (NOT progress.score, written by both quizzes+exams); one shared helper; compare exact ratio, round only for display.
 - [EPPP dashboard data gaps](psychpro-eppp-dashboard.md) — /eppp/dashboard is separate from /dashboard; NO stored exam-date (localStorage v1) and NO time-spent field — approximate honestly, never fabricate.
 - [Missed-questions trust boundary](psychpro-missed-questions-trust.md) — client-submitted missedQuestionIds resolve to full question content; ownership-validate at write or it's a content leak.

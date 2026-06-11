@@ -12,6 +12,7 @@ import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PageTitle } from "@/components/brand/page-title";
 import { isEpppTopic } from "@/lib/eppp-content";
 import { epppDomainAnchor, epppMasteryExamPath, isEpppRoute } from "@/lib/eppp-routes";
+import UpgradePrompt from "@/components/upgrade-prompt";
 
 interface Props {
   params: { category: string };
@@ -100,6 +101,21 @@ export default function CourseMasteryExamPage({ params }: Props) {
 
   const correct = questions.filter((q) => answers[q.id] === q.correctAnswer).length;
   const score = total > 0 ? Math.round((correct / total) * 100) : 0;
+
+  // -------------------------------------------------------------------------
+  // Paywall — Master/Scholar unlock the main-site mastery exam; EPPP mastery
+  // exams require the separate EPPP Mastery Suite access. Server returns 402.
+  // -------------------------------------------------------------------------
+  if (fetchError?.status === 402) {
+    return (
+      <div className="min-h-full study-page-bg" data-testid="mastery-paywall">
+        <UpgradePrompt
+          reason={inEppp ? "eppp" : "generic"}
+          onDismiss={() => navigate(backToCourseList)}
+        />
+      </div>
+    );
+  }
 
   // -------------------------------------------------------------------------
   // Locked — the server enforces the all-lessons-complete gate and returns 403.

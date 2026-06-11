@@ -34,24 +34,28 @@ import { requireUserId, getUserId } from "../lib/userId";
 import { isCallerAdmin } from "../lib/isAdmin";
 import { hasEpppAccess } from "../lib/entitlements";
 import { isEpppCourse } from "../lib/eppp";
+import { tierFromStatus, type Tier } from "../lib/tierMapping";
 
 const router = Router();
 
-const PRO_TIERS = new Set(["pro", "scholar"]);
+// Tiers that unlock the MAIN-SITE (non-EPPP) mastery exams. A Master
+// subscription stores `subscription_status = "active"`, which the canonical
+// `tierFromStatus` maps to "pro" — so Master + Scholar both qualify here.
+// EPPP mastery exams are a SEPARATE access level gated by hasEpppAccess(),
+// and are intentionally NOT unlocked by this set.
+const PRO_TIERS = new Set<Tier>(["pro", "scholar"]);
 
 // -----------------------------------------------------------------------------
 // Helpers
 // -----------------------------------------------------------------------------
 
-async function getUserTier(userId: string | null): Promise<"free" | "pro" | "scholar"> {
+async function getUserTier(userId: string | null): Promise<Tier> {
   if (!userId) return "free";
   const [u] = await db
     .select({ status: usersTable.subscriptionStatus })
     .from(usersTable)
     .where(eq(usersTable.id, userId));
-  const s = u?.status ?? "free";
-  if (s === "pro" || s === "scholar") return s;
-  return "free";
+  return tierFromStatus(u?.status);
 }
 
 /**

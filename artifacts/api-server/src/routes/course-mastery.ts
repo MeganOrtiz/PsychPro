@@ -5,11 +5,15 @@ import {
   quizQuestionsTable,
   examAttemptsTable,
   courseMasteryAttemptsTable,
+  usersTable,
 } from "@workspace/db";
 import { eq, and, inArray } from "drizzle-orm";
 import { requireUserId } from "../lib/userId";
 import { isCallerAdmin } from "../lib/isAdmin";
 import { shuffle } from "../lib/shuffle";
+import { hasEpppAccess } from "../lib/entitlements";
+import { isEpppTopic } from "../lib/eppp";
+import { tierFromStatus, type Tier } from "../lib/tierMapping";
 
 const router = Router();
 
@@ -23,6 +27,44 @@ const MASTERY_PASSING_SCORE = 90;
 // Question pool is clamped to this ceiling; the floor (50) is naturally honored
 // whenever the course has at least that many questions available.
 const MASTERY_MAX_QUESTIONS = 100;
+
+// Tiers that unlock a MAIN-SITE (non-EPPP) course mastery exam. A Master
+// subscription stores subscription_status = "active", which the canonical
+// tierFromStatus maps to "pro"; Scholar maps to "scholar". EPPP mastery exams
+// are gated SEPARATELY by hasEpppAccess() and are NEVER unlocked by this set.
+const PAID_MASTERY_TIERS = new Set<Tier>(["pro", "scholar"]);
+
+async function getUserTier(userId: string): Promise<Tier> {
+  const [u] = await db
+    .select({ status: usersTable.subscriptionStatus })
+    .from(usersTable)
+    .where(eq(usersTable.id, userId));
+  return tierFromStatus(u?.status);
+}
+
+// Decides whether a user may open/record a course mastery exam.
+//   - EPPP courses     → require EPPP access (epppAccessUntil), NOT the sub.
+//   - General courses  → require a Master/Scholar subscription.
+//   - Admins bypass both.
+// This is the reachable, category-based mirror of the (route-shadowed) intent
+// in routes/mastery-exams.ts, so the active mastery-exam system enforces the
+// same entitlement boundary: Master/Scholar unlock the main site but NOT EPPP.
+async function resolveMasteryAccess(
+  userId: string,
+  category: string,
+  isAdmin: boolean,
+): Promise<{ eppp: boolean; allowed: boolean }> {
+  const topics = await db
+    .select({ id: topicsTable.id, name: topicsTable.name, category: topicsTable.category })
+    .from(topicsTable)
+    .where(eq(topicsTable.category, category));
+  const eppp = topics.some(isEpppTopic);
+  if (isAdmin) return { eppp, allowed: true };
+  const allowed = eppp
+    ? await hasEpppAccess(userId)
+    : PAID_MASTERY_TIERS.has(await getUserTier(userId));
+  return { eppp, allowed };
+}
 
 interface LessonStatus {
   topicId: number;
@@ -146,6 +188,21 @@ router.get("/courses/:category/mastery-exam", async (req: Request, res: Response
       return;
     }
 
+    // Access gate: EPPP courses require EPPP access; general (main-site) courses
+    // require a Master/Scholar subscription; admins bypass. Checked before the
+    // prerequisite gate so the paywall (402) takes precedence over "locked" (403).
+    const access = await resolveMasteryAccess(userId, category, admin);
+    if (!access.allowed) {
+      res.status(402).json({
+        error: access.eppp
+          ? "EPPP Mastery Suite access required"
+          : "Mastery Exams require a paid plan",
+        upgrade: true,
+        eppp: access.eppp,
+      });
+      return;
+    }
+
     // Gate: EVERY lesson in the course must have its PRACTICE EXAM passed at
     // >= 90% before the mastery exam unlocks. Enforced server-side so the lock
     // can't be bypassed by navigating straight to the URL.
@@ -226,6 +283,21 @@ router.post("/course-mastery-attempts", async (req: Request, res: Response): Pro
       });
       return;
     }
+    // Defense-in-depth: a recorded attempt implies the user could open the
+    // exam, so enforce the same access gate here too.
+    const admin = await isCallerAdmin(req);
+    const access = await resolveMasteryAccess(userId, category, admin);
+    if (!access.allowed) {
+      res.status(402).json({
+        error: access.eppp
+          ? "EPPP Mastery Suite access required"
+          : "Mastery Exams require a paid plan",
+        upgrade: true,
+        eppp: access.eppp,
+      });
+      return;
+    }
+
     const passed = score >= MASTERY_PASSING_SCORE;
     const [row] = await db
       .insert(courseMasteryAttemptsTable)
