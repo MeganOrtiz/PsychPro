@@ -734,7 +734,7 @@ const styles = `
   margin-top: 12px;
   align-self: flex-start;
   padding: 9px 18px;
-  border-radius: 999px;
+  border-radius: 10px;
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
