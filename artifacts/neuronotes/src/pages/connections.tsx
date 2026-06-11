@@ -213,10 +213,6 @@ export default function ConnectionsPage() {
           </div>
         )}
 
-        <h2 className="text-lg font-semibold text-foreground mb-4">
-          People you might want to connect with
-        </h2>
-
         {loading && suggestions.length === 0 ? (
           <p className="text-sm text-muted-foreground py-8 text-center">Loading suggestions…</p>
         ) : suggestions.length === 0 ? (
