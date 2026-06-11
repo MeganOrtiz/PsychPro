@@ -234,7 +234,7 @@ export default function NewDeckPage() {
                     onClick={() => setAiMode("strict")}
                     className={`flex flex-col items-start gap-1 p-3 rounded-xl border-2 text-left transition-all ${
                       aiMode === "strict"
-                        ? "border-primary bg-primary/5"
+                        ? "border-primary bg-card shadow-[0_0_18px_rgba(118,228,247,0.22)]"
                         : "border-border bg-card hover:border-primary/40"
                     }`}
                   >
@@ -250,7 +250,7 @@ export default function NewDeckPage() {
                     onClick={() => setAiMode("enhance")}
                     className={`flex flex-col items-start gap-1 p-3 rounded-xl border-2 text-left transition-all ${
                       aiMode === "enhance"
-                        ? "border-primary bg-primary/5"
+                        ? "border-primary bg-card shadow-[0_0_18px_rgba(118,228,247,0.22)]"
                         : "border-border bg-card hover:border-primary/40"
                     }`}
                   >
