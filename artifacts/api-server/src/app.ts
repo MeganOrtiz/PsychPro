@@ -9,6 +9,7 @@ import { logger } from "./lib/logger";
 import { getUncachableStripeClient } from "./stripeClient";
 import { handleStripeWebhookEvent } from "./webhookHandlers";
 import type Stripe from "stripe";
+import * as Sentry from "@sentry/node";
 
 const app: Express = express();
 
@@ -212,5 +213,22 @@ if (MCP_ENABLED) {
 }
 
 app.use("/api", router);
+
+// Dev-only Sentry verification route. Registered ONLY when NODE_ENV is exactly
+// "development", so it never exists in production and is absent from the
+// route-auth matrix test (which boots the app with NODE_ENV=test). Throws
+// synchronously; Express 5 forwards the error to the Sentry error handler
+// below, confirming the backend → Sentry pipeline end-to-end.
+if (process.env.NODE_ENV === "development") {
+  app.get("/api/debug/sentry-test", () => {
+    throw new Error("Sentry backend test error (dev-only)");
+  });
+}
+
+// Sentry's Express error handler must be registered AFTER all routes and
+// before any other error-handling middleware. It captures 5xx errors then
+// forwards them to Express's default handler. No-ops when Sentry was not
+// initialized (no DSN), so it is safe in tests.
+Sentry.setupExpressErrorHandler(app);
 
 export default app;
