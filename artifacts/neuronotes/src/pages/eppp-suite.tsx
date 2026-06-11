@@ -29,6 +29,7 @@ import {
   NotebookPen,
   Lightbulb,
   Trash2,
+  Save,
 } from "lucide-react";
 import { useQueries } from "@tanstack/react-query";
 import {
@@ -1107,6 +1108,125 @@ function FullLengthExamsPanel({ onNavigate }: { onNavigate: (to: string) => void
 // The consolidated Quick Reference Guides (one per Part 1 domain), printable,
 // plus a write-in "My Notes" scratchpad persisted locally on the device.
 const RAPID_REVIEW_NOTES_KEY = "eppp:rapid-review:my-notes";
+
+type SavedNote = { id: string; text: string; savedAt: number };
+
+// Saved notes are persisted locally as a JSON array. Older builds stored a
+// single free-text scratchpad string under the same key, so we migrate that
+// into one saved note on first read.
+function loadSavedNotes(): SavedNote[] {
+  if (typeof window === "undefined") return [];
+  const raw = window.localStorage.getItem(RAPID_REVIEW_NOTES_KEY);
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      return parsed.filter(
+        (n): n is SavedNote =>
+          !!n && typeof n.id === "string" && typeof n.text === "string",
+      );
+    }
+  } catch {
+    // Legacy single-string scratchpad — fall through to migration below.
+  }
+  return raw.trim()
+    ? [{ id: `legacy-${Date.now()}`, text: raw, savedAt: Date.now() }]
+    : [];
+}
+
+function persistSavedNotes(notes: SavedNote[]) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(RAPID_REVIEW_NOTES_KEY, JSON.stringify(notes));
+}
+
+// A private note-taking scratchpad: write a note, Save it, and it is stored on
+// this device and listed right below the box. Shared by the Quick Reference
+// Guides tab and the standalone My Notes tab.
+function MyNotesScratchpad() {
+  const [draft, setDraft] = useState("");
+  const [notes, setNotes] = useState<SavedNote[]>([]);
+
+  useEffect(() => {
+    setNotes(loadSavedNotes());
+  }, []);
+
+  const persist = (next: SavedNote[]) => {
+    setNotes(next);
+    persistSavedNotes(next);
+  };
+
+  const handleSave = () => {
+    const text = draft.trim();
+    if (!text) return;
+    persist([
+      {
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        text,
+        savedAt: Date.now(),
+      },
+      ...notes,
+    ]);
+    setDraft("");
+  };
+
+  const handleDelete = (id: string) => persist(notes.filter((n) => n.id !== id));
+
+  return (
+    <section className="eps-notes" data-testid="eppp-my-notes">
+      <div className="eps-notes-head">
+        <span className="eps-notes-icon">
+          <NotebookPen aria-hidden />
+        </span>
+        <div>
+          <h2 className="eps-notes-title">My Notes</h2>
+          <p className="eps-notes-sub">Write down thoughts for now and later recall</p>
+        </div>
+      </div>
+      <textarea
+        className="eps-notes-area"
+        value={draft}
+        onChange={(e) => setDraft(e.target.value)}
+        placeholder="Jot down mnemonics, formulas, and the facts you keep forgetting…"
+        data-testid="eppp-my-notes-input"
+      />
+      <div className="eps-notes-actions">
+        <button
+          className="eps-save-btn"
+          onClick={handleSave}
+          disabled={!draft.trim()}
+          data-testid="eppp-my-notes-save"
+        >
+          <Save aria-hidden /> Save note
+        </button>
+      </div>
+      {notes.length > 0 && (
+        <div className="eps-notes-saved" data-testid="eppp-my-notes-saved">
+          {notes.map((n) => (
+            <article key={n.id} className="eps-note-card" data-testid={`eppp-my-note-${n.id}`}>
+              <p className="eps-note-text">{n.text}</p>
+              <div className="eps-note-foot">
+                <span className="eps-note-date">
+                  {new Date(n.savedAt).toLocaleDateString(undefined, {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </span>
+                <button
+                  className="eps-ghost-btn"
+                  onClick={() => handleDelete(n.id)}
+                  data-testid={`eppp-my-note-delete-${n.id}`}
+                >
+                  <Trash2 aria-hidden /> Delete
+                </button>
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
 
 function RapidReviewPanel({ onNavigate }: { onNavigate: (to: string) => void }) {
   const { data: allTopics, isLoading } = useGetTopics();

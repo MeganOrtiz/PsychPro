@@ -33,6 +33,14 @@ function stripGuideMeta(md: string): string {
   return lines.slice(i).join("\n").replace(/^\s+/, "");
 }
 
+// Quick Reference Guides also carry a trailing write-in "My Notes" worksheet
+// (a heading followed by &nbsp; spacers and escaped-underscore ruled lines).
+// That print-only template renders as literal junk on screen, so we drop the
+// whole section from the heading to the end of the document.
+function stripTrailingMyNotes(md: string): string {
+  return md.replace(/\n+#{1,6}\s+My Notes[\s\S]*$/i, "").trimEnd();
+}
+
 interface Props {
   params: { id: string };
 }
@@ -143,9 +151,11 @@ export default function StudyGuidePage({ params }: Props) {
           >
             <MarkdownRenderer
               content={
-                isClinicalCase || isQRG
+                isClinicalCase
                   ? stripGuideMeta(guide.content.replace(/^\s*#\s+.*\n+/, ""))
-                  : guide.content.replace(/^\s*#\s+.*\n+/, "")
+                  : isQRG
+                    ? stripTrailingMyNotes(stripGuideMeta(guide.content.replace(/^\s*#\s+.*\n+/, "")))
+                    : guide.content.replace(/^\s*#\s+.*\n+/, "")
               }
             />
           </div>
