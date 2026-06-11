@@ -141,13 +141,16 @@ router.post("/users/profile", async (req: Request, res: Response): Promise<void>
     assign("selectedProduct", cleanStr(selectedProduct));
     if (typeof onboardingComplete === "boolean") {
       fields.onboardingComplete = onboardingComplete;
-      // Stamp the completion time only when the flag flips to true. Re-running
-      // onboarding to edit answers (which posts onboardingComplete=true again)
-      // preserves the original timestamp via the row's existing value.
-      if (onboardingComplete) fields.onboardingCompletedAt = new Date();
     }
 
     const existing = await db.select().from(usersTable).where(eq(usersTable.id, userId));
+
+    // Stamp the completion time only on the false->true transition. Re-running
+    // onboarding to edit answers (which posts onboardingComplete=true again)
+    // preserves the original timestamp.
+    if (onboardingComplete === true && !existing[0]?.onboardingCompletedAt) {
+      fields.onboardingCompletedAt = new Date();
+    }
     let user;
     if (existing.length === 0) {
       [user] = await db.insert(usersTable).values({

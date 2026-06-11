@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import type { ReactNode } from "react";
 import { useLocation } from "wouter";
 import { useGetUserProfile } from "@workspace/api-client-react";
+import { Button } from "@/components/ui/button";
 import { RequireSignedIn } from "./require-signed-in";
 
 /**
@@ -21,19 +22,41 @@ function GateLoader() {
 }
 
 /**
+ * Blocking error state shown when the profile can't be loaded. We deliberately
+ * fail CLOSED (never render protected content on error) so an incomplete user
+ * can't slip past the gate, while a retry keeps a transient backend hiccup from
+ * permanently trapping the user.
+ */
+function GateError({ onRetry }: { onRetry: () => void }) {
+  return (
+    <div
+      className="study-page-bg flex min-h-screen flex-col items-center justify-center gap-4 p-6 text-center"
+      data-testid="onboarding-gate-error"
+    >
+      <p className="text-sm text-muted-foreground max-w-sm">
+        We couldn't load your account just now. Please check your connection and try again.
+      </p>
+      <Button onClick={onRetry} className="rounded-md px-5" data-testid="button-gate-retry">
+        Try again
+      </Button>
+    </div>
+  );
+}
+
+/**
  * Gate that keeps users out of the app until onboarding is complete. Fetches
  * the profile (GET /users/profile auto-creates the row with
  * onboardingComplete=false for brand-new users) and redirects incomplete users
  * to /onboarding. Completed users fall straight through.
  *
- * Fails OPEN: if the profile request errors we render the children rather than
- * trapping the user, so a transient backend hiccup never bricks the whole app.
+ * Fails CLOSED: on a profile fetch error we show a blocking retry screen rather
+ * than rendering protected content, so an incomplete user can't bypass the gate.
  */
 function OnboardingGate({ children }: { children: ReactNode }) {
   const [, navigate] = useLocation();
-  const { data: profile, isLoading, isError } = useGetUserProfile();
+  const { data: profile, isLoading, isError, refetch } = useGetUserProfile();
 
-  const needsOnboarding = !isError && !!profile && !profile.onboardingComplete;
+  const needsOnboarding = !!profile && !profile.onboardingComplete;
 
   useEffect(() => {
     if (needsOnboarding) {
@@ -41,9 +64,11 @@ function OnboardingGate({ children }: { children: ReactNode }) {
     }
   }, [needsOnboarding, navigate]);
 
-  // While loading, or after we've decided to redirect, render the loader so the
-  // protected content never flashes before the redirect lands.
-  if (isLoading || needsOnboarding) return <GateLoader />;
+  if (isLoading) return <GateLoader />;
+  if (isError) return <GateError onRetry={() => void refetch()} />;
+  // After we've decided to redirect, keep showing the loader so protected
+  // content never flashes before the redirect lands.
+  if (needsOnboarding) return <GateLoader />;
   return <>{children}</>;
 }
 

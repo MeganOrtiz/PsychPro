@@ -408,12 +408,17 @@ export default function OnboardingPage() {
       const ok = await finalize();
       if (!ok) return;
 
-      if (isPaid && !alreadyHasAccess && answers.selectedPriceId) {
+      // When resuming a saved flow, selectedPriceId isn't persisted server-side,
+      // so recover it from the live catalog by matching the chosen tier.
+      const priceId =
+        answers.selectedPriceId ?? tierCards.find((c) => c.tier === tier)?.priceId ?? null;
+
+      if (isPaid && !alreadyHasAccess && priceId) {
         try {
           const { url } =
             tier === "eppp"
-              ? await epppCheckout.mutateAsync({ priceId: answers.selectedPriceId })
-              : await checkout.mutateAsync({ data: { priceId: answers.selectedPriceId } });
+              ? await epppCheckout.mutateAsync({ priceId })
+              : await checkout.mutateAsync({ data: { priceId } });
           window.location.href = url;
           return;
         } catch (err) {
