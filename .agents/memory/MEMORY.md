@@ -33,3 +33,4 @@
 - [EPPP dashboard data gaps](psychpro-eppp-dashboard.md) — /eppp/dashboard is separate from /dashboard; NO stored exam-date (localStorage v1) and NO time-spent field — approximate honestly, never fabricate.
 - [Missed-questions trust boundary](psychpro-missed-questions-trust.md) — client-submitted missedQuestionIds resolve to full question content; ownership-validate at write or it's a content leak.
 - [EPPP special-category routing](psychpro-eppp-special-categories.md) — clinical cases / rapid review / full-length exams must be excluded at BOTH getEpppExamPart→null AND groupEpppTopicsByCategory, while isEpppTopic stays true.
+- [EPPP suite reorg already done](psychpro-eppp-suite-reorg-done.md) — the pasted T001–T010 reorg plan is STALE; suite already implements it (and surpasses it). Don't re-run or you regress owner decisions (clinical-cases is a top-level tab; Reflections/My Notes intentional).

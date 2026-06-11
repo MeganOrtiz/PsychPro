@@ -130,22 +130,29 @@ export default function FeedbackPage() {
 
       <form onSubmit={handleSubmit} className="space-y-5" noValidate>
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2 text-center">Type</label>
           <div className="flex flex-wrap justify-center gap-2">
-            {FEEDBACK_TYPES.map((ft) => (
-              <button
-                key={ft.value}
-                type="button"
-                onClick={() => setType(ft.value)}
-                className={`grow-0 shrink-0 basis-[calc(50%-0.25rem)] px-3 py-2.5 rounded-md border text-sm font-medium text-center transition-colors ${
-                  type === ft.value
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-border bg-card text-foreground hover:bg-muted"
-                }`}
-              >
-                {ft.label}
-              </button>
-            ))}
+            {FEEDBACK_TYPES.map((ft) => {
+              const selected = type === ft.value;
+              return (
+                <button
+                  key={ft.value}
+                  type="button"
+                  onClick={() => setType(ft.value)}
+                  aria-pressed={selected}
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(145deg, rgba(42,146,174,0.62), rgba(30,114,140,0.70))",
+                  }}
+                  className={`grow-0 shrink-0 basis-[calc(50%-0.25rem)] px-3 py-2.5 rounded-md border text-sm font-medium text-center text-foreground transition-all ${
+                    selected
+                      ? "border-[rgba(118,228,247,0.75)] shadow-[0_0_18px_rgba(118,228,247,0.45)]"
+                      : "border-[rgba(118,228,247,0.3)] hover:border-[rgba(118,228,247,0.55)] hover:shadow-[0_0_14px_rgba(118,228,247,0.28)]"
+                  }`}
+                >
+                  {ft.label}
+                </button>
+              );
+            })}
           </div>
         </div>
 
