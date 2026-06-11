@@ -28,6 +28,8 @@ import {
   Printer,
   NotebookPen,
   Timer,
+  Lightbulb,
+  Trash2,
 } from "lucide-react";
 import { useQueries } from "@tanstack/react-query";
 import {
@@ -60,6 +62,11 @@ import {
   type EpppExamPart,
 } from "@/lib/eppp-content";
 import { epppDomainAnchor, epppDomainSlug, epppMasteryExamPath, epppTopicModePath, epppTopicPath } from "@/lib/eppp-routes";
+import {
+  listAllReflections,
+  deleteReflection,
+  type ReflectionRecord,
+} from "@/lib/reflections";
 import smokeBg from "@/assets/bg/brain-clouds.png";
 import EpppDashboardPage from "@/pages/eppp-dashboard";
 
@@ -99,6 +106,7 @@ type TabSlug =
   | "full-length-exams"
   | "missed-questions"
   | "rapid-review"
+  | "reflections-notes"
   | "performance-analytics"
   | "resources";
 
@@ -120,6 +128,7 @@ const TABS: TabDef[] = [
   { slug: "full-length-exams", label: "Full-Length Exams", icon: ClipboardCheck, section: "Assess" },
   { slug: "missed-questions", label: "Missed Questions", icon: XCircle, section: "Review" },
   { slug: "rapid-review", label: "Quick Reference Guide", icon: Zap, section: "Review" },
+  { slug: "reflections-notes", label: "Reflections & My Notes", icon: Lightbulb, section: "Review" },
   { slug: "resources", label: "Resources", icon: Library, section: "Reference" },
   { slug: "study-plan", label: "Study Plan", icon: ClipboardList, section: "Plan" },
 ];
@@ -395,6 +404,8 @@ function SuiteContent({
       return <DomainMasteryExamsPanel onNavigate={onNavigate} />;
     case "rapid-review":
       return <RapidReviewPanel onNavigate={onNavigate} />;
+    case "reflections-notes":
+      return <ReflectionsNotesPanel />;
     case "study-plan":
       return (
         <ComingSoonPanel
@@ -1210,6 +1221,134 @@ function RapidReviewPanel({ onNavigate }: { onNavigate: (to: string) => void }) 
   );
 }
 
+// ---- Reflections & My Notes ----------------------------------------------
+// A consolidated, device-local study journal: every "Lock it in" reflection
+// saved during quizzes (from @/lib/reflections) plus the same write-in My Notes
+// scratchpad surfaced on the Quick Reference Guides tab (shared localStorage
+// key). Nothing here is sent to a server.
+function ReflectionsNotesPanel() {
+  const { data: allTopics } = useGetTopics();
+  const topicNameById = useMemo(() => {
+    const m = new Map<number, string>();
+    ((allTopics ?? []) as Topic[]).forEach((t) => m.set(t.id, t.name));
+    return m;
+  }, [allTopics]);
+
+  const [reflections, setReflections] = useState<ReflectionRecord[]>([]);
+  // Avoid a flash of the empty state before localStorage is read on mount.
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => {
+    setReflections(listAllReflections());
+    setHydrated(true);
+  }, []);
+
+  const handleDeleteReflection = (topicId: number, questionId: number) => {
+    deleteReflection(topicId, questionId);
+    setReflections(listAllReflections());
+  };
+
+  // My Notes — same scratchpad + storage key as the Quick Reference Guides tab.
+  const [notes, setNotes] = useState("");
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setNotes(window.localStorage.getItem(RAPID_REVIEW_NOTES_KEY) ?? "");
+  }, []);
+  const handleNotesChange = (v: string) => {
+    setNotes(v);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(RAPID_REVIEW_NOTES_KEY, v);
+    }
+  };
+
+  return (
+    <div className="study-page-bg eps-panel" data-testid="eppp-panel-reflections-notes">
+      <div className="eps-shell">
+        <PanelHead
+          eyebrow="JOURNAL"
+          title="Reflections & My Notes"
+          subtitle="Every “Lock it in” reflection you've saved during quizzes, plus your private My Notes scratchpad. These live on this device only — never sent to a server."
+        />
+
+        <div className="eps-section-head">
+          <span className="eps-section-meta">
+            {!hydrated
+              ? "Loading…"
+              : `${reflections.length} saved ${reflections.length === 1 ? "reflection" : "reflections"}`}
+          </span>
+        </div>
+
+        {!hydrated ? (
+          <div className="eps-empty">Loading your reflections…</div>
+        ) : reflections.length === 0 ? (
+          <div className="eps-empty">
+            No reflections yet. When you miss a quiz question, write a one-sentence
+            “why” in the Reflect box and tap “Lock it in” — your saved reflections
+            collect here.
+          </div>
+        ) : (
+          <div className="eps-mq-list">
+            {reflections.map((r) => (
+              <article
+                key={`${r.topicId}-${r.questionId}`}
+                className="eps-mq-card"
+                data-testid={`eppp-reflection-${r.topicId}-${r.questionId}`}
+              >
+                <div className="eps-mq-tags">
+                  <span className="eps-mq-tag is-domain">
+                    {topicNameById.get(r.topicId) ?? `Topic #${r.topicId}`}
+                  </span>
+                  {r.savedAt && (
+                    <span className="eps-mq-tag">
+                      {new Date(r.savedAt).toLocaleDateString()}
+                    </span>
+                  )}
+                </div>
+                {r.questionText && <p className="eps-mq-q">{r.questionText}</p>}
+                {r.correctText && (
+                  <p className="eps-mq-explain">
+                    <strong>Correct ({r.correctAnswer}):</strong> {r.correctText}
+                  </p>
+                )}
+                <p className="eps-reflection-note">{r.text}</p>
+                <div className="eps-mq-actions">
+                  <button
+                    className="eps-ghost-btn"
+                    onClick={() => handleDeleteReflection(r.topicId, r.questionId)}
+                    data-testid={`eppp-reflection-delete-${r.topicId}-${r.questionId}`}
+                  >
+                    <Trash2 aria-hidden /> Delete
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+
+        <section className="eps-notes" data-testid="eppp-reflections-my-notes">
+          <div className="eps-notes-head">
+            <span className="eps-notes-icon">
+              <NotebookPen aria-hidden />
+            </span>
+            <div>
+              <h2 className="eps-notes-title">My Notes</h2>
+              <p className="eps-notes-sub">
+                Your private, high-yield scratchpad. Saved automatically on this device.
+              </p>
+            </div>
+          </div>
+          <textarea
+            className="eps-notes-area"
+            value={notes}
+            onChange={(e) => handleNotesChange(e.target.value)}
+            placeholder="Jot down mnemonics, formulas, and the facts you keep forgetting…"
+            data-testid="eppp-reflections-notes-input"
+          />
+        </section>
+      </div>
+    </div>
+  );
+}
+
 // ---- Missed Questions -----------------------------------------------------
 // Every question answered incorrectly across quizzes and exams, bucketed
 // client-side by part + domain (the EPPP taxonomy lives in eppp-content.ts).
@@ -1971,6 +2110,11 @@ const styles = `
 .eps-mq-study svg { width: 14px; height: 14px; transition: transform 0.2s ease; }
 .eps-mq-study:hover { transform: translateY(-1px); }
 .eps-mq-study:hover svg { transform: translateX(3px); }
+.eps-reflection-note {
+  margin: 0 0 14px; padding: 12px 14px; border-radius: 10px;
+  font-size: 13.5px; line-height: 1.6; color: ${C.cloud}; white-space: pre-wrap;
+  background: rgba(118,228,247,0.08); border-left: 3px solid ${C.cyan};
+}
 @media (max-width: 640px) {
   .eps-mq-filters { flex-direction: column; align-items: stretch; }
   .eps-mq-domain { justify-content: space-between; }
