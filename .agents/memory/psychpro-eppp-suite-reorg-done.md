@@ -1,17 +1,15 @@
 ---
-name: PsychPro EPPP suite reorg already implemented
-description: The pasted "EPPP Mastery Suite reorg" T001–T010 session plan is stale; the suite already implements it and has moved past it.
+name: PsychPro EPPP suite reorg is final
+description: Any pasted "EPPP Mastery Suite reorg" plan is stale; the live suite already implements it and reflects newer owner decisions — owner confirmed leave-as-is.
 ---
 
-The EPPP Mastery Suite (`artifacts/neuronotes/src/pages/eppp-suite.tsx` + `lib/eppp-content.ts`) already implements the target reorg described in the pasted T001–T010 plan, and in places reflects NEWER owner decisions that contradict that plan.
+The EPPP Mastery Suite (`artifacts/neuronotes/src/pages/eppp-suite.tsx` + `lib/eppp-content.ts`) already implements the reorg that older pasted plans describe, and in places reflects NEWER owner decisions that contradict those plans. On 2026-06-11 the owner explicitly chose "leave it as-is — don't change anything."
 
-**Already done (do not redo):** `isEpppQuickReference` + `getEpppQuickReferenceGuides` + the `getEpppExamPart`/`groupEpppTopicsByCategory` exclusions exist; Question Bank sub-tab retired (deep-link now opens Knowledge rail); Domain Mastery Exams + Full-Length Exams both have Part 1/Part 2 sub-tabs; Rapid Review/Quick Reference is a top-level tab; every tab is wired to a real panel.
+**Deliberate owner deviations (live code wins):**
+- Clinical Integration Cases is intentionally its OWN top-level tab, NOT a Part 1 sub-tab.
+- There is no standalone Flashcards tab (flashcards are reached via lesson/topic pages).
+- Reflections and My Notes are deliberately two separate top-level tabs.
 
-**Plan conflicts with current code (current code wins unless owner says otherwise):**
-- Clinical Integration Cases is intentionally its OWN top-level tab (with Part 1/Part 2 sub-tabs), NOT a Part 1 sub-tab as the plan asks.
-- There is no standalone Flashcards tab to remove (flashcards are reached via lesson/topic pages).
-- Reflections and My Notes were deliberately split into two separate top-level tabs.
+**Why:** A prior session already merged the reorg; pasted plans predate it. Re-running one would regress deliberate owner decisions.
 
-**Why:** A prior session/task agent already merged this reorg; the pasted plan predates it. Re-running it would regress deliberate owner decisions (e.g. move clinical-cases back, delete Reflections/My Notes).
-
-**How to apply:** If handed this plan again, diff against the live code FIRST. Treat the code comments in eppp-suite.tsx (TABS region ~124-153) as the current owner intent. Only implement genuinely-missing deltas the owner re-confirms.
+**How to apply:** If handed an EPPP-reorg plan again, diff against live code FIRST and treat the TABS-region comments in eppp-suite.tsx as current owner intent. Only implement genuinely-missing deltas the owner re-confirms.

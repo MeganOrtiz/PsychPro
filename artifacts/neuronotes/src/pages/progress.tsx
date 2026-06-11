@@ -254,11 +254,14 @@ export default function ProgressPage() {
           {weak.length > 0 && (
             <div
               className="rounded-xl p-4 border"
-              style={{ background: `${P.paperSoft}`, borderColor: `${P.surf}55` }}
+              style={{
+                background: `linear-gradient(135deg, ${P.surface}, ${P.bg})`,
+                borderColor: `${P.surf}66`,
+              }}
             >
               <div className="flex items-center gap-2 mb-3">
-                <AlertCircle className="w-4 h-4" style={{ color: P.tealDeep }} />
-                <h2 className="font-semibold text-sm" style={{ color: P.ink }}>Needs Work</h2>
+                <AlertCircle className="w-4 h-4" style={{ color: P.surf }} />
+                <h2 className="font-semibold text-sm text-white">Needs Work</h2>
               </div>
               <div className="space-y-2">
                 {weak.slice(0, 3).map(t => (
@@ -267,7 +270,7 @@ export default function ProgressPage() {
                     className="flex items-center justify-between cursor-pointer hover:opacity-80 transition-opacity"
                     onClick={() => navigate(`/topics/${t.id}`)}
                   >
-                    <span className="text-sm truncate mr-2" style={{ color: P.ink }}>{t.name}</span>
+                    <span className="text-sm truncate mr-2 text-white/90">{t.name}</span>
                     <ScoreBadge score={t.progress?.score ?? 0} />
                   </div>
                 ))}
