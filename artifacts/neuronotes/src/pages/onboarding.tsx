@@ -418,7 +418,7 @@ export default function OnboardingPage() {
           const { url } =
             tier === "eppp"
               ? await epppCheckout.mutateAsync({ priceId })
-              : await checkout.mutateAsync({ data: { priceId } });
+              : await checkout.mutateAsync({ data: { priceId, successPath: "/dashboard" } });
           window.location.href = url;
           return;
         } catch (err) {

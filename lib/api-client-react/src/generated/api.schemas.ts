@@ -324,6 +324,8 @@ export interface SubscriptionPlan {
 
 export interface CreateCheckoutSessionBody {
   priceId: string;
+  /** Optional same-origin path (must start with a single "/") the user is returned to after a successful checkout. Used by onboarding to land paid users on the dashboard. Ignored if it isn't a safe relative path; defaults to the subscription page. */
+  successPath?: string;
 }
 
 export interface CheckoutSessionResponse {

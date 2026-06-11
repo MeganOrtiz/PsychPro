@@ -15,7 +15,7 @@ export default function SignUpPage() {
         routing="path"
         path={`${basePath}/sign-up`}
         signInUrl={`${basePath}/sign-in`}
-        fallbackRedirectUrl={`${basePath}/dashboard`}
+        fallbackRedirectUrl={`${basePath}/welcome`}
         appearance={{
           variables: {
             colorPrimary: P.surf,

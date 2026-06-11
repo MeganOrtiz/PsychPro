@@ -11,14 +11,74 @@ const router = Router();
 // for backward compatibility with older clients, but no new gating uses it.
 const FREE_LIMIT = 10;
 
-// --- onboarding field sanitizers -------------------------------------------
-// The in-depth onboarding flow (Task #145) sends free-form-ish answers chosen
-// from fixed client option sets. We don't hard-validate against an allow-list
-// (that would couple the server to the client copy and break when options are
-// reworded), but we DO clamp shape + length so nothing unbounded lands in the
-// DB.
+// --- onboarding field validation -------------------------------------------
+// The in-depth onboarding flow sends answers chosen from fixed client option
+// sets. We validate the enum-backed fields against those allow-lists (rejecting
+// anything off-list with a 400) and clamp shape + length so nothing unbounded
+// lands in the DB. selectedProduct is intentionally NOT enum-checked: it's a
+// human-readable label sourced from the live Stripe catalog and varies per
+// account, so it's only length-clamped.
 const MAX_FIELD_LEN = 120;
 const MAX_GOALS = 24;
+
+const ALLOWED_LEARNER_ROLES = new Set([
+  "Undergraduate student",
+  "Graduate / PhD / PsyD student",
+  "Postdoc or trainee",
+  "Licensed clinician",
+  "Researcher / academic",
+  "Lifelong learner",
+]);
+const ALLOWED_LEARNING_GOALS = new Set([
+  "Prepare for the EPPP",
+  "Prepare for course exams",
+  "Deepen clinical knowledge",
+  "Master neuroscience & the brain",
+  "Build research & statistics skills",
+  "Explore psychology broadly",
+]);
+const ALLOWED_STUDY_FOCUS = new Set([
+  "General PsychPro learning",
+  "Assessment & diagnosis",
+  "Neuropsychology",
+  "Psychotherapy & intervention",
+  "Research methods & statistics",
+  "EPPP Mastery Suite",
+]);
+const ALLOWED_EPPP_INTEREST = new Set([
+  "Yes — I'm actively preparing",
+  "Soon — within the next year",
+  "Just exploring for now",
+  "Not pursuing the EPPP",
+]);
+const ALLOWED_TIERS = new Set(["free", "pro", "scholar", "eppp"]);
+
+// Validates the onboarding enum fields present in the body. Returns an error
+// string for the first invalid field, or null when everything is acceptable.
+// Absent/empty values are allowed (the flow saves answers progressively).
+function validateOnboardingEnums(body: Record<string, unknown>): string | null {
+  const single: [string, unknown, Set<string>][] = [
+    ["learnerRole", body.learnerRole, ALLOWED_LEARNER_ROLES],
+    ["studyFocus", body.studyFocus, ALLOWED_STUDY_FOCUS],
+    ["epppInterest", body.epppInterest, ALLOWED_EPPP_INTEREST],
+    ["selectedTier", body.selectedTier, ALLOWED_TIERS],
+  ];
+  for (const [name, value, allowed] of single) {
+    if (value === undefined || value === null) continue;
+    if (typeof value !== "string") return `Invalid ${name}`;
+    const trimmed = value.trim();
+    if (trimmed && !allowed.has(trimmed)) return `Invalid ${name}`;
+  }
+  if (body.learningGoals !== undefined && body.learningGoals !== null) {
+    if (!Array.isArray(body.learningGoals)) return "Invalid learningGoals";
+    for (const g of body.learningGoals) {
+      if (typeof g !== "string") return "Invalid learningGoals";
+      const trimmed = g.trim();
+      if (trimmed && !ALLOWED_LEARNING_GOALS.has(trimmed)) return "Invalid learningGoals";
+    }
+  }
+  return null;
+}
 
 function cleanStr(v: unknown): string | undefined {
   if (typeof v !== "string") return undefined;
@@ -120,6 +180,14 @@ router.post("/users/profile", async (req: Request, res: Response): Promise<void>
       selectedProduct,
       onboardingComplete,
     } = req.body;
+
+    // Reject onboarding answers that aren't members of their fixed option sets
+    // before anything is written.
+    const enumError = validateOnboardingEnums(req.body);
+    if (enumError) {
+      res.status(400).json({ error: enumError });
+      return;
+    }
 
     // Build a partial column set: only fields explicitly present in the body
     // are written, so progressive saves during the multi-step flow never clear

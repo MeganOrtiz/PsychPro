@@ -58,11 +58,19 @@ router.post("/subscription/checkout", async (req: Request, res: Response): Promi
   try {
     const userId = requireUserId(req, res);
     if (!userId) return;
-    const { priceId } = req.body as { priceId: string };
+    const { priceId, successPath } = req.body as { priceId: string; successPath?: string };
     if (!priceId || typeof priceId !== "string") {
       res.status(400).json({ error: "Missing priceId" });
       return;
     }
+    // Only accept a same-origin relative path (single leading slash, no
+    // protocol-relative "//"), then prefix it with our own domain below. This
+    // lets onboarding land paid users on the dashboard without opening an
+    // open-redirect: an attacker-supplied absolute/off-domain URL is rejected.
+    const safeReturnPath =
+      typeof successPath === "string" && /^\/(?!\/)[\w/?=&%.#-]*$/.test(successPath)
+        ? successPath
+        : "/subscription?success=true";
     let [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
 
     // Pre-launch guard: block a second Checkout Session when the user is
@@ -133,7 +141,7 @@ router.post("/subscription/checkout", async (req: Request, res: Response): Promi
         payment_method_types: ["card"],
         line_items: [{ price: priceId, quantity: 1 }],
         mode: "subscription",
-        success_url: `${baseUrl}/subscription?success=true`,
+        success_url: `${baseUrl}${safeReturnPath}`,
         cancel_url: `${baseUrl}/subscription?canceled=true`,
       },
       { idempotencyKey: `checkout:${userId}:${priceId}` },

@@ -1139,6 +1139,13 @@ components:
       properties:
         priceId:
           type: string
+        successPath:
+          type: string
+          description: >-
+            Optional same-origin path (must start with a single "/") the user is
+            returned to after a successful checkout. Used by onboarding to land
+            paid users on the dashboard. Ignored if it isn't a safe relative
+            path; defaults to the subscription page.
       required:
         - priceId
 

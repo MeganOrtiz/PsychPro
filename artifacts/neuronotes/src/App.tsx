@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ClerkTokenBridge } from "@/components/auth/clerk-token-bridge";
 import { RequireSignedIn } from "@/components/auth/require-signed-in";
 import { RequireOnboarded } from "@/components/auth/require-onboarded";
+import { PostAuthRedirect } from "@/components/auth/post-auth-redirect";
 import SignInPage from "@/pages/sign-in";
 import SignUpPage from "@/pages/sign-up";
 import LandingPage from "@/pages/landing";
@@ -175,6 +176,13 @@ function AppRouter() {
           <RequireOnboarded>
             <CourseMasteryExamPage params={params} />
           </RequireOnboarded>
+        )}
+      </Route>
+      <Route path="/welcome">
+        {() => (
+          <RequireSignedIn>
+            <PostAuthRedirect />
+          </RequireSignedIn>
         )}
       </Route>
       <Route path="/onboarding">
