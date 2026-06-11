@@ -258,16 +258,16 @@
 .study-page-aurora {
   /* Mirrors STUDY_PALETTE in src/lib/study-theme.ts. Canonical palette
      = the landing-page cinematic neuroscience UI. */
-  --background: 196 76% 14%;         /* #09303F bg */
+  --background: 196 74% 18%;         /* #0B3C4E bg (lifted) */
   --foreground: 188 100% 83%;        /* #A7F3FF mist (icy text) */
-  --card: 195 76% 19%;               /* #0C4355 surface */
+  --card: 195 73% 29%;               /* #146480 surface (lifted) */
   --card-foreground: 188 100% 83%;
-  --popover: 195 76% 19%;
+  --popover: 195 73% 27%;
   --popover-foreground: 188 100% 83%;
-  --muted: 195 78% 19%;              /* #0B4356 bgSoft */
-  --muted-foreground: 195 24% 73%;   /* #A9C6CF inkSoft */
+  --muted: 195 76% 24%;              /* #0E5570 bgSoft (lifted) */
+  --muted-foreground: 195 30% 78%;   /* brighter muted text */
   --border: 192 56% 44%;             /* #3196AF steel/cerulean */
-  --input: 195 78% 19%;              /* #0B4356 bgSoft */
+  --input: 195 76% 24%;              /* bgSoft (lifted) */
   --primary: 189 64% 64%;            /* #68CCDE teal */
   --primary-foreground: 196 76% 14%;
   --secondary: 192 56% 44%;          /* #3196AF cerulean */
@@ -437,8 +437,8 @@
 .lesson-header-box {
   background: linear-gradient(
     145deg,
-    rgba(12, 67, 85, 0.32),
-    rgba(9, 48, 63, 0.4)
+    rgba(20,100,128, 0.32),
+    rgba(14,78,100, 0.4)
   );
   border: 1px solid rgba(196, 232, 242, 0.22);
   border-radius: 12px;
@@ -458,8 +458,8 @@
 .recommended-tile {
   background: linear-gradient(
     145deg,
-    rgba(12,67,85, 0.32),
-    rgba(9,48,63, 0.4)
+    rgba(20,100,128, 0.32),
+    rgba(14,78,100, 0.4)
   );
   border-color: rgba(196, 232, 242, 0.22);
   backdrop-filter: blur(20px) saturate(135%);
@@ -643,8 +643,8 @@
 .study-page-aurora .bg-card {
   background-image: linear-gradient(
     145deg,
-    rgba(12,67,85, 0.58),
-    rgba(9,48,63, 0.66)
+    rgba(20,100,128, 0.58),
+    rgba(14,78,100, 0.66)
   );
   border: 1px solid rgba(118, 228, 247, 0.14);
   border-radius: 22px;
@@ -663,7 +663,7 @@
    outside @layer so they override the Tailwind border/background utilities on
    the nav tokens. */
 .nav-glass-idle {
-  background: rgba(16,55,72, 0.55);
+  background: rgba(26,88,114, 0.55);
   border: 1px solid rgba(118, 228, 247, 0.12);
   box-shadow:
     0 0 12px rgba(118, 228, 247, 0.08),
@@ -837,7 +837,7 @@
   textarea,
   select
 ) {
-  background: rgba(6, 32, 44, 0.72);
+  background: rgba(11,52,67, 0.72);
   border: 1px solid rgba(118, 228, 247, 0.14);
   color: #E4F4F6;
   border-radius: 14px;

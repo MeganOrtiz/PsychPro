@@ -1342,7 +1342,7 @@ const styles = `
   max-width: 420px;
   border-radius: 18px;
   padding: 22px 22px 16px;
-  background: linear-gradient(145deg, rgba(12,67,85,0.72), rgba(9,48,63,0.85));
+  background: linear-gradient(145deg, rgba(20,100,128,0.72), rgba(14,78,100,0.85));
   border: 1px solid ${C.hairlineStrong};
   backdrop-filter: blur(18px) saturate(130%);
   -webkit-backdrop-filter: blur(18px) saturate(130%);
@@ -1371,7 +1371,7 @@ const styles = `
   position: relative;
   height: 7px;
   border-radius: 999px;
-  background: rgba(7, 33, 43, 0.6);
+  background: rgba(11,54,70, 0.6);
   overflow: hidden;
 }
 .landing-dash-fill {

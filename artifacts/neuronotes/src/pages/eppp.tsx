@@ -184,7 +184,7 @@ const styles = `
   text-align: center;
   border-radius: 26px;
   padding: clamp(32px, 5vw, 64px) clamp(22px, 4vw, 56px);
-  background: linear-gradient(150deg, rgba(17,87,111,0.62), rgba(9,48,63,0.84));
+  background: linear-gradient(150deg, rgba(27,118,150,0.62), rgba(14,78,100,0.84));
   border: 1px solid ${C.hairlineStrong};
   backdrop-filter: blur(20px) saturate(130%);
   -webkit-backdrop-filter: blur(20px) saturate(130%);
@@ -276,7 +276,7 @@ const styles = `
 .eppp-btn--ghost {
   color: ${C.mist};
   border: 1px solid ${C.hairlineStrong};
-  background: rgba(16,55,72,0.55);
+  background: rgba(26,88,114,0.55);
 }
 .eppp-btn--ghost:hover {
   transform: translateY(-1px);
@@ -313,7 +313,7 @@ const styles = `
   gap: 10px;
   border-radius: 18px;
   padding: clamp(20px, 2.4vw, 26px);
-  background: linear-gradient(145deg, rgba(12,67,85,0.58), rgba(9,48,63,0.66));
+  background: linear-gradient(145deg, rgba(20,100,128,0.58), rgba(14,78,100,0.66));
   border: 1px solid ${C.hairline};
   backdrop-filter: blur(16px) saturate(125%);
   -webkit-backdrop-filter: blur(16px) saturate(125%);

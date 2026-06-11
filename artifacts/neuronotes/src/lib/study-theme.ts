@@ -26,12 +26,12 @@
 // =============================================================================
 
 export const STUDY_PALETTE = {
-  // Backgrounds — deep midnight-teal stack
-  ink: "#06232D",         // deepest anchor (sidebar / page floor)
-  bg: "#09303F",          // page bg primary (bg-midnight)
-  bgSoft: "#0B4356",      // page bg secondary (bg-teal)
-  surface: "#0C4355",     // card surface (glass-strong)
-  surfaceElev: "#11576F", // card hover / lifted
+  // Backgrounds — deep cerulean stack (lifted for brighter UI)
+  ink: "#06232D",         // deepest anchor (sidebar / page floor) — kept dark for contrast
+  bg: "#0B3C4E",          // page bg primary (bg-midnight, lifted)
+  bgSoft: "#0E5570",      // page bg secondary (bg-teal, lifted)
+  surface: "#146480",     // card surface (glass-strong, lifted)
+  surfaceElev: "#1B7696", // card hover / lifted (lifted)
 
   // Mid-cerulean — borders, dividers, structural lines
   steel: "#3196AF",       // cerulean

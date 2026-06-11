@@ -97,7 +97,7 @@ export function NotificationsBell() {
       <button
         className="relative w-10 h-10 rounded-md flex items-center justify-center transition-all hover:scale-105"
         style={{
-          background: "rgba(6, 32, 44, 0.55)",
+          background: "rgba(11,52,67, 0.55)",
           border: "1px solid rgba(118, 228, 247, 0.28)",
           color: PALETTE.mist,
         }}
@@ -121,7 +121,7 @@ export function NotificationsBell() {
         <div
           className="absolute right-0 top-12 w-80 max-h-[70vh] overflow-y-auto rounded-2xl z-[60] shadow-2xl"
           style={{
-            background: "rgba(6, 32, 44, 0.95)",
+            background: "rgba(11,52,67, 0.95)",
             border: "1px solid rgba(118, 228, 247, 0.28)",
             backdropFilter: "blur(20px) saturate(140%)",
           }}
