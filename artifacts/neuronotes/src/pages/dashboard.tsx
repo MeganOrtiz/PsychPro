@@ -359,7 +359,7 @@ export default function DashboardPage() {
               <div className="relative sm:max-w-[58%]">
               <div className="flex items-center gap-2 mb-4">
                 <TrendingUp className="w-4 h-4" style={{ color: PALETTE.tealDeep }} />
-                <h2 className="font-semibold" style={{ color: PALETTE.mist }}>
+                <h2 className="font-semibold" style={{ color: PALETTE.mist, textShadow: "0 0 16px rgba(118,228,247,0.4)" }}>
                   {continueTopic ? "Continue Your Journey" : "Begin Your Journey"}
                 </h2>
               </div>
@@ -415,7 +415,7 @@ export default function DashboardPage() {
             {/* Recommended for You — 2x2 grid of 4 topics */}
             <StudySurface tone="light" glow innerClassName="p-5">
               <div className="mb-4">
-                <h2 className="font-semibold" style={{ color: PALETTE.mist }}>Recommended for You</h2>
+                <h2 className="font-semibold" style={{ color: PALETTE.mist, textShadow: "0 0 16px rgba(118,228,247,0.4)" }}>Recommended for You</h2>
                 <p className="text-xs mt-1" style={{ color: PALETTE.mistSoft }}>
                   Based on your goals and progress
                 </p>
@@ -484,7 +484,7 @@ export default function DashboardPage() {
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <Trophy className="w-4 h-4" style={{ color: PALETTE.tealDeep }} />
-                    <h2 className="font-semibold" style={{ color: PALETTE.mist }}>Leaderboard</h2>
+                    <h2 className="font-semibold" style={{ color: PALETTE.mist, textShadow: "0 0 16px rgba(118,228,247,0.4)" }}>Leaderboard</h2>
                   </div>
                   <Button
                     size="sm"
@@ -583,7 +583,7 @@ export default function DashboardPage() {
           <StudySurface tone="light" innerClassName="p-5">
             <div className="flex items-center gap-2 mb-3">
               <Activity className="w-4 h-4" style={{ color: PALETTE.tealDeep }} />
-              <h2 className="font-semibold" style={{ color: PALETTE.mist }}>Study Analytics</h2>
+              <h2 className="font-semibold" style={{ color: PALETTE.mist, textShadow: "0 0 16px rgba(118,228,247,0.4)" }}>Study Analytics</h2>
             </div>
             {isLoading ? (
               <Skeleton className="h-[140px] rounded-lg" />
@@ -633,7 +633,7 @@ export default function DashboardPage() {
           <StudySurface tone="light" innerClassName="p-5">
             <div className="flex items-center gap-2 mb-3">
               <Clock className="w-4 h-4" style={{ color: PALETTE.tealDeep }} />
-              <h2 className="font-semibold" style={{ color: PALETTE.mist }}>Recent Activity</h2>
+              <h2 className="font-semibold" style={{ color: PALETTE.mist, textShadow: "0 0 16px rgba(118,228,247,0.4)" }}>Recent Activity</h2>
             </div>
             {isLoading ? (
               <div className="space-y-2">
@@ -674,7 +674,7 @@ export default function DashboardPage() {
           <StudySurface tone="light" innerClassName="p-5">
             <div className="flex items-center gap-2 mb-3">
               <Award className="w-4 h-4" style={{ color: PALETTE.tealDeep }} />
-              <h2 className="font-semibold" style={{ color: PALETTE.mist }}>Achievements</h2>
+              <h2 className="font-semibold" style={{ color: PALETTE.mist, textShadow: "0 0 16px rgba(118,228,247,0.4)" }}>Achievements</h2>
             </div>
             <div className="grid grid-cols-2 gap-3">
               {achievements.map((a) => {
@@ -1124,7 +1124,7 @@ function CourseMasterySection({
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <GraduationCap className="w-4 h-4" style={{ color: PALETTE.tealDeep }} />
-          <h2 className="font-semibold" style={{ color: PALETTE.mist }}>
+          <h2 className="font-semibold" style={{ color: PALETTE.mist, textShadow: "0 0 16px rgba(118,228,247,0.4)" }}>
             Course Mastery
           </h2>
         </div>
@@ -1238,7 +1238,7 @@ function StreakCard({
   return (
     <StudySurface tone="light" innerClassName="p-5">
       <div className="flex items-center gap-2 mb-3">
-        <h2 className="font-semibold" style={{ color: PALETTE.mist }}>Your Streak</h2>
+        <h2 className="font-semibold" style={{ color: PALETTE.mist, textShadow: "0 0 16px rgba(118,228,247,0.4)" }}>Your Streak</h2>
         <span aria-hidden>🔥</span>
       </div>
       <div className="flex items-end justify-between gap-3 mb-3">
