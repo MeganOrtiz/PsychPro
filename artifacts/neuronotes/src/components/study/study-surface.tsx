@@ -22,28 +22,45 @@ interface StudySurfaceProps {
 function surfaceStyles(tone: StudyTone): CSSProperties {
   switch (tone) {
     case "dark":
+      // Prominent translucent cerulean glass — slightly brighter base than
+      // "light" so it reads as a lifted/feature surface, with the same cyan
+      // top-bloom + outer corona radiance over the brain backdrop.
       return {
-        background: `linear-gradient(180deg, ${P.surfaceElev}, ${P.surface})`,
-        borderColor: `${P.surf}55`,
-        boxShadow: `0 20px 60px -20px ${P.teal}77`,
+        background:
+          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(20,90,116,0.50), rgba(11,62,82,0.64))",
+        borderColor: "rgba(118,228,247,0.26)",
+        backdropFilter: "blur(20px) saturate(135%)",
+        WebkitBackdropFilter: "blur(20px) saturate(135%)",
+        boxShadow:
+          "inset 0 1px 0 rgba(255,255,255,0.13), inset 0 0 44px -22px rgba(118,228,247,0.48), 0 0 32px -10px rgba(118,228,247,0.36), 0 22px 52px -26px rgba(0,0,0,0.7)",
         color: "#FFFFFF",
       };
     case "accent":
-      // Deep navy → teal-deep keeps white body text at >= AA contrast across the gradient.
+      // Translucent directional cerulean glass — brighter, more saturated than
+      // the card front so the flashcard back stays visually distinct while
+      // sharing the same incandescent bloom + radiant corona.
       return {
-        background: `linear-gradient(135deg, #1F4F66, ${P.tealDeep})`,
-        borderColor: P.tealDeep,
-        boxShadow: `0 20px 50px -18px ${P.tealDeep}cc`,
+        background:
+          "radial-gradient(140% 92% at 50% 0%, rgba(118,228,247,0.18) 0%, rgba(118,228,247,0.00) 60%), linear-gradient(135deg, rgba(38,130,162,0.64), rgba(22,96,122,0.76))",
+        borderColor: "rgba(118,228,247,0.32)",
+        backdropFilter: "blur(20px) saturate(140%)",
+        WebkitBackdropFilter: "blur(20px) saturate(140%)",
+        boxShadow:
+          "inset 0 1px 0 rgba(255,255,255,0.16), inset 0 0 50px -24px rgba(118,228,247,0.56), 0 0 36px -10px rgba(118,228,247,0.44), 0 22px 54px -26px rgba(0,0,0,0.66)",
         color: "#FFFFFF",
       };
     case "card-front":
-      // Radial gradient — darker on the outside edge, lighter in the
-      // center — pairs with the "accent" back of the flashcard. Same
-      // white body text so question/answer typography is consistent.
+      // Centered radial bloom — lighter in the middle, deeper at the edges —
+      // pairs with the directional "accent" back of the flashcard. Translucent
+      // glass so the brain backdrop glows through; white body text throughout.
       return {
-        background: `radial-gradient(ellipse at center, ${P.tealDeep} 0%, #1F4F66 55%, #133544 100%)`,
-        borderColor: P.tealDeep,
-        boxShadow: `0 20px 50px -18px ${P.tealDeep}cc`,
+        background:
+          "radial-gradient(120% 104% at 50% 38%, rgba(118,228,247,0.22) 0%, rgba(46,140,172,0.52) 42%, rgba(16,72,94,0.76) 100%)",
+        borderColor: "rgba(118,228,247,0.32)",
+        backdropFilter: "blur(20px) saturate(140%)",
+        WebkitBackdropFilter: "blur(20px) saturate(140%)",
+        boxShadow:
+          "inset 0 1px 0 rgba(255,255,255,0.16), inset 0 0 54px -24px rgba(118,228,247,0.56), 0 0 36px -10px rgba(118,228,247,0.44), 0 22px 54px -26px rgba(0,0,0,0.66)",
         color: "#FFFFFF",
       };
     case "light":

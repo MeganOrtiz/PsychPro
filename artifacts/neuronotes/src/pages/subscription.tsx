@@ -180,8 +180,13 @@ export default function SubscriptionPage() {
         <div
           className="border rounded-xl p-4 mb-6 flex flex-col sm:flex-row sm:items-center gap-3"
           style={{
-            background: `linear-gradient(135deg, ${P.surface}, ${P.bg})`,
-            borderColor: `${P.surf}66`,
+            background:
+              "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(20,90,116,0.48), rgba(11,62,82,0.60))",
+            borderColor: "rgba(118,228,247,0.26)",
+            backdropFilter: "blur(18px) saturate(135%)",
+            WebkitBackdropFilter: "blur(18px) saturate(135%)",
+            boxShadow:
+              "inset 0 1px 0 rgba(255,255,255,0.13), inset 0 0 44px -22px rgba(118,228,247,0.48), 0 0 32px -10px rgba(118,228,247,0.38), 0 20px 46px -26px rgba(0,0,0,0.66)",
             color: "#FFFFFF",
           }}
           data-testid="active-subscription-banner"

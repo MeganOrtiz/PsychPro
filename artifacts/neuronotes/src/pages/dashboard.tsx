@@ -259,8 +259,13 @@ export default function DashboardPage() {
           <div
             className="rounded-xl p-4 mb-6 flex items-start gap-3 border"
             style={{
-              background: "rgba(94,176,200,0.16)",
-              borderColor: `${PALETTE.tealDeep}88`,
+              background:
+                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.16) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(20,90,116,0.50), rgba(11,62,82,0.62))",
+              borderColor: "rgba(118,228,247,0.30)",
+              backdropFilter: "blur(18px) saturate(135%)",
+              WebkitBackdropFilter: "blur(18px) saturate(135%)",
+              boxShadow:
+                "inset 0 1px 0 rgba(255,255,255,0.13), inset 0 0 44px -22px rgba(118,228,247,0.50), 0 0 32px -10px rgba(118,228,247,0.40), 0 20px 46px -26px rgba(0,0,0,0.66)",
             }}
             data-testid="banner-over-limit"
           >
@@ -292,8 +297,13 @@ export default function DashboardPage() {
           <div
             className="rounded-xl p-4 mb-6 flex items-start gap-3 border"
             style={{
-              background: "rgba(94,176,200,0.12)",
-              borderColor: `${PALETTE.surf}66`,
+              background:
+                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(20,90,116,0.46), rgba(11,62,82,0.58))",
+              borderColor: "rgba(118,228,247,0.26)",
+              backdropFilter: "blur(18px) saturate(135%)",
+              WebkitBackdropFilter: "blur(18px) saturate(135%)",
+              boxShadow:
+                "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 42px -22px rgba(118,228,247,0.45), 0 0 30px -10px rgba(118,228,247,0.34), 0 20px 46px -26px rgba(0,0,0,0.66)",
             }}
             data-testid="banner-approaching-limit"
           >

@@ -87,8 +87,13 @@ export default function ReflectionsPage() {
           <div
             className="rounded-xl border p-8"
             style={{
-              background: `linear-gradient(135deg, ${P.surface}f0, ${P.bg}f0)`,
-              borderColor: `${P.surf}22`,
+              background:
+                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(20,90,116,0.46), rgba(11,62,82,0.58))",
+              borderColor: "rgba(118,228,247,0.24)",
+              backdropFilter: "blur(18px) saturate(135%)",
+              WebkitBackdropFilter: "blur(18px) saturate(135%)",
+              boxShadow:
+                "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 42px -22px rgba(118,228,247,0.45), 0 0 30px -10px rgba(118,228,247,0.34), 0 20px 46px -26px rgba(0,0,0,0.66)",
             }}
             data-testid="reflections-loading"
           >
@@ -140,8 +145,13 @@ export default function ReflectionsPage() {
                       key={`${r.topicId}-${r.questionId}`}
                       className="rounded-xl border p-4"
                       style={{
-                        background: `linear-gradient(135deg, ${P.surface}f0, ${P.bg}f0)`,
-                        borderColor: `${P.surf}33`,
+                        background:
+                          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(20,90,116,0.46), rgba(11,62,82,0.58))",
+                        borderColor: "rgba(118,228,247,0.24)",
+                        backdropFilter: "blur(18px) saturate(135%)",
+                        WebkitBackdropFilter: "blur(18px) saturate(135%)",
+                        boxShadow:
+                          "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 42px -22px rgba(118,228,247,0.45), 0 0 30px -10px rgba(118,228,247,0.34), 0 20px 46px -26px rgba(0,0,0,0.66)",
                       }}
                       data-testid={`reflection-${r.questionId}`}
                     >
