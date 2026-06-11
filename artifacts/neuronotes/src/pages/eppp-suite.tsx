@@ -1814,7 +1814,7 @@ const styles = `
 .eps-topic-meta { font-size: 12px; color: ${C.muted}; }
 .eps-topic-cta {
   display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;
-  padding: 8px 14px; border-radius: 999px;
+  padding: 8px 14px; border-radius: 0;
   font-size: 12.5px; font-weight: 700; color: ${C.ink};
   background: linear-gradient(135deg, ${C.mist} 0%, ${C.cyan} 48%, #38BDF8 100%);
   border: 1px solid rgba(167,243,255,0.65);
@@ -1826,6 +1826,7 @@ const styles = `
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.55), 0 0 26px -4px ${C.cyan}d9;
 }
 .eps-topic:hover:not(.is-disabled) .eps-topic-cta svg { transform: translateX(3px); }
+.eps-topic:active:not(.is-disabled) .eps-topic-cta { box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 0 30px -4px ${C.cyan}f2; }
 
 /* ---- Part 1 sub-tabs ---- */
 .eps-subtabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: clamp(20px, 2.4vw, 28px); }
@@ -1988,12 +1989,13 @@ const styles = `
 .eps-section-head--split { justify-content: space-between; }
 .eps-ghost-btn {
   display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
-  padding: 8px 14px; border-radius: 999px; font-size: 13px; font-weight: 600;
-  color: ${C.mist}; background: rgba(12,28,38,0.55); border: 1px solid ${C.hairlineStrong};
-  transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  padding: 8px 14px; border-radius: 0; font-size: 13px; font-weight: 600;
+  color: ${C.cloud}; background: rgba(12,28,38,0.55); border: 1px solid ${C.cyan}40;
+  transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.3s ease;
 }
 .eps-ghost-btn svg { width: 15px; height: 15px; }
-.eps-ghost-btn:hover { color: ${C.cloud}; border-color: ${C.cyan}80; transform: translateY(-1px); }
+.eps-ghost-btn:hover { color: ${C.ink}; border-color: ${C.cyan}99; transform: translateY(-1px); box-shadow: 0 0 18px -4px ${C.cyan}b3; }
+.eps-ghost-btn:active { color: ${C.ink}; border-color: ${C.cyan}cc; box-shadow: 0 0 24px -4px ${C.cyan}d9; }
 
 /* ---- Full-Length Exams ---- */
 .eps-fl-card {
