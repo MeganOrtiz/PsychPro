@@ -44,6 +44,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { useQueries } from "@tanstack/react-query";
+import { useUser } from "@clerk/clerk-react";
 import smokeBg from "@/assets/bg/brain-clouds.png";
 import journeyBrain from "@/assets/hero/dashboard-superior-brain.png";
 import {
@@ -57,6 +58,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { StudySurface } from "@/components/study/study-surface";
+import { DashboardMasthead } from "@/components/brand/dashboard-masthead";
 import TodayReviews from "@/components/learning/today-reviews";
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
 import { isEpppTopic } from "@/lib/eppp-content";
@@ -126,6 +128,16 @@ function buildActivitySeries(recent: RecentTopic[]) {
 
 export default function DashboardPage() {
   const [, navigate] = useLocation();
+  const { user, isLoaded: isUserLoaded } = useUser();
+  const greetingName =
+    user?.firstName ?? user?.fullName?.split(" ")[0] ?? "";
+  // Greeting rule: name -> "Welcome back, {name}."; no name -> "Welcome back.";
+  // still loading -> undefined so no placeholder name ever flashes.
+  const greeting = !isUserLoaded
+    ? undefined
+    : greetingName
+      ? `Welcome back, ${greetingName}.`
+      : "Welcome back.";
   const { data: summary, isLoading } = useGetDashboardSummary();
   const { data: allTopics } = useGetTopics();
   const { data: leaderboard } = useGetLeaderboard();
@@ -253,6 +265,8 @@ export default function DashboardPage() {
       data-testid="dashboard-page"
     >
       <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 lg:pt-8 pb-4 md:pb-6 lg:pb-8">
+        <DashboardMasthead greeting={greeting} className="mb-6 md:mb-8" />
+
         {isOverLimit && (
           <div
             className="rounded-xl p-4 mb-6 flex items-start gap-3 border"
