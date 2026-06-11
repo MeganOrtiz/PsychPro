@@ -12,13 +12,15 @@ const buttonVariants = cva(
       variant: {
         // Glass + cyan glow — strong fill for primary CTAs.
         default: "btn-glass-strong",
-        destructive:
-          "bg-destructive text-destructive-foreground shadow-sm border-destructive-border",
+        // Glass + red glow — kept opaque enough to stay legible on any surface.
+        destructive: "btn-glass-destructive text-destructive-foreground",
         // Glass + cyan glow — subtle fill for outline/secondary surfaces.
         outline: "btn-glass text-foreground",
         secondary: "btn-glass text-foreground",
-        ghost: "border border-transparent hover:bg-white/[0.06]",
-        link: "text-primary underline-offset-4 hover:underline",
+        // Glass + cyan glow — transparent until hover/press lights it up.
+        ghost: "btn-glass-ghost",
+        // Text link — gains a soft cyan text glow on hover so it glows too.
+        link: "btn-link-glow text-primary underline-offset-4 hover:underline",
       },
       size: {
         // @replit changed sizes

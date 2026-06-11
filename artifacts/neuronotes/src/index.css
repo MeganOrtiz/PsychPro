@@ -354,6 +354,124 @@
   box-shadow: none;
 }
 
+/* Ghost button — transparent glass that stays invisible until interacted
+   with, then lights up with the same cerulean glow as the rest of the
+   button family. Used by the shadcn `ghost` variant (icon toggles, menu
+   buttons, subtle inline actions). */
+.btn-glass-ghost {
+  position: relative;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  transition: background-color 160ms ease, border-color 160ms ease,
+    box-shadow 200ms ease, transform 120ms ease;
+}
+.btn-glass-ghost:hover {
+  background: rgba(118, 228, 247, 0.10);
+  border-color: rgba(118, 228, 247, 0.34);
+  box-shadow:
+    0 0 18px rgba(118, 228, 247, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+.btn-glass-ghost:active {
+  background: rgba(118, 228, 247, 0.18);
+  border-color: rgba(118, 228, 247, 0.5);
+  box-shadow:
+    0 0 26px rgba(118, 228, 247, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.btn-glass-ghost:disabled {
+  opacity: 0.55;
+  box-shadow: none;
+}
+
+/* Destructive button — frosted red glass. Kept high-opacity (a near-solid
+   red gradient) so white label text stays legible on BOTH the dark app
+   surface and white StudySurface cards; the "glass" reads through the
+   backdrop blur + a red glow corona that intensifies on hover/press. */
+.btn-glass-destructive {
+  position: relative;
+  border-radius: 8px;
+  background-image: linear-gradient(
+    145deg,
+    rgba(239, 68, 68, 0.95),
+    rgba(185, 28, 28, 0.95)
+  );
+  border: 1px solid rgba(248, 113, 113, 0.55);
+  backdrop-filter: blur(12px) saturate(130%);
+  -webkit-backdrop-filter: blur(12px) saturate(130%);
+  box-shadow:
+    0 0 16px rgba(248, 113, 113, 0.30),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  transition: background-color 160ms ease, background-image 160ms ease,
+    border-color 160ms ease, box-shadow 200ms ease, transform 120ms ease;
+}
+.btn-glass-destructive:hover {
+  background-image: linear-gradient(
+    145deg,
+    rgba(248, 113, 113, 0.98),
+    rgba(220, 38, 38, 0.98)
+  );
+  border-color: rgba(252, 165, 165, 0.7);
+  box-shadow:
+    0 0 24px rgba(248, 113, 113, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+.btn-glass-destructive:active {
+  background-image: linear-gradient(
+    145deg,
+    rgba(252, 165, 165, 1),
+    rgba(220, 38, 38, 1)
+  );
+  border-color: rgba(254, 202, 202, 0.85);
+  box-shadow:
+    0 0 32px rgba(248, 113, 113, 0.66),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+.btn-glass-destructive:disabled {
+  opacity: 0.55;
+  box-shadow: none;
+}
+
+/* Link button — stays a text link but picks up a soft cyan text glow on
+   hover so even the lightest-weight "button" participates in the glow. */
+.btn-link-glow {
+  transition: text-shadow 200ms ease, color 160ms ease;
+}
+.btn-link-glow:hover {
+  text-shadow: 0 0 12px rgba(118, 228, 247, 0.6);
+}
+
+/* ------------------------------------------------------------------
+   UNIVERSAL BUTTON GLOW (catch-all)
+   ------------------------------------------------------------------
+   Guarantees that EVERY <button> inside the app surface brightens with
+   a cerulean glow on hover and an even stronger glow on press — even raw
+   <button> elements with arbitrary utility classes that don't use the
+   shared Button component or any .btn-glass* class.
+
+   Wrapped entirely in :where() so the whole selector carries ZERO
+   specificity: any button that defines its own box-shadow (.btn-glass*,
+   .bg-primary buttons, .nav-glass*, .eppp-launch-btn, .eps-* buttons,
+   quiz options, etc.) overrides this automatically and is left untouched,
+   while bare buttons still light up. Clerk's avatar button (.cl-*) and
+   disabled buttons are excluded.
+   ------------------------------------------------------------------ */
+:where(.study-page-bg button:not([class*="cl-"]):not(:disabled),
+       .study-page-aurora button:not([class*="cl-"]):not(:disabled)) {
+  transition: box-shadow 200ms ease, transform 120ms ease;
+}
+:where(.study-page-bg button:not([class*="cl-"]):not(:disabled):hover,
+       .study-page-aurora button:not([class*="cl-"]):not(:disabled):hover) {
+  box-shadow: 0 0 18px rgba(118, 228, 247, 0.34);
+}
+:where(.study-page-bg button:not([class*="cl-"]):not(:disabled):active,
+       .study-page-aurora button:not([class*="cl-"]):not(:disabled):active) {
+  box-shadow: 0 0 26px rgba(118, 228, 247, 0.5);
+}
+
 /* Softer focus ring on study-page buttons — the global study --ring is a
    saturated cyan (188 90% 72%) that clashes with the cerulean button glow.
    Scope a gentler ring to buttons only so keyboard focus reads cleanly over
