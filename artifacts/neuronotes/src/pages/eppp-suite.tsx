@@ -1695,7 +1695,7 @@ const styles = `
 .eps-kb-rail-item {
   display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 11px; align-items: center;
   text-align: left; cursor: pointer;
-  padding: 11px 12px; border-radius: 0;
+  padding: 11px 12px; border-radius: 8px;
   border: 1px solid rgba(118,228,247,0.20);
   background: linear-gradient(135deg, rgba(12,67,85,0.78), rgba(7,33,43,0.86));
   box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.05);
@@ -1755,7 +1755,7 @@ const styles = `
 .eps-kb-lesson {
   display: grid; grid-template-columns: 38px minmax(0, 1fr) 18px; gap: 12px; align-items: center;
   text-align: left; cursor: pointer;
-  padding: 15px; border-radius: 0;
+  padding: 15px; border-radius: 8px;
   background: linear-gradient(135deg, rgba(12,67,85,0.78), rgba(7,33,43,0.86));
   border: 1px solid rgba(118,228,247,0.22);
   box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.06);
