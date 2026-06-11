@@ -464,13 +464,21 @@ export default function OnboardingPage() {
     }));
 
   return (
-    <div className="min-h-screen study-page-bg flex flex-col" data-testid="onboarding-page">
+    <div className="min-h-screen study-page-bg flex flex-col relative overflow-hidden" data-testid="onboarding-page">
       <style>{styles}</style>
 
-      <div className="flex-1 flex items-start md:items-center justify-center p-4 md:p-6">
+      {/* Ambient aurora — adds depth behind the glass card */}
+      <div className="ob-aurora" aria-hidden>
+        <span className="ob-orb ob-orb--1" />
+        <span className="ob-orb ob-orb--2" />
+        <span className="ob-orb ob-orb--3" />
+        <span className="ob-grid-glow" />
+      </div>
+
+      <div className="flex-1 flex items-start md:items-center justify-center p-4 md:p-6 relative z-10">
         <div className={`w-full ${wide ? "max-w-4xl" : "max-w-xl"} my-6`}>
           {/* Brand */}
-          <div className="flex items-center gap-2.5 mb-6 justify-center">
+          <div className="flex items-center gap-2.5 mb-6 justify-center ob-fade-down">
             <span className="ob-brand-icon">
               <Brain aria-hidden />
             </span>
@@ -480,29 +488,37 @@ export default function OnboardingPage() {
           </div>
 
           {/* Progress */}
-          <div className="flex gap-1.5 mb-6" aria-hidden>
-            {order.map((id, i) => (
-              <div
-                key={id}
-                className="ob-progress-seg"
-                style={{
-                  background:
-                    i <= idx
-                      ? `linear-gradient(90deg, ${P.teal}, ${P.surf})`
-                      : "rgba(118,228,247,0.14)",
-                }}
-              />
-            ))}
+          <div className="ob-progress-wrap ob-fade-down" style={{ animationDelay: "60ms" }}>
+            <div className="flex gap-1.5" aria-hidden>
+              {order.map((id, i) => (
+                <div
+                  key={id}
+                  className={`ob-progress-seg ${i === idx ? "ob-progress-seg--active" : ""}`}
+                  style={{
+                    background:
+                      i < idx
+                        ? `linear-gradient(90deg, ${P.teal}, ${P.surf})`
+                        : i === idx
+                          ? `linear-gradient(90deg, ${P.surf}, ${P.mist})`
+                          : "rgba(118,228,247,0.14)",
+                  }}
+                />
+              ))}
+            </div>
+            <p className="ob-progress-label">
+              Step {idx + 1} of {order.length}
+            </p>
           </div>
 
-          <div className="ob-card p-6 md:p-8">
+          <div className="ob-card p-6 md:p-8 ob-card-in">
+            <span className="ob-card-sheen" aria-hidden />
             <p className="ob-eyebrow">
-              Step {idx + 1} of {order.length}
+              {`0${idx + 1}`.slice(-2)} · Let's personalize PsychPro
             </p>
             <h1 className="ob-title">{meta?.title}</h1>
             {meta?.subtitle && <p className="ob-sub">{meta.subtitle}</p>}
 
-            <div className="mt-6">
+            <div className="mt-6 ob-step-anim" key={stepId}>
               {/* ---- Role ---- */}
               {stepId === "role" && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -792,7 +808,12 @@ function SummaryBody({
     <div className="space-y-4" data-testid="onboarding-summary">
       {firstName && (
         <p className="ob-greeting">
-          Welcome aboard, <span style={{ color: P.surf }}>{firstName}</span>.
+          <span className="ob-greeting-spark">
+            <Sparkles className="w-4 h-4" />
+          </span>
+          <span>
+            Welcome aboard, <span style={{ color: P.surf }}>{firstName}</span>.
+          </span>
         </p>
       )}
       <div className="ob-summary-grid">
@@ -834,19 +855,82 @@ function slug(s: string) {
 // Scoped styles — glass surfaces on the locked cerulean palette (no pills).
 // ---------------------------------------------------------------------------
 const styles = `
+/* ---- Ambient aurora background ---------------------------------------- */
+.ob-aurora { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+.ob-orb { position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.5; will-change: transform; }
+.ob-orb--1 {
+  width: 46vw; height: 46vw; top: -14vw; left: -10vw;
+  background: radial-gradient(circle at 30% 30%, ${P.surf}, transparent 70%);
+  animation: ob-drift1 18s ease-in-out infinite;
+}
+.ob-orb--2 {
+  width: 40vw; height: 40vw; bottom: -16vw; right: -8vw;
+  background: radial-gradient(circle at 50% 50%, ${P.tealDeep}, transparent 70%);
+  opacity: 0.45;
+  animation: ob-drift2 22s ease-in-out infinite;
+}
+.ob-orb--3 {
+  width: 30vw; height: 30vw; top: 38%; left: 52%;
+  background: radial-gradient(circle at 50% 50%, ${P.mist}, transparent 70%);
+  opacity: 0.28;
+  animation: ob-drift3 26s ease-in-out infinite;
+}
+.ob-grid-glow {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(118,228,247,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(118,228,247,0.05) 1px, transparent 1px);
+  background-size: 46px 46px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 25%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 25%, transparent 75%);
+}
+@keyframes ob-drift1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(5vw,4vw) scale(1.12); } }
+@keyframes ob-drift2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-4vw,-3vw) scale(1.1); } }
+@keyframes ob-drift3 { 0%,100% { transform: translate(-50%,0) scale(1); } 50% { transform: translate(-44%,-4vw) scale(1.18); } }
+
+/* ---- Entrance + transition animations -------------------------------- */
+@keyframes ob-fade-down { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes ob-card-in { from { opacity: 0; transform: translateY(16px) scale(0.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes ob-step-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes ob-item-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.ob-fade-down { animation: ob-fade-down .5s cubic-bezier(.22,.61,.36,1) both; }
+.ob-card-in { animation: ob-card-in .6s cubic-bezier(.22,.61,.36,1) both; }
+.ob-step-anim { animation: ob-step-in .42s cubic-bezier(.22,.61,.36,1) both; }
+/* Stagger the option tiles / rows / plans as a step enters */
+.ob-step-anim > .grid > *, .ob-step-anim > .space-y-3 > *, .ob-step-anim > [data-testid="onboarding-summary"] > * {
+  animation: ob-item-in .44s cubic-bezier(.22,.61,.36,1) both;
+}
+.ob-step-anim > .grid > *:nth-child(1), .ob-step-anim > .space-y-3 > *:nth-child(1) { animation-delay: .04s; }
+.ob-step-anim > .grid > *:nth-child(2), .ob-step-anim > .space-y-3 > *:nth-child(2) { animation-delay: .09s; }
+.ob-step-anim > .grid > *:nth-child(3), .ob-step-anim > .space-y-3 > *:nth-child(3) { animation-delay: .14s; }
+.ob-step-anim > .grid > *:nth-child(4), .ob-step-anim > .space-y-3 > *:nth-child(4) { animation-delay: .19s; }
+.ob-step-anim > .grid > *:nth-child(5), .ob-step-anim > .space-y-3 > *:nth-child(5) { animation-delay: .24s; }
+.ob-step-anim > .grid > *:nth-child(6), .ob-step-anim > .space-y-3 > *:nth-child(6) { animation-delay: .29s; }
+
 .ob-brand-icon {
   display: inline-flex; align-items: center; justify-content: center;
   width: 38px; height: 38px; border-radius: 11px;
   background: linear-gradient(135deg, ${P.teal}, ${P.surf});
   color: ${P.ink};
   box-shadow: 0 8px 22px -10px ${P.surf}aa, inset 0 1px 0 rgba(255,255,255,0.3);
+  animation: ob-icon-pulse 4s ease-in-out infinite;
+}
+@keyframes ob-icon-pulse {
+  0%,100% { box-shadow: 0 8px 22px -10px ${P.surf}aa, inset 0 1px 0 rgba(255,255,255,0.3); }
+  50% { box-shadow: 0 8px 30px -8px ${P.surf}, inset 0 1px 0 rgba(255,255,255,0.4); }
 }
 .ob-brand-icon svg { width: 20px; height: 20px; }
 
-.ob-progress-seg { flex: 1; height: 6px; border-radius: 999px; transition: background .3s ease; }
+.ob-progress-wrap { margin-bottom: 1.5rem; }
+.ob-progress-label { margin-top: 8px; font-size: 11px; font-weight: 600; letter-spacing: .08em; color: ${P.mistSoft}; }
+.ob-progress-seg { flex: 1; height: 6px; border-radius: 999px; transition: background .35s ease, box-shadow .35s ease; }
+.ob-progress-seg--active { box-shadow: 0 0 14px -2px ${P.surf}; animation: ob-seg-pulse 1.8s ease-in-out infinite; }
+@keyframes ob-seg-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.72; } }
 
 .ob-card {
+  position: relative;
   border-radius: 20px;
+  overflow: hidden;
   background:
     radial-gradient(130% 90% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0) 60%),
     linear-gradient(150deg, rgba(24,89,109,0.55), rgba(16,72,91,0.66));
@@ -855,17 +939,28 @@ const styles = `
   -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.12),
-    0 30px 70px -34px rgba(0,0,0,0.7);
+    0 30px 70px -34px rgba(0,0,0,0.7),
+    0 0 60px -30px ${P.surf}88;
 }
+.ob-card > * { position: relative; z-index: 1; }
+.ob-card-sheen {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: linear-gradient(115deg, transparent 30%, rgba(167,243,255,0.10) 47%, transparent 64%);
+  transform: translateX(-30%);
+  animation: ob-sheen 7s ease-in-out infinite;
+}
+@keyframes ob-sheen { 0%,72%,100% { transform: translateX(-60%); opacity: 0; } 84% { opacity: 1; } 96% { transform: translateX(60%); opacity: 0; } }
 
 .ob-eyebrow {
   font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
   color: ${P.surf};
 }
 .ob-title {
-  font-size: 1.5rem; line-height: 1.2; font-weight: 700; margin-top: 6px;
-  color: ${P.cloud};
-  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  font-size: 1.6rem; line-height: 1.18; font-weight: 800; margin-top: 6px;
+  background: linear-gradient(100deg, ${P.cloud} 0%, ${P.mist} 55%, ${P.surf} 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.25);
 }
 .ob-sub { margin-top: 8px; font-size: 0.9rem; color: ${P.mistSoft}; }
 
@@ -955,7 +1050,18 @@ const styles = `
 .ob-plan-feat { display: flex; align-items: center; gap: 7px; font-size: 0.8rem; color: ${P.mist}; }
 .ob-plan-feat svg { color: ${P.surf}; }
 
-.ob-greeting { font-size: 1rem; color: ${P.mist}; }
+.ob-greeting {
+  font-size: 1.15rem; font-weight: 700; color: ${P.mist};
+  display: flex; align-items: center; gap: 8px;
+}
+.ob-greeting-spark {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; border-radius: 9px;
+  background: linear-gradient(135deg, ${P.teal}, ${P.surf}); color: ${P.ink};
+  box-shadow: 0 0 22px -6px ${P.surf};
+  animation: ob-spark 2.4s ease-in-out infinite;
+}
+@keyframes ob-spark { 0%,100% { transform: rotate(0) scale(1); } 50% { transform: rotate(12deg) scale(1.08); } }
 .ob-summary-grid { display: flex; flex-direction: column; gap: 10px; }
 .ob-summary-item {
   display: flex; align-items: flex-start; gap: 12px;
@@ -970,4 +1076,20 @@ const styles = `
 }
 .ob-summary-label { display: block; font-size: 0.72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: ${P.surf}; }
 .ob-summary-value { display: block; font-size: 0.9rem; color: ${P.mist}; margin-top: 2px; word-break: break-word; }
+
+/* Respect reduced-motion: keep the look, drop the movement. */
+@media (prefers-reduced-motion: reduce) {
+  .ob-orb, .ob-grid-glow, .ob-card-sheen, .ob-brand-icon,
+  .ob-progress-seg--active, .ob-greeting-spark,
+  .ob-fade-down, .ob-card-in, .ob-step-anim,
+  .ob-step-anim > .grid > *, .ob-step-anim > .space-y-3 > *,
+  .ob-step-anim > [data-testid="onboarding-summary"] > * {
+    animation: none !important;
+  }
+  .ob-fade-down, .ob-card-in, .ob-step-anim,
+  .ob-step-anim > .grid > *, .ob-step-anim > .space-y-3 > *,
+  .ob-step-anim > [data-testid="onboarding-summary"] > * {
+    opacity: 1 !important; transform: none !important;
+  }
+}
 `;
