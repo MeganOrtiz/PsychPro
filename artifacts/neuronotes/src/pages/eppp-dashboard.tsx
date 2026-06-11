@@ -612,7 +612,7 @@ const styles = `
   padding: clamp(18px, 2vw, 24px);
   background:
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(145deg, rgba(20,90,116,0.40), rgba(11,62,82,0.52));
+    linear-gradient(145deg, rgba(11,54,70,0.74), rgba(6,33,46,0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -822,7 +822,7 @@ const styles = `
   text-decoration: none;
   background:
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(145deg, rgba(20,90,116,0.40), rgba(11,62,82,0.52));
+    linear-gradient(145deg, rgba(11,54,70,0.74), rgba(6,33,46,0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -838,7 +838,7 @@ const styles = `
   border-color: ${C.cyan}5e;
   background:
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.16) 0%, rgba(118,228,247,0.00) 60%),
-    linear-gradient(145deg, rgba(28,116,146,0.52), rgba(16,84,108,0.60));
+    linear-gradient(145deg, rgba(18,80,102,0.84), rgba(10,52,68,0.90));
 }
 .epd-domain--loading { opacity: 0.85; }
 .epd-bar-fill--idle {
@@ -880,7 +880,7 @@ const styles = `
   cursor: pointer;
   background:
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(145deg, rgba(20,90,116,0.40), rgba(11,62,82,0.52));
+    linear-gradient(145deg, rgba(11,54,70,0.74), rgba(6,33,46,0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);

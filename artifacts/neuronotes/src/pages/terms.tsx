@@ -110,7 +110,7 @@ export default function TermsPage() {
           style={{
             border: "1px solid rgba(118,228,247,0.18)",
             background:
-              "linear-gradient(145deg, rgba(20,90,116,0.36), rgba(11,62,82,0.50))",
+              "linear-gradient(145deg, rgba(11,54,70,0.69), rgba(6,33,46,0.83))",
           }}
           aria-label="On this page"
         >
@@ -442,7 +442,7 @@ export default function TermsPage() {
               style={{
                 border: "1px solid rgba(118,228,247,0.18)",
                 background:
-              "linear-gradient(145deg, rgba(20,90,116,0.36), rgba(11,62,82,0.50))",
+              "linear-gradient(145deg, rgba(11,54,70,0.69), rgba(6,33,46,0.83))",
                 color: P.cloud,
               }}
             >
@@ -585,7 +585,7 @@ export default function TermsPage() {
               style={{
                 border: "1px solid rgba(118,228,247,0.18)",
                 background:
-              "linear-gradient(145deg, rgba(20,90,116,0.36), rgba(11,62,82,0.50))",
+              "linear-gradient(145deg, rgba(11,54,70,0.69), rgba(6,33,46,0.83))",
               }}
             >
               <p style={{ ...TRACK_NAV, fontSize: 11, color: P.cloud }}>

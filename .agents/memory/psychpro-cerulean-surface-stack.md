@@ -23,7 +23,24 @@ recipes (`.bg-card`, `.recommended-tile`, `.lesson-header-box`).
 **Verification trick:** the dashboard is Clerk-auth-gated (screenshot browser gets 403),
 so calibrate against a target mockup via a throwaway DEV-only route gated by
 `import.meta.env.DEV` that renders the real surface classes on study-page-bg; screenshot,
-tune, then DELETE the route + file.
+tune, then DELETE the route + file. For public verification of a sweep, screenshot
+`/privacy` and `/terms` — they're public and use the same light card family.
+
+**CRITICAL — the light card recipe is DUPLICATED inline, not centralized.** Changing the
+shared recipes (StudySurface tones, `.bg-card`, `.recommended-tile`, `.lesson-header-box`)
+does NOT propagate to most pages. The idle "light" card family
+`rgba(20,90,116,A) → rgba(11,62,82,B)` is copy-pasted into per-page inline styles AND into
+per-page `<style>` blocks across ~13 files: EPPP (eppp.tsx, eppp-suite.tsx,
+eppp-dashboard.tsx via `.eppp-*`/`.eps-*`/`.epd-*`) and main study pages (dashboard,
+flashcards, quiz, practice-exam, progress, reflections, subscription, feedback, privacy,
+terms). A site-wide retone MUST sweep all of them. Fastest reliable way: a Node script in
+code_execution that regex-replaces the two exact RGB prefixes ONLY (capturing alpha) —
+`rgba(20,90,116,A)→rgba(11,54,70, min(A+0.33,0.90))` and
+`rgba(11,62,82,A)→rgba(6,33,46, min(A+0.33,0.90))`. code_execution stdout shows TRUE
+numbers (the bash/rg display garbles RGB to "n"), so enumerate + replace there.
+The brighter companion families (`rgba(20,100,128,...)`, hover/active tiers, flashcard
+accent/card-front in study-surface.tsx) are intentional elevated/interactive tiers — leave
+them unless specifically asked.
 
 **Rule:**
 - Accent stays locked at cerulean `#76E4F7` (and `mint` stays fully removed — see

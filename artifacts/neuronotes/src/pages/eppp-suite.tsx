@@ -1759,7 +1759,7 @@ const styles = `
   display: flex; flex-direction: column; gap: 8px;
   padding: 10px; border-radius: 14px;
   border: 1px solid rgba(196,232,242,0.16);
-  background: linear-gradient(155deg, rgba(13,66,86,0.30), rgba(8,46,62,0.44));
+  background: linear-gradient(155deg, rgba(10,50,66,0.62), rgba(6,34,47,0.74));
   backdrop-filter: blur(18px) saturate(130%);
   -webkit-backdrop-filter: blur(18px) saturate(130%);
   box-shadow:
@@ -1784,7 +1784,7 @@ const styles = `
     radial-gradient(120% 90% at 50% 0%,
       rgba(118,228,247,0.10) 0%,
       rgba(118,228,247,0.00) 60%),
-    linear-gradient(145deg, rgba(20,90,116,0.34), rgba(11,62,82,0.46));
+    linear-gradient(145deg, rgba(11,52,68,0.66), rgba(6,33,46,0.78));
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
@@ -1800,7 +1800,7 @@ const styles = `
     radial-gradient(120% 90% at 50% 0%,
       rgba(118,228,247,0.16) 0%,
       rgba(118,228,247,0.00) 60%),
-    linear-gradient(145deg, rgba(24,102,130,0.46), rgba(13,70,92,0.56));
+    linear-gradient(145deg, rgba(15,68,88,0.80), rgba(8,42,57,0.88));
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.16),
     inset 0 0 34px -18px rgba(118,228,247,0.50),
@@ -1815,7 +1815,7 @@ const styles = `
     radial-gradient(120% 90% at 50% 0%,
       rgba(118,228,247,0.22) 0%,
       rgba(118,228,247,0.00) 62%),
-    linear-gradient(145deg, rgba(28,116,146,0.52), rgba(14,74,96,0.60));
+    linear-gradient(145deg, rgba(18,78,100,0.84), rgba(9,48,63,0.90));
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.18),
     inset 0 0 36px -16px rgba(118,228,247,0.60),
@@ -1869,7 +1869,7 @@ const styles = `
     radial-gradient(120% 90% at 50% 0%,
       rgba(118,228,247,0.10) 0%,
       rgba(118,228,247,0.00) 60%),
-    linear-gradient(145deg, rgba(20,90,116,0.34), rgba(11,62,82,0.46));
+    linear-gradient(145deg, rgba(11,52,68,0.66), rgba(6,33,46,0.78));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -1887,7 +1887,7 @@ const styles = `
     radial-gradient(120% 90% at 50% 0%,
       rgba(118,228,247,0.16) 0%,
       rgba(118,228,247,0.00) 60%),
-    linear-gradient(145deg, rgba(24,102,130,0.46), rgba(13,70,92,0.56));
+    linear-gradient(145deg, rgba(15,68,88,0.80), rgba(8,42,57,0.88));
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.16),
     inset 0 0 34px -18px rgba(118,228,247,0.50),
@@ -1917,7 +1917,7 @@ const styles = `
   border-radius: 16px; padding: 16px 18px;
   background:
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(145deg, rgba(20,90,116,0.40), rgba(11,62,82,0.52));
+    linear-gradient(145deg, rgba(11,54,70,0.74), rgba(6,33,46,0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -1931,7 +1931,7 @@ const styles = `
   border-color: ${C.cyan}5e;
   background:
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.16) 0%, rgba(118,228,247,0.00) 60%),
-    linear-gradient(145deg, rgba(28,116,146,0.52), rgba(16,84,108,0.60));
+    linear-gradient(145deg, rgba(18,80,102,0.84), rgba(10,52,68,0.90));
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.16),
     inset 0 0 38px -18px rgba(118,228,247,0.52),
@@ -1987,7 +1987,7 @@ const styles = `
   border-radius: 12px; padding: 14px 16px;
   background:
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(145deg, rgba(20,90,116,0.40), rgba(11,62,82,0.52));
+    linear-gradient(145deg, rgba(11,54,70,0.74), rgba(6,33,46,0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -2058,7 +2058,7 @@ const styles = `
   background:
     radial-gradient(circle at 18% 12%, ${C.cyan}24, transparent 34%),
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(145deg, rgba(20,90,116,0.42), rgba(11,62,82,0.54));
+    linear-gradient(145deg, rgba(11,55,71,0.76), rgba(6,34,47,0.86));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -2077,7 +2077,7 @@ const styles = `
   border-radius: 13px; padding: 13px 14px;
   background:
     radial-gradient(120% 90% at 50% 0%, rgba(118,228,247,0.08) 0%, rgba(118,228,247,0.00) 60%),
-    linear-gradient(145deg, rgba(20,90,116,0.32), rgba(11,62,82,0.44));
+    linear-gradient(145deg, rgba(10,50,66,0.64), rgba(6,32,44,0.76));
   border: 1px solid rgba(196,232,242,0.20);
   backdrop-filter: blur(16px) saturate(130%);
   -webkit-backdrop-filter: blur(16px) saturate(130%);
@@ -2110,7 +2110,7 @@ const styles = `
   padding: clamp(18px, 2.4vw, 26px);
   background:
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(145deg, rgba(20,90,116,0.40), rgba(11,62,82,0.52));
+    linear-gradient(145deg, rgba(11,54,70,0.74), rgba(6,33,46,0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -2123,7 +2123,7 @@ const styles = `
 .eps-build-card.is-active {
   background:
     radial-gradient(circle at 18% 0%, ${C.cyan}22, transparent 36%),
-    linear-gradient(145deg, rgba(27,118,150,0.62), rgba(14,78,100,0.72));
+    linear-gradient(145deg, rgba(19,82,106,0.86), rgba(11,54,70,0.92));
   border-color: ${C.hairlineStrong};
 }
 .eps-build-kicker {
@@ -2167,7 +2167,7 @@ const styles = `
   background:
     linear-gradient(90deg, rgba(118,228,247,0.16), transparent 44%),
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(145deg, rgba(20,90,116,0.40), rgba(11,62,82,0.52));
+    linear-gradient(145deg, rgba(11,54,70,0.74), rgba(6,33,46,0.85));
 }
 .eps-contract-card ul {
   margin: 16px 0 0;
@@ -2188,7 +2188,7 @@ const styles = `
   border-radius: 22px; padding: clamp(40px, 6vw, 72px) clamp(24px, 4vw, 56px);
   background:
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(150deg, rgba(22,96,124,0.46), rgba(12,68,90,0.58));
+    linear-gradient(150deg, rgba(13,60,78,0.78), rgba(7,40,55,0.88));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -2232,7 +2232,7 @@ const styles = `
   border-radius: 18px; padding: clamp(20px, 2.6vw, 30px); text-align: center;
   background:
     radial-gradient(circle at 50% 0%, ${C.cyan}26, transparent 46%),
-    linear-gradient(160deg, rgba(20,90,116,0.44), rgba(11,62,82,0.56));
+    linear-gradient(160deg, rgba(12,56,72,0.78), rgba(6,34,47,0.87));
   border: 1px solid rgba(118,228,247,0.3);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -2274,7 +2274,7 @@ const styles = `
   margin-top: clamp(22px, 2.6vw, 32px); border-radius: 18px; padding: clamp(18px, 2.4vw, 26px);
   background:
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(145deg, rgba(20,90,116,0.40), rgba(11,62,82,0.52));
+    linear-gradient(145deg, rgba(11,54,70,0.74), rgba(6,33,46,0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -2317,7 +2317,7 @@ const styles = `
   border-radius: 12px; padding: 14px 16px;
   background:
     radial-gradient(120% 90% at 50% 0%, rgba(118,228,247,0.08) 0%, rgba(118,228,247,0.00) 60%),
-    linear-gradient(145deg, rgba(20,90,116,0.32), rgba(11,62,82,0.44));
+    linear-gradient(145deg, rgba(10,50,66,0.64), rgba(6,32,44,0.76));
   border: 1px solid rgba(196,232,242,0.20);
   backdrop-filter: blur(16px) saturate(130%);
   -webkit-backdrop-filter: blur(16px) saturate(130%);
@@ -2347,7 +2347,7 @@ const styles = `
   border-radius: 16px; padding: clamp(16px, 2vw, 22px);
   background:
     radial-gradient(120% 90% at 50% 0%, rgba(118,228,247,0.10), rgba(118,228,247,0) 60%),
-    linear-gradient(145deg, rgba(20,90,116,0.34), rgba(11,62,82,0.46));
+    linear-gradient(145deg, rgba(11,52,68,0.66), rgba(6,33,46,0.78));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);

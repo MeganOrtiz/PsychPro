@@ -186,7 +186,7 @@ const styles = `
   padding: clamp(32px, 5vw, 64px) clamp(22px, 4vw, 56px);
   background:
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(150deg, rgba(22,96,124,0.46), rgba(12,68,90,0.58));
+    linear-gradient(150deg, rgba(13,60,78,0.78), rgba(7,40,55,0.88));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -321,7 +321,7 @@ const styles = `
   padding: clamp(20px, 2.4vw, 26px);
   background:
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(145deg, rgba(20,90,116,0.40), rgba(11,62,82,0.52));
+    linear-gradient(145deg, rgba(11,54,70,0.74), rgba(6,33,46,0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
