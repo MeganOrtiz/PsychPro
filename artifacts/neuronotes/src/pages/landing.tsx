@@ -924,7 +924,7 @@ const styles = `
 
 .landing-wordmark {
   margin: 0;
-  font-family: "Julius Sans One", "Outfit", "Inter", system-ui, sans-serif;
+  font-family: "Proxima Nova", "proxima-nova", "Montserrat", "Outfit", "Inter", system-ui, sans-serif;
   font-weight: 400;
   font-size: clamp(40px, 7.5vw, 92px);
   letter-spacing: 0.34em;
