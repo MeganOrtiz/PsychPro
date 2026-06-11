@@ -122,7 +122,7 @@ export default function StudyGuidePage({ params }: Props) {
             <h2 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight leading-tight">
               {isQRG
                 ? guide.title.replace(/\s*[—–-]\s*Quick Reference Guide\s*$/i, "")
-                : guide.title.replace(/\s*[—–-]\s*Study Guide\s*$/i, "")}
+                : guide.title.replace(/\s*[—–-]\s*(?:EPPP\s+)?Study Guide\s*$/i, "")}
             </h2>
             {isQRG && (
               <p className="mt-2 text-sm font-semibold tracking-[0.2em] uppercase" style={{ color: P.tealDeep }}>
