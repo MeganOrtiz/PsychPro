@@ -213,7 +213,7 @@ export default function NewDeckPage() {
               <Loader2 className="w-6 h-6 text-primary animate-spin mt-2" />
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-5 bg-card border border-border rounded-2xl p-5 md:p-7 mt-4">
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">Deck Title</label>
                 <input
