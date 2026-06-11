@@ -1696,23 +1696,30 @@ const styles = `
   display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 11px; align-items: center;
   text-align: left; cursor: pointer;
   padding: 11px 12px; border-radius: 0;
-  border: 1px solid rgba(118,228,247,0.10);
-  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(118,228,247,0.20);
+  background: linear-gradient(135deg, rgba(12,67,85,0.78), rgba(7,33,43,0.86));
+  box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.05);
+  backdrop-filter: blur(8px);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease, background 0.2s ease;
 }
-.eps-kb-rail-item:hover { border-color: ${C.cyan}66; background: rgba(118,228,247,0.06); }
+.eps-kb-rail-item:hover {
+  border-color: rgba(118,228,247,0.45);
+  box-shadow: 0 12px 30px -14px rgba(118,228,247,0.45), inset 0 1px 0 0 rgba(255,255,255,0.10);
+}
 .eps-kb-rail-item:focus-visible,
 .eps-kb-lesson:focus-visible { outline: 2px solid ${C.cyan}; outline-offset: 2px; }
 .eps-kb-rail-item.is-active {
-  border-color: ${C.cyan}8c;
-  background: linear-gradient(145deg, rgba(17,87,111,0.7), rgba(11,67,86,0.78));
-  box-shadow: 0 0 22px -10px ${C.cyan}b3, inset 0 1px 0 rgba(255,255,255,0.06);
+  border-color: rgba(118,228,247,0.55);
+  background: linear-gradient(135deg, rgba(118,228,247,0.15), rgba(12,67,85,0.90));
+  box-shadow: 0 14px 34px -14px rgba(118,228,247,0.55), inset 0 1px 0 0 rgba(255,255,255,0.10);
 }
 .eps-kb-rail-icon {
   display: inline-flex; align-items: center; justify-content: center;
   width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px;
-  background: ${C.cyan}16; border: 1px solid ${C.cyan}40; color: ${C.cyan};
+  background: radial-gradient(circle at 50% 40%, rgba(118,228,247,0.18), rgba(12,67,85,0.55) 70%);
+  border: 1px solid rgba(118,228,247,0.28); color: ${C.cyan};
 }
+.eps-kb-rail-item.is-active .eps-kb-rail-icon svg { filter: drop-shadow(0 0 6px rgba(118,228,247,0.85)); }
 .eps-kb-rail-icon svg { width: 17px; height: 17px; }
 .eps-kb-rail-text { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
 .eps-kb-rail-name {
@@ -1736,9 +1743,10 @@ const styles = `
 .eps-kb-head-icon {
   display: inline-flex; align-items: center; justify-content: center;
   width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px;
-  background: ${C.cyan}16; border: 1px solid ${C.cyan}40; color: ${C.cyan};
+  background: radial-gradient(circle at 50% 40%, rgba(58,224,236,0.18), rgba(12,67,85,0.65) 70%);
+  border: 1px solid rgba(118,228,247,0.32); color: ${C.cyan};
 }
-.eps-kb-head-icon svg { width: 20px; height: 20px; }
+.eps-kb-head-icon svg { width: 20px; height: 20px; filter: drop-shadow(0 0 4px rgba(118,228,247,0.7)); }
 .eps-kb-head-text { min-width: 0; }
 .eps-kb-head-name { margin: 0; font-size: clamp(17px, 2vw, 21px); font-weight: 600; line-height: 1.2; color: ${C.cloud}; }
 .eps-kb-head-meta { margin: 3px 0 0; font-size: 12.5px; color: ${C.muted}; }
@@ -1748,15 +1756,22 @@ const styles = `
   display: grid; grid-template-columns: 38px minmax(0, 1fr) 18px; gap: 12px; align-items: center;
   text-align: left; cursor: pointer;
   padding: 15px; border-radius: 0;
-  background: linear-gradient(145deg, rgba(12,67,85,0.5), rgba(9,48,63,0.6));
-  border: 1px solid ${C.hairline};
+  background: linear-gradient(135deg, rgba(12,67,85,0.78), rgba(7,33,43,0.86));
+  border: 1px solid rgba(118,228,247,0.22);
+  box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.06);
+  backdrop-filter: blur(8px);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
-.eps-kb-lesson:hover { transform: translateY(-2px); border-color: ${C.cyan}66; box-shadow: 0 0 24px -12px ${C.cyan}80; }
+.eps-kb-lesson:hover {
+  transform: translateY(-2px);
+  border-color: rgba(118,228,247,0.55);
+  box-shadow: 0 14px 36px -14px rgba(118,228,247,0.55), inset 0 1px 0 0 rgba(255,255,255,0.10);
+}
 .eps-kb-lesson-icon {
   display: inline-flex; align-items: center; justify-content: center; align-self: start;
   width: 38px; height: 38px; flex-shrink: 0; border-radius: 10px;
-  background: ${C.cyan}14; border: 1px solid ${C.cyan}38; color: ${C.cyan};
+  background: radial-gradient(circle at 50% 40%, rgba(118,228,247,0.18), rgba(12,67,85,0.55) 70%);
+  border: 1px solid rgba(118,228,247,0.28); color: ${C.cyan};
 }
 .eps-kb-lesson-icon svg { width: 17px; height: 17px; }
 .eps-kb-lesson-body { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
