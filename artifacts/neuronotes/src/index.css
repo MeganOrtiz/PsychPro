@@ -258,16 +258,16 @@
 .study-page-aurora {
   /* Mirrors STUDY_PALETTE in src/lib/study-theme.ts. Canonical palette
      = the landing-page cinematic neuroscience UI. */
-  --background: 196 74% 18%;         /* #0B3C4E bg (lifted) */
+  --background: 196 80% 13%;         /* #072E3C bg (deepened) */
   --foreground: 188 100% 83%;        /* #A7F3FF mist (icy text) */
-  --card: 195 73% 29%;               /* #146480 surface (lifted) */
+  --card: 195 70% 21%;               /* #10485B surface (deepened) */
   --card-foreground: 188 100% 83%;
-  --popover: 195 73% 27%;
+  --popover: 195 72% 19%;
   --popover-foreground: 188 100% 83%;
-  --muted: 195 76% 24%;              /* #0E5570 bgSoft (lifted) */
+  --muted: 195 78% 17%;              /* #0A3C4D bgSoft (deepened) */
   --muted-foreground: 195 30% 78%;   /* brighter muted text */
   --border: 192 56% 44%;             /* #3196AF steel/cerulean */
-  --input: 195 76% 24%;              /* bgSoft (lifted) */
+  --input: 195 78% 17%;              /* #0A3C4D bgSoft (deepened) */
   --primary: 189 64% 64%;            /* #68CCDE teal */
   --primary-foreground: 196 76% 14%;
   --secondary: 192 56% 44%;          /* #3196AF cerulean */
@@ -407,22 +407,34 @@
   /* Very light vignette only — let the cyan clouds glow through across
      the whole viewport. Edges get a slight darken to keep CTA text
      readable; the center is nearly transparent. */
+  /* Layered for DEPTH + INCANDESCENCE (2026-06-11):
+       1. a soft cyan radiance bloom over the brain (upper-center) so the
+          page glows from within — the ethereal, incandescent core.
+       2. a deep cerulean vignette that darkens the edges hard, pushing the
+          glowing center forward (depth perception).
+       3. the cinematic brain-clouds backdrop.
+     Base color is a near-black deep cerulean so the whole site reads as a
+     dark, radiant turquoise rather than the previous lifted/washed look. */
   background-image:
-    radial-gradient(ellipse 150% 130% at 50% 55%,
-      rgba(8, 37, 48, 0.00) 0%,
-      rgba(8, 37, 48, 0.08) 55%,
-      rgba(8, 37, 48, 0.30) 100%),
+    radial-gradient(ellipse 62% 50% at 50% 40%,
+      rgba(118, 228, 247, 0.16) 0%,
+      rgba(104, 204, 222, 0.07) 36%,
+      rgba(7, 46, 60, 0.00) 70%),
+    radial-gradient(ellipse 150% 135% at 50% 48%,
+      rgba(4, 22, 30, 0.00) 0%,
+      rgba(4, 22, 30, 0.40) 56%,
+      rgba(2, 13, 19, 0.82) 100%),
     url("./assets/bg/brain-clouds.png");
   /* Anchor center-center so the densest atmospheric cloud band — the
      middle of the source image, right around the brain — fills the
      viewport edge-to-edge on landscape. Top of the source (sparse
      upper clouds) and very bottom (sparse trailing clouds) get cropped
      off; the rich cyan smoke fills every pixel. */
-  background-size: cover, cover;
-  background-position: center, center center;
-  background-repeat: no-repeat, no-repeat;
-  background-attachment: fixed, fixed;
-  background-color: #061b23;
+  background-size: cover, cover, cover;
+  background-position: center, center, center center;
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-attachment: fixed, fixed, fixed;
+  background-color: #04161d;
   pointer-events: none;
 }
 
@@ -437,8 +449,8 @@
 .lesson-header-box {
   background: linear-gradient(
     145deg,
-    rgba(42,146,174, 0.32),
-    rgba(30,114,140, 0.4)
+    rgba(24, 98, 124, 0.34),
+    rgba(13, 66, 86, 0.46)
   );
   border: 1px solid rgba(196, 232, 242, 0.22);
   border-radius: 12px;
@@ -446,8 +458,9 @@
   -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 0 20px -2px rgba(118, 228, 247, 0.3),
-    0 8px 22px -16px rgba(0, 0, 0, 0.55);
+    inset 0 0 32px -20px rgba(118, 228, 247, 0.42),
+    0 0 26px -3px rgba(118, 228, 247, 0.34),
+    0 8px 24px -16px rgba(0, 0, 0, 0.62);
   padding: 1.5rem 1.5rem 1.25rem;
 }
 
@@ -456,31 +469,41 @@
    landing-page atmosphere so the dashboard feels cut from the same
    cinematic surface. */
 .recommended-tile {
-  background: linear-gradient(
-    145deg,
-    rgba(42,146,174, 0.32),
-    rgba(30,114,140, 0.4)
-  );
+  background:
+    radial-gradient(120% 90% at 50% 0%,
+      rgba(118, 228, 247, 0.10) 0%,
+      rgba(118, 228, 247, 0.00) 60%),
+    linear-gradient(
+      145deg,
+      rgba(20, 90, 116, 0.34),
+      rgba(11, 62, 82, 0.46)
+    );
   border-color: rgba(196, 232, 242, 0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 0 20px -2px rgba(118, 228, 247, 0.3),
-    0 8px 22px -16px rgba(0, 0, 0, 0.55);
+    inset 0 0 30px -20px rgba(118, 228, 247, 0.4),
+    0 0 22px -3px rgba(118, 228, 247, 0.32),
+    0 8px 22px -16px rgba(0, 0, 0, 0.6);
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .recommended-tile:hover {
   border-color: rgba(196, 232, 242, 0.38);
-  background: linear-gradient(
-    145deg,
-    rgba(14, 58, 78, 0.42),
-    rgba(8, 36, 50, 0.5)
-  );
+  background:
+    radial-gradient(120% 90% at 50% 0%,
+      rgba(118, 228, 247, 0.16) 0%,
+      rgba(118, 228, 247, 0.00) 60%),
+    linear-gradient(
+      145deg,
+      rgba(24, 102, 130, 0.46),
+      rgba(13, 70, 92, 0.56)
+    );
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 0 34px -18px rgba(118, 228, 247, 0.5),
     0 0 32px 0 rgba(118, 228, 247, 0.48),
-    0 12px 26px -16px rgba(0, 0, 0, 0.6);
+    0 12px 26px -16px rgba(0, 0, 0, 0.62);
 }
 .recommended-tile:active {
   border-color: rgba(196, 232, 242, 0.48);
@@ -641,18 +664,26 @@
    backdrop blur, deep drop shadow, faint outer cerulean glow. */
 .study-page-bg .bg-card,
 .study-page-aurora .bg-card {
-  background-image: linear-gradient(
-    145deg,
-    rgba(42,146,174, 0.62),
-    rgba(30,114,140, 0.70)
-  );
-  border: 1px solid rgba(118, 228, 247, 0.20);
+  /* Deeper cerulean glass + an inner cyan top-bloom (incandescence) and an
+     outer cyan corona (radiance) over a deep drop shadow (depth). */
+  background-image:
+    radial-gradient(125% 78% at 50% 0%,
+      rgba(118, 228, 247, 0.12) 0%,
+      rgba(118, 228, 247, 0.00) 58%),
+    linear-gradient(
+      145deg,
+      rgba(20, 90, 116, 0.58),
+      rgba(11, 62, 82, 0.70)
+    );
+  border: 1px solid rgba(118, 228, 247, 0.22);
   border-radius: 22px;
-  backdrop-filter: blur(18px) saturate(130%);
-  -webkit-backdrop-filter: blur(18px) saturate(130%);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
-    inset 0 1px 0 rgba(167, 243, 255, 0.10),
-    0 18px 40px -24px rgba(0, 0, 0, 0.55);
+    inset 0 1px 0 rgba(167, 243, 255, 0.14),
+    inset 0 0 42px -22px rgba(118, 228, 247, 0.45),
+    0 0 34px -18px rgba(118, 228, 247, 0.40),
+    0 26px 58px -30px rgba(0, 0, 0, 0.78);
 }
 
 /* Sidebar nav glass — compact luminous dark-glass pills (2026-06 spec).

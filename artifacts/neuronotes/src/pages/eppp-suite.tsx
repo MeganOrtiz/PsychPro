@@ -2213,14 +2213,17 @@ const styles = `
 .eps-mq-list { display: flex; flex-direction: column; gap: 14px; }
 .eps-mq-card {
   border-radius: 16px; padding: clamp(16px, 2vw, 22px);
-  background: linear-gradient(145deg, rgba(42,146,174,0.32), rgba(30,114,140,0.4));
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(118,228,247,0.10), rgba(118,228,247,0) 60%),
+    linear-gradient(145deg, rgba(20,90,116,0.34), rgba(11,62,82,0.46));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.12),
-    0 0 20px -2px rgba(118,228,247,0.3),
-    0 8px 22px -16px rgba(0,0,0,0.55);
+    inset 0 0 30px -20px rgba(118,228,247,0.4),
+    0 0 22px -3px rgba(118,228,247,0.32),
+    0 8px 22px -16px rgba(0,0,0,0.6);
 }
 .eps-mq-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
 .eps-mq-tag {

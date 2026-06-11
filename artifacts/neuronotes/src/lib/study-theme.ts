@@ -26,12 +26,14 @@
 // =============================================================================
 
 export const STUDY_PALETTE = {
-  // Backgrounds — deep cerulean stack (lifted for brighter UI)
-  ink: "#06232D",         // deepest anchor (sidebar / page floor) — kept dark for contrast
-  bg: "#0B3C4E",          // page bg primary (bg-midnight, lifted)
-  bgSoft: "#0E5570",      // page bg secondary (bg-teal, lifted)
-  surface: "#146480",     // card surface (glass-strong, lifted)
-  surfaceElev: "#1B7696", // card hover / lifted (lifted)
+  // Backgrounds — deep cerulean stack (DEEPENED 2026-06-11 per owner: darker,
+  // richer cerulean/turquoise for an incandescent, ethereal feel — radiance
+  // now comes from the locked cyan accents + glows against a deeper floor).
+  ink: "#051B24",         // deepest anchor (sidebar / page floor)
+  bg: "#072E3C",          // page bg primary (deep cerulean)
+  bgSoft: "#0A3C4D",      // page bg secondary
+  surface: "#10485B",     // card surface (glass base)
+  surfaceElev: "#18596D", // card hover / lifted
 
   // Mid-cerulean — borders, dividers, structural lines
   steel: "#3196AF",       // cerulean
