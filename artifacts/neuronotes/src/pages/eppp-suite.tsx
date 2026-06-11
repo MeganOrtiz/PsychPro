@@ -27,7 +27,6 @@ import {
   Sparkles,
   Printer,
   NotebookPen,
-  Timer,
   Lightbulb,
   Trash2,
 } from "lucide-react";
@@ -1051,7 +1050,7 @@ function FullLengthExamsPanel({ onNavigate }: { onNavigate: (to: string) => void
           subtitle="Sit a complete, timed EPPP simulation end-to-end. Build the stamina and pacing the real exam demands."
         />
 
-        <div className="eps-subtabs" role="tablist" aria-label="Exam parts">
+        <div className="eps-subtabs eps-subtabs--center" role="tablist" aria-label="Exam parts">
           {MASTERY_SUBTABS.map((t) => {
             const isActive = t.key === part;
             return (
@@ -1089,17 +1088,6 @@ function FullLengthExamsPanel({ onNavigate }: { onNavigate: (to: string) => void
                   {exam.quizCount ?? 0} questions · timed simulation
                 </p>
               </div>
-            </div>
-            <div className="eps-fl-features">
-              <span className="eps-fl-feature">
-                <Timer aria-hidden /> Real exam pacing
-              </span>
-              <span className="eps-fl-feature">
-                <ClipboardCheck aria-hidden /> Full question set
-              </span>
-              <span className="eps-fl-feature">
-                <XCircle aria-hidden /> Misses saved for review
-              </span>
             </div>
             <button
               className="eps-fl-cta btn-glass-strong"
