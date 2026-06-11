@@ -184,7 +184,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           // image painted inside with a dark gradient overlay, over the
           // StudySurface "dark" base gradient — so the smoky cloud continuum
           // bleeds through the sidebar exactly like it does through the card.
-          background: `linear-gradient(180deg, rgba(9,54,64,0.26) 0%, rgba(9,54,64,0.44) 55%, rgba(9,54,64,0.66) 100%), url(${smokeBg}), linear-gradient(180deg, ${STUDY_PALETTE.surfaceElev}, ${STUDY_PALETTE.surface})`,
+          background: `linear-gradient(180deg, rgba(9, 50, 64, 0.26) 0%, rgba(9, 50, 64, 0.44) 55%, rgba(9, 50, 64, 0.66) 100%), url(${smokeBg}), linear-gradient(180deg, ${STUDY_PALETTE.surfaceElev}, ${STUDY_PALETTE.surface})`,
           backgroundSize: "cover, cover, cover",
           backgroundPosition: "center, center, center",
           backgroundRepeat: "no-repeat, no-repeat, no-repeat",

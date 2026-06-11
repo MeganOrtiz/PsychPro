@@ -532,13 +532,13 @@ function StudyGuideView({ content, title }: { content: string; title: string }) 
     const body = ref.current?.innerHTML ?? "";
     const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${safeTitle}</title>
 <style>
-  body{font-family:Georgia,'Times New Roman',serif;color:#1b3238;max-width:760px;margin:48px auto;padding:0 28px;line-height:1.65;}
-  h1,h2,h3,h4{font-family:Arial,Helvetica,sans-serif;color:#0d3b46;line-height:1.25;margin-top:1.5em;}
-  h1{font-size:26px;border-bottom:2px solid #0d3b46;padding-bottom:8px;margin-top:0;}
+  body{font-family:Georgia,'Times New Roman',serif;color:#1b3138;max-width:760px;margin:48px auto;padding:0 28px;line-height:1.65;}
+  h1,h2,h3,h4{font-family:Arial,Helvetica,sans-serif;color:#0d3746;line-height:1.25;margin-top:1.5em;}
+  h1{font-size:26px;border-bottom:2px solid #0d3746;padding-bottom:8px;margin-top:0;}
   h2{font-size:20px;} h3{font-size:16px;}
   ul,ol{padding-left:22px;} li{margin:5px 0;}
-  strong{color:#0d3b46;} code{background:#f1f3f4;padding:1px 5px;border-radius:3px;font-family:Menlo,Consolas,monospace;}
-  blockquote{border-left:3px solid #c8d2d6;margin:1em 0;padding-left:14px;color:#4c656b;}
+  strong{color:#0d3746;} code{background:#f1f3f4;padding:1px 5px;border-radius:3px;font-family:Menlo,Consolas,monospace;}
+  blockquote{border-left:3px solid #c8d2d6;margin:1em 0;padding-left:14px;color:#4c636b;}
   table{border-collapse:collapse;width:100%;} th,td{border:1px solid #c8d2d6;padding:6px 10px;text-align:left;}
 </style></head>
 <body><h1>${safeTitle}</h1>${body}</body></html>`;

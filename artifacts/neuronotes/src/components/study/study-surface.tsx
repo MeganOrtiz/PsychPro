@@ -27,7 +27,7 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
       // top-bloom + outer corona radiance over the brain backdrop.
       return {
         background:
-          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.09) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(15,82,97,0.80), rgba(8,57,69,0.90))",
+          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.09) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(15, 76, 97, 0.80), rgba(8, 53, 69, 0.90))",
         borderColor: "rgba(118,228,247,0.24)",
         backdropFilter: "blur(20px) saturate(135%)",
         WebkitBackdropFilter: "blur(20px) saturate(135%)",
@@ -41,7 +41,7 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
       // sharing the same incandescent bloom + radiant corona.
       return {
         background:
-          "radial-gradient(140% 92% at 50% 0%, rgba(118,228,247,0.18) 0%, rgba(118,228,247,0.00) 60%), linear-gradient(135deg, rgba(37,148,173,0.64), rgba(21,113,133,0.76))",
+          "radial-gradient(140% 92% at 50% 0%, rgba(118,228,247,0.18) 0%, rgba(118,228,247,0.00) 60%), linear-gradient(135deg, rgba(37,148,173,0.64), rgba(21, 105, 133, 0.76))",
         borderColor: "rgba(118,228,247,0.32)",
         backdropFilter: "blur(20px) saturate(140%)",
         WebkitBackdropFilter: "blur(20px) saturate(140%)",
@@ -55,7 +55,7 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
       // glass so the brain backdrop glows through; white body text throughout.
       return {
         background:
-          "radial-gradient(120% 104% at 50% 38%, rgba(118,228,247,0.22) 0%, rgba(46,140,172,0.52) 42%, rgba(17,93,111,0.76) 100%)",
+          "radial-gradient(120% 104% at 50% 38%, rgba(118,228,247,0.22) 0%, rgba(46,140,172,0.52) 42%, rgba(17, 87, 111, 0.76) 100%)",
         borderColor: "rgba(118,228,247,0.32)",
         backdropFilter: "blur(20px) saturate(140%)",
         WebkitBackdropFilter: "blur(20px) saturate(140%)",
@@ -72,7 +72,7 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
       // rather than a flat opaque box.
       return {
         background:
-          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.06) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(12,73,87,0.74), rgba(7,52,63,0.85))",
+          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.06) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(12, 68, 87, 0.74), rgba(7, 49, 63, 0.85))",
         borderColor: "rgba(118,228,247,0.20)",
         backdropFilter: "blur(20px) saturate(135%)",
         WebkitBackdropFilter: "blur(20px) saturate(135%)",

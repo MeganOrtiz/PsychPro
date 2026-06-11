@@ -179,38 +179,38 @@
   --elevate-1: rgba(255,255,255, .04);
   --elevate-2: rgba(255,255,255, .09);
 
-  /* Deep cerulean/turquoise dark theme (hue ~189–192, matching the locked
-     #76E4F7 accent) — retoned away from the previous navy (hue 210–222)
-     so site chrome reads as deep turquoise, not navy. */
-  --background: 192 60% 9%;
+  /* Deep cerulean/turquoise dark theme — surfaces at hue ~196 (cerulean),
+     accents stay at the locked #76E4F7 family (hue ~188–189). Nudged off the
+     earlier green-leaning ~191 toward cerulean per owner; still not navy. */
+  --background: 196 60% 9%;
   --foreground: 192 40% 95%;
 
-  --border: 192 40% 24%;
+  --border: 196 40% 24%;
 
-  --card: 192 58% 12%;
+  --card: 196 58% 12%;
   --card-foreground: 192 40% 95%;
-  --card-border: 192 40% 24%;
+  --card-border: 196 40% 24%;
 
-  --sidebar: 192 60% 7%;
+  --sidebar: 196 60% 7%;
   --sidebar-foreground: 192 38% 90%;
-  --sidebar-border: 192 42% 18%;
+  --sidebar-border: 196 42% 18%;
   --sidebar-primary: 189 84% 55%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 192 42% 18%;
+  --sidebar-accent: 196 42% 18%;
   --sidebar-accent-foreground: 192 38% 90%;
   --sidebar-ring: 189 84% 55%;
 
-  --popover: 192 56% 12%;
+  --popover: 196 56% 12%;
   --popover-foreground: 192 38% 95%;
-  --popover-border: 192 40% 22%;
+  --popover-border: 196 40% 22%;
 
   --primary: 189 84% 55%;
   --primary-foreground: 0 0% 100%;
 
-  --secondary: 192 42% 22%;
+  --secondary: 196 42% 22%;
   --secondary-foreground: 192 38% 90%;
 
-  --muted: 192 42% 17%;
+  --muted: 196 42% 17%;
   --muted-foreground: 192 24% 62%;
 
   --accent: 189 88% 62%;
@@ -219,7 +219,7 @@
   --destructive: 0 72% 51%;
   --destructive-foreground: 0 0% 100%;
 
-  --input: 192 40% 24%;
+  --input: 196 40% 24%;
   --ring: 189 84% 55%;
 
   --chart-1: 189 84% 55%;
@@ -261,16 +261,16 @@
 .study-page-aurora {
   /* Mirrors STUDY_PALETTE in src/lib/study-theme.ts. Canonical palette
      = the landing-page cinematic neuroscience UI. */
-  --background: 191 81% 17%;         /* #08404D bg (deep turquoise) */
+  --background: 196 81% 17%;         /* #083b4d bg (deep cerulean) */
   --foreground: 188 100% 83%;        /* #A7F3FF mist (icy text) */
-  --card: 191 73% 25%;               /* #115C6C surface (deep turquoise) */
+  --card: 196 73% 25%;               /* #11556c surface (deep cerulean) */
   --card-foreground: 188 100% 83%;
-  --popover: 191 73% 23%;
+  --popover: 196 73% 23%;
   --popover-foreground: 188 100% 83%;
-  --muted: 191 81% 20%;              /* #0A4F5E bgSoft (deep turquoise) */
+  --muted: 196 81% 20%;              /* #0a495e bgSoft (deep cerulean) */
   --muted-foreground: 191 30% 78%;   /* brighter muted text */
   --border: 192 56% 44%;             /* #3196AF steel/cerulean */
-  --input: 191 81% 20%;              /* #0A4F5E bgSoft (deep turquoise) */
+  --input: 196 81% 20%;              /* #0a495e bgSoft (deep cerulean) */
   --primary: 189 64% 64%;            /* #68CCDE teal */
   --primary-foreground: 196 76% 14%;
   --secondary: 192 56% 44%;          /* #3196AF cerulean */
@@ -305,7 +305,7 @@
    .nav-glass-idle recipe: flat dark teal fill, faint cerulean hairline, soft
    cyan glow that intensifies on hover/active. */
 .btn-glass {
-  background: rgba(26,88,103, 0.72);
+  background: rgba(26, 83, 103, 0.72);
   border: 1px solid rgba(118, 228, 247, 0.34);
   color: #e6fafe;
   box-shadow:
@@ -540,11 +540,11 @@
     radial-gradient(ellipse 62% 50% at 50% 40%,
       rgba(118, 228, 247, 0.08) 0%,
       rgba(104, 204, 222, 0.035) 36%,
-      rgba(8, 64, 77, 0.00) 70%),
+      rgba(8, 59, 77, 0.00) 70%),
     radial-gradient(ellipse 150% 135% at 50% 48%,
-      rgba(3, 24, 29, 0.24) 0%,
-      rgba(3, 24, 29, 0.60) 56%,
-      rgba(1, 15, 19, 0.92) 100%),
+      rgba(3, 22, 29, 0.24) 0%,
+      rgba(3, 22, 29, 0.60) 56%,
+      rgba(1, 14, 19, 0.92) 100%),
     url("./assets/bg/brain-clouds.png");
   /* Anchor center-center so the densest atmospheric cloud band — the
      middle of the source image, right around the brain — fills the
@@ -555,7 +555,7 @@
   background-position: center, center, center center;
   background-repeat: no-repeat, no-repeat, no-repeat;
   background-attachment: fixed, fixed, fixed;
-  background-color: #05262d;
+  background-color: #05232d;
   pointer-events: none;
 }
 
@@ -570,8 +570,8 @@
 .lesson-header-box {
   background: linear-gradient(
     145deg,
-    rgba(14, 78, 93, 0.66),
-    rgba(8, 57, 69, 0.78)
+    rgba(14, 73, 93, 0.66),
+    rgba(8, 53, 69, 0.78)
   );
   border: 1px solid rgba(196, 232, 242, 0.20);
   border-radius: 12px;
@@ -596,8 +596,8 @@
       rgba(118, 228, 247, 0.00) 60%),
     linear-gradient(
       145deg,
-      rgba(12, 71, 85, 0.66),
-      rgba(7, 52, 63, 0.78)
+      rgba(12, 66, 85, 0.66),
+      rgba(7, 49, 63, 0.78)
     );
   border-color: rgba(196, 232, 242, 0.20);
   backdrop-filter: blur(20px) saturate(135%);
@@ -617,8 +617,8 @@
       rgba(118, 228, 247, 0.00) 60%),
     linear-gradient(
       145deg,
-      rgba(23, 119, 141, 0.46),
-      rgba(13, 91, 109, 0.56)
+      rgba(23, 111, 141, 0.46),
+      rgba(13, 85, 109, 0.56)
     );
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
@@ -642,8 +642,8 @@
 .course-mastery-tile--locked {
   background: linear-gradient(
     145deg,
-    rgba(13, 47, 55, 0.35),
-    rgba(8, 36, 43, 0.45)
+    rgba(13, 44, 55, 0.35),
+    rgba(8, 34, 43, 0.45)
   );
   border-color: rgba(196, 232, 242, 0.1);
   opacity: 0.5;
@@ -659,7 +659,7 @@
   background: linear-gradient(
     145deg,
     rgba(47, 160, 198, 0.32),
-    rgba(15, 79, 95, 0.52)
+    rgba(15, 74, 95, 0.52)
   );
   border-color: rgba(118, 228, 247, 0.55);
   box-shadow:
@@ -715,8 +715,8 @@
   border: 1px solid rgba(118, 228, 247, 0.6);
   background: linear-gradient(
     180deg,
-    rgba(22, 110, 130, 0.95),
-    rgba(10, 64, 77, 0.97)
+    rgba(22, 103, 130, 0.95),
+    rgba(10, 60, 77, 0.97)
   );
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
@@ -732,8 +732,8 @@
   border-color: rgba(118, 228, 247, 0.95);
   background: linear-gradient(
     180deg,
-    rgba(33, 140, 163, 0.96),
-    rgba(14, 80, 95, 0.98)
+    rgba(33, 130, 163, 0.96),
+    rgba(14, 74, 95, 0.98)
   );
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.22),
@@ -748,7 +748,7 @@
   background: linear-gradient(
     180deg,
     rgba(44, 144, 174, 0.98),
-    rgba(17, 94, 111, 0.99)
+    rgba(17, 87, 111, 0.99)
   );
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.28),
@@ -793,8 +793,8 @@
       rgba(118, 228, 247, 0.00) 58%),
     linear-gradient(
       145deg,
-      rgba(13, 75, 89, 0.78),
-      rgba(7, 52, 64, 0.88)
+      rgba(13, 70, 89, 0.78),
+      rgba(7, 49, 64, 0.88)
     );
   border: 1px solid rgba(118, 228, 247, 0.20);
   border-radius: 22px;
@@ -815,7 +815,7 @@
    outside @layer so they override the Tailwind border/background utilities on
    the nav tokens. */
 .nav-glass-idle {
-  background: rgba(26,105,125, 0.55);
+  background: rgba(26, 100, 125, 0.55);
   border: 1px solid rgba(118, 228, 247, 0.12);
   box-shadow:
     0 0 12px rgba(118, 228, 247, 0.08),
@@ -896,7 +896,7 @@
 /* Secondary buttons — subtle luminous dark glass, scoped to actual buttons. */
 .study-page-bg button.bg-secondary,
 .study-page-aurora button.bg-secondary {
-  background: rgba(26,88,103, 0.72);
+  background: rgba(26, 83, 103, 0.72);
   color: #e6fafe;
   border: 1px solid rgba(118, 228, 247, 0.34);
   border-radius: 8px;
@@ -931,7 +931,7 @@
    without a bg-* class. */
 .study-page-bg button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive),
 .study-page-aurora button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive) {
-  background: rgba(26,88,103, 0.6);
+  background: rgba(26, 83, 103, 0.6);
   border-color: rgba(118, 228, 247, 0.34) !important;
   color: #e6fafe;
   border-radius: 8px;
@@ -989,7 +989,7 @@
   textarea,
   select
 ) {
-  background: rgba(12,70,84, 0.72);
+  background: rgba(12, 66, 84, 0.72);
   border: 1px solid rgba(118, 228, 247, 0.14);
   color: #E4F4F6;
   border-radius: 14px;

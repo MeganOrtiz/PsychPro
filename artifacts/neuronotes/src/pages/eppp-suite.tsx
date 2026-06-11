@@ -94,7 +94,7 @@ const C = {
   cyan: "#76E4F7",
   mist: "#A7F3FF",
   cloud: "#F4FBFF",
-  ink: "#07343e",
+  ink: "#07303e",
   hairline: "rgba(118,228,247,0.16)",
   hairlineStrong: "rgba(118,228,247,0.32)",
   body: "rgba(225,244,250,0.84)",
@@ -299,7 +299,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
         )}
         style={{
           ["--nav-glow" as never]: STUDY_PALETTE.surf,
-          background: `linear-gradient(180deg, rgba(9,54,64,0.26) 0%, rgba(9,54,64,0.44) 55%, rgba(9,54,64,0.66) 100%), url(${smokeBg}), linear-gradient(180deg, ${STUDY_PALETTE.surfaceElev}, ${STUDY_PALETTE.surface})`,
+          background: `linear-gradient(180deg, rgba(9, 50, 64, 0.26) 0%, rgba(9, 50, 64, 0.44) 55%, rgba(9, 50, 64, 0.66) 100%), url(${smokeBg}), linear-gradient(180deg, ${STUDY_PALETTE.surfaceElev}, ${STUDY_PALETTE.surface})`,
           backgroundSize: "cover, cover, cover",
           backgroundPosition: "center, center, center",
           backgroundRepeat: "no-repeat, no-repeat, no-repeat",
@@ -1681,7 +1681,7 @@ const styles = `
   display: inline-flex; align-items: center; gap: 6px;
   padding: 8px 14px; border-radius: 8px;
   font-size: 12.5px; font-weight: 600; text-decoration: none; white-space: nowrap;
-  color: ${C.mist}; border: 1px solid ${C.hairlineStrong}; background: rgba(26,105,125,0.5);
+  color: ${C.mist}; border: 1px solid ${C.hairlineStrong}; background: rgba(26, 100, 125, 0.5);
   transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 .eps-back-app svg { width: 14px; height: 14px; }
@@ -1722,7 +1722,7 @@ const styles = `
 .eps-section-meta { font-size: 13px; font-weight: 600; color: ${C.mist}; }
 .eps-empty {
   border-radius: 16px; padding: 28px; text-align: center; font-size: 14px; color: ${C.muted};
-  border: 1px dashed ${C.hairline}; background: rgba(13,93,111,0.4);
+  border: 1px dashed ${C.hairline}; background: rgba(13, 86, 111, 0.4);
 }
 
 /* ---- Knowledge sub-tab: course-style rail + lessons pane ---- */
@@ -1735,7 +1735,7 @@ const styles = `
   display: flex; flex-direction: column; gap: 8px;
   padding: 10px; border-radius: 14px;
   border: 1px solid rgba(196,232,242,0.16);
-  background: linear-gradient(155deg, rgba(11,69,83,0.62), rgba(7,52,64,0.74));
+  background: linear-gradient(155deg, rgba(11, 65, 83, 0.62), rgba(7, 49, 64, 0.74));
   backdrop-filter: blur(18px) saturate(130%);
   -webkit-backdrop-filter: blur(18px) saturate(130%);
   box-shadow:
@@ -1760,7 +1760,7 @@ const styles = `
     radial-gradient(120% 90% at 50% 0%,
       rgba(118,228,247,0.10) 0%,
       rgba(118,228,247,0.00) 60%),
-    linear-gradient(145deg, rgba(12,71,85,0.66), rgba(7,52,63,0.78));
+    linear-gradient(145deg, rgba(12, 66, 85, 0.66), rgba(7, 49, 63, 0.78));
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
@@ -1776,7 +1776,7 @@ const styles = `
     radial-gradient(120% 90% at 50% 0%,
       rgba(118,228,247,0.16) 0%,
       rgba(118,228,247,0.00) 60%),
-    linear-gradient(145deg, rgba(16,88,105,0.80), rgba(9,61,74,0.88));
+    linear-gradient(145deg, rgba(16, 82, 105, 0.80), rgba(9, 57, 74, 0.88));
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.16),
     inset 0 0 34px -18px rgba(118,228,247,0.50),
@@ -1791,7 +1791,7 @@ const styles = `
     radial-gradient(120% 90% at 50% 0%,
       rgba(118,228,247,0.22) 0%,
       rgba(118,228,247,0.00) 62%),
-    linear-gradient(145deg, rgba(18,93,111,0.84), rgba(10,67,80,0.90));
+    linear-gradient(145deg, rgba(18, 87, 111, 0.84), rgba(10, 62, 80, 0.90));
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.18),
     inset 0 0 36px -16px rgba(118,228,247,0.60),
@@ -1801,7 +1801,7 @@ const styles = `
 .eps-kb-rail-icon {
   display: inline-flex; align-items: center; justify-content: center;
   width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px;
-  background: radial-gradient(circle at 50% 40%, rgba(118,228,247,0.18), rgba(19,117,139,0.55) 70%);
+  background: radial-gradient(circle at 50% 40%, rgba(118,228,247,0.18), rgba(19, 108, 139, 0.55) 70%);
   border: 1px solid rgba(118,228,247,0.28); color: ${C.cyan};
 }
 .eps-kb-rail-item.is-active .eps-kb-rail-icon svg { filter: drop-shadow(0 0 6px rgba(118,228,247,0.85)); }
@@ -1828,7 +1828,7 @@ const styles = `
 .eps-kb-head-icon {
   display: inline-flex; align-items: center; justify-content: center;
   width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px;
-  background: radial-gradient(circle at 50% 40%, rgba(58,224,236,0.18), rgba(19,117,139,0.65) 70%);
+  background: radial-gradient(circle at 50% 40%, rgba(58,224,236,0.18), rgba(19, 108, 139, 0.65) 70%);
   border: 1px solid rgba(118,228,247,0.32); color: ${C.cyan};
 }
 .eps-kb-head-icon svg { width: 20px; height: 20px; filter: drop-shadow(0 0 4px rgba(118,228,247,0.7)); }
@@ -1845,7 +1845,7 @@ const styles = `
     radial-gradient(120% 90% at 50% 0%,
       rgba(118,228,247,0.10) 0%,
       rgba(118,228,247,0.00) 60%),
-    linear-gradient(145deg, rgba(12,71,85,0.66), rgba(7,52,63,0.78));
+    linear-gradient(145deg, rgba(12, 66, 85, 0.66), rgba(7, 49, 63, 0.78));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -1863,7 +1863,7 @@ const styles = `
     radial-gradient(120% 90% at 50% 0%,
       rgba(118,228,247,0.16) 0%,
       rgba(118,228,247,0.00) 60%),
-    linear-gradient(145deg, rgba(16,88,105,0.80), rgba(9,61,74,0.88));
+    linear-gradient(145deg, rgba(16, 82, 105, 0.80), rgba(9, 57, 74, 0.88));
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.16),
     inset 0 0 34px -18px rgba(118,228,247,0.50),
@@ -1873,7 +1873,7 @@ const styles = `
 .eps-kb-lesson-icon {
   display: inline-flex; align-items: center; justify-content: center; align-self: start;
   width: 38px; height: 38px; flex-shrink: 0; border-radius: 10px;
-  background: radial-gradient(circle at 50% 40%, rgba(118,228,247,0.18), rgba(19,117,139,0.55) 70%);
+  background: radial-gradient(circle at 50% 40%, rgba(118,228,247,0.18), rgba(19, 108, 139, 0.55) 70%);
   border: 1px solid rgba(118,228,247,0.28); color: ${C.cyan};
 }
 .eps-kb-lesson-icon svg { width: 17px; height: 17px; }
@@ -1893,7 +1893,7 @@ const styles = `
   border-radius: 16px; padding: 16px 18px;
   background:
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(145deg, rgba(12,73,87,0.74), rgba(7,52,63,0.85));
+    linear-gradient(145deg, rgba(12, 68, 87, 0.74), rgba(7, 49, 63, 0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -1907,7 +1907,7 @@ const styles = `
   border-color: ${C.cyan}5e;
   background:
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.16) 0%, rgba(118,228,247,0.00) 60%),
-    linear-gradient(145deg, rgba(18,95,113,0.84), rgba(11,71,85,0.90));
+    linear-gradient(145deg, rgba(18, 89, 113, 0.84), rgba(11, 66, 85, 0.90));
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.16),
     inset 0 0 38px -18px rgba(118,228,247,0.52),
@@ -1936,7 +1936,7 @@ const styles = `
 .eps-exam-cta svg { width: 15px; height: 15px; }
 .eps-exam-cta:hover { transform: translateY(-1px); background: rgba(118,228,247,0.36); border-color: rgba(118,228,247,0.65); box-shadow: 0 0 28px rgba(118,228,247,0.55), inset 0 1px 0 rgba(255,255,255,0.12); }
 .eps-exam-cta--ghost {
-  color: ${C.mist}; background: rgba(26,105,125,0.55); border: 1px solid ${C.hairlineStrong}; box-shadow: none;
+  color: ${C.mist}; background: rgba(26, 100, 125, 0.55); border: 1px solid ${C.hairlineStrong}; box-shadow: none;
 }
 .eps-exam-cta--ghost:hover { border-color: ${C.cyan}80; color: ${C.cloud}; box-shadow: none; }
 
@@ -1963,7 +1963,7 @@ const styles = `
   border-radius: 12px; padding: 14px 16px;
   background:
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(145deg, rgba(12,73,87,0.74), rgba(7,52,63,0.85));
+    linear-gradient(145deg, rgba(12, 68, 87, 0.74), rgba(7, 49, 63, 0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -2007,7 +2007,7 @@ const styles = `
 .eps-subtab {
   display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
   padding: 9px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; white-space: nowrap;
-  color: ${C.mist}; background: rgba(26,105,125,0.55); border: 1px solid ${C.hairlineStrong};
+  color: ${C.mist}; background: rgba(26, 100, 125, 0.55); border: 1px solid ${C.hairlineStrong};
   transition: transform 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
 .eps-subtab svg { width: 15px; height: 15px; flex-shrink: 0; }
@@ -2034,7 +2034,7 @@ const styles = `
   background:
     radial-gradient(circle at 18% 12%, ${C.cyan}24, transparent 34%),
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(145deg, rgba(12,74,88,0.76), rgba(7,52,64,0.86));
+    linear-gradient(145deg, rgba(12, 69, 88, 0.76), rgba(7, 49, 64, 0.86));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -2053,7 +2053,7 @@ const styles = `
   border-radius: 13px; padding: 13px 14px;
   background:
     radial-gradient(120% 90% at 50% 0%, rgba(118,228,247,0.08) 0%, rgba(118,228,247,0.00) 60%),
-    linear-gradient(145deg, rgba(11,69,83,0.64), rgba(7,50,61,0.76));
+    linear-gradient(145deg, rgba(11, 65, 83, 0.64), rgba(7, 47, 61, 0.76));
   border: 1px solid rgba(196,232,242,0.20);
   backdrop-filter: blur(16px) saturate(130%);
   -webkit-backdrop-filter: blur(16px) saturate(130%);
@@ -2086,7 +2086,7 @@ const styles = `
   padding: clamp(18px, 2.4vw, 26px);
   background:
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(145deg, rgba(12,73,87,0.74), rgba(7,52,63,0.85));
+    linear-gradient(145deg, rgba(12, 68, 87, 0.74), rgba(7, 49, 63, 0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -2099,7 +2099,7 @@ const styles = `
 .eps-build-card.is-active {
   background:
     radial-gradient(circle at 18% 0%, ${C.cyan}22, transparent 36%),
-    linear-gradient(145deg, rgba(19,98,117,0.86), rgba(12,73,87,0.92));
+    linear-gradient(145deg, rgba(19, 92, 117, 0.86), rgba(12, 68, 87, 0.92));
   border-color: ${C.hairlineStrong};
 }
 .eps-build-kicker {
@@ -2143,7 +2143,7 @@ const styles = `
   background:
     linear-gradient(90deg, rgba(118,228,247,0.16), transparent 44%),
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(145deg, rgba(12,73,87,0.74), rgba(7,52,63,0.85));
+    linear-gradient(145deg, rgba(12, 68, 87, 0.74), rgba(7, 49, 63, 0.85));
 }
 .eps-contract-card ul {
   margin: 16px 0 0;
@@ -2164,7 +2164,7 @@ const styles = `
   border-radius: 22px; padding: clamp(40px, 6vw, 72px) clamp(24px, 4vw, 56px);
   background:
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(150deg, rgba(14,80,95,0.78), rgba(8,59,72,0.88));
+    linear-gradient(150deg, rgba(14, 74, 95, 0.78), rgba(8, 56, 72, 0.88));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -2196,7 +2196,7 @@ const styles = `
 .eps-ghost-btn {
   display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
   padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600;
-  color: ${C.cloud}; background: rgba(26,105,125,0.55); border: 1px solid ${C.cyan}40;
+  color: ${C.cloud}; background: rgba(26, 100, 125, 0.55); border: 1px solid ${C.cyan}40;
   transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.3s ease;
 }
 .eps-ghost-btn svg { width: 15px; height: 15px; }
@@ -2208,7 +2208,7 @@ const styles = `
   border-radius: 18px; padding: clamp(20px, 2.6vw, 30px); text-align: center;
   background:
     radial-gradient(circle at 50% 0%, ${C.cyan}26, transparent 46%),
-    linear-gradient(160deg, rgba(13,75,89,0.78), rgba(7,52,64,0.87));
+    linear-gradient(160deg, rgba(13, 70, 89, 0.78), rgba(7, 49, 64, 0.87));
   border: 1px solid rgba(118,228,247,0.3);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -2250,7 +2250,7 @@ const styles = `
   margin-top: clamp(22px, 2.6vw, 32px); border-radius: 18px; padding: clamp(18px, 2.4vw, 26px);
   background:
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(145deg, rgba(12,73,87,0.74), rgba(7,52,63,0.85));
+    linear-gradient(145deg, rgba(12, 68, 87, 0.74), rgba(7, 49, 63, 0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -2272,7 +2272,7 @@ const styles = `
 .eps-notes-area {
   width: 100%; min-height: 180px; resize: vertical; box-sizing: border-box;
   border-radius: 12px; padding: 14px 16px; font-size: 14px; line-height: 1.6;
-  color: ${C.cloud}; background: rgba(9,60,72,0.6); border: 1px solid ${C.hairlineStrong};
+  color: ${C.cloud}; background: rgba(9, 56, 72, 0.6); border: 1px solid ${C.hairlineStrong};
   font-family: inherit;
 }
 .eps-notes-area::placeholder { color: ${C.muted}; }
@@ -2293,7 +2293,7 @@ const styles = `
   border-radius: 12px; padding: 14px 16px;
   background:
     radial-gradient(120% 90% at 50% 0%, rgba(118,228,247,0.08) 0%, rgba(118,228,247,0.00) 60%),
-    linear-gradient(145deg, rgba(11,69,83,0.64), rgba(7,50,61,0.76));
+    linear-gradient(145deg, rgba(11, 65, 83, 0.64), rgba(7, 47, 61, 0.76));
   border: 1px solid rgba(196,232,242,0.20);
   backdrop-filter: blur(16px) saturate(130%);
   -webkit-backdrop-filter: blur(16px) saturate(130%);
@@ -2314,7 +2314,7 @@ const styles = `
 .eps-mq-select {
   appearance: none; cursor: pointer; padding: 9px 30px 9px 14px; border-radius: 10px;
   font-size: 13px; font-weight: 600; color: ${C.cloud};
-  background: rgba(26,105,125,0.7) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2376E4F7' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;
+  background: rgba(26, 100, 125, 0.7) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2376E4F7' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;
   border: 1px solid ${C.hairlineStrong}; max-width: 280px;
 }
 .eps-mq-select:focus { outline: none; border-color: ${C.cyan}80; }
@@ -2323,7 +2323,7 @@ const styles = `
   border-radius: 16px; padding: clamp(16px, 2vw, 22px);
   background:
     radial-gradient(120% 90% at 50% 0%, rgba(118,228,247,0.10), rgba(118,228,247,0) 60%),
-    linear-gradient(145deg, rgba(12,71,85,0.66), rgba(7,52,63,0.78));
+    linear-gradient(145deg, rgba(12, 66, 85, 0.66), rgba(7, 49, 63, 0.78));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);

@@ -258,7 +258,7 @@ export default function DashboardPage() {
             className="rounded-xl p-4 mb-6 flex items-start gap-3 border"
             style={{
               background:
-                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.16) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(12,73,87,0.83), rgba(7,52,63,0.90))",
+                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.16) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(12, 68, 87, 0.83), rgba(7, 49, 63, 0.90))",
               borderColor: "rgba(118,228,247,0.30)",
               backdropFilter: "blur(18px) saturate(135%)",
               WebkitBackdropFilter: "blur(18px) saturate(135%)",
@@ -296,7 +296,7 @@ export default function DashboardPage() {
             className="rounded-xl p-4 mb-6 flex items-start gap-3 border"
             style={{
               background:
-                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(12,73,87,0.79), rgba(7,52,63,0.90))",
+                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(12, 68, 87, 0.79), rgba(7, 49, 63, 0.90))",
               borderColor: "rgba(118,228,247,0.26)",
               backdropFilter: "blur(18px) saturate(135%)",
               WebkitBackdropFilter: "blur(18px) saturate(135%)",
@@ -604,7 +604,7 @@ export default function DashboardPage() {
                     <Tooltip
                       cursor={{ stroke: PALETTE.teal, strokeOpacity: 0.25 }}
                       contentStyle={{
-                        background: "rgba(13,93,111,0.92)",
+                        background: "rgba(13, 86, 111, 0.92)",
                         border: "1px solid rgba(118,228,247,0.25)",
                         borderRadius: 10,
                         color: PALETTE.mist,
@@ -687,7 +687,7 @@ export default function DashboardPage() {
                             borderColor: "rgba(118,228,247,0.35)",
                           }
                         : {
-                            background: "rgba(13,93,111,0.4)",
+                            background: "rgba(13, 86, 111, 0.4)",
                             borderColor: "rgba(118,228,247,0.10)",
                             opacity: 0.55,
                           }
@@ -708,7 +708,7 @@ export default function DashboardPage() {
                             }
                       }
                     >
-                      <Icon className="w-4 h-4" style={{ color: a.earned ? "#05343f" : PALETTE.mistSoft }} />
+                      <Icon className="w-4 h-4" style={{ color: a.earned ? "#05303f" : PALETTE.mistSoft }} />
                     </div>
                     <p className="text-[11px] font-semibold leading-tight" style={{ color: PALETTE.mist }}>
                       {a.label}
@@ -755,7 +755,7 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
-          backgroundImage: `linear-gradient(180deg, rgba(9,54,64,0.26) 0%, rgba(9,54,64,0.44) 55%, rgba(9,54,64,0.66) 100%), url(${smokeBg})`,
+          backgroundImage: `linear-gradient(180deg, rgba(9, 50, 64, 0.26) 0%, rgba(9, 50, 64, 0.44) 55%, rgba(9, 50, 64, 0.66) 100%), url(${smokeBg})`,
           backgroundSize: "cover, cover",
           backgroundPosition: "center, center",
           backgroundRepeat: "no-repeat, no-repeat",

@@ -102,7 +102,7 @@ export const SYSTEM_META: Record<BrainSystem, { label: string; color: string; de
   },
   brainstem: {
     label: "Brainstem",
-    color: "#1c6880",
+    color: "#1c6680",
     description: "Midbrain, pons, and medulla — vital autonomic centers and origin of most cranial nerves.",
   },
   cerebellum: {
@@ -2413,7 +2413,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
     scale: [0.18, 0.08, 0.18],
     displacement: 0.02,
     segments: 3,
-    color: "#1c6880",
+    color: "#1c6680",
     overview:
       "Darkly pigmented strip in the midbrain, named for its melanin-containing neurons. Source of the dopaminergic projections that fuel the basal ganglia and reward learning.",
     functions: [
@@ -2531,7 +2531,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
     scale: [0.35, 0.25, 0.35],
     displacement: 0.04,
     segments: 4,
-    color: "#1c6880",
+    color: "#1c6680",
     overview:
       "Top segment of the brainstem, between the diencephalon and pons. Houses cranial nerve nuclei III and IV, the substantia nigra, and the colliculi for visual and auditory reflexes.",
     functions: [

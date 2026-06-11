@@ -27,13 +27,13 @@
 
 export const STUDY_PALETTE = {
   // Backgrounds — deep cerulean/turquoise stack (RETONED 2026-06-11 per owner:
-  // pulled off the navy/bluer cerulean toward turquoise hue ~191 to match the
-  // locked #76E4F7 accent; deep but reads clearly turquoise, not navy).
-  ink: "#062c35",         // deepest anchor (sidebar / page floor)
-  bg: "#08404d",          // page bg primary (deep cerulean)
-  bgSoft: "#0a4f5e",      // page bg secondary
-  surface: "#115c6c",     // card surface (glass base)
-  surfaceElev: "#186778", // card hover / lifted
+  // nudged off the green-leaning ~191 up to cerulean hue ~196 so surfaces read
+  // turquoise+cerulean, not green and not navy; accents stay locked at #76E4F7).
+  ink: "#062935",         // deepest anchor (sidebar / page floor)
+  bg: "#083b4d",          // page bg primary (deep cerulean)
+  bgSoft: "#0a495e",      // page bg secondary
+  surface: "#11556c",     // card surface (glass base)
+  surfaceElev: "#186078", // card hover / lifted
 
   // Mid-cerulean — borders, dividers, structural lines
   steel: "#3196AF",       // cerulean

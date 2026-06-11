@@ -45,7 +45,7 @@ export default function TopicDetailPage({ params }: Props) {
       onClick: () => navigate(inEppp ? epppTopicModePath(topicId, "flashcards") : `/topics/${topicId}/flashcards`),
       testId: "button-flashcards",
       accent: "#68CCDE",
-      accentDeep: "#1e7a8e",
+      accentDeep: "#1e728e",
       locked: false,
     },
     {
@@ -57,7 +57,7 @@ export default function TopicDetailPage({ params }: Props) {
       onClick: () => navigate(inEppp ? epppTopicModePath(topicId, "quiz") : `/topics/${topicId}/quiz`),
       testId: "button-quiz",
       accent: "#68CCDE",
-      accentDeep: "#1e7a8e",
+      accentDeep: "#1e728e",
       locked: !!ent?.quizLocked,
     },
     {
@@ -69,7 +69,7 @@ export default function TopicDetailPage({ params }: Props) {
       onClick: () => navigate(inEppp ? epppTopicModePath(topicId, "study-guide") : `/topics/${topicId}/study-guide`),
       testId: "button-study-guide",
       accent: "#68CCDE",
-      accentDeep: "#1e7a8e",
+      accentDeep: "#1e728e",
       locked: !!ent?.studyGuideLocked,
     },
     {
@@ -81,7 +81,7 @@ export default function TopicDetailPage({ params }: Props) {
       onClick: () => navigate(inEppp ? epppTopicModePath(topicId, "exam") : `/topics/${topicId}/exam`),
       testId: "button-practice-exam",
       accent: "#68CCDE",
-      accentDeep: "#1e7a8e",
+      accentDeep: "#1e728e",
       locked: !!ent?.examLocked,
     },
   ];
