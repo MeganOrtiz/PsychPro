@@ -23,9 +23,7 @@
 // stats (no backend). Keep these wrapped in StudySurface so they match.
 // =============================================================================
 import { useEffect, useMemo, useRef, useState } from "react";
-import { authHeaders } from "@/lib/auth-headers";
 import { useLocation } from "wouter";
-import { useUser } from "@clerk/clerk-react";
 import {
   BookOpen,
   Brain,
@@ -47,7 +45,6 @@ import {
 } from "lucide-react";
 import { useQueries } from "@tanstack/react-query";
 import smokeBg from "@/assets/bg/brain-clouds.png";
-import spotlightPortrait from "@/assets/spotlight/featured.png";
 import journeyBrain from "@/assets/hero/dashboard-superior-brain.png";
 import {
   useGetDashboardSummary,
@@ -743,112 +740,12 @@ export default function DashboardPage() {
 // ---------------------------------------------------------------------------
 // SpotlightCard — tall right-rail card matching the reference comp.
 // Smoky brain backdrop bleeds into the card top, centered star + "Spotlight"
-// wordmark, circular photo with cyan aura, name + credentials, and a quiet
-// FEATURED WORK / share-icon footer that links into /featured-work.
-//
-// Uses the public /api/featured-work/spotlight endpoint (no auth required) —
-// the API rotates a real approved community submission daily. When no
-// submission is available we fall back to the signed-in user's profile so
-// the card never shows a placeholder name.
+// wordmark, a glowing "Coming Soon" disc, a community-submission call to
+// action, and a quiet FEATURED WORK / share-icon footer that links into
+// /featured-work.
 // ---------------------------------------------------------------------------
-type SpotlightSubmission = {
-  id: number;
-  workType: string;
-  title: string;
-  abstract: string;
-  submitter: {
-    displayName: string;
-    role: string | null;
-    institution: string | null;
-    profilePhotoUrl: string | null;
-  };
-};
-
-// Pretty-print the workType taxonomy slug ("dissertation", "case_study", …)
-// so the spotlight badge reads naturally without a separate lookup table.
-function formatWorkType(slug: string | undefined | null): string {
-  if (!slug) return "Featured";
-  return slug
-    .split(/[_\s-]+/)
-    .filter(Boolean)
-    .map((w) => w[0]!.toUpperCase() + w.slice(1).toLowerCase())
-    .join(" ");
-}
-
-// Mirror of profilePhotoSrc in app-layout: object-storage paths (`/objects/...`)
-// must be prefixed with `/api/storage` so the dev/prod proxy routes them to
-// the api-server's storage endpoint. Absolute http(s) URLs pass through.
-function resolveSpotlightPhoto(path: string | null | undefined): string | undefined {
-  if (!path) return undefined;
-  if (path.startsWith("http")) return path;
-  if (path.startsWith("/objects/")) return `/api/storage${path}`;
-  return path;
-}
 
 function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
-  const [spot, setSpot] = useState<SpotlightSubmission | null>(null);
-  const [viewerProfilePhoto, setViewerProfilePhoto] = useState<string | null>(null);
-  const { user } = useUser();
-
-  useEffect(() => {
-    let cancelled = false;
-    fetch("/api/featured-work/spotlight")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => { if (!cancelled && d) setSpot(d); })
-      .catch(() => {});
-    return () => { cancelled = true; };
-  }, []);
-
-  // Pull the viewer's own /api/profile/me photo so the no-spotlight fallback
-  // can use their uploaded portrait before resorting to the Clerk avatar.
-  useEffect(() => {
-    let cancelled = false;
-    async function load() {
-      try {
-        const res = await fetch("/api/profile/me", { headers: await authHeaders() });
-        if (!res.ok) return;
-        const data = await res.json();
-        if (cancelled) return;
-        setViewerProfilePhoto(typeof data?.profilePhotoUrl === "string" ? data.profilePhotoUrl : null);
-      } catch {
-        /* silent — avatar falls through to Clerk image or initial */
-      }
-    }
-    load();
-    return () => { cancelled = true; };
-  }, []);
-
-  const viewerName =
-    user?.fullName ||
-    [user?.firstName, user?.lastName].filter(Boolean).join(" ").trim() ||
-    user?.username ||
-    user?.primaryEmailAddress?.emailAddress?.split("@")[0] ||
-    "PsychPro Member";
-  const viewerAvatar = user?.imageUrl ?? undefined;
-  const viewerProfilePhotoSrc = resolveSpotlightPhoto(viewerProfilePhoto);
-
-  const featuredName = spot ? spot.submitter.displayName : viewerName;
-  const featuredRole = spot ? (spot.submitter.role ?? "Contributor") : "PsyD Candidate";
-  const featuredInstitution = spot
-    ? (spot.submitter.institution ?? "")
-    : "Clinical Neuropsychology";
-
-  // Avatar fallback chain:
-  //   When a spotlight submission exists: use ONLY the submitter's uploaded
-  //   portrait (or the initial-letter circle when absent). We deliberately do
-  //   NOT mix in the viewer's photo here — display-name equality isn't a
-  //   reliable identity check, and the spotlight payload doesn't expose a
-  //   stable user id we can match against.
-  //   When no submission has loaded: fall back to the viewer's own profile
-  //   photo, then their Clerk avatar, so the card never feels empty.
-  //   Final safety net: the bundled spotlightPortrait. Per product call,
-  //   we always want a face on this card — never the initial-letter
-  //   circle — so the portrait is the last resort in both branches.
-  const avatarImage =
-    (spot
-      ? resolveSpotlightPhoto(spot.submitter.profilePhotoUrl)
-      : viewerProfilePhotoSrc ?? viewerAvatar) ?? spotlightPortrait;
-
   return (
     <StudySurface tone="dark" fillHeight className="w-full" innerClassName="relative overflow-hidden p-7 text-white flex flex-col">
       {/* Smoky brain backdrop bleeds through the entire card — same atmosphere
@@ -901,7 +798,7 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
             textShadow: "0 1px 6px rgba(0,0,0,0.5)",
           }}
         >
-          Highlighting the next generation of clinicians and researchers.
+          Showcase of work created by members of the PsychPro community.
         </p>
 
         {/* Featured person — circular avatar with cyan spotlight glow.
@@ -932,117 +829,40 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
               }}
             />
             <div
-              className="relative w-32 h-32 rounded-full overflow-hidden"
+              className="relative w-32 h-32 rounded-full flex items-center justify-center text-center px-3"
               style={{
+                background: `radial-gradient(circle at 50% 35%, ${PALETTE.surf}33, ${PALETTE.teal}1f 60%, transparent 82%)`,
                 boxShadow: `0 0 0 3px ${PALETTE.surf}cc, 0 0 32px 6px ${PALETTE.surf}66, inset 0 0 0 1px rgba(255,255,255,0.18)`,
                 zIndex: 1,
               }}
               data-testid="spotlight-avatar"
             >
-              {avatarImage ? (
-                <img
-                  src={avatarImage}
-                  alt={`${featuredName} — featured spotlight`}
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-              ) : (
-                <div
-                  aria-hidden
-                  className="absolute inset-0 flex items-center justify-center text-3xl font-light"
-                  style={{
-                    background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
-                    color: PALETTE.cloud,
-                  }}
-                >
-                  {(featuredName ?? "?").slice(0, 1).toUpperCase()}
-                </div>
-              )}
+              <span
+                className="text-lg font-semibold leading-tight tracking-wide text-white"
+                style={{ textShadow: `0 0 14px ${PALETTE.surf}aa, 0 2px 8px rgba(0,0,0,0.55)` }}
+              >
+                Coming
+                <br />
+                Soon
+              </span>
             </div>
           </div>
           <p
-            className="text-xl font-semibold tracking-tight text-center px-2"
-            data-testid="spotlight-name"
-            style={{ textShadow: "0 2px 10px rgba(0,0,0,0.55)" }}
+            className="text-sm text-center px-3 leading-relaxed"
+            data-testid="spotlight-cta-text"
+            style={{ color: `${PALETTE.mist}d9`, textShadow: "0 1px 6px rgba(0,0,0,0.5)" }}
           >
-            {featuredName}
+            Submit your dissertation, research, or presentation for an
+            opportunity to be featured!
           </p>
-          {featuredRole && (
-            <p
-              className="text-sm mt-1 text-center"
-              style={{ color: `${PALETTE.mist}cc`, textShadow: "0 1px 6px rgba(0,0,0,0.5)" }}
-            >
-              {featuredRole}
-            </p>
-          )}
-          {featuredInstitution && (
-            <p
-              className="text-sm text-center"
-              style={{ color: `${PALETTE.mist}cc`, textShadow: "0 1px 6px rgba(0,0,0,0.5)" }}
-            >
-              {featuredInstitution}
-            </p>
-          )}
         </div>
 
-        {/* Submission details — work-type chip + title + truncated abstract.
-            Only renders when a real spotlight submission has loaded so the
-            empty/fallback state stays clean. The whole block is clickable
-            and links into /featured-work?submission=<id>. */}
-        {spot && (spot.title || spot.abstract) && (
-          <button
-            type="button"
-            onClick={() => onCta(spot.id)}
-            className="group block w-full mt-6 text-left rounded-md border backdrop-blur-md p-4 transition-all hover:bg-white/[0.08] hover:border-[color:var(--nav-glow,#76e4f7)]/55"
-            style={{
-              background: "rgba(255,255,255,0.04)",
-              borderColor: `${PALETTE.surf}33`,
-              boxShadow: "inset 0 1px 0 0 rgba(255,255,255,0.08)",
-            }}
-            data-testid="spotlight-submission-detail"
-          >
-            <div className="flex items-center justify-between mb-2">
-              <span
-                className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] px-2 py-0.5 rounded-full border"
-                style={{
-                  background: `${PALETTE.surf}1c`,
-                  borderColor: `${PALETTE.surf}55`,
-                  color: PALETTE.mist,
-                }}
-              >
-                <Sparkles className="w-2.5 h-2.5" />
-                {formatWorkType(spot.workType)}
-              </span>
-              <ArrowUpRight
-                className="w-4 h-4 opacity-60 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                style={{ color: PALETTE.mist }}
-              />
-            </div>
-            {spot.title && (
-              <p
-                className="text-sm font-semibold leading-snug text-white line-clamp-2"
-                style={{ textShadow: "0 1px 6px rgba(0,0,0,0.45)" }}
-              >
-                {spot.title}
-              </p>
-            )}
-            {spot.abstract && (
-              <p
-                className="text-xs mt-1.5 leading-relaxed line-clamp-3"
-                style={{ color: `${PALETTE.mist}b8` }}
-              >
-                {spot.abstract}
-              </p>
-            )}
-          </button>
-        )}
-
         {/* Footer — muted FEATURED WORK label on the left, share icon right.
-            Both targets link into /featured-work (deep-linked to the
-            current spotlight submission when one exists). */}
+            Both targets link into /featured-work. */}
         <div className="mt-8 pt-5 flex items-center justify-between border-t border-white/10">
           <button
             type="button"
-            onClick={() => onCta(spot?.id)}
+            onClick={() => onCta()}
             className="text-[10px] font-semibold tracking-[0.32em] uppercase transition-colors hover:text-white"
             style={{ color: `${PALETTE.mistSoft}cc` }}
             data-testid="spotlight-footer-label"
@@ -1051,7 +871,7 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
           </button>
           <button
             type="button"
-            onClick={() => onCta(spot?.id)}
+            onClick={() => onCta()}
             className="w-8 h-8 rounded-md flex items-center justify-center transition-all border"
             style={{
               background: `${PALETTE.surf}14`,
