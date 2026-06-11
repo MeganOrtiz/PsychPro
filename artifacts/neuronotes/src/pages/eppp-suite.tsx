@@ -1121,17 +1121,27 @@ function loadSavedNotes(): SavedNote[] {
   try {
     const parsed = JSON.parse(raw);
     if (Array.isArray(parsed)) {
-      return parsed.filter(
-        (n): n is SavedNote =>
-          !!n && typeof n.id === "string" && typeof n.text === "string",
-      );
+      return parsed
+        .filter(
+          (n): n is SavedNote =>
+            !!n && typeof n.id === "string" && typeof n.text === "string",
+        )
+        .map((n) => ({
+          ...n,
+          savedAt: typeof n.savedAt === "number" ? n.savedAt : Date.now(),
+        }));
     }
   } catch {
     // Legacy single-string scratchpad — fall through to migration below.
   }
-  return raw.trim()
-    ? [{ id: `legacy-${Date.now()}`, text: raw, savedAt: Date.now() }]
-    : [];
+  if (!raw.trim()) return [];
+  // Legacy single-string scratchpad: migrate it into one saved note and
+  // persist the JSON-array format so we only ever do this conversion once.
+  const migrated: SavedNote[] = [
+    { id: `legacy-${Date.now()}`, text: raw, savedAt: Date.now() },
+  ];
+  persistSavedNotes(migrated);
+  return migrated;
 }
 
 function persistSavedNotes(notes: SavedNote[]) {
@@ -1235,18 +1245,6 @@ function RapidReviewPanel({ onNavigate }: { onNavigate: (to: string) => void }) 
     [allTopics],
   );
 
-  const [notes, setNotes] = useState("");
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    setNotes(window.localStorage.getItem(RAPID_REVIEW_NOTES_KEY) ?? "");
-  }, []);
-  const handleNotesChange = (v: string) => {
-    setNotes(v);
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem(RAPID_REVIEW_NOTES_KEY, v);
-    }
-  };
-
   const handlePrint = () => {
     if (typeof window === "undefined") return;
     const w = window.open("", "_blank", "width=820,height=900");
@@ -1254,14 +1252,18 @@ function RapidReviewPanel({ onNavigate }: { onNavigate: (to: string) => void }) 
     const esc = (s: string) =>
       s.replace(/[&<>]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[ch] as string));
     const list = guides.map((g) => `<li>${esc(g.name)}</li>`).join("");
+    const savedNotes = loadSavedNotes();
+    const notesHtml = savedNotes.length
+      ? savedNotes.map((n) => `<div class="notes">${esc(n.text)}</div>`).join("")
+      : `<div class="notes"></div>`;
     w.document.write(
       `<!doctype html><html><head><title>EPPP Quick Reference Guides</title>` +
         `<style>body{font-family:Georgia,serif;margin:40px;color:#111;line-height:1.55}` +
         `h1{font-size:22px}h2{font-size:16px;margin-top:28px}ul{padding-left:20px}` +
-        `.notes{white-space:pre-wrap;border:1px solid #ccc;border-radius:8px;padding:16px;min-height:220px}` +
+        `.notes{white-space:pre-wrap;border:1px solid #ccc;border-radius:8px;padding:16px;min-height:80px;margin-bottom:10px}` +
         `</style></head><body><h1>EPPP Quick Reference Guides</h1>` +
         `<h2>Quick Reference Guides</h2><ul>${list}</ul>` +
-        `<h2>My Notes</h2><div class="notes">${esc(notes)}</div></body></html>`,
+        `<h2>My Notes</h2>${notesHtml}</body></html>`,
     );
     w.document.close();
     w.focus();
@@ -1316,26 +1318,7 @@ function RapidReviewPanel({ onNavigate }: { onNavigate: (to: string) => void }) 
           </div>
         )}
 
-        <section className="eps-notes" data-testid="eppp-rapid-review-notes">
-          <div className="eps-notes-head">
-            <span className="eps-notes-icon">
-              <NotebookPen aria-hidden />
-            </span>
-            <div>
-              <h2 className="eps-notes-title">My Notes</h2>
-              <p className="eps-notes-sub">
-                Your private, high-yield scratchpad. Saved automatically on this device.
-              </p>
-            </div>
-          </div>
-          <textarea
-            className="eps-notes-area"
-            value={notes}
-            onChange={(e) => handleNotesChange(e.target.value)}
-            placeholder="Jot down mnemonics, formulas, and the facts you keep forgetting…"
-            data-testid="eppp-rapid-review-notes-input"
-          />
-        </section>
+        <MyNotesScratchpad />
       </div>
     </div>
   );
@@ -1434,51 +1417,20 @@ function ReflectionsPanel() {
 }
 
 // ---- My Notes -------------------------------------------------------------
-// A private write-in scratchpad persisted locally on the device. Shares its
+// A private note-taking scratchpad persisted locally on the device. Shares its
 // storage key with the Quick Reference Guides tab so the same notes surface in
 // both places. Nothing here is sent to a server.
 function MyNotesPanel() {
-  const [notes, setNotes] = useState("");
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    setNotes(window.localStorage.getItem(RAPID_REVIEW_NOTES_KEY) ?? "");
-  }, []);
-  const handleNotesChange = (v: string) => {
-    setNotes(v);
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem(RAPID_REVIEW_NOTES_KEY, v);
-    }
-  };
-
   return (
     <div className="study-page-bg eps-panel" data-testid="eppp-panel-my-notes">
       <div className="eps-shell">
         <PanelHead
           eyebrow="JOURNAL"
           title="My Notes"
-          subtitle="Your private, high-yield scratchpad. Saved automatically on this device only — never sent to a server."
+          subtitle="Write down thoughts for now and later recall"
         />
 
-        <section className="eps-notes" data-testid="eppp-my-notes">
-          <div className="eps-notes-head">
-            <span className="eps-notes-icon">
-              <NotebookPen aria-hidden />
-            </span>
-            <div>
-              <h2 className="eps-notes-title">My Notes</h2>
-              <p className="eps-notes-sub">
-                Your private, high-yield scratchpad. Saved automatically on this device.
-              </p>
-            </div>
-          </div>
-          <textarea
-            className="eps-notes-area"
-            value={notes}
-            onChange={(e) => handleNotesChange(e.target.value)}
-            placeholder="Jot down mnemonics, formulas, and the facts you keep forgetting…"
-            data-testid="eppp-my-notes-input"
-          />
-        </section>
+        <MyNotesScratchpad />
       </div>
     </div>
   );
@@ -2207,6 +2159,25 @@ const styles = `
 }
 .eps-notes-area::placeholder { color: ${C.muted}; }
 .eps-notes-area:focus { outline: none; border-color: ${C.cyan}80; box-shadow: 0 0 0 3px rgba(118,228,247,0.12); }
+.eps-notes-actions { display: flex; justify-content: flex-end; margin-top: 12px; }
+.eps-save-btn {
+  display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
+  border-radius: 8px; padding: 9px 18px; font-size: 13px; font-weight: 700;
+  color: ${C.ink}; background: ${C.cyan}; border: 1px solid ${C.cyan};
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+.eps-save-btn svg { width: 15px; height: 15px; }
+.eps-save-btn:hover { transform: translateY(-1px); box-shadow: 0 0 22px -4px ${C.cyan}; }
+.eps-save-btn:active { transform: translateY(0); box-shadow: 0 0 26px -4px ${C.cyan}; }
+.eps-save-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+.eps-notes-saved { display: flex; flex-direction: column; gap: 12px; margin-top: 18px; }
+.eps-note-card {
+  border-radius: 12px; padding: 14px 16px;
+  background: rgba(4,21,29,0.55); border: 1px solid ${C.hairlineStrong};
+}
+.eps-note-text { margin: 0; font-size: 14px; line-height: 1.6; color: ${C.cloud}; white-space: pre-wrap; }
+.eps-note-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px; }
+.eps-note-date { font-size: 12px; font-weight: 600; color: ${C.muted}; }
 
 /* ---- Missed Questions ---- */
 .eps-mq-filters { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 18px; }
