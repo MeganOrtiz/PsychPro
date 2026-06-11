@@ -815,10 +815,26 @@ components:
           type: ["string", "null"]
         referralSource:
           type: ["string", "null"]
+        learnerRole:
+          type: ["string", "null"]
+        learningGoals:
+          type: array
+          items:
+            type: string
+        studyFocus:
+          type: ["string", "null"]
+        epppInterest:
+          type: ["string", "null"]
+        selectedTier:
+          type: ["string", "null"]
+        selectedProduct:
+          type: ["string", "null"]
         subscriptionStatus:
           type: string
         onboardingComplete:
           type: boolean
+        onboardingCompletedAt:
+          type: ["string", "null"]
         stripeCustomerId:
           type: ["string", "null"]
         stripeSubscriptionId:
@@ -829,6 +845,7 @@ components:
         - id
         - subscriptionStatus
         - onboardingComplete
+        - learningGoals
 
     UpsertUserProfileBody:
       type: object
@@ -842,6 +859,20 @@ components:
         degree:
           type: string
         referralSource:
+          type: string
+        learnerRole:
+          type: string
+        learningGoals:
+          type: array
+          items:
+            type: string
+        studyFocus:
+          type: string
+        epppInterest:
+          type: string
+        selectedTier:
+          type: string
+        selectedProduct:
           type: string
         onboardingComplete:
           type: boolean

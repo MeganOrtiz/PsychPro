@@ -11,6 +11,71 @@ const router = Router();
 // for backward compatibility with older clients, but no new gating uses it.
 const FREE_LIMIT = 10;
 
+// --- onboarding field sanitizers -------------------------------------------
+// The in-depth onboarding flow (Task #145) sends free-form-ish answers chosen
+// from fixed client option sets. We don't hard-validate against an allow-list
+// (that would couple the server to the client copy and break when options are
+// reworded), but we DO clamp shape + length so nothing unbounded lands in the
+// DB.
+const MAX_FIELD_LEN = 120;
+const MAX_GOALS = 24;
+
+function cleanStr(v: unknown): string | undefined {
+  if (typeof v !== "string") return undefined;
+  const trimmed = v.trim();
+  if (!trimmed) return undefined;
+  return trimmed.slice(0, MAX_FIELD_LEN);
+}
+
+// learningGoals is stored as a JSON-encoded string[] in a single text column.
+function encodeGoals(v: unknown): string | undefined {
+  if (!Array.isArray(v)) return undefined;
+  const goals = Array.from(
+    new Set(
+      v
+        .map((g) => (typeof g === "string" ? g.trim().slice(0, MAX_FIELD_LEN) : ""))
+        .filter((g) => g.length > 0),
+    ),
+  ).slice(0, MAX_GOALS);
+  return JSON.stringify(goals);
+}
+
+function decodeGoals(v: unknown): string[] {
+  if (typeof v !== "string" || !v) return [];
+  try {
+    const parsed = JSON.parse(v);
+    if (Array.isArray(parsed)) {
+      return parsed.filter((g): g is string => typeof g === "string");
+    }
+  } catch {
+    // legacy / malformed value — treat as empty rather than throwing
+  }
+  return [];
+}
+
+function serializeProfile(user: typeof usersTable.$inferSelect) {
+  return {
+    id: user.id,
+    email: user.email,
+    role: user.role,
+    goal: user.goal,
+    degree: user.degree,
+    referralSource: user.referralSource,
+    learnerRole: user.learnerRole,
+    learningGoals: decodeGoals(user.learningGoals),
+    studyFocus: user.studyFocus,
+    epppInterest: user.epppInterest,
+    selectedTier: user.selectedTier,
+    selectedProduct: user.selectedProduct,
+    subscriptionStatus: user.subscriptionStatus,
+    onboardingComplete: user.onboardingComplete,
+    onboardingCompletedAt: user.onboardingCompletedAt?.toISOString() ?? null,
+    stripeCustomerId: user.stripeCustomerId,
+    stripeSubscriptionId: user.stripeSubscriptionId,
+    createdAt: user.createdAt?.toISOString(),
+  };
+}
+
 router.get("/users/profile", async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = requireUserId(req, res);
@@ -30,19 +95,7 @@ router.get("/users/profile", async (req: Request, res: Response): Promise<void> 
         usageCount: 0,
       }).returning();
     }
-    res.json({
-      id: user.id,
-      email: user.email,
-      role: user.role,
-      goal: user.goal,
-      degree: user.degree,
-      referralSource: user.referralSource,
-      subscriptionStatus: user.subscriptionStatus,
-      onboardingComplete: user.onboardingComplete,
-      stripeCustomerId: user.stripeCustomerId,
-      stripeSubscriptionId: user.stripeSubscriptionId,
-      createdAt: user.createdAt?.toISOString(),
-    });
+    res.json(serializeProfile(user));
   } catch (err) {
     req.log.error({ err }, "Error getting user profile");
     res.status(500).json({ error: "Internal server error" });
@@ -53,42 +106,68 @@ router.post("/users/profile", async (req: Request, res: Response): Promise<void>
   try {
     const userId = requireUserId(req, res);
     if (!userId) return;
-    const { email, role, goal, degree, referralSource, onboardingComplete } = req.body;
+    const {
+      email,
+      role,
+      goal,
+      degree,
+      referralSource,
+      learnerRole,
+      learningGoals,
+      studyFocus,
+      epppInterest,
+      selectedTier,
+      selectedProduct,
+      onboardingComplete,
+    } = req.body;
+
+    // Build a partial column set: only fields explicitly present in the body
+    // are written, so progressive saves during the multi-step flow never clear
+    // answers captured by an earlier step.
+    const fields: Partial<typeof usersTable.$inferInsert> = {};
+    const assign = (key: keyof typeof usersTable.$inferInsert, value: string | undefined) => {
+      if (value !== undefined) fields[key] = value as never;
+    };
+    assign("email", cleanStr(email));
+    assign("role", cleanStr(role));
+    assign("goal", cleanStr(goal));
+    assign("degree", cleanStr(degree));
+    assign("referralSource", cleanStr(referralSource));
+    assign("learnerRole", cleanStr(learnerRole));
+    assign("learningGoals", encodeGoals(learningGoals));
+    assign("studyFocus", cleanStr(studyFocus));
+    assign("epppInterest", cleanStr(epppInterest));
+    assign("selectedTier", cleanStr(selectedTier));
+    assign("selectedProduct", cleanStr(selectedProduct));
+    if (typeof onboardingComplete === "boolean") {
+      fields.onboardingComplete = onboardingComplete;
+      // Stamp the completion time only when the flag flips to true. Re-running
+      // onboarding to edit answers (which posts onboardingComplete=true again)
+      // preserves the original timestamp via the row's existing value.
+      if (onboardingComplete) fields.onboardingCompletedAt = new Date();
+    }
+
     const existing = await db.select().from(usersTable).where(eq(usersTable.id, userId));
     let user;
     if (existing.length === 0) {
       [user] = await db.insert(usersTable).values({
         id: userId,
-        email,
-        role,
-        goal,
-        degree,
-        referralSource,
-        onboardingComplete: onboardingComplete ?? true,
+        ...fields,
+        onboardingComplete: fields.onboardingComplete ?? false,
         subscriptionStatus: "free",
         isAdmin: false,
         usageCount: 0,
       }).returning();
-    } else {
+    } else if (Object.keys(fields).length > 0) {
       [user] = await db
         .update(usersTable)
-        .set({ email, role, goal, degree, referralSource, onboardingComplete })
+        .set(fields)
         .where(eq(usersTable.id, userId))
         .returning();
+    } else {
+      user = existing[0];
     }
-    res.json({
-      id: user.id,
-      email: user.email,
-      role: user.role,
-      goal: user.goal,
-      degree: user.degree,
-      referralSource: user.referralSource,
-      subscriptionStatus: user.subscriptionStatus,
-      onboardingComplete: user.onboardingComplete,
-      stripeCustomerId: user.stripeCustomerId,
-      stripeSubscriptionId: user.stripeSubscriptionId,
-      createdAt: user.createdAt?.toISOString(),
-    });
+    res.json(serializeProfile(user));
   } catch (err) {
     req.log.error({ err }, "Error upserting user profile");
     res.status(500).json({ error: "Internal server error" });

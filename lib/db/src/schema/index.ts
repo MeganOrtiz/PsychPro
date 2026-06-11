@@ -22,6 +22,17 @@ export const usersTable = pgTable("users", {
   // tracks the Master/Scholar sub). Null for one-time buyers / non-EPPP users.
   epppSubscriptionId: text("eppp_subscription_id"),
   onboardingComplete: boolean("onboarding_complete").notNull().default(false),
+  onboardingCompletedAt: timestamp("onboarding_completed_at"),
+  // In-depth onboarding answers (Task #145). learnerRole/studyFocus/epppInterest
+  // are single-select strings; learningGoals is a JSON-encoded string[]; the
+  // selectedTier/selectedProduct capture the plan the user chose on the tier
+  // step (free|pro|scholar|eppp + a human-readable product label).
+  learnerRole: text("learner_role"),
+  learningGoals: text("learning_goals"),
+  studyFocus: text("study_focus"),
+  epppInterest: text("eppp_interest"),
+  selectedTier: text("selected_tier"),
+  selectedProduct: text("selected_product"),
   usageCount: integer("usage_count").notNull().default(0),
   progressScore: integer("progress_score").notNull().default(0),
   isAdmin: boolean("is_admin").notNull().default(false),

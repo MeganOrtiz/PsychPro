@@ -12,5 +12,11 @@ export interface UpsertUserProfileBody {
   goal?: string;
   degree?: string;
   referralSource?: string;
+  learnerRole?: string;
+  learningGoals?: string[];
+  studyFocus?: string;
+  epppInterest?: string;
+  selectedTier?: string;
+  selectedProduct?: string;
   onboardingComplete?: boolean;
 }

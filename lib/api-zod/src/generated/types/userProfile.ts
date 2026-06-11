@@ -18,8 +18,21 @@ export interface UserProfile {
   degree?: string | null;
   /** @nullable */
   referralSource?: string | null;
+  /** @nullable */
+  learnerRole?: string | null;
+  learningGoals: string[];
+  /** @nullable */
+  studyFocus?: string | null;
+  /** @nullable */
+  epppInterest?: string | null;
+  /** @nullable */
+  selectedTier?: string | null;
+  /** @nullable */
+  selectedProduct?: string | null;
   subscriptionStatus: string;
   onboardingComplete: boolean;
+  /** @nullable */
+  onboardingCompletedAt?: string | null;
   /** @nullable */
   stripeCustomerId?: string | null;
   /** @nullable */

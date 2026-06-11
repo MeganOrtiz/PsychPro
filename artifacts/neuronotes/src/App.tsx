@@ -6,6 +6,7 @@ import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ClerkTokenBridge } from "@/components/auth/clerk-token-bridge";
 import { RequireSignedIn } from "@/components/auth/require-signed-in";
+import { RequireOnboarded } from "@/components/auth/require-onboarded";
 import SignInPage from "@/pages/sign-in";
 import SignUpPage from "@/pages/sign-up";
 import LandingPage from "@/pages/landing";
@@ -94,93 +95,99 @@ function AppRouter() {
       {import.meta.env.DEV ? <Route path="/__crash-test" component={CrashTestPage} /> : null}
       <Route path="/eppp">
         {() => (
-          <RequireSignedIn>
+          <RequireOnboarded>
             <EpppPage />
-          </RequireSignedIn>
+          </RequireOnboarded>
         )}
       </Route>
       <Route path="/eppp/suite/:tab?">
         {(params) => (
-          <RequireSignedIn>
+          <RequireOnboarded>
             <EpppSuitePage tab={params.tab} />
-          </RequireSignedIn>
+          </RequireOnboarded>
         )}
       </Route>
       <Route path="/eppp/dashboard">
         {() => (
-          <RequireSignedIn>
+          <RequireOnboarded>
             <EpppSuitePage tab="performance-analytics" />
-          </RequireSignedIn>
+          </RequireOnboarded>
         )}
       </Route>
       <Route path="/eppp/skills">
         {() => (
-          <RequireSignedIn>
+          <RequireOnboarded>
             <EpppSuitePage tab="part-2-skills" />
-          </RequireSignedIn>
+          </RequireOnboarded>
         )}
       </Route>
       <Route path="/eppp/clinical-cases">
         {() => (
-          <RequireSignedIn>
+          <RequireOnboarded>
             <EpppSuitePage tab="clinical-cases" />
-          </RequireSignedIn>
+          </RequireOnboarded>
         )}
       </Route>
       <Route path="/eppp/rapid-review">
         {() => (
-          <RequireSignedIn>
+          <RequireOnboarded>
             <EpppSuitePage tab="rapid-review" />
-          </RequireSignedIn>
+          </RequireOnboarded>
         )}
       </Route>
       <Route path="/eppp/topics/:id">
         {(params) => (
-          <RequireSignedIn>
+          <RequireOnboarded>
             <TopicDetailPage params={params} />
-          </RequireSignedIn>
+          </RequireOnboarded>
         )}
       </Route>
       <Route path="/eppp/topics/:id/flashcards">
         {(params) => (
-          <RequireSignedIn>
+          <RequireOnboarded>
             <FlashcardsPage params={params} />
-          </RequireSignedIn>
+          </RequireOnboarded>
         )}
       </Route>
       <Route path="/eppp/topics/:id/quiz">
         {(params) => (
-          <RequireSignedIn>
+          <RequireOnboarded>
             <QuizPage params={params} />
-          </RequireSignedIn>
+          </RequireOnboarded>
         )}
       </Route>
       <Route path="/eppp/topics/:id/study-guide">
         {(params) => (
-          <RequireSignedIn>
+          <RequireOnboarded>
             <StudyGuidePage params={params} />
-          </RequireSignedIn>
+          </RequireOnboarded>
         )}
       </Route>
       <Route path="/eppp/topics/:id/exam">
         {(params) => (
-          <RequireSignedIn>
+          <RequireOnboarded>
             <PracticeExamPage params={params} />
-          </RequireSignedIn>
+          </RequireOnboarded>
         )}
       </Route>
       <Route path="/eppp/courses/:category/mastery-exam">
         {(params) => (
-          <RequireSignedIn>
+          <RequireOnboarded>
             <CourseMasteryExamPage params={params} />
+          </RequireOnboarded>
+        )}
+      </Route>
+      <Route path="/onboarding">
+        {() => (
+          <RequireSignedIn>
+            <OnboardingPage />
           </RequireSignedIn>
         )}
       </Route>
       <Route>
-        <RequireSignedIn>
+        <RequireOnboarded>
           <AppLayout>
             <Switch>
-            <Route path="/onboarding" component={OnboardingPage} />
             <Route path="/dashboard" component={DashboardPage} />
             <Route path="/topics" component={TopicsPage} />
             <Route path="/topics/:id" component={TopicDetailPage} />
@@ -212,7 +219,7 @@ function AppRouter() {
             <Route component={NotFound} />
           </Switch>
         </AppLayout>
-        </RequireSignedIn>
+        </RequireOnboarded>
       </Route>
     </Switch>
   );
