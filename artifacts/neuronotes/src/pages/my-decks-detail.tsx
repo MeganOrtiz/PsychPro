@@ -662,18 +662,9 @@ export default function MyDeckDetailPage() {
 
       <div className="mb-5">
         <PageTitle title={deck.title} className="mb-3" />
-        <div className="flex items-center gap-2 flex-wrap justify-center">
-          {deck.tier === "pro" ? (
+        {deck.tier === "pro" && (
+          <div className="flex items-center gap-2 flex-wrap justify-center">
             <Badge className="bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 border-purple-200">Pro Tools</Badge>
-          ) : (
-            <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border-blue-200">Standard Tools</Badge>
-          )}
-        </div>
-        {deck.tier !== "pro" && (
-          <div className="flex gap-3 mt-2 text-sm text-muted-foreground justify-center">
-            <span>{flashcards.length} flashcards</span>
-            <span>·</span>
-            <span>{quizQuestions.length} quiz questions</span>
           </div>
         )}
       </div>
