@@ -129,8 +129,8 @@ const TABS: TabDef[] = [
   { slug: "full-length-exams", label: "Full-Length Exams", icon: ClipboardCheck, section: "Assess" },
   { slug: "missed-questions", label: "Missed Questions", icon: XCircle, section: "Review" },
   { slug: "rapid-review", label: "Quick Reference Guide", icon: Zap, section: "Review" },
-  { slug: "reflections", label: "Reflections", icon: Lightbulb, section: "Review" },
-  { slug: "my-notes", label: "My Notes", icon: NotebookPen, section: "Review" },
+  { slug: "reflections", label: "Reflections", icon: Lightbulb, section: "Journal" },
+  { slug: "my-notes", label: "My Notes", icon: NotebookPen, section: "Journal" },
   { slug: "resources", label: "Resources", icon: Library, section: "Reference" },
   { slug: "study-plan", label: "Study Plan", icon: ClipboardList, section: "Plan" },
 ];
