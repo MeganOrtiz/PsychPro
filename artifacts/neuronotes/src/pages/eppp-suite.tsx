@@ -1788,10 +1788,10 @@ const styles = `
 .eps-exam-row {
   display: flex; align-items: center; gap: 16px;
   border-radius: 16px; padding: 16px 18px;
-  background: linear-gradient(145deg, rgba(12,67,85,0.5), rgba(9,48,63,0.62));
+  background: linear-gradient(145deg, rgba(10,53,69,0.93), rgba(6,32,43,0.96));
   border: 1px solid ${C.hairline};
 }
-.eps-exam-row.is-mastered { border-color: ${C.cyan}5e; background: linear-gradient(145deg, rgba(17,87,111,0.6), rgba(11,67,86,0.68)); }
+.eps-exam-row.is-mastered { border-color: ${C.cyan}5e; background: linear-gradient(145deg, rgba(18,90,115,0.95), rgba(11,60,78,0.97)); }
 .eps-exam-row.is-locked { opacity: 0.9; }
 .eps-exam-icon {
   display: inline-flex; align-items: center; justify-content: center;
