@@ -1624,7 +1624,7 @@ const styles = `
 .eps-crumb-page { font-size: 13px; font-weight: 500; color: ${C.mist}; }
 .eps-back-app {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 14px; border-radius: 0;
+  padding: 8px 14px; border-radius: 8px;
   font-size: 12.5px; font-weight: 600; text-decoration: none; white-space: nowrap;
   color: ${C.mist}; border: 1px solid ${C.hairlineStrong}; background: rgba(16,55,72,0.5);
   transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease;
@@ -1805,7 +1805,7 @@ const styles = `
 .eps-exam-meta { font-size: 12.5px; color: ${C.muted}; line-height: 1.4; }
 .eps-exam-cta {
   display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; cursor: pointer;
-  padding: 9px 16px; border-radius: 0; font-size: 13px; font-weight: 700; white-space: nowrap;
+  padding: 9px 16px; border-radius: 8px; font-size: 13px; font-weight: 700; white-space: nowrap;
   color: ${C.cloud}; border: 1px solid rgba(118,228,247,0.5);
   background: rgba(118,228,247,0.26);
   box-shadow: 0 0 20px rgba(118,228,247,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
@@ -1838,7 +1838,7 @@ const styles = `
 @media (max-width: 760px) { .eps-topic-grid { grid-template-columns: 1fr; } }
 .eps-topic {
   display: flex; align-items: center; gap: 14px; text-align: left; cursor: pointer;
-  border-radius: 0; padding: 14px 16px;
+  border-radius: 8px; padding: 14px 16px;
   background: linear-gradient(145deg, rgba(12,67,85,0.5), rgba(9,48,63,0.6));
   border: 1px solid ${C.hairline};
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
@@ -1856,7 +1856,7 @@ const styles = `
 .eps-topic-meta { font-size: 12px; color: ${C.muted}; }
 .eps-topic-cta {
   display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;
-  padding: 8px 14px; border-radius: 0;
+  padding: 8px 14px; border-radius: 8px;
   font-size: 12.5px; font-weight: 700; color: ${C.cloud};
   background: rgba(118,228,247,0.26);
   border: 1px solid rgba(118,228,247,0.5);
@@ -1875,7 +1875,7 @@ const styles = `
 .eps-subtabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: clamp(20px, 2.4vw, 28px); }
 .eps-subtab {
   display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
-  padding: 9px 16px; border-radius: 0; font-size: 13px; font-weight: 600; white-space: nowrap;
+  padding: 9px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; white-space: nowrap;
   color: ${C.mist}; background: rgba(16,55,72,0.55); border: 1px solid ${C.hairlineStrong};
   transition: transform 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
@@ -1889,7 +1889,7 @@ const styles = `
 /* Clinical Cases part toggle: centered, larger, squared (not pill) */
 .eps-subtabs--center { justify-content: center; }
 .eps-subtabs--center .eps-subtab {
-  border-radius: 0; padding: 13px 26px; font-size: 15.5px; gap: 9px;
+  border-radius: 8px; padding: 13px 26px; font-size: 15.5px; gap: 9px;
 }
 .eps-subtabs--center .eps-subtab svg { width: 18px; height: 18px; }
 
@@ -2032,7 +2032,7 @@ const styles = `
 .eps-section-head--split { justify-content: space-between; }
 .eps-ghost-btn {
   display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
-  padding: 8px 14px; border-radius: 0; font-size: 13px; font-weight: 600;
+  padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600;
   color: ${C.cloud}; background: rgba(16,55,72,0.55); border: 1px solid ${C.cyan}40;
   transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.3s ease;
 }

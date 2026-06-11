@@ -978,7 +978,7 @@ const styles = `
   font-weight: 600;
   letter-spacing: 0.22em;
   padding: 14px 28px;
-  border-radius: 0;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }
