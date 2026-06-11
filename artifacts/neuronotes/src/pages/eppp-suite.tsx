@@ -106,7 +106,8 @@ type TabSlug =
   | "full-length-exams"
   | "missed-questions"
   | "rapid-review"
-  | "reflections-notes"
+  | "reflections"
+  | "my-notes"
   | "performance-analytics"
   | "resources";
 
@@ -128,7 +129,8 @@ const TABS: TabDef[] = [
   { slug: "full-length-exams", label: "Full-Length Exams", icon: ClipboardCheck, section: "Assess" },
   { slug: "missed-questions", label: "Missed Questions", icon: XCircle, section: "Review" },
   { slug: "rapid-review", label: "Quick Reference Guide", icon: Zap, section: "Review" },
-  { slug: "reflections-notes", label: "Reflections & My Notes", icon: Lightbulb, section: "Review" },
+  { slug: "reflections", label: "Reflections", icon: Lightbulb, section: "Review" },
+  { slug: "my-notes", label: "My Notes", icon: NotebookPen, section: "Review" },
   { slug: "resources", label: "Resources", icon: Library, section: "Reference" },
   { slug: "study-plan", label: "Study Plan", icon: ClipboardList, section: "Plan" },
 ];
@@ -141,6 +143,12 @@ const DEFAULT_TAB: TabSlug = "performance-analytics";
 // Guides are a dedicated top-level tab too — neither is a Part 1 sub-tab.
 const MOVED_INTO_PART1: Record<string, TabSlug> = {
   "question-bank": "domains",
+};
+
+// Legacy deep-link aliases — the combined "Reflections & My Notes" tab was
+// split into two separate top-level tabs. Old links land on Reflections.
+const LEGACY_TAB_ALIASES: Record<string, TabSlug> = {
+  "reflections-notes": "reflections",
 };
 
 // Reuse the main-app sidebar pill recipe (classes defined in index.css).
@@ -234,7 +242,9 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isMobile = useIsMobile();
 
-  const requestedTab = tab && MOVED_INTO_PART1[tab] ? MOVED_INTO_PART1[tab] : tab;
+  const requestedTab = tab
+    ? MOVED_INTO_PART1[tab] ?? LEGACY_TAB_ALIASES[tab] ?? tab
+    : tab;
   const activeSlug: TabSlug = TABS.some((t) => t.slug === requestedTab)
     ? (requestedTab as TabSlug)
     : DEFAULT_TAB;
@@ -337,7 +347,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
           <button
             onClick={() => setSidebarOpen(true)}
             data-testid="eppp-suite-menu-toggle"
-            className="inline-flex items-center justify-center h-9 w-9 rounded-none text-foreground"
+            className="inline-flex items-center justify-center h-9 w-9 rounded-md text-foreground"
             aria-label="Open menu"
           >
             <Menu className="w-5 h-5" />
@@ -404,8 +414,10 @@ function SuiteContent({
       return <DomainMasteryExamsPanel onNavigate={onNavigate} />;
     case "rapid-review":
       return <RapidReviewPanel onNavigate={onNavigate} />;
-    case "reflections-notes":
-      return <ReflectionsNotesPanel />;
+    case "reflections":
+      return <ReflectionsPanel />;
+    case "my-notes":
+      return <MyNotesPanel />;
     case "study-plan":
       return (
         <ComingSoonPanel
@@ -1221,12 +1233,10 @@ function RapidReviewPanel({ onNavigate }: { onNavigate: (to: string) => void }) 
   );
 }
 
-// ---- Reflections & My Notes ----------------------------------------------
-// A consolidated, device-local study journal: every "Lock it in" reflection
-// saved during quizzes (from @/lib/reflections) plus the same write-in My Notes
-// scratchpad surfaced on the Quick Reference Guides tab (shared localStorage
-// key). Nothing here is sent to a server.
-function ReflectionsNotesPanel() {
+// ---- Reflections ----------------------------------------------------------
+// A device-local journal of every "Lock it in" reflection saved during quizzes
+// (from @/lib/reflections). Nothing here is sent to a server.
+function ReflectionsPanel() {
   const { data: allTopics } = useGetTopics();
   const topicNameById = useMemo(() => {
     const m = new Map<number, string>();
@@ -1247,26 +1257,13 @@ function ReflectionsNotesPanel() {
     setReflections(listAllReflections());
   };
 
-  // My Notes — same scratchpad + storage key as the Quick Reference Guides tab.
-  const [notes, setNotes] = useState("");
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    setNotes(window.localStorage.getItem(RAPID_REVIEW_NOTES_KEY) ?? "");
-  }, []);
-  const handleNotesChange = (v: string) => {
-    setNotes(v);
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem(RAPID_REVIEW_NOTES_KEY, v);
-    }
-  };
-
   return (
-    <div className="study-page-bg eps-panel" data-testid="eppp-panel-reflections-notes">
+    <div className="study-page-bg eps-panel" data-testid="eppp-panel-reflections">
       <div className="eps-shell">
         <PanelHead
           eyebrow="JOURNAL"
-          title="Reflections & My Notes"
-          subtitle="Every “Lock it in” reflection you've saved during quizzes, plus your private My Notes scratchpad. These live on this device only — never sent to a server."
+          title="Reflections"
+          subtitle="Every “Lock it in” reflection you've saved during quizzes. These live on this device only — never sent to a server."
         />
 
         <div className="eps-section-head">
@@ -1323,8 +1320,38 @@ function ReflectionsNotesPanel() {
             ))}
           </div>
         )}
+      </div>
+    </div>
+  );
+}
 
-        <section className="eps-notes" data-testid="eppp-reflections-my-notes">
+// ---- My Notes -------------------------------------------------------------
+// A private write-in scratchpad persisted locally on the device. Shares its
+// storage key with the Quick Reference Guides tab so the same notes surface in
+// both places. Nothing here is sent to a server.
+function MyNotesPanel() {
+  const [notes, setNotes] = useState("");
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setNotes(window.localStorage.getItem(RAPID_REVIEW_NOTES_KEY) ?? "");
+  }, []);
+  const handleNotesChange = (v: string) => {
+    setNotes(v);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(RAPID_REVIEW_NOTES_KEY, v);
+    }
+  };
+
+  return (
+    <div className="study-page-bg eps-panel" data-testid="eppp-panel-my-notes">
+      <div className="eps-shell">
+        <PanelHead
+          eyebrow="JOURNAL"
+          title="My Notes"
+          subtitle="Your private, high-yield scratchpad. Saved automatically on this device only — never sent to a server."
+        />
+
+        <section className="eps-notes" data-testid="eppp-my-notes">
           <div className="eps-notes-head">
             <span className="eps-notes-icon">
               <NotebookPen aria-hidden />
@@ -1341,7 +1368,7 @@ function ReflectionsNotesPanel() {
             value={notes}
             onChange={(e) => handleNotesChange(e.target.value)}
             placeholder="Jot down mnemonics, formulas, and the facts you keep forgetting…"
-            data-testid="eppp-reflections-notes-input"
+            data-testid="eppp-my-notes-input"
           />
         </section>
       </div>

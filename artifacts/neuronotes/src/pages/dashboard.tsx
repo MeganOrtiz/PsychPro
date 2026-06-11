@@ -281,7 +281,7 @@ export default function DashboardPage() {
               size="sm"
               onClick={() => navigate("/subscription")}
               data-testid="button-upgrade-banner"
-              className="rounded-none px-4"
+              className="rounded-md px-4"
             >
               Upgrade
             </Button>
@@ -315,7 +315,7 @@ export default function DashboardPage() {
               variant="outline"
               onClick={() => navigate("/subscription")}
               data-testid="button-upgrade-approaching"
-              className="rounded-none px-4"
+              className="rounded-md px-4"
             >
               Upgrade
             </Button>
@@ -360,7 +360,7 @@ export default function DashboardPage() {
                   <Button
                     onClick={() => navigate(`/topics/${continueTopic.topicId}`)}
                     data-testid="button-continue-studying"
-                    className="rounded-none px-5"
+                    className="rounded-md px-5"
                   >
                     Continue Studying
                     <ArrowUpRight className="w-4 h-4 ml-1" />
@@ -375,7 +375,7 @@ export default function DashboardPage() {
                   <Button
                     onClick={() => navigate("/topics")}
                     data-testid="button-begin-journey"
-                    className="rounded-none px-5"
+                    className="rounded-md px-5"
                   >
                     Browse Topics
                     <ArrowUpRight className="w-4 h-4 ml-1" />
@@ -414,7 +414,7 @@ export default function DashboardPage() {
                       <button
                         key={t.id}
                         onClick={() => navigate(`/topics/${t.topicId}`)}
-                        className="recommended-tile group w-full flex items-center gap-3 p-3 rounded-none text-left border transition-all hover:-translate-y-0.5"
+                        className="recommended-tile group w-full flex items-center gap-3 p-3 rounded-md text-left border transition-all hover:-translate-y-0.5"
                         data-testid={`recommended-${t.topicId}`}
                       >
                         <div
@@ -462,7 +462,7 @@ export default function DashboardPage() {
                     size="sm"
                     variant="outline"
                     onClick={() => navigate("/leaderboard")}
-                    className="text-xs rounded-none px-3 h-7"
+                    className="text-xs rounded-md px-3 h-7"
                     data-testid="button-view-leaderboard"
                   >
                     View all
@@ -623,7 +623,7 @@ export default function DashboardPage() {
                   <li key={r.id}>
                     <button
                       onClick={() => navigate(`/topics/${r.topicId}`)}
-                      className="recommended-tile w-full flex items-center gap-3 px-3 py-2 rounded-none border text-left transition-all hover:-translate-y-0.5"
+                      className="recommended-tile w-full flex items-center gap-3 px-3 py-2 rounded-md border text-left transition-all hover:-translate-y-0.5"
                       data-testid={`recent-activity-${r.topicId}`}
                     >
                       <div className="flex-1 min-w-0">
@@ -964,7 +964,7 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
           <button
             type="button"
             onClick={() => onCta(spot.id)}
-            className="group block w-full mt-6 text-left rounded-none border backdrop-blur-md p-4 transition-all hover:bg-white/[0.08] hover:border-[color:var(--nav-glow,#76e4f7)]/55"
+            className="group block w-full mt-6 text-left rounded-md border backdrop-blur-md p-4 transition-all hover:bg-white/[0.08] hover:border-[color:var(--nav-glow,#76e4f7)]/55"
             style={{
               background: "rgba(255,255,255,0.04)",
               borderColor: `${PALETTE.surf}33`,
@@ -1024,7 +1024,7 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
           <button
             type="button"
             onClick={() => onCta(spot?.id)}
-            className="w-8 h-8 rounded-none flex items-center justify-center transition-all border"
+            className="w-8 h-8 rounded-md flex items-center justify-center transition-all border"
             style={{
               background: `${PALETTE.surf}14`,
               borderColor: `${PALETTE.surf}38`,
@@ -1123,7 +1123,7 @@ function CourseMasterySection({
                 navigate(`/courses/${encodeURIComponent(category)}/mastery-exam`)
               }
               className={cn(
-                "course-mastery-tile group relative flex flex-col items-center justify-center gap-2 p-4 rounded-none border text-center min-h-[104px]",
+                "course-mastery-tile group relative flex flex-col items-center justify-center gap-2 p-4 rounded-md border text-center min-h-[104px]",
                 mastered
                   ? "course-mastery-tile--mastered"
                   : "course-mastery-tile--locked",

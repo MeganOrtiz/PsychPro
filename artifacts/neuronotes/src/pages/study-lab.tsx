@@ -104,7 +104,7 @@ function TopicGridSingle({
             onClick={() => onChange(t.id)}
             data-testid={`topic-option-${t.id}`}
             className={cn(
-              "text-left rounded-none border p-3 transition-all",
+              "text-left rounded-md border p-3 transition-all",
               active
                 ? "border-primary bg-primary/10"
                 : "border-border bg-card hover:border-primary/40 hover:bg-muted/50",
@@ -152,7 +152,7 @@ function TopicGridMulti({
             disabled={atMax}
             data-testid={`topic-option-${t.id}`}
             className={cn(
-              "text-left rounded-none border p-3 transition-all",
+              "text-left rounded-md border p-3 transition-all",
               active
                 ? "border-primary bg-primary/10"
                 : "border-border bg-card hover:border-primary/40 hover:bg-muted/50",
@@ -517,7 +517,7 @@ export default function StudyLabPage() {
               key={t.id}
               onClick={() => setActive(t.id)}
               data-testid={`tech-card-${t.id}`}
-              className="group text-left rounded-none border border-border bg-card p-5 shadow-sm hover:shadow-md hover:border-primary/40 hover:-translate-y-0.5 transition-all"
+              className="group text-left rounded-md border border-border bg-card p-5 shadow-sm hover:shadow-md hover:border-primary/40 hover:-translate-y-0.5 transition-all"
             >
               <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-4 group-hover:bg-primary/15 transition-colors">
                 <t.icon className="w-6 h-6 text-primary" />

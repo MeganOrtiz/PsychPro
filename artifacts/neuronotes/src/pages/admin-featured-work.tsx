@@ -119,7 +119,7 @@ export default function AdminFeaturedWorkPage() {
             <button
               key={s}
               onClick={() => setFilter(s)}
-              className={`px-3 py-1.5 rounded-none text-xs font-medium border transition-colors ${
+              className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-colors ${
                 filter === s ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card text-muted-foreground hover:bg-muted"
               }`}
               data-testid={`tab-status-${s}`}
@@ -162,28 +162,28 @@ export default function AdminFeaturedWorkPage() {
                   )}
                   <div className="flex flex-wrap gap-2">
                     {fileHref && (
-                      <a href={fileHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground border border-border rounded-none px-2.5 py-1">
+                      <a href={fileHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground border border-border rounded-md px-2.5 py-1">
                         <FileText className="w-3 h-3" /> PDF
                       </a>
                     )}
                     {s.externalLink && (
-                      <a href={s.externalLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground border border-border rounded-none px-2.5 py-1">
+                      <a href={s.externalLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground border border-border rounded-md px-2.5 py-1">
                         <ExternalLink className="w-3 h-3" /> Link
                       </a>
                     )}
                     <div className="flex-1" />
                     {s.status !== "approved" && (
-                      <button onClick={() => applyAction(s.id, "approved")} disabled={busy} className="inline-flex items-center gap-1 text-xs text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800 rounded-none px-2.5 py-1">
+                      <button onClick={() => applyAction(s.id, "approved")} disabled={busy} className="inline-flex items-center gap-1 text-xs text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800 rounded-md px-2.5 py-1">
                         <Check className="w-3 h-3" /> Approve
                       </button>
                     )}
                     {s.status !== "revision_requested" && (
-                      <button onClick={() => { setActionFor({ id: s.id, status: "revision_requested" }); setNote(s.adminNote ?? ""); }} className="inline-flex items-center gap-1 text-xs text-yellow-700 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800 rounded-none px-2.5 py-1">
+                      <button onClick={() => { setActionFor({ id: s.id, status: "revision_requested" }); setNote(s.adminNote ?? ""); }} className="inline-flex items-center gap-1 text-xs text-yellow-700 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800 rounded-md px-2.5 py-1">
                         <MessageCircle className="w-3 h-3" /> Request revision
                       </button>
                     )}
                     {s.status !== "rejected" && (
-                      <button onClick={() => { setActionFor({ id: s.id, status: "rejected" }); setNote(s.adminNote ?? ""); }} className="inline-flex items-center gap-1 text-xs text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800 rounded-none px-2.5 py-1">
+                      <button onClick={() => { setActionFor({ id: s.id, status: "rejected" }); setNote(s.adminNote ?? ""); }} className="inline-flex items-center gap-1 text-xs text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800 rounded-md px-2.5 py-1">
                         <X className="w-3 h-3" /> Reject
                       </button>
                     )}

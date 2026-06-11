@@ -133,7 +133,7 @@ export default function TodayReviews({ topics }: TodayReviewsProps) {
             <li key={item.topicId}>
               <button
                 onClick={() => navigate(`/topics/${item.topicId}`)}
-                className="recommended-tile w-full flex items-center gap-3 px-3 py-2 rounded-none border text-left transition-all hover:-translate-y-0.5"
+                className="recommended-tile w-full flex items-center gap-3 px-3 py-2 rounded-md border text-left transition-all hover:-translate-y-0.5"
                 data-testid={`review-item-${item.topicId}`}
               >
                 <span

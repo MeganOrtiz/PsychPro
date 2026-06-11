@@ -144,7 +144,7 @@ export default function OnboardingPage() {
                   key={option}
                   onClick={() => handleSelect(option)}
                   data-testid={`option-${option.replace(/\s+/g, "-").toLowerCase()}`}
-                  className={`w-full text-left px-4 py-3 rounded-none border text-sm font-medium transition-all flex items-center justify-between ${
+                  className={`w-full text-left px-4 py-3 rounded-md border text-sm font-medium transition-all flex items-center justify-between ${
                     selected
                       ? "border-primary bg-primary/10 text-primary"
                       : "border-border bg-background text-foreground hover:border-primary/40 hover:bg-muted/50"

@@ -72,7 +72,7 @@ class Brain3DErrorBoundary extends Component<
           <button
             type="button"
             onClick={this.props.onFallback}
-            className="mt-1 text-xs font-semibold px-3 py-1.5 rounded-none"
+            className="mt-1 text-xs font-semibold px-3 py-1.5 rounded-md"
             style={{
               background: `${PALETTE.surf}22`,
               color: PALETTE.surf,
@@ -219,7 +219,7 @@ function StructureSearch({
           />
           <button
             onClick={onClose}
-            className="p-1 rounded-none hover:bg-white/5"
+            className="p-1 rounded-md hover:bg-white/5"
             style={{ color: PALETTE.mist }}
             aria-label="Close search"
           >
@@ -298,7 +298,7 @@ function ViewTabs({
             role="tab"
             aria-selected={isActive}
             onClick={() => onPick(value)}
-            className="px-3 md:px-4 py-1.5 rounded-none text-xs md:text-sm font-medium flex items-center gap-1.5 whitespace-nowrap transition-all"
+            className="px-3 md:px-4 py-1.5 rounded-md text-xs md:text-sm font-medium flex items-center gap-1.5 whitespace-nowrap transition-all"
             style={
               isActive
                 ? {
@@ -495,7 +495,7 @@ function StructureDetail({
         <button
           onClick={onClose}
           aria-label="Close detail"
-          className="p-1.5 rounded-none transition-colors hover:bg-white/5"
+          className="p-1.5 rounded-md transition-colors hover:bg-white/5"
           style={{ color: PALETTE.mist }}
           data-testid="button-close-detail"
         >
@@ -632,7 +632,7 @@ function StructureDetail({
       >
         <Link href={`/topics`}>
           <a
-            className="w-full inline-flex items-center justify-center gap-2 rounded-none h-9 text-xs font-medium transition-all border"
+            className="w-full inline-flex items-center justify-center gap-2 rounded-md h-9 text-xs font-medium transition-all border"
             style={{
               background: `${PALETTE.surface}cc`,
               borderColor: `${PALETTE.steel}99`,
@@ -971,7 +971,7 @@ function NumberedKey({
                 onMouseLeave={() => onHover(null)}
                 onFocus={() => onHover(s.id)}
                 onBlur={() => onHover(null)}
-                className="w-full flex items-center gap-2.5 rounded-none px-2 py-1.5 text-left transition-colors"
+                className="w-full flex items-center gap-2.5 rounded-md px-2 py-1.5 text-left transition-colors"
                 style={{
                   background: emphasized ? `${GLOW}1f` : "transparent",
                   boxShadow: active ? `inset 0 0 0 1px ${GLOW}aa` : "none",
@@ -1078,7 +1078,7 @@ function BrainDiagram({
                   onMouseLeave={() => onHover(null)}
                   onFocus={() => onHover(struct.id)}
                   onBlur={() => onHover(null)}
-                  className="flex items-center justify-center rounded-none font-bold outline-none transition-all duration-150"
+                  className="flex items-center justify-center rounded-md font-bold outline-none transition-all duration-150"
                   style={{
                     width: emphasized ? 24 : 19,
                     height: emphasized ? 24 : 19,
@@ -1820,7 +1820,7 @@ export default function BrainLabPage() {
                 <button
                   key={mode}
                   onClick={() => setViewMode(mode)}
-                  className="px-2.5 py-1 rounded-none text-xs font-semibold flex items-center gap-1.5 transition-all"
+                  className="px-2.5 py-1 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-all"
                   style={{
                     background: on ? `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})` : "transparent",
                     color: on ? PALETTE.bg : PALETTE.mist,
@@ -1836,7 +1836,7 @@ export default function BrainLabPage() {
           </div>
           <button
             onClick={() => setSearchOpen(true)}
-            className="px-3 py-1.5 rounded-none text-xs font-medium border flex items-center gap-2 transition-all hover:-translate-y-0.5"
+            className="px-3 py-1.5 rounded-md text-xs font-medium border flex items-center gap-2 transition-all hover:-translate-y-0.5"
             style={{
               background: `${PALETTE.surface}cc`,
               borderColor: `${PALETTE.steel}99`,

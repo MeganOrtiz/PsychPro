@@ -111,7 +111,7 @@ export default function FlashcardsPage({ params }: Props) {
             <TooltipTrigger asChild>
               <button
                 onClick={() => navigate(inEppp ? "/eppp/suite/study-plan" : "/study-lab")}
-                className="text-muted-foreground hover:text-foreground p-1.5 rounded-none hover:bg-accent transition-colors"
+                className="text-muted-foreground hover:text-foreground p-1.5 rounded-md hover:bg-accent transition-colors"
                 data-testid="button-study-lab"
                 aria-label="Open Study Lab"
               >
@@ -127,7 +127,7 @@ export default function FlashcardsPage({ params }: Props) {
               <TooltipTrigger asChild>
                 <SheetTrigger asChild>
                   <button
-                    className="text-muted-foreground hover:text-foreground p-1.5 rounded-none hover:bg-accent transition-colors"
+                    className="text-muted-foreground hover:text-foreground p-1.5 rounded-md hover:bg-accent transition-colors"
                     data-testid="button-reflect"
                     aria-label="Open elaboration panel"
                   >
@@ -154,7 +154,7 @@ export default function FlashcardsPage({ params }: Props) {
           </Sheet>
           <Tooltip>
             <TooltipTrigger asChild>
-              <button onClick={handleRestart} className="text-muted-foreground hover:text-foreground p-1.5 rounded-none hover:bg-accent transition-colors" data-testid="button-restart" aria-label="Restart">
+              <button onClick={handleRestart} className="text-muted-foreground hover:text-foreground p-1.5 rounded-md hover:bg-accent transition-colors" data-testid="button-restart" aria-label="Restart">
                 <RotateCcw className="w-4 h-4" />
               </button>
             </TooltipTrigger>

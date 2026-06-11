@@ -137,7 +137,7 @@ export default function FeedbackPage() {
                 key={ft.value}
                 type="button"
                 onClick={() => setType(ft.value)}
-                className={`grow-0 shrink-0 basis-[calc(50%-0.25rem)] px-3 py-2.5 rounded-none border text-sm font-medium text-center transition-colors ${
+                className={`grow-0 shrink-0 basis-[calc(50%-0.25rem)] px-3 py-2.5 rounded-md border text-sm font-medium text-center transition-colors ${
                   type === ft.value
                     ? "border-primary bg-primary/10 text-primary"
                     : "border-border bg-card text-foreground hover:bg-muted"

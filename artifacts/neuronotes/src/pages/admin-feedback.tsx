@@ -95,7 +95,7 @@ export default function AdminFeedbackPage() {
           <button
             key={s}
             onClick={() => setFilter(s)}
-            className={`px-3 py-1.5 rounded-none text-xs font-medium border transition-colors capitalize ${
+            className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-colors capitalize ${
               filter === s
                 ? "border-primary bg-primary text-primary-foreground"
                 : "border-border bg-card text-muted-foreground hover:bg-muted"
@@ -152,7 +152,7 @@ export default function AdminFeedbackPage() {
                 {entry.status !== "read" && (
                   <button
                     onClick={() => setStatus(entry.id, "read")}
-                    className="text-xs text-muted-foreground hover:text-foreground border border-border rounded-none px-2.5 py-1 transition-colors"
+                    className="text-xs text-muted-foreground hover:text-foreground border border-border rounded-md px-2.5 py-1 transition-colors"
                   >
                     Mark read
                   </button>
@@ -160,7 +160,7 @@ export default function AdminFeedbackPage() {
                 {entry.status !== "resolved" && (
                   <button
                     onClick={() => setStatus(entry.id, "resolved")}
-                    className="text-xs text-green-700 dark:text-green-400 hover:text-green-800 border border-green-200 dark:border-green-800 rounded-none px-2.5 py-1 transition-colors flex items-center gap-1"
+                    className="text-xs text-green-700 dark:text-green-400 hover:text-green-800 border border-green-200 dark:border-green-800 rounded-md px-2.5 py-1 transition-colors flex items-center gap-1"
                   >
                     <CheckCheck className="w-3 h-3" />
                     Resolve
@@ -169,7 +169,7 @@ export default function AdminFeedbackPage() {
                 {entry.status === "resolved" && (
                   <button
                     onClick={() => setStatus(entry.id, "unread")}
-                    className="text-xs text-muted-foreground hover:text-foreground border border-border rounded-none px-2.5 py-1 transition-colors"
+                    className="text-xs text-muted-foreground hover:text-foreground border border-border rounded-md px-2.5 py-1 transition-colors"
                   >
                     Reopen
                   </button>

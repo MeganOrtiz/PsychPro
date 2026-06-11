@@ -18,7 +18,7 @@ type NavItem = { href: string; label: string; icon: React.ComponentType<{ classN
 // .nav-glass-* rules in index.css. Idle text is muted icy-blue and brightens
 // to luminous cyan (#A7F3FF) on hover/active.
 const NAV_ITEM_BASE =
-  "nav-glass group relative flex items-center gap-2.5 px-3 py-2 rounded-none cursor-pointer transition-all duration-200 ease-in-out border backdrop-blur-md";
+  "nav-glass group relative flex items-center gap-2.5 px-3 py-2 rounded-md cursor-pointer transition-all duration-200 ease-in-out border backdrop-blur-md";
 const NAV_ITEM_IDLE = "nav-glass-idle text-[#B9D2DA] hover:text-[#A7F3FF]";
 const NAV_ITEM_ACTIVE = "nav-glass-active text-[#A7F3FF]";
 

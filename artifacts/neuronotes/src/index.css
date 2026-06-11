@@ -292,7 +292,7 @@
 .btn-glass,
 .btn-glass-strong {
   position: relative;
-  border-radius: 0;
+  border-radius: 8px;
   backdrop-filter: blur(12px) saturate(130%);
   -webkit-backdrop-filter: blur(12px) saturate(130%);
   transition: background-color 160ms ease, background-image 160ms ease,
@@ -540,7 +540,7 @@
   align-items: center;
   justify-content: center;
   height: 40px;
-  border-radius: 0;
+  border-radius: 8px;
   padding: 0 18px;
   font-weight: 600;
   font-size: 13px;
@@ -694,7 +694,7 @@
   background-color: rgba(118, 228, 247, 0.26);
   color: #f2feff;
   border: 1px solid rgba(118, 228, 247, 0.5);
-  border-radius: 0;
+  border-radius: 8px;
   backdrop-filter: blur(12px) saturate(130%);
   -webkit-backdrop-filter: blur(12px) saturate(130%);
   transition: all 0.2s ease;
@@ -727,7 +727,7 @@
   background: rgba(20, 46, 60, 0.72);
   color: #e6fafe;
   border: 1px solid rgba(118, 228, 247, 0.34);
-  border-radius: 0;
+  border-radius: 8px;
   backdrop-filter: blur(12px) saturate(130%);
   -webkit-backdrop-filter: blur(12px) saturate(130%);
   transition: all 0.2s ease;
@@ -762,7 +762,7 @@
   background: rgba(20, 46, 60, 0.6);
   border-color: rgba(118, 228, 247, 0.34) !important;
   color: #e6fafe;
-  border-radius: 0;
+  border-radius: 8px;
   backdrop-filter: blur(12px) saturate(130%);
   -webkit-backdrop-filter: blur(12px) saturate(130%);
   transition: all 0.2s ease;
