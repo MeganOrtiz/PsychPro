@@ -413,7 +413,7 @@ export default function DashboardPage() {
             </StudySurface>
 
             {/* Recommended for You — 2x2 grid of 4 topics */}
-            <StudySurface tone="light" innerClassName="p-5">
+            <StudySurface tone="light" glow innerClassName="p-5">
               <div className="mb-4">
                 <h2 className="font-semibold" style={{ color: PALETTE.mist }}>Recommended for You</h2>
                 <p className="text-xs mt-1" style={{ color: PALETTE.mistSoft }}>

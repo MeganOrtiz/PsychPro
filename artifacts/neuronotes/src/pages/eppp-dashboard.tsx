@@ -20,6 +20,7 @@ import {
 } from "@workspace/api-client-react";
 import { groupEpppTopicsByCategory, isEpppKnowledgeTopic } from "@/lib/eppp-content";
 import { epppDomainAnchor, epppTopicPath } from "@/lib/eppp-routes";
+import { knowledgeDomainIcon } from "@/lib/eppp-icons";
 
 // ---------------------------------------------------------------------------
 // EPPP Mastery Suite dashboard — the working "how ready am I" home for the
@@ -313,7 +314,9 @@ export function EpppDashboardView({
                       unlocked: false,
                     },
                   ]
-              ).map((d) => (
+              ).map((d) => {
+                const Icon = knowledgeDomainIcon(d.category);
+                return (
                 <div
                   key={d.category}
                   className="epd-domain epd-domain--loading"
@@ -322,7 +325,12 @@ export function EpppDashboardView({
                     .replace(/[^a-z0-9]+/g, "-")}`}
                 >
                   <div className="epd-domain-top">
-                    <span className="epd-domain-name">{d.category}</span>
+                    <span className="epd-domain-head">
+                      <span className="epd-domain-icon">
+                        <Icon aria-hidden />
+                      </span>
+                      <span className="epd-domain-name">{d.category}</span>
+                    </span>
                   </div>
                   <div className="epd-bar">
                     <span className="epd-bar-fill epd-bar-fill--idle" />
@@ -331,7 +339,8 @@ export function EpppDashboardView({
                     <span>Checking progress…</span>
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
           ) : domainStats.length === 0 ? (
             <div className="epd-empty">
@@ -340,6 +349,7 @@ export function EpppDashboardView({
           ) : (
             <div className="epd-domain-grid">
               {domainStats.map((d) => {
+                const Icon = knowledgeDomainIcon(d.category);
                 return (
                   <Link
                     key={d.category}
@@ -350,7 +360,12 @@ export function EpppDashboardView({
                       .replace(/[^a-z0-9]+/g, "-")}`}
                   >
                     <div className="epd-domain-top">
-                      <span className="epd-domain-name">{d.category}</span>
+                      <span className="epd-domain-head">
+                        <span className="epd-domain-icon">
+                          <Icon aria-hidden />
+                        </span>
+                        <span className="epd-domain-name">{d.category}</span>
+                      </span>
                       {d.mastered ? (
                         <span className="epd-badge epd-badge--mastered">
                           <CheckCircle2 aria-hidden /> Mastered
@@ -848,6 +863,13 @@ const styles = `
 }
 @keyframes epd-pulse { 0%,100% { opacity: 0.4; } 50% { opacity: 0.9; } }
 .epd-domain-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.epd-domain-head { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.epd-domain-icon {
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  width: 34px; height: 34px; border-radius: 10px;
+  color: ${C.cyan}; background: rgba(118,228,247,0.1); border: 1px solid rgba(118,228,247,0.28);
+}
+.epd-domain-icon svg { width: 17px; height: 17px; }
 .epd-domain-name { font-size: 14.5px; font-weight: 600; color: ${C.cloud}; line-height: 1.3; }
 .epd-badge {
   display: inline-flex; align-items: center; gap: 4px;
