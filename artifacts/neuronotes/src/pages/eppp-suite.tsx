@@ -69,6 +69,7 @@ import {
 } from "@/lib/reflections";
 import smokeBg from "@/assets/bg/brain-clouds.png";
 import EpppDashboardPage from "@/pages/eppp-dashboard";
+import { ResourcesContent } from "@/pages/resources";
 
 // ---------------------------------------------------------------------------
 // EPPP Mastery Suite — a dedicated, EPPP-only workspace with its own left-column
@@ -962,7 +963,7 @@ function ClinicalCasesPanel({ onNavigate }: { onNavigate: (to: string) => void }
   );
 }
 
-// ---- EPPP-only resources --------------------------------------------------
+// ---- Resources ------------------------------------------------------------
 function EpppResourcesPanel() {
   return (
     <div className="study-page-bg eps-panel" data-testid="eppp-panel-resources">
@@ -970,22 +971,10 @@ function EpppResourcesPanel() {
         <PanelHead
           eyebrow="REFERENCE"
           title="Resources"
-          subtitle="EPPP-only reference material will live here. Main PsychPro resources stay on the main site."
+          subtitle="The primary sources, clinical frameworks, and research databases that inform PsychPro's study content. All links open in a new tab."
         />
-        <div className="eps-soon" data-testid="eppp-resources-contained">
-          <div className="eps-soon-glow" aria-hidden />
-          <span className="eps-soon-icon">
-            <Library aria-hidden />
-          </span>
-          <span className="eps-soon-pill">
-            <Sparkles aria-hidden /> EPPP workspace
-          </span>
-          <h2 className="eps-soon-title">EPPP resources only</h2>
-          <p className="eps-soon-text">
-            This area is reserved for EPPP-specific references, decision trees,
-            formulas, and review assets. General PsychPro resources are not
-            shown inside the EPPP dashboard.
-          </p>
+        <div data-testid="eppp-resources-contained">
+          <ResourcesContent />
         </div>
       </div>
     </div>

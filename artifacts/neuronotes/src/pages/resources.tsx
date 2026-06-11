@@ -178,7 +178,7 @@ const SECTIONS: Section[] = [
   },
 ];
 
-export default function ResourcesPage() {
+export function ResourcesContent() {
   const [query, setQuery] = useState("");
 
   const filteredSections = useMemo(() => {
@@ -197,14 +197,7 @@ export default function ResourcesPage() {
   }, [query]);
 
   return (
-    <div className="min-h-full study-page-bg" data-testid="resources-page">
-      <div className="max-w-5xl mx-auto p-4 md:p-6 lg:p-8">
-      <PageTitle
-        title="Resources & References"
-        icon={Library}
-        subtitle="The primary sources, clinical frameworks, and research databases that inform PsychPro's study content. All links open in a new tab."
-      />
-
+    <>
       <div className="relative mb-6">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/70" />
         <Input
@@ -272,6 +265,20 @@ export default function ResourcesPage() {
           <span className="font-semibold text-foreground">A note on scope.</span> PsychPro's content is built from publicly available diagnostic frameworks, peer-reviewed neuroscience, and clinical practice references. It is intended as an educational study aid for students and clinicians — not a substitute for clinical judgment, supervision, or the original source materials. Always consult primary sources and current guidelines for clinical decision-making.
         </p>
       </div>
+    </>
+  );
+}
+
+export default function ResourcesPage() {
+  return (
+    <div className="min-h-full study-page-bg" data-testid="resources-page">
+      <div className="max-w-5xl mx-auto p-4 md:p-6 lg:p-8">
+        <PageTitle
+          title="Resources & References"
+          icon={Library}
+          subtitle="The primary sources, clinical frameworks, and research databases that inform PsychPro's study content. All links open in a new tab."
+        />
+        <ResourcesContent />
       </div>
     </div>
   );
