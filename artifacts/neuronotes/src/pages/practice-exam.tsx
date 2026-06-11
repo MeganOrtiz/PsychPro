@@ -626,8 +626,8 @@ export default function PracticeExamPage({ params }: Props) {
         />
       </div>
 
-      <StudySurface tone="light" glow pill={{ text: "Question" }} innerClassName="p-6 md:p-7 mb-6">
-        <p className="text-base md:text-lg font-medium leading-relaxed pr-20 text-white" data-testid="text-exam-question">{q.question}</p>
+      <StudySurface tone="light" glow innerClassName="p-6 md:p-7 mb-6">
+        <p className="text-base md:text-lg font-medium leading-relaxed text-white" data-testid="text-exam-question">{q.question}</p>
       </StudySurface>
 
       <div className="space-y-2.5 mb-6">

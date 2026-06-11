@@ -214,12 +214,11 @@ export default function QuizPage({ params }: Props) {
           <StudySurface
             tone="light"
             glow
-            pill={{ text: "Question" }}
             innerClassName="p-6 md:p-7 mb-6"
             testId="quiz-question-card"
           >
             <p
-              className="text-base md:text-lg font-medium leading-relaxed pr-20 text-white"
+              className="text-base md:text-lg font-medium leading-relaxed text-white"
               data-testid="text-question"
             >
               {current.question}
