@@ -896,14 +896,14 @@ const styles = `
 
 .landing-wordmark {
   margin: 0;
-  font-family: "Proxima Nova", "proxima-nova", "Montserrat", "Outfit", "Inter", system-ui, sans-serif;
+  font-family: "Outfit", "Inter", system-ui, -apple-system, sans-serif;
   font-weight: 400;
   font-size: clamp(40px, 7.5vw, 92px);
-  letter-spacing: 0.34em;
+  letter-spacing: 0.22em;
   line-height: 1;
   color: #F4FBFF;
   text-shadow: 0 0 40px ${C.cyan}55, 0 0 12px ${C.cyan}33;
-  padding-left: 0.32em;
+  padding-left: 0.22em;
 }
 .landing-tagline {
   margin: clamp(6px, 1vh, 12px) 0 0;
