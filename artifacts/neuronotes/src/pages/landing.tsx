@@ -924,10 +924,10 @@ const styles = `
 
 .landing-wordmark {
   margin: 0;
-  font-family: "Saira", "Outfit", "Inter", system-ui, sans-serif;
-  font-weight: 200;
+  font-family: "Julius Sans One", "Outfit", "Inter", system-ui, sans-serif;
+  font-weight: 400;
   font-size: clamp(40px, 7.5vw, 92px);
-  letter-spacing: 0.32em;
+  letter-spacing: 0.34em;
   line-height: 1;
   color: #F4FBFF;
   text-shadow: 0 0 40px ${C.cyan}55, 0 0 12px ${C.cyan}33;
