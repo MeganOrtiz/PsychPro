@@ -1398,7 +1398,7 @@ const styles = `
   position: relative;
   height: 7px;
   border-radius: 999px;
-  background: rgba(2, 13, 18, 0.6);
+  background: rgba(7, 33, 43, 0.6);
   overflow: hidden;
 }
 .landing-dash-fill {

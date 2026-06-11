@@ -273,7 +273,7 @@ function CourseRailButton({
 }) {
   const Icon = CATEGORY_ICONS[name] ?? LibraryBig;
 
-  const idleBg = "linear-gradient(135deg, rgba(12,67,85,0.78), rgba(2,13,18,0.86))";
+  const idleBg = "linear-gradient(135deg, rgba(12,67,85,0.78), rgba(7,33,43,0.86))";
   const activeBg = "linear-gradient(135deg, rgba(118,228,247,0.15), rgba(12,67,85,0.90))";
   const idleBorder = "rgba(118,228,247,0.20)";
   const activeBorder = "rgba(118,228,247,0.55)";
@@ -424,7 +424,7 @@ function CourseMasteryButton({ group }: { group: { name: string; items: Topic[] 
   const unlocked = status?.unlocked ?? false;
   const mastered = status?.mastered ?? false;
 
-  const lockedBg = "linear-gradient(135deg, rgba(12,67,85,0.78), rgba(2,13,18,0.86))";
+  const lockedBg = "linear-gradient(135deg, rgba(12,67,85,0.78), rgba(7,33,43,0.86))";
   const unlockedBg = "linear-gradient(135deg, rgba(118,228,247,0.16), rgba(12,67,85,0.92))";
   const lockedBorder = "rgba(118,228,247,0.18)";
   const unlockedBorder = "rgba(118,228,247,0.55)";
@@ -552,7 +552,7 @@ function TopicCard({ topic, onClick, showCategory }: TopicCardProps) {
       className="group text-left rounded-md p-4 cursor-pointer transition-all border backdrop-blur-md hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2"
       style={{
         background:
-          "linear-gradient(135deg, rgba(12,67,85,0.78), rgba(2,13,18,0.86))",
+          "linear-gradient(135deg, rgba(12,67,85,0.78), rgba(7,33,43,0.86))",
         borderColor: "rgba(118,228,247,0.22)",
         boxShadow: "inset 0 1px 0 0 rgba(255,255,255,0.06)",
         // Use CSS custom-property so :hover can shift box-shadow cheaply.

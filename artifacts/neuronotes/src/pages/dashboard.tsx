@@ -830,7 +830,7 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
-          backgroundImage: `linear-gradient(180deg, rgba(2,13,18,0.35) 0%, rgba(2,13,18,0.55) 55%, rgba(2,13,18,0.8) 100%), url(${smokeBg})`,
+          backgroundImage: `linear-gradient(180deg, rgba(8,37,48,0.26) 0%, rgba(8,37,48,0.44) 55%, rgba(8,37,48,0.66) 100%), url(${smokeBg})`,
           backgroundSize: "cover, cover",
           backgroundPosition: "center, center",
           backgroundRepeat: "no-repeat, no-repeat",
