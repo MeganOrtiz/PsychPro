@@ -777,8 +777,11 @@ const styles = `
 }
 .epd-section-title {
   margin: 0;
+  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-weight: 300;
   font-size: clamp(18px, 2.2vw, 26px);
-  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
   color: ${C.cloud};
 }
 .epd-section-meta { font-size: 13px; font-weight: 600; color: ${C.mist}; white-space: nowrap; }
