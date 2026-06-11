@@ -39,6 +39,33 @@ type EpppUserFields = {
   isAdmin: boolean | null;
 };
 
+export type EntitlementFlags = {
+  flashcardsCapped: boolean;
+  quizLocked: boolean;
+  examLocked: boolean;
+  studyGuideLocked: boolean;
+};
+
+/**
+ * Pure decision for the free-tier lock flags. Given whether the user has
+ * unrestricted access (admin, or the relevant paid access) and their lifetime
+ * quiz/exam counts, returns which surfaces are capped/locked. Extracted from
+ * getEntitlements so the cap behavior is unit-testable without a database.
+ */
+export function computeEntitlementFlags(args: {
+  unrestricted: boolean;
+  quizzesCompleted: number;
+  examsCompleted: number;
+}): EntitlementFlags {
+  const { unrestricted, quizzesCompleted, examsCompleted } = args;
+  return {
+    flashcardsCapped: !unrestricted,
+    quizLocked: !unrestricted && quizzesCompleted >= FREE_QUIZ_LIMIT,
+    examLocked: !unrestricted && examsCompleted >= FREE_EXAM_LIMIT,
+    studyGuideLocked: !unrestricted,
+  };
+}
+
 /** True when the user currently has EPPP Mastery Suite access. */
 export function computeEpppAccess(user: EpppUserFields): boolean {
   if (user.isAdmin) return true;
@@ -114,9 +141,6 @@ export async function getEntitlements(
     examLimit: FREE_EXAM_LIMIT,
     quizzesCompleted,
     examsCompleted,
-    flashcardsCapped: !unrestricted,
-    quizLocked: !unrestricted && quizzesCompleted >= FREE_QUIZ_LIMIT,
-    examLocked: !unrestricted && examsCompleted >= FREE_EXAM_LIMIT,
-    studyGuideLocked: !unrestricted,
+    ...computeEntitlementFlags({ unrestricted, quizzesCompleted, examsCompleted }),
   };
 }

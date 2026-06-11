@@ -97,8 +97,22 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, log: Logger)
         }
         log.info({ userId: user.id, status: sub.status, eppp: true }, "Updated EPPP subscription");
       } else {
-        // Master/Scholar path (unchanged).
-        const newStatus = active ? ((await getSubscriptionTier(stripe, sub)) ?? "free") : "free";
+        // Master/Scholar path.
+        let newStatus = "free";
+        if (active) {
+          const resolved = await getSubscriptionTier(stripe, sub);
+          if (resolved === null) {
+            // An active subscription that doesn't map to an approved tier falls
+            // back to free. This is almost always a Stripe misconfiguration
+            // (missing/typo'd neuronotes_tier) rather than intended — warn so it
+            // doesn't silently strip a paying user of their tier.
+            log.warn(
+              { userId: user.id, subId: sub.id, priceId: sub.items.data[0]?.price?.id },
+              "Active subscription did not map to an approved Master/Scholar tier; defaulting to free — check the product's neuronotes_tier metadata",
+            );
+          }
+          newStatus = resolved ?? "free";
+        }
         await db.update(usersTable).set({
           stripeSubscriptionId: sub.id,
           subscriptionStatus: newStatus,
@@ -147,12 +161,22 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, log: Logger)
           limit: 10,
         });
         let months = 0;
+        let sawEpppOneTime = false;
         for (const li of lineItems.data) {
           const price = li.price as Stripe.Price | null;
           const product = price?.product as Stripe.Product | undefined;
           if (price && !price.recurring && isEpppProduct(product)) {
+            sawEpppOneTime = true;
             months = Math.max(months, epppMonthsFromPrice(price));
           }
+        }
+        if (months === 0 && sawEpppOneTime) {
+          // A one-time EPPP purchase whose price lacks a valid eppp_months would
+          // grant no access at all — warn loudly rather than silently no-op.
+          log.warn(
+            { userId: user.id, sessionId: session.id },
+            "One-time EPPP purchase granted 0 months — a price is missing a valid eppp_months metadata value",
+          );
         }
         if (months > 0) {
           // Stack on top of any remaining access rather than truncating it.
@@ -174,10 +198,16 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, log: Logger)
           }).where(eq(usersTable.id, user.id));
           log.info({ userId: user.id, eppp: true }, "Activated EPPP subscription at checkout");
         } else {
-          const tier = (await getSubscriptionTier(stripe, sub)) ?? "free";
+          const resolved = await getSubscriptionTier(stripe, sub);
+          if (resolved === null) {
+            log.warn(
+              { userId: user.id, subId: subscriptionId },
+              "Checkout completed for a subscription that did not map to an approved Master/Scholar tier; defaulting to free — check the product's neuronotes_tier metadata",
+            );
+          }
           await db.update(usersTable).set({
             stripeSubscriptionId: subscriptionId,
-            subscriptionStatus: tier,
+            subscriptionStatus: resolved ?? "free",
           }).where(eq(usersTable.id, user.id));
         }
       }

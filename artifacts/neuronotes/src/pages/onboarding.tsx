@@ -161,8 +161,11 @@ function fmtMoney(cents: number, currency: string) {
   }
 }
 
-function deriveTier(name: string): "scholar" | "pro" {
-  return /scholar/i.test(name) ? "scholar" : "pro";
+// Categorize a plan card STRICTLY by the server's canonical tier metadata
+// (derived from the Stripe product's neuronotes_tier), never by the display
+// name — a product rename in Stripe must not silently re-bucket the card.
+function cardTier(plan: SubscriptionPlan): "scholar" | "pro" {
+  return plan.tier === "scholar" ? "scholar" : "pro";
 }
 
 type TierCard = {
@@ -246,7 +249,7 @@ export default function OnboardingPage() {
     }
     return Array.from(byProduct.values())
       .map((plan) => {
-        const tier = deriveTier(plan.name);
+        const tier = cardTier(plan);
         return {
           tier,
           name: plan.name,

@@ -7,7 +7,9 @@ import { requireUserId } from "../lib/userId";
 import {
   ACTIVE_SUBSCRIPTION_STATUSES,
   isApprovedSubscriptionTier,
+  isUnclassifiedPlanMetadata,
   subscriptionStatusApiShape,
+  tierFromTierMetadata,
 } from "../lib/tierMapping";
 
 const router = Router();
@@ -26,7 +28,23 @@ router.get("/subscription/plans", async (req: Request, res: Response): Promise<v
       // stays "pro" everywhere else in the codebase. Case-insensitive so
       // metadata values like "Scholar" or "Pro" entered via the Stripe
       // dashboard still match.
-      if (!isApprovedSubscriptionTier(product.metadata?.neuronotes_tier)) continue;
+      const meta = product.metadata?.neuronotes_tier;
+      if (!isApprovedSubscriptionTier(meta)) {
+        // Surface likely Stripe misconfiguration: a product whose neuronotes_tier
+        // is MISSING/blank or an UNRECOGNIZED value will silently never appear on
+        // the pricing page. (EPPP-tagged products are intentionally excluded here
+        // — they're sold via /eppp/plans, not as a Master/Scholar subscription.)
+        if (isUnclassifiedPlanMetadata(meta)) {
+          req.log.warn(
+            { productId: product.id, neuronotes_tier: meta ?? null },
+            "Active Stripe product is not tagged as an approved Master/Scholar plan (missing or unrecognized neuronotes_tier); not shown as a subscription plan",
+          );
+        }
+        continue;
+      }
+
+      // Categorize by the canonical metadata mapping, NOT the display name.
+      const tier = tierFromTierMetadata(meta);
 
       const prices = await stripe.prices.list({ product: product.id, active: true, limit: 10 });
       for (const price of prices.data) {
@@ -44,6 +62,7 @@ router.get("/subscription/plans", async (req: Request, res: Response): Promise<v
           unitAmount: price.unit_amount ?? 0,
           currency: price.currency,
           interval,
+          tier,
         });
       }
     }

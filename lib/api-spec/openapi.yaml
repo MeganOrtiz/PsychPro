@@ -1126,6 +1126,12 @@ components:
           type: string
         interval:
           type: string
+        tier:
+          type: string
+          description: >-
+            Canonical internal tier for this plan, derived server-side from the
+            product's neuronotes_tier metadata ("pro" or "scholar"). Clients MUST
+            categorize plan cards by this field, never by the display name.
       required:
         - id
         - name
@@ -1133,6 +1139,7 @@ components:
         - unitAmount
         - currency
         - interval
+        - tier
 
     CreateCheckoutSessionBody:
       type: object

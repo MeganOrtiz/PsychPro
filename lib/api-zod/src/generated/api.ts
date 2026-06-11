@@ -576,6 +576,11 @@ export const GetSubscriptionPlansResponseItem = zod.object({
   unitAmount: zod.number(),
   currency: zod.string(),
   interval: zod.string(),
+  tier: zod
+    .string()
+    .describe(
+      'Canonical internal tier for this plan, derived server-side from the product\'s neuronotes_tier metadata (\"pro\" or \"scholar\"). Clients MUST categorize plan cards by this field, never by the display name.',
+    ),
 });
 export const GetSubscriptionPlansResponse = zod.array(
   GetSubscriptionPlansResponseItem,

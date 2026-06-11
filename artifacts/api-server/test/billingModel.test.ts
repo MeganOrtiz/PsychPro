@@ -31,11 +31,15 @@ import {
   EPPP_TIER,
   isApprovedSubscriptionTier,
   isEpppTierMetadata,
+  isUnclassifiedPlanMetadata,
   normalizeTierMetadata,
   subscriptionStatusApiShape,
   subscriptionStatusFromTierMetadata,
   tierFromStatus,
+  tierFromTierMetadata,
 } from "../src/lib/tierMapping";
+import { computeEntitlementFlags } from "../src/lib/entitlements";
+import { FREE_QUIZ_LIMIT, FREE_EXAM_LIMIT } from "../src/lib/entitlements";
 
 class AssertionError extends Error {}
 function assert(cond: unknown, message: string): asserts cond {
@@ -174,6 +178,77 @@ test("normalizeTierMetadata lower-cases and passes through nullish", () => {
   eq(normalizeTierMetadata("eppp"), "eppp", "eppp");
   eq(normalizeTierMetadata(undefined), undefined, "undefined");
   eq(normalizeTierMetadata(null), undefined, "null");
+});
+
+// ---------------------------------------------------------------------
+// 4b. Plan-card categorization — the pricing UI must bucket a plan by the
+//     server-derived canonical tier metadata, NOT by the product's display
+//     name (a Stripe rename must not re-bucket the card or cross-wire tiers).
+// ---------------------------------------------------------------------
+
+test("tierFromTierMetadata: maps metadata directly to the card tier", () => {
+  eq(tierFromTierMetadata("pro"), "pro", "pro");
+  eq(tierFromTierMetadata("master"), "pro", "master alias");
+  eq(tierFromTierMetadata("Master"), "pro", "case-insensitive master");
+  eq(tierFromTierMetadata("scholar"), "scholar", "scholar");
+  eq(tierFromTierMetadata("Scholar"), "scholar", "case-insensitive scholar");
+  // Anything not an approved general tier (incl. EPPP, unknown, empty) is free.
+  eq(tierFromTierMetadata("eppp"), "free", "eppp never a general card tier");
+  eq(tierFromTierMetadata("anything-else"), "free", "unknown");
+  eq(tierFromTierMetadata(""), "free", "empty");
+  eq(tierFromTierMetadata(undefined), "free", "undefined");
+  eq(tierFromTierMetadata(null), "free", "null");
+});
+
+test("isUnclassifiedPlanMetadata flags missing AND unrecognized tiers (not EPPP/approved)", () => {
+  // A plan that will be dropped from the pricing page should be flagged so the
+  // misconfiguration surfaces — whether the tag is missing/blank or a typo.
+  assert(isUnclassifiedPlanMetadata(undefined), "missing flagged");
+  assert(isUnclassifiedPlanMetadata(null), "null flagged");
+  assert(isUnclassifiedPlanMetadata(""), "blank flagged");
+  assert(isUnclassifiedPlanMetadata("typo-tier"), "unrecognized flagged");
+  // Legitimately classified products must NOT be flagged.
+  assert(!isUnclassifiedPlanMetadata("pro"), "approved pro not flagged");
+  assert(!isUnclassifiedPlanMetadata("master"), "approved master not flagged");
+  assert(!isUnclassifiedPlanMetadata("scholar"), "approved scholar not flagged");
+  assert(!isUnclassifiedPlanMetadata("eppp"), "eppp not flagged (sold separately)");
+});
+
+// ---------------------------------------------------------------------
+// 4c. Free-tier caps — a free user lands on the permanent capped tier and is
+//     locked at exactly the documented caps, while any unrestricted user
+//     (paid for the relevant dimension, or admin) is never capped.
+// ---------------------------------------------------------------------
+
+test("computeEntitlementFlags: free user is capped and locks at the caps", () => {
+  // Fresh free user: capped previews + study guides, but the first quiz/exam
+  // are still available (counts are below the lifetime caps).
+  eq(
+    computeEntitlementFlags({ unrestricted: false, quizzesCompleted: 0, examsCompleted: 0 }),
+    { flashcardsCapped: true, quizLocked: false, examLocked: false, studyGuideLocked: true },
+    "fresh free user",
+  );
+  // After using the one free quiz, the quiz locks (exam still available).
+  eq(
+    computeEntitlementFlags({ unrestricted: false, quizzesCompleted: FREE_QUIZ_LIMIT, examsCompleted: 0 }),
+    { flashcardsCapped: true, quizLocked: true, examLocked: false, studyGuideLocked: true },
+    "quiz exhausted",
+  );
+  // After using the one free exam, the exam locks (quiz still available).
+  eq(
+    computeEntitlementFlags({ unrestricted: false, quizzesCompleted: 0, examsCompleted: FREE_EXAM_LIMIT }),
+    { flashcardsCapped: true, quizLocked: false, examLocked: true, studyGuideLocked: true },
+    "exam exhausted",
+  );
+});
+
+test("computeEntitlementFlags: unrestricted (paid/admin) is never capped", () => {
+  // Even with huge usage counts, an unrestricted user has nothing locked.
+  eq(
+    computeEntitlementFlags({ unrestricted: true, quizzesCompleted: 999, examsCompleted: 999 }),
+    { flashcardsCapped: false, quizLocked: false, examLocked: false, studyGuideLocked: false },
+    "unrestricted user",
+  );
 });
 
 // ---------------------------------------------------------------------

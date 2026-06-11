@@ -71,6 +71,17 @@ export function isEpppTierMetadata(meta: string | null | undefined): boolean {
 }
 
 /**
+ * True when an active Stripe product's `neuronotes_tier` neither tags it as an
+ * approved Master/Scholar plan NOR as the EPPP product — so it will be dropped
+ * from the pricing page. A MISSING/blank tag and an UNRECOGNIZED value both
+ * qualify. Used to surface likely Stripe misconfiguration (a PsychPro plan that
+ * was never tagged, or a typo'd tag) instead of silently omitting the product.
+ */
+export function isUnclassifiedPlanMetadata(meta: string | null | undefined): boolean {
+  return !isApprovedSubscriptionTier(meta) && !isEpppTierMetadata(meta);
+}
+
+/**
  * Maps an approved Stripe product's `neuronotes_tier` metadata to the value we
  * STORE in `subscription_status`:
  *   "scholar"            → "scholar"
@@ -98,6 +109,19 @@ export function tierFromStatus(status: string | null | undefined): Tier {
   if (status === "scholar") return "scholar";
   if (status === "active" || status === "pro" || status === "trialing") return "pro";
   return "free";
+}
+
+/**
+ * Maps a Stripe product's `neuronotes_tier` metadata DIRECTLY onto the internal
+ * Tier used by the pricing UI to categorize a plan card:
+ *   "pro" | "master"  → "pro"
+ *   "scholar"         → "scholar"
+ *   anything else (incl. "eppp", undefined, unknown) → "free"
+ * This is the canonical way a client categorizes a plan — NEVER infer the tier
+ * from the product's display name (a Stripe rename must not re-bucket the card).
+ */
+export function tierFromTierMetadata(meta: string | null | undefined): Tier {
+  return tierFromStatus(subscriptionStatusFromTierMetadata(meta));
 }
 
 /**

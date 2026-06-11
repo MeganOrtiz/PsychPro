@@ -42,6 +42,7 @@ type Plan = {
   unitAmount: number;
   currency: string;
   interval: string;
+  tier: string;
 };
 
 function formatPrice(amount: number, currency: string) {
@@ -75,8 +76,9 @@ export default function SubscriptionPage() {
   const isPro = isActive && !isScholar;
   const currentPeriodEnd = status?.currentPeriodEnd ?? null;
 
-  const proPlans = (plans as Plan[] | undefined)?.filter((p) => !p.name.toLowerCase().includes("scholar")) ?? [];
-  const scholarPlans = (plans as Plan[] | undefined)?.filter((p) => p.name.toLowerCase().includes("scholar")) ?? [];
+  // Bucket by the server's canonical tier metadata, never the display name.
+  const proPlans = (plans as Plan[] | undefined)?.filter((p) => p.tier !== "scholar") ?? [];
+  const scholarPlans = (plans as Plan[] | undefined)?.filter((p) => p.tier === "scholar") ?? [];
 
   async function handleSubscribe(priceId: string) {
     try {

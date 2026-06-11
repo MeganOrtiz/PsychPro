@@ -56,6 +56,14 @@ router.get("/eppp/plans", async (req: Request, res: Response): Promise<void> => 
           currency: price.currency,
           months,
         });
+      } else {
+        // Misconfiguration: an EPPP one-time price with no valid eppp_months
+        // would grant zero access, so it is intentionally not surfaced. Warn so
+        // the missing metadata is fixable instead of silently dropping a SKU.
+        req.log.warn(
+          { productId: product.id, priceId: price.id, eppp_months: price.metadata?.eppp_months ?? null },
+          "EPPP one-time price has no valid eppp_months metadata; not surfaced as a purchase option",
+        );
       }
     }
 

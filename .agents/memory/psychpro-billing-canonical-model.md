@@ -23,7 +23,12 @@ The root cause was duplicated inline mappings — each route/webhook kept its ow
 **How to apply:** when touching billing/entitlement gating, route through the canonical module
 and add/extend the regression suite rather than branching on tier strings locally.
 
-**Known divergence (intentionally NOT fixed during the lock-in):** mastery-exams' own tier helper
-treats only literal `pro`/`scholar` as paid, so a Master subscriber stored as `active` reads as
-free there. Reconciling it to the canonical mapping changes access behavior, so it's a separate
-change, not part of a no-behavior-change lock-in. (No live users were affected when noted.)
+**Plan categorization:** classify subscription plans by SERVER-derived canonical tier metadata
+(`tierFromTierMetadata`, surfaced as the `tier` field on `/subscription/plans`), never by the
+Stripe product DISPLAY NAME. Renaming a product in the Stripe dashboard must not cross-wire tiers.
+A product whose `neuronotes_tier` is missing/unrecognized (and not EPPP) is flagged via
+`isUnclassifiedPlanMetadata` and dropped from the pricing page instead of silently mis-listed.
+
+**Divergence is RESOLVED (was: mastery-exams treated only literal `pro`/`scholar` as paid):** both
+mastery-exam systems now route through canonical `tierFromStatus` + the {pro,scholar} sets, so a
+Master subscriber stored as `active` correctly reads as paid everywhere. No remaining known divergence.

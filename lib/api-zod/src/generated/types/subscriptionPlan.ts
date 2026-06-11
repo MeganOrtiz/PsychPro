@@ -15,4 +15,6 @@ export interface SubscriptionPlan {
   unitAmount: number;
   currency: string;
   interval: string;
+  /** Canonical internal tier for this plan, derived server-side from the product's neuronotes_tier metadata ("pro" or "scholar"). Clients MUST categorize plan cards by this field, never by the display name. */
+  tier: string;
 }
