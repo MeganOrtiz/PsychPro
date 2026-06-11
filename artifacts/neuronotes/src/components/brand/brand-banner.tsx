@@ -49,9 +49,10 @@ export function BrandBanner({
           />
         )}
         <h1
-          className="font-light leading-none"
+          className="leading-none"
           style={{
             fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
+            fontWeight: 200,
             fontSize: isLg
               ? "clamp(28px, 4vw, 44px)"
               : "clamp(18px, 2.2vw, 24px)",
