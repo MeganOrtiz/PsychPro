@@ -62,6 +62,12 @@ export function initSentry(): void {
       if (breadcrumb.data) {
         const data = breadcrumb.data as Record<string, unknown>;
         if (typeof data.url === "string") data.url = data.url.split("?")[0];
+        // Defense-in-depth: never let request/response payloads (which can
+        // carry answers, notes, reflections, or other clinical content) ride
+        // along on fetch/xhr or navigation breadcrumbs.
+        delete data.body;
+        delete data.request_body;
+        delete data.response_body;
       }
       return breadcrumb;
     },

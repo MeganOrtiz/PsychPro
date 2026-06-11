@@ -36,5 +36,6 @@
 - [EPPP suite reorg already done](psychpro-eppp-suite-reorg-done.md) — the pasted T001–T010 reorg plan is STALE; suite already implements it (and surpasses it). Don't re-run or you regress owner decisions (clinical-cases is a top-level tab; Reflections/My Notes intentional).
 - [Progress page highlight cards](psychpro-progress-highlight-cards.md) — Needs Work/Strong Areas are a designed pair; both must use the deep-turquoise gradient surface, never a pale paperSoft fill.
 - [EPPP journal/MQ card glass](psychpro-eppp-card-glass.md) — eps-mq-card etc. must use the translucent cerulean glass recipe, never opaque near-black; reuse lesson-header-box values.
+- [drizzle-orm + otel peer dup](drizzle-otel-peer-dup.md) — a dep pulling @opentelemetry/api splits drizzle into 2 pnpm variants; api-server typecheck breaks; align by adding otel api to lib/db.
 - [EPPP separate access level](psychpro-eppp-access-level.md) — EPPP is its own expiry-driven tier (epppAccessUntil), never unlocked by Master/Scholar; gate with EPPP helpers + Stripe metadata conventions.
 - [Stripe MCP metadata bracket](stripe-mcp-metadata-bracket.md) — set metadata via flat `metadata[key]` params in stripeApiExecute; nested object & dot notation both fail.
