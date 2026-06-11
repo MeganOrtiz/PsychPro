@@ -234,14 +234,14 @@ export default function SubscriptionPage() {
           ) : proPlans.length > 0 ? (
             <div className="space-y-3">
               {proPlans.map((plan) => (
-                <div key={plan.priceId} className="border border-border rounded-xl p-4">
+                <div key={plan.priceId} className="sub-bill">
                   <div className="flex items-center justify-between mb-3">
                     <div>
                       <p className="font-semibold text-foreground capitalize">Billed {plan.interval}ly</p>
-                      {plan.interval === "year" && <p className="text-xs text-green-600 dark:text-green-400 font-medium">Save ~33%</p>}
+                      {plan.interval === "year" && <p className="text-xs font-semibold" style={{ color: P.surf }}>Save ~33%</p>}
                     </div>
                     <div className="text-right">
-                      <p className="text-2xl font-bold text-foreground">{formatPrice(plan.unitAmount, plan.currency)}</p>
+                      <p className="sub-price text-3xl font-extrabold">{formatPrice(plan.unitAmount, plan.currency)}</p>
                       <p className="text-xs text-muted-foreground">/{plan.interval}</p>
                     </div>
                   </div>
@@ -271,24 +271,23 @@ export default function SubscriptionPage() {
 
         {/* Scholar tier — recolored from purple to the cerulean/teal study
             palette so it sits in the same brand family as the rest of the app. */}
-        <div
-          className="bg-card border-2 rounded-xl p-5 relative"
-          style={{ borderColor: `${P.surf}88` }}
-        >
-          <div className="absolute -top-3 left-5">
+        <div className="sub-plan relative">
+          <div className="absolute -top-3 left-5 z-10">
             <span
-              className="text-white text-xs font-bold px-3 py-1 rounded-full"
-              style={{ background: P.tealDeep }}
+              className="text-[#06232D] text-xs font-bold px-3 py-1 rounded-full"
+              style={{ background: P.surf, boxShadow: `0 0 18px -4px ${P.surf}` }}
             >
               NEW
             </span>
           </div>
-          <div className="flex items-center gap-2 mb-4">
-            <BookMarked className="w-4 h-4" style={{ color: P.tealDeep }} />
+          <div className="flex items-center gap-3 mb-5">
+            <span className="sub-icon-chip">
+              <BookMarked className="w-[18px] h-[18px]" style={{ color: P.surf }} />
+            </span>
             <span className="font-semibold text-foreground text-lg">PsychPro Scholar</span>
             <Badge
-              className="ml-auto border-0 text-white"
-              style={{ background: P.teal }}
+              className="ml-auto border-0 text-[#06232D] font-semibold"
+              style={{ background: P.teal, boxShadow: `0 0 18px -4px ${P.teal}` }}
             >
               Best Value
             </Badge>
@@ -311,11 +310,7 @@ export default function SubscriptionPage() {
           ) : scholarPlans.length > 0 ? (
             <div className="space-y-3">
               {scholarPlans.map((plan) => (
-                <div
-                  key={plan.priceId}
-                  className="border rounded-xl p-4"
-                  style={{ borderColor: `${P.surf}55` }}
-                >
+                <div key={plan.priceId} className="sub-bill">
                   <div className="flex items-center justify-between mb-3">
                     <div>
                       <p className="font-semibold text-foreground capitalize">Billed {plan.interval}ly</p>
@@ -324,7 +319,7 @@ export default function SubscriptionPage() {
                       )}
                     </div>
                     <div className="text-right">
-                      <p className="text-2xl font-bold text-foreground">{formatPrice(plan.unitAmount, plan.currency)}</p>
+                      <p className="sub-price text-3xl font-extrabold">{formatPrice(plan.unitAmount, plan.currency)}</p>
                       <p className="text-xs text-muted-foreground">/{plan.interval}</p>
                     </div>
                   </div>
