@@ -803,7 +803,7 @@ const styles = `
   justify-content: center;
   width: 36px;
   height: 36px;
-  border-radius: 999px;
+  border-radius: 0;
   background: transparent;
   border: 1px solid ${C.hairline};
   color: ${C.cyanSoft};
@@ -821,7 +821,7 @@ const styles = `
   font-weight: 600;
   letter-spacing: 0.24em;
   padding: 9px 18px;
-  border-radius: 999px;
+  border-radius: 0;
   background: transparent;
   border: 1px solid ${C.cyan};
   color: ${C.cyan};
@@ -978,7 +978,7 @@ const styles = `
   font-weight: 600;
   letter-spacing: 0.22em;
   padding: 14px 28px;
-  border-radius: 8px;
+  border-radius: 0;
   cursor: pointer;
   transition: all 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }

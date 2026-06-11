@@ -177,7 +177,7 @@ function QuizView({ questions, isExam, examLength, timed }: { questions: QuizQue
               key={key}
               disabled={submitted}
               onClick={() => setAnswers((prev) => ({ ...prev, [q.id]: key }))}
-              className={`w-full text-left rounded-xl px-4 py-3 text-sm transition-colors ${cls} flex items-start gap-3`}
+              className={`w-full text-left rounded-none px-4 py-3 text-sm transition-colors ${cls} flex items-start gap-3`}
             >
               <span className="font-bold flex-shrink-0 w-5">{key}.</span>
               <span>{text}</span>
@@ -380,7 +380,7 @@ function MatchingView({ cards }: { cards: Flashcard[] }) {
                 key={`f-${p.id}`}
                 disabled={matched.has(p.id)}
                 onClick={() => setSelectedFront(p.id)}
-                className={`w-full rounded-xl px-3 py-3 text-xs text-left border-2 transition-colors ${tileClass(p.id, "front")}`}
+                className={`w-full rounded-none px-3 py-3 text-xs text-left border-2 transition-colors ${tileClass(p.id, "front")}`}
               >
                 {p.front}
               </button>
@@ -392,7 +392,7 @@ function MatchingView({ cards }: { cards: Flashcard[] }) {
                 key={`b-${p.id}`}
                 disabled={matched.has(p.id)}
                 onClick={() => setSelectedBack(p.id)}
-                className={`w-full rounded-xl px-3 py-3 text-xs text-left border-2 transition-colors ${tileClass(p.id, "back")}`}
+                className={`w-full rounded-none px-3 py-3 text-xs text-left border-2 transition-colors ${tileClass(p.id, "back")}`}
               >
                 {p.back}
               </button>
@@ -504,10 +504,10 @@ function ReviewView({ deckId, cards }: { deckId: number; cards: Flashcard[] }) {
         </Button>
       ) : (
         <div className="grid grid-cols-4 gap-2">
-          <button onClick={() => rate("again")} className="py-2 rounded-lg text-xs font-medium border border-red-400 bg-red-50 dark:bg-red-900/20 text-red-700 hover:bg-red-100">Again</button>
-          <button onClick={() => rate("hard")} className="py-2 rounded-lg text-xs font-medium border border-amber-400 bg-amber-50 dark:bg-amber-900/20 text-amber-700 hover:bg-amber-100">Hard</button>
-          <button onClick={() => rate("good")} className="py-2 rounded-lg text-xs font-medium border border-blue-400 bg-blue-50 dark:bg-blue-900/20 text-blue-700 hover:bg-blue-100">Good</button>
-          <button onClick={() => rate("easy")} className="py-2 rounded-lg text-xs font-medium border border-green-500 bg-green-50 dark:bg-green-900/20 text-green-700 hover:bg-green-100">Easy</button>
+          <button onClick={() => rate("again")} className="py-2 rounded-none text-xs font-medium border border-red-400 bg-red-50 dark:bg-red-900/20 text-red-700 hover:bg-red-100">Again</button>
+          <button onClick={() => rate("hard")} className="py-2 rounded-none text-xs font-medium border border-amber-400 bg-amber-50 dark:bg-amber-900/20 text-amber-700 hover:bg-amber-100">Hard</button>
+          <button onClick={() => rate("good")} className="py-2 rounded-none text-xs font-medium border border-blue-400 bg-blue-50 dark:bg-blue-900/20 text-blue-700 hover:bg-blue-100">Good</button>
+          <button onClick={() => rate("easy")} className="py-2 rounded-none text-xs font-medium border border-green-500 bg-green-50 dark:bg-green-900/20 text-green-700 hover:bg-green-100">Easy</button>
         </div>
       )}
     </div>
@@ -674,7 +674,7 @@ export default function MyDeckDetailPage() {
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`flex-1 min-w-0 flex items-center justify-center gap-1.5 px-2 py-2 rounded-lg text-xs font-medium transition-colors whitespace-nowrap ${activeTab === t.id ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+            className={`flex-1 min-w-0 flex items-center justify-center gap-1.5 px-2 py-2 rounded-none text-xs font-medium transition-colors whitespace-nowrap ${activeTab === t.id ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
           >
             <t.icon className="w-3.5 h-3.5 flex-shrink-0" />
             <span className="hidden sm:inline">{t.label}</span>

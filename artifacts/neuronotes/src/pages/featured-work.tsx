@@ -228,7 +228,7 @@ function Chip({ active, onClick, children }: { active?: boolean; onClick?: () =>
     <button
       type="button"
       onClick={onClick}
-      className={`px-3 py-1 rounded-lg text-xs font-medium border transition-colors ${
+      className={`px-3 py-1 rounded-none text-xs font-medium border transition-colors ${
         active ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground"
       }`}
     >{children}</button>
@@ -310,7 +310,7 @@ function DetailModal({ submission, onClose }: { submission: Submission; onClose:
         <button
           aria-label="Close"
           onClick={onClose}
-          className="absolute top-3 right-3 w-9 h-9 rounded-lg bg-muted hover:bg-muted/70 flex items-center justify-center"
+          className="absolute top-3 right-3 w-9 h-9 rounded-none bg-muted hover:bg-muted/70 flex items-center justify-center"
         ><X className="w-4 h-4" /></button>
         <div className="flex items-center gap-2 mb-3">
           <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold uppercase tracking-wide bg-primary/15 text-primary border border-primary/25">
@@ -615,7 +615,7 @@ function SubmitForm({ onSubmitted }: { onSubmitted: () => void }) {
                       type="button"
                       key={t}
                       onClick={() => toggleTag(t)}
-                      className={`px-2.5 py-1 rounded-lg text-xs border transition-colors ${
+                      className={`px-2.5 py-1 rounded-none text-xs border transition-colors ${
                         selected ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card text-foreground hover:bg-muted"
                       }`}
                     >{t}</button>

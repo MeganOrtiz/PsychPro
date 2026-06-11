@@ -137,7 +137,7 @@ export default function MyDecksPage() {
                 <button
                   onClick={(e) => deleteDeck(deck.id, e)}
                   disabled={deleting === deck.id}
-                  className="p-2 rounded-lg text-white/70 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex-shrink-0"
+                  className="p-2 rounded-none text-white/70 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex-shrink-0"
                 >
                   {deleting === deck.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
                 </button>

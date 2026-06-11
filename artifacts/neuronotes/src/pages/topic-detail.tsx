@@ -137,7 +137,7 @@ export default function TopicDetailPage({ params }: Props) {
                   onClick={mode.onClick}
                   data-testid={mode.testId}
                   aria-label={mode.locked ? `${mode.title} — locked, requires PsychPro Master` : mode.title}
-                  className="recommended-tile group relative flex items-center gap-4 p-5 rounded-xl text-left border hover:-translate-y-0.5 active:translate-y-0 overflow-hidden"
+                  className="recommended-tile group relative flex items-center gap-4 p-5 rounded-none text-left border hover:-translate-y-0.5 active:translate-y-0 overflow-hidden"
                   style={{ color: "#FFFFFF" }}
                 >
                   {/* Animated sheen — a faint diagonal highlight that drifts

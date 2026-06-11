@@ -232,7 +232,7 @@ export default function NewDeckPage() {
                   <button
                     type="button"
                     onClick={() => setAiMode("strict")}
-                    className={`flex flex-col items-start gap-1 p-3 rounded-xl border-2 text-left transition-all ${
+                    className={`flex flex-col items-start gap-1 p-3 rounded-none border-2 text-left transition-all ${
                       aiMode === "strict"
                         ? "border-primary bg-card shadow-[0_0_18px_rgba(118,228,247,0.22)]"
                         : "border-border bg-card hover:border-primary/40"
@@ -248,7 +248,7 @@ export default function NewDeckPage() {
                   <button
                     type="button"
                     onClick={() => setAiMode("enhance")}
-                    className={`flex flex-col items-start gap-1 p-3 rounded-xl border-2 text-left transition-all ${
+                    className={`flex flex-col items-start gap-1 p-3 rounded-none border-2 text-left transition-all ${
                       aiMode === "enhance"
                         ? "border-primary bg-card shadow-[0_0_18px_rgba(118,228,247,0.22)]"
                         : "border-border bg-card hover:border-primary/40"
@@ -286,7 +286,7 @@ export default function NewDeckPage() {
                             key={n}
                             type="button"
                             onClick={() => setFlashcardCount(n)}
-                            className={`py-2 rounded-lg border text-sm font-medium transition-colors ${
+                            className={`py-2 rounded-none border text-sm font-medium transition-colors ${
                               flashcardCount === n
                                 ? "border-primary bg-primary/10 text-primary"
                                 : "border-border bg-card text-muted-foreground hover:bg-muted"
@@ -310,7 +310,7 @@ export default function NewDeckPage() {
                             key={n}
                             type="button"
                             onClick={() => setQuizCount(n)}
-                            className={`py-2 rounded-lg border text-sm font-medium transition-colors ${
+                            className={`py-2 rounded-none border text-sm font-medium transition-colors ${
                               quizCount === n
                                 ? "border-primary bg-primary/10 text-primary"
                                 : "border-border bg-card text-muted-foreground hover:bg-muted"
@@ -338,7 +338,7 @@ export default function NewDeckPage() {
                               key={n}
                               type="button"
                               onClick={() => setExamQuestionCount(n)}
-                              className={`py-2 rounded-lg border text-sm font-medium transition-colors ${
+                              className={`py-2 rounded-none border text-sm font-medium transition-colors ${
                                 examQuestionCount === n
                                   ? "border-primary bg-primary/10 text-primary"
                                   : "border-border bg-card text-muted-foreground hover:bg-muted"
@@ -352,7 +352,7 @@ export default function NewDeckPage() {
                       <button
                         type="button"
                         onClick={() => setExamTimed(!examTimed)}
-                        className={`w-full flex items-center justify-between gap-2 rounded-lg border px-3 py-2.5 text-sm transition-colors ${
+                        className={`w-full flex items-center justify-between gap-2 rounded-none border px-3 py-2.5 text-sm transition-colors ${
                           examTimed ? "border-primary bg-primary/10 text-primary" : "border-border bg-card text-foreground hover:bg-muted"
                         }`}
                       >
@@ -376,7 +376,7 @@ export default function NewDeckPage() {
                             key={n}
                             type="button"
                             onClick={() => setClozeCount(n)}
-                            className={`py-2 rounded-lg border text-sm font-medium transition-colors ${
+                            className={`py-2 rounded-none border text-sm font-medium transition-colors ${
                               clozeCount === n
                                 ? "border-primary bg-primary/10 text-primary"
                                 : "border-border bg-card text-muted-foreground hover:bg-muted"
@@ -394,7 +394,7 @@ export default function NewDeckPage() {
               {/* Study material */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">Study Material</label>
-                <div className="flex rounded-lg border border-border overflow-hidden mb-3">
+                <div className="flex rounded-none border border-border overflow-hidden mb-3">
                   <button
                     type="button"
                     onClick={() => setMode("text")}
@@ -430,7 +430,7 @@ export default function NewDeckPage() {
                           <p className="font-medium text-foreground text-sm truncate">{file.name}</p>
                           <p className="text-xs text-muted-foreground">{(file.size / 1024).toFixed(0)} KB</p>
                         </div>
-                        <button type="button" onClick={removeFile} className="p-1 rounded-lg hover:bg-muted transition-colors">
+                        <button type="button" onClick={removeFile} className="p-1 rounded-none hover:bg-muted transition-colors">
                           <X className="w-4 h-4 text-muted-foreground" />
                         </button>
                       </div>
@@ -508,7 +508,7 @@ export default function NewDeckPage() {
               key={t.id}
               onClick={() => setActive(t.id)}
               data-testid={`tool-card-${t.id}`}
-              className="group text-left rounded-2xl border border-border bg-card p-5 shadow-sm hover:shadow-md hover:border-primary/40 hover:-translate-y-0.5 transition-all"
+              className="group text-left rounded-none border border-border bg-card p-5 shadow-sm hover:shadow-md hover:border-primary/40 hover:-translate-y-0.5 transition-all"
             >
               <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-4 group-hover:bg-primary/15 transition-colors">
                 <t.icon className="w-6 h-6 text-primary" />

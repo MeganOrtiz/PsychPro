@@ -337,7 +337,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
           <button
             onClick={() => setSidebarOpen(true)}
             data-testid="eppp-suite-menu-toggle"
-            className="inline-flex items-center justify-center h-9 w-9 rounded-md text-foreground"
+            className="inline-flex items-center justify-center h-9 w-9 rounded-none text-foreground"
             aria-label="Open menu"
           >
             <Menu className="w-5 h-5" />
@@ -1597,7 +1597,7 @@ const styles = `
 .eps-crumb-page { font-size: 13px; font-weight: 500; color: ${C.mist}; }
 .eps-back-app {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 14px; border-radius: 999px;
+  padding: 8px 14px; border-radius: 0;
   font-size: 12.5px; font-weight: 600; text-decoration: none; white-space: nowrap;
   color: ${C.mist}; border: 1px solid ${C.hairlineStrong}; background: rgba(12,28,38,0.5);
   transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease;
@@ -1668,7 +1668,7 @@ const styles = `
 .eps-kb-rail-item {
   display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 11px; align-items: center;
   text-align: left; cursor: pointer;
-  padding: 11px 12px; border-radius: 11px;
+  padding: 11px 12px; border-radius: 0;
   border: 1px solid rgba(118,228,247,0.10);
   background: rgba(255,255,255,0.025);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease, background 0.2s ease;
@@ -1720,7 +1720,7 @@ const styles = `
 .eps-kb-lesson {
   display: grid; grid-template-columns: 38px minmax(0, 1fr) 18px; gap: 12px; align-items: center;
   text-align: left; cursor: pointer;
-  padding: 15px; border-radius: 14px;
+  padding: 15px; border-radius: 0;
   background: linear-gradient(145deg, rgba(10,45,61,0.5), rgba(6,28,40,0.6));
   border: 1px solid ${C.hairline};
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
@@ -1763,7 +1763,7 @@ const styles = `
 .eps-exam-meta { font-size: 12.5px; color: ${C.muted}; line-height: 1.4; }
 .eps-exam-cta {
   display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; cursor: pointer;
-  padding: 9px 16px; border-radius: 999px; font-size: 13px; font-weight: 700; white-space: nowrap;
+  padding: 9px 16px; border-radius: 0; font-size: 13px; font-weight: 700; white-space: nowrap;
   color: ${C.ink}; border: 1px solid rgba(167,243,255,0.65);
   background: linear-gradient(135deg, ${C.mist} 0%, ${C.cyan} 48%, #38BDF8 100%);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 0 22px -4px ${C.cyan}b3;
@@ -1796,7 +1796,7 @@ const styles = `
 @media (max-width: 760px) { .eps-topic-grid { grid-template-columns: 1fr; } }
 .eps-topic {
   display: flex; align-items: center; gap: 14px; text-align: left; cursor: pointer;
-  border-radius: 14px; padding: 14px 16px;
+  border-radius: 0; padding: 14px 16px;
   background: linear-gradient(145deg, rgba(10,45,61,0.5), rgba(6,28,40,0.6));
   border: 1px solid ${C.hairline};
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
@@ -1832,7 +1832,7 @@ const styles = `
 .eps-subtabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: clamp(20px, 2.4vw, 28px); }
 .eps-subtab {
   display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
-  padding: 9px 16px; border-radius: 12px; font-size: 13px; font-weight: 600; white-space: nowrap;
+  padding: 9px 16px; border-radius: 0; font-size: 13px; font-weight: 600; white-space: nowrap;
   color: ${C.mist}; background: rgba(12,28,38,0.55); border: 1px solid ${C.hairlineStrong};
   transition: transform 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
@@ -1846,7 +1846,7 @@ const styles = `
 /* Clinical Cases part toggle: centered, larger, squared (not pill) */
 .eps-subtabs--center { justify-content: center; }
 .eps-subtabs--center .eps-subtab {
-  border-radius: 12px; padding: 13px 26px; font-size: 15.5px; gap: 9px;
+  border-radius: 0; padding: 13px 26px; font-size: 15.5px; gap: 9px;
 }
 .eps-subtabs--center .eps-subtab svg { width: 18px; height: 18px; }
 

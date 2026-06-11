@@ -30,7 +30,7 @@ export default function CrashTestPage() {
         <button
           type="button"
           onClick={() => setBoom(true)}
-          className="inline-flex items-center justify-center gap-2 rounded-md bg-destructive text-destructive-foreground px-4 py-2 text-sm font-medium hover:opacity-90"
+          className="inline-flex items-center justify-center gap-2 rounded-none bg-destructive text-destructive-foreground px-4 py-2 text-sm font-medium hover:opacity-90"
           data-testid="button-trigger-crash"
         >
           Trigger crash

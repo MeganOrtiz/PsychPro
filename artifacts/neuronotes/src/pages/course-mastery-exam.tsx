@@ -377,7 +377,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
             const isSelected = answers[q.id] === key;
             const isAnswered = !!answers[q.id];
             let style: React.CSSProperties = {};
-            let cls = "w-full text-left px-4 py-3.5 rounded-xl border text-sm transition-all flex items-center gap-3";
+            let cls = "w-full text-left px-4 py-3.5 rounded-none border text-sm transition-all flex items-center gap-3";
             if (!isAnswered) {
               cls += " hover:-translate-y-0.5 quiz-option-hover";
               style = {

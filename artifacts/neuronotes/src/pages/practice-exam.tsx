@@ -342,7 +342,7 @@ export default function PracticeExamPage({ params }: Props) {
             <button
               onClick={() => setQuestionCount(Math.min(25, examAvailable) as QuestionCount)}
               data-testid={`button-count-${examAvailable}`}
-              className="rounded-xl border p-5 text-left transition-all hover:-translate-y-0.5 bg-card"
+              className="rounded-none border p-5 text-left transition-all hover:-translate-y-0.5 bg-card"
               style={{
                 borderColor: `${P.surf}55`,
                 boxShadow: `0 8px 22px -12px ${P.teal}66`,
@@ -364,7 +364,7 @@ export default function PracticeExamPage({ params }: Props) {
                 key={n}
                 onClick={() => setQuestionCount(n)}
                 data-testid={`button-count-${n}`}
-                className="rounded-xl border p-5 text-left transition-all hover:-translate-y-0.5 bg-card"
+                className="rounded-none border p-5 text-left transition-all hover:-translate-y-0.5 bg-card"
                 style={
                   isSelected
                     ? {
@@ -572,7 +572,7 @@ export default function PracticeExamPage({ params }: Props) {
             <TooltipTrigger asChild>
               <button
                 onClick={() => navigate(inEppp ? "/eppp/suite/study-plan" : "/study-lab")}
-                className="text-muted-foreground hover:text-foreground p-1.5 rounded-md hover:bg-accent transition-colors"
+                className="text-muted-foreground hover:text-foreground p-1.5 rounded-none hover:bg-accent transition-colors"
                 data-testid="button-study-lab"
                 aria-label="Open Study Lab"
               >
@@ -588,7 +588,7 @@ export default function PracticeExamPage({ params }: Props) {
               <TooltipTrigger asChild>
                 <SheetTrigger asChild>
                   <button
-                    className="text-muted-foreground hover:text-foreground p-1.5 rounded-md hover:bg-accent transition-colors"
+                    className="text-muted-foreground hover:text-foreground p-1.5 rounded-none hover:bg-accent transition-colors"
                     data-testid="button-reflect"
                     aria-label="Open reflection panel"
                   >
@@ -640,7 +640,7 @@ export default function PracticeExamPage({ params }: Props) {
           const isSelected = answers[q.id] === key;
           const isAnswered = !!answers[q.id];
           let style: React.CSSProperties = {};
-          let cls = "w-full text-left px-4 py-3.5 rounded-xl border text-sm transition-all flex items-center gap-3";
+          let cls = "w-full text-left px-4 py-3.5 rounded-none border text-sm transition-all flex items-center gap-3";
           if (!isAnswered) {
             // Match the quiz's cerulean glass option (index.css quiz-option-hover
             // ramps the glow + border on :hover).

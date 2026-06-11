@@ -418,7 +418,7 @@ export function BrainQuizPanel({
           <div className="flex items-center gap-2 flex-wrap justify-center">
             <button
               onClick={restart}
-              className="px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2"
+              className="px-4 py-2 rounded-none text-sm font-semibold flex items-center gap-2"
               style={{ background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`, color: PALETTE.bg }}
               data-testid="button-quiz-restart"
             >
@@ -428,7 +428,7 @@ export function BrainQuizPanel({
             {onExit && (
               <button
                 onClick={onExit}
-                className="px-4 py-2 rounded-xl text-sm font-medium border flex items-center gap-2"
+                className="px-4 py-2 rounded-none text-sm font-medium border flex items-center gap-2"
                 style={{ background: `${PALETTE.surface}cc`, borderColor: `${PALETTE.steel}99`, color: PALETTE.mist }}
                 data-testid="button-quiz-exit"
               >
@@ -514,7 +514,7 @@ export function BrainQuizPanel({
                   key={opt.id}
                   onClick={() => answer(opt.id)}
                   disabled={answered}
-                  className="px-3 py-2.5 rounded-xl text-sm font-medium border text-left flex items-center justify-between gap-2 transition-all"
+                  className="px-3 py-2.5 rounded-none text-sm font-medium border text-left flex items-center justify-between gap-2 transition-all"
                   style={{ background: bg, borderColor: border, color }}
                   data-testid={`quiz-option-${opt.id}`}
                 >
@@ -580,7 +580,7 @@ export function BrainQuizPanel({
         <button
           onClick={next}
           disabled={!answered}
-          className="px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all"
+          className="px-4 py-2 rounded-none text-sm font-semibold flex items-center gap-2 transition-all"
           style={{
             background: answered ? `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})` : `${PALETTE.steel}66`,
             color: answered ? PALETTE.bg : `${PALETTE.mist}66`,

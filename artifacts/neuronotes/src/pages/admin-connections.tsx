@@ -91,7 +91,7 @@ export default function AdminConnectionsPage() {
             <button
               key={r.days}
               onClick={() => setRange(r.days)}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium border ${
+              className={`px-3 py-1.5 rounded-none text-sm font-medium border ${
                 range === r.days
                   ? "border-primary bg-primary/10 text-primary"
                   : "border-border bg-card text-foreground hover:bg-muted"

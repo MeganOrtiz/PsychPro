@@ -231,7 +231,7 @@ export default function QuizPage({ params }: Props) {
               const isSelected = selected === key;
               const isCorrect = key === current.correctAnswer;
 
-              const baseClass = "w-full text-left px-4 py-3.5 rounded-xl border text-sm transition-all flex items-center gap-3";
+              const baseClass = "w-full text-left px-4 py-3.5 rounded-none border text-sm transition-all flex items-center gap-3";
 
               let style: React.CSSProperties = {};
               let cls = baseClass;
@@ -390,7 +390,7 @@ export default function QuizPage({ params }: Props) {
                     setReflectionSaved(true);
                   }}
                   disabled={reflection.trim().length === 0 || reflectionSaved}
-                  className="text-xs font-medium px-2.5 py-1 rounded-md text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  className="text-xs font-medium px-2.5 py-1 rounded-none text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                   style={{
                     background: reflectionSaved
                       ? `linear-gradient(135deg, ${P.surf}55, ${P.surf}33)`

@@ -236,7 +236,7 @@ function CourseRail({
               key={c.name}
               type="button"
               onClick={() => onSelect(c.name)}
-              className={`shrink-0 px-3 py-2 rounded-lg border flex items-center gap-2 text-sm transition-colors ${
+              className={`shrink-0 px-3 py-2 rounded-none border flex items-center gap-2 text-sm transition-colors ${
                 isActive
                   ? "bg-primary/15 border-primary/50 text-foreground"
                   : "bg-card border-border text-white/70 hover:text-foreground hover:border-primary/30"
@@ -290,7 +290,7 @@ function CourseRailButton({
       onClick={onClick}
       aria-pressed={active}
       data-testid={`course-rail-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
-      className="group relative w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all duration-200 border backdrop-blur-md cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--nav-glow)]/50"
+      className="group relative w-full flex items-center gap-3 px-3 py-2.5 rounded-none text-left transition-all duration-200 border backdrop-blur-md cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--nav-glow)]/50"
       style={{
         background: active ? activeBg : idleBg,
         borderColor: active ? activeBorder : idleBorder,
@@ -446,7 +446,7 @@ function CourseMasteryButton({ group }: { group: { name: string; items: Topic[] 
         navigate(`/courses/${encodeURIComponent(group.name)}/mastery-exam`);
       }}
       data-testid={`course-mastery-${group.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
-      className={`group relative w-full mt-5 flex items-center gap-4 px-4 py-4 rounded-xl text-left transition-all duration-200 border backdrop-blur-md focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--nav-glow,#76E4F7)]/50 ${
+      className={`group relative w-full mt-5 flex items-center gap-4 px-4 py-4 rounded-none text-left transition-all duration-200 border backdrop-blur-md focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--nav-glow,#76E4F7)]/50 ${
         unlocked ? "cursor-pointer" : "cursor-not-allowed"
       }`}
       style={{
@@ -549,7 +549,7 @@ function TopicCard({ topic, onClick, showCategory }: TopicCardProps) {
       type="button"
       onClick={onClick}
       data-testid={`card-topic-${topic.id}`}
-      className="group text-left rounded-xl p-4 cursor-pointer transition-all border backdrop-blur-md hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2"
+      className="group text-left rounded-none p-4 cursor-pointer transition-all border backdrop-blur-md hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2"
       style={{
         background:
           "linear-gradient(135deg, rgba(10,45,61,0.78), rgba(2,13,18,0.86))",
