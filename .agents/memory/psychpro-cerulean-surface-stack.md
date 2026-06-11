@@ -9,7 +9,21 @@ DIRECTION REVERSED 2026-06-11. The owner previously asked for "brighter / less d
 teal" (surfaces were lifted). The owner then RETRACTED that: they disliked the
 lighter look and want the WHOLE site **deeper/darker cerulean-turquoise** with
 "incandescence and radiance throughout," "depth perception," and an "ethereal vibe."
-Current state = DEEPENED. Do NOT re-lift surfaces to the old brighter values.
+Current state = DEEPENED (deepened twice; the owner kept saying "too light" even after
+the tokens were already deep). Do NOT re-lift surfaces to the old brighter values.
+
+**Diagnostic heuristic — when the owner says "too light":** check SURFACE
+translucency/alpha first, NOT the tokens. The repeat offender is `StudySurface
+tone="light"` (the most-used card tone): low alpha lets the bright cyan-bloom backdrop
+wash through and reads light even over deep tokens. Fix = raise card opacity + deepen the
+fill, drop the per-card cyan top-bloom, and tame the page `::before` central bloom +
+strengthen the vignette — in lockstep across study-surface.tsx tones and the index.css
+recipes (`.bg-card`, `.recommended-tile`, `.lesson-header-box`).
+
+**Verification trick:** the dashboard is Clerk-auth-gated (screenshot browser gets 403),
+so calibrate against a target mockup via a throwaway DEV-only route gated by
+`import.meta.env.DEV` that renders the real surface classes on study-page-bg; screenshot,
+tune, then DELETE the route + file.
 
 **Rule:**
 - Accent stays locked at cerulean `#76E4F7` (and `mint` stays fully removed — see

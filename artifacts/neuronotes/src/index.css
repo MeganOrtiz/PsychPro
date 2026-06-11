@@ -535,13 +535,13 @@
      dark, radiant turquoise rather than the previous lifted/washed look. */
   background-image:
     radial-gradient(ellipse 62% 50% at 50% 40%,
-      rgba(118, 228, 247, 0.16) 0%,
-      rgba(104, 204, 222, 0.07) 36%,
+      rgba(118, 228, 247, 0.08) 0%,
+      rgba(104, 204, 222, 0.035) 36%,
       rgba(7, 46, 60, 0.00) 70%),
     radial-gradient(ellipse 150% 135% at 50% 48%,
-      rgba(4, 22, 30, 0.00) 0%,
-      rgba(4, 22, 30, 0.40) 56%,
-      rgba(2, 13, 19, 0.82) 100%),
+      rgba(3, 17, 24, 0.24) 0%,
+      rgba(3, 17, 24, 0.60) 56%,
+      rgba(1, 9, 14, 0.92) 100%),
     url("./assets/bg/brain-clouds.png");
   /* Anchor center-center so the densest atmospheric cloud band — the
      middle of the source image, right around the brain — fills the
@@ -567,10 +567,10 @@
 .lesson-header-box {
   background: linear-gradient(
     145deg,
-    rgba(24, 98, 124, 0.34),
-    rgba(13, 66, 86, 0.46)
+    rgba(13, 58, 76, 0.66),
+    rgba(7, 38, 52, 0.78)
   );
-  border: 1px solid rgba(196, 232, 242, 0.22);
+  border: 1px solid rgba(196, 232, 242, 0.20);
   border-radius: 12px;
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -589,14 +589,14 @@
 .recommended-tile {
   background:
     radial-gradient(120% 90% at 50% 0%,
-      rgba(118, 228, 247, 0.10) 0%,
+      rgba(118, 228, 247, 0.06) 0%,
       rgba(118, 228, 247, 0.00) 60%),
     linear-gradient(
       145deg,
-      rgba(20, 90, 116, 0.34),
-      rgba(11, 62, 82, 0.46)
+      rgba(11, 52, 68, 0.66),
+      rgba(6, 33, 46, 0.78)
     );
-  border-color: rgba(196, 232, 242, 0.22);
+  border-color: rgba(196, 232, 242, 0.20);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
@@ -786,14 +786,14 @@
      outer cyan corona (radiance) over a deep drop shadow (depth). */
   background-image:
     radial-gradient(125% 78% at 50% 0%,
-      rgba(118, 228, 247, 0.12) 0%,
+      rgba(118, 228, 247, 0.07) 0%,
       rgba(118, 228, 247, 0.00) 58%),
     linear-gradient(
       145deg,
-      rgba(20, 90, 116, 0.58),
-      rgba(11, 62, 82, 0.70)
+      rgba(12, 56, 72, 0.78),
+      rgba(6, 34, 47, 0.88)
     );
-  border: 1px solid rgba(118, 228, 247, 0.22);
+  border: 1px solid rgba(118, 228, 247, 0.20);
   border-radius: 22px;
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);

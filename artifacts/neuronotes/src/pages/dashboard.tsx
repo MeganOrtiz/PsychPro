@@ -48,6 +48,7 @@ import {
 import { useQueries } from "@tanstack/react-query";
 import smokeBg from "@/assets/bg/brain-clouds.png";
 import spotlightPortrait from "@/assets/spotlight/featured.png";
+import journeyBrain from "@/assets/hero/dashboard-superior-brain.png";
 import {
   useGetDashboardSummary,
   useGetTopics,
@@ -338,8 +339,24 @@ export default function DashboardPage() {
             Your Journey" and its footer aligns with the Streak/Leaderboard row. */}
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-6 items-stretch">
           <div className="min-w-0 space-y-6">
-            {/* Begin/Continue Your Journey (full width, top) */}
-            <StudySurface tone="light" glow innerClassName="p-5">
+            {/* Begin/Continue Your Journey (full width, top) — glowing superior
+                brain bleeds in from the right edge and fades into the surface. */}
+            <StudySurface tone="light" glow innerClassName="p-5 overflow-hidden">
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-y-0 right-0 hidden w-[46%] sm:block"
+                style={{
+                  backgroundImage: `url(${journeyBrain})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  opacity: 0.9,
+                  WebkitMaskImage:
+                    "linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.85) 40%, #000 100%)",
+                  maskImage:
+                    "linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.85) 40%, #000 100%)",
+                }}
+              />
+              <div className="relative sm:max-w-[58%]">
               <div className="flex items-center gap-2 mb-4">
                 <TrendingUp className="w-4 h-4" style={{ color: PALETTE.tealDeep }} />
                 <h2 className="font-semibold" style={{ color: PALETTE.mist }}>
@@ -392,6 +409,7 @@ export default function DashboardPage() {
                   </Button>
                 </div>
               )}
+              </div>
             </StudySurface>
 
             {/* Recommended for You — 2x2 grid of 4 topics */}
