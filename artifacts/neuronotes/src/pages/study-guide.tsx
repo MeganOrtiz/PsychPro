@@ -12,17 +12,19 @@ import { PageTitle } from "@/components/brand/page-title";
 import { epppTopicPath, isEpppRoute } from "@/lib/eppp-routes";
 import { isEpppTopic, isEpppQuickReference, isEpppClinicalCase } from "@/lib/eppp-content";
 
-// Clinical Integration Cases are authored with a metadata preamble at the top of
-// the guide body (an "EPPP Part N — Clinical Integration Case" heading plus
+// Clinical Integration Cases and Quick Reference Guides are authored with a
+// metadata preamble at the top of the guide body (an "EPPP Part N — Clinical
+// Integration Case" / "EPPP Part N — Quick Reference Guide" heading plus
 // examPart / contentType / domain / difficulty / competencyTags / reviewTags
 // lines). That frontmatter is for content management, not the reader, so we strip
-// the leading contiguous block of it and show only the actual case content.
-function stripClinicalCaseMeta(md: string): string {
+// the leading contiguous block of it and show only the actual content.
+function stripGuideMeta(md: string): string {
   const lines = md.split("\n");
   const isMeta = (raw: string) => {
     const t = raw.trim().replace(/^#+\s*/, "").replace(/\*\*/g, "");
     if (t === "") return true;
     if (/clinical integration case/i.test(t) && /eppp\s*part/i.test(t)) return true;
+    if (/quick reference guide/i.test(t) && /eppp\s*part/i.test(t)) return true;
     if (/^(examPart|contentType|domain|difficulty|competencyTags|reviewTags)\s*:/i.test(t)) return true;
     return false;
   };
@@ -141,8 +143,8 @@ export default function StudyGuidePage({ params }: Props) {
           >
             <MarkdownRenderer
               content={
-                isClinicalCase
-                  ? stripClinicalCaseMeta(guide.content.replace(/^\s*#\s+.*\n+/, ""))
+                isClinicalCase || isQRG
+                  ? stripGuideMeta(guide.content.replace(/^\s*#\s+.*\n+/, ""))
                   : guide.content.replace(/^\s*#\s+.*\n+/, "")
               }
             />
