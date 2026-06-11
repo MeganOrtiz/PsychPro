@@ -71,6 +71,8 @@ import {
   type ReflectionRecord,
 } from "@/lib/reflections";
 import smokeBg from "@/assets/bg/brain-clouds.png";
+import epppMastheadBanner from "@/assets/hero/eppp-mastery-banner.webp";
+import { DashboardMasthead } from "@/components/brand/dashboard-masthead";
 import EpppDashboardPage from "@/pages/eppp-dashboard";
 import { ResourcesContent } from "@/pages/resources";
 
@@ -414,6 +416,12 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
         </header>
 
         <main className="flex-1 overflow-y-auto" data-testid="eppp-suite-content">
+          <DashboardMasthead
+            image={epppMastheadBanner}
+            alt="EPPP Mastery Suite — learn. expand. connect."
+            maxWidth={780}
+            className="px-4 pt-6 md:px-8 md:pt-8"
+          />
           <SuiteContent slug={activeSlug} onNavigate={navigate} />
         </main>
       </div>
