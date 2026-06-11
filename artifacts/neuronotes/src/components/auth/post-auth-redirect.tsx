@@ -13,6 +13,11 @@ import { useEntitlements } from "@/lib/use-entitlements";
  * This keeps EPPP buyers landing in the EPPP Mastery Suite on every sign-in,
  * not just at the end of onboarding. It only decides a destination — the
  * protected routes themselves remain guarded by RequireOnboarded.
+ *
+ * Admins are intentionally excluded from the EPPP-suite redirect: admin
+ * accounts auto-qualify for epppAccess (admin bypass), so without this they'd
+ * always be sent to /eppp/suite. They land on /dashboard instead; genuine EPPP
+ * buyers (driven by epppAccessUntil) still go to the suite.
  */
 export function PostAuthRedirect() {
   const [, navigate] = useLocation();
@@ -37,7 +42,8 @@ export function PostAuthRedirect() {
     // Wait for entitlements so EPPP buyers aren't sent to the main dashboard by
     // mistake. If entitlements fail to load they stay undefined -> dashboard.
     if (entLoading) return;
-    navigate(entitlements?.epppAccess ? "/eppp/suite" : "/dashboard", { replace: true });
+    const goEppp = !!entitlements?.epppAccess && !entitlements?.isAdmin;
+    navigate(goEppp ? "/eppp/suite" : "/dashboard", { replace: true });
   }, [profile, profileLoading, profileError, entitlements, entLoading, navigate]);
 
   return (
