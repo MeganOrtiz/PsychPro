@@ -696,10 +696,10 @@ const C = {
   cyanMid: P.teal,     // #68CCDE
   cyanDeep: P.tealDeep,// #3196AF
   bg: "#061b23",
-  bgPanel: "rgba(11, 67, 86, 0.5)",
-  bgPanelStrong: "rgba(10, 53, 68, 0.72)",
-  hairline: "rgba(118, 228, 247, 0.18)",
-  hairlineStrong: "rgba(118, 228, 247, 0.32)",
+  bgPanel: "rgba(22, 104, 132, 0.62)",
+  bgPanelStrong: "rgba(14, 80, 103, 0.84)",
+  hairline: "rgba(118, 228, 247, 0.36)",
+  hairlineStrong: "rgba(118, 228, 247, 0.58)",
 };
 
 const styles = `
@@ -1113,9 +1113,9 @@ const styles = `
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.02) inset,
+    0 0 0 1px color-mix(in srgb, var(--accent) 14%, transparent) inset,
     0 18px 36px -22px rgba(0, 0, 0, 0.6),
-    0 0 18px color-mix(in srgb, var(--accent) 12%, transparent);
+    0 0 26px color-mix(in srgb, var(--accent) 24%, transparent);
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
   min-height: 230px;
 }
@@ -1175,14 +1175,15 @@ const styles = `
   padding: 22px 20px;
   border-radius: 16px;
   border: 1px solid ${C.hairline};
-  background: linear-gradient(180deg, rgba(11,67,86,0.4), rgba(9,48,63,0.55));
+  background: linear-gradient(180deg, rgba(24,110,140,0.6), rgba(14,80,103,0.74));
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 0 22px ${C.cyan}1f, 0 0 0 1px ${C.cyan}14 inset;
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .landing-science-item:hover {
   border-color: ${C.hairlineStrong};
-  box-shadow: 0 0 26px ${C.cyan}18;
+  box-shadow: 0 0 34px ${C.cyan}33, 0 0 0 1px ${C.cyan}2a inset;
 }
 .landing-science-icon {
   display: inline-flex;
@@ -1271,13 +1272,13 @@ const styles = `
   padding: clamp(26px, 3.4vw, 44px);
   border-radius: 22px;
   border: 1px solid ${C.hairlineStrong};
-  background: linear-gradient(150deg, rgba(12,67,85,0.62), rgba(9,48,63,0.82));
-  backdrop-filter: blur(18px) saturate(130%);
-  -webkit-backdrop-filter: blur(18px) saturate(130%);
+  background: linear-gradient(150deg, rgba(26,116,148,0.72), rgba(15,84,108,0.88));
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
   box-shadow:
     0 30px 80px -38px rgba(0, 0, 0, 0.72),
-    0 0 36px ${C.cyan}14,
-    0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+    0 0 48px ${C.cyan}30,
+    0 0 0 1px ${C.cyan}22 inset;
 }
 @media (min-width: 880px) {
   .landing-founder-card { grid-template-columns: 320px 1fr; }
@@ -1420,11 +1421,11 @@ const styles = `
   overflow: hidden;
   border-radius: 22px;
   padding: clamp(28px, 4vw, 48px);
-  background: linear-gradient(150deg, rgba(17,87,111,0.6), rgba(9,48,63,0.82));
+  background: linear-gradient(150deg, rgba(28,120,152,0.74), rgba(15,84,108,0.9));
   border: 1px solid ${C.hairlineStrong};
-  backdrop-filter: blur(20px) saturate(130%);
-  -webkit-backdrop-filter: blur(20px) saturate(130%);
-  box-shadow: 0 36px 90px -40px rgba(0,0,0,0.75), 0 0 40px ${C.cyan}16;
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  box-shadow: 0 36px 90px -40px rgba(0,0,0,0.75), 0 0 48px ${C.cyan}33, 0 0 0 1px ${C.cyan}22 inset;
 }
 .landing-scholar-card::before {
   content: "";
@@ -1433,7 +1434,7 @@ const styles = `
   right: -10%;
   width: 60%;
   height: 120%;
-  background: radial-gradient(circle, ${C.cyan}22 0%, transparent 60%);
+  background: radial-gradient(circle, ${C.cyan}3a 0%, transparent 62%);
   pointer-events: none;
 }
 .landing-scholar-head {
@@ -1469,11 +1470,11 @@ const styles = `
   text-align: center;
   border-radius: 22px;
   padding: clamp(30px, 4.4vw, 52px);
-  background: linear-gradient(150deg, rgba(17,87,111,0.6), rgba(9,48,63,0.82));
+  background: linear-gradient(150deg, rgba(28,120,152,0.74), rgba(15,84,108,0.9));
   border: 1px solid ${C.hairlineStrong};
-  backdrop-filter: blur(20px) saturate(130%);
-  -webkit-backdrop-filter: blur(20px) saturate(130%);
-  box-shadow: 0 36px 90px -40px rgba(0,0,0,0.75), 0 0 40px ${C.cyan}16;
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  box-shadow: 0 36px 90px -40px rgba(0,0,0,0.75), 0 0 48px ${C.cyan}33, 0 0 0 1px ${C.cyan}22 inset;
 }
 .landing-mastery-card::before {
   content: "";
@@ -1483,7 +1484,7 @@ const styles = `
   transform: translateX(-50%);
   width: 70%;
   height: 120%;
-  background: radial-gradient(circle, ${C.cyan}22 0%, transparent 60%);
+  background: radial-gradient(circle, ${C.cyan}3a 0%, transparent 62%);
   pointer-events: none;
 }
 .landing-mastery-icon {
