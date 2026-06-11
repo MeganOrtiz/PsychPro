@@ -249,8 +249,8 @@ export default function LandingPage() {
             </a>
 
             <nav className="landing-nav-links" aria-label="Sections">
+              <a href="#mastery" className="landing-nav-link">Features</a>
               <a href="#tools" className="landing-nav-link">Study Tools</a>
-              <a href="#features" className="landing-nav-link">Features</a>
               <a href="#brain-lab" className="landing-nav-link">Brain Lab</a>
               <a href="#scholar" className="landing-nav-link">Scholar</a>
             </nav>
