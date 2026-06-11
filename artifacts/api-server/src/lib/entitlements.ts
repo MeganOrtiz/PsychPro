@@ -1,6 +1,7 @@
 import { db } from "@workspace/db";
 import { usersTable, quizAttemptsTable, examAttemptsTable } from "@workspace/db";
 import { eq, sql } from "drizzle-orm";
+import { type Tier, tierFromStatus } from "./tierMapping";
 
 // Authoritative free-tier caps. Mirrored on the client in
 // artifacts/neuronotes/src/lib/limits.ts — keep in sync.
@@ -8,7 +9,9 @@ export const FREE_FLASHCARD_PREVIEW = 10;
 export const FREE_QUIZ_LIMIT = 1;
 export const FREE_EXAM_LIMIT = 1;
 
-export type Tier = "free" | "pro" | "scholar";
+// Re-exported so existing consumers can keep importing `Tier` from here. The
+// canonical definition (and the status→tier mapping) lives in ./tierMapping.
+export type { Tier };
 
 export type Entitlements = {
   tier: Tier;
@@ -30,12 +33,6 @@ export type Entitlements = {
   examLocked: boolean;
   studyGuideLocked: boolean;
 };
-
-function tierFromStatus(s: string | null | undefined): Tier {
-  if (s === "scholar") return "scholar";
-  if (s === "active" || s === "pro" || s === "trialing") return "pro";
-  return "free";
-}
 
 type EpppUserFields = {
   epppAccessUntil: Date | null;

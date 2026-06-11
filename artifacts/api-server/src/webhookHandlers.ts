@@ -4,23 +4,13 @@ import { eq } from "drizzle-orm";
 import type { Logger } from "pino";
 import type Stripe from "stripe";
 import { getUncachableStripeClient } from "./stripeClient";
-
-// "master" is accepted as an alias for "pro" — the Stripe product is
-// labeled Master in the dashboard but we still store the internal tier
-// string as "pro" / "active" everywhere downstream.
-const APPROVED_TIERS = new Set(["pro", "master", "scholar"]);
-
-// EPPP Mastery Suite is a SEPARATE access level — its Stripe product is tagged
-// neuronotes_tier="eppp". It must NEVER map to a Master/Scholar subscription
-// status; it only drives the epppAccessUntil / epppSubscriptionId columns.
-const EPPP_TIER = "eppp";
-
-function productTier(product: Stripe.Product | undefined | null): string | undefined {
-  return product?.metadata?.neuronotes_tier?.toLowerCase();
-}
+import {
+  isEpppTierMetadata,
+  subscriptionStatusFromTierMetadata,
+} from "./lib/tierMapping";
 
 function isEpppProduct(product: Stripe.Product | undefined | null): boolean {
-  return productTier(product) === EPPP_TIER;
+  return isEpppTierMetadata(product?.metadata?.neuronotes_tier);
 }
 
 // Months of access granted by a one-time EPPP price (price.metadata.eppp_months
@@ -59,10 +49,7 @@ async function getSubscriptionTier(stripe: Stripe, sub: Stripe.Subscription): Pr
     if (!priceId) return null;
     const price = await stripe.prices.retrieve(priceId, { expand: ["product"] });
     const product = price.product as Stripe.Product;
-    const tier = productTier(product);
-    if (!tier || !APPROVED_TIERS.has(tier)) return null;
-    if (tier === "scholar") return "scholar";
-    return "active";
+    return subscriptionStatusFromTierMetadata(product?.metadata?.neuronotes_tier);
   } catch {
     return null;
   }

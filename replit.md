@@ -154,6 +154,34 @@ fetched dynamically (no hard-coded IDs). Run
 `STRIPE_ENV=production pnpm --filter @workspace/db exec tsx ../../scripts/seed-stripe-products.ts`
 once to seed Pro + Scholar products in live Stripe.
 
+### Canonical Billing / Entitlement Model (single source of truth)
+**All** tier/EPPP mapping logic lives in **`artifacts/api-server/src/lib/tierMapping.ts`**.
+Never re-implement these mappings inline anywhere else — duplicated copies are how a
+"second competing model" gets reintroduced during a refactor/rebase. The invariants are
+locked by `artifacts/api-server/test/billingModel.test.ts` (and a "no inline re-declaration"
+guard in that suite).
+
+Two **independent** access dimensions that never write to each other:
+1. **General subscription (Master / Scholar)** — stored on `users.subscription_status`.
+   - Stripe product tag `metadata.neuronotes_tier`: `"pro"`/`"master"` → internal Master,
+     `"scholar"` → Scholar. `"master"` is a **display alias** for the internal `"pro"`.
+   - Stored values: canonical `"free"` | `"active"` (= Master) | `"scholar"`; legacy aliases
+     tolerated on read: `"pro"`, `"trialing"` (both == Master).
+   - `getSubscriptionTier` (webhook) writes `"active"`/`"scholar"`/`"free"` only.
+   - `tierFromStatus`: `active`/`pro`/`trialing` → `pro`; `scholar` → `scholar`; else → `free`.
+   - `GET /api/subscription/status` shape: scholar → `{active, scholar}`,
+     active/pro/trialing → `{active, pro}`, else → `{free, free}`.
+2. **EPPP Mastery Suite** — a SEPARATE, expiry-driven level (`users.epppAccessUntil` /
+   `epppSubscriptionId`), Stripe-tagged `neuronotes_tier="eppp"`. EPPP access NEVER writes
+   `subscription_status`, and a Master/Scholar subscription NEVER grants EPPP access
+   (`computeEpppAccess` / `hasEpppAccess` / `getEntitlements({eppp:true})`).
+
+> Known divergence (NOT canonical): `routes/mastery-exams.ts` `getUserTier` treats only the
+> literal `pro`/`scholar` statuses as paid, so a Master subscriber stored as `active` would
+> read as free there. No live users are affected (0 active/pro rows). Reconcile to
+> `tierFromStatus` in a dedicated change (it alters access behavior, so out of scope for the
+> lock-in).
+
 ### DB Schema
 - `usersTable` — user profile, usage count, subscription status
 - `topicsTable` — 39 neuroscience/neuropsychology topics

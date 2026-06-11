@@ -4,6 +4,11 @@ import { usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { getUncachableStripeClient } from "../stripeClient";
 import { requireUserId } from "../lib/userId";
+import {
+  ACTIVE_SUBSCRIPTION_STATUSES,
+  isApprovedSubscriptionTier,
+  subscriptionStatusApiShape,
+} from "../lib/tierMapping";
 
 const router = Router();
 
@@ -21,8 +26,7 @@ router.get("/subscription/plans", async (req: Request, res: Response): Promise<v
       // stays "pro" everywhere else in the codebase. Case-insensitive so
       // metadata values like "Scholar" or "Pro" entered via the Stripe
       // dashboard still match.
-      const tier = product.metadata?.neuronotes_tier?.toLowerCase();
-      if (tier !== "pro" && tier !== "master" && tier !== "scholar") continue;
+      if (!isApprovedSubscriptionTier(product.metadata?.neuronotes_tier)) continue;
 
       const prices = await stripe.prices.list({ product: product.id, active: true, limit: 10 });
       for (const price of prices.data) {
@@ -78,8 +82,7 @@ router.post("/subscription/checkout", async (req: Request, res: Response): Promi
     // twice (or a stale frontend that doesn't reflect a recent purchase) can
     // generate overlapping subscriptions and double-charge themselves. Active
     // tiers mirror the mapping in GET /subscription/status — keep in sync.
-    const ACTIVE_STATUSES = new Set(["active", "pro", "scholar", "trialing"]);
-    if (user?.subscriptionStatus && ACTIVE_STATUSES.has(user.subscriptionStatus)) {
+    if (user?.subscriptionStatus && ACTIVE_SUBSCRIPTION_STATUSES.has(user.subscriptionStatus)) {
       res.status(409).json({
         error: "You already have an active subscription. Manage it from the billing portal.",
         code: "already_subscribed",
@@ -96,9 +99,8 @@ router.post("/subscription/checkout", async (req: Request, res: Response): Promi
     try {
       const price = await stripe.prices.retrieve(priceId, { expand: ["product"] });
       const product = price.product as import("stripe").default.Product;
-      const tier = product?.metadata?.neuronotes_tier?.toLowerCase();
       const interval = price.recurring?.interval;
-      const isApprovedTier = tier === "pro" || tier === "master" || tier === "scholar";
+      const isApprovedTier = isApprovedSubscriptionTier(product?.metadata?.neuronotes_tier);
       const isApprovedInterval = interval === "month" || interval === "year";
       if (!isApprovedTier || !isApprovedInterval || !price.active || product.deleted) {
         res.status(400).json({ error: "Invalid plan selected" });
@@ -196,23 +198,9 @@ router.get("/subscription/status", async (req: Request, res: Response): Promise<
       return;
     }
 
-    const dbStatus = user.subscriptionStatus ?? "free";
     // Map DB subscriptionStatus to the {status, tier} shape the frontend
-    // expects. "scholar" → status="active" tier="scholar".
-    // "active"/"pro"/"trialing" → status="active" tier="pro".
-    // Anything else → status="free" tier="free".
-    let status: string;
-    let tier: string;
-    if (dbStatus === "scholar") {
-      status = "active";
-      tier = "scholar";
-    } else if (dbStatus === "active" || dbStatus === "pro" || dbStatus === "trialing") {
-      status = "active";
-      tier = "pro";
-    } else {
-      status = "free";
-      tier = "free";
-    }
+    // expects via the canonical mapping (see lib/tierMapping.ts).
+    const { status, tier } = subscriptionStatusApiShape(user.subscriptionStatus);
 
     res.json({
       status,

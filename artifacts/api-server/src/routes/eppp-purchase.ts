@@ -4,6 +4,7 @@ import { usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { getUncachableStripeClient } from "../stripeClient";
 import { requireUserId } from "../lib/userId";
+import { isEpppTierMetadata } from "../lib/tierMapping";
 
 const router = Router();
 
@@ -12,11 +13,6 @@ const router = Router();
 //   - $99/mo recurring subscription
 //   - $499 one-time  → 6 months  (price.metadata.eppp_months="6")
 //   - $799 one-time  → 12 months (price.metadata.eppp_months="12")
-const EPPP_TIER = "eppp";
-
-function productTier(product: { metadata?: Record<string, string> } | null | undefined): string | undefined {
-  return product?.metadata?.neuronotes_tier?.toLowerCase();
-}
 
 // -----------------------------------------------------------------------------
 // GET /eppp/plans  (anonymous catalog)
@@ -27,7 +23,7 @@ router.get("/eppp/plans", async (req: Request, res: Response): Promise<void> => 
   try {
     const stripe = await getUncachableStripeClient();
     const products = await stripe.products.list({ active: true, limit: 100 });
-    const product = products.data.find((p) => productTier(p) === EPPP_TIER);
+    const product = products.data.find((p) => isEpppTierMetadata(p.metadata?.neuronotes_tier));
     if (!product) {
       res.json({ productId: null, name: null, description: null, monthly: null, oneTime: [] });
       return;
@@ -104,12 +100,12 @@ router.post("/eppp/checkout", async (req: Request, res: Response): Promise<void>
     try {
       const price = await stripe.prices.retrieve(priceId, { expand: ["product"] });
       const product = price.product as import("stripe").default.Product;
-      const tier = productTier(product);
+      const isEppp = isEpppTierMetadata(product?.metadata?.neuronotes_tier);
       isRecurring = !!price.recurring;
       const isOneTimeWithMonths =
         !price.recurring && (parseInt(price.metadata?.eppp_months ?? "", 10) || 0) > 0;
       const isMonthly = price.recurring?.interval === "month";
-      if (tier !== EPPP_TIER || !price.active || product.deleted || !(isMonthly || isOneTimeWithMonths)) {
+      if (!isEppp || !price.active || product.deleted || !(isMonthly || isOneTimeWithMonths)) {
         res.status(400).json({ error: "Invalid EPPP plan selected" });
         return;
       }

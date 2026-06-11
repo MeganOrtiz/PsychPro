@@ -41,4 +41,5 @@
 - [Glass inheritance paths](psychpro-glass-inheritance-paths.md) — surfaces auto-inherit glass via bg-card / StudySurface light / .recommended-tile; only gaps are non-light StudySurface tones + bespoke inline panels. Don't sweep every page; grep gaps.
 - [drizzle-orm + otel peer dup](drizzle-otel-peer-dup.md) — a dep pulling @opentelemetry/api splits drizzle into 2 pnpm variants; api-server typecheck breaks; align by adding otel api to lib/db.
 - [EPPP separate access level](psychpro-eppp-access-level.md) — EPPP is its own expiry-driven tier (epppAccessUntil), never unlocked by Master/Scholar; gate with EPPP helpers + Stripe metadata conventions.
+- [Canonical billing model](psychpro-billing-canonical-model.md) — one tier/EPPP mapping module is the single source of truth; never re-declare it inline; mastery-exams.getUserTier is a known divergence.
 - [Stripe MCP metadata bracket](stripe-mcp-metadata-bracket.md) — set metadata via flat `metadata[key]` params in stripeApiExecute; nested object & dot notation both fail.

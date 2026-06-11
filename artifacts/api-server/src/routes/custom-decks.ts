@@ -13,6 +13,7 @@ import { openai } from "@workspace/integrations-openai-ai-server";
 import { requireUserId } from "../lib/userId";
 import { isCallerAdmin } from "../lib/isAdmin";
 import { parseIntParam } from "../lib/params";
+import { ACTIVE_SUBSCRIPTION_STATUSES } from "../lib/tierMapping";
 
 const router = Router();
 const upload = multer({
@@ -28,19 +29,13 @@ async function getUser(userId: string) {
   return user ?? null;
 }
 
-const PAID_SUBSCRIPTION_STATUSES = new Set([
-  "scholar",
-  "active",
-  "pro",
-  "trialing",
-]);
 
 async function requireScholar(req: Request, res: Response, next: NextFunction): Promise<void> {
   const userId = requireUserId(req, res);
   if (!userId) return;
   let user = await getUser(userId);
   const isAdmin = await isCallerAdmin(req);
-  if (!isAdmin && (!user || !PAID_SUBSCRIPTION_STATUSES.has(user.subscriptionStatus))) {
+  if (!isAdmin && (!user || !ACTIVE_SUBSCRIPTION_STATUSES.has(user.subscriptionStatus))) {
     res.status(403).json({ error: "An active subscription is required to generate study materials." });
     return;
   }
