@@ -95,6 +95,63 @@ export default function SubscriptionPage() {
 
   return (
     <div className="min-h-full study-page-bg" data-testid="subscription-page">
+      <style>{`
+        .sub-plan {
+          position: relative;
+          border-radius: 18px;
+          padding: 24px;
+          background:
+            radial-gradient(135% 90% at 100% 0%, ${P.surf}1f, transparent 58%),
+            linear-gradient(158deg, ${P.surface}, ${P.bg});
+          border: 1px solid ${P.surf}33;
+          box-shadow: 0 20px 44px -26px rgba(0,0,0,0.85), inset 0 1px 0 ${P.surf}1a;
+          transition: transform 240ms ease, box-shadow 240ms ease, border-color 240ms ease;
+        }
+        .sub-plan::before {
+          content: "";
+          position: absolute;
+          inset: 0 22px auto 22px;
+          height: 2px;
+          border-radius: 0 0 3px 3px;
+          background: linear-gradient(90deg, transparent, ${P.surf}, transparent);
+          opacity: 0.8;
+        }
+        .sub-plan--featured {
+          border-color: ${P.surf}55;
+          box-shadow: 0 24px 54px -24px rgba(0,0,0,0.9), 0 0 0 1px ${P.surf}22, 0 0 46px -18px ${P.surf}66;
+        }
+        .sub-plan:hover {
+          transform: translateY(-3px);
+          border-color: ${P.surf}80;
+          box-shadow: 0 30px 64px -24px rgba(0,0,0,0.92), 0 0 52px -16px ${P.surf}80;
+        }
+        .sub-icon-chip {
+          display: inline-flex; align-items: center; justify-content: center;
+          width: 36px; height: 36px; border-radius: 11px; flex-shrink: 0;
+          background: ${P.surf}1f; border: 1px solid ${P.surf}45;
+          box-shadow: 0 0 20px -7px ${P.surf}99, inset 0 1px 0 ${P.surf}26;
+        }
+        .sub-bill {
+          position: relative;
+          border-radius: 14px;
+          padding: 16px;
+          background: linear-gradient(150deg, ${P.surfaceElev}59, ${P.bg}cc);
+          border: 1px solid ${P.surf}26;
+          transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+        }
+        .sub-bill:hover {
+          transform: translateY(-2px);
+          border-color: ${P.surf}5e;
+          box-shadow: 0 18px 36px -24px rgba(0,0,0,0.85), 0 0 28px -14px ${P.surf}73;
+        }
+        .sub-price {
+          background: linear-gradient(180deg, ${P.mist}, ${P.surf});
+          -webkit-background-clip: text; background-clip: text;
+          -webkit-text-fill-color: transparent; color: transparent;
+          filter: drop-shadow(0 0 14px ${P.surf}55);
+          letter-spacing: -0.01em;
+        }
+      `}</style>
       <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
       <PageTitle
         title="Upgrade"
@@ -149,11 +206,18 @@ export default function SubscriptionPage() {
       )}
 
       <div className="space-y-5">
-        <div className="bg-card border border-border rounded-xl p-5">
-          <div className="flex items-center gap-2 mb-4">
-            <Crown className="w-4 h-4 text-primary" />
+        <div className="sub-plan sub-plan--featured">
+          <div className="flex items-center gap-3 mb-5">
+            <span className="sub-icon-chip">
+              <Crown className="w-[18px] h-[18px]" style={{ color: P.surf }} />
+            </span>
             <span className="font-semibold text-foreground text-lg">PsychPro {PRO_DISPLAY_NAME}</span>
-            <Badge variant="secondary" className="ml-auto">Most Popular</Badge>
+            <Badge
+              className="ml-auto border-0 text-[#06232D] font-semibold"
+              style={{ background: P.surf, boxShadow: `0 0 18px -4px ${P.surf}` }}
+            >
+              Most Popular
+            </Badge>
           </div>
 
           <div className="space-y-2 mb-5">
