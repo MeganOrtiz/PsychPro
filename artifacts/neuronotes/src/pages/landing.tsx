@@ -803,7 +803,7 @@ const styles = `
   justify-content: center;
   width: 36px;
   height: 36px;
-  border-radius: 0;
+  border-radius: 8px;
   background: transparent;
   border: 1px solid ${C.hairline};
   color: ${C.cyanSoft};
@@ -821,7 +821,7 @@ const styles = `
   font-weight: 600;
   letter-spacing: 0.24em;
   padding: 9px 18px;
-  border-radius: 0;
+  border-radius: 8px;
   background: transparent;
   border: 1px solid ${C.cyan};
   color: ${C.cyan};
