@@ -74,6 +74,8 @@ const PROTECTED = new Set<string>([
   "POST /api/subscription/checkout",
   "POST /api/subscription/portal",
   "GET /api/subscription/status",
+  // EPPP Mastery Suite purchase
+  "POST /api/eppp/checkout",
   // topics (study-guide is the only protected topic route)
   "GET /api/topics/:topicId/study-guide",
   // feedback (submit + admin list/patch)
@@ -143,6 +145,8 @@ const ANONYMOUS = new Set<string>([
   "GET /api/storage/objects/*path",
   // subscription plans (catalog)
   "GET /api/subscription/plans",
+  // EPPP plans (catalog)
+  "GET /api/eppp/plans",
   // admin status (boolean: is the MCP admin secret configured?)
   "GET /api/admin/status",
   // OAuth dynamic-registration + auth code flow (public by design)

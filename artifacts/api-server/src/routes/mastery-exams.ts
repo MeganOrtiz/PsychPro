@@ -32,6 +32,8 @@ import {
 import { eq, and, count, asc, desc, sql, inArray, max } from "drizzle-orm";
 import { requireUserId, getUserId } from "../lib/userId";
 import { isCallerAdmin } from "../lib/isAdmin";
+import { hasEpppAccess } from "../lib/entitlements";
+import { isEpppCourse } from "../lib/eppp";
 
 const router = Router();
 
@@ -372,11 +374,14 @@ router.get("/courses/:courseId/mastery-exam", async (req: Request, res: Response
 
     const courseId = parseInt(String(req.params.courseId));
     const admin = await isCallerAdmin(req);
-    const tier = await getUserTier(userId);
-    if (!admin && !PRO_TIERS.has(tier)) {
+    // EPPP courses gate on EPPP access; general courses gate on Master/Scholar.
+    const eppp = await isEpppCourse(courseId);
+    const paidOk = eppp ? await hasEpppAccess(userId) : PRO_TIERS.has(await getUserTier(userId));
+    if (!admin && !paidOk) {
       res.status(402).json({
-        error: "Mastery Exams require a paid plan",
+        error: eppp ? "EPPP Mastery Suite access required" : "Mastery Exams require a paid plan",
         upgrade: true,
+        eppp,
       });
       return;
     }
@@ -473,9 +478,10 @@ router.post(
       }
 
       const admin = await isCallerAdmin(req);
-      const tier = await getUserTier(userId);
-      if (!admin && !PRO_TIERS.has(tier)) {
-        res.status(402).json({ error: "Mastery Exams require a paid plan" });
+      const eppp = await isEpppCourse(courseId);
+      const paidOk = eppp ? await hasEpppAccess(userId) : PRO_TIERS.has(await getUserTier(userId));
+      if (!admin && !paidOk) {
+        res.status(402).json({ error: eppp ? "EPPP Mastery Suite access required" : "Mastery Exams require a paid plan", eppp });
         return;
       }
 

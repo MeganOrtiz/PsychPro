@@ -8,6 +8,7 @@ export type UpgradeReason =
   | "exam"          // free user finished their 1 lifetime practice exam
   | "studyGuide"    // study guides are paid-only
   | "flashcards"    // (rarely surfaced — flashcards are capped, not blocked)
+  | "eppp"          // EPPP Mastery Suite — a SEPARATE access level
   | "generic";      // fallback when the caller doesn't know
 
 interface UpgradePromptProps {
@@ -31,6 +32,10 @@ const COPY: Record<UpgradeReason, { title: string; body: string }> = {
   flashcards: {
     title: "See every flashcard",
     body: "Free accounts preview the first 10 cards per topic. Upgrade to PsychPro Master to study every card in the deck.",
+  },
+  eppp: {
+    title: "Unlock the EPPP Mastery Suite",
+    body: "The EPPP Mastery Suite is a separate access level from Master & Scholar. Get full access with a monthly subscription or a one-time 6- or 12-month pass.",
   },
   generic: {
     title: "Upgrade to keep going",
@@ -59,7 +64,7 @@ export default function UpgradePrompt({ onDismiss, reason = "generic" }: Upgrade
           data-testid="button-upgrade"
         >
           <Zap className="w-4 h-4 mr-2" />
-          Upgrade Now
+          {reason === "eppp" ? "Unlock Now" : "Upgrade Now"}
         </Button>
         {onDismiss && (
           <Button variant="outline" onClick={onDismiss} className="w-full" data-testid="button-dismiss">

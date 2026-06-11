@@ -5,6 +5,7 @@ import { eq, count, asc } from "drizzle-orm";
 import { requireUserId } from "../lib/userId";
 import { shuffle } from "../lib/shuffle";
 import { getEntitlements, FREE_FLASHCARD_PREVIEW } from "../lib/entitlements";
+import { isEpppTopicId } from "../lib/eppp";
 
 const router = Router();
 
@@ -68,7 +69,8 @@ router.get("/topics/:topicId/flashcards", async (req: Request, res: Response): P
     const userId = requireUserId(req, res);
     if (!userId) return;
     const topicId = parseInt(String(req.params.topicId));
-    const ent = await getEntitlements(userId);
+    const eppp = await isEpppTopicId(topicId);
+    const ent = await getEntitlements(userId, { eppp });
     // Free users get only the first N cards (stable id-asc order) — the
     // remainder never leaves the server. Subscribed/admin users get all.
     const baseQuery = db
@@ -91,14 +93,19 @@ router.get("/topics/:topicId/quizzes", async (req: Request, res: Response): Prom
     const userId = requireUserId(req, res);
     if (!userId) return;
     const topicId = parseInt(String(req.params.topicId));
+    const eppp = await isEpppTopicId(topicId);
     // Free-tier cap: 1 completed quiz total (lifetime, across all topics).
     // The completion increment happens implicitly via the quiz-attempts
     // insert in progress.ts — re-checking here gates 2nd+ entry server-side.
-    const ent = await getEntitlements(userId);
+    // EPPP topics gate on EPPP access (not the Master/Scholar subscription).
+    const ent = await getEntitlements(userId, { eppp });
     if (ent.quizLocked) {
       res.status(402).json({
         error: "Free quiz limit reached",
-        message: `Free accounts can complete ${ent.quizLimit} quiz. Upgrade to PsychPro Master for unlimited quizzes.`,
+        message: eppp
+          ? "Unlock the EPPP Mastery Suite for unlimited EPPP quizzes."
+          : `Free accounts can complete ${ent.quizLimit} quiz. Upgrade to PsychPro Master for unlimited quizzes.`,
+        eppp,
         quizzesCompleted: ent.quizzesCompleted,
         quizLimit: ent.quizLimit,
       });
@@ -133,13 +140,18 @@ router.get("/topics/:topicId/study-guide", async (req: Request, res: Response): 
     const userId = requireUserId(req, res);
     if (!userId) return;
     const topicId = parseInt(String(req.params.topicId));
-    // Study guides are paid-only (Master/Scholar). Free users get 402 and
-    // the frontend renders a shown-but-locked surface in its place.
-    const ent = await getEntitlements(userId);
+    const eppp = await isEpppTopicId(topicId);
+    // Study guides are paid-only. General topics require Master/Scholar; EPPP
+    // topics require EPPP access. Free users get 402 and the frontend renders a
+    // shown-but-locked surface in its place.
+    const ent = await getEntitlements(userId, { eppp });
     if (ent.studyGuideLocked) {
       res.status(402).json({
         error: "Study guides require a subscription",
-        message: "Upgrade to PsychPro Master to unlock comprehensive study guides for every topic.",
+        message: eppp
+          ? "Unlock the EPPP Mastery Suite to access EPPP study guides."
+          : "Upgrade to PsychPro Master to unlock comprehensive study guides for every topic.",
+        eppp,
       });
       return;
     }
@@ -160,12 +172,17 @@ router.get("/topics/:topicId/practice-exam", async (req: Request, res: Response)
     const userId = requireUserId(req, res);
     if (!userId) return;
     const topicId = parseInt(String(req.params.topicId));
-    // Free-tier cap: 1 completed exam total (lifetime).
-    const ent = await getEntitlements(userId);
+    const eppp = await isEpppTopicId(topicId);
+    // Free-tier cap: 1 completed exam total (lifetime). EPPP topics gate on
+    // EPPP access (not the Master/Scholar subscription).
+    const ent = await getEntitlements(userId, { eppp });
     if (ent.examLocked) {
       res.status(402).json({
         error: "Free exam limit reached",
-        message: `Free accounts can complete ${ent.examLimit} practice exam. Upgrade to PsychPro Master for unlimited practice exams.`,
+        message: eppp
+          ? "Unlock the EPPP Mastery Suite for unlimited EPPP practice exams."
+          : `Free accounts can complete ${ent.examLimit} practice exam. Upgrade to PsychPro Master for unlimited practice exams.`,
+        eppp,
         examsCompleted: ent.examsCompleted,
         examLimit: ent.examLimit,
       });

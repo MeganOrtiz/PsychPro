@@ -5,6 +5,11 @@ export type Entitlements = {
   tier: "free" | "pro" | "scholar";
   isAdmin: boolean;
   isSubscribed: boolean;
+  // EPPP Mastery Suite access is a SEPARATE access level from Master/Scholar,
+  // driven by an expiry date (epppAccessUntil). epppAccess already folds in the
+  // expiry check and admin bypass — prefer it over reading the date directly.
+  epppAccess: boolean;
+  epppAccessUntil: string | null;
   flashcardPreviewLimit: number;
   quizLimit: number;
   examLimit: number;

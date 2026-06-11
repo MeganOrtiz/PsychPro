@@ -43,6 +43,8 @@ import {
 } from "@workspace/api-client-react";
 import { STUDY_PALETTE } from "@/lib/study-theme";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useEntitlements } from "@/lib/use-entitlements";
+import UpgradePrompt from "@/components/upgrade-prompt";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { cn } from "@/lib/utils";
 import {
@@ -242,6 +244,34 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
   const [, navigate] = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isMobile = useIsMobile();
+  const { data: entitlements, isLoading: entLoading } = useEntitlements();
+  const epppUnlocked = !!entitlements?.epppAccess;
+
+  // EPPP Mastery Suite is a SEPARATE access level. Gate the whole suite behind
+  // EPPP access (admins are included via computeEpppAccess on the server). Show
+  // a neutral loader while entitlements resolve so non-buyers never glimpse the
+  // suite content before the lock screen renders.
+  if (entLoading) {
+    return (
+      <div
+        className="study-page-bg flex min-h-screen items-center justify-center"
+        data-testid="eppp-suite-loading"
+      >
+        <p className="text-sm text-muted-foreground">Loading…</p>
+      </div>
+    );
+  }
+  if (!epppUnlocked) {
+    return (
+      <div
+        className="study-page-bg flex min-h-screen items-center justify-center"
+        data-testid="eppp-suite-locked"
+      >
+        <style>{styles}</style>
+        <UpgradePrompt reason="eppp" onDismiss={() => navigate("/dashboard")} />
+      </div>
+    );
+  }
 
   const requestedTab = tab
     ? MOVED_INTO_PART1[tab] ?? LEGACY_TAB_ALIASES[tab] ?? tab

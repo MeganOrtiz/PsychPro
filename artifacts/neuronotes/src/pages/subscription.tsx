@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 import { useLocation, useSearch } from "wouter";
-import { Check, Zap, Crown, Loader2, BookMarked, Sparkles, Settings } from "lucide-react";
+import { Check, Zap, Crown, Loader2, BookMarked, Sparkles, Settings, GraduationCap } from "lucide-react";
 import { useGetSubscriptionPlans, useGetSubscriptionStatus, useCreateCheckoutSession, useCreatePortalSession } from "@workspace/api-client-react";
+import { useEpppPlans, useEpppCheckout } from "@/lib/use-eppp-purchase";
+import { useEntitlements } from "@/lib/use-entitlements";
 import { Button } from "@/components/ui/button";
 import { PageTitle } from "@/components/brand/page-title";
 import { Badge } from "@/components/ui/badge";
@@ -53,6 +55,9 @@ export default function SubscriptionPage() {
   const { data: status, isLoading: statusLoading } = useGetSubscriptionStatus();
   const createCheckout = useCreateCheckoutSession();
   const createPortal = useCreatePortalSession();
+  const { data: epppPlans, isLoading: epppPlansLoading } = useEpppPlans();
+  const { data: entitlements } = useEntitlements();
+  const epppCheckout = useEpppCheckout();
 
   useEffect(() => {
     const params = new URLSearchParams(search);
@@ -91,7 +96,18 @@ export default function SubscriptionPage() {
     }
   }
 
+  async function handleEpppCheckout(priceId: string) {
+    try {
+      const result = await epppCheckout.mutateAsync({ priceId });
+      if (result.url) window.location.href = result.url;
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not start checkout. Please try again.");
+    }
+  }
+
   const loading = plansLoading || statusLoading;
+  const epppActive = !!entitlements?.epppAccess;
+  const epppUntil = entitlements?.epppAccessUntil ?? null;
 
   return (
     <div className="min-h-full study-page-bg" data-testid="subscription-page">
@@ -336,6 +352,116 @@ export default function SubscriptionPage() {
                       "Current Plan"
                     ) : (
                       <><Sparkles className="w-4 h-4 mr-2" />Subscribe to Scholar</>
+                    )}
+                  </Button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-6 text-muted-foreground">
+              <p className="text-sm">Pricing coming soon</p>
+            </div>
+          )}
+        </div>
+
+        {/* EPPP Mastery Suite — a SEPARATE access level, sold independently of
+            Master & Scholar. Three options: $99/mo, or one-time 6mo / 12mo. */}
+        <div className="sub-plan relative" data-testid="eppp-plan">
+          <div className="absolute -top-3 left-5 z-10">
+            <span
+              className="text-[#06232D] text-xs font-bold px-3 py-1 rounded-full"
+              style={{ background: P.surf, boxShadow: `0 0 18px -4px ${P.surf}` }}
+            >
+              EPPP
+            </span>
+          </div>
+          <div className="flex items-center gap-3 mb-3">
+            <span className="sub-icon-chip">
+              <GraduationCap className="w-[18px] h-[18px]" style={{ color: P.surf }} />
+            </span>
+            <span className="font-semibold text-foreground text-lg">EPPP Mastery Suite</span>
+            <Badge
+              className="ml-auto border-0 text-[#06232D] font-semibold"
+              style={{ background: P.surf, boxShadow: `0 0 18px -4px ${P.surf}` }}
+            >
+              Separate access
+            </Badge>
+          </div>
+
+          <p className="text-sm text-muted-foreground mb-4">
+            Full access to the EPPP Mastery Suite — knowledge domains, question
+            bank, domain &amp; full-length exams, missed-question review, and more.
+            Sold separately from Master &amp; Scholar.
+          </p>
+
+          {epppActive && (
+            <div
+              className="rounded-xl p-3 mb-4 text-sm"
+              style={{ background: `${P.surf}1a`, border: `1px solid ${P.surf}55`, color: "#FFFFFF" }}
+              data-testid="eppp-active-banner"
+            >
+              <span className="font-semibold">You have EPPP access.</span>
+              {epppUntil && (
+                <span className="text-white/80">
+                  {" "}Active until {new Date(epppUntil).toLocaleDateString()}.
+                </span>
+              )}
+            </div>
+          )}
+
+          {epppPlansLoading ? (
+            <Skeleton className="h-12 rounded-xl" />
+          ) : (epppPlans?.monthly || (epppPlans?.oneTime?.length ?? 0) > 0) ? (
+            <div className="space-y-3">
+              {epppPlans?.monthly && (
+                <div className="sub-bill" data-testid="eppp-bill-monthly">
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <p className="font-semibold text-foreground">Monthly subscription</p>
+                      <p className="text-xs text-muted-foreground">Cancel anytime</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="sub-price text-3xl font-extrabold">{formatPrice(epppPlans.monthly.unitAmount, epppPlans.monthly.currency)}</p>
+                      <p className="text-xs text-muted-foreground">/month</p>
+                    </div>
+                  </div>
+                  <Button
+                    className="w-full"
+                    disabled={epppCheckout.isPending}
+                    onClick={() => handleEpppCheckout(epppPlans.monthly!.priceId)}
+                    data-testid="button-eppp-monthly"
+                  >
+                    {epppCheckout.isPending ? (
+                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Processing...</>
+                    ) : (
+                      <><Zap className="w-4 h-4 mr-2" />Subscribe monthly</>
+                    )}
+                  </Button>
+                </div>
+              )}
+
+              {epppPlans?.oneTime?.map((pack) => (
+                <div key={pack.priceId} className="sub-bill" data-testid={`eppp-bill-${pack.months}mo`}>
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <p className="font-semibold text-foreground">{pack.months} months access</p>
+                      <p className="text-xs text-muted-foreground">One-time payment</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="sub-price text-3xl font-extrabold">{formatPrice(pack.unitAmount, pack.currency)}</p>
+                      <p className="text-xs text-muted-foreground">one-time</p>
+                    </div>
+                  </div>
+                  <Button
+                    className="w-full"
+                    disabled={epppCheckout.isPending}
+                    onClick={() => handleEpppCheckout(pack.priceId)}
+                    data-testid={`button-eppp-${pack.months}mo`}
+                  >
+                    {epppCheckout.isPending ? (
+                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Processing...</>
+                    ) : (
+                      <><GraduationCap className="w-4 h-4 mr-2" />Get {pack.months} months</>
                     )}
                   </Button>
                 </div>

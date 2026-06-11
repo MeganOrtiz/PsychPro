@@ -13,6 +13,14 @@ export const usersTable = pgTable("users", {
   subscriptionStatus: text("subscription_status").notNull().default("free"),
   stripeCustomerId: text("stripe_customer_id"),
   stripeSubscriptionId: text("stripe_subscription_id"),
+  // EPPP Mastery Suite is a SEPARATE access level from Master/Scholar. A single
+  // expiry date covers all three purchase types: $99/mo subscription (set to the
+  // period end, bumped on renewal), $499 one-time (now + 6 months), and $799
+  // one-time (now + 12 months). Access = isAdmin || (epppAccessUntil > now).
+  epppAccessUntil: timestamp("eppp_access_until"),
+  // The $99/mo EPPP subscription id (distinct from stripeSubscriptionId, which
+  // tracks the Master/Scholar sub). Null for one-time buyers / non-EPPP users.
+  epppSubscriptionId: text("eppp_subscription_id"),
   onboardingComplete: boolean("onboarding_complete").notNull().default(false),
   usageCount: integer("usage_count").notNull().default(0),
   progressScore: integer("progress_score").notNull().default(0),
