@@ -3,7 +3,6 @@ import { useLocation } from "wouter";
 import { useAuth } from "@clerk/clerk-react";
 import {
   Brain,
-  Search,
   BookOpen,
   Layers,
   ClipboardList,
@@ -33,7 +32,7 @@ import { isEpppTopic } from "@/lib/eppp-content";
 // Keeps the established dark cinematic "neuroscience portal" brand (midnight
 // teal, cyan glow, glassmorphism, the floating brain motif, Outfit/Inter type)
 // but presents the product through a deeper, multi-section narrative:
-//   1. Navbar (logo + in-page nav + search + LOG IN)
+//   1. Navbar (logo + in-page nav + LOG IN)
 //   2. Hero (brain centerpiece, wordmark, tagline, value prop, CTAs, stat strip)
 //   3. Positioning band (serious prep, without the four-figure price tag)
 //   4. Study tools (flashcards / quizzes / study guides / practice tests / course mastery exam)
@@ -257,15 +256,6 @@ export default function LandingPage() {
             </nav>
 
             <div className="landing-nav-actions">
-              <button
-                type="button"
-                onClick={goToTopics}
-                className="landing-nav-search"
-                aria-label="Search topics"
-                data-testid="nav-search"
-              >
-                <Search aria-hidden />
-              </button>
               <button
                 type="button"
                 onClick={goToApp}
@@ -797,25 +787,6 @@ const styles = `
   align-items: center;
   gap: 14px;
 }
-.landing-nav-search {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  background: transparent;
-  border: 1px solid ${C.hairline};
-  color: ${C.cyanSoft};
-  cursor: pointer;
-  transition: all 180ms ease;
-}
-.landing-nav-search:hover {
-  border-color: ${C.cyan};
-  color: ${C.cyan};
-  box-shadow: 0 0 14px ${C.cyan}55;
-}
-.landing-nav-search svg { width: 16px; height: 16px; }
 .landing-nav-login {
   font-size: 11px;
   font-weight: 600;
