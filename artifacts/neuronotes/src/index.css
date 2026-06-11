@@ -431,6 +431,26 @@
   content: none;
 }
 
+/* Lesson detail header — wraps the title, category, description and counts
+   in the same glass surface as the study-option cards so the text stays
+   readable over the smoky background. */
+.lesson-header-box {
+  background: linear-gradient(
+    145deg,
+    rgba(12, 67, 85, 0.32),
+    rgba(9, 48, 63, 0.4)
+  );
+  border: 1px solid rgba(196, 232, 242, 0.22);
+  border-radius: 12px;
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 0 20px -2px rgba(118, 228, 247, 0.3),
+    0 8px 22px -16px rgba(0, 0, 0, 0.55);
+  padding: 1.5rem 1.5rem 1.25rem;
+}
+
 /* Recommended-for-You tiles on the dashboard — glassy translucent pills
    with a soft cyan corona that intensifies on hover. Matches the
    landing-page atmosphere so the dashboard feels cut from the same

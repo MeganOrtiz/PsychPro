@@ -118,12 +118,14 @@ export default function TopicDetailPage({ params }: Props) {
           <div className="text-center py-16 text-muted-foreground">Topic not found.</div>
         ) : (
           <>
-            <PageTitle title={topic.name} subtitle={topic.category} className="mb-4" />
-            <p className="text-muted-foreground mb-4 text-center">{topic.description}</p>
+            <div className="lesson-header-box mb-6">
+              <PageTitle title={topic.name} subtitle={topic.category} className="mb-3" />
+              <p className="text-muted-foreground mb-4 text-center">{topic.description}</p>
 
-            <div className="flex gap-4 mb-6 text-sm text-muted-foreground justify-center">
-              <span className="flex items-center gap-1.5"><Layers className="w-4 h-4" />{topic.flashcardCount} flashcards</span>
-              <span className="flex items-center gap-1.5"><BookOpen className="w-4 h-4" />{topic.quizCount} questions</span>
+              <div className="flex gap-4 text-sm text-muted-foreground justify-center">
+                <span className="flex items-center gap-1.5"><Layers className="w-4 h-4" />{topic.flashcardCount} flashcards</span>
+                <span className="flex items-center gap-1.5"><BookOpen className="w-4 h-4" />{topic.quizCount} questions</span>
+              </div>
             </div>
 
             <div className="flex items-center gap-2 mb-3">
