@@ -1392,7 +1392,7 @@ function MissedQuestionsPanel({ onNavigate }: { onNavigate: (to: string) => void
                               Hide answer
                             </button>
                             <button
-                              className="eps-mq-study"
+                              className="eps-mq-study btn-glass"
                               onClick={() => onNavigate(epppTopicPath(q.topicId))}
                               data-testid={`eppp-missed-study-${q.id}`}
                             >
@@ -1931,7 +1931,7 @@ const styles = `
 .eps-mq-list { display: flex; flex-direction: column; gap: 14px; }
 .eps-mq-card {
   border-radius: 16px; padding: clamp(16px, 2vw, 22px);
-  background: linear-gradient(145deg, rgba(10,45,61,0.46), rgba(6,28,40,0.64));
+  background: linear-gradient(145deg, rgba(9,34,46,0.95), rgba(5,20,28,0.97));
   border: 1px solid ${C.hairline};
 }
 .eps-mq-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
@@ -1947,7 +1947,7 @@ const styles = `
 .eps-mq-option {
   display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px;
   font-size: 13.5px; line-height: 1.5; color: ${C.body};
-  background: rgba(4,21,29,0.5); border: 1px solid ${C.hairline};
+  background: rgba(6,26,36,0.9); border: 1px solid ${C.hairline};
 }
 .eps-mq-option.is-correct { color: ${C.cloud}; background: rgba(118,228,247,0.1); border-color: ${C.hairlineStrong}; }
 .eps-mq-option-key {
@@ -1959,15 +1959,13 @@ const styles = `
 .eps-mq-option-check { width: 16px; height: 16px; margin-left: auto; flex-shrink: 0; color: ${C.cyan}; }
 .eps-mq-explain {
   margin: 0 0 14px; padding: 12px 14px; border-radius: 10px; font-size: 13px; line-height: 1.65;
-  color: ${C.body}; background: rgba(4,21,29,0.4); border: 1px solid ${C.hairline};
+  color: ${C.body}; background: rgba(6,26,36,0.88); border: 1px solid ${C.hairline};
 }
 .eps-mq-explain strong { color: ${C.mist}; }
 .eps-mq-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .eps-mq-study {
   display: inline-flex; align-items: center; gap: 7px; cursor: pointer; margin-left: auto;
-  padding: 9px 16px; border-radius: 10px; font-size: 13px; font-weight: 700;
-  color: ${C.ink}; border: 1px solid rgba(167,243,255,0.65);
-  background: linear-gradient(135deg, ${C.mist} 0%, ${C.cyan} 48%, #38BDF8 100%);
+  padding: 9px 16px; font-size: 13px; font-weight: 700;
   transition: transform 0.2s ease;
 }
 .eps-mq-study svg { width: 14px; height: 14px; transition: transform 0.2s ease; }
