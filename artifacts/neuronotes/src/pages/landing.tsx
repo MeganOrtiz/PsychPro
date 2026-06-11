@@ -695,9 +695,9 @@ const C = {
   cyanSoft: P.mist,    // #A7F3FF — icy text
   cyanMid: P.teal,     // #68CCDE
   cyanDeep: P.tealDeep,// #3196AF
-  bg: "#061b23",
-  bgPanel: "rgba(11, 54, 70, 0.82)",
-  bgPanelStrong: "rgba(6, 33, 46, 0.90)",
+  bg: "#082b33",
+  bgPanel: "rgba(12, 73, 87, 0.82)",
+  bgPanelStrong: "rgba(7, 52, 63, 0.90)",
   hairline: "rgba(118, 228, 247, 0.36)",
   hairlineStrong: "rgba(118, 228, 247, 0.58)",
 };
@@ -722,7 +722,7 @@ const styles = `
   width: 100%;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  background: linear-gradient(180deg, rgba(6, 27, 36, 0.58), rgba(6, 27, 36, 0.26));
+  background: linear-gradient(180deg, rgba(8, 44, 52, 0.58), rgba(8, 44, 52, 0.26));
   border-bottom: 1px solid ${C.hairline};
 }
 .landing-nav-inner {
@@ -930,7 +930,7 @@ const styles = `
   line-height: 1.7;
   font-weight: 400;
   color: rgba(225, 244, 250, 0.88);
-  text-shadow: 0 1px 12px rgba(2, 13, 18, 0.55);
+  text-shadow: 0 1px 12px rgba(2, 19, 23, 0.55);
 }
 .landing-cta-row {
   display: flex;
@@ -976,7 +976,7 @@ const styles = `
 .landing-cta-primary {
   background: linear-gradient(135deg, ${C.cyan}, ${C.cyanMid});
   border: 1.5px solid ${C.cyan};
-  color: #021018;
+  color: #02171d;
   box-shadow: 0 10px 30px -10px ${C.cyan}aa, 0 0 22px ${C.cyan}3a;
 }
 .landing-cta-primary:hover {
@@ -1084,7 +1084,7 @@ const styles = `
   line-height: 1.72;
   font-weight: 400;
   color: rgba(225, 244, 250, 0.74);
-  text-shadow: 0 1px 10px rgba(2, 13, 18, 0.45);
+  text-shadow: 0 1px 10px rgba(2, 19, 23, 0.45);
 }
 
 /* ============== STUDY TOOLS / FEATURE CARDS ============== */
@@ -1150,7 +1150,7 @@ const styles = `
   letter-spacing: 0.01em;
   line-height: 1.3;
   color: #ffffff;
-  text-shadow: 0 1px 10px rgba(2, 13, 18, 0.55);
+  text-shadow: 0 1px 10px rgba(2, 19, 23, 0.55);
 }
 .landing-feature-body {
   margin: 0;
@@ -1175,7 +1175,7 @@ const styles = `
   padding: 22px 20px;
   border-radius: 16px;
   border: 1px solid ${C.hairline};
-  background: linear-gradient(180deg, rgba(11,54,70,0.82), rgba(6,33,46,0.90));
+  background: linear-gradient(180deg, rgba(12,73,87,0.82), rgba(7,52,63,0.90));
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   box-shadow: 0 0 22px ${C.cyan}1f, 0 0 0 1px ${C.cyan}14 inset;
@@ -1272,7 +1272,7 @@ const styles = `
   padding: clamp(26px, 3.4vw, 44px);
   border-radius: 22px;
   border: 1px solid ${C.hairlineStrong};
-  background: linear-gradient(150deg, rgba(11,54,70,0.85), rgba(6,33,46,0.90));
+  background: linear-gradient(150deg, rgba(12,73,87,0.85), rgba(7,52,63,0.90));
   backdrop-filter: blur(18px) saturate(140%);
   -webkit-backdrop-filter: blur(18px) saturate(140%);
   box-shadow:
@@ -1342,7 +1342,7 @@ const styles = `
   max-width: 420px;
   border-radius: 18px;
   padding: 22px 22px 16px;
-  background: linear-gradient(145deg, rgba(11,54,70,0.84), rgba(6,33,46,0.90));
+  background: linear-gradient(145deg, rgba(12,73,87,0.84), rgba(7,52,63,0.90));
   border: 1px solid ${C.hairlineStrong};
   backdrop-filter: blur(18px) saturate(130%);
   -webkit-backdrop-filter: blur(18px) saturate(130%);
@@ -1371,7 +1371,7 @@ const styles = `
   position: relative;
   height: 7px;
   border-radius: 999px;
-  background: rgba(11,54,70, 0.6);
+  background: rgba(12,73,87, 0.6);
   overflow: hidden;
 }
 .landing-dash-fill {
@@ -1421,7 +1421,7 @@ const styles = `
   overflow: hidden;
   border-radius: 22px;
   padding: clamp(28px, 4vw, 48px);
-  background: linear-gradient(150deg, rgba(11,54,70,0.86), rgba(6,33,46,0.90));
+  background: linear-gradient(150deg, rgba(12,73,87,0.86), rgba(7,52,63,0.90));
   border: 1px solid ${C.hairlineStrong};
   backdrop-filter: blur(20px) saturate(140%);
   -webkit-backdrop-filter: blur(20px) saturate(140%);
@@ -1470,7 +1470,7 @@ const styles = `
   text-align: center;
   border-radius: 22px;
   padding: clamp(30px, 4.4vw, 52px);
-  background: linear-gradient(150deg, rgba(11,54,70,0.86), rgba(6,33,46,0.90));
+  background: linear-gradient(150deg, rgba(12,73,87,0.86), rgba(7,52,63,0.90));
   border: 1px solid ${C.hairlineStrong};
   backdrop-filter: blur(20px) saturate(140%);
   -webkit-backdrop-filter: blur(20px) saturate(140%);
@@ -1511,7 +1511,7 @@ const styles = `
   font-size: clamp(14px, 1.1vw, 16.5px);
   line-height: 1.78;
   color: rgba(225, 244, 250, 0.84);
-  text-shadow: 0 1px 10px rgba(2, 13, 18, 0.45);
+  text-shadow: 0 1px 10px rgba(2, 19, 23, 0.45);
 }
 
 /* ============== FINAL CTA ============== */
@@ -1601,7 +1601,7 @@ const styles = `
 .landing-footer {
   border-top: 1px solid ${C.hairline};
   margin-top: clamp(28px, 4vh, 48px);
-  background: linear-gradient(180deg, rgba(6, 27, 36, 0.32), rgba(6, 27, 36, 0.7));
+  background: linear-gradient(180deg, rgba(8, 44, 52, 0.32), rgba(8, 44, 52, 0.7));
   backdrop-filter: blur(8px);
 }
 .landing-footer-inner {

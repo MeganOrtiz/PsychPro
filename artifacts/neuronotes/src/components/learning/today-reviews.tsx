@@ -142,7 +142,7 @@ export default function TodayReviews({ topics }: TodayReviewsProps) {
                     item.isOverdue
                       ? {
                           background: `linear-gradient(135deg, ${P.teal}, ${P.surf})`,
-                          color: "#04222E",
+                          color: "#05343f",
                           borderColor: P.tealDeep,
                         }
                       : {

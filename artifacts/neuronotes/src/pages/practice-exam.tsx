@@ -210,7 +210,7 @@ export default function PracticeExamPage({ params }: Props) {
           <div
             className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 border"
             style={{
-              background: passed ? `linear-gradient(135deg, #1F4F66, ${P.tealDeep})` : "rgba(244,180,98,0.18)",
+              background: passed ? `linear-gradient(135deg, #1f6070, ${P.tealDeep})` : "rgba(244,180,98,0.18)",
               borderColor: passed ? P.tealDeep : "rgba(244,180,98,0.55)",
               boxShadow: passed ? `0 18px 40px -18px ${P.tealDeep}cc` : "none",
             }}
@@ -474,7 +474,7 @@ export default function PracticeExamPage({ params }: Props) {
             style={{
               borderColor: "rgba(118,228,247,0.26)",
               background:
-                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(11,54,70,0.81), rgba(6,33,46,0.90))",
+                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(12,73,87,0.81), rgba(7,52,63,0.90))",
               backdropFilter: "blur(20px) saturate(135%)",
               WebkitBackdropFilter: "blur(20px) saturate(135%)",
               boxShadow:
@@ -651,7 +651,7 @@ export default function PracticeExamPage({ params }: Props) {
             cls += " hover:-translate-y-0.5 quiz-option-hover";
             style = {
               background:
-                "linear-gradient(to bottom, rgba(20,100,128,0.78), rgba(11,54,70,0.86))",
+                "linear-gradient(to bottom, rgba(19,117,139,0.78), rgba(12,73,87,0.86))",
               borderColor: `${P.surf}55`,
               color: P.cloud,
               boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(255,255,255,0.06)`,
@@ -659,7 +659,7 @@ export default function PracticeExamPage({ params }: Props) {
           } else if (isSelected) {
             cls += " text-white font-medium";
             style = {
-              background: `linear-gradient(to bottom, #1F4F66, ${P.tealDeep})`,
+              background: `linear-gradient(to bottom, #1f6070, ${P.tealDeep})`,
               borderColor: P.tealDeep,
               boxShadow: `0 14px 32px -16px ${P.tealDeep}cc`,
             };
@@ -667,7 +667,7 @@ export default function PracticeExamPage({ params }: Props) {
             cls += " opacity-55";
             style = {
               background:
-                "linear-gradient(to bottom, rgba(20,100,128,0.78), rgba(11,54,70,0.86))",
+                "linear-gradient(to bottom, rgba(19,117,139,0.78), rgba(12,73,87,0.86))",
               borderColor: `${P.surf}25`,
               color: `${P.cloud}aa`,
             };

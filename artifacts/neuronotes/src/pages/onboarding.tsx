@@ -936,7 +936,7 @@ const styles = `
   overflow: hidden;
   background:
     radial-gradient(130% 90% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0) 60%),
-    linear-gradient(150deg, rgba(24,89,109,0.55), rgba(16,72,91,0.66));
+    linear-gradient(150deg, rgba(24,103,120,0.55), rgba(17,92,108,0.66));
   border: 1px solid rgba(118,228,247,0.26);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -973,7 +973,7 @@ const styles = `
   width: 100%; padding: 13px 14px; text-align: left;
   border-radius: 12px;
   border: 1px solid rgba(118,228,247,0.18);
-  background: linear-gradient(150deg, rgba(16,72,91,0.5), rgba(10,60,77,0.6));
+  background: linear-gradient(150deg, rgba(17,92,108,0.5), rgba(10,79,94,0.6));
   color: ${P.mist};
   transition: transform .15s ease, border-color .15s ease, background .15s ease, box-shadow .15s ease;
 }
@@ -982,7 +982,7 @@ const styles = `
   border-color: ${P.surf};
   background:
     radial-gradient(120% 100% at 0% 0%, rgba(118,228,247,0.22), rgba(118,228,247,0) 60%),
-    linear-gradient(150deg, rgba(24,89,109,0.7), rgba(16,72,91,0.78));
+    linear-gradient(150deg, rgba(24,103,120,0.7), rgba(17,92,108,0.78));
   box-shadow: inset 0 0 0 1px rgba(118,228,247,0.4), 0 0 26px -12px ${P.surf}cc;
 }
 .ob-tile-icon {
@@ -1005,7 +1005,7 @@ const styles = `
   display: flex; align-items: center; gap: 12px; width: 100%;
   padding: 14px 16px; border-radius: 12px;
   border: 1px solid rgba(118,228,247,0.18);
-  background: linear-gradient(150deg, rgba(16,72,91,0.5), rgba(10,60,77,0.6));
+  background: linear-gradient(150deg, rgba(17,92,108,0.5), rgba(10,79,94,0.6));
   transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
 }
 .ob-row:hover { transform: translateY(-1px); border-color: rgba(118,228,247,0.4); }
@@ -1016,7 +1016,7 @@ const styles = `
   position: relative; display: flex; flex-direction: column; gap: 8px;
   padding: 18px; border-radius: 16px; text-align: left;
   border: 1px solid rgba(118,228,247,0.18);
-  background: linear-gradient(155deg, rgba(16,72,91,0.55), rgba(10,60,77,0.66));
+  background: linear-gradient(155deg, rgba(17,92,108,0.55), rgba(10,79,94,0.66));
   transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
 }
 .ob-plan:hover { transform: translateY(-2px); border-color: rgba(118,228,247,0.42); }
@@ -1028,7 +1028,7 @@ const styles = `
   border-color: rgba(167,243,255,0.4);
   background:
     radial-gradient(130% 100% at 100% 0%, rgba(167,243,255,0.2), rgba(167,243,255,0) 55%),
-    linear-gradient(155deg, rgba(24,89,109,0.7), rgba(8,45,60,0.82));
+    linear-gradient(155deg, rgba(24,103,120,0.7), rgba(9,64,77,0.82));
 }
 .ob-plan--eppp.ob-plan--on {
   box-shadow: inset 0 0 0 1px rgba(167,243,255,0.6), 0 0 38px -12px rgba(167,243,255,0.7);
@@ -1070,7 +1070,7 @@ const styles = `
   display: flex; align-items: flex-start; gap: 12px;
   padding: 13px 15px; border-radius: 12px;
   border: 1px solid rgba(118,228,247,0.18);
-  background: linear-gradient(150deg, rgba(16,72,91,0.5), rgba(10,60,77,0.6));
+  background: linear-gradient(150deg, rgba(17,92,108,0.5), rgba(10,79,94,0.6));
 }
 .ob-summary-icon {
   display: inline-flex; align-items: center; justify-content: center;

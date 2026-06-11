@@ -183,7 +183,7 @@ export default function SubscriptionPage() {
           className="border rounded-xl p-4 mb-6 flex flex-col sm:flex-row sm:items-center gap-3"
           style={{
             background:
-              "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(11,54,70,0.81), rgba(6,33,46,0.90))",
+              "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(12,73,87,0.81), rgba(7,52,63,0.90))",
             borderColor: "rgba(118,228,247,0.26)",
             backdropFilter: "blur(18px) saturate(135%)",
             WebkitBackdropFilter: "blur(18px) saturate(135%)",
@@ -236,7 +236,7 @@ export default function SubscriptionPage() {
             </span>
             <span className="font-semibold text-foreground text-lg">PsychPro {PRO_DISPLAY_NAME}</span>
             <Badge
-              className="ml-auto border-0 text-[#06232D] font-semibold"
+              className="ml-auto border-0 text-[#07343e] font-semibold"
               style={{ background: P.surf, boxShadow: `0 0 18px -4px ${P.surf}` }}
             >
               Most Popular
@@ -297,7 +297,7 @@ export default function SubscriptionPage() {
         <div className="sub-plan relative">
           <div className="absolute -top-3 left-5 z-10">
             <span
-              className="text-[#06232D] text-xs font-bold px-3 py-1 rounded-full"
+              className="text-[#07343e] text-xs font-bold px-3 py-1 rounded-full"
               style={{ background: P.surf, boxShadow: `0 0 18px -4px ${P.surf}` }}
             >
               NEW
@@ -309,7 +309,7 @@ export default function SubscriptionPage() {
             </span>
             <span className="font-semibold text-foreground text-lg">PsychPro Scholar</span>
             <Badge
-              className="ml-auto border-0 text-[#06232D] font-semibold"
+              className="ml-auto border-0 text-[#07343e] font-semibold"
               style={{ background: P.teal, boxShadow: `0 0 18px -4px ${P.teal}` }}
             >
               Best Value
@@ -376,7 +376,7 @@ export default function SubscriptionPage() {
         <div className="sub-plan relative" data-testid="eppp-plan">
           <div className="absolute -top-3 left-5 z-10">
             <span
-              className="text-[#06232D] text-xs font-bold px-3 py-1 rounded-full"
+              className="text-[#07343e] text-xs font-bold px-3 py-1 rounded-full"
               style={{ background: P.surf, boxShadow: `0 0 18px -4px ${P.surf}` }}
             >
               EPPP
@@ -388,7 +388,7 @@ export default function SubscriptionPage() {
             </span>
             <span className="font-semibold text-foreground text-lg">EPPP Mastery Suite</span>
             <Badge
-              className="ml-auto border-0 text-[#06232D] font-semibold"
+              className="ml-auto border-0 text-[#07343e] font-semibold"
               style={{ background: P.surf, boxShadow: `0 0 18px -4px ${P.surf}` }}
             >
               Separate access

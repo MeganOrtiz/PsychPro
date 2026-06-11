@@ -5,12 +5,22 @@ description: The deep-cerulean surface palette, where it lives (two mirrored pla
 
 # PsychPro cerulean surface stack
 
-DIRECTION REVERSED 2026-06-11. The owner previously asked for "brighter / less dark
-teal" (surfaces were lifted). The owner then RETRACTED that: they disliked the
-lighter look and want the WHOLE site **deeper/darker cerulean-turquoise** with
-"incandescence and radiance throughout," "depth perception," and an "ethereal vibe."
-Current state = DEEPENED (deepened twice; the owner kept saying "too light" even after
-the tokens were already deep). Do NOT re-lift surfaces to the old brighter values.
+HUE REVERSAL 2026-06-11 (latest). After the deepening (below), the owner said the whole
+site looked "too navy" and asked to "return to deep cerulean/deep turquoise." Root cause:
+EVERY surface sat at hue ~194–203 (bluer cerulean) while the locked accent #76E4F7 is
+hue 189 (turquoise-cyan) — bright turquoise accents floating on bluer surfaces READ AS
+NAVY, even though no surface was literally navy-hue. PLUS a genuinely-navy legacy global
+`.dark` block (hue 210–222, the shadcn defaults: --background/--card/--sidebar/--popover
+/--muted/--primary/--accent). Fix applied: pulled ALL surface hues toward ~191 (70% toward
+189) to MATCH the accent, +slight saturation, +gentle lightness lift on the darkest, and
+retoned the `.dark` block to hue 189–192. So the canonical surface hue is now ~191, not
+196–200. Diagnostic for future "too navy": check the surface↔accent HUE GAP, not just
+lightness — keep surfaces within a few degrees of the 189 accent.
+
+EARLIER (same day): owner had asked for "brighter / less dark teal" (lifted), RETRACTED
+it for "deeper/darker cerulean-turquoise" with "incandescence/radiance/depth/ethereal,"
+so surfaces were DEEPENED twice. The hue reversal above kept it deep but shifted hue to
+turquoise. Do NOT re-lift surfaces back to bright; the lever for "navy" is HUE, not depth.
 
 **Diagnostic heuristic — when the owner says "too light":** check SURFACE
 translucency/alpha first, NOT the tokens. The repeat offender is `StudySurface
