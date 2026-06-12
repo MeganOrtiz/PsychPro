@@ -46,13 +46,13 @@ import { isEpppTopic } from "@/lib/eppp-content";
 //
 // COPY RULES (from the user): only true facts. No "expert-made" / "built by
 // clinicians" claims, no fabricated testimonials, logos, ratings, or user
-// counts. Verified facts only (39 topics, 6 domains, the five study formats,
+// counts. Verified facts only (46 topics, 8 domains, the five study formats,
 // the learning-science methods, the Brain Lab, the dashboard, Scholar AI).
 // =============================================================================
 
 const STAT_STRIP = [
-  { value: "39", label: "Topics" },
-  { value: "6", label: "Domains" },
+  { value: "46", label: "Topics" },
+  { value: "8", label: "Domains" },
   { value: "5", label: "Study formats" },
 ] as const;
 
@@ -118,14 +118,17 @@ const LEARNING_SCIENCE = [
   },
 ] as const;
 
-// The six domains the curriculum spans.
+// The eight domains the curriculum spans (the distinct main-catalog
+// categories — kept in sync with the topic catalog).
 const DOMAINS = [
   "Neuroscience",
   "Neuropsychology",
-  "Psychopharmacology",
-  "Assessment",
   "Psychotherapy",
+  "Assessment",
+  "Pediatric & Neuropsychiatric Conditions",
   "Research Methods",
+  "Psychology",
+  "Special Topics",
 ] as const;
 
 // What the Scholar tier adds — mirrors src/pages/subscription.tsx SCHOLAR_FEATURES.
