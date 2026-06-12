@@ -515,9 +515,6 @@ export default function OnboardingPage() {
 
           <div className="ob-card p-6 md:p-8 ob-card-in">
             <span className="ob-card-sheen" aria-hidden />
-            <p className="ob-eyebrow">
-              {`0${idx + 1}`.slice(-2)} · Let's personalize PsychPro
-            </p>
             <h1 className="ob-title">{meta?.title}</h1>
             {meta?.subtitle && <p className="ob-sub">{meta.subtitle}</p>}
 
@@ -620,7 +617,7 @@ export default function OnboardingPage() {
             </div>
 
             {/* Footer */}
-            <div className="mt-8 flex items-center justify-between gap-3">
+            <div className="ob-actions mt-8 flex items-center justify-between gap-3">
               <Button
                 variant="outline"
                 onClick={handleBack}
@@ -960,12 +957,13 @@ const styles = `
 }
 .ob-title {
   font-size: 1.6rem; line-height: 1.18; font-weight: 800; margin-top: 6px;
+  text-align: center;
   background: linear-gradient(100deg, ${P.cloud} 0%, ${P.mist} 55%, ${P.surf} 100%);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
   text-shadow: 0 1px 2px rgba(0,0,0,0.25);
 }
-.ob-sub { margin-top: 8px; font-size: 0.9rem; color: ${P.mistSoft}; }
+.ob-sub { margin-top: 8px; font-size: 0.9rem; color: ${P.mistSoft}; text-align: center; }
 
 .ob-tile {
   position: relative;
@@ -974,7 +972,7 @@ const styles = `
   border-radius: 12px;
   border: 1px solid rgba(118,228,247,0.18);
   background: linear-gradient(150deg, rgba(17, 85, 108, 0.5), rgba(10, 73, 94, 0.6));
-  color: ${P.mist};
+  color: #ffffff;
   transition: transform .15s ease, border-color .15s ease, background .15s ease, box-shadow .15s ease;
 }
 .ob-tile:hover { transform: translateY(-1px); border-color: rgba(118,228,247,0.4); }
@@ -991,7 +989,31 @@ const styles = `
   background: linear-gradient(135deg, ${P.tealDeep}, ${P.teal});
   color: ${P.cloud};
 }
-.ob-tile-label { flex: 1; min-width: 0; font-size: 0.875rem; font-weight: 600; }
+.ob-tile-label { flex: 1; min-width: 0; font-size: 0.875rem; font-weight: 600; color: #ffffff; }
+
+/* Onboarding footer nav buttons (Back / Continue / Finish) — opaque frosted
+   glass so they read clearly over the dark card, matching the sidebar nav
+   pills. Scoped to .ob-actions so the option tiles (also <button>s) are
+   unaffected. */
+.ob-actions button {
+  background-image: none !important;
+  background-color: rgba(31, 108, 133, 0.92) !important;
+  border: 1px solid rgba(118, 228, 247, 0.42) !important;
+  color: #eafcff !important;
+  box-shadow:
+    0 0 16px rgba(118, 228, 247, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(130%);
+  backdrop-filter: blur(12px) saturate(130%);
+}
+.ob-actions button:hover:not(:disabled) {
+  background-color: rgba(42, 130, 158, 0.96) !important;
+  border-color: rgba(118, 228, 247, 0.6) !important;
+  box-shadow:
+    0 0 22px rgba(118, 228, 247, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.09) !important;
+}
+.ob-actions button:disabled { opacity: 0.5; }
 .ob-check {
   display: inline-flex; align-items: center; justify-content: center;
   width: 20px; height: 20px; border-radius: 999px; flex-shrink: 0;
