@@ -37,6 +37,7 @@ import {
   Compass,
   Crown,
   Star,
+  Clock,
   Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -50,7 +51,7 @@ import {
   type UserProfile,
   type SubscriptionPlan,
 } from "@workspace/api-client-react";
-import { useEpppPlans, useEpppCheckout } from "@/lib/use-eppp-purchase";
+import { useEpppPlans, useEpppCheckout, type EpppOneTimePlan } from "@/lib/use-eppp-purchase";
 import { useEntitlements } from "@/lib/use-entitlements";
 import { useToast } from "@/hooks/use-toast";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -297,6 +298,16 @@ export default function OnboardingPage() {
       eppp: true,
     };
   }, [epppPlans]);
+
+  // One-time EPPP access packs ($499 → 6mo, $799 → 12mo) — bought once for a
+  // fixed window instead of the monthly subscription.
+  const epppOneTime = useMemo(
+    () =>
+      (epppPlans?.oneTime ?? [])
+        .filter((p) => p.priceId)
+        .sort((a, b) => a.unitAmount - b.unitAmount),
+    [epppPlans],
+  );
 
   const freeTier: TierCard = {
     tier: "free",
@@ -586,23 +597,83 @@ export default function OnboardingPage() {
 
               {/* ---- Tier ---- */}
               {stepId === "tier" && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {tierCards.map((card) => (
-                    <TierOption
-                      key={`${card.tier}-${card.priceId ?? "free"}`}
-                      card={card}
-                      selected={answers.selectedTier === card.tier}
-                      onSelect={() =>
-                        setAnswers((p) => ({
-                          ...p,
-                          selectedTier: card.tier,
-                          selectedProduct: card.name,
-                          selectedPriceId: card.priceId,
-                        }))
-                      }
-                    />
-                  ))}
-                </div>
+                <>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {tierCards.map((card) => (
+                      <TierOption
+                        key={`${card.tier}-${card.priceId ?? "free"}`}
+                        card={card}
+                        selected={
+                          card.tier === "eppp"
+                            ? answers.selectedTier === "eppp" &&
+                              !epppOneTime.some((p) => p.priceId === answers.selectedPriceId)
+                            : answers.selectedTier === card.tier
+                        }
+                        onSelect={() =>
+                          setAnswers((p) => ({
+                            ...p,
+                            selectedTier: card.tier,
+                            selectedProduct: card.name,
+                            selectedPriceId: card.priceId,
+                          }))
+                        }
+                      />
+                    ))}
+                  </div>
+
+                  {epppOneTime.length > 0 && (
+                    <div className="ob-onetime">
+                      <span className="ob-plan-badge ob-onetime-badge">EPPP</span>
+                      <div className="ob-onetime-head">
+                        <span className="ob-onetime-icon">
+                          <Clock className="w-4 h-4" />
+                        </span>
+                        <span className="min-w-0">
+                          <span className="ob-onetime-title">Prefer one-time access?</span>
+                          <span className="ob-onetime-sub">
+                            Pay once for a fixed window of full EPPP Mastery Suite access — no
+                            subscription.
+                          </span>
+                        </span>
+                      </div>
+                      <div className="ob-onetime-grid">
+                        {epppOneTime.map((p) => {
+                          const sel = answers.selectedPriceId === p.priceId;
+                          return (
+                            <button
+                              key={p.priceId}
+                              type="button"
+                              onClick={() =>
+                                setAnswers((prev) => ({
+                                  ...prev,
+                                  selectedTier: "eppp",
+                                  selectedProduct: `${epppPlans?.name ?? "EPPP Mastery Suite"} · ${p.months}-month access`,
+                                  selectedPriceId: p.priceId,
+                                }))
+                              }
+                              aria-pressed={sel}
+                              data-testid={slug(`eppp-onetime-${p.months}`)}
+                              className={`ob-onetime-opt ${sel ? "ob-onetime-opt--on" : ""}`}
+                            >
+                              <span className="ob-onetime-opt-top">
+                                <span className="ob-onetime-price">
+                                  {fmtMoney(p.unitAmount, p.currency)}
+                                </span>
+                                <span className="ob-check">
+                                  {sel && <Check className="w-3.5 h-3.5" />}
+                                </span>
+                              </span>
+                              <span className="ob-onetime-window">
+                                {p.months} months of full access
+                              </span>
+                              <span className="ob-onetime-note">One-time payment</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
 
               {/* ---- Summary ---- */}
@@ -612,6 +683,7 @@ export default function OnboardingPage() {
                   answers={answers}
                   showEppp={showEppp}
                   tierCards={tierCards}
+                  epppOneTime={epppOneTime}
                 />
               )}
             </div>
@@ -794,15 +866,19 @@ function SummaryBody({
   answers,
   showEppp,
   tierCards,
+  epppOneTime,
 }: {
   firstName: string;
   answers: Answers;
   showEppp: boolean;
   tierCards: TierCard[];
+  epppOneTime: EpppOneTimePlan[];
 }) {
   const planCard = tierCards.find((c) => c.tier === answers.selectedTier);
-  const planLabel =
-    planCard?.tier === "free"
+  const oneTimeSel = epppOneTime.find((p) => p.priceId === answers.selectedPriceId);
+  const planLabel = oneTimeSel
+    ? `${answers.selectedProduct || "EPPP Mastery Suite"} · ${fmtMoney(oneTimeSel.unitAmount, oneTimeSel.currency)} one-time`
+    : planCard?.tier === "free"
       ? "Free"
       : planCard
         ? `${planCard.name}${planCard.interval === "month" ? ` · ${fmtMoney(planCard.amount, planCard.currency)}/mo` : ""}`
@@ -1078,6 +1154,42 @@ const styles = `
 .ob-plan-feats { display: flex; flex-direction: column; gap: 5px; margin-top: 4px; }
 .ob-plan-feat { display: flex; align-items: center; gap: 7px; font-size: 0.8rem; color: ${P.mist}; }
 .ob-plan-feat svg { color: ${P.surf}; }
+
+.ob-onetime {
+  position: relative; margin-top: 16px;
+  padding: 18px; border-radius: 16px;
+  border: 1px solid rgba(167,243,255,0.4);
+  background:
+    radial-gradient(130% 100% at 100% 0%, rgba(167,243,255,0.16), rgba(167,243,255,0) 55%),
+    linear-gradient(155deg, rgba(24, 96, 120, 0.62), rgba(9, 60, 77, 0.78));
+}
+.ob-onetime-badge { top: 14px; right: 14px; }
+.ob-onetime-head { display: flex; align-items: flex-start; gap: 12px; padding-right: 64px; }
+.ob-onetime-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border-radius: 9px; flex-shrink: 0;
+  background: linear-gradient(135deg, ${P.surf}, ${P.mist}); color: ${P.ink};
+}
+.ob-onetime-title { display: block; font-size: 1rem; font-weight: 700; color: ${P.cloud}; }
+.ob-onetime-sub { display: block; font-size: 0.82rem; color: ${P.mistSoft}; margin-top: 2px; }
+.ob-onetime-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+@media (max-width: 640px) { .ob-onetime-grid { grid-template-columns: 1fr; } }
+.ob-onetime-opt {
+  display: flex; flex-direction: column; gap: 4px; text-align: left;
+  padding: 14px 16px; border-radius: 12px;
+  border: 1px solid rgba(118,228,247,0.2);
+  background: linear-gradient(150deg, rgba(17, 85, 108, 0.5), rgba(10, 73, 94, 0.62));
+  transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+.ob-onetime-opt:hover { transform: translateY(-1px); border-color: rgba(167,243,255,0.45); }
+.ob-onetime-opt--on {
+  border-color: ${P.mist};
+  box-shadow: inset 0 0 0 1px rgba(167,243,255,0.6), 0 0 30px -14px rgba(167,243,255,0.7);
+}
+.ob-onetime-opt-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.ob-onetime-price { font-size: 1.3rem; font-weight: 800; color: ${P.surf}; }
+.ob-onetime-window { font-size: 0.88rem; font-weight: 600; color: ${P.mist}; }
+.ob-onetime-note { font-size: 0.72rem; letter-spacing: .05em; text-transform: uppercase; color: ${P.mistSoft}; }
 
 .ob-greeting {
   font-size: 1.15rem; font-weight: 700; color: ${P.mist};
