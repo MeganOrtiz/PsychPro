@@ -897,7 +897,7 @@ const styles = `
 .landing-wordmark {
   margin: 0;
   font-family: "Outfit", "Inter", system-ui, -apple-system, sans-serif;
-  font-weight: 400;
+  font-weight: 200;
   font-size: clamp(40px, 7.5vw, 92px);
   letter-spacing: 0.22em;
   line-height: 1;
