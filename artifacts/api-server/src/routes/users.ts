@@ -34,8 +34,8 @@ const ALLOWED_LEARNING_GOALS = new Set([
   "Optimize studying",
   "Deepen clinical knowledge and application",
   "Prepare for course exams",
-  "Master neuroscience & the brain",
-  "Build research & statistics skills",
+  "Sharpen DSM-5 & diagnostic criteria",
+  "Prep for clinical rotations / practicum",
 ]);
 // studyFocus stores the user's preferred LEARNING STYLE (how they learn best).
 const ALLOWED_STUDY_FOCUS = new Set([

@@ -77,8 +77,8 @@ const GOAL_OPTIONS: { value: string; icon: Icon }[] = [
   { value: "Optimize studying", icon: Sparkles },
   { value: "Deepen clinical knowledge and application", icon: Stethoscope },
   { value: "Prepare for course exams", icon: ClipboardCheck },
-  { value: "Master neuroscience & the brain", icon: Brain },
-  { value: "Build research & statistics skills", icon: FlaskConical },
+  { value: "Sharpen DSM-5 & diagnostic criteria", icon: Microscope },
+  { value: "Prep for clinical rotations / practicum", icon: Compass },
 ];
 
 // Step 3 captures the user's preferred LEARNING STYLE (how they learn best).
