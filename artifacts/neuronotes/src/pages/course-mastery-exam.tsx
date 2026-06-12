@@ -127,7 +127,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
           <div
             className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 border"
             style={{
-              background: "linear-gradient(135deg, rgba(19, 108, 139, 0.9), rgba(12, 68, 87, 0.95))",
+              background: "linear-gradient(135deg, rgba(19, 115, 139, 0.9), rgba(12, 72, 87, 0.95))",
               borderColor: `${P.surf}55`,
             }}
           >
@@ -194,7 +194,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
             <div
               className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 border"
               style={{
-                background: passed ? `linear-gradient(135deg, #1f5b70, ${P.tealDeep})` : "rgba(244,180,98,0.18)",
+                background: passed ? `linear-gradient(135deg, #1f6070, ${P.tealDeep})` : "rgba(244,180,98,0.18)",
                 borderColor: passed ? P.tealDeep : "rgba(244,180,98,0.55)",
                 boxShadow: passed ? `0 18px 40px -18px ${P.tealDeep}cc` : "none",
               }}
@@ -369,7 +369,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
           )}
         </div>
 
-        <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "rgba(47,160,198,0.12)" }}>
+        <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "rgba(47, 168, 198,0.12)" }}>
           <div
             className="h-1.5 rounded-full transition-all"
             style={{
@@ -397,7 +397,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
             if (!isAnswered) {
               cls += " hover:-translate-y-0.5 quiz-option-hover";
               style = {
-                background: "linear-gradient(135deg, rgba(19, 108, 139, 0.78), rgba(12, 68, 87, 0.86))",
+                background: "linear-gradient(135deg, rgba(19, 115, 139, 0.78), rgba(12, 72, 87, 0.86))",
                 borderColor: `${P.surf}55`,
                 color: P.cloud,
                 boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(255,255,255,0.06)`,
@@ -405,14 +405,14 @@ export default function CourseMasteryExamPage({ params }: Props) {
             } else if (isSelected) {
               cls += " text-white font-medium";
               style = {
-                background: `linear-gradient(135deg, #1f5b70, ${P.tealDeep})`,
+                background: `linear-gradient(135deg, #1f6070, ${P.tealDeep})`,
                 borderColor: P.tealDeep,
                 boxShadow: `0 14px 32px -16px ${P.tealDeep}cc`,
               };
             } else {
               cls += " opacity-55";
               style = {
-                background: "linear-gradient(135deg, rgba(19, 108, 139, 0.78), rgba(12, 68, 87, 0.86))",
+                background: "linear-gradient(135deg, rgba(19, 115, 139, 0.78), rgba(12, 72, 87, 0.86))",
                 borderColor: `${P.surf}25`,
                 color: `${P.cloud}aa`,
               };

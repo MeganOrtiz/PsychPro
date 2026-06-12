@@ -88,7 +88,7 @@ export default function ReflectionsPage() {
             className="rounded-xl border p-8"
             style={{
               background:
-                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(12, 68, 87, 0.79), rgba(7, 49, 63, 0.90))",
+                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(12, 72, 87, 0.79), rgba(7, 52, 63, 0.90))",
               borderColor: "rgba(118,228,247,0.24)",
               backdropFilter: "blur(18px) saturate(135%)",
               WebkitBackdropFilter: "blur(18px) saturate(135%)",
@@ -146,7 +146,7 @@ export default function ReflectionsPage() {
                       className="rounded-xl border p-4"
                       style={{
                         background:
-                          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(12, 68, 87, 0.79), rgba(7, 49, 63, 0.90))",
+                          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(12, 72, 87, 0.79), rgba(7, 52, 63, 0.90))",
                         borderColor: "rgba(118,228,247,0.24)",
                         backdropFilter: "blur(18px) saturate(135%)",
                         WebkitBackdropFilter: "blur(18px) saturate(135%)",

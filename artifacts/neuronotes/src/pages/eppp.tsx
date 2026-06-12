@@ -19,7 +19,7 @@ import {
 const C = {
   cyan: "#76E4F7",
   mist: "#A7F3FF",
-  ink: "#07303e",
+  ink: "#07333e",
   hairline: "rgba(118,228,247,0.16)",
   hairlineStrong: "rgba(118,228,247,0.32)",
   body: "rgba(225,244,250,0.84)",
@@ -186,7 +186,7 @@ const styles = `
   padding: clamp(32px, 5vw, 64px) clamp(22px, 4vw, 56px);
   background:
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(150deg, rgba(14, 74, 95, 0.78), rgba(8, 56, 72, 0.88));
+    linear-gradient(150deg, rgba(14, 79, 95, 0.78), rgba(8, 59, 72, 0.88));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -237,7 +237,7 @@ const styles = `
   font-weight: 800;
   line-height: 1.12;
   color: #F2FBFE;
-  text-shadow: 0 2px 24px rgba(2, 18, 23, 0.5);
+  text-shadow: 0 2px 24px rgba(2, 19, 23, 0.5);
 }
 .eppp-lede {
   position: relative;
@@ -272,7 +272,7 @@ const styles = `
 .eppp-btn--primary {
   color: ${C.ink};
   border: 1px solid rgba(167,243,255,0.65);
-  background: linear-gradient(135deg, ${C.mist} 0%, ${C.cyan} 48%, #38BDF8 100%);
+  background: linear-gradient(135deg, ${C.mist} 0%, ${C.cyan} 48%, #38d2f8 100%);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 0 22px -4px ${C.cyan}b3;
 }
 .eppp-btn--primary:hover {
@@ -282,7 +282,7 @@ const styles = `
 .eppp-btn--ghost {
   color: ${C.mist};
   border: 1px solid ${C.hairlineStrong};
-  background: rgba(26, 100, 125, 0.55);
+  background: rgba(26, 105, 125, 0.55);
 }
 .eppp-btn--ghost:hover {
   transform: translateY(-1px);
@@ -321,7 +321,7 @@ const styles = `
   padding: clamp(20px, 2.4vw, 26px);
   background:
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(145deg, rgba(12, 68, 87, 0.74), rgba(7, 49, 63, 0.85));
+    linear-gradient(145deg, rgba(12, 72, 87, 0.74), rgba(7, 52, 63, 0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);

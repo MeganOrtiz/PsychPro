@@ -5,7 +5,18 @@ description: The deep-cerulean surface palette, where it lives (two mirrored pla
 
 # PsychPro cerulean surface stack
 
-HUE REVERSAL 2026-06-11 (latest). After the deepening (below), the owner said the whole
+CANONICAL HUE = 192 (set 2026-06-12, latest). The 2026-06-11 retone bumped surfaces to
+hue ~196 (see study-theme.ts comment + .dark block); owner reported "too navy AGAIN."
+Confirmed pendulum: surfaces at hue 191 read GREEN, at 196 read NAVY; the accent #76E4F7
+is hue 189. Fix applied: a gated global hue sweep pulling EVERY surface in the hue band
+[193,206] (lightness<60%, saturation>20%) down to hue 192 — across study-theme.ts hex
+tokens, the index.css .dark + .study-page-bg HSL blocks, and ALL inline rgba() families in
+pages/components. Accents (hue<193, incl. #76E4F7/#68CCDE) left untouched as the north
+star. Lightness/saturation preserved (hue is the only lever). #3196AF was already hue ~192
+so it didn't move. The sweep was a Node script in code_execution (RGB↔HSL, band+L+S gate);
+re-run that approach for any future retone — never hand-edit the ~13 duplicated families.
+
+HUE REVERSAL 2026-06-11. After the deepening (below), the owner said the whole
 site looked "too navy" and asked to "return to deep cerulean/deep turquoise." Root cause:
 EVERY surface sat at hue ~194–203 (bluer cerulean) while the locked accent #76E4F7 is
 hue 189 (turquoise-cyan) — bright turquoise accents floating on bluer surfaces READ AS

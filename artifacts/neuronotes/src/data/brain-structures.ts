@@ -87,7 +87,7 @@ export const SYSTEM_META: Record<BrainSystem, { label: string; color: string; de
   },
   diencephalon: {
     label: "Diencephalon",
-    color: "#3FB6D9",
+    color: "#3fbad9",
     description: "Central relay region — thalamus, hypothalamus, and pituitary — coordinating sensation, homeostasis, and hormones.",
   },
   "basal-ganglia": {
@@ -102,17 +102,17 @@ export const SYSTEM_META: Record<BrainSystem, { label: string; color: string; de
   },
   brainstem: {
     label: "Brainstem",
-    color: "#1c6680",
+    color: "#1c6c80",
     description: "Midbrain, pons, and medulla — vital autonomic centers and origin of most cranial nerves.",
   },
   cerebellum: {
     label: "Cerebellum",
-    color: "#2FA0C6",
+    color: "#2fa8c6",
     description: "The 'little brain' behind the brainstem, coordinating movement, balance, and motor learning.",
   },
   ventricle: {
     label: "Ventricular System",
-    color: "#5FA8C9",
+    color: "#5fb4c9",
     description: "CSF-filled cavities that cushion the brain and clear metabolic waste.",
   },
 };
@@ -149,7 +149,7 @@ export const CATEGORY_META: Record<PartCategory, { label: string; color: string;
   },
   area: {
     label: "Functional Area",
-    color: "#3FB6D9",
+    color: "#3fbad9",
     description: "A cortical region defined by its function rather than its folds.",
   },
   nucleus: {
@@ -1020,7 +1020,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
     rotation: [0, 0, -0.15],
     displacement: 0.15,
     segments: 6,
-    color: "#3FB6D9",
+    color: "#3fbad9",
     overview:
       "Lateral lobes situated below the Sylvian fissure, occupying the inferolateral aspect of each hemisphere from the temporal pole back to the occipital boundary. They house the primary auditory cortex and (on the dominant side) Wernicke's area for language comprehension, the ventral 'what' visual stream for object, face, and word recognition, and — on their medial surfaces — the hippocampus, entorhinal/perirhinal cortex, and amygdala that form the core of the declarative memory and emotional-salience systems. As a result the temporal lobe is central to aphasia, amnesia, the agnosias, and temporal-lobe epilepsy.",
     functions: [
@@ -1812,7 +1812,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
     scale: [1.45, 0.22, 0.35],
     displacement: 0.08,
     segments: 5,
-    color: "#3FB6D9",
+    color: "#3fbad9",
     overview:
       "A thin strip on the precentral gyrus, immediately anterior to the central sulcus. Contains the giant Betz cells whose axons descend the corticospinal tract to drive voluntary movement.",
     functions: [
@@ -1884,7 +1884,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
     scale: [0.22, 0.55, 0.7],
     displacement: 0.06,
     segments: 5,
-    color: "#5FA8C9",
+    color: "#5fb4c9",
     overview:
       "Curves around the anterior corpus callosum on the medial surface of the frontal lobe. A hub for conflict monitoring, emotional regulation, and the autonomic accompaniment of emotion.",
     functions: [
@@ -1921,7 +1921,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
     scale: [0.18, 0.5, 0.6],
     displacement: 0.05,
     segments: 4,
-    color: "#2FA0C6",
+    color: "#2fa8c6",
     overview:
       "Hidden cortical lobe buried within the lateral sulcus, beneath the temporal lobe's overhang. Acts as the brain's 'interoceptive cortex' — the seat of bodily self-awareness.",
     functions: [
@@ -2004,7 +2004,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
     scale: [0.2, 0.2, 0.22],
     displacement: 0.04,
     segments: 4,
-    color: "#3FB6D9",
+    color: "#3fbad9",
     overview:
       "Almond-shaped nuclei sitting just anterior to each hippocampus. The brain's threat-detection system and the emotional tagger that decides which experiences become unforgettable.",
     functions: [
@@ -2041,7 +2041,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
     scale: [0.22, 0.5, 0.6],
     displacement: 0.06,
     segments: 4,
-    color: "#5FA8C9",
+    color: "#5fb4c9",
     overview:
       "Sits above the splenium of the corpus callosum on the medial parietal surface. A central node of the Default Mode Network — most active during introspection and mind-wandering.",
     functions: [
@@ -2160,7 +2160,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
     scale: [0.28, 0.4, 0.6],
     displacement: 0.05,
     segments: 4,
-    color: "#3FB6D9",
+    color: "#3fbad9",
     overview:
       "Egg-shaped pair of nuclei at the brain's geometric center. Almost every sensory pathway except olfaction, and every cortical loop, is gated through here — earning it the title 'gateway to the cortex.'",
     functions: [
@@ -2246,7 +2246,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
     scale: [0.13, 0.16, 0.13],
     displacement: 0.02,
     segments: 3,
-    color: "#5FA8C9",
+    color: "#5fb4c9",
     overview:
       "Pea-sized endocrine gland hanging from the hypothalamus on a thin stalk. The 'master gland' — its anterior and posterior lobes secrete hormones that govern growth, reproduction, stress, and metabolism.",
     functions: [
@@ -2372,7 +2372,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
     scale: [0.15, 0.3, 0.4],
     displacement: 0.03,
     segments: 4,
-    color: "#5FA8C9",
+    color: "#5fb4c9",
     overview:
       "Pale-staining nucleus medial to the putamen, divided into external (GPe) and internal (GPi) segments. The basal ganglia's main output gateway, releasing or applying the brakes on thalamocortical motor loops.",
     functions: [
@@ -2413,7 +2413,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
     scale: [0.18, 0.08, 0.18],
     displacement: 0.02,
     segments: 3,
-    color: "#1c6680",
+    color: "#1c6c80",
     overview:
       "Darkly pigmented strip in the midbrain, named for its melanin-containing neurons. Source of the dopaminergic projections that fuel the basal ganglia and reward learning.",
     functions: [
@@ -2531,7 +2531,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
     scale: [0.35, 0.25, 0.35],
     displacement: 0.04,
     segments: 4,
-    color: "#1c6680",
+    color: "#1c6c80",
     overview:
       "Top segment of the brainstem, between the diencephalon and pons. Houses cranial nerve nuclei III and IV, the substantia nigra, and the colliculi for visual and auditory reflexes.",
     functions: [
@@ -2568,7 +2568,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
     scale: [0.45, 0.3, 0.4],
     displacement: 0.04,
     segments: 4,
-    color: "#3FB6D9",
+    color: "#3fbad9",
     overview:
       "Bulging middle segment of the brainstem. Acts as a neural switchboard — its name means 'bridge' — relaying signals between the cerebrum and cerebellum.",
     functions: [
@@ -2610,7 +2610,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
     scale: [0.3, 0.35, 0.3],
     displacement: 0.04,
     segments: 4,
-    color: "#5FA8C9",
+    color: "#5fb4c9",
     overview:
       "Lowest segment of the brainstem, continuous with the spinal cord. Contains the autonomic centers that keep us alive — cardiac, respiratory, vasomotor, and reflex.",
     functions: [
@@ -2692,7 +2692,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
     scale: [1.35, 0.7, 0.9],
     displacement: 0.06,
     segments: 6,
-    color: "#2FA0C6",
+    color: "#2fa8c6",
     overview:
       "The 'little brain' tucked beneath the occipital lobe and behind the brainstem. Holds more neurons than the cerebrum despite being a fraction of its size — and increasingly recognized as a contributor to cognition and emotion.",
     functions: [
@@ -3062,7 +3062,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
     scale: [0.18, 0.18, 0.18],
     displacement: 0.02,
     segments: 3,
-    color: "#3FB6D9",
+    color: "#3fbad9",
     overview:
       "A small midline endocrine gland behind the thalamus that secretes melatonin in response to darkness, anchoring the body's circadian rhythm.",
     functions: [
@@ -3362,7 +3362,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
     scale: [0.25, 0.2, 0.25],
     displacement: 0.04,
     segments: 3,
-    color: "#3FB6D9",
+    color: "#3fbad9",
     overview:
       "The posterior cap of the inferior frontal gyrus (Brodmann 44). Together with the pars triangularis it forms Broca's area on the dominant hemisphere.",
     functions: [
@@ -3401,7 +3401,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
     scale: [0.25, 0.2, 0.25],
     displacement: 0.04,
     segments: 3,
-    color: "#3FB6D9",
+    color: "#3fbad9",
     overview:
       "The wedge-shaped middle subdivision of the inferior frontal gyrus (Brodmann 45), the anterior half of Broca's area.",
     functions: [
@@ -3439,7 +3439,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
     scale: [0.25, 0.2, 0.25],
     displacement: 0.04,
     segments: 3,
-    color: "#3FB6D9",
+    color: "#3fbad9",
     overview:
       "The anterior-inferior subdivision of the inferior frontal gyrus (Brodmann 47), transitioning toward the orbitofrontal surface.",
     functions: [
@@ -3996,7 +3996,7 @@ const STRUCTURE_DEFS: StructureDef[] = [
     scale: [0.4, 0.4, 0.4],
     displacement: 0.05,
     segments: 4,
-    color: "#3FB6D9",
+    color: "#3fbad9",
     overview:
       "Higher-order visual cortex on the lateral occipital surface (the lateral occipital complex), specialized for recognizing object shape.",
     functions: [

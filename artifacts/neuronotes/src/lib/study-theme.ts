@@ -26,14 +26,15 @@
 // =============================================================================
 
 export const STUDY_PALETTE = {
-  // Backgrounds — deep cerulean/turquoise stack (RETONED 2026-06-11 per owner:
-  // nudged off the green-leaning ~191 up to cerulean hue ~196 so surfaces read
-  // turquoise+cerulean, not green and not navy; accents stay locked at #76E4F7).
-  ink: "#062935",         // deepest anchor (sidebar / page floor)
-  bg: "#083b4d",          // page bg primary (deep cerulean)
-  bgSoft: "#0a495e",      // page bg secondary
-  surface: "#11556c",     // card surface (glass base)
-  surfaceElev: "#186078", // card hover / lifted
+  // Backgrounds — deep cerulean/turquoise stack. CANONICAL SURFACE HUE = 192
+  // (set 2026-06-12). Pendulum history: hue 191 read green, 196 read navy; 192
+  // sits just off the locked #76E4F7 accent (hue 189) on the anti-navy side.
+  // The lever for "too navy" is HUE, never lightness — keep surfaces near 192.
+  ink: "#062c35",         // deepest anchor (sidebar / page floor)
+  bg: "#083f4d",          // page bg primary (deep cerulean)
+  bgSoft: "#0a4d5e",      // page bg secondary
+  surface: "#115a6c",     // card surface (glass base)
+  surfaceElev: "#186578", // card hover / lifted
 
   // Mid-cerulean — borders, dividers, structural lines
   steel: "#3196AF",       // cerulean

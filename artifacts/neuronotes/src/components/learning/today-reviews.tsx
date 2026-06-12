@@ -111,7 +111,7 @@ export default function TodayReviews({ topics }: TodayReviewsProps) {
           <span
             className="ml-auto text-[11px] font-semibold px-2 py-0.5 rounded-full border"
             style={{
-              background: "rgba(94,176,200,0.16)",
+              background: "rgba(94, 179, 200,0.16)",
               color: P.surf,
               borderColor: "rgba(118,228,247,0.30)",
             }}
@@ -142,11 +142,11 @@ export default function TodayReviews({ topics }: TodayReviewsProps) {
                     item.isOverdue
                       ? {
                           background: `linear-gradient(135deg, ${P.teal}, ${P.surf})`,
-                          color: "#05303f",
+                          color: "#05333f",
                           borderColor: P.tealDeep,
                         }
                       : {
-                          background: "rgba(94,176,200,0.14)",
+                          background: "rgba(94, 179, 200,0.14)",
                           color: P.surf,
                           borderColor: "rgba(118,228,247,0.30)",
                         }

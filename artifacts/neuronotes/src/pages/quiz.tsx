@@ -144,7 +144,7 @@ export default function QuizPage({ params }: Props) {
             className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 border"
             style={{
               background: passed
-                ? `linear-gradient(135deg, #1f5b70, ${P.tealDeep})`
+                ? `linear-gradient(135deg, #1f6070, ${P.tealDeep})`
                 : "rgba(244,180,98,0.18)",
               borderColor: passed ? P.tealDeep : "rgba(244,180,98,0.55)",
               boxShadow: passed ? `0 18px 40px -18px ${P.tealDeep}cc` : "none",
@@ -192,7 +192,7 @@ export default function QuizPage({ params }: Props) {
         </p>
       ) : null}
 
-      <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "rgba(47,160,198,0.12)" }}>
+      <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "rgba(47, 168, 198,0.12)" }}>
         <div
           className="h-1.5 rounded-full transition-all"
           style={{
@@ -245,7 +245,7 @@ export default function QuizPage({ params }: Props) {
                 cls += " hover:-translate-y-0.5 quiz-option-hover";
                 style = {
                   background:
-                    "linear-gradient(135deg, rgba(12, 79, 102, 0.78), rgba(8, 46, 59, 0.86))",
+                    "linear-gradient(135deg, rgba(12, 84, 102, 0.78), rgba(8, 49, 59, 0.86))",
                   borderColor: `${P.surf}55`,
                   color: P.cloud,
                   boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(255,255,255,0.06)`,
@@ -270,7 +270,7 @@ export default function QuizPage({ params }: Props) {
                 cls += " opacity-55";
                 style = {
                   background:
-                    "linear-gradient(135deg, rgba(12, 79, 102, 0.78), rgba(8, 46, 59, 0.86))",
+                    "linear-gradient(135deg, rgba(12, 84, 102, 0.78), rgba(8, 49, 59, 0.86))",
                   borderColor: `${P.surf}25`,
                   color: `${P.cloud}aa`,
                 };
@@ -324,7 +324,7 @@ export default function QuizPage({ params }: Props) {
               className="rounded-xl p-4 mb-6 border"
               style={{
                 background:
-                  "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(12, 68, 87, 0.79), rgba(7, 49, 63, 0.90))",
+                  "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(12, 72, 87, 0.79), rgba(7, 52, 63, 0.90))",
                 borderColor: "rgba(118,228,247,0.24)",
                 backdropFilter: "blur(18px) saturate(135%)",
                 WebkitBackdropFilter: "blur(18px) saturate(135%)",
