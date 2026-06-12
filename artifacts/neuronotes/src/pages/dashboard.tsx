@@ -45,6 +45,7 @@ import {
 } from "lucide-react";
 import { useQueries } from "@tanstack/react-query";
 import smokeBg from "@/assets/bg/brain-clouds.png";
+import spotlightHeadshot from "@assets/Screenshot_2026-04-28_at_8.01.18_PM_1781307715250.png";
 import {
   useGetDashboardSummary,
   useGetTopics,
@@ -813,31 +814,35 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
               }}
             />
             <div
-              className="relative w-32 h-32 rounded-full flex items-center justify-center text-center px-3"
+              className="relative w-32 h-32 rounded-full overflow-hidden"
               style={{
-                background: `radial-gradient(circle at 50% 35%, ${PALETTE.surf}33, ${PALETTE.teal}1f 60%, transparent 82%)`,
                 boxShadow: `0 0 0 3px ${PALETTE.surf}cc, 0 0 32px 6px ${PALETTE.surf}66, inset 0 0 0 1px rgba(255,255,255,0.18)`,
                 zIndex: 1,
               }}
               data-testid="spotlight-avatar"
             >
-              <span
-                className="text-lg font-semibold leading-tight tracking-wide text-white"
-                style={{ textShadow: `0 0 14px ${PALETTE.surf}aa, 0 2px 8px rgba(0,0,0,0.55)` }}
-              >
-                Coming
-                <br />
-                Soon
-              </span>
+              <img
+                src={spotlightHeadshot}
+                alt="Megan Ortiz"
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
           <p
-            className="text-sm text-center px-3 leading-relaxed"
+            className="text-base font-semibold text-center tracking-wide text-white"
+            data-testid="spotlight-name"
+            style={{ textShadow: `0 0 14px ${PALETTE.surf}88, 0 2px 8px rgba(0,0,0,0.55)` }}
+          >
+            Megan Ortiz
+          </p>
+          <p
+            className="text-xs text-center px-3 mt-2 leading-relaxed uppercase tracking-wide"
             data-testid="spotlight-cta-text"
             style={{ color: `${PALETTE.mist}d9`, textShadow: "0 1px 6px rgba(0,0,0,0.5)" }}
           >
-            Submit your dissertation, research, or presentation for an
-            opportunity to be featured!
+            Social Cognition in Children with Autism Spectrum Disorder: Exploring
+            Correlates Between Objective Neuropsychological Measures and Parent
+            Reports
           </p>
         </div>
 
