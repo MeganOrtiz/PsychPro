@@ -807,40 +807,41 @@
     0 26px 58px -30px rgba(0, 0, 0, 0.78);
 }
 
-/* Sidebar nav glass — compact luminous dark-glass pills (2026-06 spec).
-   Idle is a very dark teal at low opacity; hover/active/pressed brighten the
-   surface and intensify the cyan outer glow. The active (current-route) row
-   also gets a glowing cyan left bar via ::before. All glow colors use the
+/* Sidebar nav glass — frosted opaque dark-glass pills (2026-06 spec).
+   Idle is a solid deep teal frosted panel (high opacity over the smoke
+   backdrop); hover/active/pressed brighten the surface and intensify the cyan
+   outer glow. The active (current-route) row also gets a glowing cyan left bar
+   via ::before. All glow colors use the
    locked cerulean #76E4F7 / rgb(118,228,247). These plain rules sit
    outside @layer so they override the Tailwind border/background utilities on
    the nav tokens. */
 .nav-glass-idle {
-  background: rgba(26, 100, 125, 0.55);
-  border: 1px solid rgba(118, 228, 247, 0.12);
+  background: rgba(20, 84, 105, 0.86);
+  border: 1px solid rgba(118, 228, 247, 0.22);
   box-shadow:
     0 0 12px rgba(118, 228, 247, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 .nav-glass-idle:hover {
-  background: rgba(118, 228, 247, 0.06);
-  border-color: rgba(118, 228, 247, 0.20);
-  box-shadow:
-    0 0 14px rgba(118, 228, 247, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-}
-.nav-glass-idle:active {
-  background: rgba(118, 228, 247, 0.10);
-  border-color: rgba(118, 228, 247, 0.24);
+  background: rgba(31, 108, 133, 0.92);
+  border-color: rgba(118, 228, 247, 0.36);
   box-shadow:
     0 0 16px rgba(118, 228, 247, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+.nav-glass-idle:active {
+  background: rgba(38, 122, 149, 0.95);
+  border-color: rgba(118, 228, 247, 0.44);
+  box-shadow:
+    0 0 18px rgba(118, 228, 247, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
 }
 .nav-glass-active {
-  background: rgba(118, 228, 247, 0.08);
-  border: 1px solid rgba(118, 228, 247, 0.18);
+  background: rgba(42, 130, 158, 0.94);
+  border: 1px solid rgba(118, 228, 247, 0.5);
   box-shadow:
-    0 0 16px rgba(118, 228, 247, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    0 0 18px rgba(118, 228, 247, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 .nav-glass-active::before {
   content: "";
