@@ -38,6 +38,8 @@ import {
   Crown,
   Star,
   Clock,
+  Layers,
+  Repeat,
   Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -63,29 +65,31 @@ type Icon = React.ComponentType<{ className?: string }>;
 
 const ROLE_OPTIONS: { value: string; icon: Icon }[] = [
   { value: "Undergraduate student", icon: BookOpen },
-  { value: "Graduate / PhD / PsyD student", icon: GraduationCap },
-  { value: "Postdoc or trainee", icon: Microscope },
-  { value: "Licensed clinician", icon: Stethoscope },
-  { value: "Researcher / academic", icon: FlaskConical },
+  { value: "Graduate student", icon: GraduationCap },
+  { value: "Postdoc", icon: Microscope },
+  { value: "Licensed clinician / professional", icon: Stethoscope },
+  { value: "Researcher / lecturer", icon: FlaskConical },
   { value: "Lifelong learner", icon: Compass },
 ];
 
 const GOAL_OPTIONS: { value: string; icon: Icon }[] = [
   { value: "Prepare for the EPPP", icon: GraduationCap },
+  { value: "Optimize studying", icon: Sparkles },
+  { value: "Deepen clinical knowledge and application", icon: Stethoscope },
   { value: "Prepare for course exams", icon: ClipboardCheck },
-  { value: "Deepen clinical knowledge", icon: Stethoscope },
   { value: "Master neuroscience & the brain", icon: Brain },
   { value: "Build research & statistics skills", icon: FlaskConical },
-  { value: "Explore psychology broadly", icon: Compass },
 ];
 
+// Step 3 captures the user's preferred LEARNING STYLE (how they learn best).
+// Persisted in the studyFocus profile field.
 const FOCUS_OPTIONS: { value: string; icon: Icon }[] = [
-  { value: "General PsychPro learning", icon: Sparkles },
-  { value: "Assessment & diagnosis", icon: ClipboardCheck },
-  { value: "Neuropsychology", icon: Brain },
-  { value: "Psychotherapy & intervention", icon: Stethoscope },
-  { value: "Research methods & statistics", icon: FlaskConical },
-  { value: "EPPP Mastery Suite", icon: GraduationCap },
+  { value: "Rote memorization", icon: Brain },
+  { value: "Flashcards", icon: Layers },
+  { value: "Study guides", icon: BookOpen },
+  { value: "Short quizzes", icon: ClipboardCheck },
+  { value: "Long-form practice exams", icon: GraduationCap },
+  { value: "Spaced intervals", icon: Repeat },
 ];
 
 const EPPP_INTEREST_OPTIONS: { value: string; hint: string }[] = [
@@ -133,8 +137,8 @@ const STEP_META: Record<Exclude<StepId, "account">, { title: string; subtitle: s
     subtitle: "Pick everything that applies — you can change these any time.",
   },
   focus: {
-    title: "Where should we start?",
-    subtitle: "Choose the area you most want to focus on first.",
+    title: "How do you learn best?",
+    subtitle: "Pick the study approach that works best for you — we'll lead with it.",
   },
   eppp: {
     title: "Are you preparing for the EPPP?",
@@ -222,9 +226,8 @@ export default function OnboardingPage() {
 
   // The EPPP eligibility step only appears if the user signalled exam/EPPP intent.
   const showEppp = useMemo(() => {
-    const goalTrigger = answers.learningGoals.some((g) => EPPP_TRIGGER_GOALS.has(g));
-    return goalTrigger || answers.studyFocus === "EPPP Mastery Suite";
-  }, [answers.learningGoals, answers.studyFocus]);
+    return answers.learningGoals.some((g) => EPPP_TRIGGER_GOALS.has(g));
+  }, [answers.learningGoals]);
 
   const order = useMemo<StepId[]>(() => {
     const ids: StepId[] = ["role", "goals", "focus"];
@@ -903,7 +906,7 @@ function SummaryBody({
           label="Goals"
           value={answers.learningGoals.length ? answers.learningGoals.join(", ") : "—"}
         />
-        <SummaryItem icon={Compass} label="Study focus" value={answers.studyFocus || "—"} />
+        <SummaryItem icon={Brain} label="Learning style" value={answers.studyFocus || "—"} />
         {showEppp && (
           <SummaryItem icon={ClipboardCheck} label="EPPP" value={answers.epppInterest || "—"} />
         )}

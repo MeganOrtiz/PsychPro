@@ -23,27 +23,28 @@ const MAX_GOALS = 24;
 
 const ALLOWED_LEARNER_ROLES = new Set([
   "Undergraduate student",
-  "Graduate / PhD / PsyD student",
-  "Postdoc or trainee",
-  "Licensed clinician",
-  "Researcher / academic",
+  "Graduate student",
+  "Postdoc",
+  "Licensed clinician / professional",
+  "Researcher / lecturer",
   "Lifelong learner",
 ]);
 const ALLOWED_LEARNING_GOALS = new Set([
   "Prepare for the EPPP",
+  "Optimize studying",
+  "Deepen clinical knowledge and application",
   "Prepare for course exams",
-  "Deepen clinical knowledge",
   "Master neuroscience & the brain",
   "Build research & statistics skills",
-  "Explore psychology broadly",
 ]);
+// studyFocus stores the user's preferred LEARNING STYLE (how they learn best).
 const ALLOWED_STUDY_FOCUS = new Set([
-  "General PsychPro learning",
-  "Assessment & diagnosis",
-  "Neuropsychology",
-  "Psychotherapy & intervention",
-  "Research methods & statistics",
-  "EPPP Mastery Suite",
+  "Rote memorization",
+  "Flashcards",
+  "Study guides",
+  "Short quizzes",
+  "Long-form practice exams",
+  "Spaced intervals",
 ]);
 const ALLOWED_EPPP_INTEREST = new Set([
   "Yes — I'm actively preparing",
