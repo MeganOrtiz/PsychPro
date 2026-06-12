@@ -192,6 +192,19 @@ function AppRouter() {
           </RequireSignedIn>
         )}
       </Route>
+      {/* Subscription/plans is reachable without finishing onboarding so the
+          landing "Browse courses" CTA can show plan options instead of forcing
+          the onboarding flow. Auth-gated (RequireSignedIn) but not
+          onboarding-gated. */}
+      <Route path="/subscription">
+        {() => (
+          <RequireSignedIn>
+            <AppLayout>
+              <SubscriptionPage />
+            </AppLayout>
+          </RequireSignedIn>
+        )}
+      </Route>
       <Route>
         <RequireOnboarded>
           <AppLayout>
@@ -206,7 +219,6 @@ function AppRouter() {
             <Route path="/courses/:category/mastery-exam" component={CourseMasteryExamPage} />
             <Route path="/progress" component={ProgressPage} />
             <Route path="/leaderboard" component={LeaderboardPage} />
-            <Route path="/subscription" component={SubscriptionPage} />
             <Route path="/feedback" component={FeedbackPage} />
             <Route path="/featured-work" component={FeaturedWorkPage} />
             <Route path="/feature-request" component={FeatureRequestPage} />

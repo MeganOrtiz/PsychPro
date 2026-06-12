@@ -212,6 +212,7 @@ export default function LandingPage() {
   const navTo = (path: string) => navigate(isSignedIn ? path : "/sign-in");
   const goToApp = () => navTo("/dashboard");
   const goToTopics = () => navTo("/topics");
+  const goToPlans = () => navTo("/subscription");
 
   // Full topic list for the "All topics" section at the bottom. Pulled live
   // from the topics hook so it stays in sync with the database, sorted by the
@@ -313,7 +314,7 @@ export default function LandingPage() {
             </button>
             <button
               type="button"
-              onClick={goToTopics}
+              onClick={goToPlans}
               className="landing-cta landing-cta-ghost"
               data-testid="cta-explore-topics"
             >
