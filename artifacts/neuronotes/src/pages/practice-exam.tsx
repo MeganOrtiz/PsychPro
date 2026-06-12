@@ -474,7 +474,7 @@ export default function PracticeExamPage({ params }: Props) {
             style={{
               borderColor: "rgba(118,228,247,0.26)",
               background:
-                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(12, 72, 87, 0.81), rgba(7, 52, 63, 0.90))",
+                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 76% 19% / 0.81), hsl(var(--surf-hue) 80% 14% / 0.90))",
               backdropFilter: "blur(20px) saturate(135%)",
               WebkitBackdropFilter: "blur(20px) saturate(135%)",
               boxShadow:
@@ -484,7 +484,7 @@ export default function PracticeExamPage({ params }: Props) {
             <header className="flex items-start gap-3 mb-3">
               <div
                 className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
-                style={{ background: `rgba(94, 179, 200,0.18)`, border: `1px solid ${P.surf}55` }}
+                style={{ background: `hsl(var(--surf-hue) 49% 58% / 0.18)`, border: `1px solid ${P.surf}55` }}
               >
                 <Brain className="w-5 h-5" style={{ color: P.surf }} />
               </div>
@@ -620,7 +620,7 @@ export default function PracticeExamPage({ params }: Props) {
         </div>
       </div>
 
-      <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "rgba(47, 168, 198,0.12)" }}>
+      <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "hsl(var(--surf-hue) 62% 48% / 0.12)" }}>
         <div
           className="h-1.5 rounded-full transition-all"
           style={{
@@ -651,7 +651,7 @@ export default function PracticeExamPage({ params }: Props) {
             cls += " hover:-translate-y-0.5 quiz-option-hover";
             style = {
               background:
-                "linear-gradient(to bottom, rgba(19, 115, 139, 0.78), rgba(12, 72, 87, 0.86))",
+                "linear-gradient(to bottom, hsl(var(--surf-hue) 76% 31% / 0.78), hsl(var(--surf-hue) 76% 19% / 0.86))",
               borderColor: `${P.surf}55`,
               color: P.cloud,
               boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(255,255,255,0.06)`,
@@ -667,7 +667,7 @@ export default function PracticeExamPage({ params }: Props) {
             cls += " opacity-55";
             style = {
               background:
-                "linear-gradient(to bottom, rgba(19, 115, 139, 0.78), rgba(12, 72, 87, 0.86))",
+                "linear-gradient(to bottom, hsl(var(--surf-hue) 76% 31% / 0.78), hsl(var(--surf-hue) 76% 19% / 0.86))",
               borderColor: `${P.surf}25`,
               color: `${P.cloud}aa`,
             };

@@ -192,7 +192,7 @@ export default function QuizPage({ params }: Props) {
         </p>
       ) : null}
 
-      <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "rgba(47, 168, 198,0.12)" }}>
+      <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "hsl(var(--surf-hue) 62% 48% / 0.12)" }}>
         <div
           className="h-1.5 rounded-full transition-all"
           style={{
@@ -245,7 +245,7 @@ export default function QuizPage({ params }: Props) {
                 cls += " hover:-translate-y-0.5 quiz-option-hover";
                 style = {
                   background:
-                    "linear-gradient(135deg, rgba(12, 84, 102, 0.78), rgba(8, 49, 59, 0.86))",
+                    "linear-gradient(135deg, hsl(var(--surf-hue) 79% 22% / 0.78), hsl(var(--surf-hue) 76% 13% / 0.86))",
                   borderColor: `${P.surf}55`,
                   color: P.cloud,
                   boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(255,255,255,0.06)`,
@@ -270,7 +270,7 @@ export default function QuizPage({ params }: Props) {
                 cls += " opacity-55";
                 style = {
                   background:
-                    "linear-gradient(135deg, rgba(12, 84, 102, 0.78), rgba(8, 49, 59, 0.86))",
+                    "linear-gradient(135deg, hsl(var(--surf-hue) 79% 22% / 0.78), hsl(var(--surf-hue) 76% 13% / 0.86))",
                   borderColor: `${P.surf}25`,
                   color: `${P.cloud}aa`,
                 };
@@ -324,7 +324,7 @@ export default function QuizPage({ params }: Props) {
               className="rounded-xl p-4 mb-6 border"
               style={{
                 background:
-                  "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, rgba(12, 72, 87, 0.79), rgba(7, 52, 63, 0.90))",
+                  "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 76% 19% / 0.79), hsl(var(--surf-hue) 80% 14% / 0.90))",
                 borderColor: "rgba(118,228,247,0.24)",
                 backdropFilter: "blur(18px) saturate(135%)",
                 WebkitBackdropFilter: "blur(18px) saturate(135%)",

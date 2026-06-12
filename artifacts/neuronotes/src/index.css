@@ -85,6 +85,10 @@
 
 /* LIGHT MODE — Cerulean Blue theme */
 :root {
+  /* SINGLE HUE KNOB for the whole cerulean surface system. Change this one
+     number to retone every surface app-wide. Accents (#76E4F7, hue ~189) are
+     intentionally NOT derived from this — they are the fixed north star. */
+  --surf-hue: 192;
   --button-outline: rgba(0,0,0, .10);
   --badge-outline: rgba(0,0,0, .05);
   --opaque-button-border-intensity: -8;
@@ -183,36 +187,36 @@
      2026-06-12). Accents stay at the locked #76E4F7 family (hue ~188–189).
      History: hue 191 read green, 196 read navy; 192 sits just off the accent on
      the anti-navy side. Lever for "too navy" is HUE, never lightness. */
-  --background: 192 60% 9%;
-  --foreground: 192 40% 95%;
+  --background: var(--surf-hue) 60% 9%;
+  --foreground: var(--surf-hue) 40% 95%;
 
-  --border: 192 40% 24%;
+  --border: var(--surf-hue) 40% 24%;
 
-  --card: 192 58% 12%;
-  --card-foreground: 192 40% 95%;
-  --card-border: 192 40% 24%;
+  --card: var(--surf-hue) 58% 12%;
+  --card-foreground: var(--surf-hue) 40% 95%;
+  --card-border: var(--surf-hue) 40% 24%;
 
-  --sidebar: 192 60% 7%;
-  --sidebar-foreground: 192 38% 90%;
-  --sidebar-border: 192 42% 18%;
+  --sidebar: var(--surf-hue) 60% 7%;
+  --sidebar-foreground: var(--surf-hue) 38% 90%;
+  --sidebar-border: var(--surf-hue) 42% 18%;
   --sidebar-primary: 189 84% 55%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 192 42% 18%;
-  --sidebar-accent-foreground: 192 38% 90%;
+  --sidebar-accent: var(--surf-hue) 42% 18%;
+  --sidebar-accent-foreground: var(--surf-hue) 38% 90%;
   --sidebar-ring: 189 84% 55%;
 
-  --popover: 192 56% 12%;
-  --popover-foreground: 192 38% 95%;
-  --popover-border: 192 40% 22%;
+  --popover: var(--surf-hue) 56% 12%;
+  --popover-foreground: var(--surf-hue) 38% 95%;
+  --popover-border: var(--surf-hue) 40% 22%;
 
   --primary: 189 84% 55%;
   --primary-foreground: 0 0% 100%;
 
-  --secondary: 192 42% 22%;
-  --secondary-foreground: 192 38% 90%;
+  --secondary: var(--surf-hue) 42% 22%;
+  --secondary-foreground: var(--surf-hue) 38% 90%;
 
-  --muted: 192 42% 17%;
-  --muted-foreground: 192 24% 62%;
+  --muted: var(--surf-hue) 42% 17%;
+  --muted-foreground: var(--surf-hue) 24% 62%;
 
   --accent: 189 88% 62%;
   --accent-foreground: 0 0% 100%;
@@ -220,7 +224,7 @@
   --destructive: 0 72% 51%;
   --destructive-foreground: 0 0% 100%;
 
-  --input: 192 40% 24%;
+  --input: var(--surf-hue) 40% 24%;
   --ring: 189 84% 55%;
 
   --chart-1: 189 84% 55%;
@@ -262,22 +266,22 @@
 .study-page-aurora {
   /* Mirrors STUDY_PALETTE in src/lib/study-theme.ts. Canonical palette
      = the landing-page cinematic neuroscience UI. */
-  --background: 192 81% 17%;         /* #083f4d bg (deep cerulean) */
+  --background: var(--surf-hue) 81% 17%;         /* #083f4d bg (deep cerulean) */
   --foreground: 188 100% 83%;        /* #A7F3FF mist (icy text) */
-  --card: 192 73% 25%;               /* #115a6c surface (deep cerulean) */
+  --card: var(--surf-hue) 73% 25%;               /* #115a6c surface (deep cerulean) */
   --card-foreground: 188 100% 83%;
-  --popover: 192 73% 23%;
+  --popover: var(--surf-hue) 73% 23%;
   --popover-foreground: 188 100% 83%;
-  --muted: 192 81% 20%;              /* #0a4d5e bgSoft (deep cerulean) */
+  --muted: var(--surf-hue) 81% 20%;              /* #0a4d5e bgSoft (deep cerulean) */
   --muted-foreground: 191 30% 78%;   /* brighter muted text */
-  --border: 192 56% 44%;             /* #3196AF steel/cerulean */
-  --input: 192 81% 20%;              /* #0a4d5e bgSoft (deep cerulean) */
+  --border: var(--surf-hue) 56% 44%;             /* #3196AF steel/cerulean */
+  --input: var(--surf-hue) 81% 20%;              /* #0a4d5e bgSoft (deep cerulean) */
   --primary: 189 64% 64%;            /* #68CCDE teal */
-  --primary-foreground: 192 76% 14%;
-  --secondary: 192 56% 44%;          /* #3196AF cerulean */
+  --primary-foreground: var(--surf-hue) 76% 14%;
+  --secondary: var(--surf-hue) 56% 44%;          /* #3196AF cerulean */
   --secondary-foreground: 188 100% 83%;
   --accent: 188 90% 72%;             /* #76E4F7 surf (bright-cyan) */
-  --accent-foreground: 192 76% 14%;
+  --accent-foreground: var(--surf-hue) 76% 14%;
   --ring: 188 90% 72%;
   /* Shared cyan glow token for glass buttons + nav items so every
      interactive surface reads from the same accent. */
@@ -306,7 +310,7 @@
    .nav-glass-idle recipe: flat dark teal fill, faint cerulean hairline, soft
    cyan glow that intensifies on hover/active. */
 .btn-glass {
-  background: rgba(26, 88, 103, 0.72);
+  background: hsl(var(--surf-hue) 60% 25% / 0.72);
   border: 1px solid rgba(118, 228, 247, 0.34);
   color: #e6fafe;
   box-shadow:
@@ -541,11 +545,11 @@
     radial-gradient(ellipse 62% 50% at 50% 40%,
       rgba(118, 228, 247, 0.08) 0%,
       rgba(104, 204, 222, 0.035) 36%,
-      rgba(8, 63, 77, 0.00) 70%),
+      hsl(var(--surf-hue) 81% 17% / 0.00) 70%),
     radial-gradient(ellipse 150% 135% at 50% 48%,
-      rgba(3, 24, 29, 0.24) 0%,
-      rgba(3, 24, 29, 0.60) 56%,
-      rgba(1, 15, 19, 0.92) 100%),
+      hsl(var(--surf-hue) 81% 6% / 0.24) 0%,
+      hsl(var(--surf-hue) 81% 6% / 0.60) 56%,
+      hsl(var(--surf-hue) 90% 4% / 0.92) 100%),
     url("./assets/bg/brain-clouds.png");
   /* Anchor center-center so the densest atmospheric cloud band — the
      middle of the source image, right around the brain — fills the
@@ -571,8 +575,8 @@
 .lesson-header-box {
   background: linear-gradient(
     145deg,
-    rgba(14, 77, 93, 0.66),
-    rgba(8, 57, 69, 0.78)
+    hsl(var(--surf-hue) 74% 21% / 0.66),
+    hsl(var(--surf-hue) 79% 15% / 0.78)
   );
   border: 1px solid rgba(196, 232, 242, 0.20);
   border-radius: 12px;
@@ -597,8 +601,8 @@
       rgba(118, 228, 247, 0.00) 60%),
     linear-gradient(
       145deg,
-      rgba(12, 70, 85, 0.66),
-      rgba(7, 52, 63, 0.78)
+      hsl(var(--surf-hue) 75% 19% / 0.66),
+      hsl(var(--surf-hue) 80% 14% / 0.78)
     );
   border-color: rgba(196, 232, 242, 0.20);
   backdrop-filter: blur(20px) saturate(135%);
@@ -618,8 +622,8 @@
       rgba(118, 228, 247, 0.00) 60%),
     linear-gradient(
       145deg,
-      rgba(23, 117, 141, 0.46),
-      rgba(13, 90, 109, 0.56)
+      hsl(var(--surf-hue) 72% 32% / 0.46),
+      hsl(var(--surf-hue) 79% 24% / 0.56)
     );
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
@@ -643,8 +647,8 @@
 .course-mastery-tile--locked {
   background: linear-gradient(
     145deg,
-    rgba(13, 47, 55, 0.35),
-    rgba(8, 36, 43, 0.45)
+    hsl(var(--surf-hue) 62% 13% / 0.35),
+    hsl(var(--surf-hue) 69% 10% / 0.45)
   );
   border-color: rgba(196, 232, 242, 0.1);
   opacity: 0.5;
@@ -659,8 +663,8 @@
 .course-mastery-tile--mastered {
   background: linear-gradient(
     145deg,
-    rgba(47, 168, 198, 0.32),
-    rgba(15, 79, 95, 0.52)
+    hsl(var(--surf-hue) 62% 48% / 0.32),
+    hsl(var(--surf-hue) 73% 22% / 0.52)
   );
   border-color: rgba(118, 228, 247, 0.55);
   box-shadow:
@@ -716,8 +720,8 @@
   border: 1px solid rgba(118, 228, 247, 0.6);
   background: linear-gradient(
     180deg,
-    rgba(22, 108, 130, 0.95),
-    rgba(10, 64, 77, 0.97)
+    hsl(var(--surf-hue) 71% 30% / 0.95),
+    hsl(var(--surf-hue) 77% 17% / 0.97)
   );
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
@@ -733,8 +737,8 @@
   border-color: rgba(118, 228, 247, 0.95);
   background: linear-gradient(
     180deg,
-    rgba(33, 137, 163, 0.96),
-    rgba(14, 79, 95, 0.98)
+    hsl(var(--surf-hue) 66% 38% / 0.96),
+    hsl(var(--surf-hue) 74% 21% / 0.98)
   );
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.22),
@@ -748,8 +752,8 @@
   border-color: rgba(118, 228, 247, 1);
   background: linear-gradient(
     180deg,
-    rgba(44, 148, 174, 0.98),
-    rgba(17, 92, 111, 0.99)
+    hsl(var(--surf-hue) 60% 43% / 0.98),
+    hsl(var(--surf-hue) 73% 25% / 0.99)
   );
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.28),
@@ -794,8 +798,8 @@
       rgba(118, 228, 247, 0.00) 58%),
     linear-gradient(
       145deg,
-      rgba(13, 74, 89, 0.78),
-      rgba(7, 53, 64, 0.88)
+      hsl(var(--surf-hue) 75% 20% / 0.78),
+      hsl(var(--surf-hue) 80% 14% / 0.88)
     );
   border: 1px solid rgba(118, 228, 247, 0.20);
   border-radius: 22px;
@@ -817,28 +821,28 @@
    outside @layer so they override the Tailwind border/background utilities on
    the nav tokens. */
 .nav-glass-idle {
-  background: rgba(20, 88, 105, 0.86);
+  background: hsl(var(--surf-hue) 68% 25% / 0.86);
   border: 1px solid rgba(118, 228, 247, 0.22);
   box-shadow:
     0 0 12px rgba(118, 228, 247, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 .nav-glass-idle:hover {
-  background: rgba(31, 113, 133, 0.92);
+  background: hsl(var(--surf-hue) 62% 32% / 0.92);
   border-color: rgba(118, 228, 247, 0.36);
   box-shadow:
     0 0 16px rgba(118, 228, 247, 0.22),
     inset 0 1px 0 rgba(255, 255, 255, 0.07);
 }
 .nav-glass-idle:active {
-  background: rgba(38, 127, 149, 0.95);
+  background: hsl(var(--surf-hue) 59% 37% / 0.95);
   border-color: rgba(118, 228, 247, 0.44);
   box-shadow:
     0 0 18px rgba(118, 228, 247, 0.28),
     inset 0 1px 0 rgba(255, 255, 255, 0.07);
 }
 .nav-glass-active {
-  background: rgba(42, 135, 158, 0.94);
+  background: hsl(var(--surf-hue) 58% 39% / 0.94);
   border: 1px solid rgba(118, 228, 247, 0.5);
   box-shadow:
     0 0 18px rgba(118, 228, 247, 0.3),
@@ -898,7 +902,7 @@
 /* Secondary buttons — subtle luminous dark glass, scoped to actual buttons. */
 .study-page-bg button.bg-secondary,
 .study-page-aurora button.bg-secondary {
-  background: rgba(26, 88, 103, 0.72);
+  background: hsl(var(--surf-hue) 60% 25% / 0.72);
   color: #e6fafe;
   border: 1px solid rgba(118, 228, 247, 0.34);
   border-radius: 8px;
@@ -933,7 +937,7 @@
    without a bg-* class. */
 .study-page-bg button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive),
 .study-page-aurora button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive) {
-  background: rgba(26, 88, 103, 0.6);
+  background: hsl(var(--surf-hue) 60% 25% / 0.6);
   border-color: rgba(118, 228, 247, 0.34) !important;
   color: #e6fafe;
   border-radius: 8px;
@@ -991,7 +995,7 @@
   textarea,
   select
 ) {
-  background: rgba(12, 70, 84, 0.72);
+  background: hsl(var(--surf-hue) 75% 19% / 0.72);
   border: 1px solid rgba(118, 228, 247, 0.14);
   color: #E4F4F6;
   border-radius: 14px;

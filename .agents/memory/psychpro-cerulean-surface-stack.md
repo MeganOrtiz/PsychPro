@@ -5,16 +5,21 @@ description: The deep-cerulean surface palette, where it lives (two mirrored pla
 
 # PsychPro cerulean surface stack
 
-CANONICAL HUE = 192 (set 2026-06-12, latest). The 2026-06-11 retone bumped surfaces to
-hue ~196 (see study-theme.ts comment + .dark block); owner reported "too navy AGAIN."
-Confirmed pendulum: surfaces at hue 191 read GREEN, at 196 read NAVY; the accent #76E4F7
-is hue 189. Fix applied: a gated global hue sweep pulling EVERY surface in the hue band
-[193,206] (lightness<60%, saturation>20%) down to hue 192 — across study-theme.ts hex
-tokens, the index.css .dark + .study-page-bg HSL blocks, and ALL inline rgba() families in
-pages/components. Accents (hue<193, incl. #76E4F7/#68CCDE) left untouched as the north
-star. Lightness/saturation preserved (hue is the only lever). #3196AF was already hue ~192
-so it didn't move. The sweep was a Node script in code_execution (RGB↔HSL, band+L+S gate);
-re-run that approach for any future retone — never hand-edit the ~13 duplicated families.
+CANONICAL SURFACE HUE = 192; lever for "too navy" is HUE, never lightness (set 2026-06-12).
+**Why:** confirmed pendulum — surfaces at hue 191 read GREEN, at 196 read NAVY; the locked
+accent #76E4F7 is hue 189. Bright cyan accents floating on bluer (higher-hue) surfaces are
+what reads as navy, even when no surface is literally navy. **How to apply:** to retone,
+shift only the surface HUE toward the accent (keep S/L/alpha); diagnose "too navy" by the
+surface↔accent hue gap, not depth.
+
+SINGLE KNOB (2026-06-12): surface colors are centralized behind one CSS var `--surf-hue`
+in index.css — UI surfaces are written `hsl(var(--surf-hue) S% L% / A)` (and the .dark /
+.study-page-bg token tuples use `var(--surf-hue) S% L%`). Change that one number to retone
+every surface. INTENTIONAL EXCEPTION: `study-theme.ts` stays literal hex (also feeds
+three.js / brain-lab, which can't parse `hsl(var())`) — keep it in sync by hue manually.
+A guardrail (`scripts/check-surface-hue.mjs`, validation step `surface-hue`) fails the build
+if any LITERAL surface (dark+saturated cerulean) drifts outside hue 188–193 — covers rgb/
+hex/hsl()/bare token tuples; `hsl(var(--surf-hue) …)` has no literal hue so it always passes.
 
 HUE REVERSAL 2026-06-11. After the deepening (below), the owner said the whole
 site looked "too navy" and asked to "return to deep cerulean/deep turquoise." Root cause:

@@ -587,7 +587,7 @@ const styles = `
   text-align: center;
   border-radius: 16px;
   border: 1px solid ${C.hairlineStrong};
-  background: linear-gradient(135deg, rgba(12, 77, 93, 0.96), rgba(12, 70, 84, 0.92));
+  background: linear-gradient(135deg, hsl(var(--surf-hue) 77% 21% / 0.96), hsl(var(--surf-hue) 75% 19% / 0.92));
   box-shadow: 0 18px 54px -42px rgba(118,228,247,0.78), inset 0 1px 0 rgba(255,255,255,0.08);
 }
 .epd-head-img {
@@ -604,8 +604,8 @@ const styles = `
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 50% 52%, rgba(12, 77, 93, 0.12) 0%, rgba(12, 77, 93, 0.62) 55%, rgba(12, 77, 93, 0.94) 100%),
-    linear-gradient(90deg, rgba(12, 77, 93, 0.96), rgba(12, 77, 93, 0.28) 48%, rgba(12, 77, 93, 0.96));
+    radial-gradient(circle at 50% 52%, hsl(var(--surf-hue) 77% 21% / 0.12) 0%, hsl(var(--surf-hue) 77% 21% / 0.62) 55%, hsl(var(--surf-hue) 77% 21% / 0.94) 100%),
+    linear-gradient(90deg, hsl(var(--surf-hue) 77% 21% / 0.96), hsl(var(--surf-hue) 77% 21% / 0.28) 48%, hsl(var(--surf-hue) 77% 21% / 0.96));
 }
 .epd-title {
   position: relative;
@@ -627,7 +627,7 @@ const styles = `
   padding: clamp(18px, 2vw, 24px);
   background:
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(145deg, rgba(12, 72, 87, 0.74), rgba(7, 52, 63, 0.85));
+    linear-gradient(145deg, hsl(var(--surf-hue) 76% 19% / 0.74), hsl(var(--surf-hue) 80% 14% / 0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -740,7 +740,7 @@ const styles = `
   border-radius: 10px;
   font-size: 14px;
   color: ${C.cloud};
-  background: rgba(12, 77, 93, 0.6);
+  background: hsl(var(--surf-hue) 77% 21% / 0.6);
   border: 1px solid ${C.hairlineStrong};
   color-scheme: dark;
 }
@@ -821,7 +821,7 @@ const styles = `
   font-size: 14px;
   color: ${C.muted};
   border: 1px dashed ${C.hairline};
-  background: rgba(13, 91, 111, 0.4);
+  background: hsl(var(--surf-hue) 79% 24% / 0.4);
 }
 
 /* domain grid */
@@ -837,7 +837,7 @@ const styles = `
   text-decoration: none;
   background:
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(145deg, rgba(12, 72, 87, 0.74), rgba(7, 52, 63, 0.85));
+    linear-gradient(145deg, hsl(var(--surf-hue) 76% 19% / 0.74), hsl(var(--surf-hue) 80% 14% / 0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -853,7 +853,7 @@ const styles = `
   border-color: ${C.cyan}5e;
   background:
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.16) 0%, rgba(118,228,247,0.00) 60%),
-    linear-gradient(145deg, rgba(18, 94, 113, 0.84), rgba(11, 70, 85, 0.90));
+    linear-gradient(145deg, hsl(var(--surf-hue) 73% 26% / 0.84), hsl(var(--surf-hue) 77% 19% / 0.90));
 }
 .epd-domain--loading { opacity: 0.85; }
 .epd-bar-fill--idle {
@@ -902,7 +902,7 @@ const styles = `
   cursor: pointer;
   background:
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(145deg, rgba(12, 72, 87, 0.74), rgba(7, 52, 63, 0.85));
+    linear-gradient(145deg, hsl(var(--surf-hue) 76% 19% / 0.74), hsl(var(--surf-hue) 80% 14% / 0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
