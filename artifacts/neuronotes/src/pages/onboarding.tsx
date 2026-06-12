@@ -226,7 +226,7 @@ export default function OnboardingPage() {
   }, [answers.learningGoals, answers.studyFocus]);
 
   const order = useMemo<StepId[]>(() => {
-    const ids: StepId[] = ["account", "role", "goals", "focus"];
+    const ids: StepId[] = ["role", "goals", "focus"];
     if (showEppp) ids.push("eppp");
     ids.push("tier", "summary");
     return ids;
@@ -371,7 +371,7 @@ export default function OnboardingPage() {
 
   function handleBack() {
     const prev = order[idx - 1];
-    if (prev && prev !== "account") setStepId(prev);
+    if (prev) setStepId(prev);
   }
 
   // -------------------------------------------------------------------------
@@ -618,16 +618,20 @@ export default function OnboardingPage() {
 
             {/* Footer */}
             <div className="ob-actions mt-8 flex items-center justify-between gap-3">
-              <Button
-                variant="outline"
-                onClick={handleBack}
-                disabled={idx <= 1 || submitting}
-                className="rounded-md px-4"
-                data-testid="button-back"
-              >
-                <ChevronLeft className="w-4 h-4 mr-1" />
-                Back
-              </Button>
+              {idx > 0 ? (
+                <Button
+                  variant="outline"
+                  onClick={handleBack}
+                  disabled={submitting}
+                  className="rounded-md px-4"
+                  data-testid="button-back"
+                >
+                  <ChevronLeft className="w-4 h-4 mr-1" />
+                  Back
+                </Button>
+              ) : (
+                <span aria-hidden />
+              )}
 
               {stepId === "summary" ? (
                 <div className="flex items-center gap-2">
