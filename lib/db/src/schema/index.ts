@@ -52,7 +52,9 @@ export const topicsTable = pgTable("topics", {
   // courseId-based Course Mastery Exams system. `category` is kept as a
   // denormalized shim during migration — see coursesTable below.
   courseId: integer("course_id").references(() => coursesTable.id),
-});
+}, (t) => [
+  index("topics_course_idx").on(t.courseId),
+]);
 
 export const insertTopicSchema = createInsertSchema(topicsTable).omit({ id: true });
 export type InsertTopic = z.infer<typeof insertTopicSchema>;
@@ -64,7 +66,9 @@ export const flashcardsTable = pgTable("flashcards", {
   question: text("question").notNull(),
   answer: text("answer").notNull(),
   difficulty: text("difficulty").notNull().default("medium"),
-});
+}, (t) => [
+  index("flashcards_topic_idx").on(t.topicId),
+]);
 
 export const insertFlashcardSchema = createInsertSchema(flashcardsTable).omit({ id: true });
 export type InsertFlashcard = z.infer<typeof insertFlashcardSchema>;
@@ -81,7 +85,9 @@ export const quizQuestionsTable = pgTable("quiz_questions", {
   correctAnswer: text("correct_answer").notNull(),
   explanation: text("explanation").notNull(),
   examOnly: boolean("exam_only").notNull().default(false),
-});
+}, (t) => [
+  index("quiz_questions_topic_idx").on(t.topicId),
+]);
 
 export const insertQuizQuestionSchema = createInsertSchema(quizQuestionsTable).omit({ id: true });
 export type InsertQuizQuestion = z.infer<typeof insertQuizQuestionSchema>;
@@ -92,7 +98,9 @@ export const studyGuidesTable = pgTable("study_guides", {
   topicId: integer("topic_id").notNull().references(() => topicsTable.id),
   title: text("title").notNull(),
   content: text("content").notNull(),
-});
+}, (t) => [
+  index("study_guides_topic_idx").on(t.topicId),
+]);
 
 export const insertStudyGuideSchema = createInsertSchema(studyGuidesTable).omit({ id: true });
 export type InsertStudyGuide = z.infer<typeof insertStudyGuideSchema>;
@@ -104,7 +112,10 @@ export const progressTable = pgTable("progress", {
   topicId: integer("topic_id").notNull().references(() => topicsTable.id),
   score: integer("score").notNull().default(0),
   lastAccessed: timestamp("last_accessed").notNull().defaultNow(),
-});
+}, (t) => [
+  index("progress_user_topic_idx").on(t.userId, t.topicId),
+  index("progress_topic_idx").on(t.topicId),
+]);
 
 export const insertProgressSchema = createInsertSchema(progressTable).omit({ id: true, lastAccessed: true });
 export type InsertProgress = z.infer<typeof insertProgressSchema>;
@@ -124,7 +135,9 @@ export const practiceExamsTable = pgTable("practice_exams", {
   timeLimit: integer("time_limit").notNull().default(600),
   passingScore: integer("passing_score").notNull().default(70),
   createdAt: timestamp("created_at").notNull().defaultNow(),
-});
+}, (t) => [
+  index("practice_exams_topic_idx").on(t.topicId),
+]);
 
 export const insertPracticeExamSchema = createInsertSchema(practiceExamsTable).omit({ id: true, createdAt: true });
 export type InsertPracticeExam = z.infer<typeof insertPracticeExamSchema>;
@@ -167,7 +180,9 @@ export const customDecksTable = pgTable("custom_decks", {
   examQuestionCount: integer("exam_question_count").notNull().default(15),
   examTimed: boolean("exam_timed").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
-});
+}, (t) => [
+  index("custom_decks_user_idx").on(t.userId),
+]);
 
 export const insertCustomDeckSchema = createInsertSchema(customDecksTable).omit({ id: true, createdAt: true });
 export type InsertCustomDeck = z.infer<typeof insertCustomDeckSchema>;
@@ -227,7 +242,10 @@ export const quizAttemptsTable = pgTable("quiz_attempts", {
   // Powers the EPPP "Missed Questions" review tab.
   missedQuestionIds: integer("missed_question_ids").array(),
   completedAt: timestamp("completed_at").notNull().defaultNow(),
-});
+}, (t) => [
+  index("quiz_attempts_user_topic_idx").on(t.userId, t.topicId),
+  index("quiz_attempts_topic_idx").on(t.topicId),
+]);
 
 export const insertQuizAttemptSchema = createInsertSchema(quizAttemptsTable).omit({ id: true, completedAt: true });
 export type InsertQuizAttempt = z.infer<typeof insertQuizAttemptSchema>;
@@ -244,7 +262,10 @@ export const examAttemptsTable = pgTable("exam_attempts", {
   // Powers the EPPP "Missed Questions" review tab.
   missedQuestionIds: integer("missed_question_ids").array(),
   completedAt: timestamp("completed_at").notNull().defaultNow(),
-});
+}, (t) => [
+  index("exam_attempts_user_topic_idx").on(t.userId, t.topicId),
+  index("exam_attempts_topic_idx").on(t.topicId),
+]);
 
 export const insertExamAttemptSchema = createInsertSchema(examAttemptsTable).omit({ id: true, completedAt: true });
 export type InsertExamAttempt = z.infer<typeof insertExamAttemptSchema>;

@@ -10,7 +10,16 @@ if (!process.env.DATABASE_URL) {
   );
 }
 
-export const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+export const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  // Autoscale runs multiple server instances, each with its own pool. Cap the
+  // per-instance connection count so N instances stay comfortably under
+  // Postgres' max_connections ceiling under heavy traffic. Override via env if
+  // the deployment is scaled differently.
+  max: Number(process.env.PG_POOL_MAX ?? 8),
+  idleTimeoutMillis: 30_000,
+  connectionTimeoutMillis: 10_000,
+});
 export const db = drizzle(pool, { schema });
 
 export * from "./schema";

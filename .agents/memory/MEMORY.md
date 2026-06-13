@@ -43,3 +43,4 @@
 - [EPPP separate access level](psychpro-eppp-access-level.md) — EPPP is its own expiry-driven tier (epppAccessUntil), never unlocked by Master/Scholar; gate with EPPP helpers + Stripe metadata conventions.
 - [Canonical billing model](psychpro-billing-canonical-model.md) — one tier/EPPP mapping module is the single source of truth; never re-declare it inline; mastery-exams.getUserTier is a known divergence.
 - [Stripe MCP metadata bracket](stripe-mcp-metadata-bracket.md) — set metadata via flat `metadata[key]` params in stripeApiExecute; nested object & dot notation both fail.
+- [Leaderboard perf aggregation](leaderboard-perf-aggregation.md) — avoid ARRAY_AGG via db.execute (returns non-array); date_trunc on without-tz col == JS startOfDay; cache/pool are per-instance under autoscale.
