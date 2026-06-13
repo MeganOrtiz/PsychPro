@@ -294,6 +294,9 @@ export function CortexStage({ brain, overline, heading, overallPct, overallLabel
             <img
               src={brainSrc}
               alt="PsychPro brain"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
               style={{ position: "relative", width: "100%", height: "auto", display: "block" }}
             />
           </div>
