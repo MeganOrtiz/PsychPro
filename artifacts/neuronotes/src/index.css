@@ -900,33 +900,81 @@
    locked cerulean #76E4F7 / rgb(118,228,247). These plain rules sit
    outside @layer so they override the Tailwind border/background utilities on
    the nav tokens. */
+.nav-glass-idle,
+.nav-glass-active {
+  /* Frosted glassmorphic pills: a soft top-lit cerulean gradient over a
+     near-opaque deep-teal base, blurred + saturated so the smoke backdrop
+     diffuses through. Border glow ramps up on hover / press / active. */
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  transition: background 200ms ease, border-color 200ms ease,
+    box-shadow 240ms ease, transform 140ms ease;
+}
 .nav-glass-idle {
-  background: hsl(var(--surf-hue) 66% 29% / 0.93);
-  border: 1px solid rgba(118, 228, 247, 0.36);
+  background:
+    linear-gradient(
+      150deg,
+      hsl(var(--surf-hue) 62% 34% / 0.90),
+      hsl(var(--surf-hue) 68% 24% / 0.94)
+    );
+  border: 1px solid rgba(118, 228, 247, 0.34);
   box-shadow:
-    0 0 20px rgba(118, 228, 247, 0.2),
+    0 0 16px rgba(118, 228, 247, 0.16),
+    inset 0 0 14px -6px rgba(118, 228, 247, 0.22),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 .nav-glass-idle:hover {
-  background: hsl(var(--surf-hue) 60% 36% / 0.96);
-  border-color: rgba(118, 228, 247, 0.52);
+  background:
+    linear-gradient(
+      150deg,
+      hsl(var(--surf-hue) 58% 42% / 0.94),
+      hsl(var(--surf-hue) 64% 31% / 0.96)
+    );
+  border-color: rgba(118, 228, 247, 0.7);
   box-shadow:
-    0 0 28px rgba(118, 228, 247, 0.38),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    0 0 0 1px rgba(118, 228, 247, 0.55),
+    0 0 22px 1px rgba(118, 228, 247, 0.5),
+    inset 0 0 18px -6px rgba(118, 228, 247, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  transform: translateY(-1px);
 }
 .nav-glass-idle:active {
-  background: hsl(var(--surf-hue) 57% 41% / 0.98);
-  border-color: rgba(118, 228, 247, 0.6);
+  background:
+    linear-gradient(
+      150deg,
+      hsl(var(--surf-hue) 55% 47% / 0.97),
+      hsl(var(--surf-hue) 61% 36% / 0.98)
+    );
+  border-color: rgba(118, 228, 247, 0.82);
   box-shadow:
-    0 0 32px rgba(118, 228, 247, 0.46),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    0 0 0 1.5px rgba(118, 228, 247, 0.72),
+    0 0 30px 2px rgba(118, 228, 247, 0.62),
+    inset 0 0 22px -6px rgba(118, 228, 247, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  transform: translateY(0);
 }
 .nav-glass-active {
-  background: hsl(var(--surf-hue) 56% 43% / 0.97);
-  border: 1px solid rgba(118, 228, 247, 0.64);
+  background:
+    linear-gradient(
+      150deg,
+      hsl(var(--surf-hue) 54% 49% / 0.95),
+      hsl(var(--surf-hue) 60% 38% / 0.97)
+    );
+  border: 1px solid rgba(118, 228, 247, 0.72);
   box-shadow:
-    0 0 30px rgba(118, 228, 247, 0.46),
+    0 0 0 1px rgba(118, 228, 247, 0.6),
+    0 0 28px 1px rgba(118, 228, 247, 0.5),
+    inset 0 0 20px -6px rgba(118, 228, 247, 0.42),
     inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+.nav-glass-active:hover {
+  border-color: rgba(118, 228, 247, 0.85);
+  box-shadow:
+    0 0 0 1.5px rgba(118, 228, 247, 0.72),
+    0 0 32px 2px rgba(118, 228, 247, 0.6),
+    inset 0 0 24px -6px rgba(118, 228, 247, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  transform: translateY(-1px);
 }
 .nav-glass-active::before {
   content: "";
