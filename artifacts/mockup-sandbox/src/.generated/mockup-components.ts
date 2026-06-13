@@ -2,11 +2,11 @@
 type ModuleMap = Record<string, () => Promise<Record<string, unknown>>>;
 export const modules: ModuleMap = {
   "./components/mockups/btn-states-proof/ButtonStates.tsx": () => import("../components/mockups/btn-states-proof/ButtonStates.tsx"),
-  "./components/mockups/cerulean-buttons/Showcase.tsx": () => import("../components/mockups/cerulean-buttons/Showcase.tsx"),
   "./components/mockups/course-cards/BeforeAfter.tsx": () => import("../components/mockups/course-cards/BeforeAfter.tsx"),
   "./components/mockups/dash-header/Nebula.tsx": () => import("../components/mockups/dash-header/Nebula.tsx"),
   "./components/mockups/dash-header/Specimen.tsx": () => import("../components/mockups/dash-header/Specimen.tsx"),
   "./components/mockups/dash-header/SynapseCore.tsx": () => import("../components/mockups/dash-header/SynapseCore.tsx"),
+  "./components/mockups/cerulean-buttons/Showcase.tsx": () => import("../components/mockups/cerulean-buttons/Showcase.tsx"),
   "./components/mockups/dashboard-buttons/BrightFrosted.tsx": () => import("../components/mockups/dashboard-buttons/BrightFrosted.tsx"),
   "./components/mockups/dashboard-buttons/Refined.tsx": () => import("../components/mockups/dashboard-buttons/Refined.tsx"),
   "./components/mockups/dashboard-buttons/StrongGlow.tsx": () => import("../components/mockups/dashboard-buttons/StrongGlow.tsx"),
@@ -17,8 +17,6 @@ export const modules: ModuleMap = {
   "./components/mockups/header-refresh/Refined.tsx": () => import("../components/mockups/header-refresh/Refined.tsx"),
   "./components/mockups/landing-redesign/Cinematic.tsx": () => import("../components/mockups/landing-redesign/Cinematic.tsx"),
   "./components/mockups/landing-redesign/TighterBolder.tsx": () => import("../components/mockups/landing-redesign/TighterBolder.tsx"),
-  "./components/mockups/living-cortex/EpppDashboard.tsx": () => import("../components/mockups/living-cortex/EpppDashboard.tsx"),
-  "./components/mockups/living-cortex/MainDashboard.tsx": () => import("../components/mockups/living-cortex/MainDashboard.tsx"),
   "./components/mockups/psychpro-aesthetic/Landing.tsx": () => import("../components/mockups/psychpro-aesthetic/Landing.tsx"),
   "./components/mockups/psychpro-polished/Dashboard.tsx": () => import("../components/mockups/psychpro-polished/Dashboard.tsx"),
   "./components/mockups/psychpro-polished/Landing.tsx": () => import("../components/mockups/psychpro-polished/Landing.tsx")
