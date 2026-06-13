@@ -902,11 +902,11 @@
    the nav tokens. */
 .nav-glass-idle,
 .nav-glass-active {
-  /* Frosted glassmorphic pills: a soft top-lit cerulean gradient over a
-     near-opaque deep-teal base, blurred + saturated so the smoke backdrop
-     diffuses through. Border glow ramps up on hover / press / active. */
-  backdrop-filter: blur(14px) saturate(150%);
-  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  /* See-through glassmorphic panes: a low-opacity cerulean tint over a light
+     blur, so the smoke backdrop reads clearly through the glass (clear & glassy
+     rather than thick frost). Border glow ramps up on hover / press / active. */
+  backdrop-filter: blur(7px) saturate(135%);
+  -webkit-backdrop-filter: blur(7px) saturate(135%);
   transition: background 200ms ease, border-color 200ms ease,
     box-shadow 240ms ease, transform 140ms ease;
 }
@@ -914,27 +914,27 @@
   background:
     linear-gradient(
       150deg,
-      hsl(var(--surf-hue) 62% 34% / 0.90),
-      hsl(var(--surf-hue) 68% 24% / 0.94)
+      hsl(var(--surf-hue) 62% 38% / 0.22),
+      hsl(var(--surf-hue) 68% 26% / 0.30)
     );
-  border: 1px solid rgba(118, 228, 247, 0.34);
+  border: 1px solid rgba(118, 228, 247, 0.3);
   box-shadow:
-    0 0 16px rgba(118, 228, 247, 0.16),
-    inset 0 0 14px -6px rgba(118, 228, 247, 0.22),
+    0 0 14px rgba(118, 228, 247, 0.14),
+    inset 0 0 14px -6px rgba(118, 228, 247, 0.18),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 .nav-glass-idle:hover {
   background:
     linear-gradient(
       150deg,
-      hsl(var(--surf-hue) 58% 42% / 0.94),
-      hsl(var(--surf-hue) 64% 31% / 0.96)
+      hsl(var(--surf-hue) 58% 46% / 0.34),
+      hsl(var(--surf-hue) 64% 34% / 0.42)
     );
   border-color: rgba(118, 228, 247, 0.7);
   box-shadow:
     0 0 0 1px rgba(118, 228, 247, 0.55),
     0 0 22px 1px rgba(118, 228, 247, 0.5),
-    inset 0 0 18px -6px rgba(118, 228, 247, 0.4),
+    inset 0 0 18px -6px rgba(118, 228, 247, 0.36),
     inset 0 1px 0 rgba(255, 255, 255, 0.14);
   transform: translateY(-1px);
 }
@@ -942,14 +942,14 @@
   background:
     linear-gradient(
       150deg,
-      hsl(var(--surf-hue) 55% 47% / 0.97),
-      hsl(var(--surf-hue) 61% 36% / 0.98)
+      hsl(var(--surf-hue) 55% 50% / 0.46),
+      hsl(var(--surf-hue) 61% 38% / 0.54)
     );
   border-color: rgba(118, 228, 247, 0.82);
   box-shadow:
     0 0 0 1.5px rgba(118, 228, 247, 0.72),
     0 0 30px 2px rgba(118, 228, 247, 0.62),
-    inset 0 0 22px -6px rgba(118, 228, 247, 0.5),
+    inset 0 0 22px -6px rgba(118, 228, 247, 0.46),
     inset 0 1px 0 rgba(255, 255, 255, 0.14);
   transform: translateY(0);
 }
@@ -957,14 +957,14 @@
   background:
     linear-gradient(
       150deg,
-      hsl(var(--surf-hue) 54% 49% / 0.95),
-      hsl(var(--surf-hue) 60% 38% / 0.97)
+      hsl(var(--surf-hue) 54% 52% / 0.42),
+      hsl(var(--surf-hue) 60% 40% / 0.5)
     );
   border: 1px solid rgba(118, 228, 247, 0.72);
   box-shadow:
     0 0 0 1px rgba(118, 228, 247, 0.6),
     0 0 28px 1px rgba(118, 228, 247, 0.5),
-    inset 0 0 20px -6px rgba(118, 228, 247, 0.42),
+    inset 0 0 20px -6px rgba(118, 228, 247, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 .nav-glass-active:hover {
@@ -972,7 +972,7 @@
   box-shadow:
     0 0 0 1.5px rgba(118, 228, 247, 0.72),
     0 0 32px 2px rgba(118, 228, 247, 0.6),
-    inset 0 0 24px -6px rgba(118, 228, 247, 0.5),
+    inset 0 0 24px -6px rgba(118, 228, 247, 0.46),
     inset 0 1px 0 rgba(255, 255, 255, 0.16);
   transform: translateY(-1px);
 }
