@@ -1,0 +1,46 @@
+/* Living Cortex — shared tokens + motion. Imported by each component file. */
+
+.lc-root {
+  --lc-ink: #062c35;
+  --lc-bg: #083f4d;
+  --lc-bg-soft: #0a4d5e;
+  --lc-surface: #115a6c;
+  --lc-steel: #3196af;
+  --lc-teal: #68ccde;
+  --lc-surf: #76e4f7;
+  --lc-mist: #a7f3ff;
+  --lc-mist-soft: #7fbfd0;
+  --lc-cloud: #f4fbff;
+  --lc-ink-soft: #a9c6cf;
+  --lc-glass-border: rgba(118, 228, 247, 0.24);
+}
+
+/* Idle bloom on the brain */
+@keyframes lc-breathe {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.012); }
+}
+
+/* Zone corona pulse (mastered zones pulse stronger) */
+@keyframes lc-pulse {
+  0%, 100% { opacity: 0.55; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.14); }
+}
+
+/* Faint atmospheric drift on the cloud layer */
+@keyframes lc-drift {
+  0% { transform: translate3d(0, 0, 0) scale(1.05); }
+  50% { transform: translate3d(-1.5%, 1%, 0) scale(1.08); }
+  100% { transform: translate3d(0, 0, 0) scale(1.05); }
+}
+
+.lc-breathe { animation: lc-breathe 7s ease-in-out infinite; }
+.lc-pulse { animation: lc-pulse 3.4s ease-in-out infinite; }
+.lc-pulse-strong { animation: lc-pulse 2.6s ease-in-out infinite; }
+.lc-drift { animation: lc-drift 26s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lc-breathe, .lc-pulse, .lc-pulse-strong, .lc-drift {
+    animation: none !important;
+  }
+}
