@@ -697,7 +697,7 @@ const C = {
   hairlineStrong: "rgba(118, 228, 247, 0.58)",
 };
 
-const styles = `
+export const styles = `
 .landing-root {
   position: relative;
   min-height: 100vh;
@@ -924,28 +924,72 @@ const styles = `
   flex-shrink: 0;
 }
 .landing-cta-ghost {
-  background: transparent;
+  background: ${C.cyan}12;
   border: 1.5px solid ${C.cyan}cc;
   color: ${C.cyan};
-  box-shadow: 0 0 14px ${C.cyan}33, 0 0 0 1px ${C.cyan}1a inset;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    0 0 0 1px ${C.cyan}22 inset,
+    0 0 18px ${C.cyan}45,
+    0 0 38px -6px ${C.cyan}33;
 }
-.landing-cta-ghost:hover {
-  background: ${C.cyan}14;
+.landing-cta-ghost:hover,
+.landing-cta-ghost.is-hover {
+  background: ${C.cyan}1f;
   color: #fff;
   border-color: ${C.cyan};
-  box-shadow: 0 0 24px ${C.cyan}66, 0 0 0 1px ${C.cyan}33 inset;
   transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.20),
+    0 0 0 1px ${C.cyan}3a inset,
+    0 0 30px ${C.cyan}80,
+    0 0 62px -6px ${C.cyan}55;
+}
+.landing-cta-ghost:active,
+.landing-cta-ghost.is-active {
+  transform: translateY(0);
+  color: #fff;
+  border-color: ${C.cyan};
+  background: ${C.cyan}30;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.26),
+    0 0 0 1px ${C.cyan}55 inset,
+    0 0 44px 2px ${C.cyan}b0,
+    0 0 84px -2px ${C.cyan}66;
+}
+.landing-cta-ghost .landing-cta-icon {
+  filter: drop-shadow(0 0 5px ${C.cyan}99);
 }
 /* Primary CTA — filled cyan-teal gradient so the main action dominates. */
 .landing-cta-primary {
   background: linear-gradient(135deg, ${C.cyan}, ${C.cyanMid});
   border: 1.5px solid ${C.cyan};
   color: #02181d;
-  box-shadow: 0 10px 30px -10px ${C.cyan}aa, 0 0 22px ${C.cyan}3a;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.45),
+    0 10px 30px -10px ${C.cyan}bb,
+    0 0 26px ${C.cyan}55,
+    0 0 52px -8px ${C.cyan}44;
 }
-.landing-cta-primary:hover {
+.landing-cta-primary:hover,
+.landing-cta-primary.is-hover {
   transform: translateY(-1px);
-  box-shadow: 0 16px 40px -10px ${C.cyan}cc, 0 0 34px ${C.cyan}66;
+  background: linear-gradient(135deg, #8eecff, ${C.cyan});
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.55),
+    0 16px 42px -10px ${C.cyan}dd,
+    0 0 40px ${C.cyan}88,
+    0 0 78px -8px ${C.cyan}55;
+}
+.landing-cta-primary:active,
+.landing-cta-primary.is-active {
+  transform: translateY(0);
+  background: linear-gradient(135deg, #a3f1ff, ${C.cyan});
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.60),
+    0 8px 26px -10px ${C.cyan}ee,
+    0 0 56px 2px ${C.cyan}b0,
+    0 0 98px -2px ${C.cyan}66;
 }
 
 /* ============== HERO STAT STRIP ============== */
