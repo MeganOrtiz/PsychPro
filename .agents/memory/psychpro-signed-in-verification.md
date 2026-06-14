@@ -20,6 +20,18 @@ page) here. Don't keep retrying Clerk login — reach for the surrogate below.
 gives pixel-accurate proof of styling without needing auth. Combine with `pnpm --filter
 @workspace/neuronotes run typecheck`.
 
+**Lighter alternative for whole-page chrome (not just one component):** add a
+DEV-only wouter route that renders the real page inside its layout WITHOUT the auth
+gates (e.g. `<AppLayout><DashboardPage/></AppLayout>` guarded by `import.meta.env.DEV`),
+screenshot it, then delete the route. Data hooks 401 but the layout/chrome renders.
+To locate a "faint line/seam" precisely, save the app-preview to disk and run per-row
+brightness on a background-only column with ImageMagick — distinguishes a real
+full-width seam from a localized button border or card-top highlight.
+
+**"Faint line at top of dashboard" gotcha:** the desktop top bar is transparent/
+borderless (no line); the mobile header (`md:hidden`) is the one that carries a visible
+top seam. Check the mobile breakpoint, not desktop, for such reports.
+
 **When the user says a dashboard fix "did nothing" after many tries:** the most likely
 cause is a **stale/cached or published build**, not the code. The fixes are usually
 already correct in source. Advise hard-refresh / republish before re-editing.

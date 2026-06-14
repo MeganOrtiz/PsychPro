@@ -420,7 +420,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <header className="flex items-center gap-3 px-4 py-3 border-b border-border bg-card md:hidden">
+        <header className="flex items-center gap-3 px-4 py-3 md:hidden">
           <Button
             variant="ghost"
             size="sm"
