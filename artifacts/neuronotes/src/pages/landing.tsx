@@ -859,17 +859,27 @@ const styles = `
     rgba(0,0,0,0.55) 75%,
     rgba(0,0,0,0.18) 90%,
     rgba(0,0,0,0) 100%);
+  /* Gentle brightness/saturation trim eases the electric harshness while the
+     brain stays generously prominent. The tight outline glow is softened so the
+     main glow now reads as the diffuse ethereal halo behind it (.landing-hero-
+     aura). NOTE: heroBrainPulse animates the filter property, so this trim is
+     mirrored in the keyframes, otherwise it is lost while animating. */
   filter:
-    drop-shadow(0 0 32px ${C.cyan}55)
-    drop-shadow(0 0 90px ${C.cyanMid}33);
+    brightness(0.95) saturate(0.9)
+    drop-shadow(0 0 22px ${C.cyan}40)
+    drop-shadow(0 0 72px ${C.cyanMid}33);
   animation: heroBrainPulse 4.2s ease-in-out infinite;
 }
 .landing-hero-aura {
   position: absolute;
-  inset: 22% 28%;
+  inset: 8% 12%;
   border-radius: 50%;
-  background: radial-gradient(circle, ${C.cyan}3a 0%, ${C.cyanMid}18 40%, transparent 70%);
-  filter: blur(48px);
+  background: radial-gradient(circle,
+    ${C.cyan}40 0%,
+    ${C.cyanMid}24 38%,
+    ${C.cyanMid}10 58%,
+    transparent 78%);
+  filter: blur(72px);
   animation: heroBrainAura 4.2s ease-in-out infinite;
   z-index: -1;
 }
@@ -1688,10 +1698,10 @@ html { scroll-behavior: smooth; }
 }
 @keyframes heroBrainPulse {
   0%, 100% {
-    filter: drop-shadow(0 0 28px ${C.cyan}66) drop-shadow(0 0 80px ${C.cyanMid}44);
+    filter: brightness(0.95) saturate(0.9) drop-shadow(0 0 20px ${C.cyan}3a) drop-shadow(0 0 70px ${C.cyanMid}33);
   }
   50% {
-    filter: drop-shadow(0 0 42px ${C.cyan}99) drop-shadow(0 0 100px ${C.cyanMid}66);
+    filter: brightness(0.98) saturate(0.93) drop-shadow(0 0 30px ${C.cyan}52) drop-shadow(0 0 92px ${C.cyanMid}4d);
   }
 }
 @keyframes heroBrainAura {
