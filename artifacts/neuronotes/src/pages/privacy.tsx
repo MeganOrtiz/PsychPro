@@ -104,7 +104,7 @@ export default function PrivacyPage() {
           style={{
             border: "1px solid rgba(118,228,247,0.18)",
             background:
-              "linear-gradient(145deg, hsl(var(--surf-hue) 76% 19% / 0.69), hsl(var(--surf-hue) 80% 14% / 0.83))",
+              "linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.69), hsl(var(--surf-hue) 88% 14% / 0.83))",
           }}
           aria-label="On this page"
         >
@@ -428,7 +428,7 @@ export default function PrivacyPage() {
               style={{
                 border: "1px solid rgba(118,228,247,0.18)",
                 background:
-              "linear-gradient(145deg, hsl(var(--surf-hue) 76% 19% / 0.69), hsl(var(--surf-hue) 80% 14% / 0.83))",
+              "linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.69), hsl(var(--surf-hue) 88% 14% / 0.83))",
               }}
             >
               <p style={{ ...TRACK_NAV, fontSize: 11, color: P.cloud }}>

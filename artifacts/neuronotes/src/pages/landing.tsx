@@ -700,8 +700,8 @@ const C = {
   cyanMid: P.teal,     // #68CCDE
   cyanDeep: P.tealDeep,// #3196AF
   bg: "#082a33",
-  bgPanel: "hsl(var(--surf-hue) 76% 19% / 0.82)",
-  bgPanelStrong: "hsl(var(--surf-hue) 80% 14% / 0.90)",
+  bgPanel: "hsl(var(--surf-hue) 88% 19% / 0.82)",
+  bgPanelStrong: "hsl(var(--surf-hue) 88% 14% / 0.90)",
   hairline: "rgba(118, 228, 247, 0.36)",
   hairlineStrong: "rgba(118, 228, 247, 0.58)",
 };
@@ -726,7 +726,7 @@ const styles = `
   width: 100%;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  background: linear-gradient(180deg, hsl(var(--surf-hue) 73% 12% / 0.58), hsl(var(--surf-hue) 73% 12% / 0.26));
+  background: linear-gradient(180deg, hsl(var(--surf-hue) 85% 12% / 0.58), hsl(var(--surf-hue) 85% 12% / 0.26));
   border-bottom: 1px solid ${C.hairline};
 }
 .landing-nav-inner {
@@ -944,7 +944,7 @@ const styles = `
   line-height: 1.7;
   font-weight: 400;
   color: rgba(225, 244, 250, 0.88);
-  text-shadow: 0 1px 12px hsl(var(--surf-hue) 84% 5% / 0.55);
+  text-shadow: 0 1px 12px hsl(var(--surf-hue) 92% 5% / 0.55);
 }
 .landing-cta-row {
   display: flex;
@@ -1098,7 +1098,7 @@ const styles = `
   line-height: 1.72;
   font-weight: 400;
   color: rgba(225, 244, 250, 0.74);
-  text-shadow: 0 1px 10px hsl(var(--surf-hue) 84% 5% / 0.45);
+  text-shadow: 0 1px 10px hsl(var(--surf-hue) 92% 5% / 0.45);
 }
 
 /* ============== STUDY TOOLS / FEATURE CARDS ============== */
@@ -1164,7 +1164,7 @@ const styles = `
   letter-spacing: 0.01em;
   line-height: 1.3;
   color: #ffffff;
-  text-shadow: 0 1px 10px hsl(var(--surf-hue) 84% 5% / 0.55);
+  text-shadow: 0 1px 10px hsl(var(--surf-hue) 92% 5% / 0.55);
 }
 .landing-feature-body {
   margin: 0;
@@ -1189,7 +1189,7 @@ const styles = `
   padding: 22px 20px;
   border-radius: 16px;
   border: 1px solid ${C.hairline};
-  background: linear-gradient(180deg, hsl(var(--surf-hue) 76% 19% / 0.82), hsl(var(--surf-hue) 80% 14% / 0.90));
+  background: linear-gradient(180deg, hsl(var(--surf-hue) 88% 19% / 0.82), hsl(var(--surf-hue) 88% 14% / 0.90));
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   box-shadow: 0 0 22px ${C.cyan}1f, 0 0 0 1px ${C.cyan}14 inset;
@@ -1286,7 +1286,7 @@ const styles = `
   padding: clamp(26px, 3.4vw, 44px);
   border-radius: 22px;
   border: 1px solid ${C.hairlineStrong};
-  background: linear-gradient(150deg, hsl(var(--surf-hue) 76% 19% / 0.85), hsl(var(--surf-hue) 80% 14% / 0.90));
+  background: linear-gradient(150deg, hsl(var(--surf-hue) 88% 19% / 0.85), hsl(var(--surf-hue) 88% 14% / 0.90));
   backdrop-filter: blur(18px) saturate(140%);
   -webkit-backdrop-filter: blur(18px) saturate(140%);
   box-shadow:
@@ -1356,7 +1356,7 @@ const styles = `
   max-width: 420px;
   border-radius: 18px;
   padding: 22px 22px 16px;
-  background: linear-gradient(145deg, hsl(var(--surf-hue) 76% 19% / 0.84), hsl(var(--surf-hue) 80% 14% / 0.90));
+  background: linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.84), hsl(var(--surf-hue) 88% 14% / 0.90));
   border: 1px solid ${C.hairlineStrong};
   backdrop-filter: blur(18px) saturate(130%);
   -webkit-backdrop-filter: blur(18px) saturate(130%);
@@ -1385,7 +1385,7 @@ const styles = `
   position: relative;
   height: 7px;
   border-radius: 999px;
-  background: hsl(var(--surf-hue) 76% 19% / 0.6);
+  background: hsl(var(--surf-hue) 88% 19% / 0.6);
   overflow: hidden;
 }
 .landing-dash-fill {
@@ -1435,7 +1435,7 @@ const styles = `
   overflow: hidden;
   border-radius: 22px;
   padding: clamp(28px, 4vw, 48px);
-  background: linear-gradient(150deg, hsl(var(--surf-hue) 76% 19% / 0.86), hsl(var(--surf-hue) 80% 14% / 0.90));
+  background: linear-gradient(150deg, hsl(var(--surf-hue) 88% 19% / 0.86), hsl(var(--surf-hue) 88% 14% / 0.90));
   border: 1px solid ${C.hairlineStrong};
   backdrop-filter: blur(20px) saturate(140%);
   -webkit-backdrop-filter: blur(20px) saturate(140%);
@@ -1484,7 +1484,7 @@ const styles = `
   text-align: center;
   border-radius: 22px;
   padding: clamp(30px, 4.4vw, 52px);
-  background: linear-gradient(150deg, hsl(var(--surf-hue) 76% 19% / 0.86), hsl(var(--surf-hue) 80% 14% / 0.90));
+  background: linear-gradient(150deg, hsl(var(--surf-hue) 88% 19% / 0.86), hsl(var(--surf-hue) 88% 14% / 0.90));
   border: 1px solid ${C.hairlineStrong};
   backdrop-filter: blur(20px) saturate(140%);
   -webkit-backdrop-filter: blur(20px) saturate(140%);
@@ -1525,7 +1525,7 @@ const styles = `
   font-size: clamp(14px, 1.1vw, 16.5px);
   line-height: 1.78;
   color: rgba(225, 244, 250, 0.84);
-  text-shadow: 0 1px 10px hsl(var(--surf-hue) 84% 5% / 0.45);
+  text-shadow: 0 1px 10px hsl(var(--surf-hue) 92% 5% / 0.45);
 }
 
 /* ============== FINAL CTA ============== */
@@ -1615,7 +1615,7 @@ const styles = `
 .landing-footer {
   border-top: 1px solid ${C.hairline};
   margin-top: clamp(28px, 4vh, 48px);
-  background: linear-gradient(180deg, hsl(var(--surf-hue) 73% 12% / 0.32), hsl(var(--surf-hue) 73% 12% / 0.7));
+  background: linear-gradient(180deg, hsl(var(--surf-hue) 85% 12% / 0.32), hsl(var(--surf-hue) 85% 12% / 0.7));
   backdrop-filter: blur(8px);
 }
 .landing-footer-inner {

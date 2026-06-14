@@ -51,7 +51,7 @@ export default function UpgradePrompt({ onDismiss, reason = "generic" }: Upgrade
     <div className="p-4 md:p-6 max-w-lg mx-auto flex flex-col items-center justify-center min-h-[60vh] text-center" data-testid="upgrade-prompt">
       <div
         className="w-16 h-16 rounded-full flex items-center justify-center mb-6"
-        style={{ background: `hsl(var(--surf-hue) 49% 58% / 0.18)`, border: `1px solid ${P.surf}55` }}
+        style={{ background: `hsl(var(--surf-hue) 69% 58% / 0.18)`, border: `1px solid ${P.surf}55` }}
       >
         <Lock className="w-8 h-8" style={{ color: P.tealDeep }} />
       </div>

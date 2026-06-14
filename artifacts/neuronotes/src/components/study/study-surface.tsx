@@ -27,7 +27,7 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
       // top-bloom + outer corona radiance over the brain backdrop.
       return {
         background:
-          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.09) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 73% 22% / 0.80), hsl(var(--surf-hue) 79% 15% / 0.90))",
+          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.09) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 85% 22% / 0.80), hsl(var(--surf-hue) 91% 15% / 0.90))",
         borderColor: "rgba(118,228,247,0.24)",
         backdropFilter: "blur(20px) saturate(135%)",
         WebkitBackdropFilter: "blur(20px) saturate(135%)",
@@ -41,7 +41,7 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
       // sharing the same incandescent bloom + radiant corona.
       return {
         background:
-          "radial-gradient(140% 92% at 50% 0%, rgba(118,228,247,0.18) 0%, rgba(118,228,247,0.00) 60%), linear-gradient(135deg, hsl(var(--surf-hue) 65% 41% / 0.64), hsl(var(--surf-hue) 73% 30% / 0.76))",
+          "radial-gradient(140% 92% at 50% 0%, rgba(118,228,247,0.18) 0%, rgba(118,228,247,0.00) 60%), linear-gradient(135deg, hsl(var(--surf-hue) 81% 41% / 0.64), hsl(var(--surf-hue) 85% 30% / 0.76))",
         borderColor: "rgba(118,228,247,0.32)",
         backdropFilter: "blur(20px) saturate(140%)",
         WebkitBackdropFilter: "blur(20px) saturate(140%)",
@@ -55,7 +55,7 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
       // glass so the brain backdrop glows through; white body text throughout.
       return {
         background:
-          "radial-gradient(120% 104% at 50% 38%, rgba(118,228,247,0.22) 0%, hsl(var(--surf-hue) 58% 43% / 0.52) 42%, hsl(var(--surf-hue) 73% 25% / 0.76) 100%)",
+          "radial-gradient(120% 104% at 50% 38%, rgba(118,228,247,0.22) 0%, hsl(var(--surf-hue) 74% 43% / 0.52) 42%, hsl(var(--surf-hue) 85% 25% / 0.76) 100%)",
         borderColor: "rgba(118,228,247,0.32)",
         backdropFilter: "blur(20px) saturate(140%)",
         WebkitBackdropFilter: "blur(20px) saturate(140%)",
@@ -72,7 +72,7 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
       // rather than a flat opaque box.
       return {
         background:
-          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.06) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 76% 19% / 0.74), hsl(var(--surf-hue) 80% 14% / 0.85))",
+          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.06) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))",
         borderColor: "rgba(118,228,247,0.20)",
         backdropFilter: "blur(20px) saturate(135%)",
         WebkitBackdropFilter: "blur(20px) saturate(135%)",
@@ -101,9 +101,9 @@ function pillStyles(tone: StudyTone, brand?: boolean): CSSProperties {
   return brand
     ? { background: P.teal, color: "#FFFFFF", borderColor: P.tealDeep }
     : {
-        background: "hsl(var(--surf-hue) 49% 58% / 0.14)",
+        background: "hsl(var(--surf-hue) 69% 58% / 0.14)",
         color: P.surf,
-        borderColor: "hsl(var(--surf-hue) 49% 58% / 0.30)",
+        borderColor: "hsl(var(--surf-hue) 69% 58% / 0.30)",
       };
 }
 

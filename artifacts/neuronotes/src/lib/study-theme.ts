@@ -30,18 +30,18 @@ export const STUDY_PALETTE = {
   // (set 2026-06-12). Pendulum history: hue 191 read green, 196 read navy; 192
   // sits just off the locked #76E4F7 accent (hue 189) on the anti-navy side.
   // The lever for "too navy" is HUE, never lightness — keep surfaces near 192.
-  ink: "#062c35",         // deepest anchor (sidebar / page floor)
-  bg: "#083f4d",          // page bg primary (deep cerulean)
-  bgSoft: "#0a4d5e",      // page bg secondary
-  surface: "#115a6c",     // card surface (glass base)
-  surfaceElev: "#186578", // card hover / lifted
+  ink: "#042f3a",         // deepest anchor (sidebar / page floor)
+  bg: "#044352",          // page bg primary (deep cerulean)
+  bgSoft: "#054f61",      // page bg secondary
+  surface: "#086178",     // card surface (glass base)
+  surfaceElev: "#0c6b83", // card hover / lifted
 
   // Mid-cerulean — borders, dividers, structural lines
-  steel: "#3196AF",       // cerulean
+  steel: "#1da2c3",       // cerulean
 
   // Cyan accents — hue ~188–195, locked
-  tealDeep: "#3196AF",    // cerulean (alias)
-  teal: "#68CCDE",        // cyan
+  tealDeep: "#1da2c3",    // cerulean (alias)
+  teal: "#5ad7ed",        // cyan
   surf: "#76E4F7",        // bright-cyan (primary glow)
   mist: "#A7F3FF",        // soft-cyan (icy text)
   mistSoft: "#7FBFD0",    // dimmer soft-cyan (muted icy text on dark surfaces)

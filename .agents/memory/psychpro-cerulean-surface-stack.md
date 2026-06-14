@@ -114,3 +114,34 @@ Retone in lockstep: tokens + HSL mirror + the recipe rgba together.
 **How to apply (inline rgba sweep):** scope any regex to numbers immediately after
 `rgb(`/`rgba(` ONLY; a bare `\d+,\d+,\d+` match also mangles numeric arrays/args/copy.
 Keep a fixed old→new triplet map so the same fill always maps consistently.
+
+**UPDATE 2026-06-14 — the legacy rgba surface fills are GONE.** The deep-cerulean
+surface family `rgba(11,54,70)/rgba(6,33,46)` (and the older `rgba(20,90,116)/
+rgba(11,62,82)`) NO LONGER EXISTS anywhere in src — every surface fill is now
+`hsl(var(--surf-hue) S% L% / A)` (tokens in index.css `.dark`/`.study-page-bg`, the
+glass recipes in index.css, AND inline gradients across ~23 .tsx files incl. landing's
+`C.bgPanel`/`bgPanelStrong`). So a surface retone is now an hsl(var(--surf-hue)) sweep,
+NOT an rgba sweep — don't go hunting for rgba triplets.
+
+**PIGMENT = SATURATION lever (2026-06-14).** Owner wanted "much richer / more
+pigmented" and explicitly chose saturation-only: keep hue (192) + keep it deep (no
+lightness lift) + NO green shift. To make surfaces richer, raise ONLY the S digit on the
+`hsl(var(--surf-hue) S% L%)` surfaces — in BOTH index.css (token tuples + recipe
+gradients) AND every inline `.tsx` gradient (the dominant card pair is `76% 19% / 80%
+14%`; the subtle-tint pair is `49% 58%`). Used ~+12–20 pts by band, cap ~92, keeping
+L + alpha. **EXCLUDE:** text/foregrounds + `--muted-foreground`, the locked accent
+`#76E4F7` (188 90% 72%) and `rgba(118,228,247)`, and the icy-text/neutral hex in
+`study-theme.ts` (mist/cloud/paper/inkSoft).
+**DO saturate study-theme.ts SURFACE hex too** (ink/bg/bgSoft/surface/surfaceElev/
+steel/tealDeep/teal) — they mirror the `.study-page-bg` HSL tokens AND drive live UI
+directly (auth/sign-in theming, dashboard header, app-layout 3rd gradient layer,
+subscription, eppp shell), so leaving them flat makes the site patchy. Convert each hex→
+HSL, keep HUE (192 surfaces / 189 teal) + lightness, raise only S to the matching token
+target, convert back to hex; also fix the now-stale `/* #hex */` comments in index.css.
+Brain-lab (brain-lab.tsx, brain-3d-view.tsx, brain-quiz.tsx) only imports the accent
+glow (`surf #76E4F7`, untouched) — saturating background surface hex is safe: a valid
+hex string can't break WebGL/GLB; the documented brain risks are asset corruption +
+lightness, NOT the S channel.
+**Why:** saturation never touches the hue digit, so the surface-hue guardrail is
+unaffected. To go richer/less rich later, re-run the band bump on the same hsl surfaces +
+re-derive the study-theme.ts hex; NEVER touch hue or lightness.

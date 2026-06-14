@@ -273,8 +273,8 @@ function CourseRailButton({
 }) {
   const Icon = CATEGORY_ICONS[name] ?? LibraryBig;
 
-  const idleBg = "linear-gradient(135deg, hsl(var(--surf-hue) 76% 31% / 0.78), hsl(var(--surf-hue) 76% 19% / 0.86))";
-  const activeBg = "linear-gradient(135deg, rgba(118,228,247,0.15), hsl(var(--surf-hue) 76% 31% / 0.90))";
+  const idleBg = "linear-gradient(135deg, hsl(var(--surf-hue) 88% 31% / 0.78), hsl(var(--surf-hue) 88% 19% / 0.86))";
+  const activeBg = "linear-gradient(135deg, rgba(118,228,247,0.15), hsl(var(--surf-hue) 88% 31% / 0.90))";
   const idleBorder = "rgba(118,228,247,0.20)";
   const activeBorder = "rgba(118,228,247,0.55)";
   const hoverBorder = "rgba(118,228,247,0.45)";
@@ -310,7 +310,7 @@ function CourseRailButton({
         className="w-9 h-9 shrink-0 rounded-lg flex items-center justify-center border"
         style={{
           background:
-            "radial-gradient(circle at 50% 40%, rgba(118,228,247,0.18), hsl(var(--surf-hue) 76% 31% / 0.55) 70%)",
+            "radial-gradient(circle at 50% 40%, rgba(118,228,247,0.18), hsl(var(--surf-hue) 88% 31% / 0.55) 70%)",
           borderColor: "rgba(118,228,247,0.28)",
         }}
       >
@@ -371,7 +371,7 @@ function CourseLessons({
           className="w-11 h-11 rounded-lg flex items-center justify-center border"
           style={{
             background:
-              "radial-gradient(circle at 50% 40%, rgba(58,224,236,0.18), hsl(var(--surf-hue) 76% 31% / 0.65) 70%)",
+              "radial-gradient(circle at 50% 40%, rgba(58,224,236,0.18), hsl(var(--surf-hue) 88% 31% / 0.65) 70%)",
             borderColor: "rgba(118,228,247,0.32)",
           }}
         >
@@ -424,8 +424,8 @@ function CourseMasteryButton({ group }: { group: { name: string; items: Topic[] 
   const unlocked = status?.unlocked ?? false;
   const mastered = status?.mastered ?? false;
 
-  const lockedBg = "linear-gradient(135deg, hsl(var(--surf-hue) 76% 31% / 0.78), hsl(var(--surf-hue) 76% 19% / 0.86))";
-  const unlockedBg = "linear-gradient(135deg, rgba(118,228,247,0.16), hsl(var(--surf-hue) 76% 31% / 0.92))";
+  const lockedBg = "linear-gradient(135deg, hsl(var(--surf-hue) 88% 31% / 0.78), hsl(var(--surf-hue) 88% 19% / 0.86))";
+  const unlockedBg = "linear-gradient(135deg, rgba(118,228,247,0.16), hsl(var(--surf-hue) 88% 31% / 0.92))";
   const lockedBorder = "rgba(118,228,247,0.18)";
   const unlockedBorder = "rgba(118,228,247,0.55)";
   const lockedShadow = "inset 0 1px 0 0 rgba(255,255,255,0.05)";
@@ -471,7 +471,7 @@ function CourseMasteryButton({ group }: { group: { name: string; items: Topic[] 
         className="w-11 h-11 shrink-0 rounded-lg flex items-center justify-center border"
         style={{
           background:
-            "radial-gradient(circle at 50% 40%, rgba(118,228,247,0.18), hsl(var(--surf-hue) 76% 31% / 0.55) 70%)",
+            "radial-gradient(circle at 50% 40%, rgba(118,228,247,0.18), hsl(var(--surf-hue) 88% 31% / 0.55) 70%)",
           borderColor: "rgba(118,228,247,0.28)",
         }}
       >
@@ -552,7 +552,7 @@ function TopicCard({ topic, onClick, showCategory }: TopicCardProps) {
       className="group text-left rounded-md p-4 cursor-pointer transition-all border backdrop-blur-md hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2"
       style={{
         background:
-          "linear-gradient(135deg, hsl(var(--surf-hue) 76% 31% / 0.78), hsl(var(--surf-hue) 76% 19% / 0.86))",
+          "linear-gradient(135deg, hsl(var(--surf-hue) 88% 31% / 0.78), hsl(var(--surf-hue) 88% 19% / 0.86))",
         borderColor: "rgba(118,228,247,0.22)",
         boxShadow: "inset 0 1px 0 0 rgba(255,255,255,0.06)",
         // Use CSS custom-property so :hover can shift box-shadow cheaply.
@@ -1101,7 +1101,7 @@ function TopicThumbnail({ topic }: { topic: Topic }) {
         // glowing symbol inside reads as luminous on top of the dark
         // teal card surface.
         background:
-          "radial-gradient(circle at 50% 40%, rgba(58,224,236,0.18), hsl(var(--surf-hue) 76% 31% / 0.65) 70%)",
+          "radial-gradient(circle at 50% 40%, rgba(58,224,236,0.18), hsl(var(--surf-hue) 88% 31% / 0.65) 70%)",
         borderColor: "rgba(118,228,247,0.32)",
         boxShadow:
           "inset 0 0 14px rgba(118,228,247,0.10), 0 0 18px -6px rgba(58,224,236,0.35)",
