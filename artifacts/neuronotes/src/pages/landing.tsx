@@ -504,7 +504,7 @@ export default function LandingPage() {
               </p>
             </div>
           </div>
-          <div className="landing-split-body">
+          <div className="landing-split-body landing-split-body--boxed">
             <p className="landing-eyebrow landing-eyebrow--left">YOUR DASHBOARD</p>
             <h2 className="landing-split-title">
               Track progress, prioritize learning, and connect
