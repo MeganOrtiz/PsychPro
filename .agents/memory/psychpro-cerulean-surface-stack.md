@@ -92,10 +92,20 @@ radiance. Verify on the public `/` route (no auth gate).
 - Keep DARK on purpose: `ink` (deepest anchor), the page vignette, `text-shadow`
   near-black, drop-shadows `rgba(0,0,0,...)`.
 
-**Radiance/depth recipe (current):** `.study-page-bg::before` layers a central cyan
-bloom (`rgba(118,228,247,~0.16)` upper-center) + a deep cerulean vignette (edges to
-`rgba(2,13,19,0.82)`) over brain-clouds.png on a `#04161d` base. Glass cards add an
-inner cyan top-bloom + outer cyan corona + deep drop shadow for incandescence + depth.
+**Radiance/depth recipe (current, updated 2026-06-14):** the shared backdrop
+`assets/bg/brain-clouds.png` is now a HIGH-DEFINITION 1408×768 LANDSCAPE deep-cerulean
+nebula image that GLOWS on its own (bright incandescent core baked into the art) — it
+is no longer the old portrait brain image. Because the image self-glows, `.study-page-bg
+::before` NO LONGER adds an additive cyan center bloom; instead its inner gradient is a
+deep-cerulean *tame* over the bright core (so it reads deep turquoise, not washed-out
+bright teal), plus a deepened deep-cerulean vignette to the edges, all in
+`hsl(var(--surf-hue) …)`. The backdrop is fully STATIC — the earlier "living atmosphere"
+animations (atmosphere-smoke-drift / nebula-drift / radiance-breathe) were REMOVED at the
+owner's request; `::after` now holds static nebula glows at opacity 0.92. To re-skin every
+page, replace that one shared PNG. **Why "too teal" → fix:** owner reads a flat/bright
+center as "too teal"; deepen by taming the core + deepening the vignette (and prefer a
+deeper-toned background image), NOT by lifting/brightening. Glass cards still add an inner
+cyan top-bloom + outer cyan corona + deep drop shadow for incandescence + depth.
 
 **Why:** perceived tone comes MOSTLY from the inline rgba surface gradients in the
 index.css recipes, not just the tokens — a token-only change looks unchanged on cards.

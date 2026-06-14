@@ -48,6 +48,12 @@ uri = "file://attached_assets/generated_images/brain_cranial_nerves.png"
 type = "image"
 title = "brain cranial nerves matte"
 
+[[generated]]
+id = "7xrMSXZxGAfTaVEgsbG3V"
+uri = "file://artifacts/neuronotes/src/assets/bg/brain-clouds.png"
+type = "image"
+title = "deep cerulean nebula background"
+
 [[outputs]]
 id = "aKKI8N7WseM8lzrKZFEEq"
 uri = "file://.local/exports/brain-lab-code.tar.gz"

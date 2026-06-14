@@ -492,9 +492,9 @@
 .study-page-bg,
 .study-page-aurora {
   position: relative;
-  /* Transparent — the cinematic brain-clouds image lives on the ::before
-     pseudo-element (z-index: -2). A solid background-color here would
-     overpaint that image and leave the page dark. The page-bg color
+  /* Transparent — the cinematic deep-cerulean nebula image lives on the
+     ::before pseudo-element (z-index: -2). A solid background-color here
+     would overpaint that image and leave the page dark. The page-bg color
      fallback is on the ::before itself. */
   background-color: transparent;
 }
@@ -505,15 +505,14 @@
    .study-page-bg is the canonical PsychPro app surface used by
    every authenticated page. It paints:
      - shadcn token overrides (cerulean palette, defined above)
-     - a flat dark base color via ::before (image stripped — see note)
+     - the full-bleed, high-definition deep-cerulean nebula backdrop
+       via ::before (static — no motion), on a near-black deep
+       cerulean base color
+     - static nebula glows via ::after
      - canonical glass card treatment (.bg-card descendants)
 
-   NOTE: the previous full-bleed cerulean smoke image has been
-   removed at the user's request to start the visual design from
-   scratch. The ::before now paints only a plain dark surface so
-   the page chrome and cards still have something to sit on. When
-   the new background art lands, re-introduce it here so every
-   page picks it up automatically.
+   The backdrop image is a single shared asset (assets/bg/brain-clouds.png);
+   replacing that one file re-skins every page automatically.
 
    DO NOT override the ::before background per-page. DO NOT
    re-declare these CSS variables in another scope. DO NOT add
@@ -525,37 +524,27 @@
   position: fixed;
   inset: 0;
   z-index: -2;
-  /* Cinematic full-bleed brain-clouds backdrop. The image is portrait
-     (576×1024) so on landscape viewports the clouds fan out edge-to-edge
-     via background-size:cover while the brain stays centered. A subtle
-     radial darkening sits on top to keep page text readable without
-     killing the ethereal cyan glow. */
-  /* Very light vignette only — let the cyan clouds glow through across
-     the whole viewport. Edges get a slight darken to keep CTA text
-     readable; the center is nearly transparent. */
-  /* Layered for DEPTH + INCANDESCENCE (2026-06-11):
-       1. a soft cyan radiance bloom over the brain (upper-center) so the
-          page glows from within — the ethereal, incandescent core.
-       2. a deep cerulean vignette that darkens the edges hard, pushing the
-          glowing center forward (depth perception).
-       3. the cinematic brain-clouds backdrop.
+  /* Cinematic full-bleed deep-cerulean nebula backdrop — a high-definition
+     1408×768 landscape image that fills the viewport edge-to-edge via
+     background-size:cover. Two overlays sit on top of it:
+       1. a deep-cerulean tame over the bright nebula core so the center reads
+          as glowing DEEP turquoise rather than a washed-out bright highlight
+          (the image already glows; we no longer add cyan brightness on top).
+       2. a deep cerulean vignette that darkens the edges hard for depth.
      Base color is a near-black deep cerulean so the whole site reads as a
-     dark, radiant turquoise rather than the previous lifted/washed look. */
+     deep, radiant turquoise — not bright teal. */
   background-image:
-    radial-gradient(ellipse 62% 50% at 50% 40%,
-      rgba(118, 228, 247, 0.08) 0%,
-      rgba(104, 204, 222, 0.035) 36%,
-      hsl(var(--surf-hue) 81% 17% / 0.00) 70%),
+    radial-gradient(ellipse 70% 58% at 50% 44%,
+      hsl(var(--surf-hue) 80% 9% / 0.40) 0%,
+      hsl(var(--surf-hue) 80% 8% / 0.18) 45%,
+      hsl(var(--surf-hue) 80% 7% / 0.00) 75%),
     radial-gradient(ellipse 150% 135% at 50% 48%,
-      hsl(var(--surf-hue) 81% 6% / 0.24) 0%,
-      hsl(var(--surf-hue) 81% 6% / 0.60) 56%,
-      hsl(var(--surf-hue) 90% 4% / 0.92) 100%),
+      hsl(var(--surf-hue) 81% 6% / 0.28) 0%,
+      hsl(var(--surf-hue) 81% 6% / 0.62) 56%,
+      hsl(var(--surf-hue) 90% 4% / 0.94) 100%),
     url("./assets/bg/brain-clouds.png");
-  /* Anchor center-center so the densest atmospheric cloud band — the
-     middle of the source image, right around the brain — fills the
-     viewport edge-to-edge on landscape. Top of the source (sparse
-     upper clouds) and very bottom (sparse trailing clouds) get cropped
-     off; the rich cyan smoke fills every pixel. */
+  /* Anchor center-center so the dense, glowing core of the nebula sits in the
+     middle of the viewport and the deep cerulean clouds frame the edges. */
   background-size: cover, cover, cover;
   background-position: center, center, center center;
   background-repeat: no-repeat, no-repeat, no-repeat;
