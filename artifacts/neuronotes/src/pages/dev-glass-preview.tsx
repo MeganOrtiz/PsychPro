@@ -1,14 +1,14 @@
 import { GraduationCap, Lock, LibraryBig, ChevronRight } from "lucide-react";
 
 const cardBg =
-  "linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.00) 40%), linear-gradient(135deg, hsl(var(--surf-hue) 86% 16% / 0.90), hsl(var(--surf-hue) 90% 10% / 0.95))";
-const cardBorder = "rgba(118,228,247,0.26)";
+  "linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.04) 16%, rgba(255,255,255,0.00) 46%), radial-gradient(130% 80% at 50% 0%, rgba(118,228,247,0.09) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(150deg, hsl(var(--surf-hue) 96% 16% / 0.93), hsl(var(--surf-hue) 98% 8% / 0.97))";
+const cardBorder = "rgba(118,228,247,0.30)";
 const cardShadow =
-  "inset 0 1px 0 0 rgba(255,255,255,0.14), 0 12px 30px -18px rgba(0,0,0,0.72)";
+  "inset 0 1px 0 0 rgba(255,255,255,0.22), inset 0 0 46px -24px rgba(118,228,247,0.30), 0 0 30px -10px rgba(118,228,247,0.22), 0 26px 58px -28px rgba(0,0,0,0.84)";
+const glassFilter = "blur(24px) saturate(150%)";
 const activeBg =
-  "linear-gradient(135deg, rgba(118,228,247,0.15), hsl(var(--surf-hue) 88% 31% / 0.90))";
-const unlockedBg =
-  "linear-gradient(135deg, rgba(118,228,247,0.16), hsl(var(--surf-hue) 88% 31% / 0.92))";
+  "linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.04) 18%, rgba(255,255,255,0.00) 48%), linear-gradient(150deg, hsl(var(--surf-hue) 96% 26% / 0.94), hsl(var(--surf-hue) 98% 14% / 0.96))";
+const unlockedBg = activeBg;
 
 export default function DevGlassPreview() {
   return (
@@ -24,7 +24,7 @@ export default function DevGlassPreview() {
           <button
             type="button"
             className="group relative w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-left border backdrop-blur-md"
-            style={{ background: cardBg, borderColor: cardBorder, boxShadow: cardShadow }}
+            style={{ background: cardBg, borderColor: cardBorder, boxShadow: cardShadow, backdropFilter: glassFilter, WebkitBackdropFilter: glassFilter }}
           >
             <span
               className="w-9 h-9 shrink-0 rounded-lg flex items-center justify-center border"
@@ -53,7 +53,9 @@ export default function DevGlassPreview() {
               background: activeBg,
               borderColor: "rgba(118,228,247,0.55)",
               boxShadow:
-                "0 14px 34px -14px rgba(118,228,247,0.55), inset 0 1px 0 0 rgba(255,255,255,0.10)",
+                "0 14px 34px -14px rgba(118,228,247,0.50), inset 0 1px 0 0 rgba(255,255,255,0.20)",
+              backdropFilter: glassFilter,
+              WebkitBackdropFilter: glassFilter,
             }}
           >
             <span
@@ -91,7 +93,7 @@ export default function DevGlassPreview() {
             <div
               key={i}
               className="rounded-md p-4 border backdrop-blur-md"
-              style={{ background: cardBg, borderColor: cardBorder, boxShadow: cardShadow }}
+              style={{ background: cardBg, borderColor: cardBorder, boxShadow: cardShadow, backdropFilter: glassFilter, WebkitBackdropFilter: glassFilter }}
             >
               <span className="block text-[11px] mb-0.5 uppercase tracking-wider" style={{ color: "#76E4F7" }}>
                 Subjective Measures
@@ -139,7 +141,9 @@ export default function DevGlassPreview() {
               background: unlockedBg,
               borderColor: "rgba(118,228,247,0.55)",
               boxShadow:
-                "0 16px 38px -14px rgba(118,228,247,0.55), inset 0 1px 0 0 rgba(255,255,255,0.10)",
+                "0 16px 38px -14px rgba(118,228,247,0.50), inset 0 1px 0 0 rgba(255,255,255,0.20)",
+              backdropFilter: glassFilter,
+              WebkitBackdropFilter: glassFilter,
             }}
           >
             <span
