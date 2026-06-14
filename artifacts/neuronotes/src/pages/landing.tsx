@@ -988,7 +988,7 @@ const styles = `
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(199, 230, 240, 0.6);
+  color: #ffffff;
 }
 @media (max-width: 480px) {
   .landing-stat-item { padding: 0 12px; gap: 7px; }
