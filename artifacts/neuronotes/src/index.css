@@ -827,23 +827,26 @@
   /* Deeper cerulean glass + an inner cyan top-bloom (incandescence) and an
      outer cyan corona (radiance) over a deep drop shadow (depth). */
   background-image:
+    linear-gradient(180deg,
+      rgba(255, 255, 255, 0.10) 0%,
+      rgba(255, 255, 255, 0.00) 14%),
     radial-gradient(125% 78% at 50% 0%,
-      rgba(118, 228, 247, 0.07) 0%,
-      rgba(118, 228, 247, 0.00) 58%),
+      rgba(118, 228, 247, 0.10) 0%,
+      rgba(118, 228, 247, 0.00) 55%),
     linear-gradient(
       145deg,
-      hsl(var(--surf-hue) 88% 20% / 0.78),
-      hsl(var(--surf-hue) 90% 14% / 0.88)
+      hsl(var(--surf-hue) 86% 15% / 0.90),
+      hsl(var(--surf-hue) 92% 9% / 0.95)
     );
-  border: 1px solid rgba(118, 228, 247, 0.20);
+  border: 1px solid rgba(118, 228, 247, 0.26);
   border-radius: 22px;
-  backdrop-filter: blur(20px) saturate(135%);
-  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
   box-shadow:
-    inset 0 1px 0 rgba(167, 243, 255, 0.14),
-    inset 0 0 42px -22px rgba(118, 228, 247, 0.45),
-    0 0 34px -18px rgba(118, 228, 247, 0.40),
-    0 26px 58px -30px rgba(0, 0, 0, 0.78);
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 0 42px -24px rgba(118, 228, 247, 0.34),
+    0 0 28px -10px rgba(118, 228, 247, 0.26),
+    0 24px 54px -28px rgba(0, 0, 0, 0.82);
 }
 
 /* Sidebar nav glass — frosted opaque dark-glass pills (2026-06 spec).

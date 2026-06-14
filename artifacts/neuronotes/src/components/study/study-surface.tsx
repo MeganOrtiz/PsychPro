@@ -72,12 +72,12 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
       // rather than a flat opaque box.
       return {
         background:
-          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.06) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))",
-        borderColor: "rgba(118,228,247,0.20)",
-        backdropFilter: "blur(20px) saturate(135%)",
-        WebkitBackdropFilter: "blur(20px) saturate(135%)",
+          "linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.00) 14%), radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 55%), linear-gradient(145deg, hsl(var(--surf-hue) 86% 15% / 0.90), hsl(var(--surf-hue) 92% 9% / 0.95))",
+        borderColor: "rgba(118,228,247,0.26)",
+        backdropFilter: "blur(20px) saturate(140%)",
+        WebkitBackdropFilter: "blur(20px) saturate(140%)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.09), inset 0 0 40px -24px rgba(118,228,247,0.30), 0 0 24px -8px rgba(118,228,247,0.22), 0 18px 40px -24px rgba(0,0,0,0.66)",
+          "inset 0 1px 0 rgba(255,255,255,0.18), inset 0 0 42px -24px rgba(118,228,247,0.34), 0 0 28px -10px rgba(118,228,247,0.26), 0 24px 54px -28px rgba(0,0,0,0.82)",
         color: P.mist,
       };
   }
