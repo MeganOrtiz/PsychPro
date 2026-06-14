@@ -1,13 +1,13 @@
 import { GraduationCap, Lock, LibraryBig, ChevronRight } from "lucide-react";
 
 const cardBg =
-  "linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.04) 16%, rgba(255,255,255,0.00) 46%), radial-gradient(130% 80% at 50% 0%, rgba(118,228,247,0.09) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(150deg, hsl(var(--surf-hue) 96% 16% / 0.93), hsl(var(--surf-hue) 98% 8% / 0.97))";
-const cardBorder = "rgba(118,228,247,0.30)";
+  "linear-gradient(180deg, rgba(255,255,255,0.13) 0%, rgba(255,255,255,0.035) 22%, rgba(255,255,255,0.00) 55%), linear-gradient(160deg, hsl(var(--surf-hue) 46% 16% / 0.48), hsl(var(--surf-hue) 52% 9% / 0.66))";
+const cardBorder = "rgba(118,228,247,0.22)";
 const cardShadow =
-  "inset 0 1px 0 0 rgba(255,255,255,0.22), inset 0 0 46px -24px rgba(118,228,247,0.30), 0 0 30px -10px rgba(118,228,247,0.22), 0 26px 58px -28px rgba(0,0,0,0.84)";
-const glassFilter = "blur(24px) saturate(150%)";
+  "inset 0 1px 0 0 rgba(255,255,255,0.16), 0 18px 44px -26px rgba(0,0,0,0.70)";
+const glassFilter = "blur(18px) saturate(118%)";
 const activeBg =
-  "linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.04) 18%, rgba(255,255,255,0.00) 48%), linear-gradient(150deg, hsl(var(--surf-hue) 96% 26% / 0.94), hsl(var(--surf-hue) 98% 14% / 0.96))";
+  "linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.04) 22%, rgba(255,255,255,0.00) 55%), linear-gradient(160deg, hsl(var(--surf-hue) 58% 24% / 0.58), hsl(var(--surf-hue) 56% 14% / 0.70))";
 const unlockedBg = activeBg;
 
 export default function DevGlassPreview() {

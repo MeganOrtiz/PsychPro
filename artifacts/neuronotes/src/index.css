@@ -828,26 +828,21 @@
      outer cyan corona (radiance) over a deep drop shadow (depth). */
   background-image:
     linear-gradient(180deg,
-      rgba(255, 255, 255, 0.16) 0%,
-      rgba(255, 255, 255, 0.04) 16%,
-      rgba(255, 255, 255, 0.00) 46%),
-    radial-gradient(130% 80% at 50% 0%,
-      rgba(118, 228, 247, 0.09) 0%,
-      rgba(118, 228, 247, 0.00) 58%),
+      rgba(255, 255, 255, 0.13) 0%,
+      rgba(255, 255, 255, 0.035) 22%,
+      rgba(255, 255, 255, 0.00) 55%),
     linear-gradient(
-      150deg,
-      hsl(var(--surf-hue) 96% 16% / 0.93),
-      hsl(var(--surf-hue) 98% 8% / 0.97)
+      160deg,
+      hsl(var(--surf-hue) 46% 16% / 0.48),
+      hsl(var(--surf-hue) 52% 9% / 0.66)
     );
-  border: 1px solid rgba(118, 228, 247, 0.30);
+  border: 1px solid rgba(118, 228, 247, 0.22);
   border-radius: 22px;
-  backdrop-filter: blur(24px) saturate(150%);
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  backdrop-filter: blur(18px) saturate(118%);
+  -webkit-backdrop-filter: blur(18px) saturate(118%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.22),
-    inset 0 0 46px -24px rgba(118, 228, 247, 0.30),
-    0 0 30px -10px rgba(118, 228, 247, 0.22),
-    0 26px 58px -28px rgba(0, 0, 0, 0.84);
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 18px 44px -26px rgba(0, 0, 0, 0.70);
 }
 
 /* Sidebar nav glass — frosted opaque dark-glass pills (2026-06 spec).
