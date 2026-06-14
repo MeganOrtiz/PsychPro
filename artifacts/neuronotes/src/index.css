@@ -562,14 +562,9 @@
   background-attachment: fixed, fixed, fixed;
   background-color: #05252d;
   pointer-events: none;
-  /* LIVING ATMOSPHERE (2026-06-13, Task #156): the smoke layer drifts very
-     slowly so the deep space behind the hero/dashboards reads alive instead of
-     flat. Only background-position animates (radiance + vignette stay centered),
-     so the readable floor never shifts. Gated by prefers-reduced-motion below. */
-  animation: atmosphere-smoke-drift 72s ease-in-out infinite;
 }
 
-/* Drifting nebula glows + a gently breathing central radiance. Painted on the
+/* Static nebula glows. Painted on the
    previously-unused ::after so the static floor (::before) stays untouched. Sits
    at z-index:-1 (above the floor, behind all content) and is pure additive glow
    in the locked cerulean family — accent rgba (hue 189) + hsl(var(--surf-hue)),
@@ -592,61 +587,7 @@
       rgba(118, 228, 247, 0.08) 0%,
       rgba(118, 228, 247, 0.00) 66%);
   background-repeat: no-repeat;
-  will-change: transform, opacity;
-  animation:
-    atmosphere-nebula-drift 58s ease-in-out infinite,
-    atmosphere-radiance-breathe 12s ease-in-out infinite;
-}
-
-@keyframes atmosphere-smoke-drift {
-  0%,
-  100% {
-    background-position: center, center, 50% 50%;
-  }
-  50% {
-    background-position: center, center, 53% 46%;
-  }
-}
-
-@keyframes atmosphere-nebula-drift {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0) scale(1.02);
-  }
-  25% {
-    transform: translate3d(1.4%, -1.1%, 0) scale(1.05);
-  }
-  50% {
-    transform: translate3d(-1.2%, 1.4%, 0) scale(1.08);
-  }
-  75% {
-    transform: translate3d(-1.5%, -0.6%, 0) scale(1.05);
-  }
-}
-
-@keyframes atmosphere-radiance-breathe {
-  0%,
-  100% {
-    opacity: 0.82;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-/* Reduced motion: keep the deep, glowing atmosphere but hold it perfectly
-   still (static-but-deep fallback). */
-@media (prefers-reduced-motion: reduce) {
-  .study-page-bg::before,
-  .study-page-aurora::before,
-  .study-page-bg::after,
-  .study-page-aurora::after {
-    animation: none;
-  }
-  .study-page-bg::after,
-  .study-page-aurora::after {
-    opacity: 0.92;
-  }
+  opacity: 0.92;
 }
 
 /* Lesson detail header — wraps the title, category, description and counts
