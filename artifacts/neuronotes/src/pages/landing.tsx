@@ -12,13 +12,21 @@ import {
   Shuffle,
   Upload,
   Sparkles,
-  LineChart,
+  Activity,
   Compass,
   ArrowRight,
   Check,
   Award,
   CheckCircle2,
 } from "lucide-react";
+import {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+} from "recharts";
 import { useGetTopics } from "@workspace/api-client-react";
 import brainLateral from "@/assets/brain-views/lateral.webp";
 import founderMegan from "@/assets/founder/megan.png";
@@ -117,18 +125,18 @@ const LEARNING_SCIENCE = [
   },
 ] as const;
 
-// The eight domains the curriculum spans (the distinct main-catalog
-// categories — kept in sync with the topic catalog).
-const DOMAINS = [
-  "Neuroscience",
-  "Neuropsychology",
-  "Psychotherapy",
-  "Assessment",
-  "Pediatric & Neuropsychiatric Conditions",
-  "Research Methods",
-  "Psychology",
-  "Special Topics",
-] as const;
+// Illustrative 7-day score trend for the landing "Study Analytics" card. This
+// is a decorative sample (the card is aria-hidden) mirroring the real dashboard
+// Study Analytics chart shape; no live user data is shown on the landing page.
+const DASH_ACTIVITY = [
+  { day: "Mon", score: 62 },
+  { day: "Tue", score: 74 },
+  { day: "Wed", score: 58 },
+  { day: "Thu", score: 88 },
+  { day: "Fri", score: 79 },
+  { day: "Sat", score: 94 },
+  { day: "Sun", score: 86 },
+];
 
 // What the Scholar tier adds — mirrors src/pages/subscription.tsx SCHOLAR_FEATURES.
 const SCHOLAR_POINTS = [
@@ -453,22 +461,44 @@ export default function LandingPage() {
           <div className="landing-split-media">
             <div className="landing-dash-card" aria-hidden="true">
               <div className="landing-dash-card-head">
-                <LineChart className="landing-dash-card-icon" aria-hidden />
-                <span>Your progress</span>
+                <Activity className="landing-dash-card-icon" aria-hidden />
+                <span>Study Analytics</span>
               </div>
-              <ul className="landing-dash-rows">
-                {DOMAINS.slice(0, 4).map((d, i) => (
-                  <li key={d} className="landing-dash-row">
-                    <span className="landing-dash-row-label">{d}</span>
-                    <span className="landing-dash-track" aria-hidden>
-                      <span
-                        className="landing-dash-fill"
-                        style={{ width: `${[68, 44, 82, 30][i]}%` }}
-                      />
-                    </span>
-                  </li>
-                ))}
-              </ul>
+              <div className="landing-dash-chart">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={DASH_ACTIVITY}
+                    margin={{ top: 8, right: 8, bottom: 0, left: -8 }}
+                  >
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke="rgba(118,228,247,0.12)"
+                      vertical={false}
+                    />
+                    <XAxis
+                      dataKey="day"
+                      tickLine={false}
+                      axisLine={false}
+                      tick={{ fontSize: 11, fill: C.mistSoft }}
+                    />
+                    <YAxis
+                      tickLine={false}
+                      axisLine={false}
+                      tick={{ fontSize: 11, fill: C.mistSoft }}
+                      width={36}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="score"
+                      stroke={C.cyan}
+                      strokeWidth={2.5}
+                      dot={{ r: 2.5, fill: C.cyanMid }}
+                      activeDot={{ r: 4 }}
+                      isAnimationActive={false}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
               <p className="landing-dash-note" aria-hidden>
                 Illustration
               </p>
@@ -688,6 +718,7 @@ export default function LandingPage() {
 const C = {
   cyan: P.surf,        // #76E4F7 — primary glow
   cyanSoft: P.mist,    // #A7F3FF — icy text
+  mistSoft: P.mistSoft,// #7FBFD0 — muted icy text (chart ticks)
   cyanMid: P.teal,     // #68CCDE
   cyanDeep: P.tealDeep,// #3196AF
   bg: "#082a33",
@@ -1379,26 +1410,12 @@ export const styles = `
   color: ${C.cyanSoft};
 }
 .landing-dash-card-icon { width: 18px; height: 18px; color: ${C.cyan}; }
-.landing-dash-rows { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
-.landing-dash-row { display: flex; flex-direction: column; gap: 7px; }
-.landing-dash-row-label {
-  font-size: 12.5px;
-  font-weight: 500;
-  color: rgba(225, 244, 250, 0.82);
+.landing-dash-chart {
+  height: 150px;
+  margin: 0 -4px;
 }
-.landing-dash-track {
-  position: relative;
-  height: 7px;
-  border-radius: 999px;
-  background: hsl(var(--surf-hue) 88% 19% / 0.6);
-  overflow: hidden;
-}
-.landing-dash-fill {
-  position: absolute;
-  inset: 0 auto 0 0;
-  border-radius: 999px;
-  background: linear-gradient(90deg, ${C.cyanMid}, ${C.cyan});
-  box-shadow: 0 0 14px ${C.cyan}66;
+.landing-dash-chart .recharts-cartesian-axis-tick text {
+  fill: ${C.mistSoft};
 }
 .landing-dash-note {
   margin: 14px 0 0;

@@ -9,13 +9,7 @@ const COLS = [
 
 export default function DevCtaPreview() {
   return (
-    <div
-      className="min-h-screen w-full p-10 text-white"
-      style={{
-        background:
-          "radial-gradient(120% 90% at 50% 0%, #0b3646 0%, #06212e 60%, #041821 100%)",
-      }}
-    >
+    <div className="study-page-bg min-h-screen w-full p-10 text-white">
       <style>{styles}</style>
       <div className="max-w-5xl mx-auto landing-root" style={{ minHeight: 0 }}>
         <h1 className="text-2xl font-semibold mb-1">Landing CTA Glow — state review</h1>
