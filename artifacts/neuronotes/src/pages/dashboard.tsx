@@ -248,7 +248,7 @@ export default function DashboardPage() {
 
   return (
     <div
-      className="min-h-full study-page-bg"
+      className="min-h-full"
       data-testid="dashboard-page"
     >
       <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 lg:pt-8 pb-4 md:pb-6 lg:pb-8">
