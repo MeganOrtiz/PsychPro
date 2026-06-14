@@ -45,3 +45,4 @@
 - [Stripe MCP metadata bracket](stripe-mcp-metadata-bracket.md) — set metadata via flat `metadata[key]` params in stripeApiExecute; nested object & dot notation both fail.
 - [Leaderboard perf aggregation](leaderboard-perf-aggregation.md) — avoid ARRAY_AGG via db.execute (returns non-array); date_trunc on without-tz col == JS startOfDay; cache/pool are per-instance under autoscale.
 - [Mockup preview heavy images](mockup-preview-heavy-images.md) — large PNGs lose the load race and render blank (looks like a "crash"); quantize to PNG8 with magick + eager/fetchPriority; true white = server mid-restart.
+- [study-page-bg horizontal seam](brain-clouds-bg-seam.md) — faint dead-straight full-width line over the bg = background-attachment:fixed on the already position:fixed ::before; set attachment:scroll (HiDPI-only, not a border/image defect).

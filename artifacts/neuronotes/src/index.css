@@ -548,7 +548,15 @@
   background-size: cover, cover, cover;
   background-position: center, center, center center;
   background-repeat: no-repeat, no-repeat, no-repeat;
-  background-attachment: fixed, fixed, fixed;
+  /* NO background-attachment: fixed. The pseudo-element is already
+     position:fixed; inset:0, so it is pinned to the viewport. Adding
+     background-attachment:fixed on top is redundant AND makes the browser
+     composite the background against the viewport at fractional device-pixel
+     boundaries, which paints a faint dead-straight horizontal seam across the
+     page on HiDPI / fractional-zoom displays. Leaving attachment at the
+     default (scroll) paints the image within this fixed box — visually
+     identical, no seam. */
+  background-attachment: scroll, scroll, scroll;
   background-color: #05252d;
   pointer-events: none;
 }
