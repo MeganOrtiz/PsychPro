@@ -20,7 +20,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { useGetTopics } from "@workspace/api-client-react";
-import brainSmoke from "@/assets/hero/brain.png";
+import heroClouds from "@/assets/hero/brain-clouds.webp";
 import brainLateral from "@/assets/brain-views/lateral.webp";
 import founderMegan from "@/assets/founder/megan.png";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -277,10 +277,8 @@ export default function LandingPage() {
           id="home"
           className={`landing-hero${mounted ? " is-mounted" : ""}`}
         >
-          <div className="landing-hero-brain" aria-hidden>
-            <div className="landing-hero-aura" />
-            <img src={brainSmoke} alt="" className="landing-hero-brain-img" />
-          </div>
+          <div className="landing-hero-bg" aria-hidden />
+          <div className="landing-hero-spacer" aria-hidden />
 
           <h1 className="landing-wordmark" style={{ ["--delay" as any]: "120ms" }}>
             PSYCHPRO
@@ -709,6 +707,7 @@ const C = {
 const styles = `
 .landing-root {
   position: relative;
+  overflow-x: clip;
   min-height: 100vh;
   min-height: 100dvh;
   color: ${C.cyanSoft};
@@ -813,6 +812,8 @@ const styles = `
 /* ============== HERO ============== */
 .landing-hero {
   position: relative;
+  z-index: 1;
+  isolation: isolate;
   max-width: 1320px;
   margin: 0 auto;
   padding: 0 24px clamp(14px, 2.4vh, 28px);
@@ -821,67 +822,45 @@ const styles = `
   align-items: center;
   text-align: center;
 }
-.landing-hero-brain {
-  position: relative;
-  width: clamp(340px, 52vw, 580px);
-  height: clamp(520px, 74vh, 880px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: clamp(-48px, -4vh, -16px);
-  margin-bottom: clamp(-190px, -17vh, -130px);
-  opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 1000ms cubic-bezier(0.16, 1, 0.3, 1), transform 1000ms cubic-bezier(0.16, 1, 0.3, 1);
-  animation: heroBrainFloat 7s ease-in-out infinite;
-  pointer-events: none;
-}
-.landing-hero.is-mounted .landing-hero-brain {
-  opacity: 1;
-  transform: translateY(0);
-}
-.landing-hero-brain-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center center;
-  -webkit-mask-image: radial-gradient(ellipse 62% 78% at 50% 42%,
-    rgba(0,0,0,1) 0%,
-    rgba(0,0,0,1) 32%,
-    rgba(0,0,0,0.92) 55%,
-    rgba(0,0,0,0.55) 75%,
-    rgba(0,0,0,0.18) 90%,
-    rgba(0,0,0,0) 100%);
-  mask-image: radial-gradient(ellipse 62% 78% at 50% 42%,
-    rgba(0,0,0,1) 0%,
-    rgba(0,0,0,1) 32%,
-    rgba(0,0,0,0.92) 55%,
-    rgba(0,0,0,0.55) 75%,
-    rgba(0,0,0,0.18) 90%,
-    rgba(0,0,0,0) 100%);
-  /* Gentle brightness/saturation trim eases the electric harshness while the
-     brain stays generously prominent. The tight outline glow is softened so the
-     main glow now reads as the diffuse ethereal halo behind it (.landing-hero-
-     aura). NOTE: heroBrainPulse animates the filter property, so this trim is
-     mirrored in the keyframes, otherwise it is lost while animating. */
-  filter:
-    brightness(0.95) saturate(0.9)
-    drop-shadow(0 0 22px ${C.cyan}40)
-    drop-shadow(0 0 72px ${C.cyanMid}33);
-  animation: heroBrainPulse 4.2s ease-in-out infinite;
-}
-.landing-hero-aura {
+/* ---- Full-bleed hero artwork: the brain-in-clouds image. Sits behind the hero
+   content (z-index:-1 within the hero's isolated stacking context), pinned near
+   the top of the page behind the translucent nav, scaled to cover, and masked at
+   the bottom so it dissolves into the global .study-page-bg nebula below. ---- */
+.landing-hero-bg {
   position: absolute;
-  inset: 8% 12%;
-  border-radius: 50%;
-  background: radial-gradient(circle,
-    ${C.cyan}40 0%,
-    ${C.cyanMid}24 38%,
-    ${C.cyanMid}10 58%,
-    transparent 78%);
-  filter: blur(72px);
-  animation: heroBrainAura 4.2s ease-in-out infinite;
   z-index: -1;
+  top: clamp(-96px, -8vh, -64px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  height: clamp(680px, 100vh, 1160px);
+  background-image: url(${heroClouds});
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
+  pointer-events: none;
+  opacity: 0;
+  animation: heroBgFade 1500ms cubic-bezier(0.16, 1, 0.3, 1) 80ms forwards;
+  -webkit-mask-image: linear-gradient(180deg,
+    rgba(0,0,0,1) 0%,
+    rgba(0,0,0,1) 56%,
+    rgba(0,0,0,0.45) 80%,
+    rgba(0,0,0,0) 100%);
+  mask-image: linear-gradient(180deg,
+    rgba(0,0,0,1) 0%,
+    rgba(0,0,0,1) 56%,
+    rgba(0,0,0,0.45) 80%,
+    rgba(0,0,0,0) 100%);
+}
+@keyframes heroBgFade {
+  to { opacity: 1; }
+}
+/* Transparent spacer reserving the vertical room the glowing brain fills in the
+   artwork, so the wordmark lands over the clouds beneath it. */
+.landing-hero-spacer {
+  width: 100%;
+  height: clamp(300px, 44vh, 540px);
+  pointer-events: none;
 }
 
 .landing-wordmark,
@@ -1692,28 +1671,10 @@ html { scroll-behavior: smooth; }
 }
 
 /* ============== KEYFRAMES ============== */
-@keyframes heroBrainFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-@keyframes heroBrainPulse {
-  0%, 100% {
-    filter: brightness(0.95) saturate(0.9) drop-shadow(0 0 20px ${C.cyan}3a) drop-shadow(0 0 70px ${C.cyanMid}33);
-  }
-  50% {
-    filter: brightness(0.98) saturate(0.93) drop-shadow(0 0 30px ${C.cyan}52) drop-shadow(0 0 92px ${C.cyanMid}4d);
-  }
-}
-@keyframes heroBrainAura {
-  0%, 100% { opacity: 0.7; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.08); }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .landing-hero-brain,
-  .landing-hero-brain-img,
-  .landing-hero-aura {
+  .landing-hero-bg {
     animation: none !important;
+    opacity: 1 !important;
   }
   .landing-wordmark,
   .landing-tagline,
@@ -1721,7 +1682,6 @@ html { scroll-behavior: smooth; }
   .landing-blurb,
   .landing-cta-row,
   .landing-stat-strip,
-  .landing-hero-brain,
   [data-reveal] {
     transition: none !important;
     opacity: 1 !important;
