@@ -425,7 +425,7 @@ export default function LandingPage() {
               className="landing-split-img"
             />
           </div>
-          <div className="landing-split-body">
+          <div className="landing-split-body landing-split-body--boxed">
             <p className="landing-eyebrow landing-eyebrow--left">INTERACTIVE 3D</p>
             <h2 className="landing-split-title">
               Interactive Brain Lab
@@ -1225,6 +1225,17 @@ const styles = `
   font-size: clamp(14px, 1.1vw, 16.5px);
   line-height: 1.72;
   color: rgba(225, 244, 250, 0.82);
+}
+/* Glass box around split copy for readability over the nebula, matching
+   the mastery/founder card recipe. */
+.landing-split-body--boxed {
+  padding: clamp(24px, 3vw, 38px);
+  border-radius: 20px;
+  background: linear-gradient(150deg, hsl(var(--surf-hue) 88% 19% / 0.82), hsl(var(--surf-hue) 88% 14% / 0.88));
+  border: 1px solid ${C.hairlineStrong};
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: 0 30px 80px -40px rgba(0,0,0,0.72), 0 0 40px ${C.cyan}2a, 0 0 0 1px ${C.cyan}1f inset;
 }
 
 /* ============== MEET THE FOUNDER ============== */
