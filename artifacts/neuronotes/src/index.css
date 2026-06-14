@@ -511,12 +511,13 @@
      - static nebula glows via ::after
      - canonical glass card treatment (.bg-card descendants)
 
-   The backdrop image is a single shared asset (assets/bg/brain-clouds.png);
-   replacing that one file re-skins every page automatically.
+   The in-app backdrop image is a single shared asset (assets/bg/app-smoke.png);
+   replacing that one file re-skins every in-app page automatically. The
+   marketing landing is the one exception — see the .landing-root override below.
 
-   DO NOT override the ::before background per-page. DO NOT
-   re-declare these CSS variables in another scope. DO NOT add
-   a competing .bg-card rule.
+   DO NOT override the ::before background per-page (the landing-root rule below
+   is the single sanctioned exception). DO NOT re-declare these CSS variables in
+   another scope. DO NOT add a competing .bg-card rule.
    ============================================================ */
 .study-page-bg::before,
 .study-page-aurora::before {
@@ -524,18 +525,18 @@
   position: fixed;
   inset: 0;
   z-index: -2;
-  /* Full-bleed deep-cerulean brain-in-clouds backdrop (assets/bg/brain-clouds.png,
-     a 941×1672 portrait artwork: a glowing cyan brain floating above billowing
-     deep-teal clouds). Anchored center-top so the brain sits near the top of the
-     viewport with the clouds filling the rest. Only a gentle corner vignette sits
-     on top — NO center tame and NO hard edge darkening — so the image keeps its
-     full color intensity and glow. Base color is a near-black deep cerulean that
-     matches the image's darkest clouds for a seamless letterbox on any aspect. */
+  /* Full-bleed deep-cerulean teal-smoke backdrop (assets/bg/app-smoke.png,
+     a 941×1672 portrait artwork: billowing cyan/teal smoke clouds, no brain).
+     Anchored center-top with the clouds filling the viewport. Only a gentle
+     corner vignette sits on top — NO center tame and NO hard edge darkening —
+     so the image keeps its full color intensity and glow. Base color is a
+     near-black deep cerulean that matches the image's darkest clouds for a
+     seamless letterbox on any aspect. */
   background-image:
     radial-gradient(ellipse 130% 100% at 50% 34%,
       hsl(var(--surf-hue) 90% 7% / 0.00) 60%,
       hsl(var(--surf-hue) 93% 5% / 0.55) 100%),
-    url("./assets/bg/brain-clouds.png");
+    url("./assets/bg/app-smoke.png");
   background-size: cover, cover;
   background-position: center top, center top;
   background-repeat: no-repeat, no-repeat;
@@ -576,6 +577,21 @@
       rgba(118, 228, 247, 0.00) 66%);
   background-repeat: no-repeat;
   opacity: 0.92;
+}
+
+/* Landing page exception. The marketing landing keeps the original
+   brain-in-clouds hero artwork (brain-clouds.png); only the in-app surfaces
+   — the main site and the EPPP suite — use the brainless teal-smoke backdrop
+   (app-smoke.png) set on the base .study-page-bg::before rule above. The
+   landing root carries BOTH .landing-root and .study-page-bg, so this
+   two-class selector outranks the base rule and restores the brain image
+   while inheriting all other backdrop properties (size/position/etc.). */
+.landing-root.study-page-bg::before {
+  background-image:
+    radial-gradient(ellipse 130% 100% at 50% 34%,
+      hsl(var(--surf-hue) 90% 7% / 0.00) 60%,
+      hsl(var(--surf-hue) 93% 5% / 0.55) 100%),
+    url("./assets/bg/brain-clouds.png");
 }
 
 /* Lesson detail header — wraps the title, category, description and counts

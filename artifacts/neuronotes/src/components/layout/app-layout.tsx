@@ -8,7 +8,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { STUDY_PALETTE } from "@/lib/study-theme";
-import smokeBg from "@/assets/bg/brain-clouds.png";
+import smokeBg from "@/assets/bg/app-smoke.png";
 
 type NavItem = { href: string; label: string; icon: React.ComponentType<{ className?: string }> };
 
