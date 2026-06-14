@@ -831,9 +831,9 @@ const styles = `
   width: min(880px, 92%);
   height: 78%;
   background: radial-gradient(ellipse 64% 56% at 50% 52%,
-    rgba(4, 22, 30, 0.66) 0%,
-    rgba(4, 22, 30, 0.40) 46%,
-    rgba(4, 22, 30, 0.00) 76%);
+    hsl(var(--surf-hue) 82% 7% / 0.66) 0%,
+    hsl(var(--surf-hue) 82% 7% / 0.40) 46%,
+    hsl(var(--surf-hue) 82% 7% / 0.00) 76%);
   pointer-events: none;
 }
 
