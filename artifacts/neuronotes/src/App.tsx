@@ -49,7 +49,6 @@ import AppLayout from "@/components/layout/app-layout";
 import { ErrorBoundary } from "@/components/error-boundary";
 import CrashTestPage from "@/pages/crash-test";
 import DevGlassPreview from "@/pages/dev-glass-preview";
-import DevCtaPreview from "@/pages/dev-cta-preview";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -97,7 +96,6 @@ function AppRouter() {
       <Route path="/sign-up/*?" component={SignUpPage} />
       {import.meta.env.DEV ? <Route path="/__crash-test" component={CrashTestPage} /> : null}
       {import.meta.env.DEV ? <Route path="/__glass-preview" component={DevGlassPreview} /> : null}
-      {import.meta.env.DEV ? <Route path="/__cta-preview" component={DevCtaPreview} /> : null}
       <Route path="/eppp">
         {() => (
           <RequireOnboarded>

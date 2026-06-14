@@ -728,7 +728,7 @@ const C = {
   hairlineStrong: "rgba(118, 228, 247, 0.58)",
 };
 
-export const styles = `
+const styles = `
 .landing-root {
   position: relative;
   min-height: 100vh;
@@ -964,8 +964,7 @@ export const styles = `
     0 0 18px ${C.cyan}45,
     0 0 38px -6px ${C.cyan}33;
 }
-.landing-cta-ghost:hover,
-.landing-cta-ghost.is-hover {
+.landing-cta-ghost:hover {
   background: ${C.cyan}1f;
   color: #fff;
   border-color: ${C.cyan};
@@ -976,8 +975,7 @@ export const styles = `
     0 0 30px ${C.cyan}80,
     0 0 62px -6px ${C.cyan}55;
 }
-.landing-cta-ghost:active,
-.landing-cta-ghost.is-active {
+.landing-cta-ghost:active {
   transform: translateY(0);
   color: #fff;
   border-color: ${C.cyan};
@@ -1002,8 +1000,7 @@ export const styles = `
     0 0 26px ${C.cyan}55,
     0 0 52px -8px ${C.cyan}44;
 }
-.landing-cta-primary:hover,
-.landing-cta-primary.is-hover {
+.landing-cta-primary:hover {
   transform: translateY(-1px);
   background: linear-gradient(135deg, #8eecff, ${C.cyan});
   box-shadow:
@@ -1012,8 +1009,7 @@ export const styles = `
     0 0 40px ${C.cyan}88,
     0 0 78px -8px ${C.cyan}55;
 }
-.landing-cta-primary:active,
-.landing-cta-primary.is-active {
+.landing-cta-primary:active {
   transform: translateY(0);
   background: linear-gradient(135deg, #a3f1ff, ${C.cyan});
   box-shadow:
