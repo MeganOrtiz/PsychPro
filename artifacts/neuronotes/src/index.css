@@ -586,7 +586,7 @@
 }
 
 /* Landing page exception. The marketing landing keeps the original
-   brain-in-clouds hero artwork (brain-clouds.png); only the in-app surfaces
+   brain-in-clouds hero artwork (brain-clouds.jpg); only the in-app surfaces
    — the main site and the EPPP suite — use the brainless teal-smoke backdrop
    (app-smoke.jpg) set on the base .study-page-bg::before rule above. The
    landing root carries BOTH .landing-root and .study-page-bg, so this
@@ -597,7 +597,7 @@
     radial-gradient(ellipse 130% 100% at 50% 34%,
       hsl(var(--surf-hue) 90% 7% / 0.00) 60%,
       hsl(var(--surf-hue) 93% 5% / 0.55) 100%),
-    url("./assets/bg/brain-clouds.png");
+    url("./assets/bg/brain-clouds.jpg");
 }
 
 /* Lesson detail header — wraps the title, category, description and counts
