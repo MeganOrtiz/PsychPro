@@ -331,9 +331,6 @@ export default function LandingPage() {
         {/* ============== EPPP MASTERY SUITE ============== */}
         <section id="mastery" className="landing-section landing-mastery" data-reveal>
           <div className="landing-mastery-card">
-            <div className="landing-mastery-icon">
-              <GraduationCap aria-hidden />
-            </div>
             <p className="landing-eyebrow">THE SYSTEM</p>
             <h2 className="landing-section-title">
               The PsychPro EPPP Mastery Suite&trade;
