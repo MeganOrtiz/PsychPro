@@ -70,7 +70,7 @@ import {
   deleteReflection,
   type ReflectionRecord,
 } from "@/lib/reflections";
-import smokeBg from "@/assets/bg/app-smoke.png";
+import smokeBg from "@/assets/bg/app-smoke.jpg";
 import EpppDashboardPage from "@/pages/eppp-dashboard";
 import { ResourcesContent } from "@/pages/resources";
 

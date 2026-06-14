@@ -517,7 +517,7 @@
      - static nebula glows via ::after
      - canonical glass card treatment (.bg-card descendants)
 
-   The in-app backdrop image is a single shared asset (assets/bg/app-smoke.png);
+   The in-app backdrop image is a single shared asset (assets/bg/app-smoke.jpg);
    replacing that one file re-skins every in-app page automatically. The
    marketing landing is the one exception — see the .landing-root override below.
 
@@ -531,8 +531,8 @@
   position: fixed;
   inset: 0;
   z-index: -2;
-  /* Full-bleed deep-cerulean teal-smoke backdrop (assets/bg/app-smoke.png,
-     a 941×1672 portrait artwork: billowing cyan/teal smoke clouds, no brain).
+  /* Full-bleed deep-cerulean teal-smoke backdrop (assets/bg/app-smoke.jpg,
+     a 2560×1441 landscape artwork: billowing cyan/teal smoke clouds, no brain).
      Anchored center-top with the clouds filling the viewport. Only a gentle
      corner vignette sits on top — NO center tame and NO hard edge darkening —
      so the image keeps its full color intensity and glow. Base color is a
@@ -542,7 +542,7 @@
     radial-gradient(ellipse 130% 100% at 50% 34%,
       hsl(var(--surf-hue) 90% 7% / 0.00) 60%,
       hsl(var(--surf-hue) 93% 5% / 0.55) 100%),
-    url("./assets/bg/app-smoke.png");
+    url("./assets/bg/app-smoke.jpg");
   background-size: cover, cover;
   background-position: center top, center top;
   background-repeat: no-repeat, no-repeat;
@@ -588,7 +588,7 @@
 /* Landing page exception. The marketing landing keeps the original
    brain-in-clouds hero artwork (brain-clouds.png); only the in-app surfaces
    — the main site and the EPPP suite — use the brainless teal-smoke backdrop
-   (app-smoke.png) set on the base .study-page-bg::before rule above. The
+   (app-smoke.jpg) set on the base .study-page-bg::before rule above. The
    landing root carries BOTH .landing-root and .study-page-bg, so this
    two-class selector outranks the base rule and restores the brain image
    while inheriting all other backdrop properties (size/position/etc.). */
