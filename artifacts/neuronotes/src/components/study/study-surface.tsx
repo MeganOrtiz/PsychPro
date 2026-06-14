@@ -66,7 +66,7 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
     case "light":
     default:
       // Refined translucent frosted glass matching the IMG_2548 reference:
-      // a dark-teal fill that lets the page's nebula backdrop show
+      // a dark-teal fill that lets the page's brain-clouds backdrop show
       // through, a faint cerulean hairline, and a soft drop shadow (no heavy
       // cyan halo). A real backdrop blur makes it read as frosted glass
       // rather than a flat opaque box.

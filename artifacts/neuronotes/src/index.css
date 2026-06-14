@@ -492,7 +492,7 @@
 .study-page-bg,
 .study-page-aurora {
   position: relative;
-  /* Transparent — the cinematic nebula image lives on the ::before
+  /* Transparent — the cinematic brain-clouds image lives on the ::before
      pseudo-element (z-index: -2). A solid background-color here would
      overpaint that image and leave the page dark. The page-bg color
      fallback is on the ::before itself. */
@@ -525,36 +525,55 @@
   position: fixed;
   inset: 0;
   z-index: -2;
-  /* Static full-bleed cerulean nebula backdrop. nebula-cerulean.png is a
-     high-resolution landscape image that fills the viewport via cover. On top:
-       1. a soft cyan radiance bloom (upper-center) so the page glows from within.
-       2. a LIGHT cerulean vignette that darkens only the extreme edges, just
-          enough to keep edge text readable — deliberately gentle so the vibrant
-          turquoise texture is NOT washed out (the previous heavy vignette, when
-          doubled by nested study-page-bg, read navy).
-     Base color is a deep cerulean floor. No motion — the backdrop is static. */
+  /* Cinematic full-bleed brain-clouds backdrop. The image is portrait
+     (576×1024) so on landscape viewports the clouds fan out edge-to-edge
+     via background-size:cover while the brain stays centered. A subtle
+     radial darkening sits on top to keep page text readable without
+     killing the ethereal cyan glow. */
+  /* Very light vignette only — let the cyan clouds glow through across
+     the whole viewport. Edges get a slight darken to keep CTA text
+     readable; the center is nearly transparent. */
+  /* Layered for DEPTH + INCANDESCENCE (2026-06-11):
+       1. a soft cyan radiance bloom over the brain (upper-center) so the
+          page glows from within — the ethereal, incandescent core.
+       2. a deep cerulean vignette that darkens the edges hard, pushing the
+          glowing center forward (depth perception).
+       3. the cinematic brain-clouds backdrop.
+     Base color is a near-black deep cerulean so the whole site reads as a
+     dark, radiant turquoise rather than the previous lifted/washed look. */
   background-image:
     radial-gradient(ellipse 62% 50% at 50% 40%,
-      rgba(118, 228, 247, 0.12) 0%,
-      rgba(104, 204, 222, 0.05) 36%,
+      rgba(118, 228, 247, 0.08) 0%,
+      rgba(104, 204, 222, 0.035) 36%,
       hsl(var(--surf-hue) 81% 17% / 0.00) 70%),
     radial-gradient(ellipse 150% 135% at 50% 48%,
-      hsl(var(--surf-hue) 81% 6% / 0.04) 0%,
-      hsl(var(--surf-hue) 81% 6% / 0.26) 60%,
-      hsl(var(--surf-hue) 90% 5% / 0.58) 100%),
-    url("./assets/bg/nebula-cerulean.png");
+      hsl(var(--surf-hue) 81% 6% / 0.24) 0%,
+      hsl(var(--surf-hue) 81% 6% / 0.60) 56%,
+      hsl(var(--surf-hue) 90% 4% / 0.92) 100%),
+    url("./assets/bg/brain-clouds.png");
+  /* Anchor center-center so the densest atmospheric cloud band — the
+     middle of the source image, right around the brain — fills the
+     viewport edge-to-edge on landscape. Top of the source (sparse
+     upper clouds) and very bottom (sparse trailing clouds) get cropped
+     off; the rich cyan smoke fills every pixel. */
   background-size: cover, cover, cover;
-  background-position: center, center, center;
+  background-position: center, center, center center;
   background-repeat: no-repeat, no-repeat, no-repeat;
   background-attachment: fixed, fixed, fixed;
   background-color: #05252d;
   pointer-events: none;
+  /* LIVING ATMOSPHERE (2026-06-13, Task #156): the smoke layer drifts very
+     slowly so the deep space behind the hero/dashboards reads alive instead of
+     flat. Only background-position animates (radiance + vignette stay centered),
+     so the readable floor never shifts. Gated by prefers-reduced-motion below. */
+  animation: atmosphere-smoke-drift 72s ease-in-out infinite;
 }
 
-/* Static additive nebula glow. Painted on the previously-unused ::after so the
-   floor (::before) stays untouched. Sits at z-index:-1 (above the floor, behind
-   all content) and is pure additive glow in the locked cerulean family — accent
-   rgba (hue 189) + hsl(var(--surf-hue)), no off-hue literals, no motion. */
+/* Drifting nebula glows + a gently breathing central radiance. Painted on the
+   previously-unused ::after so the static floor (::before) stays untouched. Sits
+   at z-index:-1 (above the floor, behind all content) and is pure additive glow
+   in the locked cerulean family — accent rgba (hue 189) + hsl(var(--surf-hue)),
+   no off-hue literals, no lift of the base surface lightness. */
 .study-page-bg::after,
 .study-page-aurora::after {
   content: "";
@@ -573,23 +592,61 @@
       rgba(118, 228, 247, 0.08) 0%,
       rgba(118, 228, 247, 0.00) 66%);
   background-repeat: no-repeat;
+  will-change: transform, opacity;
+  animation:
+    atmosphere-nebula-drift 58s ease-in-out infinite,
+    atmosphere-radiance-breathe 12s ease-in-out infinite;
 }
 
-/* Nested study-page-bg must NOT repaint the backdrop. Most pages render inside
-   AppLayout (which already paints study-page-bg) yet also carry study-page-bg
-   themselves so they work as standalone routes. When nested, suppress the inner
-   pseudo-elements so the fixed backdrop is painted exactly once — otherwise the
-   semi-transparent vignette stacks and the whole app reads navy (color drift),
-   and the doubled fixed layer leaves a faint seam at the top of the page. */
-.study-page-bg .study-page-bg::before,
-.study-page-bg .study-page-bg::after,
-.study-page-bg .study-page-aurora::before,
-.study-page-bg .study-page-aurora::after,
-.study-page-aurora .study-page-bg::before,
-.study-page-aurora .study-page-bg::after,
-.study-page-aurora .study-page-aurora::before,
-.study-page-aurora .study-page-aurora::after {
-  content: none;
+@keyframes atmosphere-smoke-drift {
+  0%,
+  100% {
+    background-position: center, center, 50% 50%;
+  }
+  50% {
+    background-position: center, center, 53% 46%;
+  }
+}
+
+@keyframes atmosphere-nebula-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1.02);
+  }
+  25% {
+    transform: translate3d(1.4%, -1.1%, 0) scale(1.05);
+  }
+  50% {
+    transform: translate3d(-1.2%, 1.4%, 0) scale(1.08);
+  }
+  75% {
+    transform: translate3d(-1.5%, -0.6%, 0) scale(1.05);
+  }
+}
+
+@keyframes atmosphere-radiance-breathe {
+  0%,
+  100% {
+    opacity: 0.82;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Reduced motion: keep the deep, glowing atmosphere but hold it perfectly
+   still (static-but-deep fallback). */
+@media (prefers-reduced-motion: reduce) {
+  .study-page-bg::before,
+  .study-page-aurora::before,
+  .study-page-bg::after,
+  .study-page-aurora::after {
+    animation: none;
+  }
+  .study-page-bg::after,
+  .study-page-aurora::after {
+    opacity: 0.92;
+  }
 }
 
 /* Lesson detail header — wraps the title, category, description and counts

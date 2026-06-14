@@ -44,7 +44,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { useQueries } from "@tanstack/react-query";
-import smokeBg from "@/assets/bg/nebula-cerulean.png";
+import smokeBg from "@/assets/bg/brain-clouds.png";
 import {
   useGetDashboardSummary,
   useGetTopics,

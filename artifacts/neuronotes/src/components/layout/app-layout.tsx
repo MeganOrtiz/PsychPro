@@ -8,7 +8,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { STUDY_PALETTE } from "@/lib/study-theme";
-import smokeBg from "@/assets/bg/nebula-cerulean.png";
+import smokeBg from "@/assets/bg/brain-clouds.png";
 
 type NavItem = { href: string; label: string; icon: React.ComponentType<{ className?: string }> };
 
@@ -180,7 +180,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
         style={{
           // CSS var consumed by NAV_ITEM_* tokens for the teal hover glow.
           ["--nav-glow" as never]: STUDY_PALETTE.surf,
-          // Match the Spotlight card's backdrop: the same nebula smoke
+          // Match the Spotlight card's backdrop: the same brain-clouds smoke
           // image painted inside with a dark gradient overlay, over the
           // StudySurface "dark" base gradient — so the smoky cloud continuum
           // bleeds through the sidebar exactly like it does through the card.
