@@ -524,30 +524,21 @@
   position: fixed;
   inset: 0;
   z-index: -2;
-  /* Cinematic full-bleed deep-cerulean nebula backdrop — a high-definition
-     1408×768 landscape image that fills the viewport edge-to-edge via
-     background-size:cover. Two overlays sit on top of it:
-       1. a deep-cerulean tame over the bright nebula core so the center reads
-          as glowing DEEP turquoise rather than a washed-out bright highlight
-          (the image already glows; we no longer add cyan brightness on top).
-       2. a deep cerulean vignette that darkens the edges hard for depth.
-     Base color is a near-black deep cerulean so the whole site reads as a
-     deep, radiant turquoise — not bright teal. */
+  /* Full-bleed deep-cerulean brain-in-clouds backdrop (assets/bg/brain-clouds.png,
+     a 941×1672 portrait artwork: a glowing cyan brain floating above billowing
+     deep-teal clouds). Anchored center-top so the brain sits near the top of the
+     viewport with the clouds filling the rest. Only a gentle corner vignette sits
+     on top — NO center tame and NO hard edge darkening — so the image keeps its
+     full color intensity and glow. Base color is a near-black deep cerulean that
+     matches the image's darkest clouds for a seamless letterbox on any aspect. */
   background-image:
-    radial-gradient(ellipse 70% 58% at 50% 44%,
-      hsl(var(--surf-hue) 90% 9% / 0.40) 0%,
-      hsl(var(--surf-hue) 90% 8% / 0.18) 45%,
-      hsl(var(--surf-hue) 90% 7% / 0.00) 75%),
-    radial-gradient(ellipse 150% 135% at 50% 48%,
-      hsl(var(--surf-hue) 91% 6% / 0.28) 0%,
-      hsl(var(--surf-hue) 91% 6% / 0.62) 56%,
-      hsl(var(--surf-hue) 96% 4% / 0.94) 100%),
+    radial-gradient(ellipse 130% 100% at 50% 34%,
+      hsl(var(--surf-hue) 90% 7% / 0.00) 60%,
+      hsl(var(--surf-hue) 93% 5% / 0.55) 100%),
     url("./assets/bg/brain-clouds.png");
-  /* Anchor center-center so the dense, glowing core of the nebula sits in the
-     middle of the viewport and the deep cerulean clouds frame the edges. */
-  background-size: cover, cover, cover;
-  background-position: center, center, center center;
-  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-size: cover, cover;
+  background-position: center top, center top;
+  background-repeat: no-repeat, no-repeat;
   /* NO background-attachment: fixed. The pseudo-element is already
      position:fixed; inset:0, so it is pinned to the viewport. Adding
      background-attachment:fixed on top is redundant AND makes the browser
@@ -556,7 +547,7 @@
      page on HiDPI / fractional-zoom displays. Leaving attachment at the
      default (scroll) paints the image within this fixed box — visually
      identical, no seam. */
-  background-attachment: scroll, scroll, scroll;
+  background-attachment: scroll, scroll;
   background-color: #05252d;
   pointer-events: none;
 }
