@@ -1082,12 +1082,12 @@ const styles = `
   align-items: center;
   gap: 12px;
   margin: 0 0 10px;
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 12.5px;
+  font-weight: 700;
   letter-spacing: 0.4em;
   padding-left: 0.4em;
-  color: ${C.cyan};
-  text-shadow: 0 0 16px ${C.cyan}66;
+  color: ${C.cyanSoft};
+  text-shadow: 0 0 18px ${C.cyan}88, 0 1px 12px hsl(var(--surf-hue) 92% 5% / 0.7);
 }
 .landing-eyebrow::before,
 .landing-eyebrow::after {
