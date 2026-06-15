@@ -566,19 +566,21 @@ export default function LandingPage() {
 
         {/* ============== FINAL CTA ============== */}
         <section className="landing-section landing-final" data-reveal>
-          <h2 className="landing-final-title">
-            Explore topics designed for real-world clinical application
-          </h2>
-          <div className="landing-cta-row landing-cta-row--center">
-            <button
-              type="button"
-              onClick={goToApp}
-              className="landing-cta landing-cta-primary"
-              data-testid="cta-final-join"
-            >
-              <span>GET STARTED FREE</span>
-              <ArrowRight className="landing-cta-icon" aria-hidden />
-            </button>
+          <div className="landing-final-card">
+            <h2 className="landing-final-title">
+              Explore topics designed for real-world clinical application
+            </h2>
+            <div className="landing-cta-row landing-cta-row--center">
+              <button
+                type="button"
+                onClick={goToApp}
+                className="landing-cta landing-cta-primary"
+                data-testid="cta-final-join"
+              >
+                <span>GET STARTED FREE</span>
+                <ArrowRight className="landing-cta-icon" aria-hidden />
+              </button>
+            </div>
           </div>
         </section>
 
@@ -1547,9 +1549,35 @@ const styles = `
 }
 
 /* ============== FINAL CTA ============== */
-.landing-final { text-align: center; max-width: 760px; padding-bottom: clamp(6px, 0.8vh, 10px); }
+.landing-final { text-align: center; max-width: 880px; padding-bottom: clamp(6px, 0.8vh, 10px); }
 .landing-topics { padding-top: clamp(6px, 0.8vh, 10px); }
+/* Glass panel around the closing CTA for readability over the nebula,
+   matching the mastery/system card recipe. */
+.landing-final-card {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  border-radius: 22px;
+  padding: clamp(30px, 4.4vw, 52px);
+  background: linear-gradient(150deg, hsl(var(--surf-hue) 88% 19% / 0.86), hsl(var(--surf-hue) 88% 14% / 0.90));
+  border: 1px solid ${C.hairlineStrong};
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  box-shadow: 0 36px 90px -40px rgba(0,0,0,0.75), 0 0 48px ${C.cyan}33, 0 0 0 1px ${C.cyan}22 inset;
+}
+.landing-final-card::before {
+  content: "";
+  position: absolute;
+  top: -45%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  height: 120%;
+  background: radial-gradient(circle, ${C.cyan}3a 0%, transparent 62%);
+  pointer-events: none;
+}
 .landing-final-title {
+  position: relative;
   margin: 0;
   font-family: "Outfit", "Inter", system-ui, sans-serif;
   font-weight: 300;
@@ -1558,6 +1586,7 @@ const styles = `
   color: #F4FBFF;
   text-shadow: 0 0 40px ${C.cyan}3a;
 }
+.landing-final-card .landing-cta-row { position: relative; }
 /* ============== ALL TOPICS ============== */
 .landing-topics-grid {
   display: grid;
