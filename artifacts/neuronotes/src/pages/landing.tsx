@@ -1120,8 +1120,8 @@ const styles = `
   font-size: clamp(14px, 1.05vw, 16.5px);
   line-height: 1.72;
   font-weight: 400;
-  color: rgba(225, 244, 250, 0.74);
-  text-shadow: 0 1px 10px hsl(var(--surf-hue) 92% 5% / 0.45);
+  color: rgba(244, 251, 255, 0.95);
+  text-shadow: 0 1px 14px hsl(var(--surf-hue) 92% 5% / 0.6);
 }
 
 /* ============== STUDY TOOLS / FEATURE CARDS ============== */
