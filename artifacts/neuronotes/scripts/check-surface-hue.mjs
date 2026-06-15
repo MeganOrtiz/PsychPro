@@ -32,6 +32,24 @@ const DETECT_HI = 210;
 const MAX_L = 0.5; // surfaces are dark (<45%); excludes bright cyan accents / light text
 const MIN_S = 0.2; // exclude near-neutrals
 
+// --- Accent-family guardrail (interactive button glow/edge) ---------------
+// Buttons across the app share one glowing-outline vibe whose accent is the
+// LOCKED cerulean #76E4F7 (hue ~189). The recurring drift is mint/green
+// (#5EEAD4 ≈ hue 170) creeping back into button borders, glows and fills.
+// This check flags any BRIGHT, saturated cyan/green-family color used inside a
+// button/CTA rule whose hue falls outside the cerulean accent window. Dark
+// surfaces (handled above), reds (destructive), and near-neutral whites are
+// ignored. Express button accents with rgba(118,228,247,A) (or #76E4F7).
+const ACCENT_LO = 184; // cerulean accent window (accent #76E4F7 ≈ 189)
+const ACCENT_HI = 200;
+const ACCENT_DETECT_LO = 120; // green … cyan (catches mint ~170)
+const ACCENT_DETECT_HI = 210;
+const ACCENT_MIN_S = 0.35; // saturated (excludes white inset highlights)
+const ACCENT_MIN_L = 0.5; // bright glow/edge colors (excludes dark fills)
+// Selectors that style an interactive button surface (flat rules in index.css).
+const BUTTON_SELECTOR =
+  /\.btn-glass|\.btn-link|button\.bg-|button\.border|\.landing-cta|\.landing-nav|button:not/;
+
 function rgbToHsl(r, g, b) {
   r /= 255; g /= 255; b /= 255;
   const mx = Math.max(r, g, b), mn = Math.min(r, g, b);
@@ -131,6 +149,75 @@ for (const file of walk(SRC, [])) {
         if (!isSurface(h, s, l)) continue;
         if (h < ALLOW_LO || h > ALLOW_HI) flag(rel, lineOf(fullLineBase, blk.start + m.index), m[0].trim() + " (token)", h);
       }
+    }
+  }
+}
+
+// --- Accent-family scan: button/CTA rules in index.css must glow cerulean ----
+const isAccent = (h, s, l) =>
+  l >= ACCENT_MIN_L && s > ACCENT_MIN_S && h >= ACCENT_DETECT_LO && h <= ACCENT_DETECT_HI;
+
+function flagAccent(file, line, raw, h) {
+  violations.push(
+    `${file}:${line}  ${raw}  (hue ${h.toFixed(1)} — interactive button accent must be cerulean ${ACCENT_LO}-${ACCENT_HI}; accent #76E4F7 ≈ 189, NEVER mint/green). ` +
+      `Use rgba(118, 228, 247, A) or #76E4F7.`,
+  );
+}
+
+function accentColorsIn(body) {
+  const out = [];
+  let m;
+  const rgba = /rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})/g;
+  while ((m = rgba.exec(body))) {
+    const [h, s, l] = rgbToHsl(+m[1], +m[2], +m[3]);
+    out.push({ raw: m[0] + ")", h, s, l, idx: m.index });
+  }
+  const hex = /#([0-9a-fA-F]{6})\b/g;
+  while ((m = hex.exec(body))) {
+    const x = m[1];
+    const [h, s, l] = rgbToHsl(parseInt(x.slice(0, 2), 16), parseInt(x.slice(2, 4), 16), parseInt(x.slice(4, 6), 16));
+    out.push({ raw: m[0], h, s, l, idx: m.index });
+  }
+  // literal hsl()/hsla() with a NUMERIC hue (skips hsl(var(--surf-hue) …))
+  const hsl = /hsla?\(\s*([\d.]+)(?:deg)?\s*[, ]\s*([\d.]+)%\s*[, ]\s*([\d.]+)%/g;
+  while ((m = hsl.exec(body))) {
+    out.push({ raw: m[0] + " …)", h: parseFloat(m[1]), s: parseFloat(m[2]) / 100, l: parseFloat(m[3]) / 100, idx: m.index });
+  }
+  return out;
+}
+
+// Scan a CSS string for button/CTA rules with off-family bright accent colors.
+// `cssText` may be a substring of `fullText` (e.g. a styled template literal),
+// with `baseOffset` its start index in `fullText` for correct line numbers.
+// `${…}` interpolations are blanked first (preserving indices) so the flat-rule
+// parser stays robust and only literal colors are inspected.
+function scanCssButtons(file, fullText, cssText, baseOffset) {
+  const safe = cssText.replace(/\$\{[^}]*\}/g, (mm) => " ".repeat(mm.length));
+  const rule = /([^{}@]+)\{([^{}]*)\}/g; // flat rules only; skips @media/@layer
+  let m;
+  while ((m = rule.exec(safe))) {
+    if (!BUTTON_SELECTOR.test(m[1])) continue;
+    const bodyStart = m.index + m[1].length + 1;
+    for (const c of accentColorsIn(m[2])) {
+      if (isAccent(c.h, c.s, c.l) && (c.h < ACCENT_LO || c.h > ACCENT_HI)) {
+        flagAccent(file, lineOf(fullText, baseOffset + bodyStart + c.idx), c.raw, c.h);
+      }
+    }
+  }
+}
+
+for (const file of walk(SRC, [])) {
+  const rel = path.relative(ROOT, file);
+  const text = fs.readFileSync(file, "utf8");
+  if (file.endsWith(".css")) {
+    scanCssButtons(rel, text, text, 0);
+  } else {
+    // .ts/.tsx — only scan CSS authored inside backtick template literals
+    // (e.g. landing.tsx `const styles = `…``); never raw JSX, to avoid braces.
+    const tpl = /`([^`]*)`/g;
+    let t;
+    while ((t = tpl.exec(text))) {
+      scanCssButtons(rel, text, t[1], t.index + 1);
     }
   }
 }

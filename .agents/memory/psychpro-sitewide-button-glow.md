@@ -17,4 +17,6 @@ Every button on PsychPro must glow on hover AND press, and read as glass.
 
 **Scope note:** landing page wrapper is `landing-root study-page-bg`, so the catch-all already covers landing. Nav items are `<div>`s (not buttons) — untouched by the catch-all by design.
 
+**Guardrail also enforces button COLOR family (not just surface hue).** `scripts/check-surface-hue.mjs` (run by the `surface-hue` workflow) has an accent-family pass: any BRIGHT, saturated cyan/green-family color (L≥0.5, S>0.35, hue 120–210) used inside a button/CTA rule must sit in the cerulean window [184,200] (accent #76E4F7 ≈ 189) — this catches mint #5EEAD4 (hue ~170) drifting back into button borders/glows. It scans flat button rules in `index.css` AND CSS authored in `.tsx` backtick template literals (e.g. `landing.tsx`); `${…}` interpolations are blanked first so only literal colors are inspected. Reds (destructive, hue ~0) and near-white insets (low S) are ignored.
+
 **Adaptive transparency:** delivered honestly via `backdrop-filter: blur() saturate()` on buttons and boxes (`.bg-card`, tiles, header boxes) — the blur samples whatever is behind, so the same recipe reads differently over dark vs light. CSS cannot truly measure background contrast; backdrop-filter is the real adaptive mechanism.
