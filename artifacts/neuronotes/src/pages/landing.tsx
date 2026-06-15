@@ -317,7 +317,7 @@ export default function LandingPage() {
             <button
               type="button"
               onClick={goToPlans}
-              className="landing-cta landing-cta-ghost"
+              className="landing-cta landing-cta-primary"
               data-testid="cta-explore-topics"
             >
               <Compass className="landing-cta-icon" aria-hidden />
