@@ -946,8 +946,8 @@ const styles = `
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.22em;
-  padding: 14px 28px;
-  border-radius: 8px;
+  padding: 15px 30px;
+  border-radius: 14px;
   cursor: pointer;
   transition: all 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -991,34 +991,53 @@ const styles = `
 .landing-cta-ghost .landing-cta-icon {
   filter: drop-shadow(0 0 5px ${C.cyan}99);
 }
-/* Primary CTA — filled cyan-teal gradient so the main action dominates. */
+/* Primary CTA — glowing cerulean OUTLINE (lit edge, translucent dark fill,
+   soft halo) so the main action reads "lit from within" and dominates via a
+   brighter edge + larger bloom than the ghost variant. */
 .landing-cta-primary {
-  background: linear-gradient(135deg, ${C.cyan}, ${C.cyanMid});
+  background:
+    linear-gradient(180deg, ${C.cyan}24, ${C.cyan}0d),
+    hsl(var(--surf-hue) 78% 8% / 0.66);
   border: 1.5px solid ${C.cyan};
-  color: #02181d;
+  color: #EAFBFF;
+  text-shadow: 0 0 12px ${C.cyan}aa;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.45),
-    0 10px 30px -10px ${C.cyan}bb,
-    0 0 26px ${C.cyan}55,
-    0 0 52px -8px ${C.cyan}44;
+    inset 0 1px 0 rgba(255,255,255,0.16),
+    0 0 0 1px ${C.cyan}55 inset,
+    0 0 24px ${C.cyan}66,
+    0 0 52px -6px ${C.cyan}55,
+    0 16px 44px -18px rgba(0,0,0,0.8);
 }
 .landing-cta-primary:hover {
   transform: translateY(-1px);
-  background: linear-gradient(135deg, #8eecff, ${C.cyan});
+  color: #ffffff;
+  border-color: #aef1ff;
+  background:
+    linear-gradient(180deg, ${C.cyan}33, ${C.cyan}14),
+    hsl(var(--surf-hue) 78% 9% / 0.6);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.55),
-    0 16px 42px -10px ${C.cyan}dd,
-    0 0 40px ${C.cyan}88,
-    0 0 78px -8px ${C.cyan}55;
+    inset 0 1px 0 rgba(255,255,255,0.24),
+    0 0 0 1px ${C.cyan}80 inset,
+    0 0 36px ${C.cyan}99,
+    0 0 78px -6px ${C.cyan}80,
+    0 20px 50px -18px rgba(0,0,0,0.85);
 }
 .landing-cta-primary:active {
   transform: translateY(0);
-  background: linear-gradient(135deg, #a3f1ff, ${C.cyan});
+  color: #ffffff;
+  border-color: #c6f6ff;
+  background:
+    linear-gradient(180deg, ${C.cyan}42, ${C.cyan}1c),
+    hsl(var(--surf-hue) 78% 10% / 0.55);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.60),
-    0 8px 26px -10px ${C.cyan}ee,
-    0 0 56px 2px ${C.cyan}b0,
-    0 0 98px -2px ${C.cyan}66;
+    inset 0 1px 0 rgba(255,255,255,0.30),
+    0 0 0 1px ${C.cyan}aa inset,
+    0 0 52px 2px ${C.cyan}b0,
+    0 0 100px -2px ${C.cyan}66,
+    0 10px 30px -16px rgba(0,0,0,0.9);
+}
+.landing-cta-primary .landing-cta-icon {
+  filter: drop-shadow(0 0 6px ${C.cyan}cc);
 }
 
 /* ============== HERO STAT STRIP ============== */
