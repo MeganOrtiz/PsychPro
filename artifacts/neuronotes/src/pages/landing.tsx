@@ -21,8 +21,9 @@ import {
 } from "lucide-react";
 import {
   ResponsiveContainer,
-  LineChart,
+  ComposedChart,
   Line,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -466,37 +467,50 @@ export default function LandingPage() {
               </div>
               <div className="landing-dash-chart">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart
+                  <ComposedChart
                     data={DASH_ACTIVITY}
                     margin={{ top: 8, right: 8, bottom: 0, left: -8 }}
                   >
+                    <defs>
+                      <linearGradient id="dashLineFill" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor={C.cyanDeep} stopOpacity={0.22} />
+                        <stop offset="100%" stopColor={C.cyanDeep} stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
                     <CartesianGrid
                       strokeDasharray="3 3"
-                      stroke="rgba(118,228,247,0.12)"
+                      stroke={C.grid}
                       vertical={false}
                     />
                     <XAxis
                       dataKey="day"
                       tickLine={false}
                       axisLine={false}
-                      tick={{ fontSize: 11, fill: C.mistSoft }}
+                      tick={{ fontSize: 11, fill: C.inkSoft }}
                     />
                     <YAxis
                       tickLine={false}
                       axisLine={false}
-                      tick={{ fontSize: 11, fill: C.mistSoft }}
+                      tick={{ fontSize: 11, fill: C.inkSoft }}
                       width={36}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="score"
+                      stroke="none"
+                      fill="url(#dashLineFill)"
+                      isAnimationActive={false}
                     />
                     <Line
                       type="monotone"
                       dataKey="score"
-                      stroke={C.cyan}
+                      stroke={C.cyanDeep}
                       strokeWidth={2.5}
-                      dot={{ r: 2.5, fill: C.cyanMid }}
+                      dot={{ r: 2.5, fill: C.cyanDeep }}
                       activeDot={{ r: 4 }}
                       isAnimationActive={false}
                     />
-                  </LineChart>
+                  </ComposedChart>
                 </ResponsiveContainer>
               </div>
             </div>
@@ -717,6 +731,9 @@ const C = {
   mistSoft: P.mistSoft,// #7FBFD0 — muted icy text (chart ticks)
   cyanMid: P.teal,     // #68CCDE
   cyanDeep: P.tealDeep,// #3196AF
+  ink: "#0b3b47",                  // deep cerulean ink — text on the white preview card
+  inkSoft: "rgba(11,59,71,0.58)",  // muted ink — chart ticks on white
+  grid: "rgba(11,59,71,0.10)",     // chart grid lines on white
   bg: "#082a33",
   bgPanel: "hsl(var(--surf-hue) 88% 19% / 0.82)",
   bgPanelStrong: "hsl(var(--surf-hue) 88% 14% / 0.90)",
@@ -1403,11 +1420,16 @@ const styles = `
   max-width: 420px;
   border-radius: 18px;
   padding: 22px 22px 16px;
-  background: linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.84), hsl(var(--surf-hue) 88% 14% / 0.90));
-  border: 1px solid ${C.hairlineStrong};
-  backdrop-filter: blur(18px) saturate(130%);
-  -webkit-backdrop-filter: blur(18px) saturate(130%);
-  box-shadow: 0 30px 70px -34px rgba(0,0,0,0.7), 0 0 34px ${C.cyan}14;
+  background: linear-gradient(157deg, #ffffff 0%, #f1fafd 52%, #e3f3fa 100%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow:
+    0 2px 4px hsl(var(--surf-hue) 74% 9% / 0.20),
+    0 16px 32px -14px hsl(var(--surf-hue) 74% 9% / 0.50),
+    0 54px 96px -40px rgba(0, 0, 0, 0.74),
+    0 0 0 1px rgba(49, 150, 175, 0.16),
+    0 0 80px -22px rgba(118, 228, 247, 0.60),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96),
+    inset 0 -34px 52px -36px rgba(49, 150, 175, 0.22);
 }
 .landing-dash-card-head {
   display: flex;
@@ -1418,15 +1440,15 @@ const styles = `
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: ${C.cyanSoft};
+  color: ${C.ink};
 }
-.landing-dash-card-icon { width: 18px; height: 18px; color: ${C.cyan}; }
+.landing-dash-card-icon { width: 18px; height: 18px; color: ${C.cyanDeep}; }
 .landing-dash-chart {
   height: 150px;
   margin: 0 -4px;
 }
 .landing-dash-chart .recharts-cartesian-axis-tick text {
-  fill: ${C.mistSoft};
+  fill: ${C.inkSoft};
 }
 
 /* Checklists */
