@@ -472,27 +472,27 @@ export default function LandingPage() {
                   >
                     <CartesianGrid
                       strokeDasharray="3 3"
-                      stroke={C.grid}
+                      stroke="rgba(118,228,247,0.12)"
                       vertical={false}
                     />
                     <XAxis
                       dataKey="day"
                       tickLine={false}
                       axisLine={false}
-                      tick={{ fontSize: 11, fill: C.inkSoft }}
+                      tick={{ fontSize: 11, fill: C.mistSoft }}
                     />
                     <YAxis
                       tickLine={false}
                       axisLine={false}
-                      tick={{ fontSize: 11, fill: C.inkSoft }}
+                      tick={{ fontSize: 11, fill: C.mistSoft }}
                       width={36}
                     />
                     <Line
                       type="monotone"
                       dataKey="score"
-                      stroke={C.cyanDeep}
+                      stroke={C.cyan}
                       strokeWidth={2.5}
-                      dot={{ r: 2.5, fill: C.cyanDeep }}
+                      dot={{ r: 2.5, fill: C.cyanMid }}
                       activeDot={{ r: 4 }}
                       isAnimationActive={false}
                     />
@@ -717,9 +717,6 @@ const C = {
   mistSoft: P.mistSoft,// #7FBFD0 — muted icy text (chart ticks)
   cyanMid: P.teal,     // #68CCDE
   cyanDeep: P.tealDeep,// #3196AF
-  ink: "#0b3b47",                  // deep cerulean ink (hue 192) — text on the white card
-  inkSoft: "rgba(11,59,71,0.58)",  // muted ink — chart ticks on white
-  grid: "rgba(11,59,71,0.10)",     // chart grid lines on white
   bg: "#082a33",
   bgPanel: "hsl(var(--surf-hue) 88% 19% / 0.82)",
   bgPanelStrong: "hsl(var(--surf-hue) 88% 14% / 0.90)",
@@ -1406,11 +1403,11 @@ const styles = `
   max-width: 420px;
   border-radius: 18px;
   padding: 22px 22px 16px;
-  background: linear-gradient(150deg, #ffffff, #eef9fc);
-  border: 1px solid rgba(49, 150, 175, 0.30);
+  background: linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.84), hsl(var(--surf-hue) 88% 14% / 0.90));
+  border: 1px solid ${C.hairlineStrong};
   backdrop-filter: blur(18px) saturate(130%);
   -webkit-backdrop-filter: blur(18px) saturate(130%);
-  box-shadow: 0 30px 70px -34px rgba(0,0,0,0.7), 0 0 40px ${C.cyan}33, 0 0 0 1px rgba(255,255,255,0.7) inset;
+  box-shadow: 0 30px 70px -34px rgba(0,0,0,0.7), 0 0 34px ${C.cyan}14;
 }
 .landing-dash-card-head {
   display: flex;
@@ -1421,15 +1418,15 @@ const styles = `
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: ${C.ink};
+  color: ${C.cyanSoft};
 }
-.landing-dash-card-icon { width: 18px; height: 18px; color: ${C.cyanDeep}; }
+.landing-dash-card-icon { width: 18px; height: 18px; color: ${C.cyan}; }
 .landing-dash-chart {
   height: 150px;
   margin: 0 -4px;
 }
 .landing-dash-chart .recharts-cartesian-axis-tick text {
-  fill: ${C.inkSoft};
+  fill: ${C.mistSoft};
 }
 
 /* Checklists */
