@@ -3,22 +3,16 @@ import type { ReactNode } from "react";
 import { useLocation } from "wouter";
 import { useGetUserProfile } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
+import { FullScreenLoader } from "@/components/full-screen-loader";
 import { RequireSignedIn } from "./require-signed-in";
 
 /**
- * Full-screen neutral loader shown while we resolve whether the signed-in user
- * still needs onboarding. Kept intentionally plain (no app chrome) so it works
- * both inside and outside AppLayout.
+ * Full-screen loader shown while we resolve whether the signed-in user still
+ * needs onboarding. Uses the shared FullScreenLoader so it matches the rest of
+ * the auth/onboarding flow (one continuous nebula backdrop, no app chrome).
  */
 function GateLoader() {
-  return (
-    <div
-      className="study-page-bg flex min-h-screen items-center justify-center"
-      data-testid="onboarding-gate-loading"
-    >
-      <p className="text-sm text-muted-foreground">Loading…</p>
-    </div>
-  );
+  return <FullScreenLoader testId="onboarding-gate-loading" />;
 }
 
 /**

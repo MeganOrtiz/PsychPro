@@ -515,6 +515,17 @@
   background-color: transparent;
 }
 
+/* Dark app floor — prevents white flashes during route/auth transitions.
+   The app is always dark (the auth pages and every .study-page-bg page), but
+   the default shadcn --background (light) lives on <body>; without this floor a
+   route swap can flash that light canvas for a frame, which reads as "choppy".
+   Matches the .study-page-bg::before base color so the handoff is seamless. */
+html,
+body,
+#root {
+  background-color: #05252d;
+}
+
 /* ============================================================
    CANONICAL APP SURFACE — DO NOT OVERRIDE PER-PAGE
    ============================================================

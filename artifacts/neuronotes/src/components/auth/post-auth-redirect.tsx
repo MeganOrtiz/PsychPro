@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useLocation } from "wouter";
 import { useGetUserProfile } from "@workspace/api-client-react";
 import { useEntitlements } from "@/lib/use-entitlements";
+import { FullScreenLoader } from "@/components/full-screen-loader";
 
 /**
  * Post-authentication landing resolver. Clerk redirects here after sign-in /
@@ -46,12 +47,5 @@ export function PostAuthRedirect() {
     navigate(goEppp ? "/eppp/suite" : "/dashboard", { replace: true });
   }, [profile, profileLoading, profileError, entitlements, entLoading, navigate]);
 
-  return (
-    <div
-      className="study-page-bg flex min-h-screen items-center justify-center"
-      data-testid="post-auth-redirect"
-    >
-      <p className="text-sm text-muted-foreground">Loading…</p>
-    </div>
-  );
+  return <FullScreenLoader testId="post-auth-redirect" />;
 }
