@@ -499,9 +499,6 @@ export default function LandingPage() {
                   </LineChart>
                 </ResponsiveContainer>
               </div>
-              <p className="landing-dash-note" aria-hidden>
-                Illustration
-              </p>
             </div>
           </div>
           <div className="landing-split-body landing-split-body--boxed">
@@ -529,11 +526,8 @@ export default function LandingPage() {
         <section id="scholar" className="landing-section landing-scholar" data-reveal>
           <div className="landing-scholar-card">
             <div className="landing-scholar-head">
-              <div className="landing-scholar-icon">
-                <Sparkles aria-hidden />
-              </div>
               <div>
-                <p className="landing-eyebrow landing-eyebrow--left">SCHOLAR TIER</p>
+                <p className="landing-eyebrow">SCHOLAR TIER</p>
                 <h2 className="landing-split-title landing-scholar-title">
                   Turn your own material into study tools
                 </h2>
@@ -725,7 +719,6 @@ const C = {
   cyanDeep: P.tealDeep,// #3196AF
   ink: "#0b3b47",                  // deep cerulean ink (hue 192) — text on the white card
   inkSoft: "rgba(11,59,71,0.58)",  // muted ink — chart ticks on white
-  inkFaint: "rgba(11,59,71,0.32)", // faint ink — note label on white
   grid: "rgba(11,59,71,0.10)",     // chart grid lines on white
   bg: "#082a33",
   bgPanel: "hsl(var(--surf-hue) 88% 19% / 0.82)",
@@ -1438,15 +1431,6 @@ const styles = `
 .landing-dash-chart .recharts-cartesian-axis-tick text {
   fill: ${C.inkSoft};
 }
-.landing-dash-note {
-  margin: 14px 0 0;
-  text-align: right;
-  font-size: 9.5px;
-  font-weight: 600;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: ${C.inkFaint};
-}
 
 /* Checklists */
 .landing-checklist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
@@ -1497,24 +1481,11 @@ const styles = `
 .landing-scholar-head {
   position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 16px;
+  text-align: center;
   margin-bottom: 8px;
 }
-.landing-scholar-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 52px;
-  height: 52px;
-  flex-shrink: 0;
-  border-radius: 14px;
-  background: ${C.cyan}18;
-  border: 1px solid ${C.cyan}55;
-  color: ${C.cyan};
-  box-shadow: 0 0 22px ${C.cyan}44;
-}
-.landing-scholar-icon svg { width: 24px; height: 24px; }
 .landing-scholar-title { margin: 4px 0 0; }
 .landing-scholar .landing-split-text { position: relative; max-width: 720px; }
 .landing-scholar .landing-checklist { position: relative; margin-bottom: clamp(22px, 3vh, 30px); }
