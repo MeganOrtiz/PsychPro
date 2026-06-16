@@ -516,13 +516,21 @@
 }
 
 /* Dark app floor — prevents white flashes during route/auth transitions.
-   The app is always dark (the auth pages and every .study-page-bg page), but
-   the default shadcn --background (light) lives on <body>; without this floor a
-   route swap can flash that light canvas for a frame, which reads as "choppy".
-   Matches the .study-page-bg::before base color so the handoff is seamless. */
-html,
-body,
-#root {
+   The shadcn --background token is LIGHT, and it lives on <body>; without this
+   floor a route swap flashes that light canvas for a frame, which reads as
+   "choppy". This sets body to the deep-cerulean floor instead.
+
+   CRITICAL — set this on <body> ONLY. Never add a background to <html> or
+   <#root>:
+     - The page backdrops (landing brain-clouds, in-app app-smoke) live on a
+       `position: fixed; z-index: -2` ::before. For those to show, body's
+       background must be PROPAGATED to the canvas (the bottom-most layer, behind
+       the negative-z ::before). The browser only propagates body's background
+       to the canvas when <html> has NO background of its own.
+     - Giving <html> (or the normal-flow <#root>) a background breaks that
+       propagation, so body's background paints in normal flow ON TOP of the
+       fixed ::before and wipes every page backdrop. */
+body {
   background-color: #05252d;
 }
 
