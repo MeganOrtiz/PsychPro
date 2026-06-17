@@ -71,15 +71,6 @@ import {
 
 const DAY_LABELS = ["S", "M", "T", "W", "T", "F", "S"];
 
-// Brand-family icon palettes — each tile gets a slightly different teal/surf
-// gradient so the recommended row feels cohesive instead of rainbow.
-const BRAND_TILES = [
-  { bg: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`, border: PALETTE.tealDeep },
-  { bg: `linear-gradient(135deg, ${PALETTE.tealDeep}, ${PALETTE.teal})`, border: PALETTE.tealDeep },
-  { bg: `linear-gradient(135deg, ${PALETTE.surfaceElev}, ${PALETTE.tealDeep})`, border: PALETTE.surfaceElev },
-  { bg: `linear-gradient(135deg, ${PALETTE.surf}, ${PALETTE.mist})`, border: PALETTE.teal },
-] as const;
-
 type RecentTopic = {
   id: number;
   topicId: number;
@@ -411,7 +402,6 @@ export default function DashboardPage() {
               ) : recommended.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {recommended.slice(0, 4).map((t, idx) => {
-                    const tile = BRAND_TILES[idx % BRAND_TILES.length];
                     const meta = [
                       { icon: Sparkles, hint: "Expand your knowledge" },
                       { icon: BookOpen, hint: "Strengthen your foundation" },
@@ -428,9 +418,12 @@ export default function DashboardPage() {
                       >
                         <div
                           className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 border transition-transform group-hover:scale-105"
-                          style={{ background: tile.bg, borderColor: tile.border }}
+                          style={{
+                            background: "rgba(118,228,247,0.1)",
+                            borderColor: "rgba(118,228,247,0.28)",
+                          }}
                         >
-                          <Icon className="w-4 h-4 text-white" />
+                          <Icon className="w-4 h-4" style={{ color: PALETTE.surf }} />
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-semibold truncate" style={{ color: PALETTE.mist }}>
