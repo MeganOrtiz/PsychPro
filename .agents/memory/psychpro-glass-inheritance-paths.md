@@ -27,3 +27,11 @@ gradients (`P.surface`/`P.bg` solid pairs) and low-alpha `rgba(94,176,200,...)`
 fills, then EXCLUDE buttons, chips/badges/icon tints, inputs/textareas, photo
 banners, skeleton bars, and page backdrops (#04080c) — those intentionally stay
 opaque. Canonical recipe = the `.bg-card` rule in index.css.
+
+**Cross-dashboard tile parity:** the main Dashboard "Recommended for You" tiles
+(`.recommended-tile`, index.css) and the EPPP dashboard "Progress by domain"
+tiles (`.epd-domain`, eppp-dashboard.tsx) must share the SAME resting glass
+recipe — owner wants both dashboards to feel identical. They were drifting
+(recommended-tile was lighter/glassier). Keep their base recipes in sync; do
+NOT fork into a dashboard-scoped class unless the owner explicitly asks for
+divergence (fragmenting the canonical glass is what this file warns against).

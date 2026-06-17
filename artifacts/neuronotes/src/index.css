@@ -656,47 +656,47 @@ body {
    cinematic surface. */
 .recommended-tile {
   background:
-    radial-gradient(120% 90% at 50% 0%,
-      rgba(118, 228, 247, 0.06) 0%,
-      rgba(118, 228, 247, 0.00) 60%),
+    radial-gradient(125% 80% at 50% 0%,
+      rgba(118, 228, 247, 0.10) 0%,
+      rgba(118, 228, 247, 0.00) 58%),
     linear-gradient(
       145deg,
-      hsl(var(--surf-hue) 88% 19% / 0.66),
-      hsl(var(--surf-hue) 90% 14% / 0.78)
+      hsl(var(--surf-hue) 88% 19% / 0.74),
+      hsl(var(--surf-hue) 88% 14% / 0.85)
     );
-  border-color: rgba(196, 232, 242, 0.20);
+  border-color: rgba(196, 232, 242, 0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    inset 0 0 30px -20px rgba(118, 228, 247, 0.4),
-    0 0 22px -3px rgba(118, 228, 247, 0.32),
-    0 8px 22px -16px rgba(0, 0, 0, 0.6);
+    inset 0 0 40px -22px rgba(118, 228, 247, 0.42),
+    0 0 24px -6px rgba(118, 228, 247, 0.28),
+    0 24px 60px -42px rgba(0, 0, 0, 0.72);
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .recommended-tile:hover {
   border-color: rgba(196, 232, 242, 0.38);
   background:
-    radial-gradient(120% 90% at 50% 0%,
-      rgba(118, 228, 247, 0.16) 0%,
-      rgba(118, 228, 247, 0.00) 60%),
+    radial-gradient(125% 80% at 50% 0%,
+      rgba(118, 228, 247, 0.14) 0%,
+      rgba(118, 228, 247, 0.00) 58%),
     linear-gradient(
       145deg,
-      hsl(var(--surf-hue) 86% 32% / 0.46),
-      hsl(var(--surf-hue) 90% 24% / 0.56)
+      hsl(var(--surf-hue) 86% 26% / 0.70),
+      hsl(var(--surf-hue) 89% 19% / 0.82)
     );
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    inset 0 0 34px -18px rgba(118, 228, 247, 0.5),
-    0 0 32px 0 rgba(118, 228, 247, 0.48),
-    0 12px 26px -16px rgba(0, 0, 0, 0.62);
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 0 40px -20px rgba(118, 228, 247, 0.46),
+    0 0 28px -8px rgba(118, 228, 247, 0.34),
+    0 26px 62px -40px rgba(0, 0, 0, 0.74);
 }
 .recommended-tile:active {
-  border-color: rgba(196, 232, 242, 0.48);
+  border-color: rgba(196, 232, 242, 0.44);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    0 0 38px 1px rgba(118, 228, 247, 0.56),
-    0 14px 30px -16px rgba(0, 0, 0, 0.65);
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 0 30px -6px rgba(118, 228, 247, 0.4),
+    0 18px 40px -28px rgba(0, 0, 0, 0.7);
 }
 
 /* Course Mastery tiles — dull and desaturated until the course's mastery
