@@ -19,7 +19,25 @@ export const pool = new Pool({
   max: Number(process.env.PG_POOL_MAX ?? 8),
   idleTimeoutMillis: 30_000,
   connectionTimeoutMillis: 10_000,
+  // Keep idle TCP connections alive. Serverless Postgres and connection
+  // proxies silently drop idle sockets, which surfaces as "Connection
+  // terminated unexpectedly" on the next query. TCP keepalive probes keep the
+  // socket warm so pooled clients stay usable between bursts of traffic.
+  keepAlive: true,
 });
+
+// A pooled client can emit 'error' while it is idle — e.g. the database or a
+// connection proxy drops an idle connection. pg surfaces this as an 'error'
+// event on the Pool; with no listener attached, Node treats it as an unhandled
+// error event and crashes the whole process. Log it and let the pool discard
+// the dead client: the next acquire transparently opens a fresh connection.
+pool.on("error", (err) => {
+  console.error(
+    "[db] idle pooled client error (connection will be recycled):",
+    err instanceof Error ? err.message : err,
+  );
+});
+
 export const db = drizzle(pool, { schema });
 
 export * from "./schema";
