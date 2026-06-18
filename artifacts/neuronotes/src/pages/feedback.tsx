@@ -141,7 +141,7 @@ export default function FeedbackPage() {
                   aria-pressed={selected}
                   style={{
                     backgroundImage:
-                      "linear-gradient(180deg, hsl(var(--surf-hue) 88% 19% / 0.82), hsl(var(--surf-hue) 88% 14% / 0.90))",
+                      "linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.90), hsl(var(--surf-hue) 88% 14% / 0.90))",
                   }}
                   className={`grow-0 shrink-0 basis-[calc(50%-0.25rem)] px-3 py-2.5 rounded-md border text-sm font-medium text-center text-foreground transition-all ${
                     selected

@@ -108,13 +108,9 @@ export default function TermsPage() {
         <nav
           className="mt-10 mb-12 rounded-lg p-5"
           style={{
-            border: "1px solid rgba(118,228,247,0.36)",
+            border: "1px solid rgba(118,228,247,0.18)",
             background:
-              "linear-gradient(180deg, hsl(var(--surf-hue) 88% 19% / 0.82), hsl(var(--surf-hue) 88% 14% / 0.90))",
-            backdropFilter: "blur(10px) saturate(140%)",
-            WebkitBackdropFilter: "blur(10px) saturate(140%)",
-            boxShadow:
-              "inset 0 0 0 1px rgba(118,228,247,0.14), 0 18px 36px -22px rgba(0,0,0,0.60), 0 0 26px rgba(118,228,247,0.24)",
+              "linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.69), hsl(var(--surf-hue) 88% 14% / 0.83))",
           }}
           aria-label="On this page"
         >
@@ -444,13 +440,9 @@ export default function TermsPage() {
             <div
               className="rounded-lg p-4 text-sm"
               style={{
-                border: "1px solid rgba(118,228,247,0.36)",
+                border: "1px solid rgba(118,228,247,0.18)",
                 background:
-              "linear-gradient(180deg, hsl(var(--surf-hue) 88% 19% / 0.82), hsl(var(--surf-hue) 88% 14% / 0.90))",
-                backdropFilter: "blur(10px) saturate(140%)",
-                WebkitBackdropFilter: "blur(10px) saturate(140%)",
-                boxShadow:
-              "inset 0 0 0 1px rgba(118,228,247,0.14), 0 18px 36px -22px rgba(0,0,0,0.60), 0 0 26px rgba(118,228,247,0.24)",
+              "linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.69), hsl(var(--surf-hue) 88% 14% / 0.83))",
                 color: P.cloud,
               }}
             >
@@ -591,13 +583,9 @@ export default function TermsPage() {
             <div
               className="rounded-lg p-4 text-sm"
               style={{
-                border: "1px solid rgba(118,228,247,0.36)",
+                border: "1px solid rgba(118,228,247,0.18)",
                 background:
-              "linear-gradient(180deg, hsl(var(--surf-hue) 88% 19% / 0.82), hsl(var(--surf-hue) 88% 14% / 0.90))",
-                backdropFilter: "blur(10px) saturate(140%)",
-                WebkitBackdropFilter: "blur(10px) saturate(140%)",
-                boxShadow:
-              "inset 0 0 0 1px rgba(118,228,247,0.14), 0 18px 36px -22px rgba(0,0,0,0.60), 0 0 26px rgba(118,228,247,0.24)",
+              "linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.69), hsl(var(--surf-hue) 88% 14% / 0.83))",
               }}
             >
               <p style={{ ...TRACK_NAV, fontSize: 11, color: P.cloud }}>

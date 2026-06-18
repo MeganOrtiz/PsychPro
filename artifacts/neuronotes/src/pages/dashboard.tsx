@@ -248,12 +248,12 @@ export default function DashboardPage() {
             className="rounded-xl p-4 mb-6 flex items-start gap-3 border"
             style={{
               background:
-                "linear-gradient(180deg, hsl(var(--surf-hue) 88% 19% / 0.82), hsl(var(--surf-hue) 88% 14% / 0.90))",
-              borderColor: "rgba(118,228,247,0.36)",
-              backdropFilter: "blur(10px) saturate(140%)",
-              WebkitBackdropFilter: "blur(10px) saturate(140%)",
+                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.16) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.83), hsl(var(--surf-hue) 88% 14% / 0.90))",
+              borderColor: "rgba(118,228,247,0.30)",
+              backdropFilter: "blur(18px) saturate(135%)",
+              WebkitBackdropFilter: "blur(18px) saturate(135%)",
               boxShadow:
-                "inset 0 0 0 1px rgba(118,228,247,0.14), 0 18px 36px -22px rgba(0,0,0,0.60), 0 0 26px rgba(118,228,247,0.24)",
+                "inset 0 1px 0 rgba(255,255,255,0.13), inset 0 0 44px -22px rgba(118,228,247,0.50), 0 0 32px -10px rgba(118,228,247,0.40), 0 20px 46px -26px rgba(0,0,0,0.66)",
             }}
             data-testid="banner-over-limit"
           >
@@ -286,12 +286,12 @@ export default function DashboardPage() {
             className="rounded-xl p-4 mb-6 flex items-start gap-3 border"
             style={{
               background:
-                "linear-gradient(180deg, hsl(var(--surf-hue) 88% 19% / 0.82), hsl(var(--surf-hue) 88% 14% / 0.90))",
-              borderColor: "rgba(118,228,247,0.36)",
-              backdropFilter: "blur(10px) saturate(140%)",
-              WebkitBackdropFilter: "blur(10px) saturate(140%)",
+                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.79), hsl(var(--surf-hue) 88% 14% / 0.90))",
+              borderColor: "rgba(118,228,247,0.26)",
+              backdropFilter: "blur(18px) saturate(135%)",
+              WebkitBackdropFilter: "blur(18px) saturate(135%)",
               boxShadow:
-                "inset 0 0 0 1px rgba(118,228,247,0.14), 0 18px 36px -22px rgba(0,0,0,0.60), 0 0 26px rgba(118,228,247,0.24)",
+                "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 42px -22px rgba(118,228,247,0.45), 0 0 30px -10px rgba(118,228,247,0.34), 0 20px 46px -26px rgba(0,0,0,0.66)",
             }}
             data-testid="banner-approaching-limit"
           >
@@ -385,7 +385,7 @@ export default function DashboardPage() {
             </StudySurface>
 
             {/* Recommended for You — 2x2 grid of 4 topics */}
-            <StudySurface tone="panel" glow innerClassName="p-5">
+            <StudySurface tone="light" glow innerClassName="p-5">
               <div className="mb-4">
                 <h2 className="font-semibold" style={{ color: PALETTE.mist, textShadow: "0 0 16px rgba(118,228,247,0.4)" }}>Recommended for You</h2>
                 <p className="text-xs mt-1" style={{ color: PALETTE.mistSoft }}>
@@ -604,7 +604,7 @@ export default function DashboardPage() {
           </StudySurface>
 
           {/* Recent Activity — most recently studied topics */}
-          <StudySurface tone="panel" innerClassName="p-5">
+          <StudySurface tone="light" innerClassName="p-5">
             <div className="flex items-center gap-2 mb-3">
               <Clock className="w-4 h-4" style={{ color: PALETTE.tealDeep }} />
               <h2 className="font-semibold" style={{ color: PALETTE.mist, textShadow: "0 0 16px rgba(118,228,247,0.4)" }}>Recent Activity</h2>

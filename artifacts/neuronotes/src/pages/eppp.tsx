@@ -184,18 +184,17 @@ const styles = `
   text-align: center;
   border-radius: 26px;
   padding: clamp(32px, 5vw, 64px) clamp(22px, 4vw, 56px);
-  /* CONTAINER backing (deeper/stronger) — the hero wraps the headline + CTA;
-     its own .eppp-hero-glow child supplies the radiance, so the surface stays
-     deep so nested standard tiles elsewhere on the page read as lifted. */
   background:
-    linear-gradient(180deg, hsl(var(--surf-hue) 88% 12% / 0.92), hsl(var(--surf-hue) 88% 7% / 0.96));
-  border: 1px solid rgba(118,228,247,0.28);
-  backdrop-filter: blur(16px) saturate(130%);
-  -webkit-backdrop-filter: blur(16px) saturate(130%);
+    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0.00) 58%),
+    linear-gradient(150deg, hsl(var(--surf-hue) 86% 21% / 0.78), hsl(var(--surf-hue) 88% 16% / 0.88));
+  border: 1px solid rgba(196,232,242,0.22);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.08),
-    0 24px 54px -28px rgba(0,0,0,0.85),
-    0 0 20px -8px rgba(118,228,247,0.12);
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 0 48px -24px rgba(118,228,247,0.45),
+    0 0 48px ${C.cyan}1c,
+    0 40px 100px -44px rgba(0,0,0,0.76);
 }
 .eppp-hero-glow {
   position: absolute;
@@ -318,18 +317,19 @@ const styles = `
   display: flex;
   flex-direction: column;
   gap: 10px;
-  border-radius: 16px;
+  border-radius: 18px;
   padding: clamp(20px, 2.4vw, 26px);
-  /* STANDARD tile — landing feature-card glass. */
   background:
-    linear-gradient(180deg, hsl(var(--surf-hue) 88% 19% / 0.82), hsl(var(--surf-hue) 88% 14% / 0.90));
-  border: 1px solid rgba(118,228,247,0.36);
-  backdrop-filter: blur(10px) saturate(140%);
-  -webkit-backdrop-filter: blur(10px) saturate(140%);
+    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
+    linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85));
+  border: 1px solid rgba(196,232,242,0.22);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
-    inset 0 0 0 1px rgba(118,228,247,0.14),
-    0 18px 36px -22px rgba(0,0,0,0.60),
-    0 0 26px rgba(118,228,247,0.24);
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 0 40px -22px rgba(118,228,247,0.42),
+    0 0 28px -6px rgba(118,228,247,0.30),
+    0 24px 60px -40px rgba(0,0,0,0.7);
 }
 .eppp-link-card {
   text-decoration: none;
@@ -338,8 +338,8 @@ const styles = `
 }
 .eppp-link-card:hover {
   transform: translateY(-3px);
-  border-color: rgba(118,228,247,0.55);
-  box-shadow: inset 0 0 0 1px rgba(118,228,247,0.22), 0 26px 48px -22px rgba(0,0,0,0.70), 0 0 32px rgba(118,228,247,0.40);
+  border-color: ${C.cyan}66;
+  box-shadow: 0 28px 70px -38px rgba(0,0,0,0.75), 0 0 30px -8px ${C.cyan}59;
 }
 .eppp-card-icon {
   display: inline-flex;

@@ -310,34 +310,32 @@
    .nav-glass-idle recipe: flat dark teal fill, faint cerulean hairline, soft
    cyan glow that intensifies on hover/active. */
 .btn-glass {
-  /* STANDARD tile glass — scaled to button size (smaller radius/drop, no card
-     padding). Icy text keeps it legible over the deep cerulean fill. */
-  background: linear-gradient(180deg, hsl(var(--surf-hue) 88% 19% / 0.82), hsl(var(--surf-hue) 88% 14% / 0.90));
-  border: 1.5px solid rgba(118, 228, 247, 0.36);
+  background: hsl(var(--surf-hue) 78% 30% / 0.30);
+  border: 1.5px solid rgba(118, 228, 247, 0.45);
   color: #eafaff;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
   box-shadow:
-    inset 0 0 0 1px rgba(118, 228, 247, 0.14),
-    0 10px 22px -14px rgba(0, 0, 0, 0.60),
-    0 0 18px rgba(118, 228, 247, 0.22),
+    0 0 16px rgba(118, 228, 247, 0.18),
+    0 0 40px -10px rgba(118, 228, 247, 0.22),
+    inset 0 0 18px -8px rgba(0, 0, 0, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 .btn-glass:hover {
-  background: linear-gradient(180deg, hsl(var(--surf-hue) 88% 22% / 0.86), hsl(var(--surf-hue) 88% 16% / 0.92));
-  border-color: rgba(118, 228, 247, 0.55);
-  transform: translateY(-1px);
+  background: hsl(var(--surf-hue) 76% 38% / 0.42);
+  border-color: rgba(118, 228, 247, 0.70);
   box-shadow:
-    inset 0 0 0 1px rgba(118, 228, 247, 0.22),
-    0 16px 30px -16px rgba(0, 0, 0, 0.70),
-    0 0 28px rgba(118, 228, 247, 0.36),
-    inset 0 1px 0 rgba(255, 255, 255, 0.10);
+    0 0 26px rgba(118, 228, 247, 0.45),
+    0 0 60px -10px rgba(118, 228, 247, 0.40),
+    inset 0 0 20px -8px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 .btn-glass:active {
-  background: linear-gradient(180deg, hsl(var(--surf-hue) 88% 26% / 0.90), hsl(var(--surf-hue) 88% 18% / 0.94));
+  background: hsl(var(--surf-hue) 74% 44% / 0.52);
   border-color: rgba(118, 228, 247, 0.85);
   box-shadow:
-    inset 0 0 0 1px rgba(118, 228, 247, 0.30),
-    0 0 40px rgba(118, 228, 247, 0.50),
+    0 0 36px rgba(118, 228, 247, 0.60),
+    0 0 80px -6px rgba(118, 228, 247, 0.50),
+    inset 0 0 22px -8px rgba(0, 0, 0, 0.36),
     inset 0 1px 0 rgba(255, 255, 255, 0.11);
 }
 /* Primary CTA — brighter luminous dark-glass mirroring the sidebar
@@ -657,32 +655,48 @@ body {
    landing-page atmosphere so the dashboard feels cut from the same
    cinematic surface. */
 .recommended-tile {
-  /* STANDARD tile — landing feature-card glass; reads as lifted inside the
-     deeper dashboard "panel" containers. */
   background:
-    linear-gradient(180deg, hsl(var(--surf-hue) 88% 19% / 0.82), hsl(var(--surf-hue) 88% 14% / 0.90));
-  border-color: rgba(118, 228, 247, 0.36);
-  backdrop-filter: blur(10px) saturate(140%);
-  -webkit-backdrop-filter: blur(10px) saturate(140%);
+    radial-gradient(125% 80% at 50% 0%,
+      rgba(118, 228, 247, 0.10) 0%,
+      rgba(118, 228, 247, 0.00) 58%),
+    linear-gradient(
+      145deg,
+      hsl(var(--surf-hue) 88% 19% / 0.74),
+      hsl(var(--surf-hue) 88% 14% / 0.85)
+    );
+  border-color: rgba(196, 232, 242, 0.22);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
-    inset 0 0 0 1px rgba(118, 228, 247, 0.14),
-    0 18px 36px -22px rgba(0, 0, 0, 0.60),
-    0 0 26px rgba(118, 228, 247, 0.24);
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 0 40px -22px rgba(118, 228, 247, 0.42),
+    0 0 24px -6px rgba(118, 228, 247, 0.28),
+    0 24px 60px -42px rgba(0, 0, 0, 0.72);
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .recommended-tile:hover {
-  border-color: rgba(118, 228, 247, 0.55);
+  border-color: rgba(196, 232, 242, 0.38);
+  background:
+    radial-gradient(125% 80% at 50% 0%,
+      rgba(118, 228, 247, 0.14) 0%,
+      rgba(118, 228, 247, 0.00) 58%),
+    linear-gradient(
+      145deg,
+      hsl(var(--surf-hue) 86% 26% / 0.70),
+      hsl(var(--surf-hue) 89% 19% / 0.82)
+    );
   box-shadow:
-    inset 0 0 0 1px rgba(118, 228, 247, 0.22),
-    0 26px 48px -22px rgba(0, 0, 0, 0.70),
-    0 0 32px rgba(118, 228, 247, 0.40);
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 0 40px -20px rgba(118, 228, 247, 0.46),
+    0 0 28px -8px rgba(118, 228, 247, 0.34),
+    0 26px 62px -40px rgba(0, 0, 0, 0.74);
 }
 .recommended-tile:active {
-  border-color: rgba(118, 228, 247, 0.5);
+  border-color: rgba(196, 232, 242, 0.44);
   box-shadow:
-    inset 0 0 0 1px rgba(118, 228, 247, 0.18),
-    0 0 30px rgba(118, 228, 247, 0.34),
-    0 18px 40px -28px rgba(0, 0, 0, 0.78);
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 0 30px -6px rgba(118, 228, 247, 0.4),
+    0 18px 40px -28px rgba(0, 0, 0, 0.7);
 }
 
 /* Course Mastery tiles — dull and desaturated until the course's mastery
@@ -755,7 +769,7 @@ body {
   align-items: center;
   justify-content: center;
   height: 40px;
-  border-radius: 14px;
+  border-radius: 8px;
   padding: 0 18px;
   font-weight: 600;
   font-size: 13px;
@@ -764,37 +778,36 @@ body {
   color: #eafdff;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
   cursor: pointer;
-  /* BUTTON GLASS — standard tile fill scaled to button size. */
-  border: 1.5px solid rgba(118, 228, 247, 0.36);
+  border: 1px solid rgba(118, 228, 247, 0.55);
   background: linear-gradient(
     180deg,
-    hsl(var(--surf-hue) 88% 19% / 0.82),
-    hsl(var(--surf-hue) 88% 14% / 0.90)
+    hsl(var(--surf-hue) 82% 38% / 0.40),
+    hsl(var(--surf-hue) 88% 22% / 0.50)
   );
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
   box-shadow:
-    inset 0 0 0 1px rgba(118, 228, 247, 0.14),
-    0 10px 22px -14px rgba(0, 0, 0, 0.60),
-    0 0 18px rgba(118, 228, 247, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 0 0 1px rgba(118, 228, 247, 0.28),
+    0 0 24px -2px rgba(118, 228, 247, 0.6),
+    0 0 46px -6px rgba(118, 228, 247, 0.4);
   transition: transform 0.2s ease, box-shadow 0.3s ease, border-color 0.2s ease,
     background 0.2s ease, color 0.2s ease;
 }
 .eppp-launch-btn:hover {
   transform: translateY(-1px);
   color: #ffffff;
-  border-color: rgba(118, 228, 247, 0.55);
+  border-color: rgba(118, 228, 247, 0.95);
   background: linear-gradient(
     180deg,
-    hsl(var(--surf-hue) 88% 22% / 0.86),
-    hsl(var(--surf-hue) 88% 16% / 0.92)
+    hsl(var(--surf-hue) 80% 44% / 0.52),
+    hsl(var(--surf-hue) 86% 26% / 0.60)
   );
   box-shadow:
-    inset 0 0 0 1px rgba(118, 228, 247, 0.22),
-    0 16px 30px -16px rgba(0, 0, 0, 0.70),
-    0 0 28px rgba(118, 228, 247, 0.40),
-    inset 0 1px 0 rgba(255, 255, 255, 0.10);
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 0 0 1px rgba(118, 228, 247, 0.45),
+    0 0 36px 0 rgba(118, 228, 247, 0.95),
+    0 0 70px -4px rgba(118, 228, 247, 0.6);
 }
 .eppp-launch-btn:active {
   transform: translateY(0);
@@ -844,16 +857,21 @@ body {
      outer cyan corona (radiance) over a deep drop shadow (depth). */
   background-image:
     linear-gradient(180deg,
-      hsl(var(--surf-hue) 88% 19% / 0.82),
-      hsl(var(--surf-hue) 88% 14% / 0.90));
-  border: 1px solid rgba(118, 228, 247, 0.36);
-  border-radius: 16px;
-  backdrop-filter: blur(10px) saturate(140%);
-  -webkit-backdrop-filter: blur(10px) saturate(140%);
+      rgba(255, 255, 255, 0.13) 0%,
+      rgba(255, 255, 255, 0.035) 22%,
+      rgba(255, 255, 255, 0.00) 55%),
+    linear-gradient(
+      160deg,
+      hsl(var(--surf-hue) 46% 16% / 0.48),
+      hsl(var(--surf-hue) 52% 9% / 0.66)
+    );
+  border: 1px solid rgba(118, 228, 247, 0.22);
+  border-radius: 22px;
+  backdrop-filter: blur(18px) saturate(118%);
+  -webkit-backdrop-filter: blur(18px) saturate(118%);
   box-shadow:
-    inset 0 0 0 1px rgba(118, 228, 247, 0.14),
-    0 18px 36px -22px rgba(0, 0, 0, 0.60),
-    0 0 26px rgba(118, 228, 247, 0.24);
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 18px 44px -26px rgba(0, 0, 0, 0.70);
 }
 
 /* Sidebar nav glass — frosted opaque dark-glass pills (2026-06 spec).
@@ -866,74 +884,79 @@ body {
    the nav tokens. */
 .nav-glass-idle,
 .nav-glass-active {
-  /* Match the landing-page CTA glass buttons: a translucent dark glass fill
-     with a subtle cyan top-tint, a bright solid cerulean (#76E4F7) outline,
-     and a soft cyan halo that intensifies idle → hover → active. The blur lets
-     the smoke sidebar backdrop read through the glass. */
-  backdrop-filter: blur(8px) saturate(140%);
-  -webkit-backdrop-filter: blur(8px) saturate(140%);
+  /* See-through glassmorphic panes: a low-opacity cerulean tint over a light
+     blur, so the smoke backdrop reads clearly through the glass (clear & glassy
+     rather than thick frost). Border glow ramps up on hover / press / active. */
+  backdrop-filter: blur(7px) saturate(135%);
+  -webkit-backdrop-filter: blur(7px) saturate(135%);
   transition: background 200ms ease, border-color 200ms ease,
-    box-shadow 240ms ease, transform 140ms ease, color 200ms ease;
+    box-shadow 240ms ease, transform 140ms ease;
 }
 .nav-glass-idle {
   background:
-    linear-gradient(180deg, rgba(118, 228, 247, 0.14), rgba(118, 228, 247, 0.05)),
-    hsl(var(--surf-hue) 78% 8% / 0.66);
-  border: 1.5px solid #76E4F7;
+    linear-gradient(
+      150deg,
+      hsl(var(--surf-hue) 80% 38% / 0.22),
+      hsl(var(--surf-hue) 84% 26% / 0.30)
+    );
+  border: 1px solid rgba(118, 228, 247, 0.3);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    inset 0 0 0 1px rgba(118, 228, 247, 0.33),
-    0 0 20px rgba(118, 228, 247, 0.40),
-    0 0 44px -8px rgba(118, 228, 247, 0.33),
-    0 14px 38px -20px rgba(0, 0, 0, 0.80);
+    0 0 14px rgba(118, 228, 247, 0.14),
+    inset 0 0 14px -6px rgba(118, 228, 247, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 .nav-glass-idle:hover {
-  transform: translateY(-1px);
-  border-color: #aef1ff;
   background:
-    linear-gradient(180deg, rgba(118, 228, 247, 0.20), rgba(118, 228, 247, 0.08)),
-    hsl(var(--surf-hue) 78% 9% / 0.60);
+    linear-gradient(
+      150deg,
+      hsl(var(--surf-hue) 78% 46% / 0.34),
+      hsl(var(--surf-hue) 82% 34% / 0.42)
+    );
+  border-color: rgba(118, 228, 247, 0.7);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.24),
-    inset 0 0 0 1px rgba(118, 228, 247, 0.50),
-    0 0 30px rgba(118, 228, 247, 0.60),
-    0 0 66px -8px rgba(118, 228, 247, 0.50),
-    0 18px 44px -20px rgba(0, 0, 0, 0.85);
+    0 0 0 1px rgba(118, 228, 247, 0.55),
+    0 0 22px 1px rgba(118, 228, 247, 0.5),
+    inset 0 0 18px -6px rgba(118, 228, 247, 0.36),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  transform: translateY(-1px);
 }
 .nav-glass-idle:active {
-  transform: translateY(0);
-  border-color: #c6f6ff;
   background:
-    linear-gradient(180deg, rgba(118, 228, 247, 0.26), rgba(118, 228, 247, 0.11)),
-    hsl(var(--surf-hue) 78% 10% / 0.55);
+    linear-gradient(
+      150deg,
+      hsl(var(--surf-hue) 76% 50% / 0.46),
+      hsl(var(--surf-hue) 80% 38% / 0.54)
+    );
+  border-color: rgba(118, 228, 247, 0.82);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.30),
-    inset 0 0 0 1px rgba(118, 228, 247, 0.66),
-    0 0 44px 2px rgba(118, 228, 247, 0.70),
-    0 0 90px -2px rgba(118, 228, 247, 0.40),
-    0 8px 26px -16px rgba(0, 0, 0, 0.90);
+    0 0 0 1.5px rgba(118, 228, 247, 0.72),
+    0 0 30px 2px rgba(118, 228, 247, 0.62),
+    inset 0 0 22px -6px rgba(118, 228, 247, 0.46),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  transform: translateY(0);
 }
 .nav-glass-active {
   background:
-    linear-gradient(180deg, rgba(118, 228, 247, 0.22), rgba(118, 228, 247, 0.09)),
-    hsl(var(--surf-hue) 78% 9% / 0.60);
-  border: 1.5px solid #aef1ff;
+    linear-gradient(
+      150deg,
+      hsl(var(--surf-hue) 76% 52% / 0.42),
+      hsl(var(--surf-hue) 80% 40% / 0.5)
+    );
+  border: 1px solid rgba(118, 228, 247, 0.72);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.22),
-    inset 0 0 0 1px rgba(118, 228, 247, 0.55),
-    0 0 30px rgba(118, 228, 247, 0.60),
-    0 0 64px -8px rgba(118, 228, 247, 0.50),
-    0 16px 40px -20px rgba(0, 0, 0, 0.82);
+    0 0 0 1px rgba(118, 228, 247, 0.6),
+    0 0 28px 1px rgba(118, 228, 247, 0.5),
+    inset 0 0 20px -6px rgba(118, 228, 247, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 .nav-glass-active:hover {
-  transform: translateY(-1px);
-  border-color: #c6f6ff;
+  border-color: rgba(118, 228, 247, 0.85);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.26),
-    inset 0 0 0 1px rgba(118, 228, 247, 0.66),
-    0 0 38px rgba(118, 228, 247, 0.68),
-    0 0 80px -6px rgba(118, 228, 247, 0.55),
-    0 18px 44px -20px rgba(0, 0, 0, 0.85);
+    0 0 0 1.5px rgba(118, 228, 247, 0.72),
+    0 0 32px 2px rgba(118, 228, 247, 0.6),
+    inset 0 0 24px -6px rgba(118, 228, 247, 0.46),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  transform: translateY(-1px);
 }
 .nav-glass-active::before {
   content: "";
@@ -996,39 +1019,40 @@ body {
 /* Secondary buttons — subtle luminous dark glass, scoped to actual buttons. */
 .study-page-bg button.bg-secondary,
 .study-page-aurora button.bg-secondary {
-  background: linear-gradient(180deg, hsl(var(--surf-hue) 88% 19% / 0.82), hsl(var(--surf-hue) 88% 14% / 0.90));
+  background: hsl(var(--surf-hue) 78% 30% / 0.30);
   color: #eafaff;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-  border: 1.5px solid rgba(118, 228, 247, 0.36);
+  border: 1.5px solid rgba(118, 228, 247, 0.45);
   border-radius: 14px;
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
   transition: all 0.2s ease;
   box-shadow:
-    inset 0 0 0 1px rgba(118, 228, 247, 0.14),
-    0 10px 22px -14px rgba(0, 0, 0, 0.60),
-    0 0 18px rgba(118, 228, 247, 0.22),
+    0 0 16px rgba(118, 228, 247, 0.18),
+    0 0 40px -10px rgba(118, 228, 247, 0.22),
+    inset 0 0 18px -8px rgba(0, 0, 0, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .study-page-bg button.bg-secondary:hover,
 .study-page-aurora button.bg-secondary:hover {
-  background: linear-gradient(180deg, hsl(var(--surf-hue) 88% 22% / 0.86), hsl(var(--surf-hue) 88% 16% / 0.92));
-  border-color: rgba(118, 228, 247, 0.55);
+  background: hsl(var(--surf-hue) 76% 38% / 0.42);
+  border-color: rgba(118, 228, 247, 0.70);
   box-shadow:
-    inset 0 0 0 1px rgba(118, 228, 247, 0.22),
-    0 16px 30px -16px rgba(0, 0, 0, 0.70),
-    0 0 28px rgba(118, 228, 247, 0.36),
-    inset 0 1px 0 rgba(255, 255, 255, 0.10);
+    0 0 26px rgba(118, 228, 247, 0.45),
+    0 0 60px -10px rgba(118, 228, 247, 0.40),
+    inset 0 0 20px -8px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .study-page-bg button.bg-secondary:active,
 .study-page-aurora button.bg-secondary:active {
-  background: linear-gradient(180deg, hsl(var(--surf-hue) 88% 26% / 0.90), hsl(var(--surf-hue) 88% 18% / 0.94));
+  background: hsl(var(--surf-hue) 74% 44% / 0.52);
   border-color: rgba(118, 228, 247, 0.85);
   box-shadow:
-    inset 0 0 0 1px rgba(118, 228, 247, 0.30),
-    0 0 40px rgba(118, 228, 247, 0.50),
+    0 0 36px rgba(118, 228, 247, 0.60),
+    0 0 80px -6px rgba(118, 228, 247, 0.50),
+    inset 0 0 22px -8px rgba(0, 0, 0, 0.36),
     inset 0 1px 0 rgba(255, 255, 255, 0.11);
 }
 

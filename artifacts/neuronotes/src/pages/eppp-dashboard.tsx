@@ -625,18 +625,17 @@ const styles = `
   position: relative;
   border-radius: 20px;
   padding: clamp(18px, 2vw, 24px);
-  /* CONTAINER backing (deeper/stronger) — wraps the nested .epd-domain /
-     .epd-next standard tiles and stat content so they read as lifted above
-     it. Restrained outer halo keeps the radiance on the tiles inside. */
   background:
-    linear-gradient(180deg, hsl(var(--surf-hue) 88% 12% / 0.92), hsl(var(--surf-hue) 88% 7% / 0.96));
-  border: 1px solid rgba(118,228,247,0.28);
-  backdrop-filter: blur(16px) saturate(130%);
-  -webkit-backdrop-filter: blur(16px) saturate(130%);
+    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
+    linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85));
+  border: 1px solid rgba(196,232,242,0.22);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.08),
-    0 24px 54px -28px rgba(0,0,0,0.85),
-    0 0 20px -8px rgba(118,228,247,0.12);
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 0 40px -22px rgba(118,228,247,0.42),
+    0 0 28px -6px rgba(118,228,247,0.30),
+    0 24px 60px -42px rgba(0,0,0,0.72);
 }
 .epd-card-label {
   display: inline-flex;
@@ -836,22 +835,26 @@ const styles = `
   border-radius: 16px;
   padding: 18px;
   text-decoration: none;
-  /* STANDARD tile — landing feature-card glass; reads as lifted over the page
-     backdrop / deeper container. */
   background:
-    linear-gradient(180deg, hsl(var(--surf-hue) 88% 19% / 0.82), hsl(var(--surf-hue) 88% 14% / 0.90));
-  border: 1px solid rgba(118,228,247,0.36);
-  backdrop-filter: blur(10px) saturate(140%);
-  -webkit-backdrop-filter: blur(10px) saturate(140%);
+    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
+    linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85));
+  border: 1px solid rgba(196,232,242,0.22);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
-    inset 0 0 0 1px rgba(118,228,247,0.14),
-    0 18px 36px -22px rgba(0,0,0,0.60),
-    0 0 26px rgba(118,228,247,0.24);
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 0 40px -22px rgba(118,228,247,0.42),
+    0 0 24px -6px rgba(118,228,247,0.28),
+    0 24px 60px -42px rgba(0,0,0,0.72);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
-.epd-domain:hover { transform: translateY(-3px); border-color: rgba(118,228,247,0.55); box-shadow: inset 0 0 0 1px rgba(118,228,247,0.22), 0 26px 48px -22px rgba(0,0,0,0.70), 0 0 32px rgba(118,228,247,0.40); }
-/* Mastered domains keep the canonical tile shell (no lighter/different
-   surface); mastery is signaled by the "Mastered" badge, not the tile. */
+.epd-domain:hover { transform: translateY(-3px); border-color: ${C.cyan}66; box-shadow: 0 22px 56px -38px rgba(0,0,0,0.7), 0 0 24px -10px ${C.cyan}59; }
+.epd-domain.is-mastered {
+  border-color: ${C.cyan}5e;
+  background:
+    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.16) 0%, rgba(118,228,247,0.00) 60%),
+    linear-gradient(145deg, hsl(var(--surf-hue) 85% 26% / 0.84), hsl(var(--surf-hue) 89% 19% / 0.90));
+}
 .epd-domain--loading { opacity: 0.85; }
 .epd-bar-fill--idle {
   display: block; height: 100%; width: 35%; border-radius: 999px;
@@ -897,20 +900,20 @@ const styles = `
   padding: 14px 16px;
   text-align: left;
   cursor: pointer;
-  /* STANDARD tile — landing feature-card glass; reads as lifted inside the
-     deeper .epd-card container. */
   background:
-    linear-gradient(180deg, hsl(var(--surf-hue) 88% 19% / 0.82), hsl(var(--surf-hue) 88% 14% / 0.90));
-  border: 1px solid rgba(118,228,247,0.36);
-  backdrop-filter: blur(10px) saturate(140%);
-  -webkit-backdrop-filter: blur(10px) saturate(140%);
+    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
+    linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85));
+  border: 1px solid rgba(196,232,242,0.22);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
-    inset 0 0 0 1px rgba(118,228,247,0.14),
-    0 18px 36px -22px rgba(0,0,0,0.60),
-    0 0 26px rgba(118,228,247,0.24);
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 0 38px -22px rgba(118,228,247,0.40),
+    0 0 22px -6px rgba(118,228,247,0.26),
+    0 24px 60px -42px rgba(0,0,0,0.72);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
-.epd-next:hover { transform: translateY(-3px); border-color: rgba(118,228,247,0.55); box-shadow: inset 0 0 0 1px rgba(118,228,247,0.22), 0 26px 48px -22px rgba(0,0,0,0.70), 0 0 32px rgba(118,228,247,0.40); }
+.epd-next:hover { transform: translateY(-2px); border-color: ${C.cyan}66; box-shadow: 0 0 24px -12px ${C.cyan}80; }
 .epd-next-icon {
   display: inline-flex; align-items: center; justify-content: center;
   width: 40px; height: 40px; flex-shrink: 0;
