@@ -39,3 +39,11 @@ already correct in source. Advise hard-refresh / republish before re-editing.
 **Dashboard layout note:** the dashboard grid uses `items-start` with exactly two
 children (left column div + spotlight `<aside>`), so the columns are already
 top-aligned in code — do not churn alignment.
+
+**Do NOT hand-build an approximation mock.** A hand-written `/__glass-preview` page with
+fake panels + hardcoded classes once "verified" nested tiles as "reads cleanly" — but it
+never reproduced the real nesting (a tile inside an already-`tone="light"` panel), so the
+flattened-hierarchy regression shipped. The surrogate must COPY the real component/JSX
+slice verbatim (mockup-extract or the verbatim-copy path above), with its real parents —
+not an approximation. If you can only check a recipe in isolation, label it exactly that
+("checked in isolation, NOT in the real dashboard"), never "verified."

@@ -47,5 +47,6 @@
 - [Mockup preview heavy images](mockup-preview-heavy-images.md) — large PNGs lose the load race and render blank (looks like a "crash"); quantize to PNG8 with magick + eager/fetchPriority; true white = server mid-restart.
 - [Chart/SVG literal colors](psychpro-chart-svg-literal-colors.md) — Recharts stroke/fill are SVG attributes; hsl(var(--surf-hue)) renders black there, so use literal hue-192 colors (guardrail still applies).
 - [study-page-bg horizontal seam](brain-clouds-bg-seam.md) — faint dead-straight full-width line over the bg = background-attachment:fixed on the already position:fixed ::before; set attachment:scroll (HiDPI-only, not a border/image defect).
+- [Dashboard tile hierarchy](psychpro-dashboard-tile-hierarchy.md) — "unify all tiles to one recipe" ≠ identical fill; a panel and the tiles nested inside it must keep a one-step elevation gap or hierarchy collapses; inventory every tile/state variant upfront.
 - [Route white-flash floor](psychpro-route-white-flash.md) — body resolves the LIGHT shadcn --background; keep a global dark floor + shared FullScreenLoader so route/auth swaps never flash white.
 - [DB pool/startup resilience](psychpro-db-pool-resilience.md) — DB cold-start timeouts + idle-socket drops are TRANSIENT; keep pool keepAlive+error handler and retry idempotent startup backfills with jittered backoff.
