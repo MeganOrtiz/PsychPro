@@ -907,20 +907,23 @@ const styles = `
   padding: 14px 16px;
   text-align: left;
   cursor: pointer;
+  /* Canonical dark-cerulean glass tile recipe — matches StudySurface "light"
+     and .epd-card / .epd-domain / .recommended-tile. */
   background:
-    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85));
-  border: 1px solid rgba(196,232,242,0.22);
-  backdrop-filter: blur(20px) saturate(135%);
-  -webkit-backdrop-filter: blur(20px) saturate(135%);
+    linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.00) 14%),
+    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 55%),
+    linear-gradient(145deg, hsl(var(--surf-hue) 86% 15% / 0.90), hsl(var(--surf-hue) 92% 9% / 0.95));
+  border: 1px solid rgba(118,228,247,0.26);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.12),
-    inset 0 0 38px -22px rgba(118,228,247,0.40),
-    0 0 22px -6px rgba(118,228,247,0.26),
-    0 24px 60px -42px rgba(0,0,0,0.72);
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    inset 0 0 42px -24px rgba(118,228,247,0.34),
+    0 0 28px -10px rgba(118,228,247,0.26),
+    0 24px 54px -28px rgba(0,0,0,0.82);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
-.epd-next:hover { transform: translateY(-2px); border-color: ${C.cyan}66; box-shadow: 0 0 24px -12px ${C.cyan}80; }
+.epd-next:hover { transform: translateY(-2px); border-color: ${C.cyan}6b; box-shadow: inset 0 1px 0 rgba(255,255,255,0.20), inset 0 0 42px -22px rgba(118,228,247,0.42), 0 0 32px -8px rgba(118,228,247,0.34), 0 26px 56px -28px rgba(0,0,0,0.84); }
 .epd-next-icon {
   display: inline-flex; align-items: center; justify-content: center;
   width: 40px; height: 40px; flex-shrink: 0;
