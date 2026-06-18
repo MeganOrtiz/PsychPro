@@ -655,48 +655,42 @@ body {
    landing-page atmosphere so the dashboard feels cut from the same
    cinematic surface. */
 .recommended-tile {
+  /* Canonical dark-cerulean glass tile recipe — matches StudySurface "light"
+     and .epd-card / .epd-domain so every dashboard tile reads identically. */
   background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.00) 14%),
     radial-gradient(125% 80% at 50% 0%,
       rgba(118, 228, 247, 0.10) 0%,
-      rgba(118, 228, 247, 0.00) 58%),
+      rgba(118, 228, 247, 0.00) 55%),
     linear-gradient(
       145deg,
-      hsl(var(--surf-hue) 88% 19% / 0.74),
-      hsl(var(--surf-hue) 88% 14% / 0.85)
+      hsl(var(--surf-hue) 86% 15% / 0.90),
+      hsl(var(--surf-hue) 92% 9% / 0.95)
     );
-  border-color: rgba(196, 232, 242, 0.22);
-  backdrop-filter: blur(20px) saturate(135%);
-  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  border-color: rgba(118, 228, 247, 0.26);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    inset 0 0 40px -22px rgba(118, 228, 247, 0.42),
-    0 0 24px -6px rgba(118, 228, 247, 0.28),
-    0 24px 60px -42px rgba(0, 0, 0, 0.72);
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 0 42px -24px rgba(118, 228, 247, 0.34),
+    0 0 28px -10px rgba(118, 228, 247, 0.26),
+    0 24px 54px -28px rgba(0, 0, 0, 0.82);
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .recommended-tile:hover {
-  border-color: rgba(196, 232, 242, 0.38);
-  background:
-    radial-gradient(125% 80% at 50% 0%,
-      rgba(118, 228, 247, 0.14) 0%,
-      rgba(118, 228, 247, 0.00) 58%),
-    linear-gradient(
-      145deg,
-      hsl(var(--surf-hue) 86% 26% / 0.70),
-      hsl(var(--surf-hue) 89% 19% / 0.82)
-    );
+  border-color: rgba(118, 228, 247, 0.42);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.14),
-    inset 0 0 40px -20px rgba(118, 228, 247, 0.46),
-    0 0 28px -8px rgba(118, 228, 247, 0.34),
-    0 26px 62px -40px rgba(0, 0, 0, 0.74);
+    inset 0 1px 0 rgba(255, 255, 255, 0.20),
+    inset 0 0 42px -22px rgba(118, 228, 247, 0.42),
+    0 0 32px -8px rgba(118, 228, 247, 0.34),
+    0 26px 56px -28px rgba(0, 0, 0, 0.84);
 }
 .recommended-tile:active {
-  border-color: rgba(196, 232, 242, 0.44);
+  border-color: rgba(118, 228, 247, 0.5);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    0 0 30px -6px rgba(118, 228, 247, 0.4),
-    0 18px 40px -28px rgba(0, 0, 0, 0.7);
+    0 0 30px -8px rgba(118, 228, 247, 0.4),
+    0 18px 40px -28px rgba(0, 0, 0, 0.78);
 }
 
 /* Course Mastery tiles — dull and desaturated until the course's mastery
@@ -884,79 +878,74 @@ body {
    the nav tokens. */
 .nav-glass-idle,
 .nav-glass-active {
-  /* See-through glassmorphic panes: a low-opacity cerulean tint over a light
-     blur, so the smoke backdrop reads clearly through the glass (clear & glassy
-     rather than thick frost). Border glow ramps up on hover / press / active. */
-  backdrop-filter: blur(7px) saturate(135%);
-  -webkit-backdrop-filter: blur(7px) saturate(135%);
+  /* Match the landing-page CTA glass buttons: a translucent dark glass fill
+     with a subtle cyan top-tint, a bright solid cerulean (#76E4F7) outline,
+     and a soft cyan halo that intensifies idle → hover → active. The blur lets
+     the smoke sidebar backdrop read through the glass. */
+  backdrop-filter: blur(8px) saturate(140%);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
   transition: background 200ms ease, border-color 200ms ease,
-    box-shadow 240ms ease, transform 140ms ease;
+    box-shadow 240ms ease, transform 140ms ease, color 200ms ease;
 }
 .nav-glass-idle {
   background:
-    linear-gradient(
-      150deg,
-      hsl(var(--surf-hue) 80% 38% / 0.22),
-      hsl(var(--surf-hue) 84% 26% / 0.30)
-    );
-  border: 1px solid rgba(118, 228, 247, 0.3);
+    linear-gradient(180deg, rgba(118, 228, 247, 0.14), rgba(118, 228, 247, 0.05)),
+    hsl(var(--surf-hue) 78% 8% / 0.66);
+  border: 1.5px solid #76E4F7;
   box-shadow:
-    0 0 14px rgba(118, 228, 247, 0.14),
-    inset 0 0 14px -6px rgba(118, 228, 247, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 0 0 1px rgba(118, 228, 247, 0.33),
+    0 0 20px rgba(118, 228, 247, 0.40),
+    0 0 44px -8px rgba(118, 228, 247, 0.33),
+    0 14px 38px -20px rgba(0, 0, 0, 0.80);
 }
 .nav-glass-idle:hover {
-  background:
-    linear-gradient(
-      150deg,
-      hsl(var(--surf-hue) 78% 46% / 0.34),
-      hsl(var(--surf-hue) 82% 34% / 0.42)
-    );
-  border-color: rgba(118, 228, 247, 0.7);
-  box-shadow:
-    0 0 0 1px rgba(118, 228, 247, 0.55),
-    0 0 22px 1px rgba(118, 228, 247, 0.5),
-    inset 0 0 18px -6px rgba(118, 228, 247, 0.36),
-    inset 0 1px 0 rgba(255, 255, 255, 0.14);
   transform: translateY(-1px);
+  border-color: #aef1ff;
+  background:
+    linear-gradient(180deg, rgba(118, 228, 247, 0.20), rgba(118, 228, 247, 0.08)),
+    hsl(var(--surf-hue) 78% 9% / 0.60);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.24),
+    inset 0 0 0 1px rgba(118, 228, 247, 0.50),
+    0 0 30px rgba(118, 228, 247, 0.60),
+    0 0 66px -8px rgba(118, 228, 247, 0.50),
+    0 18px 44px -20px rgba(0, 0, 0, 0.85);
 }
 .nav-glass-idle:active {
-  background:
-    linear-gradient(
-      150deg,
-      hsl(var(--surf-hue) 76% 50% / 0.46),
-      hsl(var(--surf-hue) 80% 38% / 0.54)
-    );
-  border-color: rgba(118, 228, 247, 0.82);
-  box-shadow:
-    0 0 0 1.5px rgba(118, 228, 247, 0.72),
-    0 0 30px 2px rgba(118, 228, 247, 0.62),
-    inset 0 0 22px -6px rgba(118, 228, 247, 0.46),
-    inset 0 1px 0 rgba(255, 255, 255, 0.14);
   transform: translateY(0);
+  border-color: #c6f6ff;
+  background:
+    linear-gradient(180deg, rgba(118, 228, 247, 0.26), rgba(118, 228, 247, 0.11)),
+    hsl(var(--surf-hue) 78% 10% / 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.30),
+    inset 0 0 0 1px rgba(118, 228, 247, 0.66),
+    0 0 44px 2px rgba(118, 228, 247, 0.70),
+    0 0 90px -2px rgba(118, 228, 247, 0.40),
+    0 8px 26px -16px rgba(0, 0, 0, 0.90);
 }
 .nav-glass-active {
   background:
-    linear-gradient(
-      150deg,
-      hsl(var(--surf-hue) 76% 52% / 0.42),
-      hsl(var(--surf-hue) 80% 40% / 0.5)
-    );
-  border: 1px solid rgba(118, 228, 247, 0.72);
+    linear-gradient(180deg, rgba(118, 228, 247, 0.22), rgba(118, 228, 247, 0.09)),
+    hsl(var(--surf-hue) 78% 9% / 0.60);
+  border: 1.5px solid #aef1ff;
   box-shadow:
-    0 0 0 1px rgba(118, 228, 247, 0.6),
-    0 0 28px 1px rgba(118, 228, 247, 0.5),
-    inset 0 0 20px -6px rgba(118, 228, 247, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 0 0 1px rgba(118, 228, 247, 0.55),
+    0 0 30px rgba(118, 228, 247, 0.60),
+    0 0 64px -8px rgba(118, 228, 247, 0.50),
+    0 16px 40px -20px rgba(0, 0, 0, 0.82);
 }
 .nav-glass-active:hover {
-  border-color: rgba(118, 228, 247, 0.85);
-  box-shadow:
-    0 0 0 1.5px rgba(118, 228, 247, 0.72),
-    0 0 32px 2px rgba(118, 228, 247, 0.6),
-    inset 0 0 24px -6px rgba(118, 228, 247, 0.46),
-    inset 0 1px 0 rgba(255, 255, 255, 0.16);
   transform: translateY(-1px);
+  border-color: #c6f6ff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.26),
+    inset 0 0 0 1px rgba(118, 228, 247, 0.66),
+    0 0 38px rgba(118, 228, 247, 0.68),
+    0 0 80px -6px rgba(118, 228, 247, 0.55),
+    0 18px 44px -20px rgba(0, 0, 0, 0.85);
 }
 .nav-glass-active::before {
   content: "";
