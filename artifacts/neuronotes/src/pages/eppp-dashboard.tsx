@@ -856,12 +856,8 @@ const styles = `
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
 .epd-domain:hover { transform: translateY(-3px); border-color: ${C.cyan}6b; box-shadow: inset 0 1px 0 rgba(255,255,255,0.20), inset 0 0 42px -22px rgba(118,228,247,0.42), 0 0 32px -8px rgba(118,228,247,0.34), 0 26px 56px -28px rgba(0,0,0,0.84); }
-.epd-domain.is-mastered {
-  border-color: ${C.cyan}5e;
-  background:
-    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.16) 0%, rgba(118,228,247,0.00) 60%),
-    linear-gradient(145deg, hsl(var(--surf-hue) 85% 26% / 0.84), hsl(var(--surf-hue) 89% 19% / 0.90));
-}
+/* Mastered domains keep the canonical tile shell (no lighter/different
+   surface); mastery is signaled by the "Mastered" badge, not the tile. */
 .epd-domain--loading { opacity: 0.85; }
 .epd-bar-fill--idle {
   display: block; height: 100%; width: 35%; border-radius: 999px;
