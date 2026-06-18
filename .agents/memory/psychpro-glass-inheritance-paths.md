@@ -28,6 +28,15 @@ fills, then EXCLUDE buttons, chips/badges/icon tints, inputs/textareas, photo
 banners, skeleton bars, and page backdrops (#04080c) — those intentionally stay
 opaque. Canonical recipe = the `.bg-card` rule in index.css.
 
+**Bespoke inline tiles use MORE THAN ONE legacy signature — grep for all:** a
+single grep misses pages. Known legacy families seen inline: (a) eppp-suite nav
+rail `rgba(196,232,242,0.x)` hairline + `145deg` fill (EXCLUDED — leave it);
+(b) quiz/reflections cards = `radial-gradient(125% 80%...) , linear-gradient(145deg, ...19%/0.79, ...14%/0.90)` + `rgba(118,228,247,0.24)` border + `blur(18px)`;
+(c) privacy/terms TOC + contact/DMCA boxes = `linear-gradient(145deg, ...19%/0.69, ...14%/0.83)` + `border 0.18`, no shadow/backdrop. All of (b)/(c) are in-scope
+tiles → convert to the STANDARD landing recipe (180deg 0.82/0.90, border 0.36,
+blur(10) saturate(140), inset+drop+halo shadow). Sweep by grepping `145deg`
+across `pages/` (not just one hairline color), then exclude only `.eps-kb-rail*`.
+
 **Cross-dashboard tile parity:** the main Dashboard "Recommended for You" tiles
 (`.recommended-tile`, index.css) and the EPPP dashboard "Progress by domain"
 tiles (`.epd-domain`, eppp-dashboard.tsx) must share the SAME resting glass

@@ -472,13 +472,13 @@ export default function PracticeExamPage({ params }: Props) {
           <section
             className="rounded-2xl border p-6 shadow-sm"
             style={{
-              borderColor: "rgba(118,228,247,0.26)",
+              borderColor: "rgba(118,228,247,0.36)",
               background:
-                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.81), hsl(var(--surf-hue) 88% 14% / 0.90))",
-              backdropFilter: "blur(20px) saturate(135%)",
-              WebkitBackdropFilter: "blur(20px) saturate(135%)",
+                "linear-gradient(180deg, hsl(var(--surf-hue) 88% 19% / 0.82), hsl(var(--surf-hue) 88% 14% / 0.90))",
+              backdropFilter: "blur(10px) saturate(140%)",
+              WebkitBackdropFilter: "blur(10px) saturate(140%)",
               boxShadow:
-                "inset 0 1px 0 rgba(255,255,255,0.13), inset 0 0 44px -22px rgba(118,228,247,0.48), 0 0 32px -10px rgba(118,228,247,0.38), 0 22px 50px -26px rgba(0,0,0,0.7)",
+                "inset 0 0 0 1px rgba(118,228,247,0.14), 0 18px 36px -22px rgba(0,0,0,0.60), 0 0 26px rgba(118,228,247,0.24)",
             }}
           >
             <header className="flex items-start gap-3 mb-3">

@@ -1014,16 +1014,17 @@ const styles = `
   position: relative;
   border-radius: 20px;
   overflow: hidden;
+  /* CONTAINER backing (deeper/stronger) — wraps the nested .ob-tile option
+     tiles so they read as lifted above it. */
   background:
-    radial-gradient(130% 90% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0) 60%),
-    linear-gradient(150deg, hsl(var(--surf-hue) 83% 28% / 0.55), hsl(var(--surf-hue) 85% 25% / 0.66));
-  border: 1px solid rgba(118,228,247,0.26);
-  backdrop-filter: blur(20px) saturate(135%);
-  -webkit-backdrop-filter: blur(20px) saturate(135%);
+    linear-gradient(180deg, hsl(var(--surf-hue) 88% 12% / 0.92), hsl(var(--surf-hue) 88% 7% / 0.96));
+  border: 1px solid rgba(118,228,247,0.28);
+  backdrop-filter: blur(16px) saturate(130%);
+  -webkit-backdrop-filter: blur(16px) saturate(130%);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.12),
-    0 30px 70px -34px rgba(0,0,0,0.7),
-    0 0 60px -30px ${P.surf}88;
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 24px 54px -28px rgba(0,0,0,0.85),
+    0 0 20px -8px rgba(118,228,247,0.12);
 }
 .ob-card > * { position: relative; z-index: 1; }
 .ob-card-sheen {

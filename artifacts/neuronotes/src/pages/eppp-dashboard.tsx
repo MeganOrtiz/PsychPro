@@ -625,21 +625,18 @@ const styles = `
   position: relative;
   border-radius: 20px;
   padding: clamp(18px, 2vw, 24px);
-  /* Match the main Dashboard panels (StudySurface "light") so big cards read
-     identically across both dashboards: a top white sheen, a faint cyan
-     top-bloom, over a deep cerulean glass base with a soft (not heavy) halo. */
+  /* CONTAINER backing (deeper/stronger) — wraps the nested .epd-domain /
+     .epd-next standard tiles and stat content so they read as lifted above
+     it. Restrained outer halo keeps the radiance on the tiles inside. */
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.00) 14%),
-    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 55%),
-    linear-gradient(145deg, hsl(var(--surf-hue) 86% 15% / 0.90), hsl(var(--surf-hue) 92% 9% / 0.95));
-  border: 1px solid rgba(118,228,247,0.26);
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
+    linear-gradient(180deg, hsl(var(--surf-hue) 88% 12% / 0.92), hsl(var(--surf-hue) 88% 7% / 0.96));
+  border: 1px solid rgba(118,228,247,0.28);
+  backdrop-filter: blur(16px) saturate(130%);
+  -webkit-backdrop-filter: blur(16px) saturate(130%);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.18),
-    inset 0 0 42px -24px rgba(118,228,247,0.34),
-    0 0 28px -10px rgba(118,228,247,0.26),
-    0 24px 54px -28px rgba(0,0,0,0.82);
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 24px 54px -28px rgba(0,0,0,0.85),
+    0 0 20px -8px rgba(118,228,247,0.12);
 }
 .epd-card-label {
   display: inline-flex;
@@ -839,23 +836,20 @@ const styles = `
   border-radius: 16px;
   padding: 18px;
   text-decoration: none;
-  /* Canonical dark-cerulean glass tile recipe — matches StudySurface "light"
-     and .epd-card / .recommended-tile so every dashboard tile reads alike. */
+  /* STANDARD tile — landing feature-card glass; reads as lifted over the page
+     backdrop / deeper container. */
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.00) 14%),
-    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 55%),
-    linear-gradient(145deg, hsl(var(--surf-hue) 86% 15% / 0.90), hsl(var(--surf-hue) 92% 9% / 0.95));
-  border: 1px solid rgba(118,228,247,0.26);
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
+    linear-gradient(180deg, hsl(var(--surf-hue) 88% 19% / 0.82), hsl(var(--surf-hue) 88% 14% / 0.90));
+  border: 1px solid rgba(118,228,247,0.36);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.18),
-    inset 0 0 42px -24px rgba(118,228,247,0.34),
-    0 0 28px -10px rgba(118,228,247,0.26),
-    0 24px 54px -28px rgba(0,0,0,0.82);
+    inset 0 0 0 1px rgba(118,228,247,0.14),
+    0 18px 36px -22px rgba(0,0,0,0.60),
+    0 0 26px rgba(118,228,247,0.24);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
-.epd-domain:hover { transform: translateY(-3px); border-color: ${C.cyan}6b; box-shadow: inset 0 1px 0 rgba(255,255,255,0.20), inset 0 0 42px -22px rgba(118,228,247,0.42), 0 0 32px -8px rgba(118,228,247,0.34), 0 26px 56px -28px rgba(0,0,0,0.84); }
+.epd-domain:hover { transform: translateY(-3px); border-color: rgba(118,228,247,0.55); box-shadow: inset 0 0 0 1px rgba(118,228,247,0.22), 0 26px 48px -22px rgba(0,0,0,0.70), 0 0 32px rgba(118,228,247,0.40); }
 /* Mastered domains keep the canonical tile shell (no lighter/different
    surface); mastery is signaled by the "Mastered" badge, not the tile. */
 .epd-domain--loading { opacity: 0.85; }
@@ -903,23 +897,20 @@ const styles = `
   padding: 14px 16px;
   text-align: left;
   cursor: pointer;
-  /* Canonical dark-cerulean glass tile recipe — matches StudySurface "light"
-     and .epd-card / .epd-domain / .recommended-tile. */
+  /* STANDARD tile — landing feature-card glass; reads as lifted inside the
+     deeper .epd-card container. */
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.00) 14%),
-    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 55%),
-    linear-gradient(145deg, hsl(var(--surf-hue) 86% 15% / 0.90), hsl(var(--surf-hue) 92% 9% / 0.95));
-  border: 1px solid rgba(118,228,247,0.26);
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
+    linear-gradient(180deg, hsl(var(--surf-hue) 88% 19% / 0.82), hsl(var(--surf-hue) 88% 14% / 0.90));
+  border: 1px solid rgba(118,228,247,0.36);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.18),
-    inset 0 0 42px -24px rgba(118,228,247,0.34),
-    0 0 28px -10px rgba(118,228,247,0.26),
-    0 24px 54px -28px rgba(0,0,0,0.82);
+    inset 0 0 0 1px rgba(118,228,247,0.14),
+    0 18px 36px -22px rgba(0,0,0,0.60),
+    0 0 26px rgba(118,228,247,0.24);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
-.epd-next:hover { transform: translateY(-2px); border-color: ${C.cyan}6b; box-shadow: inset 0 1px 0 rgba(255,255,255,0.20), inset 0 0 42px -22px rgba(118,228,247,0.42), 0 0 32px -8px rgba(118,228,247,0.34), 0 26px 56px -28px rgba(0,0,0,0.84); }
+.epd-next:hover { transform: translateY(-3px); border-color: rgba(118,228,247,0.55); box-shadow: inset 0 0 0 1px rgba(118,228,247,0.22), 0 26px 48px -22px rgba(0,0,0,0.70), 0 0 32px rgba(118,228,247,0.40); }
 .epd-next-icon {
   display: inline-flex; align-items: center; justify-content: center;
   width: 40px; height: 40px; flex-shrink: 0;

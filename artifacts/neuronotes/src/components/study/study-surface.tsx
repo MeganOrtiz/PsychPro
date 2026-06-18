@@ -63,21 +63,35 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
           "inset 0 1px 0 rgba(255,255,255,0.16), inset 0 0 54px -24px rgba(118,228,247,0.56), 0 0 36px -10px rgba(118,228,247,0.44), 0 22px 54px -26px rgba(0,0,0,0.66)",
         color: "#FFFFFF",
       };
-    case "light":
-    default:
-      // Refined translucent frosted glass matching the IMG_2548 reference:
-      // a dark-teal fill that lets the page's brain-clouds backdrop show
-      // through, a faint cerulean hairline, and a soft drop shadow (no heavy
-      // cyan halo). A real backdrop blur makes it read as frosted glass
-      // rather than a flat opaque box.
+    case "panel":
+      // CONTAINER backing — a DEEPER/stronger version of the standard tile so
+      // the nested standard tiles (lighter + cyan halo) read as lifted above
+      // it. Restrained outer halo keeps the radiance on the tiles inside, not
+      // on the wrapper. (One family, one-step elevation.)
       return {
         background:
-          "linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.00) 14%), radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 55%), linear-gradient(145deg, hsl(var(--surf-hue) 86% 15% / 0.90), hsl(var(--surf-hue) 92% 9% / 0.95))",
-        borderColor: "rgba(118,228,247,0.26)",
-        backdropFilter: "blur(20px) saturate(140%)",
-        WebkitBackdropFilter: "blur(20px) saturate(140%)",
+          "linear-gradient(180deg, hsl(var(--surf-hue) 88% 12% / 0.92), hsl(var(--surf-hue) 88% 7% / 0.96))",
+        borderColor: "rgba(118,228,247,0.28)",
+        backdropFilter: "blur(16px) saturate(130%)",
+        WebkitBackdropFilter: "blur(16px) saturate(130%)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.18), inset 0 0 42px -24px rgba(118,228,247,0.34), 0 0 28px -10px rgba(118,228,247,0.26), 0 24px 54px -28px rgba(0,0,0,0.82)",
+          "inset 0 1px 0 rgba(255,255,255,0.08), 0 24px 54px -28px rgba(0,0,0,0.85), 0 0 20px -8px rgba(118,228,247,0.12)",
+        color: P.mist,
+      };
+    case "light":
+    default:
+      // STANDARD TILE = the landing feature-card glass recipe: a translucent
+      // deep-cerulean gradient (lighter at top → deeper at bottom), a soft
+      // cerulean hairline, an inner cyan ring, a dark drop shadow and a cyan
+      // outer halo so the tile reads as lifted glass over the backdrop.
+      return {
+        background:
+          "linear-gradient(180deg, hsl(var(--surf-hue) 88% 19% / 0.82), hsl(var(--surf-hue) 88% 14% / 0.90))",
+        borderColor: "rgba(118,228,247,0.36)",
+        backdropFilter: "blur(10px) saturate(140%)",
+        WebkitBackdropFilter: "blur(10px) saturate(140%)",
+        boxShadow:
+          "inset 0 0 0 1px rgba(118,228,247,0.14), 0 18px 36px -22px rgba(0,0,0,0.60), 0 0 26px rgba(118,228,247,0.24)",
         color: P.mist,
       };
   }

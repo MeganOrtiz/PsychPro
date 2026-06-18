@@ -53,4 +53,4 @@ export const STUDY_PALETTE = {
   inkSoft: "#A9C6CF",     // muted text (text-muted)
 } as const;
 
-export type StudyTone = "light" | "dark" | "accent" | "card-front";
+export type StudyTone = "light" | "dark" | "accent" | "card-front" | "panel";
