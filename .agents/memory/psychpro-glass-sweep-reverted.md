@@ -31,8 +31,12 @@ unification. If asked to improve dashboard look, preserve real tonal hierarchy
 (distinct weights for container vs nested card vs button) and verify on the
 logged-in screens, not proxies.
 
-**How it was reverted:** restored the 18 changed files under
-`artifacts/neuronotes/src/` to baseline commit `1ab581c` (the Published state
-just before the Plan→Build transition that started the sweep) via
-`git show 1ab581c:<path>` + write. The deeper design history before that point
-(glowing-outline buttons, deepened cerulean stack) was left intact.
+**How it was reverted:** restored the changed files under
+`artifacts/neuronotes/src/` to the Published baseline captured just before the
+Plan→Build transition that started the sweep (via `git show <baseline>:<path>` +
+write). The deeper design history before that point (glowing-outline buttons,
+deepened cerulean stack) was left intact.
+
+**Update:** a later, DIFFERENT request DID unify main-site cards — but onto the
+already-approved EPPP `.epd-card` recipe, not the landing recipe, preserving
+hierarchy and excluding nav rails. See `psychpro-eppp-unified-cards.md`.

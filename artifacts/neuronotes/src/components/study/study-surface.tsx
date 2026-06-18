@@ -65,19 +65,18 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
       };
     case "light":
     default:
-      // Refined translucent frosted glass matching the IMG_2548 reference:
-      // a dark-teal fill that lets the page's brain-clouds backdrop show
-      // through, a faint cerulean hairline, and a soft drop shadow (no heavy
-      // cyan halo). A real backdrop blur makes it read as frosted glass
-      // rather than a flat opaque box.
+      // Unified with the EPPP card system (.epd-card): a radial cyan top-bloom
+      // over a 145° diagonal cerulean glass with a cyan inner glow + outer
+      // corona and a deep drop shadow, so the main-site surfaces read as the
+      // same translucent bloom glass as the EPPP domain tiles.
       return {
         background:
-          "linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.00) 14%), radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 55%), linear-gradient(145deg, hsl(var(--surf-hue) 86% 15% / 0.90), hsl(var(--surf-hue) 92% 9% / 0.95))",
-        borderColor: "rgba(118,228,247,0.26)",
-        backdropFilter: "blur(20px) saturate(140%)",
-        WebkitBackdropFilter: "blur(20px) saturate(140%)",
+          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))",
+        borderColor: "rgba(196,232,242,0.22)",
+        backdropFilter: "blur(20px) saturate(135%)",
+        WebkitBackdropFilter: "blur(20px) saturate(135%)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.18), inset 0 0 42px -24px rgba(118,228,247,0.34), 0 0 28px -10px rgba(118,228,247,0.26), 0 24px 54px -28px rgba(0,0,0,0.82)",
+          "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 40px -22px rgba(118,228,247,0.42), 0 0 28px -6px rgba(118,228,247,0.30), 0 24px 60px -42px rgba(0,0,0,0.72)",
         color: P.mist,
       };
   }
