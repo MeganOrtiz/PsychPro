@@ -426,9 +426,10 @@ function CourseMasteryButton({ group }: { group: { name: string; items: Topic[] 
 
   const lockedBg = "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))";
   const unlockedBg = "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.16) 0%, rgba(118,228,247,0.00) 60%), linear-gradient(145deg, hsl(var(--surf-hue) 85% 26% / 0.84), hsl(var(--surf-hue) 89% 19% / 0.90))";
-  const lockedBorder = "rgba(118,228,247,0.26)";
+  const lockedBorder = "rgba(196,232,242,0.22)";
   const unlockedBorder = "rgba(118,228,247,0.55)";
-  const lockedShadow = "inset 0 1px 0 0 rgba(255,255,255,0.14), 0 12px 30px -18px rgba(0,0,0,0.72)";
+  const lockedShadow =
+    "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 40px -22px rgba(118,228,247,0.42), 0 0 28px -6px rgba(118,228,247,0.30), 0 24px 60px -42px rgba(0,0,0,0.72)";
   const unlockedShadow =
     "0 16px 38px -14px rgba(118,228,247,0.55), inset 0 1px 0 0 rgba(255,255,255,0.10)";
   const hoverBorder = "rgba(118,228,247,0.75)";
@@ -553,8 +554,9 @@ function TopicCard({ topic, onClick, showCategory }: TopicCardProps) {
       style={{
         background:
           "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))",
-        borderColor: "rgba(118,228,247,0.26)",
-        boxShadow: "inset 0 1px 0 0 rgba(255,255,255,0.14), 0 12px 30px -18px rgba(0,0,0,0.72)",
+        borderColor: "rgba(196,232,242,0.22)",
+        boxShadow:
+          "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 40px -22px rgba(118,228,247,0.42), 0 0 28px -6px rgba(118,228,247,0.30), 0 24px 60px -42px rgba(0,0,0,0.72)",
         // Use CSS custom-property so :hover can shift box-shadow cheaply.
         ["--card-glow" as never]: "rgba(118,228,247,0.55)",
       }}
@@ -566,9 +568,9 @@ function TopicCard({ topic, onClick, showCategory }: TopicCardProps) {
       }}
       onMouseLeave={(e) => {
         (e.currentTarget as HTMLButtonElement).style.borderColor =
-          "rgba(118,228,247,0.26)";
+          "rgba(196,232,242,0.22)";
         (e.currentTarget as HTMLButtonElement).style.boxShadow =
-          "inset 0 1px 0 0 rgba(255,255,255,0.14), 0 12px 30px -18px rgba(0,0,0,0.72)";
+          "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 40px -22px rgba(118,228,247,0.42), 0 0 28px -6px rgba(118,228,247,0.30), 0 24px 60px -42px rgba(0,0,0,0.72)";
       }}
     >
       <div className="flex items-start gap-3">
