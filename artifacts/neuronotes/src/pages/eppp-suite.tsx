@@ -2003,24 +2003,58 @@ const styles = `
 .eps-topic:active:not(.is-disabled) .eps-topic-cta { background: rgba(118,228,247,0.42); box-shadow: 0 0 32px rgba(118,228,247,0.65), inset 0 1px 0 rgba(255,255,255,0.14); }
 
 /* ---- Part 1 sub-tabs ---- */
-.eps-subtabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: clamp(20px, 2.4vw, 28px); }
+.eps-subtabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: clamp(20px, 2.4vw, 28px); }
+/* Part toggles / filters adopt the glowing cyan-glass "launch button" recipe. */
 .eps-subtab {
-  display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
-  padding: 9px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; white-space: nowrap;
-  color: ${C.mist}; background: hsl(var(--surf-hue) 82% 30% / 0.55); border: 1px solid ${C.hairlineStrong};
-  transition: transform 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;
+  height: 40px; padding: 0 18px; border-radius: 8px; font-size: 13px; font-weight: 600; white-space: nowrap;
+  color: #eafdff; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(118, 228, 247, 0.55);
+  background: linear-gradient(
+    180deg,
+    hsl(var(--surf-hue) 82% 38% / 0.40),
+    hsl(var(--surf-hue) 88% 22% / 0.50)
+  );
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 0 0 1px rgba(118, 228, 247, 0.28),
+    0 0 24px -2px rgba(118, 228, 247, 0.6),
+    0 0 46px -6px rgba(118, 228, 247, 0.4);
+  transition: transform 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease, background 0.2s ease;
 }
-.eps-subtab svg { width: 15px; height: 15px; flex-shrink: 0; }
-.eps-subtab:hover { color: ${C.cloud}; border-color: ${C.cyan}80; }
+.eps-subtab svg { width: 16px; height: 16px; flex-shrink: 0; color: #76e4f7; filter: drop-shadow(0 0 5px rgba(118, 228, 247, 0.6)); }
+.eps-subtab:hover {
+  transform: translateY(-1px); color: #ffffff; border-color: rgba(118, 228, 247, 0.95);
+  background: linear-gradient(
+    180deg,
+    hsl(var(--surf-hue) 80% 44% / 0.52),
+    hsl(var(--surf-hue) 86% 26% / 0.60)
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 0 0 1px rgba(118, 228, 247, 0.45),
+    0 0 36px 0 rgba(118, 228, 247, 0.95),
+    0 0 70px -4px rgba(118, 228, 247, 0.6);
+}
 .eps-subtab.is-active {
-  color: ${C.cloud}; border-color: rgba(118,228,247,0.6);
-  background: rgba(118,228,247,0.26);
-  box-shadow: 0 0 20px rgba(118,228,247,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+  color: #ffffff; border-color: rgba(118, 228, 247, 1);
+  background: linear-gradient(
+    180deg,
+    hsl(var(--surf-hue) 78% 48% / 0.62),
+    hsl(var(--surf-hue) 86% 30% / 0.68)
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    0 0 0 1px rgba(118, 228, 247, 0.6),
+    0 0 48px 2px rgba(118, 228, 247, 1),
+    0 0 90px -2px rgba(118, 228, 247, 0.7);
 }
-/* Clinical Cases part toggle: centered, larger, squared (not pill) */
+/* Clinical Cases / Full-length part toggle: same recipe, larger. */
 .eps-subtabs--center { justify-content: center; }
 .eps-subtabs--center .eps-subtab {
-  border-radius: 8px; padding: 13px 26px; font-size: 15.5px; gap: 9px;
+  height: 48px; padding: 0 26px; font-size: 15px; gap: 9px;
 }
 .eps-subtabs--center .eps-subtab svg { width: 18px; height: 18px; }
 
@@ -2192,16 +2226,54 @@ const styles = `
 .eps-soon-text { position: relative; margin: 12px auto 0; max-width: 560px; font-size: 14.5px; line-height: 1.7; color: ${C.body}; }
 
 /* ---- Shared ghost button + split section head ---- */
-.eps-section-head--split { justify-content: space-between; }
+.eps-section-head--split { justify-content: center; gap: 16px; }
+/* Print button: glowing cyan-glass "launch button" recipe. */
 .eps-ghost-btn {
-  display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
-  padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600;
-  color: ${C.cloud}; background: hsl(var(--surf-hue) 82% 30% / 0.55); border: 1px solid ${C.cyan}40;
-  transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;
+  height: 40px; padding: 0 18px; border-radius: 8px; font-size: 13px; font-weight: 600; white-space: nowrap;
+  color: #eafdff; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(118, 228, 247, 0.55);
+  background: linear-gradient(
+    180deg,
+    hsl(var(--surf-hue) 82% 38% / 0.40),
+    hsl(var(--surf-hue) 88% 22% / 0.50)
+  );
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 0 0 1px rgba(118, 228, 247, 0.28),
+    0 0 24px -2px rgba(118, 228, 247, 0.6),
+    0 0 46px -6px rgba(118, 228, 247, 0.4);
+  transition: transform 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease, background 0.2s ease;
 }
-.eps-ghost-btn svg { width: 15px; height: 15px; }
-.eps-ghost-btn:hover { color: ${C.ink}; border-color: ${C.cyan}99; transform: translateY(-1px); box-shadow: 0 0 18px -4px ${C.cyan}b3; }
-.eps-ghost-btn:active { color: ${C.ink}; border-color: ${C.cyan}cc; box-shadow: 0 0 24px -4px ${C.cyan}d9; }
+.eps-ghost-btn svg { width: 16px; height: 16px; color: #76e4f7; filter: drop-shadow(0 0 5px rgba(118, 228, 247, 0.6)); }
+.eps-ghost-btn:hover {
+  transform: translateY(-1px); color: #ffffff; border-color: rgba(118, 228, 247, 0.95);
+  background: linear-gradient(
+    180deg,
+    hsl(var(--surf-hue) 80% 44% / 0.52),
+    hsl(var(--surf-hue) 86% 26% / 0.60)
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 0 0 1px rgba(118, 228, 247, 0.45),
+    0 0 36px 0 rgba(118, 228, 247, 0.95),
+    0 0 70px -4px rgba(118, 228, 247, 0.6);
+}
+.eps-ghost-btn:active {
+  transform: translateY(0); color: #ffffff; border-color: rgba(118, 228, 247, 1);
+  background: linear-gradient(
+    180deg,
+    hsl(var(--surf-hue) 78% 48% / 0.62),
+    hsl(var(--surf-hue) 86% 30% / 0.68)
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    0 0 0 1px rgba(118, 228, 247, 0.6),
+    0 0 48px 2px rgba(118, 228, 247, 1),
+    0 0 90px -2px rgba(118, 228, 247, 0.7);
+}
 
 /* ---- Full-Length Exams ---- */
 .eps-fl-card {
@@ -2307,7 +2379,7 @@ const styles = `
 .eps-note-date { font-size: 12px; font-weight: 600; color: ${C.muted}; }
 
 /* ---- Missed Questions ---- */
-.eps-mq-filters { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 18px; }
+.eps-mq-filters { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px; margin-bottom: 18px; }
 .eps-mq-filters .eps-subtabs { margin-bottom: 0; }
 .eps-mq-domain { display: inline-flex; align-items: center; gap: 9px; }
 .eps-mq-domain-label { font-size: 12.5px; font-weight: 600; color: ${C.muted}; }
