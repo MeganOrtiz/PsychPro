@@ -107,3 +107,9 @@ id = "Z_dhYrhJ66oR4-aXEUFVx"
 uri = "file://screenshots/header-refined.jpg"
 type = "image"
 title = "Refined headers — top bar + dashboard banner (landing-matched title)"
+
+[[outputs]]
+id = "2Q5QoV4bxfl0nWZSypq-6"
+uri = "file://screenshots/header-preview-both.jpg"
+type = "image"
+title = "Dashboard wordmarks — PSYCHPRO + EPPP MASTERY SUITE"
