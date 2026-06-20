@@ -445,7 +445,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
                   className="relative font-light whitespace-nowrap"
                   style={{
                     fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
-                    fontSize: "clamp(20px, 2.1vw, 30px)",
+                    fontSize: "clamp(34px, 3.6vw, 50px)",
                     letterSpacing: "0.24em",
                     textIndent: "0.24em",
                     color: "#F4FBFF",

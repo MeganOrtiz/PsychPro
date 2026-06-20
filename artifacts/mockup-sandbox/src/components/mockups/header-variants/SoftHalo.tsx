@@ -35,7 +35,7 @@ const mainWordmark: React.CSSProperties = {
 
 const epppWordmark: React.CSSProperties = {
   ...wordmarkBase,
-  fontSize: "clamp(20px, 2.1vw, 30px)",
+  fontSize: "clamp(34px, 3.6vw, 50px)",
   letterSpacing: "0.24em",
   textIndent: "0.24em",
 };
