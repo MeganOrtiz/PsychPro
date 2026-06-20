@@ -425,7 +425,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
           {isEpppDash && (
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-x-0 top-0 flex flex-col items-center pt-3"
+              className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center pr-[clamp(210px,24vw,330px)]"
             >
               <span className="relative inline-flex items-center justify-center">
                 {/* Soft halo — a radial cyan glow-bloom centered behind the
@@ -437,7 +437,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
                     width: "150%",
                     height: "320%",
                     background:
-                      "radial-gradient(ellipse at center, rgba(118,228,247,0.26) 0%, rgba(118,228,247,0.14) 26%, rgba(118,228,247,0.05) 50%, rgba(118,228,247,0) 72%)",
+                      "radial-gradient(ellipse at center, rgba(118,228,247,0.32) 0%, rgba(118,228,247,0.18) 26%, rgba(118,228,247,0.06) 50%, rgba(118,228,247,0) 72%)",
                     filter: "blur(16px)",
                   }}
                 />
@@ -445,9 +445,9 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
                   className="relative font-light whitespace-nowrap"
                   style={{
                     fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
-                    fontSize: "clamp(26px, 2.8vw, 40px)",
-                    letterSpacing: "0.3em",
-                    textIndent: "0.3em",
+                    fontSize: "clamp(20px, 2.1vw, 30px)",
+                    letterSpacing: "0.24em",
+                    textIndent: "0.24em",
                     color: "#F4FBFF",
                     textShadow:
                       "0 0 30px rgba(118,228,247,0.5), 0 0 64px rgba(118,228,247,0.22)",

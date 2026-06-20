@@ -457,7 +457,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           {isDashboard && (
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-x-0 top-0 flex flex-col items-center pt-3"
+              className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center pr-[clamp(220px,25vw,350px)]"
             >
               <span className="relative inline-flex items-center justify-center">
                 {/* Soft halo — a radial cyan glow-bloom centered behind the
@@ -469,7 +469,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                     width: "150%",
                     height: "320%",
                     background:
-                      "radial-gradient(ellipse at center, rgba(118,228,247,0.26) 0%, rgba(118,228,247,0.14) 26%, rgba(118,228,247,0.05) 50%, rgba(118,228,247,0) 72%)",
+                      "radial-gradient(ellipse at center, rgba(118,228,247,0.32) 0%, rgba(118,228,247,0.18) 26%, rgba(118,228,247,0.06) 50%, rgba(118,228,247,0) 72%)",
                     filter: "blur(16px)",
                   }}
                 />
@@ -477,7 +477,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   className="relative font-light whitespace-nowrap"
                   style={{
                     fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
-                    fontSize: "clamp(38px, 4.2vw, 56px)",
+                    fontSize: "clamp(34px, 3.6vw, 50px)",
                     letterSpacing: "0.42em",
                     textIndent: "0.42em",
                     color: "#F4FBFF",
