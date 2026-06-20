@@ -5,11 +5,11 @@ const halo: React.CSSProperties = {
   left: "50%",
   top: "50%",
   transform: "translate(-50%, -50%)",
-  width: "132%",
-  height: "280%",
+  width: "150%",
+  height: "320%",
   background:
-    "radial-gradient(ellipse at center, rgba(118,228,247,0.30) 0%, rgba(118,228,247,0.12) 38%, rgba(118,228,247,0) 64%)",
-  filter: "blur(10px)",
+    "radial-gradient(ellipse at center, rgba(118,228,247,0.26) 0%, rgba(118,228,247,0.14) 26%, rgba(118,228,247,0.05) 50%, rgba(118,228,247,0) 72%)",
+  filter: "blur(16px)",
   pointerEvents: "none",
   zIndex: 1,
 };
