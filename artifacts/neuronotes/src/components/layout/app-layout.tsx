@@ -460,44 +460,33 @@ export default function AppLayout({ children }: AppLayoutProps) {
               className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center pr-[clamp(220px,25vw,350px)]"
             >
               <span
-                className="relative inline-flex items-center justify-center"
-                style={{ gap: "clamp(14px, 1.6vw, 24px)" }}
+                className="relative font-light whitespace-nowrap"
+                style={{
+                  fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
+                  fontSize: "clamp(34px, 3.6vw, 50px)",
+                  letterSpacing: "0.42em",
+                  textIndent: "0.42em",
+                  color: "#F4FBFF",
+                  textShadow: "0 1px 14px rgba(0,0,0,0.5)",
+                }}
+                data-testid="topbar-wordmark"
               >
-                {/* Flanking accent hairlines — gradient rules that fade in
-                    toward the wordmark on each side (no diamond markers). */}
-                <span
-                  aria-hidden
-                  style={{
-                    width: "clamp(28px, 4vw, 64px)",
-                    height: 1,
-                    background:
-                      "linear-gradient(90deg, rgba(118,228,247,0) 0%, rgba(118,228,247,0.85) 100%)",
-                  }}
-                />
-                <span
-                  className="relative font-light whitespace-nowrap"
-                  style={{
-                    fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
-                    fontSize: "clamp(34px, 3.6vw, 50px)",
-                    letterSpacing: "0.42em",
-                    textIndent: "0.42em",
-                    color: "#F4FBFF",
-                    textShadow: "0 1px 14px rgba(0,0,0,0.5)",
-                  }}
-                  data-testid="topbar-wordmark"
-                >
-                  PSYCHPRO
-                </span>
-                <span
-                  aria-hidden
-                  style={{
-                    width: "clamp(28px, 4vw, 64px)",
-                    height: 1,
-                    background:
-                      "linear-gradient(90deg, rgba(118,228,247,0.85) 0%, rgba(118,228,247,0) 100%)",
-                  }}
-                />
+                PSYCHPRO
               </span>
+              {/* Laser beam underline — cyan-to-white gradient rule with glow. */}
+              <span
+                aria-hidden
+                style={{
+                  marginTop: "14px",
+                  width: "min(520px, 64%)",
+                  height: 2,
+                  borderRadius: 2,
+                  background:
+                    "linear-gradient(90deg, rgba(118,228,247,0) 0%, rgba(118,228,247,0.85) 30%, #FFFFFF 50%, rgba(118,228,247,0.85) 70%, rgba(118,228,247,0) 100%)",
+                  boxShadow:
+                    "0 0 18px rgba(118,228,247,0.8), 0 0 4px rgba(255,255,255,0.6)",
+                }}
+              />
             </div>
           )}
           <Link

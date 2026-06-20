@@ -1,17 +1,13 @@
 import "./_group.css";
 
-const ruleLeft: React.CSSProperties = {
-  width: "clamp(28px, 4vw, 64px)",
-  height: 1,
+const laser: React.CSSProperties = {
+  marginTop: 14,
+  width: "min(520px, 64%)",
+  height: 2,
+  borderRadius: 2,
   background:
-    "linear-gradient(90deg, rgba(118,228,247,0) 0%, rgba(118,228,247,0.85) 100%)",
-  flexShrink: 0,
-};
-
-const ruleRight: React.CSSProperties = {
-  ...ruleLeft,
-  background:
-    "linear-gradient(90deg, rgba(118,228,247,0.85) 0%, rgba(118,228,247,0) 100%)",
+    "linear-gradient(90deg, rgba(118,228,247,0) 0%, rgba(118,228,247,0.85) 30%, #FFFFFF 50%, rgba(118,228,247,0.85) 70%, rgba(118,228,247,0) 100%)",
+  boxShadow: "0 0 18px rgba(118,228,247,0.8), 0 0 4px rgba(255,255,255,0.6)",
 };
 
 const wordmarkBase: React.CSSProperties = {
@@ -108,19 +104,13 @@ function HeaderBand({
       </span>
       {/* Hero wordmark overlay — centered in the OPEN space (right padding
           reserves room for the control cluster) and vertically centered.
-          Flanking hairlines on each side, no glow, no diamonds. */}
+          Laser-beam underline, no glow halo, no side details. */}
       <div
         className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center"
         style={{ paddingRight: reserve }}
       >
-        <span
-          className="relative inline-flex items-center justify-center"
-          style={{ gap: "clamp(14px, 1.6vw, 24px)" }}
-        >
-          <span style={ruleLeft} />
-          <h1 style={wordmark}>{text}</h1>
-          <span style={ruleRight} />
-        </span>
+        <h1 style={wordmark}>{text}</h1>
+        <span style={laser} />
       </div>
       <Controls label={controlLabel} />
     </div>

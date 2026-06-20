@@ -119,3 +119,9 @@ id = "XBK90gFyKP4304vI9Oj9o"
 uri = "file://screenshots/header-preview-flanking.jpg"
 type = "image"
 title = "Dashboard wordmarks — flanking hairlines (no glow, no diamonds)"
+
+[[outputs]]
+id = "9THIkJlN7zDsm6_IVbv0y"
+uri = "file://screenshots/header-preview-laser.jpg"
+type = "image"
+title = "Dashboard wordmarks — laser underline (no glow, no side details)"
