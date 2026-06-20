@@ -290,7 +290,6 @@ export function EpppDashboardView({
         <section className="epd-section" data-testid="eppp-domain-progress">
           <div className="epd-section-head epd-section-head--hero">
             <div>
-              <p className="epd-section-eyebrow">CONTENT AREAS</p>
               <h2 className="epd-section-title">Progress by domain</h2>
             </div>
             <span className="epd-section-meta">
