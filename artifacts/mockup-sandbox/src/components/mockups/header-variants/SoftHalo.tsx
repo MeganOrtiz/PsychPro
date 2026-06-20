@@ -28,16 +28,6 @@ function Beam() {
           boxShadow: "0 0 10px rgba(118,228,247,0.6)",
         }}
       />
-      <span
-        style={{
-          position: "absolute",
-          width: 5,
-          height: 5,
-          borderRadius: 9999,
-          background: "#F4FBFF",
-          boxShadow: "0 0 12px 1px rgba(118,228,247,0.9)",
-        }}
-      />
     </span>
   );
 }
