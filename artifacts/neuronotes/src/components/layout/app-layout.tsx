@@ -9,6 +9,14 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { STUDY_PALETTE } from "@/lib/study-theme";
 import smokeBg from "@/assets/bg/app-smoke.jpg";
+import brainArt from "@assets/Screenshot_2026-06-20_at_3.22.26_AM_1781943752347.png";
+
+// Edge-fade mask for the sidebar brain artwork so it melts into the smoky
+// column backdrop instead of reading as a hard rectangle.
+const BRAIN_EDGE_FADE = [
+  "linear-gradient(to bottom, transparent 0%, #000 12%, #000 84%, transparent 100%)",
+  "linear-gradient(to right, transparent 0%, #000 8%, #000 92%, transparent 100%)",
+].join(", ");
 
 type NavItem = { href: string; label: string; icon: React.ComponentType<{ className?: string }> };
 
@@ -214,46 +222,27 @@ export default function AppLayout({ children }: AppLayoutProps) {
           style={{ background: `radial-gradient(closest-side, ${STUDY_PALETTE.teal}2e, transparent)` }}
         />
 
-        {/* Brand header — mirrors the EPPP suite sidebar wordmark (icon box +
-            word + eyebrow) so the main workspace carries a matching identity at
-            the top of the column. "learn. connect. expand." echoes the three
-            primary nav groups (Learn / Connect / Expand). */}
-        <div className="relative flex items-center justify-between px-4 pt-4 pb-2">
-          <div className="flex items-center gap-[11px]">
-            <span
-              className="inline-flex items-center justify-center w-9 h-9 flex-shrink-0 rounded-[11px]"
-              style={{
-                background: "rgba(118,228,247,0.09)",
-                border: "1px solid rgba(118,228,247,0.27)",
-                color: "#76E4F7",
-                boxShadow: "0 0 18px -4px rgba(118,228,247,0.5)",
-              }}
-            >
-              <Brain className="w-[18px] h-[18px]" />
-            </span>
-            <span className="flex flex-col leading-none">
-              <span
-                className="text-[18px] font-light"
-                style={{
-                  fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
-                  letterSpacing: "0.22em",
-                  paddingLeft: "0.22em",
-                  color: "#F4FBFF",
-                  textShadow: "0 0 18px rgba(118,228,247,0.23)",
-                }}
-              >
-                PSYCHPRO
-              </span>
-              <span
-                className="mt-[5px] text-[10px] font-bold uppercase whitespace-nowrap"
-                style={{ letterSpacing: "0.1em", color: "#A7F3FF" }}
-              >
-                learn. connect. expand.
-              </span>
-            </span>
-          </div>
+        {/* Brand header — the glowing brain artwork crowns the column in place
+            of the old wordmark/eyebrow text. An edge-fade mask melts it into the
+            smoky backdrop so there's no hard rectangle. The PSYCHPRO wordmark
+            now lives centered in the top bar. The mobile close control overlays
+            the top-right. */}
+        <div className="relative px-3 pt-3 pb-1">
+          <img
+            src={brainArt}
+            alt="PsychPro"
+            className="block w-full h-auto select-none pointer-events-none"
+            draggable={false}
+            style={{
+              WebkitMaskImage: BRAIN_EDGE_FADE,
+              maskImage: BRAIN_EDGE_FADE,
+              WebkitMaskComposite: "source-in",
+              maskComposite: "intersect",
+            }}
+            data-testid="sidebar-brain-art"
+          />
           <button
-            className="md:hidden text-white/80 mt-1"
+            className="md:hidden absolute top-3 right-3 text-white/80"
             onClick={() => setSidebarOpen(false)}
             aria-label="Close menu"
           >
@@ -452,7 +441,24 @@ export default function AppLayout({ children }: AppLayoutProps) {
         {/* Desktop top bar: unified right-side cluster — the notifications
             bell sits next to the Clerk UserButton so account + alerts read as
             one consistent control group on every page. */}
-        <header className="hidden md:flex items-center justify-end gap-3 px-6 py-3">
+        <header className="relative hidden md:flex items-center justify-end gap-3 px-6 py-3">
+          {/* Centered PSYCHPRO wordmark — fills the open space between the
+              sidebar and the right-side control cluster. pointer-events-none so
+              it never blocks the controls layered beside it. */}
+          <span
+            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-light whitespace-nowrap"
+            style={{
+              fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
+              fontSize: "clamp(20px, 2vw, 28px)",
+              letterSpacing: "0.42em",
+              textIndent: "0.42em",
+              color: "#F4FBFF",
+              textShadow: "0 0 22px rgba(118,228,247,0.30)",
+            }}
+            data-testid="topbar-wordmark"
+          >
+            PSYCHPRO
+          </span>
           <Link
             href="/eppp/suite"
             className="eppp-launch-btn"
