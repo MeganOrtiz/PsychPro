@@ -113,3 +113,9 @@ id = "2Q5QoV4bxfl0nWZSypq-6"
 uri = "file://screenshots/header-preview-both.jpg"
 type = "image"
 title = "Dashboard wordmarks — PSYCHPRO + EPPP MASTERY SUITE"
+
+[[outputs]]
+id = "XBK90gFyKP4304vI9Oj9o"
+uri = "file://screenshots/header-preview-flanking.jpg"
+type = "image"
+title = "Dashboard wordmarks — flanking hairlines (no glow, no diamonds)"
