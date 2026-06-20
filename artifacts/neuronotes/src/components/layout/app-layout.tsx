@@ -150,6 +150,8 @@ interface AppLayoutProps {
 export default function AppLayout({ children }: AppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [location] = useLocation();
+  // The big centered PSYCHPRO wordmark + laser beam is a dashboard-only flourish.
+  const isDashboard = location === "/dashboard";
   // One NotificationsBell at a time: the mobile and desktop headers both live
   // in the DOM (toggled by CSS), so gate the bell by breakpoint to avoid two
   // instances mounting and double-polling /api/notifications.
@@ -441,24 +443,53 @@ export default function AppLayout({ children }: AppLayoutProps) {
         {/* Desktop top bar: unified right-side cluster — the notifications
             bell sits next to the Clerk UserButton so account + alerts read as
             one consistent control group on every page. */}
-        <header className="relative hidden md:flex items-center justify-end gap-3 px-6 py-3">
-          {/* Centered PSYCHPRO wordmark — fills the open space between the
+        <header
+          className={cn(
+            "relative hidden md:flex justify-end gap-3 px-6",
+            isDashboard ? "items-start pt-3 pb-3 min-h-[116px]" : "items-center py-3",
+          )}
+        >
+          {/* Dashboard-only hero wordmark — a large centered PSYCHPRO with a
+              luminous laser beam beneath it, filling the open space between the
               sidebar and the right-side control cluster. pointer-events-none so
-              it never blocks the controls layered beside it. */}
-          <span
-            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-light whitespace-nowrap"
-            style={{
-              fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
-              fontSize: "clamp(20px, 2vw, 28px)",
-              letterSpacing: "0.42em",
-              textIndent: "0.42em",
-              color: "#F4FBFF",
-              textShadow: "0 0 22px rgba(118,228,247,0.30)",
-            }}
-            data-testid="topbar-wordmark"
-          >
-            PSYCHPRO
-          </span>
+              it never blocks the controls layered beside it. Other pages keep a
+              clean top bar (no wordmark). */}
+          {isDashboard && (
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0 top-0 flex flex-col items-center pt-3"
+            >
+              <span
+                className="font-light whitespace-nowrap"
+                style={{
+                  fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
+                  fontSize: "clamp(30px, 3.4vw, 46px)",
+                  letterSpacing: "0.42em",
+                  textIndent: "0.42em",
+                  color: "#F4FBFF",
+                  textShadow:
+                    "0 0 26px rgba(118,228,247,0.38), 0 0 60px rgba(118,228,247,0.18)",
+                }}
+                data-testid="topbar-wordmark"
+              >
+                PSYCHPRO
+              </span>
+              {/* Luminous laser beam — a thin line with a bright white-cyan core
+                  that feathers to transparent at both ends, wrapped in a soft
+                  cyan glow. */}
+              <span
+                className="mt-3 block rounded-full"
+                style={{
+                  width: "min(620px, 58vw)",
+                  height: "2px",
+                  background:
+                    "linear-gradient(90deg, transparent 0%, rgba(118,228,247,0) 12%, rgba(167,243,255,0.9) 44%, #FFFFFF 50%, rgba(167,243,255,0.9) 56%, rgba(118,228,247,0) 88%, transparent 100%)",
+                  boxShadow:
+                    "0 0 12px 1px rgba(118,228,247,0.6), 0 0 30px 2px rgba(118,228,247,0.32)",
+                }}
+              />
+            </div>
+          )}
           <Link
             href="/eppp/suite"
             className="eppp-launch-btn"
