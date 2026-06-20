@@ -327,7 +327,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-6 items-stretch">
           <div className="min-w-0 space-y-6">
             {/* Begin/Continue Your Journey (full width, top). */}
-            <StudySurface tone="light" glow innerClassName="p-5">
+            <StudySurface tone="light" innerClassName="p-5">
               <div className="relative">
               <div className="flex items-center gap-2 mb-4">
                 <TrendingUp className="w-4 h-4" style={{ color: PALETTE.tealDeep }} />
@@ -385,7 +385,7 @@ export default function DashboardPage() {
             </StudySurface>
 
             {/* Recommended for You — 2x2 grid of 4 topics */}
-            <StudySurface tone="light" glow innerClassName="p-5">
+            <StudySurface tone="light" innerClassName="p-5">
               <div className="mb-4">
                 <h2 className="font-semibold" style={{ color: PALETTE.mist, textShadow: "0 0 16px rgba(118,228,247,0.4)" }}>Recommended for You</h2>
                 <p className="text-xs mt-1" style={{ color: PALETTE.mistSoft }}>
