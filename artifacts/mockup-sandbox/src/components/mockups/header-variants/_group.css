@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600&display=swap');
+
+.hv-stage {
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: #F4FBFF;
+  background:
+    radial-gradient(120% 90% at 50% -12%, rgba(118, 228, 247, 0.12), rgba(118, 228, 247, 0) 55%),
+    linear-gradient(180deg, rgba(6, 33, 46, 0.74), rgba(4, 22, 32, 0.93)),
+    url('/__mockup/images/app-smoke.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.hv-band {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 24px;
+  position: relative;
+  text-align: center;
+}
+
+.hv-divider {
+  width: 64%;
+  height: 1px;
+  margin: 0 auto;
+  background: linear-gradient(90deg, transparent, rgba(196, 232, 242, 0.16), transparent);
+}
+
+.hv-label {
+  font-size: 11px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: rgba(167, 243, 255, 0.5);
+  margin-bottom: 28px;
+}
+
+.hv-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Wordmarks: slightly larger than the live recipe, perfectly centered
+   (trailing letter-spacing compensated with matching padding-left). */
+.hv-main {
+  margin: 0;
+  font-weight: 300;
+  font-size: clamp(40px, 4.6vw, 60px);
+  letter-spacing: 0.42em;
+  padding-left: 0.42em;
+  color: #F4FBFF;
+  text-shadow: 0 0 30px rgba(118, 228, 247, 0.55), 0 0 64px rgba(118, 228, 247, 0.22);
+  position: relative;
+  z-index: 2;
+  white-space: nowrap;
+}
+
+.hv-eppp {
+  margin: 0;
+  font-weight: 300;
+  font-size: clamp(26px, 3vw, 40px);
+  letter-spacing: 0.3em;
+  padding-left: 0.3em;
+  color: #F4FBFF;
+  text-shadow: 0 0 30px rgba(118, 228, 247, 0.55), 0 0 64px rgba(118, 228, 247, 0.22);
+  position: relative;
+  z-index: 2;
+  white-space: nowrap;
+}
