@@ -125,3 +125,9 @@ id = "9THIkJlN7zDsm6_IVbv0y"
 uri = "file://screenshots/header-preview-laser.jpg"
 type = "image"
 title = "Dashboard wordmarks — laser underline (no glow, no side details)"
+
+[[outputs]]
+id = "VLGTzeLCjS2a7sDbOR4Nn"
+uri = "file://screenshots/header-preview-beam.jpg"
+type = "image"
+title = "Dashboard wordmarks — upgraded signal-beam underline"

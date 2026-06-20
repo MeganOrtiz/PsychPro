@@ -473,20 +473,46 @@ export default function AppLayout({ children }: AppLayoutProps) {
               >
                 PSYCHPRO
               </span>
-              {/* Laser beam underline — cyan-to-white gradient rule with glow. */}
+              {/* Signal-beam underline — a crisp tapered beam with a soft
+                  underglow pool and a luminous center node. Impactful but
+                  restrained. */}
               <span
                 aria-hidden
-                style={{
-                  marginTop: "14px",
-                  width: "min(520px, 64%)",
-                  height: 2,
-                  borderRadius: 2,
-                  background:
-                    "linear-gradient(90deg, rgba(118,228,247,0) 0%, rgba(118,228,247,0.85) 30%, #FFFFFF 50%, rgba(118,228,247,0.85) 70%, rgba(118,228,247,0) 100%)",
-                  boxShadow:
-                    "0 0 18px rgba(118,228,247,0.8), 0 0 4px rgba(255,255,255,0.6)",
-                }}
-              />
+                className="relative flex items-center justify-center"
+                style={{ marginTop: "16px", width: "min(540px, 66%)", height: "16px" }}
+              >
+                <span
+                  style={{
+                    position: "absolute",
+                    width: "100%",
+                    height: "100%",
+                    background:
+                      "radial-gradient(closest-side, rgba(118,228,247,0.26) 0%, rgba(118,228,247,0) 78%)",
+                    filter: "blur(4px)",
+                  }}
+                />
+                <span
+                  style={{
+                    position: "relative",
+                    width: "100%",
+                    height: "1.5px",
+                    borderRadius: "9999px",
+                    background:
+                      "linear-gradient(90deg, rgba(118,228,247,0) 0%, rgba(118,228,247,0.9) 26%, #F4FBFF 50%, rgba(118,228,247,0.9) 74%, rgba(118,228,247,0) 100%)",
+                    boxShadow: "0 0 10px rgba(118,228,247,0.6)",
+                  }}
+                />
+                <span
+                  style={{
+                    position: "absolute",
+                    width: "5px",
+                    height: "5px",
+                    borderRadius: "9999px",
+                    background: "#F4FBFF",
+                    boxShadow: "0 0 12px 1px rgba(118,228,247,0.9)",
+                  }}
+                />
+              </span>
             </div>
           )}
           <Link
