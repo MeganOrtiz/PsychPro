@@ -71,6 +71,7 @@ import {
   type ReflectionRecord,
 } from "@/lib/reflections";
 import smokeBg from "@/assets/bg/app-smoke.jpg";
+import brainArt from "@assets/Screenshot_2026-06-20_at_3.22.26_AM_1781943752347.png";
 import EpppDashboardPage from "@/pages/eppp-dashboard";
 import { ResourcesContent } from "@/pages/resources";
 
@@ -140,6 +141,13 @@ const TABS: TabDef[] = [
 ];
 
 const DEFAULT_TAB: TabSlug = "performance-analytics";
+
+// Edge-fade mask for the sidebar brain artwork so it melts into the smoky
+// column backdrop instead of reading as a hard rectangle.
+const BRAIN_EDGE_FADE = [
+  "linear-gradient(to bottom, transparent 0%, #000 12%, #000 84%, transparent 100%)",
+  "linear-gradient(to right, transparent 0%, #000 8%, #000 92%, transparent 100%)",
+].join(", ");
 
 // Question Bank reaches Part 1 via a legacy deep-link (it was retired as a
 // sub-tab and now opens the Knowledge rail). Clinical Integration Cases is now
@@ -280,6 +288,9 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
   const activeSlug: TabSlug = TABS.some((t) => t.slug === requestedTab)
     ? (requestedTab as TabSlug)
     : DEFAULT_TAB;
+  // The big centered "EPPP Mastery Suite" wordmark + laser beam is shown only on
+  // the suite's Dashboard tab, mirroring the main-site dashboard hero.
+  const isEpppDash = activeSlug === "performance-analytics";
 
   return (
     <div className="study-page-bg flex min-h-screen" data-testid="eppp-suite">
@@ -328,19 +339,26 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
           style={{ background: `radial-gradient(closest-side, ${STUDY_PALETTE.teal}2e, transparent)` }}
         />
 
-        {/* Brand header */}
-        <div className="relative flex items-start justify-between px-4 pt-4 pb-2">
-          <div className="eps-brand">
-            <span className="eps-brand-icon">
-              <GraduationCap aria-hidden />
-            </span>
-            <span className="eps-brand-text">
-              <span className="eps-brand-word">EPPP</span>
-              <span className="eps-brand-eyebrow">Mastery Suite</span>
-            </span>
-          </div>
+        {/* Brand header — the glowing brain artwork crowns the column in place
+            of the old EPPP wordmark/eyebrow text, mirroring the main-site
+            sidebar. An edge-fade mask melts it into the smoky backdrop. The
+            mobile close control overlays the top-right. */}
+        <div className="relative px-3 pt-3 pb-1">
+          <img
+            src={brainArt}
+            alt="EPPP Mastery Suite"
+            className="block w-full h-auto select-none pointer-events-none"
+            draggable={false}
+            style={{
+              WebkitMaskImage: BRAIN_EDGE_FADE,
+              maskImage: BRAIN_EDGE_FADE,
+              WebkitMaskComposite: "source-in",
+              maskComposite: "intersect",
+            }}
+            data-testid="eppp-sidebar-brain-art"
+          />
           <button
-            className="md:hidden text-white/80 mt-1"
+            className="md:hidden absolute top-3 right-3 text-white/80"
             onClick={() => setSidebarOpen(false)}
             aria-label="Close menu"
           >
@@ -393,7 +411,52 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
         </header>
 
         {/* Desktop top bar */}
-        <header className="hidden md:flex items-center justify-end gap-3 px-6 py-3">
+        <header
+          className={cn(
+            "relative hidden md:flex justify-end gap-3 px-6",
+            isEpppDash ? "items-start pt-3 pb-3 min-h-[116px]" : "items-center py-3",
+          )}
+        >
+          {/* Dashboard-only hero wordmark — a large centered "EPPP Mastery
+              Suite" title with a luminous laser beam beneath it, filling the
+              open space between the sidebar and the right-side control cluster.
+              pointer-events-none so it never blocks the controls. Other suite
+              tabs keep a clean top bar. */}
+          {isEpppDash && (
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0 top-0 flex flex-col items-center pt-3"
+            >
+              <span
+                className="font-light whitespace-nowrap"
+                style={{
+                  fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
+                  fontSize: "clamp(22px, 2.4vw, 34px)",
+                  letterSpacing: "0.18em",
+                  textIndent: "0.18em",
+                  color: "#F4FBFF",
+                  textShadow:
+                    "0 0 26px rgba(118,228,247,0.38), 0 0 60px rgba(118,228,247,0.18)",
+                }}
+                data-testid="eppp-topbar-wordmark"
+              >
+                EPPP Mastery Suite
+              </span>
+              {/* Luminous laser beam — bright white-cyan core feathering to
+                  transparent at both ends, wrapped in a soft cyan glow. */}
+              <span
+                className="mt-3 block rounded-full"
+                style={{
+                  width: "min(620px, 58vw)",
+                  height: "2px",
+                  background:
+                    "linear-gradient(90deg, transparent 0%, rgba(118,228,247,0) 12%, rgba(167,243,255,0.9) 44%, #FFFFFF 50%, rgba(167,243,255,0.9) 56%, rgba(118,228,247,0) 88%, transparent 100%)",
+                  boxShadow:
+                    "0 0 12px 1px rgba(118,228,247,0.6), 0 0 30px 2px rgba(118,228,247,0.32)",
+                }}
+              />
+            </div>
+          )}
           <div className="flex items-center gap-3">
             <Link href="/dashboard" className="eppp-launch-btn" data-testid="eppp-suite-back-desktop">
               <span className="eppp-launch-btn__inner">
@@ -1643,26 +1706,6 @@ function MissedQuestionsPanel({ onNavigate }: { onNavigate: (to: string) => void
 }
 
 const styles = `
-/* ---- sidebar brand ---- */
-.eps-brand { display: flex; align-items: center; gap: 11px; }
-.eps-brand-icon {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 36px; height: 36px; flex-shrink: 0;
-  border-radius: 11px;
-  background: ${C.cyan}16; border: 1px solid ${C.cyan}45; color: ${C.cyan};
-  box-shadow: 0 0 18px -4px ${C.cyan}80;
-}
-.eps-brand-icon svg { width: 18px; height: 18px; }
-.eps-brand-text { display: flex; flex-direction: column; line-height: 1; }
-.eps-brand-word {
-  font-family: "Outfit", "Inter", system-ui, sans-serif;
-  font-weight: 300; font-size: 18px; letter-spacing: 0.22em; padding-left: 0.22em;
-  color: ${C.cloud}; text-shadow: 0 0 18px ${C.cyan}3a;
-}
-.eps-brand-eyebrow {
-  margin-top: 5px; font-size: 10px; font-weight: 700; letter-spacing: 0.18em;
-  text-transform: uppercase; color: ${C.mist};
-}
 .eps-nav-section {
   margin: 14px 8px 6px;
   font-size: 9.5px;
