@@ -427,18 +427,19 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
               aria-hidden
               className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center pr-[clamp(210px,24vw,330px)]"
             >
-              <span className="relative inline-flex items-center justify-center">
-                {/* Soft halo — a radial cyan glow-bloom centered behind the
-                    wordmark, replacing the former laser beam underline. */}
+              <span
+                className="relative inline-flex items-center justify-center"
+                style={{ gap: "clamp(14px, 1.6vw, 24px)" }}
+              >
+                {/* Flanking accent hairlines — gradient rules that fade in
+                    toward the wordmark on each side (no diamond markers). */}
                 <span
                   aria-hidden
-                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
                   style={{
-                    width: "150%",
-                    height: "320%",
+                    width: "clamp(28px, 4vw, 64px)",
+                    height: 1,
                     background:
-                      "radial-gradient(ellipse at center, rgba(118,228,247,0.32) 0%, rgba(118,228,247,0.18) 26%, rgba(118,228,247,0.06) 50%, rgba(118,228,247,0) 72%)",
-                    filter: "blur(16px)",
+                      "linear-gradient(90deg, rgba(118,228,247,0) 0%, rgba(118,228,247,0.85) 100%)",
                   }}
                 />
                 <span
@@ -449,13 +450,21 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
                     letterSpacing: "0.24em",
                     textIndent: "0.24em",
                     color: "#F4FBFF",
-                    textShadow:
-                      "0 0 30px rgba(118,228,247,0.5), 0 0 64px rgba(118,228,247,0.22)",
+                    textShadow: "0 1px 14px rgba(0,0,0,0.5)",
                   }}
                   data-testid="eppp-topbar-wordmark"
                 >
                   EPPP MASTERY SUITE
                 </span>
+                <span
+                  aria-hidden
+                  style={{
+                    width: "clamp(28px, 4vw, 64px)",
+                    height: 1,
+                    background:
+                      "linear-gradient(90deg, rgba(118,228,247,0.85) 0%, rgba(118,228,247,0) 100%)",
+                  }}
+                />
               </span>
             </div>
           )}

@@ -1,17 +1,17 @@
 import "./_group.css";
 
-const halo: React.CSSProperties = {
-  position: "absolute",
-  left: "50%",
-  top: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "150%",
-  height: "320%",
+const ruleLeft: React.CSSProperties = {
+  width: "clamp(28px, 4vw, 64px)",
+  height: 1,
   background:
-    "radial-gradient(ellipse at center, rgba(118,228,247,0.32) 0%, rgba(118,228,247,0.18) 26%, rgba(118,228,247,0.06) 50%, rgba(118,228,247,0) 72%)",
-  filter: "blur(16px)",
-  pointerEvents: "none",
-  zIndex: 1,
+    "linear-gradient(90deg, rgba(118,228,247,0) 0%, rgba(118,228,247,0.85) 100%)",
+  flexShrink: 0,
+};
+
+const ruleRight: React.CSSProperties = {
+  ...ruleLeft,
+  background:
+    "linear-gradient(90deg, rgba(118,228,247,0.85) 0%, rgba(118,228,247,0) 100%)",
 };
 
 const wordmarkBase: React.CSSProperties = {
@@ -22,8 +22,7 @@ const wordmarkBase: React.CSSProperties = {
   fontWeight: 300,
   fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
   color: "#F4FBFF",
-  textShadow:
-    "0 0 30px rgba(118,228,247,0.5), 0 0 64px rgba(118,228,247,0.22)",
+  textShadow: "0 1px 14px rgba(0,0,0,0.5)",
 };
 
 const mainWordmark: React.CSSProperties = {
@@ -108,14 +107,19 @@ function HeaderBand({
         {label}
       </span>
       {/* Hero wordmark overlay — centered in the OPEN space (right padding
-          reserves room for the control cluster) and vertically centered. */}
+          reserves room for the control cluster) and vertically centered.
+          Flanking hairlines on each side, no glow, no diamonds. */}
       <div
         className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center"
         style={{ paddingRight: reserve }}
       >
-        <span className="relative inline-flex items-center justify-center">
-          <span style={halo} />
+        <span
+          className="relative inline-flex items-center justify-center"
+          style={{ gap: "clamp(14px, 1.6vw, 24px)" }}
+        >
+          <span style={ruleLeft} />
           <h1 style={wordmark}>{text}</h1>
+          <span style={ruleRight} />
         </span>
       </div>
       <Controls label={controlLabel} />
