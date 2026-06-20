@@ -417,44 +417,46 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
             isEpppDash ? "items-start pt-3 pb-3 min-h-[116px]" : "items-center py-3",
           )}
         >
-          {/* Dashboard-only hero wordmark — a large centered "EPPP Mastery
-              Suite" title with a luminous laser beam beneath it, filling the
-              open space between the sidebar and the right-side control cluster.
-              pointer-events-none so it never blocks the controls. Other suite
-              tabs keep a clean top bar. */}
+          {/* Dashboard-only hero wordmark — a large centered "EPPP MASTERY
+              SUITE" title wrapped in a soft cyan halo glow-bloom (no underline),
+              filling the open space between the sidebar and the right-side
+              control cluster. pointer-events-none so it never blocks the
+              controls. Other suite tabs keep a clean top bar. */}
           {isEpppDash && (
             <div
               aria-hidden
               className="pointer-events-none absolute inset-x-0 top-0 flex flex-col items-center pt-3"
             >
-              <span
-                className="font-light whitespace-nowrap"
-                style={{
-                  fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
-                  fontSize: "clamp(22px, 2.4vw, 34px)",
-                  letterSpacing: "0.18em",
-                  textIndent: "0.18em",
-                  color: "#F4FBFF",
-                  textShadow:
-                    "0 0 26px rgba(118,228,247,0.38), 0 0 60px rgba(118,228,247,0.18)",
-                }}
-                data-testid="eppp-topbar-wordmark"
-              >
-                EPPP Mastery Suite
+              <span className="relative inline-flex items-center justify-center">
+                {/* Soft halo — a radial cyan glow-bloom centered behind the
+                    wordmark, replacing the former laser beam underline. */}
+                <span
+                  aria-hidden
+                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                  style={{
+                    width: "132%",
+                    height: "280%",
+                    background:
+                      "radial-gradient(ellipse at center, rgba(118,228,247,0.30) 0%, rgba(118,228,247,0.12) 38%, rgba(118,228,247,0) 64%)",
+                    filter: "blur(10px)",
+                  }}
+                />
+                <span
+                  className="relative font-light whitespace-nowrap"
+                  style={{
+                    fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
+                    fontSize: "clamp(26px, 2.8vw, 40px)",
+                    letterSpacing: "0.3em",
+                    textIndent: "0.3em",
+                    color: "#F4FBFF",
+                    textShadow:
+                      "0 0 30px rgba(118,228,247,0.5), 0 0 64px rgba(118,228,247,0.22)",
+                  }}
+                  data-testid="eppp-topbar-wordmark"
+                >
+                  EPPP MASTERY SUITE
+                </span>
               </span>
-              {/* Luminous laser beam — bright white-cyan core feathering to
-                  transparent at both ends, wrapped in a soft cyan glow. */}
-              <span
-                className="mt-3 block rounded-full"
-                style={{
-                  width: "min(620px, 58vw)",
-                  height: "2px",
-                  background:
-                    "linear-gradient(90deg, transparent 0%, rgba(118,228,247,0) 12%, rgba(167,243,255,0.9) 44%, #FFFFFF 50%, rgba(167,243,255,0.9) 56%, rgba(118,228,247,0) 88%, transparent 100%)",
-                  boxShadow:
-                    "0 0 12px 1px rgba(118,228,247,0.6), 0 0 30px 2px rgba(118,228,247,0.32)",
-                }}
-              />
             </div>
           )}
           <div className="flex items-center gap-3">
