@@ -1144,7 +1144,9 @@ body {
 }
 
 .flashcard-inner {
-  transition: transform 0.5s;
+  /* Linear so the 0.25s opacity face-swap below lands exactly at the 90°
+     edge-on point (ease would put 0.25s past 90°, reopening the mirror flash). */
+  transition: transform 0.5s linear;
   transform-style: preserve-3d;
   position: relative;
 }
@@ -1157,6 +1159,12 @@ body {
 .flashcard-back {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  /* The glass faces use backdrop-filter, which flattens the 3D context and
+     defeats backface-visibility in many browsers — the back face's mirrored
+     text flashes through mid-flip. Hard-swap face visibility with opacity at
+     the rotation midpoint (when the card is edge-on, ~0.25s into the 0.5s
+     turn) so a mirrored face is never seen. */
+  transition: opacity 0s linear 0.25s;
 }
 
 .flashcard-back {
@@ -1166,6 +1174,15 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
+  opacity: 0;
+}
+
+.flashcard-inner.flipped .flashcard-front {
+  opacity: 0;
+}
+
+.flashcard-inner.flipped .flashcard-back {
+  opacity: 1;
 }
 
 /* Learning-tools shared animations */
