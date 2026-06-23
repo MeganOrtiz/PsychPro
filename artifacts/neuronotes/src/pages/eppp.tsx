@@ -114,8 +114,10 @@ export default function EpppPage() {
 
         {/* Pillars */}
         <section className="eppp-section" data-testid="eppp-pillars">
-          <p className="eppp-section-eyebrow">THE SYSTEM</p>
-          <h2 className="eppp-section-title">What the Mastery Suite includes</h2>
+          <header className="text-scrim text-scrim-start">
+            <p className="eppp-section-eyebrow">THE SYSTEM</p>
+            <h2 className="eppp-section-title">What the Mastery Suite includes</h2>
+          </header>
           <div className="eppp-grid eppp-grid--3">
             {PILLARS.map((p) => {
               const Icon = p.icon;
@@ -134,8 +136,10 @@ export default function EpppPage() {
 
         {/* Entry points */}
         <section className="eppp-section" data-testid="eppp-entry-points">
-          <p className="eppp-section-eyebrow">GET STARTED</p>
-          <h2 className="eppp-section-title">Your path to a passing score</h2>
+          <header className="text-scrim text-scrim-start">
+            <p className="eppp-section-eyebrow">GET STARTED</p>
+            <h2 className="eppp-section-title">Your path to a passing score</h2>
+          </header>
           <div className="eppp-grid eppp-grid--3">
             {ENTRY_POINTS.map((e) => {
               const Icon = e.icon;

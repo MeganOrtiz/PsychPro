@@ -54,3 +54,4 @@
 - [Dashboard tile hierarchy](psychpro-dashboard-tile-hierarchy.md) — "unify all tiles to one recipe" ≠ identical fill; a panel and the tiles nested inside it must keep a one-step elevation gap or hierarchy collapses; inventory every tile/state variant upfront.
 - [Route white-flash floor](psychpro-route-white-flash.md) — body resolves the LIGHT shadcn --background; keep a global dark floor + shared FullScreenLoader so route/auth swaps never flash white.
 - [DB pool/startup resilience](psychpro-db-pool-resilience.md) — DB cold-start timeouts + idle-socket drops are TRANSIENT; keep pool keepAlive+error handler and retry idempotent startup backfills with jittered backoff.
+- [Header scrim convention](psychpro-header-scrim.md) — floating headers over the smoke wallpaper use the shared `.text-scrim`/`.text-scrim-start` utility (soft fading pool, NOT a box, hue via --surf-hue); never add ad-hoc text-shadows.

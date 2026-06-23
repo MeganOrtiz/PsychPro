@@ -877,6 +877,39 @@ body {
     0 24px 60px -42px rgba(0, 0, 0, 0.72);
 }
 
+/* =============================================================================
+   HEADER LEGIBILITY SCRIM (.text-scrim / .text-scrim-start)
+
+   Floating page/section headers (PageTitle, EPPP PanelHead, EPPP dashboard
+   section heads) sit directly on the cerulean smoke wallpaper, where titles,
+   eyebrows and subtitles wash out over bright plumes. This drops a soft,
+   edge-fading deep-cerulean pool BEHIND the header text so it stays readable —
+   but it is NOT a hard box: the radial fades to fully transparent, keeping the
+   smoke visible. Hue is locked via --surf-hue (192) so the surface-hue guardrail
+   stays green. `isolation:isolate` + ::before z-index:-1 place the pool between
+   the page background and the text without per-child z-index. Add
+   `.text-scrim-start` alongside `.text-scrim` to anchor the pool left for
+   left-aligned section heads. */
+.text-scrim { position: relative; isolation: isolate; }
+.text-scrim::before {
+  content: "";
+  position: absolute;
+  inset: -22% -10%;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(60% 64% at 50% 50%,
+    hsl(var(--surf-hue) 55% 5% / 0.66) 0%,
+    hsl(var(--surf-hue) 55% 5% / 0.42) 44%,
+    hsl(var(--surf-hue) 55% 5% / 0.00) 76%);
+  filter: blur(12px);
+}
+.text-scrim-start::before {
+  background: radial-gradient(56% 64% at 20% 50%,
+    hsl(var(--surf-hue) 55% 5% / 0.66) 0%,
+    hsl(var(--surf-hue) 55% 5% / 0.40) 42%,
+    hsl(var(--surf-hue) 55% 5% / 0.00) 72%);
+}
+
 /* Sidebar nav glass — frosted opaque dark-glass pills (2026-06 spec).
    Idle is a solid deep teal frosted panel (high opacity over the smoke
    backdrop); hover/active/pressed brighten the surface and intensify the cyan

@@ -288,7 +288,7 @@ export function EpppDashboardView({
 
         {/* Domain progress */}
         <section className="epd-section" data-testid="eppp-domain-progress">
-          <div className="epd-section-head epd-section-head--hero">
+          <div className="epd-section-head epd-section-head--hero text-scrim">
             <div>
               <h2 className="epd-section-title">Progress by domain</h2>
             </div>
@@ -392,7 +392,7 @@ export function EpppDashboardView({
 
         {/* What to study next */}
         <section className="epd-section" data-testid="eppp-study-next">
-          <div className="epd-section-head">
+          <div className="epd-section-head text-scrim text-scrim-start">
             <div>
               <p className="epd-section-eyebrow">KEEP MOVING</p>
               <h2 className="epd-section-title">What to study next</h2>

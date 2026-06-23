@@ -24,7 +24,7 @@ interface PageTitleProps {
 export function PageTitle({ title, subtitle, icon: Icon, className }: PageTitleProps) {
   return (
     <div
-      className={cn("relative flex flex-col items-center text-center mb-6", className)}
+      className={cn("relative flex flex-col items-center text-center mb-6 text-scrim", className)}
       data-testid="page-title"
     >
       {Icon ? (

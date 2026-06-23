@@ -558,7 +558,7 @@ function PanelHead({
   subtitle: string;
 }) {
   return (
-    <header className="eps-head">
+    <header className="eps-head text-scrim">
       <p className="eps-eyebrow">{eyebrow}</p>
       <h1 className="eps-title">{title}</h1>
       <p className="eps-sub">{subtitle}</p>
@@ -1772,7 +1772,7 @@ const styles = `
   overflow-wrap: anywhere;
   color: ${C.cloud}; text-shadow: 0 0 32px ${C.cyan}2e;
 }
-.eps-sub { margin: 14px 0 0; max-width: 640px; font-size: clamp(13px, 1vw, 15px); line-height: 1.6; color: ${C.body}; }
+.eps-sub { margin: 14px 0 0; max-width: 640px; font-size: clamp(13px, 1vw, 15px); line-height: 1.6; color: ${C.cloud}; }
 @media (max-width: 640px) {
   .eps-title { letter-spacing: 0.18em; padding-left: 0.18em; }
 }
