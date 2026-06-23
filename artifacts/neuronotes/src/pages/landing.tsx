@@ -910,7 +910,6 @@ const styles = `
   letter-spacing: 0.22em;
   line-height: 1;
   color: #F4FBFF;
-  text-shadow: 0 0 40px ${C.cyan}55, 0 0 12px ${C.cyan}33;
   padding-left: 0.22em;
 }
 .landing-tagline {
