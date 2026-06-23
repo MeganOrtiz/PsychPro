@@ -683,7 +683,7 @@ const styles = `
 .epd-ring-cap { margin-top: 3px; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: ${C.mist}; }
 .epd-readiness-meta { min-width: 0; }
 .epd-readiness-note { margin: 10px 0 0; font-size: 15px; font-weight: 600; color: ${C.cloud}; }
-.epd-readiness-sub { margin: 6px 0 0; font-size: 12.5px; line-height: 1.5; color: ${C.muted}; }
+.epd-readiness-sub { margin: 6px 0 0; font-size: 12.5px; line-height: 1.5; color: ${C.body}; }
 
 .epd-stat-big {
   margin: 12px 0 0;
@@ -793,7 +793,7 @@ const styles = `
   font-size: 11.5px;
   font-weight: 700;
   letter-spacing: 0.16em;
-  color: ${C.mist};
+  color: ${C.cloud};
 }
 .epd-section-title {
   margin: 0;
@@ -804,7 +804,7 @@ const styles = `
   text-transform: uppercase;
   color: ${C.cloud};
 }
-.epd-section-meta { font-size: 13px; font-weight: 600; color: ${C.mist}; white-space: nowrap; }
+.epd-section-meta { font-size: 13px; font-weight: 600; color: ${C.cloud}; white-space: nowrap; }
 .epd-section-link {
   display: inline-flex; align-items: center; gap: 6px;
   font-size: 13px; font-weight: 600; text-decoration: none; color: ${C.mist};
@@ -922,7 +922,7 @@ const styles = `
 .epd-next-icon svg { width: 19px; height: 19px; }
 .epd-next-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
 .epd-next-name { font-size: 14px; font-weight: 600; color: ${C.cloud}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.epd-next-meta { font-size: 12px; color: ${C.muted}; }
+.epd-next-meta { font-size: 12px; color: ${C.body}; }
 .epd-next-arrow { width: 16px; height: 16px; color: ${C.mist}; flex-shrink: 0; transition: transform 0.2s ease; }
 .epd-next:hover .epd-next-arrow { transform: translateX(3px); }
 `;

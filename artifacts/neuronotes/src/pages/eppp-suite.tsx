@@ -1757,7 +1757,7 @@ const styles = `
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: ${C.mist};
+  color: ${C.cloud};
 }
 .eps-title {
   margin: 0;

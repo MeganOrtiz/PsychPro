@@ -249,7 +249,7 @@ const styles = `
   max-width: 760px;
   font-size: clamp(14px, 1.1vw, 16.5px);
   line-height: 1.78;
-  color: ${C.body};
+  color: #E8F6FB;
 }
 .eppp-cta-row {
   position: relative;
