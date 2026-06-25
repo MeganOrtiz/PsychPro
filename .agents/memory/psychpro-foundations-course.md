@@ -9,6 +9,18 @@ The main-site course **Foundations** = history of psychology, social determinant
 social psychology, community psychology, organizational psychology (started as
 5 content-free PLACEHOLDER lessons; content authored later via Claude/MCP into prod).
 
+# Repairing already-seeded rows in prod (descriptions etc.)
+
+The lessons were first seeded as content-free placeholders (description =
+"Placeholder lesson — content coming soon."). Content was later authored via
+Claude/MCP, but Claude did NOT touch the topic descriptions, so they stayed on
+the placeholder. Because the seed insert uses `ON CONFLICT DO NOTHING`, changing
+the seed array alone will NOT update existing rows. To fix already-present prod
+rows, the startup backfill also runs a **guarded UPDATE** (set real description
+WHERE name = X AND description = the exact old placeholder string). Guarding on
+the old value keeps it idempotent and prevents clobbering later manual edits.
+Same pattern applies to any future field repair on prod-seeded content.
+
 # How a NEW main-site course reaches prod
 
 Courses are promoted from distinct `topics.category` by `backfillCoursesFromTopics`
