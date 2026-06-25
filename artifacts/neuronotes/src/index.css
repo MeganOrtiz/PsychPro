@@ -601,8 +601,8 @@ body {
   z-index: -1;
   pointer-events: none;
   background-image:
-    radial-gradient(38% 40% at 26% 28%,
-      rgba(118, 228, 247, 0.10) 0%,
+    radial-gradient(40% 40% at 50% 22%,
+      rgba(118, 228, 247, 0.08) 0%,
       rgba(118, 228, 247, 0.00) 70%),
     radial-gradient(44% 42% at 78% 66%,
       hsl(var(--surf-hue) 92% 32% / 0.16) 0%,
