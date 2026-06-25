@@ -5,6 +5,7 @@ import app from "./app";
 import {
   db,
   backfillCoursesFromTopics,
+  backfillFoundationsPlaceholders,
   backfillFullLengthExamTime,
 } from "@workspace/db";
 import { logger } from "./lib/logger";
@@ -76,20 +77,44 @@ app.listen(port, "0.0.0.0", (err) => {
   // tooling and seed.ts never runs in production. Run in the background so it
   // never delays readiness or the startup health check; failures are logged but
   // do not take the server down.
-  void runStartupTaskWithRetry("Course backfill", () =>
-    backfillCoursesFromTopics(db),
+  // Seed the main-site "Foundations" course placeholder lessons, THEN run the
+  // course backfill (chained) so the new "Foundations" course row is created and
+  // its topics linked in the same boot. Both are idempotent and race-safe, and
+  // this startup hook is the ONLY path that seeds production (the prod DB is
+  // read-only to tooling and seed.ts never runs in production).
+  void runStartupTaskWithRetry("Foundations placeholders backfill", () =>
+    backfillFoundationsPlaceholders(db),
   )
     .then((result) =>
       logger.info(
         result,
         result.skipped
-          ? "Course backfill: already up to date"
-          : "Course backfill complete",
+          ? "Foundations placeholders: already up to date"
+          : "Foundations placeholders complete",
       ),
     )
     .catch((err) =>
-      logger.error({ err }, "Course backfill failed after retries"),
-    );
+      logger.error(
+        { err },
+        "Foundations placeholders backfill failed after retries",
+      ),
+    )
+    .finally(() => {
+      void runStartupTaskWithRetry("Course backfill", () =>
+        backfillCoursesFromTopics(db),
+      )
+        .then((result) =>
+          logger.info(
+            result,
+            result.skipped
+              ? "Course backfill: already up to date"
+              : "Course backfill complete",
+          ),
+        )
+        .catch((err) =>
+          logger.error({ err }, "Course backfill failed after retries"),
+        );
+    });
 
   // Correct the EPPP full-length exam time budgets (255 min stored as 255 sec).
   // Idempotent and race-safe; the ONLY path that fixes the production data.

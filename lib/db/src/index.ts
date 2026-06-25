@@ -42,4 +42,5 @@ export const db = drizzle(pool, { schema });
 
 export * from "./schema";
 export * from "./backfill-courses-core";
+export * from "./backfill-foundations-topics-core";
 export * from "./backfill-full-length-exam-time-core";

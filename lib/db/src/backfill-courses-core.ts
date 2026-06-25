@@ -29,6 +29,7 @@ type Database = NodePgDatabase<typeof schema>;
 // the key here must be the full production string or that course would fall back
 // to displayOrder 99 with a null description once it is seeded in production.
 const COURSE_DISPLAY_ORDER: Record<string, number> = {
+  "Foundations": 0,
   "Neuroscience": 1,
   "Neuropsychology": 2,
   "Pediatric & Neuropsychiatric Conditions": 3,
@@ -40,6 +41,8 @@ const COURSE_DISPLAY_ORDER: Record<string, number> = {
 };
 
 const COURSE_DESCRIPTIONS: Record<string, string> = {
+  "Foundations":
+    "Foundational topics in psychology — the history of the field, social and community psychology, organizational psychology, and the social determinants that shape behavior.",
   "Neuroscience":
     "Foundations of brain and behavior — neurons, neurotransmitters, neuroanatomy, and the biological systems that underlie psychological function.",
   "Neuropsychology":

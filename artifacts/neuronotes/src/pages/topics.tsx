@@ -526,6 +526,7 @@ function CourseMasteryButton({ group }: { group: { name: string; items: Topic[] 
 // =============================================================================
 
 const CATEGORY_ICONS: Record<string, ComponentType<{ className?: string; style?: React.CSSProperties }>> = {
+  Foundations: GraduationCap,
   Assessment: ClipboardList,
   Neuropsychology: Activity,
   Neuroscience: Atom,
