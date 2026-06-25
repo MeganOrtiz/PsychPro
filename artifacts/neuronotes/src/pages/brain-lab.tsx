@@ -3,6 +3,7 @@ import { Link } from "wouter";
 // Palette comes from the shared single-source-of-truth file.
 // Do NOT redefine a local PALETTE here — it will fork the brand.
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
+import { PageTitle } from "@/components/brand/page-title";
 import {
   Brain,
   ArrowRight,
@@ -1783,43 +1784,15 @@ export default function BrainLabPage() {
 
   return (
     <div className="flex h-[calc(100vh-57px)] min-h-0 flex-col overflow-hidden study-page-bg">
-      {/* Header */}
-      <div
-        className="flex-shrink-0 px-4 md:px-6 py-3 flex items-center justify-between gap-3 border-b"
-        style={{
-          borderColor: `${PALETTE.steel}66`,
-          background: `linear-gradient(180deg, ${PALETTE.surface}cc, transparent)`,
-        }}
-      >
-        <div className="flex items-center gap-3 min-w-0">
-          <div
-            className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{
-              background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
-              color: PALETTE.bg,
-            }}
-          >
-            <Brain className="w-5 h-5" />
-          </div>
-          <div className="min-w-0">
-            <h1
-              className="font-light uppercase truncate leading-none"
-              style={{
-                fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
-                fontSize: "clamp(15px, 2.2vw, 19px)",
-                letterSpacing: "0.22em",
-                color: PALETTE.cloud,
-                textShadow: `0 0 18px ${PALETTE.surf}55`,
-              }}
-            >
-              Brain Lab
-            </h1>
-            <p className="text-xs hidden sm:block" style={{ color: `${PALETTE.mist}99` }}>
-              Explore the brain. Understand the mind.
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2 flex-shrink-0">
+      {/* Header — centered title block to match the rest of the app's pages */}
+      <div className="flex-shrink-0 px-4 md:px-6 pt-5 pb-3">
+        <PageTitle
+          title="Brain Lab"
+          subtitle="Explore the brain. Understand the mind."
+          icon={Brain}
+          className="mb-4"
+        />
+        <div className="flex items-center justify-center gap-2 flex-wrap">
           {/* View toggle — interactive 3D brain vs. anatomical section images */}
           <div
             className="flex items-center p-0.5 rounded-xl border"
