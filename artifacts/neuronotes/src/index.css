@@ -627,6 +627,11 @@ body {
       hsl(var(--surf-hue) 90% 7% / 0.00) 60%,
       hsl(var(--surf-hue) 93% 5% / 0.55) 100%),
     url("./assets/bg/brain-clouds.jpg");
+  /* Pigment correction (matches owner's photo-editor pass): push saturation and
+     contrast up and pull brightness down so the cerulean reads as deep pigment
+     instead of a milky glow-washed haze. Applied to the landing hero first as an
+     apples-to-apples test before rolling the same correction site-wide. */
+  filter: saturate(1.32) contrast(1.12) brightness(0.9);
 }
 
 /* Lesson detail header — wraps the title, category, description and counts

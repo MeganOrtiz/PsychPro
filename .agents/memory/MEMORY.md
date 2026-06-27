@@ -55,4 +55,5 @@
 - [Route white-flash floor](psychpro-route-white-flash.md) — body resolves the LIGHT shadcn --background; keep a global dark floor + shared FullScreenLoader so route/auth swaps never flash white.
 - [Foundations course](psychpro-foundations-course.md) — main-site Foundations = psych history/social/community/org placeholders; new courses seed via startup backfill + category promotion; STALE add-foundation-topics.ts (neuroanatomy) must not be run.
 - [DB pool/startup resilience](psychpro-db-pool-resilience.md) — DB cold-start timeouts + idle-socket drops are TRANSIENT; keep pool keepAlive+error handler and retry idempotent startup backfills with jittered backoff.
+- [Pigment over glow](psychpro-pigment-over-glow.md) — "flat/bland/foggy" = too much glow+backdrop-blur desaturating contrast, NOT wrong hue; fix with saturate+contrast up, brightness down, LESS glow — never add light.
 - [Header scrim convention](psychpro-header-scrim.md) — floating headers over the smoke wallpaper use the shared `.text-scrim`/`.text-scrim-start` utility (soft fading pool, NOT a box, hue via --surf-hue); never add ad-hoc text-shadows.
