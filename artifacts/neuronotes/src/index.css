@@ -575,6 +575,13 @@ body {
   background-size: cover, cover;
   background-position: center top, center top;
   background-repeat: no-repeat, no-repeat;
+  /* Pigment correction (matches the landing hero pass + owner's photo-editor
+     reference): push saturation and contrast up and pull brightness down so the
+     in-app teal-smoke backdrop reads as deep pigment instead of a milky, glow-
+     washed haze. Re-skins every signed-in page + the EPPP suite in one place. The
+     landing keeps its own (slightly different) filter via the more-specific
+     .landing-root.study-page-bg::before rule below. */
+  filter: saturate(1.32) contrast(1.12) brightness(0.9);
   /* NO background-attachment: fixed. The pseudo-element is already
      position:fixed; inset:0, so it is pinned to the viewport. Adding
      background-attachment:fixed on top is redundant AND makes the browser
