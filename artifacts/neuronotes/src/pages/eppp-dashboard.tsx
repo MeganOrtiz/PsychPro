@@ -625,11 +625,11 @@ const styles = `
   border-radius: 20px;
   padding: clamp(18px, 2vw, 24px);
   background:
-    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.06) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(145deg, hsl(var(--surf-hue) 90% 18% / 0.90), hsl(var(--surf-hue) 90% 12% / 0.96));
+    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.05) 0%, rgba(118,228,247,0.00) 58%),
+    linear-gradient(145deg, hsl(var(--surf-hue) 90% 17% / 0.95), hsl(var(--surf-hue) 90% 11% / 0.99));
   border: 1px solid rgba(196,232,242,0.22);
-  backdrop-filter: blur(9px) saturate(140%);
-  -webkit-backdrop-filter: blur(9px) saturate(140%);
+  backdrop-filter: blur(5px) saturate(140%);
+  -webkit-backdrop-filter: blur(5px) saturate(140%);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.10),
     inset 0 0 36px -24px rgba(118,228,247,0.16),

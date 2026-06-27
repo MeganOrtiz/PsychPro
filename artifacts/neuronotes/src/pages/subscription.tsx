@@ -183,12 +183,12 @@ export default function SubscriptionPage() {
           className="border rounded-xl p-4 mb-6 flex flex-col sm:flex-row sm:items-center gap-3"
           style={{
             background:
-              "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.81), hsl(var(--surf-hue) 88% 14% / 0.90))",
+              "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.05) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 90% 17% / 0.95), hsl(var(--surf-hue) 90% 11% / 0.99))",
             borderColor: "rgba(118,228,247,0.26)",
-            backdropFilter: "blur(18px) saturate(135%)",
-            WebkitBackdropFilter: "blur(18px) saturate(135%)",
+            backdropFilter: "blur(5px) saturate(140%)",
+            WebkitBackdropFilter: "blur(5px) saturate(140%)",
             boxShadow:
-              "inset 0 1px 0 rgba(255,255,255,0.13), inset 0 0 44px -22px rgba(118,228,247,0.48), 0 0 32px -10px rgba(118,228,247,0.38), 0 20px 46px -26px rgba(0,0,0,0.66)",
+              "inset 0 1px 0 rgba(255,255,255,0.10), inset 0 0 36px -24px rgba(118,228,247,0.16), 0 0 20px -10px rgba(118,228,247,0.10), 0 20px 46px -28px rgba(0,0,0,0.72)",
             color: "#FFFFFF",
           }}
           data-testid="active-subscription-banner"

@@ -273,8 +273,8 @@ function CourseRailButton({
 }) {
   const Icon = CATEGORY_ICONS[name] ?? LibraryBig;
 
-  const idleBg = "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))";
-  const activeBg = "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.16) 0%, rgba(118,228,247,0.00) 60%), linear-gradient(145deg, hsl(var(--surf-hue) 85% 26% / 0.84), hsl(var(--surf-hue) 89% 19% / 0.90))";
+  const idleBg = "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.05) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 90% 17% / 0.95), hsl(var(--surf-hue) 90% 11% / 0.99))";
+  const activeBg = "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0.00) 60%), linear-gradient(145deg, hsl(var(--surf-hue) 85% 28% / 0.96), hsl(var(--surf-hue) 89% 20% / 0.99))";
   const idleBorder = "rgba(118,228,247,0.26)";
   const activeBorder = "rgba(118,228,247,0.55)";
   const hoverBorder = "rgba(118,228,247,0.45)";
@@ -424,12 +424,12 @@ function CourseMasteryButton({ group }: { group: { name: string; items: Topic[] 
   const unlocked = status?.unlocked ?? false;
   const mastered = status?.mastered ?? false;
 
-  const lockedBg = "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))";
-  const unlockedBg = "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.16) 0%, rgba(118,228,247,0.00) 60%), linear-gradient(145deg, hsl(var(--surf-hue) 85% 26% / 0.84), hsl(var(--surf-hue) 89% 19% / 0.90))";
+  const lockedBg = "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.05) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 90% 17% / 0.95), hsl(var(--surf-hue) 90% 11% / 0.99))";
+  const unlockedBg = "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0.00) 60%), linear-gradient(145deg, hsl(var(--surf-hue) 85% 28% / 0.96), hsl(var(--surf-hue) 89% 20% / 0.99))";
   const lockedBorder = "rgba(196,232,242,0.22)";
   const unlockedBorder = "rgba(118,228,247,0.55)";
   const lockedShadow =
-    "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 40px -22px rgba(118,228,247,0.42), 0 0 28px -6px rgba(118,228,247,0.30), 0 24px 60px -42px rgba(0,0,0,0.72)";
+    "inset 0 1px 0 rgba(255,255,255,0.10), inset 0 0 36px -24px rgba(118,228,247,0.16), 0 0 20px -10px rgba(118,228,247,0.10), 0 24px 60px -42px rgba(0,0,0,0.80)";
   const unlockedShadow =
     "0 16px 38px -14px rgba(118,228,247,0.55), inset 0 1px 0 0 rgba(255,255,255,0.10)";
   const hoverBorder = "rgba(118,228,247,0.75)";
@@ -554,10 +554,10 @@ function TopicCard({ topic, onClick, showCategory }: TopicCardProps) {
       className="group text-left rounded-md p-4 cursor-pointer transition-all border backdrop-blur-md hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2"
       style={{
         background:
-          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))",
+          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.05) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 90% 17% / 0.95), hsl(var(--surf-hue) 90% 11% / 0.99))",
         borderColor: "rgba(196,232,242,0.22)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 40px -22px rgba(118,228,247,0.42), 0 0 28px -6px rgba(118,228,247,0.30), 0 24px 60px -42px rgba(0,0,0,0.72)",
+          "inset 0 1px 0 rgba(255,255,255,0.10), inset 0 0 36px -24px rgba(118,228,247,0.16), 0 0 20px -10px rgba(118,228,247,0.10), 0 24px 60px -42px rgba(0,0,0,0.80)",
         // Use CSS custom-property so :hover can shift box-shadow cheaply.
         ["--card-glow" as never]: "rgba(118,228,247,0.55)",
       }}
@@ -571,7 +571,7 @@ function TopicCard({ topic, onClick, showCategory }: TopicCardProps) {
         (e.currentTarget as HTMLButtonElement).style.borderColor =
           "rgba(196,232,242,0.22)";
         (e.currentTarget as HTMLButtonElement).style.boxShadow =
-          "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 40px -22px rgba(118,228,247,0.42), 0 0 28px -6px rgba(118,228,247,0.30), 0 24px 60px -42px rgba(0,0,0,0.72)";
+          "inset 0 1px 0 rgba(255,255,255,0.10), inset 0 0 36px -24px rgba(118,228,247,0.16), 0 0 20px -10px rgba(118,228,247,0.10), 0 24px 60px -42px rgba(0,0,0,0.80)";
       }}
     >
       <div className="flex items-start gap-3">

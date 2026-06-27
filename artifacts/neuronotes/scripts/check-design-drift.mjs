@@ -81,7 +81,7 @@ if (!cardRecipe) {
 } else {
   const RECIPE = [
     { name: "non-pill 20px corner", re: /border-radius:\s*20px;/, expected: "border-radius: 20px;" },
-    { name: "glass blur", re: /backdrop-filter:\s*blur\(9px\)\s*saturate\(140%\)/, expected: "backdrop-filter: blur(9px) saturate(140%)" },
+    { name: "glass blur", re: /backdrop-filter:\s*blur\(5px\)\s*saturate\(140%\)/, expected: "backdrop-filter: blur(5px) saturate(140%)" },
     { name: "145° diagonal bloom", re: /linear-gradient\(\s*145deg/, expected: "linear-gradient(145deg, …)" },
     { name: "cyan inner glow", re: /rgba\(118,\s*228,\s*247,\s*0\.16\)/, expected: "inset 0 0 36px -24px rgba(118, 228, 247, 0.16)" },
     { name: "cyan outer corona", re: /rgba\(118,\s*228,\s*247,\s*0\.10\)/, expected: "0 0 20px -10px rgba(118, 228, 247, 0.10)" },

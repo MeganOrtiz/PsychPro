@@ -44,3 +44,26 @@ must update `scripts/check-design-drift.mjs` in the same commit or the guardrail
 verbatim" stance (see psychpro-eppp-unified-cards.md) — do NOT "restore" the heavy glow
 thinking EPPP is sacred. The brighter SELECTED/active variants + flashcard accent/card-front
 tones were NOT touched in this pass; revisit only if owner says they still read foggy.
+
+## Phase 3 done: per-page inline surfaces de-fogged
+Swept every main-site page's INLINE-styled boxes/panels (not the shared recipe) to the
+same de-fogged values: idle/base fill = `linear-gradient(145deg, hsl(--surf-hue 90% 17%/0.95),
+hsl(--surf-hue 90% 11%/0.99))` + top-bloom radial 0.05; active/selected = brighter (L28/20 @
+0.96/0.99, bloom 0.12); backdrop `blur(18-20px) saturate(135%)` -> `blur(5px) saturate(140%)`;
+box-shadow coronas cut to inner 0.16 / outer 0.10. Pages: dashboard banners, progress
+Needs-Work/Strong pair, reflections, topics tiles, brain-lab panels, and (extended for study-flow
+consistency) quiz, flashcards, practice-exam, subscription, plus index.css `.lesson-header-box`.
+
+**Two gotchas that bit here:**
+1. The pasted session plan's `.epd-card` numbers were the OLD FOGGY recipe (blur20/0.74-0.85/
+   coronas 0.42/0.30). The plan STRUCTURE was right but its VALUES are stale — apply de-fogged
+   values, never the plan's literal numbers.
+2. An `edit` `replace_all` on a multi-line backdropFilter block only matches ONE indentation
+   variant. brain-lab.tsx had the same `blur(20px) saturate(135%)` block at 4 different indents;
+   replace_all missed 3 of them. Use a file-wide `sed 's/blur(20px) saturate(135%)/.../g'` for
+   literal CSS-value sweeps, then grep to confirm zero remain.
+
+**Left alone (intentional):** study-surface tone=accent/card-front/dark (flashcard faces +
+Spotlight atmosphere), nav rails (.nav-glass*/.eps-kb-rail*), icon discs, toggles/badges/header
+fades, dimming scrims (blur 6-8px on PALETTE.bg), terms/privacy legal pages, onboarding plan
+cards, dev-glass-preview. Revisit only if owner flags them.
