@@ -252,7 +252,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           </button>
         </div>
 
-        <nav className="relative flex-1 p-3 space-y-2 overflow-y-auto">
+        <nav className="relative flex-1 p-3 space-y-3 overflow-y-auto">
           <div className="px-3 pt-1 pb-1">
             <p className="text-[11px] font-semibold text-[#94B8C2]/60 uppercase tracking-[1.2px]">Learn</p>
           </div>
@@ -591,7 +591,7 @@ function ToolsStudio({
           Tools Studio
         </p>
       </div>
-      <div className="space-y-1">
+      <div className="space-y-3">
         {tiers.map((t) => {
           const Icon = t.icon;
           return (
