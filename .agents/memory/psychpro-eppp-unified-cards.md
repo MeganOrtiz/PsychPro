@@ -38,3 +38,8 @@ old stack; the deepen rule still governs page backgrounds and non-card surfaces.
 truth) and mirror into the shared `.bg-card` / StudySurface light recipe; verify on
 the logged-in screens (Clerk blocks the test browser — owner screenshot or
 mockup-extract of the real composition), never on a synthetic route.
+
+**Update (supersedes "EPPP stays untouched"):** owner later chose to de-fog the SHARED
+card recipe — reducing blur + the two cyan coronas and making the fill more opaque/
+pigmented — which intentionally changes EPPP cards too. See psychpro-pigment-over-glow.md
+("Phase 2 done"). Do not re-inflate the card glow on the assumption EPPP is sacred.

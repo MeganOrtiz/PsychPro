@@ -29,3 +29,18 @@ the diagnosis directly.
 - Roll out in two phases: (1) backdrop image filter, (2) reduce surface glow/blur on
   cards/buttons/panels. Keep hue locked (--surf-hue 192) so check-surface-hue + check-design-drift
   stay green — a filter adds no color literals, so guardrails are unaffected.
+
+## Phase 2 done: shared CARD recipe de-fogged (EPPP included)
+Owner explicitly chose (over "leave EPPP as template") to de-fog the SHARED card
+recipe, accepting that it changes EPPP cards too. The canonical card recipe lives in
+THREE mirrored places — EPPP `.epd-card` (source, in eppp-dashboard.tsx `<style>`),
+`.study-page-bg .bg-card` (index.css), and StudySurface `tone="light"` — edit all three
+in lockstep. The de-fog = cut backdrop blur hard, slash the two cyan coronas (inset +
+outer), dim the top bloom, and make the fill MORE opaque + saturated (pigment, not haze).
+The design-drift lock pins the card blur + both corona alphas, so any card-recipe change
+must update `scripts/check-design-drift.mjs` in the same commit or the guardrail fails.
+
+**Why:** this supersedes the old "EPPP is the untouched template / adopt .epd-card glow
+verbatim" stance (see psychpro-eppp-unified-cards.md) — do NOT "restore" the heavy glow
+thinking EPPP is sacred. The brighter SELECTED/active variants + flashcard accent/card-front
+tones were NOT touched in this pass; revisit only if owner says they still read foggy.
