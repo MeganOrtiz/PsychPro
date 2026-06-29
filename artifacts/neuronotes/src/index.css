@@ -875,7 +875,7 @@ body {
      cloth as the EPPP domain tiles. */
   background:
     radial-gradient(125% 80% at 50% 0%,
-      rgba(118, 228, 247, 0.05) 0%,
+      rgba(118, 228, 247, 0.14) 0%,
       rgba(118, 228, 247, 0.00) 58%),
     linear-gradient(
       145deg,
@@ -884,12 +884,12 @@ body {
     );
   border: 1px solid rgba(196, 232, 242, 0.22);
   border-radius: 20px;
-  backdrop-filter: blur(5px) saturate(170%);
-  -webkit-backdrop-filter: blur(5px) saturate(170%);
+  backdrop-filter: blur(5px) saturate(190%);
+  -webkit-backdrop-filter: blur(5px) saturate(190%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.10),
-    inset 0 0 36px -24px rgba(118, 228, 247, 0.16),
-    0 0 20px -10px rgba(118, 228, 247, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    inset 0 0 36px -24px rgba(118, 228, 247, 0.28),
+    0 0 20px -10px rgba(118, 228, 247, 0.18),
     0 22px 52px -40px rgba(0, 0, 0, 0.80);
 }
 
