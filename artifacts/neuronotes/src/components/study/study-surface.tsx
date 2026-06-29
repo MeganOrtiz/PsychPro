@@ -71,10 +71,10 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
       // same translucent bloom glass as the EPPP domain tiles.
       return {
         background:
-          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.05) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 90% 17% / 0.95), hsl(var(--surf-hue) 90% 11% / 0.99))",
+          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.05) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99))",
         borderColor: "rgba(196,232,242,0.22)",
-        backdropFilter: "blur(5px) saturate(140%)",
-        WebkitBackdropFilter: "blur(5px) saturate(140%)",
+        backdropFilter: "blur(5px) saturate(170%)",
+        WebkitBackdropFilter: "blur(5px) saturate(170%)",
         boxShadow:
           "inset 0 1px 0 rgba(255,255,255,0.10), inset 0 0 36px -24px rgba(118,228,247,0.16), 0 0 20px -10px rgba(118,228,247,0.10), 0 22px 52px -40px rgba(0,0,0,0.80)",
         color: P.mist,
