@@ -1,0 +1,119 @@
+import { TrendingUp, Sparkles, BookOpen, Brain, ChevronRight, ArrowUpRight, Trophy } from "lucide-react";
+
+const MIST = "#eafdff";
+const MIST_SOFT = "rgba(205,238,247,0.74)";
+const TEAL_DEEP = "#76E4F7";
+
+// "Back to PsychPro" button look applied to content cards.
+// Recipe taken verbatim from .eppp-launch-btn: brighter, more translucent
+// cerulean glass + crisp cyan border + a 1px cyan ring + soft cyan outer glow.
+const sectionStyle: React.CSSProperties = {
+  border: "1px solid rgba(118,228,247,0.55)",
+  background:
+    "linear-gradient(180deg, hsl(var(--surf-hue) 82% 38% / 0.40), hsl(var(--surf-hue) 88% 22% / 0.50))",
+  backdropFilter: "blur(16px) saturate(140%)",
+  WebkitBackdropFilter: "blur(16px) saturate(140%)",
+  boxShadow:
+    "inset 0 1px 0 rgba(255,255,255,0.16), 0 0 0 1px rgba(118,228,247,0.28), 0 0 24px -2px rgba(118,228,247,0.6), 0 0 46px -6px rgba(118,228,247,0.4)",
+};
+
+// Nested tiles sit one step "inside": same family, dimmer fill + a softer,
+// tighter glow so the hierarchy reads (panel glows brighter than its tiles).
+const tileStyle: React.CSSProperties = {
+  border: "1px solid rgba(118,228,247,0.45)",
+  background:
+    "linear-gradient(180deg, hsl(var(--surf-hue) 82% 30% / 0.42), hsl(var(--surf-hue) 88% 18% / 0.54))",
+  backdropFilter: "blur(16px) saturate(140%)",
+  WebkitBackdropFilter: "blur(16px) saturate(140%)",
+  boxShadow:
+    "inset 0 1px 0 rgba(255,255,255,0.14), 0 0 0 1px rgba(118,228,247,0.20), 0 0 16px -3px rgba(118,228,247,0.4)",
+};
+
+export function LaunchGlass() {
+  return (
+    <div
+      style={{ ["--surf-hue" as any]: "192" }}
+      className="relative min-h-screen w-full overflow-hidden p-7"
+    >
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0"
+        style={{
+          zIndex: -2,
+          backgroundColor: "#05252d",
+          backgroundImage:
+            "radial-gradient(ellipse 130% 100% at 50% 34%, hsl(var(--surf-hue) 90% 7% / 0.00) 60%, hsl(var(--surf-hue) 93% 5% / 0.55) 100%), url('/__mockup/images/app-smoke.jpg')",
+          backgroundSize: "cover, cover",
+          backgroundPosition: "center top, center top",
+          backgroundRepeat: "no-repeat, no-repeat",
+          filter: "saturate(1.32) contrast(1.12) brightness(0.9)",
+        }}
+      />
+      <p className="mb-4 text-xs font-semibold tracking-[0.2em]" style={{ color: MIST_SOFT }}>
+        LAUNCH GLASS — "BACK TO PSYCHPRO" BUTTON RECIPE
+      </p>
+      <div className="space-y-5">
+        <section className="relative rounded-2xl p-5" style={sectionStyle}>
+          <div className="mb-4 flex items-center gap-2">
+            <TrendingUp className="h-4 w-4" style={{ color: TEAL_DEEP }} />
+            <h2 className="font-semibold" style={{ color: MIST }}>Continue Your Journey</h2>
+          </div>
+          <div className="mb-2 flex items-center justify-between">
+            <p className="font-medium" style={{ color: MIST }}>Objective Measures</p>
+            <span className="text-sm font-semibold" style={{ color: TEAL_DEEP }}>8%</span>
+          </div>
+          <div className="mb-4 h-2 overflow-hidden rounded-full" style={{ background: "hsl(var(--surf-hue) 80% 48% / 0.16)" }}>
+            <div className="h-full" style={{ width: "8%", background: `linear-gradient(90deg, ${TEAL_DEEP}, #b8f1fb)` }} />
+          </div>
+          <button className="inline-flex items-center gap-1 rounded-md px-5 py-2 text-sm font-semibold" style={{ background: "rgba(118,228,247,0.18)", color: MIST, border: "1px solid rgba(118,228,247,0.45)" }}>
+            Continue Studying <ArrowUpRight className="h-4 w-4" />
+          </button>
+        </section>
+
+        <section className="relative rounded-2xl p-5" style={sectionStyle}>
+          <div className="mb-4">
+            <h2 className="font-semibold" style={{ color: MIST }}>Recommended for You</h2>
+            <p className="mt-1 text-xs" style={{ color: MIST_SOFT }}>Based on your goals and progress</p>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { icon: Sparkles, name: "Objective Measures", hint: "Expand your knowledge" },
+              { icon: BookOpen, name: "Apraxia & Agnosia", hint: "Strengthen your foundation" },
+              { icon: Brain, name: "Acceptance & Mindfulness", hint: "Sharpen your skills" },
+              { icon: TrendingUp, name: "ADHD & Medications", hint: "Level up next" },
+            ].map((t) => {
+              const Icon = t.icon;
+              return (
+                <div key={t.name} className="flex items-center gap-3 rounded-md p-3" style={tileStyle}>
+                  <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border" style={{ background: "rgba(118,228,247,0.14)", borderColor: "rgba(118,228,247,0.32)" }}>
+                    <Icon className="h-4 w-4" style={{ color: TEAL_DEEP }} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold" style={{ color: MIST }}>{t.name}</p>
+                    <p className="truncate text-xs" style={{ color: MIST_SOFT }}>{t.hint}</p>
+                  </div>
+                  <ChevronRight className="h-4 w-4 flex-shrink-0" style={{ color: TEAL_DEEP }} />
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="relative rounded-2xl p-5" style={sectionStyle}>
+          <div className="mb-3 flex items-center gap-2">
+            <Trophy className="h-4 w-4" style={{ color: TEAL_DEEP }} />
+            <h2 className="font-semibold" style={{ color: MIST }}>Leaderboard</h2>
+          </div>
+          <div className="space-y-2">
+            {["Scholar 0749", "Scholar 1785", "Scholar 5789", "Scholar 7135"].map((s, i) => (
+              <div key={s} className="flex items-center gap-3 text-sm">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-bold" style={{ background: "rgba(118,228,247,0.18)", color: TEAL_DEEP }}>{i + 1}</span>
+                <span style={{ color: MIST }}>{s}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+}

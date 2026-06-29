@@ -20,6 +20,7 @@ export const modules: ModuleMap = {
   "./components/mockups/dashboard-hero-slot/TopicOfTheDay.tsx": () => import("../components/mockups/dashboard-hero-slot/TopicOfTheDay.tsx"),
   "./components/mockups/dashboard-hero-slot/WeeklySummary.tsx": () => import("../components/mockups/dashboard-hero-slot/WeeklySummary.tsx"),
   "./components/mockups/defog-content/Current.tsx": () => import("../components/mockups/defog-content/Current.tsx"),
+  "./components/mockups/defog-content/LaunchGlass.tsx": () => import("../components/mockups/defog-content/LaunchGlass.tsx"),
   "./components/mockups/defog-content/Pigment.tsx": () => import("../components/mockups/defog-content/Pigment.tsx"),
   "./components/mockups/defog-content/Richer.tsx": () => import("../components/mockups/defog-content/Richer.tsx"),
   "./components/mockups/header-refresh/Refined.tsx": () => import("../components/mockups/header-refresh/Refined.tsx"),
