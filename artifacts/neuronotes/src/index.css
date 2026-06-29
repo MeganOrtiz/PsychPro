@@ -646,18 +646,23 @@ body {
    readable over the smoky background. */
 .lesson-header-box {
   background:
+    radial-gradient(125% 80% at 50% 0%,
+      rgba(118, 228, 247, 0.05) 0%,
+      rgba(118, 228, 247, 0.00) 58%),
     linear-gradient(
       145deg,
-      hsl(var(--surf-hue) 100% 18% / 0.96),
-      hsl(var(--surf-hue) 100% 9% / 0.99)
+      hsl(var(--surf-hue) 90% 17% / 0.95),
+      hsl(var(--surf-hue) 90% 11% / 0.99)
     );
-  border: 1px solid rgba(196, 232, 242, 0.22);
+  border: 1px solid rgba(196, 232, 242, 0.20);
   border-radius: 12px;
   backdrop-filter: blur(5px) saturate(140%);
   -webkit-backdrop-filter: blur(5px) saturate(140%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 8px 24px -16px rgba(0, 0, 0, 0.74);
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    inset 0 0 32px -24px rgba(118, 228, 247, 0.16),
+    0 0 20px -10px rgba(118, 228, 247, 0.10),
+    0 8px 24px -16px rgba(0, 0, 0, 0.72);
   padding: 1.5rem 1.5rem 1.25rem;
 }
 
@@ -667,36 +672,47 @@ body {
    cinematic surface. */
 .recommended-tile {
   background:
+    radial-gradient(125% 80% at 50% 0%,
+      rgba(118, 228, 247, 0.08) 0%,
+      rgba(118, 228, 247, 0.00) 58%),
     linear-gradient(
       145deg,
-      hsl(var(--surf-hue) 100% 23% / 0.94),
-      hsl(var(--surf-hue) 100% 14% / 0.98)
+      hsl(var(--surf-hue) 88% 23% / 0.93),
+      hsl(var(--surf-hue) 88% 16% / 0.97)
     );
-  border-color: rgba(196, 232, 242, 0.30);
+  border-color: rgba(196, 232, 242, 0.26);
   backdrop-filter: blur(5px) saturate(140%);
   -webkit-backdrop-filter: blur(5px) saturate(140%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 16px 40px -30px rgba(0, 0, 0, 0.76);
+    inset 0 0 34px -24px rgba(118, 228, 247, 0.18),
+    0 0 18px -10px rgba(118, 228, 247, 0.12),
+    0 16px 40px -30px rgba(0, 0, 0, 0.74);
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .recommended-tile:hover {
-  border-color: rgba(196, 232, 242, 0.44);
+  border-color: rgba(196, 232, 242, 0.40);
   background:
+    radial-gradient(125% 80% at 50% 0%,
+      rgba(118, 228, 247, 0.12) 0%,
+      rgba(118, 228, 247, 0.00) 58%),
     linear-gradient(
       145deg,
-      hsl(var(--surf-hue) 100% 28% / 0.96),
-      hsl(var(--surf-hue) 100% 18% / 0.99)
+      hsl(var(--surf-hue) 86% 30% / 0.95),
+      hsl(var(--surf-hue) 89% 22% / 0.98)
     );
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    0 22px 54px -38px rgba(0, 0, 0, 0.78);
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 0 34px -22px rgba(118, 228, 247, 0.24),
+    0 0 22px -8px rgba(118, 228, 247, 0.18),
+    0 22px 54px -38px rgba(0, 0, 0, 0.76);
 }
 .recommended-tile:active {
-  border-color: rgba(196, 232, 242, 0.48);
+  border-color: rgba(196, 232, 242, 0.44);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    0 18px 40px -28px rgba(0, 0, 0, 0.74);
+    0 0 30px -6px rgba(118, 228, 247, 0.4),
+    0 18px 40px -28px rgba(0, 0, 0, 0.7);
 }
 
 /* Course Mastery tiles — dull and desaturated until the course's mastery
@@ -853,25 +869,28 @@ body {
    backdrop blur, deep drop shadow, faint outer cerulean glow. */
 .study-page-bg .bg-card,
 .study-page-aurora .bg-card {
-  /* Pigment-corrected cerulean glass (matches the owner's photo-editor pass):
-     max-saturation deep cerulean with widened top→bottom contrast, a crisp
-     cerulean hairline and a deep drop shadow for separation. NO cyan top-bloom
-     or inner/outer corona — depth comes from PIGMENT (saturation + contrast),
-     not glow. Keeps every generic shadcn card on the main site cut from the
-     same cloth as the EPPP domain tiles. */
+  /* Unified with the EPPP card system (.epd-card): a radial cyan top-bloom over
+     a 145° diagonal cerulean glass, cyan inner glow + outer corona, deep drop
+     shadow. Keeps every generic shadcn card on the main site cut from the same
+     cloth as the EPPP domain tiles. */
   background:
+    radial-gradient(125% 80% at 50% 0%,
+      rgba(118, 228, 247, 0.05) 0%,
+      rgba(118, 228, 247, 0.00) 58%),
     linear-gradient(
       145deg,
-      hsl(var(--surf-hue) 100% 18% / 0.96),
-      hsl(var(--surf-hue) 100% 9% / 0.99)
+      hsl(var(--surf-hue) 90% 17% / 0.95),
+      hsl(var(--surf-hue) 90% 11% / 0.99)
     );
   border: 1px solid rgba(196, 232, 242, 0.22);
   border-radius: 20px;
   backdrop-filter: blur(5px) saturate(140%);
   -webkit-backdrop-filter: blur(5px) saturate(140%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 22px 52px -40px rgba(0, 0, 0, 0.82);
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    inset 0 0 36px -24px rgba(118, 228, 247, 0.16),
+    0 0 20px -10px rgba(118, 228, 247, 0.10),
+    0 22px 52px -40px rgba(0, 0, 0, 0.80);
 }
 
 /* =============================================================================

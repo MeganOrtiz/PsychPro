@@ -859,24 +859,9 @@ const styles = `
   align-items: center;
   text-align: center;
 }
-/* Localized legibility scrim — a soft pool of deep teal behind the hero text
-   only, so the wordmark, tagline and blurb read cleanly over the glowing brain
-   without dimming the rest of the full-intensity backdrop. */
-.landing-hero::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: min(880px, 92%);
-  height: 78%;
-  background: radial-gradient(ellipse 64% 56% at 50% 52%,
-    hsl(var(--surf-hue) 82% 7% / 0.66) 0%,
-    hsl(var(--surf-hue) 82% 7% / 0.40) 46%,
-    hsl(var(--surf-hue) 82% 7% / 0.00) 76%);
-  pointer-events: none;
-}
+/* Flat hero (owner request): no radial scrim halo behind the hero text.
+   Legibility comes from neutral per-element drop shadows instead of a pooled
+   background blob. */
 
 .landing-wordmark,
 .landing-tagline,
@@ -911,6 +896,7 @@ const styles = `
   line-height: 1;
   color: #F4FBFF;
   padding-left: 0.22em;
+  text-shadow: 0 2px 18px hsl(var(--surf-hue) 92% 5% / 0.55);
 }
 .landing-tagline {
   margin: clamp(6px, 1vh, 12px) 0 0;
@@ -928,7 +914,7 @@ const styles = `
   font-size: clamp(22px, 2.8vw, 36px);
   line-height: 1.2;
   color: #F4FBFF;
-  text-shadow: 0 0 30px ${C.cyan}30;
+  text-shadow: 0 2px 16px hsl(var(--surf-hue) 92% 5% / 0.5);
 }
 .landing-blurb {
   margin: clamp(10px, 1.4vh, 18px) auto 0;

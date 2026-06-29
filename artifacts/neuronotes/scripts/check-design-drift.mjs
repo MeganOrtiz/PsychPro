@@ -8,13 +8,11 @@
 //
 //   1. Global structural tokens  — the corner-radius token (--radius) and the
 //      surface-hue base token (--surf-hue).
-//   2. The pigment cerulean glass card — the main-site `.bg-card` rule: a 145°
-//      diagonal max-saturation cerulean gradient, a fixed 20px (NON-pill) corner,
-//      blur(5px) saturate(140%) glass, and a crisp cerulean hairline. Depth comes
-//      from PIGMENT (saturation + contrast), NOT cyan glow — the owner explicitly
-//      rejected the bloom/corona look, so there is intentionally no cyan inner
-//      glow or outer corona here. Guards against drift toward rounder, softer,
-//      pill-like controls and against the glow creeping back.
+//   2. The luminous cerulean glass card — the main-site `.bg-card` rule, which
+//      mirrors the EPPP `.epd-card`: a 145° diagonal bloom, a fixed 20px (NON-
+//      pill) corner, blur(20px) saturate(135%) glass, and the cyan inner glow +
+//      outer corona shadow. Guards against the recurring drift toward rounder,
+//      softer, pill-like controls.
 //   3. A ban on mint / teal-green accents — cerulean #76E4F7 is the only accent;
 //      mint was retracted app-wide and keeps trying to creep back.
 //
@@ -84,20 +82,14 @@ if (!cardRecipe) {
   const RECIPE = [
     { name: "non-pill 20px corner", re: /border-radius:\s*20px;/, expected: "border-radius: 20px;" },
     { name: "glass blur", re: /backdrop-filter:\s*blur\(5px\)\s*saturate\(140%\)/, expected: "backdrop-filter: blur(5px) saturate(140%)" },
-    { name: "145° diagonal gradient", re: /linear-gradient\(\s*145deg/, expected: "linear-gradient(145deg, …)" },
-    { name: "max-saturation pigment fill", re: /hsl\(var\(--surf-hue\)\s*100%\s*18%/, expected: "hsl(var(--surf-hue) 100% 18% / 0.96)" },
-    { name: "no cyan glow/corona (pigment, not glow)", re: /rgba\(118,\s*228,\s*247/, expected: "remove any cyan inner glow / outer corona from .bg-card — depth is pigment, not glow", forbidden: true },
+    { name: "145° diagonal bloom", re: /linear-gradient\(\s*145deg/, expected: "linear-gradient(145deg, …)" },
+    { name: "cyan inner glow", re: /rgba\(118,\s*228,\s*247,\s*0\.16\)/, expected: "inset 0 0 36px -24px rgba(118, 228, 247, 0.16)" },
+    { name: "cyan outer corona", re: /rgba\(118,\s*228,\s*247,\s*0\.10\)/, expected: "0 0 20px -10px rgba(118, 228, 247, 0.10)" },
     { name: "cerulean hairline border", re: /rgba\(196,\s*232,\s*242,\s*0\.22\)/, expected: "border: 1px solid rgba(196, 232, 242, 0.22)" },
   ];
   for (const r of RECIPE) {
-    const present = r.re.test(cardRecipe);
-    // `forbidden` entries must be ABSENT (e.g. the rejected cyan glow); all
-    // others must be PRESENT.
-    if (r.forbidden ? present : !present) {
-      fail(
-        `.bg-card recipe: ${r.name} ${r.forbidden ? "crept back in" : "changed or removed"}`,
-        r.forbidden ? r.expected : `restore \`${r.expected}\``,
-      );
+    if (!r.re.test(cardRecipe)) {
+      fail(`.bg-card recipe: ${r.name} changed or removed`, `restore \`${r.expected}\``);
     }
   }
 }
@@ -113,32 +105,6 @@ while ((m = MINT.exec(css))) {
     `mint/teal-green accent ${m[0]} at ${REL}:${lineOf(m.index)}`,
     "use the locked cerulean #76E4F7 / rgba(118, 228, 247, A) — mint was retracted app-wide",
   );
-}
-
-// --- 4) No cyan card-bloom on main-site pages ------------------------------
-// The owner rejected cyan glow on content cards/panels (pigment, not glow).
-// The card top-bloom signature `radial-gradient(125% 80% at 50% 0%, rgba(118,
-// 228, 247 …)` is unambiguously that glow (legit accents — borders, icon discs,
-// chart strokes, heading text-shadows — never use this exact signature), so ban
-// it from the main-site sidebar pages. EPPP pages are the untouched template.
-const BLOOM = /radial-gradient\(\s*125%\s*80%\s*at\s*50%\s*0%,\s*rgba\(118,\s*228,\s*247/;
-const PAGES = [
-  "pages/dashboard.tsx",
-  "pages/progress.tsx",
-  "pages/reflections.tsx",
-  "pages/topics.tsx",
-  "pages/brain-lab.tsx",
-];
-for (const rel of PAGES) {
-  const fp = path.join(ROOT, "src", rel);
-  if (!fs.existsSync(fp)) continue;
-  const src = fs.readFileSync(fp, "utf8");
-  if (BLOOM.test(src)) {
-    fail(
-      `cyan card-bloom glow crept back into src/${rel}`,
-      "remove the `radial-gradient(125% 80% at 50% 0%, rgba(118,228,247 …)` card top-bloom — content cards use pigment, not glow",
-    );
-  }
 }
 
 // --- Report ----------------------------------------------------------------
