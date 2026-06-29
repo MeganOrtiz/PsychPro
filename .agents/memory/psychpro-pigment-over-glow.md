@@ -1,69 +1,63 @@
 ---
 name: PsychPro pigment-over-glow correction
-description: The "flat/bland/foggy" complaint is a glow+blur desaturation problem, not a hue/darkness problem; fix with pigment (saturate+contrast up, brightness down) and LESS glow, never more light.
+description: The "flat/bland/foggy" complaint is a glow+blur desaturation problem, not a hue/darkness problem; the owner's final direction is pigment-only (saturated deep cerulean fill, NO cyan glow at all) on content cards/panels.
 ---
 
 # Pigment over glow
 
-When the owner says the site looks "flat", "bland", or "foggy", the root cause is
-**stacked cyan glow + layered backdrop-blur desaturating and flattening contrast**, NOT
-the wrong hue and NOT that surfaces are too dark.
+When the owner says content cards/panels look "flat", "bland", "foggy", or "washed
+out", the root cause is **stacked cyan glow + layered backdrop-blur desaturating and
+flattening contrast**, NOT the wrong hue and NOT that surfaces are too dark.
 
-**The fix (owner-confirmed "yes exactly"):**
-- Increase **saturation** and **contrast**, and **lower brightness** (deepen blacks) so the
-  cerulean reads as *pigment*, not a milky wash.
-- **Reduce** the glow: fewer/weaker cyan coronas (outer + the doubled inset corona), and pull
-  back the ~25 `backdrop-filter: blur() saturate()` layers that compound into haze across nested
-  surfaces (page bg → panel → card → inner tile).
-- Do NOT "add more light/glow" to fix flatness — that is the cause, not the cure.
+**Why:** Owner edited the reference in their own photo editor (saturation+contrast up,
+brightness down) and showed a side-by-side; the more-pigmented version killed the fog.
+They explicitly rejected an "add cyan glow/bloom" attempt: *"no i dont want to add glow
+like that. this is an image that i adjusted on my computer and i like it better."*
 
-**Why:** Owner edited the landing hero in their own photo editor (saturation+contrast up,
-brightness down) and showed a side-by-side; the more-pigmented version killed the fog. Confirmed
-the diagnosis directly.
+## Final decision: pigment-only, NO cyan glow on content cards
+Owner's settled direction (supersedes every earlier "reduce the glow a bit" pass): a
+content card/panel = **saturated deep cerulean linear-gradient fill (push HSL saturation
+to 100%, widen top→bottom lightness contrast, deepen) + a white top hairline + a deep
+drop shadow for separation. NO cyan radial top-bloom. NO cyan inner/outer corona.**
+Do NOT "add light/glow" to fix flatness — that is the cause, not the cure; fix with
+saturate + contrast up, brightness down, and LESS glow.
 
-**How to apply:**
-- Hero/backdrop images live on `.study-page-bg::before` (in-app = `app-smoke.jpg`) and
-  `.landing-root.study-page-bg::before` (landing = `brain-clouds.jpg`). Correct them with a CSS
-  `filter: saturate() contrast() brightness()` on the `::before` (started landing-only at
-  saturate(1.32) contrast(1.12) brightness(0.9) as an apples-to-apples test before site-wide).
-- Roll out in two phases: (1) backdrop image filter, (2) reduce surface glow/blur on
-  cards/buttons/panels. Keep hue locked (--surf-hue 192) so check-surface-hue + check-design-drift
-  stay green — a filter adds no color literals, so guardrails are unaffected.
+**Scope this applies to (all done):**
+- Shared recipes: index.css `.bg-card`, `.lesson-header-box`, `.recommended-tile`
+  (base/hover/active), and StudySurface `tone="light"`.
+- Inline page panels on the main-site sidebar pages: dashboard, progress, reflections,
+  topics, brain-lab.
 
-## Phase 2 done: shared CARD recipe de-fogged (EPPP included)
-Owner explicitly chose (over "leave EPPP as template") to de-fog the SHARED card
-recipe, accepting that it changes EPPP cards too. The canonical card recipe lives in
-THREE mirrored places — EPPP `.epd-card` (source, in eppp-dashboard.tsx `<style>`),
-`.study-page-bg .bg-card` (index.css), and StudySurface `tone="light"` — edit all three
-in lockstep. The de-fog = cut backdrop blur hard, slash the two cyan coronas (inset +
-outer), dim the top bloom, and make the fill MORE opaque + saturated (pigment, not haze).
-The design-drift lock pins the card blur + both corona alphas, so any card-recipe change
-must update `scripts/check-design-drift.mjs` in the same commit or the guardrail fails.
+**Left as the template:** EPPP `.epd-card` (eppp-dashboard.tsx) is intentionally NOT
+changed. Any pasted session plan that says to align inline surfaces *to* the `.epd-card`
+glow recipe (blur20, fill 0.74/0.85, coronas 0.42/0.30) is STALE — those are the old
+foggy numbers; do NOT re-add glow.
 
-**Why:** this supersedes the old "EPPP is the untouched template / adopt .epd-card glow
-verbatim" stance (see psychpro-eppp-unified-cards.md) — do NOT "restore" the heavy glow
-thinking EPPP is sacred. The brighter SELECTED/active variants + flashcard accent/card-front
-tones were NOT touched in this pass; revisit only if owner says they still read foggy.
+## How to sweep inline panels safely (critical)
+Most `rgba(118,228,247…)` inline uses are **legitimate accents — keep them**:
+`borderColor`, icon-chip backgrounds, chart strokes / tooltip borders, heading
+`textShadow` (form `0 0 16px rgba(...)`, no spread), and brain-viz radials (which use
+`PALETTE.surf`, not a literal cyan). A blind find/replace on the cyan literal will strip
+these and break the design (this is the same mistake behind the reverted glass sweep).
 
-## Phase 3 done: per-page inline surfaces de-fogged
-Swept every main-site page's INLINE-styled boxes/panels (not the shared recipe) to the
-same de-fogged values: idle/base fill = `linear-gradient(145deg, hsl(--surf-hue 90% 17%/0.95),
-hsl(--surf-hue 90% 11%/0.99))` + top-bloom radial 0.05; active/selected = brighter (L28/20 @
-0.96/0.99, bloom 0.12); backdrop `blur(18-20px) saturate(135%)` -> `blur(5px) saturate(140%)`;
-box-shadow coronas cut to inner 0.16 / outer 0.10. Pages: dashboard banners, progress
-Needs-Work/Strong pair, reflections, topics tiles, brain-lab panels, and (extended for study-flow
-consistency) quiz, flashcards, practice-exam, subscription, plus index.css `.lesson-header-box`.
+Strip ONLY the two card/panel glow signatures:
+1. Background top-bloom: `radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,X) 0%,
+   rgba(118,228,247,0.00) 58%|60%), ` → remove the prefix, leave the `linear-gradient(...)`.
+2. Box-shadow coronas: `inset 0 0 Npx -Mpx rgba(118,228,247,X)` and
+   `0 0 Npx -Mpx rgba(118,228,247,X)`. The `-Mpx` **spread** is what distinguishes a
+   corona from a heading text-shadow — match on it so you don't touch headings.
 
-**Two gotchas that bit here:**
-1. The pasted session plan's `.epd-card` numbers were the OLD FOGGY recipe (blur20/0.74-0.85/
-   coronas 0.42/0.30). The plan STRUCTURE was right but its VALUES are stale — apply de-fogged
-   values, never the plan's literal numbers.
-2. An `edit` `replace_all` on a multi-line backdropFilter block only matches ONE indentation
-   variant. brain-lab.tsx had the same `blur(20px) saturate(135%)` block at 4 different indents;
-   replace_all missed 3 of them. Use a file-wide `sed 's/blur(20px) saturate(135%)/.../g'` for
-   literal CSS-value sweeps, then grep to confirm zero remain.
+Use targeted `perl -0pi` substitutions (self-contained, balanced substrings), then grep
+to confirm zero blooms/coronas remain AND that the accent/textShadow counts are unchanged.
+`edit` `replace_all` misses indentation variants — see psychpro-design-lock for the value
+guardrail. After the sweep, verify no dangling commas / empty `boxShadow` strings via tsc.
 
-**Left alone (intentional):** study-surface tone=accent/card-front/dark (flashcard faces +
-Spotlight atmosphere), nav rails (.nav-glass*/.eps-kb-rail*), icon discs, toggles/badges/header
-fades, dimming scrims (blur 6-8px on PALETTE.bg), terms/privacy legal pages, onboarding plan
-cards, dev-glass-preview. Revisit only if owner flags them.
+## Guardrail
+`scripts/check-design-drift.mjs` now (a) REQUIRES the max-saturation pigment fill on
+`.bg-card` and (b) FORBIDS any `rgba(118,228,247…)` cyan glow returning to `.bg-card`.
+Hue stays locked (`--surf-hue` 192) so check-surface-hue is unaffected. Any intentional
+card-recipe change must update this guardrail in the same commit.
+
+**Verification constraint:** Clerk blocks the test browser on auth-gated pages, so verify
+the look via an isolated mockup-sandbox copy of the real composition (see
+psychpro-signed-in-verification), never a proxy.

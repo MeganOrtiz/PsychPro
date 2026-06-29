@@ -20,6 +20,7 @@ export const modules: ModuleMap = {
   "./components/mockups/dashboard-hero-slot/TopicOfTheDay.tsx": () => import("../components/mockups/dashboard-hero-slot/TopicOfTheDay.tsx"),
   "./components/mockups/dashboard-hero-slot/WeeklySummary.tsx": () => import("../components/mockups/dashboard-hero-slot/WeeklySummary.tsx"),
   "./components/mockups/defog-content/Current.tsx": () => import("../components/mockups/defog-content/Current.tsx"),
+  "./components/mockups/defog-content/Pigment.tsx": () => import("../components/mockups/defog-content/Pigment.tsx"),
   "./components/mockups/defog-content/Richer.tsx": () => import("../components/mockups/defog-content/Richer.tsx"),
   "./components/mockups/header-refresh/Refined.tsx": () => import("../components/mockups/header-refresh/Refined.tsx"),
   "./components/mockups/header-variants/Current.tsx": () => import("../components/mockups/header-variants/Current.tsx"),
@@ -29,7 +30,7 @@ export const modules: ModuleMap = {
   "./components/mockups/header-variants/UnderglowPool.tsx": () => import("../components/mockups/header-variants/UnderglowPool.tsx"),
   "./components/mockups/landing-redesign/Cinematic.tsx": () => import("../components/mockups/landing-redesign/Cinematic.tsx"),
   "./components/mockups/landing-redesign/TighterBolder.tsx": () => import("../components/mockups/landing-redesign/TighterBolder.tsx"),
+  "./components/mockups/psychpro-aesthetic/Landing.tsx": () => import("../components/mockups/psychpro-aesthetic/Landing.tsx"),
   "./components/mockups/psychpro-polished/Dashboard.tsx": () => import("../components/mockups/psychpro-polished/Dashboard.tsx"),
-  "./components/mockups/psychpro-polished/Landing.tsx": () => import("../components/mockups/psychpro-polished/Landing.tsx"),
-  "./components/mockups/psychpro-aesthetic/Landing.tsx": () => import("../components/mockups/psychpro-aesthetic/Landing.tsx")
+  "./components/mockups/psychpro-polished/Landing.tsx": () => import("../components/mockups/psychpro-polished/Landing.tsx")
 };

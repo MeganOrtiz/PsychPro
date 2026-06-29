@@ -65,18 +65,18 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
       };
     case "light":
     default:
-      // Unified with the EPPP card system (.epd-card): a radial cyan top-bloom
-      // over a 145° diagonal cerulean glass with a cyan inner glow + outer
-      // corona and a deep drop shadow, so the main-site surfaces read as the
-      // same translucent bloom glass as the EPPP domain tiles.
+      // Pigment-corrected cerulean glass (matches the owner's photo-editor pass):
+      // max-saturation deep cerulean with widened top→bottom contrast and a crisp
+      // hairline + deep drop shadow for separation. NO cyan top-bloom or inner/
+      // outer corona — depth comes from PIGMENT (saturation + contrast), not glow.
       return {
         background:
-          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.05) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 90% 17% / 0.95), hsl(var(--surf-hue) 90% 11% / 0.99))",
+          "linear-gradient(145deg, hsl(var(--surf-hue) 100% 18% / 0.96), hsl(var(--surf-hue) 100% 9% / 0.99))",
         borderColor: "rgba(196,232,242,0.22)",
         backdropFilter: "blur(5px) saturate(140%)",
         WebkitBackdropFilter: "blur(5px) saturate(140%)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.10), inset 0 0 36px -24px rgba(118,228,247,0.16), 0 0 20px -10px rgba(118,228,247,0.10), 0 22px 52px -40px rgba(0,0,0,0.80)",
+          "inset 0 1px 0 rgba(255,255,255,0.12), 0 22px 52px -40px rgba(0,0,0,0.82)",
         color: P.mist,
       };
   }

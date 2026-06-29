@@ -189,12 +189,12 @@ function StructureSearch({
         className="w-full max-w-xl rounded-2xl border overflow-hidden"
         style={{
           background:
-            "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.05) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 90% 17% / 0.95), hsl(var(--surf-hue) 90% 11% / 0.99))",
+            "linear-gradient(145deg, hsl(var(--surf-hue) 90% 17% / 0.95), hsl(var(--surf-hue) 90% 11% / 0.99))",
           borderColor: "rgba(196,232,242,0.22)",
           backdropFilter: "blur(5px) saturate(140%)",
           WebkitBackdropFilter: "blur(5px) saturate(140%)",
           boxShadow:
-            "inset 0 1px 0 rgba(255,255,255,0.10), inset 0 0 36px -24px rgba(118,228,247,0.16), 0 0 20px -10px rgba(118,228,247,0.10), 0 24px 60px -42px rgba(0,0,0,0.80)",
+            "inset 0 1px 0 rgba(255,255,255,0.10), 0 24px 60px -42px rgba(0,0,0,0.80)",
         }}
         onClick={(e) => e.stopPropagation()}
         role="dialog"
@@ -473,12 +473,12 @@ function StructureDetail({
       className="rounded-2xl border overflow-hidden flex flex-col h-full min-h-0 max-h-full"
       style={{
         background:
-          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.05) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 90% 17% / 0.95), hsl(var(--surf-hue) 90% 11% / 0.99))",
+          "linear-gradient(145deg, hsl(var(--surf-hue) 90% 17% / 0.95), hsl(var(--surf-hue) 90% 11% / 0.99))",
         borderColor: "rgba(196,232,242,0.22)",
         backdropFilter: "blur(5px) saturate(140%)",
         WebkitBackdropFilter: "blur(5px) saturate(140%)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.10), inset 0 0 36px -24px rgba(118,228,247,0.16), 0 0 20px -10px rgba(118,228,247,0.10), 0 24px 60px -42px rgba(0,0,0,0.80)",
+          "inset 0 1px 0 rgba(255,255,255,0.10), 0 24px 60px -42px rgba(0,0,0,0.80)",
       }}
       data-testid="structure-detail"
     >
@@ -883,12 +883,12 @@ function EmptyDetail() {
       className="rounded-2xl border p-6 h-full flex flex-col items-center justify-center text-center"
       style={{
         background:
-          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.05) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 90% 17% / 0.95), hsl(var(--surf-hue) 90% 11% / 0.99))",
+          "linear-gradient(145deg, hsl(var(--surf-hue) 90% 17% / 0.95), hsl(var(--surf-hue) 90% 11% / 0.99))",
         borderColor: "rgba(196,232,242,0.22)",
         backdropFilter: "blur(5px) saturate(140%)",
         WebkitBackdropFilter: "blur(5px) saturate(140%)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.10), inset 0 0 36px -24px rgba(118,228,247,0.16), 0 0 20px -10px rgba(118,228,247,0.10), 0 24px 60px -42px rgba(0,0,0,0.80)",
+          "inset 0 1px 0 rgba(255,255,255,0.10), 0 24px 60px -42px rgba(0,0,0,0.80)",
       }}
       data-testid="empty-detail"
     >
@@ -947,7 +947,7 @@ function NumberedKey({
       className="rounded-2xl border h-full flex flex-col overflow-hidden"
       style={{
         background:
-          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.05) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 90% 17% / 0.95), hsl(var(--surf-hue) 90% 11% / 0.99))",
+          "linear-gradient(145deg, hsl(var(--surf-hue) 90% 17% / 0.95), hsl(var(--surf-hue) 90% 11% / 0.99))",
         borderColor: "rgba(196,232,242,0.22)",
         backdropFilter: "blur(5px) saturate(140%)",
         WebkitBackdropFilter: "blur(5px) saturate(140%)",
@@ -1883,12 +1883,12 @@ export default function BrainLabPage() {
             className="relative rounded-2xl border overflow-hidden flex-1 min-h-0 h-full"
             style={{
               background:
-                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.05) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 90% 17% / 0.95), hsl(var(--surf-hue) 90% 11% / 0.99))",
+                "linear-gradient(145deg, hsl(var(--surf-hue) 90% 17% / 0.95), hsl(var(--surf-hue) 90% 11% / 0.99))",
               borderColor: "rgba(196,232,242,0.22)",
               backdropFilter: "blur(5px) saturate(140%)",
               WebkitBackdropFilter: "blur(5px) saturate(140%)",
               boxShadow:
-                "inset 0 1px 0 rgba(255,255,255,0.10), inset 0 0 36px -24px rgba(118,228,247,0.16), 0 0 20px -10px rgba(118,228,247,0.10), 0 24px 60px -42px rgba(0,0,0,0.80)",
+                "inset 0 1px 0 rgba(255,255,255,0.10), 0 24px 60px -42px rgba(0,0,0,0.80)",
             }}
             data-testid="brain-diagram-wrap"
           >
