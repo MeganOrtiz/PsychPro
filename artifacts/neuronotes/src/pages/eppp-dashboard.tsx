@@ -625,15 +625,15 @@ const styles = `
   border-radius: 20px;
   padding: clamp(18px, 2vw, 24px);
   background:
-    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.05) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(145deg, hsl(var(--surf-hue) 90% 17% / 0.95), hsl(var(--surf-hue) 90% 11% / 0.99));
+    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%),
+    linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99));
   border: 1px solid rgba(196,232,242,0.22);
-  backdrop-filter: blur(5px) saturate(140%);
-  -webkit-backdrop-filter: blur(5px) saturate(140%);
+  backdrop-filter: blur(5px) saturate(190%);
+  -webkit-backdrop-filter: blur(5px) saturate(190%);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.10),
-    inset 0 0 36px -24px rgba(118,228,247,0.16),
-    0 0 20px -10px rgba(118,228,247,0.10),
+    inset 0 1px 0 rgba(255,255,255,0.03),
+    inset 0 0 36px -24px rgba(118,228,247,0.28),
+    0 0 20px -10px rgba(118,228,247,0.18),
     0 22px 52px -40px rgba(0,0,0,0.80);
 }
 .epd-card-label {
@@ -836,10 +836,10 @@ const styles = `
   text-decoration: none;
   background:
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85));
+    linear-gradient(145deg, hsl(var(--surf-hue) 100% 19% / 0.74), hsl(var(--surf-hue) 100% 14% / 0.85));
   border: 1px solid rgba(196,232,242,0.22);
-  backdrop-filter: blur(20px) saturate(135%);
-  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  backdrop-filter: blur(20px) saturate(170%);
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.12),
     inset 0 0 40px -22px rgba(118,228,247,0.42),
@@ -901,10 +901,10 @@ const styles = `
   cursor: pointer;
   background:
     radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
-    linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85));
+    linear-gradient(145deg, hsl(var(--surf-hue) 100% 19% / 0.74), hsl(var(--surf-hue) 100% 14% / 0.85));
   border: 1px solid rgba(196,232,242,0.22);
-  backdrop-filter: blur(20px) saturate(135%);
-  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  backdrop-filter: blur(20px) saturate(170%);
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.12),
     inset 0 0 38px -22px rgba(118,228,247,0.40),

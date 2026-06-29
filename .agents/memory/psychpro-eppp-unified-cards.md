@@ -1,45 +1,37 @@
 ---
-name: PsychPro main site adopts EPPP card system
-description: The main site's tiles/cards now use the EPPP .epd-card recipe verbatim; EPPP is the template. How this differs from the reverted glass sweep.
+name: PsychPro main + EPPP share ONE boosted card family
+description: Main site and EPPP cards now share a deliberately boosted cerulean glass recipe. The "EPPP is the untouched template" framing is retracted.
 ---
 
-# Main site unified onto the EPPP card recipe
+# Main + EPPP cards share one boosted glass family
 
-The owner confirmed (via an EPPP-dashboard screenshot) that the MAIN site —
-dashboard plus every page reachable from the main sidebar tabs — should adopt the
-EXACT EPPP visual system. EPPP is the TEMPLATE and stays untouched. The canonical
-tile is EPPP's `.epd-card`: a radial cyan top-bloom over a 145° diagonal cerulean
-glass, border `rgba(196,232,242,0.22)`, `blur(20px) saturate(135%)`, with an inset
-top highlight + inset cyan inner glow + outer cyan corona + deep drop shadow.
-A brighter SELECTED variant (radial 0.16 + `145deg hsl(192 85% 26%/0.84) →
-hsl(192 89% 19%/0.90)`) is used for active/selected/unlocked states.
+**Retracted framing:** older notes (and re-pasted session plans) say "EPPP is the
+TEMPLATE, stays untouched, main must match the old `.epd-card`." That is no longer
+true. The owner iteratively asked for *more color, not more brightness, same depth*,
+then "boost even more," then "match them and boost EPPP." So the card recipe was
+deliberately boosted across BOTH main site and EPPP. Do not treat EPPP as sacred.
 
-Where it was applied: the shared layer (`.study-page-bg .bg-card` in index.css and
-StudySurface `tone="light"`) carries most pages; per-page inline surfaces were
-aligned in topics.tsx (course rail, topic/lesson cards, mastery button) and
-brain-lab.tsx (search modal, detail panel, empty state, numbered key). Dashboard
-banners, progress highlight cards, and reflections cards already used the 145°
-radial-bloom family from a prior pass. EXCLUDED: left sidebar/nav rails
-(`.nav-glass*`, `.eps-kb-rail*`) on both sides.
+**The boost (color up, brightness/depth unchanged):** cyan top-bloom 0.05→0.14,
+glass `saturate` 140%→190% (blur5 base recipe), inner cyan glow 0.16→0.28, outer
+corona 0.10→0.18, white inset highlight 0.10→0.03, fill saturation 90%→100% — while
+keeping fill lightness (17%/11%) and alpha (0.95/0.99) so perceived depth is the
+same. This lives in the shared recipe (`.bg-card` in index.css + StudySurface
+`tone="light"`) and was swept across the main-site pages + dashboard banners. The
+`check-design-drift.mjs` RECIPE lock was updated in lockstep (saturate190 / glow0.28
+/ corona0.18) — any future recipe change must update that lock in the same commit.
 
-**Why this is NOT the reverted sweep:** the reverted attempt (see
-`psychpro-glass-sweep-reverted.md`) forced the LANDING recipe onto EVERY tile AND
-button at high opacity, flattening hierarchy. This work instead matches the
-already-approved EPPP dashboard, keeps the standard-vs-brighter-selected tonal
-split, and leaves nav rails alone — so hierarchy survives.
+**EPPP boost was surgical, NOT a blanket bump — preserve its hierarchy.** EPPP has
+two families: the base `.epd-card` (was the old dull recipe identical to old main →
+full-boosted to match the new base) and a bright/elevated translucent family
+(`blur(20px)`, fill alpha ~0.74, big glows 0.40–0.45). For the elevated family only
+the **card-background fills** were pushed to S100 and the **card glass** `saturate`
+135%→170%. Its white insets (0.12) and existing glows were left alone.
+**Why:** EPPP intentionally uses ~12 different hsl saturations (S 78–92) for text,
+borders, and sub-tiles. Blanket-bumping every fill to S100 oversaturates text and
+collapses the elevation hierarchy. So "match" here is *perceptual* (shared boosted
+color character), not literal recipe parity.
 
-**Supersedes "never re-lift":** `psychpro-cerulean-surface-stack.md` says don't
-re-lift surfaces toward bright. The EPPP `.epd-card` fill (19% L / 0.74 alpha) is
-LIGHTER than the deepened stack (7–14% L / 0.82–0.96 alpha) — that is intentional
-and owner-approved for CARDS. Do not "re-deepen" the EPPP card tiles back to the
-old stack; the deepen rule still governs page backgrounds and non-card surfaces.
-
-**How to apply:** to change the card look, edit EPPP's `.epd-card` (the source of
-truth) and mirror into the shared `.bg-card` / StudySurface light recipe; verify on
-the logged-in screens (Clerk blocks the test browser — owner screenshot or
-mockup-extract of the real composition), never on a synthetic route.
-
-**Update (supersedes "EPPP stays untouched"):** owner later chose to de-fog the SHARED
-card recipe — reducing blur + the two cyan coronas and making the fill more opaque/
-pigmented — which intentionally changes EPPP cards too. See psychpro-pigment-over-glow.md
-("Phase 2 done"). Do not re-inflate the card glow on the assumption EPPP is sacred.
+**How to apply / verify:** edit the shared recipe + drift lock together; for EPPP
+target the specific card-background two-stop strings, never a global S→100 sweep.
+Clerk blocks the test browser, so visual confirmation needs an owner screenshot or a
+mockup-extract of the real composition — never a synthetic route.
