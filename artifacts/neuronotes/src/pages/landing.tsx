@@ -110,7 +110,7 @@ const LEARNING_SCIENCE = [
     icon: Target,
     title: "Active recall",
     body:
-      "Retrieve, don't reread. Every tool is designed to make you pull knowledge from memory — the way it sticks.",
+      "Retrieve, don't reread. Every tool is designed to make you pull knowledge from memory, the way it sticks.",
   },
   {
     icon: Repeat,
@@ -292,14 +292,14 @@ export default function LandingPage() {
             learn. expand. connect.
           </p>
           <p className="landing-headline" style={{ ["--delay" as any]: "320ms" }}>
-            Master Topics in Clinical Psychology, Neuropsychology,
-            Neuroscience, Assessment, Psychotherapy, and More
+            Study Smarter. Not Longer.
           </p>
           <p className="landing-blurb" style={{ ["--delay" as any]: "420ms" }}>
-            PsychPro combines evidence-based learning strategies with
-            comprehensive educational content to create a modern learning
-            experience for psychology students, professionals, and life-long
-            learners.
+            Evidence-based study tools designed to help you learn efficiently,
+            retain more, and spend less time searching for the right resources.
+            PsychPro brings psychology, neuroscience, assessment, and clinical
+            learning into one organized space, so students can study with more
+            clarity and confidence.
           </p>
 
           <div
@@ -313,16 +313,16 @@ export default function LandingPage() {
               data-testid="cta-join-now"
             >
               <BookOpen className="landing-cta-icon" aria-hidden />
-              <span>JOIN NOW</span>
+              <span>Start Learning Smarter</span>
             </button>
             <button
               type="button"
               onClick={goToPlans}
-              className="landing-cta landing-cta-primary"
+              className="landing-cta landing-cta-ghost"
               data-testid="cta-explore-topics"
             >
               <Compass className="landing-cta-icon" aria-hidden />
-              <span>BROWSE COURSES</span>
+              <span>Explore the Platform</span>
             </button>
           </div>
 
@@ -361,7 +361,7 @@ export default function LandingPage() {
           <div className="landing-section-head" data-reveal>
             <p className="landing-eyebrow">WHAT'S INSIDE</p>
             <h2 className="landing-section-title">
-              Learn, apply, retain, and revisit
+              Everything You Need to Learn More and Reclaim Your Time
             </h2>
           </div>
           <div className="landing-tools-grid">
@@ -394,11 +394,12 @@ export default function LandingPage() {
           <div className="landing-section-head" data-reveal>
             <p className="landing-eyebrow">THE METHOD</p>
             <h2 className="landing-section-title">
-              Built on how learning actually works
+              Evidence-Based by Design
             </h2>
             <p className="landing-section-sub">
-              PsychPro is designed around evidence-based learning principles, so
-              the hours you put in turn into knowledge that lasts.
+              Every feature is built around evidence-based learning principles
+              that improve retention, strengthen understanding, and make every
+              study session more effective.
             </p>
           </div>
           <div className="landing-science-grid">
@@ -437,13 +438,11 @@ export default function LandingPage() {
           <div className="landing-split-body landing-split-body--boxed">
             <p className="landing-eyebrow landing-eyebrow--left">INTERACTIVE 3D</p>
             <h2 className="landing-split-title">
-              Interactive Brain Lab
+              Connect Structure to Function
             </h2>
             <p className="landing-split-text">
-              Study the structures and functions of the brain with our
-              interactive Brain Lab — built for visual learning. Rotate the
-              model, open any structure, and connect anatomy to its function and
-              clinical relevance.
+              Explore neuroanatomy through interactive visual learning that
+              helps connect brain structures, systems, and clinical relevance.
             </p>
             <button
               type="button"
@@ -518,12 +517,11 @@ export default function LandingPage() {
           <div className="landing-split-body landing-split-body--boxed">
             <p className="landing-eyebrow landing-eyebrow--left">YOUR DASHBOARD</p>
             <h2 className="landing-split-title">
-              Track progress, prioritize learning, and connect
+              Know What to Study Next
             </h2>
             <p className="landing-split-text">
-              Your personalized dashboard keeps your studying on track, shows you
-              what to prioritize next, and connects you with the wider PsychPro
-              community.
+              Your dashboard helps organize progress, clarify priorities, and
+              keep each study session focused.
             </p>
             <ul className="landing-checklist">
               {DASHBOARD_POINTS.map((point) => (
@@ -543,14 +541,14 @@ export default function LandingPage() {
               <div>
                 <p className="landing-eyebrow">SCHOLAR TIER</p>
                 <h2 className="landing-split-title landing-scholar-title">
-                  Turn your own material into study tools
+                  Upload. Learn. Master.
                 </h2>
               </div>
             </div>
             <p className="landing-split-text">
-              Scholar members bring their own content — lecture notes, articles,
-              and PDFs — and use AI to generate custom flashcards, quizzes, study
-              guides, and practice exams built only from what they upload.
+              Upload lecture notes, PDFs, and course materials to generate
+              personalized flashcards, quizzes, study guides, and practice
+              exams.
             </p>
             <ul className="landing-checklist landing-checklist--grid">
               {SCHOLAR_POINTS.map((point) => (
