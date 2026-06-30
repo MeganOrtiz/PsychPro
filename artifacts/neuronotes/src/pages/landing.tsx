@@ -342,16 +342,12 @@ export default function LandingPage() {
           <div className="landing-mastery-card">
             <p className="landing-eyebrow">THE SYSTEM</p>
             <h2 className="landing-section-title">
-              The PsychPro EPPP Mastery Suite&trade;
+              Built to Help You Learn Faster
             </h2>
             <p className="landing-mastery-text">
-              The PsychPro EPPP Mastery Suite&trade; is a system of learning
-              resources designed to promote mastery of EPPP content through
-              conceptual understanding, critical thinking, and active
-              application. Featuring structured lessons in each domain, clinical
-              integration case examples, and full-length practice exams, the
-              system equips learners with the knowledge and confidence needed
-              for both EPPP success and real-world clinical practice.
+              Flashcards, quizzes, study guides, practice exams, and interactive
+              learning spaces all in one place, designed to help students study
+              with clarity, structure, and confidence.
             </p>
           </div>
         </section>
@@ -598,7 +594,7 @@ export default function LandingPage() {
               Browse the complete topic library
             </h2>
             <p className="landing-section-sub">
-              The full library of topics you can study on PsychPro — flashcards,
+              The full library of topics you can study on PsychPro: flashcards,
               quizzes, study guides, and practice exams for each.
             </p>
           </div>
@@ -657,36 +653,26 @@ export default function LandingPage() {
               <p className="landing-eyebrow landing-eyebrow--left">
                 MEET THE FOUNDER
               </p>
-              <h2 className="landing-split-title">Hey Everyone,</h2>
+              <h2 className="landing-split-title">
+                Built by Someone Who's Been There
+              </h2>
               <div className="landing-founder-text">
                 <p>
-                  I created PsychPro out of a need to meaningfully organize and
-                  connect all the information I'd attained throughout my academic
-                  career and clinical training. As a clinical psychology doctoral
-                  student myself, I understand firsthand how much there is to
-                  learn and apply across psychology, neuroscience, assessment,
-                  intervention, research, clinical practice, and licensure prep.
+                  PsychPro began as a personal learning system built across years
+                  of graduate training in psychology, applied cognition and
+                  neuroscience, and clinical psychopharmacology. As I moved
+                  through different programs, I kept seeing how much richer
+                  psychology became when concepts were connected instead of
+                  separated into silos.
                 </p>
                 <p>
-                  What started as a way to share the countless pages of notes,
-                  study materials, and resources I'd created over the years
-                  quickly turned into something much more: an all-in-one space
-                  where information could be learned, understood, and processed
-                  more deeply.
-                </p>
-                <p>
-                  PsychPro offers study guides, flashcards, practice questions,
-                  visual learning tools, and EPPP preparation materials designed
-                  to support students, clinicians, and lifelong learners from
-                  their very first psychology courses through advanced training,
-                  licensure, and beyond.
-                </p>
-                <p>
-                  PsychPro is the resource I wish I'd had from day one and I'm so
-                  glad you're here to learn alongside me.
+                  I created PsychPro to bring those connections into one
+                  organized space, originally for my own studying. As the system
+                  grew, I realized it could help other students learn with
+                  greater clarity, confidence, and purpose.
                 </p>
               </div>
-              <p className="landing-founder-sign">— Megan, Founder of PsychPro</p>
+              <p className="landing-founder-sign">Megan, Founder of PsychPro</p>
             </div>
           </div>
         </section>

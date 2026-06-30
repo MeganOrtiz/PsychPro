@@ -145,3 +145,13 @@ lightness, NOT the S channel.
 **Why:** saturation never touches the hue digit, so the surface-hue guardrail is
 unaffected. To go richer/less rich later, re-run the band bump on the same hsl surfaces +
 re-derive the study-theme.ts hex; NEVER touch hue or lightness.
+
+**#0077B6 "Rich Ocean Blue" brief request DECLINED in favor of the lock (2026-06-30).**
+A landing-revamp brief asked to "use Rich Ocean Blue (#0077B6) for secondary backgrounds/
+cards/gradients only." #0077B6 is hue ~201, L~0.36 — it lands squarely in the navy band the
+surface-hue guardrail blocks (would FAIL the build and read as the exact navy drift the lock
+prevents). When shown the tradeoff, the owner chose to KEEP the locked cerulean (it already
+reads as deep rich ocean-blue) rather than loosen the guardrail. **How to apply:** if a future
+brief re-requests #0077B6 (or any hue outside 188–193) for surfaces, do NOT apply it literally;
+restate the conflict and default to the locked cerulean unless the owner explicitly opts to
+loosen the lock.
