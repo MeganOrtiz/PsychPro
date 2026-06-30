@@ -1,0 +1,127 @@
+Revamp the PsychPro landing page messaging and layout while keeping the existing product features, dashboard structure, and overall professional design.
+
+The new direction should position PsychPro as an integrated psychology learning system, not just a study platform. The site should feel professional, personal, calm, credible, and modern. Avoid hype, overly salesy language, emojis, and long em dashes. Use commas, periods, or colons instead.
+
+Core brand philosophy:
+“PsychPro exists to help psychology students learn with confidence, think critically, and build meaningful careers, without sacrificing the life they are working so hard to create.”
+
+Main positioning:
+PsychPro was built from years of connecting concepts across psychology, neuroscience, cognition, assessment, psychopharmacology, and clinical training. It should communicate that psychology is easier to understand when ideas are organized, connected, and applied, rather than treated as disconnected classes or isolated facts.
+
+Tone:
+Professional but personal.
+Clear but not cold.
+Confident but not gimmicky.
+Efficient but not shallow.
+Premium academic learning space, not hustle culture.
+
+Core themes to weave throughout the page:
+
+1. Clarity
+2. Connection
+3. Competence
+4. Confidence
+5. Efficient learning
+6. Integrated psychology education
+7. More time for the life students are building
+
+Hero section:
+Headline:
+“Study Smarter. Not Longer.”
+
+Supporting text:
+“Evidence-based study tools designed to help you learn efficiently, retain more, and spend less time searching for the right resources.”
+
+Optional supporting sentence:
+“PsychPro brings psychology, neuroscience, assessment, and clinical learning into one organized space, so students can study with more clarity and confidence.”
+
+Primary CTA:
+“Start Learning Smarter”
+
+Secondary CTA:
+“Explore the Platform”
+
+Section: The System
+Title:
+“Built to Help You Learn Faster”
+
+Description:
+“Flashcards, quizzes, study guides, practice exams, and interactive learning spaces all in one place, designed to help students study with clarity, structure, and confidence.”
+
+Section: What’s Inside
+Title:
+“Everything You Need to Learn More and Reclaim Your Time”
+
+Keep the current feature cards, but update the titles and descriptions:
+
+Flashcards:
+Title: “Review in Minutes”
+Description: “Review key concepts quickly with detailed flashcards designed to strengthen long-term retention.”
+
+Quizzes:
+Title: “Knowledge Checks”
+Description: “Identify what you know, strengthen areas of growth, and deepen understanding with detailed explanations for every question.”
+
+Study Guides:
+Title: “Key Concepts. Organized.”
+Description: “Study guides with consolidated need-to-know concepts designed to help you spend less time searching across resources and more time actively learning.”
+
+Practice Exams:
+Title: “Test Yourself to Build Competence and Confidence”
+Description: “Practice with exam-style questions that help you assess readiness, identify gaps, and strengthen clinical reasoning.”
+
+Course Mastery Exam:
+Title: “Measure Your Mastery”
+Description: “Bring everything together with cumulative exams designed to help you evaluate your understanding before moving forward.”
+
+Learning Science Section:
+Title:
+“Evidence-Based by Design”
+
+Description:
+“Every feature is built around evidence-based learning principles that improve retention, strengthen understanding, and make every study session more effective.”
+
+Keep active recall, spaced repetition, interleaving, and applied practice if they already exist. Make this section feel like proof that PsychPro is intentionally designed, not just a collection of tools.
+
+Brain Lab:
+Title:
+“Connect Structure to Function”
+
+Description:
+“Explore neuroanatomy through interactive visual learning that helps connect brain structures, systems, and clinical relevance.”
+
+Dashboard Section:
+Title:
+“Know What to Study Next”
+
+Description:
+“Your dashboard helps organize progress, clarify priorities, and keep each study session focused.”
+
+Bullets:
+“Monitor your progress across every course.”
+“Always know what to review next.”
+“Build lasting study habits and maintain momentum.”
+
+Scholar Tier:
+Title:
+“Upload. Learn. Master.”
+
+Description:
+“Upload lecture notes, PDFs, and course materials to generate personalized flashcards, quizzes, study guides, and practice exams.”
+
+Founder Section:
+Title:
+“Built by Someone Who’s Been There”
+
+Founder copy:
+“PsychPro began as a personal learning system built across years of graduate training in psychology, applied cognition and neuroscience, and clinical psychopharmacology. As I moved through different programs, I kept seeing how much richer psychology became when concepts were connected instead of separated into silos. I created PsychPro to bring those connections into one organized space, originally for my own studying. As the system grew, I realized it could help other students learn with greater clarity, confidence, and purpose.”
+
+Design direction:
+Keep the site clean, calm, and premium.
+Use generous spacing, modern cards, soft gradients, and subtle depth.
+Use Rich Ocean Blue (#0077B6) for secondary backgrounds, cards, or gradients only.
+Avoid overly bright colors or cluttered visuals.
+The page should feel like an organized, modern psychology learning environment.
+
+Important:
+Do not remove the current content offerings. Keep flashcards, quizzes, study guides, practice exams, Brain Lab, dashboard/progress tracking, AI tools, and topic browsing visible. The goal is to reframe the language around outcomes, connection, and confidence while keeping the feature clarity intact.

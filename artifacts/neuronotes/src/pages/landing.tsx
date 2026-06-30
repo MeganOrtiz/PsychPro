@@ -69,37 +69,37 @@ const STAT_STRIP = [
 const STUDY_TOOLS = [
   {
     icon: Layers,
-    title: "Flashcards Built for Understanding",
+    title: "Review in Minutes",
     body:
-      "More than simple recall. Every card is designed to strengthen conceptual understanding, clinical reasoning, and long-term retention.",
+      "Review key concepts quickly with detailed flashcards designed to strengthen long-term retention.",
     accent: "#76E4F7",
   },
   {
     icon: ClipboardList,
-    title: "Quizzes That Reinforce Learning",
+    title: "Knowledge Checks",
     body:
-      "Every question includes detailed explanations that transform assessment into another opportunity to learn.",
+      "Identify what you know, strengthen areas of growth, and deepen understanding with detailed explanations for every question.",
     accent: "#68CCDE",
   },
   {
     icon: BookOpen,
-    title: "Comprehensive Study Guides",
+    title: "Key Concepts. Organized.",
     body:
-      "Structured, high-yield content that brings together essential concepts, clinical applications, and key details in one place.",
+      "Study guides with consolidated need-to-know concepts designed to help you spend less time searching across resources and more time actively learning.",
     accent: "#A7F3FF",
   },
   {
     icon: GraduationCap,
-    title: "Exam-Style Practice Tests",
+    title: "Test Yourself to Build Competence and Confidence",
     body:
-      "Build confidence, identify knowledge gaps, and apply what you've learned under realistic testing conditions.",
+      "Practice with exam-style questions that help you assess readiness, identify gaps, and strengthen clinical reasoning.",
     accent: "#6FC9DF",
   },
   {
     icon: Award,
-    title: "Course Mastery Exam",
+    title: "Measure Your Mastery",
     body:
-      "Solidify your understanding of every topic in a course with the final Course Mastery Exam.",
+      "Bring everything together with cumulative exams designed to help you evaluate your understanding before moving forward.",
     accent: "#9AD9E8",
   },
 ] as const;
@@ -149,9 +149,9 @@ const SCHOLAR_POINTS = [
 
 // What the personalized dashboard surfaces — all real app features.
 const DASHBOARD_POINTS = [
-  "Progress tracked across every topic you study",
-  "A clear recommendation for what to study next",
-  "Study streaks that keep your momentum going",
+  "Monitor your progress across every course.",
+  "Always know what to review next.",
+  "Build lasting study habits and maintain momentum.",
 ] as const;
 
 const FOOTER_LINKS = [
