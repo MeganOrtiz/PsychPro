@@ -292,7 +292,7 @@ export default function LandingPage() {
             learn. expand. connect.
           </p>
           <p className="landing-headline" style={{ ["--delay" as any]: "320ms" }}>
-            From Concepts to Confidence.
+            Learn Smarter. Not Harder.
           </p>
           <p className="landing-blurb" style={{ ["--delay" as any]: "420ms" }}>
             Evidence-based study tools designed to help you learn efficiently,
