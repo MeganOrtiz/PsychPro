@@ -43,13 +43,13 @@ cards like the image," use THIS recipe — do not trust any note that calls June
 StudySurface (study-surface.tsx) are separate files — keep them in lockstep by hand.
 Buttons/launch pills keep their own stronger glow; this file is only about cards/tiles.
 
-## Page background (part of "the June 27 look")
-The June-27 reference also runs the in-app `app-smoke.jpg` backdrop at NATIVE
-brightness — the base `.study-page-bg::before` had NO `filter`. A later "deepen"
-pass added `filter: saturate(1.16) contrast(1.1) brightness(0.92)`, which darkened
-and muted the whole signed-in background away from the screenshot. When the owner
-says "make it look EXACTLY like the screenshot," remove that filter (restore native
-brightness). This intentionally REVERSES the older "deepen / never re-lift" note.
+## Page background (DEEP — do NOT lighten)
+The owner reacted VERY strongly ("NOT LIGHTER") when the app-smoke backdrop was
+run at native brightness. The signed-in background MUST stay deep: keep
+`filter: saturate(1.16) contrast(1.1) brightness(0.92)` on `.study-page-bg::before`.
+This SUPERSEDES the earlier "match the screenshot at native brightness" idea —
+"exactly like the screenshot" does NOT mean lighter. Deep pigment > literal filter
+match. Never remove or raise the brightness of this backdrop.
 
 ## Verifying without auth
 The live EPPP/main dashboards are Clerk-gated (external instance blocks the test

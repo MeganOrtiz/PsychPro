@@ -575,12 +575,10 @@ body {
   background-size: cover, cover;
   background-position: center top, center top;
   background-repeat: no-repeat, no-repeat;
-  /* NO filter here. The June-27 reference the owner matches against runs the
-     app-smoke backdrop at its native brightness/saturation (the clouds fill the
-     viewport at full color intensity). A later "deepen" pass added
-     filter: saturate(1.16) contrast(1.1) brightness(0.92), which darkened and
-     muted the whole in-app background away from the reference — removed so the
-     backdrop matches the screenshot exactly. */
+  /* Deep-pigment correction: push saturation + contrast up and brightness DOWN
+     so the in-app teal-smoke backdrop reads as deep, rich pigment — NOT a lighter,
+     glow-washed haze. The owner wants this DEEP look; do not remove/lighten it. */
+  filter: saturate(1.16) contrast(1.1) brightness(0.92);
   /* NO background-attachment: fixed. The pseudo-element is already
      position:fixed; inset:0, so it is pinned to the viewport. Adding
      background-attachment:fixed on top is redundant AND makes the browser
