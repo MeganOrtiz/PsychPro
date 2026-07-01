@@ -44,6 +44,7 @@ import MyDeckDetailPage from "@/pages/my-decks-detail";
 import ReflectionsPage from "@/pages/reflections";
 import ProfilePage from "@/pages/profile";
 import EpppSuitePage from "@/pages/eppp-suite";
+import EpppStudySessionPage from "@/pages/eppp-study-session";
 import NotFound from "@/pages/not-found";
 import AppLayout from "@/components/layout/app-layout";
 import { ErrorBoundary } from "@/components/error-boundary";
@@ -100,6 +101,20 @@ function AppRouter() {
         {() => (
           <RequireOnboarded>
             <EpppPage />
+          </RequireOnboarded>
+        )}
+      </Route>
+      <Route path="/eppp/study-session/flashcards">
+        {() => (
+          <RequireOnboarded>
+            <EpppStudySessionPage mode="flashcards" />
+          </RequireOnboarded>
+        )}
+      </Route>
+      <Route path="/eppp/study-session/quiz">
+        {() => (
+          <RequireOnboarded>
+            <EpppStudySessionPage mode="quiz" />
           </RequireOnboarded>
         )}
       </Route>

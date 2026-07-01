@@ -30,6 +30,8 @@ import {
   Lightbulb,
   Trash2,
   Save,
+  Search,
+  Check,
 } from "lucide-react";
 import { useQueries } from "@tanstack/react-query";
 import {
@@ -530,14 +532,7 @@ function SuiteContent({
     case "my-notes":
       return <MyNotesPanel />;
     case "study-plan":
-      return (
-        <ComingSoonPanel
-          eyebrow="PLAN"
-          title="Study Plan"
-          icon={ClipboardList}
-          description="A personalized, date-aware study schedule that sequences domains and lessons toward your exam date — so you always know what to study next."
-        />
-      );
+      return <StudyPlanPanel onNavigate={onNavigate} />;
     case "full-length-exams":
       return <FullLengthExamsPanel onNavigate={onNavigate} />;
     case "missed-questions":
@@ -545,6 +540,222 @@ function SuiteContent({
     default:
       return <EpppDashboardPage />;
   }
+}
+
+// ---- Study Plan -----------------------------------------------------------
+const STUDY_PLAN_STORAGE_KEY = "psychpro-eppp-study-plan-v1";
+
+function StudyPlanPanel({ onNavigate }: { onNavigate: (to: string) => void }) {
+  const { data: rawTopics, isLoading, error } = useGetTopics();
+  const [search, setSearch] = useState("");
+  const [part, setPart] = useState<"all" | EpppExamPart>("all");
+  const [selected, setSelected] = useState<Set<number>>(() => {
+    if (typeof window === "undefined") return new Set();
+    try {
+      const saved = JSON.parse(window.localStorage.getItem(STUDY_PLAN_STORAGE_KEY) ?? "[]");
+      return new Set(Array.isArray(saved) ? saved.filter(Number.isInteger) : []);
+    } catch {
+      return new Set();
+    }
+  });
+  const [sessionSize, setSessionSize] = useState(20);
+
+  const lessons = useMemo(
+    () =>
+      ((rawTopics ?? []) as Topic[])
+        .filter((topic) => getEpppExamPart(topic) !== null)
+        .filter((topic) => (topic.flashcardCount ?? 0) > 0 || (topic.quizCount ?? 0) > 0)
+        .sort((a, b) => a.name.localeCompare(b.name)),
+    [rawTopics],
+  );
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(STUDY_PLAN_STORAGE_KEY, JSON.stringify([...selected]));
+  }, [selected]);
+
+  const visibleLessons = useMemo(() => {
+    const needle = search.trim().toLowerCase();
+    return lessons.filter((topic) => {
+      const topicPart = getEpppExamPart(topic);
+      if (part !== "all" && topicPart !== part) return false;
+      if (!needle) return true;
+      return `${topic.name} ${getEpppDisplayCategory(topic)}`.toLowerCase().includes(needle);
+    });
+  }, [lessons, part, search]);
+
+  const groups = useMemo(() => {
+    const grouped = new Map<string, { part: EpppExamPart; label: string; lessons: Topic[] }>();
+    for (const topic of visibleLessons) {
+      const topicPart = getEpppExamPart(topic);
+      if (!topicPart) continue;
+      const label = getEpppDisplayCategory(topic);
+      const key = `${topicPart}:${label}`;
+      const group = grouped.get(key) ?? { part: topicPart, label, lessons: [] };
+      group.lessons.push(topic);
+      grouped.set(key, group);
+    }
+    return [...grouped.values()].sort((a, b) =>
+      a.part === b.part ? a.label.localeCompare(b.label) : a.part.localeCompare(b.part),
+    );
+  }, [visibleLessons]);
+
+  const selectedLessons = useMemo(
+    () => lessons.filter((topic) => selected.has(topic.id)),
+    [lessons, selected],
+  );
+  const flashcardTotal = selectedLessons.reduce((sum, topic) => sum + (topic.flashcardCount ?? 0), 0);
+  const quizTotal = selectedLessons.reduce((sum, topic) => sum + (topic.quizCount ?? 0), 0);
+
+  const toggleLesson = (topicId: number) => {
+    setSelected((current) => {
+      const next = new Set(current);
+      if (next.has(topicId)) next.delete(topicId);
+      else next.add(topicId);
+      return next;
+    });
+  };
+
+  const selectVisible = () => {
+    setSelected((current) => new Set([...current, ...visibleLessons.map((topic) => topic.id)]));
+  };
+
+  const launch = (mode: "flashcards" | "quiz") => {
+    if (selected.size === 0) return;
+    const params = new URLSearchParams({
+      topics: [...selected].join(","),
+      limit: String(sessionSize),
+    });
+    onNavigate(`/eppp/study-session/${mode}?${params.toString()}`);
+  };
+
+  return (
+    <section className="eps-panel eps-plan" data-testid="eppp-study-plan">
+      <PanelHead
+        eyebrow="PLAN"
+        title="Build a Study Session"
+        subtitle="Choose lessons from the complete EPPP knowledge and skills library, then turn them into one focused flashcard deck or mixed quiz."
+      />
+
+      <div className="eps-plan-layout">
+        <div className="eps-plan-library">
+          <div className="eps-plan-toolbar">
+            <label className="eps-plan-search">
+              <Search aria-hidden />
+              <span className="sr-only">Search lessons</span>
+              <input
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Search every lesson or domain"
+                data-testid="study-plan-search"
+              />
+            </label>
+            <div className="eps-plan-filters" aria-label="Filter lessons by exam part">
+              {(["all", "part1", "part2"] as const).map((value) => (
+                <button
+                  key={value}
+                  type="button"
+                  className={cn("eps-plan-filter", part === value && "is-active")}
+                  onClick={() => setPart(value)}
+                >
+                  {value === "all" ? "All" : value === "part1" ? "Part 1" : "Part 2"}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="eps-plan-library-meta">
+            <span>{visibleLessons.length} lessons</span>
+            <button type="button" onClick={selectVisible}>Select visible</button>
+          </div>
+
+          {isLoading ? (
+            <div className="eps-plan-empty">Loading the EPPP library…</div>
+          ) : error ? (
+            <div className="eps-plan-empty">The lesson library could not be loaded. Try refreshing this page.</div>
+          ) : groups.length === 0 ? (
+            <div className="eps-plan-empty">No lessons match this search.</div>
+          ) : (
+            <div className="eps-plan-groups">
+              {groups.map((group) => (
+                <section key={`${group.part}-${group.label}`} className="eps-plan-group">
+                  <div className="eps-plan-group-head">
+                    <span>{group.part === "part1" ? "Part 1" : "Part 2"}</span>
+                    <h2>{group.label}</h2>
+                  </div>
+                  <div className="eps-plan-lessons">
+                    {group.lessons.map((topic) => {
+                      const isSelected = selected.has(topic.id);
+                      return (
+                        <button
+                          key={topic.id}
+                          type="button"
+                          className={cn("eps-plan-lesson", isSelected && "is-selected")}
+                          onClick={() => toggleLesson(topic.id)}
+                          aria-pressed={isSelected}
+                          data-testid={`study-plan-lesson-${topic.id}`}
+                        >
+                          <span className="eps-plan-check" aria-hidden>{isSelected && <Check />}</span>
+                          <span className="eps-plan-lesson-copy">
+                            <strong>{topic.name}</strong>
+                            <small>{topic.flashcardCount ?? 0} cards · {topic.quizCount ?? 0} questions</small>
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </section>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <aside className="eps-plan-queue" aria-label="Selected study lessons">
+          <div>
+            <p className="eps-plan-queue-kicker">YOUR STUDY QUEUE</p>
+            <h2>{selectedLessons.length === 0 ? "Choose your lessons" : `${selectedLessons.length} lessons selected`}</h2>
+            <p>
+              {selectedLessons.length === 0
+                ? "Select lessons on the left to build a cross-domain session."
+                : `${flashcardTotal} available flashcards · ${quizTotal} available questions`}
+            </p>
+          </div>
+
+          {selectedLessons.length > 0 && (
+            <div className="eps-plan-selected-list">
+              {selectedLessons.slice(0, 8).map((topic) => (
+                <button key={topic.id} type="button" onClick={() => toggleLesson(topic.id)}>
+                  <span>{topic.name}</span><X aria-label={`Remove ${topic.name}`} />
+                </button>
+              ))}
+              {selectedLessons.length > 8 && <p>+{selectedLessons.length - 8} more lessons</p>}
+            </div>
+          )}
+
+          <label className="eps-plan-size">
+            Session size
+            <select value={sessionSize} onChange={(event) => setSessionSize(Number(event.target.value))}>
+              <option value={10}>10 items</option>
+              <option value={20}>20 items</option>
+              <option value={40}>40 items</option>
+              <option value={1000}>Use all available</option>
+            </select>
+          </label>
+
+          <div className="eps-plan-actions">
+            <button type="button" disabled={selected.size === 0 || flashcardTotal === 0} onClick={() => launch("flashcards")}>
+              <Layers aria-hidden /><span><strong>Create flashcards</strong><small>Interleaved across selected lessons</small></span><ArrowRight aria-hidden />
+            </button>
+            <button type="button" disabled={selected.size === 0 || quizTotal === 0} onClick={() => launch("quiz")}>
+              <ClipboardCheck aria-hidden /><span><strong>Create mixed quiz</strong><small>Questions balanced across lessons</small></span><ArrowRight aria-hidden />
+            </button>
+          </div>
+
+          {selected.size > 0 && <button type="button" className="eps-plan-clear" onClick={() => setSelected(new Set())}>Clear selection</button>}
+        </aside>
+      </div>
+    </section>
+  );
 }
 
 // ---- panel header ---------------------------------------------------------
@@ -2464,4 +2675,65 @@ const styles = `
   .eps-mq-select { max-width: none; flex: 1; }
   .eps-mq-study { margin-left: 0; }
 }
+
+/* ---- Study Plan ---- */
+.eps-plan { max-width: 1240px; }
+.eps-plan-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 360px); gap: clamp(18px, 2.4vw, 28px); align-items: start; }
+.eps-plan-library,
+.eps-plan-queue {
+  border: 1px solid rgba(196,232,242,0.22); border-radius: 20px;
+  background: linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99));
+  backdrop-filter: blur(5px) saturate(190%); -webkit-backdrop-filter: blur(5px) saturate(190%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 22px 52px -40px rgba(0,0,0,0.8);
+}
+.eps-plan-library { min-width: 0; overflow: hidden; }
+.eps-plan-toolbar { display: flex; gap: 12px; align-items: center; padding: 16px; border-bottom: 1px solid ${C.hairline}; }
+.eps-plan-search { flex: 1; min-width: 180px; display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid ${C.hairlineStrong}; border-radius: 10px; background: hsl(var(--surf-hue) 96% 9% / 0.78); }
+.eps-plan-search svg { width: 17px; height: 17px; color: ${C.cyan}; flex-shrink: 0; }
+.eps-plan-search input { width: 100%; border: 0; outline: 0; background: transparent; color: ${C.cloud}; font-size: 13.5px; }
+.eps-plan-search input::placeholder { color: ${C.muted}; }
+.eps-plan-filters { display: flex; gap: 6px; }
+.eps-plan-filter { cursor: pointer; padding: 9px 11px; border: 1px solid ${C.hairline}; border-radius: 8px; background: hsl(var(--surf-hue) 91% 13% / 0.82); color: ${C.muted}; font-size: 12px; font-weight: 700; }
+.eps-plan-filter.is-active { border-color: ${C.cyan}80; background: hsl(var(--surf-hue) 95% 23% / 0.78); color: ${C.cloud}; }
+.eps-plan-library-meta { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 16px; border-bottom: 1px solid ${C.hairline}; color: ${C.muted}; font-size: 12px; }
+.eps-plan-library-meta button { color: ${C.cyan}; font-weight: 700; cursor: pointer; }
+.eps-plan-groups { max-height: min(64vh, 720px); overflow-y: auto; padding: 4px 16px 18px; }
+.eps-plan-group { padding-top: 16px; }
+.eps-plan-group + .eps-plan-group { margin-top: 4px; border-top: 1px solid ${C.hairline}; }
+.eps-plan-group-head { display: flex; align-items: baseline; gap: 9px; margin-bottom: 9px; }
+.eps-plan-group-head span { color: ${C.cyan}; font-size: 10px; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase; }
+.eps-plan-group-head h2 { margin: 0; color: ${C.cloud}; font-size: 13px; font-weight: 750; }
+.eps-plan-lessons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.eps-plan-lesson { min-width: 0; cursor: pointer; display: flex; align-items: flex-start; gap: 10px; padding: 11px; border: 1px solid ${C.hairline}; border-radius: 10px; text-align: left; background: hsl(var(--surf-hue) 94% 13% / 0.76); transition: border-color .18s ease, background .18s ease, transform .18s ease; }
+.eps-plan-lesson:hover { transform: translateY(-1px); border-color: ${C.cyan}70; }
+.eps-plan-lesson.is-selected { background: hsl(var(--surf-hue) 98% 22% / 0.82); border-color: ${C.cyan}99; }
+.eps-plan-check { width: 19px; height: 19px; border-radius: 6px; border: 1px solid ${C.hairlineStrong}; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; color: ${C.ink}; }
+.eps-plan-check svg { width: 13px; height: 13px; }
+.eps-plan-lesson.is-selected .eps-plan-check { background: ${C.cyan}; border-color: ${C.cyan}; }
+.eps-plan-lesson-copy { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.eps-plan-lesson-copy strong { color: ${C.cloud}; font-size: 12.5px; line-height: 1.3; }
+.eps-plan-lesson-copy small { color: ${C.muted}; font-size: 10.5px; line-height: 1.3; }
+.eps-plan-empty { padding: 48px 24px; text-align: center; color: ${C.muted}; font-size: 13px; }
+.eps-plan-queue { position: sticky; top: 16px; padding: 20px; display: flex; flex-direction: column; gap: 18px; }
+.eps-plan-queue-kicker { margin: 0 0 6px; color: ${C.cyan}; font-size: 10px; font-weight: 800; letter-spacing: .12em; }
+.eps-plan-queue h2 { margin: 0; color: ${C.cloud}; font-size: 20px; line-height: 1.2; }
+.eps-plan-queue > div:first-child > p:last-child { margin: 7px 0 0; color: ${C.muted}; font-size: 12.5px; line-height: 1.5; }
+.eps-plan-selected-list { display: flex; flex-direction: column; gap: 6px; max-height: 220px; overflow-y: auto; }
+.eps-plan-selected-list button { cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 9px; border-radius: 8px; border: 1px solid ${C.hairline}; background: hsl(var(--surf-hue) 92% 13% / 0.78); color: ${C.body}; font-size: 11.5px; text-align: left; }
+.eps-plan-selected-list button span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.eps-plan-selected-list button svg { width: 13px; height: 13px; color: ${C.muted}; flex-shrink: 0; }
+.eps-plan-selected-list p { margin: 2px 0 0; color: ${C.muted}; font-size: 11px; text-align: center; }
+.eps-plan-size { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: ${C.body}; font-size: 12px; font-weight: 700; }
+.eps-plan-size select { padding: 8px 28px 8px 10px; border-radius: 8px; border: 1px solid ${C.hairlineStrong}; color: ${C.cloud}; background: hsl(var(--surf-hue) 92% 13% / 0.88); font-size: 12px; }
+.eps-plan-actions { display: flex; flex-direction: column; gap: 9px; }
+.eps-plan-actions > button { cursor: pointer; display: grid; grid-template-columns: 30px 1fr 16px; align-items: center; gap: 10px; width: 100%; padding: 12px; border-radius: 10px; border: 1px solid ${C.hairlineStrong}; background: linear-gradient(135deg, hsl(var(--surf-hue) 98% 25% / 0.88), hsl(var(--surf-hue) 98% 16% / 0.94)); color: ${C.cloud}; text-align: left; }
+.eps-plan-actions > button:disabled { cursor: not-allowed; opacity: .4; }
+.eps-plan-actions > button > svg:first-child { width: 19px; height: 19px; color: ${C.cyan}; }
+.eps-plan-actions > button > svg:last-child { width: 15px; height: 15px; color: ${C.mist}; }
+.eps-plan-actions span { display: flex; flex-direction: column; gap: 3px; }
+.eps-plan-actions strong { font-size: 12.5px; }
+.eps-plan-actions small { color: ${C.muted}; font-size: 10.5px; font-weight: 500; }
+.eps-plan-clear { align-self: center; cursor: pointer; color: ${C.muted}; font-size: 11px; text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 980px) { .eps-plan-layout { grid-template-columns: 1fr; } .eps-plan-queue { position: static; } }
+@media (max-width: 700px) { .eps-plan-toolbar { align-items: stretch; flex-direction: column; } .eps-plan-lessons { grid-template-columns: 1fr; } .eps-plan-filters { width: 100%; } .eps-plan-filter { flex: 1; } }
 `;
