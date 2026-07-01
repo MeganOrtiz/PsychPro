@@ -213,7 +213,6 @@ export default function QuizPage({ params }: Props) {
         <>
           <StudySurface
             tone="light"
-            glow
             innerClassName="p-6 md:p-7 mb-6"
             testId="quiz-question-card"
           >
@@ -248,7 +247,7 @@ export default function QuizPage({ params }: Props) {
                     "linear-gradient(135deg, hsl(var(--surf-hue) 91% 22% / 0.78), hsl(var(--surf-hue) 88% 13% / 0.86))",
                   borderColor: `${P.surf}55`,
                   color: P.cloud,
-                  boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(255,255,255,0.06)`,
+                  boxShadow: "0 10px 24px -16px rgba(0,0,0,0.6), inset 0 1px 0 0 rgba(255,255,255,0.06)",
                 };
               } else if (isCorrect) {
                 // Correct answer turns emerald green, mirroring the red

@@ -1300,11 +1300,8 @@ body {
     transition: transform 200ms ease, box-shadow 250ms ease, border-color 200ms ease, background 250ms ease;
   }
   .quiz-option-hover:hover:not(:disabled) {
-    border-color: rgba(167, 243, 255, 0.55) !important;
-    box-shadow:
-      0 0 0 1px rgba(167, 243, 255, 0.25),
-      0 12px 32px -10px rgba(118, 228, 247, 0.55),
-      0 0 24px -4px rgba(118, 228, 247, 0.35) !important;
+    border-color: rgba(167, 243, 255, 0.45) !important;
+    box-shadow: 0 14px 30px -18px rgba(0, 0, 0, 0.65) !important;
   }
 
   .toggle-elevate::before,
