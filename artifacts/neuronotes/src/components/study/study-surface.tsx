@@ -27,12 +27,12 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
       // top-bloom + outer corona radiance over the brain backdrop.
       return {
         background:
-          "linear-gradient(145deg, hsl(var(--surf-hue) 85% 22% / 0.80), hsl(var(--surf-hue) 91% 15% / 0.90))",
+          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.09) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 85% 22% / 0.80), hsl(var(--surf-hue) 91% 15% / 0.90))",
         borderColor: "rgba(118,228,247,0.24)",
         backdropFilter: "blur(20px) saturate(135%)",
         WebkitBackdropFilter: "blur(20px) saturate(135%)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.10), 0 22px 52px -26px rgba(0,0,0,0.74)",
+          "inset 0 1px 0 rgba(255,255,255,0.10), inset 0 0 44px -24px rgba(118,228,247,0.36), 0 0 30px -12px rgba(118,228,247,0.28), 0 22px 52px -26px rgba(0,0,0,0.74)",
         color: "#FFFFFF",
       };
     case "accent":
@@ -46,7 +46,7 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
         backdropFilter: "blur(20px) saturate(140%)",
         WebkitBackdropFilter: "blur(20px) saturate(140%)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.16), 0 22px 54px -26px rgba(0,0,0,0.66)",
+          "inset 0 1px 0 rgba(255,255,255,0.16), inset 0 0 50px -24px rgba(118,228,247,0.56), 0 0 36px -10px rgba(118,228,247,0.44), 0 22px 54px -26px rgba(0,0,0,0.66)",
         color: "#FFFFFF",
       };
     case "card-front":
@@ -60,7 +60,7 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
         backdropFilter: "blur(20px) saturate(140%)",
         WebkitBackdropFilter: "blur(20px) saturate(140%)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.16), 0 22px 54px -26px rgba(0,0,0,0.66)",
+          "inset 0 1px 0 rgba(255,255,255,0.16), inset 0 0 54px -24px rgba(118,228,247,0.56), 0 0 36px -10px rgba(118,228,247,0.44), 0 22px 54px -26px rgba(0,0,0,0.66)",
         color: "#FFFFFF",
       };
     case "light":
@@ -68,15 +68,15 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
       // Unified with the EPPP card system (.epd-card): a radial cyan top-bloom
       // over a 145° diagonal cerulean glass with a cyan inner glow + outer
       // corona and a deep drop shadow, so the main-site surfaces read as the
-      // same translucent bloom glass as the EPPP domain tiles (the June-27 look).
+      // same translucent bloom glass as the EPPP domain tiles.
       return {
         background:
-          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))",
+          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.06) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 90% 18% / 0.90), hsl(var(--surf-hue) 90% 12% / 0.96))",
         borderColor: "rgba(196,232,242,0.22)",
-        backdropFilter: "blur(20px) saturate(135%)",
-        WebkitBackdropFilter: "blur(20px) saturate(135%)",
+        backdropFilter: "blur(9px) saturate(140%)",
+        WebkitBackdropFilter: "blur(9px) saturate(140%)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 40px -22px rgba(118,228,247,0.42), 0 0 28px -6px rgba(118,228,247,0.30), 0 24px 60px -42px rgba(0,0,0,0.72)",
+          "inset 0 1px 0 rgba(255,255,255,0.10), inset 0 0 36px -24px rgba(118,228,247,0.16), 0 0 20px -10px rgba(118,228,247,0.10), 0 22px 52px -40px rgba(0,0,0,0.80)",
         color: P.mist,
       };
   }

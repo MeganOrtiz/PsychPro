@@ -44,12 +44,11 @@ import MyDeckDetailPage from "@/pages/my-decks-detail";
 import ReflectionsPage from "@/pages/reflections";
 import ProfilePage from "@/pages/profile";
 import EpppSuitePage from "@/pages/eppp-suite";
-import EpppStudySessionPage from "@/pages/eppp-study-session";
 import NotFound from "@/pages/not-found";
 import AppLayout from "@/components/layout/app-layout";
 import { ErrorBoundary } from "@/components/error-boundary";
 import CrashTestPage from "@/pages/crash-test";
-import DevEpppPreview from "@/pages/dev-eppp-preview";
+import DevGlassPreview from "@/pages/dev-glass-preview";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -96,25 +95,11 @@ function AppRouter() {
       <Route path="/sign-in/*?" component={SignInPage} />
       <Route path="/sign-up/*?" component={SignUpPage} />
       {import.meta.env.DEV ? <Route path="/__crash-test" component={CrashTestPage} /> : null}
-      {import.meta.env.DEV ? <Route path="/__eppp-preview" component={DevEpppPreview} /> : null}
+      {import.meta.env.DEV ? <Route path="/__glass-preview" component={DevGlassPreview} /> : null}
       <Route path="/eppp">
         {() => (
           <RequireOnboarded>
             <EpppPage />
-          </RequireOnboarded>
-        )}
-      </Route>
-      <Route path="/eppp/study-session/flashcards">
-        {() => (
-          <RequireOnboarded>
-            <EpppStudySessionPage mode="flashcards" />
-          </RequireOnboarded>
-        )}
-      </Route>
-      <Route path="/eppp/study-session/quiz">
-        {() => (
-          <RequireOnboarded>
-            <EpppStudySessionPage mode="quiz" />
           </RequireOnboarded>
         )}
       </Route>

@@ -69,37 +69,37 @@ const STAT_STRIP = [
 const STUDY_TOOLS = [
   {
     icon: Layers,
-    title: "Review in Minutes",
+    title: "Flashcards Built for Understanding",
     body:
-      "Review key concepts quickly with detailed flashcards designed to strengthen long-term retention.",
+      "More than simple recall. Every card is designed to strengthen conceptual understanding, clinical reasoning, and long-term retention.",
     accent: "#76E4F7",
   },
   {
     icon: ClipboardList,
-    title: "Knowledge Checks",
+    title: "Quizzes That Reinforce Learning",
     body:
-      "Identify what you know, strengthen areas of growth, and deepen understanding with detailed explanations for every question.",
+      "Every question includes detailed explanations that transform assessment into another opportunity to learn.",
     accent: "#68CCDE",
   },
   {
     icon: BookOpen,
-    title: "Key Concepts. Organized.",
+    title: "Comprehensive Study Guides",
     body:
-      "Study guides with consolidated need-to-know concepts designed to help you spend less time searching across resources and more time actively learning.",
+      "Structured, high-yield content that brings together essential concepts, clinical applications, and key details in one place.",
     accent: "#A7F3FF",
   },
   {
     icon: GraduationCap,
-    title: "Test Yourself to Build Competence and Confidence",
+    title: "Exam-Style Practice Tests",
     body:
-      "Practice with exam-style questions that help you assess readiness, identify gaps, and strengthen clinical reasoning.",
+      "Build confidence, identify knowledge gaps, and apply what you've learned under realistic testing conditions.",
     accent: "#6FC9DF",
   },
   {
     icon: Award,
-    title: "Measure Your Mastery",
+    title: "Course Mastery Exam",
     body:
-      "Bring everything together with cumulative exams designed to help you evaluate your understanding before moving forward.",
+      "Solidify your understanding of every topic in a course with the final Course Mastery Exam.",
     accent: "#9AD9E8",
   },
 ] as const;
@@ -110,7 +110,7 @@ const LEARNING_SCIENCE = [
     icon: Target,
     title: "Active recall",
     body:
-      "Retrieve, don't reread. Every tool is designed to make you pull knowledge from memory, the way it sticks.",
+      "Retrieve, don't reread. Every tool is designed to make you pull knowledge from memory — the way it sticks.",
   },
   {
     icon: Repeat,
@@ -149,9 +149,9 @@ const SCHOLAR_POINTS = [
 
 // What the personalized dashboard surfaces — all real app features.
 const DASHBOARD_POINTS = [
-  "Monitor your progress across every course.",
-  "Always know what to review next.",
-  "Build lasting study habits and maintain momentum.",
+  "Progress tracked across every topic you study",
+  "A clear recommendation for what to study next",
+  "Study streaks that keep your momentum going",
 ] as const;
 
 const FOOTER_LINKS = [
@@ -292,14 +292,14 @@ export default function LandingPage() {
             learn. expand. connect.
           </p>
           <p className="landing-headline" style={{ ["--delay" as any]: "320ms" }}>
-            Learn Smarter. Not Harder.
+            Master Topics in Clinical Psychology, Neuropsychology,
+            Neuroscience, Assessment, Psychotherapy, and More
           </p>
           <p className="landing-blurb" style={{ ["--delay" as any]: "420ms" }}>
-            Evidence-based study tools designed to help you learn efficiently,
-            retain more, and spend less time searching for the right resources.
-            PsychPro brings psychology, neuroscience, assessment, and clinical
-            learning into one organized space, so students can study with more
-            clarity and confidence.
+            PsychPro combines evidence-based learning strategies with
+            comprehensive educational content to create a modern learning
+            experience for psychology students, professionals, and life-long
+            learners.
           </p>
 
           <div
@@ -313,16 +313,16 @@ export default function LandingPage() {
               data-testid="cta-join-now"
             >
               <BookOpen className="landing-cta-icon" aria-hidden />
-              <span>Start Learning Smarter</span>
+              <span>JOIN NOW</span>
             </button>
             <button
               type="button"
               onClick={goToPlans}
-              className="landing-cta landing-cta-ghost"
+              className="landing-cta landing-cta-primary"
               data-testid="cta-explore-topics"
             >
               <Compass className="landing-cta-icon" aria-hidden />
-              <span>Explore the Platform</span>
+              <span>BROWSE COURSES</span>
             </button>
           </div>
 
@@ -342,12 +342,16 @@ export default function LandingPage() {
           <div className="landing-mastery-card">
             <p className="landing-eyebrow">THE SYSTEM</p>
             <h2 className="landing-section-title">
-              Built to Help You Learn Faster
+              The PsychPro EPPP Mastery Suite&trade;
             </h2>
             <p className="landing-mastery-text">
-              Flashcards, quizzes, study guides, practice exams, and interactive
-              learning spaces all in one place, designed to help students study
-              with clarity, structure, and confidence.
+              The PsychPro EPPP Mastery Suite&trade; is a system of learning
+              resources designed to promote mastery of EPPP content through
+              conceptual understanding, critical thinking, and active
+              application. Featuring structured lessons in each domain, clinical
+              integration case examples, and full-length practice exams, the
+              system equips learners with the knowledge and confidence needed
+              for both EPPP success and real-world clinical practice.
             </p>
           </div>
         </section>
@@ -357,7 +361,7 @@ export default function LandingPage() {
           <div className="landing-section-head" data-reveal>
             <p className="landing-eyebrow">WHAT'S INSIDE</p>
             <h2 className="landing-section-title">
-              Everything You Need to Learn More and Reclaim Your Time
+              Learn, apply, retain, and revisit
             </h2>
           </div>
           <div className="landing-tools-grid">
@@ -390,12 +394,11 @@ export default function LandingPage() {
           <div className="landing-section-head" data-reveal>
             <p className="landing-eyebrow">THE METHOD</p>
             <h2 className="landing-section-title">
-              Evidence-Based by Design
+              Built on how learning actually works
             </h2>
             <p className="landing-section-sub">
-              Every feature is built around evidence-based learning principles
-              that improve retention, strengthen understanding, and make every
-              study session more effective.
+              PsychPro is designed around evidence-based learning principles, so
+              the hours you put in turn into knowledge that lasts.
             </p>
           </div>
           <div className="landing-science-grid">
@@ -434,11 +437,13 @@ export default function LandingPage() {
           <div className="landing-split-body landing-split-body--boxed">
             <p className="landing-eyebrow landing-eyebrow--left">INTERACTIVE 3D</p>
             <h2 className="landing-split-title">
-              Connect Structure to Function
+              Interactive Brain Lab
             </h2>
             <p className="landing-split-text">
-              Explore neuroanatomy through interactive visual learning that
-              helps connect brain structures, systems, and clinical relevance.
+              Study the structures and functions of the brain with our
+              interactive Brain Lab — built for visual learning. Rotate the
+              model, open any structure, and connect anatomy to its function and
+              clinical relevance.
             </p>
             <button
               type="button"
@@ -513,11 +518,12 @@ export default function LandingPage() {
           <div className="landing-split-body landing-split-body--boxed">
             <p className="landing-eyebrow landing-eyebrow--left">YOUR DASHBOARD</p>
             <h2 className="landing-split-title">
-              Know What to Study Next
+              Track progress, prioritize learning, and connect
             </h2>
             <p className="landing-split-text">
-              Your dashboard helps organize progress, clarify priorities, and
-              keep each study session focused.
+              Your personalized dashboard keeps your studying on track, shows you
+              what to prioritize next, and connects you with the wider PsychPro
+              community.
             </p>
             <ul className="landing-checklist">
               {DASHBOARD_POINTS.map((point) => (
@@ -537,14 +543,14 @@ export default function LandingPage() {
               <div>
                 <p className="landing-eyebrow">SCHOLAR TIER</p>
                 <h2 className="landing-split-title landing-scholar-title">
-                  Upload. Learn. Master.
+                  Turn your own material into study tools
                 </h2>
               </div>
             </div>
             <p className="landing-split-text">
-              Upload lecture notes, PDFs, and course materials to generate
-              personalized flashcards, quizzes, study guides, and practice
-              exams.
+              Scholar members bring their own content — lecture notes, articles,
+              and PDFs — and use AI to generate custom flashcards, quizzes, study
+              guides, and practice exams built only from what they upload.
             </p>
             <ul className="landing-checklist landing-checklist--grid">
               {SCHOLAR_POINTS.map((point) => (
@@ -594,7 +600,7 @@ export default function LandingPage() {
               Browse the complete topic library
             </h2>
             <p className="landing-section-sub">
-              The full library of topics you can study on PsychPro: flashcards,
+              The full library of topics you can study on PsychPro — flashcards,
               quizzes, study guides, and practice exams for each.
             </p>
           </div>
@@ -653,26 +659,36 @@ export default function LandingPage() {
               <p className="landing-eyebrow landing-eyebrow--left">
                 MEET THE FOUNDER
               </p>
-              <h2 className="landing-split-title">
-                Built by Someone Who's Been There
-              </h2>
+              <h2 className="landing-split-title">Hey Everyone,</h2>
               <div className="landing-founder-text">
                 <p>
-                  PsychPro began as a personal learning system built across years
-                  of graduate training in psychology, applied cognition and
-                  neuroscience, and clinical psychopharmacology. As I moved
-                  through different programs, I kept seeing how much richer
-                  psychology became when concepts were connected instead of
-                  separated into silos.
+                  I created PsychPro out of a need to meaningfully organize and
+                  connect all the information I'd attained throughout my academic
+                  career and clinical training. As a clinical psychology doctoral
+                  student myself, I understand firsthand how much there is to
+                  learn and apply across psychology, neuroscience, assessment,
+                  intervention, research, clinical practice, and licensure prep.
                 </p>
                 <p>
-                  I created PsychPro to bring those connections into one
-                  organized space, originally for my own studying. As the system
-                  grew, I realized it could help other students learn with
-                  greater clarity, confidence, and purpose.
+                  What started as a way to share the countless pages of notes,
+                  study materials, and resources I'd created over the years
+                  quickly turned into something much more: an all-in-one space
+                  where information could be learned, understood, and processed
+                  more deeply.
+                </p>
+                <p>
+                  PsychPro offers study guides, flashcards, practice questions,
+                  visual learning tools, and EPPP preparation materials designed
+                  to support students, clinicians, and lifelong learners from
+                  their very first psychology courses through advanced training,
+                  licensure, and beyond.
+                </p>
+                <p>
+                  PsychPro is the resource I wish I'd had from day one and I'm so
+                  glad you're here to learn alongside me.
                 </p>
               </div>
-              <p className="landing-founder-sign">Megan, Founder of PsychPro</p>
+              <p className="landing-founder-sign">— Megan, Founder of PsychPro</p>
             </div>
           </div>
         </section>
@@ -719,22 +735,10 @@ const C = {
   inkSoft: "rgba(11,59,71,0.58)",  // muted ink — chart ticks on white
   grid: "rgba(11,59,71,0.10)",     // chart grid lines on white
   bg: "#082a33",
-  bgPanel: "hsl(var(--surf-hue) 100% 17% / 0.95)",
-  bgPanelStrong: "hsl(var(--surf-hue) 100% 11% / 0.99)",
+  bgPanel: "hsl(var(--surf-hue) 88% 19% / 0.82)",
+  bgPanelStrong: "hsl(var(--surf-hue) 88% 14% / 0.90)",
   hairline: "rgba(118, 228, 247, 0.36)",
   hairlineStrong: "rgba(118, 228, 247, 0.58)",
-  // Canonical EPPP .epd-card glass recipe (matches main-site .bg-card +
-  // eppp-dashboard .epd-card), shared by every landing tile so the marketing
-  // page reads as the same glass as the app and the EPPP domain tiles.
-  cardBg:
-    "linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99))",
-  cardBorder: "rgba(196, 232, 242, 0.22)",
-  cardBlur: "blur(5px) saturate(190%)",
-  cardShadow:
-    "inset 0 1px 0 rgba(255,255,255,0.03), 0 22px 52px -40px rgba(0,0,0,0.80)",
-  // Dark legibility pool for white text that floats over the wallpaper (not in a tile).
-  textPool:
-    "0 2px 22px hsl(var(--surf-hue) 92% 5% / 0.72), 0 1px 4px hsl(var(--surf-hue) 92% 6% / 0.55)",
 };
 
 const styles = `
@@ -855,9 +859,24 @@ const styles = `
   align-items: center;
   text-align: center;
 }
-/* Flat hero (owner request): no radial scrim halo behind the hero text.
-   Legibility comes from neutral per-element drop shadows instead of a pooled
-   background blob. */
+/* Localized legibility scrim — a soft pool of deep teal behind the hero text
+   only, so the wordmark, tagline and blurb read cleanly over the glowing brain
+   without dimming the rest of the full-intensity backdrop. */
+.landing-hero::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(880px, 92%);
+  height: 78%;
+  background: radial-gradient(ellipse 64% 56% at 50% 52%,
+    hsl(var(--surf-hue) 82% 7% / 0.66) 0%,
+    hsl(var(--surf-hue) 82% 7% / 0.40) 46%,
+    hsl(var(--surf-hue) 82% 7% / 0.00) 76%);
+  pointer-events: none;
+}
 
 .landing-wordmark,
 .landing-tagline,
@@ -892,7 +911,6 @@ const styles = `
   line-height: 1;
   color: #F4FBFF;
   padding-left: 0.22em;
-  text-shadow: 0 2px 18px hsl(var(--surf-hue) 92% 5% / 0.55);
 }
 .landing-tagline {
   margin: clamp(6px, 1vh, 12px) 0 0;
@@ -901,7 +919,6 @@ const styles = `
   letter-spacing: 0.42em;
   color: ${C.cyanSoft};
   padding-left: 0.42em;
-  text-shadow: ${C.textPool};
 }
 .landing-headline {
   margin: clamp(12px, 1.6vh, 20px) auto 0;
@@ -911,16 +928,16 @@ const styles = `
   font-size: clamp(22px, 2.8vw, 36px);
   line-height: 1.2;
   color: #F4FBFF;
-  text-shadow: ${C.textPool};
+  text-shadow: 0 0 30px ${C.cyan}30;
 }
 .landing-blurb {
   margin: clamp(10px, 1.4vh, 18px) auto 0;
-  max-width: 720px;
-  font-size: clamp(18px, 1.55vw, 22px);
-  line-height: 1.72;
+  max-width: 660px;
+  font-size: clamp(15px, 1.2vw, 17.5px);
+  line-height: 1.7;
   font-weight: 400;
-  color: rgba(230, 246, 251, 0.94);
-  text-shadow: ${C.textPool};
+  color: rgba(225, 244, 250, 0.88);
+  text-shadow: 0 1px 12px hsl(var(--surf-hue) 92% 5% / 0.55);
 }
 .landing-cta-row {
   display: flex;
@@ -1099,7 +1116,7 @@ const styles = `
   letter-spacing: 0.4em;
   padding-left: 0.4em;
   color: ${C.cyanSoft};
-  text-shadow: 0 0 18px ${C.cyan}66, ${C.textPool};
+  text-shadow: 0 0 18px ${C.cyan}88, 0 1px 12px hsl(var(--surf-hue) 92% 5% / 0.7);
 }
 .landing-eyebrow::before,
 .landing-eyebrow::after {
@@ -1124,7 +1141,7 @@ const styles = `
   letter-spacing: 0.01em;
   line-height: 1.14;
   color: #F4FBFF;
-  text-shadow: ${C.textPool}, 0 0 34px ${C.cyan}22;
+  text-shadow: 0 0 34px ${C.cyan}30;
 }
 .landing-section-sub {
   margin: clamp(14px, 1.8vh, 20px) auto 0;
@@ -1133,7 +1150,7 @@ const styles = `
   line-height: 1.72;
   font-weight: 400;
   color: rgba(244, 251, 255, 0.95);
-  text-shadow: ${C.textPool};
+  text-shadow: 0 1px 14px hsl(var(--surf-hue) 92% 5% / 0.6);
 }
 
 /* ============== STUDY TOOLS / FEATURE CARDS ============== */
@@ -1156,21 +1173,25 @@ const styles = `
   align-items: center;
   text-align: center;
   padding: 26px 22px 24px;
-  background: ${C.cardBg};
-  border: 1px solid ${C.cardBorder};
-  border-radius: 20px;
-  backdrop-filter: ${C.cardBlur};
-  -webkit-backdrop-filter: ${C.cardBlur};
-  box-shadow: ${C.cardShadow};
+  background: linear-gradient(180deg, ${C.bgPanel}, ${C.bgPanelStrong});
+  border: 1px solid ${C.hairline};
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent) 14%, transparent) inset,
+    0 18px 36px -22px rgba(0, 0, 0, 0.6),
+    0 0 26px color-mix(in srgb, var(--accent) 24%, transparent);
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
   min-height: 230px;
 }
 .landing-feature-card:hover {
   transform: translateY(-3px);
-  border-color: rgba(118, 228, 247, 0.45);
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.06),
-    0 30px 60px -40px rgba(0,0,0,0.82);
+    0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent) inset,
+    0 26px 48px -22px rgba(0, 0, 0, 0.7),
+    0 0 32px color-mix(in srgb, var(--accent) 40%, transparent);
 }
 .landing-feature-icon-wrap {
   display: inline-flex;
@@ -1218,19 +1239,17 @@ const styles = `
   display: flex;
   gap: 16px;
   padding: 22px 20px;
-  border-radius: 20px;
-  border: 1px solid ${C.cardBorder};
-  background: ${C.cardBg};
-  backdrop-filter: ${C.cardBlur};
-  -webkit-backdrop-filter: ${C.cardBlur};
-  box-shadow: ${C.cardShadow};
+  border-radius: 16px;
+  border: 1px solid ${C.hairline};
+  background: linear-gradient(180deg, hsl(var(--surf-hue) 88% 19% / 0.82), hsl(var(--surf-hue) 88% 14% / 0.90));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 0 22px ${C.cyan}1f, 0 0 0 1px ${C.cyan}14 inset;
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .landing-science-item:hover {
-  border-color: rgba(118, 228, 247, 0.45);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.06),
-    0 26px 56px -40px rgba(0,0,0,0.82);
+  border-color: ${C.hairlineStrong};
+  box-shadow: 0 0 34px ${C.cyan}33, 0 0 0 1px ${C.cyan}2a inset;
 }
 .landing-science-icon {
   display: inline-flex;
@@ -1301,7 +1320,7 @@ const styles = `
   font-size: clamp(24px, 3vw, 38px);
   line-height: 1.16;
   color: #F4FBFF;
-  text-shadow: ${C.textPool}, 0 0 30px ${C.cyan}22;
+  text-shadow: 0 0 30px ${C.cyan}30;
 }
 .landing-split-text {
   margin: clamp(14px, 1.8vh, 20px) 0 clamp(20px, 2.6vh, 28px);
@@ -1314,11 +1333,11 @@ const styles = `
 .landing-split-body--boxed {
   padding: clamp(24px, 3vw, 38px);
   border-radius: 20px;
-  background: ${C.cardBg};
-  border: 1px solid ${C.cardBorder};
-  backdrop-filter: ${C.cardBlur};
-  -webkit-backdrop-filter: ${C.cardBlur};
-  box-shadow: ${C.cardShadow};
+  background: linear-gradient(150deg, hsl(var(--surf-hue) 88% 19% / 0.82), hsl(var(--surf-hue) 88% 14% / 0.88));
+  border: 1px solid ${C.hairlineStrong};
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: 0 30px 80px -40px rgba(0,0,0,0.72), 0 0 40px ${C.cyan}2a, 0 0 0 1px ${C.cyan}1f inset;
 }
 
 /* ============== MEET THE FOUNDER ============== */
@@ -1329,11 +1348,14 @@ const styles = `
   align-items: center;
   padding: clamp(26px, 3.4vw, 44px);
   border-radius: 22px;
-  border: 1px solid ${C.cardBorder};
-  background: ${C.cardBg};
-  backdrop-filter: ${C.cardBlur};
-  -webkit-backdrop-filter: ${C.cardBlur};
-  box-shadow: ${C.cardShadow};
+  border: 1px solid ${C.hairlineStrong};
+  background: linear-gradient(150deg, hsl(var(--surf-hue) 88% 19% / 0.85), hsl(var(--surf-hue) 88% 14% / 0.90));
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  box-shadow:
+    0 30px 80px -38px rgba(0, 0, 0, 0.72),
+    0 0 48px ${C.cyan}30,
+    0 0 0 1px ${C.cyan}22 inset;
 }
 @media (min-width: 880px) {
   .landing-founder-card { grid-template-columns: 320px 1fr; }
@@ -1404,6 +1426,7 @@ const styles = `
     0 16px 32px -14px hsl(var(--surf-hue) 74% 9% / 0.50),
     0 54px 96px -40px rgba(0, 0, 0, 0.74),
     0 0 0 1px rgba(49, 150, 175, 0.16),
+    0 0 80px -22px rgba(118, 228, 247, 0.60),
     inset 0 1px 0 rgba(255, 255, 255, 0.96),
     inset 0 -34px 52px -36px rgba(49, 150, 175, 0.22);
 }
@@ -1457,11 +1480,11 @@ const styles = `
   overflow: hidden;
   border-radius: 22px;
   padding: clamp(28px, 4vw, 48px);
-  background: ${C.cardBg};
-  border: 1px solid ${C.cardBorder};
-  backdrop-filter: ${C.cardBlur};
-  -webkit-backdrop-filter: ${C.cardBlur};
-  box-shadow: ${C.cardShadow};
+  background: linear-gradient(150deg, hsl(var(--surf-hue) 88% 19% / 0.86), hsl(var(--surf-hue) 88% 14% / 0.90));
+  border: 1px solid ${C.hairlineStrong};
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  box-shadow: 0 36px 90px -40px rgba(0,0,0,0.75), 0 0 48px ${C.cyan}33, 0 0 0 1px ${C.cyan}22 inset;
 }
 .landing-scholar-card::before {
   content: "";
@@ -1493,11 +1516,11 @@ const styles = `
   text-align: center;
   border-radius: 22px;
   padding: clamp(30px, 4.4vw, 52px);
-  background: ${C.cardBg};
-  border: 1px solid ${C.cardBorder};
-  backdrop-filter: ${C.cardBlur};
-  -webkit-backdrop-filter: ${C.cardBlur};
-  box-shadow: ${C.cardShadow};
+  background: linear-gradient(150deg, hsl(var(--surf-hue) 88% 19% / 0.86), hsl(var(--surf-hue) 88% 14% / 0.90));
+  border: 1px solid ${C.hairlineStrong};
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  box-shadow: 0 36px 90px -40px rgba(0,0,0,0.75), 0 0 48px ${C.cyan}33, 0 0 0 1px ${C.cyan}22 inset;
 }
 .landing-mastery-card::before {
   content: "";
@@ -1548,11 +1571,11 @@ const styles = `
   text-align: center;
   border-radius: 22px;
   padding: clamp(30px, 4.4vw, 52px);
-  background: ${C.cardBg};
-  border: 1px solid ${C.cardBorder};
-  backdrop-filter: ${C.cardBlur};
-  -webkit-backdrop-filter: ${C.cardBlur};
-  box-shadow: ${C.cardShadow};
+  background: linear-gradient(150deg, hsl(var(--surf-hue) 88% 19% / 0.86), hsl(var(--surf-hue) 88% 14% / 0.90));
+  border: 1px solid ${C.hairlineStrong};
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  box-shadow: 0 36px 90px -40px rgba(0,0,0,0.75), 0 0 48px ${C.cyan}33, 0 0 0 1px ${C.cyan}22 inset;
 }
 .landing-final-card::before {
   content: "";
@@ -1605,7 +1628,7 @@ const styles = `
   line-height: 1.3;
   color: ${C.cyanSoft};
   background: ${C.bgPanel};
-  border: 1px solid ${C.cardBorder};
+  border: 1px solid ${C.hairline};
   cursor: pointer;
   transition: transform 200ms cubic-bezier(.2,.8,.2,1),
               background 200ms ease, border-color 200ms ease,

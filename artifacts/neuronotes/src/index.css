@@ -575,12 +575,13 @@ body {
   background-size: cover, cover;
   background-position: center top, center top;
   background-repeat: no-repeat, no-repeat;
-  /* Deep-pigment correction: push saturation + contrast UP hard so the cyan smoke
-     plumes read as vivid, punchy pigment (matching the reference screenshot's bright
-     tendrils) while keeping brightness DOWN so the overall backdrop stays deep — NOT
-     a lighter, glow-washed haze. Vividness comes from saturation/contrast, never from
-     raising brightness. The owner wants this DEEP-but-VIVID look; do not lighten it. */
-  filter: saturate(1.5) contrast(1.24) brightness(0.92);
+  /* Pigment correction (matches the landing hero pass + owner's photo-editor
+     reference): push saturation and contrast up and pull brightness down so the
+     in-app teal-smoke backdrop reads as deep pigment instead of a milky, glow-
+     washed haze. Re-skins every signed-in page + the EPPP suite in one place. The
+     landing keeps its own (slightly different) filter via the more-specific
+     .landing-root.study-page-bg::before rule below. */
+  filter: saturate(1.32) contrast(1.12) brightness(0.9);
   /* NO background-attachment: fixed. The pseudo-element is already
      position:fixed; inset:0, so it is pinned to the viewport. Adding
      background-attachment:fixed on top is redundant AND makes the browser
@@ -686,21 +687,21 @@ body {
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .recommended-tile:hover {
-  border-color: rgba(196, 232, 242, 0.40);
+  border-color: rgba(196, 232, 242, 0.38);
   background:
     radial-gradient(125% 80% at 50% 0%,
-      rgba(118, 228, 247, 0.12) 0%,
+      rgba(118, 228, 247, 0.14) 0%,
       rgba(118, 228, 247, 0.00) 58%),
     linear-gradient(
       145deg,
-      hsl(var(--surf-hue) 86% 30% / 0.95),
-      hsl(var(--surf-hue) 89% 22% / 0.98)
+      hsl(var(--surf-hue) 86% 26% / 0.70),
+      hsl(var(--surf-hue) 89% 19% / 0.82)
     );
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.14),
-    inset 0 0 34px -22px rgba(118, 228, 247, 0.24),
-    0 0 22px -8px rgba(118, 228, 247, 0.18),
-    0 22px 54px -38px rgba(0, 0, 0, 0.76);
+    inset 0 0 40px -20px rgba(118, 228, 247, 0.46),
+    0 0 28px -8px rgba(118, 228, 247, 0.34),
+    0 26px 62px -40px rgba(0, 0, 0, 0.74);
 }
 .recommended-tile:active {
   border-color: rgba(196, 232, 242, 0.44);
@@ -865,29 +866,27 @@ body {
 .study-page-bg .bg-card,
 .study-page-aurora .bg-card {
   /* Unified with the EPPP card system (.epd-card): a radial cyan top-bloom over
-     a 145° diagonal TRANSLUCENT cerulean glass, a subtle cyan inner glow + outer
-     corona, and a deep drop shadow — this is the refined June-27 glass. Depth
-     comes from the translucent fill + heavy blur + a SOFT glow (not a flat opaque
-     pigment, and not the heavy launch-pill glow). Keeps every generic shadcn card
-     on the main site cut from the same cloth as the EPPP domain tiles. */
+     a 145° diagonal cerulean glass, cyan inner glow + outer corona, deep drop
+     shadow. Keeps every generic shadcn card on the main site cut from the same
+     cloth as the EPPP domain tiles. */
   background:
     radial-gradient(125% 80% at 50% 0%,
-      rgba(118, 228, 247, 0.10) 0%,
+      rgba(118, 228, 247, 0.06) 0%,
       rgba(118, 228, 247, 0.00) 58%),
     linear-gradient(
       145deg,
-      hsl(var(--surf-hue) 88% 19% / 0.74),
-      hsl(var(--surf-hue) 88% 14% / 0.85)
+      hsl(var(--surf-hue) 90% 18% / 0.90),
+      hsl(var(--surf-hue) 90% 12% / 0.96)
     );
   border: 1px solid rgba(196, 232, 242, 0.22);
   border-radius: 20px;
-  backdrop-filter: blur(20px) saturate(135%);
-  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  backdrop-filter: blur(9px) saturate(140%);
+  -webkit-backdrop-filter: blur(9px) saturate(140%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    inset 0 0 40px -22px rgba(118, 228, 247, 0.42),
-    0 0 28px -6px rgba(118, 228, 247, 0.30),
-    0 24px 60px -42px rgba(0, 0, 0, 0.72);
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    inset 0 0 36px -24px rgba(118, 228, 247, 0.16),
+    0 0 20px -10px rgba(118, 228, 247, 0.10),
+    0 22px 52px -40px rgba(0, 0, 0, 0.80);
 }
 
 /* =============================================================================
@@ -1310,8 +1309,11 @@ body {
     transition: transform 200ms ease, box-shadow 250ms ease, border-color 200ms ease, background 250ms ease;
   }
   .quiz-option-hover:hover:not(:disabled) {
-    border-color: rgba(167, 243, 255, 0.45) !important;
-    box-shadow: 0 14px 30px -18px rgba(0, 0, 0, 0.65) !important;
+    border-color: rgba(167, 243, 255, 0.55) !important;
+    box-shadow:
+      0 0 0 1px rgba(167, 243, 255, 0.25),
+      0 12px 32px -10px rgba(118, 228, 247, 0.55),
+      0 0 24px -4px rgba(118, 228, 247, 0.35) !important;
   }
 
   .toggle-elevate::before,

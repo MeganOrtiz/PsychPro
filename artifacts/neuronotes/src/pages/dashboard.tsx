@@ -248,12 +248,12 @@ export default function DashboardPage() {
             className="rounded-xl p-4 mb-6 flex items-start gap-3 border"
             style={{
               background:
-                "linear-gradient(145deg, hsl(var(--surf-hue) 100% 20% / 0.96), hsl(var(--surf-hue) 100% 13% / 0.99))",
+                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.16) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.83), hsl(var(--surf-hue) 88% 14% / 0.90))",
               borderColor: "rgba(118,228,247,0.30)",
-              backdropFilter: "blur(5px) saturate(190%)",
-              WebkitBackdropFilter: "blur(5px) saturate(190%)",
+              backdropFilter: "blur(18px) saturate(135%)",
+              WebkitBackdropFilter: "blur(18px) saturate(135%)",
               boxShadow:
-                "inset 0 1px 0 rgba(255,255,255,0.03), 0 20px 46px -28px rgba(0,0,0,0.72)",
+                "inset 0 1px 0 rgba(255,255,255,0.13), inset 0 0 44px -22px rgba(118,228,247,0.50), 0 0 32px -10px rgba(118,228,247,0.40), 0 20px 46px -26px rgba(0,0,0,0.66)",
             }}
             data-testid="banner-over-limit"
           >
@@ -286,12 +286,12 @@ export default function DashboardPage() {
             className="rounded-xl p-4 mb-6 flex items-start gap-3 border"
             style={{
               background:
-                "linear-gradient(145deg, hsl(var(--surf-hue) 100% 19% / 0.96), hsl(var(--surf-hue) 100% 12% / 0.99))",
+                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.79), hsl(var(--surf-hue) 88% 14% / 0.90))",
               borderColor: "rgba(118,228,247,0.26)",
-              backdropFilter: "blur(5px) saturate(190%)",
-              WebkitBackdropFilter: "blur(5px) saturate(190%)",
+              backdropFilter: "blur(18px) saturate(135%)",
+              WebkitBackdropFilter: "blur(18px) saturate(135%)",
               boxShadow:
-                "inset 0 1px 0 rgba(255,255,255,0.03), 0 20px 46px -28px rgba(0,0,0,0.72)",
+                "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 42px -22px rgba(118,228,247,0.45), 0 0 30px -10px rgba(118,228,247,0.34), 0 20px 46px -26px rgba(0,0,0,0.66)",
             }}
             data-testid="banner-approaching-limit"
           >
@@ -325,10 +325,7 @@ export default function DashboardPage() {
             left content stack so the Spotlight box top aligns with "Begin
             Your Journey" and its footer aligns with the Streak/Leaderboard row. */}
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-6 items-stretch">
-          <div
-            className="min-w-0 flex flex-col"
-            style={{ gap: "clamp(18px, 2.4vw, 28px)" }}
-          >
+          <div className="min-w-0 space-y-6">
             {/* Begin/Continue Your Journey (full width, top). */}
             <StudySurface tone="light" innerClassName="p-5">
               <div className="relative">

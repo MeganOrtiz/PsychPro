@@ -28,26 +28,7 @@ export default function SignUpPage() {
             fontFamily: "inherit",
           },
           elements: {
-            // Deep-cerulean translucent glass — pigment, no cyan glow. Lower
-            // opacity + strong backdrop blur let the smoke wallpaper diffuse
-            // through so the card reads as real glass (not a flat opaque box);
-            // depth comes from the bright top edge + soft drop shadow.
-            card: {
-              background:
-                "linear-gradient(160deg, hsl(192 92% 20% / 0.70), hsl(192 96% 12% / 0.82))",
-              border: "1px solid rgba(196, 232, 242, 0.22)",
-              borderRadius: "20px",
-              backdropFilter: "blur(30px) saturate(155%)",
-              WebkitBackdropFilter: "blur(30px) saturate(155%)",
-              boxShadow:
-                "inset 0 1px 0 rgba(255,255,255,0.20), 0 32px 70px -34px rgba(0,0,0,0.78)",
-            },
-            // Kill Clerk's default lighter footer band so the whole card reads
-            // as one cohesive glass panel (was a mismatched two-tone block).
-            footer: {
-              background: "transparent",
-              borderTop: "1px solid rgba(196, 232, 242, 0.10)",
-            },
+            card: `bg-[${P.surface}]/90 border border-white/10 backdrop-blur-md shadow-2xl`,
             headerTitle: "text-white",
             headerSubtitle: `text-[${P.mistSoft}]`,
             formButtonPrimary: `bg-[${P.surf}] hover:bg-[${P.teal}] text-[${P.ink}] font-medium`,

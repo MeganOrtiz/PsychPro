@@ -213,6 +213,7 @@ export default function QuizPage({ params }: Props) {
         <>
           <StudySurface
             tone="light"
+            glow
             innerClassName="p-6 md:p-7 mb-6"
             testId="quiz-question-card"
           >
@@ -247,7 +248,7 @@ export default function QuizPage({ params }: Props) {
                     "linear-gradient(135deg, hsl(var(--surf-hue) 91% 22% / 0.78), hsl(var(--surf-hue) 88% 13% / 0.86))",
                   borderColor: `${P.surf}55`,
                   color: P.cloud,
-                  boxShadow: "0 10px 24px -16px rgba(0,0,0,0.6), inset 0 1px 0 0 rgba(255,255,255,0.06)",
+                  boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(255,255,255,0.06)`,
                 };
               } else if (isCorrect) {
                 // Correct answer turns emerald green, mirroring the red
@@ -323,12 +324,12 @@ export default function QuizPage({ params }: Props) {
               className="rounded-xl p-4 mb-6 border"
               style={{
                 background:
-                  "linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99))",
+                  "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.79), hsl(var(--surf-hue) 88% 14% / 0.90))",
                 borderColor: "rgba(118,228,247,0.24)",
-                backdropFilter: "blur(5px) saturate(190%)",
-                WebkitBackdropFilter: "blur(5px) saturate(190%)",
+                backdropFilter: "blur(18px) saturate(135%)",
+                WebkitBackdropFilter: "blur(18px) saturate(135%)",
                 boxShadow:
-                  "inset 0 1px 0 rgba(255,255,255,0.03), 0 20px 46px -28px rgba(0,0,0,0.72)",
+                  "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 42px -22px rgba(118,228,247,0.45), 0 0 30px -10px rgba(118,228,247,0.34), 0 20px 46px -26px rgba(0,0,0,0.66)",
               }}
               data-testid="reflect-prompt"
             >
