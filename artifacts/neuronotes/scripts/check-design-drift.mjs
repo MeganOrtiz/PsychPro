@@ -8,11 +8,10 @@
 //
 //   1. Global structural tokens  — the corner-radius token (--radius) and the
 //      surface-hue base token (--surf-hue).
-//   2. The signature-glass cerulean card — the main-site `.bg-card` rule, which
-//      shares the .eppp-launch-btn glass language: a 145° diagonal translucent
-//      cerulean fill, fixed 20px (NON-pill) corner, blur(16px) saturate(140%)
-//      glass, a cyan hairline border, and the soft cyan glow. Owner-requested
-//      unification of every tile + button onto the launch-button look.
+//   2. The pigment-only cerulean glass card — the main-site `.bg-card` rule,
+//      which mirrors the EPPP `.epd-card`: a 145° diagonal fill, fixed 20px
+//      (NON-pill) corner, blur(5px) saturate(190%) glass, and no cyan bloom or
+//      corona. Guards against both structural drift and the recurring glow.
 //   3. A ban on mint / teal-green accents — cerulean #76E4F7 is the only accent;
 //      mint was retracted app-wide and keeps trying to creep back.
 //
@@ -81,23 +80,24 @@ if (!cardRecipe) {
 } else {
   const RECIPE = [
     { name: "non-pill 20px corner", re: /border-radius:\s*20px;/, expected: "border-radius: 20px;" },
-    { name: "glass blur", re: /backdrop-filter:\s*blur\(16px\)\s*saturate\(140%\)/, expected: "backdrop-filter: blur(16px) saturate(140%)" },
+    { name: "glass blur", re: /backdrop-filter:\s*blur\(5px\)\s*saturate\(190%\)/, expected: "backdrop-filter: blur(5px) saturate(190%)" },
     { name: "145° diagonal bloom", re: /linear-gradient\(\s*145deg/, expected: "linear-gradient(145deg, …)" },
-    { name: "cyan hairline border", re: /rgba\(118,\s*228,\s*247,\s*0\.45\)/, expected: "border: 1px solid rgba(118, 228, 247, 0.45)" },
+    { name: "cerulean hairline border", re: /rgba\(196,\s*232,\s*242,\s*0\.22\)/, expected: "border: 1px solid rgba(196, 232, 242, 0.22)" },
   ];
   for (const r of RECIPE) {
     if (!r.re.test(cardRecipe)) {
       fail(`.bg-card recipe: ${r.name} changed or removed`, `restore \`${r.expected}\``);
     }
   }
-  // Signature-glass lock: every tile now shares the .eppp-launch-btn glass
-  // language (translucent cerulean fill + cyan hairline border + soft cyan glow),
-  // at the owner's explicit request. The card MUST carry the signature cyan glow
-  // layer; a bare pigment-only card (no glow) is now the drift to guard against.
-  if (!/0 0 26px -6px rgba\(118,\s*228,\s*247,\s*0\.42\)/.test(cardRecipe)) {
+  // Pigment-only lock: the card must NOT reintroduce the cyan top-bloom radial
+  // or the cyan inner-glow / outer-corona box-shadow layers. Depth comes from
+  // PIGMENT (saturation + contrast), not glow. This cyan glow kept drifting back
+  // onto the dashboards, so the card is pinned glow-free — its only colors are
+  // the hsl() fill and the rgba(196,232,242) hairline border.
+  if (/rgba\(118,\s*228,\s*247/.test(cardRecipe)) {
     fail(
-      ".bg-card recipe: signature cyan glow missing",
-      "restore the launch-button glow layer `0 0 26px -6px rgba(118, 228, 247, 0.42)` — every tile shares the .eppp-launch-btn glass language",
+      ".bg-card recipe: cyan glow re-added (rgba(118, 228, 247, …) inside the card)",
+      "keep the card pigment-only — remove the cyan top-bloom radial and the cyan inner/outer corona box-shadow layers",
     );
   }
 }
