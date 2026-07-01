@@ -325,7 +325,7 @@ export default function DashboardPage() {
             left content stack so the Spotlight box top aligns with "Begin
             Your Journey" and its footer aligns with the Streak/Leaderboard row. */}
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-6 items-stretch">
-          <div className="min-w-0 space-y-6">
+          <div className="min-w-0 space-y-[clamp(18px,2.4vw,28px)]">
             {/* Begin/Continue Your Journey (full width, top). */}
             <StudySurface tone="light" innerClassName="p-5">
               <div className="relative">
