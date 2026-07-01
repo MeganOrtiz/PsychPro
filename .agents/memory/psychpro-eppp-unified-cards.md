@@ -47,3 +47,9 @@ border `rgba(118,228,247,0.45)`, `blur(16px) saturate(140%)`, glow
 files, so keep them in lockstep by hand — they silently diverged once. The drift
 lock still only parses index.css `.bg-card`; treat `.epd-card` as its manual twin.
 See `psychpro-glass-sweep-reverted.md` Update 3.
+
+**Update 2 (the launch-pill signature-glass update above was REVERTED):** owner
+reverted it; both .bg-card and .epd-card are back on the PIGMENT recipe (opaque
+~.95/.99 fill, subtle rgba(196,232,242) border, blur5, NO cyan glow). See
+`psychpro-glass-sweep-reverted.md` Update 4. Ignore the "launch-pill signature
+glass" note above — it is dead.

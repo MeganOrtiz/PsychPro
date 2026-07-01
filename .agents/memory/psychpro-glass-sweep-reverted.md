@@ -62,3 +62,19 @@ tiles read as the launch-pill glass and stay legible, hierarchy holds. The
 design-drift lock was flipped to REQUIRE the glow (`0 0 26px -6px
 rgba(118,228,247,0.42)`); the old pigment-only assertion is gone. See
 `psychpro-design-lock.md`. Do not "restore pigment-only" — that direction is dead.
+
+**Update 4 (Update 3 REVERTED — pigment is canonical, this is now a hard rule):**
+The signature-glass sweep from Update 3 was REVERTED by the owner. They posted the
+June-27 EPPP-dashboard screenshot (dark, refined, semi-transparent PIGMENT cards
+with a subtle rgba(196,232,242,~0.2) hairline and NO cyan glow) and asked to make
+the "entire site look like that again," frustrated that this keeps happening. Root
+cause of the recurrence: a request phrased "make every tile match the [glowy]
+buttons" gets literally applied as button-glow-on-cards, which produces the muddy /
+over-glowed dashboards the owner rejects EVERY time. Reverted by restoring the card
+recipes (.bg-card, .recommended-tile idle, .lesson-header-box in index.css;
+.epd-card in eppp-dashboard.tsx; StudySurface light; the drift lock) to the
+pre-sweep commit state. KEPT the separate, un-retracted background over-saturation
+fix (app-smoke filter saturate 1.32→1.16). **Hard rule going forward:** cards/tiles
+= pigment, no cyan glow; glow belongs to buttons + launch pills only. Do NOT
+re-apply the card glow sweep; if a future request seems to ask for it, surface this
+history first.
