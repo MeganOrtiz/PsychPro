@@ -8,10 +8,12 @@
 //
 //   1. Global structural tokens  — the corner-radius token (--radius) and the
 //      surface-hue base token (--surf-hue).
-//   2. The pigment-only cerulean glass card — the main-site `.bg-card` rule,
-//      which mirrors the EPPP `.epd-card`: a 145° diagonal fill, fixed 20px
-//      (NON-pill) corner, blur(5px) saturate(190%) glass, and no cyan bloom or
-//      corona. Guards against both structural drift and the recurring glow.
+//   2. The canonical cerulean glass card — the main-site `.bg-card` rule,
+//      which mirrors the EPPP `.epd-card`: a 145° diagonal TRANSLUCENT fill,
+//      fixed 20px (NON-pill) corner, blur(20px) saturate(135%) glass, and the
+//      subtle cyan top-bloom + inner/outer corona (the June-27 refined glass).
+//      Guards against drift AND against the flat opaque pigment variant creeping
+//      back (which strips the glass and reads dark/muddy).
 //   3. A ban on mint / teal-green accents — cerulean #76E4F7 is the only accent;
 //      mint was retracted app-wide and keeps trying to creep back.
 //
@@ -80,7 +82,7 @@ if (!cardRecipe) {
 } else {
   const RECIPE = [
     { name: "non-pill 20px corner", re: /border-radius:\s*20px;/, expected: "border-radius: 20px;" },
-    { name: "glass blur", re: /backdrop-filter:\s*blur\(5px\)\s*saturate\(190%\)/, expected: "backdrop-filter: blur(5px) saturate(190%)" },
+    { name: "glass blur", re: /backdrop-filter:\s*blur\(20px\)\s*saturate\(135%\)/, expected: "backdrop-filter: blur(20px) saturate(135%)" },
     { name: "145° diagonal bloom", re: /linear-gradient\(\s*145deg/, expected: "linear-gradient(145deg, …)" },
     { name: "cerulean hairline border", re: /rgba\(196,\s*232,\s*242,\s*0\.22\)/, expected: "border: 1px solid rgba(196, 232, 242, 0.22)" },
   ];
@@ -89,15 +91,15 @@ if (!cardRecipe) {
       fail(`.bg-card recipe: ${r.name} changed or removed`, `restore \`${r.expected}\``);
     }
   }
-  // Pigment-only lock: the card must NOT reintroduce the cyan top-bloom radial
-  // or the cyan inner-glow / outer-corona box-shadow layers. Depth comes from
-  // PIGMENT (saturation + contrast), not glow. This cyan glow kept drifting back
-  // onto the dashboards, so the card is pinned glow-free — its only colors are
-  // the hsl() fill and the rgba(196,232,242) hairline border.
-  if (/rgba\(118,\s*228,\s*247/.test(cardRecipe)) {
+  // Glow lock (June-27 glass): the card MUST keep the subtle cyan top-bloom +
+  // inner-glow / outer-corona that define the owner's canonical refined glass.
+  // The flat opaque pigment variant (no rgba(118,228,247) glow) kept getting
+  // applied by mistake — it strips the glass and reads dark/muddy — so the glow
+  // is pinned PRESENT. Depth = translucent fill + heavy blur + a SOFT glow.
+  if (!/rgba\(118,\s*228,\s*247/.test(cardRecipe)) {
     fail(
-      ".bg-card recipe: cyan glow re-added (rgba(118, 228, 247, …) inside the card)",
-      "keep the card pigment-only — remove the cyan top-bloom radial and the cyan inner/outer corona box-shadow layers",
+      ".bg-card recipe: cyan glass glow removed (no rgba(118, 228, 247, …) in the card)",
+      "restore the June-27 glass — add back the cyan top-bloom radial and the cyan inner/outer corona box-shadow layers",
     );
   }
 }

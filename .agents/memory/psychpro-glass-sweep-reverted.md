@@ -78,3 +78,14 @@ fix (app-smoke filter saturate 1.32→1.16). **Hard rule going forward:** cards/
 = pigment, no cyan glow; glow belongs to buttons + launch pills only. Do NOT
 re-apply the card glow sweep; if a future request seems to ask for it, surface this
 history first.
+
+**Update 5 (Update 4 was WRONG — correcting the record):** Update 4 claimed
+"pigment is canonical, no glow on cards." That is FALSE and caused another bad
+revert. The owner then posted the SAME June-27 screenshot again asking why it got
+worse. Root cause: the June-27 look is TRANSLUCENT GLASS WITH A SUBTLE GLOW (commit
+1585ea0), not flat pigment. Restoring the de-glowed pigment baseline (423bf00) made
+the cards dark/flat. Fixed by restoring the real 1585ea0 glass recipe to .bg-card,
+.epd-card, .recommended-tile, .lesson-header-box, StudySurface, and FLIPPING the
+guardrail to REQUIRE the glow. Authoritative details + exact values now live in
+`psychpro-canonical-card-recipe.md`. Do not trust any note calling June-27
+"pigment / no glow".

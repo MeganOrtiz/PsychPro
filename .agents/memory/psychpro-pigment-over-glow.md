@@ -48,3 +48,9 @@ of what makes the surfaces read as glass. Removing it wholesale was a downgrade.
 dashboard/EPPP cards can't be screenshotted directly — verify via an isolated
 mockup-sandbox copy of the real composition (see psychpro-signed-in-verification), and
 rely on owner screenshots for the live look.
+
+**Clarification:** "pigment over glow" does NOT mean cards should have zero glow.
+The canonical card (June-27) keeps a SUBTLE cyan bloom+corona; stripping it makes
+cards read flat/dark. The rule is: fight muddiness with saturation/contrast and by
+REDUCING excessive glow — not by removing glow entirely. See
+`psychpro-canonical-card-recipe.md`.

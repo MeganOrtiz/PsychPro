@@ -53,3 +53,9 @@ reverted it; both .bg-card and .epd-card are back on the PIGMENT recipe (opaque
 ~.95/.99 fill, subtle rgba(196,232,242) border, blur5, NO cyan glow). See
 `psychpro-glass-sweep-reverted.md` Update 4. Ignore the "launch-pill signature
 glass" note above — it is dead.
+
+**Update 3 (supersedes Update 2):** the PIGMENT direction from Update 2 was ALSO
+wrong. Canonical = the June-27 translucent glass w/ subtle glow. See
+`psychpro-canonical-card-recipe.md` for the single source of truth on both
+.bg-card and .epd-card. Ignore both "signature glass" (Update 1) and "pigment"
+(Update 2) notes above.

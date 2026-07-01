@@ -68,15 +68,15 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
       // Unified with the EPPP card system (.epd-card): a radial cyan top-bloom
       // over a 145° diagonal cerulean glass with a cyan inner glow + outer
       // corona and a deep drop shadow, so the main-site surfaces read as the
-      // same translucent bloom glass as the EPPP domain tiles.
+      // same translucent bloom glass as the EPPP domain tiles (the June-27 look).
       return {
         background:
-          "linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99))",
+          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))",
         borderColor: "rgba(196,232,242,0.22)",
-        backdropFilter: "blur(5px) saturate(190%)",
-        WebkitBackdropFilter: "blur(5px) saturate(190%)",
+        backdropFilter: "blur(20px) saturate(135%)",
+        WebkitBackdropFilter: "blur(20px) saturate(135%)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.03), 0 22px 52px -40px rgba(0,0,0,0.80)",
+          "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 40px -22px rgba(118,228,247,0.42), 0 0 28px -6px rgba(118,228,247,0.30), 0 24px 60px -42px rgba(0,0,0,0.72)",
         color: P.mist,
       };
   }
