@@ -18,13 +18,13 @@ All values live in `artifacts/neuronotes/src/index.css`.
 - `--radius: .625rem;` — the global corner-radius token.
 - `--surf-hue: 193;` — the surface hue base.
 
-**Canonical luminous glass card** — the main-site `.study-page-bg .bg-card` rule,
+**Canonical pigment-only glass card** — the main-site `.study-page-bg .bg-card` rule,
 which mirrors the EPPP `.epd-card`:
 - `border-radius: 20px;` — fixed, **non-pill** corner.
-- `backdrop-filter: blur(20px) saturate(135%)` — the glass blur.
-- `linear-gradient(145deg, …)` — the 145° diagonal bloom direction.
-- `inset 0 0 40px -22px rgba(118, 228, 247, 0.42)` — cyan inner glow.
-- `0 0 28px -6px rgba(118, 228, 247, 0.30)` — cyan outer corona.
+- `backdrop-filter: blur(5px) saturate(190%)` — the glass blur.
+- `linear-gradient(145deg, …)` — the 145° pigmented fill direction.
+- no cyan top-bloom, inset cyan glow, or outer cyan corona on idle cards.
+- depth comes from pigment contrast plus the neutral dark drop shadow.
 - `border: 1px solid rgba(196, 232, 242, 0.22)` — cerulean hairline border.
 
 **Banned accents** — mint / teal-green hexes (`#5EEAD4`, `#2DD4BF`, `#14B8A6`) are

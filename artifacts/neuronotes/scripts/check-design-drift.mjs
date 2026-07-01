@@ -8,11 +8,10 @@
 //
 //   1. Global structural tokens  — the corner-radius token (--radius) and the
 //      surface-hue base token (--surf-hue).
-//   2. The luminous cerulean glass card — the main-site `.bg-card` rule, which
-//      mirrors the EPPP `.epd-card`: a 145° diagonal bloom, a fixed 20px (NON-
-//      pill) corner, blur(20px) saturate(135%) glass, and the cyan inner glow +
-//      outer corona shadow. Guards against the recurring drift toward rounder,
-//      softer, pill-like controls.
+//   2. The pigment-only cerulean glass card — the main-site `.bg-card` rule,
+//      which mirrors the EPPP `.epd-card`: a 145° diagonal fill, fixed 20px
+//      (NON-pill) corner, blur(5px) saturate(190%) glass, and no cyan bloom or
+//      corona. Guards against both structural drift and the recurring glow.
 //   3. A ban on mint / teal-green accents — cerulean #76E4F7 is the only accent;
 //      mint was retracted app-wide and keeps trying to creep back.
 //
@@ -71,7 +70,7 @@ if (!rootBlock) {
   }
 }
 
-// --- 2) Canonical luminous glass card (.bg-card == EPPP .epd-card) ----------
+// --- 2) Canonical pigment-only glass card (.bg-card == EPPP .epd-card) -------
 const cardRecipe = ruleBlock(css, ".study-page-bg .bg-card");
 if (!cardRecipe) {
   fail(
