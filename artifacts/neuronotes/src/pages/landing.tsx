@@ -719,10 +719,22 @@ const C = {
   inkSoft: "rgba(11,59,71,0.58)",  // muted ink — chart ticks on white
   grid: "rgba(11,59,71,0.10)",     // chart grid lines on white
   bg: "#082a33",
-  bgPanel: "hsl(var(--surf-hue) 88% 19% / 0.82)",
-  bgPanelStrong: "hsl(var(--surf-hue) 88% 14% / 0.90)",
+  bgPanel: "hsl(var(--surf-hue) 100% 17% / 0.95)",
+  bgPanelStrong: "hsl(var(--surf-hue) 100% 11% / 0.99)",
   hairline: "rgba(118, 228, 247, 0.36)",
   hairlineStrong: "rgba(118, 228, 247, 0.58)",
+  // Canonical EPPP .epd-card glass recipe (matches main-site .bg-card +
+  // eppp-dashboard .epd-card), shared by every landing tile so the marketing
+  // page reads as the same glass as the app and the EPPP domain tiles.
+  cardBg:
+    "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99))",
+  cardBorder: "rgba(196, 232, 242, 0.22)",
+  cardBlur: "blur(5px) saturate(190%)",
+  cardShadow:
+    "inset 0 1px 0 rgba(255,255,255,0.03), inset 0 0 36px -24px rgba(118,228,247,0.28), 0 0 20px -10px rgba(118,228,247,0.18), 0 22px 52px -40px rgba(0,0,0,0.80)",
+  // Dark legibility pool for white text that floats over the wallpaper (not in a tile).
+  textPool:
+    "0 2px 22px hsl(var(--surf-hue) 92% 5% / 0.72), 0 1px 4px hsl(var(--surf-hue) 92% 6% / 0.55)",
 };
 
 const styles = `
@@ -889,6 +901,7 @@ const styles = `
   letter-spacing: 0.42em;
   color: ${C.cyanSoft};
   padding-left: 0.42em;
+  text-shadow: ${C.textPool};
 }
 .landing-headline {
   margin: clamp(12px, 1.6vh, 20px) auto 0;
@@ -898,7 +911,7 @@ const styles = `
   font-size: clamp(22px, 2.8vw, 36px);
   line-height: 1.2;
   color: #F4FBFF;
-  text-shadow: 0 2px 16px hsl(var(--surf-hue) 92% 5% / 0.5);
+  text-shadow: ${C.textPool};
 }
 .landing-blurb {
   margin: clamp(10px, 1.4vh, 18px) auto 0;
@@ -907,7 +920,7 @@ const styles = `
   line-height: 1.7;
   font-weight: 400;
   color: rgba(225, 244, 250, 0.88);
-  text-shadow: 0 1px 12px hsl(var(--surf-hue) 92% 5% / 0.55);
+  text-shadow: ${C.textPool};
 }
 .landing-cta-row {
   display: flex;
@@ -1086,7 +1099,7 @@ const styles = `
   letter-spacing: 0.4em;
   padding-left: 0.4em;
   color: ${C.cyanSoft};
-  text-shadow: 0 0 18px ${C.cyan}88, 0 1px 12px hsl(var(--surf-hue) 92% 5% / 0.7);
+  text-shadow: 0 0 18px ${C.cyan}66, ${C.textPool};
 }
 .landing-eyebrow::before,
 .landing-eyebrow::after {
@@ -1111,7 +1124,7 @@ const styles = `
   letter-spacing: 0.01em;
   line-height: 1.14;
   color: #F4FBFF;
-  text-shadow: 0 0 34px ${C.cyan}30;
+  text-shadow: ${C.textPool}, 0 0 34px ${C.cyan}22;
 }
 .landing-section-sub {
   margin: clamp(14px, 1.8vh, 20px) auto 0;
@@ -1120,7 +1133,7 @@ const styles = `
   line-height: 1.72;
   font-weight: 400;
   color: rgba(244, 251, 255, 0.95);
-  text-shadow: 0 1px 14px hsl(var(--surf-hue) 92% 5% / 0.6);
+  text-shadow: ${C.textPool};
 }
 
 /* ============== STUDY TOOLS / FEATURE CARDS ============== */
@@ -1143,25 +1156,23 @@ const styles = `
   align-items: center;
   text-align: center;
   padding: 26px 22px 24px;
-  background: linear-gradient(180deg, ${C.bgPanel}, ${C.bgPanelStrong});
-  border: 1px solid ${C.hairline};
-  border-radius: 16px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--accent) 14%, transparent) inset,
-    0 18px 36px -22px rgba(0, 0, 0, 0.6),
-    0 0 26px color-mix(in srgb, var(--accent) 24%, transparent);
+  background: ${C.cardBg};
+  border: 1px solid ${C.cardBorder};
+  border-radius: 20px;
+  backdrop-filter: ${C.cardBlur};
+  -webkit-backdrop-filter: ${C.cardBlur};
+  box-shadow: ${C.cardShadow};
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
   min-height: 230px;
 }
 .landing-feature-card:hover {
   transform: translateY(-3px);
-  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  border-color: rgba(118, 228, 247, 0.45);
   box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent) inset,
-    0 26px 48px -22px rgba(0, 0, 0, 0.7),
-    0 0 32px color-mix(in srgb, var(--accent) 40%, transparent);
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    inset 0 0 40px -22px rgba(118,228,247,0.42),
+    0 0 30px -6px rgba(118,228,247,0.34),
+    0 30px 60px -40px rgba(0,0,0,0.82);
 }
 .landing-feature-icon-wrap {
   display: inline-flex;
@@ -1209,17 +1220,21 @@ const styles = `
   display: flex;
   gap: 16px;
   padding: 22px 20px;
-  border-radius: 16px;
-  border: 1px solid ${C.hairline};
-  background: linear-gradient(180deg, hsl(var(--surf-hue) 88% 19% / 0.82), hsl(var(--surf-hue) 88% 14% / 0.90));
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 0 22px ${C.cyan}1f, 0 0 0 1px ${C.cyan}14 inset;
+  border-radius: 20px;
+  border: 1px solid ${C.cardBorder};
+  background: ${C.cardBg};
+  backdrop-filter: ${C.cardBlur};
+  -webkit-backdrop-filter: ${C.cardBlur};
+  box-shadow: ${C.cardShadow};
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .landing-science-item:hover {
-  border-color: ${C.hairlineStrong};
-  box-shadow: 0 0 34px ${C.cyan}33, 0 0 0 1px ${C.cyan}2a inset;
+  border-color: rgba(118, 228, 247, 0.45);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    inset 0 0 40px -22px rgba(118,228,247,0.42),
+    0 0 30px -6px rgba(118,228,247,0.34),
+    0 26px 56px -40px rgba(0,0,0,0.82);
 }
 .landing-science-icon {
   display: inline-flex;
@@ -1290,7 +1305,7 @@ const styles = `
   font-size: clamp(24px, 3vw, 38px);
   line-height: 1.16;
   color: #F4FBFF;
-  text-shadow: 0 0 30px ${C.cyan}30;
+  text-shadow: ${C.textPool}, 0 0 30px ${C.cyan}22;
 }
 .landing-split-text {
   margin: clamp(14px, 1.8vh, 20px) 0 clamp(20px, 2.6vh, 28px);
@@ -1303,11 +1318,11 @@ const styles = `
 .landing-split-body--boxed {
   padding: clamp(24px, 3vw, 38px);
   border-radius: 20px;
-  background: linear-gradient(150deg, hsl(var(--surf-hue) 88% 19% / 0.82), hsl(var(--surf-hue) 88% 14% / 0.88));
-  border: 1px solid ${C.hairlineStrong};
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
-  box-shadow: 0 30px 80px -40px rgba(0,0,0,0.72), 0 0 40px ${C.cyan}2a, 0 0 0 1px ${C.cyan}1f inset;
+  background: ${C.cardBg};
+  border: 1px solid ${C.cardBorder};
+  backdrop-filter: ${C.cardBlur};
+  -webkit-backdrop-filter: ${C.cardBlur};
+  box-shadow: ${C.cardShadow};
 }
 
 /* ============== MEET THE FOUNDER ============== */
@@ -1318,14 +1333,11 @@ const styles = `
   align-items: center;
   padding: clamp(26px, 3.4vw, 44px);
   border-radius: 22px;
-  border: 1px solid ${C.hairlineStrong};
-  background: linear-gradient(150deg, hsl(var(--surf-hue) 88% 19% / 0.85), hsl(var(--surf-hue) 88% 14% / 0.90));
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
-  box-shadow:
-    0 30px 80px -38px rgba(0, 0, 0, 0.72),
-    0 0 48px ${C.cyan}30,
-    0 0 0 1px ${C.cyan}22 inset;
+  border: 1px solid ${C.cardBorder};
+  background: ${C.cardBg};
+  backdrop-filter: ${C.cardBlur};
+  -webkit-backdrop-filter: ${C.cardBlur};
+  box-shadow: ${C.cardShadow};
 }
 @media (min-width: 880px) {
   .landing-founder-card { grid-template-columns: 320px 1fr; }
@@ -1450,11 +1462,11 @@ const styles = `
   overflow: hidden;
   border-radius: 22px;
   padding: clamp(28px, 4vw, 48px);
-  background: linear-gradient(150deg, hsl(var(--surf-hue) 88% 19% / 0.86), hsl(var(--surf-hue) 88% 14% / 0.90));
-  border: 1px solid ${C.hairlineStrong};
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
-  box-shadow: 0 36px 90px -40px rgba(0,0,0,0.75), 0 0 48px ${C.cyan}33, 0 0 0 1px ${C.cyan}22 inset;
+  background: ${C.cardBg};
+  border: 1px solid ${C.cardBorder};
+  backdrop-filter: ${C.cardBlur};
+  -webkit-backdrop-filter: ${C.cardBlur};
+  box-shadow: ${C.cardShadow};
 }
 .landing-scholar-card::before {
   content: "";
@@ -1486,11 +1498,11 @@ const styles = `
   text-align: center;
   border-radius: 22px;
   padding: clamp(30px, 4.4vw, 52px);
-  background: linear-gradient(150deg, hsl(var(--surf-hue) 88% 19% / 0.86), hsl(var(--surf-hue) 88% 14% / 0.90));
-  border: 1px solid ${C.hairlineStrong};
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
-  box-shadow: 0 36px 90px -40px rgba(0,0,0,0.75), 0 0 48px ${C.cyan}33, 0 0 0 1px ${C.cyan}22 inset;
+  background: ${C.cardBg};
+  border: 1px solid ${C.cardBorder};
+  backdrop-filter: ${C.cardBlur};
+  -webkit-backdrop-filter: ${C.cardBlur};
+  box-shadow: ${C.cardShadow};
 }
 .landing-mastery-card::before {
   content: "";
@@ -1541,11 +1553,11 @@ const styles = `
   text-align: center;
   border-radius: 22px;
   padding: clamp(30px, 4.4vw, 52px);
-  background: linear-gradient(150deg, hsl(var(--surf-hue) 88% 19% / 0.86), hsl(var(--surf-hue) 88% 14% / 0.90));
-  border: 1px solid ${C.hairlineStrong};
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
-  box-shadow: 0 36px 90px -40px rgba(0,0,0,0.75), 0 0 48px ${C.cyan}33, 0 0 0 1px ${C.cyan}22 inset;
+  background: ${C.cardBg};
+  border: 1px solid ${C.cardBorder};
+  backdrop-filter: ${C.cardBlur};
+  -webkit-backdrop-filter: ${C.cardBlur};
+  box-shadow: ${C.cardShadow};
 }
 .landing-final-card::before {
   content: "";
@@ -1598,7 +1610,7 @@ const styles = `
   line-height: 1.3;
   color: ${C.cyanSoft};
   background: ${C.bgPanel};
-  border: 1px solid ${C.hairline};
+  border: 1px solid ${C.cardBorder};
   cursor: pointer;
   transition: transform 200ms cubic-bezier(.2,.8,.2,1),
               background 200ms ease, border-color 200ms ease,

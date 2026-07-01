@@ -68,15 +68,27 @@ The brighter companion families (`rgba(20,100,128,...)`, hover/active tiers, fla
 accent/card-front in study-surface.tsx) are intentional elevated/interactive tiers — leave
 them unless specifically asked.
 
-**landing.tsx is its OWN island.** The marketing landing page does NOT use the
-`rgba(20,90,116)/rgba(11,62,82)` family the sweep targets — it has a separate bright card
-family that the site-wide sweep never touches, so it stays light after a global deepen and
-the owner re-reports "too light" for the landing only. Its surfaces: the `C.bgPanel`/
-`C.bgPanelStrong` tokens (drive `.landing-feature-card` + `.landing-topic-chip`), plus
-inline gradients on `.landing-science-item`, `.landing-founder-card`, `.landing-dash-card`,
-`.landing-scholar-card`, `.landing-mastery-card`. Deepen all of these to the canonical
-`rgba(11,54,70,~0.82–0.86)→rgba(6,33,46,0.90)`; keep the cyan hairlines/glows/shadows for
-radiance. Verify on the public `/` route (no auth gate).
+**landing.tsx is its OWN island** — but the owner can waive that. Historically the
+marketing landing page ran a SEPARATE bright card family (`C.bgPanel`/`C.bgPanelStrong`
+tokens + per-tile inline gradients), independent of the app/EPPP surfaces, and had to be
+deepened separately after a global retone. **OVERRIDE (2026-07-01):** owner explicitly asked
+to make the landing tiles "the same as the main site and EPPP." So ALL landing tiles were
+migrated onto the canonical EPPP `.epd-card` glass via shared tokens in the `C` object —
+`C.cardBg` (radial top-bloom + 145deg linear `hsl(var(--surf-hue) 100% 17%/.95→100% 11%/.99)`),
+`C.cardBorder rgba(196,232,242,0.22)`, `C.cardBlur blur(5px) saturate(190%)`, `C.cardShadow`
+(4-layer). Applied to `.landing-feature-card`, `.landing-science-item`, `.landing-founder-card`,
+`.landing-scholar-card`, `.landing-mastery-card`, `.landing-final-card`, `.landing-split-body--boxed`.
+DELIBERATE EXCEPTIONS: (1) `.landing-topic-chip` stays a LIGHT pill (shares the deep fill +
+cardBorder for family, but NO radial bloom / heavy card shadow — a 44px pill with the full
+recipe looks wrong); (2) `.landing-dash-card` stays WHITE (`#ffffff→#e3f3fa`) — it's a
+dashboard-illustration mockup with dark ink on white; converting it to dark glass makes its
+contents unreadable. **Why the override is safe:** the epd recipe is all `hsl(var(--surf-hue))`
+(surface-hue guardrail passes) and does not touch the locked `.bg-card` recipe (design-drift
+passes). Also unified in the same pass: white text floating on the wallpaper (not in a tile)
+now uses a shared `C.textPool` dark drop-shadow (tagline/headline/blurb/eyebrow/section-title/
+section-sub/split-title) for legibility instead of cyan-only glows. Verify on the public `/`
+route (no auth gate). **If the owner later reverts:** restore the bright-family tokens; do NOT
+assume the island rule alone — check for an explicit unify/revert request first.
 
 **Rule:**
 - Accent stays locked at cerulean `#76E4F7` (and `mint` stays fully removed — see
