@@ -620,18 +620,25 @@ const styles = `
 }
 
 /* ---- Shared card ---- */
+/* Signature glass — matches the top-right launch pills (.eppp-launch-btn) and the
+   main-site .bg-card at the owner's explicit request: a 145° translucent cerulean
+   fill, cyan hairline border, soft cyan glow (inset ring + outer corona) over the
+   deep drop shadow. Kept in lockstep with .bg-card in index.css (same fill/border/
+   blur/glow) so main + EPPP tiles stay one family. */
 .epd-card {
   position: relative;
   border-radius: 20px;
   padding: clamp(18px, 2vw, 24px);
   background:
-    linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99));
-  border: 1px solid rgba(196,232,242,0.22);
-  backdrop-filter: blur(5px) saturate(190%);
-  -webkit-backdrop-filter: blur(5px) saturate(190%);
+    linear-gradient(145deg, hsl(var(--surf-hue) 80% 30% / 0.58), hsl(var(--surf-hue) 86% 18% / 0.70));
+  border: 1px solid rgba(118,228,247,0.45);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.03),
-    0 22px 52px -40px rgba(0,0,0,0.80);
+    inset 0 1px 0 rgba(255,255,255,0.14),
+    0 0 0 1px rgba(118,228,247,0.22),
+    0 0 26px -6px rgba(118,228,247,0.42),
+    0 22px 52px -40px rgba(0,0,0,0.70);
 }
 .epd-card-label {
   display: inline-flex;

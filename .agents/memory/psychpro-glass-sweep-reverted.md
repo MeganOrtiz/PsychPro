@@ -41,7 +41,7 @@ deepened cerulean stack) was left intact.
 already-approved EPPP `.epd-card` recipe, not the landing recipe, preserving
 hierarchy and excluding nav rails. See `psychpro-eppp-unified-cards.md`.
 
-**Update 2 (current direction — idle cards go pigment-only):** the owner then
+**Update 2 (idle cards go pigment-only):** the owner then
 asked to remove the cyan glow from cards everywhere and confirmed all cards
 should be consistent. This is NOT the muddy all-surfaces unification that was
 reverted — it only strips the *idle* card top-bloom radial + negative-spread
@@ -49,3 +49,16 @@ cyan corona, leaving pigment glass. Hierarchy is preserved because interactive
 states (hover/active/selected), buttons, nav pills, and tabs KEEP their glow, so
 resting cards read flat but still lift on interaction. See the superseding note
 in `psychpro-pigment-over-glow.md` for the full keep/strip matrix.
+
+**Update 3 (CURRENT — signature-glass sweep, sanctioned):** Update 2 is now
+RETRACTED. Owner explicitly (via user_query) asked to make *every button and
+tile* match the top-right launch pills ("Back to PsychPro" / "EPPP Mastery
+Suite" = the `.eppp-launch-btn` glass: translucent cerulean fill + cyan hairline
+border + soft cyan glow). Applied to `.bg-card`, `.lesson-header-box`,
+`.recommended-tile` (idle) and StudySurface `light`/default tone. The muddy-wall
+failure was AVOIDED by keeping fills opaque enough (alpha .58/.70) — verified
+over the smoke bg via a throwaway `/__glass-preview` DEV route (since removed):
+tiles read as the launch-pill glass and stay legible, hierarchy holds. The
+design-drift lock was flipped to REQUIRE the glow (`0 0 26px -6px
+rgba(118,228,247,0.42)`); the old pigment-only assertion is gone. See
+`psychpro-design-lock.md`. Do not "restore pigment-only" — that direction is dead.

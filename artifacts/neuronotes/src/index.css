@@ -581,7 +581,7 @@ body {
      washed haze. Re-skins every signed-in page + the EPPP suite in one place. The
      landing keeps its own (slightly different) filter via the more-specific
      .landing-root.study-page-bg::before rule below. */
-  filter: saturate(1.32) contrast(1.12) brightness(0.9);
+  filter: saturate(1.16) contrast(1.1) brightness(0.92);
   /* NO background-attachment: fixed. The pseudo-element is already
      position:fixed; inset:0, so it is pinned to the viewport. Adding
      background-attachment:fixed on top is redundant AND makes the browser
@@ -648,15 +648,17 @@ body {
   background:
     linear-gradient(
       145deg,
-      hsl(var(--surf-hue) 90% 17% / 0.95),
-      hsl(var(--surf-hue) 90% 11% / 0.99)
+      hsl(var(--surf-hue) 80% 30% / 0.58),
+      hsl(var(--surf-hue) 86% 18% / 0.70)
     );
-  border: 1px solid rgba(196, 232, 242, 0.20);
+  border: 1px solid rgba(118, 228, 247, 0.45);
   border-radius: 12px;
-  backdrop-filter: blur(5px) saturate(140%);
-  -webkit-backdrop-filter: blur(5px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 0 0 1px rgba(118, 228, 247, 0.22),
+    0 0 26px -6px rgba(118, 228, 247, 0.42),
     0 8px 24px -16px rgba(0, 0, 0, 0.72);
   padding: 1.5rem 1.5rem 1.25rem;
 }
@@ -669,14 +671,16 @@ body {
   background:
     linear-gradient(
       145deg,
-      hsl(var(--surf-hue) 88% 23% / 0.93),
-      hsl(var(--surf-hue) 88% 16% / 0.97)
+      hsl(var(--surf-hue) 80% 30% / 0.58),
+      hsl(var(--surf-hue) 86% 18% / 0.70)
     );
-  border-color: rgba(196, 232, 242, 0.26);
-  backdrop-filter: blur(5px) saturate(140%);
-  -webkit-backdrop-filter: blur(5px) saturate(140%);
+  border-color: rgba(118, 228, 247, 0.45);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 0 0 1px rgba(118, 228, 247, 0.22),
+    0 0 26px -6px rgba(118, 228, 247, 0.42),
     0 16px 40px -30px rgba(0, 0, 0, 0.74);
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -859,25 +863,27 @@ body {
    backdrop blur, deep drop shadow, faint outer cerulean glow. */
 .study-page-bg .bg-card,
 .study-page-aurora .bg-card {
-  /* Unified with the EPPP card system (.epd-card): a 145° diagonal cerulean
-     glass with a deep drop shadow. Depth comes from PIGMENT (saturation +
-     contrast), NOT a cyan glow — the top-bloom / inner-glow / outer-corona were
-     removed at the owner's request (the glow kept drifting back). Keeps every
-     generic shadcn card on the main site cut from the same cloth as the EPPP
-     domain tiles. */
+  /* Signature glass — every tile shares the .eppp-launch-btn glass language at
+     the owner's explicit request: a 145° diagonal TRANSLUCENT cerulean fill, a
+     cyan hairline border, and a soft cyan glow (inset ring + outer corona) over
+     the deep drop shadow. Kept opaque enough (fill alpha .58/.70) to stay legible
+     over the smoke wallpaper. Keeps every shadcn card, StudySurface tile, and the
+     EPPP domain tiles cut from the same cloth as the top-right launch buttons. */
   background:
     linear-gradient(
       145deg,
-      hsl(var(--surf-hue) 100% 17% / 0.95),
-      hsl(var(--surf-hue) 100% 11% / 0.99)
+      hsl(var(--surf-hue) 80% 30% / 0.58),
+      hsl(var(--surf-hue) 86% 18% / 0.70)
     );
-  border: 1px solid rgba(196, 232, 242, 0.22);
+  border: 1px solid rgba(118, 228, 247, 0.45);
   border-radius: 20px;
-  backdrop-filter: blur(5px) saturate(190%);
-  -webkit-backdrop-filter: blur(5px) saturate(190%);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 22px 52px -40px rgba(0, 0, 0, 0.80);
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 0 0 1px rgba(118, 228, 247, 0.22),
+    0 0 26px -6px rgba(118, 228, 247, 0.42),
+    0 22px 52px -40px rgba(0, 0, 0, 0.70);
 }
 
 /* =============================================================================

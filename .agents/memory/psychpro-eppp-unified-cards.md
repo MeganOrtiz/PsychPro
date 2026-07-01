@@ -35,3 +35,15 @@ color character), not literal recipe parity.
 target the specific card-background two-stop strings, never a global S→100 sweep.
 Clerk blocks the test browser, so visual confirmation needs an owner screenshot or a
 mockup-extract of the real composition — never a synthetic route.
+
+**Update (CURRENT — both families now on the launch-pill signature glass):** the
+"boost color up, keep depth, saturate190/S100, fill alpha 0.95/0.99" specifics
+above are SUPERSEDED. Owner then asked to make every tile+button match the
+top-right launch pills (`.eppp-launch-btn`). So BOTH `.bg-card` (index.css) and
+`.epd-card` (eppp-dashboard.tsx template CSS) now use the identical signature
+glass: `linear-gradient(145deg, hsl(var(--surf-hue) 80% 30% /0.58), hsl(var(--surf-hue) 86% 18% /0.70))`,
+border `rgba(118,228,247,0.45)`, `blur(16px) saturate(140%)`, glow
+`0 0 26px -6px rgba(118,228,247,0.42)` + inset ring. The two live in DIFFERENT
+files, so keep them in lockstep by hand — they silently diverged once. The drift
+lock still only parses index.css `.bg-card`; treat `.epd-card` as its manual twin.
+See `psychpro-glass-sweep-reverted.md` Update 3.
