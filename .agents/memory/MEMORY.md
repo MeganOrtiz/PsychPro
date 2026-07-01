@@ -58,3 +58,4 @@
 - [Pigment over glow](psychpro-pigment-over-glow.md) — "flat/bland/foggy" = too much glow+backdrop-blur desaturating contrast, NOT wrong hue; fix with saturate+contrast up, brightness down, LESS glow — never add light.
 - [Clerk auth card glass](psychpro-auth-card-glass.md) — sign-in/up card must be TRANSLUCENT glass (alpha ~.70-.82 + blur ~30px), not opaque/flat; set Clerk `footer` bg transparent to kill the two-tone band.
 - [Header scrim convention](psychpro-header-scrim.md) — floating headers over the smoke wallpaper use the shared `.text-scrim`/`.text-scrim-start` utility (soft fading pool, NOT a box, hue via --surf-hue); never add ad-hoc text-shadows.
+- [Dashboard left-stack gap](psychpro-dashboard-left-stack-gap.md) — match EPPP spacing via inline flex `gap: clamp(18px,2.4vw,28px)` (= `.epd-shell`), NOT Tailwind arbitrary `space-y-[clamp(...)]` (unreliable).
