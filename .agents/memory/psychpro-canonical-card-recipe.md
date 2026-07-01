@@ -42,3 +42,17 @@ cards like the image," use THIS recipe — do not trust any note that calls June
 "pigment / no glow." `.bg-card` (index.css), `.epd-card` (eppp-dashboard.tsx), and
 StudySurface (study-surface.tsx) are separate files — keep them in lockstep by hand.
 Buttons/launch pills keep their own stronger glow; this file is only about cards/tiles.
+
+## Page background (part of "the June 27 look")
+The June-27 reference also runs the in-app `app-smoke.jpg` backdrop at NATIVE
+brightness — the base `.study-page-bg::before` had NO `filter`. A later "deepen"
+pass added `filter: saturate(1.16) contrast(1.1) brightness(0.92)`, which darkened
+and muted the whole signed-in background away from the screenshot. When the owner
+says "make it look EXACTLY like the screenshot," remove that filter (restore native
+brightness). This intentionally REVERSES the older "deepen / never re-lift" note.
+
+## Verifying without auth
+The live EPPP/main dashboards are Clerk-gated (external instance blocks the test
+browser). Verify card+background visually via the DEV-only route `/__eppp-preview`
+(`src/pages/dev-eppp-preview.tsx`) which renders `EpppDashboardView` with static
+mock data mirroring the screenshot. DEV-gated in `App.tsx`; screenshot it directly.
