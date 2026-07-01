@@ -51,6 +51,25 @@ OAuth security: PKCE S256 + exact-match `redirect_uri` + single-use 60-second au
 - `pnpm --filter @workspace/db run test:push-then-seed-fresh-db` — provision a temp DB, run `push` then `seed` against it (the documented "first publish" sequence), and assert every content table is populated with no orphan FK rows. Requires `CREATE DATABASE` privilege.
 - `pnpm --filter @workspace/db exec tsx ../../scripts/seed-stripe-products.ts` — seed Stripe products
 
+## Reusable safe-edit prompt
+
+Copy this into Replit Agent whenever requesting an edit:
+
+> Work only on **[name the specific feature]**. First read `replit.md` and
+> `docs/design-system-lock.md`. Do not alter shared styling, card recipes,
+> design tokens, or unrelated files. Preserve the pigment-only idle-card
+> system. Before editing, show me the proposed file list. Before finishing,
+> run `corepack pnpm run design:check`, show me the final changed-file list and
+> `git diff --stat`, and create a checkpoint only if the check passes. Do not
+> update or weaken the design checks merely to make them pass without my
+> explicit approval. Do not restore files from an older checkpoint or commit;
+> make targeted changes against the current version.
+
+These constraints also apply by default to every Replit Agent task, including
+requests unrelated to design. Unrelated work must not modify visual-system
+files. If a requested change genuinely requires one of those files, stop and
+ask for explicit approval before editing it.
+
 See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details.
 
 ### TypeScript references
