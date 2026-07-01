@@ -28,17 +28,25 @@ export default function SignInPage() {
             fontFamily: "inherit",
           },
           elements: {
-            // Canonical deep-cerulean pigment glass (matches the main-site
-            // .bg-card / EPPP .epd-card) so the auth card reads as part of the
-            // same surface system — pigment-only, no cyan glow.
+            // Deep-cerulean translucent glass — pigment, no cyan glow. Lower
+            // opacity + strong backdrop blur let the smoke wallpaper diffuse
+            // through so the card reads as real glass (not a flat opaque box);
+            // depth comes from the bright top edge + soft drop shadow.
             card: {
               background:
-                "linear-gradient(145deg, hsl(192 100% 17% / 0.95), hsl(192 100% 11% / 0.99))",
+                "linear-gradient(160deg, hsl(192 92% 20% / 0.70), hsl(192 96% 12% / 0.82))",
               border: "1px solid rgba(196, 232, 242, 0.22)",
-              backdropFilter: "blur(5px) saturate(190%)",
-              WebkitBackdropFilter: "blur(5px) saturate(190%)",
+              borderRadius: "20px",
+              backdropFilter: "blur(30px) saturate(155%)",
+              WebkitBackdropFilter: "blur(30px) saturate(155%)",
               boxShadow:
-                "inset 0 1px 0 rgba(255,255,255,0.12), 0 22px 52px -40px rgba(0,0,0,0.80)",
+                "inset 0 1px 0 rgba(255,255,255,0.20), 0 32px 70px -34px rgba(0,0,0,0.78)",
+            },
+            // Kill Clerk's default lighter footer band so the whole card reads
+            // as one cohesive glass panel (was a mismatched two-tone block).
+            footer: {
+              background: "transparent",
+              borderTop: "1px solid rgba(196, 232, 242, 0.10)",
             },
             headerTitle: "text-white",
             headerSubtitle: `text-[${P.mistSoft}]`,
