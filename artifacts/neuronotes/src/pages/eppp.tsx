@@ -189,14 +189,12 @@ const styles = `
   border-radius: 26px;
   padding: clamp(32px, 5vw, 64px) clamp(22px, 4vw, 56px);
   background:
-    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0.00) 58%),
     linear-gradient(150deg, hsl(var(--surf-hue) 100% 21% / 0.78), hsl(var(--surf-hue) 100% 16% / 0.88));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(170%);
   -webkit-backdrop-filter: blur(20px) saturate(170%);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.12),
-    inset 0 0 48px -24px rgba(118,228,247,0.45),
     0 0 48px ${C.cyan}1c,
     0 40px 100px -44px rgba(0,0,0,0.76);
 }
@@ -324,15 +322,12 @@ const styles = `
   border-radius: 18px;
   padding: clamp(20px, 2.4vw, 26px);
   background:
-    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
     linear-gradient(145deg, hsl(var(--surf-hue) 100% 19% / 0.74), hsl(var(--surf-hue) 100% 14% / 0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(170%);
   -webkit-backdrop-filter: blur(20px) saturate(170%);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.12),
-    inset 0 0 40px -22px rgba(118,228,247,0.42),
-    0 0 28px -6px rgba(118,228,247,0.30),
     0 24px 60px -40px rgba(0,0,0,0.7);
 }
 .eppp-link-card {

@@ -646,9 +646,6 @@ body {
    readable over the smoky background. */
 .lesson-header-box {
   background:
-    radial-gradient(125% 80% at 50% 0%,
-      rgba(118, 228, 247, 0.05) 0%,
-      rgba(118, 228, 247, 0.00) 58%),
     linear-gradient(
       145deg,
       hsl(var(--surf-hue) 90% 17% / 0.95),
@@ -660,8 +657,6 @@ body {
   -webkit-backdrop-filter: blur(5px) saturate(140%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.10),
-    inset 0 0 32px -24px rgba(118, 228, 247, 0.16),
-    0 0 20px -10px rgba(118, 228, 247, 0.10),
     0 8px 24px -16px rgba(0, 0, 0, 0.72);
   padding: 1.5rem 1.5rem 1.25rem;
 }
@@ -672,9 +667,6 @@ body {
    cinematic surface. */
 .recommended-tile {
   background:
-    radial-gradient(125% 80% at 50% 0%,
-      rgba(118, 228, 247, 0.08) 0%,
-      rgba(118, 228, 247, 0.00) 58%),
     linear-gradient(
       145deg,
       hsl(var(--surf-hue) 88% 23% / 0.93),
@@ -685,8 +677,6 @@ body {
   -webkit-backdrop-filter: blur(5px) saturate(140%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    inset 0 0 34px -24px rgba(118, 228, 247, 0.18),
-    0 0 18px -10px rgba(118, 228, 247, 0.12),
     0 16px 40px -30px rgba(0, 0, 0, 0.74);
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -869,14 +859,13 @@ body {
    backdrop blur, deep drop shadow, faint outer cerulean glow. */
 .study-page-bg .bg-card,
 .study-page-aurora .bg-card {
-  /* Unified with the EPPP card system (.epd-card): a radial cyan top-bloom over
-     a 145° diagonal cerulean glass, cyan inner glow + outer corona, deep drop
-     shadow. Keeps every generic shadcn card on the main site cut from the same
-     cloth as the EPPP domain tiles. */
+  /* Unified with the EPPP card system (.epd-card): a 145° diagonal cerulean
+     glass with a deep drop shadow. Depth comes from PIGMENT (saturation +
+     contrast), NOT a cyan glow — the top-bloom / inner-glow / outer-corona were
+     removed at the owner's request (the glow kept drifting back). Keeps every
+     generic shadcn card on the main site cut from the same cloth as the EPPP
+     domain tiles. */
   background:
-    radial-gradient(125% 80% at 50% 0%,
-      rgba(118, 228, 247, 0.14) 0%,
-      rgba(118, 228, 247, 0.00) 58%),
     linear-gradient(
       145deg,
       hsl(var(--surf-hue) 100% 17% / 0.95),
@@ -887,9 +876,7 @@ body {
   backdrop-filter: blur(5px) saturate(190%);
   -webkit-backdrop-filter: blur(5px) saturate(190%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.03),
-    inset 0 0 36px -24px rgba(118, 228, 247, 0.28),
-    0 0 20px -10px rgba(118, 228, 247, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
     0 22px 52px -40px rgba(0, 0, 0, 0.80);
 }
 

@@ -625,15 +625,12 @@ const styles = `
   border-radius: 20px;
   padding: clamp(18px, 2vw, 24px);
   background:
-    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%),
     linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(5px) saturate(190%);
   -webkit-backdrop-filter: blur(5px) saturate(190%);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.03),
-    inset 0 0 36px -24px rgba(118,228,247,0.28),
-    0 0 20px -10px rgba(118,228,247,0.18),
     0 22px 52px -40px rgba(0,0,0,0.80);
 }
 .epd-card-label {
@@ -835,15 +832,12 @@ const styles = `
   padding: 18px;
   text-decoration: none;
   background:
-    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
     linear-gradient(145deg, hsl(var(--surf-hue) 100% 19% / 0.74), hsl(var(--surf-hue) 100% 14% / 0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(170%);
   -webkit-backdrop-filter: blur(20px) saturate(170%);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.12),
-    inset 0 0 40px -22px rgba(118,228,247,0.42),
-    0 0 24px -6px rgba(118,228,247,0.28),
     0 24px 60px -42px rgba(0,0,0,0.72);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
@@ -851,7 +845,6 @@ const styles = `
 .epd-domain.is-mastered {
   border-color: ${C.cyan}5e;
   background:
-    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.16) 0%, rgba(118,228,247,0.00) 60%),
     linear-gradient(145deg, hsl(var(--surf-hue) 85% 26% / 0.84), hsl(var(--surf-hue) 89% 19% / 0.90));
 }
 .epd-domain--loading { opacity: 0.85; }
@@ -900,15 +893,12 @@ const styles = `
   text-align: left;
   cursor: pointer;
   background:
-    radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%),
     linear-gradient(145deg, hsl(var(--surf-hue) 100% 19% / 0.74), hsl(var(--surf-hue) 100% 14% / 0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(170%);
   -webkit-backdrop-filter: blur(20px) saturate(170%);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.12),
-    inset 0 0 38px -22px rgba(118,228,247,0.40),
-    0 0 22px -6px rgba(118,228,247,0.26),
     0 24px 60px -42px rgba(0,0,0,0.72);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }

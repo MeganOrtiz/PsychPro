@@ -1015,15 +1015,13 @@ const styles = `
   border-radius: 20px;
   overflow: hidden;
   background:
-    radial-gradient(130% 90% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0) 60%),
-    linear-gradient(150deg, hsl(var(--surf-hue) 83% 28% / 0.55), hsl(var(--surf-hue) 85% 25% / 0.66));
-  border: 1px solid rgba(118,228,247,0.26);
-  backdrop-filter: blur(20px) saturate(135%);
-  -webkit-backdrop-filter: blur(20px) saturate(135%);
+    linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99));
+  border: 1px solid rgba(196,232,242,0.22);
+  backdrop-filter: blur(20px) saturate(170%);
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.12),
-    0 30px 70px -34px rgba(0,0,0,0.7),
-    0 0 60px -30px ${P.surf}88;
+    0 30px 70px -34px rgba(0,0,0,0.7);
 }
 .ob-card > * { position: relative; z-index: 1; }
 .ob-card-sheen {
@@ -1053,8 +1051,8 @@ const styles = `
   display: flex; align-items: center; gap: 11px;
   width: 100%; padding: 13px 14px; text-align: left;
   border-radius: 12px;
-  border: 1px solid rgba(118,228,247,0.18);
-  background: linear-gradient(150deg, hsl(var(--surf-hue) 85% 25% / 0.5), hsl(var(--surf-hue) 89% 20% / 0.6));
+  border: 1px solid rgba(196,232,242,0.18);
+  background: linear-gradient(145deg, hsl(var(--surf-hue) 100% 20% / 0.92), hsl(var(--surf-hue) 100% 14% / 0.96));
   color: #ffffff;
   transition: transform .15s ease, border-color .15s ease, background .15s ease, box-shadow .15s ease;
 }

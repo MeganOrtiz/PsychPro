@@ -40,3 +40,12 @@ deepened cerulean stack) was left intact.
 **Update:** a later, DIFFERENT request DID unify main-site cards — but onto the
 already-approved EPPP `.epd-card` recipe, not the landing recipe, preserving
 hierarchy and excluding nav rails. See `psychpro-eppp-unified-cards.md`.
+
+**Update 2 (current direction — idle cards go pigment-only):** the owner then
+asked to remove the cyan glow from cards everywhere and confirmed all cards
+should be consistent. This is NOT the muddy all-surfaces unification that was
+reverted — it only strips the *idle* card top-bloom radial + negative-spread
+cyan corona, leaving pigment glass. Hierarchy is preserved because interactive
+states (hover/active/selected), buttons, nav pills, and tabs KEEP their glow, so
+resting cards read flat but still lift on interaction. See the superseding note
+in `psychpro-pigment-over-glow.md` for the full keep/strip matrix.

@@ -727,11 +727,11 @@ const C = {
   // eppp-dashboard .epd-card), shared by every landing tile so the marketing
   // page reads as the same glass as the app and the EPPP domain tiles.
   cardBg:
-    "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99))",
+    "linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99))",
   cardBorder: "rgba(196, 232, 242, 0.22)",
   cardBlur: "blur(5px) saturate(190%)",
   cardShadow:
-    "inset 0 1px 0 rgba(255,255,255,0.03), inset 0 0 36px -24px rgba(118,228,247,0.28), 0 0 20px -10px rgba(118,228,247,0.18), 0 22px 52px -40px rgba(0,0,0,0.80)",
+    "inset 0 1px 0 rgba(255,255,255,0.03), 0 22px 52px -40px rgba(0,0,0,0.80)",
   // Dark legibility pool for white text that floats over the wallpaper (not in a tile).
   textPool:
     "0 2px 22px hsl(var(--surf-hue) 92% 5% / 0.72), 0 1px 4px hsl(var(--surf-hue) 92% 6% / 0.55)",
@@ -1170,8 +1170,6 @@ const styles = `
   border-color: rgba(118, 228, 247, 0.45);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.06),
-    inset 0 0 40px -22px rgba(118,228,247,0.42),
-    0 0 30px -6px rgba(118,228,247,0.34),
     0 30px 60px -40px rgba(0,0,0,0.82);
 }
 .landing-feature-icon-wrap {
@@ -1232,8 +1230,6 @@ const styles = `
   border-color: rgba(118, 228, 247, 0.45);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.06),
-    inset 0 0 40px -22px rgba(118,228,247,0.42),
-    0 0 30px -6px rgba(118,228,247,0.34),
     0 26px 56px -40px rgba(0,0,0,0.82);
 }
 .landing-science-icon {
@@ -1408,7 +1404,6 @@ const styles = `
     0 16px 32px -14px hsl(var(--surf-hue) 74% 9% / 0.50),
     0 54px 96px -40px rgba(0, 0, 0, 0.74),
     0 0 0 1px rgba(49, 150, 175, 0.16),
-    0 0 80px -22px rgba(118, 228, 247, 0.60),
     inset 0 1px 0 rgba(255, 255, 255, 0.96),
     inset 0 -34px 52px -36px rgba(49, 150, 175, 0.22);
 }

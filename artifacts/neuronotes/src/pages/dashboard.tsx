@@ -248,12 +248,12 @@ export default function DashboardPage() {
             className="rounded-xl p-4 mb-6 flex items-start gap-3 border"
             style={{
               background:
-                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.16) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 100% 20% / 0.96), hsl(var(--surf-hue) 100% 13% / 0.99))",
+                "linear-gradient(145deg, hsl(var(--surf-hue) 100% 20% / 0.96), hsl(var(--surf-hue) 100% 13% / 0.99))",
               borderColor: "rgba(118,228,247,0.30)",
               backdropFilter: "blur(5px) saturate(190%)",
               WebkitBackdropFilter: "blur(5px) saturate(190%)",
               boxShadow:
-                "inset 0 1px 0 rgba(255,255,255,0.03), inset 0 0 34px -24px rgba(118,228,247,0.28), 0 0 22px -10px rgba(118,228,247,0.18), 0 20px 46px -28px rgba(0,0,0,0.72)",
+                "inset 0 1px 0 rgba(255,255,255,0.03), 0 20px 46px -28px rgba(0,0,0,0.72)",
             }}
             data-testid="banner-over-limit"
           >
@@ -286,12 +286,12 @@ export default function DashboardPage() {
             className="rounded-xl p-4 mb-6 flex items-start gap-3 border"
             style={{
               background:
-                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 100% 19% / 0.96), hsl(var(--surf-hue) 100% 12% / 0.99))",
+                "linear-gradient(145deg, hsl(var(--surf-hue) 100% 19% / 0.96), hsl(var(--surf-hue) 100% 12% / 0.99))",
               borderColor: "rgba(118,228,247,0.26)",
               backdropFilter: "blur(5px) saturate(190%)",
               WebkitBackdropFilter: "blur(5px) saturate(190%)",
               boxShadow:
-                "inset 0 1px 0 rgba(255,255,255,0.03), inset 0 0 32px -24px rgba(118,228,247,0.26), 0 0 20px -10px rgba(118,228,247,0.16), 0 20px 46px -28px rgba(0,0,0,0.72)",
+                "inset 0 1px 0 rgba(255,255,255,0.03), 0 20px 46px -28px rgba(0,0,0,0.72)",
             }}
             data-testid="banner-approaching-limit"
           >

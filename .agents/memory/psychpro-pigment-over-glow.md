@@ -3,7 +3,24 @@ name: PsychPro pigment-only / no-glow sweep was REVERTED
 description: The "pigment-only, strip ALL cyan glow from content cards" direction was built, deployed, then rejected by the owner as "worse" and reverted. Do NOT re-strip glow from live cards.
 ---
 
-# Pigment-only / no-glow sweep — REVERTED
+# Pigment-only / no-glow sweep — REVERTED, then RE-REQUESTED (current = no idle glow)
+
+> **SUPERSEDING UPDATE (current confirmed direction):** the owner LATER
+> re-requested removing the "weird glow" from cards everywhere (main site + EPPP)
+> and confirmed all cards should be consistent. The current live state is:
+> **idle card surfaces = pigment-only** — NO cyan top-bloom radial
+> (`radial-gradient(… at 50% 0%, rgba(118,228,247,…))`) and NO negative-spread
+> cyan corona box-shadows on the resting card. **Interactive glow is PRESERVED:**
+> `:hover` / `:active` / selected states, buttons (`.btn-*`, `.eppp-launch-btn`,
+> `button.bg-*`), nav pills (`.nav-glass-*`), tabs (`.eps-subtab`), the
+> achievement `.course-mastery-tile--mastered` state, keyframes, and the
+> flashcard flip faces (study-surface `accent` / `card-front` tones) all KEEP
+> their glow. The `.bg-card` recipe is locked pigment-only by check:design-drift.
+> Owner taste on card glow has now oscillated 3+ times — treat any future
+> "add/remove card glow" as high-risk and confirm scope (idle vs interactive).
+> The REVERTED history below is retained for context but no longer the direction.
+
+# Pigment-only / no-glow sweep — REVERTED (historical)
 
 A full sweep that stripped every cyan glow (top-bloom radials + box-shadow coronas)
 off the main-site content cards/panels — leaving a pigment-only saturated cerulean

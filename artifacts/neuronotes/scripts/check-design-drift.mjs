@@ -83,14 +83,23 @@ if (!cardRecipe) {
     { name: "non-pill 20px corner", re: /border-radius:\s*20px;/, expected: "border-radius: 20px;" },
     { name: "glass blur", re: /backdrop-filter:\s*blur\(5px\)\s*saturate\(190%\)/, expected: "backdrop-filter: blur(5px) saturate(190%)" },
     { name: "145° diagonal bloom", re: /linear-gradient\(\s*145deg/, expected: "linear-gradient(145deg, …)" },
-    { name: "cyan inner glow", re: /rgba\(118,\s*228,\s*247,\s*0\.28\)/, expected: "inset 0 0 36px -24px rgba(118, 228, 247, 0.28)" },
-    { name: "cyan outer corona", re: /rgba\(118,\s*228,\s*247,\s*0\.18\)/, expected: "0 0 20px -10px rgba(118, 228, 247, 0.18)" },
     { name: "cerulean hairline border", re: /rgba\(196,\s*232,\s*242,\s*0\.22\)/, expected: "border: 1px solid rgba(196, 232, 242, 0.22)" },
   ];
   for (const r of RECIPE) {
     if (!r.re.test(cardRecipe)) {
       fail(`.bg-card recipe: ${r.name} changed or removed`, `restore \`${r.expected}\``);
     }
+  }
+  // Pigment-only lock: the card must NOT reintroduce the cyan top-bloom radial
+  // or the cyan inner-glow / outer-corona box-shadow layers. Depth comes from
+  // PIGMENT (saturation + contrast), not glow. This cyan glow kept drifting back
+  // onto the dashboards, so the card is pinned glow-free — its only colors are
+  // the hsl() fill and the rgba(196,232,242) hairline border.
+  if (/rgba\(118,\s*228,\s*247/.test(cardRecipe)) {
+    fail(
+      ".bg-card recipe: cyan glow re-added (rgba(118, 228, 247, …) inside the card)",
+      "keep the card pigment-only — remove the cyan top-bloom radial and the cyan inner/outer corona box-shadow layers",
+    );
   }
 }
 

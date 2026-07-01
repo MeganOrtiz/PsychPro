@@ -28,7 +28,18 @@ export default function SignUpPage() {
             fontFamily: "inherit",
           },
           elements: {
-            card: `bg-[${P.surface}]/90 border border-white/10 backdrop-blur-md shadow-2xl`,
+            // Canonical deep-cerulean pigment glass (matches the main-site
+            // .bg-card / EPPP .epd-card) so the auth card reads as part of the
+            // same surface system — pigment-only, no cyan glow.
+            card: {
+              background:
+                "linear-gradient(145deg, hsl(192 100% 17% / 0.95), hsl(192 100% 11% / 0.99))",
+              border: "1px solid rgba(196, 232, 242, 0.22)",
+              backdropFilter: "blur(5px) saturate(190%)",
+              WebkitBackdropFilter: "blur(5px) saturate(190%)",
+              boxShadow:
+                "inset 0 1px 0 rgba(255,255,255,0.12), 0 22px 52px -40px rgba(0,0,0,0.80)",
+            },
             headerTitle: "text-white",
             headerSubtitle: `text-[${P.mistSoft}]`,
             formButtonPrimary: `bg-[${P.surf}] hover:bg-[${P.teal}] text-[${P.ink}] font-medium`,
