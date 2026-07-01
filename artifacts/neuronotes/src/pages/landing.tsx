@@ -915,11 +915,11 @@ const styles = `
 }
 .landing-blurb {
   margin: clamp(10px, 1.4vh, 18px) auto 0;
-  max-width: 660px;
-  font-size: clamp(15px, 1.2vw, 17.5px);
-  line-height: 1.7;
+  max-width: 720px;
+  font-size: clamp(18px, 1.55vw, 22px);
+  line-height: 1.72;
   font-weight: 400;
-  color: rgba(225, 244, 250, 0.88);
+  color: rgba(230, 246, 251, 0.94);
   text-shadow: ${C.textPool};
 }
 .landing-cta-row {
