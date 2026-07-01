@@ -575,10 +575,12 @@ body {
   background-size: cover, cover;
   background-position: center top, center top;
   background-repeat: no-repeat, no-repeat;
-  /* Deep-pigment correction: push saturation + contrast up and brightness DOWN
-     so the in-app teal-smoke backdrop reads as deep, rich pigment — NOT a lighter,
-     glow-washed haze. The owner wants this DEEP look; do not remove/lighten it. */
-  filter: saturate(1.16) contrast(1.1) brightness(0.92);
+  /* Deep-pigment correction: push saturation + contrast UP hard so the cyan smoke
+     plumes read as vivid, punchy pigment (matching the reference screenshot's bright
+     tendrils) while keeping brightness DOWN so the overall backdrop stays deep — NOT
+     a lighter, glow-washed haze. Vividness comes from saturation/contrast, never from
+     raising brightness. The owner wants this DEEP-but-VIVID look; do not lighten it. */
+  filter: saturate(1.5) contrast(1.24) brightness(0.92);
   /* NO background-attachment: fixed. The pseudo-element is already
      position:fixed; inset:0, so it is pinned to the viewport. Adding
      background-attachment:fixed on top is redundant AND makes the browser
