@@ -562,32 +562,19 @@ body {
   z-index: -2;
   /* Full-bleed deep-cerulean teal-smoke backdrop (assets/bg/app-smoke.jpg,
      a 2560×1441 landscape artwork: billowing cyan/teal smoke clouds, no brain).
-     Anchored center-top with the clouds filling the viewport. A deep cerulean
-     scrim sits on top across the WHOLE image (center ~0.48 → edge ~0.80), which
-     knocks the luminous smoke plumes down into deep pigment instead of leaving
-     them glow-bright — the owner explicitly wanted the in-app dashboards deep,
-     not milky/glowy. Base color is a near-black deep cerulean that matches the
-     image's darkest clouds for a seamless letterbox on any aspect. */
+     Anchored center-top with the clouds filling the viewport. Only a gentle
+     corner vignette sits on top — NO center tame and NO hard edge darkening —
+     so the image keeps its full color intensity and glow. Base color is a
+     near-black deep cerulean that matches the image's darkest clouds for a
+     seamless letterbox on any aspect. */
   background-image:
-    radial-gradient(ellipse 130% 105% at 50% 32%,
-      hsl(var(--surf-hue) 88% 6% / 0.48) 0%,
-      hsl(var(--surf-hue) 90% 5% / 0.62) 55%,
-      hsl(var(--surf-hue) 93% 4% / 0.80) 100%),
+    radial-gradient(ellipse 130% 100% at 50% 34%,
+      hsl(var(--surf-hue) 90% 7% / 0.00) 60%,
+      hsl(var(--surf-hue) 93% 5% / 0.55) 100%),
     url("./assets/bg/app-smoke.jpg");
   background-size: cover, cover;
   background-position: center top, center top;
   background-repeat: no-repeat, no-repeat;
-  /* Pigment correction (matches the landing hero pass + owner's photo-editor
-     reference): push saturation and contrast up and pull brightness down so the
-     in-app teal-smoke backdrop reads as deep pigment instead of a milky, glow-
-     washed haze. Re-skins every signed-in page + the EPPP suite in one place. The
-     landing keeps its own (slightly different) filter via the more-specific
-     .landing-root.study-page-bg::before rule below.
-     NOTE: brightness(0.9) + a corner-only vignette was still too glow-bright on
-     the dashboards ("nothing changed / glow still there"); the real deepening now
-     comes from the full-coverage scrim in background-image above, with brightness
-     pulled to 0.82 here. Do not re-brighten to match the landing. */
-  filter: saturate(1.28) contrast(1.10) brightness(0.82);
   /* NO background-attachment: fixed. The pseudo-element is already
      position:fixed; inset:0, so it is pinned to the viewport. Adding
      background-attachment:fixed on top is redundant AND makes the browser
@@ -624,14 +611,6 @@ body {
       rgba(118, 228, 247, 0.08) 0%,
       rgba(118, 228, 247, 0.00) 66%);
   background-repeat: no-repeat;
-  /* Was 0.92 — the additive cyan bloom was the "glow" the owner kept seeing on
-     the dashboards. Cut to a faint hint so the deepened smoke reads clean. The
-     marketing landing restores the fuller glow via the override below. */
-  opacity: 0.2;
-}
-
-/* Landing keeps the fuller nebula glow — the de-glow above is in-app only. */
-.landing-root.study-page-bg::after {
   opacity: 0.92;
 }
 
@@ -885,22 +864,22 @@ body {
      cloth as the EPPP domain tiles. */
   background:
     radial-gradient(125% 80% at 50% 0%,
-      rgba(118, 228, 247, 0.06) 0%,
+      rgba(118, 228, 247, 0.10) 0%,
       rgba(118, 228, 247, 0.00) 58%),
     linear-gradient(
       145deg,
-      hsl(var(--surf-hue) 90% 18% / 0.90),
-      hsl(var(--surf-hue) 90% 12% / 0.96)
+      hsl(var(--surf-hue) 88% 19% / 0.74),
+      hsl(var(--surf-hue) 88% 14% / 0.85)
     );
   border: 1px solid rgba(196, 232, 242, 0.22);
   border-radius: 20px;
-  backdrop-filter: blur(9px) saturate(140%);
-  -webkit-backdrop-filter: blur(9px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.10),
-    inset 0 0 36px -24px rgba(118, 228, 247, 0.16),
-    0 0 20px -10px rgba(118, 228, 247, 0.10),
-    0 22px 52px -40px rgba(0, 0, 0, 0.80);
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 0 40px -22px rgba(118, 228, 247, 0.42),
+    0 0 28px -6px rgba(118, 228, 247, 0.30),
+    0 24px 60px -42px rgba(0, 0, 0, 0.72);
 }
 
 /* =============================================================================
