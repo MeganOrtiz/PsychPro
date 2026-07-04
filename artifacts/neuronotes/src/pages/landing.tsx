@@ -869,12 +869,16 @@ const styles = `
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: min(880px, 92%);
-  height: 78%;
-  background: radial-gradient(ellipse 64% 56% at 50% 52%,
-    hsl(var(--surf-hue) 82% 7% / 0.66) 0%,
-    hsl(var(--surf-hue) 82% 7% / 0.40) 46%,
-    hsl(var(--surf-hue) 82% 7% / 0.00) 76%);
+  width: min(1000px, 96%);
+  height: 84%;
+  /* Deep-teal legibility pool behind the hero text. Raised strength (inner ~0.86)
+     so the glowing smoke plumes behind the PSYCHPRO wordmark are subdued into a
+     clean, calm backdrop instead of reading as a bright glow around the letters.
+     Soft falloff to 0 keeps it a natural pool, not a hard oval. */
+  background: radial-gradient(ellipse 60% 56% at 50% 50%,
+    hsl(var(--surf-hue) 84% 6% / 0.86) 0%,
+    hsl(var(--surf-hue) 84% 6% / 0.60) 44%,
+    hsl(var(--surf-hue) 84% 6% / 0.00) 78%);
   pointer-events: none;
 }
 
