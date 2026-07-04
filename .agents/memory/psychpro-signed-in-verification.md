@@ -11,7 +11,12 @@ fails, AND the testing harness's programmatic helper (`runTest` with
 `testClerkAuth: true`) fails with `Unprocessable Entity` from `signInClerkUser`.
 
 **Consequence:** you cannot screenshot the live signed-in dashboard (or any logged-in
-page) here. Don't keep retrying Clerk login — reach for the surrogate below.
+page) here. Don't keep retrying Clerk login — reach for the surrogate below. Note the
+failure can also present as a **hang**: `runTest` is only callable inside `code_execution`,
+which is capped at ~10 min, so a heavy signed-in flow just times out (no screenshots)
+rather than returning the `Unprocessable Entity` error. Either way: stop retrying, use the
+surrogate. Cheapest of all when the user only needs to confirm: ask them to open their own
+already-logged-in browser.
 
 **Verification path that works:** reproduce the exact edited CSS/markup in an isolated
 `mockup-sandbox` component (copy the real glass classes + the JSX slice verbatim into a
