@@ -575,15 +575,17 @@ body {
   background-size: cover, cover;
   background-position: center top, center top;
   background-repeat: no-repeat, no-repeat;
-  /* Pigment correction + brightness match to the landing. app-smoke.jpg is ~16%
-     DARKER than the landing's brain-clouds.jpg (measured mean HSB brightness
-     0.179 vs 0.207) though slightly more saturated, which is why the in-app smoke
-     read as a muted teal next to the brighter, more-cyan landing. Grading the
-     in-app brightness UP by that measured gap (landing 0.9 x 0.207/0.179 ~= 1.04)
-     lifts the main site + EPPP suite to the landing's tone while keeping saturation
-     high so the cerulean reads as pigment, not haze. The landing keeps its own
-     brightness(0.9) via the more-specific .landing-root rule below. */
-  filter: saturate(1.32) contrast(1.12) brightness(1.04);
+  /* Pigment correction (matches the landing hero pass + owner's photo-editor
+     reference): push saturation and contrast up and pull brightness down so the
+     in-app teal-smoke backdrop reads as deep pigment instead of a milky, glow-
+     washed haze. Re-skins every signed-in page + the EPPP suite in one place. The
+     landing keeps its own (slightly different) filter via the more-specific
+     .landing-root.study-page-bg::before rule below.
+     NOTE: an earlier pass graded this UP to brightness(1.04) to "match" the
+     brighter landing; the owner explicitly wanted the in-app main site + EPPP
+     suite kept at this DEEPER brightness(0.9) look (per reference screenshot), so
+     it is pinned back to 0.9 here. Do not re-brighten to match the landing. */
+  filter: saturate(1.32) contrast(1.12) brightness(0.9);
   /* NO background-attachment: fixed. The pseudo-element is already
      position:fixed; inset:0, so it is pinned to the viewport. Adding
      background-attachment:fixed on top is redundant AND makes the browser

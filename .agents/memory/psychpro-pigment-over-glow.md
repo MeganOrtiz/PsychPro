@@ -44,3 +44,13 @@ must update `scripts/check-design-drift.mjs` in the same commit or the guardrail
 verbatim" stance (see psychpro-eppp-unified-cards.md) — do NOT "restore" the heavy glow
 thinking EPPP is sacred. The brighter SELECTED/active variants + flashcard accent/card-front
 tones were NOT touched in this pass; revisit only if owner says they still read foggy.
+
+## In-app backdrop brightness: PINNED at 0.9 (do NOT match to landing)
+The in-app backdrop (`.study-page-bg::before`, app-smoke.jpg, covers BOTH main site + EPPP
+suite) must stay at `filter: saturate(1.32) contrast(1.12) brightness(0.9)`. A pass once graded
+it UP to `brightness(1.04)` to "match" the brighter landing (app-smoke measured ~16% darker than
+brain-clouds); the owner rejected that and wants the deeper 0.9 look on the in-app pages (per a
+reference screenshot of the EPPP Mastery Suite). Landing keeps its own 0.9 via the more-specific
+`.landing-root.study-page-bg::before` rule — they happen to share 0.9 but for different reasons;
+do NOT re-couple in-app brightness to the landing's tone.
+**Why:** owner explicitly said "get both [main] page and the EPPP page back to this" deeper look.
