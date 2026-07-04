@@ -131,3 +131,9 @@ id = "VLGTzeLCjS2a7sDbOR4Nn"
 uri = "file://screenshots/header-preview-beam.jpg"
 type = "image"
 title = "Dashboard wordmarks — upgraded signal-beam underline"
+
+[[outputs]]
+id = "u4F67mqv3r1Iqlce--13c"
+uri = "file://.local/checkpoint-shots/20b04a2.jpg"
+type = "image"
+title = "Checkpoint 20b04a2 — June 27, 11:08 (de-fog pass)"
