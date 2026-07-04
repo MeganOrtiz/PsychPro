@@ -60,7 +60,7 @@ async function runStartupTaskWithRetry<T>(
   throw lastErr;
 }
 
-app.listen(port, "0.0.0.0", (err) => {
+const server = app.listen(port, "0.0.0.0", (err) => {
   if (err) {
     logger.error({ err }, "Error listening on port");
     process.exit(1);
@@ -136,3 +136,31 @@ app.listen(port, "0.0.0.0", (err) => {
       ),
     );
 });
+
+// Graceful shutdown. When the workflow (or a deploy) restarts this service it
+// sends SIGTERM/SIGINT; without an explicit handler the listener could linger
+// and keep port 8080 bound, so the next boot fails with EADDRINUSE. Closing the
+// server releases the port; a short timer force-exits if a hung connection
+// prevents a clean close. `isShuttingDown` guards against a doubled signal.
+let isShuttingDown = false;
+function shutdown(signal: NodeJS.Signals): void {
+  if (isShuttingDown) return;
+  isShuttingDown = true;
+  logger.info({ signal }, "Received shutdown signal — closing server");
+  server.close((err) => {
+    if (err) {
+      logger.error({ err }, "Error while closing server");
+      process.exit(1);
+    }
+    logger.info("Server closed — exiting");
+    process.exit(0);
+  });
+  // Failsafe: if an open connection stalls server.close(), exit anyway so the
+  // port is never held hostage across a restart.
+  setTimeout(() => {
+    logger.warn("Forced exit after shutdown timeout");
+    process.exit(0);
+  }, 5000).unref();
+}
+process.on("SIGTERM", () => shutdown("SIGTERM"));
+process.on("SIGINT", () => shutdown("SIGINT"));
