@@ -566,8 +566,6 @@ const styles = `
   min-height: 100%;
   padding: clamp(14px, 2.4vw, 28px) clamp(16px, 4vw, 48px) clamp(48px, 6vw, 88px);
 }
-/* Glow removed on the EPPP dashboard — drop the shared cerulean nebula wash. */
-.study-page-bg.epd-page::after { content: none; }
 .epd-shell {
   max-width: 1120px;
   margin: 0 auto;
@@ -589,7 +587,7 @@ const styles = `
   border-radius: 16px;
   border: 1px solid ${C.hairlineStrong};
   background: linear-gradient(135deg, hsl(var(--surf-hue) 89% 21% / 0.96), hsl(var(--surf-hue) 87% 19% / 0.92));
-  box-shadow: 0 18px 54px -42px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.08);
+  box-shadow: 0 18px 54px -42px rgba(118,228,247,0.78), inset 0 1px 0 rgba(255,255,255,0.08);
 }
 .epd-head-img {
   position: absolute;
@@ -618,7 +616,7 @@ const styles = `
   line-height: 1;
   letter-spacing: 0;
   color: ${C.cloud};
-  text-shadow: 0 0 18px ${C.ink};
+  text-shadow: 0 0 18px ${C.ink}, 0 0 28px rgba(118,228,247,0.36);
 }
 
 /* ---- Shared card ---- */
@@ -634,6 +632,8 @@ const styles = `
   -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 0 40px -22px rgba(118,228,247,0.42),
+    0 0 28px -6px rgba(118,228,247,0.30),
     0 24px 60px -42px rgba(0,0,0,0.72);
 }
 .epd-card-label {
@@ -668,6 +668,7 @@ const styles = `
   stroke: ${C.cyan};
   stroke-width: 10;
   stroke-linecap: round;
+  filter: drop-shadow(0 0 6px ${C.cyan}99);
   transition: stroke-dashoffset 900ms cubic-bezier(0.16,1,0.3,1);
 }
 .epd-ring-center {
@@ -707,6 +708,7 @@ const styles = `
 .epd-week-dot.is-active {
   background: ${C.cyan};
   border-color: ${C.cyan};
+  box-shadow: 0 0 8px ${C.cyan}99;
 }
 .epd-week-lbl { font-size: 10px; color: ${C.muted}; }
 
@@ -776,10 +778,12 @@ const styles = `
 }
 .epd-section-head--hero .epd-section-eyebrow {
   color: #76e4f7;
+  text-shadow: 0 0 14px rgba(118, 228, 247, 0.55);
 }
 .epd-section-head--hero .epd-section-title {
   font-size: clamp(24px, 3vw, 34px);
   color: #ffffff;
+  text-shadow: 0 0 22px rgba(118, 228, 247, 0.45);
 }
 .epd-section-head--hero .epd-section-meta {
   color: #bff4ff;
@@ -838,10 +842,12 @@ const styles = `
   -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 0 40px -22px rgba(118,228,247,0.42),
+    0 0 24px -6px rgba(118,228,247,0.28),
     0 24px 60px -42px rgba(0,0,0,0.72);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
-.epd-domain:hover { transform: translateY(-3px); border-color: ${C.cyan}66; box-shadow: 0 22px 56px -38px rgba(0,0,0,0.7); }
+.epd-domain:hover { transform: translateY(-3px); border-color: ${C.cyan}66; box-shadow: 0 22px 56px -38px rgba(0,0,0,0.7), 0 0 24px -10px ${C.cyan}59; }
 .epd-domain.is-mastered {
   border-color: ${C.cyan}5e;
   background:
@@ -876,6 +882,7 @@ const styles = `
 .epd-bar-fill {
   display: block; height: 100%; border-radius: 999px;
   background: linear-gradient(90deg, ${C.cyan}, ${C.mist});
+  box-shadow: 0 0 8px ${C.cyan}80;
   transition: width 800ms cubic-bezier(0.16,1,0.3,1);
 }
 .epd-domain-foot { display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: ${C.muted}; }
