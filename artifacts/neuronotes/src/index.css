@@ -187,35 +187,35 @@
      2026-06-12). Accents stay at the locked #76E4F7 family (hue ~188–189).
      History: hue 191 read green, 196 read navy; 192 sits just off the accent on
      the anti-navy side. Lever for "too navy" is HUE, never lightness. */
-  --background: var(--surf-hue) 80% 9%;
+  --background: var(--surf-hue) 84% 8%;
   --foreground: var(--surf-hue) 40% 95%;
 
-  --border: var(--surf-hue) 58% 24%;
+  --border: var(--surf-hue) 60% 22%;
 
-  --card: var(--surf-hue) 78% 12%;
+  --card: var(--surf-hue) 82% 11%;
   --card-foreground: var(--surf-hue) 40% 95%;
-  --card-border: var(--surf-hue) 58% 24%;
+  --card-border: var(--surf-hue) 60% 22%;
 
-  --sidebar: var(--surf-hue) 80% 7%;
+  --sidebar: var(--surf-hue) 84% 6%;
   --sidebar-foreground: var(--surf-hue) 38% 90%;
-  --sidebar-border: var(--surf-hue) 60% 18%;
+  --sidebar-border: var(--surf-hue) 64% 16%;
   --sidebar-primary: 189 84% 55%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: var(--surf-hue) 60% 18%;
+  --sidebar-accent: var(--surf-hue) 64% 16%;
   --sidebar-accent-foreground: var(--surf-hue) 38% 90%;
   --sidebar-ring: 189 84% 55%;
 
-  --popover: var(--surf-hue) 76% 12%;
+  --popover: var(--surf-hue) 80% 11%;
   --popover-foreground: var(--surf-hue) 38% 95%;
   --popover-border: var(--surf-hue) 58% 22%;
 
   --primary: 189 84% 55%;
   --primary-foreground: 0 0% 100%;
 
-  --secondary: var(--surf-hue) 60% 22%;
+  --secondary: var(--surf-hue) 64% 20%;
   --secondary-foreground: var(--surf-hue) 38% 90%;
 
-  --muted: var(--surf-hue) 60% 17%;
+  --muted: var(--surf-hue) 64% 15%;
   --muted-foreground: var(--surf-hue) 24% 62%;
 
   --accent: 189 88% 62%;
@@ -224,7 +224,7 @@
   --destructive: 0 72% 51%;
   --destructive-foreground: 0 0% 100%;
 
-  --input: var(--surf-hue) 58% 24%;
+  --input: var(--surf-hue) 60% 22%;
   --ring: 189 84% 55%;
 
   --chart-1: 189 84% 55%;
@@ -266,19 +266,19 @@
 .study-page-aurora {
   /* Mirrors STUDY_PALETTE in src/lib/study-theme.ts. Canonical palette
      = the landing-page cinematic neuroscience UI. */
-  --background: var(--surf-hue) 90% 17%;         /* #044352 bg (deep cerulean) */
+  --background: var(--surf-hue) 92% 15%;         /* deepened cerulean (pigment pass) */
   --foreground: 188 100% 83%;        /* #A7F3FF mist (icy text) */
-  --card: var(--surf-hue) 88% 25%;               /* #086178 surface (deep cerulean) */
+  --card: var(--surf-hue) 90% 23%;               /* deepened cerulean surface (pigment pass) */
   --card-foreground: 188 100% 83%;
-  --popover: var(--surf-hue) 88% 23%;
+  --popover: var(--surf-hue) 90% 21%;
   --popover-foreground: 188 100% 83%;
-  --muted: var(--surf-hue) 90% 20%;              /* #054f61 bgSoft (deep cerulean) */
+  --muted: var(--surf-hue) 92% 18%;              /* deepened bgSoft (pigment pass) */
   --muted-foreground: 191 30% 78%;   /* brighter muted text */
-  --border: var(--surf-hue) 74% 44%;             /* #1da2c3 steel/cerulean */
-  --input: var(--surf-hue) 90% 20%;              /* #054f61 bgSoft (deep cerulean) */
+  --border: var(--surf-hue) 76% 42%;             /* deepened steel/cerulean (pigment pass) */
+  --input: var(--surf-hue) 92% 18%;              /* deepened bgSoft (pigment pass) */
   --primary: 189 80% 64%;            /* #5ad7ed teal */
   --primary-foreground: var(--surf-hue) 90% 14%;
-  --secondary: var(--surf-hue) 74% 44%;          /* #1da2c3 cerulean */
+  --secondary: var(--surf-hue) 76% 42%;          /* deepened cerulean (pigment pass) */
   --secondary-foreground: 188 100% 83%;
   --accent: 188 90% 72%;             /* #76E4F7 surf (bright-cyan) */
   --accent-foreground: var(--surf-hue) 90% 14%;
@@ -585,6 +585,11 @@ body {
      identical, no seam. */
   background-attachment: scroll, scroll;
   background-color: #05252d;
+  /* Pigment correction rolled out site-wide (validated first on the landing
+     hero, see .landing-root override below): push saturation + contrast up and
+     pull brightness down so the cerulean reads as deep pigment instead of a
+     milky glow-washed haze. */
+  filter: saturate(1.32) contrast(1.12) brightness(0.9);
   pointer-events: none;
 }
 
@@ -611,7 +616,9 @@ body {
       rgba(118, 228, 247, 0.08) 0%,
       rgba(118, 228, 247, 0.00) 66%);
   background-repeat: no-repeat;
-  opacity: 0.92;
+  /* Eased so the additive glow doesn't re-lift the deepened (pigment-pass)
+     floor — keeps the site-wide "lower brightness" intent consistent. */
+  opacity: 0.82;
 }
 
 /* Landing page exception. The marketing landing keeps the original
@@ -629,8 +636,9 @@ body {
     url("./assets/bg/brain-clouds.jpg");
   /* Pigment correction (matches owner's photo-editor pass): push saturation and
      contrast up and pull brightness down so the cerulean reads as deep pigment
-     instead of a milky glow-washed haze. Applied to the landing hero first as an
-     apples-to-apples test before rolling the same correction site-wide. */
+     instead of a milky glow-washed haze. Now rolled out site-wide on the base
+     .study-page-bg::before rule above; kept here so the landing's brain-clouds
+     image receives the identical correction. */
   filter: saturate(1.32) contrast(1.12) brightness(0.9);
 }
 

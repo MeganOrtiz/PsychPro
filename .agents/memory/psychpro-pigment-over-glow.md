@@ -24,8 +24,15 @@ the diagnosis directly.
 **How to apply:**
 - Hero/backdrop images live on `.study-page-bg::before` (in-app = `app-smoke.jpg`) and
   `.landing-root.study-page-bg::before` (landing = `brain-clouds.jpg`). Correct them with a CSS
-  `filter: saturate() contrast() brightness()` on the `::before` (started landing-only at
-  saturate(1.32) contrast(1.12) brightness(0.9) as an apples-to-apples test before site-wide).
-- Roll out in two phases: (1) backdrop image filter, (2) reduce surface glow/blur on
-  cards/buttons/panels. Keep hue locked (--surf-hue 192) so check-surface-hue + check-design-drift
-  stay green — a filter adds no color literals, so guardrails are unaffected.
+  `filter: saturate() contrast() brightness()` on the `::before`.
+- Phase 1 (backdrop image filter) is DONE site-wide: the same validated pass — saturate(1.32)
+  contrast(1.12) brightness(0.9) — now lives on BOTH the base in-app `::before` and the landing
+  override, so every page shares one pigment lever. Tune brightness/saturation there first.
+- Opaque surfaces that DON'T sample the wallpaper backdrop (portaled popovers/dropdowns/tooltips
+  read `.dark` tokens; in-page surfaces read the `.study-page-bg` tokens) get no benefit from the
+  ::before filter — deepen THOSE by nudging the surface token S up / L down in BOTH blocks (keep
+  hue on var(--surf-hue) so guardrails don't see a literal hue). Foregrounds/accents stay put.
+- Keep hue locked (--surf-hue 192) so check-surface-hue + check-design-drift stay green — a filter
+  and var(--surf-hue) token tuples add no literal hue, so guardrails are unaffected.
+- Further glow/blur reduction on cards/buttons/panels is the remaining lever if the deepened
+  backdrop + tokens still read foggy.
