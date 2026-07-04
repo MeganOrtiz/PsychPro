@@ -69,37 +69,37 @@ const STAT_STRIP = [
 const STUDY_TOOLS = [
   {
     icon: Layers,
-    title: "Flashcards Built for Understanding",
+    title: "Review in Minutes",
     body:
-      "More than simple recall. Every card is designed to strengthen conceptual understanding, clinical reasoning, and long-term retention.",
+      "Review key concepts quickly with detailed flashcards designed to strengthen long-term retention.",
     accent: "#76E4F7",
   },
   {
     icon: ClipboardList,
-    title: "Quizzes That Reinforce Learning",
+    title: "Knowledge Checks",
     body:
-      "Every question includes detailed explanations that transform assessment into another opportunity to learn.",
+      "Identify what you know, strengthen areas of growth, and deepen understanding with detailed explanations for every question.",
     accent: "#68CCDE",
   },
   {
     icon: BookOpen,
-    title: "Comprehensive Study Guides",
+    title: "Key Concepts. Organized.",
     body:
-      "Structured, high-yield content that brings together essential concepts, clinical applications, and key details in one place.",
+      "Study guides with consolidated need-to-know concepts designed to help you spend less time searching across resources and more time actively learning.",
     accent: "#A7F3FF",
   },
   {
     icon: GraduationCap,
-    title: "Exam-Style Practice Tests",
+    title: "Test Yourself to Build Competence and Confidence",
     body:
-      "Build confidence, identify knowledge gaps, and apply what you've learned under realistic testing conditions.",
+      "Practice with exam-style questions that help you assess readiness, identify gaps, and strengthen clinical reasoning.",
     accent: "#6FC9DF",
   },
   {
     icon: Award,
-    title: "Course Mastery Exam",
+    title: "Measure Your Mastery",
     body:
-      "Solidify your understanding of every topic in a course with the final Course Mastery Exam.",
+      "Bring everything together with cumulative exams designed to help you evaluate your understanding before moving forward.",
     accent: "#9AD9E8",
   },
 ] as const;
@@ -110,7 +110,7 @@ const LEARNING_SCIENCE = [
     icon: Target,
     title: "Active recall",
     body:
-      "Retrieve, don't reread. Every tool is designed to make you pull knowledge from memory — the way it sticks.",
+      "Retrieve, don't reread. Every tool is designed to make you pull knowledge from memory, the way it sticks.",
   },
   {
     icon: Repeat,
@@ -149,9 +149,9 @@ const SCHOLAR_POINTS = [
 
 // What the personalized dashboard surfaces — all real app features.
 const DASHBOARD_POINTS = [
-  "Progress tracked across every topic you study",
-  "A clear recommendation for what to study next",
-  "Study streaks that keep your momentum going",
+  "Monitor your progress across every course.",
+  "Always know what to review next.",
+  "Build lasting study habits and maintain momentum.",
 ] as const;
 
 const FOOTER_LINKS = [
@@ -292,14 +292,14 @@ export default function LandingPage() {
             learn. expand. connect.
           </p>
           <p className="landing-headline" style={{ ["--delay" as any]: "320ms" }}>
-            Master Topics in Clinical Psychology, Neuropsychology,
-            Neuroscience, Assessment, Psychotherapy, and More
+            Learn Smarter. Not Harder.
           </p>
           <p className="landing-blurb" style={{ ["--delay" as any]: "420ms" }}>
-            PsychPro combines evidence-based learning strategies with
-            comprehensive educational content to create a modern learning
-            experience for psychology students, professionals, and life-long
-            learners.
+            Evidence-based study tools designed to help you learn efficiently,
+            retain more, and spend less time searching for the right resources.
+            PsychPro brings psychology, neuroscience, assessment, and clinical
+            learning into one organized space, so students can study with more
+            clarity and confidence.
           </p>
 
           <div
@@ -313,16 +313,16 @@ export default function LandingPage() {
               data-testid="cta-join-now"
             >
               <BookOpen className="landing-cta-icon" aria-hidden />
-              <span>JOIN NOW</span>
+              <span>Start Learning Smarter</span>
             </button>
             <button
               type="button"
               onClick={goToPlans}
-              className="landing-cta landing-cta-primary"
+              className="landing-cta landing-cta-ghost"
               data-testid="cta-explore-topics"
             >
               <Compass className="landing-cta-icon" aria-hidden />
-              <span>BROWSE COURSES</span>
+              <span>Explore the Platform</span>
             </button>
           </div>
 
@@ -342,16 +342,12 @@ export default function LandingPage() {
           <div className="landing-mastery-card">
             <p className="landing-eyebrow">THE SYSTEM</p>
             <h2 className="landing-section-title">
-              The PsychPro EPPP Mastery Suite&trade;
+              Built to Help You Learn Faster
             </h2>
             <p className="landing-mastery-text">
-              The PsychPro EPPP Mastery Suite&trade; is a system of learning
-              resources designed to promote mastery of EPPP content through
-              conceptual understanding, critical thinking, and active
-              application. Featuring structured lessons in each domain, clinical
-              integration case examples, and full-length practice exams, the
-              system equips learners with the knowledge and confidence needed
-              for both EPPP success and real-world clinical practice.
+              Flashcards, quizzes, study guides, practice exams, and interactive
+              learning spaces all in one place, designed to help students study
+              with clarity, structure, and confidence.
             </p>
           </div>
         </section>
@@ -361,7 +357,7 @@ export default function LandingPage() {
           <div className="landing-section-head" data-reveal>
             <p className="landing-eyebrow">WHAT'S INSIDE</p>
             <h2 className="landing-section-title">
-              Learn, apply, retain, and revisit
+              Everything You Need to Learn More and Reclaim Your Time
             </h2>
           </div>
           <div className="landing-tools-grid">
@@ -394,11 +390,12 @@ export default function LandingPage() {
           <div className="landing-section-head" data-reveal>
             <p className="landing-eyebrow">THE METHOD</p>
             <h2 className="landing-section-title">
-              Built on how learning actually works
+              Evidence-Based by Design
             </h2>
             <p className="landing-section-sub">
-              PsychPro is designed around evidence-based learning principles, so
-              the hours you put in turn into knowledge that lasts.
+              Every feature is built around evidence-based learning principles
+              that improve retention, strengthen understanding, and make every
+              study session more effective.
             </p>
           </div>
           <div className="landing-science-grid">
@@ -437,13 +434,11 @@ export default function LandingPage() {
           <div className="landing-split-body landing-split-body--boxed">
             <p className="landing-eyebrow landing-eyebrow--left">INTERACTIVE 3D</p>
             <h2 className="landing-split-title">
-              Interactive Brain Lab
+              Connect Structure to Function
             </h2>
             <p className="landing-split-text">
-              Study the structures and functions of the brain with our
-              interactive Brain Lab — built for visual learning. Rotate the
-              model, open any structure, and connect anatomy to its function and
-              clinical relevance.
+              Explore neuroanatomy through interactive visual learning that
+              helps connect brain structures, systems, and clinical relevance.
             </p>
             <button
               type="button"
@@ -518,12 +513,11 @@ export default function LandingPage() {
           <div className="landing-split-body landing-split-body--boxed">
             <p className="landing-eyebrow landing-eyebrow--left">YOUR DASHBOARD</p>
             <h2 className="landing-split-title">
-              Track progress, prioritize learning, and connect
+              Know What to Study Next
             </h2>
             <p className="landing-split-text">
-              Your personalized dashboard keeps your studying on track, shows you
-              what to prioritize next, and connects you with the wider PsychPro
-              community.
+              Your dashboard helps organize progress, clarify priorities, and
+              keep each study session focused.
             </p>
             <ul className="landing-checklist">
               {DASHBOARD_POINTS.map((point) => (
@@ -543,14 +537,14 @@ export default function LandingPage() {
               <div>
                 <p className="landing-eyebrow">SCHOLAR TIER</p>
                 <h2 className="landing-split-title landing-scholar-title">
-                  Turn your own material into study tools
+                  Upload. Learn. Master.
                 </h2>
               </div>
             </div>
             <p className="landing-split-text">
-              Scholar members bring their own content — lecture notes, articles,
-              and PDFs — and use AI to generate custom flashcards, quizzes, study
-              guides, and practice exams built only from what they upload.
+              Upload lecture notes, PDFs, and course materials to generate
+              personalized flashcards, quizzes, study guides, and practice
+              exams.
             </p>
             <ul className="landing-checklist landing-checklist--grid">
               {SCHOLAR_POINTS.map((point) => (
@@ -600,7 +594,7 @@ export default function LandingPage() {
               Browse the complete topic library
             </h2>
             <p className="landing-section-sub">
-              The full library of topics you can study on PsychPro — flashcards,
+              The full library of topics you can study on PsychPro: flashcards,
               quizzes, study guides, and practice exams for each.
             </p>
           </div>
@@ -659,36 +653,26 @@ export default function LandingPage() {
               <p className="landing-eyebrow landing-eyebrow--left">
                 MEET THE FOUNDER
               </p>
-              <h2 className="landing-split-title">Hey Everyone,</h2>
+              <h2 className="landing-split-title">
+                Built by Someone Who's Been There
+              </h2>
               <div className="landing-founder-text">
                 <p>
-                  I created PsychPro out of a need to meaningfully organize and
-                  connect all the information I'd attained throughout my academic
-                  career and clinical training. As a clinical psychology doctoral
-                  student myself, I understand firsthand how much there is to
-                  learn and apply across psychology, neuroscience, assessment,
-                  intervention, research, clinical practice, and licensure prep.
+                  PsychPro began as a personal learning system built across years
+                  of graduate training in psychology, applied cognition and
+                  neuroscience, and clinical psychopharmacology. As I moved
+                  through different programs, I kept seeing how much richer
+                  psychology became when concepts were connected instead of
+                  separated into silos.
                 </p>
                 <p>
-                  What started as a way to share the countless pages of notes,
-                  study materials, and resources I'd created over the years
-                  quickly turned into something much more: an all-in-one space
-                  where information could be learned, understood, and processed
-                  more deeply.
-                </p>
-                <p>
-                  PsychPro offers study guides, flashcards, practice questions,
-                  visual learning tools, and EPPP preparation materials designed
-                  to support students, clinicians, and lifelong learners from
-                  their very first psychology courses through advanced training,
-                  licensure, and beyond.
-                </p>
-                <p>
-                  PsychPro is the resource I wish I'd had from day one and I'm so
-                  glad you're here to learn alongside me.
+                  I created PsychPro to bring those connections into one
+                  organized space, originally for my own studying. As the system
+                  grew, I realized it could help other students learn with
+                  greater clarity, confidence, and purpose.
                 </p>
               </div>
-              <p className="landing-founder-sign">— Megan, Founder of PsychPro</p>
+              <p className="landing-founder-sign">Megan, Founder of PsychPro</p>
             </div>
           </div>
         </section>
