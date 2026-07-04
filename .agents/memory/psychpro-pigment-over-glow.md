@@ -36,3 +36,11 @@ the diagnosis directly.
   and var(--surf-hue) token tuples add no literal hue, so guardrails are unaffected.
 - Further glow/blur reduction on cards/buttons/panels is the remaining lever if the deepened
   backdrop + tokens still read foggy.
+- VALUES MUST BE BOLD to be visible: the landing's original brightness(0.9) (-10%) was invisible
+  on the in-app app-smoke backdrop and the user read it as "you did nothing." app-smoke.jpg is
+  intrinsically brighter than the landing brain image, so the in-app `::before` filter needs a
+  STRONGER pass than the landing (in-app now saturate(1.5) contrast(1.16) brightness(0.58) +
+  vignette center 0.30 / edge 0.74; landing keeps its own 0.9 over the darker brain image).
+  When asked to lower brightness "site-wide", change brightness in big steps (0.6-0.7), not 0.9.
+- Verify the in-app backdrop on the PUBLIC `/sign-in` page (shares the app-smoke `::before`) — do
+  not rely on the landing screenshot, whose separate override masks in-app backdrop edits.

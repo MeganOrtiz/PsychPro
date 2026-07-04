@@ -13,6 +13,13 @@ fails, AND the testing harness's programmatic helper (`runTest` with
 **Consequence:** you cannot screenshot the live signed-in dashboard (or any logged-in
 page) here. Don't keep retrying Clerk login — reach for the surrogate below.
 
+**Fastest surrogate for BACKDROP / global CSS changes (no auth, no mockup):** the
+`/sign-in` and `/sign-up` routes are PUBLIC and render the same `.study-page-bg`
+wrapper + the in-app `app-smoke.jpg` `::before` backdrop that every signed-in page
+(incl. `/dashboard`) uses. Screenshot `/sign-in` to see site-wide background /
+filter / vignette changes exactly as the dashboard will render them — no login, no
+temp route. (Only covers the shared backdrop + card glass, not page-specific chrome.)
+
 **Verification path that works:** reproduce the exact edited CSS/markup in an isolated
 `mockup-sandbox` component (copy the real glass classes + the JSX slice verbatim into a
 `_group.css` + `.tsx`), restart the mockup workflow, and screenshot
