@@ -5,6 +5,7 @@ import { STUDY_PALETTE as P, type StudyTone } from "@/lib/study-theme";
 interface StudySurfaceProps {
   tone?: StudyTone;
   glow?: boolean;
+  noGlow?: boolean;
   className?: string;
   style?: CSSProperties;
   children?: ReactNode;
@@ -19,7 +20,7 @@ interface StudySurfaceProps {
   fillHeight?: boolean;
 }
 
-function surfaceStyles(tone: StudyTone): CSSProperties {
+function baseSurfaceStyles(tone: StudyTone): CSSProperties {
   switch (tone) {
     case "dark":
       // Prominent translucent cerulean glass — slightly brighter base than
@@ -82,6 +83,20 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
   }
 }
 
+// Same glass surface with the cyan corona/inner-glow halos stripped out —
+// keeps the white top highlight and the deep drop shadow so the card still
+// reads as a lifted surface, just without the "glow". Used on the dashboards.
+const NOGLOW_SHADOW: Partial<Record<StudyTone, string>> = {
+  light: "inset 0 1px 0 rgba(255,255,255,0.12), 0 24px 60px -42px rgba(0,0,0,0.72)",
+  dark: "inset 0 1px 0 rgba(255,255,255,0.10), 0 22px 52px -26px rgba(0,0,0,0.74)",
+};
+
+function surfaceStyles(tone: StudyTone, noGlow = false): CSSProperties {
+  const s = baseSurfaceStyles(tone);
+  if (noGlow && NOGLOW_SHADOW[tone]) s.boxShadow = NOGLOW_SHADOW[tone];
+  return s;
+}
+
 function pillStyles(tone: StudyTone, brand?: boolean): CSSProperties {
   if (tone === "dark") {
     return {
@@ -111,6 +126,7 @@ export const StudySurface = forwardRef<HTMLElement, StudySurfaceProps>(
     {
       tone = "light",
       glow = false,
+      noGlow = false,
       className,
       style,
       children,
@@ -168,7 +184,7 @@ export const StudySurface = forwardRef<HTMLElement, StudySurfaceProps>(
             isButton && "group-hover:-translate-y-0.5",
             innerClassName,
           )}
-          style={surfaceStyles(tone)}
+          style={surfaceStyles(tone, noGlow)}
         >
           {pill && (
             <div

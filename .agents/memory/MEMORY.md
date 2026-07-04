@@ -58,3 +58,4 @@
 - [DB pool/startup resilience](psychpro-db-pool-resilience.md) — DB cold-start timeouts + idle-socket drops are TRANSIENT; keep pool keepAlive+error handler and retry idempotent startup backfills with jittered backoff.
 - [Pigment over glow](psychpro-pigment-over-glow.md) — "flat/bland/foggy" = too much glow+backdrop-blur desaturating contrast, NOT wrong hue; fix with saturate+contrast up, brightness down, LESS glow — never add light.
 - [Header scrim convention](psychpro-header-scrim.md) — floating headers over the smoke wallpaper use the shared `.text-scrim`/`.text-scrim-start` utility (soft fading pool, NOT a box, hue via --surf-hue); never add ad-hoc text-shadows.
+- [Dashboard glow removal](psychpro-dashboard-glow-removal.md) — "remove glow" must cover StudySurface noGlow + nested children + inline text-shadows + SVG feGaussianBlur filters + nebula divs + page ::after; keep buttons.

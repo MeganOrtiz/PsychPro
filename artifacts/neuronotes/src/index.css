@@ -704,6 +704,21 @@ body {
     0 18px 40px -28px rgba(0, 0, 0, 0.7);
 }
 
+/* Dashboard: glow removed per request — only buttons keep their glow. Keep the
+   glass pigment, borders and deep drop shadow; strip the cyan corona/bloom
+   halos from the recommended tiles, and drop the shared cerulean nebula wash
+   behind the page. */
+.dashboard-page .recommended-tile,
+.dashboard-page .recommended-tile:hover,
+.dashboard-page .recommended-tile:active {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 24px 60px -42px rgba(0, 0, 0, 0.72);
+}
+.study-page-bg:has(.dashboard-page)::after {
+  content: none;
+}
+
 /* Course Mastery tiles — dull and desaturated until the course's mastery
    exam is passed, then they light up with a steady cerulean glow. */
 .course-mastery-tile {
@@ -734,9 +749,7 @@ body {
   border-color: rgba(118, 228, 247, 0.55);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    0 0 26px -2px rgba(118, 228, 247, 0.6),
     0 8px 22px -16px rgba(0, 0, 0, 0.55);
-  animation: course-mastery-glow 3.2s ease-in-out infinite;
 }
 .course-mastery-tile--mastered:hover {
   transform: translateY(-2px);

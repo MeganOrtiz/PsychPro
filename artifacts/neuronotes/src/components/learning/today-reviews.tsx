@@ -103,7 +103,7 @@ export default function TodayReviews({ topics }: TodayReviewsProps) {
   if (!ready) return null;
 
   return (
-    <StudySurface tone="light" innerClassName="p-5" testId="today-reviews">
+    <StudySurface tone="light" noGlow innerClassName="p-5" testId="today-reviews">
       <div className="flex items-center gap-2 mb-3">
         <CalendarDays className="w-4 h-4" style={{ color: P.tealDeep }} />
         <h2 className="font-semibold" style={{ color: P.mist }}>Today's Reviews</h2>

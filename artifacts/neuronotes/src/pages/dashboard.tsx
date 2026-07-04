@@ -239,7 +239,7 @@ export default function DashboardPage() {
 
   return (
     <div
-      className="min-h-full"
+      className="min-h-full dashboard-page"
       data-testid="dashboard-page"
     >
       <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 lg:pt-8 pb-4 md:pb-6 lg:pb-8">
@@ -253,7 +253,7 @@ export default function DashboardPage() {
               backdropFilter: "blur(18px) saturate(135%)",
               WebkitBackdropFilter: "blur(18px) saturate(135%)",
               boxShadow:
-                "inset 0 1px 0 rgba(255,255,255,0.13), inset 0 0 44px -22px rgba(118,228,247,0.50), 0 0 32px -10px rgba(118,228,247,0.40), 0 20px 46px -26px rgba(0,0,0,0.66)",
+                "inset 0 1px 0 rgba(255,255,255,0.13), 0 20px 46px -26px rgba(0,0,0,0.66)",
             }}
             data-testid="banner-over-limit"
           >
@@ -291,7 +291,7 @@ export default function DashboardPage() {
               backdropFilter: "blur(18px) saturate(135%)",
               WebkitBackdropFilter: "blur(18px) saturate(135%)",
               boxShadow:
-                "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 42px -22px rgba(118,228,247,0.45), 0 0 30px -10px rgba(118,228,247,0.34), 0 20px 46px -26px rgba(0,0,0,0.66)",
+                "inset 0 1px 0 rgba(255,255,255,0.12), 0 20px 46px -26px rgba(0,0,0,0.66)",
             }}
             data-testid="banner-approaching-limit"
           >
@@ -327,11 +327,11 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-6 items-stretch">
           <div className="min-w-0 space-y-6">
             {/* Begin/Continue Your Journey (full width, top). */}
-            <StudySurface tone="light" innerClassName="p-5">
+            <StudySurface tone="light" noGlow innerClassName="p-5">
               <div className="relative">
               <div className="flex items-center gap-2 mb-4">
                 <TrendingUp className="w-4 h-4" style={{ color: PALETTE.tealDeep }} />
-                <h2 className="font-semibold" style={{ color: PALETTE.mist, textShadow: "0 0 16px rgba(118,228,247,0.4)" }}>
+                <h2 className="font-semibold" style={{ color: PALETTE.mist }}>
                   {continueTopic ? "Continue Your Journey" : "Begin Your Journey"}
                 </h2>
               </div>
@@ -385,9 +385,9 @@ export default function DashboardPage() {
             </StudySurface>
 
             {/* Recommended for You — 2x2 grid of 4 topics */}
-            <StudySurface tone="light" innerClassName="p-5">
+            <StudySurface tone="light" noGlow innerClassName="p-5">
               <div className="mb-4">
-                <h2 className="font-semibold" style={{ color: PALETTE.mist, textShadow: "0 0 16px rgba(118,228,247,0.4)" }}>Recommended for You</h2>
+                <h2 className="font-semibold" style={{ color: PALETTE.mist }}>Recommended for You</h2>
                 <p className="text-xs mt-1" style={{ color: PALETTE.mistSoft }}>
                   Based on your goals and progress
                 </p>
@@ -454,11 +454,11 @@ export default function DashboardPage() {
               />
 
               {/* Leaderboard */}
-              <StudySurface tone="light" innerClassName="p-5">
+              <StudySurface tone="light" noGlow innerClassName="p-5">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <Trophy className="w-4 h-4" style={{ color: PALETTE.tealDeep }} />
-                    <h2 className="font-semibold" style={{ color: PALETTE.mist, textShadow: "0 0 16px rgba(118,228,247,0.4)" }}>Leaderboard</h2>
+                    <h2 className="font-semibold" style={{ color: PALETTE.mist }}>Leaderboard</h2>
                   </div>
                   <Button
                     size="sm"
@@ -554,10 +554,10 @@ export default function DashboardPage() {
         {/* Bottom metric row — full-width grid of four glass cards. */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mt-6">
           {/* Study Analytics — activity/score trend */}
-          <StudySurface tone="light" innerClassName="p-5">
+          <StudySurface tone="light" noGlow innerClassName="p-5">
             <div className="flex items-center gap-2 mb-3">
               <Activity className="w-4 h-4" style={{ color: PALETTE.tealDeep }} />
-              <h2 className="font-semibold" style={{ color: PALETTE.mist, textShadow: "0 0 16px rgba(118,228,247,0.4)" }}>Study Analytics</h2>
+              <h2 className="font-semibold" style={{ color: PALETTE.mist }}>Study Analytics</h2>
             </div>
             {isLoading ? (
               <Skeleton className="h-[140px] rounded-lg" />
@@ -604,10 +604,10 @@ export default function DashboardPage() {
           </StudySurface>
 
           {/* Recent Activity — most recently studied topics */}
-          <StudySurface tone="light" innerClassName="p-5">
+          <StudySurface tone="light" noGlow innerClassName="p-5">
             <div className="flex items-center gap-2 mb-3">
               <Clock className="w-4 h-4" style={{ color: PALETTE.tealDeep }} />
-              <h2 className="font-semibold" style={{ color: PALETTE.mist, textShadow: "0 0 16px rgba(118,228,247,0.4)" }}>Recent Activity</h2>
+              <h2 className="font-semibold" style={{ color: PALETTE.mist }}>Recent Activity</h2>
             </div>
             {isLoading ? (
               <div className="space-y-2">
@@ -645,10 +645,10 @@ export default function DashboardPage() {
           </StudySurface>
 
           {/* Achievements — milestone badges derived from existing stats */}
-          <StudySurface tone="light" innerClassName="p-5">
+          <StudySurface tone="light" noGlow innerClassName="p-5">
             <div className="flex items-center gap-2 mb-3">
               <Award className="w-4 h-4" style={{ color: PALETTE.tealDeep }} />
-              <h2 className="font-semibold" style={{ color: PALETTE.mist, textShadow: "0 0 16px rgba(118,228,247,0.4)" }}>Achievements</h2>
+              <h2 className="font-semibold" style={{ color: PALETTE.mist }}>Achievements</h2>
             </div>
             <div className="grid grid-cols-2 gap-3">
               {achievements.map((a) => {
@@ -724,7 +724,7 @@ export default function DashboardPage() {
 
 function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
   return (
-    <StudySurface tone="dark" fillHeight className="w-full" innerClassName="relative overflow-hidden p-7 text-white flex flex-col">
+    <StudySurface tone="dark" noGlow fillHeight className="w-full" innerClassName="relative overflow-hidden p-7 text-white flex flex-col">
       {/* Smoky brain backdrop bleeds through the entire card — same atmosphere
           as the page background so the spotlight reads as cut from the
           surrounding smoke continuum. */}
@@ -740,18 +740,6 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
         }}
       />
 
-      {/* Soft cyan nebula glows around the avatar */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-16 -right-12 w-56 h-56 rounded-full blur-3xl"
-        style={{ background: `radial-gradient(closest-side, ${PALETTE.surf}40, transparent)` }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -bottom-10 -left-10 w-48 h-48 rounded-full blur-3xl"
-        style={{ background: `radial-gradient(closest-side, ${PALETTE.teal}30, transparent)` }}
-      />
-
       <div className="relative flex flex-1 flex-col">
         {/* Spotlight header — a single star above the wordmark, matching the
             reference comp (no surrounding pill). */}
@@ -759,7 +747,7 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
           <Star
             className="w-6 h-6"
             strokeWidth={1.5}
-            style={{ color: PALETTE.surf, filter: `drop-shadow(0 0 8px ${PALETTE.surf}aa)` }}
+            style={{ color: PALETTE.surf }}
           />
           <span
             className="mt-2 text-lg font-semibold text-white tracking-wide"
@@ -784,39 +772,17 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
         <div className="flex flex-1 flex-col items-center justify-center">
           <div className="relative mb-5">
             <div
-              aria-hidden
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-              style={{
-                width: 260,
-                height: 260,
-                background: `radial-gradient(circle, ${PALETTE.surf}55 0%, ${PALETTE.surf}28 28%, ${PALETTE.teal}14 50%, transparent 72%)`,
-                filter: "blur(10px)",
-                zIndex: 0,
-              }}
-            />
-            <div
-              aria-hidden
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none rounded-full"
-              style={{
-                width: 170,
-                height: 170,
-                background: `radial-gradient(circle, ${PALETTE.surf}75 0%, ${PALETTE.surf}30 45%, transparent 75%)`,
-                filter: "blur(14px)",
-                zIndex: 0,
-              }}
-            />
-            <div
               className="relative w-32 h-32 rounded-full flex items-center justify-center text-center px-3"
               style={{
                 background: `radial-gradient(circle at 50% 35%, ${PALETTE.surf}33, ${PALETTE.teal}1f 60%, transparent 82%)`,
-                boxShadow: `0 0 0 3px ${PALETTE.surf}cc, 0 0 32px 6px ${PALETTE.surf}66, inset 0 0 0 1px rgba(255,255,255,0.18)`,
+                boxShadow: `0 0 0 3px ${PALETTE.surf}cc, inset 0 0 0 1px rgba(255,255,255,0.18)`,
                 zIndex: 1,
               }}
               data-testid="spotlight-avatar"
             >
               <span
                 className="text-lg font-semibold leading-tight tracking-wide text-white"
-                style={{ textShadow: `0 0 14px ${PALETTE.surf}aa, 0 2px 8px rgba(0,0,0,0.55)` }}
+                style={{ textShadow: `0 2px 8px rgba(0,0,0,0.55)` }}
               >
                 Coming
                 <br />
@@ -917,11 +883,11 @@ function CourseMasterySection({
   const masteredCount = queries.filter((q) => q.data?.mastered).length;
 
   return (
-    <StudySurface tone="light" innerClassName="p-5">
+    <StudySurface tone="light" noGlow innerClassName="p-5">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <GraduationCap className="w-4 h-4" style={{ color: PALETTE.tealDeep }} />
-          <h2 className="font-semibold" style={{ color: PALETTE.mist, textShadow: "0 0 16px rgba(118,228,247,0.4)" }}>
+          <h2 className="font-semibold" style={{ color: PALETTE.mist }}>
             Course Mastery
           </h2>
         </div>
@@ -1033,9 +999,9 @@ function StreakCard({
   const activeDays = weeklyFlames.filter((d) => d.lit).length;
 
   return (
-    <StudySurface tone="light" innerClassName="p-5">
+    <StudySurface tone="light" noGlow innerClassName="p-5">
       <div className="flex items-center gap-2 mb-3">
-        <h2 className="font-semibold" style={{ color: PALETTE.mist, textShadow: "0 0 16px rgba(118,228,247,0.4)" }}>Your Streak</h2>
+        <h2 className="font-semibold" style={{ color: PALETTE.mist }}>Your Streak</h2>
         <span aria-hidden>🔥</span>
       </div>
       <div className="flex items-end justify-between gap-3 mb-3">
@@ -1045,7 +1011,6 @@ function StreakCard({
               className="text-5xl font-bold leading-none tabular-nums"
               style={{
                 color: PALETTE.mist,
-                textShadow: `0 0 24px ${PALETTE.surf}55`,
               }}
               data-testid="text-streak-count"
             >
@@ -1070,13 +1035,6 @@ function StreakCard({
                   <stop offset="0%" stopColor={PALETTE.teal} stopOpacity={0.6} />
                   <stop offset="100%" stopColor={PALETTE.surf} stopOpacity={1} />
                 </linearGradient>
-                <filter id="streakSparkGlow" x="-20%" y="-20%" width="140%" height="140%">
-                  <feGaussianBlur stdDeviation="2.4" result="b" />
-                  <feMerge>
-                    <feMergeNode in="b" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
               </defs>
               <Line
                 type="monotone"
@@ -1086,7 +1044,6 @@ function StreakCard({
                 dot={false}
                 isAnimationActive
                 animationDuration={1000}
-                filter="url(#streakSparkGlow)"
               />
             </LineChart>
           </ResponsiveContainer>
