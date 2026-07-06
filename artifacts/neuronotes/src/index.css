@@ -301,8 +301,8 @@
 .btn-glass-strong {
   position: relative;
   border-radius: 14px;
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(170%);
+  -webkit-backdrop-filter: blur(16px) saturate(170%);
   transition: background-color 160ms ease, background-image 160ms ease,
     border-color 160ms ease, box-shadow 200ms ease, transform 120ms ease;
 }
@@ -310,7 +310,7 @@
    .nav-glass-idle recipe: flat dark teal fill, faint cerulean hairline, soft
    cyan glow that intensifies on hover/active. */
 .btn-glass {
-  background: hsl(var(--surf-hue) 78% 30% / 0.30);
+  background: hsl(var(--surf-hue) 88% 30% / 0.30);
   border: 1.5px solid rgba(118, 228, 247, 0.45);
   color: #eafaff;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
@@ -319,14 +319,14 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 .btn-glass:hover {
-  background: hsl(var(--surf-hue) 76% 38% / 0.42);
+  background: hsl(var(--surf-hue) 86% 38% / 0.42);
   border-color: rgba(118, 228, 247, 0.70);
   box-shadow:
     inset 0 0 20px -8px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 .btn-glass:active {
-  background: hsl(var(--surf-hue) 74% 44% / 0.52);
+  background: hsl(var(--surf-hue) 84% 44% / 0.52);
   border-color: rgba(118, 228, 247, 0.85);
   box-shadow:
     inset 0 0 22px -8px rgba(0, 0, 0, 0.36),
@@ -373,8 +373,8 @@
   border-radius: 14px;
   background: transparent;
   border: 1.5px solid transparent;
-  backdrop-filter: blur(10px) saturate(120%);
-  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  backdrop-filter: blur(10px) saturate(150%);
+  -webkit-backdrop-filter: blur(10px) saturate(150%);
   transition: background-color 160ms ease, border-color 160ms ease,
     box-shadow 200ms ease, transform 120ms ease;
 }
@@ -408,8 +408,8 @@
     rgba(185, 28, 28, 0.95)
   );
   border: 1px solid rgba(248, 113, 113, 0.55);
-  backdrop-filter: blur(12px) saturate(130%);
-  -webkit-backdrop-filter: blur(12px) saturate(130%);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
   box-shadow:
     0 0 16px rgba(248, 113, 113, 0.30),
     inset 0 1px 0 rgba(255, 255, 255, 0.12);
@@ -556,8 +556,8 @@ body {
       hsl(var(--surf-hue) 100% 42% / 0.46),
       hsl(var(--surf-hue) 100% 30% / 0.50)),
     radial-gradient(ellipse 130% 100% at 50% 34%,
-      hsl(var(--surf-hue) 90% 7% / 0.10) 55%,
-      hsl(var(--surf-hue) 95% 5% / 0.50) 100%),
+      hsl(var(--surf-hue) 100% 7% / 0.10) 55%,
+      hsl(var(--surf-hue) 100% 5% / 0.50) 100%),
     url("./assets/bg/app-smoke.jpg");
   background-size: cover, cover, cover;
   background-position: center top, center top, center top;
@@ -605,8 +605,8 @@ body {
       rgba(118, 228, 247, 0.08) 0%,
       rgba(118, 228, 247, 0.00) 70%),
     radial-gradient(44% 42% at 78% 66%,
-      hsl(var(--surf-hue) 92% 32% / 0.16) 0%,
-      hsl(var(--surf-hue) 92% 32% / 0.00) 72%),
+      hsl(var(--surf-hue) 100% 32% / 0.16) 0%,
+      hsl(var(--surf-hue) 100% 32% / 0.00) 72%),
     radial-gradient(52% 48% at 50% 46%,
       rgba(118, 228, 247, 0.08) 0%,
       rgba(118, 228, 247, 0.00) 66%);
@@ -627,8 +627,8 @@ body {
       hsl(var(--surf-hue) 100% 42% / 0.46),
       hsl(var(--surf-hue) 100% 30% / 0.50)),
     radial-gradient(ellipse 130% 100% at 50% 34%,
-      hsl(var(--surf-hue) 90% 7% / 0.10) 55%,
-      hsl(var(--surf-hue) 95% 5% / 0.50) 100%),
+      hsl(var(--surf-hue) 100% 7% / 0.10) 55%,
+      hsl(var(--surf-hue) 100% 5% / 0.50) 100%),
     url("./assets/bg/brain-clouds.jpg");
   /* Calm-it-down pass: the glowing brain backdrop was the loudest thing on the
      page, so pull brightness/saturation down and lay a soft deep-cerulean veil
@@ -643,13 +643,13 @@ body {
 .lesson-header-box {
   background: linear-gradient(
     145deg,
-    hsl(var(--surf-hue) 88% 21% / 0.66),
-    hsl(var(--surf-hue) 90% 15% / 0.78)
+    hsl(var(--surf-hue) 98% 21% / 0.66),
+    hsl(var(--surf-hue) 100% 15% / 0.78)
   );
   border: 1px solid rgba(196, 232, 242, 0.20);
   border-radius: 12px;
-  backdrop-filter: blur(20px) saturate(135%);
-  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  backdrop-filter: blur(20px) saturate(165%);
+  -webkit-backdrop-filter: blur(20px) saturate(165%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
     inset 0 0 32px -20px rgba(118, 228, 247, 0.42),
@@ -669,12 +669,12 @@ body {
       rgba(118, 228, 247, 0.00) 58%),
     linear-gradient(
       145deg,
-      hsl(var(--surf-hue) 88% 19% / 0.74),
-      hsl(var(--surf-hue) 88% 14% / 0.85)
+      hsl(var(--surf-hue) 98% 19% / 0.74),
+      hsl(var(--surf-hue) 98% 14% / 0.85)
     );
   border-color: rgba(196, 232, 242, 0.22);
-  backdrop-filter: blur(20px) saturate(135%);
-  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  backdrop-filter: blur(20px) saturate(165%);
+  -webkit-backdrop-filter: blur(20px) saturate(165%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
     inset 0 0 40px -22px rgba(118, 228, 247, 0.42),
@@ -690,8 +690,8 @@ body {
       rgba(118, 228, 247, 0.00) 58%),
     linear-gradient(
       145deg,
-      hsl(var(--surf-hue) 86% 26% / 0.70),
-      hsl(var(--surf-hue) 89% 19% / 0.82)
+      hsl(var(--surf-hue) 96% 26% / 0.70),
+      hsl(var(--surf-hue) 99% 19% / 0.82)
     );
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.14),
@@ -715,8 +715,8 @@ body {
 .course-mastery-tile--locked {
   background: linear-gradient(
     145deg,
-    hsl(var(--surf-hue) 80% 13% / 0.35),
-    hsl(var(--surf-hue) 84% 10% / 0.45)
+    hsl(var(--surf-hue) 90% 13% / 0.35),
+    hsl(var(--surf-hue) 94% 10% / 0.45)
   );
   border-color: rgba(196, 232, 242, 0.1);
   opacity: 0.5;
@@ -731,8 +731,8 @@ body {
 .course-mastery-tile--mastered {
   background: linear-gradient(
     145deg,
-    hsl(var(--surf-hue) 80% 48% / 0.32),
-    hsl(var(--surf-hue) 86% 22% / 0.52)
+    hsl(var(--surf-hue) 90% 48% / 0.32),
+    hsl(var(--surf-hue) 96% 22% / 0.52)
   );
   border-color: rgba(118, 228, 247, 0.55);
   box-shadow:
@@ -789,11 +789,11 @@ body {
   border: 1px solid rgba(118, 228, 247, 0.55);
   background: linear-gradient(
     180deg,
-    hsl(var(--surf-hue) 82% 38% / 0.40),
-    hsl(var(--surf-hue) 88% 22% / 0.50)
+    hsl(var(--surf-hue) 92% 38% / 0.40),
+    hsl(var(--surf-hue) 98% 22% / 0.50)
   );
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(170%);
+  -webkit-backdrop-filter: blur(16px) saturate(170%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
     0 0 0 1px rgba(118, 228, 247, 0.28);
@@ -806,8 +806,8 @@ body {
   border-color: rgba(118, 228, 247, 0.95);
   background: linear-gradient(
     180deg,
-    hsl(var(--surf-hue) 80% 44% / 0.52),
-    hsl(var(--surf-hue) 86% 26% / 0.60)
+    hsl(var(--surf-hue) 90% 44% / 0.52),
+    hsl(var(--surf-hue) 96% 26% / 0.60)
   );
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.22),
@@ -819,8 +819,8 @@ body {
   border-color: rgba(118, 228, 247, 1);
   background: linear-gradient(
     180deg,
-    hsl(var(--surf-hue) 78% 48% / 0.62),
-    hsl(var(--surf-hue) 86% 30% / 0.68)
+    hsl(var(--surf-hue) 88% 48% / 0.62),
+    hsl(var(--surf-hue) 96% 30% / 0.68)
   );
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.28),
@@ -863,13 +863,13 @@ body {
       rgba(118, 228, 247, 0.00) 58%),
     linear-gradient(
       145deg,
-      hsl(var(--surf-hue) 88% 19% / 0.74),
-      hsl(var(--surf-hue) 88% 14% / 0.85)
+      hsl(var(--surf-hue) 98% 19% / 0.74),
+      hsl(var(--surf-hue) 98% 14% / 0.85)
     );
   border: 1px solid rgba(196, 232, 242, 0.22);
   border-radius: 20px;
-  backdrop-filter: blur(20px) saturate(135%);
-  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  backdrop-filter: blur(20px) saturate(165%);
+  -webkit-backdrop-filter: blur(20px) saturate(165%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
     inset 0 0 40px -22px rgba(118, 228, 247, 0.42),
@@ -898,16 +898,16 @@ body {
   z-index: -1;
   pointer-events: none;
   background: radial-gradient(60% 64% at 50% 50%,
-    hsl(var(--surf-hue) 55% 5% / 0.66) 0%,
-    hsl(var(--surf-hue) 55% 5% / 0.42) 44%,
-    hsl(var(--surf-hue) 55% 5% / 0.00) 76%);
+    hsl(var(--surf-hue) 65% 5% / 0.66) 0%,
+    hsl(var(--surf-hue) 65% 5% / 0.42) 44%,
+    hsl(var(--surf-hue) 65% 5% / 0.00) 76%);
   filter: blur(12px);
 }
 .text-scrim-start::before {
   background: radial-gradient(56% 64% at 20% 50%,
-    hsl(var(--surf-hue) 55% 5% / 0.66) 0%,
-    hsl(var(--surf-hue) 55% 5% / 0.40) 42%,
-    hsl(var(--surf-hue) 55% 5% / 0.00) 72%);
+    hsl(var(--surf-hue) 65% 5% / 0.66) 0%,
+    hsl(var(--surf-hue) 65% 5% / 0.40) 42%,
+    hsl(var(--surf-hue) 65% 5% / 0.00) 72%);
 }
 
 /* Sidebar nav glass — frosted opaque dark-glass pills (2026-06 spec).
@@ -923,8 +923,8 @@ body {
   /* See-through glassmorphic panes: a low-opacity cerulean tint over a light
      blur, so the smoke backdrop reads clearly through the glass (clear & glassy
      rather than thick frost). Border glow ramps up on hover / press / active. */
-  backdrop-filter: blur(7px) saturate(135%);
-  -webkit-backdrop-filter: blur(7px) saturate(135%);
+  backdrop-filter: blur(7px) saturate(165%);
+  -webkit-backdrop-filter: blur(7px) saturate(165%);
   transition: background 200ms ease, border-color 200ms ease,
     box-shadow 240ms ease, transform 140ms ease;
 }
@@ -932,8 +932,8 @@ body {
   background:
     linear-gradient(
       150deg,
-      hsl(var(--surf-hue) 80% 38% / 0.22),
-      hsl(var(--surf-hue) 84% 26% / 0.30)
+      hsl(var(--surf-hue) 90% 38% / 0.22),
+      hsl(var(--surf-hue) 94% 26% / 0.30)
     );
   border: 1px solid rgba(118, 228, 247, 0.3);
   box-shadow:
@@ -944,8 +944,8 @@ body {
   background:
     linear-gradient(
       150deg,
-      hsl(var(--surf-hue) 78% 46% / 0.34),
-      hsl(var(--surf-hue) 82% 34% / 0.42)
+      hsl(var(--surf-hue) 88% 46% / 0.34),
+      hsl(var(--surf-hue) 92% 34% / 0.42)
     );
   border-color: rgba(118, 228, 247, 0.7);
   box-shadow:
@@ -958,8 +958,8 @@ body {
   background:
     linear-gradient(
       150deg,
-      hsl(var(--surf-hue) 76% 50% / 0.46),
-      hsl(var(--surf-hue) 80% 38% / 0.54)
+      hsl(var(--surf-hue) 86% 50% / 0.46),
+      hsl(var(--surf-hue) 90% 38% / 0.54)
     );
   border-color: rgba(118, 228, 247, 0.82);
   box-shadow:
@@ -972,8 +972,8 @@ body {
   background:
     linear-gradient(
       150deg,
-      hsl(var(--surf-hue) 76% 52% / 0.42),
-      hsl(var(--surf-hue) 80% 40% / 0.5)
+      hsl(var(--surf-hue) 86% 52% / 0.42),
+      hsl(var(--surf-hue) 90% 40% / 0.5)
     );
   border: 1px solid rgba(118, 228, 247, 0.72);
   box-shadow:
@@ -1014,8 +1014,8 @@ body {
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
   border: 1.5px solid rgba(118, 228, 247, 0.85);
   border-radius: 14px;
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(170%);
+  -webkit-backdrop-filter: blur(16px) saturate(170%);
   transition: all 0.2s ease;
   box-shadow:
     inset 0 0 0 1px rgba(118, 228, 247, 0.30),
@@ -1043,13 +1043,13 @@ body {
 /* Secondary buttons — subtle luminous dark glass, scoped to actual buttons. */
 .study-page-bg button.bg-secondary,
 .study-page-aurora button.bg-secondary {
-  background: hsl(var(--surf-hue) 78% 30% / 0.30);
+  background: hsl(var(--surf-hue) 88% 30% / 0.30);
   color: #eafaff;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
   border: 1.5px solid rgba(118, 228, 247, 0.45);
   border-radius: 14px;
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(170%);
+  -webkit-backdrop-filter: blur(16px) saturate(170%);
   transition: all 0.2s ease;
   box-shadow:
     inset 0 0 18px -8px rgba(0, 0, 0, 0.45),
@@ -1058,7 +1058,7 @@ body {
 
 .study-page-bg button.bg-secondary:hover,
 .study-page-aurora button.bg-secondary:hover {
-  background: hsl(var(--surf-hue) 76% 38% / 0.42);
+  background: hsl(var(--surf-hue) 86% 38% / 0.42);
   border-color: rgba(118, 228, 247, 0.70);
   box-shadow:
     inset 0 0 20px -8px rgba(0, 0, 0, 0.4),
@@ -1067,7 +1067,7 @@ body {
 
 .study-page-bg button.bg-secondary:active,
 .study-page-aurora button.bg-secondary:active {
-  background: hsl(var(--surf-hue) 74% 44% / 0.52);
+  background: hsl(var(--surf-hue) 84% 44% / 0.52);
   border-color: rgba(118, 228, 247, 0.85);
   box-shadow:
     inset 0 0 22px -8px rgba(0, 0, 0, 0.36),
@@ -1079,14 +1079,14 @@ body {
    without a bg-* class. */
 .study-page-bg button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive),
 .study-page-aurora button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive) {
-  background: hsl(var(--surf-hue) 78% 30% / 0.26);
+  background: hsl(var(--surf-hue) 88% 30% / 0.26);
   border-width: 1.5px;
   border-color: rgba(118, 228, 247, 0.45) !important;
   color: #eafaff;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
   border-radius: 14px;
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(170%);
+  -webkit-backdrop-filter: blur(16px) saturate(170%);
   transition: all 0.2s ease;
   box-shadow:
     inset 0 0 18px -8px rgba(0, 0, 0, 0.42),
@@ -1095,7 +1095,7 @@ body {
 
 .study-page-bg button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive):hover,
 .study-page-aurora button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive):hover {
-  background: hsl(var(--surf-hue) 76% 38% / 0.40);
+  background: hsl(var(--surf-hue) 86% 38% / 0.40);
   border-color: rgba(118, 228, 247, 0.70) !important;
   box-shadow:
     inset 0 0 20px -8px rgba(0, 0, 0, 0.4),
@@ -1104,7 +1104,7 @@ body {
 
 .study-page-bg button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive):active,
 .study-page-aurora button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive):active {
-  background: hsl(var(--surf-hue) 74% 44% / 0.50);
+  background: hsl(var(--surf-hue) 84% 44% / 0.50);
   border-color: rgba(118, 228, 247, 0.85) !important;
   box-shadow:
     inset 0 0 22px -8px rgba(0, 0, 0, 0.36),
@@ -1139,7 +1139,7 @@ body {
   textarea,
   select
 ) {
-  background: hsl(var(--surf-hue) 88% 19% / 0.72);
+  background: hsl(var(--surf-hue) 98% 19% / 0.72);
   border: 1px solid rgba(118, 228, 247, 0.14);
   color: #E4F4F6;
   border-radius: 14px;

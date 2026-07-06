@@ -88,10 +88,10 @@ export default function ReflectionsPage() {
             className="rounded-xl border p-8"
             style={{
               background:
-                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.79), hsl(var(--surf-hue) 88% 14% / 0.90))",
+                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 98% 19% / 0.79), hsl(var(--surf-hue) 98% 14% / 0.90))",
               borderColor: "rgba(118,228,247,0.24)",
-              backdropFilter: "blur(18px) saturate(135%)",
-              WebkitBackdropFilter: "blur(18px) saturate(135%)",
+              backdropFilter: "blur(18px) saturate(165%)",
+              WebkitBackdropFilter: "blur(18px) saturate(165%)",
               boxShadow:
                 "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 42px -22px rgba(118,228,247,0.45), 0 0 30px -10px rgba(118,228,247,0.34), 0 20px 46px -26px rgba(0,0,0,0.66)",
             }}
@@ -146,10 +146,10 @@ export default function ReflectionsPage() {
                       className="rounded-xl border p-4"
                       style={{
                         background:
-                          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.79), hsl(var(--surf-hue) 88% 14% / 0.90))",
+                          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 98% 19% / 0.79), hsl(var(--surf-hue) 98% 14% / 0.90))",
                         borderColor: "rgba(118,228,247,0.24)",
-                        backdropFilter: "blur(18px) saturate(135%)",
-                        WebkitBackdropFilter: "blur(18px) saturate(135%)",
+                        backdropFilter: "blur(18px) saturate(165%)",
+                        WebkitBackdropFilter: "blur(18px) saturate(165%)",
                         boxShadow:
                           "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 42px -22px rgba(118,228,247,0.45), 0 0 30px -10px rgba(118,228,247,0.34), 0 20px 46px -26px rgba(0,0,0,0.66)",
                       }}

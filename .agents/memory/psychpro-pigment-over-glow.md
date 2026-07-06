@@ -65,5 +65,22 @@ cards keep it, so hierarchy stays intact and the owner's card family is preserve
 - Verify the in-app backdrop on the PUBLIC `/sign-in` page (shares the app-smoke `::before`) — do
   not rely on the landing screenshot, whose separate override masks in-app backdrop edits.
 
+## Raising saturation SITE-WIDE = surface tokens, not the backdrop filter
+When the owner asks to "increase saturation across the ENTIRE site", the backdrop
+`filter: saturate()` on the muted dark JPGs is NOT the lever — it barely moves an
+already-desaturated image and reads as "you just turned down brightness" (owner
+rejected this twice). The direct, visible lever is the **S component of every
+`hsl(var(--surf-hue) S% L% / A)` surface token**: bump S upward (e.g. +10, cap 100)
+across all css + tsx. Because the hue stays tokenized, both guardrails
+(check-surface-hue, check-design-drift) are blind to it — no literal hue added.
+Secondary lever: raise all glass `backdrop-filter: ... saturate(N%)` (saturates the
+wallpaper showing through translucent glass). To genuinely enrich a backdrop image
+itself, inject a saturated cerulean tint LAYER via `background-blend-mode: overlay`
+(hue on var(--surf-hue)), not just a bigger filter saturate().
+**Why:** filter saturate on a flat/muted source ≈ no-op; deepening the token S and the
+blend tint pushes real pigment. **How to apply:** sweep with a perl `s///ge` that reads
+the ORIGINAL matched S digit (no cascade), preserve relative L/alpha so hierarchy stays
+intact; if drift locks the `.bg-card` saturate value, update the lock in the SAME commit.
+
 ## Landing brain-clouds backdrop is the loudest glow
 The `.landing-root.study-page-bg::before` brain-clouds.jpg hero backdrop (glow baked into the JPG) is the single loudest glow on the whole site — "first thing i see is glow" reports point here, NOT at CSS coronas. Can't strip glow from the image, so calm it in CSS: pull `filter: brightness` down hard (~0.66) + modest saturate/contrast, and lay a soft deep-cerulean veil over the WHOLE radial (incl. center at 50% 34% where the brain sits) instead of only darkening the edges. Deepen, never brighten.

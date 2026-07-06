@@ -2,9 +2,9 @@ import { ChevronRight } from "lucide-react";
 
 // Two locked tones the owner likes: lighter blue (Courses) + darker (Dashboard).
 const lightBase =
-  "linear-gradient(160deg, hsl(var(--surf-hue) 52% 28% / 0.60), hsl(var(--surf-hue) 54% 18% / 0.72))";
+  "linear-gradient(160deg, hsl(var(--surf-hue) 62% 28% / 0.60), hsl(var(--surf-hue) 64% 18% / 0.72))";
 const darkBase =
-  "linear-gradient(160deg, hsl(var(--surf-hue) 50% 15% / 0.74), hsl(var(--surf-hue) 55% 8% / 0.84))";
+  "linear-gradient(160deg, hsl(var(--surf-hue) 60% 15% / 0.74), hsl(var(--surf-hue) 65% 8% / 0.84))";
 
 // B + D blend: specular bright rim (B) + inner cyan bloom & deep base (D).
 const bloomGloss =
@@ -15,7 +15,7 @@ const streak =
 const blendBorder = "rgba(118,228,247,0.32)";
 const blendShadow =
   "inset 0 1px 0 rgba(255,255,255,0.22), 0 0 24px -8px rgba(118,228,247,0.26), inset 0 -22px 44px -30px rgba(0,0,0,0.55), 0 20px 46px -26px rgba(0,0,0,0.70)";
-const blendBlur = "blur(18px) saturate(122%)";
+const blendBlur = "blur(18px) saturate(152%)";
 
 function GlassCard({ overlay, base }: { overlay: string; base: string }) {
   return (

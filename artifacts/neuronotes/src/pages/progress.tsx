@@ -230,7 +230,7 @@ export default function ProgressPage() {
           <div style={{ height: 140 }}>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={trendData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--surf-hue) 69% 58% / 0.15)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--surf-hue) 79% 58% / 0.15)" />
                 <XAxis dataKey="day" tickLine={false} axisLine={false} tick={{ fontSize: 11 }} />
                 <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 11 }} domain={[0, 100]} />
                 <Tooltip />
@@ -256,10 +256,10 @@ export default function ProgressPage() {
               className="rounded-xl p-4 border"
               style={{
                 background:
-                  "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.81), hsl(var(--surf-hue) 88% 14% / 0.90))",
+                  "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 98% 19% / 0.81), hsl(var(--surf-hue) 98% 14% / 0.90))",
                 borderColor: "rgba(118,228,247,0.26)",
-                backdropFilter: "blur(18px) saturate(135%)",
-                WebkitBackdropFilter: "blur(18px) saturate(135%)",
+                backdropFilter: "blur(18px) saturate(165%)",
+                WebkitBackdropFilter: "blur(18px) saturate(165%)",
                 boxShadow:
                   "inset 0 1px 0 rgba(255,255,255,0.13), inset 0 0 44px -22px rgba(118,228,247,0.48), 0 0 32px -10px rgba(118,228,247,0.38), 0 20px 46px -26px rgba(0,0,0,0.66)",
               }}
@@ -287,10 +287,10 @@ export default function ProgressPage() {
               className="rounded-xl p-4 border"
               style={{
                 background:
-                  "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.81), hsl(var(--surf-hue) 88% 14% / 0.90))",
+                  "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 98% 19% / 0.81), hsl(var(--surf-hue) 98% 14% / 0.90))",
                 borderColor: "rgba(118,228,247,0.26)",
-                backdropFilter: "blur(18px) saturate(135%)",
-                WebkitBackdropFilter: "blur(18px) saturate(135%)",
+                backdropFilter: "blur(18px) saturate(165%)",
+                WebkitBackdropFilter: "blur(18px) saturate(165%)",
                 boxShadow:
                   "inset 0 1px 0 rgba(255,255,255,0.13), inset 0 0 44px -22px rgba(118,228,247,0.48), 0 0 32px -10px rgba(118,228,247,0.38), 0 20px 46px -26px rgba(0,0,0,0.66)",
               }}
@@ -406,10 +406,10 @@ function ScoreBadge({ score }: { score: number }) {
   // Tiers match the icons / strong-vs-weak split on the rest of the page.
   const style: { background: string; color: string } =
     score >= STRONG_SCORE
-      ? { background: "hsl(var(--surf-hue) 81% 34% / 0.15)", color: P.tealDeep }
+      ? { background: "hsl(var(--surf-hue) 91% 34% / 0.15)", color: P.tealDeep }
       : score >= WEAK_SCORE
-      ? { background: "hsl(var(--surf-hue) 78% 48% / 0.15)", color: P.teal }
-      : { background: "hsl(var(--surf-hue) 69% 58% / 0.18)", color: P.tealDeep };
+      ? { background: "hsl(var(--surf-hue) 88% 48% / 0.15)", color: P.teal }
+      : { background: "hsl(var(--surf-hue) 79% 58% / 0.18)", color: P.tealDeep };
   return (
     <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={style}>
       {score}%
