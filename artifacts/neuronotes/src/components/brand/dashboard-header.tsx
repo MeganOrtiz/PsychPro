@@ -44,7 +44,7 @@ export function DashboardHeader({ greeting: _greeting }: DashboardHeaderProps) {
             fontSize: "clamp(28px, 3.8vw, 38px)",
             letterSpacing: "0",
             color: P.cloud,
-            textShadow: `0 0 18px ${P.ink}, 0 0 28px ${P.surf}42`,
+            textShadow: `0 0 18px ${P.ink}`,
           }}
         >
           PsychPro

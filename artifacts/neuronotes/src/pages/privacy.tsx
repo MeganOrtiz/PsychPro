@@ -41,7 +41,7 @@ export default function PrivacyPage() {
           >
             <Brain
               className="w-6 h-6"
-              style={{ color: P.surf, filter: `drop-shadow(0 0 8px ${P.surf}aa)` }}
+              style={{ color: P.surf }}
             />
             <span
               className="text-base"

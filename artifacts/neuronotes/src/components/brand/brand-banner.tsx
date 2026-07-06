@@ -44,7 +44,6 @@ export function BrandBanner({
             className={isLg ? "w-7 h-7" : "w-5 h-5"}
             style={{
               color: P.surf,
-              filter: `drop-shadow(0 0 6px ${P.surf}66)`,
             }}
           />
         )}
@@ -61,7 +60,6 @@ export function BrandBanner({
             // sits optically centered next to the icon instead of drifting left.
             textIndent: "0.42em",
             color: P.cloud,
-            textShadow: `0 0 20px ${P.surf}3d`,
           }}
           data-testid="brand-banner-wordmark"
         >
@@ -86,7 +84,7 @@ export function BrandBanner({
               aria-hidden
               className="block h-px w-9 mb-3"
               style={{
-                background: `linear-gradient(90deg, transparent, ${P.surf}59, transparent)`,
+                background: `linear-gradient(90deg, transparent, ${P.surf}24, transparent)`,
               }}
             />
           )}

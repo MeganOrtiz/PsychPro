@@ -36,6 +36,26 @@ the diagnosis directly.
   and var(--surf-hue) token tuples add no literal hue, so guardrails are unaffected.
 - Further glow/blur reduction on cards/buttons/panels is the remaining lever if the deepened
   backdrop + tokens still read foggy.
+
+## Calm-it-down de-glow rule (site-wide)
+When the owner asks to "calm it down" / strip cyan glow while KEEPING the glass cards + smoke,
+the durable STRIP vs KEEP boundary is:
+- **STRIP** the outer cyan corona / drop-shadow / cyan text-shadow from: plain + heading TEXT,
+  BUTTONS and TABS (all states + their bare inline `svg` icons), sidebar/site NAV link coronas,
+  progress rings/dots/bars, the wordmark underline, and standalone glowing divider lines.
+- **KEEP**: glass CARD/tile/panel/row recipes and their hover glows; icon BADGES (an `svg` inside
+  a `radial-gradient` container — these are card/section decoration); brain-lab/brain-quiz image
+  filters + hotspot markers (visualization imagery, not chrome); landing hero CTAs (separate bright
+  family). Card-grid decorative symbol auras (e.g. topics.tsx 39-symbol grid) are card decoration → keep.
+- When stripping a multi-line `box-shadow`, the ring line that becomes the new terminator must end
+  in `;` not `,` — the two cyan corona lines are the LAST entries, so replace the
+  `0 0 0 1px …,\n  <corona>,\n  <corona>;` tail with `0 0 0 1px …;` or the whole declaration is
+  dropped as malformed.
+- eppp-suite.tsx carries its OWN full styled button/tab/nav system (.eps-subtab, .eps-ghost-btn,
+  .eps-save-btn + svg) mirroring index.css's launch/glass buttons — de-glow it in lockstep or that
+  major section stays glowing while the rest is calm.
+**Why:** aligns with pigment-over-glow; owner picked this scope ("option 1"). Chrome loses glow,
+cards keep it, so hierarchy stays intact and the owner's card family is preserved.
 - VALUES MUST BE BOLD to be visible: the landing's original brightness(0.9) (-10%) was invisible
   on the in-app app-smoke backdrop and the user read it as "you did nothing." app-smoke.jpg is
   intrinsically brighter than the landing brain image, so the in-app `::before` filter needs a

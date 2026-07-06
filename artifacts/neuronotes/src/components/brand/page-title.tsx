@@ -33,7 +33,6 @@ export function PageTitle({ title, subtitle, icon: Icon, className }: PageTitleP
           className="w-6 h-6 mb-2"
           style={{
             color: P.surf,
-            filter: `drop-shadow(0 0 8px ${P.surf}aa)`,
           }}
         />
       ) : null}
@@ -44,7 +43,6 @@ export function PageTitle({ title, subtitle, icon: Icon, className }: PageTitleP
           fontSize: "clamp(22px, 3.2vw, 36px)",
           letterSpacing: "0.32em",
           color: P.cloud,
-          textShadow: `0 0 24px ${P.surf}52`,
         }}
         data-testid="page-title-text"
       >

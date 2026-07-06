@@ -75,7 +75,7 @@ export function DashboardMasthead({
             aria-hidden
             className="mb-2.5 block h-px w-9"
             style={{
-              background: `linear-gradient(90deg, transparent, ${P.surf}59, transparent)`,
+              background: `linear-gradient(90deg, transparent, ${P.surf}24, transparent)`,
             }}
           />
           <p

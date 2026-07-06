@@ -166,7 +166,6 @@ export default function SubscriptionPage() {
           background: linear-gradient(180deg, ${P.mist}, ${P.surf});
           -webkit-background-clip: text; background-clip: text;
           -webkit-text-fill-color: transparent; color: transparent;
-          filter: drop-shadow(0 0 14px ${P.surf}55);
           letter-spacing: -0.01em;
         }
       `}</style>
