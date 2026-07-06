@@ -189,10 +189,10 @@ function StructureSearch({
         className="w-full max-w-xl rounded-2xl border overflow-hidden"
         style={{
           background:
-            "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 98% 19% / 0.74), hsl(var(--surf-hue) 98% 14% / 0.85))",
+            "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))",
           borderColor: "rgba(196,232,242,0.22)",
-          backdropFilter: "blur(20px) saturate(165%)",
-          WebkitBackdropFilter: "blur(20px) saturate(165%)",
+          backdropFilter: "blur(20px) saturate(135%)",
+          WebkitBackdropFilter: "blur(20px) saturate(135%)",
           boxShadow:
             "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 40px -22px rgba(118,228,247,0.42), 0 0 28px -6px rgba(118,228,247,0.30), 0 24px 60px -42px rgba(0,0,0,0.72)",
         }}
@@ -473,10 +473,10 @@ function StructureDetail({
       className="rounded-2xl border overflow-hidden flex flex-col h-full min-h-0 max-h-full"
       style={{
         background:
-          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 98% 19% / 0.74), hsl(var(--surf-hue) 98% 14% / 0.85))",
+          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))",
         borderColor: "rgba(196,232,242,0.22)",
-        backdropFilter: "blur(20px) saturate(165%)",
-        WebkitBackdropFilter: "blur(20px) saturate(165%)",
+        backdropFilter: "blur(20px) saturate(135%)",
+        WebkitBackdropFilter: "blur(20px) saturate(135%)",
         boxShadow:
           "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 40px -22px rgba(118,228,247,0.42), 0 0 28px -6px rgba(118,228,247,0.30), 0 24px 60px -42px rgba(0,0,0,0.72)",
       }}
@@ -883,10 +883,10 @@ function EmptyDetail() {
       className="rounded-2xl border p-6 h-full flex flex-col items-center justify-center text-center"
       style={{
         background:
-          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 98% 19% / 0.74), hsl(var(--surf-hue) 98% 14% / 0.85))",
+          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))",
         borderColor: "rgba(196,232,242,0.22)",
-        backdropFilter: "blur(20px) saturate(165%)",
-        WebkitBackdropFilter: "blur(20px) saturate(165%)",
+        backdropFilter: "blur(20px) saturate(135%)",
+        WebkitBackdropFilter: "blur(20px) saturate(135%)",
         boxShadow:
           "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 40px -22px rgba(118,228,247,0.42), 0 0 28px -6px rgba(118,228,247,0.30), 0 24px 60px -42px rgba(0,0,0,0.72)",
       }}
@@ -947,10 +947,10 @@ function NumberedKey({
       className="rounded-2xl border h-full flex flex-col overflow-hidden"
       style={{
         background:
-          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 98% 19% / 0.74), hsl(var(--surf-hue) 98% 14% / 0.85))",
+          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))",
         borderColor: "rgba(196,232,242,0.22)",
-        backdropFilter: "blur(20px) saturate(165%)",
-        WebkitBackdropFilter: "blur(20px) saturate(165%)",
+        backdropFilter: "blur(20px) saturate(135%)",
+        WebkitBackdropFilter: "blur(20px) saturate(135%)",
       }}
       data-testid="brain-key"
     >
@@ -1883,10 +1883,10 @@ export default function BrainLabPage() {
             className="relative rounded-2xl border overflow-hidden flex-1 min-h-0 h-full"
             style={{
               background:
-                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 98% 19% / 0.74), hsl(var(--surf-hue) 98% 14% / 0.85))",
+                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))",
               borderColor: "rgba(196,232,242,0.22)",
-              backdropFilter: "blur(20px) saturate(165%)",
-              WebkitBackdropFilter: "blur(20px) saturate(165%)",
+              backdropFilter: "blur(20px) saturate(135%)",
+              WebkitBackdropFilter: "blur(20px) saturate(135%)",
               boxShadow:
                 "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 40px -22px rgba(118,228,247,0.42), 0 0 28px -6px rgba(118,228,247,0.30), 0 24px 60px -42px rgba(0,0,0,0.72)",
             }}

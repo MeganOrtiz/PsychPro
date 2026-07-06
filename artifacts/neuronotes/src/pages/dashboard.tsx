@@ -248,10 +248,10 @@ export default function DashboardPage() {
             className="rounded-xl p-4 mb-6 flex items-start gap-3 border"
             style={{
               background:
-                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.16) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 98% 19% / 0.83), hsl(var(--surf-hue) 98% 14% / 0.90))",
+                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.16) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.83), hsl(var(--surf-hue) 88% 14% / 0.90))",
               borderColor: "rgba(118,228,247,0.30)",
-              backdropFilter: "blur(18px) saturate(165%)",
-              WebkitBackdropFilter: "blur(18px) saturate(165%)",
+              backdropFilter: "blur(18px) saturate(135%)",
+              WebkitBackdropFilter: "blur(18px) saturate(135%)",
               boxShadow:
                 "inset 0 1px 0 rgba(255,255,255,0.13), 0 20px 46px -26px rgba(0,0,0,0.66)",
             }}
@@ -286,10 +286,10 @@ export default function DashboardPage() {
             className="rounded-xl p-4 mb-6 flex items-start gap-3 border"
             style={{
               background:
-                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 98% 19% / 0.79), hsl(var(--surf-hue) 98% 14% / 0.90))",
+                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.79), hsl(var(--surf-hue) 88% 14% / 0.90))",
               borderColor: "rgba(118,228,247,0.26)",
-              backdropFilter: "blur(18px) saturate(165%)",
-              WebkitBackdropFilter: "blur(18px) saturate(165%)",
+              backdropFilter: "blur(18px) saturate(135%)",
+              WebkitBackdropFilter: "blur(18px) saturate(135%)",
               boxShadow:
                 "inset 0 1px 0 rgba(255,255,255,0.12), 0 20px 46px -26px rgba(0,0,0,0.66)",
             }}
@@ -347,7 +347,7 @@ export default function DashboardPage() {
                       {continueTopic.score}%
                     </span>
                   </div>
-                  <div className="h-2 rounded-full overflow-hidden mb-4" style={{ background: "hsl(var(--surf-hue) 88% 48% / 0.14)" }}>
+                  <div className="h-2 rounded-full overflow-hidden mb-4" style={{ background: "hsl(var(--surf-hue) 78% 48% / 0.14)" }}>
                     <div
                       className="h-full transition-all"
                       style={{
@@ -581,7 +581,7 @@ export default function DashboardPage() {
                     <Tooltip
                       cursor={{ stroke: PALETTE.teal, strokeOpacity: 0.25 }}
                       contentStyle={{
-                        background: "hsl(var(--surf-hue) 100% 24% / 0.92)",
+                        background: "hsl(var(--surf-hue) 91% 24% / 0.92)",
                         border: "1px solid rgba(118,228,247,0.25)",
                         borderRadius: 10,
                         color: PALETTE.mist,
@@ -660,11 +660,11 @@ export default function DashboardPage() {
                     style={
                       a.earned
                         ? {
-                            background: "hsl(var(--surf-hue) 79% 58% / 0.14)",
+                            background: "hsl(var(--surf-hue) 69% 58% / 0.14)",
                             borderColor: "rgba(118,228,247,0.35)",
                           }
                         : {
-                            background: "hsl(var(--surf-hue) 100% 24% / 0.4)",
+                            background: "hsl(var(--surf-hue) 91% 24% / 0.4)",
                             borderColor: "rgba(118,228,247,0.10)",
                             opacity: 0.55,
                           }
@@ -680,7 +680,7 @@ export default function DashboardPage() {
                               borderColor: PALETTE.tealDeep,
                             }
                           : {
-                              background: "hsl(var(--surf-hue) 79% 58% / 0.10)",
+                              background: "hsl(var(--surf-hue) 69% 58% / 0.10)",
                               borderColor: "rgba(118,228,247,0.20)",
                             }
                       }
@@ -732,7 +732,7 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
-          backgroundImage: `linear-gradient(180deg, hsl(var(--surf-hue) 97% 14% / 0.26) 0%, hsl(var(--surf-hue) 97% 14% / 0.44) 55%, hsl(var(--surf-hue) 97% 14% / 0.66) 100%), url(${smokeBg})`,
+          backgroundImage: `linear-gradient(180deg, hsl(var(--surf-hue) 87% 14% / 0.26) 0%, hsl(var(--surf-hue) 87% 14% / 0.44) 55%, hsl(var(--surf-hue) 87% 14% / 0.66) 100%), url(${smokeBg})`,
           backgroundSize: "cover, cover",
           backgroundPosition: "center, center",
           backgroundRepeat: "no-repeat, no-repeat",

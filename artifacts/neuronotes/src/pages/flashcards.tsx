@@ -176,7 +176,7 @@ export default function FlashcardsPage({ params }: Props) {
           </div>
 
           <div className="relative mb-4">
-            <div className="w-full rounded-full h-1.5 mb-8 overflow-hidden" style={{ background: "hsl(var(--surf-hue) 88% 48% / 0.12)" }}>
+            <div className="w-full rounded-full h-1.5 mb-8 overflow-hidden" style={{ background: "hsl(var(--surf-hue) 78% 48% / 0.12)" }}>
               <div
                 className="h-1.5 rounded-full transition-all"
                 style={{
@@ -250,10 +250,10 @@ export default function FlashcardsPage({ params }: Props) {
               className="mt-6 rounded-xl border p-5 text-center"
               style={{
                 background:
-                  "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 98% 19% / 0.81), hsl(var(--surf-hue) 98% 14% / 0.90))",
+                  "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.81), hsl(var(--surf-hue) 88% 14% / 0.90))",
                 borderColor: "rgba(118,228,247,0.26)",
-                backdropFilter: "blur(18px) saturate(165%)",
-                WebkitBackdropFilter: "blur(18px) saturate(165%)",
+                backdropFilter: "blur(18px) saturate(135%)",
+                WebkitBackdropFilter: "blur(18px) saturate(135%)",
                 boxShadow:
                   "inset 0 1px 0 rgba(255,255,255,0.13), inset 0 0 44px -22px rgba(118,228,247,0.48), 0 0 32px -10px rgba(118,228,247,0.38), 0 20px 46px -26px rgba(0,0,0,0.66)",
               }}
@@ -261,7 +261,7 @@ export default function FlashcardsPage({ params }: Props) {
             >
               <div
                 className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3"
-                style={{ background: `hsl(var(--surf-hue) 79% 58% / 0.25)`, border: `1px solid ${P.surf}55` }}
+                style={{ background: `hsl(var(--surf-hue) 69% 58% / 0.25)`, border: `1px solid ${P.surf}55` }}
               >
                 <Lock className="w-5 h-5 text-white" />
               </div>
