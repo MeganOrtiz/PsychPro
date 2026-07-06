@@ -552,20 +552,29 @@ body {
      near-black deep cerulean that matches the image's darkest clouds for a
      seamless letterbox on any aspect. */
   background-image:
+    linear-gradient(180deg,
+      hsl(var(--surf-hue) 100% 42% / 0.46),
+      hsl(var(--surf-hue) 100% 30% / 0.50)),
     radial-gradient(ellipse 130% 100% at 50% 34%,
-      hsl(var(--surf-hue) 90% 6% / 0.30) 42%,
-      hsl(var(--surf-hue) 93% 4% / 0.66) 100%),
+      hsl(var(--surf-hue) 90% 7% / 0.10) 55%,
+      hsl(var(--surf-hue) 95% 5% / 0.50) 100%),
     url("./assets/bg/app-smoke.jpg");
-  background-size: cover, cover;
-  background-position: center top, center top;
-  background-repeat: no-repeat, no-repeat;
+  background-size: cover, cover, cover;
+  background-position: center top, center top, center top;
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  /* Saturation-injection layer: a fully-saturated cerulean tint blended over the
+     smoke with `overlay` pushes real deep-cerulean/turquoise pigment into the
+     image instead of just darkening it (a plain saturate() filter barely moves an
+     already-muted JPG). Hue stays tokenized (--surf-hue) so the hue guardrail
+     stays green. Landing inherits this blend + sizing from here. */
+  background-blend-mode: overlay, normal, normal;
   /* Calm-it-down pass (unified with the landing hero): pull brightness/saturation
      down and lay a soft deep-cerulean veil over the WHOLE image so the in-app
      teal-smoke backdrop reads as the same quiet pigment as the landing, instead of
      a brighter glow-washed haze. Re-skins every signed-in page + the EPPP suite in
      one place. Kept identical to .landing-root.study-page-bg::before so the
      landing and the app share one backdrop treatment. */
-  filter: saturate(1.5) contrast(1.08) brightness(0.66);
+  filter: saturate(1.8) contrast(1.1) brightness(0.8);
   /* NO background-attachment: fixed. The pseudo-element is already
      position:fixed; inset:0, so it is pinned to the viewport. Adding
      background-attachment:fixed on top is redundant AND makes the browser
@@ -574,7 +583,7 @@ body {
      page on HiDPI / fractional-zoom displays. Leaving attachment at the
      default (scroll) paints the image within this fixed box — visually
      identical, no seam. */
-  background-attachment: scroll, scroll;
+  background-attachment: scroll, scroll, scroll;
   background-color: #05252d;
   pointer-events: none;
 }
@@ -614,15 +623,18 @@ body {
    while inheriting all other backdrop properties (size/position/etc.). */
 .landing-root.study-page-bg::before {
   background-image:
+    linear-gradient(180deg,
+      hsl(var(--surf-hue) 100% 42% / 0.46),
+      hsl(var(--surf-hue) 100% 30% / 0.50)),
     radial-gradient(ellipse 130% 100% at 50% 34%,
-      hsl(var(--surf-hue) 90% 6% / 0.30) 42%,
-      hsl(var(--surf-hue) 93% 4% / 0.66) 100%),
+      hsl(var(--surf-hue) 90% 7% / 0.10) 55%,
+      hsl(var(--surf-hue) 95% 5% / 0.50) 100%),
     url("./assets/bg/brain-clouds.jpg");
   /* Calm-it-down pass: the glowing brain backdrop was the loudest thing on the
      page, so pull brightness/saturation down and lay a soft deep-cerulean veil
      over the whole image (incl. the brain at ~50% 34%) so it reads as quiet
      pigment, not a beacon. Deepen, don't brighten. */
-  filter: saturate(1.5) contrast(1.08) brightness(0.66);
+  filter: saturate(1.8) contrast(1.1) brightness(0.8);
 }
 
 /* Lesson detail header — wraps the title, category, description and counts
