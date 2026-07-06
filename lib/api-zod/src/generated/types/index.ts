@@ -7,10 +7,6 @@
  */
 
 export * from "./attemptRecord";
-export * from "./authorizationSessionHeaderParameter";
-export * from "./authUser";
-export * from "./authUserEnvelope";
-export * from "./beginBrowserLoginParams";
 export * from "./checkoutSessionResponse";
 export * from "./clientErrorsRateLimitCleanupConfig";
 export * from "./clientErrorsRateLimitConfig";
@@ -23,18 +19,13 @@ export * from "./dashboardSummary";
 export * from "./dashboardSummaryWeeklyActivityItem";
 export * from "./epppMissedQuestion";
 export * from "./epppMissedQuestionsResponse";
-export * from "./errorEnvelope";
 export * from "./flashcard";
 export * from "./flashcardDifficulty";
 export * from "./getPracticeExamByTopicParams";
-export * from "./handleBrowserLoginCallbackParams";
 export * from "./healthConfig";
 export * from "./healthStatus";
 export * from "./leaderboard";
 export * from "./leaderboardEntry";
-export * from "./logoutSuccess";
-export * from "./mobileTokenExchangeRequest";
-export * from "./mobileTokenExchangeSuccess";
 export * from "./portalSessionResponse";
 export * from "./practiceExam";
 export * from "./quizQuestion";

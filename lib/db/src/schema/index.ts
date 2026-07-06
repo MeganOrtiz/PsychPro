@@ -1,32 +1,11 @@
-import { pgTable, text, serial, integer, timestamp, boolean, bigserial, jsonb, varchar, index, primaryKey } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, timestamp, boolean, bigserial, index, primaryKey } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
-// Session store for Replit Auth (OIDC). The opaque session id (`sid`) is set
-// as an httpOnly cookie in the browser and passed as `Authorization: Bearer
-// <sid>` by mobile clients. `sess` holds the SessionData JSON (user claims +
-// OIDC tokens). (IMPORTANT) This table is mandatory for Replit Auth.
-export const sessionsTable = pgTable(
-  "sessions",
-  {
-    sid: varchar("sid").primaryKey(),
-    sess: jsonb("sess").notNull(),
-    expire: timestamp("expire").notNull(),
-  },
-  (table) => [index("IDX_session_expire").on(table.expire)],
-);
-export type Session = typeof sessionsTable.$inferSelect;
-
 export const usersTable = pgTable("users", {
-  // Stores the Replit Auth subject id (OIDC `sub` claim) as the primary key.
   id: text("id").primaryKey(),
   email: text("email"),
-  // Identity fields sourced from the OIDC claims on login (upserted every
-  // callback). firstName also feeds personalized greetings across the app.
-  firstName: text("first_name"),
-  lastName: text("last_name"),
-  profileImageUrl: text("profile_image_url"),
   role: text("role"),
   goal: text("goal"),
   degree: text("degree"),
@@ -58,10 +37,9 @@ export const usersTable = pgTable("users", {
   progressScore: integer("progress_score").notNull().default(0),
   isAdmin: boolean("is_admin").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
-export const insertUserSchema = createInsertSchema(usersTable).omit({ createdAt: true, updatedAt: true });
+export const insertUserSchema = createInsertSchema(usersTable).omit({ createdAt: true });
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof usersTable.$inferSelect;
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
-import { useAuth } from "@workspace/replit-auth-web";
+import { useAuth } from "@clerk/clerk-react";
 import {
   Brain,
   BookOpen,
@@ -206,7 +206,7 @@ function useScrollReveal() {
 
 export default function LandingPage() {
   const [, navigate] = useLocation();
-  const { isAuthenticated: isSignedIn } = useAuth();
+  const { isSignedIn } = useAuth();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

@@ -1,6 +1,5 @@
 export * from "./generated/api";
 export type {
-  AuthUser,
   CheckoutSessionResponse,
   DashboardSummary,
   Flashcard,

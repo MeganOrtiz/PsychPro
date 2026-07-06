@@ -284,9 +284,11 @@ router.post("/users/usage", async (req: Request, res: Response): Promise<void> =
   }
 });
 
-// Self-service account deletion. The app owns deletion server-side: cancel
-// Stripe, then wipe app data (including auth sessions). The frontend signs the
-// user out afterwards.
+// Self-service account deletion. Clerk's built-in self-serve delete (in the
+// UserProfile modal) talks to the Clerk frontend API directly and was failing
+// for this instance, so the app owns deletion server-side: cancel Stripe,
+// wipe app data, then delete the Clerk identity. The frontend signs the user
+// out afterwards.
 router.delete("/users/me", async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = requireUserId(req, res);
@@ -300,7 +302,7 @@ router.delete("/users/me", async (req: Request, res: Response): Promise<void> =>
 });
 
 // Admin: list OTHER accounts that share the caller's email. Surfaces the
-// duplicate-identity case (same email, two accounts) so an admin can clean
+// duplicate-identity case (same email, two Clerk users) so an admin can clean
 // it up without signing into the duplicate.
 router.get("/users/duplicates", async (req: Request, res: Response): Promise<void> => {
   try {

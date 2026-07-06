@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { AccountMenu } from "@/components/layout/account-menu";
+import { UserButton } from "@clerk/clerk-react";
 import {
   GraduationCap,
   Layers,
@@ -406,7 +406,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
           <span className="font-bold text-foreground">Mastery Suite</span>
           <div className="ml-auto flex items-center gap-2.5">
             {isMobile && <NotificationsBell />}
-            <AccountMenu size="sm" />
+            <UserButton afterSignOutUrl={import.meta.env.BASE_URL.replace(/\/$/, "") || "/"} />
           </div>
         </header>
 
@@ -480,7 +480,14 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
               </span>
             </Link>
             {!isMobile && <NotificationsBell />}
-            <AccountMenu size="md" />
+            <UserButton
+              afterSignOutUrl={import.meta.env.BASE_URL.replace(/\/$/, "") || "/"}
+              appearance={{
+                elements: {
+                  avatarBox: "w-10 h-10 rounded-full ring-1 ring-[#76E4F7]/40",
+                },
+              }}
+            />
           </div>
         </header>
 

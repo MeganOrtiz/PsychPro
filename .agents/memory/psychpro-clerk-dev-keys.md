@@ -1,12 +1,7 @@
 ---
-name: PsychPro Clerk dev vs prod keys (SUPERSEDED — history only)
-description: SUPERSEDED by the Replit Auth migration (see psychpro-replit-auth-migration.md). PsychPro no longer uses Clerk or any third-party auth keys. Kept only as historical context.
+name: PsychPro Clerk dev vs prod keys
+description: How Clerk auth is keyed across the Replit preview (dev) vs the live psychprosuite.com deployment.
 ---
-
-> **SUPERSEDED:** PsychPro migrated fully off Clerk onto Replit Auth (OIDC). There is no
-> dev/prod publishable/secret key split anymore — the platform auto-provisions
-> `REPLIT_DOMAINS`/`ISSUER_URL`/`REPL_ID`/`SESSION_SECRET`. Everything below is historical.
-
 
 # PsychPro Clerk dev vs prod keys
 

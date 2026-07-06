@@ -18,10 +18,11 @@
 // classes without updating the maps, this test fails loudly and forces
 // the docs to stay in sync with the code.
 //
-// We do NOT need a real session to exercise this. Without a valid `sid`
-// session cookie, `authMiddleware()` leaves `req.user` undefined,
-// `requireUserId(req, res)` writes 401 and `getOptionalUserId(req)` returns
-// null. That is exactly the behaviour we want to assert.
+// We do NOT need real Clerk credentials to exercise this. Without an
+// `Authorization` header (or Clerk cookie), `clerkMiddleware()` leaves
+// `getAuth(req).userId` null, `requireUserId(req, res)` writes 401 and
+// `getOptionalUserId(req)` returns null. That is exactly the behaviour
+// we want to assert.
 
 import type { AddressInfo } from "node:net";
 import type { IRouter, RequestHandler } from "express";
@@ -118,16 +119,6 @@ const PROTECTED = new Set<string>([
 ]);
 
 const ANONYMOUS = new Set<string>([
-  // auth (Replit Auth / OIDC). /auth/user returns {user:null} when signed
-  // out (never 401); the login/callback/logout endpoints redirect (302).
-  "GET /api/auth/user",
-  "GET /api/login",
-  "GET /api/callback",
-  "GET /api/logout",
-  // mobile auth (out-of-band OIDC PKCE exchange; not session-gated).
-  // token-exchange returns 400 on an empty body, logout returns 200.
-  "POST /api/mobile-auth/token-exchange",
-  "POST /api/mobile-auth/logout",
   // health
   "GET /api/healthz",
   // topics (read-only catalog)
@@ -172,7 +163,7 @@ const ANONYMOUS = new Set<string>([
   "DELETE /api/mcp",
 ]);
 
-// Routes that authenticate out-of-band (NOT via the login session). Exercising
+// Routes that authenticate out-of-band (NOT via Clerk session). Exercising
 // them without their out-of-band credential is expected to return
 // something other than 401 — we still enumerate them so discovery does
 // not flag them as drift.
@@ -182,9 +173,9 @@ const SPECIAL = new Map<string, { expectedStatuses: number[]; reason: string }>(
     {
       // 400 when STRIPE_WEBHOOK_SECRET is configured but no signature is
       // supplied; 400 with "Webhook secret not configured" when it is not.
-      // Either way the webhook auth is signature-based, not session-based.
+      // Either way the webhook auth is signature-based, not Clerk.
       expectedStatuses: [400],
-      reason: "Stripe webhook is signature-verified, not session-gated.",
+      reason: "Stripe webhook is signature-verified, not Clerk-gated.",
     },
   ],
 ]);
@@ -369,7 +360,7 @@ async function main(): Promise<void> {
   }
 
   // Spin up an HTTP server on an ephemeral port so we can issue real
-  // requests through the full middleware stack (including authMiddleware).
+  // requests through the full middleware stack (including clerkMiddleware).
   const server = app.listen(0);
   await new Promise<void>((resolve) => server.once("listening", () => resolve()));
   const addr = server.address() as AddressInfo;

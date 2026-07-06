@@ -34,7 +34,7 @@ OAuth security: PKCE S256 + exact-match `redirect_uri` + single-use 60-second au
 - **Validation**: Zod (`zod/v4`), `drizzle-zod`
 - **API codegen**: Orval (from OpenAPI spec)
 - **Build**: esbuild (CJS bundle)
-- **Auth**: **Replit Auth (OIDC), server-verified session on every protected route.** No third-party auth provider. Login is a server-side OIDC flow (`openid-client`, `artifacts/api-server/src/lib/auth.ts`) that stores a session in `sessionsTable` (Postgres) referenced by an httpOnly `sid` cookie; because the web app and API are same-origin the cookie is sent automatically (no bearer token). `authMiddleware` (`middlewares/authMiddleware.ts`) is mounted globally after `cookieParser()` and populates `req.user`; every protected `/api/**` route derives the caller's user id from `req.user.id` via the helpers in `artifacts/api-server/src/lib/userId.ts` (`requireUserId` rejects with `401 Unauthorized`; `getOptionalUserId` returns `null` for anonymous-tolerant routes). No client-supplied identity header is consulted. The frontend uses `useAuth()` from `@workspace/replit-auth-web` (reads `/api/auth/user`); there is **no in-app login form** and no `<ClerkProvider>`. Admin gating (`users.isAdmin`) is re-read from the database keyed on the verified session user id; client-supplied role flags are never trusted. See the "Auth Pattern" section below for the full route matrix.
+- **Auth**: **Server-verified Clerk session on every protected route.** The frontend wraps the app in `<ClerkProvider>` (see `artifacts/neuronotes/src/App.tsx`); `ClerkTokenBridge` pushes the Clerk session token into both the generated API client (`setAuthTokenGetter`) and the shared `authHeaders()` helper used by direct `fetch()` call sites (`artifacts/neuronotes/src/lib/auth-headers.ts`). Every API request therefore carries `Authorization: Bearer <token>`. The API server mounts `@clerk/express` `clerkMiddleware()` globally, and every `/api/**` route derives the caller's user id from `getAuth(req).userId` via the helpers in `artifacts/api-server/src/lib/userId.ts` (`requireUserId` rejects with `401 Unauthorized` on protected routes; `getOptionalUserId` returns `null` for anonymous-tolerant routes). The legacy `X-User-Id` request header is no longer sent by the frontend nor consulted by the server. Admin gating (`users.isAdmin`) is re-read from the database keyed on the verified Clerk user id; client-supplied role flags are never trusted.
 - **Payments**: Stripe (API version: 2026-03-25.dahlia)
 
 ## Key Commands
@@ -66,42 +66,38 @@ A mobile-responsive neuroscience/neuropsychology study app.
 - **PsychPro Web** (`artifacts/neuronotes`) — React/Vite SPA (teal/navy theme)
 
 ### Key Files
-- `artifacts/api-server/src/app.ts` — Express app with Stripe webhook + `cookieParser()` + Replit Auth session middleware (`middlewares/authMiddleware.ts`)
-- `artifacts/api-server/src/lib/auth.ts` — Replit Auth (OIDC) core: `openid-client` config, session CRUD in Postgres (`sessionsTable`), `SESSION_COOKIE = "sid"`, and `upsertUser` (writes identity columns only — never app-managed fields like `isAdmin` or subscription state).
-- `artifacts/api-server/src/routes/auth.ts` — auth routes: `GET /api/login` (OIDC authorize + PKCE), `GET /api/callback`, `GET /api/logout`, `GET /api/auth/user` (`{ user | null }`), plus mobile-auth stubs.
-- `artifacts/api-server/src/lib/userId.ts` — `requireUserId(req,res)` / `getOptionalUserId(req)` — derive the caller's identity from the verified session via `req.user.id` (populated by `authMiddleware`). `requireUserId` responds `401 Unauthorized` when no session is present; `getOptionalUserId` returns `null` for the small whitelist of anonymous-tolerant routes (see "Auth Pattern" below).
+- `artifacts/api-server/src/app.ts` — Express app with Stripe webhook + Clerk middleware
+- `artifacts/api-server/src/lib/userId.ts` — `requireUserId(req,res)` / `getOptionalUserId(req)` — derive the caller's identity from the verified Clerk session via `getAuth(req)` (`@clerk/express`). `requireUserId` responds `401 Unauthorized` when no Clerk session is present; `getOptionalUserId` returns `null` for the small whitelist of anonymous-tolerant routes (see "Auth Pattern" below).
 - `artifacts/api-server/src/lib/mcpEnabled.ts` — gates `/api/mcp`, `/api/oauth/*`, `/.well-known/oauth-authorization-server`, and the `/api/admin/tokens` admin router on `MCP_ENABLED` (default on). The flag applies in every environment, not just production, so it can also be used to disable MCP locally during development.
 - `artifacts/api-server/src/middlewares/feedbackRateLimit.ts` — per-IP throttle on `POST /api/feedback` (default 5/hour, env-tunable)
 - `artifacts/api-server/src/routes/` — Route handlers (topics, flashcards, quizzes, study guides, practice exams, users, progress, subscription)
 - `artifacts/api-server/src/stripeClient.ts` — Stripe client (API version: 2026-03-25.dahlia)
-- `artifacts/neuronotes/src/App.tsx` — wouter routes; no auth provider needed (the session cookie is sent automatically on same-origin `/api/*` requests). `useAuth()` from `@workspace/replit-auth-web` reads `/api/auth/user`.
-- `artifacts/neuronotes/src/lib/auth-headers.ts` — `authHeaders()` / `jsonAuthHeaders()` helpers that direct `fetch()` call sites use to build request headers. Auth itself rides the `sid` session cookie, so these attach no bearer token (kept as a shared seam for existing call sites).
+- `artifacts/neuronotes/src/App.tsx` — wouter routes wrapped in `<ClerkProvider>`; `ClerkTokenBridge` rendered once near the top of the tree
+- `artifacts/neuronotes/src/lib/auth-headers.ts` — `authHeaders()` / `jsonAuthHeaders()` helpers that direct `fetch()` call sites use to attach `Authorization: Bearer <clerk-token>`
 - `artifacts/neuronotes/src/pages/` — All 11 pages
 - `lib/db/src/schema/index.ts` — DB schema (users, topics, flashcards, quiz_questions, study_guides, progress)
 - `lib/db/src/seed.ts` — PsychPro content seed (39 topics, 1,612 flashcards, 935 quiz questions, 39 study guides, 39 practice exams with 738 join rows)
 - `lib/db/src/seed-eppp-master-content.ts` — EPPP Mastery starter content seed (8 domain courses, 71 KN chapter topics, starter study guides)
 
 ### Auth Pattern
-- **Replit Auth (OIDC) is the identity provider, and every protected route verifies the session server-side.**
-  - Frontend: no auth provider component is needed. The httpOnly `sid` session cookie is same-origin (the web app proxies `/api` to the api-server) so the browser sends it automatically on every `/api/*` request. `useAuth()` from `@workspace/replit-auth-web` reads `GET /api/auth/user` to expose `{ user, isLoading, isAuthenticated, login, logout }`. `login()` redirects to `/api/login?returnTo=…`; `logout()` redirects to `/api/logout`. Protected pages live under `<RequireSignedIn>` (redirects to `login()` when signed out) — there is **no in-app login form**; `/sign-in` and `/sign-up` immediately hand off to the hosted flow.
-  - Backend: `authMiddleware` (`middlewares/authMiddleware.ts`) is mounted globally in `app.ts` after `cookieParser()`; it reads the `sid` cookie, loads the session row from `sessionsTable`, and populates `req.user` + `req.isAuthenticated()`. Every protected route calls `requireUserId(req, res)` from `lib/userId.ts`, which reads `req.user.id` and responds `401 Unauthorized` when the session is missing or invalid. MCP-scoped paths (`isMcpScopedPath`) bypass the session middleware because they carry their own bearer tokens.
-- **Admin gating:** `users.isAdmin` is always re-read from the database keyed on the verified session user id (see `routes/feedback.ts` `requireAdmin`, `routes/featured-work.ts` `requireAdminCaller`, etc.). The admin-token issuer at `/api/admin/tokens` uses a separate `MCP_ADMIN_SECRET` shared secret — see `lib/requireAdmin.ts`.
-- **Anonymous-tolerant / public routes (complete whitelist):** these intentionally accept callers without a session — every other `/api/**` route rejects with `401`. Some read no caller identity at all; others use `getOptionalUserId(req)` to enrich the response when a verified session happens to be present:
-  - `GET /api/auth/user` (returns `{ user: null }` when signed out)
+- **Clerk is the identity provider, and every protected route verifies the Clerk session server-side.**
+  - Frontend: `<ClerkProvider>` wraps the app in `App.tsx`. `ClerkTokenBridge` (`src/components/auth/clerk-token-bridge.tsx`) listens to `useAuth()` and pushes the Clerk session token into the generated API client (`Authorization: Bearer <token>`). The protected pages live under `<RequireSignedIn>` so the token is always present by the time a protected API call is made.
+  - Backend: `clerkMiddleware()` is mounted globally in `artifacts/api-server/src/app.ts`. Every protected route calls `requireUserId(req, res)` from `artifacts/api-server/src/lib/userId.ts`, which reads `getAuth(req).userId` and responds `401 Unauthorized` when the Clerk session is missing or invalid. The legacy `X-User-Id` request header is neither sent by the frontend nor consulted by the server.
+- **Admin gating:** `users.isAdmin` is always re-read from the database keyed on the verified Clerk user id (see `routes/feedback.ts` `requireAdmin`, `routes/featured-work.ts` `requireAdminCaller`, etc.). The admin-token issuer at `/api/admin/tokens` uses a separate `MCP_ADMIN_SECRET` shared secret — see `lib/requireAdmin.ts`.
+- **Anonymous-tolerant / public routes (complete whitelist):** these intentionally accept callers without a Clerk session — every other `/api/**` route rejects with `401`. Some read no caller identity at all; others use `getOptionalUserId(req)` to enrich the response when a verified Clerk session happens to be present:
   - `GET /api/healthz`, `GET /api/admin/status` (no user needed)
   - `GET /api/topics`, `GET /api/topics/:id` (read-only catalog; no user needed). NOTE: `/api/topics/:id/flashcards`, `/api/topics/:id/quizzes`, `/api/topics/:id/practice-exam`, and `/api/topics/:id/study-guide` are **protected** (auth-gated behind free-tier entitlements) — they are NOT in this whitelist.
-  - `GET /api/login`, `GET /api/callback`, `GET /api/logout` (the auth flow itself)
   - `POST /api/stripe/webhook` (Stripe signature verified)
   - `GET /api/subscription/plans`
-  - `GET /api/leaderboard` (`currentUser` marker uses the verified user id when present)
-  - `POST /api/client-errors` (error reports from anonymous landing-page visitors; logs the verified user id when present)
+  - `GET /api/leaderboard` (`currentUser` marker uses the verified Clerk id when present)
+  - `POST /api/client-errors` (error reports from anonymous landing-page visitors; logs the verified Clerk id when present)
   - `GET /api/feedback/is-admin` (returns `{isAdmin: false}` when no session)
   - `GET /api/storage/public-objects/*`, `GET /api/storage/objects/*` (the ACL check itself decides whether to allow unauthenticated reads)
   - `GET /api/profile/public/:userId` (only returns rows where `pref_show_on_featured_work = true`; 404 otherwise)
   - `GET /api/featured-work`, `GET /api/featured-work/spotlight` (lists/spotlight of `status='approved'` submissions only)
   - `GET /api/featured-work/:id` (approved rows are public; non-approved rows require owner or admin — caller derived from `getOptionalUserId` + DB-keyed admin check)
   - `GET /.well-known/oauth-authorization-server`, OAuth discovery/protocol endpoints (not user-session routes)
-- **Non-session auth surfaces:** `/api/admin/tokens*` uses the `MCP_ADMIN_SECRET` shared-secret check in `lib/requireAdmin.ts` (separate from the login session), and `/api/mcp` verifies its own bearer token. These do not call the session helpers.
+- **Non-Clerk auth surfaces:** `/api/admin/tokens*` uses the `MCP_ADMIN_SECRET` shared-secret check in `lib/requireAdmin.ts` (separate from Clerk), and `/api/mcp` verifies its own bearer token. These do not call the Clerk helpers.
 
 ### Features
 - Landing page with CTAs that go straight to the dashboard (no sign-up gate)
@@ -149,10 +145,9 @@ Content totals (matches DB seed):
 
 ### Production Publishing
 See `PUBLISHING.md` at the repo root for the full checklist (production secrets,
-Stripe live mode + connector, DB seeding, smoke test, rollback). Authentication
-is Replit Auth (OIDC) — the platform provides the required env vars
-(`REPLIT_DOMAINS`, `ISSUER_URL`, `REPL_ID`, `SESSION_SECRET`) in both dev and
-deployment; no third-party auth keys are needed.
+Stripe live mode + connector, DB seeding, smoke test, rollback). Production
+requires Clerk live keys (`CLERK_SECRET_KEY`, `CLERK_PUBLISHABLE_KEY`,
+`VITE_CLERK_PUBLISHABLE_KEY`); see `PUBLISHING.md` §1–§2.
 Stripe credentials come from the Replit Stripe **connector** — the API server
 auto-selects the `production` connector when `REPLIT_DEPLOYMENT=1`. Price IDs are
 fetched dynamically (no hard-coded IDs). Run

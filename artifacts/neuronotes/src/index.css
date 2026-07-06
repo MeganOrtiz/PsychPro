@@ -464,8 +464,8 @@
    specificity: any button that defines its own box-shadow (.btn-glass*,
    .bg-primary buttons, .nav-glass*, .eppp-launch-btn, .eps-* buttons,
    quiz options, etc.) overrides this automatically and is left untouched,
-   while bare buttons still light up. Disabled buttons are excluded (the
-   `.cl-*` guard is a harmless legacy no-op — that class no longer renders).
+   while bare buttons still light up. Clerk's avatar button (.cl-*) and
+   disabled buttons are excluded.
    ------------------------------------------------------------------ */
 :where(.study-page-bg button:not([class*="cl-"]):not(:disabled),
        .study-page-aurora button:not([class*="cl-"]):not(:disabled)) {

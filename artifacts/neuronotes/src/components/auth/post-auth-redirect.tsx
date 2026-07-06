@@ -5,7 +5,7 @@ import { useEntitlements } from "@/lib/use-entitlements";
 import { FullScreenLoader } from "@/components/full-screen-loader";
 
 /**
- * Post-authentication landing resolver. The auth flow redirects here after sign-in /
+ * Post-authentication landing resolver. Clerk redirects here after sign-in /
  * sign-up; we then send the user to the correct destination:
  *   - onboarding incomplete            -> /onboarding
  *   - completed + EPPP access (buyer)  -> /eppp/suite

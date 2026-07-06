@@ -1,25 +1,48 @@
-import { useEffect } from "react";
-import { useAuth } from "@workspace/replit-auth-web";
-import { FullScreenLoader } from "@/components/full-screen-loader";
+import { SignUp } from "@clerk/clerk-react";
+import { STUDY_PALETTE as P } from "@/lib/study-theme";
 
-/**
- * There is no in-app sign-up form — account creation is handled by the hosted
- * Replit Auth flow (the same entry point as sign-in). This page immediately
- * hands off to `login()`, which sends the browser to `/api/login`. Signed-in
- * users are bounced to /welcome so the post-auth resolver can route them.
- */
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+
 export default function SignUpPage() {
-  const { isLoading, isAuthenticated, login } = useAuth();
-
-  useEffect(() => {
-    if (isLoading) return;
-    if (isAuthenticated) {
-      const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-      window.location.href = `${base}/welcome`;
-    } else {
-      login();
-    }
-  }, [isLoading, isAuthenticated, login]);
-
-  return <FullScreenLoader testId="sign-up-loading" />;
+  return (
+    <div className="study-page-bg flex min-h-[100dvh] items-center justify-center px-4">
+      <SignUp
+        routing="path"
+        path={`${basePath}/sign-up`}
+        signInUrl={`${basePath}/sign-in`}
+        fallbackRedirectUrl={`${basePath}/welcome`}
+        appearance={{
+          variables: {
+            colorPrimary: P.surf,
+            colorBackground: P.surface,
+            colorText: P.cloud,
+            colorTextSecondary: P.mistSoft,
+            colorInputBackground: P.ink,
+            colorInputText: P.cloud,
+            colorDanger: "#ef4444",
+            // Overrides Clerk's default orange warning color (e.g. the
+            // "You're signing in from a new device" banner) so security
+            // notices match the PsychPro cyan palette instead of clashing.
+            colorWarning: P.surf,
+            borderRadius: "0.75rem",
+            fontFamily: "inherit",
+          },
+          elements: {
+            card: `bg-[${P.surface}]/90 border border-white/10 backdrop-blur-md shadow-2xl`,
+            headerTitle: "text-white",
+            headerSubtitle: `text-[${P.mistSoft}]`,
+            formButtonPrimary: `bg-[${P.surf}] hover:bg-[${P.teal}] text-[${P.ink}] font-medium`,
+            socialButtonsBlockButton: "border border-white/10 hover:bg-white/5",
+            socialButtonsBlockButtonText: "text-white",
+            formFieldLabel: `text-[${P.mist}]`,
+            formFieldInput: "bg-white/5 border border-white/10 text-white",
+            footerActionText: `text-[${P.mistSoft}]`,
+            footerActionLink: `text-[${P.surf}] hover:text-[${P.mist}]`,
+            dividerLine: "bg-white/10",
+            dividerText: `text-[${P.mistSoft}]`,
+          },
+        }}
+      />
+    </div>
+  );
 }

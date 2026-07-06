@@ -8,13 +8,15 @@ working production deployment on `*.replit.app`. Follow it top-to-bottom on the
 > deploy outside North America, choose the region in the **Advanced** section of
 > the Publishing tool *before* the first publish.
 
-> **Authentication (Replit Auth / OIDC):** the API server requires a verified
-> Replit Auth session on every protected `/api/**` route. The session rides an
-> httpOnly `sid` cookie (same-origin — the web app proxies `/api` to the API
-> server), so there is no bearer token to coordinate between the two artifacts.
-> The platform injects the required OIDC env vars (`REPLIT_DOMAINS`,
-> `ISSUER_URL`, `REPL_ID`, `SESSION_SECRET`) in both dev and deployment — no
-> third-party auth keys are needed.
+> **Deploy ordering (May 2026 server-verified auth migration):** the API server
+> now requires a verified Clerk session on every protected `/api/**` route.
+> Deploy order is safe in either direction — the API server still tolerates
+> requests (the legacy `X-User-Id` header is no longer sent or consulted), and
+> the frontend already sends `Authorization: Bearer <clerk-token>` via
+> `ClerkTokenBridge` for every signed-in user. As long as production
+> `CLERK_SECRET_KEY` and `CLERK_PUBLISHABLE_KEY` (server) and
+> `VITE_CLERK_PUBLISHABLE_KEY` (frontend build) are set before the first
+> protected request, no extra coordination is required.
 
 ---
 
@@ -27,7 +29,9 @@ the live/production value — not the dev value used in this project.
 | Secret | Used by | Notes |
 | --- | --- | --- |
 | `DATABASE_URL` | API server, seed scripts | Provisioned automatically when you add a Postgres database to the deployment. |
-| `SESSION_SECRET`, `REPLIT_DOMAINS`, `ISSUER_URL`, `REPL_ID` | API server (Replit Auth / OIDC) | Auto-provisioned by the platform in both dev and deployment. These drive the OIDC login flow and sign the `sid` session cookie — no third-party auth keys (Clerk, etc.) are required. |
+| `CLERK_SECRET_KEY` | API server (Clerk middleware) | **production** — `sk_live_…` from Clerk's production instance. Required — every protected `/api/**` route verifies the Clerk session via `getAuth(req)`; without this secret the server cannot verify session tokens and all protected routes will respond `401 Unauthorized`. |
+| `CLERK_PUBLISHABLE_KEY` | API server (Clerk middleware) | **production** — `pk_live_…`. Read at API startup so `clerkMiddleware()` can verify session tokens. Required for the same reason as `CLERK_SECRET_KEY`. |
+| `VITE_CLERK_PUBLISHABLE_KEY` | Web frontend (build-time) | **production** — `pk_live_…` from Clerk's production instance. The Vite build inlines this, so it must be present *before* the build runs. |
 | `STRIPE_WEBHOOK_SECRET` | API server (`/api/stripe/webhook`) | **production** — `whsec_…` from the Stripe Dashboard's *Live mode* webhook endpoint pointed at `https://<your-app>.replit.app/api/stripe/webhook`. |
 | `AI_INTEGRATIONS_OPENAI_API_KEY` | Custom-deck generation (Scholar tier) | Auto-managed by the Replit AI integration; copy the value from your dev secrets if it isn't auto-provisioned in production. |
 | `AI_INTEGRATIONS_OPENAI_BASE_URL` | Custom-deck generation | Same — copy from dev. |
@@ -83,17 +87,20 @@ To verify an override took effect:
 
 ---
 
-## 2. Authentication (Replit Auth)
+## 2. Switch Clerk to production mode
 
-Nothing to configure. Authentication uses Replit Auth (OIDC); the platform
-injects `REPLIT_DOMAINS`, `ISSUER_URL`, `REPL_ID`, and `SESSION_SECRET` in both
-dev and deployment, and the deployment's `*.replit.app` domain (plus any custom
-domain you attach) is trusted automatically. There is no third-party dashboard,
-allowed-origin list, or live/test key swap to perform.
-
-The dev banner (`@replit/vite-plugin-dev-banner`) is already gated on
-`NODE_ENV !== "production"`, so it disappears automatically in the live build —
-confirm by loading the site after publish.
+1. In your Clerk Dashboard, create / open the **Production** instance for this
+   app.
+2. Add `https://<your-app>.replit.app` as an allowed origin and as the
+   application home / sign-in URL.
+3. Copy `pk_live_…` → set `VITE_CLERK_PUBLISHABLE_KEY` in the deployment
+   Secrets panel.
+4. Copy `sk_live_…` → set `CLERK_SECRET_KEY`.
+5. The dev banner (`@replit/vite-plugin-dev-banner`) is already gated on
+   `NODE_ENV !== "production"`, so it disappears automatically in the live
+   build. Confirm by loading the site after publish.
+6. (Optional) If you set up a Clerk webhook later, point it at
+   `https://<your-app>.replit.app/api/__clerk` and add the secret here.
 
 ---
 
@@ -329,8 +336,8 @@ get `{"status":"ok"}`.
 ## 7. Custom domain (optional, do later)
 
 Add a custom domain in the deployment UI (Settings → Domains). DNS instructions
-are shown in-product. Replit Auth trusts the deployment's attached domains
-automatically, so no allowed-origin update is needed after the domain verifies.
+are shown in-product. After the domain verifies, update Clerk's allowed origins
+to include it.
 
 ---
 
@@ -341,8 +348,8 @@ require `users.isAdmin = true` in the production database. There is no UI or
 secret-header path to grant admin — it must be done from the deployment shell.
 
 1. Have the target user sign in once on production so their `users` row exists.
-2. Find their user ID by querying
-   `SELECT id, email FROM users WHERE email = '…'`.
+2. Find their user ID (e.g. from the Clerk dashboard, or by querying
+   `SELECT id, email FROM users WHERE email = '…'`).
 3. From a shell with production `DATABASE_URL` set, run:
 
    ```bash
@@ -374,6 +381,6 @@ If a publish goes wrong:
   Dashboard; subscription state is reconciled automatically by the webhook on
   next subscription change event.
 - **Compromised secret** → rotate it in the Secrets panel and re-deploy. For
+  the Clerk secret key, also rotate it in the Clerk Dashboard. For
   `STRIPE_WEBHOOK_SECRET`, regenerate the endpoint signing secret in the
-  Stripe Dashboard and copy the new value here. To force-invalidate all live
-  login sessions, rotate `SESSION_SECRET` and re-deploy.
+  Stripe Dashboard and copy the new value here.

@@ -1,21 +1,23 @@
 import type { Request, Response } from "express";
+import { clerkClient } from "@clerk/express";
 import { db, usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { getOptionalUserId, requireUserId } from "./userId";
 
 /**
  * Admin gate. A caller is admin when EITHER:
- *   (a) Their `users` row (looked up by verified user id) has
+ *   (a) Their `users` row (looked up by verified Clerk user id) has
  *       `isAdmin = true`, OR
- *   (b) Their verified session email matches an entry in the
+ *   (b) Their verified Clerk primary email matches an entry in the
  *       `ADMIN_EMAILS` allowlist (comma-separated env var). The
  *       built-in allowlist always includes `admin@psychprosuite.com`
- *       so the project owner is never locked out by a user-id mismatch
- *       between dev/prod or account re-creation.
+ *       so the project owner is never locked out by a Clerk-id mismatch
+ *       between dev/prod, account re-creation, or a fresh Clerk instance.
  *
  * On a successful email-match the row is self-healed (lazy-upserted with
- * `isAdmin = true` and the current user id) so subsequent id lookups
- * succeed too.
+ * `isAdmin = true` and the current Clerk id) so subsequent id lookups
+ * succeed too. This removes the manual `grant-admin` rerun that the
+ * owner used to need every time Clerk minted a new user id.
  */
 
 const BUILTIN_ADMIN_EMAILS = ["admin@psychprosuite.com"];
@@ -28,12 +30,25 @@ function adminEmailAllowlist(): Set<string> {
   return new Set([...BUILTIN_ADMIN_EMAILS, ...fromEnv]);
 }
 
-function sessionEmail(req: Request): string | null {
-  // The email comes from the verified OIDC claims captured into the
-  // server-side session at login (see `routes/auth.ts` upsertUser). It is
-  // never client-supplied, so it is safe to trust for the allowlist match.
-  const email = req.user?.email?.trim().toLowerCase();
-  return email && email.length > 0 ? email : null;
+async function fetchClerkPrimaryEmail(userId: string): Promise<string | null> {
+  try {
+    const user = await clerkClient.users.getUser(userId);
+    const primaryId = user.primaryEmailAddressId;
+    if (!primaryId) return null;
+    const addr = user.emailAddresses.find((e) => e.id === primaryId);
+    if (!addr) return null;
+    // SECURITY: only trust the primary email *after* Clerk has verified it.
+    // An unverified address (e.g. someone added admin@psychprosuite.com to
+    // their own Clerk account without clicking the verification link) must
+    // never grant admin — that would be a trivial escalation path.
+    if (addr.verification?.status !== "verified") return null;
+    const email = addr.emailAddress?.trim().toLowerCase();
+    return email && email.length > 0 ? email : null;
+  } catch {
+    // Clerk lookup failed (network, missing secret, deleted user) — treat
+    // as "no verified email" rather than crashing the route.
+    return null;
+  }
 }
 
 async function selfHealAdminRow(userId: string, email: string): Promise<void> {
@@ -64,7 +79,7 @@ async function selfHealAdminRow(userId: string, email: string): Promise<void> {
 }
 
 /**
- * Returns true when the current request carries a verified login session
+ * Returns true when the current request carries a verified Clerk session
  * for an admin user. Safe to call on anonymous-tolerant routes — returns
  * false (without writing to the response) when the caller is signed out.
  */
@@ -81,7 +96,7 @@ export async function isCallerAdmin(req: Request): Promise<boolean> {
   const allowlist = adminEmailAllowlist();
   if (allowlist.size === 0) return false;
 
-  const email = sessionEmail(req);
+  const email = await fetchClerkPrimaryEmail(userId);
   if (!email || !allowlist.has(email)) return false;
 
   await selfHealAdminRow(userId, email);
@@ -89,7 +104,7 @@ export async function isCallerAdmin(req: Request): Promise<boolean> {
 }
 
 /**
- * Strict admin gate for protected routes. Returns the verified
+ * Strict admin gate for protected routes. Returns the verified Clerk
  * user id on success; writes 401 (no session) or 403 (signed in but
  * not admin) and returns null on failure.
  */

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import { Brain, LayoutDashboard, BookOpen, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck, BookMarked, Library, Wrench, Sparkles, Star, Beaker, Lightbulb, Users, GraduationCap } from "lucide-react";
-import { AccountMenu } from "@/components/layout/account-menu";
+import { UserButton } from "@clerk/clerk-react";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { authHeaders } from "@/lib/auth-headers";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -436,12 +436,12 @@ export default function AppLayout({ children }: AppLayoutProps) {
               </span>
             </Link>
             {isMobile && <NotificationsBell />}
-            <AccountMenu size="sm" />
+            <UserButton afterSignOutUrl={import.meta.env.BASE_URL.replace(/\/$/, "") || "/"} />
           </div>
         </header>
 
         {/* Desktop top bar: unified right-side cluster — the notifications
-            bell sits next to the account menu so account + alerts read as
+            bell sits next to the Clerk UserButton so account + alerts read as
             one consistent control group on every page. */}
         <header
           className={cn(
@@ -516,7 +516,14 @@ export default function AppLayout({ children }: AppLayoutProps) {
             </span>
           </Link>
           {!isMobile && <NotificationsBell />}
-          <AccountMenu size="md" />
+          <UserButton
+            afterSignOutUrl={import.meta.env.BASE_URL.replace(/\/$/, "") || "/"}
+            appearance={{
+              elements: {
+                avatarBox: "w-10 h-10 rounded-full ring-1 ring-[#76E4F7]/40",
+              },
+            }}
+          />
         </header>
 
         <main className="flex-1 overflow-y-auto" data-testid="main-content">

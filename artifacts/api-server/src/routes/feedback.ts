@@ -10,7 +10,7 @@ import { feedbackRateLimit } from "../middlewares/feedbackRateLimit";
 const router = Router();
 
 // Strict admin gate. Admin is granted either via `users.isAdmin = true`
-// (set with `scripts/src/grant-admin.ts`) OR by verified session email
+// (set with `scripts/src/grant-admin.ts`) OR by verified Clerk email
 // matching the `ADMIN_EMAILS` allowlist (see `lib/isAdmin.ts`).
 async function requireAdmin(req: Request, res: Response): Promise<boolean> {
   const userId = requireUserId(req, res);

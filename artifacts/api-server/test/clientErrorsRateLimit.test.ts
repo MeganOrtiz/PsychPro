@@ -81,24 +81,29 @@ async function runOnce({ ip, userAgent, userId }: RunOptions): Promise<RunResult
   // Mock the bare minimum of express's Request that the middleware touches.
   // - `req.ip` is read for the per-IP key.
   // - `req.headers["user-agent"]` is included in the warn payload.
-  // - `req.user` is the Replit Auth session identity attached by
-  //   `authMiddleware()` in production; the middleware reads it via
-  //   `getOptionalUserId(req)` to log the verified user id on throttled
+  // - `req.auth()` is the Clerk auth object attached by `clerkMiddleware()`
+  //   in production; the middleware reads it via `getOptionalUserId(req)`
+  //   → `getAuth(req)` to log the verified Clerk user id on throttled
   //   requests. We stub it so a test can simulate signed-in callers.
   // - `req.log.warn` is the pino-http per-request logger we capture.
   const headers: Record<string, string> = {
     "user-agent": userAgent ?? "test-agent/1.0",
   };
-  const user =
-    typeof userId === "string" && userId.length > 0 ? { id: userId } : undefined;
+  // `tokenType: "session_token"` is required: `getAuth(req)` from
+  // `@clerk/express` defaults `acceptsToken` to `SessionToken` and
+  // returns a signed-out auth object (userId=null) when the stub omits it.
+  const auth = {
+    userId: typeof userId === "string" && userId.length > 0 ? userId : null,
+    tokenType: "session_token" as const,
+  };
   const req = {
     ip,
     socket: { remoteAddress: ip },
     headers,
-    user,
     header(name: string): string | undefined {
       return headers[name.toLowerCase()];
     },
+    auth: () => auth,
     log: {
       warn: (obj: Record<string, unknown>, msg: string) => {
         warnLogs.push({ obj, msg });

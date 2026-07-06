@@ -80,7 +80,7 @@
     "zod": "catalog:"
   },
   "dependencies": {
-    "@workspace/replit-auth-web": "workspace:*",
+    "@clerk/clerk-react": "^5.61.3",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.1",
     "react-markdown": "^10.1.0",

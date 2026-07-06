@@ -21,7 +21,7 @@ export default function PublicProfilePage() {
 
   useEffect(() => {
     if (!params.userId) return;
-    // Public route — no signed-in session required; the API only returns rows
+    // Public route — no Clerk session required; the API only returns rows
     // where the owner has opted in via `pref_show_on_featured_work`.
     fetch(`/api/profile/public/${encodeURIComponent(params.userId)}`)
       .then(async (r) => {

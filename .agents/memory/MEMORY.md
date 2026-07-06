@@ -2,8 +2,7 @@
 - [PsychPro glass buttons](psychpro-glass-buttons.md) — landing/marketing button styling convention.
 - [PsychPro custom-deck subscription gate](psychpro-custom-decks-subscription-gate.md) — "upload broken" reports are usually the paid-tier 403 gate firing, not the upload itself.
 - [OAuth/MCP state persistence](oauth-mcp-persistence.md) — dynamic-client-registration + auth codes + tokens must be in Postgres; in-memory Maps break across Autoscale instances and restarts.
-- [Replit Auth migration](psychpro-replit-auth-migration.md) — PsychPro fully migrated OFF Clerk TO Replit Auth (OIDC); httpOnly `sid` session cookie + `sessionsTable`; no third-party auth keys; no in-app login form; useAuth() from @workspace/replit-auth-web.
-- [Account deletion (Clerk SUPERSEDED)](psychpro-clerk-account-deletion.md) — durable lesson survives: never report account/duplicate removed unless identity provider confirms (identityDeleted); Clerk mechanics are history.
+- [Clerk account deletion](psychpro-clerk-account-deletion.md) — Clerk browser flows are broken on this instance; deletion is app-owned server-side; never report removed unless clerkDeleted is true.
 - [Image hotspot overlays](image-hotspot-overlays.md) — to keep clickable markers aligned on an object-contain <img>, wrap img+overlay in a shrink-to-fit div and position by %.
 - [Responsive header double-mount](psychpro-responsive-header-double-mount.md) — mobile+desktop headers are both in the DOM (CSS-toggled); a polling/listener component in both mounts twice — gate by useIsMobile.
 - [PsychPro Spotlight rail](psychpro-spotlight-rail.md) — right rail must be full column height (items-stretch + StudySurface fillHeight); never sticky/self-start.
@@ -19,7 +18,7 @@
 - [PsychPro cerulean surface stack](psychpro-cerulean-surface-stack.md) — owner RETRACTED the lighter look; whole site is DEEPENED deep-cerulean rgba(11,54,70)→rgba(6,33,46); never re-lift; landing.tsx cards use their OWN bright family (deepen separately).
 - [Reverting worktree edits](reverting-worktree-edits.md) — main agent shell blocks destructive git; use `git show <ref>:<path>` + write. Checkpoints auto-commit edits, so HEAD may already contain them.
 - [Replit secrets quirks](replit-secrets-quirks.md) — can't programmatically fix a secret-stored value (deleteEnvVars no-ops, setEnvVars refuses); normalize bad pasted keys in code instead.
-- [Clerk dev vs prod keys (SUPERSEDED)](psychpro-clerk-dev-keys.md) — history only; Replit Auth needs no third-party keys (see Replit Auth migration entry).
+- [Clerk dev vs prod keys](psychpro-clerk-dev-keys.md) — preview needs pk_test/sk_test in VITE_CLERK_PUBLISHABLE_KEY_DEV + CLERK_SK_OVERRIDE (dev-gated); prod pk_live rejects the Replit dev origin.
 - [Brain Lab 3D marker depth](brain-lab-3d-marker-depth.md) — fade <Html> markers by camera-facing (not hard occlude); hard occlusion hides interior structures.
 - [PsychPro MCP Claude connect](psychpro-mcp-protected-resource.md) — "Claude can't access" = either RFC 9728 well-known missing from artifact.toml paths (SPA serves HTML) OR claude.ai/claude.com not in CORS allowlist (browser drops response, nothing logged); manual handshake passes either way.
 - [GLB meshopt compression](glb-meshopt-compression.md) — shrink geometry-only GLB ~85% via gltf-transform meshopt; load with useGLTF(URL,false,true) (local decoder, no Draco CDN).
@@ -63,3 +62,4 @@
 - [June-27 look restore](psychpro-june27-look-restore.md) — owner reverted the darkening pass back to the June 27 glowing-cerulean reference; don't re-darken; reproduce past looks via git-exact file restore.
 - [Teal backdrop grade](psychpro-teal-backdrop-grade.md) — backdrop graded to turquoise via one hue-rotate(-21deg) on the ::before filter (surfaces stay cerulean 193, guardrails green); backdrop-only, not a mint revival; don't chase pigment on nested glass.
 - [Corona/bloom removal](psychpro-corona-bloom-removal.md) — owner banned cyan top-blooms/inset glows/outer coronas app-wide; cards are pigment-only with neutral dark shadows; guardrail lock updated to match — small accent glows (borders/rings/icons) are still fine.
+- [Auth provider choice](psychpro-auth-provider-choice.md) — PsychPro uses external Clerk on purpose; Replit Auth forces end users to have Replit accounts (consumer audience killer); a RA migration was built+reverted; RA→Clerk migration is unsupported — keep Clerk.

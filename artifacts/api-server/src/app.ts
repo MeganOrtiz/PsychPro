@@ -1,8 +1,7 @@
 import express, { type Express, type Request, type Response } from "express";
 import cors from "cors";
-import cookieParser from "cookie-parser";
 import pinoHttp from "pino-http";
-import { authMiddleware } from "./middlewares/authMiddleware";
+import { clerkMiddleware } from "@clerk/express";
 import router from "./routes";
 import { handleDiscovery, handleProtectedResource } from "./routes/oauth";
 import { MCP_ENABLED } from "./lib/mcpEnabled";
@@ -58,8 +57,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// CORS lockdown. Production: only the canonical site origin may send
-// credentialed requests. Dev: allow the Replit dev
+// CORS lockdown. Production: only the canonical site origin and the Clerk
+// auth subdomain may send credentialed requests. Dev: allow the Replit dev
 // origin (REPLIT_DEV_DOMAIN) plus localhost so workspace previews still
 // work. Additional origins can be supplied via CORS_ALLOWED_ORIGINS
 // (comma-separated) for staging or custom domains without a code change.
@@ -73,6 +72,7 @@ const explicitOrigins = (process.env.CORS_ALLOWED_ORIGINS ?? "")
   .filter((s) => s.length > 0);
 const allowedOrigins = new Set<string>([
   "https://psychprosuite.com",
+  "https://auth.psychprosuite.com",
   ...explicitOrigins,
 ]);
 if (!isProd) {
@@ -162,27 +162,37 @@ app.post(
   }
 );
 
-app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Replit Auth (OIDC) session middleware — reads the opaque session id from the
-// `sid` httpOnly cookie OR `Authorization: Bearer <sid>` header, loads the
-// server-side session from Postgres, refreshes expired access tokens, and
-// populates `req.user` (+ `req.isAuthenticated()`). The route-level
+// Clerk auth middleware — verifies session cookie OR `Authorization: Bearer
+// <token>` on every request. Populates `getAuth(req)` so the route-level
 // `requireUserId(req,res)` / `getOptionalUserId(req)` helpers in
-// `src/lib/userId.ts` derive identity from `req.user.id` — there is no
+// `src/lib/userId.ts` can read the verified Clerk user id. Every protected
+// `/api/**` route derives identity from this middleware — there is no
 // fallback to any client-supplied identity header (see `src/lib/userId.ts`,
-// `replit.md` § Auth Pattern, and `threat_model.md` § Spoofing). If no valid
-// session is present the middleware no-ops and protected routes respond
-// `401 Unauthorized`.
+// `replit.md` § Auth Pattern, and `threat_model.md` § Spoofing). If Clerk
+// credentials are missing the middleware no-ops and protected routes will
+// respond `401 Unauthorized`.
+// In dev, prefer the CLERK_*_OVERRIDE pair (a dev Clerk instance) so the
+// Replit dev origin can authenticate. In production we always use the
+// non-override prod keys (they're domain-locked to auth.psychprosuite.com).
+const isDev = process.env.NODE_ENV !== "production";
+const clerkPk = (isDev && process.env.CLERK_PK_OVERRIDE) || process.env.CLERK_PUBLISHABLE_KEY;
+const clerkSk = (isDev && process.env.CLERK_SK_OVERRIDE) || process.env.CLERK_SECRET_KEY;
+const clerk = clerkMiddleware({
+  publishableKey: clerkPk,
+  secretKey: clerkSk,
+});
 app.use((req, res, next) => {
   // OAuth + MCP endpoints have their own auth model (PKCE for the OAuth flow,
-  // bearer tokens for /api/mcp) and must NOT pass through the session
-  // handshake. Bearer tokens on those routes are MCP access tokens, not
-  // Replit Auth session ids, so running authMiddleware would mis-handle them.
+  // bearer tokens for /api/mcp) and must NOT pass through Clerk's session
+  // handshake. The authorize step happens in the user's logged-in browser, so
+  // it carries Clerk cookies — letting Clerk run would trigger a session
+  // handshake 307 that breaks the authorization-code flow and Claude never
+  // receives a token ("Connection has expired").
   if (isMcpScopedPath(req.path)) return next();
-  return authMiddleware(req, res, next);
+  return clerk(req, res, next);
 });
 
 // Root-level OAuth discovery alias. The platform router forwards this exact

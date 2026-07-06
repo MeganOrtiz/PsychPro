@@ -1,7 +1,7 @@
 // =============================================================================
 // In-depth, multi-step onboarding (Task #145).
 //
-// Step 1 (Account Creation) is the hosted sign-up flow — the user is already
+// Step 1 (Account Creation) is the existing Clerk sign-up — the user is already
 // signed in by the time they reach this page, so it shows here as a completed
 // first step. This page owns steps 2-7:
 //   2. Role               (learnerRole, single-select)
@@ -19,7 +19,7 @@
 // =============================================================================
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "wouter";
-import { useAuth } from "@workspace/replit-auth-web";
+import { useUser } from "@clerk/clerk-react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Brain,
@@ -188,12 +188,12 @@ type TierCard = {
 
 export default function OnboardingPage() {
   const [, navigate] = useLocation();
-  const { user } = useAuth();
+  const { user } = useUser();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const email = user?.email ?? undefined;
-  const firstName = user?.firstName ?? "";
+  const email = user?.primaryEmailAddress?.emailAddress ?? undefined;
+  const firstName = user?.firstName ?? user?.fullName?.split(" ")[0] ?? "";
 
   const upsert = useUpsertUserProfile();
   const checkout = useCreateCheckoutSession();
