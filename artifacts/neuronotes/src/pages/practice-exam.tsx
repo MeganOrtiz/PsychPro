@@ -474,11 +474,11 @@ export default function PracticeExamPage({ params }: Props) {
             style={{
               borderColor: "rgba(118,228,247,0.26)",
               background:
-                "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.81), hsl(var(--surf-hue) 88% 14% / 0.90))",
+                "linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.81), hsl(var(--surf-hue) 88% 14% / 0.90))",
               backdropFilter: "blur(20px) saturate(135%)",
               WebkitBackdropFilter: "blur(20px) saturate(135%)",
               boxShadow:
-                "inset 0 1px 0 rgba(255,255,255,0.13), inset 0 0 44px -22px rgba(118,228,247,0.48), 0 0 32px -10px rgba(118,228,247,0.38), 0 22px 50px -26px rgba(0,0,0,0.7)",
+                "inset 0 1px 0 rgba(255,255,255,0.13), 0 22px 50px -26px rgba(0,0,0,0.7)",
             }}
           >
             <header className="flex items-start gap-3 mb-3">

@@ -82,14 +82,25 @@ if (!cardRecipe) {
   const RECIPE = [
     { name: "non-pill 20px corner", re: /border-radius:\s*20px;/, expected: "border-radius: 20px;" },
     { name: "glass blur", re: /backdrop-filter:\s*blur\(20px\)\s*saturate\(135%\)/, expected: "backdrop-filter: blur(20px) saturate(135%)" },
-    { name: "145° diagonal bloom", re: /linear-gradient\(\s*145deg/, expected: "linear-gradient(145deg, …)" },
-    { name: "cyan inner glow", re: /rgba\(118,\s*228,\s*247,\s*0\.42\)/, expected: "inset 0 0 40px -22px rgba(118, 228, 247, 0.42)" },
-    { name: "cyan outer corona", re: /rgba\(118,\s*228,\s*247,\s*0\.30\)/, expected: "0 0 28px -6px rgba(118, 228, 247, 0.30)" },
+    { name: "145° diagonal pigment", re: /linear-gradient\(\s*145deg/, expected: "linear-gradient(145deg, …)" },
     { name: "cerulean hairline border", re: /rgba\(196,\s*232,\s*242,\s*0\.22\)/, expected: "border: 1px solid rgba(196, 232, 242, 0.22)" },
+    { name: "neutral dark depth shadow", re: /0\s+24px\s+60px\s+-42px\s+rgba\(0,\s*0,\s*0,\s*0\.72\)/, expected: "0 24px 60px -42px rgba(0, 0, 0, 0.72)" },
   ];
   for (const r of RECIPE) {
     if (!r.re.test(cardRecipe)) {
       fail(`.bg-card recipe: ${r.name} changed or removed`, `restore \`${r.expected}\``);
+    }
+  }
+  // Pigment-only glass: no cyan top-bloom, inset glow, or outer corona layered
+  // back onto the canonical card. This is the recurring drift direction — the
+  // opposite of the checks above, which is why it's a ban, not a requirement.
+  const bannedGlow = [
+    { name: "cyan top-bloom", re: /radial-gradient\([^)]*rgba\(118,\s*228,\s*247/ },
+    { name: "cyan inset/outer glow in box-shadow", re: /rgba\(118,\s*228,\s*247,\s*0\.\d+\)/ },
+  ];
+  for (const g of bannedGlow) {
+    if (g.re.test(cardRecipe)) {
+      fail(`.bg-card recipe: ${g.name} re-introduced`, "cards are pigment-only glass — remove the cyan bloom/glow layer, keep the neutral dark depth shadow");
     }
   }
 }

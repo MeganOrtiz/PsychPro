@@ -273,16 +273,16 @@ function CourseRailButton({
 }) {
   const Icon = CATEGORY_ICONS[name] ?? LibraryBig;
 
-  const idleBg = "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))";
-  const activeBg = "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.16) 0%, rgba(118,228,247,0.00) 60%), linear-gradient(145deg, hsl(var(--surf-hue) 85% 26% / 0.84), hsl(var(--surf-hue) 89% 19% / 0.90))";
+  const idleBg = "linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))";
+  const activeBg = "linear-gradient(145deg, hsl(var(--surf-hue) 85% 26% / 0.84), hsl(var(--surf-hue) 89% 19% / 0.90))";
   const idleBorder = "rgba(118,228,247,0.26)";
   const activeBorder = "rgba(118,228,247,0.55)";
   const hoverBorder = "rgba(118,228,247,0.45)";
   const idleShadow = "inset 0 1px 0 0 rgba(255,255,255,0.14), 0 10px 26px -16px rgba(0,0,0,0.7)";
   const activeShadow =
-    "0 14px 34px -14px rgba(118,228,247,0.55), inset 0 1px 0 0 rgba(255,255,255,0.10)";
+    "0 14px 34px -14px rgba(0, 0, 0, 0.55), inset 0 1px 0 0 rgba(255,255,255,0.10)";
   const hoverShadow =
-    "0 12px 30px -14px rgba(118,228,247,0.45), inset 0 1px 0 0 rgba(255,255,255,0.10)";
+    "0 12px 30px -14px rgba(0, 0, 0, 0.55), inset 0 1px 0 0 rgba(255,255,255,0.10)";
 
   return (
     <button
@@ -310,7 +310,7 @@ function CourseRailButton({
         className="w-9 h-9 shrink-0 rounded-lg flex items-center justify-center border"
         style={{
           background:
-            "radial-gradient(circle at 50% 40%, rgba(118,228,247,0.18), hsl(var(--surf-hue) 88% 31% / 0.55) 70%)",
+            "radial-gradient(circle at 50% 40%, hsl(var(--surf-hue) 78% 46% / 0.45), hsl(var(--surf-hue) 88% 31% / 0.55) 70%)",
           borderColor: "rgba(118,228,247,0.28)",
         }}
       >
@@ -368,7 +368,7 @@ function CourseLessons({
           className="w-11 h-11 rounded-lg flex items-center justify-center border"
           style={{
             background:
-              "radial-gradient(circle at 50% 40%, rgba(58,224,236,0.18), hsl(var(--surf-hue) 88% 31% / 0.65) 70%)",
+              "radial-gradient(circle at 50% 40%, hsl(var(--surf-hue) 78% 46% / 0.45), hsl(var(--surf-hue) 88% 31% / 0.65) 70%)",
             borderColor: "rgba(118,228,247,0.32)",
           }}
         >
@@ -420,17 +420,17 @@ function CourseMasteryButton({ group }: { group: { name: string; items: Topic[] 
   const unlocked = status?.unlocked ?? false;
   const mastered = status?.mastered ?? false;
 
-  const lockedBg = "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))";
-  const unlockedBg = "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.16) 0%, rgba(118,228,247,0.00) 60%), linear-gradient(145deg, hsl(var(--surf-hue) 85% 26% / 0.84), hsl(var(--surf-hue) 89% 19% / 0.90))";
+  const lockedBg = "linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))";
+  const unlockedBg = "linear-gradient(145deg, hsl(var(--surf-hue) 85% 26% / 0.84), hsl(var(--surf-hue) 89% 19% / 0.90))";
   const lockedBorder = "rgba(196,232,242,0.22)";
   const unlockedBorder = "rgba(118,228,247,0.55)";
   const lockedShadow =
-    "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 40px -22px rgba(118,228,247,0.42), 0 0 28px -6px rgba(118,228,247,0.30), 0 24px 60px -42px rgba(0,0,0,0.72)";
+    "inset 0 1px 0 rgba(255,255,255,0.12), 0 24px 60px -42px rgba(0,0,0,0.72)";
   const unlockedShadow =
-    "0 16px 38px -14px rgba(118,228,247,0.55), inset 0 1px 0 0 rgba(255,255,255,0.10)";
+    "0 16px 38px -14px rgba(0, 0, 0, 0.55), inset 0 1px 0 0 rgba(255,255,255,0.10)";
   const hoverBorder = "rgba(118,228,247,0.75)";
   const hoverShadow =
-    "0 18px 44px -12px rgba(118,228,247,0.7), inset 0 1px 0 0 rgba(255,255,255,0.12)";
+    "0 18px 44px -12px rgba(0, 0, 0, 0.55), inset 0 1px 0 0 rgba(255,255,255,0.12)";
 
   const Marker = unlocked ? GraduationCap : Lock;
 
@@ -468,7 +468,7 @@ function CourseMasteryButton({ group }: { group: { name: string; items: Topic[] 
         className="w-11 h-11 shrink-0 rounded-lg flex items-center justify-center border"
         style={{
           background:
-            "radial-gradient(circle at 50% 40%, rgba(118,228,247,0.18), hsl(var(--surf-hue) 88% 31% / 0.55) 70%)",
+            "radial-gradient(circle at 50% 40%, hsl(var(--surf-hue) 78% 46% / 0.45), hsl(var(--surf-hue) 88% 31% / 0.55) 70%)",
           borderColor: "rgba(118,228,247,0.28)",
         }}
       >
@@ -547,10 +547,10 @@ function TopicCard({ topic, onClick, showCategory }: TopicCardProps) {
       className="group text-left rounded-md p-4 cursor-pointer transition-all border backdrop-blur-md hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2"
       style={{
         background:
-          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))",
+          "linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))",
         borderColor: "rgba(196,232,242,0.22)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 40px -22px rgba(118,228,247,0.42), 0 0 28px -6px rgba(118,228,247,0.30), 0 24px 60px -42px rgba(0,0,0,0.72)",
+          "inset 0 1px 0 rgba(255,255,255,0.12), 0 24px 60px -42px rgba(0,0,0,0.72)",
         // Use CSS custom-property so :hover can shift box-shadow cheaply.
         ["--card-glow" as never]: "rgba(118,228,247,0.55)",
       }}
@@ -558,13 +558,13 @@ function TopicCard({ topic, onClick, showCategory }: TopicCardProps) {
         (e.currentTarget as HTMLButtonElement).style.borderColor =
           "rgba(118,228,247,0.55)";
         (e.currentTarget as HTMLButtonElement).style.boxShadow =
-          "0 14px 36px -14px rgba(118,228,247,0.55), inset 0 1px 0 0 rgba(255,255,255,0.10)";
+          "0 14px 36px -14px rgba(0, 0, 0, 0.55), inset 0 1px 0 0 rgba(255,255,255,0.10)";
       }}
       onMouseLeave={(e) => {
         (e.currentTarget as HTMLButtonElement).style.borderColor =
           "rgba(196,232,242,0.22)";
         (e.currentTarget as HTMLButtonElement).style.boxShadow =
-          "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 40px -22px rgba(118,228,247,0.42), 0 0 28px -6px rgba(118,228,247,0.30), 0 24px 60px -42px rgba(0,0,0,0.72)";
+          "inset 0 1px 0 rgba(255,255,255,0.12), 0 24px 60px -42px rgba(0,0,0,0.72)";
       }}
     >
       <div className="flex items-start gap-3">
@@ -1097,7 +1097,7 @@ function TopicThumbnail({ topic }: { topic: Topic }) {
         // glowing symbol inside reads as luminous on top of the dark
         // teal card surface.
         background:
-          "radial-gradient(circle at 50% 40%, rgba(58,224,236,0.18), hsl(var(--surf-hue) 88% 31% / 0.65) 70%)",
+          "radial-gradient(circle at 50% 40%, hsl(var(--surf-hue) 78% 46% / 0.45), hsl(var(--surf-hue) 88% 31% / 0.65) 70%)",
         borderColor: "rgba(118,228,247,0.32)",
         boxShadow:
           "inset 0 0 14px rgba(118,228,247,0.10), 0 0 18px -6px rgba(58,224,236,0.35)",

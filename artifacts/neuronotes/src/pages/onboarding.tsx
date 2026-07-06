@@ -1015,7 +1015,6 @@ const styles = `
   border-radius: 20px;
   overflow: hidden;
   background:
-    radial-gradient(130% 90% at 50% 0%, rgba(118,228,247,0.12) 0%, rgba(118,228,247,0) 60%),
     linear-gradient(150deg, hsl(var(--surf-hue) 83% 28% / 0.55), hsl(var(--surf-hue) 85% 25% / 0.66));
   border: 1px solid rgba(118,228,247,0.26);
   backdrop-filter: blur(20px) saturate(135%);

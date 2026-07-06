@@ -1410,7 +1410,6 @@ const styles = `
     0 16px 32px -14px hsl(var(--surf-hue) 74% 9% / 0.50),
     0 54px 96px -40px rgba(0, 0, 0, 0.74),
     0 0 0 1px rgba(49, 150, 175, 0.16),
-    0 0 80px -22px rgba(118, 228, 247, 0.60),
     inset 0 1px 0 rgba(255, 255, 255, 0.96),
     inset 0 -34px 52px -36px rgba(49, 150, 175, 0.22);
 }

@@ -607,15 +607,12 @@ body {
   z-index: -1;
   pointer-events: none;
   background-image:
-    radial-gradient(40% 40% at 50% 22%,
-      rgba(118, 228, 247, 0.08) 0%,
-      rgba(118, 228, 247, 0.00) 70%),
     radial-gradient(44% 42% at 78% 66%,
       hsl(var(--surf-hue) 92% 32% / 0.16) 0%,
       hsl(var(--surf-hue) 92% 32% / 0.00) 72%),
     radial-gradient(52% 48% at 50% 46%,
-      rgba(118, 228, 247, 0.08) 0%,
-      rgba(118, 228, 247, 0.00) 66%);
+      hsl(var(--surf-hue) 92% 30% / 0.10) 0%,
+      hsl(var(--surf-hue) 92% 30% / 0.00) 66%);
   background-repeat: no-repeat;
   opacity: 0.92;
 }
@@ -660,8 +657,6 @@ body {
   -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    inset 0 0 32px -20px rgba(118, 228, 247, 0.42),
-    0 0 26px -3px rgba(118, 228, 247, 0.34),
     0 8px 24px -16px rgba(0, 0, 0, 0.62);
   padding: 1.5rem 1.5rem 1.25rem;
 }
@@ -672,9 +667,6 @@ body {
    cinematic surface. */
 .recommended-tile {
   background:
-    radial-gradient(125% 80% at 50% 0%,
-      rgba(118, 228, 247, 0.10) 0%,
-      rgba(118, 228, 247, 0.00) 58%),
     linear-gradient(
       145deg,
       hsl(var(--surf-hue) 88% 19% / 0.74),
@@ -685,17 +677,12 @@ body {
   -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    inset 0 0 40px -22px rgba(118, 228, 247, 0.42),
-    0 0 24px -6px rgba(118, 228, 247, 0.28),
     0 24px 60px -42px rgba(0, 0, 0, 0.72);
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .recommended-tile:hover {
   border-color: rgba(196, 232, 242, 0.38);
   background:
-    radial-gradient(125% 80% at 50% 0%,
-      rgba(118, 228, 247, 0.14) 0%,
-      rgba(118, 228, 247, 0.00) 58%),
     linear-gradient(
       145deg,
       hsl(var(--surf-hue) 86% 26% / 0.70),
@@ -703,15 +690,12 @@ body {
     );
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.14),
-    inset 0 0 40px -20px rgba(118, 228, 247, 0.46),
-    0 0 28px -8px rgba(118, 228, 247, 0.34),
     0 26px 62px -40px rgba(0, 0, 0, 0.74);
 }
 .recommended-tile:active {
   border-color: rgba(196, 232, 242, 0.44);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    0 0 30px -6px rgba(118, 228, 247, 0.4),
     0 18px 40px -28px rgba(0, 0, 0, 0.7);
 }
 
@@ -745,33 +729,11 @@ body {
   border-color: rgba(118, 228, 247, 0.55);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    0 0 26px -2px rgba(118, 228, 247, 0.6),
     0 8px 22px -16px rgba(0, 0, 0, 0.55);
-  animation: course-mastery-glow 3.2s ease-in-out infinite;
 }
 .course-mastery-tile--mastered:hover {
   transform: translateY(-2px);
   border-color: rgba(118, 228, 247, 0.85);
-}
-@keyframes course-mastery-glow {
-  0%,
-  100% {
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.18),
-      0 0 22px -4px rgba(118, 228, 247, 0.5),
-      0 8px 22px -16px rgba(0, 0, 0, 0.55);
-  }
-  50% {
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.22),
-      0 0 38px 0 rgba(118, 228, 247, 0.78),
-      0 8px 22px -16px rgba(0, 0, 0, 0.55);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .course-mastery-tile--mastered {
-    animation: none;
-  }
 }
 
 /* ============== EPPP MASTERY SYSTEM — launch button (top header) ==============
@@ -866,9 +828,6 @@ body {
      shadow. Keeps every generic shadcn card on the main site cut from the same
      cloth as the EPPP domain tiles. */
   background:
-    radial-gradient(125% 80% at 50% 0%,
-      rgba(118, 228, 247, 0.10) 0%,
-      rgba(118, 228, 247, 0.00) 58%),
     linear-gradient(
       145deg,
       hsl(var(--surf-hue) 88% 19% / 0.74),
@@ -880,8 +839,6 @@ body {
   -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    inset 0 0 40px -22px rgba(118, 228, 247, 0.42),
-    0 0 28px -6px rgba(118, 228, 247, 0.30),
     0 24px 60px -42px rgba(0, 0, 0, 0.72);
 }
 
@@ -945,7 +902,6 @@ body {
     );
   border: 1px solid rgba(118, 228, 247, 0.3);
   box-shadow:
-    inset 0 0 14px -6px rgba(118, 228, 247, 0.18),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 .nav-glass-idle:hover {
@@ -958,7 +914,6 @@ body {
   border-color: rgba(118, 228, 247, 0.7);
   box-shadow:
     0 0 0 1px rgba(118, 228, 247, 0.55),
-    inset 0 0 18px -6px rgba(118, 228, 247, 0.36),
     inset 0 1px 0 rgba(255, 255, 255, 0.14);
   transform: translateY(-1px);
 }
@@ -972,7 +927,6 @@ body {
   border-color: rgba(118, 228, 247, 0.82);
   box-shadow:
     0 0 0 1.5px rgba(118, 228, 247, 0.72),
-    inset 0 0 22px -6px rgba(118, 228, 247, 0.46),
     inset 0 1px 0 rgba(255, 255, 255, 0.14);
   transform: translateY(0);
 }
@@ -986,14 +940,12 @@ body {
   border: 1px solid rgba(118, 228, 247, 0.72);
   box-shadow:
     0 0 0 1px rgba(118, 228, 247, 0.6),
-    inset 0 0 20px -6px rgba(118, 228, 247, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 .nav-glass-active:hover {
   border-color: rgba(118, 228, 247, 0.85);
   box-shadow:
     0 0 0 1.5px rgba(118, 228, 247, 0.72),
-    inset 0 0 24px -6px rgba(118, 228, 247, 0.46),
     inset 0 1px 0 rgba(255, 255, 255, 0.16);
   transform: translateY(-1px);
 }
@@ -1284,8 +1236,7 @@ body {
     border-color: rgba(167, 243, 255, 0.55) !important;
     box-shadow:
       0 0 0 1px rgba(167, 243, 255, 0.25),
-      0 12px 32px -10px rgba(118, 228, 247, 0.55),
-      0 0 24px -4px rgba(118, 228, 247, 0.35) !important;
+      0 12px 32px -10px rgba(0, 0, 0, 0.55) !important;
   }
 
   .toggle-elevate::before,

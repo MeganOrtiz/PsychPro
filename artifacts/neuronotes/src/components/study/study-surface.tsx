@@ -28,12 +28,12 @@ function baseSurfaceStyles(tone: StudyTone): CSSProperties {
       // top-bloom + outer corona radiance over the brain backdrop.
       return {
         background:
-          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.09) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 85% 22% / 0.80), hsl(var(--surf-hue) 91% 15% / 0.90))",
+          "linear-gradient(145deg, hsl(var(--surf-hue) 85% 22% / 0.80), hsl(var(--surf-hue) 91% 15% / 0.90))",
         borderColor: "rgba(118,228,247,0.24)",
         backdropFilter: "blur(20px) saturate(135%)",
         WebkitBackdropFilter: "blur(20px) saturate(135%)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.10), inset 0 0 44px -24px rgba(118,228,247,0.36), 0 0 30px -12px rgba(118,228,247,0.28), 0 22px 52px -26px rgba(0,0,0,0.74)",
+          "inset 0 1px 0 rgba(255,255,255,0.10), 0 22px 52px -26px rgba(0,0,0,0.74)",
         color: "#FFFFFF",
       };
     case "accent":
@@ -42,26 +42,26 @@ function baseSurfaceStyles(tone: StudyTone): CSSProperties {
       // sharing the same incandescent bloom + radiant corona.
       return {
         background:
-          "radial-gradient(140% 92% at 50% 0%, rgba(118,228,247,0.18) 0%, rgba(118,228,247,0.00) 60%), linear-gradient(135deg, hsl(var(--surf-hue) 81% 41% / 0.64), hsl(var(--surf-hue) 85% 30% / 0.76))",
+          "linear-gradient(135deg, hsl(var(--surf-hue) 81% 41% / 0.64), hsl(var(--surf-hue) 85% 30% / 0.76))",
         borderColor: "rgba(118,228,247,0.32)",
         backdropFilter: "blur(20px) saturate(140%)",
         WebkitBackdropFilter: "blur(20px) saturate(140%)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.16), inset 0 0 50px -24px rgba(118,228,247,0.56), 0 0 36px -10px rgba(118,228,247,0.44), 0 22px 54px -26px rgba(0,0,0,0.66)",
+          "inset 0 1px 0 rgba(255,255,255,0.16), 0 22px 54px -26px rgba(0,0,0,0.66)",
         color: "#FFFFFF",
       };
     case "card-front":
-      // Centered radial bloom — lighter in the middle, deeper at the edges —
+      // Centered radial pigment — lighter in the middle, deeper at the edges —
       // pairs with the directional "accent" back of the flashcard. Translucent
       // glass so the brain backdrop glows through; white body text throughout.
       return {
         background:
-          "radial-gradient(120% 104% at 50% 38%, rgba(118,228,247,0.22) 0%, hsl(var(--surf-hue) 74% 43% / 0.52) 42%, hsl(var(--surf-hue) 85% 25% / 0.76) 100%)",
+          "radial-gradient(120% 104% at 50% 38%, hsl(var(--surf-hue) 78% 46% / 0.52) 0%, hsl(var(--surf-hue) 82% 34% / 0.62) 42%, hsl(var(--surf-hue) 85% 25% / 0.76) 100%)",
         borderColor: "rgba(118,228,247,0.32)",
         backdropFilter: "blur(20px) saturate(140%)",
         WebkitBackdropFilter: "blur(20px) saturate(140%)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.16), inset 0 0 54px -24px rgba(118,228,247,0.56), 0 0 36px -10px rgba(118,228,247,0.44), 0 22px 54px -26px rgba(0,0,0,0.66)",
+          "inset 0 1px 0 rgba(255,255,255,0.16), 0 22px 54px -26px rgba(0,0,0,0.66)",
         color: "#FFFFFF",
       };
     case "light":
@@ -72,12 +72,12 @@ function baseSurfaceStyles(tone: StudyTone): CSSProperties {
       // same translucent bloom glass as the EPPP domain tiles.
       return {
         background:
-          "radial-gradient(125% 80% at 50% 0%, rgba(118,228,247,0.10) 0%, rgba(118,228,247,0.00) 58%), linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))",
+          "linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))",
         borderColor: "rgba(196,232,242,0.22)",
         backdropFilter: "blur(20px) saturate(135%)",
         WebkitBackdropFilter: "blur(20px) saturate(135%)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 40px -22px rgba(118,228,247,0.42), 0 0 28px -6px rgba(118,228,247,0.30), 0 24px 60px -42px rgba(0,0,0,0.72)",
+          "inset 0 1px 0 rgba(255,255,255,0.12), 0 24px 60px -42px rgba(0,0,0,0.72)",
         color: P.mist,
       };
   }
