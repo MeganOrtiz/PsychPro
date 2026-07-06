@@ -222,7 +222,6 @@ const styles = `
   background: ${C.cyan}1a;
   border: 1px solid ${C.cyan}59;
   color: ${C.cyan};
-  box-shadow: 0 0 24px ${C.cyan}4d;
 }
 .eppp-hero-icon svg { width: 28px; height: 28px; }
 .eppp-eyebrow {

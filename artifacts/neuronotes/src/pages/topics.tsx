@@ -318,9 +318,6 @@ function CourseRailButton({
           className="w-4 h-4"
           style={{
             color: STUDY_PALETTE.surf,
-            filter: active
-              ? "drop-shadow(0 0 6px rgba(118,228,247,0.85))"
-              : "drop-shadow(0 0 3px rgba(118,228,247,0.45))",
           }}
         />
       </span>
@@ -379,7 +376,6 @@ function CourseLessons({
             className="w-5 h-5"
             style={{
               color: STUDY_PALETTE.surf,
-              filter: "drop-shadow(0 0 4px rgba(118,228,247,0.7))",
             }}
           />
         </div>
@@ -480,9 +476,6 @@ function CourseMasteryButton({ group }: { group: { name: string; items: Topic[] 
           className="w-5 h-5"
           style={{
             color: STUDY_PALETTE.surf,
-            filter: unlocked
-              ? "drop-shadow(0 0 6px rgba(118,228,247,0.85))"
-              : "drop-shadow(0 0 3px rgba(118,228,247,0.4))",
           }}
         />
       </span>
