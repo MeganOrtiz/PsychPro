@@ -70,7 +70,7 @@ import {
   deleteReflection,
   type ReflectionRecord,
 } from "@/lib/reflections";
-import smokeBg from "@/assets/bg/app-smoke.jpg";
+import smokeBg from "@/assets/bg/app-smoke.webp";
 import brainArt from "@assets/Screenshot_2026-06-20_at_3.22.26_AM_1781943752347.png";
 import EpppDashboardPage from "@/pages/eppp-dashboard";
 import { ResourcesContent } from "@/pages/resources";
@@ -1751,7 +1751,7 @@ const styles = `
 .eps-head { display: flex; flex-direction: column; align-items: center; text-align: center; }
 .eps-eyebrow {
   margin: 0 0 10px;
-  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-family: var(--app-font-sans);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.2em;
@@ -1760,7 +1760,7 @@ const styles = `
 }
 .eps-title {
   margin: 0;
-  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-family: var(--app-font-sans);
   font-weight: 300;
   font-size: clamp(22px, 3.2vw, 36px);
   line-height: 1.1;
@@ -1972,7 +1972,7 @@ const styles = `
 .eps-group-icon { width: 16px; height: 16px; color: ${C.cyan}; flex-shrink: 0; }
 .eps-group-title {
   margin: 0;
-  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-family: var(--app-font-sans);
   font-size: clamp(16px, 1.8vw, 21px);
   font-weight: 300;
   letter-spacing: 0.18em;

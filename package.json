@@ -7,7 +7,8 @@
     "build": "pnpm run typecheck && pnpm -r --if-present run build",
     "typecheck:libs": "tsc --build",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
-    "test": "node ./scripts/run-all-tests.mjs"
+    "design:check": "pnpm --dir artifacts/neuronotes run check:surface-hue && pnpm --dir artifacts/neuronotes run check:design-drift",
+    "test": "pnpm run design:check && node ./scripts/run-all-tests.mjs"
   },
   "private": true,
   "devDependencies": {

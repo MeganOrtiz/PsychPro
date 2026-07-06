@@ -610,7 +610,7 @@ const styles = `
   position: relative;
   z-index: 1;
   margin: 0;
-  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-family: var(--app-font-sans);
   font-weight: 300;
   font-size: clamp(24px, 3.4vw, 34px);
   line-height: 1;
@@ -630,8 +630,8 @@ const styles = `
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.12),
-    0 24px 60px -42px rgba(0,0,0,0.72);
+    inset 0 1px 0 rgba(255,255,255,0.03),
+    0 22px 52px -40px rgba(0,0,0,0.80);
 }
 .epd-card-label {
   display: inline-flex;
@@ -789,7 +789,7 @@ const styles = `
 }
 .epd-section-title {
   margin: 0;
-  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-family: var(--app-font-sans);
   font-weight: 300;
   font-size: clamp(18px, 2.2vw, 26px);
   letter-spacing: 0.2em;
@@ -832,8 +832,8 @@ const styles = `
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.12),
-    0 24px 60px -42px rgba(0,0,0,0.72);
+    inset 0 1px 0 rgba(255,255,255,0.03),
+    0 22px 52px -40px rgba(0,0,0,0.80);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
 .epd-domain:hover { transform: translateY(-3px); border-color: ${C.cyan}66; box-shadow: 0 22px 56px -38px rgba(0,0,0,0.7), 0 0 24px -10px ${C.cyan}59; }
@@ -892,8 +892,8 @@ const styles = `
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.12),
-    0 24px 60px -42px rgba(0,0,0,0.72);
+    inset 0 1px 0 rgba(255,255,255,0.03),
+    0 22px 52px -40px rgba(0,0,0,0.80);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
 .epd-next:hover { transform: translateY(-2px); border-color: ${C.cyan}66; box-shadow: 0 0 24px -12px ${C.cyan}80; }
