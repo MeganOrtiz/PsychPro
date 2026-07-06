@@ -565,7 +565,7 @@ body {
      a brighter glow-washed haze. Re-skins every signed-in page + the EPPP suite in
      one place. Kept identical to .landing-root.study-page-bg::before so the
      landing and the app share one backdrop treatment. */
-  filter: saturate(1.08) contrast(1.05) brightness(0.66);
+  filter: saturate(1.5) contrast(1.08) brightness(0.66);
   /* NO background-attachment: fixed. The pseudo-element is already
      position:fixed; inset:0, so it is pinned to the viewport. Adding
      background-attachment:fixed on top is redundant AND makes the browser
@@ -622,7 +622,7 @@ body {
      page, so pull brightness/saturation down and lay a soft deep-cerulean veil
      over the whole image (incl. the brain at ~50% 34%) so it reads as quiet
      pigment, not a beacon. Deepen, don't brighten. */
-  filter: saturate(1.08) contrast(1.05) brightness(0.66);
+  filter: saturate(1.5) contrast(1.08) brightness(0.66);
 }
 
 /* Lesson detail header — wraps the title, category, description and counts
