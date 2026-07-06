@@ -30,7 +30,7 @@ import {
 } from "recharts";
 import { useGetTopics } from "@workspace/api-client-react";
 import brainLateral from "@/assets/brain-views/lateral.webp";
-import founderMegan from "@/assets/founder/megan.png";
+import founderMegan from "@/assets/founder/megan.webp";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { isEpppTopic } from "@/lib/eppp-content";
 
@@ -743,7 +743,7 @@ const styles = `
   min-height: 100vh;
   min-height: 100dvh;
   color: ${C.cyanSoft};
-  font-family: "Outfit", "Inter", system-ui, -apple-system, sans-serif;
+  font-family: var(--app-font-sans);
   font-feature-settings: "ss01", "cv11";
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -885,7 +885,7 @@ const styles = `
 
 .landing-wordmark {
   margin: 0;
-  font-family: "Outfit", "Inter", system-ui, -apple-system, sans-serif;
+  font-family: var(--app-font-sans);
   font-weight: 200;
   font-size: clamp(40px, 7.5vw, 92px);
   letter-spacing: 0.22em;
@@ -906,7 +906,7 @@ const styles = `
 .landing-headline {
   margin: clamp(12px, 1.6vh, 20px) auto 0;
   max-width: 720px;
-  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-family: var(--app-font-sans);
   font-weight: 300;
   font-size: clamp(22px, 2.8vw, 36px);
   line-height: 1.2;
@@ -1059,7 +1059,7 @@ const styles = `
   background: linear-gradient(180deg, transparent, ${C.cyan}55, transparent);
 }
 .landing-stat-num {
-  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-family: var(--app-font-sans);
   font-weight: 300;
   font-size: clamp(26px, 3vw, 38px);
   color: #F4FBFF;
@@ -1118,7 +1118,7 @@ const styles = `
 .landing-eyebrow--left::before { display: none; }
 .landing-section-title {
   margin: 0;
-  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-family: var(--app-font-sans);
   font-weight: 300;
   font-size: clamp(26px, 3.4vw, 44px);
   letter-spacing: 0.01em;
@@ -1296,7 +1296,7 @@ const styles = `
 .landing-split-body { max-width: 520px; }
 .landing-split-title {
   margin: 6px 0 0;
-  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-family: var(--app-font-sans);
   font-weight: 300;
   font-size: clamp(24px, 3vw, 38px);
   line-height: 1.16;
@@ -1383,7 +1383,7 @@ const styles = `
 }
 .landing-founder-sign {
   margin: 18px 0 0;
-  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-family: var(--app-font-sans);
   font-weight: 500;
   font-size: 15px;
   letter-spacing: 0.01em;
@@ -1568,7 +1568,7 @@ const styles = `
 .landing-final-title {
   position: relative;
   margin: 0;
-  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-family: var(--app-font-sans);
   font-weight: 300;
   font-size: clamp(28px, 4vw, 50px);
   line-height: 1.1;
@@ -1599,7 +1599,7 @@ const styles = `
   padding: 10px 16px;
   border-radius: 10px;
   text-align: left;
-  font-family: "Inter", "Outfit", system-ui, sans-serif;
+  font-family: var(--app-font-sans);
   font-size: 13.5px;
   font-weight: 400;
   line-height: 1.3;

@@ -610,7 +610,7 @@ const styles = `
   position: relative;
   z-index: 1;
   margin: 0;
-  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-family: var(--app-font-sans);
   font-weight: 300;
   font-size: clamp(24px, 3.4vw, 34px);
   line-height: 1;
@@ -794,7 +794,7 @@ const styles = `
 }
 .epd-section-title {
   margin: 0;
-  font-family: "Outfit", "Inter", system-ui, sans-serif;
+  font-family: var(--app-font-sans);
   font-weight: 300;
   font-size: clamp(18px, 2.2vw, 26px);
   letter-spacing: 0.2em;

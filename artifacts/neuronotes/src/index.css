@@ -14,7 +14,7 @@
      - Swap the cloud image without also updating the landing page's
        .landing-canvas::before so both surfaces stay coherent.
    ============================================================================= */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
@@ -546,7 +546,7 @@ body {
      - static nebula glows via ::after
      - canonical glass card treatment (.bg-card descendants)
 
-   The in-app backdrop image is a single shared asset (assets/bg/app-smoke.jpg);
+   The in-app backdrop image is a single shared asset (assets/bg/app-smoke.webp);
    replacing that one file re-skins every in-app page automatically. The
    marketing landing is the one exception — see the .landing-root override below.
 
@@ -560,28 +560,16 @@ body {
   position: fixed;
   inset: 0;
   z-index: -2;
-  /* Full-bleed deep-cerulean teal-smoke backdrop (assets/bg/app-smoke.jpg,
+  /* Full-bleed deep-cerulean teal-smoke backdrop (assets/bg/app-smoke.webp,
      a 2560×1441 landscape artwork: billowing cyan/teal smoke clouds, no brain).
-     Anchored center-top with the clouds filling the viewport. Only a gentle
-     corner vignette sits on top — NO center tame and NO hard edge darkening —
-     so the image keeps its full color intensity and glow. Base color is a
-     near-black deep cerulean that matches the image's darkest clouds for a
-     seamless letterbox on any aspect. */
-  background-image:
-    radial-gradient(ellipse 130% 100% at 50% 34%,
-      hsl(var(--surf-hue) 90% 7% / 0.00) 60%,
-      hsl(var(--surf-hue) 93% 5% / 0.55) 100%),
-    url("./assets/bg/app-smoke.jpg");
-  background-size: cover, cover;
-  background-position: center top, center top;
-  background-repeat: no-repeat, no-repeat;
-  /* Pigment correction (matches the landing hero pass + owner's photo-editor
-     reference): push saturation and contrast up and pull brightness down so the
-     in-app teal-smoke backdrop reads as deep pigment instead of a milky, glow-
-     washed haze. Re-skins every signed-in page + the EPPP suite in one place. The
-     landing keeps its own (slightly different) filter via the more-specific
-     .landing-root.study-page-bg::before rule below. */
-  filter: saturate(1.32) contrast(1.12) brightness(0.9);
+     Anchored center-top with the clouds filling the viewport. The artwork is
+     shown at its native color and contrast: no vignette and no global filter.
+     Base color is a near-black deep cerulean that matches the image's darkest
+     clouds for a seamless letterbox on any aspect. */
+  background-image: url("./assets/bg/app-smoke.webp");
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
   /* NO background-attachment: fixed. The pseudo-element is already
      position:fixed; inset:0, so it is pinned to the viewport. Adding
      background-attachment:fixed on top is redundant AND makes the browser
@@ -590,7 +578,7 @@ body {
      page on HiDPI / fractional-zoom displays. Leaving attachment at the
      default (scroll) paints the image within this fixed box — visually
      identical, no seam. */
-  background-attachment: scroll, scroll;
+  background-attachment: scroll;
   background-color: #05252d;
   pointer-events: none;
 }
@@ -622,23 +610,14 @@ body {
 }
 
 /* Landing page exception. The marketing landing keeps the original
-   brain-in-clouds hero artwork (brain-clouds.jpg); only the in-app surfaces
+   brain-in-clouds hero artwork (brain-clouds.webp); only the in-app surfaces
    — the main site and the EPPP suite — use the brainless teal-smoke backdrop
-   (app-smoke.jpg) set on the base .study-page-bg::before rule above. The
+   (app-smoke.webp) set on the base .study-page-bg::before rule above. The
    landing root carries BOTH .landing-root and .study-page-bg, so this
    two-class selector outranks the base rule and restores the brain image
    while inheriting all other backdrop properties (size/position/etc.). */
 .landing-root.study-page-bg::before {
-  background-image:
-    radial-gradient(ellipse 130% 100% at 50% 34%,
-      hsl(var(--surf-hue) 90% 7% / 0.00) 60%,
-      hsl(var(--surf-hue) 93% 5% / 0.55) 100%),
-    url("./assets/bg/brain-clouds.jpg");
-  /* Pigment correction (matches owner's photo-editor pass): push saturation and
-     contrast up and pull brightness down so the cerulean reads as deep pigment
-     instead of a milky glow-washed haze. Applied to the landing hero first as an
-     apples-to-apples test before rolling the same correction site-wide. */
-  filter: saturate(1.32) contrast(1.12) brightness(0.9);
+  background-image: url("./assets/bg/brain-clouds.webp");
 }
 
 /* Lesson detail header — wraps the title, category, description and counts
@@ -876,7 +855,7 @@ body {
   backdrop-filter: blur(5px) saturate(190%);
   -webkit-backdrop-filter: blur(5px) saturate(190%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
     0 22px 52px -40px rgba(0, 0, 0, 0.80);
 }
 
@@ -1360,4 +1339,3 @@ body {
     inset: -1px;
   }
 }
-

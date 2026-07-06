@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ClerkProvider } from "@clerk/clerk-react";
@@ -8,48 +9,53 @@ import { ClerkTokenBridge } from "@/components/auth/clerk-token-bridge";
 import { RequireSignedIn } from "@/components/auth/require-signed-in";
 import { RequireOnboarded } from "@/components/auth/require-onboarded";
 import { PostAuthRedirect } from "@/components/auth/post-auth-redirect";
-import SignInPage from "@/pages/sign-in";
-import SignUpPage from "@/pages/sign-up";
-import LandingPage from "@/pages/landing";
-import PrivacyPage from "@/pages/privacy";
-import TermsPage from "@/pages/terms";
-import OnboardingPage from "@/pages/onboarding";
-import DashboardPage from "@/pages/dashboard";
-import TopicsPage from "@/pages/topics";
-import TopicDetailPage from "@/pages/topic-detail";
-import FlashcardsPage from "@/pages/flashcards";
-import QuizPage from "@/pages/quiz";
-import StudyGuidePage from "@/pages/study-guide";
-import PracticeExamPage from "@/pages/practice-exam";
-import CourseMasteryExamPage from "@/pages/course-mastery-exam";
-import ProgressPage from "@/pages/progress";
-import LeaderboardPage from "@/pages/leaderboard";
-import SubscriptionPage from "@/pages/subscription";
-import FeedbackPage from "@/pages/feedback";
-import FeatureRequestPage from "@/pages/feature-request";
-import FeaturedWorkPage from "@/pages/featured-work";
-import AdminFeaturedWorkPage from "@/pages/admin-featured-work";
-import ConnectionsPage from "@/pages/connections";
-import AdminConnectionsPage from "@/pages/admin-connections";
-import PublicProfilePage from "@/pages/public-profile";
-import ResourcesPage from "@/pages/resources";
-import StudyLabPage from "@/pages/study-lab";
-import BrainLabPage from "@/pages/brain-lab";
-import EpppPage from "@/pages/eppp";
-import AdminFeedbackPage from "@/pages/admin-feedback";
-import AdminTokensPage from "@/pages/admin-tokens";
-import MyDecksPage from "@/pages/my-decks";
-import NewDeckPage from "@/pages/my-decks-new";
-import MyDeckDetailPage from "@/pages/my-decks-detail";
-import ReflectionsPage from "@/pages/reflections";
-import ProfilePage from "@/pages/profile";
-import EpppSuitePage from "@/pages/eppp-suite";
-import EpppStudySessionPage from "@/pages/eppp-study-session";
-import NotFound from "@/pages/not-found";
 import AppLayout from "@/components/layout/app-layout";
 import { ErrorBoundary } from "@/components/error-boundary";
-import CrashTestPage from "@/pages/crash-test";
-import DevGlassPreview from "@/pages/dev-glass-preview";
+import { FullScreenLoader } from "@/components/full-screen-loader";
+
+// Route-level splitting keeps the public landing and onboarding entry paths
+// from downloading the entire signed-in application (including Brain Lab's 3D
+// stack, EPPP, dashboards, and admin pages) before their first paint.
+const SignInPage = lazy(() => import("@/pages/sign-in"));
+const SignUpPage = lazy(() => import("@/pages/sign-up"));
+const LandingPage = lazy(() => import("@/pages/landing"));
+const PrivacyPage = lazy(() => import("@/pages/privacy"));
+const TermsPage = lazy(() => import("@/pages/terms"));
+const OnboardingPage = lazy(() => import("@/pages/onboarding"));
+const DashboardPage = lazy(() => import("@/pages/dashboard"));
+const TopicsPage = lazy(() => import("@/pages/topics"));
+const TopicDetailPage = lazy(() => import("@/pages/topic-detail"));
+const FlashcardsPage = lazy(() => import("@/pages/flashcards"));
+const QuizPage = lazy(() => import("@/pages/quiz"));
+const StudyGuidePage = lazy(() => import("@/pages/study-guide"));
+const PracticeExamPage = lazy(() => import("@/pages/practice-exam"));
+const CourseMasteryExamPage = lazy(() => import("@/pages/course-mastery-exam"));
+const ProgressPage = lazy(() => import("@/pages/progress"));
+const LeaderboardPage = lazy(() => import("@/pages/leaderboard"));
+const SubscriptionPage = lazy(() => import("@/pages/subscription"));
+const FeedbackPage = lazy(() => import("@/pages/feedback"));
+const FeatureRequestPage = lazy(() => import("@/pages/feature-request"));
+const FeaturedWorkPage = lazy(() => import("@/pages/featured-work"));
+const AdminFeaturedWorkPage = lazy(() => import("@/pages/admin-featured-work"));
+const ConnectionsPage = lazy(() => import("@/pages/connections"));
+const AdminConnectionsPage = lazy(() => import("@/pages/admin-connections"));
+const PublicProfilePage = lazy(() => import("@/pages/public-profile"));
+const ResourcesPage = lazy(() => import("@/pages/resources"));
+const StudyLabPage = lazy(() => import("@/pages/study-lab"));
+const BrainLabPage = lazy(() => import("@/pages/brain-lab"));
+const EpppPage = lazy(() => import("@/pages/eppp"));
+const AdminFeedbackPage = lazy(() => import("@/pages/admin-feedback"));
+const AdminTokensPage = lazy(() => import("@/pages/admin-tokens"));
+const MyDecksPage = lazy(() => import("@/pages/my-decks"));
+const NewDeckPage = lazy(() => import("@/pages/my-decks-new"));
+const MyDeckDetailPage = lazy(() => import("@/pages/my-decks-detail"));
+const ReflectionsPage = lazy(() => import("@/pages/reflections"));
+const ProfilePage = lazy(() => import("@/pages/profile"));
+const EpppSuitePage = lazy(() => import("@/pages/eppp-suite"));
+const EpppStudySessionPage = lazy(() => import("@/pages/eppp-study-session"));
+const NotFound = lazy(() => import("@/pages/not-found"));
+const CrashTestPage = lazy(() => import("@/pages/crash-test"));
+const DevGlassPreview = lazy(() => import("@/pages/dev-glass-preview"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -277,7 +283,9 @@ function App() {
         <QueryClientProvider client={queryClient}>
           <TooltipProvider>
             <WouterRouter base={basePath}>
-              <AppRouter />
+              <Suspense fallback={<FullScreenLoader label="Loading PsychPro…" />}>
+                <AppRouter />
+              </Suspense>
             </WouterRouter>
             <Toaster />
             <SonnerToaster />

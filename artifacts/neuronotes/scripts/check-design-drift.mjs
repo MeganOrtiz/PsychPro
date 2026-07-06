@@ -26,9 +26,17 @@ import path from "path";
 
 const ROOT = path.join(path.dirname(new URL(import.meta.url).pathname), "..");
 const CSS = path.join(ROOT, "src", "index.css");
+const BUTTON = path.join(ROOT, "src", "components", "ui", "button.tsx");
+const CARD = path.join(ROOT, "src", "components", "ui", "card.tsx");
+const LANDING = path.join(ROOT, "src", "pages", "landing.tsx");
+const EPPP_DASHBOARD = path.join(ROOT, "src", "pages", "eppp-dashboard.tsx");
 const REL = path.relative(ROOT, CSS);
 
 const raw = fs.readFileSync(CSS, "utf8");
+const buttonSource = fs.readFileSync(BUTTON, "utf8");
+const cardSource = fs.readFileSync(CARD, "utf8");
+const landingSource = fs.readFileSync(LANDING, "utf8");
+const epppDashboardSource = fs.readFileSync(EPPP_DASHBOARD, "utf8");
 // Blank out CSS comments (keeping newlines, so line numbers stay accurate) so a
 // value mentioned in a comment can never satisfy OR trip a lock.
 const css = raw.replace(/\/\*[\s\S]*?\*\//g, (mm) => mm.replace(/[^\n]/g, " "));
@@ -70,6 +78,28 @@ if (!rootBlock) {
   }
 }
 
+// --- 1b) Native background artwork ----------------------------------------
+// The global color-processing filter and dark vignette made both background
+// variants look as though a film had been laid over the page. Keep the two
+// sanctioned assets, but render each directly at its native color/contrast.
+const appBackdrop = ruleBlock(css, ".study-page-bg::before");
+const landingBackdrop = ruleBlock(css, ".landing-root.study-page-bg::before");
+for (const [name, block, asset] of [
+  ["app", appBackdrop, "app-smoke.webp"],
+  ["landing", landingBackdrop, "brain-clouds.webp"],
+]) {
+  if (!block) {
+    fail(`${name} backdrop rule missing`, `restore the canonical ${name} ::before backdrop rule`);
+    continue;
+  }
+  if (!new RegExp(`background-image:\\s*url\\(["']?\\./assets/bg/${asset.replace('.', '\\.')}["']?\\);`).test(block)) {
+    fail(`${name} backdrop asset or layering drifted`, `render ${asset} directly as the sole background-image`);
+  }
+  if (/\bfilter\s*:|radial-gradient\(/.test(block)) {
+    fail(`${name} backdrop film reintroduced`, "keep the background artwork free of global filters and vignette gradients");
+  }
+}
+
 // --- 2) Canonical pigment-only glass card (.bg-card == EPPP .epd-card) -------
 const cardRecipe = ruleBlock(css, ".study-page-bg .bg-card");
 if (!cardRecipe) {
@@ -83,6 +113,7 @@ if (!cardRecipe) {
     { name: "glass blur", re: /backdrop-filter:\s*blur\(5px\)\s*saturate\(190%\)/, expected: "backdrop-filter: blur(5px) saturate(190%)" },
     { name: "145° diagonal bloom", re: /linear-gradient\(\s*145deg/, expected: "linear-gradient(145deg, …)" },
     { name: "cerulean hairline border", re: /rgba\(196,\s*232,\s*242,\s*0\.22\)/, expected: "border: 1px solid rgba(196, 232, 242, 0.22)" },
+    { name: "restrained inset highlight", re: /inset\s+0\s+1px\s+0\s+rgba\(255,\s*255,\s*255,\s*0\.03\)/, expected: "inset 0 1px 0 rgba(255, 255, 255, 0.03)" },
   ];
   for (const r of RECIPE) {
     if (!r.re.test(cardRecipe)) {
@@ -102,6 +133,24 @@ if (!cardRecipe) {
   }
 }
 
+// Landing, authenticated app, and EPPP must use one card recipe. These checks
+// intentionally span the page-local CSS sources so none of the three surfaces
+// can quietly become brighter, blurrier, rounder, or a different hue.
+const SHARED_CARD_CONTRACT = [
+  { name: "145° pigment gradient", re: /linear-gradient\(145deg,\s*hsl\(var\(--surf-hue\) 100% 17% \/ 0\.95\),\s*hsl\(var\(--surf-hue\) 100% 11% \/ 0\.99\)\)/ },
+  { name: "cerulean hairline", re: /rgba\(196,\s*232,\s*242,\s*0\.22\)/ },
+  { name: "glass blur", re: /blur\(5px\) saturate\(190%\)/ },
+  { name: "restrained inset highlight", re: /inset\s+0\s+1px\s+0\s+rgba\(255,\s*255,\s*255,\s*0\.03\)/ },
+  { name: "neutral depth shadow", re: /0\s+22px\s+52px\s+-40px\s+rgba\(0,\s*0,\s*0,\s*0\.80\)/ },
+];
+for (const [surface, source] of [["landing", landingSource], ["EPPP", epppDashboardSource]]) {
+  for (const item of SHARED_CARD_CONTRACT) {
+    if (!item.re.test(source)) {
+      fail(`${surface} card ${item.name} drifted`, "restore the canonical card recipe shared with .study-page-bg .bg-card");
+    }
+  }
+}
+
 // --- 3) Banned mint / teal-green accents -----------------------------------
 // Cerulean #76E4F7 is the only locked accent. These mint/teal hexes keep
 // drifting back in. (Scoped to index.css — TS files legitimately mention them
@@ -115,6 +164,66 @@ while ((m = MINT.exec(css))) {
   );
 }
 
+// --- 4) Typography contract ------------------------------------------------
+// A declared font that is not actually loaded silently falls back differently
+// across machines. Keep one interface family and one editorial family.
+const TYPE_CONTRACT = [
+  {
+    name: "Montserrat webfont load",
+    re: /family=Montserrat:wght@300;400;500;600;700/,
+    expected: "load Montserrat weights 300–700 in the Google Fonts import",
+  },
+  {
+    name: "Merriweather webfont load",
+    re: /family=Merriweather:ital,wght@0,400;0,700;1,400/,
+    expected: "load the locked Merriweather editorial faces",
+  },
+  {
+    name: "interface font token",
+    re: /--app-font-sans:\s*'Montserrat',\s*'Inter',\s*'SF Pro Display',\s*sans-serif;/,
+    expected: "restore --app-font-sans to Montserrat with the documented fallbacks",
+  },
+  {
+    name: "editorial font token",
+    re: /--app-font-serif:\s*'Merriweather',\s*Georgia,\s*serif;/,
+    expected: "restore --app-font-serif to Merriweather with Georgia fallback",
+  },
+];
+for (const t of TYPE_CONTRACT) {
+  if (!t.re.test(raw)) fail(`${t.name} changed or missing`, t.expected);
+}
+
+// --- 5) Shared component contract -----------------------------------------
+// Page-level edits should consume these primitives, not quietly redefine them.
+const BUTTON_VARIANTS = [
+  ['default', 'btn-glass-strong'],
+  ['destructive', 'btn-glass-destructive'],
+  ['outline', 'btn-glass'],
+  ['secondary', 'btn-glass'],
+  ['ghost', 'btn-glass-ghost'],
+  ['link', 'btn-link-glow'],
+];
+for (const [variant, className] of BUTTON_VARIANTS) {
+  const re = new RegExp(`${variant}:\\s*["'][^"']*\\b${className}\\b`);
+  if (!re.test(buttonSource)) {
+    fail(`shared Button ${variant} variant drifted`, `restore the ${className} recipe in src/components/ui/button.tsx`);
+  }
+}
+if (!/rounded-xl\s+border\s+bg-card\s+text-card-foreground\s+shadow/.test(cardSource)) {
+  fail(
+    "shared Card base recipe drifted",
+    "restore `rounded-xl border bg-card text-card-foreground shadow` in src/components/ui/card.tsx",
+  );
+}
+
+// Parallel glass utilities are how page-level tweaks previously escaped the
+// shared recipes. Comments are intentionally ignored by scanning `css`.
+for (const banned of ['glass-button', 'cta-glass']) {
+  if (new RegExp(`\\.${banned}\\s*\\{`).test(css)) {
+    fail(`competing .${banned} utility introduced`, "use the shared btn-glass variants instead");
+  }
+}
+
 // --- Report ----------------------------------------------------------------
 if (violations.length) {
   console.error(`\n✗ Design system lock FAILED — ${violations.length} drift(s) from the locked visual system:\n`);
@@ -123,4 +232,4 @@ if (violations.length) {
   console.error(`If the change is intentional, update the matching lock entry in the same commit.\n`);
   process.exit(1);
 }
-console.log("✓ Design system lock passed — glass-card recipe, radius/hue tokens, and cerulean accent are intact.");
+console.log("✓ Design system lock passed — color, glass, typography, and shared component contracts are intact.");
