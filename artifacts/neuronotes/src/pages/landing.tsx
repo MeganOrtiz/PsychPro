@@ -912,7 +912,7 @@ const styles = `
   font-size: clamp(22px, 2.8vw, 36px);
   line-height: 1.2;
   color: #F4FBFF;
-  text-shadow: 0 0 30px ${C.cyan}30;
+  text-shadow: 0 1px 12px hsl(var(--surf-hue) 92% 5% / 0.55);
 }
 .landing-blurb {
   margin: clamp(10px, 1.4vh, 18px) auto 0;

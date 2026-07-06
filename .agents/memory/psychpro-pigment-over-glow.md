@@ -64,3 +64,6 @@ cards keep it, so hierarchy stays intact and the owner's card family is preserve
   When asked to lower brightness "site-wide", change brightness in big steps (0.6-0.7), not 0.9.
 - Verify the in-app backdrop on the PUBLIC `/sign-in` page (shares the app-smoke `::before`) — do
   not rely on the landing screenshot, whose separate override masks in-app backdrop edits.
+
+## Landing brain-clouds backdrop is the loudest glow
+The `.landing-root.study-page-bg::before` brain-clouds.jpg hero backdrop (glow baked into the JPG) is the single loudest glow on the whole site — "first thing i see is glow" reports point here, NOT at CSS coronas. Can't strip glow from the image, so calm it in CSS: pull `filter: brightness` down hard (~0.66) + modest saturate/contrast, and lay a soft deep-cerulean veil over the WHOLE radial (incl. center at 50% 34% where the brain sits) instead of only darkening the edges. Deepen, never brighten.

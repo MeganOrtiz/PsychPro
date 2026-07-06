@@ -615,14 +615,14 @@ body {
 .landing-root.study-page-bg::before {
   background-image:
     radial-gradient(ellipse 130% 100% at 50% 34%,
-      hsl(var(--surf-hue) 90% 7% / 0.00) 60%,
-      hsl(var(--surf-hue) 93% 5% / 0.55) 100%),
+      hsl(var(--surf-hue) 90% 6% / 0.30) 42%,
+      hsl(var(--surf-hue) 93% 4% / 0.66) 100%),
     url("./assets/bg/brain-clouds.jpg");
-  /* Pigment correction (matches owner's photo-editor pass): push saturation and
-     contrast up and pull brightness down so the cerulean reads as deep pigment
-     instead of a milky glow-washed haze. Applied to the landing hero first as an
-     apples-to-apples test before rolling the same correction site-wide. */
-  filter: saturate(1.32) contrast(1.12) brightness(0.9);
+  /* Calm-it-down pass: the glowing brain backdrop was the loudest thing on the
+     page, so pull brightness/saturation down and lay a soft deep-cerulean veil
+     over the whole image (incl. the brain at ~50% 34%) so it reads as quiet
+     pigment, not a beacon. Deepen, don't brighten. */
+  filter: saturate(1.08) contrast(1.05) brightness(0.66);
 }
 
 /* Lesson detail header — wraps the title, category, description and counts
