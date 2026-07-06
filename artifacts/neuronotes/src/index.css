@@ -580,7 +580,7 @@ body {
      turquoise (~172) here rather than editing the hue token — that keeps the
      surface-hue + design-drift guardrails green while the DOMINANT backdrop pigment
      reads as the reference teal. Do NOT remove this as "drift". */
-  filter: saturate(2.05) contrast(1.15) brightness(0.78) hue-rotate(-21deg);
+  filter: saturate(1.6) contrast(1.2) brightness(0.68) hue-rotate(-14deg);
   /* NO background-attachment: fixed. The pseudo-element is already
      position:fixed; inset:0, so it is pinned to the viewport. Adding
      background-attachment:fixed on top is redundant AND makes the browser
@@ -642,7 +642,7 @@ body {
      pigment, not a beacon. Deepen, don't brighten.
      hue-rotate(-21deg): INTENTIONAL teal grade — see the note on the base
      .study-page-bg::before filter above. Keep identical here. */
-  filter: saturate(2.05) contrast(1.15) brightness(0.78) hue-rotate(-21deg);
+  filter: saturate(1.6) contrast(1.2) brightness(0.68) hue-rotate(-14deg);
 }
 
 /* Lesson detail header — wraps the title, category, description and counts
