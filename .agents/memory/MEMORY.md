@@ -60,3 +60,4 @@
 - [Header scrim convention](psychpro-header-scrim.md) — floating headers over the smoke wallpaper use the shared `.text-scrim`/`.text-scrim-start` utility (soft fading pool, NOT a box, hue via --surf-hue); never add ad-hoc text-shadows.
 - [Dashboard glow removal](psychpro-dashboard-glow-removal.md) — "remove glow" must cover StudySurface noGlow + nested children + inline text-shadows + SVG feGaussianBlur filters + nebula divs + page ::after; keep buttons.
 - [June-27 look restore](psychpro-june27-look-restore.md) — owner reverted the darkening pass back to the June 27 glowing-cerulean reference; don't re-darken; reproduce past looks via git-exact file restore.
+- [Teal backdrop grade](psychpro-teal-backdrop-grade.md) — backdrop graded to turquoise via one hue-rotate(-21deg) on the ::before filter (surfaces stay cerulean 193, guardrails green); backdrop-only, not a mint revival; don't chase pigment on nested glass.

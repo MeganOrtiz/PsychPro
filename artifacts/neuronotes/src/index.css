@@ -573,8 +573,14 @@ body {
      teal-smoke backdrop reads as the same quiet pigment as the landing, instead of
      a brighter glow-washed haze. Re-skins every signed-in page + the EPPP suite in
      one place. Kept identical to .landing-root.study-page-bg::before so the
-     landing and the app share one backdrop treatment. */
-  filter: saturate(1.8) contrast(1.1) brightness(0.8);
+     landing and the app share one backdrop treatment.
+     hue-rotate(-21deg): INTENTIONAL. The baked JPGs are cerulean-blue (hue ~193);
+     the owner supplied an exact teal-turquoise reference, so we grade the whole
+     backdrop layer (image + the --surf-hue overlay gradients above) toward
+     turquoise (~172) here rather than editing the hue token — that keeps the
+     surface-hue + design-drift guardrails green while the DOMINANT backdrop pigment
+     reads as the reference teal. Do NOT remove this as "drift". */
+  filter: saturate(2.05) contrast(1.15) brightness(0.78) hue-rotate(-21deg);
   /* NO background-attachment: fixed. The pseudo-element is already
      position:fixed; inset:0, so it is pinned to the viewport. Adding
      background-attachment:fixed on top is redundant AND makes the browser
@@ -633,8 +639,10 @@ body {
   /* Calm-it-down pass: the glowing brain backdrop was the loudest thing on the
      page, so pull brightness/saturation down and lay a soft deep-cerulean veil
      over the whole image (incl. the brain at ~50% 34%) so it reads as quiet
-     pigment, not a beacon. Deepen, don't brighten. */
-  filter: saturate(1.8) contrast(1.1) brightness(0.8);
+     pigment, not a beacon. Deepen, don't brighten.
+     hue-rotate(-21deg): INTENTIONAL teal grade — see the note on the base
+     .study-page-bg::before filter above. Keep identical here. */
+  filter: saturate(2.05) contrast(1.15) brightness(0.78) hue-rotate(-21deg);
 }
 
 /* Lesson detail header — wraps the title, category, description and counts
