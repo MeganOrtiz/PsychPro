@@ -12,7 +12,6 @@
     "test": "node ./scripts/run-tests.mjs"
   },
   "dependencies": {
-    "@clerk/express": "^2.1.19",
     "@google-cloud/storage": "^7.19.0",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@sentry/node": "^10.57.0",
@@ -28,6 +27,7 @@
     "http-proxy-middleware": "^3.0.5",
     "mammoth": "^1.8.0",
     "multer": "^1.4.5-lts.1",
+    "openid-client": "^6.8.4",
     "pdf-parse": "^1.1.1",
     "pino": "^9",
     "pino-http": "^10",

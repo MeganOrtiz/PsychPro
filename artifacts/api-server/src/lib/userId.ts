@@ -1,26 +1,19 @@
 import { type Request, type Response } from "express";
-import { getAuth } from "@clerk/express";
 
-// Identity is derived exclusively from the verified Clerk session token (set
-// on the request by `clerkMiddleware()` in `src/app.ts`). The legacy
-// `X-User-Id` request header is neither read by the server nor sent by the
-// frontend any more — see `replit.md` § Auth Pattern.
+// Identity is derived exclusively from the verified Replit Auth (OIDC) session
+// loaded onto the request by `authMiddleware()` in `src/app.ts`, which
+// populates `req.user` from a server-side session in Postgres. No
+// client-supplied identity header is ever trusted — see `replit.md`
+// § Auth Pattern.
 
 /**
- * Returns the verified Clerk user id for the current request, or `null` when
- * the request carries no valid Clerk session. Use this on routes that are
+ * Returns the verified user id for the current request, or `null` when the
+ * request carries no valid session. Use this on routes that are
  * anonymous-tolerant (e.g. `/api/leaderboard`, `/api/client-errors`,
  * `/api/feedback/is-admin`) where the caller may legitimately be signed out.
  */
 export function getUserId(req: Request): string | null {
-  try {
-    const auth = getAuth(req);
-    return auth.userId ?? null;
-  } catch {
-    // `getAuth` throws if `clerkMiddleware` has not run on this request.
-    // Treat that as "no verified caller" rather than crashing the route.
-    return null;
-  }
+  return req.user?.id ?? null;
 }
 
 /**
@@ -30,7 +23,7 @@ export function getUserId(req: Request): string | null {
 export const getOptionalUserId = getUserId;
 
 /**
- * Returns the verified Clerk user id, or writes `401 Unauthorized` to the
+ * Returns the verified user id, or writes `401 Unauthorized` to the
  * response and returns `null`. Use this on every protected route — never
  * trust client-supplied identity headers.
  */

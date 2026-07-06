@@ -3,7 +3,7 @@ import { STUDY_PALETTE as P } from "@/lib/study-theme";
 
 /**
  * Single, branded full-screen loader shared by every transitional state in the
- * auth/onboarding flow (Clerk boot, post-auth redirect resolver, onboarding
+ * auth/onboarding flow (auth boot, post-auth redirect resolver, onboarding
  * gate). Sits on the canonical .study-page-bg nebula so consecutive transitions
  * share one continuous backdrop instead of flashing between bare screens.
  */

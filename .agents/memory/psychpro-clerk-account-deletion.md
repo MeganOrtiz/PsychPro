@@ -1,7 +1,13 @@
 ---
-name: PsychPro Clerk browser flows & account deletion
-description: Why account deletion is app-owned server-side instead of Clerk's built-in self-serve, and the rule for reporting deletion success.
+name: PsychPro account deletion (Clerk specifics SUPERSEDED — history only)
+description: SUPERSEDED by the Replit Auth migration (see psychpro-replit-auth-migration.md). The durable lesson (report deletion success only when the identity provider confirms) still holds; the Clerk-specific mechanics below are historical.
 ---
+
+> **SUPERSEDED (Clerk mechanics only):** PsychPro migrated off Clerk onto Replit Auth. The
+> DURABLE lesson survives — never claim an account/duplicate was fully removed unless the
+> identity provider confirms the identity itself was deleted (UI field renamed
+> `clerkDeleted`→`identityDeleted`). The Clerk-SDK-specific details below are historical.
+
 
 This Clerk instance is external / self-managed on a custom domain. Its browser-side flows
 (self-serve "Delete account" in the UserProfile modal, and even the hosted sign-in page)

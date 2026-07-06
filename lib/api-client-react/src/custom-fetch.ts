@@ -30,10 +30,13 @@ export function setBaseUrl(url: string | null): void {
 }
 
 /**
- * Register a getter that supplies the current auth bearer token (e.g. a
- * Clerk session token). When set, every request gets an
- * `Authorization: Bearer <token>` header unless the caller already
- * provided one. Pass `null` to clear.
+ * Register a getter that supplies the current auth bearer token. When set,
+ * every request gets an `Authorization: Bearer <token>` header unless the
+ * caller already provided one. Pass `null` to clear.
+ *
+ * NOTE: the PsychPro web app authenticates via the httpOnly `sid` session
+ * cookie (sent automatically on same-origin requests), so it does not register
+ * a token getter. This seam remains for non-cookie clients (e.g. native).
  */
 export function setAuthTokenGetter(getter: AuthTokenGetter | null): void {
   _authTokenGetter = getter;
@@ -344,7 +347,8 @@ export async function customFetch<T = unknown>(
     headers.set("accept", DEFAULT_JSON_ACCEPT);
   }
 
-  // Attach Clerk session token (or any registered bearer) when present.
+  // Attach a registered bearer token when present (cookie-based clients
+  // register no getter and rely on the session cookie instead).
   if (_authTokenGetter && !headers.has("authorization")) {
     const token = await _authTokenGetter();
     if (token) {

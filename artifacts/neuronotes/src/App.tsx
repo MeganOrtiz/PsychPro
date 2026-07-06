@@ -1,10 +1,8 @@
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ClerkProvider } from "@clerk/clerk-react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { ClerkTokenBridge } from "@/components/auth/clerk-token-bridge";
 import { RequireSignedIn } from "@/components/auth/require-signed-in";
 import { RequireOnboarded } from "@/components/auth/require-onboarded";
 import { PostAuthRedirect } from "@/components/auth/post-auth-redirect";
@@ -58,33 +56,6 @@ const queryClient = new QueryClient({
     },
   },
 });
-
-// In dev builds, prefer VITE_CLERK_PUBLISHABLE_KEY_DEV when set so the
-// Replit dev domain can use a dev Clerk instance instead of the production
-// keys (which reject any origin other than auth.psychprosuite.com). Falls
-// back to the prod publishable key when the dev override is not set, so
-// production builds and existing dev setups are unaffected.
-// Tolerate values accidentally pasted with their env-var name prefix
-// (e.g. "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...") or wrapped in
-// quotes/whitespace, by extracting the bare pk_test_/pk_live_ token.
-function normalizeClerkKey(value: string | undefined): string | undefined {
-  if (!value) return value;
-  const match = value.match(/pk_(?:test|live)_[^\s"']+/);
-  return match ? match[0] : value.trim();
-}
-
-const devClerkPublishableKey = normalizeClerkKey(
-  import.meta.env.VITE_CLERK_PUBLISHABLE_KEY_DEV as string | undefined,
-);
-const prodClerkPublishableKey = normalizeClerkKey(
-  import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined,
-);
-const clerkPublishableKey: string | undefined = import.meta.env.DEV
-  ? devClerkPublishableKey || prodClerkPublishableKey
-  : prodClerkPublishableKey;
-if (!clerkPublishableKey) {
-  throw new Error("Missing VITE_CLERK_PUBLISHABLE_KEY environment variable");
-}
 
 function AppRouter() {
   return (
@@ -251,24 +222,15 @@ function App() {
   const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
   return (
     <ErrorBoundary>
-      <ClerkProvider
-        publishableKey={clerkPublishableKey!}
-        signInUrl={`${basePath}/sign-in`}
-        signUpUrl={`${basePath}/sign-up`}
-        signInFallbackRedirectUrl={`${basePath}/dashboard`}
-        signUpFallbackRedirectUrl={`${basePath}/dashboard`}
-      >
-        <ClerkTokenBridge />
-        <QueryClientProvider client={queryClient}>
-          <TooltipProvider>
-            <WouterRouter base={basePath}>
-              <AppRouter />
-            </WouterRouter>
-            <Toaster />
-            <SonnerToaster />
-          </TooltipProvider>
-        </QueryClientProvider>
-      </ClerkProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <WouterRouter base={basePath}>
+            <AppRouter />
+          </WouterRouter>
+          <Toaster />
+          <SonnerToaster />
+        </TooltipProvider>
+      </QueryClientProvider>
     </ErrorBoundary>
   );
 }

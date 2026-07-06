@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect, useCallback } from "react";
 import { Link, useLocation } from "wouter";
-import { useUser } from "@clerk/clerk-react";
+import { useAuth } from "@workspace/replit-auth-web";
 import {
   Flame,
   CalendarClock,
@@ -443,7 +443,7 @@ export function EpppDashboardView({
 
 export default function EpppDashboardPage() {
   const [, navigate] = useLocation();
-  const { user } = useUser();
+  const { user } = useAuth();
   const userId = user?.id ?? "anon";
 
   const { data: summary, isLoading: summaryLoading } = useGetDashboardSummary();

@@ -1,4 +1,5 @@
 import { Router, type IRouter } from "express";
+import authRouter from "./auth";
 import healthRouter from "./health";
 import topicsRouter from "./topics";
 import courseMasteryRouter from "./course-mastery";
@@ -29,6 +30,7 @@ const router: IRouter = Router();
 // `test/routeAuthMatrix.test.ts` relies on this — if you ever mount a
 // child router with a path (e.g. `router.use("/v2", v2Router)`) you must
 // also add `{ v2Router: "/v2" }` to that test's `buildKnownPrefixes()`.
+router.use(authRouter);
 router.use(healthRouter);
 router.use(topicsRouter);
 router.use(courseMasteryRouter);

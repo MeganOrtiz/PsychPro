@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { User as UserIcon, Save, Camera, Loader2, AlertTriangle, Trash2 } from "lucide-react";
-import { useClerk } from "@clerk/clerk-react";
+import { useAuth } from "@workspace/replit-auth-web";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
@@ -579,11 +579,11 @@ type DeletionResult = {
   deleted: boolean;
   stripeCanceled: boolean;
   stripeCancelFailed: boolean;
-  clerkDeleted: boolean;
+  identityDeleted: boolean;
 };
 
 function DangerZone() {
-  const { signOut } = useClerk();
+  const { logout } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
   const [confirmText, setConfirmText] = useState("");
   const [deleting, setDeleting] = useState(false);
@@ -627,7 +627,7 @@ function DangerZone() {
       } else {
         toast.success("Your account has been deleted. Signing you out…");
       }
-      await signOut({ redirectUrl: import.meta.env.BASE_URL.replace(/\/$/, "") || "/" });
+      logout();
     } catch (err) {
       console.error("[profile] delete account error", err);
       toast.error("Couldn't delete your account. Please try again in a minute.");
@@ -663,12 +663,12 @@ function DangerZone() {
       });
       if (!res.ok) throw new Error(`remove failed: ${res.status}`);
       const body = (await res.json().catch(() => ({}))) as Partial<DeletionResult>;
-      if (body.clerkDeleted === false) {
+      if (body.identityDeleted === false) {
         // The app data was removed, but the login identity survived. Because a
-        // surviving Clerk identity can recreate local rows on next sign-in,
+        // surviving login identity can recreate local rows on next sign-in,
         // keep it visible and warn instead of claiming success.
         toast.warning(
-          "Removed this account's data, but its login identity couldn't be deleted. It may reappear — please remove it from the Clerk dashboard.",
+          "Removed this account's data, but its login identity couldn't be deleted. It may reappear if that person signs in again.",
           { duration: 9000 },
         );
       } else {

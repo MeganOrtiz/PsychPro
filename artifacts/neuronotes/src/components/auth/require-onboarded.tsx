@@ -67,7 +67,7 @@ function OnboardingGate({ children }: { children: ReactNode }) {
 }
 
 /**
- * Convenience guard: requires a Clerk session AND a completed onboarding.
+ * Convenience guard: requires a signed-in session AND a completed onboarding.
  * Use for every protected route except /onboarding itself (which must stay
  * reachable for incomplete users — wrap that one in plain RequireSignedIn).
  */

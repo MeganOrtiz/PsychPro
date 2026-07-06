@@ -164,7 +164,7 @@ async function isAdmin(userId: string): Promise<boolean> {
 
 // Strict admin gate for Featured Work moderation. Delegates to the shared
 // `isCallerAdmin` helper which accepts either `users.isAdmin = true` (set
-// with `scripts/src/grant-admin.ts`) OR verified Clerk email matching the
+// with `scripts/src/grant-admin.ts`) OR verified session email matching the
 // `ADMIN_EMAILS` allowlist. (The legacy `x-admin-secret` self-promotion
 // header was removed for launch.)
 async function requireAdminCaller(req: Request, res: Response): Promise<string | null> {
