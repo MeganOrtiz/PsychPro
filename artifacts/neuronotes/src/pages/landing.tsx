@@ -29,7 +29,7 @@ import {
   CartesianGrid,
 } from "recharts";
 import { useGetTopics } from "@workspace/api-client-react";
-import brainLateral from "@/assets/brain-views/lateral.webp";
+import brainLateral from "@/assets/brain-views/lateral-glow.png";
 import founderMegan from "@/assets/founder/megan.webp";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { isEpppTopic } from "@/lib/eppp-content";
