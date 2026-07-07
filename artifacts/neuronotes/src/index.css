@@ -506,7 +506,7 @@
 
    CRITICAL — set this on <body> ONLY. Never add a background to <html> or
    <#root>:
-     - The page backdrops (landing brain-clouds, in-app app-smoke) live on a
+     - The shared page backdrop lives on a
        `position: fixed; z-index: -2` ::before. For those to show, body's
        background must be PROPAGATED to the canvas (the bottom-most layer, behind
        the negative-z ::before). The browser only propagates body's background
@@ -527,16 +527,16 @@ body {
      - the full-bleed, high-definition deep-cerulean nebula backdrop
        via ::before (static — no motion), on a near-black deep
        cerulean base color
-     - static nebula glows via ::after
      - canonical glass card treatment (.bg-card descendants)
 
-   The in-app backdrop image is a single shared asset (assets/bg/app-smoke.webp);
-   replacing that one file re-skins every in-app page automatically. The
-   marketing landing is the one exception — see the .landing-root override below.
+   The backdrop image is a single shared asset
+   (assets/bg/psychpro-smoke-bg.jpeg). Replacing that one file re-skins the
+   landing page, authenticated app, dashboards, and EPPP surfaces together.
 
-   DO NOT override the ::before background per-page (the landing-root rule below
-   is the single sanctioned exception). DO NOT re-declare these CSS variables in
-   another scope. DO NOT add a competing .bg-card rule.
+   DO NOT override the ::before background per-page. DO NOT add filters,
+   vignette gradients, blend modes, or glow layers over the artwork. DO NOT
+   re-declare these CSS variables in another scope. DO NOT add a competing
+   .bg-card rule.
    ============================================================ */
 .study-page-bg::before,
 .study-page-aurora::before {
@@ -544,15 +544,15 @@ body {
   position: fixed;
   inset: 0;
   z-index: -2;
-  /* Full-bleed deep-cerulean teal-smoke backdrop (assets/bg/app-smoke.webp,
-     a 2560×1441 landscape artwork: billowing cyan/teal smoke clouds, no brain).
-     Anchored center-top with the clouds filling the viewport. The artwork is
-     shown at its native color and contrast: no vignette and no global filter.
+  /* Full-bleed deep-cerulean teal-smoke backdrop
+     (assets/bg/psychpro-smoke-bg.jpeg), supplied as the exact canonical
+     PsychPro artwork. The image is shown at its native color and contrast:
+     no vignette, no blend mode, no pseudo-element glow, and no global filter.
      Base color is a near-black deep cerulean that matches the image's darkest
      clouds for a seamless letterbox on any aspect. */
-  background-image: url("./assets/bg/app-smoke.webp");
+  background-image: url("./assets/bg/psychpro-smoke-bg.jpeg");
   background-size: cover;
-  background-position: center top;
+  background-position: center center;
   background-repeat: no-repeat;
   /* NO background-attachment: fixed. The pseudo-element is already
      position:fixed; inset:0, so it is pinned to the viewport. Adding
@@ -567,11 +567,9 @@ body {
   pointer-events: none;
 }
 
-/* Static nebula glows. Painted on the
-   previously-unused ::after so the static floor (::before) stays untouched. Sits
-   at z-index:-1 (above the floor, behind all content) and is pure additive glow
-   in the locked cerulean family — accent rgba (hue 189) + hsl(var(--surf-hue)),
-   no off-hue literals, no lift of the base surface lightness. */
+/* Reserved overlay layer. Keep visually empty so the canonical background image
+   preserves its exact supplied color and contrast across landing, app,
+   dashboard, and EPPP surfaces. */
 .study-page-bg::after,
 .study-page-aurora::after {
   content: "";
@@ -579,26 +577,9 @@ body {
   inset: -18%;
   z-index: -1;
   pointer-events: none;
-  background-image:
-    radial-gradient(44% 42% at 78% 66%,
-      hsl(var(--surf-hue) 92% 32% / 0.16) 0%,
-      hsl(var(--surf-hue) 92% 32% / 0.00) 72%),
-    radial-gradient(52% 48% at 50% 46%,
-      hsl(var(--surf-hue) 92% 30% / 0.10) 0%,
-      hsl(var(--surf-hue) 92% 30% / 0.00) 66%);
+  background-image: none;
   background-repeat: no-repeat;
-  opacity: 0.92;
-}
-
-/* Landing page exception. The marketing landing keeps the original
-   brain-in-clouds hero artwork (brain-clouds.webp); only the in-app surfaces
-   — the main site and the EPPP suite — use the brainless teal-smoke backdrop
-   (app-smoke.webp) set on the base .study-page-bg::before rule above. The
-   landing root carries BOTH .landing-root and .study-page-bg, so this
-   two-class selector outranks the base rule and restores the brain image
-   while inheriting all other backdrop properties (size/position/etc.). */
-.landing-root.study-page-bg::before {
-  background-image: url("./assets/bg/brain-clouds.webp");
+  opacity: 0;
 }
 
 /* Lesson detail header — wraps the title, category, description and counts

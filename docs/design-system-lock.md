@@ -19,10 +19,14 @@ All values live in `artifacts/neuronotes/src/index.css`.
 - `--surf-hue: 193;` — the surface hue base.
 
 **Native background artwork**
-- Authenticated pages render the optimized `app-smoke.webp` directly.
-- The landing page renders the optimized `brain-clouds.webp` directly.
-- Neither backdrop may add a global CSS `filter` or vignette gradient. This keeps
-  the artwork clear instead of placing a dark, processed “film” over the site.
+- Landing, authenticated app, dashboard, and EPPP surfaces all render the same
+  supplied `psychpro-smoke-bg.jpeg` directly.
+- The JPEG is the canonical source of truth for the background color and quality.
+  Do not re-export, compress, color-grade, or replace it unless the background
+  artwork is intentionally changing.
+- No backdrop may add a global CSS `filter`, blend mode, vignette gradient, or
+  pseudo-element glow over the image. This keeps the artwork clear instead of
+  placing a dark, processed “film” over the site.
 
 **Canonical pigment-only glass card** — the main-site `.study-page-bg .bg-card` rule,
 which mirrors the EPPP `.epd-card`:
