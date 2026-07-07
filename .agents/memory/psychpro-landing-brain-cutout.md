@@ -1,25 +1,24 @@
 ---
-name: PsychPro landing Brain Lab cutout
-description: The landing Brain Lab split brain is a transparent glowing-teal cutout meant to blend into the smoke bg; residual haze is intentional.
+name: PsychPro landing Brain Lab brain — owner decision
+description: Owner REJECTED the glowing-teal brain in the landing Brain Lab promo; that section keeps the grayscale lateral.webp brain.
 ---
 
-# Landing "Brain Lab" split brain is a blend-in cutout
+# Landing Brain Lab promo keeps the grayscale brain (owner decision)
 
-The brain shown in the landing page's Brain Lab split section
-(`landing-split-media--brain`, imported into `landing.tsx`) is a **glowing teal
-brain cut out with background removal** and placed over the shared smoke
-background so it looks like it floats in the page, with **no rectangular image
-box**. The owner explicitly wanted "no indication it doesn't flow with the page."
+The owner supplied a glowing teal brain image and asked for its rectangular box
+removed and "seamless integration into the background for the landing page."
+A transparent cutout was made (`src/assets/brain-views/lateral-glow.png`, kept
+in the repo, currently UNUSED) and placed into the landing Brain Lab promo split
+section — the owner **rejected that placement** ("Why are you touching the brain
+lab!?") and asked for the original grayscale `lateral.webp` back there.
 
-**Why residual haze is fine (do not 'fix' it):** background removal on a glowing
-subject over a glowing cloud leaves faint semi-transparent teal haze at the edges.
-That haze is the SAME cerulean/teal family as the page's smoke background, so it
-blends invisibly — there is no visible edge. Hard-cropping it tighter would remove
-the soft glow and make the brain look pasted-on. Verify blend by compositing the
-exact cutout PNG over `assets/bg/psychpro-smoke-bg.jpeg`, not by inspecting the PNG
-on white/checkerboard (which makes the haze look like a defect).
+**Why:** The Brain Lab promo section's grayscale brain is intentional; the owner
+did not want the glowing brain there. As of this writing the owner has NOT said
+where (or whether) the glowing brain should appear.
 
-**How to apply:** The existing `.landing-split-img` drop-shadow + `.landing-split-glow`
-radial are part of the blend — keep them. The grayscale `brain-views/lateral.webp`
-is a SEPARATE asset still used by the Brain Lab tool; the landing uses its own
-`lateral-glow.png`. Don't overwrite lateral.webp to change the landing brain.
+**How to apply:**
+- Never swap the Brain Lab promo image without explicit placement instructions.
+- If the glowing brain comes up again, `lateral-glow.png` is a ready-made cutout
+  that blends seamlessly over the smoke bg (residual teal haze matches the palette
+  — verify blend by compositing over `assets/bg/psychpro-smoke-bg.jpeg`, not on white).
+- The grayscale `lateral.webp` is also used by the Brain Lab tool; never overwrite it.
