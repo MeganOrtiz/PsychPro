@@ -8,7 +8,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { STUDY_PALETTE } from "@/lib/study-theme";
-import smokeBg from "@/assets/bg/psychpro-smoke-bg.jpeg";
+import smokeBg from "@/assets/bg/psychpro-smoke-bg-hq.jpeg";
 import brainArt from "@assets/Screenshot_2026-06-20_at_3.22.26_AM_1781943752347.png";
 
 // Edge-fade mask for the sidebar brain artwork so it melts into the smoky

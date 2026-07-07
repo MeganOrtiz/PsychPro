@@ -530,7 +530,7 @@ body {
      - canonical glass card treatment (.bg-card descendants)
 
    The backdrop image is a single shared asset
-   (assets/bg/psychpro-smoke-bg.jpeg). Replacing that one file re-skins the
+   (assets/bg/psychpro-smoke-bg-hq.jpeg). Replacing that one file re-skins the
    landing page, authenticated app, dashboards, and EPPP surfaces together.
 
    DO NOT override the ::before background per-page. DO NOT add filters,
@@ -545,12 +545,12 @@ body {
   inset: 0;
   z-index: -2;
   /* Full-bleed deep-cerulean teal-smoke backdrop
-     (assets/bg/psychpro-smoke-bg.jpeg), supplied as the exact canonical
+     (assets/bg/psychpro-smoke-bg-hq.jpeg), supplied as the exact canonical
      PsychPro artwork. The image is shown at its native color and contrast:
      no vignette, no blend mode, no pseudo-element glow, and no global filter.
      Base color is a near-black deep cerulean that matches the image's darkest
      clouds for a seamless letterbox on any aspect. */
-  background-image: url("./assets/bg/psychpro-smoke-bg.jpeg");
+  background-image: url("./assets/bg/psychpro-smoke-bg-hq.jpeg");
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;

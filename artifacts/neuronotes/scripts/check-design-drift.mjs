@@ -89,15 +89,15 @@ const overlayBackdrop = ruleBlock(css, ".study-page-bg::after");
 if (!appBackdrop) {
   fail("canonical app backdrop rule missing", "restore the .study-page-bg::before backdrop rule");
 } else {
-  if (!/background-image:\s*url\(["']?\.\/assets\/bg\/psychpro-smoke-bg\.jpeg["']?\);/.test(appBackdrop)) {
-    fail("canonical backdrop asset or layering drifted", "render psychpro-smoke-bg.jpeg directly as the sole background-image");
+  if (!/background-image:\s*url\(["']?\.\/assets\/bg\/psychpro-smoke-bg-hq\.jpeg["']?\);/.test(appBackdrop)) {
+    fail("canonical backdrop asset or layering drifted", "render psychpro-smoke-bg-hq.jpeg directly as the sole background-image");
   }
   if (/\bfilter\s*:|radial-gradient\(|linear-gradient\(|background-blend-mode\s*:/.test(appBackdrop)) {
     fail("canonical backdrop film reintroduced", "keep the background artwork free of filters, blend modes, and vignette gradients");
   }
 }
 if (landingBackdrop) {
-  fail("landing backdrop override reintroduced", "landing must inherit the shared .study-page-bg::before psychpro-smoke-bg.jpeg artwork");
+  fail("landing backdrop override reintroduced", "landing must inherit the shared .study-page-bg::before psychpro-smoke-bg-hq.jpeg artwork");
 }
 if (!overlayBackdrop) {
   fail("reserved backdrop overlay rule missing", "restore the empty .study-page-bg::after overlay rule");
