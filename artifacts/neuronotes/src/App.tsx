@@ -52,7 +52,6 @@ const MyDeckDetailPage = lazy(() => import("@/pages/my-decks-detail"));
 const ReflectionsPage = lazy(() => import("@/pages/reflections"));
 const ProfilePage = lazy(() => import("@/pages/profile"));
 const EpppSuitePage = lazy(() => import("@/pages/eppp-suite"));
-const EpppStudySessionPage = lazy(() => import("@/pages/eppp-study-session"));
 const NotFound = lazy(() => import("@/pages/not-found"));
 const CrashTestPage = lazy(() => import("@/pages/crash-test"));
 const DevGlassPreview = lazy(() => import("@/pages/dev-glass-preview"));
