@@ -54,6 +54,18 @@ uri = "file://artifacts/neuronotes/src/assets/bg/brain-clouds.png"
 type = "image"
 title = "deep cerulean nebula background"
 
+[[generated]]
+id = "3iGXP3J2zhwptaIxtlO9N"
+uri = "file://attached_assets/generated_images/smoke-bg-v1.png"
+type = "image"
+title = "teal smoke bg v1"
+
+[[generated]]
+id = "NMpMlJ5DHOFYbbK73PqeR"
+uri = "file://attached_assets/generated_images/smoke-bg-v2.png"
+type = "image"
+title = "teal smoke bg v2"
+
 [[outputs]]
 id = "aKKI8N7WseM8lzrKZFEEq"
 uri = "file://.local/exports/brain-lab-code.tar.gz"
