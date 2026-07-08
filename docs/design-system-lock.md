@@ -21,10 +21,11 @@ All values live in `artifacts/neuronotes/src/index.css`.
 **Native background artwork**
 - Landing, authenticated app, dashboard, and EPPP surfaces all render the same
   high-resolution `psychpro-smoke-bg-hq.jpeg` directly.
-- The JPEG is a high-resolution derivative of the supplied landscape background,
-  upscaled without hue, saturation, contrast, or brightness changes. It is the
-  canonical source of truth for the site background. Do not color-grade or
-  replace it unless the background artwork is intentionally changing.
+- The JPEG is a full-resolution centered 16:9 crop (3023x1700) of the owner's
+  supplied July 2026 artwork, cut without hue, saturation, contrast, or
+  brightness changes. It is the canonical source of truth for the site
+  background. Do not color-grade or replace it unless the background artwork
+  is intentionally changing.
 - No backdrop may add a global CSS `filter`, blend mode, vignette gradient, or
   pseudo-element glow over the image. This keeps the artwork clear instead of
   placing a dark, processed “film” over the site.
