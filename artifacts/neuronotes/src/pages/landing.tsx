@@ -30,6 +30,7 @@ import {
 } from "recharts";
 import { useGetTopics } from "@workspace/api-client-react";
 import brainLateral from "@/assets/brain-views/lateral.webp";
+import heroBrainGlow from "@/assets/brain-views/hero-brain-glow.png";
 import founderMegan from "@/assets/founder/megan.webp";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { isEpppTopic } from "@/lib/eppp-content";
@@ -285,6 +286,18 @@ export default function LandingPage() {
           id="home"
           className={`landing-hero${mounted ? " is-mounted" : ""}`}
         >
+          <img
+            src={heroBrainGlow}
+            alt=""
+            aria-hidden
+            className="landing-hero-brain"
+            style={{ ["--delay" as any]: "40ms" }}
+            loading="eager"
+            decoding="async"
+            width={920}
+            height={689}
+            data-testid="img-hero-brain"
+          />
           <h1 className="landing-wordmark" style={{ ["--delay" as any]: "120ms" }}>
             PSYCHPRO
           </h1>
@@ -834,10 +847,10 @@ const styles = `
   position: relative;
   max-width: 1320px;
   margin: 0 auto;
-  /* Generous top padding drops the wordmark into the lower-cloud region of the
-     fixed brain-in-clouds backdrop, leaving the glowing brain unobstructed near
-     the top of the viewport. */
-  padding: clamp(190px, 38vh, 440px) 24px clamp(40px, 6vh, 90px);
+  /* Top padding clears the fixed header; the glowing hero brain image now
+     occupies the space above the wordmark, so the padding is modest and the
+     brain + wordmark stack sits comfortably in the first viewport. */
+  padding: clamp(96px, 14vh, 170px) 24px clamp(40px, 6vh, 90px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -862,6 +875,18 @@ const styles = `
   pointer-events: none;
 }
 
+/* Owner-supplied glowing brain cutout (transparent PNG) floated above the
+   wordmark. It sits directly over the shared smoke backdrop so the glow blends
+   seamlessly — no box, border, or added glow effects. */
+.landing-hero-brain {
+  width: clamp(260px, 36vw, 470px);
+  height: auto;
+  margin: 0 0 clamp(10px, 2.5vh, 28px);
+  pointer-events: none;
+  user-select: none;
+}
+
+.landing-hero-brain,
 .landing-wordmark,
 .landing-tagline,
 .landing-headline,
@@ -876,6 +901,7 @@ const styles = `
     opacity 900ms cubic-bezier(0.16, 1, 0.3, 1) var(--delay, 0ms),
     transform 900ms cubic-bezier(0.16, 1, 0.3, 1) var(--delay, 0ms);
 }
+.landing-hero.is-mounted .landing-hero-brain,
 .landing-hero.is-mounted .landing-wordmark,
 .landing-hero.is-mounted .landing-tagline,
 .landing-hero.is-mounted .landing-headline,
