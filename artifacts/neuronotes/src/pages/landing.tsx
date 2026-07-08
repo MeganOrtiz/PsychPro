@@ -30,7 +30,7 @@ import {
 } from "recharts";
 import { useGetTopics } from "@workspace/api-client-react";
 import brainLateral from "@/assets/brain-views/lateral.webp";
-import heroBrainGlow from "@/assets/brain-views/hero-brain-glow.png";
+import heroBrainGlow from "@/assets/brain-views/hero-brain-glow.webp";
 import founderMegan from "@/assets/founder/megan.webp";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { isEpppTopic } from "@/lib/eppp-content";

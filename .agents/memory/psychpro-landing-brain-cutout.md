@@ -22,3 +22,7 @@ where (or whether) the glowing brain should appear.
   that blends seamlessly over the smoke bg (residual teal haze matches the palette
   — verify blend by compositing over `assets/bg/psychpro-smoke-bg.jpeg`, not on white).
 - The grayscale `lateral.webp` is also used by the Brain Lab tool; never overwrite it.
+- July 8, 2026: the HERO brain (a separate, owner-approved glowing cutout at the top
+  of the landing page) was replaced with a new owner-supplied artwork — background
+  removed, trimmed, WebP-with-alpha (chosen over PNG8, which bands the glow edges).
+  The Brain Lab promo ban above is unaffected and still stands.
