@@ -1,12 +1,11 @@
 ---
 name: PsychPro landing brain background
-description: Landing page has its own sanctioned backdrop (owner portrait artwork with baked-in brain); rest of site stays on the shared landscape hq smoke bg.
+description: Owner's baked-brain portrait artwork was installed as a landing-only backdrop, then REJECTED on desktop; landing is back on the shared hq smoke bg.
 ---
 
-The landing page is the ONE sanctioned exception to the "single shared backdrop" rule.
+Attempt (July 8, 2026): owner supplied a portrait composite (glowing brain baked in near the top) and asked for it as the landing-only background. Installed via a `.landing-root.study-page-bg::before` override, top-anchored. Owner REJECTED the result and it was fully reverted (CSS, drift guardrail, lock doc) — landing inherits the shared backdrop again.
 
-- Landing renders owner-supplied portrait artwork (glowing brain baked in near the top) via `.landing-root.study-page-bg::before`, anchored `top center` — a centered cover-crop cuts the brain off on wide desktop viewports.
-- All other surfaces (app, dashboards, EPPP) keep the shared landscape hq smoke background.
-- The design-drift guardrail REQUIRES the landing rule (exact asset + top-center + no filters); it previously forbade any landing override — don't "restore" the old ban.
-- **Why:** owner rejected placing a brain cutout inside page content (Brain Lab promo incident) but explicitly wanted their baked-brain composite as the landing backdrop only.
-- **How to apply:** background changes are cover-scaled (cropped, never stretched); simulate desktop 16:9 center vs top crops before installing any portrait art with a focal subject near an edge.
+- **Why it failed:** desktop cover-crop shows only the top ~40% of a 3:4 portrait image, so a subject baked near the top renders huge and collides with the hero headline. Mobile looked fine.
+- **How to apply:** any future landing artwork with a focal subject should be LANDSCAPE (~16:9, e.g. 5120x2880) with the subject composed where it should sit relative to the hero text, or keep the subject as a separate element instead of baking it into the bg. Always simulate the desktop 16:9 crop AND check headline overlap before installing.
+- The unused assets remain: `src/assets/bg/psychpro-landing-brain-bg.jpg` (rejected composite, unreferenced) and `src/assets/brain-views/lateral-glow.png` (brain cutout).
+- The guardrail ban on landing backdrop overrides is RESTORED — a future sanctioned exception must update check-design-drift.mjs + docs/design-system-lock.md in the same commit again.

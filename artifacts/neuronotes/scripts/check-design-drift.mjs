@@ -80,11 +80,9 @@ if (!rootBlock) {
 }
 
 // --- 1b) Native background artwork ----------------------------------------
-// The canonical background is one supplied JPEG rendered directly everywhere,
-// with ONE sanctioned exception: the landing page renders its own supplied
-// portrait artwork (psychpro-landing-brain-bg.jpg) anchored top center. No
-// other page may add a separate asset, and no backdrop may add a global
-// color-processing filter, vignette, blend mode, or pseudo-element glow.
+// The canonical background is one supplied JPEG rendered directly everywhere.
+// No page may add a separate landing/dashboard asset, global color-processing
+// filter, vignette, blend mode, or pseudo-element glow over it.
 const appBackdrop = ruleBlock(css, ".study-page-bg::before");
 const landingBackdrop = ruleBlock(css, ".landing-root.study-page-bg::before");
 const overlayBackdrop = ruleBlock(css, ".study-page-bg::after");
@@ -98,18 +96,8 @@ if (!appBackdrop) {
     fail("canonical backdrop film reintroduced", "keep the background artwork free of filters, blend modes, and vignette gradients");
   }
 }
-if (!landingBackdrop) {
-  fail("landing backdrop rule missing", "restore the .landing-root.study-page-bg::before rule rendering psychpro-landing-brain-bg.jpg top-anchored");
-} else {
-  if (!/background-image:\s*url\(["']?\.\/assets\/bg\/psychpro-landing-brain-bg\.jpg["']?\);/.test(landingBackdrop)) {
-    fail("landing backdrop asset drifted", "render psychpro-landing-brain-bg.jpg directly as the landing background-image");
-  }
-  if (!/background-position:\s*top center;/.test(landingBackdrop)) {
-    fail("landing backdrop anchoring drifted", "keep the landing artwork anchored top center so the baked-in brain stays in frame on desktop");
-  }
-  if (/\bfilter\s*:|radial-gradient\(|linear-gradient\(|background-blend-mode\s*:/.test(landingBackdrop)) {
-    fail("landing backdrop film reintroduced", "keep the landing artwork free of filters, blend modes, and vignette gradients");
-  }
+if (landingBackdrop) {
+  fail("landing backdrop override reintroduced", "landing must inherit the shared .study-page-bg::before psychpro-smoke-bg-hq.jpeg artwork");
 }
 if (!overlayBackdrop) {
   fail("reserved backdrop overlay rule missing", "restore the empty .study-page-bg::after overlay rule");
