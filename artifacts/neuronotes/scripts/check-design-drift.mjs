@@ -80,10 +80,11 @@ if (!rootBlock) {
 }
 
 // --- 1b) Native background ---------------------------------------------------
-// The canonical background is a SOLID near-black navy (owner removed the smoke
-// artwork 2026-07-08). No page may add a background image, separate landing/
-// dashboard asset, global color-processing filter, vignette, blend mode, or
-// pseudo-element glow.
+// The canonical APP background is a SOLID near-black navy (owner removed the
+// smoke artwork 2026-07-08). The LANDING page alone shows the owner's glass-
+// brain artwork, unstretched (background-size: contain) on a pure-black floor
+// (owner instruction 2026-07-08). No other page may add a background image,
+// global color-processing filter, vignette, blend mode, or pseudo-element glow.
 const appBackdrop = ruleBlock(css, ".study-page-bg::before");
 const landingBackdrop = ruleBlock(css, ".landing-root.study-page-bg::before");
 const overlayBackdrop = ruleBlock(css, ".study-page-bg::after");
@@ -100,8 +101,21 @@ if (!appBackdrop) {
     fail("canonical backdrop film reintroduced", "keep the backdrop free of filters, blend modes, and vignette gradients");
   }
 }
-if (landingBackdrop) {
-  fail("landing backdrop override reintroduced", "landing must inherit the shared solid .study-page-bg::before backdrop");
+if (!landingBackdrop) {
+  fail("landing glass-brain backdrop missing", "restore the .landing-root.study-page-bg::before rule with the owner's landing-glass-brain.jpeg artwork");
+} else {
+  if (!/background-image:\s*url\(["']?\.\/assets\/bg\/landing-glass-brain\.jpeg["']?\);/.test(landingBackdrop)) {
+    fail("landing backdrop asset drifted", "the landing background must be the owner's landing-glass-brain.jpeg artwork");
+  }
+  if (!/background-size:\s*contain;/.test(landingBackdrop)) {
+    fail("landing backdrop stretch reintroduced", "owner: do NOT stretch the landing artwork — keep background-size: contain");
+  }
+  if (!/background-color:\s*#000;/.test(landingBackdrop)) {
+    fail("landing backdrop floor drifted", "keep the landing letterbox floor pure black (#000) to match the artwork's edges");
+  }
+  if (/\bfilter\s*:|radial-gradient\(|linear-gradient\(|background-blend-mode\s*:/.test(landingBackdrop)) {
+    fail("landing backdrop film reintroduced", "keep the landing artwork free of filters, blend modes, and vignette gradients");
+  }
 }
 if (!overlayBackdrop) {
   fail("reserved backdrop overlay rule missing", "restore the empty .study-page-bg::after overlay rule");

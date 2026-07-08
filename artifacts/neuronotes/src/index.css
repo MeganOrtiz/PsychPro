@@ -547,6 +547,22 @@ body {
   pointer-events: none;
 }
 
+/* Landing-page-only backdrop: the owner's 3D glass-brain artwork
+   (assets/bg/landing-glass-brain.jpeg, 832x1248, pure-black surround).
+   Owner instruction (2026-07-08): use it as the LANDING background, do NOT
+   stretch it, and leave the rest of the background black where the image
+   doesn't fit. background-size: contain preserves the aspect ratio (never
+   stretches or crops) and the #000 floor matches the artwork's own black
+   edges for a seamless letterbox. Authenticated app pages keep the solid
+   navy backdrop above. */
+.landing-root.study-page-bg::before {
+  background-image: url("./assets/bg/landing-glass-brain.jpeg");
+  background-size: contain;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-color: #000;
+}
+
 /* Reserved overlay layer. Keep visually empty so the solid navy backdrop
    stays exact across landing, app, dashboard, and EPPP surfaces. */
 .study-page-bg::after,
