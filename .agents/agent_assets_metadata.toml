@@ -149,3 +149,15 @@ id = "u4F67mqv3r1Iqlce--13c"
 uri = "file://.local/checkpoint-shots/20b04a2.jpg"
 type = "image"
 title = "Checkpoint 20b04a2 — June 27, 11:08 (de-fog pass)"
+
+[[outputs]]
+id = "T3Jwrq6qgd7Fplr4F1pFI"
+uri = "file://attached_assets/previews/desktop-centered-crop.jpg"
+type = "image"
+title = "Desktop view — centered crop (brain gets cut off)"
+
+[[outputs]]
+id = "Daq3QRpG-XmO0QVMGQu8g"
+uri = "file://attached_assets/previews/desktop-top-anchored-crop.jpg"
+type = "image"
+title = "Desktop view — top-anchored crop (brain visible)"
