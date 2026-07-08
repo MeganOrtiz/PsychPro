@@ -44,7 +44,6 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { useQueries } from "@tanstack/react-query";
-import smokeBg from "@/assets/bg/psychpro-smoke-bg-hq.jpeg";
 import {
   useGetDashboardSummary,
   useGetTopics,
@@ -732,10 +731,10 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
-          backgroundImage: `linear-gradient(180deg, hsl(var(--surf-hue) 87% 6% / 0.26) 0%, hsl(var(--surf-hue) 87% 6% / 0.44) 55%, hsl(var(--surf-hue) 87% 6% / 0.66) 100%), url(${smokeBg})`,
-          backgroundSize: "cover, cover",
-          backgroundPosition: "center, center",
-          backgroundRepeat: "no-repeat, no-repeat",
+          backgroundImage: `linear-gradient(180deg, hsl(var(--surf-hue) 87% 6% / 0.26) 0%, hsl(var(--surf-hue) 87% 6% / 0.44) 55%, hsl(var(--surf-hue) 87% 6% / 0.66) 100%)`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
           opacity: 0.95,
         }}
       />

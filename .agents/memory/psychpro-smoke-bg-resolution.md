@@ -28,6 +28,14 @@ also low-res at 1672×941). Same recipe reused successfully: Real-ESRGAN anime-6
 both aligned to the new artwork's darkest tone (#030d24) — keep those two in sync
 with whatever artwork ships, or first-paint/letterbox seams appear.
 
+**July 8, 2026 (later same day):** owner then said "remove the current background from
+the site" — the smoke image is now GONE entirely. `.study-page-bg::before` is a solid
+`#030d24` floor (`background-image: none`), and the smoke JPEG was also stripped from
+the three component-level layered backgrounds that reused it (app sidebar, dashboard
+hero panel, EPPP suite sidebar — their gradient layers kept). The drift guardrail's
+section 1b now enforces the SOLID backdrop (no url(), floor #030d24). The upscale
+recipe below stays useful only if the owner ever brings artwork back.
+
 **Sandbox constraints that shaped the run (also apply to any CPU ML task here):**
 - bash calls hard-cap at 120s; a full 4× pass on 1.57MP takes ~200s → must be resumable.
 - Backgrounded/nohup processes do NOT survive between bash tool calls (get reaped).

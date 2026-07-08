@@ -70,7 +70,6 @@ import {
   deleteReflection,
   type ReflectionRecord,
 } from "@/lib/reflections";
-import smokeBg from "@/assets/bg/psychpro-smoke-bg-hq.jpeg";
 import brainArt from "@assets/Screenshot_2026-06-20_at_3.22.26_AM_1781943752347.png";
 import EpppDashboardPage from "@/pages/eppp-dashboard";
 import { ResourcesContent } from "@/pages/resources";
@@ -310,10 +309,10 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
         )}
         style={{
           ["--nav-glow" as never]: STUDY_PALETTE.surf,
-          background: `linear-gradient(180deg, hsl(var(--surf-hue) 87% 6% / 0.26) 0%, hsl(var(--surf-hue) 87% 6% / 0.44) 55%, hsl(var(--surf-hue) 87% 6% / 0.66) 100%), url(${smokeBg}), linear-gradient(180deg, ${STUDY_PALETTE.surfaceElev}, ${STUDY_PALETTE.surface})`,
-          backgroundSize: "cover, cover, cover",
-          backgroundPosition: "center, center, center",
-          backgroundRepeat: "no-repeat, no-repeat, no-repeat",
+          background: `linear-gradient(180deg, hsl(var(--surf-hue) 87% 6% / 0.26) 0%, hsl(var(--surf-hue) 87% 6% / 0.44) 55%, hsl(var(--surf-hue) 87% 6% / 0.66) 100%), linear-gradient(180deg, ${STUDY_PALETTE.surfaceElev}, ${STUDY_PALETTE.surface})`,
+          backgroundSize: "cover, cover",
+          backgroundPosition: "center, center",
+          backgroundRepeat: "no-repeat, no-repeat",
           border: `1px solid ${STUDY_PALETTE.surf}55`,
           boxShadow: `0 20px 60px -20px ${STUDY_PALETTE.teal}77`,
         }}

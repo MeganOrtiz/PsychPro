@@ -79,25 +79,29 @@ if (!rootBlock) {
   }
 }
 
-// --- 1b) Native background artwork ----------------------------------------
-// The canonical background is one supplied JPEG rendered directly everywhere.
-// No page may add a separate landing/dashboard asset, global color-processing
-// filter, vignette, blend mode, or pseudo-element glow over it.
+// --- 1b) Native background ---------------------------------------------------
+// The canonical background is a SOLID near-black navy (owner removed the smoke
+// artwork 2026-07-08). No page may add a background image, separate landing/
+// dashboard asset, global color-processing filter, vignette, blend mode, or
+// pseudo-element glow.
 const appBackdrop = ruleBlock(css, ".study-page-bg::before");
 const landingBackdrop = ruleBlock(css, ".landing-root.study-page-bg::before");
 const overlayBackdrop = ruleBlock(css, ".study-page-bg::after");
 if (!appBackdrop) {
   fail("canonical app backdrop rule missing", "restore the .study-page-bg::before backdrop rule");
 } else {
-  if (!/background-image:\s*url\(["']?\.\/assets\/bg\/psychpro-smoke-bg-hq\.jpeg["']?\);/.test(appBackdrop)) {
-    fail("canonical backdrop asset or layering drifted", "render psychpro-smoke-bg-hq.jpeg directly as the sole background-image");
+  if (!/background-image:\s*none;/.test(appBackdrop) || /url\(/.test(appBackdrop)) {
+    fail("canonical backdrop drifted", "the site backdrop is a solid color — keep background-image: none (owner removed the smoke artwork)");
+  }
+  if (!/background-color:\s*#030d24;/.test(appBackdrop)) {
+    fail("canonical backdrop floor color drifted", "keep the solid near-black navy floor #030d24 (must match the body floor)");
   }
   if (/\bfilter\s*:|radial-gradient\(|linear-gradient\(|background-blend-mode\s*:/.test(appBackdrop)) {
-    fail("canonical backdrop film reintroduced", "keep the background artwork free of filters, blend modes, and vignette gradients");
+    fail("canonical backdrop film reintroduced", "keep the backdrop free of filters, blend modes, and vignette gradients");
   }
 }
 if (landingBackdrop) {
-  fail("landing backdrop override reintroduced", "landing must inherit the shared .study-page-bg::before psychpro-smoke-bg-hq.jpeg artwork");
+  fail("landing backdrop override reintroduced", "landing must inherit the shared solid .study-page-bg::before backdrop");
 }
 if (!overlayBackdrop) {
   fail("reserved backdrop overlay rule missing", "restore the empty .study-page-bg::after overlay rule");

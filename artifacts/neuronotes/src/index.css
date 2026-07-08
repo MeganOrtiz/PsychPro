@@ -524,19 +524,14 @@ body {
    .study-page-bg is the canonical PsychPro app surface used by
    every authenticated page. It paints:
      - shadcn token overrides (cerulean palette, defined above)
-     - the full-bleed, high-definition deep-cerulean nebula backdrop
-       via ::before (static — no motion), on a near-black deep
-       cerulean base color
+     - the full-bleed solid near-black navy backdrop via ::before
+       (owner removed the smoke artwork on 2026-07-08 — NO image)
      - canonical glass card treatment (.bg-card descendants)
 
-   The backdrop image is a single shared asset
-   (assets/bg/psychpro-smoke-bg-hq.jpeg). Replacing that one file re-skins the
-   landing page, authenticated app, dashboards, and EPPP surfaces together.
-
    DO NOT override the ::before background per-page. DO NOT add filters,
-   vignette gradients, blend modes, or glow layers over the artwork. DO NOT
-   re-declare these CSS variables in another scope. DO NOT add a competing
-   .bg-card rule.
+   vignette gradients, blend modes, glow layers, or a background image. DO
+   NOT re-declare these CSS variables in another scope. DO NOT add a
+   competing .bg-card rule.
    ============================================================ */
 .study-page-bg::before,
 .study-page-aurora::before {
@@ -544,32 +539,16 @@ body {
   position: fixed;
   inset: 0;
   z-index: -2;
-  /* Full-bleed deep-cerulean teal-smoke backdrop
-     (assets/bg/psychpro-smoke-bg-hq.jpeg), supplied as the exact canonical
-     PsychPro artwork. The image is shown at its native color and contrast:
-     no vignette, no blend mode, no pseudo-element glow, and no global filter.
-     Base color is a near-black deep cerulean that matches the image's darkest
-     clouds for a seamless letterbox on any aspect. */
-  background-image: url("./assets/bg/psychpro-smoke-bg-hq.jpeg");
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  /* NO background-attachment: fixed. The pseudo-element is already
-     position:fixed; inset:0, so it is pinned to the viewport. Adding
-     background-attachment:fixed on top is redundant AND makes the browser
-     composite the background against the viewport at fractional device-pixel
-     boundaries, which paints a faint dead-straight horizontal seam across the
-     page on HiDPI / fractional-zoom displays. Leaving attachment at the
-     default (scroll) paints the image within this fixed box — visually
-     identical, no seam. */
-  background-attachment: scroll;
+  /* Solid near-black deep-navy backdrop. The owner removed the smoke
+     artwork site-wide (2026-07-08): no background image, no gradients,
+     no vignette, no blend mode, no pseudo-element glow, no filter. */
+  background-image: none;
   background-color: #030d24;
   pointer-events: none;
 }
 
-/* Reserved overlay layer. Keep visually empty so the canonical background image
-   preserves its exact supplied color and contrast across landing, app,
-   dashboard, and EPPP surfaces. */
+/* Reserved overlay layer. Keep visually empty so the solid navy backdrop
+   stays exact across landing, app, dashboard, and EPPP surfaces. */
 .study-page-bg::after,
 .study-page-aurora::after {
   content: "";
