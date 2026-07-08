@@ -515,7 +515,7 @@
        propagation, so body's background paints in normal flow ON TOP of the
        fixed ::before and wipes every page backdrop. */
 body {
-  background-color: #05252d;
+  background-color: #030d24;
 }
 
 /* ============================================================
@@ -563,7 +563,7 @@ body {
      default (scroll) paints the image within this fixed box — visually
      identical, no seam. */
   background-attachment: scroll;
-  background-color: #05252d;
+  background-color: #030d24;
   pointer-events: none;
 }
 

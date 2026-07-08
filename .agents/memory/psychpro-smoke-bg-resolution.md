@@ -21,6 +21,13 @@ image was upscaled in-repl with Real-ESRGAN (spandrel + `RealESRGAN_x4plus_anime
 the 6-block model — general x4plus is too slow on CPU), then Lanczos-downscaled to 2560px
 wide, saved JPEG q90 (~1MB) over the same filename (re-skins landing+app+dashboards+EPPP).
 
+**July 8, 2026 update:** owner supplied a NEW backdrop artwork (deep navy-blue smoke,
+also low-res at 1672×941). Same recipe reused successfully: Real-ESRGAN anime-6B 4x
+(tiled, resumable), Lanczos to 2560 wide, JPEG q90 over the same shared filename
+(psychpro-smoke-bg-hq.jpeg). The letterbox base color AND the body dark floor were
+both aligned to the new artwork's darkest tone (#030d24) — keep those two in sync
+with whatever artwork ships, or first-paint/letterbox seams appear.
+
 **Sandbox constraints that shaped the run (also apply to any CPU ML task here):**
 - bash calls hard-cap at 120s; a full 4× pass on 1.57MP takes ~200s → must be resumable.
 - Backgrounded/nohup processes do NOT survive between bash tool calls (get reaped).
