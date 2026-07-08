@@ -65,3 +65,4 @@
 - [Auth provider choice](psychpro-auth-provider-choice.md) — PsychPro uses external Clerk on purpose; Replit Auth forces end users to have Replit accounts (consumer audience killer); a RA migration was built+reverted; RA→Clerk migration is unsupported — keep Clerk.
 - [Smoke bg resolution](psychpro-smoke-bg-resolution.md) — the shared smoke backdrop source is only 941px; "looks cheap/blurry" = a resolution problem fixed by super-resolution of the exact asset, not CSS; includes CPU-upscale sandbox recipe.
 - [Landing Brain Lab brain](psychpro-landing-brain-cutout.md) — owner REJECTED the glowing brain in the Brain Lab promo; keep grayscale lateral.webp there; ready-made cutout lateral-glow.png exists unused for future placement.
+- [Landing brain background](psychpro-landing-brain-bg.md) — landing is the ONE sanctioned backdrop exception (owner's baked-brain portrait art, top-anchored); guardrail now REQUIRES it — don't restore the old ban.

@@ -533,10 +533,13 @@ body {
    (assets/bg/psychpro-smoke-bg-hq.jpeg). Replacing that one file re-skins the
    landing page, authenticated app, dashboards, and EPPP surfaces together.
 
-   DO NOT override the ::before background per-page. DO NOT add filters,
-   vignette gradients, blend modes, or glow layers over the artwork. DO NOT
-   re-declare these CSS variables in another scope. DO NOT add a competing
-   .bg-card rule.
+   DO NOT override the ::before background per-page — with ONE sanctioned
+   exception: the landing page renders its own supplied artwork
+   (assets/bg/psychpro-landing-brain-bg.jpg, portrait, brain baked in) via
+   .landing-root.study-page-bg::before, anchored top center so the brain stays
+   in frame on desktop. DO NOT add filters, vignette gradients, blend modes, or
+   glow layers over either artwork. DO NOT re-declare these CSS variables in
+   another scope. DO NOT add a competing .bg-card rule.
    ============================================================ */
 .study-page-bg::before,
 .study-page-aurora::before {
@@ -565,6 +568,17 @@ body {
   background-attachment: scroll;
   background-color: #05252d;
   pointer-events: none;
+}
+
+/* Landing-only backdrop: the owner-supplied portrait artwork with the glowing
+   brain baked in near the top (assets/bg/psychpro-landing-brain-bg.jpg,
+   3023x4032). Rendered exactly like the shared backdrop — cover-scaled, never
+   stretched, no filters or overlays — but anchored top center so the brain
+   remains visible on wide desktop viewports (a centered crop would trim it
+   off). All other surfaces keep the shared psychpro-smoke-bg-hq.jpeg. */
+.landing-root.study-page-bg::before {
+  background-image: url("./assets/bg/psychpro-landing-brain-bg.jpg");
+  background-position: top center;
 }
 
 /* Reserved overlay layer. Keep visually empty so the canonical background image

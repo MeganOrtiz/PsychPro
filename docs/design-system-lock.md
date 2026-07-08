@@ -19,8 +19,14 @@ All values live in `artifacts/neuronotes/src/index.css`.
 - `--surf-hue: 193;` — the surface hue base.
 
 **Native background artwork**
-- Landing, authenticated app, dashboard, and EPPP surfaces all render the same
+- Authenticated app, dashboard, and EPPP surfaces all render the same
   high-resolution `psychpro-smoke-bg-hq.jpeg` directly.
+- The landing page renders its own owner-supplied portrait artwork
+  `psychpro-landing-brain-bg.jpg` (3023x4032, glowing brain baked in near the
+  top) via `.landing-root.study-page-bg::before`, anchored `top center` so the
+  brain stays in frame on desktop. It is cover-scaled (cropped, never
+  stretched) and, like the shared backdrop, must never receive filters, blend
+  modes, or overlay glows.
 - The JPEG is a high-resolution derivative of the supplied landscape background,
   upscaled without hue, saturation, contrast, or brightness changes. It is the
   canonical source of truth for the site background. Do not color-grade or
