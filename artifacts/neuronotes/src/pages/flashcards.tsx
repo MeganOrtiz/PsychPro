@@ -250,7 +250,7 @@ export default function FlashcardsPage({ params }: Props) {
               className="mt-6 rounded-xl border p-5 text-center"
               style={{
                 background:
-                  "linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.81), hsl(var(--surf-hue) 88% 14% / 0.90))",
+                  "linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.81), hsl(var(--surf-hue) 88% 6% / 0.90))",
                 borderColor: "rgba(118,228,247,0.26)",
                 backdropFilter: "blur(18px) saturate(135%)",
                 WebkitBackdropFilter: "blur(18px) saturate(135%)",

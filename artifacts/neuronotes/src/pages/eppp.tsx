@@ -321,7 +321,7 @@ const styles = `
   border-radius: 18px;
   padding: clamp(20px, 2.4vw, 26px);
   background:
-    linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85));
+    linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.74), hsl(var(--surf-hue) 88% 6% / 0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);

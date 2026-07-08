@@ -189,7 +189,7 @@ function StructureSearch({
         className="w-full max-w-xl rounded-2xl border overflow-hidden"
         style={{
           background:
-            "linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))",
+            "linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.74), hsl(var(--surf-hue) 88% 6% / 0.85))",
           borderColor: "rgba(196,232,242,0.22)",
           backdropFilter: "blur(20px) saturate(135%)",
           WebkitBackdropFilter: "blur(20px) saturate(135%)",
@@ -473,7 +473,7 @@ function StructureDetail({
       className="rounded-2xl border overflow-hidden flex flex-col h-full min-h-0 max-h-full"
       style={{
         background:
-          "linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))",
+          "linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.74), hsl(var(--surf-hue) 88% 6% / 0.85))",
         borderColor: "rgba(196,232,242,0.22)",
         backdropFilter: "blur(20px) saturate(135%)",
         WebkitBackdropFilter: "blur(20px) saturate(135%)",
@@ -883,7 +883,7 @@ function EmptyDetail() {
       className="rounded-2xl border p-6 h-full flex flex-col items-center justify-center text-center"
       style={{
         background:
-          "linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))",
+          "linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.74), hsl(var(--surf-hue) 88% 6% / 0.85))",
         borderColor: "rgba(196,232,242,0.22)",
         backdropFilter: "blur(20px) saturate(135%)",
         WebkitBackdropFilter: "blur(20px) saturate(135%)",
@@ -947,7 +947,7 @@ function NumberedKey({
       className="rounded-2xl border h-full flex flex-col overflow-hidden"
       style={{
         background:
-          "linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))",
+          "linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.74), hsl(var(--surf-hue) 88% 6% / 0.85))",
         borderColor: "rgba(196,232,242,0.22)",
         backdropFilter: "blur(20px) saturate(135%)",
         WebkitBackdropFilter: "blur(20px) saturate(135%)",
@@ -1883,7 +1883,7 @@ export default function BrainLabPage() {
             className="relative rounded-2xl border overflow-hidden flex-1 min-h-0 h-full"
             style={{
               background:
-                "linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))",
+                "linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.74), hsl(var(--surf-hue) 88% 6% / 0.85))",
               borderColor: "rgba(196,232,242,0.22)",
               backdropFilter: "blur(20px) saturate(135%)",
               WebkitBackdropFilter: "blur(20px) saturate(135%)",

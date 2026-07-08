@@ -474,7 +474,7 @@ export default function PracticeExamPage({ params }: Props) {
             style={{
               borderColor: "rgba(118,228,247,0.26)",
               background:
-                "linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.81), hsl(var(--surf-hue) 88% 14% / 0.90))",
+                "linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.81), hsl(var(--surf-hue) 88% 6% / 0.90))",
               backdropFilter: "blur(20px) saturate(135%)",
               WebkitBackdropFilter: "blur(20px) saturate(135%)",
               boxShadow:
@@ -651,7 +651,7 @@ export default function PracticeExamPage({ params }: Props) {
             cls += " hover:-translate-y-0.5 quiz-option-hover";
             style = {
               background:
-                "linear-gradient(to bottom, hsl(var(--surf-hue) 88% 31% / 0.78), hsl(var(--surf-hue) 88% 19% / 0.86))",
+                "linear-gradient(to bottom, hsl(var(--surf-hue) 88% 18% / 0.78), hsl(var(--surf-hue) 88% 10% / 0.86))",
               borderColor: `${P.surf}55`,
               color: P.cloud,
               boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(255,255,255,0.06)`,
@@ -667,7 +667,7 @@ export default function PracticeExamPage({ params }: Props) {
             cls += " opacity-55";
             style = {
               background:
-                "linear-gradient(to bottom, hsl(var(--surf-hue) 88% 31% / 0.78), hsl(var(--surf-hue) 88% 19% / 0.86))",
+                "linear-gradient(to bottom, hsl(var(--surf-hue) 88% 18% / 0.78), hsl(var(--surf-hue) 88% 10% / 0.86))",
               borderColor: `${P.surf}25`,
               color: `${P.cloud}aa`,
             };

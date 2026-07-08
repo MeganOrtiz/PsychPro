@@ -146,7 +146,7 @@ if (!cardRecipe) {
 // intentionally span the page-local CSS sources so none of the three surfaces
 // can quietly become brighter, blurrier, rounder, or a different hue.
 const EPPP_CARD_CONTRACT = [
-  { name: "145° pigment gradient", re: /linear-gradient\(145deg,\s*hsl\(var\(--surf-hue\)\s+88%\s+19%\s+\/\s+0\.74\),\s*hsl\(var\(--surf-hue\)\s+88%\s+14%\s+\/\s+0\.85\)\)/ },
+  { name: "145° pigment gradient", re: /linear-gradient\(145deg,\s*hsl\(var\(--surf-hue\)\s+88%\s+10%\s+\/\s+0\.74\),\s*hsl\(var\(--surf-hue\)\s+88%\s+6%\s+\/\s+0\.85\)\)/ },
   { name: "cerulean hairline", re: /rgba\(196,\s*232,\s*242,\s*0\.22\)/ },
   { name: "glass blur", re: /blur\(20px\) saturate\(135%\)/ },
   { name: "restrained inset highlight", re: /inset\s+0\s+1px\s+0\s+rgba\(255,\s*255,\s*255,\s*0\.03\)/ },
@@ -159,8 +159,19 @@ for (const item of EPPP_CARD_CONTRACT) {
   }
 }
 
+// The lesson-detail header shares the darkened card ladder; it drifted once
+// (stayed bright after a site-wide darkening pass), so pin it explicitly.
+const LESSON_HEADER_CONTRACT = [
+  { name: "darkened 145° gradient", re: /\.lesson-header-box\s*\{[^}]*linear-gradient\(\s*145deg,\s*hsl\(var\(--surf-hue\)\s+88%\s+12%\s+\/\s+0\.66\),\s*hsl\(var\(--surf-hue\)\s+90%\s+8%\s+\/\s+0\.78\)\s*\)/s },
+];
+for (const item of LESSON_HEADER_CONTRACT) {
+  if (!item.re.test(raw)) {
+    fail(`.lesson-header-box ${item.name} drifted`, "keep the lesson header on the darkened card ladder (88% 12% / 90% 8%)");
+  }
+}
+
 const LANDING_SYSTEM_CONTRACT = [
-  { name: "tokenized cerulean surfaces", re: /hsl\(var\(--surf-hue\)\s+88%\s+1[49]%\s+\/\s+0\.(8|9)/ },
+  { name: "tokenized cerulean surfaces", re: /hsl\(var\(--surf-hue\)\s+88%\s+(?:10|6)%\s+\/\s+0\.(8|9)/ },
   { name: "glass blur", re: /backdrop-filter:\s*blur\(\d+px\)\s+saturate\(1[34]0%\)/ },
   { name: "cerulean hairlines", re: /\$\{C\.hairline(?:Strong)?\}/ },
   { name: "cerulean glow accents", re: /\$\{C\.cyan\}/ },

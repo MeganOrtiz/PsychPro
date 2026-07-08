@@ -28,7 +28,7 @@ function baseSurfaceStyles(tone: StudyTone): CSSProperties {
       // top-bloom + outer corona radiance over the brain backdrop.
       return {
         background:
-          "linear-gradient(145deg, hsl(var(--surf-hue) 85% 22% / 0.80), hsl(var(--surf-hue) 91% 15% / 0.90))",
+          "linear-gradient(145deg, hsl(var(--surf-hue) 85% 12% / 0.80), hsl(var(--surf-hue) 91% 8% / 0.90))",
         borderColor: "rgba(118,228,247,0.24)",
         backdropFilter: "blur(20px) saturate(135%)",
         WebkitBackdropFilter: "blur(20px) saturate(135%)",
@@ -42,7 +42,7 @@ function baseSurfaceStyles(tone: StudyTone): CSSProperties {
       // sharing the same incandescent bloom + radiant corona.
       return {
         background:
-          "linear-gradient(135deg, hsl(var(--surf-hue) 81% 41% / 0.64), hsl(var(--surf-hue) 85% 30% / 0.76))",
+          "linear-gradient(135deg, hsl(var(--surf-hue) 81% 26% / 0.64), hsl(var(--surf-hue) 85% 18% / 0.76))",
         borderColor: "rgba(118,228,247,0.32)",
         backdropFilter: "blur(20px) saturate(140%)",
         WebkitBackdropFilter: "blur(20px) saturate(140%)",
@@ -56,7 +56,7 @@ function baseSurfaceStyles(tone: StudyTone): CSSProperties {
       // glass so the brain backdrop glows through; white body text throughout.
       return {
         background:
-          "radial-gradient(120% 104% at 50% 38%, hsl(var(--surf-hue) 78% 46% / 0.52) 0%, hsl(var(--surf-hue) 82% 34% / 0.62) 42%, hsl(var(--surf-hue) 85% 25% / 0.76) 100%)",
+          "radial-gradient(120% 104% at 50% 38%, hsl(var(--surf-hue) 78% 30% / 0.52) 0%, hsl(var(--surf-hue) 82% 21% / 0.62) 42%, hsl(var(--surf-hue) 85% 15% / 0.76) 100%)",
         borderColor: "rgba(118,228,247,0.32)",
         backdropFilter: "blur(20px) saturate(140%)",
         WebkitBackdropFilter: "blur(20px) saturate(140%)",
@@ -72,7 +72,7 @@ function baseSurfaceStyles(tone: StudyTone): CSSProperties {
       // same translucent bloom glass as the EPPP domain tiles.
       return {
         background:
-          "linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85))",
+          "linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.74), hsl(var(--surf-hue) 88% 6% / 0.85))",
         borderColor: "rgba(196,232,242,0.22)",
         backdropFilter: "blur(20px) saturate(135%)",
         WebkitBackdropFilter: "blur(20px) saturate(135%)",

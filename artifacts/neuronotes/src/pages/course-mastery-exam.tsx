@@ -127,7 +127,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
           <div
             className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 border"
             style={{
-              background: "linear-gradient(135deg, hsl(var(--surf-hue) 88% 31% / 0.9), hsl(var(--surf-hue) 88% 19% / 0.95))",
+              background: "linear-gradient(135deg, hsl(var(--surf-hue) 88% 18% / 0.9), hsl(var(--surf-hue) 88% 10% / 0.95))",
               borderColor: `${P.surf}55`,
             }}
           >
@@ -397,7 +397,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
             if (!isAnswered) {
               cls += " hover:-translate-y-0.5 quiz-option-hover";
               style = {
-                background: "linear-gradient(135deg, hsl(var(--surf-hue) 88% 31% / 0.78), hsl(var(--surf-hue) 88% 19% / 0.86))",
+                background: "linear-gradient(135deg, hsl(var(--surf-hue) 88% 18% / 0.78), hsl(var(--surf-hue) 88% 10% / 0.86))",
                 borderColor: `${P.surf}55`,
                 color: P.cloud,
                 boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(255,255,255,0.06)`,
@@ -412,7 +412,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
             } else {
               cls += " opacity-55";
               style = {
-                background: "linear-gradient(135deg, hsl(var(--surf-hue) 88% 31% / 0.78), hsl(var(--surf-hue) 88% 19% / 0.86))",
+                background: "linear-gradient(135deg, hsl(var(--surf-hue) 88% 18% / 0.78), hsl(var(--surf-hue) 88% 10% / 0.86))",
                 borderColor: `${P.surf}25`,
                 color: `${P.cloud}aa`,
               };

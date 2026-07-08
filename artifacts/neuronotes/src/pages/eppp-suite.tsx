@@ -310,7 +310,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
         )}
         style={{
           ["--nav-glow" as never]: STUDY_PALETTE.surf,
-          background: `linear-gradient(180deg, hsl(var(--surf-hue) 87% 14% / 0.26) 0%, hsl(var(--surf-hue) 87% 14% / 0.44) 55%, hsl(var(--surf-hue) 87% 14% / 0.66) 100%), url(${smokeBg}), linear-gradient(180deg, ${STUDY_PALETTE.surfaceElev}, ${STUDY_PALETTE.surface})`,
+          background: `linear-gradient(180deg, hsl(var(--surf-hue) 87% 6% / 0.26) 0%, hsl(var(--surf-hue) 87% 6% / 0.44) 55%, hsl(var(--surf-hue) 87% 6% / 0.66) 100%), url(${smokeBg}), linear-gradient(180deg, ${STUDY_PALETTE.surfaceElev}, ${STUDY_PALETTE.surface})`,
           backgroundSize: "cover, cover, cover",
           backgroundPosition: "center, center, center",
           backgroundRepeat: "no-repeat, no-repeat, no-repeat",
@@ -1793,7 +1793,7 @@ const styles = `
   display: flex; flex-direction: column; gap: 8px;
   padding: 10px; border-radius: 14px;
   border: 1px solid rgba(196,232,242,0.16);
-  background: linear-gradient(155deg, hsl(var(--surf-hue) 89% 18% / 0.62), hsl(var(--surf-hue) 88% 14% / 0.74));
+  background: linear-gradient(155deg, hsl(var(--surf-hue) 89% 18% / 0.62), hsl(var(--surf-hue) 88% 6% / 0.74));
   backdrop-filter: blur(18px) saturate(130%);
   -webkit-backdrop-filter: blur(18px) saturate(130%);
   box-shadow:
@@ -1815,7 +1815,7 @@ const styles = `
   padding: 11px 12px; border-radius: 10px;
   border: 1px solid rgba(196,232,242,0.22);
   background:
-    linear-gradient(145deg, hsl(var(--surf-hue) 87% 19% / 0.66), hsl(var(--surf-hue) 88% 14% / 0.78));
+    linear-gradient(145deg, hsl(var(--surf-hue) 87% 10% / 0.66), hsl(var(--surf-hue) 88% 6% / 0.78));
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
@@ -1826,7 +1826,7 @@ const styles = `
 .eps-kb-rail-item:hover {
   border-color: rgba(196,232,242,0.38);
   background:
-    linear-gradient(145deg, hsl(var(--surf-hue) 86% 24% / 0.80), hsl(var(--surf-hue) 90% 16% / 0.88));
+    linear-gradient(145deg, hsl(var(--surf-hue) 86% 13% / 0.80), hsl(var(--surf-hue) 90% 9% / 0.88));
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.16),
     0 12px 26px -16px rgba(0,0,0,0.62);
@@ -1836,7 +1836,7 @@ const styles = `
 .eps-kb-rail-item.is-active {
   border-color: rgba(118,228,247,0.55);
   background:
-    linear-gradient(145deg, hsl(var(--surf-hue) 84% 25% / 0.84), hsl(var(--surf-hue) 90% 18% / 0.90));
+    linear-gradient(145deg, hsl(var(--surf-hue) 84% 14% / 0.84), hsl(var(--surf-hue) 90% 10% / 0.90));
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.18),
     0 14px 30px -16px rgba(0,0,0,0.62);
@@ -1844,7 +1844,7 @@ const styles = `
 .eps-kb-rail-icon {
   display: inline-flex; align-items: center; justify-content: center;
   width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px;
-  background: radial-gradient(circle at 50% 40%, hsl(var(--surf-hue) 78% 46% / 0.45), hsl(var(--surf-hue) 88% 31% / 0.55) 70%);
+  background: radial-gradient(circle at 50% 40%, hsl(var(--surf-hue) 78% 46% / 0.45), hsl(var(--surf-hue) 88% 18% / 0.55) 70%);
   border: 1px solid rgba(118,228,247,0.28); color: ${C.cyan};
 }
 .eps-kb-rail-icon svg { width: 17px; height: 17px; }
@@ -1870,7 +1870,7 @@ const styles = `
 .eps-kb-head-icon {
   display: inline-flex; align-items: center; justify-content: center;
   width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px;
-  background: radial-gradient(circle at 50% 40%, hsl(var(--surf-hue) 78% 46% / 0.45), hsl(var(--surf-hue) 88% 31% / 0.65) 70%);
+  background: radial-gradient(circle at 50% 40%, hsl(var(--surf-hue) 78% 46% / 0.45), hsl(var(--surf-hue) 88% 18% / 0.65) 70%);
   border: 1px solid rgba(118,228,247,0.32); color: ${C.cyan};
 }
 .eps-kb-head-icon svg { width: 20px; height: 20px; }
@@ -1884,7 +1884,7 @@ const styles = `
   text-align: left; cursor: pointer;
   padding: 15px; border-radius: 12px;
   background:
-    linear-gradient(145deg, hsl(var(--surf-hue) 87% 19% / 0.66), hsl(var(--surf-hue) 88% 14% / 0.78));
+    linear-gradient(145deg, hsl(var(--surf-hue) 87% 10% / 0.66), hsl(var(--surf-hue) 88% 6% / 0.78));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -1897,7 +1897,7 @@ const styles = `
   transform: translateY(-2px);
   border-color: rgba(196,232,242,0.38);
   background:
-    linear-gradient(145deg, hsl(var(--surf-hue) 86% 24% / 0.80), hsl(var(--surf-hue) 90% 16% / 0.88));
+    linear-gradient(145deg, hsl(var(--surf-hue) 86% 13% / 0.80), hsl(var(--surf-hue) 90% 9% / 0.88));
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.16),
     0 12px 26px -16px rgba(0,0,0,0.62);
@@ -1905,7 +1905,7 @@ const styles = `
 .eps-kb-lesson-icon {
   display: inline-flex; align-items: center; justify-content: center; align-self: start;
   width: 38px; height: 38px; flex-shrink: 0; border-radius: 10px;
-  background: radial-gradient(circle at 50% 40%, hsl(var(--surf-hue) 78% 46% / 0.45), hsl(var(--surf-hue) 88% 31% / 0.55) 70%);
+  background: radial-gradient(circle at 50% 40%, hsl(var(--surf-hue) 78% 46% / 0.45), hsl(var(--surf-hue) 88% 18% / 0.55) 70%);
   border: 1px solid rgba(118,228,247,0.28); color: ${C.cyan};
 }
 .eps-kb-lesson-icon svg { width: 17px; height: 17px; }
@@ -1924,7 +1924,7 @@ const styles = `
   display: flex; align-items: center; gap: 16px;
   border-radius: 16px; padding: 16px 18px;
   background:
-    linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85));
+    linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.74), hsl(var(--surf-hue) 88% 6% / 0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -1935,7 +1935,7 @@ const styles = `
 .eps-exam-row.is-mastered {
   border-color: ${C.cyan}5e;
   background:
-    linear-gradient(145deg, hsl(var(--surf-hue) 85% 26% / 0.84), hsl(var(--surf-hue) 89% 19% / 0.90));
+    linear-gradient(145deg, hsl(var(--surf-hue) 85% 26% / 0.84), hsl(var(--surf-hue) 89% 10% / 0.90));
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.16),
     0 16px 40px -26px rgba(0,0,0,0.70);
@@ -1988,7 +1988,7 @@ const styles = `
   display: flex; align-items: center; gap: 14px; text-align: left; cursor: pointer;
   border-radius: 12px; padding: 14px 16px;
   background:
-    linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85));
+    linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.74), hsl(var(--surf-hue) 88% 6% / 0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -2051,7 +2051,7 @@ const styles = `
   background: linear-gradient(
     180deg,
     hsl(var(--surf-hue) 80% 44% / 0.52),
-    hsl(var(--surf-hue) 86% 26% / 0.60)
+    hsl(var(--surf-hue) 86% 15% / 0.60)
   );
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.22),
@@ -2084,7 +2084,7 @@ const styles = `
   padding: clamp(18px, 2.4vw, 26px);
   background:
     radial-gradient(circle at 18% 12%, ${C.cyan}24, transparent 34%),
-    linear-gradient(145deg, hsl(var(--surf-hue) 88% 20% / 0.76), hsl(var(--surf-hue) 88% 14% / 0.86));
+    linear-gradient(145deg, hsl(var(--surf-hue) 88% 11% / 0.76), hsl(var(--surf-hue) 88% 6% / 0.86));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -2131,7 +2131,7 @@ const styles = `
   border-radius: 18px;
   padding: clamp(18px, 2.4vw, 26px);
   background:
-    linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85));
+    linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.74), hsl(var(--surf-hue) 88% 6% / 0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -2142,7 +2142,7 @@ const styles = `
 .eps-build-card.is-active {
   background:
     radial-gradient(circle at 18% 0%, ${C.cyan}22, transparent 36%),
-    linear-gradient(145deg, hsl(var(--surf-hue) 84% 27% / 0.86), hsl(var(--surf-hue) 88% 19% / 0.92));
+    linear-gradient(145deg, hsl(var(--surf-hue) 84% 27% / 0.86), hsl(var(--surf-hue) 88% 10% / 0.92));
   border-color: ${C.hairlineStrong};
 }
 .eps-build-kicker {
@@ -2185,7 +2185,7 @@ const styles = `
 .eps-contract-card {
   background:
     linear-gradient(90deg, rgba(118,228,247,0.16), transparent 44%),
-    linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85));
+    linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.74), hsl(var(--surf-hue) 88% 6% / 0.85));
 }
 .eps-contract-card ul {
   margin: 16px 0 0;
@@ -2257,7 +2257,7 @@ const styles = `
   background: linear-gradient(
     180deg,
     hsl(var(--surf-hue) 80% 44% / 0.52),
-    hsl(var(--surf-hue) 86% 26% / 0.60)
+    hsl(var(--surf-hue) 86% 15% / 0.60)
   );
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.22),
@@ -2280,7 +2280,7 @@ const styles = `
   border-radius: 18px; padding: clamp(20px, 2.6vw, 30px); text-align: center;
   background:
     radial-gradient(circle at 50% 0%, ${C.cyan}26, transparent 46%),
-    linear-gradient(160deg, hsl(var(--surf-hue) 87% 20% / 0.78), hsl(var(--surf-hue) 88% 14% / 0.87));
+    linear-gradient(160deg, hsl(var(--surf-hue) 87% 20% / 0.78), hsl(var(--surf-hue) 88% 6% / 0.87));
   border: 1px solid rgba(118,228,247,0.3);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -2318,7 +2318,7 @@ const styles = `
 .eps-notes {
   margin-top: clamp(22px, 2.6vw, 32px); border-radius: 18px; padding: clamp(18px, 2.4vw, 26px);
   background:
-    linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85));
+    linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.74), hsl(var(--surf-hue) 88% 6% / 0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -2338,7 +2338,7 @@ const styles = `
 .eps-notes-area {
   width: 100%; min-height: 180px; resize: vertical; box-sizing: border-box;
   border-radius: 12px; padding: 14px 16px; font-size: 14px; line-height: 1.6;
-  color: ${C.cloud}; background: hsl(var(--surf-hue) 90% 16% / 0.6); border: 1px solid ${C.hairlineStrong};
+  color: ${C.cloud}; background: hsl(var(--surf-hue) 90% 9% / 0.6); border: 1px solid ${C.hairlineStrong};
   font-family: inherit;
 }
 .eps-notes-area::placeholder { color: ${C.muted}; }
@@ -2387,7 +2387,7 @@ const styles = `
   border-radius: 16px; padding: clamp(16px, 2vw, 22px);
   background:
     radial-gradient(120% 90% at 50% 0%, rgba(118,228,247,0.10), rgba(118,228,247,0) 60%),
-    linear-gradient(145deg, hsl(var(--surf-hue) 87% 19% / 0.66), hsl(var(--surf-hue) 88% 14% / 0.78));
+    linear-gradient(145deg, hsl(var(--surf-hue) 87% 10% / 0.66), hsl(var(--surf-hue) 88% 6% / 0.78));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);

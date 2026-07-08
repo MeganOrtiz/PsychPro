@@ -182,7 +182,7 @@ export default function SubscriptionPage() {
           className="border rounded-xl p-4 mb-6 flex flex-col sm:flex-row sm:items-center gap-3"
           style={{
             background:
-              "linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.81), hsl(var(--surf-hue) 88% 14% / 0.90))",
+              "linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.81), hsl(var(--surf-hue) 88% 6% / 0.90))",
             borderColor: "rgba(118,228,247,0.26)",
             backdropFilter: "blur(18px) saturate(135%)",
             WebkitBackdropFilter: "blur(18px) saturate(135%)",

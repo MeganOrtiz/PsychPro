@@ -732,8 +732,8 @@ const C = {
   inkSoft: "rgba(11,59,71,0.58)",  // muted ink — chart ticks on white
   grid: "rgba(11,59,71,0.10)",     // chart grid lines on white
   bg: "#082a33",
-  bgPanel: "hsl(var(--surf-hue) 88% 19% / 0.82)",
-  bgPanelStrong: "hsl(var(--surf-hue) 88% 14% / 0.90)",
+  bgPanel: "hsl(var(--surf-hue) 88% 10% / 0.82)",
+  bgPanelStrong: "hsl(var(--surf-hue) 88% 6% / 0.90)",
   hairline: "rgba(118, 228, 247, 0.36)",
   hairlineStrong: "rgba(118, 228, 247, 0.58)",
 };
@@ -1251,7 +1251,7 @@ const styles = `
   padding: 22px 20px;
   border-radius: 16px;
   border: 1px solid ${C.hairline};
-  background: linear-gradient(180deg, hsl(var(--surf-hue) 88% 19% / 0.82), hsl(var(--surf-hue) 88% 14% / 0.90));
+  background: linear-gradient(180deg, hsl(var(--surf-hue) 88% 10% / 0.82), hsl(var(--surf-hue) 88% 6% / 0.90));
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   box-shadow: 0 0 22px ${C.cyan}1f, 0 0 0 1px ${C.cyan}14 inset;
@@ -1343,7 +1343,7 @@ const styles = `
 .landing-split-body--boxed {
   padding: clamp(24px, 3vw, 38px);
   border-radius: 20px;
-  background: linear-gradient(150deg, hsl(var(--surf-hue) 88% 19% / 0.82), hsl(var(--surf-hue) 88% 14% / 0.88));
+  background: linear-gradient(150deg, hsl(var(--surf-hue) 88% 10% / 0.82), hsl(var(--surf-hue) 88% 6% / 0.88));
   border: 1px solid ${C.hairlineStrong};
   backdrop-filter: blur(18px) saturate(140%);
   -webkit-backdrop-filter: blur(18px) saturate(140%);
@@ -1359,7 +1359,7 @@ const styles = `
   padding: clamp(26px, 3.4vw, 44px);
   border-radius: 22px;
   border: 1px solid ${C.hairlineStrong};
-  background: linear-gradient(150deg, hsl(var(--surf-hue) 88% 19% / 0.85), hsl(var(--surf-hue) 88% 14% / 0.90));
+  background: linear-gradient(150deg, hsl(var(--surf-hue) 88% 10% / 0.85), hsl(var(--surf-hue) 88% 6% / 0.90));
   backdrop-filter: blur(18px) saturate(140%);
   -webkit-backdrop-filter: blur(18px) saturate(140%);
   box-shadow:
@@ -1489,7 +1489,7 @@ const styles = `
   overflow: hidden;
   border-radius: 22px;
   padding: clamp(28px, 4vw, 48px);
-  background: linear-gradient(150deg, hsl(var(--surf-hue) 88% 19% / 0.86), hsl(var(--surf-hue) 88% 14% / 0.90));
+  background: linear-gradient(150deg, hsl(var(--surf-hue) 88% 10% / 0.86), hsl(var(--surf-hue) 88% 6% / 0.90));
   border: 1px solid ${C.hairlineStrong};
   backdrop-filter: blur(20px) saturate(140%);
   -webkit-backdrop-filter: blur(20px) saturate(140%);
@@ -1525,7 +1525,7 @@ const styles = `
   text-align: center;
   border-radius: 22px;
   padding: clamp(30px, 4.4vw, 52px);
-  background: linear-gradient(150deg, hsl(var(--surf-hue) 88% 19% / 0.86), hsl(var(--surf-hue) 88% 14% / 0.90));
+  background: linear-gradient(150deg, hsl(var(--surf-hue) 88% 10% / 0.86), hsl(var(--surf-hue) 88% 6% / 0.90));
   border: 1px solid ${C.hairlineStrong};
   backdrop-filter: blur(20px) saturate(140%);
   -webkit-backdrop-filter: blur(20px) saturate(140%);
@@ -1580,7 +1580,7 @@ const styles = `
   text-align: center;
   border-radius: 22px;
   padding: clamp(30px, 4.4vw, 52px);
-  background: linear-gradient(150deg, hsl(var(--surf-hue) 88% 19% / 0.86), hsl(var(--surf-hue) 88% 14% / 0.90));
+  background: linear-gradient(150deg, hsl(var(--surf-hue) 88% 10% / 0.86), hsl(var(--surf-hue) 88% 6% / 0.90));
   border: 1px solid ${C.hairlineStrong};
   backdrop-filter: blur(20px) saturate(140%);
   -webkit-backdrop-filter: blur(20px) saturate(140%);

@@ -586,7 +586,7 @@ const styles = `
   text-align: center;
   border-radius: 16px;
   border: 1px solid ${C.hairlineStrong};
-  background: linear-gradient(135deg, hsl(var(--surf-hue) 89% 21% / 0.96), hsl(var(--surf-hue) 87% 19% / 0.92));
+  background: linear-gradient(135deg, hsl(var(--surf-hue) 89% 12% / 0.96), hsl(var(--surf-hue) 87% 10% / 0.92));
   box-shadow: 0 18px 54px -42px rgba(118,228,247,0.78), inset 0 1px 0 rgba(255,255,255,0.08);
 }
 .epd-head-img {
@@ -603,8 +603,8 @@ const styles = `
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 50% 52%, hsl(var(--surf-hue) 89% 21% / 0.12) 0%, hsl(var(--surf-hue) 89% 21% / 0.62) 55%, hsl(var(--surf-hue) 89% 21% / 0.94) 100%),
-    linear-gradient(90deg, hsl(var(--surf-hue) 89% 21% / 0.96), hsl(var(--surf-hue) 89% 21% / 0.28) 48%, hsl(var(--surf-hue) 89% 21% / 0.96));
+    radial-gradient(circle at 50% 52%, hsl(var(--surf-hue) 89% 12% / 0.12) 0%, hsl(var(--surf-hue) 89% 12% / 0.62) 55%, hsl(var(--surf-hue) 89% 12% / 0.94) 100%),
+    linear-gradient(90deg, hsl(var(--surf-hue) 89% 12% / 0.96), hsl(var(--surf-hue) 89% 12% / 0.28) 48%, hsl(var(--surf-hue) 89% 12% / 0.96));
 }
 .epd-title {
   position: relative;
@@ -625,7 +625,7 @@ const styles = `
   border-radius: 20px;
   padding: clamp(18px, 2vw, 24px);
   background:
-    linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85));
+    linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.74), hsl(var(--surf-hue) 88% 6% / 0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -734,7 +734,7 @@ const styles = `
   border-radius: 10px;
   font-size: 14px;
   color: ${C.cloud};
-  background: hsl(var(--surf-hue) 89% 21% / 0.6);
+  background: hsl(var(--surf-hue) 89% 12% / 0.6);
   border: 1px solid ${C.hairlineStrong};
   color-scheme: dark;
 }
@@ -827,7 +827,7 @@ const styles = `
   padding: 18px;
   text-decoration: none;
   background:
-    linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85));
+    linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.74), hsl(var(--surf-hue) 88% 6% / 0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
@@ -840,7 +840,7 @@ const styles = `
 .epd-domain.is-mastered {
   border-color: ${C.cyan}5e;
   background:
-    linear-gradient(145deg, hsl(var(--surf-hue) 85% 26% / 0.84), hsl(var(--surf-hue) 89% 19% / 0.90));
+    linear-gradient(145deg, hsl(var(--surf-hue) 85% 26% / 0.84), hsl(var(--surf-hue) 89% 10% / 0.90));
 }
 .epd-domain--loading { opacity: 0.85; }
 .epd-bar-fill--idle {
@@ -887,7 +887,7 @@ const styles = `
   text-align: left;
   cursor: pointer;
   background:
-    linear-gradient(145deg, hsl(var(--surf-hue) 88% 19% / 0.74), hsl(var(--surf-hue) 88% 14% / 0.85));
+    linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.74), hsl(var(--surf-hue) 88% 6% / 0.85));
   border: 1px solid rgba(196,232,242,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
