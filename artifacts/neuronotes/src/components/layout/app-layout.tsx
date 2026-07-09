@@ -354,6 +354,23 @@ export default function AppLayout({ children }: AppLayoutProps) {
           )}
         </nav>
 
+        {/* EPPP Mastery Suite launcher — moved out of the top bar (owner,
+            2026-07-09: the header button was throwing off the page-title
+            spacing) into a fixed slot at the bottom of the sidebar. */}
+        <div className="relative px-3 pb-2">
+          <Link
+            href="/eppp/suite"
+            className="eppp-launch-btn eppp-launch-btn--sidebar"
+            data-testid="eppp-launch-sidebar"
+            onClick={() => setSidebarOpen(false)}
+          >
+            <span className="eppp-launch-btn__inner">
+              <GraduationCap aria-hidden />
+              <span>EPPP Mastery Suite</span>
+            </span>
+          </Link>
+        </div>
+
         <SidebarProfileLink onNavigate={() => setSidebarOpen(false)} />
       </aside>
 
@@ -370,18 +387,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
           <Brain className="w-6 h-6 text-primary" />
           <span className="font-bold text-foreground">PsychPro</span>
           <div className="ml-auto flex items-center gap-2.5">
-            <Link
-              href="/eppp/suite"
-              className="eppp-launch-btn eppp-launch-btn--compact"
-              data-testid="eppp-launch-mobile"
-              aria-label="EPPP Mastery Suite"
-              onClick={() => setSidebarOpen(false)}
-            >
-              <span className="eppp-launch-btn__inner">
-                <GraduationCap aria-hidden />
-                <span>EPPP</span>
-              </span>
-            </Link>
             {isMobile && <NotificationsBell />}
             <UserButton afterSignOutUrl={import.meta.env.BASE_URL.replace(/\/$/, "") || "/"} />
           </div>
@@ -404,7 +409,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           {isDashboard && (
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center pr-[clamp(220px,25vw,350px)]"
+              className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center pr-[clamp(96px,9vw,140px)]"
             >
               <span
                 className="relative font-light whitespace-nowrap"
@@ -421,16 +426,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
               </span>
             </div>
           )}
-          <Link
-            href="/eppp/suite"
-            className="eppp-launch-btn"
-            data-testid="eppp-launch-desktop"
-          >
-            <span className="eppp-launch-btn__inner">
-              <GraduationCap aria-hidden />
-              <span>EPPP Mastery Suite</span>
-            </span>
-          </Link>
           {!isMobile && <NotificationsBell />}
           <UserButton
             afterSignOutUrl={import.meta.env.BASE_URL.replace(/\/$/, "") || "/"}

@@ -374,6 +374,22 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
           })}
         </nav>
 
+        {/* Back to PsychPro — moved out of the top bar (owner, 2026-07-09:
+            the header button was throwing off the page-title spacing) into a
+            fixed slot at the bottom of the suite sidebar. */}
+        <div className="relative px-3 pb-3">
+          <Link
+            href="/dashboard"
+            className="eppp-launch-btn eppp-launch-btn--sidebar"
+            data-testid="eppp-suite-back-sidebar"
+            onClick={() => setSidebarOpen(false)}
+          >
+            <span className="eppp-launch-btn__inner">
+              <ArrowLeft aria-hidden />
+              <span>Back to PsychPro</span>
+            </span>
+          </Link>
+        </div>
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
@@ -410,7 +426,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
           {isEpppDash && (
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center pr-[clamp(210px,24vw,330px)]"
+              className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center pr-[clamp(96px,9vw,140px)]"
             >
               <span
                 className="relative font-light whitespace-nowrap"
@@ -456,12 +472,6 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
             </div>
           )}
           <div className="flex items-center gap-3">
-            <Link href="/dashboard" className="eppp-launch-btn" data-testid="eppp-suite-back-desktop">
-              <span className="eppp-launch-btn__inner">
-                <ArrowLeft aria-hidden />
-                <span>Back to PsychPro</span>
-              </span>
-            </Link>
             {!isMobile && <NotificationsBell />}
             <UserButton
               afterSignOutUrl={import.meta.env.BASE_URL.replace(/\/$/, "") || "/"}

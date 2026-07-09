@@ -619,11 +619,11 @@ body {
   border-color: rgba(148, 148, 148, 0.85);
 }
 
-/* ============== EPPP MASTERY SYSTEM — launch button (top header) ==============
-   Calm, refined entry point that opens the dedicated /eppp hub. Shares the glass
-   sizing/treatment of the notifications bell so the top-bar cluster reads as one
-   cohesive control group — distinguished by a soft cerulean tint + cap glow, not
-   a pulsing/shimmering pill. Lives in both headers (app-layout.tsx). Cerulean. */
+/* ============== EPPP MASTERY SYSTEM — launch / back buttons ==============
+   Calm, refined entry points: "EPPP Mastery Suite" at the bottom of the main
+   sidebar (app-layout.tsx) and "Back to PsychPro" at the bottom of the suite
+   sidebar (eppp-suite.tsx). Moved out of the top bars (owner, 2026-07-09)
+   because the header pills were throwing off the page-title spacing. */
 .eppp-launch-btn {
   position: relative;
   display: inline-flex;
@@ -679,10 +679,8 @@ body {
   height: 16px;
   color: #a3a3a3;
 }
-.eppp-launch-btn--compact {
-  height: 36px;
-  padding: 0 13px;
-  font-size: 12px;
+.eppp-launch-btn--sidebar {
+  width: 100%;
 }
 
 /* User-supplied .study-card recipe — applied to every shadcn Card
