@@ -11,6 +11,7 @@ import UpgradePrompt from "@/components/upgrade-prompt";
 import ElaborationPanel from "@/components/learning/elaboration-panel";
 import { StudySurface } from "@/components/study/study-surface";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
+import { PP, alpha } from "@/lib/palette";
 import { useEntitlements } from "@/lib/use-entitlements";
 import { PageTitle } from "@/components/brand/page-title";
 import { epppTopicPath, isEpppRoute } from "@/lib/eppp-routes";
@@ -21,9 +22,9 @@ interface Props {
 }
 
 const difficultyStyles: Record<string, { bg: string; color: string; border: string; label: string }> = {
-  easy:   { bg: "rgba(222, 222, 222,0.55)", color: P.tealDeep, border: `${P.surf}66`, label: "Easy" },
-  medium: { bg: "rgba(165, 165, 165,0.20)",  color: P.tealDeep, border: `${P.teal}55`, label: "Medium" },
-  hard:   { bg: "rgba(244,114,98,0.16)",  color: "#B8453A",  border: "rgba(244,114,98,0.45)", label: "Hard" },
+  easy:   { bg: alpha(PP.chipLight, 0.55), color: P.tealDeep, border: `${P.surf}66`, label: "Easy" },
+  medium: { bg: alpha(PP.chipGray, 0.20),  color: P.tealDeep, border: `${P.teal}55`, label: "Medium" },
+  hard:   { bg: alpha(PP.redCoral, 0.16),  color: PP.brick,  border: alpha(PP.redCoral, 0.45), label: "Hard" },
 };
 
 export default function FlashcardsPage({ params }: Props) {
@@ -250,9 +251,9 @@ export default function FlashcardsPage({ params }: Props) {
               className="mt-6 rounded-xl border p-5 text-center"
               style={{
                 background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90)",
-                borderColor: "rgba(8,165,209,0.26)",
+                borderColor: "rgba(var(--pp-cyan-rgb), 0.26)",
                 boxShadow:
-                  "inset 0 1px 0 rgba(255,255,255,0.13), 0 20px 46px -26px rgba(0,0,0,0.66)",
+                  "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.13), 0 20px 46px -26px rgba(var(--pp-black-rgb), 0.66)",
               }}
               data-testid="flashcards-upgrade-cta"
             >

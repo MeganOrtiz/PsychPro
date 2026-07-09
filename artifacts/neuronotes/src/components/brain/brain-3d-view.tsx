@@ -3,6 +3,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Html, useGLTF, useProgress } from "@react-three/drei";
 import * as THREE from "three";
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
+import { PP, alpha } from "@/lib/palette";
 import type { BrainStructure } from "../../data/brain-structures";
 import brainGlbUrl from "@/assets/models/brain.glb?url";
 
@@ -52,13 +53,13 @@ function FittedBrain() {
     // Clean near-white skin with a faint cool cast so it sits in the
     // cerulean scene without going grey or pink.
     const skin = new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color("#f0f0f0"),
+      color: new THREE.Color(PP.skinLight),
       roughness: 0.55,
       metalness: 0.04,
       clearcoat: 0.5,
       clearcoatRoughness: 0.35,
       sheen: 0.4,
-      sheenColor: new THREE.Color("#e1e1e1"),
+      sheenColor: new THREE.Color(PP.skinSheen),
     });
 
     obj.traverse((child) => {
@@ -108,10 +109,10 @@ function getGlowTexture(): THREE.CanvasTexture | null {
       size / 2,
       size / 2,
     );
-    grad.addColorStop(0, "rgba(255,255,255,1)");
-    grad.addColorStop(0.22, "rgba(255,255,255,0.8)");
-    grad.addColorStop(0.55, "rgba(255,255,255,0.25)");
-    grad.addColorStop(1, "rgba(255,255,255,0)");
+    grad.addColorStop(0, alpha(PP.white, 1));
+    grad.addColorStop(0.22, alpha(PP.white, 0.8));
+    grad.addColorStop(0.55, alpha(PP.white, 0.25));
+    grad.addColorStop(1, alpha(PP.white, 0));
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, size, size);
     const tex = new THREE.CanvasTexture(canvas);

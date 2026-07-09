@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
+import { PP } from "@/lib/palette";
 import {
   Check,
   X,
@@ -165,9 +166,9 @@ function QuizMarker({
     // The spot to identify (question mark stays generic so it's not a giveaway)
     target: { bg: PALETTE.surf, ring: `${PALETTE.surf}`, size: 20, pulse: true },
     // A clickable blank target during "find"
-    option: { bg: `${PALETTE.surf}cc`, ring: "#ffffff", size: 16, pulse: false },
-    correct: { bg: "#34D399", ring: "#ffffff", size: 20, pulse: true },
-    wrong: { bg: "#F87171", ring: "#ffffff", size: 18, pulse: false },
+    option: { bg: `${PALETTE.surf}cc`, ring: PP.white, size: 16, pulse: false },
+    correct: { bg: PP.green400, ring: PP.white, size: 20, pulse: true },
+    wrong: { bg: PP.red400, ring: PP.white, size: 18, pulse: false },
     muted: { bg: `${PALETTE.steel}`, ring: `${PALETTE.steel}`, size: 12, pulse: false },
   } as const;
   const s = styles[variant];
@@ -214,10 +215,10 @@ function QuizMarker({
         }}
       >
         {variant === "correct" && (
-          <Check className="w-3 h-3 mx-auto" style={{ color: "#171717", marginTop: 1 }} strokeWidth={3} />
+          <Check className="w-3 h-3 mx-auto" style={{ color: PP.inkOnGreen, marginTop: 1 }} strokeWidth={3} />
         )}
         {variant === "wrong" && (
-          <X className="w-3 h-3 mx-auto" style={{ color: "#3a0d0d", marginTop: 1 }} strokeWidth={3} />
+          <X className="w-3 h-3 mx-auto" style={{ color: PP.inkOnRed, marginTop: 1 }} strokeWidth={3} />
         )}
       </span>
       {label && (variant === "correct" || variant === "wrong") && (
@@ -226,8 +227,8 @@ function QuizMarker({
           style={{
             [x > 58 ? "right" : "left"]: "calc(100% + 8px)",
             background: `${PALETTE.surfaceElev}f2`,
-            color: "#fff",
-            border: `1px solid ${variant === "correct" ? "#34D399" : "#F87171"}cc`,
+            color: PP.white,
+            border: `1px solid ${variant === "correct" ? PP.green400 : PP.red400}cc`,
           }}
         >
           {label}
@@ -496,15 +497,15 @@ export function BrainQuizPanel({
               const isPicked = opt.id === picked;
               let bg = `${PALETTE.surface}cc`;
               let border = `${PALETTE.steel}99`;
-              let color = "#fff";
+              let color: string = PP.white;
               if (answered) {
                 if (isCorrect) {
-                  bg = "#34D39922";
-                  border = "#34D399";
-                  color = "#fff";
+                  bg = `${PP.green400}22`;
+                  border = PP.green400;
+                  color = PP.white;
                 } else if (isPicked) {
-                  bg = "#F8717122";
-                  border = "#F87171";
+                  bg = `${PP.red400}22`;
+                  border = PP.red400;
                 } else {
                   color = `${PALETTE.mist}88`;
                 }
@@ -519,8 +520,8 @@ export function BrainQuizPanel({
                   data-testid={`quiz-option-${opt.id}`}
                 >
                   <span className="truncate">{opt.name}</span>
-                  {answered && isCorrect && <Check className="w-4 h-4 flex-shrink-0" style={{ color: "#34D399" }} />}
-                  {answered && isPicked && !isCorrect && <X className="w-4 h-4 flex-shrink-0" style={{ color: "#F87171" }} />}
+                  {answered && isCorrect && <Check className="w-4 h-4 flex-shrink-0" style={{ color: PP.green400 }} />}
+                  {answered && isPicked && !isCorrect && <X className="w-4 h-4 flex-shrink-0" style={{ color: PP.red400 }} />}
                 </button>
               );
             })}
@@ -549,7 +550,7 @@ export function BrainQuizPanel({
           >
             <HelpCircle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: PALETTE.surf }} />
             <p className="text-xs leading-snug" style={{ color: PALETTE.mist }}>
-              <span className="font-semibold" style={{ color: "#fff" }}>{q.item.name}:</span>{" "}
+              <span className="font-semibold" style={{ color: PP.white }}>{q.item.name}:</span>{" "}
               {q.item.blurb}
             </p>
           </div>
@@ -563,7 +564,7 @@ export function BrainQuizPanel({
       >
         <span
           className="text-sm font-semibold flex items-center gap-1.5"
-          style={{ color: answered ? (correctChosen ? "#34D399" : "#F87171") : "transparent" }}
+          style={{ color: answered ? (correctChosen ? PP.green400 : PP.red400) : "transparent" }}
           data-testid="quiz-feedback"
         >
           {answered &&

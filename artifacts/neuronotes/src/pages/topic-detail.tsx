@@ -7,6 +7,7 @@ import SpacedRepetitionScheduler from "@/components/learning/spaced-repetition";
 import { PageTitle } from "@/components/brand/page-title";
 import { Breadcrumbs, type BreadcrumbItem } from "@/components/breadcrumbs";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
+import { PP } from "@/lib/palette";
 import { useEntitlements } from "@/lib/use-entitlements";
 import { isEpppTopic } from "@/lib/eppp-content";
 import { epppDomainAnchor, epppTopicModePath, epppTopicPath, isEpppRoute } from "@/lib/eppp-routes";
@@ -44,8 +45,8 @@ export default function TopicDetailPage({ params }: Props) {
         : "Tap to flip and test your recall",
       onClick: () => navigate(inEppp ? epppTopicModePath(topicId, "flashcards") : `/topics/${topicId}/flashcards`),
       testId: "button-flashcards",
-      accent: "#999999",
-      accentDeep: "#565656",
+      accent: PP.neutral400,
+      accentDeep: PP.neutral600,
       locked: false,
     },
     {
@@ -56,8 +57,8 @@ export default function TopicDetailPage({ params }: Props) {
         : "Multiple-choice with explanations",
       onClick: () => navigate(inEppp ? epppTopicModePath(topicId, "quiz") : `/topics/${topicId}/quiz`),
       testId: "button-quiz",
-      accent: "#999999",
-      accentDeep: "#565656",
+      accent: PP.neutral400,
+      accentDeep: PP.neutral600,
       locked: !!ent?.quizLocked,
     },
     {
@@ -68,8 +69,8 @@ export default function TopicDetailPage({ params }: Props) {
         : "Comprehensive scrollable notes",
       onClick: () => navigate(inEppp ? epppTopicModePath(topicId, "study-guide") : `/topics/${topicId}/study-guide`),
       testId: "button-study-guide",
-      accent: "#999999",
-      accentDeep: "#565656",
+      accent: PP.neutral400,
+      accentDeep: PP.neutral600,
       locked: !!ent?.studyGuideLocked,
     },
     {
@@ -80,8 +81,8 @@ export default function TopicDetailPage({ params }: Props) {
         : "Timed or untimed full exam",
       onClick: () => navigate(inEppp ? epppTopicModePath(topicId, "exam") : `/topics/${topicId}/exam`),
       testId: "button-practice-exam",
-      accent: "#999999",
-      accentDeep: "#565656",
+      accent: PP.neutral400,
+      accentDeep: PP.neutral600,
       locked: !!ent?.examLocked,
     },
   ];
@@ -140,7 +141,7 @@ export default function TopicDetailPage({ params }: Props) {
                   data-testid={mode.testId}
                   aria-label={mode.locked ? `${mode.title} — locked, requires PsychPro Master` : mode.title}
                   className="recommended-tile group relative flex items-center gap-4 p-5 rounded-md text-left border hover:-translate-y-0.5 active:translate-y-0 overflow-hidden"
-                  style={{ color: "#FFFFFF" }}
+                  style={{ color: PP.white }}
                 >
                   {/* Animated sheen — a faint diagonal highlight that drifts
                       across on hover, the way a glossy button catches light. */}
@@ -172,7 +173,7 @@ export default function TopicDetailPage({ params }: Props) {
                       {mode.locked && (
                         <span
                           className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded"
-                          style={{ background: "rgba(255,255,255,0.18)", color: "#FFFFFF" }}
+                          style={{ background: "rgba(var(--pp-white-rgb), 0.18)", color: PP.white }}
                           data-testid={`badge-locked-${mode.testId}`}
                         >
                           <Lock className="w-2.5 h-2.5" /> Master

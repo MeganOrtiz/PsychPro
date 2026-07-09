@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
+import { PP } from "@/lib/palette";
 import { FREE_FLASHCARD_PREVIEW, FREE_QUIZ_LIMIT, FREE_EXAM_LIMIT } from "@/lib/limits";
 
 // B-1: display name is "Master" (the internal subscriptionStatus / Stripe
@@ -120,7 +121,7 @@ export default function SubscriptionPage() {
           padding: 24px;
           background: transparent;
           border: 1px solid ${P.surf}33;
-          box-shadow: 0 20px 44px -26px rgba(0,0,0,0.85), inset 0 1px 0 ${P.surf}1a;
+          box-shadow: 0 20px 44px -26px rgba(var(--pp-black-rgb),0.85), inset 0 1px 0 ${P.surf}1a;
           transition: transform 240ms ease, box-shadow 240ms ease, border-color 240ms ease;
         }
         .sub-plan::before {
@@ -134,12 +135,12 @@ export default function SubscriptionPage() {
         }
         .sub-plan--featured {
           border-color: ${P.surf}55;
-          box-shadow: 0 24px 54px -24px rgba(0,0,0,0.9), 0 0 0 1px ${P.surf}22, 0 0 46px -18px ${P.surf}66;
+          box-shadow: 0 24px 54px -24px rgba(var(--pp-black-rgb),0.9), 0 0 0 1px ${P.surf}22, 0 0 46px -18px ${P.surf}66;
         }
         .sub-plan:hover {
           transform: translateY(-3px);
           border-color: ${P.surf}80;
-          box-shadow: 0 30px 64px -24px rgba(0,0,0,0.92), 0 0 52px -16px ${P.surf}80;
+          box-shadow: 0 30px 64px -24px rgba(var(--pp-black-rgb),0.92), 0 0 52px -16px ${P.surf}80;
         }
         .sub-icon-chip {
           display: inline-flex; align-items: center; justify-content: center;
@@ -158,7 +159,7 @@ export default function SubscriptionPage() {
         .sub-bill:hover {
           transform: translateY(-2px);
           border-color: ${P.surf}5e;
-          box-shadow: 0 18px 36px -24px rgba(0,0,0,0.85), 0 0 28px -14px ${P.surf}73;
+          box-shadow: 0 18px 36px -24px rgba(var(--pp-black-rgb),0.85), 0 0 28px -14px ${P.surf}73;
         }
         .sub-price {
           background: ${P.surf};
@@ -180,10 +181,10 @@ export default function SubscriptionPage() {
           className="border rounded-xl p-4 mb-6 flex flex-col sm:flex-row sm:items-center gap-3"
           style={{
             background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90)",
-            borderColor: "rgba(8,165,209,0.26)",
+            borderColor: "rgba(var(--pp-cyan-rgb), 0.26)",
             boxShadow:
-              "inset 0 1px 0 rgba(255,255,255,0.13), 0 20px 46px -26px rgba(0,0,0,0.66)",
-            color: "#FFFFFF",
+              "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.13), 0 20px 46px -26px rgba(var(--pp-black-rgb), 0.66)",
+            color: PP.white,
           }}
           data-testid="active-subscription-banner"
         >
@@ -230,8 +231,8 @@ export default function SubscriptionPage() {
             </span>
             <span className="font-semibold text-foreground text-lg">PsychPro {PRO_DISPLAY_NAME}</span>
             <Badge
-              className="ml-auto border-0 text-[#232323] font-semibold"
-              style={{ background: P.surf, boxShadow: `0 0 18px -4px ${P.surf}` }}
+              className="ml-auto border-0 font-semibold"
+              style={{ background: P.surf, color: PP.chipInk, boxShadow: `0 0 18px -4px ${P.surf}` }}
             >
               Most Popular
             </Badge>
@@ -291,8 +292,8 @@ export default function SubscriptionPage() {
         <div className="sub-plan relative">
           <div className="absolute -top-3 left-5 z-10">
             <span
-              className="text-[#232323] text-xs font-bold px-3 py-1 rounded-full"
-              style={{ background: P.surf, boxShadow: `0 0 18px -4px ${P.surf}` }}
+              className="text-xs font-bold px-3 py-1 rounded-full"
+              style={{ background: P.surf, color: PP.chipInk, boxShadow: `0 0 18px -4px ${P.surf}` }}
             >
               NEW
             </span>
@@ -303,8 +304,8 @@ export default function SubscriptionPage() {
             </span>
             <span className="font-semibold text-foreground text-lg">PsychPro Scholar</span>
             <Badge
-              className="ml-auto border-0 text-[#232323] font-semibold"
-              style={{ background: P.teal, boxShadow: `0 0 18px -4px ${P.teal}` }}
+              className="ml-auto border-0 font-semibold"
+              style={{ background: P.teal, color: PP.chipInk, boxShadow: `0 0 18px -4px ${P.teal}` }}
             >
               Best Value
             </Badge>
@@ -370,8 +371,8 @@ export default function SubscriptionPage() {
         <div className="sub-plan relative" data-testid="eppp-plan">
           <div className="absolute -top-3 left-5 z-10">
             <span
-              className="text-[#232323] text-xs font-bold px-3 py-1 rounded-full"
-              style={{ background: P.surf, boxShadow: `0 0 18px -4px ${P.surf}` }}
+              className="text-xs font-bold px-3 py-1 rounded-full"
+              style={{ background: P.surf, color: PP.chipInk, boxShadow: `0 0 18px -4px ${P.surf}` }}
             >
               EPPP
             </span>
@@ -382,8 +383,8 @@ export default function SubscriptionPage() {
             </span>
             <span className="font-semibold text-foreground text-lg">EPPP Mastery Suite</span>
             <Badge
-              className="ml-auto border-0 text-[#232323] font-semibold"
-              style={{ background: P.surf, boxShadow: `0 0 18px -4px ${P.surf}` }}
+              className="ml-auto border-0 font-semibold"
+              style={{ background: P.surf, color: PP.chipInk, boxShadow: `0 0 18px -4px ${P.surf}` }}
             >
               Separate access
             </Badge>
@@ -398,7 +399,7 @@ export default function SubscriptionPage() {
           {epppActive && (
             <div
               className="rounded-xl p-3 mb-4 text-sm"
-              style={{ background: `${P.surf}1a`, border: `1px solid ${P.surf}55`, color: "#FFFFFF" }}
+              style={{ background: `${P.surf}1a`, border: `1px solid ${P.surf}55`, color: PP.white }}
               data-testid="eppp-active-banner"
             >
               <span className="font-semibold">You have EPPP access.</span>

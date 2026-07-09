@@ -189,9 +189,9 @@ function StructureSearch({
         className="w-full max-w-xl rounded-2xl border overflow-hidden"
         style={{
           background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.85)",
-          borderColor: "rgba(8,165,209,0.22)",
+          borderColor: "rgba(var(--pp-cyan-rgb), 0.22)",
           boxShadow:
-            "inset 0 1px 0 rgba(255,255,255,0.12), 0 24px 60px -42px rgba(0,0,0,0.72)",
+            "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12), 0 24px 60px -42px rgba(var(--pp-black-rgb), 0.72)",
         }}
         onClick={(e) => e.stopPropagation()}
         role="dialog"
@@ -470,9 +470,9 @@ function StructureDetail({
       className="rounded-2xl border overflow-hidden flex flex-col h-full min-h-0 max-h-full"
       style={{
         background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.85)",
-        borderColor: "rgba(8,165,209,0.22)",
+        borderColor: "rgba(var(--pp-cyan-rgb), 0.22)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.12), 0 24px 60px -42px rgba(0,0,0,0.72)",
+          "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12), 0 24px 60px -42px rgba(var(--pp-black-rgb), 0.72)",
       }}
       data-testid="structure-detail"
     >
@@ -877,9 +877,9 @@ function EmptyDetail() {
       className="rounded-2xl border p-6 h-full flex flex-col items-center justify-center text-center"
       style={{
         background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.85)",
-        borderColor: "rgba(8,165,209,0.22)",
+        borderColor: "rgba(var(--pp-cyan-rgb), 0.22)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.12), 0 24px 60px -42px rgba(0,0,0,0.72)",
+          "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12), 0 24px 60px -42px rgba(var(--pp-black-rgb), 0.72)",
       }}
       data-testid="empty-detail"
     >
@@ -938,7 +938,7 @@ function NumberedKey({
       className="rounded-2xl border h-full flex flex-col overflow-hidden"
       style={{
         background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.85)",
-        borderColor: "rgba(8,165,209,0.22)",
+        borderColor: "rgba(var(--pp-cyan-rgb), 0.22)",
       }}
       data-testid="brain-key"
     >
@@ -999,7 +999,7 @@ function NumberedKey({
                 </span>
                 <span
                   className="text-[13px] leading-tight"
-                  style={{ color: emphasized ? "#fff" : PALETTE.mist }}
+                  style={{ color: emphasized ? "rgba(var(--pp-white-rgb), 1)" : PALETTE.mist }}
                 >
                   {s.name}
                 </span>
@@ -1090,7 +1090,7 @@ function BrainDiagram({
                     fontSize: emphasized ? 12 : 10,
                     background: GLOW,
                     color: PALETTE.bg,
-                    border: "1.5px solid #fff",
+                    border: "1.5px solid rgba(var(--pp-white-rgb), 1)",
                     boxShadow: emphasized
                       ? `0 0 0 2px ${PALETTE.bg}aa, 0 0 16px 4px ${GLOW}`
                       : `0 0 0 2px ${PALETTE.bg}99, 0 0 6px 1px ${GLOW}aa`,
@@ -1111,7 +1111,7 @@ function BrainDiagram({
                         : { bottom: "calc(100% + 6px)" }),
                       transform: "translateX(-50%)",
                       background: `${PALETTE.surfaceElev}f2`,
-                      color: "#fff",
+                      color: "rgba(var(--pp-white-rgb), 1)",
                       border: `1px solid ${GLOW}cc`,
                       boxShadow: `0 6px 18px -6px ${PALETTE.bg}`,
                       zIndex: 40,
@@ -1585,7 +1585,7 @@ function LabeledBrainDiagram({
                     opacity: dim ? 0.4 : 1,
                     background: "transparent",
                     border: "none",
-                    color: emphasized ? "#ffffff" : PALETTE.mist,
+                    color: emphasized ? "rgba(var(--pp-white-rgb), 1)" : PALETTE.mist,
                     textShadow: emphasized
                       ? `0 0 9px ${GLOW}, 0 0 16px ${GLOW}, 0 1px 2px ${PALETTE.bg}, 0 0 4px ${PALETTE.bg}`
                       : `0 0 4px ${PALETTE.bg}, 0 1px 3px ${PALETTE.bg}, 0 0 9px ${PALETTE.bg}, 0 0 9px ${PALETTE.bg}`,
@@ -1871,9 +1871,9 @@ export default function BrainLabPage() {
             className="relative rounded-2xl border overflow-hidden flex-1 min-h-0 h-full"
             style={{
               background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.85)",
-              borderColor: "rgba(8,165,209,0.22)",
+              borderColor: "rgba(var(--pp-cyan-rgb), 0.22)",
               boxShadow:
-                "inset 0 1px 0 rgba(255,255,255,0.12), 0 24px 60px -42px rgba(0,0,0,0.72)",
+                "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12), 0 24px 60px -42px rgba(var(--pp-black-rgb), 0.72)",
             }}
             data-testid="brain-diagram-wrap"
           >

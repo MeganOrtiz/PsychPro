@@ -1,5 +1,6 @@
 - [PsychPro blue three-material system](psychpro-blue-material-system.md) — CURRENT (2026-07-09, supersedes the black foundation): Opaque/Glass/Gloss on --pp-* blue tokens; glow hover-only; no backdrop-filter; guardrails repointed.
 - [PsychPro black foundation](psychpro-black-foundation.md) — historical (same-day 2026-07-09); replaced hours later by the blue three-material system above.
+- [PsychPro token lock](psychpro-token-lock.md) — no raw color literals in TS/TSX outside palette.ts (+2 whitelisted files); use PP/alpha() or var(--pp-*); broad recipes banned, primitives emit scoped pp-* classes; drift guardrail enforces.
 - [Claims discipline](claims-discipline.md) — never report a fix as "done" until it's been verified end-to-end; user has called this out repeatedly.
 - [PsychPro glass buttons](psychpro-glass-buttons.md) — landing/marketing button styling convention.
 - [PsychPro custom-deck subscription gate](psychpro-custom-decks-subscription-gate.md) — "upload broken" reports are usually the paid-tier 403 gate firing, not the upload itself.

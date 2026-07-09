@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { Brain } from "lucide-react";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
+import { PP } from "@/lib/palette";
 
 const TRACK_NAV: React.CSSProperties = {
   letterSpacing: "0.22em",
@@ -28,11 +29,11 @@ export default function PrivacyPage() {
     <div
       className="min-h-screen text-white"
       style={{
-        background: "#0b0b0b",
+        background: PP.nearBlack,
         fontFamily: '"Montserrat", sans-serif',
       }}
     >
-      <header className="border-b" style={{ borderColor: "rgba(8,165,209,0.15)" }}>
+      <header className="border-b" style={{ borderColor: "rgba(var(--pp-cyan-rgb), 0.15)" }}>
         <div className="max-w-4xl mx-auto px-6 lg:px-10 py-6 flex items-center justify-between">
           <Link
             href="/"
@@ -102,7 +103,7 @@ export default function PrivacyPage() {
         <nav
           className="mt-10 mb-12 rounded-lg p-5"
           style={{
-            border: "1px solid rgba(8,165,209,0.18)",
+            border: "1px solid rgba(var(--pp-cyan-rgb), 0.18)",
             background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.83)",
           }}
           aria-label="On this page"
@@ -425,7 +426,7 @@ export default function PrivacyPage() {
             <div
               className="rounded-lg p-4 text-sm"
               style={{
-                border: "1px solid rgba(8,165,209,0.18)",
+                border: "1px solid rgba(var(--pp-cyan-rgb), 0.18)",
                 background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.83)",
               }}
             >
@@ -453,7 +454,7 @@ export default function PrivacyPage() {
 
         <div
           className="mt-16 pt-6 flex flex-wrap items-center justify-between gap-3"
-          style={{ borderTop: "1px solid rgba(8,165,209,0.15)" }}
+          style={{ borderTop: "1px solid rgba(var(--pp-cyan-rgb), 0.15)" }}
         >
           <p className="text-xs" style={{ color: P.inkSoft }}>
             © {new Date().getFullYear()} PsychPro. All rights reserved.
@@ -488,7 +489,7 @@ function Section({
     <section id={id} className="scroll-mt-24 space-y-3">
       <h2
         className="text-xs flex items-baseline gap-3"
-        style={{ ...TRACK_NAV, color: "#fff", fontWeight: 400 }}
+        style={{ ...TRACK_NAV, color: PP.white, fontWeight: 400 }}
       >
         <span style={{ color: P.surf }}>{n}.</span>
         <span>{title.toUpperCase()}</span>

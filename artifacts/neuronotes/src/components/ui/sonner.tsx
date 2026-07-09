@@ -1,4 +1,5 @@
 import { Toaster as Sonner } from "sonner"
+import { PP, alpha } from "@/lib/palette"
 
 type ToasterProps = React.ComponentProps<typeof Sonner>
 
@@ -8,22 +9,27 @@ const Toaster = ({ ...props }: ToasterProps) => {
       theme="dark"
       position="bottom-right"
       className="toaster group"
+      style={{
+        "--pp-toast-desc": alpha(PP.text, 0.75),
+        "--pp-toast-error-bg": PP.redToast,
+        "--pp-toast-error-border": alpha(PP.red400, 0.4),
+      } as React.CSSProperties}
       toastOptions={{
         unstyled: false,
         classNames: {
           toast:
-            "group toast !rounded-2xl !border !text-[#e5e5e5] " +
-            "!bg-[#071c33] !border-[#0e4e71] !shadow-none",
-          title: "!text-[#e5e5e5] !font-medium",
-          description: "!text-[rgba(229,229,229,0.75)]",
-          success: "!bg-[#071c33] !border-[#0e4e71] !shadow-none",
+            "group toast !rounded-2xl !border !text-[var(--pp-text)] " +
+            "!bg-[var(--pp-surface)] !border-[var(--pp-navy-bright)] !shadow-none",
+          title: "!text-[var(--pp-text)] !font-medium",
+          description: "!text-[var(--pp-toast-desc)]",
+          success: "!bg-[var(--pp-surface)] !border-[var(--pp-navy-bright)] !shadow-none",
           error:
-            "!bg-[#2a1216] !border-[rgba(248,113,113,0.4)] !shadow-none",
+            "!bg-[var(--pp-toast-error-bg)] !border-[var(--pp-toast-error-border)] !shadow-none",
           actionButton:
-            "group-[.toast]:!bg-[rgba(13,88,162,0.16)] group-[.toast]:!text-[#e5e5e5]",
+            "group-[.toast]:!bg-[rgba(var(--pp-ocean-deep-rgb),0.16)] group-[.toast]:!text-[var(--pp-text)]",
           cancelButton:
-            "group-[.toast]:!bg-[rgba(13,88,162,0.10)] group-[.toast]:!text-[rgba(229,229,229,0.75)]",
-          icon: "!text-[#a3a3a3]",
+            "group-[.toast]:!bg-[rgba(var(--pp-ocean-deep-rgb),0.10)] group-[.toast]:!text-[var(--pp-toast-desc)]",
+          icon: "!text-[var(--pp-text-dim)]",
         },
       }}
       {...props}

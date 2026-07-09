@@ -1,5 +1,6 @@
 import { SignIn } from "@clerk/clerk-react";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
+import { PP } from "@/lib/palette";
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -19,7 +20,7 @@ export default function SignInPage() {
             colorTextSecondary: P.mistSoft,
             colorInputBackground: P.ink,
             colorInputText: P.cloud,
-            colorDanger: "#ef4444",
+            colorDanger: PP.red,
             // Overrides Clerk's default orange warning color (e.g. the
             // "You're signing in from a new device" banner) so security
             // notices match the PsychPro cyan palette instead of clashing.

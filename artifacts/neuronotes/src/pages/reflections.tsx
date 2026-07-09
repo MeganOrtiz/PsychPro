@@ -5,6 +5,7 @@ import { useGetTopics } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { StudySurface } from "@/components/study/study-surface";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
+import { PP } from "@/lib/palette";
 import { PageTitle } from "@/components/brand/page-title";
 import {
   listAllReflections,
@@ -88,9 +89,9 @@ export default function ReflectionsPage() {
             className="rounded-xl border p-8"
             style={{
               background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90)",
-              borderColor: "rgba(8,165,209,0.24)",
+              borderColor: "rgba(var(--pp-cyan-rgb), 0.24)",
               boxShadow:
-                "inset 0 1px 0 rgba(255,255,255,0.12), 0 20px 46px -26px rgba(0,0,0,0.66)",
+                "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12), 0 20px 46px -26px rgba(var(--pp-black-rgb), 0.66)",
             }}
             data-testid="reflections-loading"
           >
@@ -143,9 +144,9 @@ export default function ReflectionsPage() {
                       className="rounded-xl border p-4"
                       style={{
                         background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90)",
-                        borderColor: "rgba(8,165,209,0.24)",
+                        borderColor: "rgba(var(--pp-cyan-rgb), 0.24)",
                         boxShadow:
-                          "inset 0 1px 0 rgba(255,255,255,0.12), 0 20px 46px -26px rgba(0,0,0,0.66)",
+                          "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12), 0 20px 46px -26px rgba(var(--pp-black-rgb), 0.66)",
                       }}
                       data-testid={`reflection-${r.questionId}`}
                     >
@@ -171,14 +172,14 @@ export default function ReflectionsPage() {
                           className="text-xs mb-3"
                           style={{ color: `${P.mist}99` }}
                         >
-                          <span className="font-semibold" style={{ color: "#7DD3A6" }}>
+                          <span className="font-semibold" style={{ color: PP.greenText }}>
                             Correct ({r.correctAnswer}):
                           </span>{" "}
                           {r.correctText}
                           {r.selectedText && r.selectedAnswer !== r.correctAnswer && (
                             <>
                               {" · "}
-                              <span className="font-semibold" style={{ color: "#E89A92" }}>
+                              <span className="font-semibold" style={{ color: PP.redText }}>
                                 You picked ({r.selectedAnswer}):
                               </span>{" "}
                               {r.selectedText}

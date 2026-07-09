@@ -1,39 +1,42 @@
 // =============================================================================
 // SINGLE SOURCE OF TRUTH for the PsychPro color palette (TS mirror).
 //
-// BLUE THREE-MATERIAL SYSTEM (owner-approved 2026-07-09): values mirror the
-// --pp-* token block in src/index.css. If you change a value here, change the
-// matching CSS token in the same commit — the guardrail scripts
+// BLUE THREE-MATERIAL SYSTEM (owner-approved 2026-07-09): every value here is
+// consumed from the PP constants in src/lib/palette.ts, which themselves mirror
+// the --pp-* token block in src/index.css. If you change a value, change it in
+// palette.ts / index.css in the same commit — the guardrail scripts
 // (check-surface-hue.mjs / check-design-drift.mjs) enforce the locked palette.
 //
-// Palette: floor #000; tinted surfaces #04101f–#071c33; navy #052a58/#0e4e71;
-// ocean #0b669a/#0d58a2; cyan #08a5d1/#0bd4df; icy #aaedf0; grays
-// #e5e5e5/#a3a3a3. The KEYS are legacy names kept so every consumer compiles.
+// Palette: black floor; tinted navy surfaces; navy structural lines; ocean and
+// cyan accents; icy highlight; locked neutral grays. The KEYS are legacy names
+// kept so every consumer compiles.
 // =============================================================================
+
+import { PP } from "@/lib/palette";
 
 export const STUDY_PALETTE = {
   // Backgrounds — pure-black floor to tinted navy surface ladder.
-  ink: "#000000",         // deepest anchor (page floor)
-  bg: "#04101f",          // page bg primary (deepest tinted surface)
-  bgSoft: "#05172b",      // page bg secondary
-  surface: "#071c33",     // card surface (standard tint)
-  surfaceElev: "#092642", // card hover / lifted
+  ink: PP.floor,          // deepest anchor (page floor)
+  bg: PP.deep,            // page bg primary (deepest tinted surface)
+  bgSoft: PP.deepSoft,    // page bg secondary
+  surface: PP.surface,    // card surface (standard tint)
+  surfaceElev: PP.raised, // card hover / lifted
 
   // Structural lines — borders, dividers
-  steel: "#0e4e71",
+  steel: PP.navyBright,
 
   // Accent ladder (legacy key names, blue values)
-  tealDeep: "#0b669a",    // mid ocean
-  teal: "#08a5d1",        // primary action cyan
-  surf: "#0bd4df",        // luminous cyan accent
-  mist: "#aaedf0",        // icy highlight text
-  mistSoft: "#a3a3a3",    // dimmer muted text (locked gray)
+  tealDeep: PP.ocean,     // mid ocean
+  teal: PP.cyan,          // primary action cyan
+  surf: PP.bright,        // luminous cyan accent
+  mist: PP.icy,           // icy highlight text
+  mistSoft: PP.textDim,   // dimmer muted text (locked gray)
 
   // Neutrals (locked grays)
-  cloud: "#e5e5e5",       // brightest text (text-main)
-  paper: "#e5e5e5",       // alias
-  paperSoft: "#cfcfcf",   // softer light-card text
-  inkSoft: "#a3a3a3",     // muted text (text-muted)
+  cloud: PP.text,         // brightest text (text-main)
+  paper: PP.text,         // alias
+  paperSoft: PP.textSoft, // softer light-card text
+  inkSoft: PP.textDim,    // muted text (text-muted)
 } as const;
 
 export type StudyTone = "light" | "dark" | "accent" | "card-front";

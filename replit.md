@@ -79,6 +79,14 @@ A mobile-responsive neuroscience/neuropsychology study app.
 - `lib/db/src/seed.ts` — PsychPro content seed (39 topics, 1,612 flashcards, 935 quiz questions, 39 study guides, 39 practice exams with 738 join rows)
 - `lib/db/src/seed-eppp-master-content.ts` — EPPP Mastery starter content seed (8 domain courses, 71 KN chapter topics, starter study guides)
 
+### Making a Safe Design Change (token lock)
+The app runs on the blue three-material system (OPAQUE panels / GLASS tiles / GLOSS buttons), enforced by two guardrails: `node scripts/check-design-drift.mjs` (structure + token discipline) and `node scripts/check-surface-hue.mjs` (palette hue windows), both run from `artifacts/neuronotes`.
+- **To change a color app-wide:** edit the `--pp-*` token in the `src/index.css` `:root` block AND its mirror in `src/lib/palette.ts` (plus the `--pp-*-rgb` channel triplet) in the same commit — the guardrail verifies all three stay in sync, and every consumer follows automatically.
+- **Never write raw color literals** (hex / `rgb()` / numeric `hsl()`) in components or pages. In styles use `var(--pp-*)` or `rgba(var(--pp-*-rgb), a)`; in SVG attributes, Recharts, three.js, or JS color math use `PP.*` / `alpha()` from `src/lib/palette.ts` (CSS vars render black in SVG attrs). The only files allowed to hold literals: `src/lib/palette.ts`, `src/data/brain-structures.ts` (anatomy atlas), `src/pages/dev-glass-preview.tsx` (dev specimen).
+- **Materials are opt-in named classes**, applied by the shared primitives: `.pp-card-opaque` (ui/card.tsx), `.pp-input-well` (ui/input.tsx, ui/textarea.tsx), `.pp-btn-outline` (ui/select.tsx trigger, ui/toggle.tsx outline), `.pp-btn-gloss`/`.pp-btn-glass` (raw buttons that skip the shared Button), plus the Button variants (`btn-glass*`) and `.mat-*` tiles. Restyling one surface = edit its named class; it can never leak to another surface.
+- **Banned patterns** (guardrail-enforced): `[class*=…]` attribute-wildcard selectors, descendant bare-element recipes (`.study-page-bg button {…}`), `backdrop-filter`/blur, glow outside `:hover/:active/:focus`, wallpaper images in CSS.
+- If a guardrail fails after an intentional design change, update the matching lock entry in `scripts/check-design-drift.mjs` in the same commit.
+
 ### Auth Pattern
 - **Clerk is the identity provider, and every protected route verifies the Clerk session server-side.**
   - Frontend: `<ClerkProvider>` wraps the app in `App.tsx`. `ClerkTokenBridge` (`src/components/auth/clerk-token-bridge.tsx`) listens to `useAuth()` and pushes the Clerk session token into the generated API client (`Authorization: Bearer <token>`). The protected pages live under `<RequireSignedIn>` so the token is always present by the time a protected API call is made.

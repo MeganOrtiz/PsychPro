@@ -52,7 +52,7 @@ export function PageTitle({ title, subtitle, icon: Icon, className }: PageTitleP
         <p
           className="mt-3 text-sm font-light"
           style={{
-            color: "#FFFFFF",
+            color: "rgb(var(--pp-white-rgb))",
             letterSpacing: "0.04em",
           }}
           data-testid="page-title-subtitle"

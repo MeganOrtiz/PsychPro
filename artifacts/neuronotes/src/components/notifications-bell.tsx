@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { Bell, CheckCheck } from "lucide-react";
 import { authHeaders } from "@/lib/auth-headers";
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
+import { PP } from "@/lib/palette";
 
 type Notification = {
   id: number;
@@ -98,7 +99,7 @@ export function NotificationsBell() {
         className="relative w-10 h-10 rounded-md flex items-center justify-center transition-all hover:scale-105"
         style={{
           background: "hsl(var(--surf-hue) var(--surf-sat) 10% / 0.55)",
-          border: "1px solid rgba(8,165,209, 0.28)",
+          border: "1px solid rgba(var(--pp-cyan-rgb), 0.28)",
           color: PALETTE.mist,
         }}
         onClick={() => setOpen((o) => !o)}
@@ -109,7 +110,7 @@ export function NotificationsBell() {
         {unreadCount > 0 && (
           <span
             className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full text-[10px] font-bold flex items-center justify-center"
-            style={{ background: "#ef4444", color: "white" }}
+            style={{ background: PP.red, color: "white" }}
             data-testid="notifications-badge"
           >
             {unreadCount > 9 ? "9+" : unreadCount}
@@ -122,7 +123,7 @@ export function NotificationsBell() {
           className="absolute right-0 top-12 w-80 max-h-[70vh] overflow-y-auto rounded-2xl z-[60] shadow-2xl"
           style={{
             background: "hsl(var(--surf-hue) var(--surf-sat) 10% / 0.95)",
-            border: "1px solid rgba(8,165,209, 0.28)",
+            border: "1px solid rgba(var(--pp-cyan-rgb), 0.28)",
           }}
           data-testid="notifications-dropdown"
         >

@@ -8,14 +8,15 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { STUDY_PALETTE } from "@/lib/study-theme";
+import { PP } from "@/lib/palette";
 type NavItem = { href: string; label: string; icon: React.ComponentType<{ className?: string }> };
 
 // Sidebar nav tile — plain neutral row (black-foundation reset, 2026-07-09).
 // Surface color and borders live in the .nav-glass-* rules in index.css.
 const NAV_ITEM_BASE =
   "nav-glass group relative flex items-center gap-2.5 px-3 py-2 rounded-md cursor-pointer transition-all duration-200 ease-in-out border";
-const NAV_ITEM_IDLE = "nav-glass-idle text-[#a3a3a3] hover:text-[#d4d4d4]";
-const NAV_ITEM_ACTIVE = "nav-glass-active text-[#d4d4d4]";
+const NAV_ITEM_IDLE = "nav-glass-idle text-pp-text-dim hover:text-[var(--nav-hover)]";
+const NAV_ITEM_ACTIVE = "nav-glass-active text-[var(--nav-hover)]";
 
 function navItemClass(isActive: boolean) {
   return cn(NAV_ITEM_BASE, isActive ? NAV_ITEM_ACTIVE : NAV_ITEM_IDLE);
@@ -175,8 +176,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
         style={{
-          background: "#071c33",
+          background: "var(--pp-surface)",
           border: "1px solid var(--pp-line)",
+          ["--nav-hover" as any]: PP.neutral300,
+          ["--nav-label" as any]: PP.neutral500,
         }}
         data-testid="sidebar"
       >
@@ -184,8 +187,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
             close control overlays the top-right. */}
         <div className="relative px-3 pt-5 pb-3">
           <p
-            className="text-center font-light text-[#f5f5f5]"
-            style={{ letterSpacing: "0.4em", textIndent: "0.4em", fontSize: "18px" }}
+            className="text-center font-light"
+            style={{ letterSpacing: "0.4em", textIndent: "0.4em", fontSize: "18px", color: PP.neutral100 }}
             data-testid="sidebar-wordmark"
           >
             PSYCHPRO
@@ -201,7 +204,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
         <nav className="relative flex-1 p-3 space-y-2 overflow-y-auto">
           <div className="px-3 pt-1 pb-1">
-            <p className="text-[11px] font-semibold text-[#8a8a8a]/60 uppercase tracking-[1.2px]">Learn</p>
+            <p className="text-[11px] font-semibold text-[var(--nav-label)]/60 uppercase tracking-[1.2px]">Learn</p>
           </div>
           {workshopNav.map((item) => {
             const isActive = location === item.href || location.startsWith(item.href + "/");
@@ -222,7 +225,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           })}
 
           <div className="px-3 pt-4 pb-1">
-            <p className="text-[11px] font-semibold text-[#8a8a8a]/60 uppercase tracking-[1.2px]">Expand</p>
+            <p className="text-[11px] font-semibold text-[var(--nav-label)]/60 uppercase tracking-[1.2px]">Expand</p>
           </div>
           {labNav.map((item) => {
             const isActive = location === item.href || location.startsWith(item.href + "/");
@@ -250,7 +253,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           />
 
           <div className="px-3 pt-4 pb-1">
-            <p className="text-[11px] font-semibold text-[#8a8a8a]/60 uppercase tracking-[1.2px]">Connect</p>
+            <p className="text-[11px] font-semibold text-[var(--nav-label)]/60 uppercase tracking-[1.2px]">Connect</p>
           </div>
           {studioNav.map((item) => {
             const isActive = location === item.href || location.startsWith(item.href + "/");
@@ -290,7 +293,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           {!isScholar && (
             <>
               <div className="px-3 pt-4 pb-1">
-                <p className="text-[11px] font-semibold text-[#8a8a8a]/60 uppercase tracking-[1.2px]">Account</p>
+                <p className="text-[11px] font-semibold text-[var(--nav-label)]/60 uppercase tracking-[1.2px]">Account</p>
               </div>
               {accountNav.map((item) => {
                 const isActive = location === item.href || location.startsWith(item.href + "/");
@@ -315,7 +318,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           {isAdmin && (
             <>
               <div className="px-3 pt-4 pb-1">
-                <p className="text-[11px] font-semibold text-[#8a8a8a]/60 uppercase tracking-[1.2px]">Admin</p>
+                <p className="text-[11px] font-semibold text-[var(--nav-label)]/60 uppercase tracking-[1.2px]">Admin</p>
               </div>
               <Link
                 href="/admin/feedback"
@@ -418,7 +421,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   fontSize: "clamp(34px, 3.6vw, 50px)",
                   letterSpacing: "0.42em",
                   textIndent: "0.42em",
-                  color: "#f5f5f5",
+                  color: PP.neutral100,
                 }}
                 data-testid="topbar-wordmark"
               >
@@ -431,7 +434,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
             afterSignOutUrl={import.meta.env.BASE_URL.replace(/\/$/, "") || "/"}
             appearance={{
               elements: {
-                avatarBox: "w-10 h-10 rounded-full ring-1 ring-[rgba(8,165,209,0.40)]",
+                avatarBox: "w-10 h-10 rounded-full ring-1 ring-[rgba(var(--pp-cyan-rgb),0.40)]",
               },
             }}
           />
@@ -498,7 +501,7 @@ function ToolsStudio({
   return (
     <div className="relative mt-1">
       <div className="px-3 pt-4 pb-1">
-        <p className="text-[11px] font-semibold tracking-[1.2px] uppercase text-[#8a8a8a]/60">
+        <p className="text-[11px] font-semibold tracking-[1.2px] uppercase text-[var(--nav-label)]/60">
           Tools Studio
         </p>
       </div>
@@ -516,7 +519,7 @@ function ToolsStudio({
                 <Icon className="w-4 h-4 flex-shrink-0" />
                 <span className="text-sm font-medium flex-1 min-w-0 truncate">{t.label}</span>
                 {!isScholar && (
-                  <span className="inline-flex items-center text-[10px] font-semibold tracking-wide px-1.5 py-0.5 rounded-full text-[#d4d4d4] border border-[rgba(8,165,209,0.30)]">
+                  <span className="inline-flex items-center text-[10px] font-semibold tracking-wide px-1.5 py-0.5 rounded-full text-[var(--nav-hover)] border border-[rgba(var(--pp-cyan-rgb),0.30)]">
                     PRO
                   </span>
                 )}
@@ -538,7 +541,7 @@ function SidebarProfileLink({ onNavigate }: { onNavigate: () => void }) {
   const name = (displayName ?? "").trim() || "Guest";
 
   return (
-    <div className="relative p-4 border-t border-[rgba(11,102,154,0.35)] z-10">
+    <div className="relative p-4 border-t border-[rgba(var(--pp-ocean-rgb),0.35)] z-10">
       <Link href="/profile" onClick={onNavigate} data-testid="nav-profile">
         <div className={navItemClass(isActive)}>
           {photoUrl ? (

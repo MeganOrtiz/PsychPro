@@ -20,6 +20,7 @@ import { useGetTopics, useGetCourseMasteryStatus } from "@workspace/api-client-r
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { STUDY_PALETTE } from "@/lib/study-theme";
+import { PP, alpha } from "@/lib/palette";
 import { PageTitle } from "@/components/brand/page-title";
 import { isEpppTopic } from "@/lib/eppp-content";
 
@@ -204,8 +205,8 @@ function CourseRail({
       <aside
         className="hidden lg:flex flex-col gap-2 p-2.5 rounded-xl border h-fit lg:sticky lg:top-4"
         style={{
-          background: "rgba(255,255,255,0.03)",
-          borderColor: "rgba(255,255,255,0.08)",
+          background: "rgba(var(--pp-white-rgb), 0.03)",
+          borderColor: "rgba(var(--pp-white-rgb), 0.08)",
           ["--nav-glow" as never]: STUDY_PALETTE.surf,
         }}
         aria-label="Courses"
@@ -275,14 +276,14 @@ function CourseRailButton({
 
   const idleBg = "hsl(var(--surf-hue) var(--surf-sat) 8% / 0.80)";
   const activeBg = "hsl(var(--surf-hue) var(--surf-sat) 18% / 0.88)";
-  const idleBorder = "rgba(8,165,209,0.26)";
-  const activeBorder = "rgba(8,165,209,0.55)";
-  const hoverBorder = "rgba(8,165,209,0.45)";
-  const idleShadow = "inset 0 1px 0 0 rgba(255,255,255,0.14), 0 10px 26px -16px rgba(0,0,0,0.7)";
+  const idleBorder = "rgba(var(--pp-cyan-rgb), 0.26)";
+  const activeBorder = "rgba(var(--pp-cyan-rgb), 0.55)";
+  const hoverBorder = "rgba(var(--pp-cyan-rgb), 0.45)";
+  const idleShadow = "inset 0 1px 0 0 rgba(var(--pp-white-rgb), 0.14), 0 10px 26px -16px rgba(var(--pp-black-rgb), 0.7)";
   const activeShadow =
-    "0 14px 34px -14px rgba(0, 0, 0, 0.55), inset 0 1px 0 0 rgba(255,255,255,0.10)";
+    "0 14px 34px -14px rgba(var(--pp-black-rgb), 0.55), inset 0 1px 0 0 rgba(var(--pp-white-rgb), 0.10)";
   const hoverShadow =
-    "0 12px 30px -14px rgba(0, 0, 0, 0.55), inset 0 1px 0 0 rgba(255,255,255,0.10)";
+    "0 12px 30px -14px rgba(var(--pp-black-rgb), 0.55), inset 0 1px 0 0 rgba(var(--pp-white-rgb), 0.10)";
 
   return (
     <button
@@ -310,7 +311,7 @@ function CourseRailButton({
         className="w-9 h-9 shrink-0 rounded-lg flex items-center justify-center border"
         style={{
           background: "hsl(var(--surf-hue) var(--surf-sat) 18% / 0.55)",
-          borderColor: "rgba(8,165,209,0.28)",
+          borderColor: "rgba(var(--pp-cyan-rgb), 0.28)",
         }}
       >
         <Icon
@@ -323,7 +324,7 @@ function CourseRailButton({
       <div className="flex-1 min-w-0">
         <div
           className="font-medium text-sm leading-snug line-clamp-2"
-          style={{ color: active ? STUDY_PALETTE.cloud : "rgba(250, 250, 250,0.92)" }}
+          style={{ color: active ? STUDY_PALETTE.cloud : alpha(PP.cloudBright, 0.92) }}
         >
           {name}
         </div>
@@ -361,13 +362,13 @@ function CourseLessons({
           lesson cards below so the right pane reads as one unit. */}
       <div
         className="flex items-center gap-3 mb-4 pb-3 border-b"
-        style={{ borderColor: "rgba(8,165,209,0.18)" }}
+        style={{ borderColor: "rgba(var(--pp-cyan-rgb), 0.18)" }}
       >
         <div
           className="w-11 h-11 rounded-lg flex items-center justify-center border"
           style={{
             background: "hsl(var(--surf-hue) var(--surf-sat) 18% / 0.65)",
-            borderColor: "rgba(8,165,209,0.32)",
+            borderColor: "rgba(var(--pp-cyan-rgb), 0.32)",
           }}
         >
           <Icon
@@ -420,15 +421,15 @@ function CourseMasteryButton({ group }: { group: { name: string; items: Topic[] 
 
   const lockedBg = "hsl(var(--surf-hue) var(--surf-sat) 8% / 0.80)";
   const unlockedBg = "hsl(var(--surf-hue) var(--surf-sat) 18% / 0.88)";
-  const lockedBorder = "rgba(8,165,209,0.22)";
-  const unlockedBorder = "rgba(8,165,209,0.55)";
+  const lockedBorder = "rgba(var(--pp-cyan-rgb), 0.22)";
+  const unlockedBorder = "rgba(var(--pp-cyan-rgb), 0.55)";
   const lockedShadow =
-    "inset 0 1px 0 rgba(255,255,255,0.12), 0 24px 60px -42px rgba(0,0,0,0.72)";
+    "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12), 0 24px 60px -42px rgba(var(--pp-black-rgb), 0.72)";
   const unlockedShadow =
-    "0 16px 38px -14px rgba(0, 0, 0, 0.55), inset 0 1px 0 0 rgba(255,255,255,0.10)";
-  const hoverBorder = "rgba(8,165,209,0.75)";
+    "0 16px 38px -14px rgba(var(--pp-black-rgb), 0.55), inset 0 1px 0 0 rgba(var(--pp-white-rgb), 0.10)";
+  const hoverBorder = "rgba(var(--pp-cyan-rgb), 0.75)";
   const hoverShadow =
-    "0 18px 44px -12px rgba(0, 0, 0, 0.55), inset 0 1px 0 0 rgba(255,255,255,0.12)";
+    "0 18px 44px -12px rgba(var(--pp-black-rgb), 0.55), inset 0 1px 0 0 rgba(var(--pp-white-rgb), 0.12)";
 
   const Marker = unlocked ? GraduationCap : Lock;
 
@@ -441,7 +442,7 @@ function CourseMasteryButton({ group }: { group: { name: string; items: Topic[] 
         navigate(`/courses/${encodeURIComponent(group.name)}/mastery-exam`);
       }}
       data-testid={`course-mastery-${group.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
-      className={`group relative w-full mt-5 flex items-center gap-4 px-4 py-4 rounded-md text-left transition-all duration-200 border focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--nav-glow,#a3a3a3)]/50 ${
+      className={`group relative w-full mt-5 flex items-center gap-4 px-4 py-4 rounded-md text-left transition-all duration-200 border focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--nav-glow,var(--pp-text-dim))]/50 ${
         unlocked ? "cursor-pointer" : "cursor-not-allowed"
       }`}
       style={{
@@ -466,7 +467,7 @@ function CourseMasteryButton({ group }: { group: { name: string; items: Topic[] 
         className="w-11 h-11 shrink-0 rounded-lg flex items-center justify-center border"
         style={{
           background: "hsl(var(--surf-hue) var(--surf-sat) 18% / 0.55)",
-          borderColor: "rgba(8,165,209,0.28)",
+          borderColor: "rgba(var(--pp-cyan-rgb), 0.28)",
         }}
       >
         <Marker
@@ -479,7 +480,7 @@ function CourseMasteryButton({ group }: { group: { name: string; items: Topic[] 
       <div className="flex-1 min-w-0">
         <div
           className="font-semibold text-sm md:text-base leading-snug"
-          style={{ color: unlocked ? STUDY_PALETTE.cloud : "rgba(250, 250, 250,0.9)" }}
+          style={{ color: unlocked ? STUDY_PALETTE.cloud : alpha(PP.cloudBright, 0.9) }}
         >
           Course Mastery Exam
         </div>
@@ -544,23 +545,23 @@ function TopicCard({ topic, onClick, showCategory }: TopicCardProps) {
       className="group text-left rounded-md p-4 cursor-pointer transition-all border hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2"
       style={{
         background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.85)",
-        borderColor: "rgba(8,165,209,0.22)",
+        borderColor: "rgba(var(--pp-cyan-rgb), 0.22)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.12), 0 24px 60px -42px rgba(0,0,0,0.72)",
+          "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12), 0 24px 60px -42px rgba(var(--pp-black-rgb), 0.72)",
         // Use CSS custom-property so :hover can shift box-shadow cheaply.
-        ["--card-glow" as never]: "rgba(8,165,209,0.55)",
+        ["--card-glow" as never]: "rgba(var(--pp-cyan-rgb), 0.55)",
       }}
       onMouseEnter={(e) => {
         (e.currentTarget as HTMLButtonElement).style.borderColor =
-          "rgba(8,165,209,0.55)";
+          "rgba(var(--pp-cyan-rgb), 0.55)";
         (e.currentTarget as HTMLButtonElement).style.boxShadow =
-          "0 14px 36px -14px rgba(0, 0, 0, 0.55), inset 0 1px 0 0 rgba(255,255,255,0.10)";
+          "0 14px 36px -14px rgba(var(--pp-black-rgb), 0.55), inset 0 1px 0 0 rgba(var(--pp-white-rgb), 0.10)";
       }}
       onMouseLeave={(e) => {
         (e.currentTarget as HTMLButtonElement).style.borderColor =
-          "rgba(8,165,209,0.22)";
+          "rgba(var(--pp-cyan-rgb), 0.22)";
         (e.currentTarget as HTMLButtonElement).style.boxShadow =
-          "inset 0 1px 0 rgba(255,255,255,0.12), 0 24px 60px -42px rgba(0,0,0,0.72)";
+          "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12), 0 24px 60px -42px rgba(var(--pp-black-rgb), 0.72)";
       }}
     >
       <div className="flex items-start gap-3">
@@ -624,8 +625,8 @@ function TopicCard({ topic, onClick, showCategory }: TopicCardProps) {
 // so the UI never breaks.
 // =============================================================================
 const stroke = STUDY_PALETTE.surf;
-const soft = "rgba(8,165,209,0.45)";
-const bright = "rgba(170,237,240,0.85)";
+const soft = alpha(PP.cyan, 0.45);
+const bright = alpha(PP.icy, 0.85);
 
 // Shared SVG attributes — keeps every symbol visually consistent.
 const svgCommon = {
@@ -1093,9 +1094,9 @@ function TopicThumbnail({ topic }: { topic: Topic }) {
         // glowing symbol inside reads as luminous on top of the dark
         // teal card surface.
         background: "hsl(var(--surf-hue) var(--surf-sat) 18% / 0.65)",
-        borderColor: "rgba(8,165,209,0.32)",
+        borderColor: "rgba(var(--pp-cyan-rgb), 0.32)",
         boxShadow:
-          "inset 0 0 14px rgba(8,165,209,0.10), 0 0 18px -6px rgba(8,165,209,0.35)",
+          "inset 0 0 14px rgba(var(--pp-cyan-rgb), 0.10), 0 0 18px -6px rgba(var(--pp-cyan-rgb), 0.35)",
       }}
       data-testid={`topic-thumb-${topic.id}`}
     >
@@ -1108,7 +1109,7 @@ function TopicThumbnail({ topic }: { topic: Topic }) {
           // inner halo for definition and a wider outer halo for the
           // dreamy aura.
           filter:
-            "drop-shadow(0 0 3px rgba(8,165,209,0.65)) drop-shadow(0 0 9px rgba(8,165,209,0.45))",
+            "drop-shadow(0 0 3px rgba(var(--pp-cyan-rgb), 0.65)) drop-shadow(0 0 9px rgba(var(--pp-cyan-rgb), 0.45))",
         }}
       >
         <svg {...svgCommon} width="100%" height="100%">

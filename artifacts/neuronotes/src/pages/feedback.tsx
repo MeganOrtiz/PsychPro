@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { PageTitle } from "@/components/brand/page-title";
 import { toast } from "sonner";
 import { jsonAuthHeaders } from "@/lib/auth-headers";
+import { PP, alpha } from "@/lib/palette";
 
 const FEEDBACK_TYPES = [
   { value: "bug", label: "Bug Report" },
@@ -141,11 +142,12 @@ export default function FeedbackPage() {
                   aria-pressed={selected}
                   style={{
                     background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90)",
-                  }}
+                    "--pp-sel-border": alpha(PP.neutral300, 0.75),
+                  } as React.CSSProperties}
                   className={`grow-0 shrink-0 basis-[calc(50%-0.25rem)] px-3 py-2.5 rounded-md border text-sm font-medium text-center text-foreground transition-all ${
                     selected
-                      ? "border-[rgba(212,212,212,0.75)]"
-                      : "border-[rgba(8,165,209,0.3)] hover:border-[rgba(8,165,209,0.55)]"
+                      ? "border-[var(--pp-sel-border)]"
+                      : "border-[rgba(var(--pp-cyan-rgb),0.3)] hover:border-[rgba(var(--pp-cyan-rgb),0.55)]"
                   }`}
                 >
                   {ft.label}

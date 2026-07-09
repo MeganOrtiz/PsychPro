@@ -127,25 +127,40 @@
   --pp-icy: #aaedf0;          /* icy highlight / bevel source */
   --pp-text: #e5e5e5;         /* primary text */
   --pp-text-dim: #a3a3a3;     /* muted text */
+  --pp-ink: #03131f;          /* dark ink text on GLOSS cyan fills */
+
+  /* RGB channel triplets — for alpha mixes: rgba(var(--pp-cyan-rgb), 0.45).
+     MUST stay numerically in sync with the hex tokens above. */
+  --pp-deep-rgb: 4, 16, 31;
+  --pp-surface-rgb: 7, 28, 51;
+  --pp-navy-rgb: 5, 42, 88;
+  --pp-navy-bright-rgb: 14, 78, 113;
+  --pp-ocean-rgb: 11, 102, 154;
+  --pp-ocean-deep-rgb: 13, 88, 162;
+  --pp-cyan-rgb: 8, 165, 209;
+  --pp-bright-rgb: 11, 212, 223;
+  --pp-icy-rgb: 170, 237, 240;
+  --pp-white-rgb: 255, 255, 255;
+  --pp-black-rgb: 0, 0, 0;
 
   /* Derived material ingredients — consume these, never re-mix raw values. */
-  --pp-bevel: rgba(170, 237, 240, 0.14);        /* opaque-panel lit top edge */
-  --pp-bevel-bright: rgba(170, 237, 240, 0.26); /* glass-tile lit top edge */
-  --pp-line: rgba(11, 102, 154, 0.50);          /* hairline border (panels) */
-  --pp-line-bright: rgba(8, 165, 209, 0.55);    /* hairline border (glass) */
-  --pp-glow: rgba(11, 212, 223, 0.30);          /* hover corona (soft) */
-  --pp-glow-strong: rgba(11, 212, 223, 0.48);   /* active corona */
-  --pp-shadow: rgba(0, 0, 0, 0.65);             /* neutral drop shadow */
+  --pp-bevel: rgba(var(--pp-icy-rgb), 0.14);        /* opaque-panel lit top edge */
+  --pp-bevel-bright: rgba(var(--pp-icy-rgb), 0.26); /* glass-tile lit top edge */
+  --pp-line: rgba(var(--pp-ocean-rgb), 0.50);          /* hairline border (panels) */
+  --pp-line-bright: rgba(var(--pp-cyan-rgb), 0.55);    /* hairline border (glass) */
+  --pp-glow: rgba(var(--pp-bright-rgb), 0.30);          /* hover corona (soft) */
+  --pp-glow-strong: rgba(var(--pp-bright-rgb), 0.48);   /* active corona */
+  --pp-shadow: rgba(var(--pp-black-rgb), 0.65);             /* neutral drop shadow */
 
   /* SINGLE HUE/SAT KNOB for the tokenized shadcn surface system below. */
   --surf-hue: 211;
   --surf-sat: 62%;
 
-  --button-outline: rgba(170, 237, 240, .12);
-  --badge-outline: rgba(170, 237, 240, .06);
+  --button-outline: rgba(var(--pp-icy-rgb), .12);
+  --badge-outline: rgba(var(--pp-icy-rgb), .06);
   --opaque-button-border-intensity: 9;
-  --elevate-1: rgba(170, 237, 240, .05);
-  --elevate-2: rgba(170, 237, 240, .10);
+  --elevate-1: rgba(var(--pp-icy-rgb), .05);
+  --elevate-2: rgba(var(--pp-icy-rgb), .10);
 
   /* Light theme (rarely seen — the app runs on the dark blue surface). */
   --background: 0 0% 97%;
@@ -200,14 +215,14 @@
   --app-font-mono: Menlo, monospace;
   --radius: .625rem;
 
-  --shadow-2xs: 0px 1px 2px 0px rgba(0,0,0,0.05);
-  --shadow-xs: 0px 2px 4px 0px rgba(0,0,0,0.06);
-  --shadow-sm: 0px 2px 4px 0px rgba(0,0,0,0.06), 0px 1px 2px -1px rgba(0,0,0,0.04);
-  --shadow: 0px 4px 6px -1px rgba(0,0,0,0.07), 0px 2px 4px -2px rgba(0,0,0,0.05);
-  --shadow-md: 0px 6px 12px -2px rgba(0,0,0,0.08), 0px 3px 6px -3px rgba(0,0,0,0.05);
-  --shadow-lg: 0px 10px 20px -4px rgba(0,0,0,0.10), 0px 4px 8px -4px rgba(0,0,0,0.06);
-  --shadow-xl: 0px 20px 40px -8px rgba(0,0,0,0.12), 0px 8px 16px -6px rgba(0,0,0,0.07);
-  --shadow-2xl: 0px 32px 60px -12px rgba(0,0,0,0.16);
+  --shadow-2xs: 0px 1px 2px 0px rgba(var(--pp-black-rgb),0.05);
+  --shadow-xs: 0px 2px 4px 0px rgba(var(--pp-black-rgb),0.06);
+  --shadow-sm: 0px 2px 4px 0px rgba(var(--pp-black-rgb),0.06), 0px 1px 2px -1px rgba(var(--pp-black-rgb),0.04);
+  --shadow: 0px 4px 6px -1px rgba(var(--pp-black-rgb),0.07), 0px 2px 4px -2px rgba(var(--pp-black-rgb),0.05);
+  --shadow-md: 0px 6px 12px -2px rgba(var(--pp-black-rgb),0.08), 0px 3px 6px -3px rgba(var(--pp-black-rgb),0.05);
+  --shadow-lg: 0px 10px 20px -4px rgba(var(--pp-black-rgb),0.10), 0px 4px 8px -4px rgba(var(--pp-black-rgb),0.06);
+  --shadow-xl: 0px 20px 40px -8px rgba(var(--pp-black-rgb),0.12), 0px 8px 16px -6px rgba(var(--pp-black-rgb),0.07);
+  --shadow-2xl: 0px 32px 60px -12px rgba(var(--pp-black-rgb),0.16);
   --tracking-normal: 0em;
   --spacing: 0.25rem;
 
@@ -228,11 +243,11 @@
 }
 
 .dark {
-  --button-outline: rgba(170, 237, 240, .12);
-  --badge-outline: rgba(170, 237, 240, .06);
+  --button-outline: rgba(var(--pp-icy-rgb), .12);
+  --badge-outline: rgba(var(--pp-icy-rgb), .06);
   --opaque-button-border-intensity: 9;
-  --elevate-1: rgba(170, 237, 240, .05);
-  --elevate-2: rgba(170, 237, 240, .10);
+  --elevate-1: rgba(var(--pp-icy-rgb), .05);
+  --elevate-2: rgba(var(--pp-icy-rgb), .10);
 
   /* Deep blue dark theme — driven by the --surf-hue/--surf-sat knobs. */
   --background: var(--surf-hue) var(--surf-sat) 6%;
@@ -281,14 +296,14 @@
   --chart-4: 210 85% 44%;
   --chart-5: 213 89% 30%;
 
-  --shadow-2xs: 0px 1px 2px 0px rgba(0,0,0,0.3);
-  --shadow-xs: 0px 2px 4px 0px rgba(0,0,0,0.35);
-  --shadow-sm: 0px 2px 4px 0px rgba(0,0,0,0.35), 0px 1px 2px -1px rgba(0,0,0,0.3);
-  --shadow: 0px 4px 6px -1px rgba(0,0,0,0.4), 0px 2px 4px -2px rgba(0,0,0,0.3);
-  --shadow-md: 0px 6px 12px -2px rgba(0,0,0,0.45), 0px 3px 6px -3px rgba(0,0,0,0.3);
-  --shadow-lg: 0px 10px 20px -4px rgba(0,0,0,0.50), 0px 4px 8px -4px rgba(0,0,0,0.35);
-  --shadow-xl: 0px 20px 40px -8px rgba(0,0,0,0.55), 0px 8px 16px -6px rgba(0,0,0,0.40);
-  --shadow-2xl: 0px 32px 60px -12px rgba(0,0,0,0.60);
+  --shadow-2xs: 0px 1px 2px 0px rgba(var(--pp-black-rgb),0.3);
+  --shadow-xs: 0px 2px 4px 0px rgba(var(--pp-black-rgb),0.35);
+  --shadow-sm: 0px 2px 4px 0px rgba(var(--pp-black-rgb),0.35), 0px 1px 2px -1px rgba(var(--pp-black-rgb),0.3);
+  --shadow: 0px 4px 6px -1px rgba(var(--pp-black-rgb),0.4), 0px 2px 4px -2px rgba(var(--pp-black-rgb),0.3);
+  --shadow-md: 0px 6px 12px -2px rgba(var(--pp-black-rgb),0.45), 0px 3px 6px -3px rgba(var(--pp-black-rgb),0.3);
+  --shadow-lg: 0px 10px 20px -4px rgba(var(--pp-black-rgb),0.50), 0px 4px 8px -4px rgba(var(--pp-black-rgb),0.35);
+  --shadow-xl: 0px 20px 40px -8px rgba(var(--pp-black-rgb),0.55), 0px 8px 16px -6px rgba(var(--pp-black-rgb),0.40);
+  --shadow-2xl: 0px 32px 60px -12px rgba(var(--pp-black-rgb),0.60);
 }
 
 @layer base {
@@ -347,7 +362,7 @@
 /* GLASS — tiles nested inside opaque panels. Tinted transparency (the parent
    panel reads through), brighter bevel. Static by default. */
 .mat-glass {
-  background: rgba(13, 88, 162, 0.16);
+  background: rgba(var(--pp-ocean-deep-rgb), 0.16);
   border: 1px solid var(--pp-line-bright);
   border-radius: 16px;
   box-shadow:
@@ -361,8 +376,8 @@
     box-shadow 240ms ease, transform 160ms ease;
 }
 .mat-glass-interactive:hover {
-  background: rgba(13, 88, 162, 0.26);
-  border-color: rgba(11, 212, 223, 0.60);
+  background: rgba(var(--pp-ocean-deep-rgb), 0.26);
+  border-color: rgba(var(--pp-bright-rgb), 0.60);
   box-shadow:
     inset 0 1px 0 var(--pp-bevel-bright),
     0 0 22px -4px var(--pp-glow),
@@ -379,10 +394,10 @@
 
 /* Mini-glass — chips, badges, tabs. Same recipe, tighter geometry. */
 .mat-chip {
-  background: rgba(13, 88, 162, 0.18);
-  border: 1px solid rgba(8, 165, 209, 0.40);
+  background: rgba(var(--pp-ocean-deep-rgb), 0.18);
+  border: 1px solid rgba(var(--pp-cyan-rgb), 0.40);
   border-radius: 999px;
-  box-shadow: inset 0 1px 0 rgba(170, 237, 240, 0.18);
+  box-shadow: inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.18);
   color: var(--pp-icy);
 }
 
@@ -405,27 +420,27 @@
 /* GLASS secondary/outline button — tinted transparency + bevel; glow only
    on hover/active. */
 .btn-glass {
-  background: rgba(13, 88, 162, 0.20);
-  border: 1.5px solid rgba(8, 165, 209, 0.45);
+  background: rgba(var(--pp-ocean-deep-rgb), 0.20);
+  border: 1.5px solid rgba(var(--pp-cyan-rgb), 0.45);
   color: var(--pp-text);
   box-shadow:
-    inset 0 1px 0 rgba(170, 237, 240, 0.22),
+    inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.22),
     0 8px 18px -14px var(--pp-shadow);
 }
 .btn-glass:hover {
-  background: rgba(13, 88, 162, 0.30);
-  border-color: rgba(11, 212, 223, 0.65);
+  background: rgba(var(--pp-ocean-deep-rgb), 0.30);
+  border-color: rgba(var(--pp-bright-rgb), 0.65);
   box-shadow:
-    inset 0 1px 0 rgba(170, 237, 240, 0.26),
+    inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.26),
     0 0 18px -2px var(--pp-glow),
     0 10px 20px -14px var(--pp-shadow);
   transform: translateY(-1px);
 }
 .btn-glass:active {
-  background: rgba(13, 88, 162, 0.42);
-  border-color: rgba(11, 212, 223, 0.85);
+  background: rgba(var(--pp-ocean-deep-rgb), 0.42);
+  border-color: rgba(var(--pp-bright-rgb), 0.85);
   box-shadow:
-    inset 0 1px 0 rgba(170, 237, 240, 0.28),
+    inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.28),
     0 0 22px -2px var(--pp-glow-strong),
     0 6px 14px -12px var(--pp-shadow);
   transform: translateY(0);
@@ -435,20 +450,20 @@
    pressable at rest through pigment alone; hover ignites the corona. */
 .btn-glass-strong {
   background: linear-gradient(180deg, var(--pp-bright) 0%, var(--pp-cyan) 52%, var(--pp-ocean) 100%);
-  border: 1px solid rgba(170, 237, 240, 0.55);
-  color: #03131f;
+  border: 1px solid rgba(var(--pp-icy-rgb), 0.55);
+  color: var(--pp-ink);
   font-weight: 600;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.45),
-    inset 0 -8px 14px -10px rgba(4, 16, 31, 0.55),
+    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.45),
+    inset 0 -8px 14px -10px rgba(var(--pp-deep-rgb), 0.55),
     0 10px 22px -14px var(--pp-shadow);
 }
 .btn-glass-strong:hover {
   background: linear-gradient(180deg, var(--pp-bright) 0%, var(--pp-cyan) 42%, var(--pp-ocean) 100%);
-  border-color: rgba(170, 237, 240, 0.85);
+  border-color: rgba(var(--pp-icy-rgb), 0.85);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.55),
-    inset 0 -8px 14px -10px rgba(4, 16, 31, 0.45),
+    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.55),
+    inset 0 -8px 14px -10px rgba(var(--pp-deep-rgb), 0.45),
     0 0 24px -2px var(--pp-glow),
     0 12px 24px -14px var(--pp-shadow);
   transform: translateY(-1px);
@@ -457,7 +472,7 @@
   background: linear-gradient(180deg, var(--pp-cyan) 0%, var(--pp-ocean) 70%, var(--pp-ocean-deep) 100%);
   border-color: var(--pp-icy);
   box-shadow:
-    inset 0 2px 6px rgba(4, 16, 31, 0.40),
+    inset 0 2px 6px rgba(var(--pp-deep-rgb), 0.40),
     0 0 28px -2px var(--pp-glow-strong),
     0 6px 14px -12px var(--pp-shadow);
   transform: translateY(0);
@@ -479,17 +494,17 @@
     box-shadow 200ms ease, transform 120ms ease;
 }
 .btn-glass-ghost:hover {
-  background: rgba(13, 88, 162, 0.16);
-  border-color: rgba(8, 165, 209, 0.45);
+  background: rgba(var(--pp-ocean-deep-rgb), 0.16);
+  border-color: rgba(var(--pp-cyan-rgb), 0.45);
   box-shadow:
-    inset 0 1px 0 rgba(170, 237, 240, 0.14),
+    inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.14),
     0 0 14px -2px var(--pp-glow);
 }
 .btn-glass-ghost:active {
-  background: rgba(13, 88, 162, 0.26);
-  border-color: rgba(11, 212, 223, 0.60);
+  background: rgba(var(--pp-ocean-deep-rgb), 0.26);
+  border-color: rgba(var(--pp-bright-rgb), 0.60);
   box-shadow:
-    inset 0 1px 0 rgba(170, 237, 240, 0.18),
+    inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.18),
     0 0 18px -2px var(--pp-glow-strong);
 }
 .btn-glass-ghost:disabled {
@@ -505,7 +520,7 @@
   background: linear-gradient(180deg, rgba(239, 68, 68, 0.98) 0%, rgba(185, 28, 28, 0.98) 100%);
   border: 1px solid rgba(248, 113, 113, 0.55);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.30),
+    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.30),
     0 8px 18px -14px var(--pp-shadow);
   transition: background-color 160ms ease, background-image 160ms ease,
     border-color 160ms ease, box-shadow 200ms ease, transform 120ms ease;
@@ -514,7 +529,7 @@
   background: linear-gradient(180deg, rgba(248, 88, 88, 1) 0%, rgba(203, 32, 32, 1) 100%);
   border-color: rgba(252, 165, 165, 0.7);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.35),
     0 0 20px -2px rgba(248, 113, 113, 0.40),
     0 10px 20px -14px var(--pp-shadow);
 }
@@ -538,33 +553,20 @@
   color: var(--pp-bright);
 }
 
-/* ------------------------------------------------------------------
-   UNIVERSAL BUTTON HOVER (catch-all)
-   ------------------------------------------------------------------
-   Guarantees EVERY <button> inside the app surface responds on hover —
-   even raw <button> elements that skip the shared Button component.
-   Wrapped in :where() so the selector carries ZERO specificity: any
-   button that defines its own box-shadow (.btn-glass*, .nav-glass*,
-   .eppp-launch-btn, quiz options, …) overrides it automatically.
-   Glow appears ONLY on hover/active per the locked rules.
-   ------------------------------------------------------------------ */
-:where(.study-page-bg button:not([class*="cl-"]):not(:disabled),
-       .study-page-aurora button:not([class*="cl-"]):not(:disabled)) {
-  transition: box-shadow 200ms ease, transform 120ms ease;
-}
-:where(.study-page-bg button:not([class*="cl-"]):not(:disabled):hover,
-       .study-page-aurora button:not([class*="cl-"]):not(:disabled):hover) {
-  box-shadow: 0 0 14px -2px var(--pp-glow);
-}
-:where(.study-page-bg button:not([class*="cl-"]):not(:disabled):active,
-       .study-page-aurora button:not([class*="cl-"]):not(:disabled):active) {
-  box-shadow: 0 0 18px -2px var(--pp-glow-strong);
-}
-
-/* Softer focus ring on study-page buttons so keyboard focus reads cleanly
-   over the hover glow. Inputs/other surfaces keep the default --ring. */
-.study-page-bg button,
-.study-page-aurora button {
+/* Softer focus ring on the named button materials so keyboard focus reads
+   cleanly over the hover glow. Scoped to the material classes — NEVER a
+   descendant element catch-all (edit-safety lock: restyling one surface
+   must not affect another). */
+.btn-glass,
+.btn-glass-strong,
+.btn-glass-ghost,
+.btn-glass-destructive,
+.pp-btn-gloss,
+.pp-btn-glass,
+.pp-btn-outline,
+.nav-glass-idle,
+.nav-glass-active,
+.eppp-launch-btn {
   --ring: 190 60% 75%;
 }
 
@@ -642,7 +644,7 @@ body {
 
 /* Recommended-for-You tiles on the dashboard — interactive GLASS. */
 .recommended-tile {
-  background: rgba(13, 88, 162, 0.14);
+  background: rgba(var(--pp-ocean-deep-rgb), 0.14);
   border-color: var(--pp-line-bright);
   box-shadow:
     inset 0 1px 0 var(--pp-bevel-bright),
@@ -650,15 +652,15 @@ body {
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .recommended-tile:hover {
-  border-color: rgba(11, 212, 223, 0.60);
-  background: rgba(13, 88, 162, 0.24);
+  border-color: rgba(var(--pp-bright-rgb), 0.60);
+  background: rgba(var(--pp-ocean-deep-rgb), 0.24);
   box-shadow:
     inset 0 1px 0 var(--pp-bevel-bright),
     0 0 22px -4px var(--pp-glow),
     0 18px 38px -26px var(--pp-shadow);
 }
 .recommended-tile:active {
-  border-color: rgba(11, 212, 223, 0.75);
+  border-color: rgba(var(--pp-bright-rgb), 0.75);
   box-shadow:
     inset 0 1px 0 var(--pp-bevel-bright),
     0 0 26px -4px var(--pp-glow-strong),
@@ -671,27 +673,27 @@ body {
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .course-mastery-tile--locked {
-  background: rgba(4, 16, 31, 0.55);
-  border-color: rgba(11, 102, 154, 0.18);
+  background: rgba(var(--pp-deep-rgb), 0.55);
+  border-color: rgba(var(--pp-ocean-rgb), 0.18);
   opacity: 0.5;
   filter: grayscale(0.6);
 }
 .course-mastery-tile--locked:hover {
   opacity: 0.82;
   filter: grayscale(0.2);
-  border-color: rgba(11, 102, 154, 0.38);
+  border-color: rgba(var(--pp-ocean-rgb), 0.38);
   transform: translateY(-2px);
 }
 .course-mastery-tile--mastered {
-  background: rgba(13, 88, 162, 0.26);
-  border-color: rgba(8, 165, 209, 0.55);
+  background: rgba(var(--pp-ocean-deep-rgb), 0.26);
+  border-color: rgba(var(--pp-cyan-rgb), 0.55);
   box-shadow:
     inset 0 1px 0 var(--pp-bevel-bright),
     0 8px 22px -16px var(--pp-shadow);
 }
 .course-mastery-tile--mastered:hover {
   transform: translateY(-2px);
-  border-color: rgba(11, 212, 223, 0.80);
+  border-color: rgba(var(--pp-bright-rgb), 0.80);
   box-shadow:
     inset 0 1px 0 var(--pp-bevel-bright),
     0 0 22px -4px var(--pp-glow),
@@ -714,10 +716,10 @@ body {
   white-space: nowrap;
   color: var(--pp-text);
   cursor: pointer;
-  border: 1px solid rgba(8, 165, 209, 0.50);
-  background: rgba(13, 88, 162, 0.24);
+  border: 1px solid rgba(var(--pp-cyan-rgb), 0.50);
+  background: rgba(var(--pp-ocean-deep-rgb), 0.24);
   box-shadow:
-    inset 0 1px 0 rgba(170, 237, 240, 0.20),
+    inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.20),
     0 6px 14px -12px var(--pp-shadow);
   transition: transform 0.2s ease, box-shadow 0.3s ease, border-color 0.2s ease,
     background 0.2s ease, color 0.2s ease;
@@ -725,25 +727,25 @@ body {
 .eppp-launch-btn:hover {
   transform: translateY(-1px);
   color: #ffffff;
-  border-color: rgba(11, 212, 223, 0.75);
-  background: rgba(13, 88, 162, 0.34);
+  border-color: rgba(var(--pp-bright-rgb), 0.75);
+  background: rgba(var(--pp-ocean-deep-rgb), 0.34);
   box-shadow:
-    inset 0 1px 0 rgba(170, 237, 240, 0.24),
+    inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.24),
     0 0 16px -2px var(--pp-glow);
 }
 .eppp-launch-btn:active {
   transform: translateY(0);
   color: #ffffff;
-  border-color: rgba(11, 212, 223, 0.95);
-  background: rgba(13, 88, 162, 0.46);
+  border-color: rgba(var(--pp-bright-rgb), 0.95);
+  background: rgba(var(--pp-ocean-deep-rgb), 0.46);
   box-shadow:
-    inset 0 1px 0 rgba(170, 237, 240, 0.28),
+    inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.28),
     0 0 20px -2px var(--pp-glow-strong);
 }
 .eppp-launch-btn:focus-visible {
   outline: none;
   box-shadow:
-    0 0 0 3px rgba(11, 212, 223, 0.45);
+    0 0 0 3px rgba(var(--pp-bright-rgb), 0.45);
 }
 .eppp-launch-btn__inner {
   display: inline-flex;
@@ -759,11 +761,11 @@ body {
   width: 100%;
 }
 
-/* Canonical shadcn Card treatment — OPAQUE material. Every generic Card
-   (.bg-card) inside any .study-page-bg page reads as a structural panel;
-   nested tiles opt into GLASS via .mat-glass / .mat-glass-interactive. */
-.study-page-bg .bg-card,
-.study-page-aurora .bg-card {
+/* Canonical shadcn Card treatment — OPAQUE material. The class is emitted
+   by the shared Card primitive (ui/card.tsx), so every generic Card reads
+   as a structural panel; nested tiles opt into GLASS via .mat-glass /
+   .mat-glass-interactive. Scoped class — never a descendant .bg-card rule. */
+.pp-card-opaque {
   background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);
   border: 1px solid var(--pp-line);
   border-radius: 20px;
@@ -791,37 +793,37 @@ body {
     box-shadow 240ms ease, transform 140ms ease;
 }
 .nav-glass-idle {
-  background: rgba(13, 88, 162, 0.14);
-  border: 1px solid rgba(11, 102, 154, 0.35);
+  background: rgba(var(--pp-ocean-deep-rgb), 0.14);
+  border: 1px solid rgba(var(--pp-ocean-rgb), 0.35);
   box-shadow:
-    inset 0 1px 0 rgba(170, 237, 240, 0.12);
+    inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.12);
 }
 .nav-glass-idle:hover {
-  background: rgba(13, 88, 162, 0.26);
-  border-color: rgba(8, 165, 209, 0.60);
+  background: rgba(var(--pp-ocean-deep-rgb), 0.26);
+  border-color: rgba(var(--pp-cyan-rgb), 0.60);
   box-shadow:
-    inset 0 1px 0 rgba(170, 237, 240, 0.16),
+    inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16),
     0 0 14px -2px var(--pp-glow);
   transform: translateY(-1px);
 }
 .nav-glass-idle:active {
-  background: rgba(13, 88, 162, 0.38);
-  border-color: rgba(11, 212, 223, 0.75);
+  background: rgba(var(--pp-ocean-deep-rgb), 0.38);
+  border-color: rgba(var(--pp-bright-rgb), 0.75);
   box-shadow:
-    inset 0 1px 0 rgba(170, 237, 240, 0.18),
+    inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.18),
     0 0 18px -2px var(--pp-glow-strong);
   transform: translateY(0);
 }
 .nav-glass-active {
-  background: rgba(13, 88, 162, 0.32);
-  border: 1px solid rgba(8, 165, 209, 0.65);
+  background: rgba(var(--pp-ocean-deep-rgb), 0.32);
+  border: 1px solid rgba(var(--pp-cyan-rgb), 0.65);
   box-shadow:
-    inset 0 1px 0 rgba(170, 237, 240, 0.18);
+    inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.18);
 }
 .nav-glass-active:hover {
-  border-color: rgba(11, 212, 223, 0.85);
+  border-color: rgba(var(--pp-bright-rgb), 0.85);
   box-shadow:
-    inset 0 1px 0 rgba(170, 237, 240, 0.20),
+    inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.20),
     0 0 16px -2px var(--pp-glow);
   transform: translateY(-1px);
 }
@@ -836,138 +838,106 @@ body {
   background: var(--pp-bright);
 }
 
-/* Legacy bg-primary/bg-secondary buttons — scoped to actual <button>
-   elements only (a [class*="bg-primary"] wildcard once hijacked every
-   subtle bg-primary/NN tint chip — never widen these selectors). Tuned to
-   the same materials as the shared Button variants: bg-primary = GLOSS,
-   bg-secondary/outline = GLASS. */
-.study-page-bg button.bg-primary,
-.study-page-aurora button.bg-primary {
+/* GLOSS button material — scoped class emitted by consumers that skip the
+   shared Button component (raw buttons, calendar selected-day, …). Same
+   material as .btn-glass-strong; NEVER re-widen to a descendant
+   button.bg-primary rule (edit-safety lock). */
+.pp-btn-gloss {
   background-image: linear-gradient(180deg, var(--pp-bright) 0%, var(--pp-cyan) 52%, var(--pp-ocean) 100%);
   background-color: var(--pp-cyan);
-  color: #03131f;
-  border: 1px solid rgba(170, 237, 240, 0.55);
+  color: var(--pp-ink);
+  border: 1px solid rgba(var(--pp-icy-rgb), 0.55);
   border-radius: 14px;
   transition: all 0.2s ease;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.45),
-    inset 0 -8px 14px -10px rgba(4, 16, 31, 0.55),
+    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.45),
+    inset 0 -8px 14px -10px rgba(var(--pp-deep-rgb), 0.55),
     0 10px 22px -14px var(--pp-shadow);
 }
 
-.study-page-bg button.bg-primary:hover,
-.study-page-aurora button.bg-primary:hover {
-  border-color: rgba(170, 237, 240, 0.85);
+.pp-btn-gloss:hover {
+  border-color: rgba(var(--pp-icy-rgb), 0.85);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.55),
-    inset 0 -8px 14px -10px rgba(4, 16, 31, 0.45),
+    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.55),
+    inset 0 -8px 14px -10px rgba(var(--pp-deep-rgb), 0.45),
     0 0 24px -2px var(--pp-glow),
     0 12px 24px -14px var(--pp-shadow);
 }
 
-.study-page-bg button.bg-primary:active,
-.study-page-aurora button.bg-primary:active {
+.pp-btn-gloss:active {
   background-image: linear-gradient(180deg, var(--pp-cyan) 0%, var(--pp-ocean) 70%, var(--pp-ocean-deep) 100%);
   border-color: var(--pp-icy);
   box-shadow:
-    inset 0 2px 6px rgba(4, 16, 31, 0.40),
+    inset 0 2px 6px rgba(var(--pp-deep-rgb), 0.40),
     0 0 28px -2px var(--pp-glow-strong);
 }
 
-/* Secondary buttons — GLASS, scoped to actual buttons. */
-.study-page-bg button.bg-secondary,
-.study-page-aurora button.bg-secondary {
-  background: rgba(13, 88, 162, 0.20);
+/* Secondary buttons — GLASS material, scoped class. */
+.pp-btn-glass {
+  background: rgba(var(--pp-ocean-deep-rgb), 0.20);
   color: var(--pp-text);
-  border: 1.5px solid rgba(8, 165, 209, 0.45);
+  border: 1.5px solid rgba(var(--pp-cyan-rgb), 0.45);
   border-radius: 14px;
   transition: all 0.2s ease;
   box-shadow:
-    inset 0 1px 0 rgba(170, 237, 240, 0.22),
+    inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.22),
     0 8px 18px -14px var(--pp-shadow);
 }
 
-.study-page-bg button.bg-secondary:hover,
-.study-page-aurora button.bg-secondary:hover {
-  background: rgba(13, 88, 162, 0.30);
-  border-color: rgba(11, 212, 223, 0.65);
+.pp-btn-glass:hover {
+  background: rgba(var(--pp-ocean-deep-rgb), 0.30);
+  border-color: rgba(var(--pp-bright-rgb), 0.65);
   box-shadow:
-    inset 0 1px 0 rgba(170, 237, 240, 0.26),
+    inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.26),
     0 0 18px -2px var(--pp-glow),
     0 10px 20px -14px var(--pp-shadow);
 }
 
-.study-page-bg button.bg-secondary:active,
-.study-page-aurora button.bg-secondary:active {
-  background: rgba(13, 88, 162, 0.42);
-  border-color: rgba(11, 212, 223, 0.85);
+.pp-btn-glass:active {
+  background: rgba(var(--pp-ocean-deep-rgb), 0.42);
+  border-color: rgba(var(--pp-bright-rgb), 0.85);
   box-shadow:
-    inset 0 1px 0 rgba(170, 237, 240, 0.28),
+    inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.28),
     0 0 22px -2px var(--pp-glow-strong);
 }
 
-/* Outline buttons — GLASS with a cyan hairline. Targets the shadcn outline
-   variant which renders `border border-input` without a bg-* class. */
-.study-page-bg button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive),
-.study-page-aurora button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive) {
-  background: rgba(13, 88, 162, 0.16);
+/* Outline buttons — GLASS with a cyan hairline. Scoped class emitted by the
+   button-like primitives that render `border border-input` (SelectTrigger,
+   outline Toggle, …). */
+.pp-btn-outline {
+  background: rgba(var(--pp-ocean-deep-rgb), 0.16);
   border-width: 1.5px;
-  border-color: rgba(8, 165, 209, 0.45) !important;
+  border-color: rgba(var(--pp-cyan-rgb), 0.45) !important;
   color: var(--pp-text);
   border-radius: 14px;
   transition: all 0.2s ease;
   box-shadow:
-    inset 0 1px 0 rgba(170, 237, 240, 0.20),
+    inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.20),
     0 8px 18px -14px var(--pp-shadow);
 }
 
-.study-page-bg button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive):hover,
-.study-page-aurora button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive):hover {
-  background: rgba(13, 88, 162, 0.26);
-  border-color: rgba(11, 212, 223, 0.65) !important;
+.pp-btn-outline:hover {
+  background: rgba(var(--pp-ocean-deep-rgb), 0.26);
+  border-color: rgba(var(--pp-bright-rgb), 0.65) !important;
   box-shadow:
-    inset 0 1px 0 rgba(170, 237, 240, 0.24),
+    inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.24),
     0 0 18px -2px var(--pp-glow);
 }
 
-.study-page-bg button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive):active,
-.study-page-aurora button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive):active {
-  background: rgba(13, 88, 162, 0.38);
-  border-color: rgba(11, 212, 223, 0.85) !important;
+.pp-btn-outline:active {
+  background: rgba(var(--pp-ocean-deep-rgb), 0.38);
+  border-color: rgba(var(--pp-bright-rgb), 0.85) !important;
   box-shadow:
-    inset 0 1px 0 rgba(170, 237, 240, 0.26),
+    inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.26),
     0 0 22px -2px var(--pp-glow-strong);
 }
 
-/* Inputs — recessed deep-tint wells with a quiet ocean hairline. Applied to
-   text inputs, textareas, and selects (skips checkboxes, radios, file
-   pickers, and buttons). */
-.study-page-bg :where(
-  input[type="text"],
-  input[type="email"],
-  input[type="password"],
-  input[type="search"],
-  input[type="number"],
-  input[type="tel"],
-  input[type="url"],
-  input:not([type]),
-  textarea,
-  select
-),
-.study-page-aurora :where(
-  input[type="text"],
-  input[type="email"],
-  input[type="password"],
-  input[type="search"],
-  input[type="number"],
-  input[type="tel"],
-  input[type="url"],
-  input:not([type]),
-  textarea,
-  select
-) {
-  background: rgba(4, 16, 31, 0.78);
-  border: 1px solid rgba(11, 102, 154, 0.40);
+/* Inputs — recessed deep-tint wells with a quiet ocean hairline. Scoped
+   class emitted by the shared Input/Textarea primitives (and any raw
+   text-entry element that opts in). NEVER a descendant element rule. */
+.pp-input-well {
+  background: rgba(var(--pp-deep-rgb), 0.78);
+  border: 1px solid rgba(var(--pp-ocean-rgb), 0.40);
   color: var(--pp-text);
   border-radius: 14px;
 }
@@ -1027,8 +997,8 @@ body {
 }
 
 @keyframes learning-pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(11, 212, 223, 0.35); }
-  50%      { box-shadow: 0 0 0 8px rgba(11, 212, 223, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(var(--pp-bright-rgb), 0.35); }
+  50%      { box-shadow: 0 0 0 8px rgba(var(--pp-bright-rgb), 0); }
 }
 .animate-pulse-glow {
   animation: learning-pulse-glow 1.6s ease-in-out infinite;
@@ -1085,11 +1055,11 @@ body {
     transition: transform 200ms ease, box-shadow 250ms ease, border-color 200ms ease, background 250ms ease;
   }
   .quiz-option-hover:hover:not(:disabled) {
-    border-color: rgba(11, 212, 223, 0.55) !important;
+    border-color: rgba(var(--pp-bright-rgb), 0.55) !important;
     box-shadow:
-      0 0 0 1px rgba(11, 212, 223, 0.25),
+      0 0 0 1px rgba(var(--pp-bright-rgb), 0.25),
       0 0 18px -4px var(--pp-glow),
-      0 12px 32px -10px rgba(0, 0, 0, 0.55) !important;
+      0 12px 32px -10px rgba(var(--pp-black-rgb), 0.55) !important;
   }
 
   .toggle-elevate::before,

@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { StudySurface } from "@/components/study/study-surface";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
+import { PP, alpha } from "@/lib/palette";
 import { useEntitlements } from "@/lib/use-entitlements";
 import { PageTitle } from "@/components/brand/page-title";
 import { epppTopicPath, isEpppRoute } from "@/lib/eppp-routes";
@@ -96,7 +97,7 @@ export default function StudyGuidePage({ params }: Props) {
         <StudySurface tone="light" glow innerClassName="text-center py-16 px-6" testId="study-guide-paywall">
           <div
             className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 border"
-            style={{ background: "rgba(222, 222, 222,0.55)", borderColor: `${P.surf}66` }}
+            style={{ background: alpha(PP.chipLight, 0.55), borderColor: `${P.surf}66` }}
           >
             <Lock className="w-8 h-8" style={{ color: P.tealDeep }} />
           </div>

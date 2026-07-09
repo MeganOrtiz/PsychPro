@@ -8,22 +8,23 @@ import {
   ArrowRight,
   Brain,
 } from "lucide-react";
+import { PP, alpha } from "@/lib/palette";
 
 // ---------------------------------------------------------------------------
 // EPPP Mastery Suite hub — the dedicated home for the licensing-exam track.
 // Reached from the glowing "EPPP Mastery Suite" button in the top header
 // (see app-layout.tsx). Mirrors the full PsychPro study concept but framed
-// specifically around the EPPP. Locked cerulean palette (#a3a3a3); no mint.
+// specifically around the EPPP. Locked cerulean palette; no mint.
 // ---------------------------------------------------------------------------
 
 const C = {
-  cyan: "#08a5d1",
-  mist: "#d4d4d4",
-  ink: "#04101f",
-  hairline: "rgba(11, 102, 154,0.16)",
-  hairlineStrong: "rgba(8, 165, 209,0.32)",
-  body: "rgba(229, 229, 229,0.84)",
-  muted: "rgba(178, 178, 178,0.66)",
+  cyan: PP.cyan,
+  mist: PP.neutral300,
+  ink: PP.deep,
+  hairline: alpha(PP.ocean, 0.16),
+  hairlineStrong: alpha(PP.cyan, 0.32),
+  body: alpha(PP.text, 0.84),
+  muted: alpha(PP.gray178, 0.66),
 };
 
 type Pillar = {
@@ -189,11 +190,11 @@ const styles = `
   border-radius: 26px;
   padding: clamp(32px, 5vw, 64px) clamp(22px, 4vw, 56px);
   background: hsl(var(--surf-hue) var(--surf-sat) 16% / 0.88);
-  border: 1px solid rgba(8, 165, 209,0.22);
+  border: 1px solid rgba(var(--pp-cyan-rgb), 0.22);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12),
     0 0 48px ${C.cyan}1c,
-    0 40px 100px -44px rgba(0,0,0,0.76);
+    0 40px 100px -44px rgba(var(--pp-black-rgb), 0.76);
 }
 .eppp-hero-glow {
   position: absolute;
@@ -234,7 +235,7 @@ const styles = `
   font-size: clamp(26px, 4.2vw, 44px);
   font-weight: 800;
   line-height: 1.12;
-  color: #f8f8f8;
+  color: ${PP.offWhite248};
   text-shadow: 0 2px 24px hsl(var(--surf-hue) var(--surf-sat) 5% / 0.5);
 }
 .eppp-lede {
@@ -243,7 +244,7 @@ const styles = `
   max-width: 760px;
   font-size: clamp(14px, 1.1vw, 16.5px);
   line-height: 1.78;
-  color: #f2f2f2;
+  color: ${PP.mistWhite242};
 }
 .eppp-cta-row {
   position: relative;
@@ -269,13 +270,13 @@ const styles = `
 .eppp-btn svg { width: 16px; height: 16px; }
 .eppp-btn--primary {
   color: ${C.ink};
-  border: 1px solid rgba(212, 212, 212,0.65);
-  background: #08a5d1;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 0 22px -4px ${C.cyan}b3;
+  border: 1px solid ${alpha(PP.neutral300, 0.65)};
+  background: ${PP.cyan};
+  box-shadow: inset 0 1px 0 rgba(var(--pp-white-rgb), 0.5), 0 0 22px -4px ${C.cyan}b3;
 }
 .eppp-btn--primary:hover {
   transform: translateY(-1px);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.55), 0 0 32px 0 ${C.cyan}d9;
+  box-shadow: inset 0 1px 0 rgba(var(--pp-white-rgb), 0.55), 0 0 32px 0 ${C.cyan}d9;
 }
 .eppp-btn--ghost {
   color: ${C.mist};
@@ -285,7 +286,7 @@ const styles = `
 .eppp-btn--ghost:hover {
   transform: translateY(-1px);
   border-color: ${C.cyan}80;
-  color: #f4f4f4;
+  color: ${PP.paperWhite};
 }
 
 /* ---- Sections ---- */
@@ -301,7 +302,7 @@ const styles = `
   margin: 0 0 clamp(20px, 3vw, 30px);
   font-size: clamp(20px, 2.6vw, 30px);
   font-weight: 800;
-  color: #e5e5e5;
+  color: ${PP.text};
 }
 
 /* ---- Cards ---- */
@@ -318,10 +319,10 @@ const styles = `
   border-radius: 18px;
   padding: clamp(20px, 2.4vw, 26px);
   background: hsl(var(--surf-hue) var(--surf-sat) 6% / 0.85);
-  border: 1px solid rgba(8, 165, 209,0.22);
+  border: 1px solid rgba(var(--pp-cyan-rgb), 0.22);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.12),
-    0 24px 60px -40px rgba(0,0,0,0.7);
+    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12),
+    0 24px 60px -40px rgba(var(--pp-black-rgb), 0.7);
 }
 .eppp-link-card {
   text-decoration: none;
@@ -331,7 +332,7 @@ const styles = `
 .eppp-link-card:hover {
   transform: translateY(-3px);
   border-color: ${C.cyan}66;
-  box-shadow: 0 28px 70px -38px rgba(0,0,0,0.75), 0 0 30px -8px ${C.cyan}59;
+  box-shadow: 0 28px 70px -38px rgba(var(--pp-black-rgb), 0.75), 0 0 30px -8px ${C.cyan}59;
 }
 .eppp-card-icon {
   display: inline-flex;
@@ -349,7 +350,7 @@ const styles = `
   margin: 0;
   font-size: 16px;
   font-weight: 700;
-  color: #e5e5e5;
+  color: ${PP.text};
 }
 .eppp-card-body {
   margin: 0;

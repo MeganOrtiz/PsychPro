@@ -21,6 +21,7 @@ import {
 import { groupEpppTopicsByCategory, isEpppKnowledgeTopic } from "@/lib/eppp-content";
 import { epppDomainAnchor, epppTopicPath } from "@/lib/eppp-routes";
 import { knowledgeDomainIcon } from "@/lib/eppp-icons";
+import { PP, alpha } from "@/lib/palette";
 
 // ---------------------------------------------------------------------------
 // EPPP Mastery Suite dashboard — the working "how ready am I" home for the
@@ -31,7 +32,7 @@ import { knowledgeDomainIcon } from "@/lib/eppp-icons";
 //   3. What to study next (weak / unfinished areas)
 //   4. Study streak + weekly activity
 //   5. An exam-date countdown (persisted locally per user for now)
-// Locked cerulean palette (#a3a3a3); no mint. All CSS scoped under .epd-*.
+// Locked cerulean palette (pp-text-dim); no mint. All CSS scoped under .epd-*.
 //
 // Split into a pure presentational view (EpppDashboardView, data via props) and
 // a data container (default export). The view is reused by the mockup sandbox
@@ -39,14 +40,14 @@ import { knowledgeDomainIcon } from "@/lib/eppp-icons";
 // ---------------------------------------------------------------------------
 
 const C = {
-  cyan: "#08a5d1",
-  mist: "#d4d4d4",
-  cloud: "#f5f5f5",
-  ink: "#04101f",
-  hairline: "rgba(11, 102, 154,0.16)",
-  hairlineStrong: "rgba(8, 165, 209,0.32)",
-  body: "rgba(229, 229, 229,0.84)",
-  muted: "rgba(178, 178, 178,0.66)",
+  cyan: PP.cyan,
+  mist: PP.neutral300,
+  cloud: PP.neutral100,
+  ink: PP.deep,
+  hairline: alpha(PP.ocean, 0.16),
+  hairlineStrong: alpha(PP.cyan, 0.32),
+  body: alpha(PP.text, 0.84),
+  muted: alpha(PP.gray178, 0.66),
 };
 
 const DAY_LABELS = ["S", "M", "T", "W", "T", "F", "S"];
@@ -587,7 +588,7 @@ const styles = `
   border-radius: 16px;
   border: 1px solid ${C.hairlineStrong};
   background: hsl(var(--surf-hue) var(--surf-sat) 10% / 0.92);
-  box-shadow: 0 18px 54px -42px rgba(0,0,0,0.78), inset 0 1px 0 rgba(255,255,255,0.08);
+  box-shadow: 0 18px 54px -42px rgba(var(--pp-black-rgb), 0.78), inset 0 1px 0 rgba(var(--pp-white-rgb), 0.08);
 }
 .epd-head-img {
   position: absolute;
@@ -623,10 +624,10 @@ const styles = `
   border-radius: 20px;
   padding: clamp(18px, 2vw, 24px);
   background: hsl(var(--surf-hue) var(--surf-sat) 6% / 0.85);
-  border: 1px solid rgba(8, 165, 209,0.22);
+  border: 1px solid rgba(var(--pp-cyan-rgb), 0.22);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.03),
-    0 22px 52px -40px rgba(0,0,0,0.80);
+    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.03),
+    0 22px 52px -40px rgba(var(--pp-black-rgb), 0.80);
 }
 .epd-card-label {
   display: inline-flex;
@@ -654,7 +655,7 @@ const styles = `
 .epd-card--readiness { display: flex; align-items: center; gap: clamp(16px, 2vw, 26px); }
 .epd-ring { position: relative; width: 128px; height: 128px; flex-shrink: 0; }
 .epd-ring-svg { width: 128px; height: 128px; transform: rotate(-90deg); }
-.epd-ring-track { fill: none; stroke: rgba(8, 165, 209,0.18); stroke-width: 10; }
+.epd-ring-track { fill: none; stroke: rgba(var(--pp-cyan-rgb), 0.18); stroke-width: 10; }
 .epd-ring-fill {
   fill: none;
   stroke: ${C.cyan};
@@ -693,8 +694,8 @@ const styles = `
 .epd-week-col { display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .epd-week-dot {
   width: 14px; height: 14px; border-radius: 999px;
-  background: rgba(13, 88, 162,0.1);
-  border: 1px solid rgba(8, 165, 209,0.2);
+  background: rgba(var(--pp-ocean-deep-rgb), 0.1);
+  border: 1px solid rgba(var(--pp-cyan-rgb), 0.2);
 }
 .epd-week-dot.is-active {
   background: ${C.cyan};
@@ -743,7 +744,7 @@ const styles = `
   font-weight: 700;
   cursor: pointer;
   color: ${C.ink};
-  border: 1px solid rgba(212, 212, 212,0.6);
+  border: 1px solid ${alpha(PP.neutral300, 0.6)};
   background: ${C.cyan};
   transition: transform 0.2s ease;
 }
@@ -766,14 +767,14 @@ const styles = `
   gap: 10px;
 }
 .epd-section-head--hero .epd-section-eyebrow {
-  color: #a3a3a3;
+  color: var(--pp-text-dim);
 }
 .epd-section-head--hero .epd-section-title {
   font-size: clamp(24px, 3vw, 34px);
-  color: #ffffff;
+  color: rgba(var(--pp-white-rgb), 1);
 }
 .epd-section-head--hero .epd-section-meta {
-  color: #dfdfdf;
+  color: ${PP.neutralHi223};
 }
 .epd-section-eyebrow {
   margin: 0 0 6px;
@@ -822,13 +823,13 @@ const styles = `
   padding: 18px;
   text-decoration: none;
   background: hsl(var(--surf-hue) var(--surf-sat) 6% / 0.85);
-  border: 1px solid rgba(8, 165, 209,0.22);
+  border: 1px solid rgba(var(--pp-cyan-rgb), 0.22);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.03),
-    0 22px 52px -40px rgba(0,0,0,0.80);
+    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.03),
+    0 22px 52px -40px rgba(var(--pp-black-rgb), 0.80);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
-.epd-domain:hover { transform: translateY(-3px); border-color: ${C.cyan}66; box-shadow: 0 22px 56px -38px rgba(0,0,0,0.7), 0 0 24px -10px ${C.cyan}59; }
+.epd-domain:hover { transform: translateY(-3px); border-color: ${C.cyan}66; box-shadow: 0 22px 56px -38px rgba(var(--pp-black-rgb), 0.7), 0 0 24px -10px ${C.cyan}59; }
 .epd-domain.is-mastered {
   border-color: ${C.cyan}5e;
   background: hsl(var(--surf-hue) var(--surf-sat) 10% / 0.90);
@@ -836,7 +837,7 @@ const styles = `
 .epd-domain--loading { opacity: 0.85; }
 .epd-bar-fill--idle {
   display: block; height: 100%; width: 35%; border-radius: 999px;
-  background: rgba(13, 88, 162,0.28);
+  background: rgba(var(--pp-ocean-deep-rgb), 0.28);
   animation: epd-pulse 1.3s ease-in-out infinite;
 }
 @keyframes epd-pulse { 0%,100% { opacity: 0.4; } 50% { opacity: 0.9; } }
@@ -845,7 +846,7 @@ const styles = `
 .epd-domain-icon {
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
   width: 34px; height: 34px; border-radius: 10px;
-  color: ${C.cyan}; background: rgba(13, 88, 162,0.1); border: 1px solid rgba(8, 165, 209,0.28);
+  color: ${C.cyan}; background: rgba(var(--pp-ocean-deep-rgb), 0.1); border: 1px solid rgba(var(--pp-cyan-rgb), 0.28);
 }
 .epd-domain-icon svg { width: 17px; height: 17px; }
 .epd-domain-name { font-size: 14.5px; font-weight: 600; color: ${C.cloud}; line-height: 1.3; }
@@ -857,10 +858,10 @@ const styles = `
 }
 .epd-badge svg { width: 12px; height: 12px; }
 .epd-badge--mastered { color: ${C.ink}; background: ${C.cyan}; }
-.epd-bar { height: 7px; border-radius: 999px; background: rgba(13, 88, 162,0.1); overflow: hidden; }
+.epd-bar { height: 7px; border-radius: 999px; background: rgba(var(--pp-ocean-deep-rgb), 0.1); overflow: hidden; }
 .epd-bar-fill {
   display: block; height: 100%; border-radius: 999px;
-  background: #08a5d1;
+  background: var(--pp-cyan);
   transition: width 800ms cubic-bezier(0.16,1,0.3,1);
 }
 .epd-domain-foot { display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: ${C.muted}; }
@@ -878,10 +879,10 @@ const styles = `
   text-align: left;
   cursor: pointer;
   background: hsl(var(--surf-hue) var(--surf-sat) 6% / 0.85);
-  border: 1px solid rgba(8, 165, 209,0.22);
+  border: 1px solid rgba(var(--pp-cyan-rgb), 0.22);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.03),
-    0 22px 52px -40px rgba(0,0,0,0.80);
+    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.03),
+    0 22px 52px -40px rgba(var(--pp-black-rgb), 0.80);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
 }
 .epd-next:hover { transform: translateY(-2px); border-color: ${C.cyan}66; box-shadow: 0 0 24px -12px ${C.cyan}80; }

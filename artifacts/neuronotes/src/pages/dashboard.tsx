@@ -57,6 +57,7 @@ import { cn } from "@/lib/utils";
 import { StudySurface } from "@/components/study/study-surface";
 import TodayReviews from "@/components/learning/today-reviews";
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
+import { PP, alpha } from "@/lib/palette";
 import { isEpppTopic } from "@/lib/eppp-content";
 import {
   ResponsiveContainer,
@@ -247,9 +248,9 @@ export default function DashboardPage() {
             className="rounded-xl p-4 mb-6 flex items-start gap-3 border"
             style={{
               background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90)",
-              borderColor: "rgba(8,165,209,0.30)",
+              borderColor: "rgba(var(--pp-cyan-rgb), 0.30)",
               boxShadow:
-                "inset 0 1px 0 rgba(255,255,255,0.13), 0 20px 46px -26px rgba(0,0,0,0.66)",
+                "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.13), 0 20px 46px -26px rgba(var(--pp-black-rgb), 0.66)",
             }}
             data-testid="banner-over-limit"
           >
@@ -282,9 +283,9 @@ export default function DashboardPage() {
             className="rounded-xl p-4 mb-6 flex items-start gap-3 border"
             style={{
               background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90)",
-              borderColor: "rgba(8,165,209,0.26)",
+              borderColor: "rgba(var(--pp-cyan-rgb), 0.26)",
               boxShadow:
-                "inset 0 1px 0 rgba(255,255,255,0.12), 0 20px 46px -26px rgba(0,0,0,0.66)",
+                "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12), 0 20px 46px -26px rgba(var(--pp-black-rgb), 0.66)",
             }}
             data-testid="banner-approaching-limit"
           >
@@ -412,8 +413,8 @@ export default function DashboardPage() {
                         <div
                           className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 border transition-transform group-hover:scale-105"
                           style={{
-                            background: "rgba(13,88,162,0.1)",
-                            borderColor: "rgba(8,165,209,0.28)",
+                            background: "rgba(var(--pp-ocean-deep-rgb), 0.1)",
+                            borderColor: "rgba(var(--pp-cyan-rgb), 0.28)",
                           }}
                         >
                           <Icon className="w-4 h-4" style={{ color: PALETTE.surf }} />
@@ -558,7 +559,7 @@ export default function DashboardPage() {
               <div style={{ height: 140 }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={activitySeries} margin={{ top: 8, right: 8, bottom: 0, left: -22 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(8,165,209,0.12)" vertical={false} />
+                    <CartesianGrid strokeDasharray="3 3" stroke={alpha(PP.cyan, 0.12)} vertical={false} />
                     <XAxis
                       dataKey="day"
                       tickLine={false}
@@ -575,7 +576,7 @@ export default function DashboardPage() {
                       cursor={{ stroke: PALETTE.teal, strokeOpacity: 0.25 }}
                       contentStyle={{
                         background: "hsl(var(--surf-hue) var(--surf-sat) 24% / 0.92)",
-                        border: "1px solid rgba(8,165,209,0.25)",
+                        border: "1px solid rgba(var(--pp-cyan-rgb), 0.25)",
                         borderRadius: 10,
                         color: PALETTE.mist,
                         fontSize: 12,
@@ -654,11 +655,11 @@ export default function DashboardPage() {
                       a.earned
                         ? {
                             background: "hsl(var(--surf-hue) var(--surf-sat) 58% / 0.14)",
-                            borderColor: "rgba(8,165,209,0.35)",
+                            borderColor: "rgba(var(--pp-cyan-rgb), 0.35)",
                           }
                         : {
                             background: "hsl(var(--surf-hue) var(--surf-sat) 24% / 0.4)",
-                            borderColor: "rgba(8,165,209,0.10)",
+                            borderColor: "rgba(var(--pp-cyan-rgb), 0.10)",
                             opacity: 0.55,
                           }
                     }
@@ -674,11 +675,11 @@ export default function DashboardPage() {
                             }
                           : {
                               background: "hsl(var(--surf-hue) var(--surf-sat) 58% / 0.10)",
-                              borderColor: "rgba(8,165,209,0.20)",
+                              borderColor: "rgba(var(--pp-cyan-rgb), 0.20)",
                             }
                       }
                     >
-                      <Icon className="w-4 h-4" style={{ color: a.earned ? "#222222" : PALETTE.mistSoft }} />
+                      <Icon className="w-4 h-4" style={{ color: a.earned ? PP.earnedInk : PALETTE.mistSoft }} />
                     </div>
                     <p className="text-[11px] font-semibold leading-tight" style={{ color: PALETTE.mist }}>
                       {a.label}
@@ -744,7 +745,7 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
           />
           <span
             className="mt-2 text-lg font-semibold text-white tracking-wide"
-            style={{ textShadow: "0 2px 10px rgba(0,0,0,0.5)" }}
+            style={{ textShadow: "0 2px 10px rgba(var(--pp-black-rgb), 0.5)" }}
           >
             Spotlight
           </span>
@@ -753,7 +754,7 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
           className="text-xs text-center mt-2 leading-relaxed px-2"
           style={{
             color: `${PALETTE.mist}cc`,
-            textShadow: "0 1px 6px rgba(0,0,0,0.5)",
+            textShadow: "0 1px 6px rgba(var(--pp-black-rgb), 0.5)",
           }}
         >
           Showcase of work created by members of the PsychPro community.
@@ -768,14 +769,14 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
               className="relative w-32 h-32 rounded-full flex items-center justify-center text-center px-3"
               style={{
                 background: `transparent`,
-                boxShadow: `0 0 0 3px ${PALETTE.surf}cc, inset 0 0 0 1px rgba(255,255,255,0.18)`,
+                boxShadow: `0 0 0 3px ${PALETTE.surf}cc, inset 0 0 0 1px rgba(var(--pp-white-rgb), 0.18)`,
                 zIndex: 1,
               }}
               data-testid="spotlight-avatar"
             >
               <span
                 className="text-lg font-semibold leading-tight tracking-wide text-white"
-                style={{ textShadow: `0 2px 8px rgba(0,0,0,0.55)` }}
+                style={{ textShadow: `0 2px 8px rgba(var(--pp-black-rgb), 0.55)` }}
               >
                 Coming
                 <br />
@@ -786,7 +787,7 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
           <p
             className="text-sm text-center px-3 leading-relaxed"
             data-testid="spotlight-cta-text"
-            style={{ color: `${PALETTE.mist}d9`, textShadow: "0 1px 6px rgba(0,0,0,0.5)" }}
+            style={{ color: `${PALETTE.mist}d9`, textShadow: "0 1px 6px rgba(var(--pp-black-rgb), 0.5)" }}
           >
             Submit your dissertation, research, or presentation for an
             opportunity to be featured!
@@ -931,10 +932,10 @@ function CourseMasterySection({
                 className="w-10 h-10 rounded-lg flex items-center justify-center"
                 style={
                   mastered
-                    ? { background: "rgba(255,255,255,0.16)" }
+                    ? { background: "rgba(var(--pp-white-rgb), 0.16)" }
                     : {
-                        background: "rgba(255,255,255,0.04)",
-                        border: "1px solid rgba(255,255,255,0.08)",
+                        background: "rgba(var(--pp-white-rgb), 0.04)",
+                        border: "1px solid rgba(var(--pp-white-rgb), 0.08)",
                       }
                 }
               >
@@ -946,14 +947,14 @@ function CourseMasterySection({
               </div>
               <span
                 className="text-sm font-semibold leading-tight line-clamp-2"
-                style={{ color: mastered ? "#fff" : PALETTE.mist }}
+                style={{ color: mastered ? PP.white : PALETTE.mist }}
               >
                 {category}
               </span>
               <span
                 className="text-[11px] font-medium"
                 style={{
-                  color: mastered ? "rgba(255,255,255,0.85)" : PALETTE.mistSoft,
+                  color: mastered ? "rgba(var(--pp-white-rgb), 0.85)" : PALETTE.mistSoft,
                 }}
               >
                 {mastered

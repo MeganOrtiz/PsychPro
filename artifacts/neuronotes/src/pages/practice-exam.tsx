@@ -16,6 +16,7 @@ import UpgradePrompt from "@/components/upgrade-prompt";
 import ElaborationPanel from "@/components/learning/elaboration-panel";
 import { StudySurface } from "@/components/study/study-surface";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
+import { PP, alpha } from "@/lib/palette";
 import { PageTitle } from "@/components/brand/page-title";
 import { epppTopicPath, isEpppRoute } from "@/lib/eppp-routes";
 import { isEpppTopic } from "@/lib/eppp-content";
@@ -210,12 +211,12 @@ export default function PracticeExamPage({ params }: Props) {
           <div
             className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 border"
             style={{
-              background: passed ? `${P.tealDeep}` : "rgba(244,180,98,0.18)",
-              borderColor: passed ? P.tealDeep : "rgba(244,180,98,0.55)",
+              background: passed ? `${P.tealDeep}` : alpha(PP.amberSoft, 0.18),
+              borderColor: passed ? P.tealDeep : alpha(PP.amberSoft, 0.55),
               boxShadow: passed ? `0 18px 40px -18px ${P.tealDeep}cc` : "none",
             }}
           >
-            <span className="text-3xl font-bold" style={{ color: passed ? "#FFFFFF" : "#B8453A" }}>{score}%</span>
+            <span className="text-3xl font-bold" style={{ color: passed ? PP.white : PP.brick }}>{score}%</span>
           </div>
           <h2 className="text-2xl font-bold text-foreground mb-2">Exam Complete</h2>
           <p className="text-muted-foreground">{correct}/{total} correct</p>
@@ -229,10 +230,10 @@ export default function PracticeExamPage({ params }: Props) {
                 key={q.id}
                 className="rounded-xl border p-4 bg-card"
                 style={{
-                  borderColor: isCorrect ? `${P.surf}66` : "rgba(224,114,96,0.45)",
+                  borderColor: isCorrect ? `${P.surf}66` : alpha(PP.coral, 0.45),
                   boxShadow: isCorrect
                     ? `0 6px 16px -10px ${P.teal}55`
-                    : "0 6px 16px -10px rgba(224,114,96,0.55)",
+                    : `0 6px 16px -10px ${alpha(PP.coral, 0.55)}`,
                 }}
               >
                 <div className="flex items-start gap-3">
@@ -240,8 +241,8 @@ export default function PracticeExamPage({ params }: Props) {
                     className="mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-full text-[11px] font-bold flex-shrink-0"
                     style={
                       isCorrect
-                        ? { background: P.teal, color: "#FFFFFF" }
-                        : { background: "rgba(224,114,96,0.85)", color: "#FFFFFF" }
+                        ? { background: P.teal, color: PP.white }
+                        : { background: alpha(PP.coral, 0.85), color: PP.white }
                     }
                   >
                     {i + 1}
@@ -472,10 +473,10 @@ export default function PracticeExamPage({ params }: Props) {
           <section
             className="rounded-2xl border p-6 shadow-sm"
             style={{
-              borderColor: "rgba(8, 165, 209,0.26)",
+              borderColor: "rgba(var(--pp-cyan-rgb), 0.26)",
               background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.94)",
               boxShadow:
-                "inset 0 1px 0 rgba(255,255,255,0.13), 0 22px 50px -26px rgba(0,0,0,0.7)",
+                "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.13), 0 22px 50px -26px rgba(var(--pp-black-rgb), 0.7)",
             }}
           >
             <header className="flex items-start gap-3 mb-3">
@@ -650,7 +651,7 @@ export default function PracticeExamPage({ params }: Props) {
               background: "hsl(var(--surf-hue) var(--surf-sat) 10% / 0.86)",
               borderColor: `${P.surf}55`,
               color: P.cloud,
-              boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(255,255,255,0.06)`,
+              boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(var(--pp-white-rgb), 0.06)`,
             };
           } else if (isSelected) {
             cls += " text-white font-medium";
@@ -680,10 +681,10 @@ export default function PracticeExamPage({ params }: Props) {
                 className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 border"
                 style={
                   !isAnswered
-                    ? { background: "rgba(13, 88, 162,0.20)", color: P.surf, borderColor: `${P.surf}88` }
+                    ? { background: "rgba(var(--pp-ocean-deep-rgb), 0.20)", color: P.surf, borderColor: `${P.surf}88` }
                     : isSelected
-                      ? { background: "rgba(8, 165, 209,0.30)", color: "#FFFFFF", borderColor: "rgba(8, 165, 209,0.55)" }
-                      : { background: "rgba(13, 88, 162,0.14)", color: P.surf, borderColor: `${P.surf}55` }
+                      ? { background: "rgba(var(--pp-cyan-rgb), 0.30)", color: PP.white, borderColor: "rgba(var(--pp-cyan-rgb), 0.55)" }
+                      : { background: "rgba(var(--pp-ocean-deep-rgb), 0.14)", color: P.surf, borderColor: `${P.surf}55` }
                 }
               >{key}</span>
               {text}

@@ -4,6 +4,7 @@ import { CalendarDays, ArrowRight, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StudySurface } from "@/components/study/study-surface";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
+import { PP } from "@/lib/palette";
 
 const INTERVALS = [1, 3, 7, 14] as const;
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -113,7 +114,7 @@ export default function TodayReviews({ topics }: TodayReviewsProps) {
             style={{
               background: "hsl(var(--surf-hue) var(--surf-sat) 58% / 0.16)",
               color: P.surf,
-              borderColor: "rgba(8,165,209,0.30)",
+              borderColor: "rgba(var(--pp-cyan-rgb), 0.30)",
             }}
           >
             {items.length}
@@ -142,13 +143,13 @@ export default function TodayReviews({ topics }: TodayReviewsProps) {
                     item.isOverdue
                       ? {
                           background: `${P.surf}`,
-                          color: "#222222",
+                          color: PP.earnedInk,
                           borderColor: P.tealDeep,
                         }
                       : {
                           background: "hsl(var(--surf-hue) var(--surf-sat) 58% / 0.14)",
                           color: P.surf,
-                          borderColor: "rgba(8,165,209,0.30)",
+                          borderColor: "rgba(var(--pp-cyan-rgb), 0.30)",
                         }
                   }
                 >

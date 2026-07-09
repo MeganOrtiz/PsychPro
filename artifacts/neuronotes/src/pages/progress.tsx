@@ -21,6 +21,7 @@ import { useGetUserProgress, useGetTopics } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { STUDY_PALETTE } from "@/lib/study-theme";
+import { PP, alpha } from "@/lib/palette";
 import { PageTitle } from "@/components/brand/page-title";
 import { isEpppTopic } from "@/lib/eppp-content";
 
@@ -230,7 +231,7 @@ export default function ProgressPage() {
           <div style={{ height: 140 }}>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={trendData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(8,165,209,0.15)" />
+                <CartesianGrid strokeDasharray="3 3" stroke={alpha(PP.cyan, 0.15)} />
                 <XAxis dataKey="day" tickLine={false} axisLine={false} tick={{ fontSize: 11 }} />
                 <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 11 }} domain={[0, 100]} />
                 <Tooltip />
@@ -256,9 +257,9 @@ export default function ProgressPage() {
               className="rounded-xl p-4 border"
               style={{
                 background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90)",
-                borderColor: "rgba(8,165,209,0.26)",
+                borderColor: "rgba(var(--pp-cyan-rgb), 0.26)",
                 boxShadow:
-                  "inset 0 1px 0 rgba(255,255,255,0.13), 0 20px 46px -26px rgba(0,0,0,0.66)",
+                  "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.13), 0 20px 46px -26px rgba(var(--pp-black-rgb), 0.66)",
               }}
             >
               <div className="flex items-center gap-2 mb-3">
@@ -284,9 +285,9 @@ export default function ProgressPage() {
               className="rounded-xl p-4 border"
               style={{
                 background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90)",
-                borderColor: "rgba(8,165,209,0.26)",
+                borderColor: "rgba(var(--pp-cyan-rgb), 0.26)",
                 boxShadow:
-                  "inset 0 1px 0 rgba(255,255,255,0.13), 0 20px 46px -26px rgba(0,0,0,0.66)",
+                  "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.13), 0 20px 46px -26px rgba(var(--pp-black-rgb), 0.66)",
               }}
             >
               <div className="flex items-center gap-2 mb-3">

@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import UpgradePrompt from "@/components/upgrade-prompt";
 import { StudySurface } from "@/components/study/study-surface";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
+import { PP, alpha } from "@/lib/palette";
 import { PageTitle } from "@/components/brand/page-title";
 import { loadReflectionText, saveReflection } from "@/lib/reflections";
 import { epppTopicPath, isEpppRoute } from "@/lib/eppp-routes";
@@ -145,8 +146,8 @@ export default function QuizPage({ params }: Props) {
             style={{
               background: passed
                 ? `${P.tealDeep}`
-                : "rgba(244,180,98,0.18)",
-              borderColor: passed ? P.tealDeep : "rgba(244,180,98,0.55)",
+                : alpha(PP.amberSoft, 0.18),
+              borderColor: passed ? P.tealDeep : alpha(PP.amberSoft, 0.55),
               boxShadow: passed ? `0 18px 40px -18px ${P.tealDeep}cc` : "none",
             }}
           >
@@ -247,23 +248,23 @@ export default function QuizPage({ params }: Props) {
                   background: "hsl(var(--surf-hue) var(--surf-sat) 13% / 0.86)",
                   borderColor: `${P.surf}55`,
                   color: P.cloud,
-                  boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(255,255,255,0.06)`,
+                  boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(var(--pp-white-rgb), 0.06)`,
                 };
               } else if (isCorrect) {
                 // Correct answer turns emerald green, mirroring the red
                 // we use for an incorrect selection.
                 cls += " text-white";
                 style = {
-                  background: "#2BA866",
-                  borderColor: "#1E7A4E",
-                  boxShadow: "0 14px 32px -16px rgba(43,168,102,0.7)",
+                  background: PP.quizGreen,
+                  borderColor: PP.quizGreenDeep,
+                  boxShadow: `0 14px 32px -16px ${alpha(PP.quizGreen, 0.7)}`,
                 };
               } else if (isSelected && !isCorrect) {
                 cls += " text-white";
                 style = {
-                  background: "#B8453A",
-                  borderColor: "#7A2C24",
-                  boxShadow: "0 14px 32px -16px rgba(122,44,36,0.65)",
+                  background: PP.brick,
+                  borderColor: PP.brickDeep,
+                  boxShadow: `0 14px 32px -16px ${alpha(PP.brickDeep, 0.65)}`,
                 };
               } else {
                 cls += " opacity-55";
@@ -290,10 +291,10 @@ export default function QuizPage({ params }: Props) {
                     )}
                     style={
                       !selected
-                        ? { background: "rgba(13,88,162,0.20)", color: P.surf, borderColor: `${P.surf}88` }
+                        ? { background: "rgba(var(--pp-ocean-deep-rgb), 0.20)", color: P.surf, borderColor: `${P.surf}88` }
                         : isSelected || isCorrect
-                          ? { background: "rgba(255,255,255,0.22)", color: "#FFFFFF" }
-                          : { background: "rgba(13,88,162,0.14)", color: P.surf, borderColor: `${P.surf}55` }
+                          ? { background: "rgba(var(--pp-white-rgb), 0.22)", color: PP.white }
+                          : { background: "rgba(var(--pp-ocean-deep-rgb), 0.14)", color: P.surf, borderColor: `${P.surf}55` }
                     }
                   >
                     {key}
@@ -313,7 +314,7 @@ export default function QuizPage({ params }: Props) {
               innerClassName="p-4 md:p-5 mb-4"
               testId="explanation-box"
             >
-              <p className="text-sm leading-relaxed pr-16 font-medium" style={{ color: "#FFFFFF" }}>{current.explanation}</p>
+              <p className="text-sm leading-relaxed pr-16 font-medium" style={{ color: PP.white }}>{current.explanation}</p>
             </StudySurface>
           )}
 
@@ -322,9 +323,9 @@ export default function QuizPage({ params }: Props) {
               className="rounded-xl p-4 mb-6 border"
               style={{
                 background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90)",
-                borderColor: "rgba(8,165,209,0.24)",
+                borderColor: "rgba(var(--pp-cyan-rgb), 0.24)",
                 boxShadow:
-                  "inset 0 1px 0 rgba(255,255,255,0.12), 0 20px 46px -26px rgba(0,0,0,0.66)",
+                  "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12), 0 20px 46px -26px rgba(var(--pp-black-rgb), 0.66)",
               }}
               data-testid="reflect-prompt"
             >

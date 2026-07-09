@@ -9,6 +9,7 @@ import ReactMarkdown from "react-markdown";
 import { shuffle } from "@/lib/shuffle";
 import { authHeaders } from "@/lib/auth-headers";
 import { PageTitle } from "@/components/brand/page-title";
+import { PP } from "@/lib/palette";
 
 type Deck = { id: number; title: string; studyGuide: string | null; status: string; tier?: "standard" | "pro"; tools?: string[]; examQuestionCount?: number; examTimed?: boolean };
 type Flashcard = { id: number; front: string; back: string; difficulty: string; cardOrder: number };
@@ -532,14 +533,14 @@ function StudyGuideView({ content, title }: { content: string; title: string }) 
     const body = ref.current?.innerHTML ?? "";
     const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${safeTitle}</title>
 <style>
-  body{font-family:Georgia,'Times New Roman',serif;color:#2a2a2a;max-width:760px;margin:48px auto;padding:0 28px;line-height:1.65;}
-  h1,h2,h3,h4{font-family:Arial,Helvetica,sans-serif;color:#2a2a2a;line-height:1.25;margin-top:1.5em;}
-  h1{font-size:26px;border-bottom:2px solid #2a2a2a;padding-bottom:8px;margin-top:0;}
+  body{font-family:Georgia,'Times New Roman',serif;color:${PP.docInk};max-width:760px;margin:48px auto;padding:0 28px;line-height:1.65;}
+  h1,h2,h3,h4{font-family:Arial,Helvetica,sans-serif;color:${PP.docInk};line-height:1.25;margin-top:1.5em;}
+  h1{font-size:26px;border-bottom:2px solid ${PP.docInk};padding-bottom:8px;margin-top:0;}
   h2{font-size:20px;} h3{font-size:16px;}
   ul,ol{padding-left:22px;} li{margin:5px 0;}
-  strong{color:#2a2a2a;} code{background:#f1f3f4;padding:1px 5px;border-radius:3px;font-family:Menlo,Consolas,monospace;}
-  blockquote{border-left:3px solid #c8d2d6;margin:1em 0;padding-left:14px;color:#4c636b;}
-  table{border-collapse:collapse;width:100%;} th,td{border:1px solid #c8d2d6;padding:6px 10px;text-align:left;}
+  strong{color:${PP.docInk};} code{background:${PP.docCode};padding:1px 5px;border-radius:3px;font-family:Menlo,Consolas,monospace;}
+  blockquote{border-left:3px solid ${PP.docBorder};margin:1em 0;padding-left:14px;color:${PP.docQuote};}
+  table{border-collapse:collapse;width:100%;} th,td{border:1px solid ${PP.docBorder};padding:6px 10px;text-align:left;}
 </style></head>
 <body><h1>${safeTitle}</h1>${body}</body></html>`;
     const blob = new Blob(["\uFEFF", html], { type: "application/msword" });
@@ -569,7 +570,7 @@ function StudyGuideView({ content, title }: { content: string; title: string }) 
       <div className="bg-card border border-border rounded-xl p-6 md:p-8">
         <div
           ref={ref}
-          className="prose prose-sm prose-invert max-w-none [--tw-prose-invert-body:#ffffff] [--tw-prose-invert-headings:#ffffff] [--tw-prose-invert-lead:#ffffff] [--tw-prose-invert-bold:#ffffff] [--tw-prose-invert-counters:#ffffff] [--tw-prose-invert-bullets:#ffffff] [--tw-prose-invert-links:#ffffff] [--tw-prose-invert-quotes:#ffffff] [--tw-prose-invert-captions:#ffffff] [--tw-prose-invert-code:#ffffff] [--tw-prose-invert-hr:rgba(255,255,255,0.22)] [--tw-prose-invert-quote-borders:rgba(255,255,255,0.3)] [--tw-prose-invert-th-borders:rgba(255,255,255,0.3)] [--tw-prose-invert-td-borders:rgba(255,255,255,0.2)]"
+          className="prose prose-sm prose-invert max-w-none [--tw-prose-invert-body:rgb(var(--pp-white-rgb))] [--tw-prose-invert-headings:rgb(var(--pp-white-rgb))] [--tw-prose-invert-lead:rgb(var(--pp-white-rgb))] [--tw-prose-invert-bold:rgb(var(--pp-white-rgb))] [--tw-prose-invert-counters:rgb(var(--pp-white-rgb))] [--tw-prose-invert-bullets:rgb(var(--pp-white-rgb))] [--tw-prose-invert-links:rgb(var(--pp-white-rgb))] [--tw-prose-invert-quotes:rgb(var(--pp-white-rgb))] [--tw-prose-invert-captions:rgb(var(--pp-white-rgb))] [--tw-prose-invert-code:rgb(var(--pp-white-rgb))] [--tw-prose-invert-hr:rgba(var(--pp-white-rgb),0.22)] [--tw-prose-invert-quote-borders:rgba(var(--pp-white-rgb),0.3)] [--tw-prose-invert-th-borders:rgba(var(--pp-white-rgb),0.3)] [--tw-prose-invert-td-borders:rgba(var(--pp-white-rgb),0.2)]"
         >
           <ReactMarkdown>{content}</ReactMarkdown>
         </div>

@@ -355,6 +355,176 @@ for (const file of walkSrc(SRC, [])) {
   }
 }
 
+// --- 9) TOKEN DISCIPLINE: no raw color literals in TS/TSX --------------------
+// Every color in application code must come from the CSS tokens
+// (var(--pp-*), rgba(var(--pp-*-rgb), a)) or from src/lib/palette.ts
+// (PP.* / alpha()). Raw literals live ONLY in the whitelisted files.
+const LITERAL_WHITELIST = [
+  path.join("src", "lib", "palette.ts"),          // the single TS literal source
+  path.join("src", "data", "brain-structures.ts"), // anatomy atlas colors (own system)
+  path.join("src", "pages", "dev-glass-preview.tsx"), // dev-only material specimen
+];
+const HEX_RE = /#[0-9a-fA-F]{3,8}\b/;
+const RGB_RE = /\brgba?\(\s*\d/;
+const HSL_NUM_RE = /\bhsla?\(\s*\d/;
+for (const file of walkSrc(SRC, [])) {
+  const rel = path.relative(ROOT, file);
+  if (LITERAL_WHITELIST.some((w) => rel === w)) continue;
+  const text = fs.readFileSync(file, "utf8");
+  const lines = text.split("\n");
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (/^\s*(\/\/|\*|\/\*)/.test(line)) continue;
+    if (HEX_RE.test(line) || RGB_RE.test(line) || HSL_NUM_RE.test(line)) {
+      fail(
+        `raw color literal in ${rel}:${i + 1} \`${line.trim().slice(0, 80)}\``,
+        "consume tokens instead: var(--pp-*) / rgba(var(--pp-*-rgb), a) in styles, PP/alpha() from @/lib/palette in SVG/JS",
+      );
+    }
+  }
+}
+
+// --- 10) TOKEN DISCIPLINE: index.css literals only in the token blocks -------
+// Outside :root/.dark, index.css must consume tokens. The only raw literals
+// tolerated outside the token blocks are neutrals (black/white/gray) and
+// semantic status colors (red/amber/green) — palette blues MUST be tokens.
+{
+  const blankBlock = (source, needle) => {
+    const sel = source.indexOf(needle);
+    if (sel === -1) return source;
+    const open = source.indexOf("{", sel);
+    let depth = 0;
+    for (let i = open; i < source.length; i++) {
+      if (source[i] === "{") depth++;
+      else if (source[i] === "}") {
+        depth--;
+        if (depth === 0) {
+          return source.slice(0, open) + source.slice(open, i + 1).replace(/[^\n]/g, " ") + source.slice(i + 1);
+        }
+      }
+    }
+    return source;
+  };
+  let outside = blankBlock(css, ":root");
+  outside = blankBlock(outside, "\n.dark {");
+  const toRgb = (str) => {
+    const hex = str.match(/^#([0-9a-fA-F]{3,8})$/)?.[1];
+    if (hex) {
+      const h = hex.length < 6 ? hex.split("").map((c) => c + c).join("").slice(0, 6) : hex.slice(0, 6);
+      return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+    }
+    const nums = str.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
+    return nums ? [Number(nums[1]), Number(nums[2]), Number(nums[3])] : null;
+  };
+  const hueOf = ([r, g, b]) => {
+    const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+    if (d === 0) return null; // neutral
+    let h;
+    if (max === r) h = ((g - b) / d) % 6;
+    else if (max === g) h = (b - r) / d + 2;
+    else h = (r - g) / d + 4;
+    return ((h * 60) + 360) % 360;
+  };
+  const litRe = /#[0-9a-fA-F]{3,8}\b|rgba?\(\s*\d+\s*,\s*\d+\s*,\s*\d+[^)]*\)|hsla?\(\s*[\d.]+[^)]*\)/g;
+  let lm;
+  while ((lm = litRe.exec(outside))) {
+    let hue, sat;
+    const hslNums = lm[0].match(/^hsla?\(\s*([\d.]+)(?:deg)?[\s,]+([\d.]+)%/);
+    if (hslNums) {
+      hue = Number(hslNums[1]) % 360;
+      sat = Number(hslNums[2]) * 2.55; // scale % to the 0-255 chroma range used below
+      if (sat === 0) hue = null;
+    } else {
+      const rgb = toRgb(lm[0]);
+      if (!rgb) continue;
+      hue = hueOf(rgb);
+      sat = Math.max(...rgb) - Math.min(...rgb);
+    }
+    const neutral = hue === null || sat <= 12;
+    const semantic = hue !== null && ((hue <= 25 || hue >= 340) || (hue >= 26 && hue <= 65) || (hue >= 100 && hue <= 170));
+    if (!neutral && !semantic) {
+      fail(
+        `raw palette literal ${lm[0]} outside the token blocks at ${REL}:${lineOf(lm.index)}`,
+        "palette colors outside :root/.dark must be tokens: var(--pp-*) or rgba(var(--pp-*-rgb), a)",
+      );
+    }
+  }
+}
+
+// --- 11) SELECTOR HYGIENE: scoped classes, not category rules ----------------
+// Broad recipes are how one edit silently restyles unrelated surfaces:
+//   - attribute wildcards ([class*=…]) once hijacked every bg-primary/NN chip;
+//   - descendant bare-element rules (.study-page-bg button {…}) skinned every
+//     button on every page. Materials are OPT-IN via named classes only.
+{
+  const wildcard = /\[class[*^|~]?=/g;
+  let wm;
+  while ((wm = wildcard.exec(css))) {
+    fail(
+      `attribute-wildcard selector at ${REL}:${lineOf(wm.index)}`,
+      "never select by [class*=…] — add a named material class to the element instead",
+    );
+  }
+  const descendant = /\.study-page-(?:bg|aurora)[^,{}\s]*[ >+~]+[^,{}\s][^,{}]*\{/g;
+  let dm;
+  while ((dm = descendant.exec(css))) {
+    fail(
+      `descendant recipe under a page scope at ${REL}:${lineOf(dm.index)} \`${dm[0].slice(0, 70)}\``,
+      "materials are opt-in named classes (.pp-btn-*, .pp-card-opaque, .pp-input-well, .mat-*) — never .study-page-bg <element> category rules",
+    );
+  }
+}
+
+// --- 12) Scoped material classes exist + primitives emit them ---------------
+for (const cls of [".pp-card-opaque", ".pp-input-well", ".pp-btn-gloss", ".pp-btn-glass", ".pp-btn-outline"]) {
+  if (!new RegExp(`\\${cls}\\s*[{,:]`).test(css)) {
+    fail(`${cls} scoped material class missing from index.css`, `restore the ${cls} recipe`);
+  }
+}
+const PRIMITIVE_CLASSES = [
+  ["card.tsx", "pp-card-opaque"],
+  ["input.tsx", "pp-input-well"],
+  ["textarea.tsx", "pp-input-well"],
+  ["select.tsx", "pp-btn-outline"],
+  ["toggle.tsx", "pp-btn-outline"],
+];
+for (const [fileName, cls] of PRIMITIVE_CLASSES) {
+  const p = path.join(ROOT, "src", "components", "ui", fileName);
+  if (!fs.readFileSync(p, "utf8").includes(cls)) {
+    fail(`ui/${fileName} no longer emits .${cls}`, `keep the ${cls} class in the shared primitive so the material applies app-wide`);
+  }
+}
+
+// --- 13) palette.ts stays in sync with the CSS tokens ------------------------
+{
+  const palettePath = path.join(ROOT, "src", "lib", "palette.ts");
+  const paletteSrc = fs.readFileSync(palettePath, "utf8");
+  const CORE = {
+    floor: "--pp-floor", deep: "--pp-deep", surface: "--pp-surface",
+    navy: "--pp-navy", navyBright: "--pp-navy-bright", ocean: "--pp-ocean",
+    oceanDeep: "--pp-ocean-deep", cyan: "--pp-cyan", bright: "--pp-bright",
+    icy: "--pp-icy", text: "--pp-text", textDim: "--pp-text-dim", ink: "--pp-ink",
+  };
+  for (const [key, cssVar] of Object.entries(CORE)) {
+    const tsHex = paletteSrc.match(new RegExp(`\\b${key}:\\s*"(#[0-9a-fA-F]{6})"`))?.[1]?.toLowerCase();
+    const cssHex = rootBlock?.match(new RegExp(`${cssVar}:\\s*(#[0-9a-fA-F]{6})\\s*;`))?.[1]?.toLowerCase();
+    if (!tsHex) fail(`PP.${key} missing from src/lib/palette.ts`, "palette.ts must mirror every core --pp-* token");
+    else if (cssHex && tsHex !== cssHex) {
+      fail(`PP.${key} (${tsHex}) out of sync with ${cssVar} (${cssHex})`, "edit the index.css token AND palette.ts in the same commit");
+    }
+    // The rgb channel triplet must match the hex numerically.
+    const rgbVar = `${cssVar}-rgb`;
+    const trip = rootBlock?.match(new RegExp(`${rgbVar}:\\s*(\\d+),\\s*(\\d+),\\s*(\\d+)\\s*;`));
+    if (trip && cssHex) {
+      const want = [1, 3, 5].map((i) => parseInt(cssHex.slice(i, i + 2), 16));
+      const got = [Number(trip[1]), Number(trip[2]), Number(trip[3])];
+      if (want.join() !== got.join()) {
+        fail(`${rgbVar} (${got.join(", ")}) does not match ${cssVar} ${cssHex}`, "keep the channel triplet numerically in sync with the hex token");
+      }
+    }
+  }
+}
+
 // --- Report ----------------------------------------------------------------
 if (violations.length) {
   console.error(`\n✗ Design system lock FAILED — ${violations.length} drift(s) from the locked blue three-material system:\n`);
