@@ -1,14 +1,15 @@
 # PsychPro Design System Lock
 
-PsychPro's visual system keeps drifting when individual pages get tweaked — surfaces
-slide toward navy, accents creep toward mint, cards turn rounder and softer. Two
-automated guardrails pin the system so a page-level edit can't silently change the
-global look. Both run as validation checks and fail loudly (exit 1) on drift.
+PsychPro's visual system keeps drifting when individual pages get tweaked — black
+surfaces slide toward flat navy, cyan accents creep toward mint, and glass cards
+lose their glossy edge-light. Two automated guardrails pin the system so a
+page-level edit can't silently change the global look. Both run as validation
+checks and fail loudly (exit 1) on drift.
 
 | Check | Script | Locks |
 |-------|--------|-------|
-| Surface hue | `scripts/check-surface-hue.mjs` (`pnpm --filter @workspace/neuronotes run check:surface-hue`) | **Color** — every literal surface color stays in the cerulean hue window (188–193); button accents stay cerulean, never mint/green |
-| Design drift | `scripts/check-design-drift.mjs` (`pnpm --filter @workspace/neuronotes run check:design-drift`) | **Shape / structure / type** — locked tokens, glass-card recipe, typography, and shared component mappings |
+| Surface hue | `scripts/check-surface-hue.mjs` (`pnpm --filter @workspace/neuronotes run check:surface-hue`) | **Color** — every literal surface color stays in the cyan hue window (186–194); button accents stay cyan, never mint/green |
+| Design drift | `scripts/check-design-drift.mjs` (`pnpm --filter @workspace/neuronotes run check:design-drift`) | **Shape / structure / type** — locked tokens, liquid-glass card recipe, typography, and shared component mappings |
 
 ## What the design-drift lock pins
 
@@ -16,30 +17,32 @@ All values live in `artifacts/neuronotes/src/index.css`.
 
 **Global structural tokens (`:root`)**
 - `--radius: .625rem;` — the global corner-radius token.
-- `--surf-hue: 193;` — the surface hue base.
+- `--surf-hue: 190;` — the surface hue base.
 
 **Native background artwork**
-- Authenticated pages render the optimized `app-smoke.webp` directly.
-- The landing page renders the optimized `brain-clouds.webp` directly.
-- Neither backdrop may add a global CSS `filter` or vignette gradient. This keeps
-  the artwork clear instead of placing a dark, processed “film” over the site.
+- Authenticated pages render `app-smoke.webp` inside a near-black stage with
+  cyan specular gradients.
+- The landing page renders the supplied `liquid-brain.jpeg` reference as the
+  first-viewport brand signal.
+- Neither backdrop may add a global CSS `filter`. Gradients are allowed only as
+  part of the locked black-stage treatment.
 
-**Canonical pigment-only glass card** — the main-site `.study-page-bg .bg-card` rule,
-which mirrors the EPPP `.epd-card`:
-- `border-radius: 20px;` — fixed, **non-pill** corner.
-- `backdrop-filter: blur(5px) saturate(190%)` — the glass blur.
-- `linear-gradient(145deg, …)` — the 145° pigmented fill direction.
-- no cyan top-bloom, inset cyan glow, or outer cyan corona on idle cards.
-- depth comes from pigment contrast plus the neutral dark drop shadow.
-- `border: 1px solid rgba(196, 232, 242, 0.22)` — cerulean hairline border.
-- `inset 0 1px 0 rgba(255, 255, 255, 0.03)` — restrained highlight shared
-  identically by landing, authenticated app, and EPPP cards.
+**Canonical liquid-neuroglass card** — the main-site `.study-page-bg .bg-card`
+rule, which mirrors the EPPP `.epd-card`:
+- `border-radius: 18px;` — fixed, **non-pill** corner.
+- `backdrop-filter: blur(18px) saturate(210%)` — the glass blur.
+- `radial-gradient(120% 90% at 50% 0%, …)` — the locked specular top highlight.
+- `linear-gradient(145deg, hsl(var(--surf-hue) 100% 12% / 0.82), hsl(var(--surf-hue) 100% 5% / 0.96))` — near-black cyan glass fill.
+- `border: 1px solid rgba(167, 243, 255, 0.30)` — icy cyan hairline border.
+- `inset 0 1px 0 rgba(255, 255, 255, 0.16)` — specular highlight.
+- `inset 0 -18px 40px -34px rgba(118, 228, 247, 0.38)` — restrained cyan lower reflection.
+- `0 28px 72px -46px rgba(0, 0, 0, 0.92)` — black depth shadow.
 
 The guardrail checks the landing, authenticated app, and EPPP implementations
 together. A page-local style block cannot change this shared recipe independently.
 
 **Banned accents** — mint / teal-green hexes (`#5EEAD4`, `#2DD4BF`, `#14B8A6`) are
-rejected in `index.css`. The only accent is locked cerulean `#76E4F7` /
+rejected in `index.css`. The only accent is locked cyan `#76E4F7` /
 `rgba(118, 228, 247, A)`.
 
 **Typography**

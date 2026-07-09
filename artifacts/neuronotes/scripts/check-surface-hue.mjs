@@ -2,15 +2,14 @@
 // =============================================================================
 // SURFACE HUE GUARDRAIL
 //
-// PsychPro's deep-cerulean surface palette repeatedly drifts toward navy. The
-// only lever is HUE: the locked accent #76E4F7 is hue ~189, and surfaces must
-// sit right next to it (canonical hue 192). When surfaces drift up to ~196 the
-// app reads navy; below ~187 it reads green.
+// PsychPro's liquid-neuroglass palette repeatedly drifts toward flat navy or
+// green-teal. The only lever is HUE: the locked accent #76E4F7 is hue ~189, and
+// surface light must sit right next to it (canonical hue 190).
 //
 // Surfaces are centralized behind the `--surf-hue` CSS variable
 // (hsl(var(--surf-hue) S% L% / A)) — that form has no literal hue, so it is the
 // preferred, always-passing way to write a surface color. This check fails when
-// a LITERAL surface color (dark + saturated cerulean) drifts outside [188, 193].
+// a LITERAL surface color (dark + saturated cyan) drifts outside [186, 194].
 // It inspects rgb/hex, literal hsl()/hsla(), and bare HSL token tuples inside
 // the .dark and .study-page-bg blocks of index.css. Accents (light, hue ~189),
 // charts, reds, greens and neutrals are ignored.
@@ -23,13 +22,14 @@ import path from "path";
 const ROOT = path.join(path.dirname(new URL(import.meta.url).pathname), "..");
 const SRC = path.join(ROOT, "src");
 
-// Safe hue window for surfaces (canonical = 192; accent = 189).
-const ALLOW_LO = 188;
-const ALLOW_HI = 193;
+// Safe hue window for surfaces (canonical = 190; accent = 189).
+const ALLOW_LO = 186;
+const ALLOW_HI = 194;
 // Detection band: only consider dark, saturated cerulean-family colors.
 const DETECT_LO = 180;
 const DETECT_HI = 210;
-const MAX_L = 0.5; // surfaces are dark (<45%); excludes bright cyan accents / light text
+const MAX_L = 0.5; // surfaces are dark (<50%); excludes bright cyan accents / light text
+const MIN_L = 0.045; // exclude near-black anchors where hue is visually meaningless
 const MIN_S = 0.2; // exclude near-neutrals
 
 // --- Accent-family guardrail (interactive button glow/edge) ---------------
@@ -66,7 +66,7 @@ function rgbToHsl(r, g, b) {
   return [h, s, l];
 }
 
-const isSurface = (h, s, l) => h >= DETECT_LO && h <= DETECT_HI && l < MAX_L && s > MIN_S;
+const isSurface = (h, s, l) => h >= DETECT_LO && h <= DETECT_HI && l >= MIN_L && l < MAX_L && s > MIN_S;
 const lineOf = (text, idx) => text.slice(0, idx).split("\n").length;
 
 const violations = [];
@@ -159,7 +159,7 @@ const isAccent = (h, s, l) =>
 
 function flagAccent(file, line, raw, h) {
   violations.push(
-    `${file}:${line}  ${raw}  (hue ${h.toFixed(1)} — interactive button accent must be cerulean ${ACCENT_LO}-${ACCENT_HI}; accent #76E4F7 ≈ 189, NEVER mint/green). ` +
+    `${file}:${line}  ${raw}  (hue ${h.toFixed(1)} — interactive button accent must be cyan ${ACCENT_LO}-${ACCENT_HI}; accent #76E4F7 ≈ 189, NEVER mint/green). ` +
       `Use rgba(118, 228, 247, A) or #76E4F7.`,
   );
 }
@@ -223,9 +223,9 @@ for (const file of walk(SRC, [])) {
 }
 
 if (violations.length) {
-  console.error(`\n✗ Surface hue guardrail FAILED — ${violations.length} color(s) drifted out of the cerulean window:\n`);
+  console.error(`\n✗ Surface hue guardrail FAILED — ${violations.length} color(s) drifted out of the cyan window:\n`);
   for (const v of violations) console.error("  " + v);
-  console.error("\nFix: pull the hue back to 192, or express it as hsl(var(--surf-hue) S% L% / A).\n");
+  console.error("\nFix: pull the hue back to 190, or express it as hsl(var(--surf-hue) S% L% / A).\n");
   process.exit(1);
 }
-console.log("✓ Surface hue guardrail passed — all literal surfaces are within the cerulean window (188-193).");
+console.log("✓ Surface hue guardrail passed — all literal surfaces are within the cyan window (186-194).");

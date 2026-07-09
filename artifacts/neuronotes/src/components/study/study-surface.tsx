@@ -22,17 +22,16 @@ interface StudySurfaceProps {
 function surfaceStyles(tone: StudyTone): CSSProperties {
   switch (tone) {
     case "dark":
-      // Prominent translucent cerulean glass — slightly brighter base than
-      // "light" so it reads as a lifted/feature surface, with the same cyan
-      // top-bloom + outer corona radiance over the brain backdrop.
+      // Prominent liquid neuroglass — brighter than "light" but still grounded
+      // in the near-black cyan-lit surface system.
       return {
         background:
-          "linear-gradient(145deg, hsl(var(--surf-hue) 85% 22% / 0.80), hsl(var(--surf-hue) 91% 15% / 0.90))",
-        borderColor: "rgba(118,228,247,0.24)",
-        backdropFilter: "blur(20px) saturate(135%)",
-        WebkitBackdropFilter: "blur(20px) saturate(135%)",
+          "radial-gradient(120% 90% at 50% 0%, rgba(167,243,255,0.16) 0%, rgba(118,228,247,0.05) 38%, rgba(118,228,247,0.00) 68%), linear-gradient(145deg, hsl(var(--surf-hue) 100% 14% / 0.86), hsl(var(--surf-hue) 100% 6% / 0.96))",
+        borderColor: "rgba(167,243,255,0.32)",
+        backdropFilter: "blur(18px) saturate(210%)",
+        WebkitBackdropFilter: "blur(18px) saturate(210%)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.10), 0 22px 52px -26px rgba(0,0,0,0.74)",
+          "inset 0 1px 0 rgba(255,255,255,0.16), inset 0 -18px 40px -34px rgba(118,228,247,0.40), 0 28px 72px -46px rgba(0,0,0,0.92), 0 0 34px -22px rgba(118,228,247,0.58)",
         color: "#FFFFFF",
       };
     case "accent":
@@ -65,18 +64,16 @@ function surfaceStyles(tone: StudyTone): CSSProperties {
       };
     case "light":
     default:
-      // Unified with the EPPP card system (.epd-card): a radial cyan top-bloom
-      // over a 145° diagonal cerulean glass with a cyan inner glow + outer
-      // corona and a deep drop shadow, so the main-site surfaces read as the
-      // same translucent bloom glass as the EPPP domain tiles.
+      // Unified with the canonical liquid neuroglass recipe used by .bg-card,
+      // EPPP cards, and landing tiles.
       return {
         background:
-          "linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99))",
-        borderColor: "rgba(196,232,242,0.22)",
-        backdropFilter: "blur(5px) saturate(190%)",
-        WebkitBackdropFilter: "blur(5px) saturate(190%)",
+          "radial-gradient(120% 90% at 50% 0%, rgba(167,243,255,0.13) 0%, rgba(118,228,247,0.04) 38%, rgba(118,228,247,0.00) 68%), linear-gradient(145deg, hsl(var(--surf-hue) 100% 12% / 0.82), hsl(var(--surf-hue) 100% 5% / 0.96))",
+        borderColor: "rgba(167,243,255,0.30)",
+        backdropFilter: "blur(18px) saturate(210%)",
+        WebkitBackdropFilter: "blur(18px) saturate(210%)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.03), 0 22px 52px -40px rgba(0,0,0,0.80)",
+          "inset 0 1px 0 rgba(255,255,255,0.16), inset 0 -18px 40px -34px rgba(118,228,247,0.38), 0 28px 72px -46px rgba(0,0,0,0.92), 0 0 34px -22px rgba(118,228,247,0.58)",
         color: P.mist,
       };
   }

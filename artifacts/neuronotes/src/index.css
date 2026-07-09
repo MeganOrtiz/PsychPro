@@ -3,16 +3,16 @@
    ---------------------------------------------------------------------------
    The .study-page-bg rule below is the canonical app surface used by every
    authenticated page (dashboard, topics, flashcards, etc). It owns:
-     - shadcn token overrides (cerulean palette)
-     - the single fixed cerulean-clouds background image (::before)
-     - canonical glass card treatment (.bg-card descendants)
+     - shadcn token overrides (liquid-neuroglass palette)
+     - the single fixed black/cyan background stage (::before)
+     - canonical liquid glass card treatment (.bg-card descendants)
 
    DO NOT:
      - Re-declare another wallpaper on a per-page basis.
      - Override these CSS variables in another scope.
      - Add a second .bg-card rule.
-     - Swap the cloud image without also updating the landing page's
-       .landing-canvas::before so both surfaces stay coherent.
+     - Swap the stage image without also updating the landing page's
+       liquid-brain treatment so both surfaces stay coherent.
    ============================================================================= */
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
@@ -83,21 +83,19 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* LIGHT MODE — Cerulean Blue theme */
+/* LIGHT MODE — Liquid neuroglass fallback theme */
 :root {
-  /* SINGLE HUE KNOB for the whole cerulean surface system. Change this one
-     number to retone every surface app-wide. Accents (#76E4F7, hue ~189) are
-     intentionally NOT derived from this — they are the fixed north star. */
-  --surf-hue: 193;
+  /* SINGLE HUE KNOB for the liquid neuroglass surface system. Accents
+     (#76E4F7, hue ~189) remain the fixed north star; surfaces sit almost black
+     with cyan specular light rather than a broad blue/teal wash. */
+  --surf-hue: 190;
   --button-outline: rgba(0,0,0, .10);
   --badge-outline: rgba(0,0,0, .05);
   --opaque-button-border-intensity: -8;
   --elevate-1: rgba(0,0,0, .03);
   --elevate-2: rgba(0,0,0, .08);
 
-  /* Light cerulean palette — based on Deep Sea Teal / Arctic Ocean Blue /
-     Cerulean Ripple / Icy Glaze / Frost White swatches, biased slightly
-     bluer (hue ~198-200°) to avoid green-teal cast. */
+  /* Light fallback palette — still cool, but secondary to the dark app. */
   --background: 198 40% 96%;     /* near Frost White with cerulean tint */
   --foreground: 200 60% 12%;     /* Deep Sea Teal text */
 
@@ -183,39 +181,37 @@
   --elevate-1: rgba(255,255,255, .04);
   --elevate-2: rgba(255,255,255, .09);
 
-  /* Deep cerulean/turquoise dark theme — CANONICAL SURFACE HUE = 192 (set
-     2026-06-12). Accents stay at the locked #76E4F7 family (hue ~188–189).
-     History: hue 191 read green, 196 read navy; 192 sits just off the accent on
-     the anti-navy side. Lever for "too navy" is HUE, never lightness. */
-  --background: var(--surf-hue) 80% 9%;
+  /* Liquid neuroglass dark theme — CANONICAL SURFACE HUE = 190. The base is
+     intentionally near-black; cyan appears as edge light, not as a flat wash. */
+  --background: var(--surf-hue) 78% 5%;
   --foreground: var(--surf-hue) 40% 95%;
 
-  --border: var(--surf-hue) 58% 24%;
+  --border: var(--surf-hue) 48% 18%;
 
-  --card: var(--surf-hue) 78% 12%;
+  --card: var(--surf-hue) 86% 9%;
   --card-foreground: var(--surf-hue) 40% 95%;
   --card-border: var(--surf-hue) 58% 24%;
 
-  --sidebar: var(--surf-hue) 80% 7%;
+  --sidebar: var(--surf-hue) 80% 4%;
   --sidebar-foreground: var(--surf-hue) 38% 90%;
-  --sidebar-border: var(--surf-hue) 60% 18%;
+  --sidebar-border: var(--surf-hue) 58% 15%;
   --sidebar-primary: 189 84% 55%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: var(--surf-hue) 60% 18%;
+  --sidebar-accent: var(--surf-hue) 68% 14%;
   --sidebar-accent-foreground: var(--surf-hue) 38% 90%;
   --sidebar-ring: 189 84% 55%;
 
-  --popover: var(--surf-hue) 76% 12%;
+  --popover: var(--surf-hue) 84% 8%;
   --popover-foreground: var(--surf-hue) 38% 95%;
-  --popover-border: var(--surf-hue) 58% 22%;
+  --popover-border: var(--surf-hue) 48% 18%;
 
   --primary: 189 84% 55%;
   --primary-foreground: 0 0% 100%;
 
-  --secondary: var(--surf-hue) 60% 22%;
+  --secondary: var(--surf-hue) 70% 14%;
   --secondary-foreground: var(--surf-hue) 38% 90%;
 
-  --muted: var(--surf-hue) 60% 17%;
+  --muted: var(--surf-hue) 64% 10%;
   --muted-foreground: var(--surf-hue) 24% 62%;
 
   --accent: 189 88% 62%;
@@ -224,7 +220,7 @@
   --destructive: 0 72% 51%;
   --destructive-foreground: 0 0% 100%;
 
-  --input: var(--surf-hue) 58% 24%;
+  --input: var(--surf-hue) 52% 16%;
   --ring: 189 84% 55%;
 
   --chart-1: 189 84% 55%;
@@ -252,30 +248,29 @@
   }
 }
 
-/* Study page backgrounds — deep cerulean/turquoise, brand-aligned with the
+/* Study page backgrounds — black-stage liquid neuroglass, brand-aligned with the
    sidebar. Scoped variable overrides retone the shadcn tokens to a deep
-   turquoise palette so tokenized utilities (text-foreground / bg-card /
+   cyan palette so tokenized utilities (text-foreground / bg-card /
    text-muted-foreground) resolve correctly on the dark surface. White
    StudySurface cards use raw palette colors directly and remain unaffected. */
-/* Dark cerulean page surface — matches the landing-page reference exactly.
-   Page-scoped token overrides retone shadcn variables to the Deep Sea Teal /
-   Arctic Ocean Blue / Cerulean Ripple / Icy Glaze / Frost White palette so
-   tokenized utilities (bg-card, text-foreground, text-muted-foreground, etc.)
-   automatically resolve to dark-theme values inside any .study-page-bg page. */
+/* Dark liquid-neuroglass page surface. Page-scoped token overrides retone
+   shadcn variables to a near-black cyan-lit instrument surface so tokenized
+   utilities (bg-card, text-foreground, text-muted-foreground, etc.) resolve
+   correctly inside any .study-page-bg page. */
 .study-page-bg,
 .study-page-aurora {
   /* Mirrors STUDY_PALETTE in src/lib/study-theme.ts. Canonical palette
-     = the landing-page cinematic neuroscience UI. */
-  --background: var(--surf-hue) 90% 17%;         /* #044352 bg (deep cerulean) */
+     = the landing-page liquid neuroglass reference. */
+  --background: var(--surf-hue) 88% 5%;
   --foreground: 188 100% 83%;        /* #A7F3FF mist (icy text) */
-  --card: var(--surf-hue) 88% 25%;               /* #086178 surface (deep cerulean) */
+  --card: var(--surf-hue) 96% 9%;
   --card-foreground: 188 100% 83%;
-  --popover: var(--surf-hue) 88% 23%;
+  --popover: var(--surf-hue) 96% 8%;
   --popover-foreground: 188 100% 83%;
-  --muted: var(--surf-hue) 90% 20%;              /* #054f61 bgSoft (deep cerulean) */
+  --muted: var(--surf-hue) 80% 9%;
   --muted-foreground: 191 30% 78%;   /* brighter muted text */
-  --border: var(--surf-hue) 74% 44%;             /* #1da2c3 steel/cerulean */
-  --input: var(--surf-hue) 90% 20%;              /* #054f61 bgSoft (deep cerulean) */
+  --border: var(--surf-hue) 58% 22%;
+  --input: var(--surf-hue) 78% 9%;
   --primary: 189 80% 64%;            /* #5ad7ed teal */
   --primary-foreground: var(--surf-hue) 90% 14%;
   --secondary: var(--surf-hue) 74% 44%;          /* #1da2c3 cerulean */
@@ -531,7 +526,7 @@
        propagation, so body's background paints in normal flow ON TOP of the
        fixed ::before and wipes every page backdrop. */
 body {
-  background-color: #05252d;
+  background-color: #02090c;
 }
 
 /* ============================================================
@@ -539,16 +534,14 @@ body {
    ============================================================
    .study-page-bg is the canonical PsychPro app surface used by
    every authenticated page. It paints:
-     - shadcn token overrides (cerulean palette, defined above)
-     - the full-bleed, high-definition deep-cerulean nebula backdrop
-       via ::before (static — no motion), on a near-black deep
-       cerulean base color
-     - static nebula glows via ::after
-     - canonical glass card treatment (.bg-card descendants)
+     - shadcn token overrides (liquid neuroglass palette, defined above)
+     - the full-bleed near-black cyan-lit stage via ::before
+     - static specular glow/reflection layers via ::after
+     - canonical liquid glass card treatment (.bg-card descendants)
 
-   The in-app backdrop image is a single shared asset (assets/bg/app-smoke.webp);
-   replacing that one file re-skins every in-app page automatically. The
-   marketing landing is the one exception — see the .landing-root override below.
+   The in-app backdrop keeps assets/bg/app-smoke.webp but grades it down into a
+   black reflective floor. The marketing landing is the one exception — see the
+   .landing-root override below.
 
    DO NOT override the ::before background per-page (the landing-root rule below
    is the single sanctioned exception). DO NOT re-declare these CSS variables in
@@ -560,13 +553,18 @@ body {
   position: fixed;
   inset: 0;
   z-index: -2;
-  /* Full-bleed deep-cerulean teal-smoke backdrop (assets/bg/app-smoke.webp,
-     a 2560×1441 landscape artwork: billowing cyan/teal smoke clouds, no brain).
-     Anchored center-top with the clouds filling the viewport. The artwork is
-     shown at its native color and contrast: no vignette and no global filter.
-     Base color is a near-black deep cerulean that matches the image's darkest
-     clouds for a seamless letterbox on any aspect. */
-  background-image: url("./assets/bg/app-smoke.webp");
+  /* Full-bleed black-stage app backdrop. The old smoke asset now behaves like a
+     soft reflection inside a near-black clinical instrument surface. */
+  background-image:
+    radial-gradient(44% 34% at 52% 14%,
+      rgba(118, 228, 247, 0.18) 0%,
+      rgba(118, 228, 247, 0.05) 40%,
+      rgba(118, 228, 247, 0.00) 72%),
+    linear-gradient(180deg,
+      rgba(0, 0, 0, 0.20) 0%,
+      rgba(0, 0, 0, 0.72) 48%,
+      rgba(0, 0, 0, 0.92) 100%),
+    url("./assets/bg/app-smoke.webp");
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
@@ -579,45 +577,51 @@ body {
      default (scroll) paints the image within this fixed box — visually
      identical, no seam. */
   background-attachment: scroll;
-  background-color: #05252d;
+  background-color: #02090c;
   pointer-events: none;
 }
 
-/* Static nebula glows. Painted on the
-   previously-unused ::after so the static floor (::before) stays untouched. Sits
-   at z-index:-1 (above the floor, behind all content) and is pure additive glow
-   in the locked cerulean family — accent rgba (hue 189) + hsl(var(--surf-hue)),
-   no off-hue literals, no lift of the base surface lightness. */
+/* Static specular glows/reflections. Sits at z-index:-1 (above the floor,
+   behind all content) and stays in the locked cyan family. */
 .study-page-bg::after,
 .study-page-aurora::after {
   content: "";
   position: fixed;
-  inset: -18%;
+  inset: -16%;
   z-index: -1;
   pointer-events: none;
   background-image:
-    radial-gradient(40% 40% at 50% 22%,
-      rgba(118, 228, 247, 0.08) 0%,
-      rgba(118, 228, 247, 0.00) 70%),
-    radial-gradient(44% 42% at 78% 66%,
-      hsl(var(--surf-hue) 92% 32% / 0.16) 0%,
-      hsl(var(--surf-hue) 92% 32% / 0.00) 72%),
-    radial-gradient(52% 48% at 50% 46%,
-      rgba(118, 228, 247, 0.08) 0%,
-      rgba(118, 228, 247, 0.00) 66%);
+    radial-gradient(30% 18% at 50% 18%,
+      rgba(167, 243, 255, 0.22) 0%,
+      rgba(118, 228, 247, 0.09) 34%,
+      rgba(118, 228, 247, 0.00) 72%),
+    radial-gradient(42% 22% at 52% 86%,
+      rgba(118, 228, 247, 0.16) 0%,
+      rgba(118, 228, 247, 0.05) 40%,
+      rgba(118, 228, 247, 0.00) 74%),
+    linear-gradient(180deg,
+      rgba(0, 0, 0, 0.00) 0%,
+      rgba(0, 0, 0, 0.28) 64%,
+      rgba(0, 0, 0, 0.74) 100%);
   background-repeat: no-repeat;
   opacity: 0.92;
 }
 
-/* Landing page exception. The marketing landing keeps the original
-   brain-in-clouds hero artwork (brain-clouds.webp); only the in-app surfaces
-   — the main site and the EPPP suite — use the brainless teal-smoke backdrop
-   (app-smoke.webp) set on the base .study-page-bg::before rule above. The
-   landing root carries BOTH .landing-root and .study-page-bg, so this
-   two-class selector outranks the base rule and restores the brain image
-   while inheriting all other backdrop properties (size/position/etc.). */
+/* Landing page exception. The marketing landing uses the supplied liquid brain
+   reference as the literal brand signal. The root carries BOTH .landing-root
+   and .study-page-bg, so this selector outranks the base stage while inheriting
+   all other backdrop properties. */
 .landing-root.study-page-bg::before {
-  background-image: url("./assets/bg/brain-clouds.webp");
+  background-image:
+    linear-gradient(180deg,
+      rgba(0, 0, 0, 0.00) 0%,
+      rgba(0, 0, 0, 0.08) 34%,
+      rgba(0, 0, 0, 0.72) 76%,
+      rgba(0, 0, 0, 0.96) 100%),
+    url("./assets/bg/liquid-brain.jpeg");
+  background-size: min(100vw, 860px) auto;
+  background-position: center top;
+  background-color: #000;
 }
 
 /* Lesson detail header — wraps the title, category, description and counts
@@ -627,16 +631,17 @@ body {
   background:
     linear-gradient(
       145deg,
-      hsl(var(--surf-hue) 90% 17% / 0.95),
-      hsl(var(--surf-hue) 90% 11% / 0.99)
+      hsl(var(--surf-hue) 100% 12% / 0.82),
+      hsl(var(--surf-hue) 100% 5% / 0.96)
     );
-  border: 1px solid rgba(196, 232, 242, 0.20);
-  border-radius: 12px;
-  backdrop-filter: blur(5px) saturate(140%);
-  -webkit-backdrop-filter: blur(5px) saturate(140%);
+  border: 1px solid rgba(167, 243, 255, 0.24);
+  border-radius: 14px;
+  backdrop-filter: blur(16px) saturate(190%);
+  -webkit-backdrop-filter: blur(16px) saturate(190%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.10),
-    0 8px 24px -16px rgba(0, 0, 0, 0.72);
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -18px 40px -34px rgba(118, 228, 247, 0.34),
+    0 18px 54px -36px rgba(0, 0, 0, 0.88);
   padding: 1.5rem 1.5rem 1.25rem;
 }
 
@@ -648,15 +653,16 @@ body {
   background:
     linear-gradient(
       145deg,
-      hsl(var(--surf-hue) 88% 23% / 0.93),
-      hsl(var(--surf-hue) 88% 16% / 0.97)
+      hsl(var(--surf-hue) 100% 12% / 0.78),
+      hsl(var(--surf-hue) 100% 6% / 0.94)
     );
-  border-color: rgba(196, 232, 242, 0.26);
-  backdrop-filter: blur(5px) saturate(140%);
-  -webkit-backdrop-filter: blur(5px) saturate(140%);
+  border-color: rgba(167, 243, 255, 0.24);
+  backdrop-filter: blur(16px) saturate(190%);
+  -webkit-backdrop-filter: blur(16px) saturate(190%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 16px 40px -30px rgba(0, 0, 0, 0.74);
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -18px 40px -34px rgba(118, 228, 247, 0.30),
+    0 22px 58px -38px rgba(0, 0, 0, 0.88);
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .recommended-tile:hover {
@@ -667,8 +673,8 @@ body {
       rgba(118, 228, 247, 0.00) 58%),
     linear-gradient(
       145deg,
-      hsl(var(--surf-hue) 86% 30% / 0.95),
-      hsl(var(--surf-hue) 89% 22% / 0.98)
+      hsl(var(--surf-hue) 100% 15% / 0.88),
+      hsl(var(--surf-hue) 100% 7% / 0.98)
     );
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.14),
@@ -832,31 +838,31 @@ body {
   font-size: 12px;
 }
 
-/* User-supplied .study-card recipe — applied to every shadcn Card
-   (.bg-card) inside any .study-page-bg page. Diagonal dark-teal
-   gradient, cerulean hairline border, soft 22px corner, glassy
-   backdrop blur, deep drop shadow, faint outer cerulean glow. */
+/* Canonical liquid neuroglass recipe — applied to every shadcn Card
+   (.bg-card) inside any .study-page-bg page. Near-black glass, cyan edge light,
+   specular highlight, and restrained reflection depth. */
 .study-page-bg .bg-card,
 .study-page-aurora .bg-card {
-  /* Unified with the EPPP card system (.epd-card): a 145° diagonal cerulean
-     glass with a deep drop shadow. Depth comes from PIGMENT (saturation +
-     contrast), NOT a cyan glow — the top-bloom / inner-glow / outer-corona were
-     removed at the owner's request (the glow kept drifting back). Keeps every
-     generic shadcn card on the main site cut from the same cloth as the EPPP
-     domain tiles. */
+  /* Unified with the EPPP card system (.epd-card) and landing tile system. */
   background:
+    radial-gradient(120% 90% at 50% 0%,
+      rgba(167, 243, 255, 0.13) 0%,
+      rgba(118, 228, 247, 0.04) 38%,
+      rgba(118, 228, 247, 0.00) 68%),
     linear-gradient(
       145deg,
-      hsl(var(--surf-hue) 100% 17% / 0.95),
-      hsl(var(--surf-hue) 100% 11% / 0.99)
+      hsl(var(--surf-hue) 100% 12% / 0.82),
+      hsl(var(--surf-hue) 100% 5% / 0.96)
     );
-  border: 1px solid rgba(196, 232, 242, 0.22);
-  border-radius: 20px;
-  backdrop-filter: blur(5px) saturate(190%);
-  -webkit-backdrop-filter: blur(5px) saturate(190%);
+  border: 1px solid rgba(167, 243, 255, 0.30);
+  border-radius: 18px;
+  backdrop-filter: blur(18px) saturate(210%);
+  -webkit-backdrop-filter: blur(18px) saturate(210%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.03),
-    0 22px 52px -40px rgba(0, 0, 0, 0.80);
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -18px 40px -34px rgba(118, 228, 247, 0.38),
+    0 28px 72px -46px rgba(0, 0, 0, 0.92),
+    0 0 34px -22px rgba(118, 228, 247, 0.58);
 }
 
 /* =============================================================================

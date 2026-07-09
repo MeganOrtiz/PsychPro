@@ -1,13 +1,13 @@
 // =============================================================================
 // SINGLE SOURCE OF TRUTH for the PsychPro color palette.
 //
-// Canonical palette = the LANDING PAGE reference (cinematic neuroscience UI):
-// deep cerulean bg, vivid turquoise/cerulean mid-tones, bright cyan accents, soft icy text.
+// Canonical palette = the LANDING PAGE reference (liquid neuroglass UI):
+// near-black stage, glossy cyan edge light, bright cyan accents, soft icy text.
 // All other pages must mirror this exactly — no royal blue, no flat navy,
 // no purple, no green-teal drift.
 //
-// Locked hue band: 188–198 (clean cyan-teal, slightly cool).
-// Do NOT shift accents toward 180 (reads green) or beyond 210 (reads cobalt).
+// Locked hue band: 186–194 (clean cyan, slightly cool).
+// Do NOT shift accents toward 180 (reads green) or beyond 200 (reads blue/navy).
 //
 // Consumers (last audited 2026-05-13):
 //   - src/pages/landing.tsx
@@ -26,15 +26,13 @@
 // =============================================================================
 
 export const STUDY_PALETTE = {
-  // Backgrounds — deep cerulean/turquoise stack. CANONICAL SURFACE HUE = 192
-  // (set 2026-06-12). Pendulum history: hue 191 read green, 196 read navy; 192
-  // sits just off the locked #76E4F7 accent (hue 189) on the anti-navy side.
-  // The lever for "too navy" is HUE, never lightness — keep surfaces near 192.
-  ink: "#042f3a",         // deepest anchor (sidebar / page floor)
-  bg: "#044352",          // page bg primary (deep cerulean)
-  bgSoft: "#054f61",      // page bg secondary
-  surface: "#086178",     // card surface (glass base)
-  surfaceElev: "#0c6b83", // card hover / lifted
+  // Backgrounds — near-black liquid neuroglass stack. CANONICAL SURFACE HUE =
+  // 190. The app should read black first, cyan second.
+  ink: "#02090c",         // deepest anchor (sidebar / page floor)
+  bg: "#031418",          // page bg primary (black-cyan)
+  bgSoft: "#04242b",      // page bg secondary
+  surface: "#05333d",     // card surface (glass base)
+  surfaceElev: "#084b59", // card hover / lifted
 
   // Mid-cerulean — borders, dividers, structural lines
   steel: "#1da2c3",       // cerulean

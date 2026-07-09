@@ -8,11 +8,10 @@
 //
 //   1. Global structural tokens  — the corner-radius token (--radius) and the
 //      surface-hue base token (--surf-hue).
-//   2. The pigment-only cerulean glass card — the main-site `.bg-card` rule,
-//      which mirrors the EPPP `.epd-card`: a 145° diagonal fill, fixed 20px
-//      (NON-pill) corner, blur(5px) saturate(190%) glass, and no cyan bloom or
-//      corona. Guards against both structural drift and the recurring glow.
-//   3. A ban on mint / teal-green accents — cerulean #76E4F7 is the only accent;
+//   2. The liquid-neuroglass card — the main-site `.bg-card` rule, which
+//      mirrors the EPPP `.epd-card`: near-black glass, cyan specular edge light,
+//      fixed 18px corner, blur(18px) saturate(210%) glass, and restrained glow.
+//   3. A ban on mint / teal-green accents — cyan #76E4F7 is the only accent;
 //      mint was retracted app-wide and keeps trying to creep back.
 //
 // Every locked value lives in a table below. When you INTENTIONALLY change the
@@ -66,7 +65,7 @@ function ruleBlock(source, selectorNeedle) {
 const rootBlock = ruleBlock(css, ":root");
 const TOKENS = [
   { name: "global corner radius", re: /--radius:\s*\.625rem;/, expected: "--radius: .625rem;" },
-  { name: "surface hue base", re: /--surf-hue:\s*193;/, expected: "--surf-hue: 193;" },
+  { name: "surface hue base", re: /--surf-hue:\s*190;/, expected: "--surf-hue: 190;" },
 ];
 if (!rootBlock) {
   fail(":root block not found in index.css", "restore the :root design-token block");
@@ -79,57 +78,48 @@ if (!rootBlock) {
 }
 
 // --- 1b) Native background artwork ----------------------------------------
-// The global color-processing filter and dark vignette made both background
-// variants look as though a film had been laid over the page. Keep the two
-// sanctioned assets, but render each directly at its native color/contrast.
+// Keep one sanctioned app stage and one sanctioned landing hero reference.
+// Gradients are now part of the intentional black-stage treatment; CSS filter
+// remains banned because it dulls the glossy cyan source art.
 const appBackdrop = ruleBlock(css, ".study-page-bg::before");
 const landingBackdrop = ruleBlock(css, ".landing-root.study-page-bg::before");
 for (const [name, block, asset] of [
   ["app", appBackdrop, "app-smoke.webp"],
-  ["landing", landingBackdrop, "brain-clouds.webp"],
+  ["landing", landingBackdrop, "liquid-brain.jpeg"],
 ]) {
   if (!block) {
     fail(`${name} backdrop rule missing`, `restore the canonical ${name} ::before backdrop rule`);
     continue;
   }
-  if (!new RegExp(`background-image:\\s*url\\(["']?\\./assets/bg/${asset.replace('.', '\\.')}["']?\\);`).test(block)) {
-    fail(`${name} backdrop asset or layering drifted`, `render ${asset} directly as the sole background-image`);
+  if (!new RegExp(`url\\(["']?\\./assets/bg/${asset.replace('.', '\\.')}["']?\\)`).test(block)) {
+    fail(`${name} backdrop asset drifted`, `keep ${asset} in the canonical ${name} backdrop`);
   }
-  if (/\bfilter\s*:|radial-gradient\(/.test(block)) {
-    fail(`${name} backdrop film reintroduced`, "keep the background artwork free of global filters and vignette gradients");
+  if (/\bfilter\s*:/.test(block)) {
+    fail(`${name} backdrop filter reintroduced`, "keep the background artwork free of global CSS filters");
   }
 }
 
-// --- 2) Canonical pigment-only glass card (.bg-card == EPPP .epd-card) -------
+// --- 2) Canonical liquid-neuroglass card (.bg-card == EPPP .epd-card) -------
 const cardRecipe = ruleBlock(css, ".study-page-bg .bg-card");
 if (!cardRecipe) {
   fail(
-    "canonical .bg-card glass recipe block not found",
+    "canonical .bg-card liquid-neuroglass recipe block not found",
     "the `.study-page-bg .bg-card` rule was removed — restore the EPPP .epd-card recipe",
   );
 } else {
   const RECIPE = [
-    { name: "non-pill 20px corner", re: /border-radius:\s*20px;/, expected: "border-radius: 20px;" },
-    { name: "glass blur", re: /backdrop-filter:\s*blur\(5px\)\s*saturate\(190%\)/, expected: "backdrop-filter: blur(5px) saturate(190%)" },
-    { name: "145° diagonal bloom", re: /linear-gradient\(\s*145deg/, expected: "linear-gradient(145deg, …)" },
-    { name: "cerulean hairline border", re: /rgba\(196,\s*232,\s*242,\s*0\.22\)/, expected: "border: 1px solid rgba(196, 232, 242, 0.22)" },
-    { name: "restrained inset highlight", re: /inset\s+0\s+1px\s+0\s+rgba\(255,\s*255,\s*255,\s*0\.03\)/, expected: "inset 0 1px 0 rgba(255, 255, 255, 0.03)" },
+    { name: "non-pill 18px corner", re: /border-radius:\s*18px;/, expected: "border-radius: 18px;" },
+    { name: "liquid glass blur", re: /backdrop-filter:\s*blur\(18px\)\s*saturate\(210%\)/, expected: "backdrop-filter: blur(18px) saturate(210%)" },
+    { name: "specular top highlight", re: /radial-gradient\(\s*120%\s+90%\s+at\s+50%\s+0%/, expected: "radial-gradient(120% 90% at 50% 0%, …)" },
+    { name: "145° black-cyan glass", re: /linear-gradient\(\s*145deg,\s*hsl\(var\(--surf-hue\)\s+100%\s+12%\s+\/\s+0\.82\),\s*hsl\(var\(--surf-hue\)\s+100%\s+5%\s+\/\s+0\.96\)\s*\)/, expected: "linear-gradient(145deg, hsl(var(--surf-hue) 100% 12% / 0.82), hsl(var(--surf-hue) 100% 5% / 0.96))" },
+    { name: "icy cyan hairline border", re: /rgba\(167,\s*243,\s*255,\s*0\.30\)/, expected: "border: 1px solid rgba(167, 243, 255, 0.30)" },
+    { name: "specular inset highlight", re: /inset\s+0\s+1px\s+0\s+rgba\(255,\s*255,\s*255,\s*0\.16\)/, expected: "inset 0 1px 0 rgba(255, 255, 255, 0.16)" },
+    { name: "cyan lower reflection", re: /inset\s+0\s+-18px\s+40px\s+-34px\s+rgba\(118,\s*228,\s*247,\s*0\.38\)/, expected: "inset 0 -18px 40px -34px rgba(118, 228, 247, 0.38)" },
   ];
   for (const r of RECIPE) {
     if (!r.re.test(cardRecipe)) {
       fail(`.bg-card recipe: ${r.name} changed or removed`, `restore \`${r.expected}\``);
     }
-  }
-  // Pigment-only lock: the card must NOT reintroduce the cyan top-bloom radial
-  // or the cyan inner-glow / outer-corona box-shadow layers. Depth comes from
-  // PIGMENT (saturation + contrast), not glow. This cyan glow kept drifting back
-  // onto the dashboards, so the card is pinned glow-free — its only colors are
-  // the hsl() fill and the rgba(196,232,242) hairline border.
-  if (/rgba\(118,\s*228,\s*247/.test(cardRecipe)) {
-    fail(
-      ".bg-card recipe: cyan glow re-added (rgba(118, 228, 247, …) inside the card)",
-      "keep the card pigment-only — remove the cyan top-bloom radial and the cyan inner/outer corona box-shadow layers",
-    );
   }
 }
 
@@ -137,11 +127,13 @@ if (!cardRecipe) {
 // intentionally span the page-local CSS sources so none of the three surfaces
 // can quietly become brighter, blurrier, rounder, or a different hue.
 const SHARED_CARD_CONTRACT = [
-  { name: "145° pigment gradient", re: /linear-gradient\(145deg,\s*hsl\(var\(--surf-hue\) 100% 17% \/ 0\.95\),\s*hsl\(var\(--surf-hue\) 100% 11% \/ 0\.99\)\)/ },
-  { name: "cerulean hairline", re: /rgba\(196,\s*232,\s*242,\s*0\.22\)/ },
-  { name: "glass blur", re: /blur\(5px\) saturate\(190%\)/ },
-  { name: "restrained inset highlight", re: /inset\s+0\s+1px\s+0\s+rgba\(255,\s*255,\s*255,\s*0\.03\)/ },
-  { name: "neutral depth shadow", re: /0\s+22px\s+52px\s+-40px\s+rgba\(0,\s*0,\s*0,\s*0\.80\)/ },
+  { name: "specular radial highlight", re: /radial-gradient\(120%\s+90%\s+at\s+50%\s+0%,\s*rgba\(167,\s*243,\s*255,\s*0\.13\)/ },
+  { name: "145° black-cyan glass", re: /linear-gradient\(145deg,\s*hsl\(var\(--surf-hue\) 100% 12% \/ 0\.82\),\s*hsl\(var\(--surf-hue\) 100% 5% \/ 0\.96\)\)/ },
+  { name: "icy cyan hairline", re: /rgba\(167,\s*243,\s*255,\s*0\.30\)/ },
+  { name: "liquid glass blur", re: /blur\(18px\) saturate\(210%\)/ },
+  { name: "specular inset highlight", re: /inset\s+0\s+1px\s+0\s+rgba\(255,\s*255,\s*255,\s*0\.16\)/ },
+  { name: "cyan lower reflection", re: /inset\s+0\s+-18px\s+40px\s+-34px\s+rgba\(118,\s*228,\s*247,\s*0\.38\)/ },
+  { name: "black depth shadow", re: /0\s+28px\s+72px\s+-46px\s+rgba\(0,\s*0,\s*0,\s*0\.92\)/ },
 ];
 for (const [surface, source] of [["landing", landingSource], ["EPPP", epppDashboardSource]]) {
   for (const item of SHARED_CARD_CONTRACT) {

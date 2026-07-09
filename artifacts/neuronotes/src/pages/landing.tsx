@@ -718,20 +718,20 @@ const C = {
   ink: "#0b3b47",                  // deep cerulean ink — text on the white preview card
   inkSoft: "rgba(11,59,71,0.58)",  // muted ink — chart ticks on white
   grid: "rgba(11,59,71,0.10)",     // chart grid lines on white
-  bg: "#082a33",
-  bgPanel: "hsl(var(--surf-hue) 100% 17% / 0.95)",
-  bgPanelStrong: "hsl(var(--surf-hue) 100% 11% / 0.99)",
+  bg: "#02090c",
+  bgPanel: "hsl(var(--surf-hue) 100% 12% / 0.82)",
+  bgPanelStrong: "hsl(var(--surf-hue) 100% 5% / 0.96)",
   hairline: "rgba(118, 228, 247, 0.36)",
   hairlineStrong: "rgba(118, 228, 247, 0.58)",
-  // Canonical EPPP .epd-card glass recipe (matches main-site .bg-card +
+  // Canonical liquid neuroglass recipe (matches main-site .bg-card +
   // eppp-dashboard .epd-card), shared by every landing tile so the marketing
   // page reads as the same glass as the app and the EPPP domain tiles.
   cardBg:
-    "linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99))",
-  cardBorder: "rgba(196, 232, 242, 0.22)",
-  cardBlur: "blur(5px) saturate(190%)",
+    "radial-gradient(120% 90% at 50% 0%, rgba(167, 243, 255, 0.13) 0%, rgba(118, 228, 247, 0.04) 38%, rgba(118, 228, 247, 0.00) 68%), linear-gradient(145deg, hsl(var(--surf-hue) 100% 12% / 0.82), hsl(var(--surf-hue) 100% 5% / 0.96))",
+  cardBorder: "rgba(167, 243, 255, 0.30)",
+  cardBlur: "blur(18px) saturate(210%)",
   cardShadow:
-    "inset 0 1px 0 rgba(255,255,255,0.03), 0 22px 52px -40px rgba(0,0,0,0.80)",
+    "inset 0 1px 0 rgba(255,255,255,0.16), inset 0 -18px 40px -34px rgba(118,228,247,0.38), 0 28px 72px -46px rgba(0,0,0,0.92), 0 0 34px -22px rgba(118,228,247,0.58)",
   // Dark legibility pool for white text that floats over the wallpaper (not in a tile).
   textPool:
     "0 2px 22px hsl(var(--surf-hue) 92% 5% / 0.72), 0 1px 4px hsl(var(--surf-hue) 92% 6% / 0.55)",
@@ -749,6 +749,12 @@ const styles = `
   text-rendering: optimizeLegibility;
 }
 
+.landing-root.study-page-bg::after {
+  background-image:
+    radial-gradient(34% 16% at 50% 18%, rgba(167, 243, 255, 0.18) 0%, rgba(118, 228, 247, 0.06) 42%, rgba(118, 228, 247, 0.00) 72%),
+    radial-gradient(42% 20% at 50% 66%, rgba(118, 228, 247, 0.13) 0%, rgba(118, 228, 247, 0.04) 44%, rgba(118, 228, 247, 0.00) 76%);
+}
+
 /* ============== NAVBAR ============== */
 .landing-nav {
   position: sticky;
@@ -757,7 +763,7 @@ const styles = `
   width: 100%;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  background: linear-gradient(180deg, hsl(var(--surf-hue) 85% 12% / 0.58), hsl(var(--surf-hue) 85% 12% / 0.26));
+  background: linear-gradient(180deg, rgba(0,0,0,0.72), rgba(0,0,0,0.28));
   border-bottom: 1px solid ${C.hairline};
 }
 .landing-nav-inner {
@@ -849,7 +855,7 @@ const styles = `
   /* Generous top padding drops the wordmark into the lower-cloud region of the
      fixed brain-in-clouds backdrop, leaving the glowing brain unobstructed near
      the top of the viewport. */
-  padding: clamp(190px, 38vh, 440px) 24px clamp(40px, 6vh, 90px);
+  padding: clamp(250px, 48vh, 520px) 24px clamp(40px, 6vh, 90px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -893,6 +899,7 @@ const styles = `
   color: #F4FBFF;
   padding-left: 0.22em;
   text-shadow: 0 2px 18px hsl(var(--surf-hue) 92% 5% / 0.55);
+  filter: drop-shadow(0 0 18px rgba(118, 228, 247, 0.24));
 }
 .landing-tagline {
   margin: clamp(6px, 1vh, 12px) 0 0;

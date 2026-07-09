@@ -622,16 +622,19 @@ const styles = `
 /* ---- Shared card ---- */
 .epd-card {
   position: relative;
-  border-radius: 20px;
+  border-radius: 18px;
   padding: clamp(18px, 2vw, 24px);
   background:
-    linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99));
-  border: 1px solid rgba(196,232,242,0.22);
-  backdrop-filter: blur(5px) saturate(190%);
-  -webkit-backdrop-filter: blur(5px) saturate(190%);
+    radial-gradient(120% 90% at 50% 0%, rgba(167,243,255,0.13) 0%, rgba(118,228,247,0.04) 38%, rgba(118,228,247,0.00) 68%),
+    linear-gradient(145deg, hsl(var(--surf-hue) 100% 12% / 0.82), hsl(var(--surf-hue) 100% 5% / 0.96));
+  border: 1px solid rgba(167,243,255,0.30);
+  backdrop-filter: blur(18px) saturate(210%);
+  -webkit-backdrop-filter: blur(18px) saturate(210%);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.03),
-    0 22px 52px -40px rgba(0,0,0,0.80);
+    inset 0 1px 0 rgba(255,255,255,0.16),
+    inset 0 -18px 40px -34px rgba(118,228,247,0.38),
+    0 28px 72px -46px rgba(0,0,0,0.92),
+    0 0 34px -22px rgba(118,228,247,0.58);
 }
 .epd-card-label {
   display: inline-flex;
