@@ -5,9 +5,12 @@ export function TintedSurfaces() {
   return (
     <div className="tinted-theme min-h-screen w-full overflow-y-auto">
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Outfit:wght@200;300;400;500;600&display=swap');
+
         .tinted-theme {
           --bg: #000000;
-          --surface: #04101f;
+          --surface-top: #071c33;
+          --surface-bottom: #04101f;
           --surface-border: #0b669a;
           --text-body: #e5e5e5;
           --text-muted: #a3a3a3;
@@ -18,12 +21,24 @@ export function TintedSurfaces() {
           
           background-color: var(--bg);
           color: var(--text-body);
-          font-family: system-ui, -apple-system, sans-serif;
+          font-family: 'Montserrat', 'Inter', sans-serif;
+        }
+
+        h1, h2, h3, h4, h5, h6, .font-heading {
+          font-family: 'Outfit', 'Inter', sans-serif;
+        }
+
+        .wordmark {
+          font-family: 'Outfit', 'Inter', sans-serif;
+          letter-spacing: 0.15em;
+          font-weight: 400;
         }
         
         .tinted-card {
-          background-color: var(--surface);
+          background: linear-gradient(180deg, var(--surface-top) 0%, var(--surface-bottom) 100%);
           border: 1px solid var(--surface-border);
+          border-top-color: #117cb3;
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 8px 24px rgba(0,0,0,0.6);
         }
         
         .tinted-interactive {
@@ -31,27 +46,31 @@ export function TintedSurfaces() {
         }
         
         .tinted-interactive:hover {
-          transform: translateY(-1px) scale(1.01);
-          box-shadow: 0 0 16px 0 rgba(8, 165, 209, 0.4);
+          transform: translateY(-2px) scale(1.01);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 12px 32px rgba(0,0,0,0.8), 0 0 24px 0 rgba(8, 165, 209, 0.4);
           border-color: var(--cyan-light);
         }
         
         .tinted-interactive:active {
           transform: translateY(1px) scale(0.99);
-          box-shadow: 0 0 6px 0 rgba(8, 165, 209, 0.6);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 4px 12px rgba(0,0,0,0.6), 0 0 12px 0 rgba(8, 165, 209, 0.5);
         }
 
         .btn-primary {
-          background-color: var(--cyan);
+          background: linear-gradient(180deg, var(--cyan-light) 0%, var(--cyan) 100%);
           color: #000;
-          border: 1px solid var(--cyan-light);
+          border: 1px solid var(--icy);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 6px 16px rgba(0,0,0,0.5);
           font-weight: 600;
+          text-shadow: 0 1px 0 rgba(255,255,255,0.3);
         }
         
         .btn-secondary {
-          background-color: transparent;
+          background: linear-gradient(180deg, var(--surface-top) 0%, var(--surface-bottom) 100%);
           color: var(--icy);
           border: 1px solid var(--surface-border);
+          border-top-color: var(--cyan);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 6px 16px rgba(0,0,0,0.5);
         }
         
         .nav-link {
@@ -64,10 +83,10 @@ export function TintedSurfaces() {
       `}</style>
 
       {/* Top Nav */}
-      <nav className="flex items-center justify-between px-8 py-4 border-b border-[#0b669a]/30">
+      <nav className="flex items-center justify-between px-8 py-4 border-b border-[#0b669a]/30 bg-[#000]/60 shadow-[0_4px_24px_rgba(0,0,0,0.5)] relative z-10">
         <div className="flex items-center gap-2">
           <BrainCircuit className="w-6 h-6 text-[#08a5d1]" />
-          <span className="font-bold tracking-widest text-[#aaedf0] text-sm">PSYCHPRO</span>
+          <span className="wordmark text-[#aaedf0] text-sm uppercase">PSYCHPRO</span>
         </div>
         <div className="hidden md:flex items-center gap-8 text-sm font-medium">
           <a href="#" className="nav-link">Flashcards</a>
@@ -84,7 +103,7 @@ export function TintedSurfaces() {
 
       {/* Landing Hero */}
       <section className="flex flex-col items-center justify-center pt-16 pb-24 px-4 text-center">
-        <div className="mb-8 w-full max-w-[520px] aspect-square flex items-center justify-center relative">
+        <div className="mb-8 w-full max-w-[520px] aspect-square flex items-center justify-center relative drop-shadow-[0_12px_48px_rgba(0,0,0,0.8)]">
           <img 
             src="/__mockup/images/blue-brain-hero.jpg" 
             alt="Glowing blue brain" 
@@ -115,7 +134,7 @@ export function TintedSurfaces() {
       </section>
 
       {/* App Dashboard Sample */}
-      <section className="px-8 py-16 max-w-6xl mx-auto border-t border-[#0b669a]/30">
+      <section className="px-8 py-16 max-w-6xl mx-auto border-t border-[#0b669a]/30 bg-gradient-to-b from-[#020810] to-[#000000]">
         <div className="mb-10">
           <h2 className="text-3xl font-bold text-[#aaedf0] mb-2">Welcome back, Dr. Sarah</h2>
           <p className="text-[#a3a3a3]">Your mastery is improving. Keep up the momentum.</p>
@@ -125,40 +144,40 @@ export function TintedSurfaces() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <div className="tinted-card tinted-interactive rounded-xl p-6 flex flex-col cursor-pointer">
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-[#052a58] rounded-md">
-                <Activity className="w-5 h-5 text-[#08a5d1]" />
+              <div className="p-2 bg-gradient-to-b from-[#0a3d7a] to-[#052a58] rounded-md shadow-[0_4px_12px_rgba(0,0,0,0.5)] border border-[#0b669a]/50">
+                <Activity className="w-5 h-5 text-[#0bd4df]" />
               </div>
               <span className="text-[#a3a3a3] font-medium text-sm">Current Streak</span>
             </div>
-            <div className="flex items-end gap-2">
+            <div className="flex items-end gap-2 font-heading">
               <span className="text-4xl font-bold text-[#e5e5e5]">14</span>
-              <span className="text-[#a3a3a3] mb-1">days</span>
+              <span className="text-[#a3a3a3] mb-1 font-sans">days</span>
             </div>
           </div>
 
           <div className="tinted-card tinted-interactive rounded-xl p-6 flex flex-col cursor-pointer">
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-[#052a58] rounded-md">
-                <Layers className="w-5 h-5 text-[#08a5d1]" />
+              <div className="p-2 bg-gradient-to-b from-[#0a3d7a] to-[#052a58] rounded-md shadow-[0_4px_12px_rgba(0,0,0,0.5)] border border-[#0b669a]/50">
+                <Layers className="w-5 h-5 text-[#0bd4df]" />
               </div>
               <span className="text-[#a3a3a3] font-medium text-sm">Cards Reviewed</span>
             </div>
-            <div className="flex items-end gap-2">
+            <div className="flex items-end gap-2 font-heading">
               <span className="text-4xl font-bold text-[#e5e5e5]">1,248</span>
-              <span className="text-[#a3a3a3] mb-1">total</span>
+              <span className="text-[#a3a3a3] mb-1 font-sans">total</span>
             </div>
           </div>
 
           <div className="tinted-card tinted-interactive rounded-xl p-6 flex flex-col cursor-pointer">
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-[#052a58] rounded-md">
-                <Target className="w-5 h-5 text-[#08a5d1]" />
+              <div className="p-2 bg-gradient-to-b from-[#0a3d7a] to-[#052a58] rounded-md shadow-[0_4px_12px_rgba(0,0,0,0.5)] border border-[#0b669a]/50">
+                <Target className="w-5 h-5 text-[#0bd4df]" />
               </div>
               <span className="text-[#a3a3a3] font-medium text-sm">Overall Mastery</span>
             </div>
-            <div className="flex items-end gap-2">
+            <div className="flex items-end gap-2 font-heading">
               <span className="text-4xl font-bold text-[#e5e5e5]">68</span>
-              <span className="text-[#a3a3a3] mb-1">%</span>
+              <span className="text-[#a3a3a3] mb-1 font-sans">%</span>
             </div>
           </div>
         </div>
@@ -173,17 +192,17 @@ export function TintedSurfaces() {
                 <span className="text-xs font-bold text-[#08a5d1] tracking-wider uppercase mb-1 block">Foundations</span>
                 <h4 className="text-lg font-bold text-[#aaedf0]">Abnormal Psychology</h4>
               </div>
-              <div className="w-10 h-10 rounded-full border border-[#0b669a] flex items-center justify-center text-[#08a5d1]">
+              <div className="w-10 h-10 rounded-full border border-[#0b669a] flex items-center justify-center text-[#08a5d1] bg-gradient-to-b from-[#052a58] to-[#04101f] shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
                 <BookOpen className="w-5 h-5" />
               </div>
             </div>
             <div className="mt-auto">
               <div className="flex justify-between text-sm mb-2">
                 <span className="text-[#a3a3a3]">Progress</span>
-                <span className="text-[#e5e5e5] font-medium">45%</span>
+                <span className="text-[#e5e5e5] font-medium font-heading">45%</span>
               </div>
-              <div className="h-2 w-full bg-[#000000] rounded-full overflow-hidden border border-[#0b669a]/50">
-                <div className="h-full bg-[#08a5d1]" style={{ width: '45%' }}></div>
+              <div className="h-2 w-full bg-[#000000] rounded-full overflow-hidden border border-[#0b669a]/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]">
+                <div className="h-full bg-gradient-to-r from-[#08a5d1] to-[#0bd4df] shadow-[0_0_8px_rgba(11,212,223,0.6)]" style={{ width: '45%' }}></div>
               </div>
             </div>
             <button className="mt-6 tinted-interactive btn-secondary w-full py-3 rounded-md text-sm font-medium">
@@ -197,17 +216,17 @@ export function TintedSurfaces() {
                 <span className="text-xs font-bold text-[#08a5d1] tracking-wider uppercase mb-1 block">Clinical prep</span>
                 <h4 className="text-lg font-bold text-[#aaedf0]">Cognitive Behavioral Therapy</h4>
               </div>
-              <div className="w-10 h-10 rounded-full border border-[#0b669a] flex items-center justify-center text-[#08a5d1]">
+              <div className="w-10 h-10 rounded-full border border-[#0b669a] flex items-center justify-center text-[#08a5d1] bg-gradient-to-b from-[#052a58] to-[#04101f] shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
                 <TrendingUp className="w-5 h-5" />
               </div>
             </div>
             <div className="mt-auto">
               <div className="flex justify-between text-sm mb-2">
                 <span className="text-[#a3a3a3]">Progress</span>
-                <span className="text-[#e5e5e5] font-medium">12%</span>
+                <span className="text-[#e5e5e5] font-medium font-heading">12%</span>
               </div>
-              <div className="h-2 w-full bg-[#000000] rounded-full overflow-hidden border border-[#0b669a]/50">
-                <div className="h-full bg-[#08a5d1]" style={{ width: '12%' }}></div>
+              <div className="h-2 w-full bg-[#000000] rounded-full overflow-hidden border border-[#0b669a]/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]">
+                <div className="h-full bg-gradient-to-r from-[#08a5d1] to-[#0bd4df] shadow-[0_0_8px_rgba(11,212,223,0.6)]" style={{ width: '12%' }}></div>
               </div>
             </div>
             <button className="mt-6 tinted-interactive btn-primary w-full py-3 rounded-md text-sm font-medium">
