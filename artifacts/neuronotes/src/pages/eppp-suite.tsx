@@ -2025,7 +2025,7 @@ const styles = `
   display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 11px; align-items: center;
   text-align: left; cursor: pointer;
   padding: 11px 12px; border-radius: 10px;
-  border: 1px solid rgba(196,232,242,0.22);
+  border: 1px solid var(--liquid-card-border);
   background:
     linear-gradient(145deg, hsl(var(--surf-hue) 87% 19% / 0.66), hsl(var(--surf-hue) 88% 14% / 0.78));
   backdrop-filter: blur(20px) saturate(170%);
@@ -2106,7 +2106,7 @@ const styles = `
   padding: 15px; border-radius: 12px;
   background:
     linear-gradient(145deg, hsl(var(--surf-hue) 87% 19% / 0.66), hsl(var(--surf-hue) 88% 14% / 0.78));
-  border: 1px solid rgba(196,232,242,0.22);
+  border: 1px solid var(--liquid-card-border);
   backdrop-filter: blur(20px) saturate(170%);
   -webkit-backdrop-filter: blur(20px) saturate(170%);
   box-shadow:
@@ -2150,7 +2150,7 @@ const styles = `
   border-radius: 16px; padding: 16px 18px;
   background:
     linear-gradient(145deg, hsl(var(--surf-hue) 100% 19% / 0.74), hsl(var(--surf-hue) 100% 14% / 0.85));
-  border: 1px solid rgba(196,232,242,0.22);
+  border: 1px solid var(--liquid-card-border);
   backdrop-filter: blur(20px) saturate(170%);
   -webkit-backdrop-filter: blur(20px) saturate(170%);
   box-shadow:
@@ -2214,7 +2214,7 @@ const styles = `
   border-radius: 12px; padding: 14px 16px;
   background:
     linear-gradient(145deg, hsl(var(--surf-hue) 100% 19% / 0.74), hsl(var(--surf-hue) 100% 14% / 0.85));
-  border: 1px solid rgba(196,232,242,0.22);
+  border: 1px solid var(--liquid-card-border);
   backdrop-filter: blur(20px) saturate(170%);
   -webkit-backdrop-filter: blur(20px) saturate(170%);
   box-shadow:
@@ -2315,7 +2315,7 @@ const styles = `
   background:
     radial-gradient(circle at 18% 12%, ${C.cyan}24, transparent 34%),
     linear-gradient(145deg, hsl(var(--surf-hue) 100% 20% / 0.76), hsl(var(--surf-hue) 100% 14% / 0.86));
-  border: 1px solid rgba(196,232,242,0.22);
+  border: 1px solid var(--liquid-card-border);
   backdrop-filter: blur(20px) saturate(170%);
   -webkit-backdrop-filter: blur(20px) saturate(170%);
   box-shadow:
@@ -2361,7 +2361,7 @@ const styles = `
   padding: clamp(18px, 2.4vw, 26px);
   background:
     linear-gradient(145deg, hsl(var(--surf-hue) 100% 19% / 0.74), hsl(var(--surf-hue) 100% 14% / 0.85));
-  border: 1px solid rgba(196,232,242,0.22);
+  border: 1px solid var(--liquid-card-border);
   backdrop-filter: blur(20px) saturate(170%);
   -webkit-backdrop-filter: blur(20px) saturate(170%);
   box-shadow:
@@ -2435,7 +2435,7 @@ const styles = `
   border-radius: 22px; padding: clamp(40px, 6vw, 72px) clamp(24px, 4vw, 56px);
   background:
     linear-gradient(150deg, hsl(var(--surf-hue) 100% 21% / 0.78), hsl(var(--surf-hue) 100% 16% / 0.88));
-  border: 1px solid rgba(196,232,242,0.22);
+  border: 1px solid var(--liquid-card-border);
   backdrop-filter: blur(20px) saturate(170%);
   -webkit-backdrop-filter: blur(20px) saturate(170%);
   box-shadow:
@@ -2553,7 +2553,7 @@ const styles = `
   margin-top: clamp(22px, 2.6vw, 32px); border-radius: 18px; padding: clamp(18px, 2.4vw, 26px);
   background:
     linear-gradient(145deg, hsl(var(--surf-hue) 100% 19% / 0.74), hsl(var(--surf-hue) 100% 14% / 0.85));
-  border: 1px solid rgba(196,232,242,0.22);
+  border: 1px solid var(--liquid-card-border);
   backdrop-filter: blur(20px) saturate(170%);
   -webkit-backdrop-filter: blur(20px) saturate(170%);
   box-shadow:
@@ -2620,7 +2620,7 @@ const styles = `
   border-radius: 16px; padding: clamp(16px, 2vw, 22px);
   background:
     linear-gradient(145deg, hsl(var(--surf-hue) 87% 19% / 0.66), hsl(var(--surf-hue) 88% 14% / 0.78));
-  border: 1px solid rgba(196,232,242,0.22);
+  border: 1px solid var(--liquid-card-border);
   backdrop-filter: blur(20px) saturate(170%);
   -webkit-backdrop-filter: blur(20px) saturate(170%);
   box-shadow:
@@ -2681,10 +2681,10 @@ const styles = `
 .eps-plan-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 360px); gap: clamp(18px, 2.4vw, 28px); align-items: start; }
 .eps-plan-library,
 .eps-plan-queue {
-  border: 1px solid rgba(196,232,242,0.22); border-radius: 20px;
-  background: linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99));
-  backdrop-filter: blur(5px) saturate(190%); -webkit-backdrop-filter: blur(5px) saturate(190%);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 22px 52px -40px rgba(0,0,0,0.8);
+  border: 1px solid var(--liquid-card-border); border-radius: 18px;
+  background: var(--liquid-card-bg);
+  backdrop-filter: var(--liquid-card-blur); -webkit-backdrop-filter: var(--liquid-card-blur);
+  box-shadow: var(--liquid-card-shadow);
 }
 .eps-plan-library { min-width: 0; overflow: hidden; }
 .eps-plan-toolbar { display: flex; gap: 12px; align-items: center; padding: 16px; border-bottom: 1px solid ${C.hairline}; }

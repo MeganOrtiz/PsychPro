@@ -88,10 +88,10 @@ export default function ReflectionsPage() {
             className="rounded-xl border p-8"
             style={{
               background:
-                "linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99))",
+                "var(--liquid-card-bg)",
               borderColor: "rgba(118,228,247,0.24)",
-              backdropFilter: "blur(5px) saturate(190%)",
-              WebkitBackdropFilter: "blur(5px) saturate(190%)",
+              backdropFilter: "var(--liquid-card-blur)",
+              WebkitBackdropFilter: "var(--liquid-card-blur)",
               boxShadow:
                 "inset 0 1px 0 rgba(255,255,255,0.03), 0 20px 46px -28px rgba(0,0,0,0.72)",
             }}
@@ -146,10 +146,10 @@ export default function ReflectionsPage() {
                       className="rounded-xl border p-4"
                       style={{
                         background:
-                          "linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99))",
+                          "var(--liquid-card-bg)",
                         borderColor: "rgba(118,228,247,0.24)",
-                        backdropFilter: "blur(5px) saturate(190%)",
-                        WebkitBackdropFilter: "blur(5px) saturate(190%)",
+                        backdropFilter: "var(--liquid-card-blur)",
+                        WebkitBackdropFilter: "var(--liquid-card-blur)",
                         boxShadow:
                           "inset 0 1px 0 rgba(255,255,255,0.03), 0 20px 46px -28px rgba(0,0,0,0.72)",
                       }}

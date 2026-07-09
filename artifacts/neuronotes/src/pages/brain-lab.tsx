@@ -189,12 +189,12 @@ function StructureSearch({
         className="w-full max-w-xl rounded-2xl border overflow-hidden"
         style={{
           background:
-            "linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99))",
-          borderColor: "rgba(196,232,242,0.22)",
-          backdropFilter: "blur(5px) saturate(190%)",
-          WebkitBackdropFilter: "blur(5px) saturate(190%)",
+            "var(--liquid-card-bg)",
+          borderColor: "var(--liquid-card-border)",
+          backdropFilter: "var(--liquid-card-blur)",
+          WebkitBackdropFilter: "var(--liquid-card-blur)",
           boxShadow:
-            "inset 0 1px 0 rgba(255,255,255,0.03), 0 24px 60px -42px rgba(0,0,0,0.80)",
+            "var(--liquid-card-shadow)",
         }}
         onClick={(e) => e.stopPropagation()}
         role="dialog"
@@ -473,12 +473,12 @@ function StructureDetail({
       className="rounded-2xl border overflow-hidden flex flex-col h-full min-h-0 max-h-full"
       style={{
         background:
-          "linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99))",
-        borderColor: "rgba(196,232,242,0.22)",
-        backdropFilter: "blur(5px) saturate(190%)",
-        WebkitBackdropFilter: "blur(5px) saturate(190%)",
+          "var(--liquid-card-bg)",
+        borderColor: "var(--liquid-card-border)",
+        backdropFilter: "var(--liquid-card-blur)",
+        WebkitBackdropFilter: "var(--liquid-card-blur)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.03), 0 24px 60px -42px rgba(0,0,0,0.80)",
+          "var(--liquid-card-shadow)",
       }}
       data-testid="structure-detail"
     >
@@ -883,12 +883,12 @@ function EmptyDetail() {
       className="rounded-2xl border p-6 h-full flex flex-col items-center justify-center text-center"
       style={{
         background:
-          "linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99))",
-        borderColor: "rgba(196,232,242,0.22)",
-        backdropFilter: "blur(5px) saturate(190%)",
-        WebkitBackdropFilter: "blur(5px) saturate(190%)",
+          "var(--liquid-card-bg)",
+        borderColor: "var(--liquid-card-border)",
+        backdropFilter: "var(--liquid-card-blur)",
+        WebkitBackdropFilter: "var(--liquid-card-blur)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.03), 0 24px 60px -42px rgba(0,0,0,0.80)",
+          "var(--liquid-card-shadow)",
       }}
       data-testid="empty-detail"
     >
@@ -947,10 +947,10 @@ function NumberedKey({
       className="rounded-2xl border h-full flex flex-col overflow-hidden"
       style={{
         background:
-          "linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99))",
-        borderColor: "rgba(196,232,242,0.22)",
-        backdropFilter: "blur(5px) saturate(190%)",
-        WebkitBackdropFilter: "blur(5px) saturate(190%)",
+          "var(--liquid-card-bg)",
+        borderColor: "var(--liquid-card-border)",
+        backdropFilter: "var(--liquid-card-blur)",
+        WebkitBackdropFilter: "var(--liquid-card-blur)",
       }}
       data-testid="brain-key"
     >
@@ -1883,12 +1883,12 @@ export default function BrainLabPage() {
             className="relative rounded-2xl border overflow-hidden flex-1 min-h-0 h-full"
             style={{
               background:
-                "linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99))",
-              borderColor: "rgba(196,232,242,0.22)",
-              backdropFilter: "blur(5px) saturate(190%)",
-              WebkitBackdropFilter: "blur(5px) saturate(190%)",
+                "var(--liquid-card-bg)",
+              borderColor: "var(--liquid-card-border)",
+              backdropFilter: "var(--liquid-card-blur)",
+              WebkitBackdropFilter: "var(--liquid-card-blur)",
               boxShadow:
-                "inset 0 1px 0 rgba(255,255,255,0.03), 0 24px 60px -42px rgba(0,0,0,0.80)",
+                "var(--liquid-card-shadow)",
             }}
             data-testid="brain-diagram-wrap"
           >

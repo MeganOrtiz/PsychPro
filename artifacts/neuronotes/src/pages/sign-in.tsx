@@ -28,15 +28,13 @@ export default function SignInPage() {
             fontFamily: "inherit",
           },
           elements: {
-            // Deep-cerulean translucent glass — pigment, no cyan glow. Lower
-            // opacity + strong backdrop blur let the smoke wallpaper diffuse
-            // through so the card reads as real glass (not a flat opaque box);
-            // depth comes from the bright top edge + soft drop shadow.
+            // Liquid-neuroglass auth panel: black-cyan pigment, icy hairline,
+            // and strong backdrop blur so the stage diffuses through the card.
             card: {
               background:
                 "linear-gradient(160deg, hsl(192 92% 20% / 0.70), hsl(192 96% 12% / 0.82))",
-              border: "1px solid rgba(196, 232, 242, 0.22)",
-              borderRadius: "20px",
+              border: "1px solid var(--liquid-card-border)",
+              borderRadius: "18px",
               backdropFilter: "blur(30px) saturate(155%)",
               WebkitBackdropFilter: "blur(30px) saturate(155%)",
               boxShadow:
@@ -46,7 +44,7 @@ export default function SignInPage() {
             // as one cohesive glass panel (was a mismatched two-tone block).
             footer: {
               background: "transparent",
-              borderTop: "1px solid rgba(196, 232, 242, 0.10)",
+              borderTop: "1px solid rgba(167, 243, 255, 0.10)",
             },
             headerTitle: "text-white",
             headerSubtitle: `text-[${P.mistSoft}]`,

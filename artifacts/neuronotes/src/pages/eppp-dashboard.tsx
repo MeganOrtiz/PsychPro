@@ -836,7 +836,7 @@ const styles = `
   text-decoration: none;
   background:
     linear-gradient(145deg, hsl(var(--surf-hue) 100% 19% / 0.74), hsl(var(--surf-hue) 100% 14% / 0.85));
-  border: 1px solid rgba(196,232,242,0.22);
+  border: 1px solid var(--liquid-card-border);
   backdrop-filter: blur(20px) saturate(170%);
   -webkit-backdrop-filter: blur(20px) saturate(170%);
   box-shadow:
@@ -897,7 +897,7 @@ const styles = `
   cursor: pointer;
   background:
     linear-gradient(145deg, hsl(var(--surf-hue) 100% 19% / 0.74), hsl(var(--surf-hue) 100% 14% / 0.85));
-  border: 1px solid rgba(196,232,242,0.22);
+  border: 1px solid var(--liquid-card-border);
   backdrop-filter: blur(20px) saturate(170%);
   -webkit-backdrop-filter: blur(20px) saturate(170%);
   box-shadow:

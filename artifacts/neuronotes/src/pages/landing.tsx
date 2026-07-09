@@ -1165,7 +1165,7 @@ const styles = `
   padding: 26px 22px 24px;
   background: ${C.cardBg};
   border: 1px solid ${C.cardBorder};
-  border-radius: 20px;
+  border-radius: 18px;
   backdrop-filter: ${C.cardBlur};
   -webkit-backdrop-filter: ${C.cardBlur};
   box-shadow: ${C.cardShadow};
@@ -1225,7 +1225,7 @@ const styles = `
   display: flex;
   gap: 16px;
   padding: 22px 20px;
-  border-radius: 20px;
+  border-radius: 18px;
   border: 1px solid ${C.cardBorder};
   background: ${C.cardBg};
   backdrop-filter: ${C.cardBlur};
@@ -1320,7 +1320,7 @@ const styles = `
    the mastery/founder card recipe. */
 .landing-split-body--boxed {
   padding: clamp(24px, 3vw, 38px);
-  border-radius: 20px;
+  border-radius: 18px;
   background: ${C.cardBg};
   border: 1px solid ${C.cardBorder};
   backdrop-filter: ${C.cardBlur};

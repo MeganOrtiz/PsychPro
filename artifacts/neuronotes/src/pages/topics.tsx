@@ -273,7 +273,7 @@ function CourseRailButton({
 }) {
   const Icon = CATEGORY_ICONS[name] ?? LibraryBig;
 
-  const idleBg = "linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99))";
+  const idleBg = "var(--liquid-card-bg)";
   const activeBg = "linear-gradient(145deg, hsl(var(--surf-hue) 85% 28% / 0.96), hsl(var(--surf-hue) 89% 20% / 0.99))";
   const idleBorder = "rgba(118,228,247,0.26)";
   const activeBorder = "rgba(118,228,247,0.55)";
@@ -424,12 +424,12 @@ function CourseMasteryButton({ group }: { group: { name: string; items: Topic[] 
   const unlocked = status?.unlocked ?? false;
   const mastered = status?.mastered ?? false;
 
-  const lockedBg = "linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99))";
+  const lockedBg = "var(--liquid-card-bg)";
   const unlockedBg = "linear-gradient(145deg, hsl(var(--surf-hue) 85% 28% / 0.96), hsl(var(--surf-hue) 89% 20% / 0.99))";
-  const lockedBorder = "rgba(196,232,242,0.22)";
+  const lockedBorder = "var(--liquid-card-border)";
   const unlockedBorder = "rgba(118,228,247,0.55)";
   const lockedShadow =
-    "inset 0 1px 0 rgba(255,255,255,0.03), 0 24px 60px -42px rgba(0,0,0,0.80)";
+    "var(--liquid-card-shadow)";
   const unlockedShadow =
     "0 16px 38px -14px rgba(118,228,247,0.55), inset 0 1px 0 0 rgba(255,255,255,0.10)";
   const hoverBorder = "rgba(118,228,247,0.75)";
@@ -554,10 +554,10 @@ function TopicCard({ topic, onClick, showCategory }: TopicCardProps) {
       className="group text-left rounded-md p-4 cursor-pointer transition-all border backdrop-blur-md hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2"
       style={{
         background:
-          "linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99))",
-        borderColor: "rgba(196,232,242,0.22)",
+          "var(--liquid-card-bg)",
+        borderColor: "var(--liquid-card-border)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.03), 0 24px 60px -42px rgba(0,0,0,0.80)",
+          "var(--liquid-card-shadow)",
         // Use CSS custom-property so :hover can shift box-shadow cheaply.
         ["--card-glow" as never]: "rgba(118,228,247,0.55)",
       }}
@@ -569,9 +569,9 @@ function TopicCard({ topic, onClick, showCategory }: TopicCardProps) {
       }}
       onMouseLeave={(e) => {
         (e.currentTarget as HTMLButtonElement).style.borderColor =
-          "rgba(196,232,242,0.22)";
+          "var(--liquid-card-border)";
         (e.currentTarget as HTMLButtonElement).style.boxShadow =
-          "inset 0 1px 0 rgba(255,255,255,0.03), 0 24px 60px -42px rgba(0,0,0,0.80)";
+          "var(--liquid-card-shadow)";
       }}
     >
       <div className="flex items-start gap-3">

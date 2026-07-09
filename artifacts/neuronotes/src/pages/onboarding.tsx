@@ -1012,11 +1012,11 @@ const styles = `
 
 .ob-card {
   position: relative;
-  border-radius: 20px;
+  border-radius: 18px;
   overflow: hidden;
   background:
-    linear-gradient(145deg, hsl(var(--surf-hue) 100% 17% / 0.95), hsl(var(--surf-hue) 100% 11% / 0.99));
-  border: 1px solid rgba(196,232,242,0.22);
+    var(--liquid-card-bg);
+  border: 1px solid var(--liquid-card-border);
   backdrop-filter: blur(20px) saturate(170%);
   -webkit-backdrop-filter: blur(20px) saturate(170%);
   box-shadow:
