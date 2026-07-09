@@ -1,32 +1,39 @@
 ---
-name: PsychPro landing brain background
-description: Current rule — landing shows the owner's glass-brain artwork unstretched (contain) on a #000 letterbox; earlier cover-crop portrait attempt was rejected. Never stretch/crop landing art.
+name: PsychPro landing brain artwork
+description: Current rule — the owner's glowing-blue hero brain is an inline <img> at the TOP of the landing hero, text right below; never a page background, never stretch/crop.
 ---
 
-# Landing background: glass-brain artwork, unstretched
+# Landing brain artwork: inline hero image at the top
 
-**Current durable rule (since July 8, 2026, owner-directed):**
-- The LANDING page alone shows the owner's 3D glass-brain artwork
-  (`src/assets/bg/landing-glass-brain.jpeg`, portrait, pure-black surround) via a
-  `.landing-root.study-page-bg::before` override: `background-size: contain`
-  (owner: "don't stretch"), centered, `#000` letterbox floor matching the art's
-  black edges. All other pages keep the solid `#030d24` floor.
-- The old hero brain cutout (`hero-brain-glow.webp` <img> above the wordmark) was
-  REMOVED at owner request ("remove the non glass brain") — hero text now sits
-  directly over the background artwork. Don't reintroduce a second brain.
-- The drift guardrail (check-design-drift.mjs section 1b) now REQUIRES this landing
-  override (asset + contain + #000 + no filters). Any future landing-art change
-  must update the guardrail in the same commit.
+**Current durable rule (since July 9, 2026, owner-directed):**
+- The owner's glowing-blue glass brain (`src/assets/bg/landing-hero-brain.jpeg`,
+  pre-trimmed to the brain itself) renders as an inline `<img
+  className="landing-hero-brain">` — the FIRST element of the landing hero,
+  with the wordmark/text stack beginning right below it.
+- The landing page floor is pure `#000` like the rest of the app; the brain is
+  NOT a page background anymore (the earlier full-page glass-brain backdrop
+  from July 8 was replaced by this arrangement).
+- The drift guardrail (check-design-drift.mjs) REQUIRES: no wallpaper on the
+  landing backdrop rule, no images in index.css at all, the hero-brain img
+  present in landing.tsx, AND the img appearing before the wordmark. Any
+  future landing-art change must update the guardrail in the same commit.
 
-**Why:** an earlier same-week attempt baked a portrait composite in with
-`cover` — desktop crop showed only the top ~40%, the brain rendered huge behind
-the headline, and the owner rejected it. `contain` avoids that entire failure
-class: never crops, never stretches, letterboxes instead.
+**Why:** the owner supplied a new brain image on July 9 with the explicit
+instruction "add it to the top of the landing page with the text beginning
+right below." Prior history: a cover-crop portrait background was rejected
+(desktop crop showed ~40% of the art), and a full-page contain background was
+then used for a day before this inline-hero arrangement superseded it.
 
-**How to apply:** for any future landing artwork, never use `cover` on portrait
-art with a focal subject; use `contain` + a floor color matching the art's edges,
-and screenshot desktop 16:9 for headline overlap before calling it done.
+**How to apply:**
+- Never `cover`-crop portrait art with a focal subject; never stretch.
+- Owner-supplied AI art usually carries huge black padding — trim it
+  (`magick -fuzz 12% -trim +repage -bordercolor black -border 24`) so the
+  text can truly start right below the subject.
+- The saturated blue artwork is exempt from the neutral-palette guardrail
+  (it only scans code literals, not image files) — this is intentional owner
+  artwork on the black foundation.
+- Screenshot both desktop 16:9 and a narrow mobile viewport before calling
+  landing-art changes done.
 
-**Gotcha:** AI-generated JPEGs can carry a bright 1px baked-in border (this one
-had a mean-brightness-85 right edge column) that renders as a visible seam line
-against the letterbox — check edge rows/columns with numpy and crop 2px if needed.
+**Gotcha:** AI-generated JPEGs can carry a bright 1px baked-in border that
+renders as a seam against black — check edge rows/columns and crop if needed.

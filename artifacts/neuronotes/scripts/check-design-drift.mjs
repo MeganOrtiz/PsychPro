@@ -95,19 +95,36 @@ if (!appBackdrop) {
   }
 }
 if (!landingBackdrop) {
-  fail("landing glass-brain backdrop missing", "restore the .landing-root.study-page-bg::before rule with the owner's landing-glass-brain.jpeg artwork");
+  fail("landing backdrop rule missing", "restore the .landing-root.study-page-bg::before rule (pure-black floor, no wallpaper)");
 } else {
-  if (!/background-image:\s*url\(["']?\.\/assets\/bg\/landing-glass-brain\.jpeg["']?\);/.test(landingBackdrop)) {
-    fail("landing backdrop asset drifted", "the landing background must be the owner's landing-glass-brain.jpeg artwork");
-  }
-  if (!/background-size:\s*contain;/.test(landingBackdrop)) {
-    fail("landing backdrop stretch reintroduced", "owner: do NOT stretch the landing artwork — keep background-size: contain");
+  if (!/background-image:\s*none;/.test(landingBackdrop) || /url\(/.test(landingBackdrop)) {
+    fail("landing backdrop wallpaper reintroduced", "the landing floor is pure black — the hero brain is an inline <img> in landing.tsx, NOT a page background");
   }
   if (!/background-color:\s*#000;/.test(landingBackdrop)) {
-    fail("landing backdrop floor drifted", "keep the landing letterbox floor pure black (#000) to match the artwork's edges");
+    fail("landing backdrop floor drifted", "keep the landing floor pure black (#000) to match the hero artwork's edges");
   }
   if (/\bfilter\s*:|radial-gradient\(|linear-gradient\(|background-blend-mode\s*:/.test(landingBackdrop)) {
-    fail("landing backdrop film reintroduced", "keep the landing artwork free of filters, blend modes, and vignette gradients");
+    fail("landing backdrop film reintroduced", "keep the landing floor free of filters, blend modes, and vignette gradients");
+  }
+}
+// Owner artwork lock (2026-07-09): the hero brain image sits at the very top
+// of the landing page with the text stack beginning right below it.
+const LANDING = path.join(ROOT, "src", "pages", "landing.tsx");
+const landingSource = fs.readFileSync(LANDING, "utf8");
+if (!/landing-hero-brain\.jpeg/.test(landingSource) || !/className="landing-hero-brain"/.test(landingSource)) {
+  fail(
+    "landing hero brain artwork missing",
+    "keep the owner's hero brain <img> (assets/bg/landing-hero-brain.jpeg, .landing-hero-brain) at the top of the landing hero",
+  );
+}
+{
+  const heroImgIdx = landingSource.indexOf('className="landing-hero-brain"');
+  const wordmarkIdx = landingSource.indexOf('className="landing-wordmark"');
+  if (heroImgIdx !== -1 && wordmarkIdx !== -1 && heroImgIdx > wordmarkIdx) {
+    fail(
+      "landing hero brain not at the top",
+      "owner: the hero brain image comes FIRST, with the wordmark/text beginning right below it",
+    );
   }
 }
 if (!overlayBackdrop) {
@@ -143,10 +160,9 @@ const urls = /url\(\s*["']?([^"')]+)["']?\s*\)/g;
 while ((m = urls.exec(css))) {
   const target = m[1];
   if (target.includes("fonts.googleapis.com")) continue;
-  if (target === "./assets/bg/landing-glass-brain.jpeg") continue;
   fail(
     `unexpected image url(${target}) at ${REL}:${lineOf(m.index)}`,
-    "the landing glass-brain artwork is the ONLY image allowed in index.css",
+    "no images in index.css — the hero brain lives as an inline <img> in landing.tsx",
   );
 }
 

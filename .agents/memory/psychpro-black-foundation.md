@@ -25,8 +25,9 @@ button glow, header scrims (scrims now disabled entirely).
 - Never reintroduce saturated color into UI chrome. Allowed exceptions:
   semantic red/amber (hue 0–70) and green (90–160) status colors, and
   `src/data/brain-structures.ts` anatomy colors (educational, exempt).
-- Landing keeps the glass-brain artwork: `landing-glass-brain.jpeg`,
-  `background-size: contain`, #000 letterbox — never cover-crop.
+- Landing keeps the owner's brain artwork as the one saturated exception —
+  since 2026-07-09 it is an inline hero `<img>` at the top of the page, not a
+  background (see psychpro-landing-brain-bg.md). Never cover-crop or stretch.
 - Both guardrails were repointed in the same commit:
   `check-surface-hue.mjs` = src-wide saturation ban (s>25% non-semantic
   fails, incl. Tailwind blue-family classes); `check-design-drift.mjs` =
