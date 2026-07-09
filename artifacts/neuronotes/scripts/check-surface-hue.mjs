@@ -1,20 +1,24 @@
 #!/usr/bin/env node
 // =============================================================================
-// NEUTRAL PALETTE GUARDRAIL  (black-foundation baseline, 2026-07-09)
+// PALETTE GUARDRAIL  (blue three-material system, locked 2026-07-09)
 //
-// The entire visual layer was stripped to a black foundation: pure-black page
-// floors, flat dark-gray panels, neutral gray borders, white/gray text. The
-// old cerulean/cyan palette, glass, glow, and colored tiles were removed.
+// The app runs on the owner-approved BLUE system: pure-black page floors,
+// navy-tint opaque panels, blue glass tiles, cyan gloss buttons, icy/gray text.
+// Palette (the --pp-* tokens in src/index.css):
+//   floor #000000 · surfaces #04101f/#071c33 · navy #052a58/#0e4e71
+//   ocean #0b669a/#0d58a2 · cyan #08a5d1/#0bd4df · icy #aaedf0
+//   grays #e5e5e5/#a3a3a3
 //
-// This check fails when a SATURATED color drifts back into the UI. Allowed:
+// This check fails when a color OUTSIDE the system drifts into the UI. Allowed:
 //   - Neutrals (saturation <= 25%).
+//   - The blue family (hue 180-220) — the locked palette lives here.
 //   - Semantic status colors: red/amber (hue 0-70) and green (hue 90-160)
 //     for destructive/warning/success states.
 //   - src/data/brain-structures.ts — functional anatomy colors used by the
 //     Brain Lab 3D/2D viewers (educational content, not UI chrome).
 //
-// Everything else — cyan, blue, indigo, violet, purple, magenta, pink — is a
-// regression toward the retired palette and fails loudly.
+// Everything else — mint/green-teal, indigo, violet, purple, magenta, pink,
+// orange-as-accent — is a drift out of the locked system and fails loudly.
 //
 // Run: node scripts/check-surface-hue.mjs   (exit 1 on any violation)
 // =============================================================================
@@ -25,13 +29,14 @@ const ROOT = path.join(path.dirname(new URL(import.meta.url).pathname), "..");
 const SRC = path.join(ROOT, "src");
 
 const MAX_NEUTRAL_S = 0.25; // anything at/below this saturation is fine
-// Allowed saturated hue windows (semantic status colors only).
+// Allowed saturated hue windows.
 const ALLOWED_HUES = [
-  [0, 70],    // red … amber (destructive, warnings)
-  [90, 160],  // green (success)
-  [345, 360], // wrap-around reds
+  [0, 70],     // red … amber (destructive, warnings)
+  [90, 160],   // green (success)
+  [178, 220],  // THE LOCKED BLUE FAMILY (icy 183 … navy 213)
+  [345, 360],  // wrap-around reds
 ];
-// Files exempt from the saturation ban.
+// Files exempt from the palette ban.
 const EXEMPT = [
   path.join("src", "data", "brain-structures.ts"),
 ];
@@ -61,7 +66,7 @@ function check(file, line, raw, h, s) {
   if (isAllowedHue(h)) return;
   violations.push(
     `${file}:${line}  ${raw}  (hue ${h.toFixed(1)}, sat ${(s * 100).toFixed(0)}% — ` +
-      `saturated non-semantic color; the app is a neutral black foundation).`,
+      `outside the locked blue/semantic palette).`,
   );
 }
 
@@ -73,11 +78,19 @@ function scanText(file, text) {
     const [h, s] = rgbToHsl(+m[1], +m[2], +m[3]);
     check(file, lineOf(text, m.index), m[0] + ")", h, s);
   }
-  // #rrggbb
-  const hex = /#([0-9a-fA-F]{6})\b/g;
+  // #rgb, #rgba, #rrggbb, #rrggbbaa
+  const hex = /#([0-9a-fA-F]{3,8})\b/g;
   while ((m = hex.exec(text))) {
     const x = m[1];
-    const [h, s] = rgbToHsl(parseInt(x.slice(0, 2), 16), parseInt(x.slice(2, 4), 16), parseInt(x.slice(4, 6), 16));
+    let r, g, b;
+    if (x.length === 3 || x.length === 4) {
+      r = parseInt(x[0] + x[0], 16); g = parseInt(x[1] + x[1], 16); b = parseInt(x[2] + x[2], 16);
+    } else if (x.length === 6 || x.length === 8) {
+      r = parseInt(x.slice(0, 2), 16); g = parseInt(x.slice(2, 4), 16); b = parseInt(x.slice(4, 6), 16);
+    } else {
+      continue; // 5- or 7-digit strings are not colors (likely ids/hashes)
+    }
+    const [h, s] = rgbToHsl(r, g, b);
     check(file, lineOf(text, m.index), m[0], h, s);
   }
   // literal hsl()/hsla() with a NUMERIC hue (skips hsl(var(--surf-hue) …))
@@ -90,12 +103,13 @@ function scanText(file, text) {
   while ((m = tup.exec(text))) {
     check(file, lineOf(text, m.index), m[0] + " (token)", +m[1], +m[2] / 100);
   }
-  // Tailwind blue-family utility classes (text-cyan-300, bg-sky-100/40, …)
-  const tw = /\b(?:text|bg|border|ring|from|via|to|divide|outline|decoration|fill|stroke|shadow)-(cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|teal)-\d{2,3}\b/g;
+  // Tailwind off-palette utility classes. The blue family (cyan/sky/blue/teal)
+  // is allowed; purple/pink families and mint-adjacent utilities are not.
+  const tw = /\b(?:text|bg|border|ring|from|via|to|divide|outline|decoration|fill|stroke|shadow)-(indigo|violet|purple|fuchsia|pink)-\d{2,3}\b/g;
   while ((m = tw.exec(text))) {
     violations.push(
       `${file}:${lineOf(text, m.index)}  ${m[0]}  (Tailwind ${m[1]} utility — ` +
-        `use neutral-* instead; the app is a neutral black foundation).`,
+        `outside the locked blue/semantic palette).`,
     );
   }
 }
@@ -116,9 +130,9 @@ for (const file of walk(SRC, [])) {
 }
 
 if (violations.length) {
-  console.error(`\n✗ Neutral palette guardrail FAILED — ${violations.length} saturated color(s) crept back in:\n`);
+  console.error(`\n✗ Palette guardrail FAILED — ${violations.length} off-palette color(s) crept in:\n`);
   for (const v of violations) console.error("  " + v);
-  console.error("\nFix: use neutral grays (#0a0a0a…#f5f5f5) or a semantic red/amber/green status color.\n");
+  console.error("\nFix: use the --pp-* tokens (blue family, hue 180-220), neutral grays, or a semantic red/amber/green status color.\n");
   process.exit(1);
 }
-console.log("✓ Neutral palette guardrail passed — no saturated non-semantic colors in src.");
+console.log("✓ Palette guardrail passed — all colors within the locked blue three-material system.");

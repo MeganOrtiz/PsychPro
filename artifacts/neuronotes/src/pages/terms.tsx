@@ -36,7 +36,7 @@ export default function TermsPage() {
         fontFamily: '"Montserrat", sans-serif',
       }}
     >
-      <header className="border-b" style={{ borderColor: "rgba(148, 148, 148,0.15)" }}>
+      <header className="border-b" style={{ borderColor: "rgba(8,165,209,0.15)" }}>
         <div className="max-w-4xl mx-auto px-6 lg:px-10 py-6 flex items-center justify-between">
           <Link
             href="/"
@@ -108,8 +108,8 @@ export default function TermsPage() {
         <nav
           className="mt-10 mb-12 rounded-lg p-5"
           style={{
-            border: "1px solid rgba(148, 148, 148,0.18)",
-            background: "hsl(var(--surf-hue) 0% 6% / 0.83)",
+            border: "1px solid rgba(8,165,209,0.18)",
+            background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.83)",
           }}
           aria-label="On this page"
         >
@@ -225,11 +225,11 @@ export default function TermsPage() {
             </p>
             <div
               className="rounded-lg overflow-hidden mt-3"
-              style={{ border: "1px solid rgba(148, 148, 148,0.18)" }}
+              style={{ border: "1px solid rgba(8,165,209,0.18)" }}
             >
               <table className="w-full text-sm">
                 <thead>
-                  <tr style={{ background: "rgba(148, 148, 148,0.06)" }}>
+                  <tr style={{ background: "rgba(13,88,162,0.06)" }}>
                     <th
                       className="text-left px-4 py-3 font-light"
                       style={{ ...TRACK_NAV, color: P.cloud, fontSize: 10 }}
@@ -251,7 +251,7 @@ export default function TermsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr style={{ borderTop: "1px solid rgba(148, 148, 148,0.12)" }}>
+                  <tr style={{ borderTop: "1px solid rgba(8,165,209,0.12)" }}>
                     <td className="px-4 py-3" style={{ color: P.cloud }}>
                       PsychPro Master
                     </td>
@@ -262,7 +262,7 @@ export default function TermsPage() {
                       $79.99 / year
                     </td>
                   </tr>
-                  <tr style={{ borderTop: "1px solid rgba(148, 148, 148,0.12)" }}>
+                  <tr style={{ borderTop: "1px solid rgba(8,165,209,0.12)" }}>
                     <td className="px-4 py-3" style={{ color: P.cloud }}>
                       PsychPro Scholar
                     </td>
@@ -439,8 +439,8 @@ export default function TermsPage() {
             <div
               className="rounded-lg p-4 text-sm"
               style={{
-                border: "1px solid rgba(148, 148, 148,0.18)",
-                background: "hsl(var(--surf-hue) 0% 6% / 0.83)",
+                border: "1px solid rgba(8,165,209,0.18)",
+                background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.83)",
                 color: P.cloud,
               }}
             >
@@ -581,8 +581,8 @@ export default function TermsPage() {
             <div
               className="rounded-lg p-4 text-sm"
               style={{
-                border: "1px solid rgba(148, 148, 148,0.18)",
-                background: "hsl(var(--surf-hue) 0% 6% / 0.83)",
+                border: "1px solid rgba(8,165,209,0.18)",
+                background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.83)",
               }}
             >
               <p style={{ ...TRACK_NAV, fontSize: 11, color: P.cloud }}>
@@ -609,7 +609,7 @@ export default function TermsPage() {
 
         <div
           className="mt-16 pt-6 flex flex-wrap items-center justify-between gap-3"
-          style={{ borderTop: "1px solid rgba(148, 148, 148,0.15)" }}
+          style={{ borderTop: "1px solid rgba(8,165,209,0.15)" }}
         >
           <p className="text-xs" style={{ color: P.inkSoft }}>
             © {new Date().getFullYear()} PsychPro. All rights reserved.

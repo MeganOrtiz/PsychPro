@@ -180,7 +180,7 @@ function StructureSearch({
   return (
     <div
       className="absolute inset-0 z-30 flex items-start justify-center pt-16 px-4"
-      style={{ background: `${PALETTE.bg}cc`, backdropFilter: "blur(8px)" }}
+      style={{ background: `${PALETTE.bg}cc` }}
       onClick={onClose}
       data-testid="structure-search-overlay"
       role="presentation"
@@ -188,10 +188,8 @@ function StructureSearch({
       <div
         className="w-full max-w-xl rounded-2xl border overflow-hidden"
         style={{
-          background: "hsl(var(--surf-hue) 0% 6% / 0.85)",
-          borderColor: "rgba(163, 163, 163,0.22)",
-          backdropFilter: "blur(20px) saturate(135%)",
-          WebkitBackdropFilter: "blur(20px) saturate(135%)",
+          background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.85)",
+          borderColor: "rgba(8,165,209,0.22)",
           boxShadow:
             "inset 0 1px 0 rgba(255,255,255,0.12), 0 24px 60px -42px rgba(0,0,0,0.72)",
         }}
@@ -471,10 +469,8 @@ function StructureDetail({
     <div
       className="rounded-2xl border overflow-hidden flex flex-col h-full min-h-0 max-h-full"
       style={{
-        background: "hsl(var(--surf-hue) 0% 6% / 0.85)",
-        borderColor: "rgba(163, 163, 163,0.22)",
-        backdropFilter: "blur(20px) saturate(135%)",
-        WebkitBackdropFilter: "blur(20px) saturate(135%)",
+        background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.85)",
+        borderColor: "rgba(8,165,209,0.22)",
         boxShadow:
           "inset 0 1px 0 rgba(255,255,255,0.12), 0 24px 60px -42px rgba(0,0,0,0.72)",
       }}
@@ -880,10 +876,8 @@ function EmptyDetail() {
     <div
       className="rounded-2xl border p-6 h-full flex flex-col items-center justify-center text-center"
       style={{
-        background: "hsl(var(--surf-hue) 0% 6% / 0.85)",
-        borderColor: "rgba(163, 163, 163,0.22)",
-        backdropFilter: "blur(20px) saturate(135%)",
-        WebkitBackdropFilter: "blur(20px) saturate(135%)",
+        background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.85)",
+        borderColor: "rgba(8,165,209,0.22)",
         boxShadow:
           "inset 0 1px 0 rgba(255,255,255,0.12), 0 24px 60px -42px rgba(0,0,0,0.72)",
       }}
@@ -943,10 +937,8 @@ function NumberedKey({
     <div
       className="rounded-2xl border h-full flex flex-col overflow-hidden"
       style={{
-        background: "hsl(var(--surf-hue) 0% 6% / 0.85)",
-        borderColor: "rgba(163, 163, 163,0.22)",
-        backdropFilter: "blur(20px) saturate(135%)",
-        WebkitBackdropFilter: "blur(20px) saturate(135%)",
+        background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.85)",
+        borderColor: "rgba(8,165,209,0.22)",
       }}
       data-testid="brain-key"
     >
@@ -1878,10 +1870,8 @@ export default function BrainLabPage() {
           <div
             className="relative rounded-2xl border overflow-hidden flex-1 min-h-0 h-full"
             style={{
-              background: "hsl(var(--surf-hue) 0% 6% / 0.85)",
-              borderColor: "rgba(163, 163, 163,0.22)",
-              backdropFilter: "blur(20px) saturate(135%)",
-              WebkitBackdropFilter: "blur(20px) saturate(135%)",
+              background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.85)",
+              borderColor: "rgba(8,165,209,0.22)",
               boxShadow:
                 "inset 0 1px 0 rgba(255,255,255,0.12), 0 24px 60px -42px rgba(0,0,0,0.72)",
             }}
@@ -1980,7 +1970,7 @@ export default function BrainLabPage() {
       {isMobile && selected && showMobileDetail && (
         <div
           className="fixed inset-0 z-40 flex items-end"
-          style={{ background: `${PALETTE.bg}cc`, backdropFilter: "blur(6px)" }}
+          style={{ background: `${PALETTE.bg}cc` }}
           onClick={() => setShowMobileDetail(false)}
         >
           <div

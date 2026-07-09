@@ -273,11 +273,11 @@ function CourseRailButton({
 }) {
   const Icon = CATEGORY_ICONS[name] ?? LibraryBig;
 
-  const idleBg = "hsl(var(--surf-hue) 0% 8% / 0.80)";
-  const activeBg = "hsl(var(--surf-hue) 0% 18% / 0.88)";
-  const idleBorder = "rgba(148, 148, 148,0.26)";
-  const activeBorder = "rgba(148, 148, 148,0.55)";
-  const hoverBorder = "rgba(148, 148, 148,0.45)";
+  const idleBg = "hsl(var(--surf-hue) var(--surf-sat) 8% / 0.80)";
+  const activeBg = "hsl(var(--surf-hue) var(--surf-sat) 18% / 0.88)";
+  const idleBorder = "rgba(8,165,209,0.26)";
+  const activeBorder = "rgba(8,165,209,0.55)";
+  const hoverBorder = "rgba(8,165,209,0.45)";
   const idleShadow = "inset 0 1px 0 0 rgba(255,255,255,0.14), 0 10px 26px -16px rgba(0,0,0,0.7)";
   const activeShadow =
     "0 14px 34px -14px rgba(0, 0, 0, 0.55), inset 0 1px 0 0 rgba(255,255,255,0.10)";
@@ -309,8 +309,8 @@ function CourseRailButton({
       <span
         className="w-9 h-9 shrink-0 rounded-lg flex items-center justify-center border"
         style={{
-          background: "hsl(var(--surf-hue) 0% 18% / 0.55)",
-          borderColor: "rgba(148, 148, 148,0.28)",
+          background: "hsl(var(--surf-hue) var(--surf-sat) 18% / 0.55)",
+          borderColor: "rgba(8,165,209,0.28)",
         }}
       >
         <Icon
@@ -361,13 +361,13 @@ function CourseLessons({
           lesson cards below so the right pane reads as one unit. */}
       <div
         className="flex items-center gap-3 mb-4 pb-3 border-b"
-        style={{ borderColor: "rgba(148, 148, 148,0.18)" }}
+        style={{ borderColor: "rgba(8,165,209,0.18)" }}
       >
         <div
           className="w-11 h-11 rounded-lg flex items-center justify-center border"
           style={{
-            background: "hsl(var(--surf-hue) 0% 18% / 0.65)",
-            borderColor: "rgba(148, 148, 148,0.32)",
+            background: "hsl(var(--surf-hue) var(--surf-sat) 18% / 0.65)",
+            borderColor: "rgba(8,165,209,0.32)",
           }}
         >
           <Icon
@@ -418,15 +418,15 @@ function CourseMasteryButton({ group }: { group: { name: string; items: Topic[] 
   const unlocked = status?.unlocked ?? false;
   const mastered = status?.mastered ?? false;
 
-  const lockedBg = "hsl(var(--surf-hue) 0% 8% / 0.80)";
-  const unlockedBg = "hsl(var(--surf-hue) 0% 18% / 0.88)";
-  const lockedBorder = "rgba(163, 163, 163,0.22)";
-  const unlockedBorder = "rgba(148, 148, 148,0.55)";
+  const lockedBg = "hsl(var(--surf-hue) var(--surf-sat) 8% / 0.80)";
+  const unlockedBg = "hsl(var(--surf-hue) var(--surf-sat) 18% / 0.88)";
+  const lockedBorder = "rgba(8,165,209,0.22)";
+  const unlockedBorder = "rgba(8,165,209,0.55)";
   const lockedShadow =
     "inset 0 1px 0 rgba(255,255,255,0.12), 0 24px 60px -42px rgba(0,0,0,0.72)";
   const unlockedShadow =
     "0 16px 38px -14px rgba(0, 0, 0, 0.55), inset 0 1px 0 0 rgba(255,255,255,0.10)";
-  const hoverBorder = "rgba(148, 148, 148,0.75)";
+  const hoverBorder = "rgba(8,165,209,0.75)";
   const hoverShadow =
     "0 18px 44px -12px rgba(0, 0, 0, 0.55), inset 0 1px 0 0 rgba(255,255,255,0.12)";
 
@@ -465,8 +465,8 @@ function CourseMasteryButton({ group }: { group: { name: string; items: Topic[] 
       <span
         className="w-11 h-11 shrink-0 rounded-lg flex items-center justify-center border"
         style={{
-          background: "hsl(var(--surf-hue) 0% 18% / 0.55)",
-          borderColor: "rgba(148, 148, 148,0.28)",
+          background: "hsl(var(--surf-hue) var(--surf-sat) 18% / 0.55)",
+          borderColor: "rgba(8,165,209,0.28)",
         }}
       >
         <Marker
@@ -543,22 +543,22 @@ function TopicCard({ topic, onClick, showCategory }: TopicCardProps) {
       data-testid={`card-topic-${topic.id}`}
       className="group text-left rounded-md p-4 cursor-pointer transition-all border hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2"
       style={{
-        background: "hsl(var(--surf-hue) 0% 6% / 0.85)",
-        borderColor: "rgba(163, 163, 163,0.22)",
+        background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.85)",
+        borderColor: "rgba(8,165,209,0.22)",
         boxShadow:
           "inset 0 1px 0 rgba(255,255,255,0.12), 0 24px 60px -42px rgba(0,0,0,0.72)",
         // Use CSS custom-property so :hover can shift box-shadow cheaply.
-        ["--card-glow" as never]: "rgba(148, 148, 148,0.55)",
+        ["--card-glow" as never]: "rgba(8,165,209,0.55)",
       }}
       onMouseEnter={(e) => {
         (e.currentTarget as HTMLButtonElement).style.borderColor =
-          "rgba(148, 148, 148,0.55)";
+          "rgba(8,165,209,0.55)";
         (e.currentTarget as HTMLButtonElement).style.boxShadow =
           "0 14px 36px -14px rgba(0, 0, 0, 0.55), inset 0 1px 0 0 rgba(255,255,255,0.10)";
       }}
       onMouseLeave={(e) => {
         (e.currentTarget as HTMLButtonElement).style.borderColor =
-          "rgba(163, 163, 163,0.22)";
+          "rgba(8,165,209,0.22)";
         (e.currentTarget as HTMLButtonElement).style.boxShadow =
           "inset 0 1px 0 rgba(255,255,255,0.12), 0 24px 60px -42px rgba(0,0,0,0.72)";
       }}
@@ -624,8 +624,8 @@ function TopicCard({ topic, onClick, showCategory }: TopicCardProps) {
 // so the UI never breaks.
 // =============================================================================
 const stroke = STUDY_PALETTE.surf;
-const soft = "rgba(148, 148, 148,0.45)";
-const bright = "rgba(212, 212, 212,0.85)";
+const soft = "rgba(8,165,209,0.45)";
+const bright = "rgba(170,237,240,0.85)";
 
 // Shared SVG attributes — keeps every symbol visually consistent.
 const svgCommon = {
@@ -1092,10 +1092,10 @@ function TopicThumbnail({ topic }: { topic: Topic }) {
         // Slightly stronger gradient base + outer cerulean halo so the
         // glowing symbol inside reads as luminous on top of the dark
         // teal card surface.
-        background: "hsl(var(--surf-hue) 0% 18% / 0.65)",
-        borderColor: "rgba(148, 148, 148,0.32)",
+        background: "hsl(var(--surf-hue) var(--surf-sat) 18% / 0.65)",
+        borderColor: "rgba(8,165,209,0.32)",
         boxShadow:
-          "inset 0 0 14px rgba(148, 148, 148,0.10), 0 0 18px -6px rgba(147, 147, 147,0.35)",
+          "inset 0 0 14px rgba(8,165,209,0.10), 0 0 18px -6px rgba(8,165,209,0.35)",
       }}
       data-testid={`topic-thumb-${topic.id}`}
     >
@@ -1108,7 +1108,7 @@ function TopicThumbnail({ topic }: { topic: Topic }) {
           // inner halo for definition and a wider outer halo for the
           // dreamy aura.
           filter:
-            "drop-shadow(0 0 3px rgba(148, 148, 148,0.65)) drop-shadow(0 0 9px rgba(147, 147, 147,0.45))",
+            "drop-shadow(0 0 3px rgba(8,165,209,0.65)) drop-shadow(0 0 9px rgba(8,165,209,0.45))",
         }}
       >
         <svg {...svgCommon} width="100%" height="100%">

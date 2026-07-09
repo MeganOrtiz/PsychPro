@@ -1,20 +1,32 @@
 /* =============================================================================
    PsychPro global styles — PROTECTED FILE.
    ---------------------------------------------------------------------------
-   The .study-page-bg rule below is the canonical app surface used by every
-   authenticated page (dashboard, topics, flashcards, etc). It owns:
-     - shadcn token overrides (cerulean palette)
-     - the single fixed cerulean-clouds background image (::before)
-     - canonical glass card treatment (.bg-card descendants)
+   BLUE THREE-MATERIAL SYSTEM (owner-approved 2026-07-09). Every surface in the
+   app is one of three materials, all driven by the --pp-* token block below:
+
+     OPAQUE — big structural panels. Solid navy-tint fill, 1px lit top bevel,
+              neutral black drop shadow. NEVER glows, not even on hover.
+     GLASS  — tiles nested inside panels. Tinted TRANSLUCENT fill (parent reads
+              through) — NO backdrop-filter/blur — brighter bevel. Interactive
+              glass ignites a cyan glow + lifts on hover.
+     GLOSS  — buttons. Saturated cyan gradient fill + glossy top highlight;
+              reads pressable at rest via pigment; hover adds glow corona.
+
+   LOCKED RULES:
+     - Glow ONLY on :hover/:active. At-rest depth comes from pigment
+       (gradients, bevels, black shadows, saturated fills) — never bloom.
+     - No backdrop-filter anywhere (enforced by the reset at end of file).
+     - Fonts: Montserrat body/UI, Outfit headings/wordmark.
+     - Palette: ONLY the --pp-* tokens below. Do not invent new colors in
+       pages; consume tokens or the material classes.
+     - Page floor stays pure #000 (body + .study-page-bg::before).
 
    DO NOT:
-     - Re-declare another wallpaper on a per-page basis.
+     - Re-declare a wallpaper or per-page backdrop.
      - Override these CSS variables in another scope.
-     - Add a second .bg-card rule.
-     - Swap the cloud image without also updating the landing page's
-       .landing-canvas::before so both surfaces stay coherent.
+     - Add a second .bg-card rule or a competing button recipe.
    ============================================================================= */
-@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
@@ -73,9 +85,24 @@
   --color-sidebar-accent-border: var(--sidebar-accent-border);
   --color-sidebar-ring: hsl(var(--sidebar-ring));
 
+  /* PP palette exposed as Tailwind utilities (bg-pp-cyan, text-pp-icy, …). */
+  --color-pp-floor: var(--pp-floor);
+  --color-pp-deep: var(--pp-deep);
+  --color-pp-surface: var(--pp-surface);
+  --color-pp-navy: var(--pp-navy);
+  --color-pp-navy-bright: var(--pp-navy-bright);
+  --color-pp-ocean: var(--pp-ocean);
+  --color-pp-ocean-deep: var(--pp-ocean-deep);
+  --color-pp-cyan: var(--pp-cyan);
+  --color-pp-bright: var(--pp-bright);
+  --color-pp-icy: var(--pp-icy);
+  --color-pp-text: var(--pp-text);
+  --color-pp-text-dim: var(--pp-text-dim);
+
   --font-sans: var(--app-font-sans);
   --font-serif: var(--app-font-serif);
   --font-mono: var(--app-font-mono);
+  --font-display: var(--app-font-display);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -83,69 +110,93 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* LIGHT MODE — Cerulean Blue theme */
 :root {
-  /* SINGLE HUE KNOB for the whole cerulean surface system. Change this one
-     number to retone every surface app-wide. Accents (#a3a3a3, hue ~189) are
-     intentionally NOT derived from this — they are the fixed north star. */
-  --surf-hue: 0;
-  --button-outline: rgba(0,0,0, .10);
-  --badge-outline: rgba(0,0,0, .05);
-  --opaque-button-border-intensity: -8;
-  --elevate-1: rgba(0,0,0, .03);
-  --elevate-2: rgba(0,0,0, .08);
+  /* ==========================================================================
+     PP FOUNDATION TOKENS — the ONLY place raw palette values may live.
+     Sampled from the owner's approved blue-brain artwork.
+     ========================================================================== */
+  --pp-floor: #000000;        /* page floor — always pure black */
+  --pp-deep: #04101f;         /* deepest tinted surface */
+  --pp-surface: #071c33;      /* standard tinted surface */
+  --pp-navy: #052a58;         /* structural navy */
+  --pp-navy-bright: #0e4e71;  /* lifted navy / borders */
+  --pp-ocean: #0b669a;        /* mid ocean blue */
+  --pp-ocean-deep: #0d58a2;   /* saturated ocean */
+  --pp-cyan: #08a5d1;         /* primary action cyan */
+  --pp-bright: #0bd4df;       /* luminous cyan (accents, glow source) */
+  --pp-icy: #aaedf0;          /* icy highlight / bevel source */
+  --pp-text: #e5e5e5;         /* primary text */
+  --pp-text-dim: #a3a3a3;     /* muted text */
 
-  /* Light cerulean palette — based on Deep Sea Teal / Arctic Ocean Blue /
-     Cerulean Ripple / Icy Glaze / Frost White swatches, biased slightly
-     bluer (hue ~198-200°) to avoid green-teal cast. */
-  --background: 0 0% 97%;     /* near Frost White with cerulean tint */
-  --foreground: 0 0% 10%;     /* Deep Sea Teal text */
+  /* Derived material ingredients — consume these, never re-mix raw values. */
+  --pp-bevel: rgba(170, 237, 240, 0.14);        /* opaque-panel lit top edge */
+  --pp-bevel-bright: rgba(170, 237, 240, 0.26); /* glass-tile lit top edge */
+  --pp-line: rgba(11, 102, 154, 0.50);          /* hairline border (panels) */
+  --pp-line-bright: rgba(8, 165, 209, 0.55);    /* hairline border (glass) */
+  --pp-glow: rgba(11, 212, 223, 0.30);          /* hover corona (soft) */
+  --pp-glow-strong: rgba(11, 212, 223, 0.48);   /* active corona */
+  --pp-shadow: rgba(0, 0, 0, 0.65);             /* neutral drop shadow */
 
-  --border: 0 0% 86%;
+  /* SINGLE HUE/SAT KNOB for the tokenized shadcn surface system below. */
+  --surf-hue: 211;
+  --surf-sat: 62%;
+
+  --button-outline: rgba(170, 237, 240, .12);
+  --badge-outline: rgba(170, 237, 240, .06);
+  --opaque-button-border-intensity: 9;
+  --elevate-1: rgba(170, 237, 240, .05);
+  --elevate-2: rgba(170, 237, 240, .10);
+
+  /* Light theme (rarely seen — the app runs on the dark blue surface). */
+  --background: 0 0% 97%;
+  --foreground: 211 40% 12%;
+
+  --border: 208 20% 86%;
 
   --card: 0 0% 100%;
-  --card-foreground: 0 0% 10%;
-  --card-border: 0 0% 86%;
+  --card-foreground: 211 40% 12%;
+  --card-border: 208 20% 86%;
 
-  --sidebar: 0 0% 10%;
-  --sidebar-foreground: 0 0% 92%;
-  --sidebar-border: 0 0% 22%;
-  --sidebar-primary: 0 0% 45%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 0 0% 22%;
-  --sidebar-accent-foreground: 0 0% 92%;
-  --sidebar-ring: 0 0% 45%;
+  --sidebar: 213 77% 7%;
+  --sidebar-foreground: 195 30% 90%;
+  --sidebar-border: 208 50% 22%;
+  --sidebar-primary: 193 93% 43%;
+  --sidebar-primary-foreground: 213 77% 7%;
+  --sidebar-accent: 211 60% 18%;
+  --sidebar-accent-foreground: 195 30% 90%;
+  --sidebar-ring: 193 93% 43%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 10%;
-  --popover-border: 0 0% 86%;
+  --popover-foreground: 211 40% 12%;
+  --popover-border: 208 20% 86%;
 
-  --primary: 0 0% 35%;        /* Arctic Ocean Blue */
+  --primary: 200 87% 34%;
   --primary-foreground: 0 0% 100%;
 
-  --secondary: 0 0% 92%;
-  --secondary-foreground: 0 0% 18%;
+  --secondary: 208 30% 92%;
+  --secondary-foreground: 211 40% 18%;
 
-  --muted: 0 0% 94%;
-  --muted-foreground: 0 0% 40%;
+  --muted: 208 25% 94%;
+  --muted-foreground: 210 20% 40%;
 
-  --accent: 0 0% 45%;
+  --accent: 193 93% 43%;
   --accent-foreground: 0 0% 100%;
 
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
 
-  --input: 0 0% 89%;
-  --ring: 0 0% 42%;
+  --input: 208 20% 89%;
+  --ring: 193 80% 42%;
 
-  --chart-1: 0 0% 42%;
-  --chart-2: 0 0% 54%;
-  --chart-3: 0 0% 58%;
-  --chart-4: 0 0% 40%;
-  --chart-5: 0 0% 30%;
+  --chart-1: 193 93% 43%;
+  --chart-2: 202 87% 42%;
+  --chart-3: 183 91% 46%;
+  --chart-4: 210 85% 44%;
+  --chart-5: 213 89% 30%;
 
   --app-font-sans: 'Montserrat', 'Inter', 'SF Pro Display', sans-serif;
   --app-font-serif: 'Merriweather', Georgia, serif;
+  --app-font-display: 'Outfit', 'Inter', system-ui, sans-serif;
   --app-font-mono: Menlo, monospace;
   --radius: .625rem;
 
@@ -177,61 +228,58 @@
 }
 
 .dark {
-  --button-outline: rgba(255,255,255, .10);
-  --badge-outline: rgba(255,255,255, .05);
+  --button-outline: rgba(170, 237, 240, .12);
+  --badge-outline: rgba(170, 237, 240, .06);
   --opaque-button-border-intensity: 9;
-  --elevate-1: rgba(255,255,255, .04);
-  --elevate-2: rgba(255,255,255, .09);
+  --elevate-1: rgba(170, 237, 240, .05);
+  --elevate-2: rgba(170, 237, 240, .10);
 
-  /* Deep cerulean/turquoise dark theme — CANONICAL SURFACE HUE = 192 (set
-     2026-06-12). Accents stay at the locked #a3a3a3 family (hue ~188–189).
-     History: hue 191 read green, 196 read navy; 192 sits just off the accent on
-     the anti-navy side. Lever for "too navy" is HUE, never lightness. */
-  --background: var(--surf-hue) 0% 9%;
-  --foreground: var(--surf-hue) 0% 95%;
+  /* Deep blue dark theme — driven by the --surf-hue/--surf-sat knobs. */
+  --background: var(--surf-hue) var(--surf-sat) 6%;
+  --foreground: 195 25% 92%;
 
-  --border: var(--surf-hue) 0% 24%;
+  --border: 205 45% 28%;
 
-  --card: var(--surf-hue) 0% 12%;
-  --card-foreground: var(--surf-hue) 0% 95%;
-  --card-border: var(--surf-hue) 0% 24%;
+  --card: var(--surf-hue) var(--surf-sat) 10%;
+  --card-foreground: 195 25% 92%;
+  --card-border: 205 45% 28%;
 
-  --sidebar: var(--surf-hue) 0% 7%;
-  --sidebar-foreground: var(--surf-hue) 0% 90%;
-  --sidebar-border: var(--surf-hue) 0% 18%;
-  --sidebar-primary: 0 0% 60%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: var(--surf-hue) 0% 18%;
-  --sidebar-accent-foreground: var(--surf-hue) 0% 90%;
-  --sidebar-ring: 0 0% 60%;
+  --sidebar: 213 77% 6%;
+  --sidebar-foreground: 195 25% 88%;
+  --sidebar-border: 208 50% 20%;
+  --sidebar-primary: 193 93% 43%;
+  --sidebar-primary-foreground: 213 77% 7%;
+  --sidebar-accent: var(--surf-hue) 55% 16%;
+  --sidebar-accent-foreground: 195 25% 88%;
+  --sidebar-ring: 193 93% 43%;
 
-  --popover: var(--surf-hue) 0% 12%;
-  --popover-foreground: var(--surf-hue) 0% 95%;
-  --popover-border: var(--surf-hue) 0% 22%;
+  --popover: var(--surf-hue) var(--surf-sat) 10%;
+  --popover-foreground: 195 25% 92%;
+  --popover-border: 205 45% 26%;
 
-  --primary: 0 0% 60%;
-  --primary-foreground: 0 0% 100%;
+  --primary: 193 93% 43%;
+  --primary-foreground: 213 77% 7%;
 
-  --secondary: var(--surf-hue) 0% 22%;
-  --secondary-foreground: var(--surf-hue) 0% 90%;
+  --secondary: var(--surf-hue) 50% 18%;
+  --secondary-foreground: 195 25% 88%;
 
-  --muted: var(--surf-hue) 0% 17%;
-  --muted-foreground: var(--surf-hue) 0% 62%;
+  --muted: var(--surf-hue) 50% 13%;
+  --muted-foreground: 200 20% 65%;
 
-  --accent: 0 0% 65%;
-  --accent-foreground: 0 0% 100%;
+  --accent: 183 91% 46%;
+  --accent-foreground: 213 77% 7%;
 
   --destructive: 0 72% 51%;
   --destructive-foreground: 0 0% 100%;
 
-  --input: var(--surf-hue) 0% 24%;
-  --ring: 0 0% 60%;
+  --input: var(--surf-hue) 45% 16%;
+  --ring: 193 80% 50%;
 
-  --chart-1: 0 0% 60%;
-  --chart-2: 0 0% 65%;
-  --chart-3: 0 0% 58%;
-  --chart-4: 0 0% 40%;
-  --chart-5: 0 0% 35%;
+  --chart-1: 193 93% 43%;
+  --chart-2: 183 91% 46%;
+  --chart-3: 202 87% 42%;
+  --chart-4: 210 85% 44%;
+  --chart-5: 213 89% 30%;
 
   --shadow-2xs: 0px 1px 2px 0px rgba(0,0,0,0.3);
   --shadow-xs: 0px 2px 4px 0px rgba(0,0,0,0.35);
@@ -252,50 +300,99 @@
   }
 }
 
-/* Study page backgrounds — deep cerulean/turquoise, brand-aligned with the
-   sidebar. Scoped variable overrides retone the shadcn tokens to a deep
-   turquoise palette so tokenized utilities (text-foreground / bg-card /
-   text-muted-foreground) resolve correctly on the dark surface. White
-   StudySurface cards use raw palette colors directly and remain unaffected. */
-/* Dark cerulean page surface — matches the landing-page reference exactly.
-   Page-scoped token overrides retone shadcn variables to the Deep Sea Teal /
-   Arctic Ocean Blue / Cerulean Ripple / Icy Glaze / Frost White palette so
-   tokenized utilities (bg-card, text-foreground, text-muted-foreground, etc.)
-   automatically resolve to dark-theme values inside any .study-page-bg page. */
+/* Canonical app surface tokens — every authenticated page (and the landing
+   page) carries .study-page-bg, which retones the shadcn tokens to the deep
+   blue system so tokenized utilities (bg-card, text-foreground,
+   text-muted-foreground, …) resolve correctly on the dark surface. */
 .study-page-bg,
 .study-page-aurora {
-  /* Mirrors STUDY_PALETTE in src/lib/study-theme.ts. Canonical palette
-     = the landing-page cinematic neuroscience UI. */
-  --background: var(--surf-hue) 0% 17%;         /* #0a0a0a bg (deep cerulean) */
-  --foreground: 0 0% 83%;        /* #d4d4d4 mist (icy text) */
-  --card: var(--surf-hue) 0% 25%;               /* #141414 surface (deep cerulean) */
-  --card-foreground: 0 0% 83%;
-  --popover: var(--surf-hue) 0% 23%;
-  --popover-foreground: 0 0% 83%;
-  --muted: var(--surf-hue) 0% 20%;              /* #111111 bgSoft (deep cerulean) */
-  --muted-foreground: 0 0% 70%;   /* brighter muted text */
-  --border: var(--surf-hue) 0% 44%;             /* #6b6b6b steel/cerulean */
-  --input: var(--surf-hue) 0% 20%;              /* #111111 bgSoft (deep cerulean) */
-  --primary: 0 0% 64%;            /* #999999 teal */
-  --primary-foreground: var(--surf-hue) 0% 14%;
-  --secondary: var(--surf-hue) 0% 44%;          /* #6b6b6b cerulean */
-  --secondary-foreground: 0 0% 83%;
-  --accent: 0 0% 72%;             /* #a3a3a3 surf (bright-cyan) */
-  --accent-foreground: var(--surf-hue) 0% 14%;
-  --ring: 0 0% 72%;
-  /* Shared cyan glow token for glass buttons + nav items so every
-     interactive surface reads from the same accent. */
-  --btn-glow: 0 0% 72%;
+  /* Mirrors STUDY_PALETTE in src/lib/study-theme.ts. */
+  --background: var(--surf-hue) var(--surf-sat) 7%;   /* deep tinted floor */
+  --foreground: 195 25% 88%;                          /* icy-tinted text */
+  --card: var(--surf-hue) var(--surf-sat) 11%;        /* tinted surface */
+  --card-foreground: 195 25% 88%;
+  --popover: var(--surf-hue) var(--surf-sat) 10%;
+  --popover-foreground: 195 25% 88%;
+  --muted: var(--surf-hue) 50% 14%;
+  --muted-foreground: 200 22% 68%;
+  --border: 205 50% 30%;
+  --input: var(--surf-hue) 50% 12%;
+  --primary: 193 93% 43%;             /* --pp-cyan */
+  --primary-foreground: 213 77% 7%;
+  --secondary: var(--surf-hue) 55% 22%;
+  --secondary-foreground: 195 25% 88%;
+  --accent: 183 91% 46%;              /* --pp-bright */
+  --accent-foreground: 213 77% 7%;
+  --ring: 193 80% 55%;
+  /* Shared glow source for gloss buttons + interactive glass. */
+  --btn-glow: 184 91% 46%;
 }
 
 /* ============================================================
-   GLASS + GLOW BUTTON UTILITIES
+   MATERIAL UTILITIES — the three canonical surfaces.
+   Pages compose these instead of inventing per-page recipes.
+   ============================================================ */
+
+/* OPAQUE — big structural panels. Solid navy-tint, lit top bevel, black
+   shadow. NEVER glows (no hover state on purpose). */
+.mat-opaque {
+  background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);
+  border: 1px solid var(--pp-line);
+  border-radius: 20px;
+  box-shadow:
+    inset 0 1px 0 var(--pp-bevel),
+    0 22px 48px -32px var(--pp-shadow);
+}
+
+/* GLASS — tiles nested inside opaque panels. Tinted transparency (the parent
+   panel reads through), brighter bevel. Static by default. */
+.mat-glass {
+  background: rgba(13, 88, 162, 0.16);
+  border: 1px solid var(--pp-line-bright);
+  border-radius: 16px;
+  box-shadow:
+    inset 0 1px 0 var(--pp-bevel-bright),
+    0 12px 28px -22px var(--pp-shadow);
+}
+
+/* Interactive glass — adds the hover glow + lift. Use on clickable tiles. */
+.mat-glass-interactive {
+  transition: background 200ms ease, border-color 200ms ease,
+    box-shadow 240ms ease, transform 160ms ease;
+}
+.mat-glass-interactive:hover {
+  background: rgba(13, 88, 162, 0.26);
+  border-color: rgba(11, 212, 223, 0.60);
+  box-shadow:
+    inset 0 1px 0 var(--pp-bevel-bright),
+    0 0 22px -4px var(--pp-glow),
+    0 16px 34px -22px var(--pp-shadow);
+  transform: translateY(-2px);
+}
+.mat-glass-interactive:active {
+  transform: translateY(0);
+  box-shadow:
+    inset 0 1px 0 var(--pp-bevel-bright),
+    0 0 26px -4px var(--pp-glow-strong),
+    0 10px 22px -18px var(--pp-shadow);
+}
+
+/* Mini-glass — chips, badges, tabs. Same recipe, tighter geometry. */
+.mat-chip {
+  background: rgba(13, 88, 162, 0.18);
+  border: 1px solid rgba(8, 165, 209, 0.40);
+  border-radius: 999px;
+  box-shadow: inset 0 1px 0 rgba(170, 237, 240, 0.18);
+  color: var(--pp-icy);
+}
+
+/* ============================================================
+   BUTTON MATERIALS (GLOSS + GLASS)
    ============================================================
-   Applied via the shadcn Button component variants below and via
-   the .btn-glass / .btn-glass-strong utility classes for the raw
-   <button> elements scattered across pages. Mirrors the sidebar
-   nav-item treatment (translucent fill, subtle border, soft cyan
-   glow that intensifies on hover/active).
+   Applied via the shadcn Button variants and via the .btn-glass /
+   .btn-glass-strong utility classes on raw <button> elements.
+   Class NAMES are legacy ("glass") but the recipes are the new
+   material system: -strong = GLOSS primary, plain = GLASS secondary.
    ============================================================ */
 .btn-glass,
 .btn-glass-strong {
@@ -304,55 +401,66 @@
   transition: background-color 160ms ease, background-image 160ms ease,
     border-color 160ms ease, box-shadow 200ms ease, transform 120ms ease;
 }
-/* Subtle luminous dark-glass — secondary/outline buttons. Mirrors the sidebar
-   .nav-glass-idle recipe: flat dark teal fill, faint cerulean hairline, soft
-   cyan glow that intensifies on hover/active. */
+
+/* GLASS secondary/outline button — tinted transparency + bevel; glow only
+   on hover/active. */
 .btn-glass {
-  background: hsl(var(--surf-hue) 0% 30% / 0.30);
-  border: 1.5px solid rgba(148, 148, 148, 0.45);
-  color: #f0f0f0;
+  background: rgba(13, 88, 162, 0.20);
+  border: 1.5px solid rgba(8, 165, 209, 0.45);
+  color: var(--pp-text);
   box-shadow:
-    inset 0 0 18px -8px rgba(0, 0, 0, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    inset 0 1px 0 rgba(170, 237, 240, 0.22),
+    0 8px 18px -14px var(--pp-shadow);
 }
 .btn-glass:hover {
-  background: hsl(var(--surf-hue) 0% 38% / 0.42);
-  border-color: rgba(148, 148, 148, 0.70);
+  background: rgba(13, 88, 162, 0.30);
+  border-color: rgba(11, 212, 223, 0.65);
   box-shadow:
-    inset 0 0 20px -8px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    inset 0 1px 0 rgba(170, 237, 240, 0.26),
+    0 0 18px -2px var(--pp-glow),
+    0 10px 20px -14px var(--pp-shadow);
+  transform: translateY(-1px);
 }
 .btn-glass:active {
-  background: hsl(var(--surf-hue) 0% 44% / 0.52);
-  border-color: rgba(148, 148, 148, 0.85);
+  background: rgba(13, 88, 162, 0.42);
+  border-color: rgba(11, 212, 223, 0.85);
   box-shadow:
-    inset 0 0 22px -8px rgba(0, 0, 0, 0.36),
-    inset 0 1px 0 rgba(255, 255, 255, 0.11);
+    inset 0 1px 0 rgba(170, 237, 240, 0.28),
+    0 0 22px -2px var(--pp-glow-strong),
+    0 6px 14px -12px var(--pp-shadow);
+  transform: translateY(0);
 }
-/* Primary CTA — brighter luminous dark-glass mirroring the sidebar
-   .nav-glass-active row: a stronger cerulean tint, brighter border, and a
-   clearly visible cyan glow corona. Near-white icy text for emphasis. */
+
+/* GLOSS primary CTA — saturated cyan gradient + glossy top highlight. Reads
+   pressable at rest through pigment alone; hover ignites the corona. */
 .btn-glass-strong {
-  background: rgba(148, 148, 148, 0.16);
-  border: 1.5px solid rgba(148, 148, 148, 0.85);
+  background: linear-gradient(180deg, var(--pp-bright) 0%, var(--pp-cyan) 52%, var(--pp-ocean) 100%);
+  border: 1px solid rgba(170, 237, 240, 0.55);
+  color: #03131f;
+  font-weight: 600;
   box-shadow:
-    inset 0 0 0 1px rgba(148, 148, 148, 0.30),
-    inset 0 1px 0 rgba(255, 255, 255, 0.14);
-  color: #f5f5f5;
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -8px 14px -10px rgba(4, 16, 31, 0.55),
+    0 10px 22px -14px var(--pp-shadow);
 }
 .btn-glass-strong:hover {
-  background: rgba(148, 148, 148, 0.24);
-  border-color: rgba(148, 148, 148, 1);
+  background: linear-gradient(180deg, var(--pp-bright) 0%, var(--pp-cyan) 42%, var(--pp-ocean) 100%);
+  border-color: rgba(170, 237, 240, 0.85);
   box-shadow:
-    inset 0 0 0 1px rgba(148, 148, 148, 0.50),
-    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -8px 14px -10px rgba(4, 16, 31, 0.45),
+    0 0 24px -2px var(--pp-glow),
+    0 12px 24px -14px var(--pp-shadow);
+  transform: translateY(-1px);
 }
 .btn-glass-strong:active {
-  background: rgba(148, 148, 148, 0.36);
-  border-color: #e5e5e5;
+  background: linear-gradient(180deg, var(--pp-cyan) 0%, var(--pp-ocean) 70%, var(--pp-ocean-deep) 100%);
+  border-color: var(--pp-icy);
   box-shadow:
-    inset 0 0 0 1px rgba(148, 148, 148, 0.70),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    inset 0 2px 6px rgba(4, 16, 31, 0.40),
+    0 0 28px -2px var(--pp-glow-strong),
+    0 6px 14px -12px var(--pp-shadow);
+  transform: translateY(0);
 }
 .btn-glass:disabled,
 .btn-glass-strong:disabled {
@@ -360,10 +468,8 @@
   box-shadow: none;
 }
 
-/* Ghost button — transparent glass that stays invisible until interacted
-   with, then lights up with the same cerulean glow as the rest of the
-   button family. Used by the shadcn `ghost` variant (icon toggles, menu
-   buttons, subtle inline actions). */
+/* Ghost button — invisible until interacted with, then lights up with the
+   same cyan system. */
 .btn-glass-ghost {
   position: relative;
   border-radius: 14px;
@@ -373,79 +479,74 @@
     box-shadow 200ms ease, transform 120ms ease;
 }
 .btn-glass-ghost:hover {
-  background: rgba(148, 148, 148, 0.10);
-  border-color: rgba(148, 148, 148, 0.45);
+  background: rgba(13, 88, 162, 0.16);
+  border-color: rgba(8, 165, 209, 0.45);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    inset 0 1px 0 rgba(170, 237, 240, 0.14),
+    0 0 14px -2px var(--pp-glow);
 }
 .btn-glass-ghost:active {
-  background: rgba(148, 148, 148, 0.18);
-  border-color: rgba(148, 148, 148, 0.6);
+  background: rgba(13, 88, 162, 0.26);
+  border-color: rgba(11, 212, 223, 0.60);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    inset 0 1px 0 rgba(170, 237, 240, 0.18),
+    0 0 18px -2px var(--pp-glow-strong);
 }
 .btn-glass-ghost:disabled {
   opacity: 0.55;
   box-shadow: none;
 }
 
-/* Destructive button — frosted red glass. Kept high-opacity (a near-solid
-   red gradient) so white label text stays legible on BOTH the dark app
-   surface and white StudySurface cards; the "glass" reads through the
-   backdrop blur + a red glow corona that intensifies on hover/press. */
+/* Destructive button — gloss recipe in the semantic red family. Kept
+   near-solid so white label text stays legible everywhere. */
 .btn-glass-destructive {
   position: relative;
   border-radius: 14px;
-  background: rgba(185, 28, 28, 0.95);
+  background: linear-gradient(180deg, rgba(239, 68, 68, 0.98) 0%, rgba(185, 28, 28, 0.98) 100%);
   border: 1px solid rgba(248, 113, 113, 0.55);
   box-shadow:
-    0 0 16px rgba(248, 113, 113, 0.30),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    inset 0 1px 0 rgba(255, 255, 255, 0.30),
+    0 8px 18px -14px var(--pp-shadow);
   transition: background-color 160ms ease, background-image 160ms ease,
     border-color 160ms ease, box-shadow 200ms ease, transform 120ms ease;
 }
 .btn-glass-destructive:hover {
-  background: rgba(220, 38, 38, 0.98);
+  background: linear-gradient(180deg, rgba(248, 88, 88, 1) 0%, rgba(203, 32, 32, 1) 100%);
   border-color: rgba(252, 165, 165, 0.7);
   box-shadow:
-    0 0 24px rgba(248, 113, 113, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 0 20px -2px rgba(248, 113, 113, 0.40),
+    0 10px 20px -14px var(--pp-shadow);
 }
 .btn-glass-destructive:active {
-  background: rgba(220, 38, 38, 1);
+  background: linear-gradient(180deg, rgba(220, 38, 38, 1) 0%, rgba(153, 27, 27, 1) 100%);
   border-color: rgba(254, 202, 202, 0.85);
   box-shadow:
-    0 0 32px rgba(248, 113, 113, 0.66),
-    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    inset 0 2px 6px rgba(60, 0, 0, 0.35),
+    0 0 26px -2px rgba(248, 113, 113, 0.55);
 }
 .btn-glass-destructive:disabled {
   opacity: 0.55;
   box-shadow: none;
 }
 
-/* Link button — stays a text link but picks up a soft cyan text glow on
-   hover so even the lightest-weight "button" participates in the glow. */
+/* Link button — text link that warms to the luminous cyan on hover. */
 .btn-link-glow {
-  transition: text-shadow 200ms ease, color 160ms ease;
+  transition: color 160ms ease;
 }
 .btn-link-glow:hover {
-  color: #e5e5e5;
+  color: var(--pp-bright);
 }
 
 /* ------------------------------------------------------------------
-   UNIVERSAL BUTTON GLOW (catch-all)
+   UNIVERSAL BUTTON HOVER (catch-all)
    ------------------------------------------------------------------
-   Guarantees that EVERY <button> inside the app surface brightens with
-   a cerulean glow on hover and an even stronger glow on press — even raw
-   <button> elements with arbitrary utility classes that don't use the
-   shared Button component or any .btn-glass* class.
-
-   Wrapped entirely in :where() so the whole selector carries ZERO
-   specificity: any button that defines its own box-shadow (.btn-glass*,
-   .bg-primary buttons, .nav-glass*, .eppp-launch-btn, .eps-* buttons,
-   quiz options, etc.) overrides this automatically and is left untouched,
-   while bare buttons still light up. Clerk's avatar button (.cl-*) and
-   disabled buttons are excluded.
+   Guarantees EVERY <button> inside the app surface responds on hover —
+   even raw <button> elements that skip the shared Button component.
+   Wrapped in :where() so the selector carries ZERO specificity: any
+   button that defines its own box-shadow (.btn-glass*, .nav-glass*,
+   .eppp-launch-btn, quiz options, …) overrides it automatically.
+   Glow appears ONLY on hover/active per the locked rules.
    ------------------------------------------------------------------ */
 :where(.study-page-bg button:not([class*="cl-"]):not(:disabled),
        .study-page-aurora button:not([class*="cl-"]):not(:disabled)) {
@@ -453,47 +554,36 @@
 }
 :where(.study-page-bg button:not([class*="cl-"]):not(:disabled):hover,
        .study-page-aurora button:not([class*="cl-"]):not(:disabled):hover) {
-  box-shadow: none;
+  box-shadow: 0 0 14px -2px var(--pp-glow);
 }
 :where(.study-page-bg button:not([class*="cl-"]):not(:disabled):active,
        .study-page-aurora button:not([class*="cl-"]):not(:disabled):active) {
-  box-shadow: none;
+  box-shadow: 0 0 18px -2px var(--pp-glow-strong);
 }
 
-/* Softer focus ring on study-page buttons — the global study --ring is a
-   saturated cyan (0 0% 72%) that clashes with the cerulean button glow.
-   Scope a gentler ring to buttons only so keyboard focus reads cleanly over
-   the glow. Inputs/other surfaces keep the default --ring. */
+/* Softer focus ring on study-page buttons so keyboard focus reads cleanly
+   over the hover glow. Inputs/other surfaces keep the default --ring. */
 .study-page-bg button,
 .study-page-aurora button {
-  --ring: 0 0% 82%;
+  --ring: 190 60% 75%;
 }
 
 .study-page-bg,
 .study-page-aurora {
   position: relative;
-  /* Transparent — the cinematic deep-cerulean nebula image lives on the
-     ::before pseudo-element (z-index: -2). A solid background-color here
-     would overpaint that image and leave the page dark. The page-bg color
-     fallback is on the ::before itself. */
+  /* Transparent — the pure-black floor lives on the ::before pseudo-element
+     (z-index: -2). A solid background-color here would overpaint it. */
   background-color: transparent;
 }
 
 /* Dark app floor — prevents white flashes during route/auth transitions.
    The shadcn --background token is LIGHT, and it lives on <body>; without this
-   floor a route swap flashes that light canvas for a frame, which reads as
-   "choppy". This sets body to the deep-cerulean floor instead.
+   floor a route swap flashes that light canvas for a frame.
 
    CRITICAL — set this on <body> ONLY. Never add a background to <html> or
-   <#root>:
-     - The shared page backdrop lives on a
-       `position: fixed; z-index: -2` ::before. For those to show, body's
-       background must be PROPAGATED to the canvas (the bottom-most layer, behind
-       the negative-z ::before). The browser only propagates body's background
-       to the canvas when <html> has NO background of its own.
-     - Giving <html> (or the normal-flow <#root>) a background breaks that
-       propagation, so body's background paints in normal flow ON TOP of the
-       fixed ::before and wipes every page backdrop. */
+   <#root>: the shared page backdrop lives on a `position: fixed; z-index: -2`
+   ::before, and the browser only propagates body's background to the canvas
+   when <html> has NO background of its own. */
 body {
   background-color: #000000;
 }
@@ -501,17 +591,9 @@ body {
 /* ============================================================
    CANONICAL APP SURFACE — DO NOT OVERRIDE PER-PAGE
    ============================================================
-   .study-page-bg is the canonical PsychPro app surface used by
-   every authenticated page. It paints:
-     - shadcn token overrides (cerulean palette, defined above)
-     - the full-bleed solid near-black navy backdrop via ::before
-       (owner removed the smoke artwork on 2026-07-08 — NO image)
-     - canonical glass card treatment (.bg-card descendants)
-
+   .study-page-bg paints the full-bleed PURE BLACK floor via ::before.
    DO NOT override the ::before background per-page. DO NOT add filters,
-   vignette gradients, blend modes, glow layers, or a background image. DO
-   NOT re-declare these CSS variables in another scope. DO NOT add a
-   competing .bg-card rule.
+   vignette gradients, blend modes, glow layers, or a background image.
    ============================================================ */
 .study-page-bg::before,
 .study-page-aurora::before {
@@ -519,26 +601,22 @@ body {
   position: fixed;
   inset: 0;
   z-index: -2;
-  /* Solid near-black deep-navy backdrop. The owner removed the smoke
-     artwork site-wide (2026-07-08): no background image, no gradients,
-     no vignette, no blend mode, no pseudo-element glow, no filter. */
   background-image: none;
   background-color: #000000;
   pointer-events: none;
 }
 
-/* Landing-page backdrop: pure black, same as the app floor.
-   Owner instruction (2026-07-09): the brain artwork is no longer a page
-   BACKGROUND — the new hero brain (assets/bg/landing-hero-brain.jpeg) is an
-   inline <img> at the very top of the landing page (see landing.tsx,
-   .landing-hero-brain) with the text beginning right below it. */
+/* Landing-page backdrop: pure black, same as the app floor. The hero brain
+   (assets/bg/landing-hero-brain.jpeg) is an inline <img> at the very top of
+   the landing page (see landing.tsx, .landing-hero-brain) — never a page
+   background. */
 .landing-root.study-page-bg::before {
   background-image: none;
   background-color: #000;
 }
 
-/* Reserved overlay layer. Keep visually empty so the solid navy backdrop
-   stays exact across landing, app, dashboard, and EPPP surfaces. */
+/* Reserved overlay layer. Keep visually empty so the black floor stays
+   exact across landing, app, dashboard, and EPPP surfaces. */
 .study-page-bg::after,
 .study-page-aurora::after {
   content: "";
@@ -551,79 +629,77 @@ body {
   opacity: 0;
 }
 
-/* Lesson detail header — wraps the title, category, description and counts
-   in the same glass surface as the study-option cards so the text stays
-   readable over the smoky background. */
+/* Lesson detail header — OPAQUE material (structural panel). */
 .lesson-header-box {
-  background: hsl(var(--surf-hue) 0% 8% / 0.78);
-  border: 1px solid rgba(163, 163, 163, 0.20);
+  background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);
+  border: 1px solid var(--pp-line);
   border-radius: 12px;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 8px 24px -16px rgba(0, 0, 0, 0.62);
+    inset 0 1px 0 var(--pp-bevel),
+    0 8px 24px -16px var(--pp-shadow);
   padding: 1.5rem 1.5rem 1.25rem;
 }
 
-/* Recommended-for-You tiles on the dashboard — glassy translucent pills
-   with a soft cyan corona that intensifies on hover. Matches the
-   landing-page atmosphere so the dashboard feels cut from the same
-   cinematic surface. */
+/* Recommended-for-You tiles on the dashboard — interactive GLASS. */
 .recommended-tile {
-  background: hsl(var(--surf-hue) 0% 6% / 0.85);
-  border-color: rgba(163, 163, 163, 0.22);
+  background: rgba(13, 88, 162, 0.14);
+  border-color: var(--pp-line-bright);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 24px 60px -42px rgba(0, 0, 0, 0.72);
+    inset 0 1px 0 var(--pp-bevel-bright),
+    0 16px 36px -28px var(--pp-shadow);
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .recommended-tile:hover {
-  border-color: rgba(163, 163, 163, 0.38);
-  background: hsl(var(--surf-hue) 0% 10% / 0.82);
+  border-color: rgba(11, 212, 223, 0.60);
+  background: rgba(13, 88, 162, 0.24);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.14),
-    0 26px 62px -40px rgba(0, 0, 0, 0.74);
+    inset 0 1px 0 var(--pp-bevel-bright),
+    0 0 22px -4px var(--pp-glow),
+    0 18px 38px -26px var(--pp-shadow);
 }
 .recommended-tile:active {
-  border-color: rgba(163, 163, 163, 0.44);
+  border-color: rgba(11, 212, 223, 0.75);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    0 18px 40px -28px rgba(0, 0, 0, 0.7);
+    inset 0 1px 0 var(--pp-bevel-bright),
+    0 0 26px -4px var(--pp-glow-strong),
+    0 12px 26px -20px var(--pp-shadow);
 }
 
-/* Course Mastery tiles — dull and desaturated until the course's mastery
-   exam is passed, then they light up with a steady cerulean glow. */
+/* Course Mastery tiles — dull glass until the course's mastery exam is
+   passed, then they brighten (glow still only on hover). */
 .course-mastery-tile {
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .course-mastery-tile--locked {
-  background: hsl(var(--surf-hue) 0% 10% / 0.45);
-  border-color: rgba(163, 163, 163, 0.1);
+  background: rgba(4, 16, 31, 0.55);
+  border-color: rgba(11, 102, 154, 0.18);
   opacity: 0.5;
   filter: grayscale(0.6);
 }
 .course-mastery-tile--locked:hover {
   opacity: 0.82;
   filter: grayscale(0.2);
-  border-color: rgba(163, 163, 163, 0.22);
+  border-color: rgba(11, 102, 154, 0.38);
   transform: translateY(-2px);
 }
 .course-mastery-tile--mastered {
-  background: hsl(var(--surf-hue) 0% 22% / 0.52);
-  border-color: rgba(148, 148, 148, 0.55);
+  background: rgba(13, 88, 162, 0.26);
+  border-color: rgba(8, 165, 209, 0.55);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    0 8px 22px -16px rgba(0, 0, 0, 0.55);
+    inset 0 1px 0 var(--pp-bevel-bright),
+    0 8px 22px -16px var(--pp-shadow);
 }
 .course-mastery-tile--mastered:hover {
   transform: translateY(-2px);
-  border-color: rgba(148, 148, 148, 0.85);
+  border-color: rgba(11, 212, 223, 0.80);
+  box-shadow:
+    inset 0 1px 0 var(--pp-bevel-bright),
+    0 0 22px -4px var(--pp-glow),
+    0 10px 24px -16px var(--pp-shadow);
 }
 
 /* ============== EPPP MASTERY SYSTEM — launch / back buttons ==============
-   Calm, refined entry points: "EPPP Mastery Suite" at the bottom of the main
-   sidebar (app-layout.tsx) and "Back to PsychPro" at the bottom of the suite
-   sidebar (eppp-suite.tsx). Moved out of the top bars (owner, 2026-07-09)
-   because the header pills were throwing off the page-title spacing. */
+   GLASS material with a gloss-adjacent emphasis. */
 .eppp-launch-btn {
   position: relative;
   display: inline-flex;
@@ -636,38 +712,38 @@ body {
   font-size: 13px;
   letter-spacing: 0.01em;
   white-space: nowrap;
-  color: #e5e5e5;
+  color: var(--pp-text);
   cursor: pointer;
-  border: 1px solid rgba(148, 148, 148, 0.55);
-  background: hsl(var(--surf-hue) 0% 22% / 0.50);
+  border: 1px solid rgba(8, 165, 209, 0.50);
+  background: rgba(13, 88, 162, 0.24);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    0 0 0 1px rgba(148, 148, 148, 0.28);
+    inset 0 1px 0 rgba(170, 237, 240, 0.20),
+    0 6px 14px -12px var(--pp-shadow);
   transition: transform 0.2s ease, box-shadow 0.3s ease, border-color 0.2s ease,
     background 0.2s ease, color 0.2s ease;
 }
 .eppp-launch-btn:hover {
   transform: translateY(-1px);
   color: #ffffff;
-  border-color: rgba(148, 148, 148, 0.95);
-  background: hsl(var(--surf-hue) 0% 15% / 0.60);
+  border-color: rgba(11, 212, 223, 0.75);
+  background: rgba(13, 88, 162, 0.34);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.22),
-    0 0 0 1px rgba(148, 148, 148, 0.45);
+    inset 0 1px 0 rgba(170, 237, 240, 0.24),
+    0 0 16px -2px var(--pp-glow);
 }
 .eppp-launch-btn:active {
   transform: translateY(0);
   color: #ffffff;
-  border-color: rgba(148, 148, 148, 1);
-  background: hsl(var(--surf-hue) 0% 30% / 0.68);
+  border-color: rgba(11, 212, 223, 0.95);
+  background: rgba(13, 88, 162, 0.46);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.28),
-    0 0 0 1px rgba(148, 148, 148, 0.6);
+    inset 0 1px 0 rgba(170, 237, 240, 0.28),
+    0 0 20px -2px var(--pp-glow-strong);
 }
 .eppp-launch-btn:focus-visible {
   outline: none;
   box-shadow:
-    0 0 0 3px rgba(148, 148, 148, 0.5);
+    0 0 0 3px rgba(11, 212, 223, 0.45);
 }
 .eppp-launch-btn__inner {
   display: inline-flex;
@@ -677,43 +753,27 @@ body {
 .eppp-launch-btn__inner svg {
   width: 16px;
   height: 16px;
-  color: #a3a3a3;
+  color: var(--pp-bright);
 }
 .eppp-launch-btn--sidebar {
   width: 100%;
 }
 
-/* User-supplied .study-card recipe — applied to every shadcn Card
-   (.bg-card) inside any .study-page-bg page. Diagonal dark-teal
-   gradient, cerulean hairline border, soft 22px corner, glassy
-   backdrop blur, deep drop shadow, faint outer cerulean glow. */
+/* Canonical shadcn Card treatment — OPAQUE material. Every generic Card
+   (.bg-card) inside any .study-page-bg page reads as a structural panel;
+   nested tiles opt into GLASS via .mat-glass / .mat-glass-interactive. */
 .study-page-bg .bg-card,
 .study-page-aurora .bg-card {
-  /* Unified with the EPPP card system (.epd-card): a radial cyan top-bloom over
-     a 145° diagonal cerulean glass, cyan inner glow + outer corona, deep drop
-     shadow. Keeps every generic shadcn card on the main site cut from the same
-     cloth as the EPPP domain tiles. */
-  background: hsl(var(--surf-hue) 0% 6% / 0.85);
-  border: 1px solid rgba(163, 163, 163, 0.22);
+  background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);
+  border: 1px solid var(--pp-line);
   border-radius: 20px;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.03),
-    0 22px 52px -40px rgba(0, 0, 0, 0.80);
+    inset 0 1px 0 var(--pp-bevel),
+    0 22px 52px -40px var(--pp-shadow);
 }
 
-/* =============================================================================
-   HEADER LEGIBILITY SCRIM (.text-scrim / .text-scrim-start)
-
-   Floating page/section headers (PageTitle, EPPP PanelHead, EPPP dashboard
-   section heads) sit directly on the cerulean smoke wallpaper, where titles,
-   eyebrows and subtitles wash out over bright plumes. This drops a soft,
-   edge-fading deep-cerulean pool BEHIND the header text so it stays readable —
-   but it is NOT a hard box: the radial fades to fully transparent, keeping the
-   smoke visible. Hue is locked via --surf-hue (192) so the surface-hue guardrail
-   stays green. `isolation:isolate` + ::before z-index:-1 place the pool between
-   the page background and the text without per-child z-index. Add
-   `.text-scrim-start` alongside `.text-scrim` to anchor the pool left for
-   left-aligned section heads. */
+/* Header legibility scrim — RETIRED (kept as no-ops so markup class names
+   remain valid). */
 .text-scrim { position: relative; isolation: isolate; }
 .text-scrim::before {
   content: none;
@@ -722,56 +782,47 @@ body {
   content: none;
 }
 
-/* Sidebar nav glass — frosted opaque dark-glass pills (2026-06 spec).
-   Idle is a solid deep teal frosted panel (high opacity over the smoke
-   backdrop); hover/active/pressed brighten the surface and intensify the cyan
-   outer glow. The active (current-route) row also gets a glowing cyan left bar
-   via ::before. All glow colors use the
-   locked cerulean #a3a3a3 / rgb(183, 183, 183). These plain rules sit
-   outside @layer so they override the Tailwind border/background utilities on
-   the nav tokens. */
+/* Sidebar nav — GLASS pills. Idle is quiet tinted transparency; hover /
+   active / pressed brighten the surface and ignite the cyan glow. The
+   active (current-route) row also gets a luminous cyan left bar. */
 .nav-glass-idle,
 .nav-glass-active {
-  /* See-through glassmorphic panes: a low-opacity cerulean tint over a light
-     blur, so the smoke backdrop reads clearly through the glass (clear & glassy
-     rather than thick frost). Border glow ramps up on hover / press / active. */
   transition: background 200ms ease, border-color 200ms ease,
     box-shadow 240ms ease, transform 140ms ease;
 }
 .nav-glass-idle {
-  background: hsl(var(--surf-hue) 0% 26% / 0.30);
-  border: 1px solid rgba(148, 148, 148, 0.3);
+  background: rgba(13, 88, 162, 0.14);
+  border: 1px solid rgba(11, 102, 154, 0.35);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    inset 0 1px 0 rgba(170, 237, 240, 0.12);
 }
 .nav-glass-idle:hover {
-  background: hsl(var(--surf-hue) 0% 34% / 0.42);
-  border-color: rgba(148, 148, 148, 0.7);
+  background: rgba(13, 88, 162, 0.26);
+  border-color: rgba(8, 165, 209, 0.60);
   box-shadow:
-    0 0 0 1px rgba(148, 148, 148, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    inset 0 1px 0 rgba(170, 237, 240, 0.16),
+    0 0 14px -2px var(--pp-glow);
   transform: translateY(-1px);
 }
 .nav-glass-idle:active {
-  background: hsl(var(--surf-hue) 0% 38% / 0.54);
-  border-color: rgba(148, 148, 148, 0.82);
+  background: rgba(13, 88, 162, 0.38);
+  border-color: rgba(11, 212, 223, 0.75);
   box-shadow:
-    0 0 0 1.5px rgba(148, 148, 148, 0.72),
-    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    inset 0 1px 0 rgba(170, 237, 240, 0.18),
+    0 0 18px -2px var(--pp-glow-strong);
   transform: translateY(0);
 }
 .nav-glass-active {
-  background: hsl(var(--surf-hue) 0% 40% / 0.5);
-  border: 1px solid rgba(148, 148, 148, 0.72);
+  background: rgba(13, 88, 162, 0.32);
+  border: 1px solid rgba(8, 165, 209, 0.65);
   box-shadow:
-    0 0 0 1px rgba(148, 148, 148, 0.6),
-    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    inset 0 1px 0 rgba(170, 237, 240, 0.18);
 }
 .nav-glass-active:hover {
-  border-color: rgba(148, 148, 148, 0.85);
+  border-color: rgba(11, 212, 223, 0.85);
   box-shadow:
-    0 0 0 1.5px rgba(148, 148, 148, 0.72),
-    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    inset 0 1px 0 rgba(170, 237, 240, 0.20),
+    0 0 16px -2px var(--pp-glow);
   transform: translateY(-1px);
 }
 .nav-glass-active::before {
@@ -782,115 +833,115 @@ body {
   bottom: 6px;
   width: 2px;
   border-radius: 0 2px 2px 0;
-  background: #a3a3a3;
+  background: var(--pp-bright);
 }
 
-/* Legacy bg-primary/bg-secondary button glass — scoped to actual <button>
-   elements only (the previous [class*="bg-primary"] wildcard hijacked every
-   subtle bg-primary/NN tint chip, badge, and avatar across the app). Tuned
-   to the same restrained refined-glass look as .btn-glass so all buttons
-   read consistently. The canonical button recipe remains .btn-glass /
-   .btn-glass-strong via the shared Button component. */
+/* Legacy bg-primary/bg-secondary buttons — scoped to actual <button>
+   elements only (a [class*="bg-primary"] wildcard once hijacked every
+   subtle bg-primary/NN tint chip — never widen these selectors). Tuned to
+   the same materials as the shared Button variants: bg-primary = GLOSS,
+   bg-secondary/outline = GLASS. */
 .study-page-bg button.bg-primary,
 .study-page-aurora button.bg-primary {
-  background-image: none;
-  background-color: rgba(148, 148, 148, 0.16);
-  color: #f5f5f5;
-  border: 1.5px solid rgba(148, 148, 148, 0.85);
+  background-image: linear-gradient(180deg, var(--pp-bright) 0%, var(--pp-cyan) 52%, var(--pp-ocean) 100%);
+  background-color: var(--pp-cyan);
+  color: #03131f;
+  border: 1px solid rgba(170, 237, 240, 0.55);
   border-radius: 14px;
   transition: all 0.2s ease;
   box-shadow:
-    inset 0 0 0 1px rgba(148, 148, 148, 0.30),
-    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -8px 14px -10px rgba(4, 16, 31, 0.55),
+    0 10px 22px -14px var(--pp-shadow);
 }
 
 .study-page-bg button.bg-primary:hover,
 .study-page-aurora button.bg-primary:hover {
-  background-color: rgba(148, 148, 148, 0.24);
-  border-color: rgba(148, 148, 148, 1);
+  border-color: rgba(170, 237, 240, 0.85);
   box-shadow:
-    inset 0 0 0 1px rgba(148, 148, 148, 0.50),
-    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -8px 14px -10px rgba(4, 16, 31, 0.45),
+    0 0 24px -2px var(--pp-glow),
+    0 12px 24px -14px var(--pp-shadow);
 }
 
 .study-page-bg button.bg-primary:active,
 .study-page-aurora button.bg-primary:active {
-  background-color: rgba(148, 148, 148, 0.36);
-  border-color: #e5e5e5;
+  background-image: linear-gradient(180deg, var(--pp-cyan) 0%, var(--pp-ocean) 70%, var(--pp-ocean-deep) 100%);
+  border-color: var(--pp-icy);
   box-shadow:
-    inset 0 0 0 1px rgba(148, 148, 148, 0.70),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    inset 0 2px 6px rgba(4, 16, 31, 0.40),
+    0 0 28px -2px var(--pp-glow-strong);
 }
 
-/* Secondary buttons — subtle luminous dark glass, scoped to actual buttons. */
+/* Secondary buttons — GLASS, scoped to actual buttons. */
 .study-page-bg button.bg-secondary,
 .study-page-aurora button.bg-secondary {
-  background: hsl(var(--surf-hue) 0% 30% / 0.30);
-  color: #f0f0f0;
-  border: 1.5px solid rgba(148, 148, 148, 0.45);
+  background: rgba(13, 88, 162, 0.20);
+  color: var(--pp-text);
+  border: 1.5px solid rgba(8, 165, 209, 0.45);
   border-radius: 14px;
   transition: all 0.2s ease;
   box-shadow:
-    inset 0 0 18px -8px rgba(0, 0, 0, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    inset 0 1px 0 rgba(170, 237, 240, 0.22),
+    0 8px 18px -14px var(--pp-shadow);
 }
 
 .study-page-bg button.bg-secondary:hover,
 .study-page-aurora button.bg-secondary:hover {
-  background: hsl(var(--surf-hue) 0% 38% / 0.42);
-  border-color: rgba(148, 148, 148, 0.70);
+  background: rgba(13, 88, 162, 0.30);
+  border-color: rgba(11, 212, 223, 0.65);
   box-shadow:
-    inset 0 0 20px -8px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    inset 0 1px 0 rgba(170, 237, 240, 0.26),
+    0 0 18px -2px var(--pp-glow),
+    0 10px 20px -14px var(--pp-shadow);
 }
 
 .study-page-bg button.bg-secondary:active,
 .study-page-aurora button.bg-secondary:active {
-  background: hsl(var(--surf-hue) 0% 44% / 0.52);
-  border-color: rgba(148, 148, 148, 0.85);
+  background: rgba(13, 88, 162, 0.42);
+  border-color: rgba(11, 212, 223, 0.85);
   box-shadow:
-    inset 0 0 22px -8px rgba(0, 0, 0, 0.36),
-    inset 0 1px 0 rgba(255, 255, 255, 0.11);
+    inset 0 1px 0 rgba(170, 237, 240, 0.28),
+    0 0 22px -2px var(--pp-glow-strong);
 }
 
-/* Outline buttons — transparent luminous glass with a cerulean hairline.
-   Targets shadcn outline variant which renders `border border-input`
-   without a bg-* class. */
+/* Outline buttons — GLASS with a cyan hairline. Targets the shadcn outline
+   variant which renders `border border-input` without a bg-* class. */
 .study-page-bg button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive),
 .study-page-aurora button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive) {
-  background: hsl(var(--surf-hue) 0% 30% / 0.26);
+  background: rgba(13, 88, 162, 0.16);
   border-width: 1.5px;
-  border-color: rgba(148, 148, 148, 0.45) !important;
-  color: #f0f0f0;
+  border-color: rgba(8, 165, 209, 0.45) !important;
+  color: var(--pp-text);
   border-radius: 14px;
   transition: all 0.2s ease;
   box-shadow:
-    inset 0 0 18px -8px rgba(0, 0, 0, 0.42),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    inset 0 1px 0 rgba(170, 237, 240, 0.20),
+    0 8px 18px -14px var(--pp-shadow);
 }
 
 .study-page-bg button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive):hover,
 .study-page-aurora button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive):hover {
-  background: hsl(var(--surf-hue) 0% 38% / 0.40);
-  border-color: rgba(148, 148, 148, 0.70) !important;
+  background: rgba(13, 88, 162, 0.26);
+  border-color: rgba(11, 212, 223, 0.65) !important;
   box-shadow:
-    inset 0 0 20px -8px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    inset 0 1px 0 rgba(170, 237, 240, 0.24),
+    0 0 18px -2px var(--pp-glow);
 }
 
 .study-page-bg button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive):active,
 .study-page-aurora button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive):active {
-  background: hsl(var(--surf-hue) 0% 44% / 0.50);
-  border-color: rgba(148, 148, 148, 0.85) !important;
+  background: rgba(13, 88, 162, 0.38);
+  border-color: rgba(11, 212, 223, 0.85) !important;
   box-shadow:
-    inset 0 0 22px -8px rgba(0, 0, 0, 0.36),
-    inset 0 1px 0 rgba(255, 255, 255, 0.11);
+    inset 0 1px 0 rgba(170, 237, 240, 0.26),
+    0 0 22px -2px var(--pp-glow-strong);
 }
 
-/* User-supplied .input recipe — translucent dark teal, cerulean
-   hairline, Frost-White text, rounded 14px, glassy backdrop blur.
-   Applied to text inputs, textareas, and selects (skips checkboxes,
-   radios, file pickers, and buttons). */
+/* Inputs — recessed deep-tint wells with a quiet ocean hairline. Applied to
+   text inputs, textareas, and selects (skips checkboxes, radios, file
+   pickers, and buttons). */
 .study-page-bg :where(
   input[type="text"],
   input[type="email"],
@@ -915,9 +966,9 @@ body {
   textarea,
   select
 ) {
-  background: hsl(var(--surf-hue) 0% 10% / 0.72);
-  border: 1px solid rgba(148, 148, 148, 0.14);
-  color: #e5e5e5;
+  background: rgba(4, 16, 31, 0.78);
+  border: 1px solid rgba(11, 102, 154, 0.40);
+  color: var(--pp-text);
   border-radius: 14px;
 }
 
@@ -942,11 +993,9 @@ body {
 .flashcard-back {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  /* The glass faces use backdrop-filter, which flattens the 3D context and
-     defeats backface-visibility in many browsers — the back face's mirrored
-     text flashes through mid-flip. Hard-swap face visibility with opacity at
-     the rotation midpoint (when the card is edge-on, ~0.25s into the 0.5s
-     turn) so a mirrored face is never seen. */
+  /* Hard-swap face visibility with opacity at the rotation midpoint (when the
+     card is edge-on, ~0.25s into the 0.5s turn) so a mirrored face is never
+     seen. */
   transition: opacity 0s linear 0.25s;
 }
 
@@ -978,8 +1027,8 @@ body {
 }
 
 @keyframes learning-pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.35); }
-  50%      { box-shadow: 0 0 0 8px rgba(255, 255, 255, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(11, 212, 223, 0.35); }
+  50%      { box-shadow: 0 0 0 8px rgba(11, 212, 223, 0); }
 }
 .animate-pulse-glow {
   animation: learning-pulse-glow 1.6s ease-in-out infinite;
@@ -994,13 +1043,9 @@ body {
 }
 
 /* =============================================================================
-   Dashboard header — refined brand banner.
-   Decluttered from the old "Synaptic Aurora" treatment (drifting auroras +
-   twinkling dots + light-sweep read as busy/tacky). Now: a single soft static
-   cerulean glow behind the wordmark plus a gentle one-shot rise-in on mount —
-   calm and premium. All selectors stay scoped under .dashhdr-* so they never
-   leak into other components (see past bg-primary / shared-class incidents).
-   Decorative layers are pointer-events-none in the markup.
+   Dashboard header — refined brand banner. A gentle one-shot rise-in on
+   mount; all selectors stay scoped under .dashhdr-* so they never leak into
+   other components (see past bg-primary / shared-class incidents).
    ============================================================================= */
 @keyframes dashhdr-rise {
   from { opacity: 0; transform: translateY(8px); }
@@ -1034,16 +1079,16 @@ body {
   .no-default-hover-elevate {}
   .no-default-active-elevate {}
 
-  /* Cerulean glow + soft border lift on hover for quiz answer options
-     (and any matching unselected interactive surfaces). The base inline
-     style sets a subtle shadow; this class amps it up on hover. */
+  /* Cyan glow + soft border lift on hover for quiz answer options
+     (and any matching unselected interactive surfaces). */
   .quiz-option-hover {
     transition: transform 200ms ease, box-shadow 250ms ease, border-color 200ms ease, background 250ms ease;
   }
   .quiz-option-hover:hover:not(:disabled) {
-    border-color: rgba(212, 212, 212, 0.55) !important;
+    border-color: rgba(11, 212, 223, 0.55) !important;
     box-shadow:
-      0 0 0 1px rgba(212, 212, 212, 0.25),
+      0 0 0 1px rgba(11, 212, 223, 0.25),
+      0 0 18px -4px var(--pp-glow),
       0 12px 32px -10px rgba(0, 0, 0, 0.55) !important;
   }
 
@@ -1105,18 +1150,14 @@ body {
 }
 
 /* =============================================================================
-   BLACK FOUNDATION RESET (2026-07-09) — global kill-switch for the old
-   glass/glow layer. No frosted blur and no text glow anywhere in the app.
-   Box shadows are removed except on elements that ask for focus rings
-   (Tailwind ring utilities apply on :focus-visible, which is excluded).
+   MATERIAL DISCIPLINE RESET — the GLASS material is tinted transparency,
+   never frosted blur: backdrop-filter stays banned app-wide. (The old
+   black-foundation box-shadow/text-shadow kill-switch is retired — the
+   material system's pigment depth needs bevels and shadows.)
    ============================================================================= */
 *,
 *::before,
 *::after {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-  text-shadow: none !important;
-}
-*:not(:focus-visible):not(:focus) {
-  box-shadow: none !important;
 }

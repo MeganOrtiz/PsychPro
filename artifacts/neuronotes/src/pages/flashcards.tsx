@@ -176,7 +176,7 @@ export default function FlashcardsPage({ params }: Props) {
           </div>
 
           <div className="relative mb-4">
-            <div className="w-full rounded-full h-1.5 mb-8 overflow-hidden" style={{ background: "hsl(var(--surf-hue) 0% 48% / 0.12)" }}>
+            <div className="w-full rounded-full h-1.5 mb-8 overflow-hidden" style={{ background: "hsl(var(--surf-hue) var(--surf-sat) 48% / 0.12)" }}>
               <div
                 className="h-1.5 rounded-full transition-all"
                 style={{
@@ -249,10 +249,8 @@ export default function FlashcardsPage({ params }: Props) {
             <div
               className="mt-6 rounded-xl border p-5 text-center"
               style={{
-                background: "hsl(var(--surf-hue) 0% 6% / 0.90)",
-                borderColor: "rgba(148, 148, 148,0.26)",
-                backdropFilter: "blur(18px) saturate(135%)",
-                WebkitBackdropFilter: "blur(18px) saturate(135%)",
+                background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90)",
+                borderColor: "rgba(8,165,209,0.26)",
                 boxShadow:
                   "inset 0 1px 0 rgba(255,255,255,0.13), 0 20px 46px -26px rgba(0,0,0,0.66)",
               }}
@@ -260,7 +258,7 @@ export default function FlashcardsPage({ params }: Props) {
             >
               <div
                 className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3"
-                style={{ background: `hsl(var(--surf-hue) 0% 58% / 0.25)`, border: `1px solid ${P.surf}55` }}
+                style={{ background: `hsl(var(--surf-hue) var(--surf-sat) 58% / 0.25)`, border: `1px solid ${P.surf}55` }}
               >
                 <Lock className="w-5 h-5 text-white" />
               </div>

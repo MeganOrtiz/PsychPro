@@ -28,27 +28,27 @@ function baseSurfaceStyles(tone: StudyTone): CSSProperties {
   switch (tone) {
     case "dark":
       return {
-        background: "#0f0f0f",
-        borderColor: "#262626",
+        background: "#04101f",
+        borderColor: "#0e4e71",
         color: "#ffffff",
       };
     case "accent":
       return {
-        background: "#1c1c1c",
-        borderColor: "#3f3f3f",
+        background: "#092642",
+        borderColor: "#0e4e71",
         color: "#ffffff",
       };
     case "card-front":
       return {
-        background: "#181818",
-        borderColor: "#3f3f3f",
+        background: "#092642",
+        borderColor: "#0e4e71",
         color: "#ffffff",
       };
     case "light":
     default:
       return {
-        background: "#141414",
-        borderColor: "#2e2e2e",
+        background: "#071c33",
+        borderColor: "#0e4e71",
         color: P.mist,
       };
   }
@@ -68,17 +68,17 @@ function pillStyles(tone: StudyTone, brand?: boolean): CSSProperties {
   }
   if (tone === "accent" || tone === "card-front") {
     return {
-      background: "rgba(255,255,255,0.22)",
+      background: "rgba(13,88,162,0.30)",
       color: "#FFFFFF",
-      borderColor: "rgba(255,255,255,0.45)",
+      borderColor: "rgba(8,165,209,0.55)",
     };
   }
   return brand
     ? { background: P.teal, color: "#FFFFFF", borderColor: P.tealDeep }
     : {
-        background: "rgba(255,255,255,0.08)",
+        background: "rgba(13,88,162,0.18)",
         color: P.surf,
-        borderColor: "rgba(255,255,255,0.18)",
+        borderColor: "rgba(8,165,209,0.40)",
       };
 }
 

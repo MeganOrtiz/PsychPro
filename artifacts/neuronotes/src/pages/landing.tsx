@@ -73,35 +73,35 @@ const STUDY_TOOLS = [
     title: "Review in Minutes",
     body:
       "Review key concepts quickly with detailed flashcards designed to strengthen long-term retention.",
-    accent: "#a3a3a3",
+    accent: "#08a5d1",
   },
   {
     icon: ClipboardList,
     title: "Knowledge Checks",
     body:
       "Identify what you know, strengthen areas of growth, and deepen understanding with detailed explanations for every question.",
-    accent: "#999999",
+    accent: "#0bd4df",
   },
   {
     icon: BookOpen,
     title: "Key Concepts. Organized.",
     body:
       "Study guides with consolidated need-to-know concepts designed to help you spend less time searching across resources and more time actively learning.",
-    accent: "#d4d4d4",
+    accent: "#aaedf0",
   },
   {
     icon: GraduationCap,
     title: "Test Yourself to Build Competence and Confidence",
     body:
       "Practice with exam-style questions that help you assess readiness, identify gaps, and strengthen clinical reasoning.",
-    accent: "#999999",
+    accent: "#08a5d1",
   },
   {
     icon: Award,
     title: "Measure Your Mastery",
     body:
       "Bring everything together with cumulative exams designed to help you evaluate your understanding before moving forward.",
-    accent: "#999999",
+    accent: "#0bd4df",
   },
 ] as const;
 
@@ -727,11 +727,11 @@ const C = {
   ink: "#171717",                  // deep cerulean ink — text on the white preview card
   inkSoft: "rgba(23, 23, 23,0.58)",  // muted ink — chart ticks on white
   grid: "rgba(23, 23, 23,0.10)",     // chart grid lines on white
-  bg: "#101010",
-  bgPanel: "hsl(var(--surf-hue) 0% 10% / 0.82)",
-  bgPanelStrong: "hsl(var(--surf-hue) 0% 6% / 0.90)",
-  hairline: "rgba(148, 148, 148, 0.36)",
-  hairlineStrong: "rgba(148, 148, 148, 0.58)",
+  bg: "#071c33",
+  bgPanel: "hsl(var(--surf-hue) var(--surf-sat) 10% / 0.82)",
+  bgPanelStrong: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90)",
+  hairline: "rgba(8,165,209, 0.36)",
+  hairlineStrong: "rgba(8,165,209, 0.58)",
 };
 
 const styles = `
@@ -752,7 +752,7 @@ const styles = `
   top: 0;
   z-index: 40;
   width: 100%;
-  background: hsl(var(--surf-hue) 0% 12% / 0.26);
+  background: hsl(var(--surf-hue) var(--surf-sat) 12% / 0.26);
   border-bottom: 1px solid ${C.hairline};
 }
 .landing-nav-inner {
@@ -861,7 +861,7 @@ const styles = `
   transform: translate(-50%, -50%);
   width: min(880px, 92%);
   height: 78%;
-  background: hsl(var(--surf-hue) 0% 7% / 0.00);
+  background: hsl(var(--surf-hue) var(--surf-sat) 7% / 0.00);
   pointer-events: none;
 }
 
@@ -1005,7 +1005,7 @@ const styles = `
    soft halo) so the main action reads "lit from within" and dominates via a
    brighter edge + larger bloom than the ghost variant. */
 .landing-cta-primary {
-  background: hsl(var(--surf-hue) 0% 8% / 0.66);
+  background: hsl(var(--surf-hue) var(--surf-sat) 8% / 0.66);
   border: 1.5px solid ${C.cyan};
   color: #f4f4f4;
   box-shadow:
@@ -1019,7 +1019,7 @@ const styles = `
   transform: translateY(-1px);
   color: #ffffff;
   border-color: #d7d7d7;
-  background: hsl(var(--surf-hue) 0% 9% / 0.6);
+  background: hsl(var(--surf-hue) var(--surf-sat) 9% / 0.6);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.24),
     0 0 0 1px ${C.cyan}80 inset,
@@ -1031,7 +1031,7 @@ const styles = `
   transform: translateY(0);
   color: #ffffff;
   border-color: #e5e5e5;
-  background: hsl(var(--surf-hue) 0% 10% / 0.55);
+  background: hsl(var(--surf-hue) var(--surf-sat) 10% / 0.55);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.30),
     0 0 0 1px ${C.cyan}aa inset,
@@ -1227,7 +1227,7 @@ const styles = `
   padding: 22px 20px;
   border-radius: 16px;
   border: 1px solid ${C.hairline};
-  background: hsl(var(--surf-hue) 0% 6% / 0.90);
+  background: hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90);
   box-shadow: 0 0 22px ${C.cyan}1f, 0 0 0 1px ${C.cyan}14 inset;
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -1316,7 +1316,7 @@ const styles = `
 .landing-split-body--boxed {
   padding: clamp(24px, 3vw, 38px);
   border-radius: 20px;
-  background: hsl(var(--surf-hue) 0% 6% / 0.88);
+  background: hsl(var(--surf-hue) var(--surf-sat) 6% / 0.88);
   border: 1px solid ${C.hairlineStrong};
   box-shadow: 0 30px 80px -40px rgba(0,0,0,0.72), 0 0 40px ${C.cyan}2a, 0 0 0 1px ${C.cyan}1f inset;
 }
@@ -1330,7 +1330,7 @@ const styles = `
   padding: clamp(26px, 3.4vw, 44px);
   border-radius: 22px;
   border: 1px solid ${C.hairlineStrong};
-  background: hsl(var(--surf-hue) 0% 6% / 0.90);
+  background: hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90);
   box-shadow:
     0 30px 80px -38px rgba(0, 0, 0, 0.72),
     0 0 48px ${C.cyan}30,
@@ -1400,8 +1400,8 @@ const styles = `
   background: #efefef;
   border: 1px solid rgba(255, 255, 255, 0.85);
   box-shadow:
-    0 2px 4px hsl(var(--surf-hue) 0% 9% / 0.20),
-    0 16px 32px -14px hsl(var(--surf-hue) 0% 9% / 0.50),
+    0 2px 4px hsl(var(--surf-hue) var(--surf-sat) 9% / 0.20),
+    0 16px 32px -14px hsl(var(--surf-hue) var(--surf-sat) 9% / 0.50),
     0 54px 96px -40px rgba(0, 0, 0, 0.74),
     0 0 0 1px rgba(112, 112, 112, 0.16),
     inset 0 1px 0 rgba(255, 255, 255, 0.96),
@@ -1457,7 +1457,7 @@ const styles = `
   overflow: hidden;
   border-radius: 22px;
   padding: clamp(28px, 4vw, 48px);
-  background: hsl(var(--surf-hue) 0% 6% / 0.90);
+  background: hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90);
   border: 1px solid ${C.hairlineStrong};
   box-shadow: 0 36px 90px -40px rgba(0,0,0,0.75), 0 0 48px ${C.cyan}33, 0 0 0 1px ${C.cyan}22 inset;
 }
@@ -1491,7 +1491,7 @@ const styles = `
   text-align: center;
   border-radius: 22px;
   padding: clamp(30px, 4.4vw, 52px);
-  background: hsl(var(--surf-hue) 0% 6% / 0.90);
+  background: hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90);
   border: 1px solid ${C.hairlineStrong};
   box-shadow: 0 36px 90px -40px rgba(0,0,0,0.75), 0 0 48px ${C.cyan}33, 0 0 0 1px ${C.cyan}22 inset;
 }
@@ -1543,7 +1543,7 @@ const styles = `
   text-align: center;
   border-radius: 22px;
   padding: clamp(30px, 4.4vw, 52px);
-  background: hsl(var(--surf-hue) 0% 6% / 0.90);
+  background: hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90);
   border: 1px solid ${C.hairlineStrong};
   box-shadow: 0 36px 90px -40px rgba(0,0,0,0.75), 0 0 48px ${C.cyan}33, 0 0 0 1px ${C.cyan}22 inset;
 }
@@ -1643,7 +1643,7 @@ const styles = `
 .landing-footer {
   border-top: 1px solid ${C.hairline};
   margin-top: clamp(28px, 4vh, 48px);
-  background: hsl(var(--surf-hue) 0% 12% / 0.7);
+  background: hsl(var(--surf-hue) var(--surf-sat) 12% / 0.7);
 }
 .landing-footer-inner {
   max-width: 1320px;

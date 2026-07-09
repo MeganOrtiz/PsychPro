@@ -246,10 +246,8 @@ export default function DashboardPage() {
           <div
             className="rounded-xl p-4 mb-6 flex items-start gap-3 border"
             style={{
-              background: "hsl(var(--surf-hue) 0% 6% / 0.90)",
-              borderColor: "rgba(148, 148, 148,0.30)",
-              backdropFilter: "blur(18px) saturate(135%)",
-              WebkitBackdropFilter: "blur(18px) saturate(135%)",
+              background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90)",
+              borderColor: "rgba(8,165,209,0.30)",
               boxShadow:
                 "inset 0 1px 0 rgba(255,255,255,0.13), 0 20px 46px -26px rgba(0,0,0,0.66)",
             }}
@@ -283,10 +281,8 @@ export default function DashboardPage() {
           <div
             className="rounded-xl p-4 mb-6 flex items-start gap-3 border"
             style={{
-              background: "hsl(var(--surf-hue) 0% 6% / 0.90)",
-              borderColor: "rgba(148, 148, 148,0.26)",
-              backdropFilter: "blur(18px) saturate(135%)",
-              WebkitBackdropFilter: "blur(18px) saturate(135%)",
+              background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90)",
+              borderColor: "rgba(8,165,209,0.26)",
               boxShadow:
                 "inset 0 1px 0 rgba(255,255,255,0.12), 0 20px 46px -26px rgba(0,0,0,0.66)",
             }}
@@ -344,7 +340,7 @@ export default function DashboardPage() {
                       {continueTopic.score}%
                     </span>
                   </div>
-                  <div className="h-2 rounded-full overflow-hidden mb-4" style={{ background: "hsl(var(--surf-hue) 0% 48% / 0.14)" }}>
+                  <div className="h-2 rounded-full overflow-hidden mb-4" style={{ background: "hsl(var(--surf-hue) var(--surf-sat) 48% / 0.14)" }}>
                     <div
                       className="h-full transition-all"
                       style={{
@@ -416,8 +412,8 @@ export default function DashboardPage() {
                         <div
                           className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 border transition-transform group-hover:scale-105"
                           style={{
-                            background: "rgba(148, 148, 148,0.1)",
-                            borderColor: "rgba(148, 148, 148,0.28)",
+                            background: "rgba(13,88,162,0.1)",
+                            borderColor: "rgba(8,165,209,0.28)",
                           }}
                         >
                           <Icon className="w-4 h-4" style={{ color: PALETTE.surf }} />
@@ -562,7 +558,7 @@ export default function DashboardPage() {
               <div style={{ height: 140 }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={activitySeries} margin={{ top: 8, right: 8, bottom: 0, left: -22 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 148, 148,0.12)" vertical={false} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(8,165,209,0.12)" vertical={false} />
                     <XAxis
                       dataKey="day"
                       tickLine={false}
@@ -578,8 +574,8 @@ export default function DashboardPage() {
                     <Tooltip
                       cursor={{ stroke: PALETTE.teal, strokeOpacity: 0.25 }}
                       contentStyle={{
-                        background: "hsl(var(--surf-hue) 0% 24% / 0.92)",
-                        border: "1px solid rgba(148, 148, 148,0.25)",
+                        background: "hsl(var(--surf-hue) var(--surf-sat) 24% / 0.92)",
+                        border: "1px solid rgba(8,165,209,0.25)",
                         borderRadius: 10,
                         color: PALETTE.mist,
                         fontSize: 12,
@@ -657,12 +653,12 @@ export default function DashboardPage() {
                     style={
                       a.earned
                         ? {
-                            background: "hsl(var(--surf-hue) 0% 58% / 0.14)",
-                            borderColor: "rgba(148, 148, 148,0.35)",
+                            background: "hsl(var(--surf-hue) var(--surf-sat) 58% / 0.14)",
+                            borderColor: "rgba(8,165,209,0.35)",
                           }
                         : {
-                            background: "hsl(var(--surf-hue) 0% 24% / 0.4)",
-                            borderColor: "rgba(148, 148, 148,0.10)",
+                            background: "hsl(var(--surf-hue) var(--surf-sat) 24% / 0.4)",
+                            borderColor: "rgba(8,165,209,0.10)",
                             opacity: 0.55,
                           }
                     }
@@ -677,8 +673,8 @@ export default function DashboardPage() {
                               borderColor: PALETTE.tealDeep,
                             }
                           : {
-                              background: "hsl(var(--surf-hue) 0% 58% / 0.10)",
-                              borderColor: "rgba(148, 148, 148,0.20)",
+                              background: "hsl(var(--surf-hue) var(--surf-sat) 58% / 0.10)",
+                              borderColor: "rgba(8,165,209,0.20)",
                             }
                       }
                     >
@@ -729,7 +725,7 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
-          background: `hsl(var(--surf-hue) 0% 6% / 0.66)`,
+          background: `hsl(var(--surf-hue) var(--surf-sat) 6% / 0.66)`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",

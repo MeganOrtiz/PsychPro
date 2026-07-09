@@ -175,8 +175,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
         style={{
-          background: "#0a0a0a",
-          border: "1px solid #262626",
+          background: "#071c33",
+          border: "1px solid var(--pp-line)",
         }}
         data-testid="sidebar"
       >
@@ -431,7 +431,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
             afterSignOutUrl={import.meta.env.BASE_URL.replace(/\/$/, "") || "/"}
             appearance={{
               elements: {
-                avatarBox: "w-10 h-10 rounded-full ring-1 ring-[#a3a3a3]/40",
+                avatarBox: "w-10 h-10 rounded-full ring-1 ring-[rgba(8,165,209,0.40)]",
               },
             }}
           />
@@ -516,7 +516,7 @@ function ToolsStudio({
                 <Icon className="w-4 h-4 flex-shrink-0" />
                 <span className="text-sm font-medium flex-1 min-w-0 truncate">{t.label}</span>
                 {!isScholar && (
-                  <span className="inline-flex items-center text-[10px] font-semibold tracking-wide px-1.5 py-0.5 rounded-full text-[#d4d4d4] border border-[#a3a3a3]/30 shadow-[0_0_8px_rgba(148, 148, 148,0.18)]">
+                  <span className="inline-flex items-center text-[10px] font-semibold tracking-wide px-1.5 py-0.5 rounded-full text-[#d4d4d4] border border-[rgba(8,165,209,0.30)]">
                     PRO
                   </span>
                 )}
@@ -538,7 +538,7 @@ function SidebarProfileLink({ onNavigate }: { onNavigate: () => void }) {
   const name = (displayName ?? "").trim() || "Guest";
 
   return (
-    <div className="relative p-4 border-t border-white/10 z-10">
+    <div className="relative p-4 border-t border-[rgba(11,102,154,0.35)] z-10">
       <Link href="/profile" onClick={onNavigate} data-testid="nav-profile">
         <div className={navItemClass(isActive)}>
           {photoUrl ? (

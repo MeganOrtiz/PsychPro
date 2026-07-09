@@ -1,40 +1,39 @@
 // =============================================================================
-// SINGLE SOURCE OF TRUTH for the PsychPro color palette.
+// SINGLE SOURCE OF TRUTH for the PsychPro color palette (TS mirror).
 //
-// BLACK FOUNDATION (owner reset, 2026-07-09): the entire visual layer was
-// stripped to a neutral black/gray baseline before a new design system is
-// built. No chroma anywhere — pure black pages, dark-gray surfaces, neutral
-// gray borders, white/gray text. The palette KEYS are unchanged so every
-// consumer keeps compiling; only the VALUES are neutral now.
+// BLUE THREE-MATERIAL SYSTEM (owner-approved 2026-07-09): values mirror the
+// --pp-* token block in src/index.css. If you change a value here, change the
+// matching CSS token in the same commit — the guardrail scripts
+// (check-surface-hue.mjs / check-design-drift.mjs) enforce the locked palette.
 //
-// Do NOT reintroduce cyan/teal/cerulean (or any saturated hue) here — the
-// guardrail scripts (check-surface-hue.mjs / check-design-drift.mjs) enforce
-// the neutral baseline.
+// Palette: floor #000; tinted surfaces #04101f–#071c33; navy #052a58/#0e4e71;
+// ocean #0b669a/#0d58a2; cyan #08a5d1/#0bd4df; icy #aaedf0; grays
+// #e5e5e5/#a3a3a3. The KEYS are legacy names kept so every consumer compiles.
 // =============================================================================
 
 export const STUDY_PALETTE = {
-  // Backgrounds — pure-black to dark-gray ladder.
-  ink: "#000000",         // deepest anchor (sidebar / page floor)
-  bg: "#0a0a0a",          // page bg primary
-  bgSoft: "#111111",      // page bg secondary
-  surface: "#141414",     // card surface
-  surfaceElev: "#1c1c1c", // card hover / lifted
+  // Backgrounds — pure-black floor to tinted navy surface ladder.
+  ink: "#000000",         // deepest anchor (page floor)
+  bg: "#04101f",          // page bg primary (deepest tinted surface)
+  bgSoft: "#05172b",      // page bg secondary
+  surface: "#071c33",     // card surface (standard tint)
+  surfaceElev: "#092642", // card hover / lifted
 
-  // Mid-gray — borders, dividers, structural lines
-  steel: "#3f3f3f",
+  // Structural lines — borders, dividers
+  steel: "#0e4e71",
 
-  // Former cyan accent slots — now neutral grays (keys kept for consumers)
-  tealDeep: "#6b6b6b",
-  teal: "#8a8a8a",
-  surf: "#a3a3a3",        // primary accent (neutral gray)
-  mist: "#d4d4d4",        // soft text
-  mistSoft: "#a8a8a8",    // dimmer muted text
+  // Accent ladder (legacy key names, blue values)
+  tealDeep: "#0b669a",    // mid ocean
+  teal: "#08a5d1",        // primary action cyan
+  surf: "#0bd4df",        // luminous cyan accent
+  mist: "#aaedf0",        // icy highlight text
+  mistSoft: "#a3a3a3",    // dimmer muted text (locked gray)
 
-  // Neutrals
-  cloud: "#f5f5f5",       // brightest text (text-main)
-  paper: "#f5f5f5",       // alias
+  // Neutrals (locked grays)
+  cloud: "#e5e5e5",       // brightest text (text-main)
+  paper: "#e5e5e5",       // alias
   paperSoft: "#cfcfcf",   // softer light-card text
-  inkSoft: "#9e9e9e",     // muted text (text-muted)
+  inkSoft: "#a3a3a3",     // muted text (text-muted)
 } as const;
 
 export type StudyTone = "light" | "dark" | "accent" | "card-front";

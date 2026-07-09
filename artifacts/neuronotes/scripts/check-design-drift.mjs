@@ -1,18 +1,28 @@
 #!/usr/bin/env node
 // =============================================================================
-// DESIGN SYSTEM LOCK  (black-foundation baseline, 2026-07-09)
+// DESIGN SYSTEM LOCK  (blue three-material system, locked 2026-07-09)
 //
 // Companion to check-surface-hue.mjs. The palette guardrail pins COLOR; this
-// one pins STRUCTURE. The app was stripped to a black foundation:
+// one pins STRUCTURE. The app runs on the owner-approved three-material system:
 //
+//   OPAQUE — structural panels: solid navy-tint gradient, lit top bevel,
+//            neutral black shadow. Never glows.
+//   GLASS  — nested tiles: tinted transparency (NO backdrop-filter/blur),
+//            brighter bevel; interactive glass glows + lifts on hover only.
+//   GLOSS  — buttons: saturated cyan gradient + glossy highlight; hover corona.
+//
+// Structural invariants enforced here:
 //   1. Pure-black page floors (body + .study-page-bg::before), no wallpaper,
-//      no filters, no vignette, no blend modes — the ONLY page artwork is the
-//      landing page's glass-brain image, unstretched (contain) on #000.
-//   2. A global reset that bans backdrop-filter (frosted glass) and
-//      text-shadow (text glow) app-wide.
-//   3. No gradients in index.css — surfaces are flat fills.
-//   4. Shared component contract — pages consume the shared Button/Card
+//      no filters, no vignette — the ONLY page artwork is the landing page's
+//      hero brain <img> at the top of the hero.
+//   2. A global reset that bans backdrop-filter (frosted glass) app-wide —
+//      GLASS is tinted transparency, never blur.
+//   3. Glow discipline: the glow tokens (--pp-glow*) may only be consumed
+//      inside :hover / :active / :focus-visible states (or @keyframes).
+//   4. The --pp-* palette tokens and material classes exist in index.css.
+//   5. Shared component contract — pages consume the shared Button/Card
 //      primitives instead of redefining them.
+//   6. Typography: Montserrat body, Outfit display, Merriweather editorial.
 //
 // When you INTENTIONALLY change the design system, update the matching lock
 // entry here in the SAME commit. An accidental drift fails this check loudly.
@@ -56,20 +66,45 @@ function ruleBlock(source, selectorNeedle) {
   return null;
 }
 
-// --- 1) Global structural tokens (scoped to :root) -------------------------
+// --- 1) Global structural + palette tokens (scoped to :root) ---------------
 const rootBlock = ruleBlock(css, ":root");
 const TOKENS = [
   { name: "global corner radius", re: /--radius:\s*\.625rem;/, expected: "--radius: .625rem;" },
-  { name: "neutral surface hue base", re: /--surf-hue:\s*0;/, expected: "--surf-hue: 0;  (neutral — saturation is 0% everywhere it is consumed)" },
+  { name: "surface hue knob", re: /--surf-hue:\s*211;/, expected: "--surf-hue: 211;  (locked blue surface hue)" },
+  { name: "surface saturation knob", re: /--surf-sat:\s*62%;/, expected: "--surf-sat: 62%;" },
+  // The locked --pp-* palette primitives.
+  { name: "pp floor token", re: /--pp-floor:\s*#000000;/, expected: "--pp-floor: #000000;" },
+  { name: "pp deep surface token", re: /--pp-deep:\s*#04101f;/, expected: "--pp-deep: #04101f;" },
+  { name: "pp surface token", re: /--pp-surface:\s*#071c33;/, expected: "--pp-surface: #071c33;" },
+  { name: "pp navy token", re: /--pp-navy:\s*#052a58;/, expected: "--pp-navy: #052a58;" },
+  { name: "pp navy-bright token", re: /--pp-navy-bright:\s*#0e4e71;/, expected: "--pp-navy-bright: #0e4e71;" },
+  { name: "pp ocean token", re: /--pp-ocean:\s*#0b669a;/, expected: "--pp-ocean: #0b669a;" },
+  { name: "pp ocean-deep token", re: /--pp-ocean-deep:\s*#0d58a2;/, expected: "--pp-ocean-deep: #0d58a2;" },
+  { name: "pp cyan token", re: /--pp-cyan:\s*#08a5d1;/, expected: "--pp-cyan: #08a5d1;" },
+  { name: "pp bright token", re: /--pp-bright:\s*#0bd4df;/, expected: "--pp-bright: #0bd4df;" },
+  { name: "pp icy token", re: /--pp-icy:\s*#aaedf0;/, expected: "--pp-icy: #aaedf0;" },
+  { name: "pp text token", re: /--pp-text:\s*#e5e5e5;/, expected: "--pp-text: #e5e5e5;" },
+  { name: "pp text-dim token", re: /--pp-text-dim:\s*#a3a3a3;/, expected: "--pp-text-dim: #a3a3a3;" },
 ];
 if (!rootBlock) {
   fail(":root block not found in index.css", "restore the :root design-token block");
 } else {
   for (const t of TOKENS) {
     if (!t.re.test(rootBlock)) {
-      fail(`${t.name} token drifted or missing`, `restore \`${t.expected}\` in the index.css :root block`);
+      fail(`${t.name} drifted or missing`, `restore \`${t.expected}\` in the index.css :root block`);
     }
   }
+}
+
+// --- 1b) Material classes exist ---------------------------------------------
+for (const mat of [".mat-opaque", ".mat-glass", ".mat-glass-interactive", ".mat-chip"]) {
+  if (!new RegExp(`\\${mat}\\s*[{,]`).test(css)) {
+    fail(`${mat} material class missing`, `restore the ${mat} material recipe in index.css`);
+  }
+}
+// The OPAQUE material never glows: it must not define a :hover state.
+if (/\.mat-opaque:hover/.test(css)) {
+  fail(".mat-opaque:hover introduced", "OPAQUE structural panels never glow or react — remove the hover state");
 }
 
 // --- 2) Pure-black page floors ----------------------------------------------
@@ -135,27 +170,74 @@ if (!overlayBackdrop) {
   }
 }
 
-// --- 3) Global glass/glow kill-switch ---------------------------------------
-// The BLACK FOUNDATION RESET block must stay at the end of index.css: it bans
-// backdrop-filter (frosted glass) and text-shadow (text glow) app-wide.
-if (!/backdrop-filter:\s*none\s*!important;[\s\S]*?text-shadow:\s*none\s*!important;/.test(css)) {
+// --- 3) Backdrop-filter ban (GLASS = tinted transparency, never blur) --------
+if (!/backdrop-filter:\s*none\s*!important;/.test(css)) {
   fail(
-    "black-foundation reset block missing",
-    "restore the global `backdrop-filter: none !important; text-shadow: none !important;` reset in index.css",
+    "material discipline reset missing",
+    "restore the global `backdrop-filter: none !important;` reset at the end of index.css",
   );
+}
+// No rule may set a real backdrop-filter value anywhere in index.css.
+{
+  const bf = /backdrop-filter:(?!\s*none\b)[^;]+;/g;
+  let m2;
+  while ((m2 = bf.exec(css))) {
+    fail(
+      `backdrop-filter value at ${REL}:${lineOf(m2.index)}`,
+      "GLASS is tinted transparency — backdrop-filter/blur is banned app-wide",
+    );
+  }
 }
 
-// --- 4) No gradients / wallpapers in index.css -------------------------------
-// Surfaces are flat fills. The only url() allowed in index.css is the landing
-// glass-brain artwork (and the Google Fonts @import).
-let m;
-const grad = /(?:linear|radial|conic)-gradient\(/g;
-while ((m = grad.exec(css))) {
-  fail(
-    `gradient at ${REL}:${lineOf(m.index)}`,
-    "surfaces are flat — use a solid fill (gradients were removed in the black-foundation reset)",
-  );
+// --- 3b) Glow discipline: glow only on hover/active/focus --------------------
+// Walk top-level rules; any rule body consuming the glow tokens must belong to
+// an interactive-state selector (or a keyframes animation, which is opt-in).
+{
+  // Collect top-level "selector { body }" spans (depth-1 blocks).
+  const spans = [];
+  let depth = 0, selStart = 0, bodyStart = -1, sel = "";
+  for (let i = 0; i < css.length; i++) {
+    const c = css[i];
+    if (c === "{") {
+      depth++;
+      if (depth === 1) { sel = css.slice(selStart, i).trim(); bodyStart = i + 1; }
+    } else if (c === "}") {
+      depth--;
+      if (depth === 0) { spans.push({ sel, body: css.slice(bodyStart, i), at: bodyStart }); selStart = i + 1; }
+    }
+  }
+  const GLOW = /var\(--pp-glow(?:-strong)?\)|rgba\(\s*11\s*,\s*212\s*,\s*223/;
+  for (const s of spans) {
+    if (!GLOW.test(s.body)) continue;
+    if (/@keyframes/.test(s.sel)) continue;
+    if (/:hover|:active|:focus/.test(s.sel)) continue;
+    // Token DEFINITIONS (:root / .dark) are the source of the glow values —
+    // consuming them at rest elsewhere is what's banned.
+    if (/^(:root|\.dark)$/.test(s.sel)) continue;
+    // Nested blocks (e.g. @layer utilities) — check inner selectors instead.
+    if (s.body.includes("{")) {
+      const inner = s.body;
+      const innerRe = /([^{}]+)\{([^{}]*)\}/g;
+      let im;
+      while ((im = innerRe.exec(inner))) {
+        if (GLOW.test(im[2]) && !/:hover|:active|:focus/.test(im[1]) && !/@keyframes/.test(im[1])) {
+          fail(
+            `resting glow in nested rule \`${im[1].trim().slice(0, 60)}\``,
+            "glow is hover/active/focus ONLY — at-rest depth comes from pigment (gradients, bevels, black shadows)",
+          );
+        }
+      }
+      continue;
+    }
+    fail(
+      `resting glow in rule \`${s.sel.slice(0, 60)}\` at ${REL}:${lineOf(s.at)}`,
+      "glow is hover/active/focus ONLY — at-rest depth comes from pigment (gradients, bevels, black shadows)",
+    );
+  }
 }
+
+// --- 4) No wallpaper images in index.css -------------------------------------
+let m;
 const urls = /url\(\s*["']?([^"')]+)["']?\s*\)/g;
 while ((m = urls.exec(css))) {
   const target = m[1];
@@ -166,46 +248,14 @@ while ((m = urls.exec(css))) {
   );
 }
 
-// --- 4b) No decorative gradients in TS/TSX inline styles ---------------------
-// Page components must not smuggle gradient fills past the index.css ban.
-// Allowed: mask-image edge fades (functional, not decorative) and the
-// dev-only glass preview page.
-const SRC = path.join(ROOT, "src");
-function walkSrc(dir, acc) {
-  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
-    const p = path.join(dir, e.name);
-    if (e.isDirectory()) walkSrc(p, acc);
-    else if (/\.(tsx?|)$/.test(e.name) && /\.tsx?$/.test(e.name)) acc.push(p);
-  }
-  return acc;
-}
-for (const file of walkSrc(SRC, [])) {
-  const rel = path.relative(ROOT, file);
-  if (rel.includes("dev-glass-preview")) continue;
-  const text = fs.readFileSync(file, "utf8");
-  const lines = text.split("\n");
-  const gradRe = /(?:linear|radial|conic)-gradient\(/;
-  for (let i = 0; i < lines.length; i++) {
-    if (!gradRe.test(lines[i])) continue;
-    // Functional mask fades: the gradient feeds a mask-image, not a fill.
-    const context = lines.slice(Math.max(0, i - 3), i + 2).join("\n");
-    if (/mask(?:-image)?|maskImage|WebkitMask/i.test(context)) continue;
-    // Comments mentioning gradients are fine.
-    if (/^\s*(\/\/|\*|\/\*)/.test(lines[i])) continue;
-    fail(
-      `decorative gradient in ${rel}:${i + 1}`,
-      "surfaces are flat solid fills — gradients are only allowed as functional mask-image fades",
-    );
-  }
-}
-
 // --- 5) Banned legacy accents ------------------------------------------------
-// The retired cerulean/mint accents must never come back.
+// The retired mint/cerulean accent hexes must never come back (the new palette
+// uses ONLY the --pp-* values; these legacy accents sit just outside it).
 const LEGACY = /#(5eead4|2dd4bf|14b8a6|76e4f7|67e8f9|22d3ee|06b6d4)\b/gi;
 while ((m = LEGACY.exec(css))) {
   fail(
     `legacy accent ${m[0]} at ${REL}:${lineOf(m.index)}`,
-    "the cerulean/mint accent system was retired — use neutral grays",
+    "the mint/cerulean accents are retired — use the --pp-* blue palette tokens",
   );
 }
 
@@ -217,6 +267,11 @@ const TYPE_CONTRACT = [
     expected: "load Montserrat weights 300–700 in the Google Fonts import",
   },
   {
+    name: "Outfit webfont load",
+    re: /family=Outfit:wght@300;400;500;600;700/,
+    expected: "load Outfit weights 300–700 in the Google Fonts import (display/headings face)",
+  },
+  {
     name: "Merriweather webfont load",
     re: /family=Merriweather:ital,wght@0,400;0,700;1,400/,
     expected: "load the locked Merriweather editorial faces",
@@ -225,6 +280,11 @@ const TYPE_CONTRACT = [
     name: "interface font token",
     re: /--app-font-sans:\s*'Montserrat',\s*'Inter',\s*'SF Pro Display',\s*sans-serif;/,
     expected: "restore --app-font-sans to Montserrat with the documented fallbacks",
+  },
+  {
+    name: "display font token",
+    re: /--app-font-display:\s*'Outfit',\s*'Inter',\s*system-ui,\s*sans-serif;/,
+    expected: "restore --app-font-display to Outfit with the documented fallbacks",
   },
   {
     name: "editorial font token",
@@ -238,6 +298,8 @@ for (const t of TYPE_CONTRACT) {
 
 // --- 7) Shared component contract -----------------------------------------
 // Page-level edits should consume these primitives, not quietly redefine them.
+// (Class NAMES are legacy "glass" names; the recipes are the material system:
+// btn-glass-strong = GLOSS primary, btn-glass = GLASS secondary.)
 const BUTTON_VARIANTS = [
   ["default", "btn-glass-strong"],
   ["destructive", "btn-glass-destructive"],
@@ -267,12 +329,38 @@ for (const banned of ["glass-button", "cta-glass"]) {
   }
 }
 
+// --- 8) No backdrop-blur Tailwind utilities in TSX ---------------------------
+const SRC = path.join(ROOT, "src");
+function walkSrc(dir, acc) {
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    const p = path.join(dir, e.name);
+    if (e.isDirectory()) walkSrc(p, acc);
+    else if (/\.tsx?$/.test(e.name)) acc.push(p);
+  }
+  return acc;
+}
+for (const file of walkSrc(SRC, [])) {
+  const rel = path.relative(ROOT, file);
+  if (rel.includes("dev-glass-preview")) continue;
+  const text = fs.readFileSync(file, "utf8");
+  const lines = text.split("\n");
+  for (let i = 0; i < lines.length; i++) {
+    if (/^\s*(\/\/|\*|\/\*)/.test(lines[i])) continue;
+    if (/\bbackdrop-blur(?:-(?:\w+|\[[^\]]+\]))?\b|(?:Webkit)?[bB]ackdropFilter\s*:\s*["'`](?!none)/.test(lines[i])) {
+      fail(
+        `backdrop blur in ${rel}:${i + 1}`,
+        "GLASS is tinted transparency — backdrop-filter/blur is banned app-wide",
+      );
+    }
+  }
+}
+
 // --- Report ----------------------------------------------------------------
 if (violations.length) {
-  console.error(`\n✗ Design system lock FAILED — ${violations.length} drift(s) from the locked black foundation:\n`);
+  console.error(`\n✗ Design system lock FAILED — ${violations.length} drift(s) from the locked blue three-material system:\n`);
   for (const v of violations) console.error(`  • ${v.what}\n      → ${v.fix}`);
   console.error(`\nThese values are pinned in scripts/check-design-drift.mjs.`);
   console.error(`If the change is intentional, update the matching lock entry in the same commit.\n`);
   process.exit(1);
 }
-console.log("✓ Design system lock passed — black foundation, typography, and shared component contracts are intact.");
+console.log("✓ Design system lock passed — blue three-material system, typography, and shared component contracts are intact.");

@@ -17,11 +17,11 @@ import {
 // ---------------------------------------------------------------------------
 
 const C = {
-  cyan: "#a3a3a3",
+  cyan: "#08a5d1",
   mist: "#d4d4d4",
-  ink: "#232323",
-  hairline: "rgba(148, 148, 148,0.16)",
-  hairlineStrong: "rgba(148, 148, 148,0.32)",
+  ink: "#04101f",
+  hairline: "rgba(11, 102, 154,0.16)",
+  hairlineStrong: "rgba(8, 165, 209,0.32)",
   body: "rgba(229, 229, 229,0.84)",
   muted: "rgba(178, 178, 178,0.66)",
 };
@@ -188,10 +188,8 @@ const styles = `
   text-align: center;
   border-radius: 26px;
   padding: clamp(32px, 5vw, 64px) clamp(22px, 4vw, 56px);
-  background: hsl(var(--surf-hue) 0% 16% / 0.88);
-  border: 1px solid rgba(163, 163, 163,0.22);
-  backdrop-filter: blur(20px) saturate(135%);
-  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  background: hsl(var(--surf-hue) var(--surf-sat) 16% / 0.88);
+  border: 1px solid rgba(8, 165, 209,0.22);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.12),
     0 0 48px ${C.cyan}1c,
@@ -237,7 +235,7 @@ const styles = `
   font-weight: 800;
   line-height: 1.12;
   color: #f8f8f8;
-  text-shadow: 0 2px 24px hsl(var(--surf-hue) 0% 5% / 0.5);
+  text-shadow: 0 2px 24px hsl(var(--surf-hue) var(--surf-sat) 5% / 0.5);
 }
 .eppp-lede {
   position: relative;
@@ -272,7 +270,7 @@ const styles = `
 .eppp-btn--primary {
   color: ${C.ink};
   border: 1px solid rgba(212, 212, 212,0.65);
-  background: #989898;
+  background: #08a5d1;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 0 22px -4px ${C.cyan}b3;
 }
 .eppp-btn--primary:hover {
@@ -282,7 +280,7 @@ const styles = `
 .eppp-btn--ghost {
   color: ${C.mist};
   border: 1px solid ${C.hairlineStrong};
-  background: hsl(var(--surf-hue) 0% 30% / 0.55);
+  background: hsl(var(--surf-hue) var(--surf-sat) 30% / 0.55);
 }
 .eppp-btn--ghost:hover {
   transform: translateY(-1px);
@@ -319,10 +317,8 @@ const styles = `
   gap: 10px;
   border-radius: 18px;
   padding: clamp(20px, 2.4vw, 26px);
-  background: hsl(var(--surf-hue) 0% 6% / 0.85);
-  border: 1px solid rgba(163, 163, 163,0.22);
-  backdrop-filter: blur(20px) saturate(135%);
-  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  background: hsl(var(--surf-hue) var(--surf-sat) 6% / 0.85);
+  border: 1px solid rgba(8, 165, 209,0.22);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.12),
     0 24px 60px -40px rgba(0,0,0,0.7);

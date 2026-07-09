@@ -472,10 +472,8 @@ export default function PracticeExamPage({ params }: Props) {
           <section
             className="rounded-2xl border p-6 shadow-sm"
             style={{
-              borderColor: "rgba(148, 148, 148,0.26)",
-              background: "hsl(var(--surf-hue) 0% 6% / 0.90)",
-              backdropFilter: "blur(20px) saturate(135%)",
-              WebkitBackdropFilter: "blur(20px) saturate(135%)",
+              borderColor: "rgba(8, 165, 209,0.26)",
+              background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.94)",
               boxShadow:
                 "inset 0 1px 0 rgba(255,255,255,0.13), 0 22px 50px -26px rgba(0,0,0,0.7)",
             }}
@@ -483,7 +481,7 @@ export default function PracticeExamPage({ params }: Props) {
             <header className="flex items-start gap-3 mb-3">
               <div
                 className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
-                style={{ background: `hsl(var(--surf-hue) 0% 58% / 0.18)`, border: `1px solid ${P.surf}55` }}
+                style={{ background: `hsl(var(--surf-hue) var(--surf-sat) 58% / 0.18)`, border: `1px solid ${P.surf}55` }}
               >
                 <Brain className="w-5 h-5" style={{ color: P.surf }} />
               </div>
@@ -619,7 +617,7 @@ export default function PracticeExamPage({ params }: Props) {
         </div>
       </div>
 
-      <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "hsl(var(--surf-hue) 0% 48% / 0.12)" }}>
+      <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "hsl(var(--surf-hue) var(--surf-sat) 48% / 0.12)" }}>
         <div
           className="h-1.5 rounded-full transition-all"
           style={{
@@ -649,7 +647,7 @@ export default function PracticeExamPage({ params }: Props) {
             // ramps the glow + border on :hover).
             cls += " hover:-translate-y-0.5 quiz-option-hover";
             style = {
-              background: "hsl(var(--surf-hue) 0% 10% / 0.86)",
+              background: "hsl(var(--surf-hue) var(--surf-sat) 10% / 0.86)",
               borderColor: `${P.surf}55`,
               color: P.cloud,
               boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(255,255,255,0.06)`,
@@ -664,7 +662,7 @@ export default function PracticeExamPage({ params }: Props) {
           } else {
             cls += " opacity-55";
             style = {
-              background: "hsl(var(--surf-hue) 0% 10% / 0.86)",
+              background: "hsl(var(--surf-hue) var(--surf-sat) 10% / 0.86)",
               borderColor: `${P.surf}25`,
               color: `${P.cloud}aa`,
             };
@@ -682,10 +680,10 @@ export default function PracticeExamPage({ params }: Props) {
                 className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 border"
                 style={
                   !isAnswered
-                    ? { background: "rgba(148, 148, 148,0.20)", color: P.surf, borderColor: `${P.surf}88` }
+                    ? { background: "rgba(13, 88, 162,0.20)", color: P.surf, borderColor: `${P.surf}88` }
                     : isSelected
-                      ? { background: "rgba(255,255,255,0.22)", color: "#FFFFFF", borderColor: "rgba(255,255,255,0.4)" }
-                      : { background: "rgba(148, 148, 148,0.14)", color: P.surf, borderColor: `${P.surf}55` }
+                      ? { background: "rgba(8, 165, 209,0.30)", color: "#FFFFFF", borderColor: "rgba(8, 165, 209,0.55)" }
+                      : { background: "rgba(13, 88, 162,0.14)", color: P.surf, borderColor: `${P.surf}55` }
                 }
               >{key}</span>
               {text}

@@ -192,7 +192,7 @@ export default function QuizPage({ params }: Props) {
         </p>
       ) : null}
 
-      <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "hsl(var(--surf-hue) 0% 48% / 0.12)" }}>
+      <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "hsl(var(--surf-hue) var(--surf-sat) 48% / 0.12)" }}>
         <div
           className="h-1.5 rounded-full transition-all"
           style={{
@@ -244,7 +244,7 @@ export default function QuizPage({ params }: Props) {
                 // (instead of the previous near-white card).
                 cls += " hover:-translate-y-0.5 quiz-option-hover";
                 style = {
-                  background: "hsl(var(--surf-hue) 0% 13% / 0.86)",
+                  background: "hsl(var(--surf-hue) var(--surf-sat) 13% / 0.86)",
                   borderColor: `${P.surf}55`,
                   color: P.cloud,
                   boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(255,255,255,0.06)`,
@@ -268,7 +268,7 @@ export default function QuizPage({ params }: Props) {
               } else {
                 cls += " opacity-55";
                 style = {
-                  background: "hsl(var(--surf-hue) 0% 13% / 0.86)",
+                  background: "hsl(var(--surf-hue) var(--surf-sat) 13% / 0.86)",
                   borderColor: `${P.surf}25`,
                   color: `${P.cloud}aa`,
                 };
@@ -290,10 +290,10 @@ export default function QuizPage({ params }: Props) {
                     )}
                     style={
                       !selected
-                        ? { background: "rgba(148, 148, 148,0.20)", color: P.surf, borderColor: `${P.surf}88` }
+                        ? { background: "rgba(13,88,162,0.20)", color: P.surf, borderColor: `${P.surf}88` }
                         : isSelected || isCorrect
                           ? { background: "rgba(255,255,255,0.22)", color: "#FFFFFF" }
-                          : { background: "rgba(148, 148, 148,0.14)", color: P.surf, borderColor: `${P.surf}55` }
+                          : { background: "rgba(13,88,162,0.14)", color: P.surf, borderColor: `${P.surf}55` }
                     }
                   >
                     {key}
@@ -321,10 +321,8 @@ export default function QuizPage({ params }: Props) {
             <div
               className="rounded-xl p-4 mb-6 border"
               style={{
-                background: "hsl(var(--surf-hue) 0% 6% / 0.90)",
-                borderColor: "rgba(148, 148, 148,0.24)",
-                backdropFilter: "blur(18px) saturate(135%)",
-                WebkitBackdropFilter: "blur(18px) saturate(135%)",
+                background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90)",
+                borderColor: "rgba(8,165,209,0.24)",
                 boxShadow:
                   "inset 0 1px 0 rgba(255,255,255,0.12), 0 20px 46px -26px rgba(0,0,0,0.66)",
               }}

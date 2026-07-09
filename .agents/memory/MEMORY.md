@@ -1,4 +1,5 @@
-- [PsychPro black foundation](psychpro-black-foundation.md) — 2026-07-09 owner reset: ALL color/glass/glow stripped to pure black+gray; SUPERSEDES every cerulean/glass/glow lock below; guardrails repointed.
+- [PsychPro blue three-material system](psychpro-blue-material-system.md) — CURRENT (2026-07-09, supersedes the black foundation): Opaque/Glass/Gloss on --pp-* blue tokens; glow hover-only; no backdrop-filter; guardrails repointed.
+- [PsychPro black foundation](psychpro-black-foundation.md) — historical (same-day 2026-07-09); replaced hours later by the blue three-material system above.
 - [Claims discipline](claims-discipline.md) — never report a fix as "done" until it's been verified end-to-end; user has called this out repeatedly.
 - [PsychPro glass buttons](psychpro-glass-buttons.md) — landing/marketing button styling convention.
 - [PsychPro custom-deck subscription gate](psychpro-custom-decks-subscription-gate.md) — "upload broken" reports are usually the paid-tier 403 gate firing, not the upload itself.
@@ -51,7 +52,7 @@
 - [Mockup preview heavy images](mockup-preview-heavy-images.md) — large PNGs lose the load race and render blank (looks like a "crash"); quantize to PNG8 with magick + eager/fetchPriority; true white = server mid-restart.
 - [Chart/SVG literal colors](psychpro-chart-svg-literal-colors.md) — Recharts stroke/fill are SVG attributes; hsl(var(--surf-hue)) renders black there, so use literal hue-192 colors (guardrail still applies).
 - [EPPP main-site adoption scope](psychpro-eppp-mainsite-adoption.md) — main site already on the EPPP card recipe; never convert non-card elements (toggles/badges/progress fills/scrims); align card-button IDLE only, keep brighter hover/active.
-- [Design system lock](psychpro-design-lock.md) — two guardrails still enforce the system, now locked to the BLACK foundation (saturation ban + structure); update locks in same commit as intentional changes.
+- [Design system lock](psychpro-design-lock.md) — two guardrails still enforce the system, now locked to the BLUE three-material system (blue-window palette ban + structure); update locks in same commit as intentional changes.
 - [study-page-bg horizontal seam](brain-clouds-bg-seam.md) — faint dead-straight full-width line over the bg = background-attachment:fixed on the already position:fixed ::before; set attachment:scroll (HiDPI-only, not a border/image defect).
 - [Dashboard tile hierarchy](psychpro-dashboard-tile-hierarchy.md) — "unify all tiles to one recipe" ≠ identical fill; a panel and the tiles nested inside it must keep a one-step elevation gap or hierarchy collapses; inventory every tile/state variant upfront.
 - [Route white-flash floor](psychpro-route-white-flash.md) — body resolves the LIGHT shadcn --background; keep a global dark floor + shared FullScreenLoader so route/auth swaps never flash white.

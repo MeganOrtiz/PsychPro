@@ -297,7 +297,6 @@ function Marker({
               border: `1px solid ${PALETTE.steel}`,
               borderRadius: 9999,
               padding: "2px 8px",
-              backdropFilter: "blur(6px)",
               whiteSpace: "nowrap",
             }}
           >

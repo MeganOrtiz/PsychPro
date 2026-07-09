@@ -127,7 +127,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
           <div
             className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 border"
             style={{
-              background: "hsl(var(--surf-hue) 0% 10% / 0.95)",
+              background: "hsl(var(--surf-hue) var(--surf-sat) 10% / 0.95)",
               borderColor: `${P.surf}55`,
             }}
           >
@@ -369,7 +369,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
           )}
         </div>
 
-        <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "hsl(var(--surf-hue) 0% 48% / 0.12)" }}>
+        <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "hsl(var(--surf-hue) var(--surf-sat) 48% / 0.12)" }}>
           <div
             className="h-1.5 rounded-full transition-all"
             style={{
@@ -397,7 +397,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
             if (!isAnswered) {
               cls += " hover:-translate-y-0.5 quiz-option-hover";
               style = {
-                background: "hsl(var(--surf-hue) 0% 10% / 0.86)",
+                background: "hsl(var(--surf-hue) var(--surf-sat) 10% / 0.86)",
                 borderColor: `${P.surf}55`,
                 color: P.cloud,
                 boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(255,255,255,0.06)`,
@@ -412,7 +412,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
             } else {
               cls += " opacity-55";
               style = {
-                background: "hsl(var(--surf-hue) 0% 10% / 0.86)",
+                background: "hsl(var(--surf-hue) var(--surf-sat) 10% / 0.86)",
                 borderColor: `${P.surf}25`,
                 color: `${P.cloud}aa`,
               };
@@ -430,10 +430,10 @@ export default function CourseMasteryExamPage({ params }: Props) {
                   className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 border"
                   style={
                     !isAnswered
-                      ? { background: "rgba(148, 148, 148,0.20)", color: P.surf, borderColor: `${P.surf}88` }
+                      ? { background: "rgba(13, 88, 162,0.20)", color: P.surf, borderColor: `${P.surf}88` }
                       : isSelected
-                        ? { background: "rgba(255,255,255,0.22)", color: "#FFFFFF", borderColor: "rgba(255,255,255,0.4)" }
-                        : { background: "rgba(148, 148, 148,0.14)", color: P.surf, borderColor: `${P.surf}55` }
+                        ? { background: "rgba(8, 165, 209,0.30)", color: "#FFFFFF", borderColor: "rgba(8, 165, 209,0.55)" }
+                        : { background: "rgba(13, 88, 162,0.14)", color: P.surf, borderColor: `${P.surf}55` }
                   }
                 >{key}</span>
                 {text}

@@ -17,7 +17,7 @@ export function DashboardHeader({ greeting: _greeting }: DashboardHeaderProps) {
         className="relative flex min-h-[92px] items-center justify-center overflow-hidden rounded-xl border px-4 py-6 text-center md:min-h-[112px] md:px-8"
         style={{
           background: P.surface,
-          borderColor: "#2e2e2e",
+          borderColor: "var(--pp-line)",
         }}
       >
         <h1
