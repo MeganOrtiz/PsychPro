@@ -12,26 +12,18 @@ const Toaster = ({ ...props }: ToasterProps) => {
         unstyled: false,
         classNames: {
           toast:
-            "group toast !rounded-2xl !border !text-[#E4F4F6] " +
-            "!bg-[linear-gradient(145deg,hsl(var(--surf-hue) 88% 18% / 0.82),hsl(var(--surf-hue) 87% 10% / 0.90))] " +
-            "!border-[rgba(118,228,247,0.32)] " +
-            "!shadow-[inset_0_1px_0_rgba(167,243,255,0.10),0_10px_30px_rgba(0,0,0,0.45)] " +
-            "backdrop-blur-xl backdrop-saturate-150",
-          title: "!text-[#E4F4F6] !font-medium",
-          description: "!text-[rgba(228,244,246,0.78)]",
-          success:
-            "!bg-[linear-gradient(145deg,hsl(var(--surf-hue) 88% 18% / 0.82),hsl(var(--surf-hue) 87% 10% / 0.90))] " +
-            "!border-[rgba(118,228,247,0.45)] " +
-            "!shadow-[inset_0_1px_0_rgba(167,243,255,0.14),0_10px_30px_rgba(0,0,0,0.45)]",
+            "group toast !rounded-2xl !border !text-[#e5e5e5] " +
+            "!bg-[#141414] !border-[#3f3f3f] !shadow-none",
+          title: "!text-[#e5e5e5] !font-medium",
+          description: "!text-[rgba(229,229,229,0.75)]",
+          success: "!bg-[#141414] !border-[#525252] !shadow-none",
           error:
-            "!bg-[linear-gradient(145deg,rgba(61,18,28,0.82),rgba(44,10,18,0.90))] " +
-            "!border-[rgba(248,153,170,0.40)] " +
-            "!shadow-[inset_0_1px_0_rgba(255,200,210,0.12),0_10px_30px_rgba(0,0,0,0.45),0_0_28px_rgba(248,113,133,0.28)]",
+            "!bg-[#2a1216] !border-[rgba(248,113,113,0.4)] !shadow-none",
           actionButton:
-            "group-[.toast]:!bg-[rgba(118,228,247,0.18)] group-[.toast]:!text-[#E4F4F6]",
+            "group-[.toast]:!bg-[rgba(255,255,255,0.12)] group-[.toast]:!text-[#e5e5e5]",
           cancelButton:
-            "group-[.toast]:!bg-white/5 group-[.toast]:!text-[rgba(228,244,246,0.75)]",
-          icon: "!text-[#76E4F7]",
+            "group-[.toast]:!bg-white/5 group-[.toast]:!text-[rgba(229,229,229,0.75)]",
+          icon: "!text-[#a3a3a3]",
         },
       }}
       {...props}

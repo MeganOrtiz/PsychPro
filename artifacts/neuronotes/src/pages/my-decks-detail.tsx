@@ -189,9 +189,9 @@ function QuizView({ questions, isExam, examLength, timed }: { questions: QuizQue
       </div>
 
       {submitted && q.explanation && (
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-3">
-          <p className="text-xs font-semibold text-blue-800 dark:text-blue-300 mb-1">Explanation</p>
-          <p className="text-sm text-blue-700 dark:text-blue-400">{q.explanation}</p>
+        <div className="bg-neutral-50 dark:bg-neutral-900/20 border border-neutral-200 dark:border-neutral-800 rounded-xl p-3">
+          <p className="text-xs font-semibold text-neutral-800 dark:text-neutral-300 mb-1">Explanation</p>
+          <p className="text-sm text-neutral-700 dark:text-neutral-400">{q.explanation}</p>
         </div>
       )}
 
@@ -506,7 +506,7 @@ function ReviewView({ deckId, cards }: { deckId: number; cards: Flashcard[] }) {
         <div className="grid grid-cols-4 gap-2">
           <button onClick={() => rate("again")} className="py-2 rounded-md text-xs font-medium border border-red-400 bg-red-50 dark:bg-red-900/20 text-red-700 hover:bg-red-100">Again</button>
           <button onClick={() => rate("hard")} className="py-2 rounded-md text-xs font-medium border border-amber-400 bg-amber-50 dark:bg-amber-900/20 text-amber-700 hover:bg-amber-100">Hard</button>
-          <button onClick={() => rate("good")} className="py-2 rounded-md text-xs font-medium border border-blue-400 bg-blue-50 dark:bg-blue-900/20 text-blue-700 hover:bg-blue-100">Good</button>
+          <button onClick={() => rate("good")} className="py-2 rounded-md text-xs font-medium border border-neutral-400 bg-neutral-50 dark:bg-neutral-900/20 text-neutral-700 hover:bg-neutral-100">Good</button>
           <button onClick={() => rate("easy")} className="py-2 rounded-md text-xs font-medium border border-green-500 bg-green-50 dark:bg-green-900/20 text-green-700 hover:bg-green-100">Easy</button>
         </div>
       )}
@@ -532,12 +532,12 @@ function StudyGuideView({ content, title }: { content: string; title: string }) 
     const body = ref.current?.innerHTML ?? "";
     const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${safeTitle}</title>
 <style>
-  body{font-family:Georgia,'Times New Roman',serif;color:#1b3238;max-width:760px;margin:48px auto;padding:0 28px;line-height:1.65;}
-  h1,h2,h3,h4{font-family:Arial,Helvetica,sans-serif;color:#0d3b46;line-height:1.25;margin-top:1.5em;}
-  h1{font-size:26px;border-bottom:2px solid #0d3b46;padding-bottom:8px;margin-top:0;}
+  body{font-family:Georgia,'Times New Roman',serif;color:#2a2a2a;max-width:760px;margin:48px auto;padding:0 28px;line-height:1.65;}
+  h1,h2,h3,h4{font-family:Arial,Helvetica,sans-serif;color:#2a2a2a;line-height:1.25;margin-top:1.5em;}
+  h1{font-size:26px;border-bottom:2px solid #2a2a2a;padding-bottom:8px;margin-top:0;}
   h2{font-size:20px;} h3{font-size:16px;}
   ul,ol{padding-left:22px;} li{margin:5px 0;}
-  strong{color:#0d3b46;} code{background:#f1f3f4;padding:1px 5px;border-radius:3px;font-family:Menlo,Consolas,monospace;}
+  strong{color:#2a2a2a;} code{background:#f1f3f4;padding:1px 5px;border-radius:3px;font-family:Menlo,Consolas,monospace;}
   blockquote{border-left:3px solid #c8d2d6;margin:1em 0;padding-left:14px;color:#4c636b;}
   table{border-collapse:collapse;width:100%;} th,td{border:1px solid #c8d2d6;padding:6px 10px;text-align:left;}
 </style></head>
@@ -664,7 +664,7 @@ export default function MyDeckDetailPage() {
         <PageTitle title={deck.title} className="mb-3" />
         {deck.tier === "pro" && (
           <div className="flex items-center gap-2 flex-wrap justify-center">
-            <Badge className="bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 border-purple-200">Pro Tools</Badge>
+            <Badge className="bg-neutral-100 text-neutral-700 dark:bg-neutral-900/30 dark:text-neutral-300 border-neutral-200">Pro Tools</Badge>
           </div>
         )}
       </div>

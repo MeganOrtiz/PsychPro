@@ -118,9 +118,7 @@ export default function SubscriptionPage() {
           position: relative;
           border-radius: 18px;
           padding: 24px;
-          background:
-            radial-gradient(135% 90% at 100% 0%, ${P.surf}1f, transparent 58%),
-            linear-gradient(158deg, ${P.surface}, ${P.bg});
+          background: transparent;
           border: 1px solid ${P.surf}33;
           box-shadow: 0 20px 44px -26px rgba(0,0,0,0.85), inset 0 1px 0 ${P.surf}1a;
           transition: transform 240ms ease, box-shadow 240ms ease, border-color 240ms ease;
@@ -131,7 +129,7 @@ export default function SubscriptionPage() {
           inset: 0 22px auto 22px;
           height: 2px;
           border-radius: 0 0 3px 3px;
-          background: linear-gradient(90deg, transparent, ${P.surf}, transparent);
+          background: transparent;
           opacity: 0.8;
         }
         .sub-plan--featured {
@@ -153,7 +151,7 @@ export default function SubscriptionPage() {
           position: relative;
           border-radius: 14px;
           padding: 16px;
-          background: linear-gradient(150deg, ${P.surfaceElev}59, ${P.bg}cc);
+          background: ${P.bg}cc;
           border: 1px solid ${P.surf}26;
           transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
         }
@@ -163,7 +161,7 @@ export default function SubscriptionPage() {
           box-shadow: 0 18px 36px -24px rgba(0,0,0,0.85), 0 0 28px -14px ${P.surf}73;
         }
         .sub-price {
-          background: linear-gradient(180deg, ${P.mist}, ${P.surf});
+          background: ${P.surf};
           -webkit-background-clip: text; background-clip: text;
           -webkit-text-fill-color: transparent; color: transparent;
           letter-spacing: -0.01em;
@@ -181,9 +179,8 @@ export default function SubscriptionPage() {
         <div
           className="border rounded-xl p-4 mb-6 flex flex-col sm:flex-row sm:items-center gap-3"
           style={{
-            background:
-              "linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.81), hsl(var(--surf-hue) 88% 6% / 0.90))",
-            borderColor: "rgba(118,228,247,0.26)",
+            background: "hsl(var(--surf-hue) 0% 6% / 0.90)",
+            borderColor: "rgba(148, 148, 148,0.26)",
             backdropFilter: "blur(18px) saturate(135%)",
             WebkitBackdropFilter: "blur(18px) saturate(135%)",
             boxShadow:
@@ -235,7 +232,7 @@ export default function SubscriptionPage() {
             </span>
             <span className="font-semibold text-foreground text-lg">PsychPro {PRO_DISPLAY_NAME}</span>
             <Badge
-              className="ml-auto border-0 text-[#07333e] font-semibold"
+              className="ml-auto border-0 text-[#232323] font-semibold"
               style={{ background: P.surf, boxShadow: `0 0 18px -4px ${P.surf}` }}
             >
               Most Popular
@@ -296,7 +293,7 @@ export default function SubscriptionPage() {
         <div className="sub-plan relative">
           <div className="absolute -top-3 left-5 z-10">
             <span
-              className="text-[#07333e] text-xs font-bold px-3 py-1 rounded-full"
+              className="text-[#232323] text-xs font-bold px-3 py-1 rounded-full"
               style={{ background: P.surf, boxShadow: `0 0 18px -4px ${P.surf}` }}
             >
               NEW
@@ -308,7 +305,7 @@ export default function SubscriptionPage() {
             </span>
             <span className="font-semibold text-foreground text-lg">PsychPro Scholar</span>
             <Badge
-              className="ml-auto border-0 text-[#07333e] font-semibold"
+              className="ml-auto border-0 text-[#232323] font-semibold"
               style={{ background: P.teal, boxShadow: `0 0 18px -4px ${P.teal}` }}
             >
               Best Value
@@ -375,7 +372,7 @@ export default function SubscriptionPage() {
         <div className="sub-plan relative" data-testid="eppp-plan">
           <div className="absolute -top-3 left-5 z-10">
             <span
-              className="text-[#07333e] text-xs font-bold px-3 py-1 rounded-full"
+              className="text-[#232323] text-xs font-bold px-3 py-1 rounded-full"
               style={{ background: P.surf, boxShadow: `0 0 18px -4px ${P.surf}` }}
             >
               EPPP
@@ -387,7 +384,7 @@ export default function SubscriptionPage() {
             </span>
             <span className="font-semibold text-foreground text-lg">EPPP Mastery Suite</span>
             <Badge
-              className="ml-auto border-0 text-[#07333e] font-semibold"
+              className="ml-auto border-0 text-[#232323] font-semibold"
               style={{ background: P.surf, boxShadow: `0 0 18px -4px ${P.surf}` }}
             >
               Separate access

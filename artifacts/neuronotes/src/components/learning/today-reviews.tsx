@@ -111,9 +111,9 @@ export default function TodayReviews({ topics }: TodayReviewsProps) {
           <span
             className="ml-auto text-[11px] font-semibold px-2 py-0.5 rounded-full border"
             style={{
-              background: "hsl(var(--surf-hue) 69% 58% / 0.16)",
+              background: "hsl(var(--surf-hue) 0% 58% / 0.16)",
               color: P.surf,
-              borderColor: "rgba(118,228,247,0.30)",
+              borderColor: "rgba(148, 148, 148,0.30)",
             }}
           >
             {items.length}
@@ -141,14 +141,14 @@ export default function TodayReviews({ topics }: TodayReviewsProps) {
                   style={
                     item.isOverdue
                       ? {
-                          background: `linear-gradient(135deg, ${P.teal}, ${P.surf})`,
-                          color: "#05333f",
+                          background: `${P.surf}`,
+                          color: "#222222",
                           borderColor: P.tealDeep,
                         }
                       : {
-                          background: "hsl(var(--surf-hue) 69% 58% / 0.14)",
+                          background: "hsl(var(--surf-hue) 0% 58% / 0.14)",
                           color: P.surf,
-                          borderColor: "rgba(118,228,247,0.30)",
+                          borderColor: "rgba(148, 148, 148,0.30)",
                         }
                   }
                 >

@@ -188,9 +188,8 @@ function StructureSearch({
       <div
         className="w-full max-w-xl rounded-2xl border overflow-hidden"
         style={{
-          background:
-            "linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.74), hsl(var(--surf-hue) 88% 6% / 0.85))",
-          borderColor: "rgba(196,232,242,0.22)",
+          background: "hsl(var(--surf-hue) 0% 6% / 0.85)",
+          borderColor: "rgba(163, 163, 163,0.22)",
           backdropFilter: "blur(20px) saturate(135%)",
           WebkitBackdropFilter: "blur(20px) saturate(135%)",
           boxShadow:
@@ -307,7 +306,7 @@ function ViewTabs({
             style={
               isActive
                 ? {
-                    background: `linear-gradient(135deg, ${PALETTE.surf}, ${PALETTE.teal})`,
+                    background: `${PALETTE.teal}`,
                     color: PALETTE.bg,
                     boxShadow: `0 6px 18px -8px ${PALETTE.surf}cc`,
                   }
@@ -472,9 +471,8 @@ function StructureDetail({
     <div
       className="rounded-2xl border overflow-hidden flex flex-col h-full min-h-0 max-h-full"
       style={{
-        background:
-          "linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.74), hsl(var(--surf-hue) 88% 6% / 0.85))",
-        borderColor: "rgba(196,232,242,0.22)",
+        background: "hsl(var(--surf-hue) 0% 6% / 0.85)",
+        borderColor: "rgba(163, 163, 163,0.22)",
         backdropFilter: "blur(20px) saturate(135%)",
         WebkitBackdropFilter: "blur(20px) saturate(135%)",
         boxShadow:
@@ -882,9 +880,8 @@ function EmptyDetail() {
     <div
       className="rounded-2xl border p-6 h-full flex flex-col items-center justify-center text-center"
       style={{
-        background:
-          "linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.74), hsl(var(--surf-hue) 88% 6% / 0.85))",
-        borderColor: "rgba(196,232,242,0.22)",
+        background: "hsl(var(--surf-hue) 0% 6% / 0.85)",
+        borderColor: "rgba(163, 163, 163,0.22)",
         backdropFilter: "blur(20px) saturate(135%)",
         WebkitBackdropFilter: "blur(20px) saturate(135%)",
         boxShadow:
@@ -895,7 +892,7 @@ function EmptyDetail() {
       <div
         className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
         style={{
-          background: `linear-gradient(135deg, ${PALETTE.teal}33, ${PALETTE.surf}22)`,
+          background: `${PALETTE.surf}22`,
           border: `1px solid ${PALETTE.surf}44`,
         }}
       >
@@ -946,9 +943,8 @@ function NumberedKey({
     <div
       className="rounded-2xl border h-full flex flex-col overflow-hidden"
       style={{
-        background:
-          "linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.74), hsl(var(--surf-hue) 88% 6% / 0.85))",
-        borderColor: "rgba(196,232,242,0.22)",
+        background: "hsl(var(--surf-hue) 0% 6% / 0.85)",
+        borderColor: "rgba(163, 163, 163,0.22)",
         backdropFilter: "blur(20px) saturate(135%)",
         WebkitBackdropFilter: "blur(20px) saturate(135%)",
       }}
@@ -1144,7 +1140,7 @@ function BrainDiagram({
           <div
             className="w-16 h-16 rounded-2xl flex items-center justify-center"
             style={{
-              background: `linear-gradient(135deg, ${PALETTE.surface}, ${PALETTE.surfaceElev})`,
+              background: `${PALETTE.surfaceElev}`,
               border: `1px solid ${PALETTE.steel}99`,
               boxShadow: `0 0 30px -8px ${PALETTE.teal}66`,
             }}
@@ -1619,7 +1615,7 @@ function LabeledBrainDiagram({
           <div
             className="w-16 h-16 rounded-2xl flex items-center justify-center"
             style={{
-              background: `linear-gradient(135deg, ${PALETTE.surface}, ${PALETTE.surfaceElev})`,
+              background: `${PALETTE.surfaceElev}`,
               border: `1px solid ${PALETTE.steel}99`,
               boxShadow: `0 0 30px -8px ${PALETTE.teal}66`,
             }}
@@ -1811,7 +1807,7 @@ export default function BrainLabPage() {
                   onClick={() => setViewMode(mode)}
                   className="px-2.5 py-1 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-all"
                   style={{
-                    background: on ? `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})` : "transparent",
+                    background: on ? `${PALETTE.surf}` : "transparent",
                     color: on ? PALETTE.bg : PALETTE.mist,
                   }}
                   data-testid={`button-view-${mode}`}
@@ -1851,7 +1847,7 @@ export default function BrainLabPage() {
         className="flex-shrink-0 px-4 md:px-6 py-2 flex items-center justify-center border-b"
         style={{
           borderColor: `${PALETTE.steel}66`,
-          background: `linear-gradient(180deg, ${PALETTE.surface}66, transparent)`,
+          background: `transparent`,
         }}
       >
         <ViewTabs
@@ -1882,9 +1878,8 @@ export default function BrainLabPage() {
           <div
             className="relative rounded-2xl border overflow-hidden flex-1 min-h-0 h-full"
             style={{
-              background:
-                "linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.74), hsl(var(--surf-hue) 88% 6% / 0.85))",
-              borderColor: "rgba(196,232,242,0.22)",
+              background: "hsl(var(--surf-hue) 0% 6% / 0.85)",
+              borderColor: "rgba(163, 163, 163,0.22)",
               backdropFilter: "blur(20px) saturate(135%)",
               WebkitBackdropFilter: "blur(20px) saturate(135%)",
               boxShadow:

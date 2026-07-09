@@ -230,7 +230,7 @@ export default function ProgressPage() {
           <div style={{ height: 140 }}>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={trendData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--surf-hue) 69% 58% / 0.15)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--surf-hue) 0% 58% / 0.15)" />
                 <XAxis dataKey="day" tickLine={false} axisLine={false} tick={{ fontSize: 11 }} />
                 <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 11 }} domain={[0, 100]} />
                 <Tooltip />
@@ -255,9 +255,8 @@ export default function ProgressPage() {
             <div
               className="rounded-xl p-4 border"
               style={{
-                background:
-                  "linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.81), hsl(var(--surf-hue) 88% 6% / 0.90))",
-                borderColor: "rgba(118,228,247,0.26)",
+                background: "hsl(var(--surf-hue) 0% 6% / 0.90)",
+                borderColor: "rgba(148, 148, 148,0.26)",
                 backdropFilter: "blur(18px) saturate(135%)",
                 WebkitBackdropFilter: "blur(18px) saturate(135%)",
                 boxShadow:
@@ -286,9 +285,8 @@ export default function ProgressPage() {
             <div
               className="rounded-xl p-4 border"
               style={{
-                background:
-                  "linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.81), hsl(var(--surf-hue) 88% 6% / 0.90))",
-                borderColor: "rgba(118,228,247,0.26)",
+                background: "hsl(var(--surf-hue) 0% 6% / 0.90)",
+                borderColor: "rgba(148, 148, 148,0.26)",
                 backdropFilter: "blur(18px) saturate(135%)",
                 WebkitBackdropFilter: "blur(18px) saturate(135%)",
                 boxShadow:
@@ -406,10 +404,10 @@ function ScoreBadge({ score }: { score: number }) {
   // Tiers match the icons / strong-vs-weak split on the rest of the page.
   const style: { background: string; color: string } =
     score >= STRONG_SCORE
-      ? { background: "hsl(var(--surf-hue) 81% 34% / 0.15)", color: P.tealDeep }
+      ? { background: "hsl(var(--surf-hue) 0% 34% / 0.15)", color: P.tealDeep }
       : score >= WEAK_SCORE
-      ? { background: "hsl(var(--surf-hue) 78% 48% / 0.15)", color: P.teal }
-      : { background: "hsl(var(--surf-hue) 69% 58% / 0.18)", color: P.tealDeep };
+      ? { background: "hsl(var(--surf-hue) 0% 48% / 0.15)", color: P.teal }
+      : { background: "hsl(var(--surf-hue) 0% 58% / 0.18)", color: P.tealDeep };
   return (
     <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={style}>
       {score}%

@@ -96,7 +96,7 @@ export default function StudyGuidePage({ params }: Props) {
         <StudySurface tone="light" glow innerClassName="text-center py-16 px-6" testId="study-guide-paywall">
           <div
             className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 border"
-            style={{ background: "rgba(189,229,255,0.55)", borderColor: `${P.surf}66` }}
+            style={{ background: "rgba(222, 222, 222,0.55)", borderColor: `${P.surf}66` }}
           >
             <Lock className="w-8 h-8" style={{ color: P.tealDeep }} />
           </div>

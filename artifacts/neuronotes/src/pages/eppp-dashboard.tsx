@@ -31,7 +31,7 @@ import { knowledgeDomainIcon } from "@/lib/eppp-icons";
 //   3. What to study next (weak / unfinished areas)
 //   4. Study streak + weekly activity
 //   5. An exam-date countdown (persisted locally per user for now)
-// Locked cerulean palette (#76E4F7); no mint. All CSS scoped under .epd-*.
+// Locked cerulean palette (#a3a3a3); no mint. All CSS scoped under .epd-*.
 //
 // Split into a pure presentational view (EpppDashboardView, data via props) and
 // a data container (default export). The view is reused by the mockup sandbox
@@ -39,14 +39,14 @@ import { knowledgeDomainIcon } from "@/lib/eppp-icons";
 // ---------------------------------------------------------------------------
 
 const C = {
-  cyan: "#76E4F7",
-  mist: "#A7F3FF",
-  cloud: "#F4FBFF",
-  ink: "#07333e",
-  hairline: "rgba(118,228,247,0.16)",
-  hairlineStrong: "rgba(118,228,247,0.32)",
-  body: "rgba(225,244,250,0.84)",
-  muted: "rgba(186,214,224,0.66)",
+  cyan: "#a3a3a3",
+  mist: "#d4d4d4",
+  cloud: "#f5f5f5",
+  ink: "#232323",
+  hairline: "rgba(148, 148, 148,0.16)",
+  hairlineStrong: "rgba(148, 148, 148,0.32)",
+  body: "rgba(229, 229, 229,0.84)",
+  muted: "rgba(178, 178, 178,0.66)",
 };
 
 const DAY_LABELS = ["S", "M", "T", "W", "T", "F", "S"];
@@ -586,8 +586,8 @@ const styles = `
   text-align: center;
   border-radius: 16px;
   border: 1px solid ${C.hairlineStrong};
-  background: linear-gradient(135deg, hsl(var(--surf-hue) 89% 12% / 0.96), hsl(var(--surf-hue) 87% 10% / 0.92));
-  box-shadow: 0 18px 54px -42px rgba(118,228,247,0.78), inset 0 1px 0 rgba(255,255,255,0.08);
+  background: hsl(var(--surf-hue) 0% 10% / 0.92);
+  box-shadow: 0 18px 54px -42px rgba(148, 148, 148,0.78), inset 0 1px 0 rgba(255,255,255,0.08);
 }
 .epd-head-img {
   position: absolute;
@@ -602,9 +602,7 @@ const styles = `
 .epd-head-shade {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(circle at 50% 52%, hsl(var(--surf-hue) 89% 12% / 0.12) 0%, hsl(var(--surf-hue) 89% 12% / 0.62) 55%, hsl(var(--surf-hue) 89% 12% / 0.94) 100%),
-    linear-gradient(90deg, hsl(var(--surf-hue) 89% 12% / 0.96), hsl(var(--surf-hue) 89% 12% / 0.28) 48%, hsl(var(--surf-hue) 89% 12% / 0.96));
+  background: hsl(var(--surf-hue) 0% 12% / 0.96);
 }
 .epd-title {
   position: relative;
@@ -624,9 +622,8 @@ const styles = `
   position: relative;
   border-radius: 20px;
   padding: clamp(18px, 2vw, 24px);
-  background:
-    linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.74), hsl(var(--surf-hue) 88% 6% / 0.85));
-  border: 1px solid rgba(196,232,242,0.22);
+  background: hsl(var(--surf-hue) 0% 6% / 0.85);
+  border: 1px solid rgba(163, 163, 163,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
@@ -659,7 +656,7 @@ const styles = `
 .epd-card--readiness { display: flex; align-items: center; gap: clamp(16px, 2vw, 26px); }
 .epd-ring { position: relative; width: 128px; height: 128px; flex-shrink: 0; }
 .epd-ring-svg { width: 128px; height: 128px; transform: rotate(-90deg); }
-.epd-ring-track { fill: none; stroke: rgba(118,228,247,0.12); stroke-width: 10; }
+.epd-ring-track { fill: none; stroke: rgba(148, 148, 148,0.12); stroke-width: 10; }
 .epd-ring-fill {
   fill: none;
   stroke: ${C.cyan};
@@ -698,8 +695,8 @@ const styles = `
 .epd-week-col { display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .epd-week-dot {
   width: 14px; height: 14px; border-radius: 999px;
-  background: rgba(118,228,247,0.1);
-  border: 1px solid rgba(118,228,247,0.2);
+  background: rgba(148, 148, 148,0.1);
+  border: 1px solid rgba(148, 148, 148,0.2);
 }
 .epd-week-dot.is-active {
   background: ${C.cyan};
@@ -734,7 +731,7 @@ const styles = `
   border-radius: 10px;
   font-size: 14px;
   color: ${C.cloud};
-  background: hsl(var(--surf-hue) 89% 12% / 0.6);
+  background: hsl(var(--surf-hue) 0% 12% / 0.6);
   border: 1px solid ${C.hairlineStrong};
   color-scheme: dark;
 }
@@ -748,8 +745,8 @@ const styles = `
   font-weight: 700;
   cursor: pointer;
   color: ${C.ink};
-  border: 1px solid rgba(167,243,255,0.6);
-  background: linear-gradient(135deg, ${C.mist} 0%, ${C.cyan} 100%);
+  border: 1px solid rgba(212, 212, 212,0.6);
+  background: ${C.cyan};
   transition: transform 0.2s ease;
 }
 .epd-exam-save:hover:not(:disabled) { transform: translateY(-1px); }
@@ -771,14 +768,14 @@ const styles = `
   gap: 10px;
 }
 .epd-section-head--hero .epd-section-eyebrow {
-  color: #76e4f7;
+  color: #a3a3a3;
 }
 .epd-section-head--hero .epd-section-title {
   font-size: clamp(24px, 3vw, 34px);
   color: #ffffff;
 }
 .epd-section-head--hero .epd-section-meta {
-  color: #bff4ff;
+  color: #dfdfdf;
 }
 .epd-section-eyebrow {
   margin: 0 0 6px;
@@ -812,7 +809,7 @@ const styles = `
   font-size: 14px;
   color: ${C.muted};
   border: 1px dashed ${C.hairline};
-  background: hsl(var(--surf-hue) 91% 24% / 0.4);
+  background: hsl(var(--surf-hue) 0% 24% / 0.4);
 }
 
 /* domain grid */
@@ -826,9 +823,8 @@ const styles = `
   border-radius: 16px;
   padding: 18px;
   text-decoration: none;
-  background:
-    linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.74), hsl(var(--surf-hue) 88% 6% / 0.85));
-  border: 1px solid rgba(196,232,242,0.22);
+  background: hsl(var(--surf-hue) 0% 6% / 0.85);
+  border: 1px solid rgba(163, 163, 163,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
@@ -839,13 +835,12 @@ const styles = `
 .epd-domain:hover { transform: translateY(-3px); border-color: ${C.cyan}66; box-shadow: 0 22px 56px -38px rgba(0,0,0,0.7), 0 0 24px -10px ${C.cyan}59; }
 .epd-domain.is-mastered {
   border-color: ${C.cyan}5e;
-  background:
-    linear-gradient(145deg, hsl(var(--surf-hue) 85% 26% / 0.84), hsl(var(--surf-hue) 89% 10% / 0.90));
+  background: hsl(var(--surf-hue) 0% 10% / 0.90);
 }
 .epd-domain--loading { opacity: 0.85; }
 .epd-bar-fill--idle {
   display: block; height: 100%; width: 35%; border-radius: 999px;
-  background: rgba(118,228,247,0.28);
+  background: rgba(148, 148, 148,0.28);
   animation: epd-pulse 1.3s ease-in-out infinite;
 }
 @keyframes epd-pulse { 0%,100% { opacity: 0.4; } 50% { opacity: 0.9; } }
@@ -854,7 +849,7 @@ const styles = `
 .epd-domain-icon {
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
   width: 34px; height: 34px; border-radius: 10px;
-  color: ${C.cyan}; background: rgba(118,228,247,0.1); border: 1px solid rgba(118,228,247,0.28);
+  color: ${C.cyan}; background: rgba(148, 148, 148,0.1); border: 1px solid rgba(148, 148, 148,0.28);
 }
 .epd-domain-icon svg { width: 17px; height: 17px; }
 .epd-domain-name { font-size: 14.5px; font-weight: 600; color: ${C.cloud}; line-height: 1.3; }
@@ -866,10 +861,10 @@ const styles = `
 }
 .epd-badge svg { width: 12px; height: 12px; }
 .epd-badge--mastered { color: ${C.ink}; background: ${C.cyan}; }
-.epd-bar { height: 7px; border-radius: 999px; background: rgba(118,228,247,0.1); overflow: hidden; }
+.epd-bar { height: 7px; border-radius: 999px; background: rgba(148, 148, 148,0.1); overflow: hidden; }
 .epd-bar-fill {
   display: block; height: 100%; border-radius: 999px;
-  background: linear-gradient(90deg, ${C.cyan}, ${C.mist});
+  background: ${C.mist};
   transition: width 800ms cubic-bezier(0.16,1,0.3,1);
 }
 .epd-domain-foot { display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: ${C.muted}; }
@@ -886,9 +881,8 @@ const styles = `
   padding: 14px 16px;
   text-align: left;
   cursor: pointer;
-  background:
-    linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.74), hsl(var(--surf-hue) 88% 6% / 0.85));
-  border: 1px solid rgba(196,232,242,0.22);
+  background: hsl(var(--surf-hue) 0% 6% / 0.85);
+  border: 1px solid rgba(163, 163, 163,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:

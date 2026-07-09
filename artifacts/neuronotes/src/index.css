@@ -86,9 +86,9 @@
 /* LIGHT MODE — Cerulean Blue theme */
 :root {
   /* SINGLE HUE KNOB for the whole cerulean surface system. Change this one
-     number to retone every surface app-wide. Accents (#76E4F7, hue ~189) are
+     number to retone every surface app-wide. Accents (#a3a3a3, hue ~189) are
      intentionally NOT derived from this — they are the fixed north star. */
-  --surf-hue: 193;
+  --surf-hue: 0;
   --button-outline: rgba(0,0,0, .10);
   --badge-outline: rgba(0,0,0, .05);
   --opaque-button-border-intensity: -8;
@@ -98,51 +98,51 @@
   /* Light cerulean palette — based on Deep Sea Teal / Arctic Ocean Blue /
      Cerulean Ripple / Icy Glaze / Frost White swatches, biased slightly
      bluer (hue ~198-200°) to avoid green-teal cast. */
-  --background: 198 40% 96%;     /* near Frost White with cerulean tint */
-  --foreground: 200 60% 12%;     /* Deep Sea Teal text */
+  --background: 0 0% 97%;     /* near Frost White with cerulean tint */
+  --foreground: 0 0% 10%;     /* Deep Sea Teal text */
 
-  --border: 198 30% 86%;
+  --border: 0 0% 86%;
 
   --card: 0 0% 100%;
-  --card-foreground: 200 60% 12%;
-  --card-border: 198 30% 86%;
+  --card-foreground: 0 0% 10%;
+  --card-border: 0 0% 86%;
 
-  --sidebar: 200 60% 12%;
-  --sidebar-foreground: 198 40% 92%;
-  --sidebar-border: 200 40% 22%;
-  --sidebar-primary: 195 53% 50%;
+  --sidebar: 0 0% 10%;
+  --sidebar-foreground: 0 0% 92%;
+  --sidebar-border: 0 0% 22%;
+  --sidebar-primary: 0 0% 45%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 200 40% 22%;
-  --sidebar-accent-foreground: 198 40% 92%;
-  --sidebar-ring: 195 53% 50%;
+  --sidebar-accent: 0 0% 22%;
+  --sidebar-accent-foreground: 0 0% 92%;
+  --sidebar-ring: 0 0% 45%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 200 60% 12%;
-  --popover-border: 198 30% 86%;
+  --popover-foreground: 0 0% 10%;
+  --popover-border: 0 0% 86%;
 
-  --primary: 195 53% 35%;        /* Arctic Ocean Blue */
+  --primary: 0 0% 35%;        /* Arctic Ocean Blue */
   --primary-foreground: 0 0% 100%;
 
-  --secondary: 198 35% 92%;
-  --secondary-foreground: 200 50% 18%;
+  --secondary: 0 0% 92%;
+  --secondary-foreground: 0 0% 18%;
 
-  --muted: 198 38% 94%;
-  --muted-foreground: 200 22% 40%;
+  --muted: 0 0% 94%;
+  --muted-foreground: 0 0% 40%;
 
-  --accent: 195 53% 50%;
+  --accent: 0 0% 45%;
   --accent-foreground: 0 0% 100%;
 
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
 
-  --input: 205 32% 89%;
-  --ring: 199 84% 42%;
+  --input: 0 0% 89%;
+  --ring: 0 0% 42%;
 
-  --chart-1: 191 84% 42%;
-  --chart-2: 189 88% 54%;
-  --chart-3: 220 80% 58%;
-  --chart-4: 280 75% 60%;
-  --chart-5: 0 84% 60%;
+  --chart-1: 0 0% 42%;
+  --chart-2: 0 0% 54%;
+  --chart-3: 0 0% 58%;
+  --chart-4: 0 0% 40%;
+  --chart-5: 0 0% 30%;
 
   --app-font-sans: 'Montserrat', 'Inter', 'SF Pro Display', sans-serif;
   --app-font-serif: 'Merriweather', Georgia, serif;
@@ -184,54 +184,54 @@
   --elevate-2: rgba(255,255,255, .09);
 
   /* Deep cerulean/turquoise dark theme — CANONICAL SURFACE HUE = 192 (set
-     2026-06-12). Accents stay at the locked #76E4F7 family (hue ~188–189).
+     2026-06-12). Accents stay at the locked #a3a3a3 family (hue ~188–189).
      History: hue 191 read green, 196 read navy; 192 sits just off the accent on
      the anti-navy side. Lever for "too navy" is HUE, never lightness. */
-  --background: var(--surf-hue) 80% 9%;
-  --foreground: var(--surf-hue) 40% 95%;
+  --background: var(--surf-hue) 0% 9%;
+  --foreground: var(--surf-hue) 0% 95%;
 
-  --border: var(--surf-hue) 58% 24%;
+  --border: var(--surf-hue) 0% 24%;
 
-  --card: var(--surf-hue) 78% 12%;
-  --card-foreground: var(--surf-hue) 40% 95%;
-  --card-border: var(--surf-hue) 58% 24%;
+  --card: var(--surf-hue) 0% 12%;
+  --card-foreground: var(--surf-hue) 0% 95%;
+  --card-border: var(--surf-hue) 0% 24%;
 
-  --sidebar: var(--surf-hue) 80% 7%;
-  --sidebar-foreground: var(--surf-hue) 38% 90%;
-  --sidebar-border: var(--surf-hue) 60% 18%;
-  --sidebar-primary: 189 84% 55%;
+  --sidebar: var(--surf-hue) 0% 7%;
+  --sidebar-foreground: var(--surf-hue) 0% 90%;
+  --sidebar-border: var(--surf-hue) 0% 18%;
+  --sidebar-primary: 0 0% 60%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: var(--surf-hue) 60% 18%;
-  --sidebar-accent-foreground: var(--surf-hue) 38% 90%;
-  --sidebar-ring: 189 84% 55%;
+  --sidebar-accent: var(--surf-hue) 0% 18%;
+  --sidebar-accent-foreground: var(--surf-hue) 0% 90%;
+  --sidebar-ring: 0 0% 60%;
 
-  --popover: var(--surf-hue) 76% 12%;
-  --popover-foreground: var(--surf-hue) 38% 95%;
-  --popover-border: var(--surf-hue) 58% 22%;
+  --popover: var(--surf-hue) 0% 12%;
+  --popover-foreground: var(--surf-hue) 0% 95%;
+  --popover-border: var(--surf-hue) 0% 22%;
 
-  --primary: 189 84% 55%;
+  --primary: 0 0% 60%;
   --primary-foreground: 0 0% 100%;
 
-  --secondary: var(--surf-hue) 60% 22%;
-  --secondary-foreground: var(--surf-hue) 38% 90%;
+  --secondary: var(--surf-hue) 0% 22%;
+  --secondary-foreground: var(--surf-hue) 0% 90%;
 
-  --muted: var(--surf-hue) 60% 17%;
-  --muted-foreground: var(--surf-hue) 24% 62%;
+  --muted: var(--surf-hue) 0% 17%;
+  --muted-foreground: var(--surf-hue) 0% 62%;
 
-  --accent: 189 88% 62%;
+  --accent: 0 0% 65%;
   --accent-foreground: 0 0% 100%;
 
   --destructive: 0 72% 51%;
   --destructive-foreground: 0 0% 100%;
 
-  --input: var(--surf-hue) 58% 24%;
-  --ring: 189 84% 55%;
+  --input: var(--surf-hue) 0% 24%;
+  --ring: 0 0% 60%;
 
-  --chart-1: 189 84% 55%;
-  --chart-2: 189 88% 62%;
-  --chart-3: 220 80% 62%;
-  --chart-4: 280 75% 65%;
-  --chart-5: 0 72% 60%;
+  --chart-1: 0 0% 60%;
+  --chart-2: 0 0% 65%;
+  --chart-3: 0 0% 58%;
+  --chart-4: 0 0% 40%;
+  --chart-5: 0 0% 35%;
 
   --shadow-2xs: 0px 1px 2px 0px rgba(0,0,0,0.3);
   --shadow-xs: 0px 2px 4px 0px rgba(0,0,0,0.35);
@@ -266,26 +266,26 @@
 .study-page-aurora {
   /* Mirrors STUDY_PALETTE in src/lib/study-theme.ts. Canonical palette
      = the landing-page cinematic neuroscience UI. */
-  --background: var(--surf-hue) 90% 17%;         /* #044352 bg (deep cerulean) */
-  --foreground: 188 100% 83%;        /* #A7F3FF mist (icy text) */
-  --card: var(--surf-hue) 88% 25%;               /* #086178 surface (deep cerulean) */
-  --card-foreground: 188 100% 83%;
-  --popover: var(--surf-hue) 88% 23%;
-  --popover-foreground: 188 100% 83%;
-  --muted: var(--surf-hue) 90% 20%;              /* #054f61 bgSoft (deep cerulean) */
-  --muted-foreground: 191 30% 78%;   /* brighter muted text */
-  --border: var(--surf-hue) 74% 44%;             /* #1da2c3 steel/cerulean */
-  --input: var(--surf-hue) 90% 20%;              /* #054f61 bgSoft (deep cerulean) */
-  --primary: 189 80% 64%;            /* #5ad7ed teal */
-  --primary-foreground: var(--surf-hue) 90% 14%;
-  --secondary: var(--surf-hue) 74% 44%;          /* #1da2c3 cerulean */
-  --secondary-foreground: 188 100% 83%;
-  --accent: 188 90% 72%;             /* #76E4F7 surf (bright-cyan) */
-  --accent-foreground: var(--surf-hue) 90% 14%;
-  --ring: 188 90% 72%;
+  --background: var(--surf-hue) 0% 17%;         /* #0a0a0a bg (deep cerulean) */
+  --foreground: 0 0% 83%;        /* #d4d4d4 mist (icy text) */
+  --card: var(--surf-hue) 0% 25%;               /* #141414 surface (deep cerulean) */
+  --card-foreground: 0 0% 83%;
+  --popover: var(--surf-hue) 0% 23%;
+  --popover-foreground: 0 0% 83%;
+  --muted: var(--surf-hue) 0% 20%;              /* #111111 bgSoft (deep cerulean) */
+  --muted-foreground: 0 0% 70%;   /* brighter muted text */
+  --border: var(--surf-hue) 0% 44%;             /* #6b6b6b steel/cerulean */
+  --input: var(--surf-hue) 0% 20%;              /* #111111 bgSoft (deep cerulean) */
+  --primary: 0 0% 64%;            /* #999999 teal */
+  --primary-foreground: var(--surf-hue) 0% 14%;
+  --secondary: var(--surf-hue) 0% 44%;          /* #6b6b6b cerulean */
+  --secondary-foreground: 0 0% 83%;
+  --accent: 0 0% 72%;             /* #a3a3a3 surf (bright-cyan) */
+  --accent-foreground: var(--surf-hue) 0% 14%;
+  --ring: 0 0% 72%;
   /* Shared cyan glow token for glass buttons + nav items so every
      interactive surface reads from the same accent. */
-  --btn-glow: 188 90% 72%;
+  --btn-glow: 0 0% 72%;
 }
 
 /* ============================================================
@@ -301,8 +301,6 @@
 .btn-glass-strong {
   position: relative;
   border-radius: 14px;
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
   transition: background-color 160ms ease, background-image 160ms ease,
     border-color 160ms ease, box-shadow 200ms ease, transform 120ms ease;
 }
@@ -310,24 +308,23 @@
    .nav-glass-idle recipe: flat dark teal fill, faint cerulean hairline, soft
    cyan glow that intensifies on hover/active. */
 .btn-glass {
-  background: hsl(var(--surf-hue) 78% 30% / 0.30);
-  border: 1.5px solid rgba(118, 228, 247, 0.45);
-  color: #eafaff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  background: hsl(var(--surf-hue) 0% 30% / 0.30);
+  border: 1.5px solid rgba(148, 148, 148, 0.45);
+  color: #f0f0f0;
   box-shadow:
     inset 0 0 18px -8px rgba(0, 0, 0, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 .btn-glass:hover {
-  background: hsl(var(--surf-hue) 76% 38% / 0.42);
-  border-color: rgba(118, 228, 247, 0.70);
+  background: hsl(var(--surf-hue) 0% 38% / 0.42);
+  border-color: rgba(148, 148, 148, 0.70);
   box-shadow:
     inset 0 0 20px -8px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 .btn-glass:active {
-  background: hsl(var(--surf-hue) 74% 44% / 0.52);
-  border-color: rgba(118, 228, 247, 0.85);
+  background: hsl(var(--surf-hue) 0% 44% / 0.52);
+  border-color: rgba(148, 148, 148, 0.85);
   box-shadow:
     inset 0 0 22px -8px rgba(0, 0, 0, 0.36),
     inset 0 1px 0 rgba(255, 255, 255, 0.11);
@@ -336,26 +333,25 @@
    .nav-glass-active row: a stronger cerulean tint, brighter border, and a
    clearly visible cyan glow corona. Near-white icy text for emphasis. */
 .btn-glass-strong {
-  background: rgba(118, 228, 247, 0.16);
-  border: 1.5px solid rgba(118, 228, 247, 0.85);
+  background: rgba(148, 148, 148, 0.16);
+  border: 1.5px solid rgba(148, 148, 148, 0.85);
   box-shadow:
-    inset 0 0 0 1px rgba(118, 228, 247, 0.30),
+    inset 0 0 0 1px rgba(148, 148, 148, 0.30),
     inset 0 1px 0 rgba(255, 255, 255, 0.14);
-  color: #f4feff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  color: #f5f5f5;
 }
 .btn-glass-strong:hover {
-  background: rgba(118, 228, 247, 0.24);
-  border-color: rgba(118, 228, 247, 1);
+  background: rgba(148, 148, 148, 0.24);
+  border-color: rgba(148, 148, 148, 1);
   box-shadow:
-    inset 0 0 0 1px rgba(118, 228, 247, 0.50),
+    inset 0 0 0 1px rgba(148, 148, 148, 0.50),
     inset 0 1px 0 rgba(255, 255, 255, 0.16);
 }
 .btn-glass-strong:active {
-  background: rgba(118, 228, 247, 0.36);
-  border-color: #c6f6ff;
+  background: rgba(148, 148, 148, 0.36);
+  border-color: #e5e5e5;
   box-shadow:
-    inset 0 0 0 1px rgba(118, 228, 247, 0.70),
+    inset 0 0 0 1px rgba(148, 148, 148, 0.70),
     inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 .btn-glass:disabled,
@@ -373,20 +369,18 @@
   border-radius: 14px;
   background: transparent;
   border: 1.5px solid transparent;
-  backdrop-filter: blur(10px) saturate(120%);
-  -webkit-backdrop-filter: blur(10px) saturate(120%);
   transition: background-color 160ms ease, border-color 160ms ease,
     box-shadow 200ms ease, transform 120ms ease;
 }
 .btn-glass-ghost:hover {
-  background: rgba(118, 228, 247, 0.10);
-  border-color: rgba(118, 228, 247, 0.45);
+  background: rgba(148, 148, 148, 0.10);
+  border-color: rgba(148, 148, 148, 0.45);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 .btn-glass-ghost:active {
-  background: rgba(118, 228, 247, 0.18);
-  border-color: rgba(118, 228, 247, 0.6);
+  background: rgba(148, 148, 148, 0.18);
+  border-color: rgba(148, 148, 148, 0.6);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
@@ -402,14 +396,8 @@
 .btn-glass-destructive {
   position: relative;
   border-radius: 14px;
-  background-image: linear-gradient(
-    145deg,
-    rgba(239, 68, 68, 0.95),
-    rgba(185, 28, 28, 0.95)
-  );
+  background: rgba(185, 28, 28, 0.95);
   border: 1px solid rgba(248, 113, 113, 0.55);
-  backdrop-filter: blur(12px) saturate(130%);
-  -webkit-backdrop-filter: blur(12px) saturate(130%);
   box-shadow:
     0 0 16px rgba(248, 113, 113, 0.30),
     inset 0 1px 0 rgba(255, 255, 255, 0.12);
@@ -417,22 +405,14 @@
     border-color 160ms ease, box-shadow 200ms ease, transform 120ms ease;
 }
 .btn-glass-destructive:hover {
-  background-image: linear-gradient(
-    145deg,
-    rgba(248, 113, 113, 0.98),
-    rgba(220, 38, 38, 0.98)
-  );
+  background: rgba(220, 38, 38, 0.98);
   border-color: rgba(252, 165, 165, 0.7);
   box-shadow:
     0 0 24px rgba(248, 113, 113, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 .btn-glass-destructive:active {
-  background-image: linear-gradient(
-    145deg,
-    rgba(252, 165, 165, 1),
-    rgba(220, 38, 38, 1)
-  );
+  background: rgba(220, 38, 38, 1);
   border-color: rgba(254, 202, 202, 0.85);
   box-shadow:
     0 0 32px rgba(248, 113, 113, 0.66),
@@ -449,7 +429,7 @@
   transition: text-shadow 200ms ease, color 160ms ease;
 }
 .btn-link-glow:hover {
-  color: #c6f6ff;
+  color: #e5e5e5;
 }
 
 /* ------------------------------------------------------------------
@@ -481,12 +461,12 @@
 }
 
 /* Softer focus ring on study-page buttons — the global study --ring is a
-   saturated cyan (188 90% 72%) that clashes with the cerulean button glow.
+   saturated cyan (0 0% 72%) that clashes with the cerulean button glow.
    Scope a gentler ring to buttons only so keyboard focus reads cleanly over
    the glow. Inputs/other surfaces keep the default --ring. */
 .study-page-bg button,
 .study-page-aurora button {
-  --ring: 194 30% 82%;
+  --ring: 0 0% 82%;
 }
 
 .study-page-bg,
@@ -515,7 +495,7 @@
        propagation, so body's background paints in normal flow ON TOP of the
        fixed ::before and wipes every page backdrop. */
 body {
-  background-color: #030d24;
+  background-color: #000000;
 }
 
 /* ============================================================
@@ -543,7 +523,7 @@ body {
      artwork site-wide (2026-07-08): no background image, no gradients,
      no vignette, no blend mode, no pseudo-element glow, no filter. */
   background-image: none;
-  background-color: #030d24;
+  background-color: #000000;
   pointer-events: none;
 }
 
@@ -581,15 +561,9 @@ body {
    in the same glass surface as the study-option cards so the text stays
    readable over the smoky background. */
 .lesson-header-box {
-  background: linear-gradient(
-    145deg,
-    hsl(var(--surf-hue) 88% 12% / 0.66),
-    hsl(var(--surf-hue) 90% 8% / 0.78)
-  );
-  border: 1px solid rgba(196, 232, 242, 0.20);
+  background: hsl(var(--surf-hue) 0% 8% / 0.78);
+  border: 1px solid rgba(163, 163, 163, 0.20);
   border-radius: 12px;
-  backdrop-filter: blur(20px) saturate(135%);
-  -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
     0 8px 24px -16px rgba(0, 0, 0, 0.62);
@@ -601,34 +575,22 @@ body {
    landing-page atmosphere so the dashboard feels cut from the same
    cinematic surface. */
 .recommended-tile {
-  background:
-    linear-gradient(
-      145deg,
-      hsl(var(--surf-hue) 88% 10% / 0.74),
-      hsl(var(--surf-hue) 88% 6% / 0.85)
-    );
-  border-color: rgba(196, 232, 242, 0.22);
-  backdrop-filter: blur(20px) saturate(135%);
-  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  background: hsl(var(--surf-hue) 0% 6% / 0.85);
+  border-color: rgba(163, 163, 163, 0.22);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
     0 24px 60px -42px rgba(0, 0, 0, 0.72);
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .recommended-tile:hover {
-  border-color: rgba(196, 232, 242, 0.38);
-  background:
-    linear-gradient(
-      145deg,
-      hsl(var(--surf-hue) 86% 15% / 0.70),
-      hsl(var(--surf-hue) 89% 10% / 0.82)
-    );
+  border-color: rgba(163, 163, 163, 0.38);
+  background: hsl(var(--surf-hue) 0% 10% / 0.82);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.14),
     0 26px 62px -40px rgba(0, 0, 0, 0.74);
 }
 .recommended-tile:active {
-  border-color: rgba(196, 232, 242, 0.44);
+  border-color: rgba(163, 163, 163, 0.44);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
     0 18px 40px -28px rgba(0, 0, 0, 0.7);
@@ -640,35 +602,27 @@ body {
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .course-mastery-tile--locked {
-  background: linear-gradient(
-    145deg,
-    hsl(var(--surf-hue) 80% 13% / 0.35),
-    hsl(var(--surf-hue) 84% 10% / 0.45)
-  );
-  border-color: rgba(196, 232, 242, 0.1);
+  background: hsl(var(--surf-hue) 0% 10% / 0.45);
+  border-color: rgba(163, 163, 163, 0.1);
   opacity: 0.5;
   filter: grayscale(0.6);
 }
 .course-mastery-tile--locked:hover {
   opacity: 0.82;
   filter: grayscale(0.2);
-  border-color: rgba(196, 232, 242, 0.22);
+  border-color: rgba(163, 163, 163, 0.22);
   transform: translateY(-2px);
 }
 .course-mastery-tile--mastered {
-  background: linear-gradient(
-    145deg,
-    hsl(var(--surf-hue) 80% 48% / 0.32),
-    hsl(var(--surf-hue) 86% 22% / 0.52)
-  );
-  border-color: rgba(118, 228, 247, 0.55);
+  background: hsl(var(--surf-hue) 0% 22% / 0.52);
+  border-color: rgba(148, 148, 148, 0.55);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.18),
     0 8px 22px -16px rgba(0, 0, 0, 0.55);
 }
 .course-mastery-tile--mastered:hover {
   transform: translateY(-2px);
-  border-color: rgba(118, 228, 247, 0.85);
+  border-color: rgba(148, 148, 148, 0.85);
 }
 
 /* ============== EPPP MASTERY SYSTEM — launch button (top header) ==============
@@ -688,53 +642,38 @@ body {
   font-size: 13px;
   letter-spacing: 0.01em;
   white-space: nowrap;
-  color: #eafdff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  color: #e5e5e5;
   cursor: pointer;
-  border: 1px solid rgba(118, 228, 247, 0.55);
-  background: linear-gradient(
-    180deg,
-    hsl(var(--surf-hue) 82% 38% / 0.40),
-    hsl(var(--surf-hue) 88% 22% / 0.50)
-  );
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid rgba(148, 148, 148, 0.55);
+  background: hsl(var(--surf-hue) 0% 22% / 0.50);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    0 0 0 1px rgba(118, 228, 247, 0.28);
+    0 0 0 1px rgba(148, 148, 148, 0.28);
   transition: transform 0.2s ease, box-shadow 0.3s ease, border-color 0.2s ease,
     background 0.2s ease, color 0.2s ease;
 }
 .eppp-launch-btn:hover {
   transform: translateY(-1px);
   color: #ffffff;
-  border-color: rgba(118, 228, 247, 0.95);
-  background: linear-gradient(
-    180deg,
-    hsl(var(--surf-hue) 80% 44% / 0.52),
-    hsl(var(--surf-hue) 86% 15% / 0.60)
-  );
+  border-color: rgba(148, 148, 148, 0.95);
+  background: hsl(var(--surf-hue) 0% 15% / 0.60);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.22),
-    0 0 0 1px rgba(118, 228, 247, 0.45);
+    0 0 0 1px rgba(148, 148, 148, 0.45);
 }
 .eppp-launch-btn:active {
   transform: translateY(0);
   color: #ffffff;
-  border-color: rgba(118, 228, 247, 1);
-  background: linear-gradient(
-    180deg,
-    hsl(var(--surf-hue) 78% 48% / 0.62),
-    hsl(var(--surf-hue) 86% 30% / 0.68)
-  );
+  border-color: rgba(148, 148, 148, 1);
+  background: hsl(var(--surf-hue) 0% 30% / 0.68);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.28),
-    0 0 0 1px rgba(118, 228, 247, 0.6);
+    0 0 0 1px rgba(148, 148, 148, 0.6);
 }
 .eppp-launch-btn:focus-visible {
   outline: none;
   box-shadow:
-    0 0 0 3px rgba(118, 228, 247, 0.5);
+    0 0 0 3px rgba(148, 148, 148, 0.5);
 }
 .eppp-launch-btn__inner {
   display: inline-flex;
@@ -744,7 +683,7 @@ body {
 .eppp-launch-btn__inner svg {
   width: 16px;
   height: 16px;
-  color: #76e4f7;
+  color: #a3a3a3;
 }
 .eppp-launch-btn--compact {
   height: 36px;
@@ -762,16 +701,9 @@ body {
      a 145° diagonal cerulean glass, cyan inner glow + outer corona, deep drop
      shadow. Keeps every generic shadcn card on the main site cut from the same
      cloth as the EPPP domain tiles. */
-  background:
-    linear-gradient(
-      145deg,
-      hsl(var(--surf-hue) 88% 10% / 0.74),
-      hsl(var(--surf-hue) 88% 6% / 0.85)
-    );
-  border: 1px solid rgba(196, 232, 242, 0.22);
+  background: hsl(var(--surf-hue) 0% 6% / 0.85);
+  border: 1px solid rgba(163, 163, 163, 0.22);
   border-radius: 20px;
-  backdrop-filter: blur(20px) saturate(135%);
-  -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.03),
     0 22px 52px -40px rgba(0, 0, 0, 0.80);
@@ -792,22 +724,10 @@ body {
    left-aligned section heads. */
 .text-scrim { position: relative; isolation: isolate; }
 .text-scrim::before {
-  content: "";
-  position: absolute;
-  inset: -22% -10%;
-  z-index: -1;
-  pointer-events: none;
-  background: radial-gradient(60% 64% at 50% 50%,
-    hsl(var(--surf-hue) 55% 5% / 0.66) 0%,
-    hsl(var(--surf-hue) 55% 5% / 0.42) 44%,
-    hsl(var(--surf-hue) 55% 5% / 0.00) 76%);
-  filter: blur(12px);
+  content: none;
 }
 .text-scrim-start::before {
-  background: radial-gradient(56% 64% at 20% 50%,
-    hsl(var(--surf-hue) 55% 5% / 0.66) 0%,
-    hsl(var(--surf-hue) 55% 5% / 0.40) 42%,
-    hsl(var(--surf-hue) 55% 5% / 0.00) 72%);
+  content: none;
 }
 
 /* Sidebar nav glass — frosted opaque dark-glass pills (2026-06 spec).
@@ -815,7 +735,7 @@ body {
    backdrop); hover/active/pressed brighten the surface and intensify the cyan
    outer glow. The active (current-route) row also gets a glowing cyan left bar
    via ::before. All glow colors use the
-   locked cerulean #76E4F7 / rgb(118,228,247). These plain rules sit
+   locked cerulean #a3a3a3 / rgb(183, 183, 183). These plain rules sit
    outside @layer so they override the Tailwind border/background utilities on
    the nav tokens. */
 .nav-glass-idle,
@@ -823,64 +743,42 @@ body {
   /* See-through glassmorphic panes: a low-opacity cerulean tint over a light
      blur, so the smoke backdrop reads clearly through the glass (clear & glassy
      rather than thick frost). Border glow ramps up on hover / press / active. */
-  backdrop-filter: blur(7px) saturate(135%);
-  -webkit-backdrop-filter: blur(7px) saturate(135%);
   transition: background 200ms ease, border-color 200ms ease,
     box-shadow 240ms ease, transform 140ms ease;
 }
 .nav-glass-idle {
-  background:
-    linear-gradient(
-      150deg,
-      hsl(var(--surf-hue) 80% 38% / 0.22),
-      hsl(var(--surf-hue) 84% 26% / 0.30)
-    );
-  border: 1px solid rgba(118, 228, 247, 0.3);
+  background: hsl(var(--surf-hue) 0% 26% / 0.30);
+  border: 1px solid rgba(148, 148, 148, 0.3);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 .nav-glass-idle:hover {
-  background:
-    linear-gradient(
-      150deg,
-      hsl(var(--surf-hue) 78% 46% / 0.34),
-      hsl(var(--surf-hue) 82% 34% / 0.42)
-    );
-  border-color: rgba(118, 228, 247, 0.7);
+  background: hsl(var(--surf-hue) 0% 34% / 0.42);
+  border-color: rgba(148, 148, 148, 0.7);
   box-shadow:
-    0 0 0 1px rgba(118, 228, 247, 0.55),
+    0 0 0 1px rgba(148, 148, 148, 0.55),
     inset 0 1px 0 rgba(255, 255, 255, 0.14);
   transform: translateY(-1px);
 }
 .nav-glass-idle:active {
-  background:
-    linear-gradient(
-      150deg,
-      hsl(var(--surf-hue) 76% 50% / 0.46),
-      hsl(var(--surf-hue) 80% 38% / 0.54)
-    );
-  border-color: rgba(118, 228, 247, 0.82);
+  background: hsl(var(--surf-hue) 0% 38% / 0.54);
+  border-color: rgba(148, 148, 148, 0.82);
   box-shadow:
-    0 0 0 1.5px rgba(118, 228, 247, 0.72),
+    0 0 0 1.5px rgba(148, 148, 148, 0.72),
     inset 0 1px 0 rgba(255, 255, 255, 0.14);
   transform: translateY(0);
 }
 .nav-glass-active {
-  background:
-    linear-gradient(
-      150deg,
-      hsl(var(--surf-hue) 76% 52% / 0.42),
-      hsl(var(--surf-hue) 80% 40% / 0.5)
-    );
-  border: 1px solid rgba(118, 228, 247, 0.72);
+  background: hsl(var(--surf-hue) 0% 40% / 0.5);
+  border: 1px solid rgba(148, 148, 148, 0.72);
   box-shadow:
-    0 0 0 1px rgba(118, 228, 247, 0.6),
+    0 0 0 1px rgba(148, 148, 148, 0.6),
     inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 .nav-glass-active:hover {
-  border-color: rgba(118, 228, 247, 0.85);
+  border-color: rgba(148, 148, 148, 0.85);
   box-shadow:
-    0 0 0 1.5px rgba(118, 228, 247, 0.72),
+    0 0 0 1.5px rgba(148, 148, 148, 0.72),
     inset 0 1px 0 rgba(255, 255, 255, 0.16);
   transform: translateY(-1px);
 }
@@ -892,7 +790,7 @@ body {
   bottom: 6px;
   width: 2px;
   border-radius: 0 2px 2px 0;
-  background: #76E4F7;
+  background: #a3a3a3;
 }
 
 /* Legacy bg-primary/bg-secondary button glass — scoped to actual <button>
@@ -904,47 +802,41 @@ body {
 .study-page-bg button.bg-primary,
 .study-page-aurora button.bg-primary {
   background-image: none;
-  background-color: rgba(118, 228, 247, 0.16);
-  color: #f4feff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-  border: 1.5px solid rgba(118, 228, 247, 0.85);
+  background-color: rgba(148, 148, 148, 0.16);
+  color: #f5f5f5;
+  border: 1.5px solid rgba(148, 148, 148, 0.85);
   border-radius: 14px;
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
   transition: all 0.2s ease;
   box-shadow:
-    inset 0 0 0 1px rgba(118, 228, 247, 0.30),
+    inset 0 0 0 1px rgba(148, 148, 148, 0.30),
     inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 
 .study-page-bg button.bg-primary:hover,
 .study-page-aurora button.bg-primary:hover {
-  background-color: rgba(118, 228, 247, 0.24);
-  border-color: rgba(118, 228, 247, 1);
+  background-color: rgba(148, 148, 148, 0.24);
+  border-color: rgba(148, 148, 148, 1);
   box-shadow:
-    inset 0 0 0 1px rgba(118, 228, 247, 0.50),
+    inset 0 0 0 1px rgba(148, 148, 148, 0.50),
     inset 0 1px 0 rgba(255, 255, 255, 0.16);
 }
 
 .study-page-bg button.bg-primary:active,
 .study-page-aurora button.bg-primary:active {
-  background-color: rgba(118, 228, 247, 0.36);
-  border-color: #c6f6ff;
+  background-color: rgba(148, 148, 148, 0.36);
+  border-color: #e5e5e5;
   box-shadow:
-    inset 0 0 0 1px rgba(118, 228, 247, 0.70),
+    inset 0 0 0 1px rgba(148, 148, 148, 0.70),
     inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 /* Secondary buttons — subtle luminous dark glass, scoped to actual buttons. */
 .study-page-bg button.bg-secondary,
 .study-page-aurora button.bg-secondary {
-  background: hsl(var(--surf-hue) 78% 30% / 0.30);
-  color: #eafaff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-  border: 1.5px solid rgba(118, 228, 247, 0.45);
+  background: hsl(var(--surf-hue) 0% 30% / 0.30);
+  color: #f0f0f0;
+  border: 1.5px solid rgba(148, 148, 148, 0.45);
   border-radius: 14px;
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
   transition: all 0.2s ease;
   box-shadow:
     inset 0 0 18px -8px rgba(0, 0, 0, 0.45),
@@ -953,8 +845,8 @@ body {
 
 .study-page-bg button.bg-secondary:hover,
 .study-page-aurora button.bg-secondary:hover {
-  background: hsl(var(--surf-hue) 76% 38% / 0.42);
-  border-color: rgba(118, 228, 247, 0.70);
+  background: hsl(var(--surf-hue) 0% 38% / 0.42);
+  border-color: rgba(148, 148, 148, 0.70);
   box-shadow:
     inset 0 0 20px -8px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
@@ -962,8 +854,8 @@ body {
 
 .study-page-bg button.bg-secondary:active,
 .study-page-aurora button.bg-secondary:active {
-  background: hsl(var(--surf-hue) 74% 44% / 0.52);
-  border-color: rgba(118, 228, 247, 0.85);
+  background: hsl(var(--surf-hue) 0% 44% / 0.52);
+  border-color: rgba(148, 148, 148, 0.85);
   box-shadow:
     inset 0 0 22px -8px rgba(0, 0, 0, 0.36),
     inset 0 1px 0 rgba(255, 255, 255, 0.11);
@@ -974,14 +866,11 @@ body {
    without a bg-* class. */
 .study-page-bg button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive),
 .study-page-aurora button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive) {
-  background: hsl(var(--surf-hue) 78% 30% / 0.26);
+  background: hsl(var(--surf-hue) 0% 30% / 0.26);
   border-width: 1.5px;
-  border-color: rgba(118, 228, 247, 0.45) !important;
-  color: #eafaff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  border-color: rgba(148, 148, 148, 0.45) !important;
+  color: #f0f0f0;
   border-radius: 14px;
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
   transition: all 0.2s ease;
   box-shadow:
     inset 0 0 18px -8px rgba(0, 0, 0, 0.42),
@@ -990,8 +879,8 @@ body {
 
 .study-page-bg button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive):hover,
 .study-page-aurora button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive):hover {
-  background: hsl(var(--surf-hue) 76% 38% / 0.40);
-  border-color: rgba(118, 228, 247, 0.70) !important;
+  background: hsl(var(--surf-hue) 0% 38% / 0.40);
+  border-color: rgba(148, 148, 148, 0.70) !important;
   box-shadow:
     inset 0 0 20px -8px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
@@ -999,8 +888,8 @@ body {
 
 .study-page-bg button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive):active,
 .study-page-aurora button.border.border-input:not(.bg-primary):not(.bg-secondary):not(.bg-destructive):active {
-  background: hsl(var(--surf-hue) 74% 44% / 0.50);
-  border-color: rgba(118, 228, 247, 0.85) !important;
+  background: hsl(var(--surf-hue) 0% 44% / 0.50);
+  border-color: rgba(148, 148, 148, 0.85) !important;
   box-shadow:
     inset 0 0 22px -8px rgba(0, 0, 0, 0.36),
     inset 0 1px 0 rgba(255, 255, 255, 0.11);
@@ -1034,12 +923,10 @@ body {
   textarea,
   select
 ) {
-  background: hsl(var(--surf-hue) 88% 10% / 0.72);
-  border: 1px solid rgba(118, 228, 247, 0.14);
-  color: #E4F4F6;
+  background: hsl(var(--surf-hue) 0% 10% / 0.72);
+  border: 1px solid rgba(148, 148, 148, 0.14);
+  color: #e5e5e5;
   border-radius: 14px;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
 }
 
 /* Flashcard flip animation */
@@ -1132,13 +1019,7 @@ body {
   animation: dashhdr-rise 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .dashhdr-glow {
-  top: -120px;
-  left: 50%;
-  width: 460px;
-  height: 320px;
-  transform: translateX(-50%);
-  border-radius: 9999px;
-  filter: blur(34px);
+  display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1168,9 +1049,9 @@ body {
     transition: transform 200ms ease, box-shadow 250ms ease, border-color 200ms ease, background 250ms ease;
   }
   .quiz-option-hover:hover:not(:disabled) {
-    border-color: rgba(167, 243, 255, 0.55) !important;
+    border-color: rgba(212, 212, 212, 0.55) !important;
     box-shadow:
-      0 0 0 1px rgba(167, 243, 255, 0.25),
+      0 0 0 1px rgba(212, 212, 212, 0.25),
       0 12px 32px -10px rgba(0, 0, 0, 0.55) !important;
   }
 
@@ -1229,4 +1110,21 @@ body {
   .border.hover-elevate:not(.no-hover-interaction-elevate)::after {
     inset: -1px;
   }
+}
+
+/* =============================================================================
+   BLACK FOUNDATION RESET (2026-07-09) — global kill-switch for the old
+   glass/glow layer. No frosted blur and no text glow anywhere in the app.
+   Box shadows are removed except on elements that ask for focus rings
+   (Tailwind ring utilities apply on :focus-visible, which is excluded).
+   ============================================================================= */
+*,
+*::before,
+*::after {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  text-shadow: none !important;
+}
+*:not(:focus-visible):not(:focus) {
+  box-shadow: none !important;
 }

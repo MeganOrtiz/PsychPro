@@ -28,7 +28,7 @@ export default function SignUpPage() {
             fontFamily: "inherit",
           },
           elements: {
-            card: `bg-[${P.surface}]/90 border border-white/10 backdrop-blur-md shadow-2xl`,
+            card: `bg-[${P.surface}]/90 border border-white/10 shadow-2xl`,
             headerTitle: "text-white",
             headerSubtitle: `text-[${P.mistSoft}]`,
             formButtonPrimary: `bg-[${P.surf}] hover:bg-[${P.teal}] text-[${P.ink}] font-medium`,

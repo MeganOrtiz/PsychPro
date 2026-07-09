@@ -127,7 +127,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
           <div
             className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 border"
             style={{
-              background: "linear-gradient(135deg, hsl(var(--surf-hue) 88% 18% / 0.9), hsl(var(--surf-hue) 88% 10% / 0.95))",
+              background: "hsl(var(--surf-hue) 0% 10% / 0.95)",
               borderColor: `${P.surf}55`,
             }}
           >
@@ -154,7 +154,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
         <div className="max-w-lg mx-auto p-4 md:p-6 lg:p-8 text-center">
           <div
             className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 border"
-            style={{ background: `linear-gradient(135deg, ${P.tealDeep}, ${P.teal})`, borderColor: P.tealDeep }}
+            style={{ background: `${P.teal}`, borderColor: P.tealDeep }}
           >
             <GraduationCap className="w-6 h-6 text-white" />
           </div>
@@ -194,7 +194,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
             <div
               className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 border"
               style={{
-                background: passed ? `linear-gradient(135deg, #1f6070, ${P.tealDeep})` : "rgba(244,180,98,0.18)",
+                background: passed ? `${P.tealDeep}` : "rgba(244,180,98,0.18)",
                 borderColor: passed ? P.tealDeep : "rgba(244,180,98,0.55)",
                 boxShadow: passed ? `0 18px 40px -18px ${P.tealDeep}cc` : "none",
               }}
@@ -369,12 +369,12 @@ export default function CourseMasteryExamPage({ params }: Props) {
           )}
         </div>
 
-        <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "hsl(var(--surf-hue) 78% 48% / 0.12)" }}>
+        <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "hsl(var(--surf-hue) 0% 48% / 0.12)" }}>
           <div
             className="h-1.5 rounded-full transition-all"
             style={{
               width: `${((index + 1) / total) * 100}%`,
-              background: `linear-gradient(90deg, ${P.teal}, ${P.surf})`,
+              background: `${P.surf}`,
             }}
           />
         </div>
@@ -397,7 +397,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
             if (!isAnswered) {
               cls += " hover:-translate-y-0.5 quiz-option-hover";
               style = {
-                background: "linear-gradient(135deg, hsl(var(--surf-hue) 88% 18% / 0.78), hsl(var(--surf-hue) 88% 10% / 0.86))",
+                background: "hsl(var(--surf-hue) 0% 10% / 0.86)",
                 borderColor: `${P.surf}55`,
                 color: P.cloud,
                 boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(255,255,255,0.06)`,
@@ -405,14 +405,14 @@ export default function CourseMasteryExamPage({ params }: Props) {
             } else if (isSelected) {
               cls += " text-white font-medium";
               style = {
-                background: `linear-gradient(135deg, #1f6070, ${P.tealDeep})`,
+                background: `${P.tealDeep}`,
                 borderColor: P.tealDeep,
                 boxShadow: `0 14px 32px -16px ${P.tealDeep}cc`,
               };
             } else {
               cls += " opacity-55";
               style = {
-                background: "linear-gradient(135deg, hsl(var(--surf-hue) 88% 18% / 0.78), hsl(var(--surf-hue) 88% 10% / 0.86))",
+                background: "hsl(var(--surf-hue) 0% 10% / 0.86)",
                 borderColor: `${P.surf}25`,
                 color: `${P.cloud}aa`,
               };
@@ -430,10 +430,10 @@ export default function CourseMasteryExamPage({ params }: Props) {
                   className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 border"
                   style={
                     !isAnswered
-                      ? { background: "rgba(118,228,247,0.20)", color: P.surf, borderColor: `${P.surf}88` }
+                      ? { background: "rgba(148, 148, 148,0.20)", color: P.surf, borderColor: `${P.surf}88` }
                       : isSelected
                         ? { background: "rgba(255,255,255,0.22)", color: "#FFFFFF", borderColor: "rgba(255,255,255,0.4)" }
-                        : { background: "rgba(118,228,247,0.14)", color: P.surf, borderColor: `${P.surf}55` }
+                        : { background: "rgba(148, 148, 148,0.14)", color: P.surf, borderColor: `${P.surf}55` }
                   }
                 >{key}</span>
                 {text}

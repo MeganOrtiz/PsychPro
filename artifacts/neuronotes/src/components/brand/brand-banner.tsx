@@ -84,7 +84,7 @@ export function BrandBanner({
               aria-hidden
               className="block h-px w-9 mb-3"
               style={{
-                background: `linear-gradient(90deg, transparent, ${P.surf}24, transparent)`,
+                background: `transparent`,
               }}
             />
           )}

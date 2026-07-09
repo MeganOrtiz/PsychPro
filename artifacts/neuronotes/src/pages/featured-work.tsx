@@ -296,7 +296,7 @@ function DetailModal({ submission, onClose }: { submission: Submission; onClose:
   }, [onClose]);
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start md:items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-start md:items-center justify-center p-4 bg-black/60 overflow-y-auto"
       onClick={onClose}
       role="dialog"
       aria-modal="true"

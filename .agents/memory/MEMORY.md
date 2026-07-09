@@ -1,3 +1,4 @@
+- [PsychPro black foundation](psychpro-black-foundation.md) — 2026-07-09 owner reset: ALL color/glass/glow stripped to pure black+gray; SUPERSEDES every cerulean/glass/glow lock below; guardrails repointed.
 - [Claims discipline](claims-discipline.md) — never report a fix as "done" until it's been verified end-to-end; user has called this out repeatedly.
 - [PsychPro glass buttons](psychpro-glass-buttons.md) — landing/marketing button styling convention.
 - [PsychPro custom-deck subscription gate](psychpro-custom-decks-subscription-gate.md) — "upload broken" reports are usually the paid-tier 403 gate firing, not the upload itself.
@@ -14,8 +15,8 @@
 - [PsychPro hero animation shared class](psychpro-hero-animation-shared-class.md) — landing "extra space/gap" near a button usually = hero opacity:0 entrance rule leaking onto a class (.landing-cta-row) reused outside .landing-hero; check parent row opacity.
 - [PsychPro Brain Lab 2D hotspots](psychpro-brain-2d-hotspots.md) — 2D HOTSPOTS (% coords) and 3D position data are independent; "wrong label" = bad coord value, not letterbox; verify via throwaway DEV route screenshot.
 - [Brain Lab view cutouts](brain-lab-view-cutouts.md) — view PNGs must be transparent cutouts; the grayscale+glow filter can't strip a baked-in background box.
-- [PsychPro mint fully removed](psychpro-sidebar-nav-mint-cyan.md) — owner RETRACTED mint #5EEAD4 app-wide (sidebar + all buttons); everything now uses locked cerulean #76E4F7. Never reintroduce mint.
-- [PsychPro cerulean surface stack](psychpro-cerulean-surface-stack.md) — owner RETRACTED the lighter look; whole site is DEEPENED deep-cerulean rgba(11,54,70)→rgba(6,33,46); never re-lift; landing.tsx cards use their OWN bright family (deepen separately).
+- [Mint/cerulean history](psychpro-sidebar-nav-mint-cyan.md) — historical; cerulean itself retired by the black foundation 2026-07-09 (mint still never returns).
+- [Cerulean stack SUPERSEDED](psychpro-cerulean-surface-stack.md) — historical; replaced by the black foundation 2026-07-09.
 - [Reverting worktree edits](reverting-worktree-edits.md) — main agent shell blocks destructive git; use `git show <ref>:<path>` + write. Checkpoints auto-commit edits, so HEAD may already contain them.
 - [Replit secrets quirks](replit-secrets-quirks.md) — can't programmatically fix a secret-stored value (deleteEnvVars no-ops, setEnvVars refuses); normalize bad pasted keys in code instead.
 - [Clerk dev vs prod keys](psychpro-clerk-dev-keys.md) — preview needs pk_test/sk_test in VITE_CLERK_PUBLISHABLE_KEY_DEV + CLERK_SK_OVERRIDE (dev-gated); prod pk_live rejects the Replit dev origin.
@@ -36,11 +37,11 @@
 - [EPPP special-category routing](psychpro-eppp-special-categories.md) — clinical cases / rapid review / full-length exams must be excluded at BOTH getEpppExamPart→null AND groupEpppTopicsByCategory, while isEpppTopic stays true.
 - [EPPP suite reorg already done](psychpro-eppp-suite-reorg-done.md) — the pasted T001–T010 reorg plan is STALE; suite already implements it (and surpasses it). Don't re-run or you regress owner decisions (clinical-cases is a top-level tab; Reflections/My Notes intentional).
 - [Progress page highlight cards](psychpro-progress-highlight-cards.md) — Needs Work/Strong Areas are a designed pair; both must use the deep-turquoise gradient surface, never a pale paperSoft fill.
-- [EPPP journal/MQ card glass](psychpro-eppp-card-glass.md) — eps-mq-card etc. must use the translucent cerulean glass recipe, never opaque near-black; reuse lesson-header-box values.
+- [EPPP card glass SUPERSEDED](psychpro-eppp-card-glass.md) — historical; cards now flat neutral (black foundation).
 - [PsychPro onboarding flow](psychpro-onboarding-flow.md) — gate fails CLOSED on profile error; /onboarding lives outside the gate; refresh profile cache after finish; selectedPriceId not persisted (re-derive from catalog).
-- [Site-wide button glow](psychpro-sitewide-button-glow.md) — every button glows via shadcn variants + a zero-specificity :where() catch-all so bespoke buttons override; destructive stays near-opaque for white-card contrast.
-- [Glass inheritance paths](psychpro-glass-inheritance-paths.md) — surfaces auto-inherit glass via bg-card / StudySurface light / .recommended-tile; only gaps are non-light StudySurface tones + bespoke inline panels. Don't sweep every page; grep gaps.
-- [EPPP unified cards](psychpro-eppp-unified-cards.md) — main-site tiles now use EPPP's .epd-card recipe verbatim (EPPP=template); differs from the reverted sweep and supersedes "never re-lift" for CARDS only.
+- [Button glow RETIRED](psychpro-sitewide-button-glow.md) — glow removed by global reset; btn-glass CLASS NAMES survive in button.tsx and are guardrail-checked.
+- [Glass inheritance SUPERSEDED](psychpro-glass-inheritance-paths.md) — historical; glass removed app-wide (black foundation).
+- [EPPP unified cards SUPERSEDED](psychpro-eppp-unified-cards.md) — historical; recipe now flat neutral (black foundation).
 - [Glass sweep REVERTED](psychpro-glass-sweep-reverted.md) — owner rejected unifying EVERY tile+button onto one glass recipe (logged-in dashboards went flat/muddy, hierarchy collapsed); don't re-attempt, and verify auth-gated screens not proxies.
 - [drizzle-orm + otel peer dup](drizzle-otel-peer-dup.md) — a dep pulling @opentelemetry/api splits drizzle into 2 pnpm variants; api-server typecheck breaks; align by adding otel api to lib/db.
 - [EPPP separate access level](psychpro-eppp-access-level.md) — EPPP is its own expiry-driven tier (epppAccessUntil), never unlocked by Master/Scholar; gate with EPPP helpers + Stripe metadata conventions.
@@ -50,18 +51,18 @@
 - [Mockup preview heavy images](mockup-preview-heavy-images.md) — large PNGs lose the load race and render blank (looks like a "crash"); quantize to PNG8 with magick + eager/fetchPriority; true white = server mid-restart.
 - [Chart/SVG literal colors](psychpro-chart-svg-literal-colors.md) — Recharts stroke/fill are SVG attributes; hsl(var(--surf-hue)) renders black there, so use literal hue-192 colors (guardrail still applies).
 - [EPPP main-site adoption scope](psychpro-eppp-mainsite-adoption.md) — main site already on the EPPP card recipe; never convert non-card elements (toggles/badges/progress fills/scrims); align card-button IDLE only, keep brighter hover/active.
-- [Design system lock](psychpro-design-lock.md) — two guardrails: check-surface-hue (color) + check-design-drift (structure/.bg-card recipe + tokens); intentional design changes must update the lock in the same commit.
+- [Design system lock](psychpro-design-lock.md) — two guardrails still enforce the system, now locked to the BLACK foundation (saturation ban + structure); update locks in same commit as intentional changes.
 - [study-page-bg horizontal seam](brain-clouds-bg-seam.md) — faint dead-straight full-width line over the bg = background-attachment:fixed on the already position:fixed ::before; set attachment:scroll (HiDPI-only, not a border/image defect).
 - [Dashboard tile hierarchy](psychpro-dashboard-tile-hierarchy.md) — "unify all tiles to one recipe" ≠ identical fill; a panel and the tiles nested inside it must keep a one-step elevation gap or hierarchy collapses; inventory every tile/state variant upfront.
 - [Route white-flash floor](psychpro-route-white-flash.md) — body resolves the LIGHT shadcn --background; keep a global dark floor + shared FullScreenLoader so route/auth swaps never flash white.
 - [Foundations course](psychpro-foundations-course.md) — main-site Foundations = psych history/social/community/org placeholders; new courses seed via startup backfill + category promotion; STALE add-foundation-topics.ts (neuroanatomy) must not be run.
 - [DB pool/startup resilience](psychpro-db-pool-resilience.md) — DB cold-start timeouts + idle-socket drops are TRANSIENT; keep pool keepAlive+error handler and retry idempotent startup backfills with jittered backoff.
-- [Pigment over glow](psychpro-pigment-over-glow.md) — "flat/bland/foggy" = too much glow+backdrop-blur desaturating contrast, NOT wrong hue; fix with saturate+contrast up, brightness down, LESS glow — never add light.
-- [Header scrim convention](psychpro-header-scrim.md) — floating headers over the smoke wallpaper use the shared `.text-scrim`/`.text-scrim-start` utility (soft fading pool, NOT a box, hue via --surf-hue); never add ad-hoc text-shadows.
+- [Pigment over glow SUPERSEDED](psychpro-pigment-over-glow.md) — historical; no pigment or glow remains (black foundation).
+- [Header scrim RETIRED](psychpro-header-scrim.md) — .text-scrim utilities now render nothing (black foundation); class names still in markup.
 - [Dashboard glow removal](psychpro-dashboard-glow-removal.md) — "remove glow" must cover StudySurface noGlow + nested children + inline text-shadows + SVG feGaussianBlur filters + nebula divs + page ::after; keep buttons.
-- [June-27 look restore](psychpro-june27-look-restore.md) — owner reverted the darkening pass back to the June 27 glowing-cerulean reference; don't re-darken; reproduce past looks via git-exact file restore.
-- [Card darkening](psychpro-card-darkening.md) — owner locked boxes/tiles DARKER than the smoke (88% 10%/6% ladder); supersedes June-27 "don't re-darken" for CARD fills only; buttons/nav pills stay bright.
-- [Teal backdrop grade](psychpro-teal-backdrop-grade.md) — backdrop graded to turquoise via one hue-rotate(-21deg) on the ::before filter (surfaces stay cerulean 193, guardrails green); backdrop-only, not a mint revival; don't chase pigment on nested glass.
+- [June-27 look SUPERSEDED](psychpro-june27-look-restore.md) — historical; owner later ordered the black foundation (2026-07-09); git-exact restore technique still useful.
+- [Card darkening SUPERSEDED](psychpro-card-darkening.md) — historical ladder; cards now flat neutral grays (black foundation).
+- [Teal backdrop SUPERSEDED](psychpro-teal-backdrop-grade.md) — historical; backdrop is now pure #000.
 - [Corona/bloom removal](psychpro-corona-bloom-removal.md) — owner banned cyan top-blooms/inset glows/outer coronas app-wide; cards are pigment-only with neutral dark shadows; guardrail lock updated to match — small accent glows (borders/rings/icons) are still fine.
 - [Auth provider choice](psychpro-auth-provider-choice.md) — PsychPro uses external Clerk on purpose; Replit Auth forces end users to have Replit accounts (consumer audience killer); a RA migration was built+reverted; RA→Clerk migration is unsupported — keep Clerk.
 - [Smoke bg resolution](psychpro-smoke-bg-resolution.md) — the shared smoke backdrop source is only 941px; "looks cheap/blurry" = a resolution problem fixed by super-resolution of the exact asset, not CSS; includes CPU-upscale sandbox recipe.

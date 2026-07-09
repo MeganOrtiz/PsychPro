@@ -8,26 +8,14 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { STUDY_PALETTE } from "@/lib/study-theme";
-import brainArt from "@assets/Screenshot_2026-06-20_at_3.22.26_AM_1781943752347.png";
-
-// Edge-fade mask for the sidebar brain artwork so it melts into the smoky
-// column backdrop instead of reading as a hard rectangle.
-const BRAIN_EDGE_FADE = [
-  "linear-gradient(to bottom, transparent 0%, #000 12%, #000 84%, transparent 100%)",
-  "linear-gradient(to right, transparent 0%, #000 8%, #000 92%, transparent 100%)",
-].join(", ");
-
 type NavItem = { href: string; label: string; icon: React.ComponentType<{ className?: string }> };
 
-// Sidebar nav tile — compact luminous dark-glass pill (2026-06 spec). Layout
-// (size, padding, radius, blur) lives in the tokens here; the surface color,
-// border, outer glow, and the glowing active left-bar live in the
-// .nav-glass-* rules in index.css. Idle text is muted icy-blue and brightens
-// to luminous cyan (#A7F3FF) on hover/active.
+// Sidebar nav tile — plain neutral row (black-foundation reset, 2026-07-09).
+// Surface color and borders live in the .nav-glass-* rules in index.css.
 const NAV_ITEM_BASE =
-  "nav-glass group relative flex items-center gap-2.5 px-3 py-2 rounded-md cursor-pointer transition-all duration-200 ease-in-out border backdrop-blur-md";
-const NAV_ITEM_IDLE = "nav-glass-idle text-[#B9D2DA] hover:text-[#A7F3FF]";
-const NAV_ITEM_ACTIVE = "nav-glass-active text-[#A7F3FF]";
+  "nav-glass group relative flex items-center gap-2.5 px-3 py-2 rounded-md cursor-pointer transition-all duration-200 ease-in-out border";
+const NAV_ITEM_IDLE = "nav-glass-idle text-[#a3a3a3] hover:text-[#d4d4d4]";
+const NAV_ITEM_ACTIVE = "nav-glass-active text-[#d4d4d4]";
 
 function navItemClass(isActive: boolean) {
   return cn(NAV_ITEM_BASE, isActive ? NAV_ITEM_ACTIVE : NAV_ITEM_IDLE);
@@ -187,61 +175,21 @@ export default function AppLayout({ children }: AppLayoutProps) {
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
         style={{
-          // CSS var consumed by NAV_ITEM_* tokens for the teal hover glow.
-          ["--nav-glow" as never]: STUDY_PALETTE.surf,
-          // Match the Spotlight card's backdrop: the same shared PsychPro smoke
-          // image painted inside with a dark gradient overlay, over the
-          // StudySurface "dark" base gradient — so the smoky cloud continuum
-          // bleeds through the sidebar exactly like it does through the card.
-          background: `linear-gradient(180deg, hsl(var(--surf-hue) 87% 6% / 0.26) 0%, hsl(var(--surf-hue) 87% 6% / 0.44) 55%, hsl(var(--surf-hue) 87% 6% / 0.66) 100%), linear-gradient(180deg, ${STUDY_PALETTE.surfaceElev}, ${STUDY_PALETTE.surface})`,
-          backgroundSize: "cover, cover",
-          backgroundPosition: "center, center",
-          backgroundRepeat: "no-repeat, no-repeat",
-          border: `1px solid ${STUDY_PALETTE.surf}55`,
-          boxShadow: `0 20px 60px -20px ${STUDY_PALETTE.teal}77`,
+          background: "#0a0a0a",
+          border: "1px solid #262626",
         }}
         data-testid="sidebar"
       >
-        {/* Starry shimmer — same recipe as the Spotlight card */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-70"
-          style={{
-            backgroundImage:
-              "radial-gradient(1px 1px at 18% 12%, rgba(255,255,255,.85), transparent 60%), radial-gradient(1.2px 1.2px at 65% 8%, rgba(255,255,255,.7), transparent 60%), radial-gradient(1px 1px at 82% 28%, rgba(255,255,255,.6), transparent 60%), radial-gradient(1.4px 1.4px at 32% 52%, rgba(255,255,255,.45), transparent 60%), radial-gradient(1px 1px at 75% 68%, rgba(255,255,255,.5), transparent 60%), radial-gradient(1px 1px at 12% 76%, rgba(255,255,255,.45), transparent 60%), radial-gradient(1.2px 1.2px at 88% 90%, rgba(255,255,255,.55), transparent 60%), radial-gradient(0.8px 0.8px at 45% 22%, rgba(255,255,255,.5), transparent 60%), radial-gradient(0.8px 0.8px at 25% 38%, rgba(255,255,255,.4), transparent 60%), radial-gradient(1px 1px at 60% 80%, rgba(255,255,255,.4), transparent 60%)",
-          }}
-        />
-        {/* Soft nebula glows */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -top-16 -right-12 w-56 h-56 rounded-full blur-3xl"
-          style={{ background: `radial-gradient(closest-side, ${STUDY_PALETTE.surf}33, transparent)` }}
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -bottom-16 -left-12 w-56 h-56 rounded-full blur-3xl"
-          style={{ background: `radial-gradient(closest-side, ${STUDY_PALETTE.teal}2e, transparent)` }}
-        />
-
-        {/* Brand header — the glowing brain artwork crowns the column in place
-            of the old wordmark/eyebrow text. An edge-fade mask melts it into the
-            smoky backdrop so there's no hard rectangle. The PSYCHPRO wordmark
-            now lives centered in the top bar. The mobile close control overlays
-            the top-right. */}
-        <div className="relative px-3 pt-3 pb-1">
-          <img
-            src={brainArt}
-            alt="PsychPro"
-            className="block w-full h-auto select-none pointer-events-none"
-            draggable={false}
-            style={{
-              WebkitMaskImage: BRAIN_EDGE_FADE,
-              maskImage: BRAIN_EDGE_FADE,
-              WebkitMaskComposite: "source-in",
-              maskComposite: "intersect",
-            }}
-            data-testid="sidebar-brain-art"
-          />
+        {/* Brand header — plain wordmark (black-foundation reset). The mobile
+            close control overlays the top-right. */}
+        <div className="relative px-3 pt-5 pb-3">
+          <p
+            className="text-center font-light text-[#f5f5f5]"
+            style={{ letterSpacing: "0.4em", textIndent: "0.4em", fontSize: "18px" }}
+            data-testid="sidebar-wordmark"
+          >
+            PSYCHPRO
+          </p>
           <button
             className="md:hidden absolute top-3 right-3 text-white/80"
             onClick={() => setSidebarOpen(false)}
@@ -253,7 +201,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
         <nav className="relative flex-1 p-3 space-y-2 overflow-y-auto">
           <div className="px-3 pt-1 pb-1">
-            <p className="text-[11px] font-semibold text-[#94B8C2]/60 uppercase tracking-[1.2px]">Learn</p>
+            <p className="text-[11px] font-semibold text-[#8a8a8a]/60 uppercase tracking-[1.2px]">Learn</p>
           </div>
           {workshopNav.map((item) => {
             const isActive = location === item.href || location.startsWith(item.href + "/");
@@ -274,7 +222,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           })}
 
           <div className="px-3 pt-4 pb-1">
-            <p className="text-[11px] font-semibold text-[#94B8C2]/60 uppercase tracking-[1.2px]">Expand</p>
+            <p className="text-[11px] font-semibold text-[#8a8a8a]/60 uppercase tracking-[1.2px]">Expand</p>
           </div>
           {labNav.map((item) => {
             const isActive = location === item.href || location.startsWith(item.href + "/");
@@ -302,7 +250,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           />
 
           <div className="px-3 pt-4 pb-1">
-            <p className="text-[11px] font-semibold text-[#94B8C2]/60 uppercase tracking-[1.2px]">Connect</p>
+            <p className="text-[11px] font-semibold text-[#8a8a8a]/60 uppercase tracking-[1.2px]">Connect</p>
           </div>
           {studioNav.map((item) => {
             const isActive = location === item.href || location.startsWith(item.href + "/");
@@ -342,7 +290,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           {!isScholar && (
             <>
               <div className="px-3 pt-4 pb-1">
-                <p className="text-[11px] font-semibold text-[#94B8C2]/60 uppercase tracking-[1.2px]">Account</p>
+                <p className="text-[11px] font-semibold text-[#8a8a8a]/60 uppercase tracking-[1.2px]">Account</p>
               </div>
               {accountNav.map((item) => {
                 const isActive = location === item.href || location.startsWith(item.href + "/");
@@ -367,7 +315,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           {isAdmin && (
             <>
               <div className="px-3 pt-4 pb-1">
-                <p className="text-[11px] font-semibold text-[#94B8C2]/60 uppercase tracking-[1.2px]">Admin</p>
+                <p className="text-[11px] font-semibold text-[#8a8a8a]/60 uppercase tracking-[1.2px]">Admin</p>
               </div>
               <Link
                 href="/admin/feedback"
@@ -465,42 +413,11 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   fontSize: "clamp(34px, 3.6vw, 50px)",
                   letterSpacing: "0.42em",
                   textIndent: "0.42em",
-                  color: "#F4FBFF",
-                  textShadow: "0 1px 14px rgba(0,0,0,0.5)",
+                  color: "#f5f5f5",
                 }}
                 data-testid="topbar-wordmark"
               >
                 PSYCHPRO
-              </span>
-              {/* Signal-beam underline — a crisp tapered beam with a soft
-                  underglow pool and a luminous center node. Impactful but
-                  restrained. */}
-              <span
-                aria-hidden
-                className="relative flex items-center justify-center"
-                style={{ marginTop: "16px", width: "min(540px, 66%)", height: "16px" }}
-              >
-                <span
-                  style={{
-                    position: "absolute",
-                    width: "100%",
-                    height: "100%",
-                    background:
-                      "radial-gradient(closest-side, rgba(118,228,247,0.26) 0%, rgba(118,228,247,0) 78%)",
-                    filter: "blur(4px)",
-                  }}
-                />
-                <span
-                  style={{
-                    position: "relative",
-                    width: "100%",
-                    height: "1.5px",
-                    borderRadius: "9999px",
-                    background:
-                      "linear-gradient(90deg, rgba(118,228,247,0) 0%, rgba(118,228,247,0.9) 26%, #F4FBFF 50%, rgba(118,228,247,0.9) 74%, rgba(118,228,247,0) 100%)",
-                    boxShadow: "0 0 10px rgba(118,228,247,0.6)",
-                  }}
-                />
               </span>
             </div>
           )}
@@ -519,7 +436,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
             afterSignOutUrl={import.meta.env.BASE_URL.replace(/\/$/, "") || "/"}
             appearance={{
               elements: {
-                avatarBox: "w-10 h-10 rounded-full ring-1 ring-[#76E4F7]/40",
+                avatarBox: "w-10 h-10 rounded-full ring-1 ring-[#a3a3a3]/40",
               },
             }}
           />
@@ -586,7 +503,7 @@ function ToolsStudio({
   return (
     <div className="relative mt-1">
       <div className="px-3 pt-4 pb-1">
-        <p className="text-[11px] font-semibold tracking-[1.2px] uppercase text-[#94B8C2]/60">
+        <p className="text-[11px] font-semibold tracking-[1.2px] uppercase text-[#8a8a8a]/60">
           Tools Studio
         </p>
       </div>
@@ -604,7 +521,7 @@ function ToolsStudio({
                 <Icon className="w-4 h-4 flex-shrink-0" />
                 <span className="text-sm font-medium flex-1 min-w-0 truncate">{t.label}</span>
                 {!isScholar && (
-                  <span className="inline-flex items-center text-[10px] font-semibold tracking-wide px-1.5 py-0.5 rounded-full text-[#A7F3FF] border border-[#76E4F7]/30 shadow-[0_0_8px_rgba(118,228,247,0.18)]">
+                  <span className="inline-flex items-center text-[10px] font-semibold tracking-wide px-1.5 py-0.5 rounded-full text-[#d4d4d4] border border-[#a3a3a3]/30 shadow-[0_0_8px_rgba(148, 148, 148,0.18)]">
                     PRO
                   </span>
                 )}
@@ -640,7 +557,7 @@ function SidebarProfileLink({ onNavigate }: { onNavigate: () => void }) {
             <div
               className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-semibold border flex-shrink-0"
               style={{
-                background: `linear-gradient(135deg, ${STUDY_PALETTE.tealDeep}, ${STUDY_PALETTE.teal})`,
+                background: `${STUDY_PALETTE.teal}`,
                 borderColor: `${STUDY_PALETTE.surf}55`,
               }}
             >

@@ -87,9 +87,8 @@ export default function ReflectionsPage() {
           <div
             className="rounded-xl border p-8"
             style={{
-              background:
-                "linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.79), hsl(var(--surf-hue) 88% 6% / 0.90))",
-              borderColor: "rgba(118,228,247,0.24)",
+              background: "hsl(var(--surf-hue) 0% 6% / 0.90)",
+              borderColor: "rgba(148, 148, 148,0.24)",
               backdropFilter: "blur(18px) saturate(135%)",
               WebkitBackdropFilter: "blur(18px) saturate(135%)",
               boxShadow:
@@ -145,9 +144,8 @@ export default function ReflectionsPage() {
                       key={`${r.topicId}-${r.questionId}`}
                       className="rounded-xl border p-4"
                       style={{
-                        background:
-                          "linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.79), hsl(var(--surf-hue) 88% 6% / 0.90))",
-                        borderColor: "rgba(118,228,247,0.24)",
+                        background: "hsl(var(--surf-hue) 0% 6% / 0.90)",
+                        borderColor: "rgba(148, 148, 148,0.24)",
                         backdropFilter: "blur(18px) saturate(135%)",
                         WebkitBackdropFilter: "blur(18px) saturate(135%)",
                         boxShadow:

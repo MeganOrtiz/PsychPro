@@ -1,24 +1,21 @@
 #!/usr/bin/env node
 // =============================================================================
-// DESIGN SYSTEM LOCK  (shape / structure guardrail)
+// DESIGN SYSTEM LOCK  (black-foundation baseline, 2026-07-09)
 //
-// Companion to check-surface-hue.mjs. The hue guardrail pins COLOR; this one
-// pins the STRUCTURAL design tokens and the canonical glass-card recipe, so a
-// page-level tweak can never silently change the global look. It locks:
+// Companion to check-surface-hue.mjs. The palette guardrail pins COLOR; this
+// one pins STRUCTURE. The app was stripped to a black foundation:
 //
-//   1. Global structural tokens  — the corner-radius token (--radius) and the
-//      surface-hue base token (--surf-hue).
-//   2. The luminous cerulean glass card — the main-site `.bg-card` rule, which
-//      mirrors the EPPP `.epd-card`: a 145° diagonal bloom, a fixed 20px (NON-
-//      pill) corner, blur(20px) saturate(135%) glass, and the cyan inner glow +
-//      outer corona shadow. Guards against the recurring drift toward rounder,
-//      softer, pill-like controls.
-//   3. A ban on mint / teal-green accents — cerulean #76E4F7 is the only accent;
-//      mint was retracted app-wide and keeps trying to creep back.
+//   1. Pure-black page floors (body + .study-page-bg::before), no wallpaper,
+//      no filters, no vignette, no blend modes — the ONLY page artwork is the
+//      landing page's glass-brain image, unstretched (contain) on #000.
+//   2. A global reset that bans backdrop-filter (frosted glass) and
+//      text-shadow (text glow) app-wide.
+//   3. No gradients in index.css — surfaces are flat fills.
+//   4. Shared component contract — pages consume the shared Button/Card
+//      primitives instead of redefining them.
 //
-// Every locked value lives in a table below. When you INTENTIONALLY change the
-// design system, update the matching entry here in the SAME commit — that is the
-// deliberate "unlock". An accidental drift fails this check loudly.
+// When you INTENTIONALLY change the design system, update the matching lock
+// entry here in the SAME commit. An accidental drift fails this check loudly.
 //
 // Run: node scripts/check-design-drift.mjs   (exit 1 on any violation)
 // =============================================================================
@@ -29,15 +26,11 @@ const ROOT = path.join(path.dirname(new URL(import.meta.url).pathname), "..");
 const CSS = path.join(ROOT, "src", "index.css");
 const BUTTON = path.join(ROOT, "src", "components", "ui", "button.tsx");
 const CARD = path.join(ROOT, "src", "components", "ui", "card.tsx");
-const LANDING = path.join(ROOT, "src", "pages", "landing.tsx");
-const EPPP_DASHBOARD = path.join(ROOT, "src", "pages", "eppp-dashboard.tsx");
 const REL = path.relative(ROOT, CSS);
 
 const raw = fs.readFileSync(CSS, "utf8");
 const buttonSource = fs.readFileSync(BUTTON, "utf8");
 const cardSource = fs.readFileSync(CARD, "utf8");
-const landingSource = fs.readFileSync(LANDING, "utf8");
-const epppDashboardSource = fs.readFileSync(EPPP_DASHBOARD, "utf8");
 // Blank out CSS comments (keeping newlines, so line numbers stay accurate) so a
 // value mentioned in a comment can never satisfy OR trip a lock.
 const css = raw.replace(/\/\*[\s\S]*?\*\//g, (mm) => mm.replace(/[^\n]/g, " "));
@@ -67,7 +60,7 @@ function ruleBlock(source, selectorNeedle) {
 const rootBlock = ruleBlock(css, ":root");
 const TOKENS = [
   { name: "global corner radius", re: /--radius:\s*\.625rem;/, expected: "--radius: .625rem;" },
-  { name: "surface hue base", re: /--surf-hue:\s*193;/, expected: "--surf-hue: 193;" },
+  { name: "neutral surface hue base", re: /--surf-hue:\s*0;/, expected: "--surf-hue: 0;  (neutral — saturation is 0% everywhere it is consumed)" },
 ];
 if (!rootBlock) {
   fail(":root block not found in index.css", "restore the :root design-token block");
@@ -79,12 +72,12 @@ if (!rootBlock) {
   }
 }
 
-// --- 1b) Native background ---------------------------------------------------
-// The canonical APP background is a SOLID near-black navy (owner removed the
-// smoke artwork 2026-07-08). The LANDING page alone shows the owner's glass-
-// brain artwork, unstretched (background-size: contain) on a pure-black floor
-// (owner instruction 2026-07-08). No other page may add a background image,
-// global color-processing filter, vignette, blend mode, or pseudo-element glow.
+// --- 2) Pure-black page floors ----------------------------------------------
+const bodyBlock = ruleBlock(css, "\nbody {");
+if (!bodyBlock || !/background-color:\s*#000000;/.test(bodyBlock)) {
+  fail("body floor drifted", "keep `background-color: #000000;` on body (prevents white route-transition flashes)");
+}
+
 const appBackdrop = ruleBlock(css, ".study-page-bg::before");
 const landingBackdrop = ruleBlock(css, ".landing-root.study-page-bg::before");
 const overlayBackdrop = ruleBlock(css, ".study-page-bg::after");
@@ -92,10 +85,10 @@ if (!appBackdrop) {
   fail("canonical app backdrop rule missing", "restore the .study-page-bg::before backdrop rule");
 } else {
   if (!/background-image:\s*none;/.test(appBackdrop) || /url\(/.test(appBackdrop)) {
-    fail("canonical backdrop drifted", "the site backdrop is a solid color — keep background-image: none (owner removed the smoke artwork)");
+    fail("canonical backdrop drifted", "the app backdrop is pure black — keep background-image: none (no wallpaper)");
   }
-  if (!/background-color:\s*#030d24;/.test(appBackdrop)) {
-    fail("canonical backdrop floor color drifted", "keep the solid near-black navy floor #030d24 (must match the body floor)");
+  if (!/background-color:\s*#000000;/.test(appBackdrop)) {
+    fail("canonical backdrop floor color drifted", "keep the pure-black floor #000000 (must match the body floor)");
   }
   if (/\bfilter\s*:|radial-gradient\(|linear-gradient\(|background-blend-mode\s*:/.test(appBackdrop)) {
     fail("canonical backdrop film reintroduced", "keep the backdrop free of filters, blend modes, and vignette gradients");
@@ -121,101 +114,86 @@ if (!overlayBackdrop) {
   fail("reserved backdrop overlay rule missing", "restore the empty .study-page-bg::after overlay rule");
 } else {
   if (!/background-image:\s*none;/.test(overlayBackdrop) || !/opacity:\s*0;/.test(overlayBackdrop)) {
-    fail("backdrop overlay glow reintroduced", "keep .study-page-bg::after visually empty so the supplied background color stays exact");
+    fail("backdrop overlay glow reintroduced", "keep .study-page-bg::after visually empty so the black floor stays exact");
   }
 }
 
-// --- 2) Canonical pigment-only glass card (.bg-card == EPPP .epd-card) -------
-const cardRecipe = ruleBlock(css, ".study-page-bg .bg-card");
-if (!cardRecipe) {
+// --- 3) Global glass/glow kill-switch ---------------------------------------
+// The BLACK FOUNDATION RESET block must stay at the end of index.css: it bans
+// backdrop-filter (frosted glass) and text-shadow (text glow) app-wide.
+if (!/backdrop-filter:\s*none\s*!important;[\s\S]*?text-shadow:\s*none\s*!important;/.test(css)) {
   fail(
-    "canonical .bg-card glass recipe block not found",
-    "the `.study-page-bg .bg-card` rule was removed — restore the EPPP .epd-card recipe",
+    "black-foundation reset block missing",
+    "restore the global `backdrop-filter: none !important; text-shadow: none !important;` reset in index.css",
   );
-} else {
-  const RECIPE = [
-    { name: "non-pill 20px corner", re: /border-radius:\s*20px;/, expected: "border-radius: 20px;" },
-    { name: "glass blur", re: /backdrop-filter:\s*blur\(20px\)\s*saturate\(135%\)/, expected: "backdrop-filter: blur(20px) saturate(135%)" },
-    { name: "145° diagonal pigment", re: /linear-gradient\(\s*145deg/, expected: "linear-gradient(145deg, …)" },
-    { name: "cerulean hairline border", re: /rgba\(196,\s*232,\s*242,\s*0\.22\)/, expected: "border: 1px solid rgba(196, 232, 242, 0.22)" },
-    { name: "restrained inset highlight", re: /inset\s+0\s+1px\s+0\s+rgba\(255,\s*255,\s*255,\s*0\.03\)/, expected: "inset 0 1px 0 rgba(255, 255, 255, 0.03)" },
-    { name: "neutral depth shadow", re: /0\s+22px\s+52px\s+-40px\s+rgba\(0,\s*0,\s*0,\s*0\.80\)/, expected: "0 22px 52px -40px rgba(0, 0, 0, 0.80)" },
-  ];
-  for (const r of RECIPE) {
-    if (!r.re.test(cardRecipe)) {
-      fail(`.bg-card recipe: ${r.name} changed or removed`, `restore \`${r.expected}\``);
-    }
-  }
-  // Pigment-only glass: no cyan top-bloom, inset glow, or outer corona layered
-  // back onto the canonical card. This is the recurring drift direction — the
-  // opposite of the checks above, which is why it's a ban, not a requirement.
-  const bannedGlow = [
-    { name: "cyan top-bloom", re: /radial-gradient\([^)]*rgba\(118,\s*228,\s*247/ },
-    { name: "cyan inset/outer glow in box-shadow", re: /rgba\(118,\s*228,\s*247,\s*0\.\d+\)/ },
-  ];
-  for (const g of bannedGlow) {
-    if (g.re.test(cardRecipe)) {
-      fail(`.bg-card recipe: ${g.name} re-introduced`, "cards are pigment-only glass — remove the cyan bloom/glow layer, keep the neutral dark depth shadow");
-    }
-  }
 }
 
-// Landing, authenticated app, and EPPP must use one card recipe. These checks
-// intentionally span the page-local CSS sources so none of the three surfaces
-// can quietly become brighter, blurrier, rounder, or a different hue.
-const EPPP_CARD_CONTRACT = [
-  { name: "145° pigment gradient", re: /linear-gradient\(145deg,\s*hsl\(var\(--surf-hue\)\s+88%\s+10%\s+\/\s+0\.74\),\s*hsl\(var\(--surf-hue\)\s+88%\s+6%\s+\/\s+0\.85\)\)/ },
-  { name: "cerulean hairline", re: /rgba\(196,\s*232,\s*242,\s*0\.22\)/ },
-  { name: "glass blur", re: /blur\(20px\) saturate\(135%\)/ },
-  { name: "restrained inset highlight", re: /inset\s+0\s+1px\s+0\s+rgba\(255,\s*255,\s*255,\s*0\.03\)/ },
-  { name: "neutral depth shadow", re: /0\s+22px\s+52px\s+-40px\s+rgba\(0,\s*0,\s*0,\s*0\.80\)/ },
-];
-
-for (const item of EPPP_CARD_CONTRACT) {
-  if (!item.re.test(epppDashboardSource)) {
-    fail(`EPPP card ${item.name} drifted`, "restore the canonical card recipe shared with .study-page-bg .bg-card");
-  }
-}
-
-// The lesson-detail header shares the darkened card ladder; it drifted once
-// (stayed bright after a site-wide darkening pass), so pin it explicitly.
-const LESSON_HEADER_CONTRACT = [
-  { name: "darkened 145° gradient", re: /\.lesson-header-box\s*\{[^}]*linear-gradient\(\s*145deg,\s*hsl\(var\(--surf-hue\)\s+88%\s+12%\s+\/\s+0\.66\),\s*hsl\(var\(--surf-hue\)\s+90%\s+8%\s+\/\s+0\.78\)\s*\)/s },
-];
-for (const item of LESSON_HEADER_CONTRACT) {
-  if (!item.re.test(raw)) {
-    fail(`.lesson-header-box ${item.name} drifted`, "keep the lesson header on the darkened card ladder (88% 12% / 90% 8%)");
-  }
-}
-
-const LANDING_SYSTEM_CONTRACT = [
-  { name: "tokenized cerulean surfaces", re: /hsl\(var\(--surf-hue\)\s+88%\s+(?:10|6)%\s+\/\s+0\.(8|9)/ },
-  { name: "glass blur", re: /backdrop-filter:\s*blur\(\d+px\)\s+saturate\(1[34]0%\)/ },
-  { name: "cerulean hairlines", re: /\$\{C\.hairline(?:Strong)?\}/ },
-  { name: "cerulean glow accents", re: /\$\{C\.cyan\}/ },
-];
-for (const item of LANDING_SYSTEM_CONTRACT) {
-  if (!item.re.test(landingSource)) {
-    fail(`landing ${item.name} drifted`, "keep landing surfaces on the locked cerulean glass system");
-  }
-}
-
-// --- 3) Banned mint / teal-green accents -----------------------------------
-// Cerulean #76E4F7 is the only locked accent. These mint/teal hexes keep
-// drifting back in. (Scoped to index.css — TS files legitimately mention them
-// in "never mint" comments.)
-const MINT = /#(5eead4|2dd4bf|14b8a6)\b/gi;
+// --- 4) No gradients / wallpapers in index.css -------------------------------
+// Surfaces are flat fills. The only url() allowed in index.css is the landing
+// glass-brain artwork (and the Google Fonts @import).
 let m;
-while ((m = MINT.exec(css))) {
+const grad = /(?:linear|radial|conic)-gradient\(/g;
+while ((m = grad.exec(css))) {
   fail(
-    `mint/teal-green accent ${m[0]} at ${REL}:${lineOf(m.index)}`,
-    "use the locked cerulean #76E4F7 / rgba(118, 228, 247, A) — mint was retracted app-wide",
+    `gradient at ${REL}:${lineOf(m.index)}`,
+    "surfaces are flat — use a solid fill (gradients were removed in the black-foundation reset)",
+  );
+}
+const urls = /url\(\s*["']?([^"')]+)["']?\s*\)/g;
+while ((m = urls.exec(css))) {
+  const target = m[1];
+  if (target.includes("fonts.googleapis.com")) continue;
+  if (target === "./assets/bg/landing-glass-brain.jpeg") continue;
+  fail(
+    `unexpected image url(${target}) at ${REL}:${lineOf(m.index)}`,
+    "the landing glass-brain artwork is the ONLY image allowed in index.css",
   );
 }
 
-// --- 4) Typography contract ------------------------------------------------
-// A declared font that is not actually loaded silently falls back differently
-// across machines. Keep one interface family and one editorial family.
+// --- 4b) No decorative gradients in TS/TSX inline styles ---------------------
+// Page components must not smuggle gradient fills past the index.css ban.
+// Allowed: mask-image edge fades (functional, not decorative) and the
+// dev-only glass preview page.
+const SRC = path.join(ROOT, "src");
+function walkSrc(dir, acc) {
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    const p = path.join(dir, e.name);
+    if (e.isDirectory()) walkSrc(p, acc);
+    else if (/\.(tsx?|)$/.test(e.name) && /\.tsx?$/.test(e.name)) acc.push(p);
+  }
+  return acc;
+}
+for (const file of walkSrc(SRC, [])) {
+  const rel = path.relative(ROOT, file);
+  if (rel.includes("dev-glass-preview")) continue;
+  const text = fs.readFileSync(file, "utf8");
+  const lines = text.split("\n");
+  const gradRe = /(?:linear|radial|conic)-gradient\(/;
+  for (let i = 0; i < lines.length; i++) {
+    if (!gradRe.test(lines[i])) continue;
+    // Functional mask fades: the gradient feeds a mask-image, not a fill.
+    const context = lines.slice(Math.max(0, i - 3), i + 2).join("\n");
+    if (/mask(?:-image)?|maskImage|WebkitMask/i.test(context)) continue;
+    // Comments mentioning gradients are fine.
+    if (/^\s*(\/\/|\*|\/\*)/.test(lines[i])) continue;
+    fail(
+      `decorative gradient in ${rel}:${i + 1}`,
+      "surfaces are flat solid fills — gradients are only allowed as functional mask-image fades",
+    );
+  }
+}
+
+// --- 5) Banned legacy accents ------------------------------------------------
+// The retired cerulean/mint accents must never come back.
+const LEGACY = /#(5eead4|2dd4bf|14b8a6|76e4f7|67e8f9|22d3ee|06b6d4)\b/gi;
+while ((m = LEGACY.exec(css))) {
+  fail(
+    `legacy accent ${m[0]} at ${REL}:${lineOf(m.index)}`,
+    "the cerulean/mint accent system was retired — use neutral grays",
+  );
+}
+
+// --- 6) Typography contract ------------------------------------------------
 const TYPE_CONTRACT = [
   {
     name: "Montserrat webfont load",
@@ -242,15 +220,15 @@ for (const t of TYPE_CONTRACT) {
   if (!t.re.test(raw)) fail(`${t.name} changed or missing`, t.expected);
 }
 
-// --- 5) Shared component contract -----------------------------------------
+// --- 7) Shared component contract -----------------------------------------
 // Page-level edits should consume these primitives, not quietly redefine them.
 const BUTTON_VARIANTS = [
-  ['default', 'btn-glass-strong'],
-  ['destructive', 'btn-glass-destructive'],
-  ['outline', 'btn-glass'],
-  ['secondary', 'btn-glass'],
-  ['ghost', 'btn-glass-ghost'],
-  ['link', 'btn-link-glow'],
+  ["default", "btn-glass-strong"],
+  ["destructive", "btn-glass-destructive"],
+  ["outline", "btn-glass"],
+  ["secondary", "btn-glass"],
+  ["ghost", "btn-glass-ghost"],
+  ["link", "btn-link-glow"],
 ];
 for (const [variant, className] of BUTTON_VARIANTS) {
   const re = new RegExp(`${variant}:\\s*["'][^"']*\\b${className}\\b`);
@@ -265,9 +243,9 @@ if (!/rounded-xl\s+border\s+bg-card\s+text-card-foreground\s+shadow/.test(cardSo
   );
 }
 
-// Parallel glass utilities are how page-level tweaks previously escaped the
-// shared recipes. Comments are intentionally ignored by scanning `css`.
-for (const banned of ['glass-button', 'cta-glass']) {
+// Parallel utilities are how page-level tweaks previously escaped the shared
+// recipes. Comments are intentionally ignored by scanning `css`.
+for (const banned of ["glass-button", "cta-glass"]) {
   if (new RegExp(`\\.${banned}\\s*\\{`).test(css)) {
     fail(`competing .${banned} utility introduced`, "use the shared btn-glass variants instead");
   }
@@ -275,10 +253,10 @@ for (const banned of ['glass-button', 'cta-glass']) {
 
 // --- Report ----------------------------------------------------------------
 if (violations.length) {
-  console.error(`\n✗ Design system lock FAILED — ${violations.length} drift(s) from the locked visual system:\n`);
+  console.error(`\n✗ Design system lock FAILED — ${violations.length} drift(s) from the locked black foundation:\n`);
   for (const v of violations) console.error(`  • ${v.what}\n      → ${v.fix}`);
-  console.error(`\nThese values are pinned in scripts/check-design-drift.mjs (see docs/design-system-lock.md).`);
+  console.error(`\nThese values are pinned in scripts/check-design-drift.mjs.`);
   console.error(`If the change is intentional, update the matching lock entry in the same commit.\n`);
   process.exit(1);
 }
-console.log("✓ Design system lock passed — color, glass, typography, and shared component contracts are intact.");
+console.log("✓ Design system lock passed — black foundation, typography, and shared component contracts are intact.");

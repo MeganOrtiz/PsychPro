@@ -2,19 +2,19 @@ import { ChevronRight } from "lucide-react";
 
 // Two locked tones the owner likes: lighter blue (Courses) + darker (Dashboard).
 const lightBase =
-  "linear-gradient(160deg, hsl(var(--surf-hue) 52% 28% / 0.60), hsl(var(--surf-hue) 54% 18% / 0.72))";
+  "linear-gradient(160deg, hsl(var(--surf-hue) 0% 28% / 0.60), hsl(var(--surf-hue) 0% 18% / 0.72))";
 const darkBase =
-  "linear-gradient(160deg, hsl(var(--surf-hue) 50% 15% / 0.74), hsl(var(--surf-hue) 55% 8% / 0.84))";
+  "linear-gradient(160deg, hsl(var(--surf-hue) 0% 15% / 0.74), hsl(var(--surf-hue) 0% 8% / 0.84))";
 
 // B + D blend: specular bright rim (B) + inner cyan bloom & deep base (D).
 const bloomGloss =
-  "radial-gradient(120% 72% at 50% 0%, rgba(118,228,247,0.14) 0%, rgba(118,228,247,0.00) 60%), linear-gradient(180deg, rgba(255,255,255,0.17) 0%, rgba(255,255,255,0.02) 22%, rgba(255,255,255,0.00) 50%)";
+  "radial-gradient(120% 72% at 50% 0%, rgba(148, 148, 148,0.14) 0%, rgba(148, 148, 148,0.00) 60%), linear-gradient(180deg, rgba(255,255,255,0.17) 0%, rgba(255,255,255,0.02) 22%, rgba(255,255,255,0.00) 50%)";
 const streak =
   "linear-gradient(115deg, transparent 34%, rgba(255,255,255,0.06) 47%, transparent 57%)";
 
-const blendBorder = "rgba(118,228,247,0.32)";
+const blendBorder = "rgba(148, 148, 148,0.32)";
 const blendShadow =
-  "inset 0 1px 0 rgba(255,255,255,0.22), 0 0 24px -8px rgba(118,228,247,0.26), inset 0 -22px 44px -30px rgba(0,0,0,0.55), 0 20px 46px -26px rgba(0,0,0,0.70)";
+  "inset 0 1px 0 rgba(255,255,255,0.22), 0 0 24px -8px rgba(148, 148, 148,0.26), inset 0 -22px 44px -30px rgba(0,0,0,0.55), 0 20px 46px -26px rgba(0,0,0,0.70)";
 const blendBlur = "blur(18px) saturate(122%)";
 
 function GlassCard({ overlay, base }: { overlay: string; base: string }) {
@@ -31,7 +31,7 @@ function GlassCard({ overlay, base }: { overlay: string; base: string }) {
     >
       <span
         className="block text-[10px] mb-0.5 uppercase tracking-[0.14em]"
-        style={{ color: "#76E4F7" }}
+        style={{ color: "#a3a3a3" }}
       >
         Subjective Measures
       </span>
@@ -48,7 +48,7 @@ function GlassCard({ overlay, base }: { overlay: string; base: string }) {
           boxShadow: blendShadow,
         }}
       >
-        Continue <ChevronRight className="w-3.5 h-3.5" style={{ color: "#76E4F7" }} />
+        Continue <ChevronRight className="w-3.5 h-3.5" style={{ color: "#a3a3a3" }} />
       </button>
     </div>
   );

@@ -1,56 +1,40 @@
 // =============================================================================
 // SINGLE SOURCE OF TRUTH for the PsychPro color palette.
 //
-// Canonical palette = the LANDING PAGE reference (cinematic neuroscience UI):
-// deep cerulean bg, vivid turquoise/cerulean mid-tones, bright cyan accents, soft icy text.
-// All other pages must mirror this exactly — no royal blue, no flat navy,
-// no purple, no green-teal drift.
+// BLACK FOUNDATION (owner reset, 2026-07-09): the entire visual layer was
+// stripped to a neutral black/gray baseline before a new design system is
+// built. No chroma anywhere — pure black pages, dark-gray surfaces, neutral
+// gray borders, white/gray text. The palette KEYS are unchanged so every
+// consumer keeps compiling; only the VALUES are neutral now.
 //
-// Locked hue band: 188–198 (clean cyan-teal, slightly cool).
-// Do NOT shift accents toward 180 (reads green) or beyond 210 (reads cobalt).
-//
-// Consumers (last audited 2026-05-13):
-//   - src/pages/landing.tsx
-//   - src/pages/brain-lab.tsx
-//   - src/pages/dashboard.tsx
-//   - src/pages/quiz.tsx
-//   - src/pages/flashcards.tsx
-//   - src/pages/topics.tsx
-//   - src/pages/topic-detail.tsx
-//   - src/pages/study-guide.tsx
-//   - src/pages/practice-exam.tsx
-//   - src/pages/reflections.tsx
-//   - src/components/study/study-surface.tsx
-//   - src/components/layout/app-layout.tsx
-//   - src/index.css `.study-page-bg` HSL overrides (mirror these hex values)
+// Do NOT reintroduce cyan/teal/cerulean (or any saturated hue) here — the
+// guardrail scripts (check-surface-hue.mjs / check-design-drift.mjs) enforce
+// the neutral baseline.
 // =============================================================================
 
 export const STUDY_PALETTE = {
-  // Backgrounds — deep cerulean/turquoise stack. CANONICAL SURFACE HUE = 192
-  // (set 2026-06-12). Pendulum history: hue 191 read green, 196 read navy; 192
-  // sits just off the locked #76E4F7 accent (hue 189) on the anti-navy side.
-  // The lever for "too navy" is HUE, never lightness — keep surfaces near 192.
-  ink: "#042f3a",         // deepest anchor (sidebar / page floor)
-  bg: "#044352",          // page bg primary (deep cerulean)
-  bgSoft: "#054f61",      // page bg secondary
-  surface: "#086178",     // card surface (glass base)
-  surfaceElev: "#0c6b83", // card hover / lifted
+  // Backgrounds — pure-black to dark-gray ladder.
+  ink: "#000000",         // deepest anchor (sidebar / page floor)
+  bg: "#0a0a0a",          // page bg primary
+  bgSoft: "#111111",      // page bg secondary
+  surface: "#141414",     // card surface
+  surfaceElev: "#1c1c1c", // card hover / lifted
 
-  // Mid-cerulean — borders, dividers, structural lines
-  steel: "#1da2c3",       // cerulean
+  // Mid-gray — borders, dividers, structural lines
+  steel: "#3f3f3f",
 
-  // Cyan accents — hue ~188–195, locked
-  tealDeep: "#1da2c3",    // cerulean (alias)
-  teal: "#5ad7ed",        // cyan
-  surf: "#76E4F7",        // bright-cyan (primary glow)
-  mist: "#A7F3FF",        // soft-cyan (icy text)
-  mistSoft: "#9FCEDC",    // dimmer soft-cyan (muted icy text on dark surfaces)
+  // Former cyan accent slots — now neutral grays (keys kept for consumers)
+  tealDeep: "#6b6b6b",
+  teal: "#8a8a8a",
+  surf: "#a3a3a3",        // primary accent (neutral gray)
+  mist: "#d4d4d4",        // soft text
+  mistSoft: "#a8a8a8",    // dimmer muted text
 
   // Neutrals
-  cloud: "#F4FBFF",       // brightest text (text-main)
-  paper: "#F4FBFF",       // alias
-  paperSoft: "#CCE5EC",   // softer light-card text
-  inkSoft: "#A9C6CF",     // muted text (text-muted)
+  cloud: "#f5f5f5",       // brightest text (text-main)
+  paper: "#f5f5f5",       // alias
+  paperSoft: "#cfcfcf",   // softer light-card text
+  inkSoft: "#9e9e9e",     // muted text (text-muted)
 } as const;
 
 export type StudyTone = "light" | "dark" | "accent" | "card-front";

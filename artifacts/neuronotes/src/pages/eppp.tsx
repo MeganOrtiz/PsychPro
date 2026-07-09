@@ -13,17 +13,17 @@ import {
 // EPPP Mastery Suite hub — the dedicated home for the licensing-exam track.
 // Reached from the glowing "EPPP Mastery Suite" button in the top header
 // (see app-layout.tsx). Mirrors the full PsychPro study concept but framed
-// specifically around the EPPP. Locked cerulean palette (#76E4F7); no mint.
+// specifically around the EPPP. Locked cerulean palette (#a3a3a3); no mint.
 // ---------------------------------------------------------------------------
 
 const C = {
-  cyan: "#76E4F7",
-  mist: "#A7F3FF",
-  ink: "#07333e",
-  hairline: "rgba(118,228,247,0.16)",
-  hairlineStrong: "rgba(118,228,247,0.32)",
-  body: "rgba(225,244,250,0.84)",
-  muted: "rgba(186,214,224,0.66)",
+  cyan: "#a3a3a3",
+  mist: "#d4d4d4",
+  ink: "#232323",
+  hairline: "rgba(148, 148, 148,0.16)",
+  hairlineStrong: "rgba(148, 148, 148,0.32)",
+  body: "rgba(229, 229, 229,0.84)",
+  muted: "rgba(178, 178, 178,0.66)",
 };
 
 type Pillar = {
@@ -188,9 +188,8 @@ const styles = `
   text-align: center;
   border-radius: 26px;
   padding: clamp(32px, 5vw, 64px) clamp(22px, 4vw, 56px);
-  background:
-    linear-gradient(150deg, hsl(var(--surf-hue) 86% 21% / 0.78), hsl(var(--surf-hue) 88% 16% / 0.88));
-  border: 1px solid rgba(196,232,242,0.22);
+  background: hsl(var(--surf-hue) 0% 16% / 0.88);
+  border: 1px solid rgba(163, 163, 163,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
@@ -205,7 +204,7 @@ const styles = `
   transform: translateX(-50%);
   width: 72%;
   height: 130%;
-  background: radial-gradient(circle, ${C.cyan}26 0%, transparent 62%);
+  background: transparent;
   pointer-events: none;
 }
 .eppp-hero-icon {
@@ -237,8 +236,8 @@ const styles = `
   font-size: clamp(26px, 4.2vw, 44px);
   font-weight: 800;
   line-height: 1.12;
-  color: #F2FBFE;
-  text-shadow: 0 2px 24px hsl(var(--surf-hue) 92% 5% / 0.5);
+  color: #f8f8f8;
+  text-shadow: 0 2px 24px hsl(var(--surf-hue) 0% 5% / 0.5);
 }
 .eppp-lede {
   position: relative;
@@ -246,7 +245,7 @@ const styles = `
   max-width: 760px;
   font-size: clamp(14px, 1.1vw, 16.5px);
   line-height: 1.78;
-  color: #E8F6FB;
+  color: #f2f2f2;
 }
 .eppp-cta-row {
   position: relative;
@@ -272,8 +271,8 @@ const styles = `
 .eppp-btn svg { width: 16px; height: 16px; }
 .eppp-btn--primary {
   color: ${C.ink};
-  border: 1px solid rgba(167,243,255,0.65);
-  background: linear-gradient(135deg, ${C.mist} 0%, ${C.cyan} 48%, #38d2f8 100%);
+  border: 1px solid rgba(212, 212, 212,0.65);
+  background: #989898;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 0 22px -4px ${C.cyan}b3;
 }
 .eppp-btn--primary:hover {
@@ -283,12 +282,12 @@ const styles = `
 .eppp-btn--ghost {
   color: ${C.mist};
   border: 1px solid ${C.hairlineStrong};
-  background: hsl(var(--surf-hue) 82% 30% / 0.55);
+  background: hsl(var(--surf-hue) 0% 30% / 0.55);
 }
 .eppp-btn--ghost:hover {
   transform: translateY(-1px);
   border-color: ${C.cyan}80;
-  color: #EAFCFF;
+  color: #f4f4f4;
 }
 
 /* ---- Sections ---- */
@@ -304,7 +303,7 @@ const styles = `
   margin: 0 0 clamp(20px, 3vw, 30px);
   font-size: clamp(20px, 2.6vw, 30px);
   font-weight: 800;
-  color: #EAF7FB;
+  color: #e5e5e5;
 }
 
 /* ---- Cards ---- */
@@ -320,9 +319,8 @@ const styles = `
   gap: 10px;
   border-radius: 18px;
   padding: clamp(20px, 2.4vw, 26px);
-  background:
-    linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.74), hsl(var(--surf-hue) 88% 6% / 0.85));
-  border: 1px solid rgba(196,232,242,0.22);
+  background: hsl(var(--surf-hue) 0% 6% / 0.85);
+  border: 1px solid rgba(163, 163, 163,0.22);
   backdrop-filter: blur(20px) saturate(135%);
   -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
@@ -355,7 +353,7 @@ const styles = `
   margin: 0;
   font-size: 16px;
   font-weight: 700;
-  color: #EAF7FB;
+  color: #e5e5e5;
 }
 .eppp-card-body {
   margin: 0;

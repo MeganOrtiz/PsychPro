@@ -15,20 +15,20 @@ export interface InterleavingModeProps {
 }
 
 const TOPIC_PALETTE: Record<string, string> = {
-  default0: "bg-sky-100 text-sky-800 border border-sky-200",
-  default1: "bg-cyan-100 text-cyan-800 border border-cyan-200",
-  default2: "bg-blue-100 text-blue-800 border border-blue-200",
-  default3: "bg-teal-100 text-teal-800 border border-teal-200",
-  default4: "bg-indigo-100 text-indigo-800 border border-indigo-200",
+  default0: "bg-neutral-100 text-neutral-800 border border-neutral-200",
+  default1: "bg-neutral-100 text-neutral-800 border border-neutral-200",
+  default2: "bg-neutral-100 text-neutral-800 border border-neutral-200",
+  default3: "bg-neutral-100 text-neutral-800 border border-neutral-200",
+  default4: "bg-neutral-100 text-neutral-800 border border-neutral-200",
   default5: "bg-slate-100 text-slate-700 border border-slate-200",
 };
 
 const TOPIC_BAR_BG: Record<string, string> = {
-  default0: "bg-sky-400",
-  default1: "bg-cyan-400",
-  default2: "bg-blue-400",
-  default3: "bg-teal-400",
-  default4: "bg-indigo-400",
+  default0: "bg-neutral-400",
+  default1: "bg-neutral-400",
+  default2: "bg-neutral-400",
+  default3: "bg-neutral-400",
+  default4: "bg-neutral-400",
   default5: "bg-slate-400",
 };
 

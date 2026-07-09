@@ -44,8 +44,8 @@ export default function TopicDetailPage({ params }: Props) {
         : "Tap to flip and test your recall",
       onClick: () => navigate(inEppp ? epppTopicModePath(topicId, "flashcards") : `/topics/${topicId}/flashcards`),
       testId: "button-flashcards",
-      accent: "#68CCDE",
-      accentDeep: "#1e788e",
+      accent: "#999999",
+      accentDeep: "#565656",
       locked: false,
     },
     {
@@ -56,8 +56,8 @@ export default function TopicDetailPage({ params }: Props) {
         : "Multiple-choice with explanations",
       onClick: () => navigate(inEppp ? epppTopicModePath(topicId, "quiz") : `/topics/${topicId}/quiz`),
       testId: "button-quiz",
-      accent: "#68CCDE",
-      accentDeep: "#1e788e",
+      accent: "#999999",
+      accentDeep: "#565656",
       locked: !!ent?.quizLocked,
     },
     {
@@ -68,8 +68,8 @@ export default function TopicDetailPage({ params }: Props) {
         : "Comprehensive scrollable notes",
       onClick: () => navigate(inEppp ? epppTopicModePath(topicId, "study-guide") : `/topics/${topicId}/study-guide`),
       testId: "button-study-guide",
-      accent: "#68CCDE",
-      accentDeep: "#1e788e",
+      accent: "#999999",
+      accentDeep: "#565656",
       locked: !!ent?.studyGuideLocked,
     },
     {
@@ -80,8 +80,8 @@ export default function TopicDetailPage({ params }: Props) {
         : "Timed or untimed full exam",
       onClick: () => navigate(inEppp ? epppTopicModePath(topicId, "exam") : `/topics/${topicId}/exam`),
       testId: "button-practice-exam",
-      accent: "#68CCDE",
-      accentDeep: "#1e788e",
+      accent: "#999999",
+      accentDeep: "#565656",
       locked: !!ent?.examLocked,
     },
   ];
@@ -148,7 +148,7 @@ export default function TopicDetailPage({ params }: Props) {
                     aria-hidden
                     className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                     style={{
-                      background: `linear-gradient(115deg, transparent 35%, ${mode.accent}22 50%, transparent 65%)`,
+                      background: `transparent`,
                     }}
                   />
                   <div
@@ -156,7 +156,7 @@ export default function TopicDetailPage({ params }: Props) {
                     style={{
                       // Icon tile gets the accent in concentrated form so it
                       // reads as the card's color signature at a glance.
-                      background: `linear-gradient(135deg, ${mode.accent} 0%, ${mode.accentDeep} 100%)`,
+                      background: `${mode.accentDeep}`,
                       boxShadow: `
                         0 0 0 1px ${mode.accent}66 inset,
                         0 8px 20px -8px ${mode.accent}aa,

@@ -52,13 +52,13 @@ function FittedBrain() {
     // Clean near-white skin with a faint cool cast so it sits in the
     // cerulean scene without going grey or pink.
     const skin = new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color("#EAF3F6"),
+      color: new THREE.Color("#f0f0f0"),
       roughness: 0.55,
       metalness: 0.04,
       clearcoat: 0.5,
       clearcoatRoughness: 0.35,
       sheen: 0.4,
-      sheenColor: new THREE.Color("#CFE9F2"),
+      sheenColor: new THREE.Color("#e1e1e1"),
     });
 
     obj.traverse((child) => {

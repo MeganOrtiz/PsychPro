@@ -185,7 +185,7 @@ export default function PracticeExamPage({ params }: Props) {
         <div className="max-w-lg mx-auto p-4 md:p-6 lg:p-8 text-center">
           <div
             className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 border"
-            style={{ background: `linear-gradient(135deg, ${P.tealDeep}, ${P.teal})`, borderColor: P.tealDeep }}
+            style={{ background: `${P.teal}`, borderColor: P.tealDeep }}
           >
             <GraduationCap className="w-6 h-6 text-white" />
           </div>
@@ -210,7 +210,7 @@ export default function PracticeExamPage({ params }: Props) {
           <div
             className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 border"
             style={{
-              background: passed ? `linear-gradient(135deg, #1f6070, ${P.tealDeep})` : "rgba(244,180,98,0.18)",
+              background: passed ? `${P.tealDeep}` : "rgba(244,180,98,0.18)",
               borderColor: passed ? P.tealDeep : "rgba(244,180,98,0.55)",
               boxShadow: passed ? `0 18px 40px -18px ${P.tealDeep}cc` : "none",
             }}
@@ -472,9 +472,8 @@ export default function PracticeExamPage({ params }: Props) {
           <section
             className="rounded-2xl border p-6 shadow-sm"
             style={{
-              borderColor: "rgba(118,228,247,0.26)",
-              background:
-                "linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.81), hsl(var(--surf-hue) 88% 6% / 0.90))",
+              borderColor: "rgba(148, 148, 148,0.26)",
+              background: "hsl(var(--surf-hue) 0% 6% / 0.90)",
               backdropFilter: "blur(20px) saturate(135%)",
               WebkitBackdropFilter: "blur(20px) saturate(135%)",
               boxShadow:
@@ -484,7 +483,7 @@ export default function PracticeExamPage({ params }: Props) {
             <header className="flex items-start gap-3 mb-3">
               <div
                 className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
-                style={{ background: `hsl(var(--surf-hue) 69% 58% / 0.18)`, border: `1px solid ${P.surf}55` }}
+                style={{ background: `hsl(var(--surf-hue) 0% 58% / 0.18)`, border: `1px solid ${P.surf}55` }}
               >
                 <Brain className="w-5 h-5" style={{ color: P.surf }} />
               </div>
@@ -542,7 +541,7 @@ export default function PracticeExamPage({ params }: Props) {
                   disabled={!ready}
                   className="text-white"
                   style={{
-                    background: `linear-gradient(135deg, ${P.tealDeep}, ${P.teal})`,
+                    background: `${P.teal}`,
                     boxShadow: `0 14px 32px -16px ${P.tealDeep}cc`,
                   }}
                   data-testid="button-begin-exam"
@@ -620,12 +619,12 @@ export default function PracticeExamPage({ params }: Props) {
         </div>
       </div>
 
-      <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "hsl(var(--surf-hue) 78% 48% / 0.12)" }}>
+      <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "hsl(var(--surf-hue) 0% 48% / 0.12)" }}>
         <div
           className="h-1.5 rounded-full transition-all"
           style={{
             width: `${((index + 1) / total) * 100}%`,
-            background: `linear-gradient(90deg, ${P.teal}, ${P.surf})`,
+            background: `${P.surf}`,
           }}
         />
       </div>
@@ -650,8 +649,7 @@ export default function PracticeExamPage({ params }: Props) {
             // ramps the glow + border on :hover).
             cls += " hover:-translate-y-0.5 quiz-option-hover";
             style = {
-              background:
-                "linear-gradient(to bottom, hsl(var(--surf-hue) 88% 18% / 0.78), hsl(var(--surf-hue) 88% 10% / 0.86))",
+              background: "hsl(var(--surf-hue) 0% 10% / 0.86)",
               borderColor: `${P.surf}55`,
               color: P.cloud,
               boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(255,255,255,0.06)`,
@@ -659,15 +657,14 @@ export default function PracticeExamPage({ params }: Props) {
           } else if (isSelected) {
             cls += " text-white font-medium";
             style = {
-              background: `linear-gradient(to bottom, #1f6070, ${P.tealDeep})`,
+              background: `${P.tealDeep}`,
               borderColor: P.tealDeep,
               boxShadow: `0 14px 32px -16px ${P.tealDeep}cc`,
             };
           } else {
             cls += " opacity-55";
             style = {
-              background:
-                "linear-gradient(to bottom, hsl(var(--surf-hue) 88% 18% / 0.78), hsl(var(--surf-hue) 88% 10% / 0.86))",
+              background: "hsl(var(--surf-hue) 0% 10% / 0.86)",
               borderColor: `${P.surf}25`,
               color: `${P.cloud}aa`,
             };
@@ -685,10 +682,10 @@ export default function PracticeExamPage({ params }: Props) {
                 className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 border"
                 style={
                   !isAnswered
-                    ? { background: "rgba(118,228,247,0.20)", color: P.surf, borderColor: `${P.surf}88` }
+                    ? { background: "rgba(148, 148, 148,0.20)", color: P.surf, borderColor: `${P.surf}88` }
                     : isSelected
                       ? { background: "rgba(255,255,255,0.22)", color: "#FFFFFF", borderColor: "rgba(255,255,255,0.4)" }
-                      : { background: "rgba(118,228,247,0.14)", color: P.surf, borderColor: `${P.surf}55` }
+                      : { background: "rgba(148, 148, 148,0.14)", color: P.surf, borderColor: `${P.surf}55` }
                 }
               >{key}</span>
               {text}

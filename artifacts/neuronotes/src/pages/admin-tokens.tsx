@@ -171,11 +171,11 @@ export default function AdminTokensPage() {
       <div className="min-h-full study-page-bg">
         <div className="max-w-md mx-auto p-8 space-y-6">
           <div className="flex items-center gap-3">
-            <Lock className="w-6 h-6 text-cyan-300" />
+            <Lock className="w-6 h-6 text-neutral-300" />
             <h1 className="text-2xl font-semibold">Unlock Admin</h1>
           </div>
           <p className="text-sm text-white/70">
-            Enter your <code className="px-1 rounded bg-black/40 text-cyan-200 text-xs">MCP_ADMIN_SECRET</code> to manage Claude tokens. It's kept only in this browser tab's session storage.
+            Enter your <code className="px-1 rounded bg-black/40 text-neutral-200 text-xs">MCP_ADMIN_SECRET</code> to manage Claude tokens. It's kept only in this browser tab's session storage.
           </p>
           <div className="space-y-2">
             <Input
@@ -199,7 +199,7 @@ export default function AdminTokensPage() {
       <div className="max-w-3xl mx-auto p-4 md:p-6 lg:p-8 space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <KeyRound className="w-6 h-6 text-cyan-300" />
+            <KeyRound className="w-6 h-6 text-neutral-300" />
             <h1 className="text-2xl md:text-3xl font-semibold">Claude MCP Tokens</h1>
           </div>
           <Button variant="ghost" size="sm" onClick={lock}>
@@ -218,31 +218,31 @@ export default function AdminTokensPage() {
           </div>
         )}
 
-        <div className="rounded-xl border border-white/10 bg-white/[0.04] backdrop-blur-sm p-5 space-y-3">
+        <div className="rounded-xl border border-white/10 bg-white/[0.04] p-5 space-y-3">
           <h2 className="font-medium text-white/90">How to connect Claude Desktop</h2>
           <ol className="text-sm text-white/75 list-decimal pl-5 space-y-2">
             <li>Create a token below and copy it (you'll only see it once).</li>
             <li>In Claude Desktop: <span className="text-white/90">Settings → Connectors → Add custom connector</span>.</li>
             <li>
               Server URL:
-              <code className="ml-2 px-2 py-0.5 rounded bg-black/40 text-cyan-200 text-xs">{mcpUrl || ".../api/mcp"}</code>
+              <code className="ml-2 px-2 py-0.5 rounded bg-black/40 text-neutral-200 text-xs">{mcpUrl || ".../api/mcp"}</code>
             </li>
-            <li>Auth: <span className="text-white/90">Bearer Token</span>, paste the token (the long string starting with <code className="text-cyan-200">ppmcp_</code>).</li>
+            <li>Auth: <span className="text-white/90">Bearer Token</span>, paste the token (the long string starting with <code className="text-neutral-200">ppmcp_</code>).</li>
             <li>Save and restart Claude Desktop. PsychPro tools will appear in any chat.</li>
           </ol>
         </div>
 
         {justCreated && (
-          <div className="rounded-xl border border-cyan-300/40 bg-cyan-300/5 p-5 space-y-3">
+          <div className="rounded-xl border border-neutral-300/40 bg-neutral-300/5 p-5 space-y-3">
             <div className="flex items-center justify-between">
-              <div className="font-medium text-cyan-100">New token: {justCreated.label}</div>
+              <div className="font-medium text-neutral-100">New token: {justCreated.label}</div>
               <button onClick={() => setJustCreated(null)} className="text-xs text-white/60 hover:text-white">
                 Dismiss
               </button>
             </div>
             <p className="text-xs text-white/70">Copy this now — for security, the full token will never be shown again.</p>
             <div className="flex items-center gap-2">
-              <code className="flex-1 break-all px-3 py-2 rounded bg-black/40 text-cyan-200 text-xs">
+              <code className="flex-1 break-all px-3 py-2 rounded bg-black/40 text-neutral-200 text-xs">
                 {justCreated.token}
               </code>
               <Button size="sm" variant="secondary" onClick={() => copyText(justCreated.token)}>
@@ -252,7 +252,7 @@ export default function AdminTokensPage() {
           </div>
         )}
 
-        <div className="rounded-xl border border-white/10 bg-white/[0.04] backdrop-blur-sm p-5 space-y-3">
+        <div className="rounded-xl border border-white/10 bg-white/[0.04] p-5 space-y-3">
           <h2 className="font-medium text-white/90">Create a new token</h2>
           <div className="flex gap-2">
             <Input
@@ -269,7 +269,7 @@ export default function AdminTokensPage() {
           </div>
         </div>
 
-        <div className="rounded-xl border border-white/10 bg-white/[0.04] backdrop-blur-sm p-5">
+        <div className="rounded-xl border border-white/10 bg-white/[0.04] p-5">
           <h2 className="font-medium text-white/90 mb-3">Your tokens</h2>
           {loading ? (
             <p className="text-sm text-white/60">Loading…</p>

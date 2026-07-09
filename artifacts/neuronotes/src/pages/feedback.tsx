@@ -140,13 +140,12 @@ export default function FeedbackPage() {
                   onClick={() => setType(ft.value)}
                   aria-pressed={selected}
                   style={{
-                    backgroundImage:
-                      "linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.90), hsl(var(--surf-hue) 88% 6% / 0.90))",
+                    background: "hsl(var(--surf-hue) 0% 6% / 0.90)",
                   }}
                   className={`grow-0 shrink-0 basis-[calc(50%-0.25rem)] px-3 py-2.5 rounded-md border text-sm font-medium text-center text-foreground transition-all ${
                     selected
-                      ? "border-[rgba(118,228,247,0.75)] shadow-[0_0_18px_rgba(118,228,247,0.45)]"
-                      : "border-[rgba(118,228,247,0.3)] hover:border-[rgba(118,228,247,0.55)] hover:shadow-[0_0_14px_rgba(118,228,247,0.28)]"
+                      ? "border-[rgba(212,212,212,0.75)]"
+                      : "border-[rgba(163,163,163,0.3)] hover:border-[rgba(163,163,163,0.55)]"
                   }`}
                 >
                   {ft.label}

@@ -246,9 +246,8 @@ export default function DashboardPage() {
           <div
             className="rounded-xl p-4 mb-6 flex items-start gap-3 border"
             style={{
-              background:
-                "linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.83), hsl(var(--surf-hue) 88% 6% / 0.90))",
-              borderColor: "rgba(118,228,247,0.30)",
+              background: "hsl(var(--surf-hue) 0% 6% / 0.90)",
+              borderColor: "rgba(148, 148, 148,0.30)",
               backdropFilter: "blur(18px) saturate(135%)",
               WebkitBackdropFilter: "blur(18px) saturate(135%)",
               boxShadow:
@@ -284,9 +283,8 @@ export default function DashboardPage() {
           <div
             className="rounded-xl p-4 mb-6 flex items-start gap-3 border"
             style={{
-              background:
-                "linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.79), hsl(var(--surf-hue) 88% 6% / 0.90))",
-              borderColor: "rgba(118,228,247,0.26)",
+              background: "hsl(var(--surf-hue) 0% 6% / 0.90)",
+              borderColor: "rgba(148, 148, 148,0.26)",
               backdropFilter: "blur(18px) saturate(135%)",
               WebkitBackdropFilter: "blur(18px) saturate(135%)",
               boxShadow:
@@ -346,12 +344,12 @@ export default function DashboardPage() {
                       {continueTopic.score}%
                     </span>
                   </div>
-                  <div className="h-2 rounded-full overflow-hidden mb-4" style={{ background: "hsl(var(--surf-hue) 78% 48% / 0.14)" }}>
+                  <div className="h-2 rounded-full overflow-hidden mb-4" style={{ background: "hsl(var(--surf-hue) 0% 48% / 0.14)" }}>
                     <div
                       className="h-full transition-all"
                       style={{
                         width: `${continueTopic.score}%`,
-                        background: `linear-gradient(90deg, ${PALETTE.teal}, ${PALETTE.surf})`,
+                        background: `${PALETTE.surf}`,
                       }}
                     />
                   </div>
@@ -418,8 +416,8 @@ export default function DashboardPage() {
                         <div
                           className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 border transition-transform group-hover:scale-105"
                           style={{
-                            background: "rgba(118,228,247,0.1)",
-                            borderColor: "rgba(118,228,247,0.28)",
+                            background: "rgba(148, 148, 148,0.1)",
+                            borderColor: "rgba(148, 148, 148,0.28)",
                           }}
                         >
                           <Icon className="w-4 h-4" style={{ color: PALETTE.surf }} />
@@ -494,14 +492,14 @@ export default function DashboardPage() {
                       >
                         <div
                           className={cn(
-                            "w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 border backdrop-blur-md",
+                            "w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 border ",
                             e.rank === 1
                               ? "bg-yellow-400/20 text-yellow-200 border-yellow-300/40"
                               : e.rank === 2
                               ? "bg-slate-200/15 text-slate-100 border-slate-200/30"
                               : e.rank === 3
                               ? "bg-amber-500/20 text-amber-200 border-amber-300/35"
-                              : "bg-cyan-400/10 text-cyan-100 border-cyan-300/25"
+                              : "bg-neutral-400/10 text-neutral-100 border-neutral-300/25"
                           )}
                         >
                           {e.rank}
@@ -564,7 +562,7 @@ export default function DashboardPage() {
               <div style={{ height: 140 }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={activitySeries} margin={{ top: 8, right: 8, bottom: 0, left: -22 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(118,228,247,0.12)" vertical={false} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 148, 148,0.12)" vertical={false} />
                     <XAxis
                       dataKey="day"
                       tickLine={false}
@@ -580,8 +578,8 @@ export default function DashboardPage() {
                     <Tooltip
                       cursor={{ stroke: PALETTE.teal, strokeOpacity: 0.25 }}
                       contentStyle={{
-                        background: "hsl(var(--surf-hue) 91% 24% / 0.92)",
-                        border: "1px solid rgba(118,228,247,0.25)",
+                        background: "hsl(var(--surf-hue) 0% 24% / 0.92)",
+                        border: "1px solid rgba(148, 148, 148,0.25)",
                         borderRadius: 10,
                         color: PALETTE.mist,
                         fontSize: 12,
@@ -659,12 +657,12 @@ export default function DashboardPage() {
                     style={
                       a.earned
                         ? {
-                            background: "hsl(var(--surf-hue) 69% 58% / 0.14)",
-                            borderColor: "rgba(118,228,247,0.35)",
+                            background: "hsl(var(--surf-hue) 0% 58% / 0.14)",
+                            borderColor: "rgba(148, 148, 148,0.35)",
                           }
                         : {
-                            background: "hsl(var(--surf-hue) 91% 24% / 0.4)",
-                            borderColor: "rgba(118,228,247,0.10)",
+                            background: "hsl(var(--surf-hue) 0% 24% / 0.4)",
+                            borderColor: "rgba(148, 148, 148,0.10)",
                             opacity: 0.55,
                           }
                     }
@@ -675,16 +673,16 @@ export default function DashboardPage() {
                       style={
                         a.earned
                           ? {
-                              background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
+                              background: `${PALETTE.surf}`,
                               borderColor: PALETTE.tealDeep,
                             }
                           : {
-                              background: "hsl(var(--surf-hue) 69% 58% / 0.10)",
-                              borderColor: "rgba(118,228,247,0.20)",
+                              background: "hsl(var(--surf-hue) 0% 58% / 0.10)",
+                              borderColor: "rgba(148, 148, 148,0.20)",
                             }
                       }
                     >
-                      <Icon className="w-4 h-4" style={{ color: a.earned ? "#05333f" : PALETTE.mistSoft }} />
+                      <Icon className="w-4 h-4" style={{ color: a.earned ? "#222222" : PALETTE.mistSoft }} />
                     </div>
                     <p className="text-[11px] font-semibold leading-tight" style={{ color: PALETTE.mist }}>
                       {a.label}
@@ -731,7 +729,7 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
-          backgroundImage: `linear-gradient(180deg, hsl(var(--surf-hue) 87% 6% / 0.26) 0%, hsl(var(--surf-hue) 87% 6% / 0.44) 55%, hsl(var(--surf-hue) 87% 6% / 0.66) 100%)`,
+          background: `hsl(var(--surf-hue) 0% 6% / 0.66)`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -773,7 +771,7 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
             <div
               className="relative w-32 h-32 rounded-full flex items-center justify-center text-center px-3"
               style={{
-                background: `radial-gradient(circle at 50% 35%, ${PALETTE.surf}33, ${PALETTE.teal}1f 60%, transparent 82%)`,
+                background: `transparent`,
                 boxShadow: `0 0 0 3px ${PALETTE.surf}cc, inset 0 0 0 1px rgba(255,255,255,0.18)`,
                 zIndex: 1,
               }}

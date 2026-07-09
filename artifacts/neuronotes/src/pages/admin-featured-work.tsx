@@ -39,7 +39,7 @@ const STATUS_LABEL: Record<Status, string> = {
 };
 
 const STATUS_PILL: Record<Status, string> = {
-  pending: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+  pending: "bg-neutral-100 text-neutral-700 dark:bg-neutral-900/30 dark:text-neutral-400",
   approved: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
   revision_requested: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
   rejected: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
@@ -196,7 +196,7 @@ export default function AdminFeaturedWorkPage() {
       </div>
 
       {actionFor && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => !busy && setActionFor(null)}>
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => !busy && setActionFor(null)}>
           <div className="bg-card border border-border rounded-2xl p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
             <h2 className="text-lg font-semibold text-foreground mb-2">{actionFor.status === "rejected" ? "Reject submission" : "Request a revision"}</h2>
             <p className="text-xs text-muted-foreground mb-3">{actionFor.status === "rejected" ? "Optional: tell the submitter why." : "Optional: describe what needs to change."}</p>

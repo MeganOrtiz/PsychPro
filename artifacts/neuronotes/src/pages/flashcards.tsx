@@ -21,8 +21,8 @@ interface Props {
 }
 
 const difficultyStyles: Record<string, { bg: string; color: string; border: string; label: string }> = {
-  easy:   { bg: "rgba(189,229,255,0.55)", color: P.tealDeep, border: `${P.surf}66`, label: "Easy" },
-  medium: { bg: "rgba(88,201,243,0.20)",  color: P.tealDeep, border: `${P.teal}55`, label: "Medium" },
+  easy:   { bg: "rgba(222, 222, 222,0.55)", color: P.tealDeep, border: `${P.surf}66`, label: "Easy" },
+  medium: { bg: "rgba(165, 165, 165,0.20)",  color: P.tealDeep, border: `${P.teal}55`, label: "Medium" },
   hard:   { bg: "rgba(244,114,98,0.16)",  color: "#B8453A",  border: "rgba(244,114,98,0.45)", label: "Hard" },
 };
 
@@ -176,12 +176,12 @@ export default function FlashcardsPage({ params }: Props) {
           </div>
 
           <div className="relative mb-4">
-            <div className="w-full rounded-full h-1.5 mb-8 overflow-hidden" style={{ background: "hsl(var(--surf-hue) 78% 48% / 0.12)" }}>
+            <div className="w-full rounded-full h-1.5 mb-8 overflow-hidden" style={{ background: "hsl(var(--surf-hue) 0% 48% / 0.12)" }}>
               <div
                 className="h-1.5 rounded-full transition-all"
                 style={{
                   width: `${((index + 1) / total) * 100}%`,
-                  background: `linear-gradient(90deg, ${P.teal}, ${P.surf})`,
+                  background: `${P.surf}`,
                 }}
               />
             </div>
@@ -249,9 +249,8 @@ export default function FlashcardsPage({ params }: Props) {
             <div
               className="mt-6 rounded-xl border p-5 text-center"
               style={{
-                background:
-                  "linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.81), hsl(var(--surf-hue) 88% 6% / 0.90))",
-                borderColor: "rgba(118,228,247,0.26)",
+                background: "hsl(var(--surf-hue) 0% 6% / 0.90)",
+                borderColor: "rgba(148, 148, 148,0.26)",
                 backdropFilter: "blur(18px) saturate(135%)",
                 WebkitBackdropFilter: "blur(18px) saturate(135%)",
                 boxShadow:
@@ -261,7 +260,7 @@ export default function FlashcardsPage({ params }: Props) {
             >
               <div
                 className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3"
-                style={{ background: `hsl(var(--surf-hue) 69% 58% / 0.25)`, border: `1px solid ${P.surf}55` }}
+                style={{ background: `hsl(var(--surf-hue) 0% 58% / 0.25)`, border: `1px solid ${P.surf}55` }}
               >
                 <Lock className="w-5 h-5 text-white" />
               </div>

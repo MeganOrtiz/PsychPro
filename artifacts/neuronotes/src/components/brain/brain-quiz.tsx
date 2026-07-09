@@ -214,7 +214,7 @@ function QuizMarker({
         }}
       >
         {variant === "correct" && (
-          <Check className="w-3 h-3 mx-auto" style={{ color: "#06281d", marginTop: 1 }} strokeWidth={3} />
+          <Check className="w-3 h-3 mx-auto" style={{ color: "#171717", marginTop: 1 }} strokeWidth={3} />
         )}
         {variant === "wrong" && (
           <X className="w-3 h-3 mx-auto" style={{ color: "#3a0d0d", marginTop: 1 }} strokeWidth={3} />
@@ -257,7 +257,7 @@ export function BrainQuizDiagram({
         <div
           className="w-16 h-16 rounded-2xl flex items-center justify-center"
           style={{
-            background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
+            background: `${PALETTE.surf}`,
             boxShadow: `0 0 40px -8px ${PALETTE.surf}`,
           }}
         >
@@ -348,7 +348,7 @@ function PanelSurface({ children }: { children: React.ReactNode }) {
     <div
       className="rounded-2xl border h-full flex flex-col overflow-hidden"
       style={{
-        background: `linear-gradient(180deg, ${PALETTE.surface}, ${PALETTE.bg})`,
+        background: `${PALETTE.bg}`,
         borderColor: `${PALETTE.steel}99`,
       }}
       data-testid="brain-quiz"
@@ -397,7 +397,7 @@ export function BrainQuizPanel({
           <div
             className="w-20 h-20 rounded-2xl flex items-center justify-center"
             style={{
-              background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`,
+              background: `${PALETTE.surf}`,
               boxShadow: `0 0 40px -6px ${PALETTE.surf}`,
             }}
           >
@@ -419,7 +419,7 @@ export function BrainQuizPanel({
             <button
               onClick={restart}
               className="px-4 py-2 rounded-md text-sm font-semibold flex items-center gap-2"
-              style={{ background: `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})`, color: PALETTE.bg }}
+              style={{ background: `${PALETTE.surf}`, color: PALETTE.bg }}
               data-testid="button-quiz-restart"
             >
               <RotateCcw className="w-4 h-4" />
@@ -465,7 +465,7 @@ export function BrainQuizPanel({
             className="h-full rounded-full transition-all duration-300"
             style={{
               width: `${((idx + (answered ? 1 : 0)) / round.length) * 100}%`,
-              background: `linear-gradient(90deg, ${PALETTE.teal}, ${PALETTE.surf})`,
+              background: `${PALETTE.surf}`,
             }}
           />
         </div>
@@ -582,7 +582,7 @@ export function BrainQuizPanel({
           disabled={!answered}
           className="px-4 py-2 rounded-md text-sm font-semibold flex items-center gap-2 transition-all"
           style={{
-            background: answered ? `linear-gradient(135deg, ${PALETTE.teal}, ${PALETTE.surf})` : `${PALETTE.steel}66`,
+            background: answered ? `${PALETTE.surf}` : `${PALETTE.steel}66`,
             color: answered ? PALETTE.bg : `${PALETTE.mist}66`,
             cursor: answered ? "pointer" : "not-allowed",
           }}

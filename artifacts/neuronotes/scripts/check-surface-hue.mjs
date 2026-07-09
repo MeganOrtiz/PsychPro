@@ -1,19 +1,20 @@
 #!/usr/bin/env node
 // =============================================================================
-// SURFACE HUE GUARDRAIL
+// NEUTRAL PALETTE GUARDRAIL  (black-foundation baseline, 2026-07-09)
 //
-// PsychPro's deep-cerulean surface palette repeatedly drifts toward navy. The
-// only lever is HUE: the locked accent #76E4F7 is hue ~189, and surfaces must
-// sit right next to it (canonical hue 192). When surfaces drift up to ~196 the
-// app reads navy; below ~187 it reads green.
+// The entire visual layer was stripped to a black foundation: pure-black page
+// floors, flat dark-gray panels, neutral gray borders, white/gray text. The
+// old cerulean/cyan palette, glass, glow, and colored tiles were removed.
 //
-// Surfaces are centralized behind the `--surf-hue` CSS variable
-// (hsl(var(--surf-hue) S% L% / A)) — that form has no literal hue, so it is the
-// preferred, always-passing way to write a surface color. This check fails when
-// a LITERAL surface color (dark + saturated cerulean) drifts outside [188, 193].
-// It inspects rgb/hex, literal hsl()/hsla(), and bare HSL token tuples inside
-// the .dark and .study-page-bg blocks of index.css. Accents (light, hue ~189),
-// charts, reds, greens and neutrals are ignored.
+// This check fails when a SATURATED color drifts back into the UI. Allowed:
+//   - Neutrals (saturation <= 25%).
+//   - Semantic status colors: red/amber (hue 0-70) and green (hue 90-160)
+//     for destructive/warning/success states.
+//   - src/data/brain-structures.ts — functional anatomy colors used by the
+//     Brain Lab 3D/2D viewers (educational content, not UI chrome).
+//
+// Everything else — cyan, blue, indigo, violet, purple, magenta, pink — is a
+// regression toward the retired palette and fails loudly.
 //
 // Run: node scripts/check-surface-hue.mjs   (exit 1 on any violation)
 // =============================================================================
@@ -23,32 +24,17 @@ import path from "path";
 const ROOT = path.join(path.dirname(new URL(import.meta.url).pathname), "..");
 const SRC = path.join(ROOT, "src");
 
-// Safe hue window for surfaces (canonical = 192; accent = 189).
-const ALLOW_LO = 188;
-const ALLOW_HI = 193;
-// Detection band: only consider dark, saturated cerulean-family colors.
-const DETECT_LO = 180;
-const DETECT_HI = 210;
-const MAX_L = 0.5; // surfaces are dark (<45%); excludes bright cyan accents / light text
-const MIN_S = 0.2; // exclude near-neutrals
-
-// --- Accent-family guardrail (interactive button glow/edge) ---------------
-// Buttons across the app share one glowing-outline vibe whose accent is the
-// LOCKED cerulean #76E4F7 (hue ~189). The recurring drift is mint/green
-// (#5EEAD4 ≈ hue 170) creeping back into button borders, glows and fills.
-// This check flags any BRIGHT, saturated cyan/green-family color used inside a
-// button/CTA rule whose hue falls outside the cerulean accent window. Dark
-// surfaces (handled above), reds (destructive), and near-neutral whites are
-// ignored. Express button accents with rgba(118,228,247,A) (or #76E4F7).
-const ACCENT_LO = 184; // cerulean accent window (accent #76E4F7 ≈ 189)
-const ACCENT_HI = 200;
-const ACCENT_DETECT_LO = 120; // green … cyan (catches mint ~170)
-const ACCENT_DETECT_HI = 210;
-const ACCENT_MIN_S = 0.35; // saturated (excludes white inset highlights)
-const ACCENT_MIN_L = 0.5; // bright glow/edge colors (excludes dark fills)
-// Selectors that style an interactive button surface (flat rules in index.css).
-const BUTTON_SELECTOR =
-  /\.btn-glass|\.btn-link|button\.bg-|button\.border|\.landing-cta|\.landing-nav|button:not/;
+const MAX_NEUTRAL_S = 0.25; // anything at/below this saturation is fine
+// Allowed saturated hue windows (semantic status colors only).
+const ALLOWED_HUES = [
+  [0, 70],    // red … amber (destructive, warnings)
+  [90, 160],  // green (success)
+  [345, 360], // wrap-around reds
+];
+// Files exempt from the saturation ban.
+const EXEMPT = [
+  path.join("src", "data", "brain-structures.ts"),
+];
 
 function rgbToHsl(r, g, b) {
   r /= 255; g /= 255; b /= 255;
@@ -66,63 +52,52 @@ function rgbToHsl(r, g, b) {
   return [h, s, l];
 }
 
-const isSurface = (h, s, l) => h >= DETECT_LO && h <= DETECT_HI && l < MAX_L && s > MIN_S;
+const isAllowedHue = (h) => ALLOWED_HUES.some(([lo, hi]) => h >= lo && h <= hi);
 const lineOf = (text, idx) => text.slice(0, idx).split("\n").length;
 
 const violations = [];
-function flag(file, line, raw, h) {
+function check(file, line, raw, h, s) {
+  if (s <= MAX_NEUTRAL_S) return;
+  if (isAllowedHue(h)) return;
   violations.push(
-    `${file}:${line}  ${raw}  (hue ${h.toFixed(1)} — must be ${ALLOW_LO}-${ALLOW_HI}; canonical 192). ` +
-      `Use hsl(var(--surf-hue) S% L% / A) instead of a literal.`,
+    `${file}:${line}  ${raw}  (hue ${h.toFixed(1)}, sat ${(s * 100).toFixed(0)}% — ` +
+      `saturated non-semantic color; the app is a neutral black foundation).`,
   );
 }
-function checkHsl(file, line, raw, h, sFrac, lFrac) {
-  if (!isSurface(h, sFrac, lFrac)) return;
-  if (h < ALLOW_LO || h > ALLOW_HI) flag(file, line, raw, h);
-}
 
-function scanText(file, text, { tuples = false } = {}) {
+function scanText(file, text) {
   let m;
   // rgb()/rgba()
   const rgba = /rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})/g;
   while ((m = rgba.exec(text))) {
-    const [h, s, l] = rgbToHsl(+m[1], +m[2], +m[3]);
-    checkHsl(file, lineOf(text, m.index), m[0] + ")", h, s, l);
+    const [h, s] = rgbToHsl(+m[1], +m[2], +m[3]);
+    check(file, lineOf(text, m.index), m[0] + ")", h, s);
   }
   // #rrggbb
   const hex = /#([0-9a-fA-F]{6})\b/g;
   while ((m = hex.exec(text))) {
     const x = m[1];
-    const [h, s, l] = rgbToHsl(parseInt(x.slice(0, 2), 16), parseInt(x.slice(2, 4), 16), parseInt(x.slice(4, 6), 16));
-    checkHsl(file, lineOf(text, m.index), m[0], h, s, l);
+    const [h, s] = rgbToHsl(parseInt(x.slice(0, 2), 16), parseInt(x.slice(2, 4), 16), parseInt(x.slice(4, 6), 16));
+    check(file, lineOf(text, m.index), m[0], h, s);
   }
-  // literal hsl()/hsla() with a NUMERIC hue (skips hsl(var(--surf-hue) ...))
+  // literal hsl()/hsla() with a NUMERIC hue (skips hsl(var(--surf-hue) …))
   const hsl = /hsla?\(\s*([\d.]+)(?:deg)?\s*[, ]\s*([\d.]+)%\s*[, ]\s*([\d.]+)%/g;
   while ((m = hsl.exec(text))) {
-    checkHsl(file, lineOf(text, m.index), m[0] + " …)", parseFloat(m[1]), parseFloat(m[2]) / 100, parseFloat(m[3]) / 100);
+    check(file, lineOf(text, m.index), m[0] + " …)", parseFloat(m[1]), parseFloat(m[2]) / 100);
   }
-  // bare HSL token tuples (e.g. shadcn `--card: 196 58% 12%`) — opt-in, dark blocks only
-  if (tuples) {
-    const tup = /(?:^|[:\s])(\d{2,3})\s+(\d{1,3})%\s+(\d{1,3})%/g;
-    while ((m = tup.exec(text))) {
-      checkHsl(file, lineOf(text, m.index), m[0].trim() + " (token)", +m[1], +m[2] / 100, +m[3] / 100);
-    }
+  // shadcn bare HSL token tuples (e.g. `--card: 196 58% 12%;`)
+  const tup = /--[\w-]+:\s*(\d{1,3})\s+(\d{1,3})%\s+(\d{1,3})%/g;
+  while ((m = tup.exec(text))) {
+    check(file, lineOf(text, m.index), m[0] + " (token)", +m[1], +m[2] / 100);
   }
-}
-
-// Extract the .dark and .study-page-bg blocks (these hold surface token tuples;
-// the :root light theme is intentionally excluded — different rules).
-function darkBlocks(css) {
-  const out = [];
-  for (const re of [/\.dark\s*\{/g, /\.study-page-bg\s*,\s*\.study-page-aurora\s*\{/g]) {
-    const mm = re.exec(css);
-    if (!mm) continue;
-    const open = css.indexOf("{", mm.index);
-    let depth = 0, i = open;
-    for (; i < css.length; i++) { if (css[i] === "{") depth++; else if (css[i] === "}") { depth--; if (depth === 0) { i++; break; } } }
-    out.push({ start: open + 1, body: css.slice(open + 1, i - 1) });
+  // Tailwind blue-family utility classes (text-cyan-300, bg-sky-100/40, …)
+  const tw = /\b(?:text|bg|border|ring|from|via|to|divide|outline|decoration|fill|stroke|shadow)-(cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|teal)-\d{2,3}\b/g;
+  while ((m = tw.exec(text))) {
+    violations.push(
+      `${file}:${lineOf(text, m.index)}  ${m[0]}  (Tailwind ${m[1]} utility — ` +
+        `use neutral-* instead; the app is a neutral black foundation).`,
+    );
   }
-  return out;
 }
 
 function walk(dir, acc) {
@@ -136,96 +111,14 @@ function walk(dir, acc) {
 
 for (const file of walk(SRC, [])) {
   const rel = path.relative(ROOT, file);
-  const text = fs.readFileSync(file, "utf8");
-  scanText(rel, text);
-  if (file.endsWith("index.css")) {
-    const fullLineBase = text;
-    for (const blk of darkBlocks(text)) {
-      // scan tuples within the block; line numbers offset to the full file
-      let m;
-      const tup = /(?:^|[:\s])(\d{2,3})\s+(\d{1,3})%\s+(\d{1,3})%/g;
-      while ((m = tup.exec(blk.body))) {
-        const [h, s, l] = [+m[1], +m[2] / 100, +m[3] / 100];
-        if (!isSurface(h, s, l)) continue;
-        if (h < ALLOW_LO || h > ALLOW_HI) flag(rel, lineOf(fullLineBase, blk.start + m.index), m[0].trim() + " (token)", h);
-      }
-    }
-  }
-}
-
-// --- Accent-family scan: button/CTA rules in index.css must glow cerulean ----
-const isAccent = (h, s, l) =>
-  l >= ACCENT_MIN_L && s > ACCENT_MIN_S && h >= ACCENT_DETECT_LO && h <= ACCENT_DETECT_HI;
-
-function flagAccent(file, line, raw, h) {
-  violations.push(
-    `${file}:${line}  ${raw}  (hue ${h.toFixed(1)} — interactive button accent must be cerulean ${ACCENT_LO}-${ACCENT_HI}; accent #76E4F7 ≈ 189, NEVER mint/green). ` +
-      `Use rgba(118, 228, 247, A) or #76E4F7.`,
-  );
-}
-
-function accentColorsIn(body) {
-  const out = [];
-  let m;
-  const rgba = /rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})/g;
-  while ((m = rgba.exec(body))) {
-    const [h, s, l] = rgbToHsl(+m[1], +m[2], +m[3]);
-    out.push({ raw: m[0] + ")", h, s, l, idx: m.index });
-  }
-  const hex = /#([0-9a-fA-F]{6})\b/g;
-  while ((m = hex.exec(body))) {
-    const x = m[1];
-    const [h, s, l] = rgbToHsl(parseInt(x.slice(0, 2), 16), parseInt(x.slice(2, 4), 16), parseInt(x.slice(4, 6), 16));
-    out.push({ raw: m[0], h, s, l, idx: m.index });
-  }
-  // literal hsl()/hsla() with a NUMERIC hue (skips hsl(var(--surf-hue) …))
-  const hsl = /hsla?\(\s*([\d.]+)(?:deg)?\s*[, ]\s*([\d.]+)%\s*[, ]\s*([\d.]+)%/g;
-  while ((m = hsl.exec(body))) {
-    out.push({ raw: m[0] + " …)", h: parseFloat(m[1]), s: parseFloat(m[2]) / 100, l: parseFloat(m[3]) / 100, idx: m.index });
-  }
-  return out;
-}
-
-// Scan a CSS string for button/CTA rules with off-family bright accent colors.
-// `cssText` may be a substring of `fullText` (e.g. a styled template literal),
-// with `baseOffset` its start index in `fullText` for correct line numbers.
-// `${…}` interpolations are blanked first (preserving indices) so the flat-rule
-// parser stays robust and only literal colors are inspected.
-function scanCssButtons(file, fullText, cssText, baseOffset) {
-  const safe = cssText.replace(/\$\{[^}]*\}/g, (mm) => " ".repeat(mm.length));
-  const rule = /([^{}@]+)\{([^{}]*)\}/g; // flat rules only; skips @media/@layer
-  let m;
-  while ((m = rule.exec(safe))) {
-    if (!BUTTON_SELECTOR.test(m[1])) continue;
-    const bodyStart = m.index + m[1].length + 1;
-    for (const c of accentColorsIn(m[2])) {
-      if (isAccent(c.h, c.s, c.l) && (c.h < ACCENT_LO || c.h > ACCENT_HI)) {
-        flagAccent(file, lineOf(fullText, baseOffset + bodyStart + c.idx), c.raw, c.h);
-      }
-    }
-  }
-}
-
-for (const file of walk(SRC, [])) {
-  const rel = path.relative(ROOT, file);
-  const text = fs.readFileSync(file, "utf8");
-  if (file.endsWith(".css")) {
-    scanCssButtons(rel, text, text, 0);
-  } else {
-    // .ts/.tsx — only scan CSS authored inside backtick template literals
-    // (e.g. landing.tsx `const styles = `…``); never raw JSX, to avoid braces.
-    const tpl = /`([^`]*)`/g;
-    let t;
-    while ((t = tpl.exec(text))) {
-      scanCssButtons(rel, text, t[1], t.index + 1);
-    }
-  }
+  if (EXEMPT.includes(rel)) continue;
+  scanText(rel, fs.readFileSync(file, "utf8"));
 }
 
 if (violations.length) {
-  console.error(`\n✗ Surface hue guardrail FAILED — ${violations.length} color(s) drifted out of the cerulean window:\n`);
+  console.error(`\n✗ Neutral palette guardrail FAILED — ${violations.length} saturated color(s) crept back in:\n`);
   for (const v of violations) console.error("  " + v);
-  console.error("\nFix: pull the hue back to 192, or express it as hsl(var(--surf-hue) S% L% / A).\n");
+  console.error("\nFix: use neutral grays (#0a0a0a…#f5f5f5) or a semantic red/amber/green status color.\n");
   process.exit(1);
 }
-console.log("✓ Surface hue guardrail passed — all literal surfaces are within the cerulean window (188-193).");
+console.log("✓ Neutral palette guardrail passed — no saturated non-semantic colors in src.");

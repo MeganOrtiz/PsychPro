@@ -144,7 +144,7 @@ export default function QuizPage({ params }: Props) {
             className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 border"
             style={{
               background: passed
-                ? `linear-gradient(135deg, #1f6070, ${P.tealDeep})`
+                ? `${P.tealDeep}`
                 : "rgba(244,180,98,0.18)",
               borderColor: passed ? P.tealDeep : "rgba(244,180,98,0.55)",
               boxShadow: passed ? `0 18px 40px -18px ${P.tealDeep}cc` : "none",
@@ -192,12 +192,12 @@ export default function QuizPage({ params }: Props) {
         </p>
       ) : null}
 
-      <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "hsl(var(--surf-hue) 78% 48% / 0.12)" }}>
+      <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "hsl(var(--surf-hue) 0% 48% / 0.12)" }}>
         <div
           className="h-1.5 rounded-full transition-all"
           style={{
             width: `${((index + 1) / total) * 100}%`,
-            background: `linear-gradient(90deg, ${P.teal}, ${P.surf})`,
+            background: `${P.surf}`,
           }}
         />
       </div>
@@ -244,8 +244,7 @@ export default function QuizPage({ params }: Props) {
                 // (instead of the previous near-white card).
                 cls += " hover:-translate-y-0.5 quiz-option-hover";
                 style = {
-                  background:
-                    "linear-gradient(135deg, hsl(var(--surf-hue) 91% 22% / 0.78), hsl(var(--surf-hue) 88% 13% / 0.86))",
+                  background: "hsl(var(--surf-hue) 0% 13% / 0.86)",
                   borderColor: `${P.surf}55`,
                   color: P.cloud,
                   boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(255,255,255,0.06)`,
@@ -255,22 +254,21 @@ export default function QuizPage({ params }: Props) {
                 // we use for an incorrect selection.
                 cls += " text-white";
                 style = {
-                  background: "linear-gradient(135deg, #1E7A4E, #2BA866)",
+                  background: "#2BA866",
                   borderColor: "#1E7A4E",
                   boxShadow: "0 14px 32px -16px rgba(43,168,102,0.7)",
                 };
               } else if (isSelected && !isCorrect) {
                 cls += " text-white";
                 style = {
-                  background: "linear-gradient(135deg, #9C3A30, #B8453A)",
+                  background: "#B8453A",
                   borderColor: "#7A2C24",
                   boxShadow: "0 14px 32px -16px rgba(122,44,36,0.65)",
                 };
               } else {
                 cls += " opacity-55";
                 style = {
-                  background:
-                    "linear-gradient(135deg, hsl(var(--surf-hue) 91% 22% / 0.78), hsl(var(--surf-hue) 88% 13% / 0.86))",
+                  background: "hsl(var(--surf-hue) 0% 13% / 0.86)",
                   borderColor: `${P.surf}25`,
                   color: `${P.cloud}aa`,
                 };
@@ -292,10 +290,10 @@ export default function QuizPage({ params }: Props) {
                     )}
                     style={
                       !selected
-                        ? { background: "rgba(118,228,247,0.20)", color: P.surf, borderColor: `${P.surf}88` }
+                        ? { background: "rgba(148, 148, 148,0.20)", color: P.surf, borderColor: `${P.surf}88` }
                         : isSelected || isCorrect
                           ? { background: "rgba(255,255,255,0.22)", color: "#FFFFFF" }
-                          : { background: "rgba(118,228,247,0.14)", color: P.surf, borderColor: `${P.surf}55` }
+                          : { background: "rgba(148, 148, 148,0.14)", color: P.surf, borderColor: `${P.surf}55` }
                     }
                   >
                     {key}
@@ -323,9 +321,8 @@ export default function QuizPage({ params }: Props) {
             <div
               className="rounded-xl p-4 mb-6 border"
               style={{
-                background:
-                  "linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.79), hsl(var(--surf-hue) 88% 6% / 0.90))",
-                borderColor: "rgba(118,228,247,0.24)",
+                background: "hsl(var(--surf-hue) 0% 6% / 0.90)",
+                borderColor: "rgba(148, 148, 148,0.24)",
                 backdropFilter: "blur(18px) saturate(135%)",
                 WebkitBackdropFilter: "blur(18px) saturate(135%)",
                 boxShadow:
@@ -397,8 +394,8 @@ export default function QuizPage({ params }: Props) {
                   className="text-xs font-medium px-2.5 py-1 rounded-md text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                   style={{
                     background: reflectionSaved
-                      ? `linear-gradient(135deg, ${P.surf}55, ${P.surf}33)`
-                      : `linear-gradient(135deg, ${P.tealDeep}, ${P.teal})`,
+                      ? `${P.surf}33`
+                      : `${P.teal}`,
                   }}
                   data-testid="button-save-reflection"
                 >

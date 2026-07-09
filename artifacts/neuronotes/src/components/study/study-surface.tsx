@@ -20,81 +20,42 @@ interface StudySurfaceProps {
   fillHeight?: boolean;
 }
 
+// Black-foundation reset (2026-07-09): every tone is a flat dark-gray panel
+// with a neutral border — no glass, no blur, no glow, no gradients. The tone
+// keys are preserved so all call sites keep working; they now map to a small
+// neutral elevation ladder.
 function baseSurfaceStyles(tone: StudyTone): CSSProperties {
   switch (tone) {
     case "dark":
-      // Prominent translucent cerulean glass — slightly brighter base than
-      // "light" so it reads as a lifted/feature surface, with the same cyan
-      // top-bloom + outer corona radiance over the brain backdrop.
       return {
-        background:
-          "linear-gradient(145deg, hsl(var(--surf-hue) 85% 12% / 0.80), hsl(var(--surf-hue) 91% 8% / 0.90))",
-        borderColor: "rgba(118,228,247,0.24)",
-        backdropFilter: "blur(20px) saturate(135%)",
-        WebkitBackdropFilter: "blur(20px) saturate(135%)",
-        boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.10), 0 22px 52px -26px rgba(0,0,0,0.74)",
-        color: "#FFFFFF",
+        background: "#0f0f0f",
+        borderColor: "#262626",
+        color: "#ffffff",
       };
     case "accent":
-      // Translucent directional cerulean glass — brighter, more saturated than
-      // the card front so the flashcard back stays visually distinct while
-      // sharing the same incandescent bloom + radiant corona.
       return {
-        background:
-          "linear-gradient(135deg, hsl(var(--surf-hue) 81% 26% / 0.64), hsl(var(--surf-hue) 85% 18% / 0.76))",
-        borderColor: "rgba(118,228,247,0.32)",
-        backdropFilter: "blur(20px) saturate(140%)",
-        WebkitBackdropFilter: "blur(20px) saturate(140%)",
-        boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.16), 0 22px 54px -26px rgba(0,0,0,0.66)",
-        color: "#FFFFFF",
+        background: "#1c1c1c",
+        borderColor: "#3f3f3f",
+        color: "#ffffff",
       };
     case "card-front":
-      // Centered radial pigment — lighter in the middle, deeper at the edges —
-      // pairs with the directional "accent" back of the flashcard. Translucent
-      // glass so the brain backdrop glows through; white body text throughout.
       return {
-        background:
-          "radial-gradient(120% 104% at 50% 38%, hsl(var(--surf-hue) 78% 30% / 0.52) 0%, hsl(var(--surf-hue) 82% 21% / 0.62) 42%, hsl(var(--surf-hue) 85% 15% / 0.76) 100%)",
-        borderColor: "rgba(118,228,247,0.32)",
-        backdropFilter: "blur(20px) saturate(140%)",
-        WebkitBackdropFilter: "blur(20px) saturate(140%)",
-        boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.16), 0 22px 54px -26px rgba(0,0,0,0.66)",
-        color: "#FFFFFF",
+        background: "#181818",
+        borderColor: "#3f3f3f",
+        color: "#ffffff",
       };
     case "light":
     default:
-      // Unified with the EPPP card system (.epd-card): a radial cyan top-bloom
-      // over a 145° diagonal cerulean glass with a cyan inner glow + outer
-      // corona and a deep drop shadow, so the main-site surfaces read as the
-      // same translucent bloom glass as the EPPP domain tiles.
       return {
-        background:
-          "linear-gradient(145deg, hsl(var(--surf-hue) 88% 10% / 0.74), hsl(var(--surf-hue) 88% 6% / 0.85))",
-        borderColor: "rgba(196,232,242,0.22)",
-        backdropFilter: "blur(20px) saturate(135%)",
-        WebkitBackdropFilter: "blur(20px) saturate(135%)",
-        boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.12), 0 24px 60px -42px rgba(0,0,0,0.72)",
+        background: "#141414",
+        borderColor: "#2e2e2e",
         color: P.mist,
       };
   }
 }
 
-// Same glass surface with the cyan corona/inner-glow halos stripped out —
-// keeps the white top highlight and the deep drop shadow so the card still
-// reads as a lifted surface, just without the "glow". Used on the dashboards.
-const NOGLOW_SHADOW: Partial<Record<StudyTone, string>> = {
-  light: "inset 0 1px 0 rgba(255,255,255,0.12), 0 24px 60px -42px rgba(0,0,0,0.72)",
-  dark: "inset 0 1px 0 rgba(255,255,255,0.10), 0 22px 52px -26px rgba(0,0,0,0.74)",
-};
-
-function surfaceStyles(tone: StudyTone, noGlow = false): CSSProperties {
-  const s = baseSurfaceStyles(tone);
-  if (noGlow && NOGLOW_SHADOW[tone]) s.boxShadow = NOGLOW_SHADOW[tone];
-  return s;
+function surfaceStyles(tone: StudyTone, _noGlow = false): CSSProperties {
+  return baseSurfaceStyles(tone);
 }
 
 function pillStyles(tone: StudyTone, brand?: boolean): CSSProperties {
@@ -115,9 +76,9 @@ function pillStyles(tone: StudyTone, brand?: boolean): CSSProperties {
   return brand
     ? { background: P.teal, color: "#FFFFFF", borderColor: P.tealDeep }
     : {
-        background: "hsl(var(--surf-hue) 69% 58% / 0.14)",
+        background: "rgba(255,255,255,0.08)",
         color: P.surf,
-        borderColor: "hsl(var(--surf-hue) 69% 58% / 0.30)",
+        borderColor: "rgba(255,255,255,0.18)",
       };
 }
 
@@ -144,6 +105,8 @@ export const StudySurface = forwardRef<HTMLElement, StudySurfaceProps>(
   ) {
     const Comp: any = as;
     const isButton = as === "button";
+    void glow;
+    void noGlow;
     return (
       <Comp
         ref={ref as any}
@@ -161,22 +124,10 @@ export const StudySurface = forwardRef<HTMLElement, StudySurfaceProps>(
         )}
         style={{
           ["--tw-ring-color" as any]: P.teal,
-          ["--tw-ring-offset-color" as any]: P.paperSoft,
+          ["--tw-ring-offset-color" as any]: P.ink,
           ...style,
         }}
       >
-        {glow && (
-          <div
-            aria-hidden
-            className={cn(
-              "absolute -inset-4 rounded-3xl opacity-60 transition-opacity blur-2xl pointer-events-none",
-              isButton && "group-hover:opacity-100",
-            )}
-            style={{
-              background: `radial-gradient(circle at 50% 50%, ${P.teal}, transparent 65%)`,
-            }}
-          />
-        )}
         <div
           className={cn(
             "relative rounded-2xl border transition-all",

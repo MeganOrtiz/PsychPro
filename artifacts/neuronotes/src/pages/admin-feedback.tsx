@@ -27,7 +27,7 @@ const TYPE_ICONS: Record<string, React.ReactNode> = {
 };
 
 const STATUS_COLORS: Record<string, string> = {
-  unread: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+  unread: "bg-neutral-100 text-neutral-700 dark:bg-neutral-900/30 dark:text-neutral-400",
   read: "bg-muted text-muted-foreground",
   resolved: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
 };
