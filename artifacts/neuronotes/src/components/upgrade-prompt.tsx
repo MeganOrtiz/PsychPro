@@ -51,7 +51,11 @@ export default function UpgradePrompt({ onDismiss, reason = "generic" }: Upgrade
     <div className="p-4 md:p-6 max-w-lg mx-auto flex flex-col items-center justify-center min-h-[60vh] text-center" data-testid="upgrade-prompt">
       <div
         className="w-16 h-16 rounded-full flex items-center justify-center mb-6"
-        style={{ background: `hsl(var(--surf-hue) var(--surf-sat) 58% / 0.18)`, border: `1px solid ${P.surf}55` }}
+        style={{
+          background: "rgba(var(--pp-ocean-deep-rgb), 0.22)",
+          border: "1px solid rgba(var(--pp-cyan-rgb), 0.35)",
+          boxShadow: "inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16)",
+        }}
       >
         <Lock className="w-8 h-8" style={{ color: P.tealDeep }} />
       </div>

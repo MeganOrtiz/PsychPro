@@ -177,13 +177,10 @@ export default function FlashcardsPage({ params }: Props) {
           </div>
 
           <div className="relative mb-4">
-            <div className="w-full rounded-full h-1.5 mb-8 overflow-hidden" style={{ background: "hsl(var(--surf-hue) var(--surf-sat) 48% / 0.12)" }}>
+            <div className="pp-progress-track w-full h-1.5 mb-8">
               <div
-                className="h-1.5 rounded-full transition-all"
-                style={{
-                  width: `${((index + 1) / total) * 100}%`,
-                  background: `${P.surf}`,
-                }}
+                className="pp-progress-fill"
+                style={{ width: `${((index + 1) / total) * 100}%` }}
               />
             </div>
 
@@ -248,19 +245,10 @@ export default function FlashcardsPage({ params }: Props) {
               previewed card in a deck that has more cards on the server. */}
           {onLastPreviewCard && (
             <div
-              className="mt-6 rounded-xl border p-5 text-center"
-              style={{
-                background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90)",
-                borderColor: "rgba(var(--pp-cyan-rgb), 0.26)",
-                boxShadow:
-                  "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.13), 0 20px 46px -26px rgba(var(--pp-black-rgb), 0.66)",
-              }}
+              className="mat-opaque mt-6 p-5 text-center"
               data-testid="flashcards-upgrade-cta"
             >
-              <div
-                className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3"
-                style={{ background: `hsl(var(--surf-hue) var(--surf-sat) 58% / 0.25)`, border: `1px solid ${P.surf}55` }}
-              >
+              <div className="mat-icon-well mat-icon-well--round w-12 h-12 flex items-center justify-center mx-auto mb-3">
                 <Lock className="w-5 h-5 text-white" />
               </div>
               <p className="font-semibold text-white mb-1">

@@ -245,13 +245,7 @@ export default function DashboardPage() {
       <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 lg:pt-8 pb-4 md:pb-6 lg:pb-8">
         {isOverLimit && (
           <div
-            className="rounded-xl p-4 mb-6 flex items-start gap-3 border"
-            style={{
-              background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90)",
-              borderColor: "rgba(var(--pp-cyan-rgb), 0.30)",
-              boxShadow:
-                "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.13), 0 20px 46px -26px rgba(var(--pp-black-rgb), 0.66)",
-            }}
+            className="mat-opaque p-4 mb-6 flex items-start gap-3"
             data-testid="banner-over-limit"
           >
             <Zap
@@ -280,13 +274,7 @@ export default function DashboardPage() {
 
         {isApproachingLimit && (
           <div
-            className="rounded-xl p-4 mb-6 flex items-start gap-3 border"
-            style={{
-              background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90)",
-              borderColor: "rgba(var(--pp-cyan-rgb), 0.26)",
-              boxShadow:
-                "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12), 0 20px 46px -26px rgba(var(--pp-black-rgb), 0.66)",
-            }}
+            className="mat-opaque p-4 mb-6 flex items-start gap-3"
             data-testid="banner-approaching-limit"
           >
             <Sparkles
@@ -341,13 +329,10 @@ export default function DashboardPage() {
                       {continueTopic.score}%
                     </span>
                   </div>
-                  <div className="h-2 rounded-full overflow-hidden mb-4" style={{ background: "hsl(var(--surf-hue) var(--surf-sat) 48% / 0.14)" }}>
+                  <div className="pp-progress-track h-2 mb-4">
                     <div
-                      className="h-full transition-all"
-                      style={{
-                        width: `${continueTopic.score}%`,
-                        background: `${PALETTE.surf}`,
-                      }}
+                      className="pp-progress-fill"
+                      style={{ width: `${continueTopic.score}%` }}
                     />
                   </div>
                   <Button
@@ -650,33 +635,20 @@ export default function DashboardPage() {
                 return (
                   <div
                     key={a.label}
-                    className="flex flex-col items-center text-center gap-1.5 p-3 rounded-lg border transition-all"
-                    style={
-                      a.earned
-                        ? {
-                            background: "hsl(var(--surf-hue) var(--surf-sat) 58% / 0.14)",
-                            borderColor: "rgba(var(--pp-cyan-rgb), 0.35)",
-                          }
-                        : {
-                            background: "hsl(var(--surf-hue) var(--surf-sat) 24% / 0.4)",
-                            borderColor: "rgba(var(--pp-cyan-rgb), 0.10)",
-                            opacity: 0.55,
-                          }
-                    }
+                    className={`mat-glass flex flex-col items-center text-center gap-1.5 p-3 transition-all ${
+                      a.earned ? "" : "opacity-55"
+                    }`}
                     data-testid={`achievement-${a.earned ? "earned" : "locked"}`}
                   >
                     <div
-                      className="w-9 h-9 rounded-full flex items-center justify-center border"
+                      className="mat-icon-well mat-icon-well--round w-9 h-9 flex items-center justify-center"
                       style={
                         a.earned
                           ? {
                               background: `${PALETTE.surf}`,
                               borderColor: PALETTE.tealDeep,
                             }
-                          : {
-                              background: "hsl(var(--surf-hue) var(--surf-sat) 58% / 0.10)",
-                              borderColor: "rgba(var(--pp-cyan-rgb), 0.20)",
-                            }
+                          : undefined
                       }
                     >
                       <Icon className="w-4 h-4" style={{ color: a.earned ? PP.earnedInk : PALETTE.mistSoft }} />

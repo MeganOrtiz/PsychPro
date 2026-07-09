@@ -117,11 +117,13 @@ export default function SubscriptionPage() {
       <style>{`
         .sub-plan {
           position: relative;
-          border-radius: 18px;
+          border-radius: 20px;
           padding: 24px;
-          background: transparent;
-          border: 1px solid ${P.surf}33;
-          box-shadow: 0 20px 44px -26px rgba(var(--pp-black-rgb),0.85), inset 0 1px 0 ${P.surf}1a;
+          background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);
+          border: 1px solid var(--pp-line);
+          box-shadow:
+            inset 0 1px 0 var(--pp-bevel),
+            0 22px 48px -32px var(--pp-shadow);
           transition: transform 240ms ease, box-shadow 240ms ease, border-color 240ms ease;
         }
         .sub-plan::before {
@@ -134,32 +136,40 @@ export default function SubscriptionPage() {
           opacity: 0.8;
         }
         .sub-plan--featured {
-          border-color: ${P.surf}55;
-          box-shadow: 0 24px 54px -24px rgba(var(--pp-black-rgb),0.9), 0 0 0 1px ${P.surf}22, 0 0 46px -18px ${P.surf}66;
+          border-color: rgba(var(--pp-bright-rgb), 0.60);
         }
         .sub-plan:hover {
           transform: translateY(-3px);
-          border-color: ${P.surf}80;
-          box-shadow: 0 30px 64px -24px rgba(var(--pp-black-rgb),0.92), 0 0 52px -16px ${P.surf}80;
+          border-color: rgba(var(--pp-bright-rgb), 0.60);
+          box-shadow:
+            inset 0 1px 0 var(--pp-bevel),
+            0 0 22px -4px var(--pp-glow),
+            0 22px 48px -32px var(--pp-shadow);
         }
         .sub-icon-chip {
           display: inline-flex; align-items: center; justify-content: center;
           width: 36px; height: 36px; border-radius: 11px; flex-shrink: 0;
-          background: ${P.surf}1f; border: 1px solid ${P.surf}45;
-          box-shadow: 0 0 20px -7px ${P.surf}99, inset 0 1px 0 ${P.surf}26;
+          background: rgba(var(--pp-ocean-deep-rgb), 0.22);
+          border: 1px solid rgba(var(--pp-cyan-rgb), 0.35);
+          box-shadow: inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16);
         }
         .sub-bill {
           position: relative;
-          border-radius: 14px;
+          border-radius: 16px;
           padding: 16px;
-          background: ${P.bg}cc;
-          border: 1px solid ${P.surf}26;
-          transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+          background: rgba(var(--pp-ocean-deep-rgb), 0.16);
+          border: 1px solid var(--pp-line-bright);
+          box-shadow: inset 0 1px 0 var(--pp-bevel-bright);
+          transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease, background 200ms ease;
         }
         .sub-bill:hover {
           transform: translateY(-2px);
-          border-color: ${P.surf}5e;
-          box-shadow: 0 18px 36px -24px rgba(var(--pp-black-rgb),0.85), 0 0 28px -14px ${P.surf}73;
+          border-color: rgba(var(--pp-bright-rgb), 0.60);
+          background: rgba(var(--pp-ocean-deep-rgb), 0.26);
+          box-shadow:
+            inset 0 1px 0 var(--pp-bevel-bright),
+            0 0 22px -4px var(--pp-glow),
+            0 16px 34px -22px var(--pp-shadow);
         }
         .sub-price {
           background: ${P.surf};
@@ -180,10 +190,10 @@ export default function SubscriptionPage() {
         <div
           className="border rounded-xl p-4 mb-6 flex flex-col sm:flex-row sm:items-center gap-3"
           style={{
-            background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90)",
-            borderColor: "rgba(var(--pp-cyan-rgb), 0.26)",
+            background: "linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%)",
+            borderColor: "var(--pp-line)",
             boxShadow:
-              "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.13), 0 20px 46px -26px rgba(var(--pp-black-rgb), 0.66)",
+              "inset 0 1px 0 var(--pp-bevel), 0 22px 48px -32px var(--pp-shadow)",
             color: PP.white,
           }}
           data-testid="active-subscription-banner"

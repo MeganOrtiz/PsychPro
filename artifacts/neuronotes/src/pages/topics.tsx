@@ -274,46 +274,19 @@ function CourseRailButton({
 }) {
   const Icon = CATEGORY_ICONS[name] ?? LibraryBig;
 
-  const idleBg = "hsl(var(--surf-hue) var(--surf-sat) 8% / 0.80)";
-  const activeBg = "hsl(var(--surf-hue) var(--surf-sat) 18% / 0.88)";
-  const idleBorder = "rgba(var(--pp-cyan-rgb), 0.26)";
-  const activeBorder = "rgba(var(--pp-cyan-rgb), 0.55)";
-  const hoverBorder = "rgba(var(--pp-cyan-rgb), 0.45)";
-  const idleShadow = "inset 0 1px 0 0 rgba(var(--pp-white-rgb), 0.14), 0 10px 26px -16px rgba(var(--pp-black-rgb), 0.7)";
-  const activeShadow =
-    "0 14px 34px -14px rgba(var(--pp-black-rgb), 0.55), inset 0 1px 0 0 rgba(var(--pp-white-rgb), 0.10)";
-  const hoverShadow =
-    "0 12px 30px -14px rgba(var(--pp-black-rgb), 0.55), inset 0 1px 0 0 rgba(var(--pp-white-rgb), 0.10)";
-
+  // GLASS nav pills — same shared recipe as the sidebar nav (nav-glass-*),
+  // so the course rail and the app nav read as one system.
   return (
     <button
       type="button"
       onClick={onClick}
       aria-pressed={active}
       data-testid={`course-rail-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
-      className="group relative w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-left transition-all duration-200 border cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--nav-glow)]/50"
-      style={{
-        background: active ? activeBg : idleBg,
-        borderColor: active ? activeBorder : idleBorder,
-        boxShadow: active ? activeShadow : idleShadow,
-      }}
-      onMouseEnter={(e) => {
-        if (active) return;
-        e.currentTarget.style.borderColor = hoverBorder;
-        e.currentTarget.style.boxShadow = hoverShadow;
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = active ? activeBorder : idleBorder;
-        e.currentTarget.style.boxShadow = active ? activeShadow : idleShadow;
-      }}
+      className={`group relative w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-left cursor-pointer focus:outline-none focus-visible:ring-2 ${
+        active ? "nav-glass-active" : "nav-glass-idle"
+      }`}
     >
-      <span
-        className="w-9 h-9 shrink-0 rounded-lg flex items-center justify-center border"
-        style={{
-          background: "hsl(var(--surf-hue) var(--surf-sat) 18% / 0.55)",
-          borderColor: "rgba(var(--pp-cyan-rgb), 0.28)",
-        }}
-      >
+      <span className="mat-icon-well w-9 h-9 shrink-0 flex items-center justify-center">
         <Icon
           className="w-4 h-4"
           style={{
@@ -364,13 +337,7 @@ function CourseLessons({
         className="flex items-center gap-3 mb-4 pb-3 border-b"
         style={{ borderColor: "rgba(var(--pp-cyan-rgb), 0.18)" }}
       >
-        <div
-          className="w-11 h-11 rounded-lg flex items-center justify-center border"
-          style={{
-            background: "hsl(var(--surf-hue) var(--surf-sat) 18% / 0.65)",
-            borderColor: "rgba(var(--pp-cyan-rgb), 0.32)",
-          }}
-        >
+        <div className="mat-icon-well w-11 h-11 flex items-center justify-center">
           <Icon
             className="w-5 h-5"
             style={{
@@ -419,20 +386,10 @@ function CourseMasteryButton({ group }: { group: { name: string; items: Topic[] 
   const unlocked = status?.unlocked ?? false;
   const mastered = status?.mastered ?? false;
 
-  const lockedBg = "hsl(var(--surf-hue) var(--surf-sat) 8% / 0.80)";
-  const unlockedBg = "hsl(var(--surf-hue) var(--surf-sat) 18% / 0.88)";
-  const lockedBorder = "rgba(var(--pp-cyan-rgb), 0.22)";
-  const unlockedBorder = "rgba(var(--pp-cyan-rgb), 0.55)";
-  const lockedShadow =
-    "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12), 0 24px 60px -42px rgba(var(--pp-black-rgb), 0.72)";
-  const unlockedShadow =
-    "0 16px 38px -14px rgba(var(--pp-black-rgb), 0.55), inset 0 1px 0 0 rgba(var(--pp-white-rgb), 0.10)";
-  const hoverBorder = "rgba(var(--pp-cyan-rgb), 0.75)";
-  const hoverShadow =
-    "0 18px 44px -12px rgba(var(--pp-black-rgb), 0.55), inset 0 1px 0 0 rgba(var(--pp-white-rgb), 0.12)";
-
   const Marker = unlocked ? GraduationCap : Lock;
 
+  // GLASS material — interactive when unlocked, dimmed static glass when
+  // locked (mirrors .course-mastery-tile--locked's dulled voice).
   return (
     <button
       type="button"
@@ -442,34 +399,11 @@ function CourseMasteryButton({ group }: { group: { name: string; items: Topic[] 
         navigate(`/courses/${encodeURIComponent(group.name)}/mastery-exam`);
       }}
       data-testid={`course-mastery-${group.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
-      className={`group relative w-full mt-5 flex items-center gap-4 px-4 py-4 rounded-md text-left transition-all duration-200 border focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--nav-glow,var(--pp-text-dim))]/50 ${
-        unlocked ? "cursor-pointer" : "cursor-not-allowed"
+      className={`group relative w-full mt-5 flex items-center gap-4 px-4 py-4 text-left focus:outline-none focus-visible:ring-2 mat-glass ${
+        unlocked ? "mat-glass-interactive cursor-pointer" : "cursor-not-allowed opacity-60"
       }`}
-      style={{
-        ["--nav-glow" as never]: STUDY_PALETTE.surf,
-        background: unlocked ? unlockedBg : lockedBg,
-        borderColor: unlocked ? unlockedBorder : lockedBorder,
-        boxShadow: unlocked ? unlockedShadow : lockedShadow,
-        opacity: unlocked ? 1 : 0.85,
-      }}
-      onMouseEnter={(e) => {
-        if (!unlocked) return;
-        e.currentTarget.style.borderColor = hoverBorder;
-        e.currentTarget.style.boxShadow = hoverShadow;
-      }}
-      onMouseLeave={(e) => {
-        if (!unlocked) return;
-        e.currentTarget.style.borderColor = unlockedBorder;
-        e.currentTarget.style.boxShadow = unlockedShadow;
-      }}
     >
-      <span
-        className="w-11 h-11 shrink-0 rounded-lg flex items-center justify-center border"
-        style={{
-          background: "hsl(var(--surf-hue) var(--surf-sat) 18% / 0.55)",
-          borderColor: "rgba(var(--pp-cyan-rgb), 0.28)",
-        }}
-      >
+      <span className="mat-icon-well w-11 h-11 shrink-0 flex items-center justify-center">
         <Marker
           className="w-5 h-5"
           style={{
@@ -534,35 +468,14 @@ interface TopicCardProps {
 }
 
 function TopicCard({ topic, onClick, showCategory }: TopicCardProps) {
-  // Dark-cerulean panel with white/near-white text — replaces the previous
-  // `bg-card + text-white/70` combo that was hard to read against
-  // the smoky page background. Colors sourced from STUDY_PALETTE.
+  // Interactive GLASS tile — shared material recipe (hover glow + lift come
+  // from .mat-glass-interactive, not per-card JS handlers).
   return (
     <button
       type="button"
       onClick={onClick}
       data-testid={`card-topic-${topic.id}`}
-      className="group text-left rounded-md p-4 cursor-pointer transition-all border hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2"
-      style={{
-        background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.85)",
-        borderColor: "rgba(var(--pp-cyan-rgb), 0.22)",
-        boxShadow:
-          "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12), 0 24px 60px -42px rgba(var(--pp-black-rgb), 0.72)",
-        // Use CSS custom-property so :hover can shift box-shadow cheaply.
-        ["--card-glow" as never]: "rgba(var(--pp-cyan-rgb), 0.55)",
-      }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLButtonElement).style.borderColor =
-          "rgba(var(--pp-cyan-rgb), 0.55)";
-        (e.currentTarget as HTMLButtonElement).style.boxShadow =
-          "0 14px 36px -14px rgba(var(--pp-black-rgb), 0.55), inset 0 1px 0 0 rgba(var(--pp-white-rgb), 0.10)";
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLButtonElement).style.borderColor =
-          "rgba(var(--pp-cyan-rgb), 0.22)";
-        (e.currentTarget as HTMLButtonElement).style.boxShadow =
-          "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12), 0 24px 60px -42px rgba(var(--pp-black-rgb), 0.72)";
-      }}
+      className="group text-left p-4 cursor-pointer focus:outline-none focus-visible:ring-2 mat-glass mat-glass-interactive"
     >
       <div className="flex items-start gap-3">
         <TopicThumbnail topic={topic} />
@@ -1088,13 +1001,10 @@ function TopicThumbnail({ topic }: { topic: Topic }) {
   return (
     <div
       aria-hidden
-      className="shrink-0 w-14 h-14 rounded-lg flex items-center justify-center border"
+      className="mat-icon-well shrink-0 w-14 h-14 flex items-center justify-center"
       style={{
-        // Slightly stronger gradient base + outer cerulean halo so the
-        // glowing symbol inside reads as luminous on top of the dark
-        // teal card surface.
-        background: "hsl(var(--surf-hue) var(--surf-sat) 18% / 0.65)",
-        borderColor: "rgba(var(--pp-cyan-rgb), 0.32)",
+        // Icon-accent halo (allowed): a small cerulean aura so the glowing
+        // symbol reads as luminous. Surface itself is the shared icon well.
         boxShadow:
           "inset 0 0 14px rgba(var(--pp-cyan-rgb), 0.10), 0 0 18px -6px rgba(var(--pp-cyan-rgb), 0.35)",
       }}

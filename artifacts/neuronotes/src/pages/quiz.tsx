@@ -193,13 +193,10 @@ export default function QuizPage({ params }: Props) {
         </p>
       ) : null}
 
-      <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "hsl(var(--surf-hue) var(--surf-sat) 48% / 0.12)" }}>
+      <div className="pp-progress-track w-full h-1.5 mb-6">
         <div
-          className="h-1.5 rounded-full transition-all"
-          style={{
-            width: `${((index + 1) / total) * 100}%`,
-            background: `${P.surf}`,
-          }}
+          className="pp-progress-fill"
+          style={{ width: `${((index + 1) / total) * 100}%` }}
         />
       </div>
 
@@ -237,19 +234,10 @@ export default function QuizPage({ params }: Props) {
               let cls = baseClass;
 
               if (!selected) {
-                // Cerulean glow on hover — `quiz-option-hover` class is
-                // defined in index.css and ramps up the box-shadow + adds
-                // a subtle border-color shift on :hover.
-                // Lightened deep-cerulean glass so the option pills match the
-                // Study Mode tiles and rail buttons elsewhere in the app
-                // (instead of the previous near-white card).
-                cls += " hover:-translate-y-0.5 quiz-option-hover";
-                style = {
-                  background: "hsl(var(--surf-hue) var(--surf-sat) 13% / 0.86)",
-                  borderColor: `${P.surf}55`,
-                  color: P.cloud,
-                  boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(var(--pp-white-rgb), 0.06)`,
-                };
+                // Shared GLASS material; `quiz-option-hover` (index.css)
+                // ramps the border + glow on :hover only.
+                cls += " hover:-translate-y-0.5 quiz-option-hover mat-glass";
+                style = { color: P.cloud };
               } else if (isCorrect) {
                 // Correct answer turns emerald green, mirroring the red
                 // we use for an incorrect selection.
@@ -267,12 +255,8 @@ export default function QuizPage({ params }: Props) {
                   boxShadow: `0 14px 32px -16px ${alpha(PP.brickDeep, 0.65)}`,
                 };
               } else {
-                cls += " opacity-55";
-                style = {
-                  background: "hsl(var(--surf-hue) var(--surf-sat) 13% / 0.86)",
-                  borderColor: `${P.surf}25`,
-                  color: `${P.cloud}aa`,
-                };
+                cls += " opacity-55 mat-glass";
+                style = { color: `${P.cloud}aa` };
               }
 
               return (
@@ -320,13 +304,7 @@ export default function QuizPage({ params }: Props) {
 
           {showExplanation && selected && selected !== current.correctAnswer && (
             <div
-              className="rounded-xl p-4 mb-6 border"
-              style={{
-                background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90)",
-                borderColor: "rgba(var(--pp-cyan-rgb), 0.24)",
-                boxShadow:
-                  "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12), 0 20px 46px -26px rgba(var(--pp-black-rgb), 0.66)",
-              }}
+              className="mat-opaque p-4 mb-6"
               data-testid="reflect-prompt"
             >
               <div className="flex items-center gap-2 mb-2">

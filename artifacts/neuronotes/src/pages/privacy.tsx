@@ -103,8 +103,9 @@ export default function PrivacyPage() {
         <nav
           className="mt-10 mb-12 rounded-lg p-5"
           style={{
-            border: "1px solid rgba(var(--pp-cyan-rgb), 0.18)",
-            background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.83)",
+            border: "1px solid var(--pp-line)",
+            background: "linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%)",
+            boxShadow: "inset 0 1px 0 var(--pp-bevel), 0 22px 48px -32px var(--pp-shadow)",
           }}
           aria-label="On this page"
         >
@@ -426,8 +427,9 @@ export default function PrivacyPage() {
             <div
               className="rounded-lg p-4 text-sm"
               style={{
-                border: "1px solid rgba(var(--pp-cyan-rgb), 0.18)",
-                background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.83)",
+                border: "1px solid var(--pp-line)",
+                background: "linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%)",
+                boxShadow: "inset 0 1px 0 var(--pp-bevel), 0 22px 48px -32px var(--pp-shadow)",
               }}
             >
               <p style={{ ...TRACK_NAV, fontSize: 11, color: P.cloud }}>

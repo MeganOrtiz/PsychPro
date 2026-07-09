@@ -112,9 +112,10 @@ export default function TodayReviews({ topics }: TodayReviewsProps) {
           <span
             className="ml-auto text-[11px] font-semibold px-2 py-0.5 rounded-full border"
             style={{
-              background: "hsl(var(--surf-hue) var(--surf-sat) 58% / 0.16)",
+              background: "rgba(var(--pp-ocean-deep-rgb), 0.22)",
               color: P.surf,
-              borderColor: "rgba(var(--pp-cyan-rgb), 0.30)",
+              borderColor: "rgba(var(--pp-cyan-rgb), 0.35)",
+              boxShadow: "inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16)",
             }}
           >
             {items.length}
@@ -147,9 +148,10 @@ export default function TodayReviews({ topics }: TodayReviewsProps) {
                           borderColor: P.tealDeep,
                         }
                       : {
-                          background: "hsl(var(--surf-hue) var(--surf-sat) 58% / 0.14)",
+                          background: "rgba(var(--pp-ocean-deep-rgb), 0.22)",
                           color: P.surf,
-                          borderColor: "rgba(var(--pp-cyan-rgb), 0.30)",
+                          borderColor: "rgba(var(--pp-cyan-rgb), 0.35)",
+                          boxShadow: "inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16)",
                         }
                   }
                 >

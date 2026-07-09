@@ -228,13 +228,7 @@ export default function PracticeExamPage({ params }: Props) {
             return (
               <div
                 key={q.id}
-                className="rounded-xl border p-4 bg-card"
-                style={{
-                  borderColor: isCorrect ? `${P.surf}66` : alpha(PP.coral, 0.45),
-                  boxShadow: isCorrect
-                    ? `0 6px 16px -10px ${P.teal}55`
-                    : `0 6px 16px -10px ${alpha(PP.coral, 0.55)}`,
-                }}
+                className={`p-4 ${isCorrect ? "mat-glass-success" : "mat-glass-error"}`}
               >
                 <div className="flex items-start gap-3">
                   <span
@@ -470,20 +464,9 @@ export default function PracticeExamPage({ params }: Props) {
               cerulean / teal palette so it sits in the same visual family as
               the rest of the study UI. Subtitle uses a high-contrast color
               token instead of muted-on-cream, which was unreadable. */}
-          <section
-            className="rounded-2xl border p-6 shadow-sm"
-            style={{
-              borderColor: "rgba(var(--pp-cyan-rgb), 0.26)",
-              background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.94)",
-              boxShadow:
-                "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.13), 0 22px 50px -26px rgba(var(--pp-black-rgb), 0.7)",
-            }}
-          >
+          <section className="mat-opaque p-6">
             <header className="flex items-start gap-3 mb-3">
-              <div
-                className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
-                style={{ background: `hsl(var(--surf-hue) var(--surf-sat) 58% / 0.18)`, border: `1px solid ${P.surf}55` }}
-              >
+              <div className="mat-icon-well w-10 h-10 flex items-center justify-center shrink-0">
                 <Brain className="w-5 h-5" style={{ color: P.surf }} />
               </div>
               <div className="flex-1 min-w-0">
@@ -618,13 +601,10 @@ export default function PracticeExamPage({ params }: Props) {
         </div>
       </div>
 
-      <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "hsl(var(--surf-hue) var(--surf-sat) 48% / 0.12)" }}>
+      <div className="pp-progress-track w-full h-1.5 mb-6">
         <div
-          className="h-1.5 rounded-full transition-all"
-          style={{
-            width: `${((index + 1) / total) * 100}%`,
-            background: `${P.surf}`,
-          }}
+          className="pp-progress-fill"
+          style={{ width: `${((index + 1) / total) * 100}%` }}
         />
       </div>
 
@@ -644,15 +624,9 @@ export default function PracticeExamPage({ params }: Props) {
           let style: React.CSSProperties = {};
           let cls = "w-full text-left px-4 py-3.5 rounded-md border text-sm transition-all flex items-center gap-3";
           if (!isAnswered) {
-            // Match the quiz's cerulean glass option (index.css quiz-option-hover
-            // ramps the glow + border on :hover).
-            cls += " hover:-translate-y-0.5 quiz-option-hover";
-            style = {
-              background: "hsl(var(--surf-hue) var(--surf-sat) 10% / 0.86)",
-              borderColor: `${P.surf}55`,
-              color: P.cloud,
-              boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(var(--pp-white-rgb), 0.06)`,
-            };
+            // Shared GLASS material; quiz-option-hover ramps glow on :hover.
+            cls += " hover:-translate-y-0.5 quiz-option-hover mat-glass";
+            style = { color: P.cloud };
           } else if (isSelected) {
             cls += " text-white font-medium";
             style = {
@@ -661,12 +635,8 @@ export default function PracticeExamPage({ params }: Props) {
               boxShadow: `0 14px 32px -16px ${P.tealDeep}cc`,
             };
           } else {
-            cls += " opacity-55";
-            style = {
-              background: "hsl(var(--surf-hue) var(--surf-sat) 10% / 0.86)",
-              borderColor: `${P.surf}25`,
-              color: `${P.cloud}aa`,
-            };
+            cls += " opacity-55 mat-glass";
+            style = { color: `${P.cloud}aa` };
           }
           return (
             <button

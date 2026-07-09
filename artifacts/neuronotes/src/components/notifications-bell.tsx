@@ -98,8 +98,9 @@ export function NotificationsBell() {
       <button
         className="relative w-10 h-10 rounded-md flex items-center justify-center transition-all hover:scale-105"
         style={{
-          background: "hsl(var(--surf-hue) var(--surf-sat) 10% / 0.55)",
-          border: "1px solid rgba(var(--pp-cyan-rgb), 0.28)",
+          background: "rgba(var(--pp-ocean-deep-rgb), 0.16)",
+          border: "1px solid var(--pp-line-bright)",
+          boxShadow: "inset 0 1px 0 var(--pp-bevel-bright)",
           color: PALETTE.mist,
         }}
         onClick={() => setOpen((o) => !o)}
@@ -122,8 +123,10 @@ export function NotificationsBell() {
         <div
           className="absolute right-0 top-12 w-80 max-h-[70vh] overflow-y-auto rounded-2xl z-[60] shadow-2xl"
           style={{
-            background: "hsl(var(--surf-hue) var(--surf-sat) 10% / 0.95)",
-            border: "1px solid rgba(var(--pp-cyan-rgb), 0.28)",
+            background: "linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%)",
+            border: "1px solid var(--pp-line)",
+            boxShadow:
+              "inset 0 1px 0 var(--pp-bevel), 0 22px 48px -32px var(--pp-shadow)",
           }}
           data-testid="notifications-dropdown"
         >

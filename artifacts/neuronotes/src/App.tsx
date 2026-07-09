@@ -12,6 +12,8 @@ import { PostAuthRedirect } from "@/components/auth/post-auth-redirect";
 import AppLayout from "@/components/layout/app-layout";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { FullScreenLoader } from "@/components/full-screen-loader";
+import { STUDY_PALETTE as P } from "@/lib/study-theme";
+import { PP } from "@/lib/palette";
 
 // Route-level splitting keeps the public landing and onboarding entry paths
 // from downloading the entire signed-in application (including Brain Lab's 3D
@@ -263,6 +265,25 @@ function App() {
         signUpUrl={`${basePath}/sign-up`}
         signInFallbackRedirectUrl={`${basePath}/dashboard`}
         signUpFallbackRedirectUrl={`${basePath}/dashboard`}
+        appearance={{
+          // Global dark theming so Clerk popovers rendered outside the
+          // sign-in/sign-up pages (UserButton menu, account modals) match
+          // the PsychPro blue material system instead of Clerk's light
+          // defaults. The sign-in/sign-up pages layer their own element
+          // overrides on top of these variables.
+          variables: {
+            colorPrimary: P.surf,
+            colorBackground: P.surface,
+            colorText: P.cloud,
+            colorTextSecondary: P.mistSoft,
+            colorInputBackground: P.ink,
+            colorInputText: P.cloud,
+            colorDanger: PP.red,
+            colorWarning: P.surf,
+            borderRadius: "0.75rem",
+            fontFamily: "inherit",
+          },
+        }}
       >
         <ClerkTokenBridge />
         <QueryClientProvider client={queryClient}>

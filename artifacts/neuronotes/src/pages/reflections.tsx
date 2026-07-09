@@ -88,10 +88,10 @@ export default function ReflectionsPage() {
           <div
             className="rounded-xl border p-8"
             style={{
-              background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90)",
-              borderColor: "rgba(var(--pp-cyan-rgb), 0.24)",
+              background: "linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%)",
+              borderColor: "var(--pp-line)",
               boxShadow:
-                "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12), 0 20px 46px -26px rgba(var(--pp-black-rgb), 0.66)",
+                "inset 0 1px 0 var(--pp-bevel), 0 22px 48px -32px var(--pp-shadow)",
             }}
             data-testid="reflections-loading"
           >
@@ -143,10 +143,10 @@ export default function ReflectionsPage() {
                       key={`${r.topicId}-${r.questionId}`}
                       className="rounded-xl border p-4"
                       style={{
-                        background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90)",
-                        borderColor: "rgba(var(--pp-cyan-rgb), 0.24)",
+                        background: "linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%)",
+                        borderColor: "var(--pp-line)",
                         boxShadow:
-                          "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12), 0 20px 46px -26px rgba(var(--pp-black-rgb), 0.66)",
+                          "inset 0 1px 0 var(--pp-bevel), 0 22px 48px -32px var(--pp-shadow)",
                       }}
                       data-testid={`reflection-${r.questionId}`}
                     >

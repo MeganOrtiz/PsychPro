@@ -188,10 +188,10 @@ function StructureSearch({
       <div
         className="w-full max-w-xl rounded-2xl border overflow-hidden"
         style={{
-          background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.85)",
-          borderColor: "rgba(var(--pp-cyan-rgb), 0.22)",
+          background: "linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%)",
+          borderColor: "var(--pp-line)",
           boxShadow:
-            "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12), 0 24px 60px -42px rgba(var(--pp-black-rgb), 0.72)",
+            "inset 0 1px 0 var(--pp-bevel), 0 22px 48px -32px var(--pp-shadow)",
         }}
         onClick={(e) => e.stopPropagation()}
         role="dialog"
@@ -469,10 +469,10 @@ function StructureDetail({
     <div
       className="rounded-2xl border overflow-hidden flex flex-col h-full min-h-0 max-h-full"
       style={{
-        background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.85)",
-        borderColor: "rgba(var(--pp-cyan-rgb), 0.22)",
+        background: "linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%)",
+        borderColor: "var(--pp-line)",
         boxShadow:
-          "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12), 0 24px 60px -42px rgba(var(--pp-black-rgb), 0.72)",
+          "inset 0 1px 0 var(--pp-bevel), 0 22px 48px -32px var(--pp-shadow)",
       }}
       data-testid="structure-detail"
     >
@@ -876,18 +876,19 @@ function EmptyDetail() {
     <div
       className="rounded-2xl border p-6 h-full flex flex-col items-center justify-center text-center"
       style={{
-        background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.85)",
-        borderColor: "rgba(var(--pp-cyan-rgb), 0.22)",
+        background: "linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%)",
+        borderColor: "var(--pp-line)",
         boxShadow:
-          "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12), 0 24px 60px -42px rgba(var(--pp-black-rgb), 0.72)",
+          "inset 0 1px 0 var(--pp-bevel), 0 22px 48px -32px var(--pp-shadow)",
       }}
       data-testid="empty-detail"
     >
       <div
         className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
         style={{
-          background: `${PALETTE.surf}22`,
-          border: `1px solid ${PALETTE.surf}44`,
+          background: "rgba(var(--pp-ocean-deep-rgb), 0.22)",
+          border: "1px solid rgba(var(--pp-cyan-rgb), 0.35)",
+          boxShadow: "inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16)",
         }}
       >
         <Target className="w-7 h-7" style={{ color: PALETTE.surf }} />
@@ -937,8 +938,10 @@ function NumberedKey({
     <div
       className="rounded-2xl border h-full flex flex-col overflow-hidden"
       style={{
-        background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.85)",
-        borderColor: "rgba(var(--pp-cyan-rgb), 0.22)",
+        background: "linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%)",
+        borderColor: "var(--pp-line)",
+        boxShadow:
+          "inset 0 1px 0 var(--pp-bevel), 0 22px 48px -32px var(--pp-shadow)",
       }}
       data-testid="brain-key"
     >
@@ -1870,10 +1873,10 @@ export default function BrainLabPage() {
           <div
             className="relative rounded-2xl border overflow-hidden flex-1 min-h-0 h-full"
             style={{
-              background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.85)",
-              borderColor: "rgba(var(--pp-cyan-rgb), 0.22)",
+              background: "linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%)",
+              borderColor: "var(--pp-line)",
               boxShadow:
-                "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12), 0 24px 60px -42px rgba(var(--pp-black-rgb), 0.72)",
+                "inset 0 1px 0 var(--pp-bevel), 0 22px 48px -32px var(--pp-shadow)",
             }}
             data-testid="brain-diagram-wrap"
           >

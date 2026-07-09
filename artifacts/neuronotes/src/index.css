@@ -401,6 +401,67 @@
   color: var(--pp-icy);
 }
 
+/* Icon well — the small square/round icon plate that repeats on rail rows,
+   recommended tiles, upgrade banners. GLASS family, tighter geometry. */
+.mat-icon-well {
+  background: rgba(var(--pp-ocean-deep-rgb), 0.22);
+  border: 1px solid rgba(var(--pp-cyan-rgb), 0.35);
+  border-radius: 12px;
+  box-shadow: inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16);
+}
+.mat-icon-well--round {
+  border-radius: 999px;
+}
+
+/* ============================================================
+   SEMANTIC MATERIALS — success / error / warning.
+   GLASS tiles + chips in the sanctioned status hues (green /
+   red / amber). Used for exam answer feedback, score badges,
+   and status banners. Glow stays hover-only app-wide; these are
+   static surfaces (pigment + bevel, neutral shadow).
+   ============================================================ */
+.mat-glass-success {
+  background: rgba(34, 197, 94, 0.14);
+  border: 1px solid rgba(74, 222, 128, 0.45);
+  border-radius: 16px;
+  box-shadow:
+    inset 0 1px 0 rgba(187, 247, 208, 0.18),
+    0 12px 28px -22px var(--pp-shadow);
+}
+.mat-glass-error {
+  background: rgba(239, 68, 68, 0.14);
+  border: 1px solid rgba(248, 113, 113, 0.45);
+  border-radius: 16px;
+  box-shadow:
+    inset 0 1px 0 rgba(254, 202, 202, 0.18),
+    0 12px 28px -22px var(--pp-shadow);
+}
+.mat-glass-warning {
+  background: rgba(245, 158, 11, 0.14);
+  border: 1px solid rgba(251, 191, 36, 0.45);
+  border-radius: 16px;
+  box-shadow:
+    inset 0 1px 0 rgba(253, 230, 138, 0.18),
+    0 12px 28px -22px var(--pp-shadow);
+}
+/* ============================================================
+   PROGRESS BARS — shared track + fill. Track is GLASS (recessed
+   tint), fill is the GLOSS cyan gradient. Consumers set height /
+   width via utilities; radius and color come from here.
+   ============================================================ */
+.pp-progress-track {
+  background: rgba(var(--pp-ocean-deep-rgb), 0.18);
+  border: 1px solid rgba(var(--pp-ocean-rgb), 0.30);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.pp-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--pp-cyan) 0%, var(--pp-bright) 100%);
+  transition: width 500ms ease;
+}
+
 /* ============================================================
    BUTTON MATERIALS (GLOSS + GLASS)
    ============================================================

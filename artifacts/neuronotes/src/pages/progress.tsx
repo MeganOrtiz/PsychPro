@@ -175,7 +175,7 @@ export default function ProgressPage() {
 
       {/* Empty state (X-4) */}
       {isEmpty && (
-        <div className="bg-card border border-border rounded-xl p-8 text-center mb-6" data-testid="empty-state-progress">
+        <div className="mat-opaque p-8 text-center mb-6" data-testid="empty-state-progress">
           <BarChart3
             className="w-10 h-10 mx-auto mb-3"
             style={{ color: STUDY_PALETTE.inkSoft }}
@@ -196,11 +196,11 @@ export default function ProgressPage() {
       {/* Summary Stats (hidden when empty) */}
       {!isEmpty && (
         <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="bg-card border border-border rounded-xl p-4 text-center">
+          <div className="mat-opaque p-4 text-center">
             <div className="text-2xl font-bold text-foreground">{studied.length}</div>
             <div className="text-xs text-white/70 mt-0.5">Topics Studied</div>
           </div>
-          <div className="bg-card border border-border rounded-xl p-4 text-center">
+          <div className="mat-opaque p-4 text-center">
             <div
               className="text-2xl font-bold"
               style={{
@@ -215,7 +215,7 @@ export default function ProgressPage() {
             </div>
             <div className="text-xs text-white/70 mt-0.5">Average Score</div>
           </div>
-          <div className="bg-card border border-border rounded-xl p-4 text-center">
+          <div className="mat-opaque p-4 text-center">
             <div className="text-2xl font-bold text-white/70">{notStarted.length}</div>
             <div className="text-xs text-white/70 mt-0.5">Not Started</div>
           </div>
@@ -224,7 +224,7 @@ export default function ProgressPage() {
 
       {/* P-2: Recent activity trend */}
       {!isEmpty && (
-        <div className="bg-card border border-border rounded-xl p-4 mb-6" data-testid="activity-trend-card">
+        <div className="mat-opaque p-4 mb-6" data-testid="activity-trend-card">
           <h2 className="text-sm font-semibold text-foreground mb-2">
             Recent activity trend
           </h2>
@@ -253,15 +253,7 @@ export default function ProgressPage() {
       {!isEmpty && (weak.length > 0 || strong.length > 0) && (
         <div className="grid md:grid-cols-2 gap-4 mb-6">
           {weak.length > 0 && (
-            <div
-              className="rounded-xl p-4 border"
-              style={{
-                background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90)",
-                borderColor: "rgba(var(--pp-cyan-rgb), 0.26)",
-                boxShadow:
-                  "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.13), 0 20px 46px -26px rgba(var(--pp-black-rgb), 0.66)",
-              }}
-            >
+            <div className="mat-opaque p-4">
               <div className="flex items-center gap-2 mb-3">
                 <AlertCircle className="w-4 h-4" style={{ color: P.surf }} />
                 <h2 className="font-semibold text-sm text-white">Needs Work</h2>
@@ -281,15 +273,7 @@ export default function ProgressPage() {
             </div>
           )}
           {strong.length > 0 && (
-            <div
-              className="rounded-xl p-4 border"
-              style={{
-                background: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90)",
-                borderColor: "rgba(var(--pp-cyan-rgb), 0.26)",
-                boxShadow:
-                  "inset 0 1px 0 rgba(var(--pp-white-rgb), 0.13), 0 20px 46px -26px rgba(var(--pp-black-rgb), 0.66)",
-              }}
-            >
+            <div className="mat-opaque p-4">
               <div className="flex items-center gap-2 mb-3">
                 <CheckCircle2 className="w-4 h-4" style={{ color: P.surf }} />
                 <h2 className="font-semibold text-sm text-white">Strong Areas</h2>
@@ -341,7 +325,7 @@ export default function ProgressPage() {
           if (catTopics.length === 0) return null;
           const catStudied = catTopics.filter(t => t.progress).length;
           return (
-            <div key={category} className="bg-card border border-border rounded-xl overflow-hidden">
+            <div key={category} className="mat-opaque overflow-hidden">
               <div className="px-4 py-3 border-b border-border bg-muted/30 flex items-center justify-between">
                 <h2 className="font-semibold text-sm text-foreground">{category}</h2>
                 <span className="text-xs text-white/70">{catStudied}/{catTopics.length} studied</span>
@@ -398,15 +382,12 @@ export default function ProgressPage() {
 }
 
 function ScoreBadge({ score }: { score: number }) {
-  // Tiers match the icons / strong-vs-weak split on the rest of the page.
-  const style: { background: string; color: string } =
-    score >= STRONG_SCORE
-      ? { background: "hsl(var(--surf-hue) var(--surf-sat) 34% / 0.15)", color: P.tealDeep }
-      : score >= WEAK_SCORE
-      ? { background: "hsl(var(--surf-hue) var(--surf-sat) 48% / 0.15)", color: P.teal }
-      : { background: "hsl(var(--surf-hue) var(--surf-sat) 58% / 0.18)", color: P.tealDeep };
+  // Shared chip material; tier is voiced through text color only (the owner
+  // recolored these AWAY from green/amber to the study palette — keep blue).
+  const color =
+    score >= STRONG_SCORE ? P.tealDeep : score >= WEAK_SCORE ? P.teal : P.surf;
   return (
-    <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={style}>
+    <span className="mat-chip text-xs font-semibold px-2 py-0.5" style={{ color }}>
       {score}%
     </span>
   );

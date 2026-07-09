@@ -125,13 +125,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
     return (
       <div className="min-h-full study-page-bg" data-testid="mastery-locked">
         <div className="max-w-lg mx-auto p-4 md:p-6 lg:p-8 text-center">
-          <div
-            className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 border"
-            style={{
-              background: "hsl(var(--surf-hue) var(--surf-sat) 10% / 0.95)",
-              borderColor: `${P.surf}55`,
-            }}
-          >
+          <div className="mat-icon-well mat-icon-well--round w-14 h-14 flex items-center justify-center mx-auto mb-4">
             <Lock className="w-6 h-6" style={{ color: P.surf }} />
           </div>
           <h2 className="text-xl font-semibold text-foreground mb-2">Mastery exam locked</h2>
@@ -216,13 +210,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
               return (
                 <div
                   key={q.id}
-                  className="rounded-xl border p-4 bg-white"
-                  style={{
-                    borderColor: isCorrect ? `${P.surf}66` : alpha(PP.coral, 0.45),
-                    boxShadow: isCorrect
-                      ? `0 6px 16px -10px ${P.teal}55`
-                      : `0 6px 16px -10px ${alpha(PP.coral, 0.55)}`,
-                  }}
+                  className={`p-4 ${isCorrect ? "mat-glass-success" : "mat-glass-error"}`}
                 >
                   <div className="flex items-start gap-3">
                     <span
@@ -370,13 +358,10 @@ export default function CourseMasteryExamPage({ params }: Props) {
           )}
         </div>
 
-        <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden" style={{ background: "hsl(var(--surf-hue) var(--surf-sat) 48% / 0.12)" }}>
+        <div className="pp-progress-track w-full h-1.5 mb-6">
           <div
-            className="h-1.5 rounded-full transition-all"
-            style={{
-              width: `${((index + 1) / total) * 100}%`,
-              background: `${P.surf}`,
-            }}
+            className="pp-progress-fill"
+            style={{ width: `${((index + 1) / total) * 100}%` }}
           />
         </div>
 
@@ -396,13 +381,9 @@ export default function CourseMasteryExamPage({ params }: Props) {
             let style: React.CSSProperties = {};
             let cls = "w-full text-left px-4 py-3.5 rounded-md border text-sm transition-all flex items-center gap-3";
             if (!isAnswered) {
-              cls += " hover:-translate-y-0.5 quiz-option-hover";
-              style = {
-                background: "hsl(var(--surf-hue) var(--surf-sat) 10% / 0.86)",
-                borderColor: `${P.surf}55`,
-                color: P.cloud,
-                boxShadow: `0 8px 22px -12px ${P.teal}66, inset 0 1px 0 0 rgba(var(--pp-white-rgb), 0.06)`,
-              };
+              // Shared GLASS material; quiz-option-hover ramps glow on :hover.
+              cls += " hover:-translate-y-0.5 quiz-option-hover mat-glass";
+              style = { color: P.cloud };
             } else if (isSelected) {
               cls += " text-white font-medium";
               style = {
@@ -411,12 +392,8 @@ export default function CourseMasteryExamPage({ params }: Props) {
                 boxShadow: `0 14px 32px -16px ${P.tealDeep}cc`,
               };
             } else {
-              cls += " opacity-55";
-              style = {
-                background: "hsl(var(--surf-hue) var(--surf-sat) 10% / 0.86)",
-                borderColor: `${P.surf}25`,
-                color: `${P.cloud}aa`,
-              };
+              cls += " opacity-55 mat-glass";
+              style = { color: `${P.cloud}aa` };
             }
             return (
               <button

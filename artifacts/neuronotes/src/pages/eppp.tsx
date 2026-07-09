@@ -187,14 +187,13 @@ const styles = `
   position: relative;
   overflow: hidden;
   text-align: center;
-  border-radius: 26px;
+  border-radius: 20px;
   padding: clamp(32px, 5vw, 64px) clamp(22px, 4vw, 56px);
-  background: hsl(var(--surf-hue) var(--surf-sat) 16% / 0.88);
-  border: 1px solid rgba(var(--pp-cyan-rgb), 0.22);
+  background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);
+  border: 1px solid var(--pp-line);
   box-shadow:
-    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12),
-    0 0 48px ${C.cyan}1c,
-    0 40px 100px -44px rgba(var(--pp-black-rgb), 0.76);
+    inset 0 1px 0 var(--pp-bevel),
+    0 22px 48px -32px var(--pp-shadow);
 }
 .eppp-hero-glow {
   position: absolute;
@@ -215,8 +214,9 @@ const styles = `
   height: 60px;
   margin-bottom: 18px;
   border-radius: 16px;
-  background: ${C.cyan}1a;
-  border: 1px solid ${C.cyan}59;
+  background: rgba(var(--pp-ocean-deep-rgb), 0.22);
+  border: 1px solid rgba(var(--pp-cyan-rgb), 0.35);
+  box-shadow: inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16);
   color: ${C.cyan};
 }
 .eppp-hero-icon svg { width: 28px; height: 28px; }
@@ -316,13 +316,13 @@ const styles = `
   display: flex;
   flex-direction: column;
   gap: 10px;
-  border-radius: 18px;
+  border-radius: 20px;
   padding: clamp(20px, 2.4vw, 26px);
-  background: hsl(var(--surf-hue) var(--surf-sat) 6% / 0.85);
-  border: 1px solid rgba(var(--pp-cyan-rgb), 0.22);
+  background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);
+  border: 1px solid var(--pp-line);
   box-shadow:
-    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12),
-    0 24px 60px -40px rgba(var(--pp-black-rgb), 0.7);
+    inset 0 1px 0 var(--pp-bevel),
+    0 22px 48px -32px var(--pp-shadow);
 }
 .eppp-link-card {
   text-decoration: none;
@@ -331,8 +331,11 @@ const styles = `
 }
 .eppp-link-card:hover {
   transform: translateY(-3px);
-  border-color: ${C.cyan}66;
-  box-shadow: 0 28px 70px -38px rgba(var(--pp-black-rgb), 0.75), 0 0 30px -8px ${C.cyan}59;
+  border-color: rgba(var(--pp-bright-rgb), 0.60);
+  box-shadow:
+    inset 0 1px 0 var(--pp-bevel),
+    0 0 22px -4px var(--pp-glow),
+    0 22px 48px -32px var(--pp-shadow);
 }
 .eppp-card-icon {
   display: inline-flex;
@@ -341,8 +344,9 @@ const styles = `
   width: 44px;
   height: 44px;
   border-radius: 12px;
-  background: ${C.cyan}16;
-  border: 1px solid ${C.cyan}40;
+  background: rgba(var(--pp-ocean-deep-rgb), 0.22);
+  border: 1px solid rgba(var(--pp-cyan-rgb), 0.35);
+  box-shadow: inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16);
   color: ${C.cyan};
 }
 .eppp-card-icon svg { width: 22px; height: 22px; }
