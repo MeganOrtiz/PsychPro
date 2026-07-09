@@ -1,5 +1,31 @@
 # Workspace
 
+## PsychPro visual-system freeze
+
+The app's colors, palette, background treatment, glass recipe, radius,
+typography, and visual assets are locked. Replit Agent must not "improve",
+"adjust", "darken", "brighten", "make consistent", "polish", or otherwise
+change the visual system unless Megan explicitly asks for an intentional
+visual-system change in the current task.
+
+For routine coding, auth, data, content, billing, API, bugfix, deployment, or
+copy tasks, do not edit visual files:
+
+- `artifacts/neuronotes/src/index.css`
+- `artifacts/neuronotes/src/lib/study-theme.ts`
+- `artifacts/neuronotes/src/components/ui/*`
+- `artifacts/neuronotes/src/components/study/*`
+- Tailwind classes or style blocks in `artifacts/neuronotes/src/pages/*`
+- `artifacts/neuronotes/src/assets/bg/*`
+- `artifacts/neuronotes/scripts/check-design-drift.mjs`
+- `artifacts/neuronotes/scripts/check-surface-hue.mjs`
+- `docs/design-system-lock.md`
+
+If an intentional visual-system change is requested, read
+`docs/design-system-lock.md` first, update implementation + guardrail + docs in
+one isolated commit, run `pnpm run design:check`, and list every visual file
+changed. Never weaken or rewrite a guardrail only to make a change pass.
+
 ## Overview
 
 pnpm workspace monorepo using TypeScript. Each package manages its own dependencies.

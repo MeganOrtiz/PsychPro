@@ -16,9 +16,11 @@
 //   3. A ban on mint / teal-green accents — cerulean #76E4F7 is the only accent;
 //      mint was retracted app-wide and keeps trying to creep back.
 //
-// Every locked value lives in a table below. When you INTENTIONALLY change the
-// design system, update the matching entry here in the SAME commit — that is the
-// deliberate "unlock". An accidental drift fails this check loudly.
+// Every locked value lives in a table below. Do not edit this script to bless a
+// visual change unless the owner explicitly requested an intentional visual-
+// system change in the current task. When that happens, update implementation,
+// this guardrail, and docs/design-system-lock.md in the SAME isolated commit.
+// An accidental drift fails this check loudly.
 //
 // Run: node scripts/check-design-drift.mjs   (exit 1 on any violation)
 // =============================================================================
@@ -278,7 +280,8 @@ if (violations.length) {
   console.error(`\n✗ Design system lock FAILED — ${violations.length} drift(s) from the locked visual system:\n`);
   for (const v of violations) console.error(`  • ${v.what}\n      → ${v.fix}`);
   console.error(`\nThese values are pinned in scripts/check-design-drift.mjs (see docs/design-system-lock.md).`);
-  console.error(`If the change is intentional, update the matching lock entry in the same commit.\n`);
+  console.error(`Do not rewrite the guardrail to pass unless the owner explicitly requested an intentional visual-system change.`);
+  console.error(`If intentional, update implementation, guardrail, and docs in one isolated commit, then report every visual file changed.\n`);
   process.exit(1);
 }
 console.log("✓ Design system lock passed — color, glass, typography, and shared component contracts are intact.");

@@ -15,6 +15,8 @@
 // the .dark and .study-page-bg blocks of index.css. Accents (light, hue ~189),
 // charts, reds, greens and neutrals are ignored.
 //
+// Do not widen this window, skip files, or bless a new hue unless the owner
+// explicitly requested an intentional visual-system change in the current task.
 // Run: node scripts/check-surface-hue.mjs   (exit 1 on any violation)
 // =============================================================================
 import fs from "fs";
@@ -225,7 +227,8 @@ for (const file of walk(SRC, [])) {
 if (violations.length) {
   console.error(`\n✗ Surface hue guardrail FAILED — ${violations.length} color(s) drifted out of the cerulean window:\n`);
   for (const v of violations) console.error("  " + v);
-  console.error("\nFix: pull the hue back to 192, or express it as hsl(var(--surf-hue) S% L% / A).\n");
+  console.error("\nFix: pull the hue back to 192, or express it as hsl(var(--surf-hue) S% L% / A).");
+  console.error("Do not widen this guardrail unless the owner explicitly requested an intentional visual-system change.\n");
   process.exit(1);
 }
 console.log("✓ Surface hue guardrail passed — all literal surfaces are within the cerulean window (188-193).");

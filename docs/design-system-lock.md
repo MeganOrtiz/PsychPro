@@ -69,6 +69,18 @@ rejected in `index.css`. The only accent is locked cerulean `#76E4F7` /
 ## Changing the design system on purpose
 
 The lock is not "never change the design" — it is "never change it *by accident*."
-When you intentionally update a locked value, change it in `index.css` **and** update
-the matching entry in `scripts/check-design-drift.mjs` (and this doc) in the **same
-commit**. That makes every deliberate change to the system explicit and reviewable.
+Do not infer permission from broad requests like "clean up", "polish", "make it
+consistent", "fix spacing", "improve contrast", or "stage and commit". Those are
+not approval to alter the palette, background, glass recipe, radius, typography,
+or visual assets.
+
+When the owner explicitly asks for an intentional visual-system change, use one
+isolated commit and change all three together:
+
+- the implementation (`index.css`, visual components/pages/assets as needed)
+- the matching guardrail expectation in `scripts/check-design-drift.mjs` or
+  `scripts/check-surface-hue.mjs`
+- this document
+
+Then run `pnpm run design:check` from the repo root and report every visual file
+changed. Never weaken, bypass, or remove a guardrail only to make validation pass.
