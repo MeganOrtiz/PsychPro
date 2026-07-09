@@ -117,14 +117,7 @@ export default function SubscriptionPage() {
       <style>{`
         .sub-plan {
           position: relative;
-          border-radius: 20px;
           padding: 24px;
-          background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);
-          border: 1px solid var(--pp-line);
-          box-shadow:
-            inset 0 1px 0 var(--pp-bevel),
-            0 22px 48px -32px var(--pp-shadow);
-          transition: transform 240ms ease, box-shadow 240ms ease, border-color 240ms ease;
         }
         .sub-plan::before {
           content: "";
@@ -138,38 +131,13 @@ export default function SubscriptionPage() {
         .sub-plan--featured {
           border-color: rgba(var(--pp-bright-rgb), 0.60);
         }
-        .sub-plan:hover {
-          transform: translateY(-3px);
-          border-color: rgba(var(--pp-bright-rgb), 0.60);
-          box-shadow:
-            inset 0 1px 0 var(--pp-bevel),
-            0 0 22px -4px var(--pp-glow),
-            0 22px 48px -32px var(--pp-shadow);
-        }
         .sub-icon-chip {
           display: inline-flex; align-items: center; justify-content: center;
           width: 36px; height: 36px; border-radius: 11px; flex-shrink: 0;
-          background: rgba(var(--pp-ocean-deep-rgb), 0.22);
-          border: 1px solid rgba(var(--pp-cyan-rgb), 0.35);
-          box-shadow: inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16);
         }
         .sub-bill {
           position: relative;
-          border-radius: 16px;
           padding: 16px;
-          background: rgba(var(--pp-ocean-deep-rgb), 0.16);
-          border: 1px solid var(--pp-line-bright);
-          box-shadow: inset 0 1px 0 var(--pp-bevel-bright);
-          transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease, background 200ms ease;
-        }
-        .sub-bill:hover {
-          transform: translateY(-2px);
-          border-color: rgba(var(--pp-bright-rgb), 0.60);
-          background: rgba(var(--pp-ocean-deep-rgb), 0.26);
-          box-shadow:
-            inset 0 1px 0 var(--pp-bevel-bright),
-            0 0 22px -4px var(--pp-glow),
-            0 16px 34px -22px var(--pp-shadow);
         }
         .sub-price {
           background: ${P.surf};
@@ -188,14 +156,8 @@ export default function SubscriptionPage() {
 
       {(isPro || isScholar) && (
         <div
-          className="border rounded-xl p-4 mb-6 flex flex-col sm:flex-row sm:items-center gap-3"
-          style={{
-            background: "linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%)",
-            borderColor: "var(--pp-line)",
-            boxShadow:
-              "inset 0 1px 0 var(--pp-bevel), 0 22px 48px -32px var(--pp-shadow)",
-            color: PP.white,
-          }}
+          className="mat-opaque rounded-xl p-4 mb-6 flex flex-col sm:flex-row sm:items-center gap-3"
+          style={{ color: PP.white }}
           data-testid="active-subscription-banner"
         >
           <div className="flex items-center gap-3 flex-1">
@@ -234,9 +196,9 @@ export default function SubscriptionPage() {
       )}
 
       <div className="space-y-5">
-        <div className="sub-plan sub-plan--featured">
+        <div className="mat-opaque mat-opaque-interactive sub-plan sub-plan--featured">
           <div className="flex items-center gap-3 mb-5">
-            <span className="sub-icon-chip">
+            <span className="mat-icon-well sub-icon-chip">
               <Crown className="w-[18px] h-[18px]" style={{ color: P.surf }} />
             </span>
             <span className="font-semibold text-foreground text-lg">PsychPro {PRO_DISPLAY_NAME}</span>
@@ -262,7 +224,7 @@ export default function SubscriptionPage() {
           ) : proPlans.length > 0 ? (
             <div className="space-y-3">
               {proPlans.map((plan) => (
-                <div key={plan.priceId} className="sub-bill">
+                <div key={plan.priceId} className="mat-glass mat-glass-interactive sub-bill">
                   <div className="flex items-center justify-between mb-3">
                     <div>
                       <p className="font-semibold text-foreground capitalize">Billed {plan.interval}ly</p>
@@ -299,7 +261,7 @@ export default function SubscriptionPage() {
 
         {/* Scholar tier — recolored from purple to the cerulean/teal study
             palette so it sits in the same brand family as the rest of the app. */}
-        <div className="sub-plan relative">
+        <div className="mat-opaque mat-opaque-interactive sub-plan relative">
           <div className="absolute -top-3 left-5 z-10">
             <span
               className="text-xs font-bold px-3 py-1 rounded-full"
@@ -309,7 +271,7 @@ export default function SubscriptionPage() {
             </span>
           </div>
           <div className="flex items-center gap-3 mb-5">
-            <span className="sub-icon-chip">
+            <span className="mat-icon-well sub-icon-chip">
               <BookMarked className="w-[18px] h-[18px]" style={{ color: P.surf }} />
             </span>
             <span className="font-semibold text-foreground text-lg">PsychPro Scholar</span>
@@ -338,7 +300,7 @@ export default function SubscriptionPage() {
           ) : scholarPlans.length > 0 ? (
             <div className="space-y-3">
               {scholarPlans.map((plan) => (
-                <div key={plan.priceId} className="sub-bill">
+                <div key={plan.priceId} className="mat-glass mat-glass-interactive sub-bill">
                   <div className="flex items-center justify-between mb-3">
                     <div>
                       <p className="font-semibold text-foreground capitalize">Billed {plan.interval}ly</p>
@@ -378,7 +340,7 @@ export default function SubscriptionPage() {
 
         {/* EPPP Mastery Suite — a SEPARATE access level, sold independently of
             Master & Scholar. Three options: $99/mo, or one-time 6mo / 12mo. */}
-        <div className="sub-plan relative" data-testid="eppp-plan">
+        <div className="mat-opaque mat-opaque-interactive sub-plan relative" data-testid="eppp-plan">
           <div className="absolute -top-3 left-5 z-10">
             <span
               className="text-xs font-bold px-3 py-1 rounded-full"
@@ -388,7 +350,7 @@ export default function SubscriptionPage() {
             </span>
           </div>
           <div className="flex items-center gap-3 mb-3">
-            <span className="sub-icon-chip">
+            <span className="mat-icon-well sub-icon-chip">
               <GraduationCap className="w-[18px] h-[18px]" style={{ color: P.surf }} />
             </span>
             <span className="font-semibold text-foreground text-lg">EPPP Mastery Suite</span>
@@ -426,7 +388,7 @@ export default function SubscriptionPage() {
           ) : (epppPlans?.monthly || (epppPlans?.oneTime?.length ?? 0) > 0) ? (
             <div className="space-y-3">
               {epppPlans?.monthly && (
-                <div className="sub-bill" data-testid="eppp-bill-monthly">
+                <div className="mat-glass mat-glass-interactive sub-bill" data-testid="eppp-bill-monthly">
                   <div className="flex items-center justify-between mb-3">
                     <div>
                       <p className="font-semibold text-foreground">Monthly subscription</p>
@@ -453,7 +415,7 @@ export default function SubscriptionPage() {
               )}
 
               {epppPlans?.oneTime?.map((pack) => (
-                <div key={pack.priceId} className="sub-bill" data-testid={`eppp-bill-${pack.months}mo`}>
+                <div key={pack.priceId} className="mat-glass mat-glass-interactive sub-bill" data-testid={`eppp-bill-${pack.months}mo`}>
                   <div className="flex items-center justify-between mb-3">
                     <div>
                       <p className="font-semibold text-foreground">{pack.months} months access</p>

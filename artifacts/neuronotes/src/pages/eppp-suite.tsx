@@ -624,10 +624,10 @@ function KnowledgeBody({
   const masteredCount = domainStats.filter((d) => d.mastered).length;
 
   if (topicsLoading && groups.length === 0) {
-    return <div className="eps-empty">Loading your domains…</div>;
+    return <div className="mat-glass eps-empty">Loading your domains…</div>;
   }
   if (groups.length === 0) {
-    return <div className="eps-empty">No EPPP domains are available yet.</div>;
+    return <div className="mat-glass eps-empty">No EPPP domains are available yet.</div>;
   }
 
   return (
@@ -639,7 +639,7 @@ function KnowledgeBody({
       </div>
 
       <div className="eps-kb-grid">
-        <aside className="eps-kb-rail" aria-label="EPPP content domains">
+        <aside className="mat-opaque eps-kb-rail" aria-label="EPPP content domains">
           {groups.map((group) => {
             const stat = statByName.get(group.name);
             const Icon = knowledgeDomainIcon(group.name);
@@ -651,11 +651,11 @@ function KnowledgeBody({
                 key={group.name}
                 type="button"
                 aria-pressed={isActive}
-                className={cn("eps-kb-rail-item", isActive && "is-active")}
+                className={cn("mat-glass mat-glass-interactive eps-kb-rail-item", isActive && "is-active")}
                 onClick={() => setActiveDomain(group.name)}
                 data-testid={`eppp-knowledge-rail-${slugify(group.name)}`}
               >
-                <span className="eps-kb-rail-icon">
+                <span className="mat-icon-well eps-kb-rail-icon">
                   <Icon aria-hidden />
                 </span>
                 <span className="eps-kb-rail-text">
@@ -717,7 +717,7 @@ function KnowledgeDomainPane({
   return (
     <div data-testid={`eppp-knowledge-pane-${slugify(group.name)}`}>
       <div className="eps-kb-head">
-        <span className="eps-kb-head-icon">
+        <span className="mat-icon-well eps-kb-head-icon">
           <Icon aria-hidden />
         </span>
         <div className="eps-kb-head-text">
@@ -731,18 +731,18 @@ function KnowledgeDomainPane({
       </div>
 
       {group.items.length === 0 ? (
-        <div className="eps-empty">No lessons in this domain yet.</div>
+        <div className="mat-glass eps-empty">No lessons in this domain yet.</div>
       ) : (
         <div className="eps-kb-lessons">
           {group.items.map((topic) => (
             <button
               key={topic.id}
               type="button"
-              className="eps-kb-lesson"
+              className="mat-glass mat-glass-interactive eps-kb-lesson"
               onClick={() => onNavigate(epppTopicPath(topic.id))}
               data-testid={`eppp-knowledge-lesson-${topic.id}`}
             >
-              <span className="eps-kb-lesson-icon">
+              <span className="mat-icon-well eps-kb-lesson-icon">
                 <BookOpen aria-hidden />
               </span>
               <span className="eps-kb-lesson-body">
@@ -789,7 +789,7 @@ function DomainMasteryBody({
       </div>
 
       {domainStats.length === 0 ? (
-        <div className="eps-empty">Loading your domains…</div>
+        <div className="mat-glass eps-empty">Loading your domains…</div>
       ) : (
         <div className="eps-exam-list">
           {domainStats.map((d) => {
@@ -801,10 +801,10 @@ function DomainMasteryBody({
             return (
               <div
                 key={d.category}
-                className={cn("eps-exam-row", `is-${state}`)}
+                className={cn("mat-opaque eps-exam-row", `is-${state}`)}
                 data-testid={`eppp-mastery-${slugify(d.category)}`}
               >
-                <span className="eps-exam-icon">
+                <span className="mat-icon-well eps-exam-icon">
                   {state === "mastered" ? (
                     <CheckCircle2 aria-hidden />
                   ) : state === "ready" ? (
@@ -827,7 +827,7 @@ function DomainMasteryBody({
                 </div>
                 {state === "locked" ? (
                   <button
-                    className="eps-exam-cta eps-exam-cta--ghost"
+                    className="eppp-launch-btn eps-exam-cta eps-exam-cta--ghost"
                     onClick={() => onNavigate(epppDomainAnchor(d.category))}
                     data-testid={`eppp-mastery-study-${slugify(d.category)}`}
                   >
@@ -835,7 +835,7 @@ function DomainMasteryBody({
                   </button>
                 ) : (
                   <button
-                    className="eps-exam-cta"
+                    className="eppp-launch-btn eps-exam-cta"
                     onClick={() =>
                       onNavigate(epppMasteryExamPath(d.category))
                     }
@@ -879,7 +879,7 @@ function DomainMasteryExamsPanel({ onNavigate }: { onNavigate: (to: string) => v
                 type="button"
                 role="tab"
                 aria-selected={isActive}
-                className={cn("eps-subtab", isActive && "is-active")}
+                className={cn("eppp-launch-btn eps-subtab", isActive && "is-active")}
                 onClick={() => setPart(t.key)}
                 data-testid={`eppp-mastery-subtab-${t.key}`}
               >
@@ -929,11 +929,11 @@ function ClinicalCasesBody({ part, onNavigate }: { part: EpppExamPart; onNavigat
   }, [allTopics, part]);
 
   if (isLoading) {
-    return <div className="eps-empty">Loading cases…</div>;
+    return <div className="mat-glass eps-empty">Loading cases…</div>;
   }
   if (grouped.length === 0) {
     return (
-      <div className="eps-empty">
+      <div className="mat-glass eps-empty">
         No {part === "part1" ? "Part 1" : "Part 2"} clinical integration cases are available yet.
       </div>
     );
@@ -953,11 +953,11 @@ function ClinicalCasesBody({ part, onNavigate }: { part: EpppExamPart; onNavigat
               return (
                 <button
                   key={t.id}
-                  className="eps-topic"
+                  className="mat-glass mat-glass-interactive eps-topic"
                   onClick={() => onNavigate(epppTopicModePath(t.id, "study-guide"))}
                   data-testid={`eppp-clinical-case-${t.id}`}
                 >
-                  <span className="eps-topic-icon">
+                  <span className="mat-icon-well eps-topic-icon">
                     <Stethoscope aria-hidden />
                   </span>
                   <span className="eps-topic-body">
@@ -1024,7 +1024,7 @@ function ClinicalCasesPanel({ onNavigate }: { onNavigate: (to: string) => void }
                 type="button"
                 role="tab"
                 aria-selected={isActive}
-                className={cn("eps-subtab", isActive && "is-active")}
+                className={cn("eppp-launch-btn eps-subtab", isActive && "is-active")}
                 onClick={() => setPart(t.key)}
                 data-testid={`eppp-clinical-subtab-${t.key}`}
               >
@@ -1075,9 +1075,9 @@ function ComingSoonPanel({
     <div className="study-page-bg eps-panel" data-testid={`eppp-panel-${title.toLowerCase().replace(/\s+/g, "-")}`}>
       <div className="eps-shell">
         <PanelHead eyebrow={eyebrow} title={title} subtitle={description} />
-        <div className="eps-soon" data-testid="eppp-coming-soon">
+        <div className="mat-opaque eps-soon" data-testid="eppp-coming-soon">
           <div className="eps-soon-glow" aria-hidden />
-          <span className="eps-soon-icon">
+          <span className="mat-icon-well eps-soon-icon">
             <Icon aria-hidden />
           </span>
           <span className="eps-soon-pill">
@@ -1127,7 +1127,7 @@ function FullLengthExamsPanel({ onNavigate }: { onNavigate: (to: string) => void
                 type="button"
                 role="tab"
                 aria-selected={isActive}
-                className={cn("eps-subtab", isActive && "is-active")}
+                className={cn("eppp-launch-btn eps-subtab", isActive && "is-active")}
                 onClick={() => setPart(t.key)}
                 data-testid={`eppp-full-length-subtab-${t.key}`}
               >
@@ -1139,15 +1139,15 @@ function FullLengthExamsPanel({ onNavigate }: { onNavigate: (to: string) => void
         </div>
 
         {isLoading ? (
-          <div className="eps-empty">Loading exam…</div>
+          <div className="mat-glass eps-empty">Loading exam…</div>
         ) : !exam ? (
-          <div className="eps-empty">
+          <div className="mat-glass eps-empty">
             The {part === "part1" ? "Part 1" : "Part 2"} full-length exam isn't available yet.
           </div>
         ) : (
-          <div className="eps-fl-card" data-testid={`eppp-full-length-${part}`}>
+          <div className="mat-opaque eps-fl-card" data-testid={`eppp-full-length-${part}`}>
             <div className="eps-fl-head">
-              <span className="eps-fl-icon">
+              <span className="mat-icon-well eps-fl-icon">
                 <ClipboardCheck aria-hidden />
               </span>
               <div className="eps-fl-head-text">
@@ -1249,9 +1249,9 @@ function MyNotesScratchpad() {
   const handleDelete = (id: string) => persist(notes.filter((n) => n.id !== id));
 
   return (
-    <section className="eps-notes" data-testid="eppp-my-notes">
+    <section className="mat-opaque eps-notes" data-testid="eppp-my-notes">
       <div className="eps-notes-head">
-        <span className="eps-notes-icon">
+        <span className="mat-icon-well eps-notes-icon">
           <NotebookPen aria-hidden />
         </span>
         <div>
@@ -1279,7 +1279,7 @@ function MyNotesScratchpad() {
       {notes.length > 0 && (
         <div className="eps-notes-saved" data-testid="eppp-my-notes-saved">
           {notes.map((n) => (
-            <article key={n.id} className="eps-note-card" data-testid={`eppp-my-note-${n.id}`}>
+            <article key={n.id} className="mat-glass eps-note-card" data-testid={`eppp-my-note-${n.id}`}>
               <p className="eps-note-text">{n.text}</p>
               <div className="eps-note-foot">
                 <span className="eps-note-date">
@@ -1290,7 +1290,7 @@ function MyNotesScratchpad() {
                   })}
                 </span>
                 <button
-                  className="eps-ghost-btn"
+                  className="eppp-launch-btn eps-ghost-btn"
                   onClick={() => handleDelete(n.id)}
                   data-testid={`eppp-my-note-delete-${n.id}`}
                 >
@@ -1352,25 +1352,25 @@ function RapidReviewPanel({ onNavigate }: { onNavigate: (to: string) => void }) 
               ? "Loading…"
               : `${guides.length} quick reference ${guides.length === 1 ? "guide" : "guides"}`}
           </span>
-          <button className="eps-ghost-btn" onClick={handlePrint} data-testid="eppp-rapid-review-print">
+          <button className="eppp-launch-btn eps-ghost-btn" onClick={handlePrint} data-testid="eppp-rapid-review-print">
             <Printer aria-hidden /> Print
           </button>
         </div>
 
         {isLoading ? (
-          <div className="eps-empty">Loading review sheets…</div>
+          <div className="mat-glass eps-empty">Loading review sheets…</div>
         ) : guides.length === 0 ? (
-          <div className="eps-empty">No quick reference guides are available yet.</div>
+          <div className="mat-glass eps-empty">No quick reference guides are available yet.</div>
         ) : (
           <div className="eps-topic-grid">
             {guides.map((t) => (
               <button
                 key={t.id}
-                className="eps-topic"
+                className="mat-glass mat-glass-interactive eps-topic"
                 onClick={() => onNavigate(epppTopicModePath(t.id, "study-guide"))}
                 data-testid={`eppp-quick-reference-${t.id}`}
               >
-                <span className="eps-topic-icon">
+                <span className="mat-icon-well eps-topic-icon">
                   <Zap aria-hidden />
                 </span>
                 <span className="eps-topic-body">
@@ -1433,9 +1433,9 @@ function ReflectionsPanel() {
         </div>
 
         {!hydrated ? (
-          <div className="eps-empty">Loading your reflections…</div>
+          <div className="mat-glass eps-empty">Loading your reflections…</div>
         ) : reflections.length === 0 ? (
-          <div className="eps-empty">
+          <div className="mat-glass eps-empty">
             No reflections yet. When you miss a quiz question, write a one-sentence
             “why” in the Reflect box and tap “Lock it in” — your saved reflections
             collect here.
@@ -1445,7 +1445,7 @@ function ReflectionsPanel() {
             {reflections.map((r) => (
               <article
                 key={`${r.topicId}-${r.questionId}`}
-                className="eps-mq-card"
+                className="mat-opaque eps-mq-card"
                 data-testid={`eppp-reflection-${r.topicId}-${r.questionId}`}
               >
                 <div className="eps-mq-tags">
@@ -1467,7 +1467,7 @@ function ReflectionsPanel() {
                 <p className="eps-reflection-note">{r.text}</p>
                 <div className="eps-mq-actions">
                   <button
-                    className="eps-ghost-btn"
+                    className="eppp-launch-btn eps-ghost-btn"
                     onClick={() => handleDeleteReflection(r.topicId, r.questionId)}
                     data-testid={`eppp-reflection-delete-${r.topicId}-${r.questionId}`}
                   >
@@ -1583,9 +1583,9 @@ function MissedQuestionsPanel({ onNavigate }: { onNavigate: (to: string) => void
         />
 
         {isLoading ? (
-          <div className="eps-empty">Loading your missed questions…</div>
+          <div className="mat-glass eps-empty">Loading your missed questions…</div>
         ) : decorated.length === 0 ? (
-          <div className="eps-empty">
+          <div className="mat-glass eps-empty">
             No missed questions yet. As you take quizzes and exams, the ones you miss
             collect here for focused review.
           </div>
@@ -1599,7 +1599,7 @@ function MissedQuestionsPanel({ onNavigate }: { onNavigate: (to: string) => void
                     type="button"
                     role="tab"
                     aria-selected={part === f.key}
-                    className={cn("eps-subtab", part === f.key && "is-active")}
+                    className={cn("eppp-launch-btn eps-subtab", part === f.key && "is-active")}
                     onClick={() => setPart(f.key)}
                     data-testid={`eppp-missed-part-${f.key}`}
                   >
@@ -1632,7 +1632,7 @@ function MissedQuestionsPanel({ onNavigate }: { onNavigate: (to: string) => void
             </div>
 
             {visible.length === 0 ? (
-              <div className="eps-empty">No missed questions match this filter.</div>
+              <div className="mat-glass eps-empty">No missed questions match this filter.</div>
             ) : (
               <div className="eps-mq-list">
                 {visible.map(({ q, domain: dom, part: qp }) => {
@@ -1644,7 +1644,7 @@ function MissedQuestionsPanel({ onNavigate }: { onNavigate: (to: string) => void
                     { key: "D", text: q.optionD },
                   ];
                   return (
-                    <article key={q.id} className="eps-mq-card" data-testid={`eppp-missed-question-${q.id}`}>
+                    <article key={q.id} className="mat-opaque eps-mq-card" data-testid={`eppp-missed-question-${q.id}`}>
                       <div className="eps-mq-tags">
                         <span className="eps-mq-tag">
                           {qp === "part2" ? "Part 2" : qp === "part1" ? "Part 1" : "EPPP"}
@@ -1678,7 +1678,7 @@ function MissedQuestionsPanel({ onNavigate }: { onNavigate: (to: string) => void
                           )}
                           <div className="eps-mq-actions">
                             <button
-                              className="eps-ghost-btn"
+                              className="eppp-launch-btn eps-ghost-btn"
                               onClick={() => setRevealed((r) => ({ ...r, [q.id]: false }))}
                               data-testid={`eppp-missed-hide-${q.id}`}
                             >
@@ -1695,7 +1695,7 @@ function MissedQuestionsPanel({ onNavigate }: { onNavigate: (to: string) => void
                         </>
                       ) : (
                         <button
-                          className="eps-ghost-btn"
+                          className="eppp-launch-btn eps-ghost-btn"
                           onClick={() => setRevealed((r) => ({ ...r, [q.id]: true }))}
                           data-testid={`eppp-missed-reveal-${q.id}`}
                         >
@@ -1777,8 +1777,8 @@ const styles = `
 .eps-section-head { display: flex; align-items: center; justify-content: flex-end; margin-top: -4px; }
 .eps-section-meta { font-size: 13px; font-weight: 600; color: ${C.mist}; }
 .eps-empty {
-  border-radius: 16px; padding: 28px; text-align: center; font-size: 14px; color: ${C.muted};
-  border: 1px dashed ${C.hairline}; background: rgba(var(--pp-ocean-deep-rgb), 0.16);
+  padding: 28px; text-align: center; font-size: 14px; color: ${C.muted};
+  border-style: dashed;
 }
 
 /* ---- Knowledge sub-tab: course-style rail + lessons pane ---- */
@@ -1789,12 +1789,7 @@ const styles = `
 .eps-kb-rail {
   position: sticky; top: 16px;
   display: flex; flex-direction: column; gap: 8px;
-  padding: 10px; border-radius: 20px;
-  border: 1px solid var(--pp-line);
-  background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel),
-    0 22px 48px -32px var(--pp-shadow);
+  padding: 10px;
 }
 @media (max-width: 900px) {
   .eps-kb-rail {
@@ -1808,37 +1803,18 @@ const styles = `
 .eps-kb-rail-item {
   display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 11px; align-items: center;
   text-align: left; cursor: pointer;
-  padding: 11px 12px; border-radius: 16px;
-  border: 1px solid var(--pp-line-bright);
-  background: rgba(var(--pp-ocean-deep-rgb), 0.16);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel-bright),
-    0 12px 28px -22px var(--pp-shadow);
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease, background 0.24s ease;
+  padding: 11px 12px;
 }
-.eps-kb-rail-item:hover {
-  border-color: rgba(var(--pp-bright-rgb), 0.60);
-  background: rgba(var(--pp-ocean-deep-rgb), 0.26);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel-bright),
-    0 0 22px -4px var(--pp-glow),
-    0 16px 34px -22px var(--pp-shadow);
-}
+.eps-kb-rail-item:hover { transform: none; }
 .eps-kb-rail-item:focus-visible,
 .eps-kb-lesson:focus-visible { outline: 2px solid ${C.cyan}; outline-offset: 2px; }
 .eps-kb-rail-item.is-active {
   border-color: rgba(var(--pp-bright-rgb), 0.60);
   background: rgba(var(--pp-ocean-deep-rgb), 0.26);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel-bright),
-    0 16px 34px -22px var(--pp-shadow);
 }
 .eps-kb-rail-icon {
   display: inline-flex; align-items: center; justify-content: center;
   width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px;
-  background: rgba(var(--pp-ocean-deep-rgb), 0.22);
-  border: 1px solid rgba(var(--pp-cyan-rgb), 0.35);
-  box-shadow: inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16);
   color: ${C.cyan};
 }
 .eps-kb-rail-icon svg { width: 17px; height: 17px; }
@@ -1863,10 +1839,7 @@ const styles = `
 }
 .eps-kb-head-icon {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px;
-  background: rgba(var(--pp-ocean-deep-rgb), 0.22);
-  border: 1px solid rgba(var(--pp-cyan-rgb), 0.35);
-  box-shadow: inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16);
+  width: 44px; height: 44px; flex-shrink: 0;
   color: ${C.cyan};
 }
 .eps-kb-head-icon svg { width: 20px; height: 20px; }
@@ -1878,29 +1851,11 @@ const styles = `
 .eps-kb-lesson {
   display: grid; grid-template-columns: 38px minmax(0, 1fr) 18px; gap: 12px; align-items: center;
   text-align: left; cursor: pointer;
-  padding: 15px; border-radius: 16px;
-  background: rgba(var(--pp-ocean-deep-rgb), 0.16);
-  border: 1px solid var(--pp-line-bright);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel-bright),
-    0 12px 28px -22px var(--pp-shadow);
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease, background 0.24s ease;
-}
-.eps-kb-lesson:hover {
-  transform: translateY(-2px);
-  border-color: rgba(var(--pp-bright-rgb), 0.60);
-  background: rgba(var(--pp-ocean-deep-rgb), 0.26);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel-bright),
-    0 0 22px -4px var(--pp-glow),
-    0 16px 34px -22px var(--pp-shadow);
+  padding: 15px;
 }
 .eps-kb-lesson-icon {
   display: inline-flex; align-items: center; justify-content: center; align-self: start;
   width: 38px; height: 38px; flex-shrink: 0; border-radius: 10px;
-  background: rgba(var(--pp-ocean-deep-rgb), 0.22);
-  border: 1px solid rgba(var(--pp-cyan-rgb), 0.35);
-  box-shadow: inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16);
   color: ${C.cyan};
 }
 .eps-kb-lesson-icon svg { width: 17px; height: 17px; }
@@ -1917,12 +1872,7 @@ const styles = `
 .eps-exam-list { display: flex; flex-direction: column; gap: 12px; }
 .eps-exam-row {
   display: flex; align-items: center; gap: 16px;
-  border-radius: 20px; padding: 16px 18px;
-  background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);
-  border: 1px solid var(--pp-line);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel),
-    0 22px 48px -32px var(--pp-shadow);
+  padding: 16px 18px;
 }
 .eps-exam-row.is-mastered {
   border-color: rgba(var(--pp-bright-rgb), 0.60);
@@ -1930,10 +1880,7 @@ const styles = `
 .eps-exam-row.is-locked { opacity: 0.9; }
 .eps-exam-icon {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 42px; height: 42px; flex-shrink: 0; border-radius: 12px;
-  background: rgba(var(--pp-ocean-deep-rgb), 0.22);
-  border: 1px solid rgba(var(--pp-cyan-rgb), 0.35);
-  box-shadow: inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16);
+  width: 42px; height: 42px; flex-shrink: 0;
   color: ${C.cyan};
 }
 .eps-exam-row.is-locked .eps-exam-icon { background: rgba(var(--pp-ocean-deep-rgb),0.06); border-color: ${C.hairline}; color: ${C.muted}; }
@@ -1941,18 +1888,10 @@ const styles = `
 .eps-exam-body { display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1; }
 .eps-exam-name { font-size: 15px; font-weight: 600; color: ${C.cloud}; }
 .eps-exam-meta { font-size: 12.5px; color: ${C.muted}; line-height: 1.4; }
-.eps-exam-cta {
-  display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; cursor: pointer;
-  padding: 9px 16px; border-radius: 8px; font-size: 13px; font-weight: 700; white-space: nowrap;
-  color: ${C.cloud}; border: 1px solid rgba(var(--pp-cyan-rgb),0.5);
-  background: rgba(var(--pp-ocean-deep-rgb),0.26);
-  box-shadow: inset 0 1px 0 rgba(var(--pp-white-rgb),0.1);
-  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
-}
+.eps-exam-cta { gap: 6px; flex-shrink: 0; height: auto; padding: 9px 16px; font-weight: 700; }
 .eps-exam-cta svg { width: 15px; height: 15px; }
-.eps-exam-cta:hover { transform: translateY(-1px); background: rgba(var(--pp-ocean-deep-rgb),0.36); border-color: rgba(var(--pp-cyan-rgb),0.65); box-shadow: inset 0 1px 0 rgba(var(--pp-white-rgb),0.12); }
 .eps-exam-cta--ghost {
-  color: ${C.mist}; background: hsl(var(--surf-hue) var(--surf-sat) 30% / 0.55); border: 1px solid ${C.hairlineStrong}; box-shadow: none;
+  color: ${C.mist}; background: hsl(var(--surf-hue) var(--surf-sat) 30% / 0.55); border-color: ${C.hairlineStrong}; box-shadow: none;
 }
 .eps-exam-cta--ghost:hover { border-color: ${C.cyan}80; color: ${C.cloud}; box-shadow: none; }
 
@@ -1976,30 +1915,12 @@ const styles = `
 @media (max-width: 760px) { .eps-topic-grid { grid-template-columns: 1fr; } }
 .eps-topic {
   display: flex; align-items: center; gap: 14px; text-align: left; cursor: pointer;
-  border-radius: 16px; padding: 14px 16px;
-  background: rgba(var(--pp-ocean-deep-rgb), 0.16);
-  border: 1px solid var(--pp-line-bright);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel-bright),
-    0 12px 28px -22px var(--pp-shadow);
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease, background 0.24s ease;
-}
-.eps-topic:hover:not(.is-disabled) {
-  transform: translateY(-2px);
-  border-color: rgba(var(--pp-bright-rgb), 0.60);
-  background: rgba(var(--pp-ocean-deep-rgb), 0.26);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel-bright),
-    0 0 22px -4px var(--pp-glow),
-    0 16px 34px -22px var(--pp-shadow);
+  padding: 14px 16px;
 }
 .eps-topic.is-disabled { opacity: 0.55; cursor: not-allowed; }
 .eps-topic-icon {
   display: inline-flex; align-items: center; justify-content: center;
   width: 40px; height: 40px; flex-shrink: 0; border-radius: 11px;
-  background: rgba(var(--pp-ocean-deep-rgb), 0.22);
-  border: 1px solid rgba(var(--pp-cyan-rgb), 0.35);
-  box-shadow: inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16);
   color: ${C.cyan};
 }
 .eps-topic-icon svg { width: 18px; height: 18px; }
@@ -2025,33 +1946,10 @@ const styles = `
 
 /* ---- Part 1 sub-tabs ---- */
 .eps-subtabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: clamp(20px, 2.4vw, 28px); }
-/* Part toggles / filters adopt the glowing cyan-glass "launch button" recipe. */
-.eps-subtab {
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;
-  height: 40px; padding: 0 18px; border-radius: 8px; font-size: 13px; font-weight: 600; white-space: nowrap;
-  color: var(--pp-text); text-shadow: 0 1px 3px rgba(var(--pp-black-rgb), 0.5);
-  border: 1px solid rgba(var(--pp-cyan-rgb), 0.55);
-  background: hsl(var(--surf-hue) var(--surf-sat) 22% / 0.50);
-  box-shadow:
-    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.16),
-    0 0 0 1px rgba(var(--pp-cyan-rgb), 0.28);
-  transition: transform 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease, background 0.2s ease;
-}
+/* Part toggles / filters compose the shared .eppp-launch-btn recipe; only
+   sizing lives here. */
+.eps-subtab { gap: 8px; }
 .eps-subtab svg { width: 16px; height: 16px; flex-shrink: 0; color: var(--pp-text-dim); }
-.eps-subtab:hover {
-  transform: translateY(-1px); color: ${PP.white}; border-color: rgba(var(--pp-cyan-rgb), 0.95);
-  background: hsl(var(--surf-hue) var(--surf-sat) 15% / 0.60);
-  box-shadow:
-    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.22),
-    0 0 0 1px rgba(var(--pp-cyan-rgb), 0.45);
-}
-.eps-subtab.is-active {
-  color: ${PP.white}; border-color: rgba(var(--pp-cyan-rgb), 1);
-  background: hsl(var(--surf-hue) var(--surf-sat) 30% / 0.68);
-  box-shadow:
-    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.28),
-    0 0 0 1px rgba(var(--pp-cyan-rgb), 0.6);
-}
 /* Clinical Cases / Full-length part toggle: same recipe, larger. */
 .eps-subtabs--center { justify-content: center; }
 .eps-subtabs--center .eps-subtab {
@@ -2059,45 +1957,6 @@ const styles = `
 }
 .eps-subtabs--center .eps-subtab svg { width: 18px; height: 18px; }
 
-/* ---- Part 2 upload / skills shell ---- */
-.eps-import-panel {
-  display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(280px, 1.05fr);
-  gap: clamp(14px, 2vw, 22px);
-  border-radius: 20px;
-  padding: clamp(18px, 2.4vw, 26px);
-  background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);
-  border: 1px solid var(--pp-line);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel),
-    0 22px 48px -32px var(--pp-shadow);
-}
-.eps-import-copy { display: flex; flex-direction: column; justify-content: center; gap: 12px; min-width: 0; }
-.eps-import-copy .eps-soon-text { max-width: 560px; }
-.eps-import-copy strong { color: ${C.mist}; font-weight: 700; }
-.eps-skill-shells { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
-.eps-skill-shell {
-  display: flex; align-items: center; gap: 10px; min-width: 0;
-  border-radius: 16px; padding: 13px 14px;
-  background: rgba(var(--pp-ocean-deep-rgb), 0.16);
-  border: 1px solid var(--pp-line-bright);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel-bright),
-    0 12px 28px -22px var(--pp-shadow);
-  color: ${C.body};
-  font-size: 12.5px;
-  font-weight: 600;
-  line-height: 1.35;
-}
-.eps-skill-shell svg { width: 16px; height: 16px; flex-shrink: 0; color: ${C.cyan}; }
-@media (max-width: 860px) {
-  .eps-import-panel { grid-template-columns: 1fr; }
-}
-@media (max-width: 560px) {
-  .eps-skill-shells { grid-template-columns: 1fr; }
-}
-
-/* ---- staged content creation panels ---- */
 .eps-build-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2105,13 +1964,7 @@ const styles = `
 }
 .eps-build-card,
 .eps-contract-card {
-  border-radius: 20px;
   padding: clamp(18px, 2.4vw, 26px);
-  background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);
-  border: 1px solid var(--pp-line);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel),
-    0 22px 48px -32px var(--pp-shadow);
 }
 .eps-build-card.is-active {
   border-color: var(--pp-line-bright);
@@ -2169,20 +2022,12 @@ const styles = `
 .eps-soon {
   position: relative; overflow: hidden;
   display: flex; flex-direction: column; align-items: center; text-align: center;
-  border-radius: 20px; padding: clamp(40px, 6vw, 72px) clamp(24px, 4vw, 56px);
-  background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);
-  border: 1px solid var(--pp-line);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel),
-    0 22px 48px -32px var(--pp-shadow);
+  padding: clamp(40px, 6vw, 72px) clamp(24px, 4vw, 56px);
 }
 .eps-soon-glow { position: absolute; top: -45%; left: 50%; transform: translateX(-50%); width: 70%; height: 120%; background: transparent; pointer-events: none; }
 .eps-soon-icon {
   position: relative; display: inline-flex; align-items: center; justify-content: center;
   width: 60px; height: 60px; margin-bottom: 18px; border-radius: 16px;
-  background: rgba(var(--pp-ocean-deep-rgb), 0.22);
-  border: 1px solid rgba(var(--pp-cyan-rgb), 0.35);
-  box-shadow: inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16);
   color: ${C.cyan};
 }
 .eps-soon-icon svg { width: 28px; height: 28px; }
@@ -2198,51 +2043,19 @@ const styles = `
 
 /* ---- Shared ghost button + split section head ---- */
 .eps-section-head--split { justify-content: center; gap: 16px; }
-/* Print button: glowing cyan-glass "launch button" recipe. */
-.eps-ghost-btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;
-  height: 40px; padding: 0 18px; border-radius: 8px; font-size: 13px; font-weight: 600; white-space: nowrap;
-  color: var(--pp-text); text-shadow: 0 1px 3px rgba(var(--pp-black-rgb), 0.5);
-  border: 1px solid rgba(var(--pp-cyan-rgb), 0.55);
-  background: hsl(var(--surf-hue) var(--surf-sat) 22% / 0.50);
-  box-shadow:
-    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.16),
-    0 0 0 1px rgba(var(--pp-cyan-rgb), 0.28);
-  transition: transform 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease, background 0.2s ease;
-}
+/* Print / inline action buttons compose the shared .eppp-launch-btn recipe. */
+.eps-ghost-btn { gap: 8px; }
 .eps-ghost-btn svg { width: 16px; height: 16px; color: var(--pp-text-dim); }
-.eps-ghost-btn:hover {
-  transform: translateY(-1px); color: ${PP.white}; border-color: rgba(var(--pp-cyan-rgb), 0.95);
-  background: hsl(var(--surf-hue) var(--surf-sat) 15% / 0.60);
-  box-shadow:
-    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.22),
-    0 0 0 1px rgba(var(--pp-cyan-rgb), 0.45);
-}
-.eps-ghost-btn:active {
-  transform: translateY(0); color: ${PP.white}; border-color: rgba(var(--pp-cyan-rgb), 1);
-  background: hsl(var(--surf-hue) var(--surf-sat) 30% / 0.68);
-  box-shadow:
-    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.28),
-    0 0 0 1px rgba(var(--pp-cyan-rgb), 0.6);
-}
 
 /* ---- Full-Length Exams ---- */
 .eps-fl-card {
-  border-radius: 20px; padding: clamp(20px, 2.6vw, 30px); text-align: center;
-  background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);
-  border: 1px solid var(--pp-line);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel),
-    0 22px 48px -32px var(--pp-shadow);
+  padding: clamp(20px, 2.6vw, 30px); text-align: center;
 }
 .eps-fl-head { display: flex; align-items: center; justify-content: center; gap: 16px; }
 .eps-fl-icon {
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
   width: 52px; height: 52px; border-radius: 14px;
   color: ${C.cyan};
-  background: rgba(var(--pp-ocean-deep-rgb), 0.22);
-  border: 1px solid rgba(var(--pp-cyan-rgb), 0.35);
-  box-shadow: inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16);
 }
 .eps-fl-icon svg { width: 26px; height: 26px; }
 .eps-fl-head-text { min-width: 0; }
@@ -2266,21 +2079,13 @@ const styles = `
 
 /* ---- Rapid Review notes ---- */
 .eps-notes {
-  margin-top: clamp(22px, 2.6vw, 32px); border-radius: 20px; padding: clamp(18px, 2.4vw, 26px);
-  background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);
-  border: 1px solid var(--pp-line);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel),
-    0 22px 48px -32px var(--pp-shadow);
+  margin-top: clamp(22px, 2.6vw, 32px); padding: clamp(18px, 2.4vw, 26px);
 }
 .eps-notes-head { display: flex; align-items: center; justify-content: center; text-align: center; gap: 13px; margin-bottom: 14px; }
 .eps-notes-icon {
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
   width: 40px; height: 40px; border-radius: 11px;
   color: ${C.cyan};
-  background: rgba(var(--pp-ocean-deep-rgb), 0.22);
-  border: 1px solid rgba(var(--pp-cyan-rgb), 0.35);
-  box-shadow: inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16);
 }
 .eps-notes-icon svg { width: 20px; height: 20px; }
 .eps-notes-title { margin: 0; font-size: 16px; font-weight: 800; color: ${C.cloud}; }
@@ -2306,12 +2111,7 @@ const styles = `
 .eps-save-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
 .eps-notes-saved { display: flex; flex-direction: column; gap: 12px; margin-top: 18px; }
 .eps-note-card {
-  border-radius: 16px; padding: 14px 16px;
-  background: rgba(var(--pp-ocean-deep-rgb), 0.16);
-  border: 1px solid var(--pp-line-bright);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel-bright),
-    0 12px 28px -22px var(--pp-shadow);
+  padding: 14px 16px;
 }
 .eps-note-text { margin: 0; font-size: 14px; line-height: 1.6; color: ${C.cloud}; white-space: pre-wrap; }
 .eps-note-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px; }
@@ -2331,12 +2131,7 @@ const styles = `
 .eps-mq-select:focus { outline: none; border-color: ${C.cyan}80; }
 .eps-mq-list { display: flex; flex-direction: column; gap: 14px; }
 .eps-mq-card {
-  border-radius: 20px; padding: clamp(16px, 2vw, 22px);
-  background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);
-  border: 1px solid var(--pp-line);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel),
-    0 22px 48px -32px var(--pp-shadow);
+  padding: clamp(16px, 2vw, 22px);
 }
 .eps-mq-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
 .eps-mq-tag {

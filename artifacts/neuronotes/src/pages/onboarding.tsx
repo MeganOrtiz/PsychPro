@@ -528,7 +528,7 @@ export default function OnboardingPage() {
             </p>
           </div>
 
-          <div className="ob-card p-6 md:p-8 ob-card-in">
+          <div className="mat-opaque ob-card p-6 md:p-8 ob-card-in">
             <span className="ob-card-sheen" aria-hidden />
             <h1 className="ob-title">{meta?.title}</h1>
             {meta?.subtitle && <p className="ob-sub">{meta.subtitle}</p>}
@@ -626,7 +626,7 @@ export default function OnboardingPage() {
                   </div>
 
                   {epppOneTime.length > 0 && (
-                    <div className="ob-onetime">
+                    <div className="mat-glass ob-onetime">
                       <span className="ob-plan-badge ob-onetime-badge">EPPP</span>
                       <div className="ob-onetime-head">
                         <span className="ob-onetime-icon">
@@ -657,7 +657,7 @@ export default function OnboardingPage() {
                               }
                               aria-pressed={sel}
                               data-testid={slug(`eppp-onetime-${p.months}`)}
-                              className={`ob-onetime-opt ${sel ? "ob-onetime-opt--on" : ""}`}
+                              className={`mat-glass mat-glass-interactive ob-onetime-opt ${sel ? "ob-onetime-opt--on" : ""}`}
                             >
                               <span className="ob-onetime-opt-top">
                                 <span className="ob-onetime-price">
@@ -778,7 +778,7 @@ function OptionTile({
       onClick={onClick}
       aria-pressed={selected}
       data-testid={slug(testid)}
-      className={`ob-tile ${selected ? "ob-tile--on" : ""}`}
+      className={`mat-glass mat-glass-interactive ob-tile ${selected ? "ob-tile--on" : ""}`}
     >
       <span className="ob-tile-icon">
         <I className="w-4 h-4" />
@@ -810,7 +810,7 @@ function OptionRow({
       onClick={onClick}
       aria-pressed={selected}
       data-testid={slug(testid)}
-      className={`ob-row ${selected ? "ob-tile--on" : ""}`}
+      className={`mat-glass mat-glass-interactive ob-row ${selected ? "ob-tile--on" : ""}`}
     >
       <span className="flex-1 min-w-0 text-left">
         <span className="ob-row-label">{label}</span>
@@ -841,7 +841,7 @@ function TierOption({
       onClick={onSelect}
       aria-pressed={selected}
       data-testid={slug(`tier-${card.tier}`)}
-      className={`ob-plan ${selected ? "ob-plan--on" : ""} ${card.eppp ? "ob-plan--eppp" : ""}`}
+      className={`mat-glass mat-glass-interactive ob-plan ${selected ? "ob-plan--on" : ""} ${card.eppp ? "ob-plan--eppp" : ""}`}
     >
       {card.eppp && <span className="ob-plan-badge">EPPP</span>}
       <span className="ob-plan-head">
@@ -919,7 +919,7 @@ function SummaryBody({
 
 function SummaryItem({ icon: I, label, value }: { icon: Icon; label: string; value: string }) {
   return (
-    <div className="ob-summary-item">
+    <div className="mat-glass ob-summary-item">
       <span className="ob-summary-icon">
         <I className="w-4 h-4" />
       </span>
@@ -1011,13 +1011,7 @@ const styles = `
 
 .ob-card {
   position: relative;
-  border-radius: 20px;
   overflow: hidden;
-  background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);
-  border: 1px solid var(--pp-line);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel),
-    0 22px 48px -32px var(--pp-shadow);
 }
 .ob-card > * { position: relative; z-index: 1; }
 .ob-card-sheen {
@@ -1047,13 +1041,8 @@ const styles = `
   display: flex; align-items: center; gap: 11px;
   width: 100%; padding: 13px 14px; text-align: left;
   border-radius: 12px;
-  border: 1px solid var(--pp-line-bright);
-  background: rgba(var(--pp-ocean-deep-rgb), 0.16);
-  box-shadow: inset 0 1px 0 var(--pp-bevel-bright);
   color: rgb(var(--pp-white-rgb));
-  transition: transform .15s ease, border-color .15s ease, background .15s ease, box-shadow .15s ease;
 }
-.ob-tile:hover { transform: translateY(-1px); border-color: rgba(var(--pp-bright-rgb),0.60); background: rgba(var(--pp-ocean-deep-rgb), 0.26); }
 .ob-tile--on {
   border-color: ${P.surf};
   background: rgba(var(--pp-ocean-deep-rgb), 0.30);
@@ -1099,24 +1088,14 @@ const styles = `
 .ob-row {
   display: flex; align-items: center; gap: 12px; width: 100%;
   padding: 14px 16px; border-radius: 12px;
-  border: 1px solid var(--pp-line-bright);
-  background: rgba(var(--pp-ocean-deep-rgb), 0.16);
-  box-shadow: inset 0 1px 0 var(--pp-bevel-bright);
-  transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
 }
-.ob-row:hover { transform: translateY(-1px); border-color: rgba(var(--pp-bright-rgb),0.60); }
 .ob-row-label { display: block; font-size: 0.9rem; font-weight: 600; color: ${P.mist}; }
 .ob-row-hint { display: block; font-size: 0.78rem; margin-top: 2px; color: ${P.mistSoft}; }
 
 .ob-plan {
   position: relative; display: flex; flex-direction: column; gap: 8px;
-  padding: 18px; border-radius: 16px; text-align: left;
-  border: 1px solid var(--pp-line-bright);
-  background: rgba(var(--pp-ocean-deep-rgb), 0.16);
-  box-shadow: inset 0 1px 0 var(--pp-bevel-bright);
-  transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+  padding: 18px; text-align: left;
 }
-.ob-plan:hover { transform: translateY(-2px); border-color: rgba(var(--pp-bright-rgb),0.60); }
 .ob-plan--on {
   border-color: ${P.surf};
   background: rgba(var(--pp-ocean-deep-rgb), 0.30);
@@ -1151,10 +1130,8 @@ const styles = `
 
 .ob-onetime {
   position: relative; margin-top: 16px;
-  padding: 18px; border-radius: 16px;
-  border: 1px solid rgba(var(--pp-icy-rgb),0.4);
-  background: rgba(var(--pp-ocean-deep-rgb), 0.16);
-  box-shadow: inset 0 1px 0 var(--pp-bevel-bright);
+  padding: 18px;
+  border-color: rgba(var(--pp-icy-rgb),0.4);
 }
 .ob-onetime-badge { top: 14px; right: 14px; }
 .ob-onetime-head { display: flex; align-items: flex-start; gap: 12px; padding-right: 64px; }
@@ -1170,12 +1147,9 @@ const styles = `
 .ob-onetime-opt {
   display: flex; flex-direction: column; gap: 4px; text-align: left;
   padding: 14px 16px; border-radius: 12px;
-  border: 1px solid var(--pp-line-bright);
   background: rgba(var(--pp-ocean-deep-rgb), 0.22);
-  box-shadow: inset 0 1px 0 var(--pp-bevel-bright);
-  transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
 }
-.ob-onetime-opt:hover { transform: translateY(-1px); border-color: rgba(var(--pp-icy-rgb),0.45); }
+.ob-onetime-opt:hover { border-color: rgba(var(--pp-icy-rgb),0.45); }
 .ob-onetime-opt--on {
   border-color: ${P.mist};
   background: rgba(var(--pp-ocean-deep-rgb), 0.30);
@@ -1202,9 +1176,6 @@ const styles = `
 .ob-summary-item {
   display: flex; align-items: flex-start; gap: 12px;
   padding: 13px 15px; border-radius: 12px;
-  border: 1px solid var(--pp-line-bright);
-  background: rgba(var(--pp-ocean-deep-rgb), 0.16);
-  box-shadow: inset 0 1px 0 var(--pp-bevel-bright);
 }
 .ob-summary-icon {
   display: inline-flex; align-items: center; justify-content: center;

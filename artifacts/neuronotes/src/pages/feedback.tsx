@@ -141,11 +141,9 @@ export default function FeedbackPage() {
                   onClick={() => setType(ft.value)}
                   aria-pressed={selected}
                   style={{
-                    background: "rgba(var(--pp-ocean-deep-rgb), 0.16)",
-                    boxShadow: "inset 0 1px 0 var(--pp-bevel-bright)",
                     "--pp-sel-border": alpha(PP.neutral300, 0.75),
                   } as React.CSSProperties}
-                  className={`grow-0 shrink-0 basis-[calc(50%-0.25rem)] px-3 py-2.5 rounded-md border text-sm font-medium text-center text-foreground transition-all ${
+                  className={`mat-glass grow-0 shrink-0 basis-[calc(50%-0.25rem)] px-3 py-2.5 rounded-md text-sm font-medium text-center text-foreground transition-all ${
                     selected
                       ? "border-[var(--pp-sel-border)]"
                       : "border-[var(--pp-line-bright)] hover:border-[rgba(var(--pp-bright-rgb),0.60)]"

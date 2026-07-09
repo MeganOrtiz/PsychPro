@@ -110,13 +110,8 @@ export default function TodayReviews({ topics }: TodayReviewsProps) {
         <h2 className="font-semibold" style={{ color: P.mist }}>Today's Reviews</h2>
         {items.length > 0 && (
           <span
-            className="ml-auto text-[11px] font-semibold px-2 py-0.5 rounded-full border"
-            style={{
-              background: "rgba(var(--pp-ocean-deep-rgb), 0.22)",
-              color: P.surf,
-              borderColor: "rgba(var(--pp-cyan-rgb), 0.35)",
-              boxShadow: "inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16)",
-            }}
+            className="mat-icon-well mat-icon-well--round ml-auto text-[11px] font-semibold px-2 py-0.5"
+            style={{ color: P.surf }}
           >
             {items.length}
           </span>
@@ -139,20 +134,16 @@ export default function TodayReviews({ topics }: TodayReviewsProps) {
                 data-testid={`review-item-${item.topicId}`}
               >
                 <span
-                  className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold border"
+                  className="mat-icon-well mat-icon-well--round shrink-0 w-7 h-7 flex items-center justify-center text-[11px] font-bold"
                   style={
                     item.isOverdue
                       ? {
                           background: `${P.surf}`,
                           color: PP.earnedInk,
                           borderColor: P.tealDeep,
+                          boxShadow: "none",
                         }
-                      : {
-                          background: "rgba(var(--pp-ocean-deep-rgb), 0.22)",
-                          color: P.surf,
-                          borderColor: "rgba(var(--pp-cyan-rgb), 0.35)",
-                          boxShadow: "inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16)",
-                        }
+                      : { color: P.surf }
                   }
                 >
                   {item.stage}

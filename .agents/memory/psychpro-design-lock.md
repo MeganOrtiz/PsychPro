@@ -23,3 +23,8 @@ never committed). This is the rebuild; keep it committed.
 
 **How to apply:** don't ban things used legitimately at scale (e.g. rounded-full,
 111+ uses). Lock the canonical recipe + tokens, not every utility.
+
+## Material composition discipline (2026-07-09)
+Pages/components must COMPOSE the shared material classes from index.css (.mat-opaque / .mat-glass(-interactive) / .mat-icon-well(--round) / .mat-chip / .pp-btn-* / .eppp-launch-btn) — never re-declare the material values in page CSS or inline styles. The drift guardrail's material rule bans the signature values (opaque gradient+shadow stack, glass base fill 0.16, icon-well cyan-0.35 border) in TSX. sonner.tsx is the one whitelisted exception (third-party toast internals need !important arbitrary values via its classNames API). State modifiers (is-active elevated fills, elevation steps) and pure geometry overrides remain legitimately local.
+**Why:** Task-176 review rejected value-migration alone; duplicated recipes drift silently.
+**How to apply:** new tiles/cards/buttons start from a shared class + local geometry; intentional material changes edit index.css + guardrail lock in the same commit.

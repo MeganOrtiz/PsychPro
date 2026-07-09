@@ -96,13 +96,8 @@ export function NotificationsBell() {
   return (
     <div className="relative" ref={dropdownRef}>
       <button
-        className="relative w-10 h-10 rounded-md flex items-center justify-center transition-all hover:scale-105"
-        style={{
-          background: "rgba(var(--pp-ocean-deep-rgb), 0.16)",
-          border: "1px solid var(--pp-line-bright)",
-          boxShadow: "inset 0 1px 0 var(--pp-bevel-bright)",
-          color: PALETTE.mist,
-        }}
+        className="mat-glass relative w-10 h-10 rounded-md flex items-center justify-center transition-all hover:scale-105"
+        style={{ color: PALETTE.mist }}
         onClick={() => setOpen((o) => !o)}
         aria-label="Notifications"
         data-testid="notifications-bell"
@@ -121,13 +116,7 @@ export function NotificationsBell() {
 
       {open && (
         <div
-          className="absolute right-0 top-12 w-80 max-h-[70vh] overflow-y-auto rounded-2xl z-[60] shadow-2xl"
-          style={{
-            background: "linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%)",
-            border: "1px solid var(--pp-line)",
-            boxShadow:
-              "inset 0 1px 0 var(--pp-bevel), 0 22px 48px -32px var(--pp-shadow)",
-          }}
+          className="mat-opaque absolute right-0 top-12 w-80 max-h-[70vh] overflow-y-auto z-[60]"
           data-testid="notifications-dropdown"
         >
           <div className="p-3 border-b border-white/10 flex items-center justify-between">

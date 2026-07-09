@@ -186,13 +186,7 @@ function StructureSearch({
       role="presentation"
     >
       <div
-        className="w-full max-w-xl rounded-2xl border overflow-hidden"
-        style={{
-          background: "linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%)",
-          borderColor: "var(--pp-line)",
-          boxShadow:
-            "inset 0 1px 0 var(--pp-bevel), 0 22px 48px -32px var(--pp-shadow)",
-        }}
+        className="mat-opaque w-full max-w-xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -467,13 +461,7 @@ function StructureDetail({
 
   return (
     <div
-      className="rounded-2xl border overflow-hidden flex flex-col h-full min-h-0 max-h-full"
-      style={{
-        background: "linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%)",
-        borderColor: "var(--pp-line)",
-        boxShadow:
-          "inset 0 1px 0 var(--pp-bevel), 0 22px 48px -32px var(--pp-shadow)",
-      }}
+      className="mat-opaque overflow-hidden flex flex-col h-full min-h-0 max-h-full"
       data-testid="structure-detail"
     >
       {/* Header */}
@@ -874,22 +862,11 @@ const HOTSPOTS: Record<ViewKey, Hotspot[]> = {
 function EmptyDetail() {
   return (
     <div
-      className="rounded-2xl border p-6 h-full flex flex-col items-center justify-center text-center"
-      style={{
-        background: "linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%)",
-        borderColor: "var(--pp-line)",
-        boxShadow:
-          "inset 0 1px 0 var(--pp-bevel), 0 22px 48px -32px var(--pp-shadow)",
-      }}
+      className="mat-opaque p-6 h-full flex flex-col items-center justify-center text-center"
       data-testid="empty-detail"
     >
       <div
-        className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
-        style={{
-          background: "rgba(var(--pp-ocean-deep-rgb), 0.22)",
-          border: "1px solid rgba(var(--pp-cyan-rgb), 0.35)",
-          boxShadow: "inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16)",
-        }}
+        className="mat-icon-well w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
       >
         <Target className="w-7 h-7" style={{ color: PALETTE.surf }} />
       </div>
@@ -936,13 +913,7 @@ function NumberedKey({
 
   return (
     <div
-      className="rounded-2xl border h-full flex flex-col overflow-hidden"
-      style={{
-        background: "linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%)",
-        borderColor: "var(--pp-line)",
-        boxShadow:
-          "inset 0 1px 0 var(--pp-bevel), 0 22px 48px -32px var(--pp-shadow)",
-      }}
+      className="mat-opaque h-full flex flex-col overflow-hidden"
       data-testid="brain-key"
     >
       {/* Header — view name, count, and inline type legend */}
@@ -1871,13 +1842,7 @@ export default function BrainLabPage() {
         {/* Center: brain diagram + numbered key below (mobile) */}
         <div className="flex flex-col gap-3 min-h-0 min-w-0 h-full overflow-hidden">
           <div
-            className="relative rounded-2xl border overflow-hidden flex-1 min-h-0 h-full"
-            style={{
-              background: "linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%)",
-              borderColor: "var(--pp-line)",
-              boxShadow:
-                "inset 0 1px 0 var(--pp-bevel), 0 22px 48px -32px var(--pp-shadow)",
-            }}
+            className="mat-opaque relative overflow-hidden flex-1 min-h-0 h-full"
             data-testid="brain-diagram-wrap"
           >
             {viewMode === "3d" ? (

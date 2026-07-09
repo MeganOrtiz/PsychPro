@@ -191,7 +191,7 @@ export function EpppDashboardView({
         {/* Stat row: readiness · streak · exam countdown */}
         <section className="epd-stat-row">
           {/* Readiness */}
-          <article className="epd-card epd-card--readiness">
+          <article className="mat-opaque epd-card epd-card--readiness">
             <ReadinessRing pct={readiness} loading={readinessLoading} />
             <div className="epd-readiness-meta">
               <p className="epd-card-label">
@@ -208,7 +208,7 @@ export function EpppDashboardView({
           </article>
 
           {/* Streak */}
-          <article className="epd-card epd-card--streak">
+          <article className="mat-opaque epd-card epd-card--streak">
             <p className="epd-card-label">
               <Flame aria-hidden /> Study streak
             </p>
@@ -235,7 +235,7 @@ export function EpppDashboardView({
           </article>
 
           {/* Exam countdown */}
-          <article className="epd-card epd-card--exam">
+          <article className="mat-opaque epd-card epd-card--exam">
             <p className="epd-card-label">
               <CalendarClock aria-hidden /> Exam countdown
             </p>
@@ -319,14 +319,14 @@ export function EpppDashboardView({
                 return (
                 <div
                   key={d.category}
-                  className="epd-domain epd-domain--loading"
+                  className="mat-glass epd-domain epd-domain--loading"
                   data-testid={`eppp-domain-loading-${d.category
                     .toLowerCase()
                     .replace(/[^a-z0-9]+/g, "-")}`}
                 >
                   <div className="epd-domain-top">
                     <span className="epd-domain-head">
-                      <span className="epd-domain-icon">
+                      <span className="mat-icon-well epd-domain-icon">
                         <Icon aria-hidden />
                       </span>
                       <span className="epd-domain-name">{d.category}</span>
@@ -343,7 +343,7 @@ export function EpppDashboardView({
               })}
             </div>
           ) : domainStats.length === 0 ? (
-            <div className="epd-empty">
+            <div className="mat-glass epd-empty">
               No EPPP domains are loaded for this dashboard yet.
             </div>
           ) : (
@@ -354,14 +354,14 @@ export function EpppDashboardView({
                   <Link
                     key={d.category}
                     href={epppDomainAnchor(d.category)}
-                    className={`epd-domain${d.mastered ? " is-mastered" : ""}`}
+                    className={`mat-glass mat-glass-interactive epd-domain${d.mastered ? " is-mastered" : ""}`}
                     data-testid={`eppp-domain-${d.category
                       .toLowerCase()
                       .replace(/[^a-z0-9]+/g, "-")}`}
                   >
                     <div className="epd-domain-top">
                       <span className="epd-domain-head">
-                        <span className="epd-domain-icon">
+                        <span className="mat-icon-well epd-domain-icon">
                           <Icon aria-hidden />
                         </span>
                         <span className="epd-domain-name">{d.category}</span>
@@ -404,9 +404,9 @@ export function EpppDashboardView({
           </div>
 
           {recommendedLoading ? (
-            <div className="epd-empty">Finding your next lessons…</div>
+            <div className="mat-glass epd-empty">Finding your next lessons…</div>
           ) : recommended.length === 0 ? (
-            <div className="epd-empty">
+            <div className="mat-glass epd-empty">
               No lessons yet — start with any domain above.
             </div>
           ) : (
@@ -414,11 +414,11 @@ export function EpppDashboardView({
               {recommended.map((t) => (
                 <button
                   key={t.topicId}
-                  className="epd-next"
+                  className="mat-glass mat-glass-interactive epd-next"
                   onClick={() => onNavigate(epppTopicPath(t.topicId))}
                   data-testid={`eppp-next-${t.topicId}`}
                 >
-                  <span className="epd-next-icon">
+                  <span className="mat-icon-well epd-next-icon">
                     {t.score > 0 ? (
                       <Sparkles aria-hidden />
                     ) : (
@@ -576,37 +576,6 @@ const styles = `
 }
 
 /* ---- Header ---- */
-.epd-head {
-  position: relative;
-  min-height: clamp(92px, 10vw, 112px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  padding: clamp(24px, 3vw, 32px) clamp(18px, 4vw, 40px);
-  text-align: center;
-  border-radius: 20px;
-  border: 1px solid var(--pp-line);
-  background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel),
-    0 22px 48px -32px var(--pp-shadow);
-}
-.epd-head-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 57%;
-  opacity: 0.62;
-  filter: saturate(1.06) contrast(1.04);
-}
-.epd-head-shade {
-  position: absolute;
-  inset: 0;
-  background: hsl(var(--surf-hue) var(--surf-sat) 12% / 0.96);
-}
 .epd-title {
   position: relative;
   z-index: 1;
@@ -623,13 +592,7 @@ const styles = `
 /* ---- Shared card ---- */
 .epd-card {
   position: relative;
-  border-radius: 20px;
   padding: clamp(18px, 2vw, 24px);
-  background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);
-  border: 1px solid var(--pp-line);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel),
-    0 22px 48px -32px var(--pp-shadow);
 }
 .epd-card-label {
   display: inline-flex;
@@ -804,13 +767,11 @@ const styles = `
 .epd-section-link:hover { color: ${C.cloud}; }
 .epd-section-link:hover svg { transform: translateX(3px); }
 .epd-empty {
-  border-radius: 16px;
   padding: 28px;
   text-align: center;
   font-size: 14px;
   color: ${C.muted};
-  border: 1px dashed ${C.hairline};
-  background: rgba(var(--pp-ocean-deep-rgb), 0.16);
+  border-style: dashed;
 }
 
 /* domain grid */
@@ -821,24 +782,8 @@ const styles = `
   display: flex;
   flex-direction: column;
   gap: 12px;
-  border-radius: 16px;
   padding: 18px;
   text-decoration: none;
-  background: rgba(var(--pp-ocean-deep-rgb), 0.16);
-  border: 1px solid var(--pp-line-bright);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel-bright),
-    0 12px 28px -22px var(--pp-shadow);
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease, background 0.24s ease;
-}
-.epd-domain:hover {
-  transform: translateY(-3px);
-  border-color: rgba(var(--pp-bright-rgb), 0.60);
-  background: rgba(var(--pp-ocean-deep-rgb), 0.26);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel-bright),
-    0 0 22px -4px var(--pp-glow),
-    0 16px 34px -22px var(--pp-shadow);
 }
 .epd-domain.is-mastered {
   border-color: rgba(var(--pp-bright-rgb), 0.60);
@@ -856,9 +801,6 @@ const styles = `
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
   width: 34px; height: 34px; border-radius: 10px;
   color: ${C.cyan};
-  background: rgba(var(--pp-ocean-deep-rgb), 0.22);
-  border: 1px solid rgba(var(--pp-cyan-rgb), 0.35);
-  box-shadow: inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16);
 }
 .epd-domain-icon svg { width: 17px; height: 17px; }
 .epd-domain-name { font-size: 14.5px; font-weight: 600; color: ${C.cloud}; line-height: 1.3; }
@@ -886,33 +828,14 @@ const styles = `
   display: flex;
   align-items: center;
   gap: 14px;
-  border-radius: 16px;
   padding: 14px 16px;
   text-align: left;
   cursor: pointer;
-  background: rgba(var(--pp-ocean-deep-rgb), 0.16);
-  border: 1px solid var(--pp-line-bright);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel-bright),
-    0 12px 28px -22px var(--pp-shadow);
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease, background 0.24s ease;
-}
-.epd-next:hover {
-  transform: translateY(-2px);
-  border-color: rgba(var(--pp-bright-rgb), 0.60);
-  background: rgba(var(--pp-ocean-deep-rgb), 0.26);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel-bright),
-    0 0 22px -4px var(--pp-glow),
-    0 16px 34px -22px var(--pp-shadow);
 }
 .epd-next-icon {
   display: inline-flex; align-items: center; justify-content: center;
   width: 40px; height: 40px; flex-shrink: 0;
   border-radius: 11px;
-  background: rgba(var(--pp-ocean-deep-rgb), 0.22);
-  border: 1px solid rgba(var(--pp-cyan-rgb), 0.35);
-  box-shadow: inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16);
   color: ${C.cyan};
 }
 .epd-next-icon svg { width: 19px; height: 19px; }

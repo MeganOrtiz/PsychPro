@@ -107,12 +107,7 @@ export default function TermsPage() {
 
         {/* Table of contents */}
         <nav
-          className="mt-10 mb-12 rounded-lg p-5"
-          style={{
-            border: "1px solid var(--pp-line)",
-            background: "linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%)",
-            boxShadow: "inset 0 1px 0 var(--pp-bevel), 0 22px 48px -32px var(--pp-shadow)",
-          }}
+          className="mat-opaque mt-10 mb-12 p-5"
           aria-label="On this page"
         >
           <p
@@ -439,13 +434,8 @@ export default function TermsPage() {
               counter-notices should be sent to our designated agent:
             </p>
             <div
-              className="rounded-lg p-4 text-sm"
-              style={{
-                border: "1px solid var(--pp-line)",
-                background: "linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%)",
-                boxShadow: "inset 0 1px 0 var(--pp-bevel), 0 22px 48px -32px var(--pp-shadow)",
-                color: P.cloud,
-              }}
+              className="mat-opaque p-4 text-sm"
+              style={{ color: P.cloud }}
             >
               <p style={{ ...TRACK_NAV, fontSize: 11 }}>
                 PSYCHPRO — DMCA DESIGNATED AGENT
@@ -582,12 +572,7 @@ export default function TermsPage() {
               If you have questions about these Terms, please contact us:
             </p>
             <div
-              className="rounded-lg p-4 text-sm"
-              style={{
-                border: "1px solid var(--pp-line)",
-                background: "linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%)",
-                boxShadow: "inset 0 1px 0 var(--pp-bevel), 0 22px 48px -32px var(--pp-shadow)",
-              }}
+              className="mat-opaque p-4 text-sm"
             >
               <p style={{ ...TRACK_NAV, fontSize: 11, color: P.cloud }}>
                 PSYCHPRO

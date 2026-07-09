@@ -86,13 +86,7 @@ export default function ReflectionsPage() {
 
         {!hydrated ? (
           <div
-            className="rounded-xl border p-8"
-            style={{
-              background: "linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%)",
-              borderColor: "var(--pp-line)",
-              boxShadow:
-                "inset 0 1px 0 var(--pp-bevel), 0 22px 48px -32px var(--pp-shadow)",
-            }}
+            className="mat-opaque p-8"
             data-testid="reflections-loading"
           >
             <div
@@ -141,13 +135,7 @@ export default function ReflectionsPage() {
                   {group.items.map((r) => (
                     <div
                       key={`${r.topicId}-${r.questionId}`}
-                      className="rounded-xl border p-4"
-                      style={{
-                        background: "linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%)",
-                        borderColor: "var(--pp-line)",
-                        boxShadow:
-                          "inset 0 1px 0 var(--pp-bevel), 0 22px 48px -32px var(--pp-shadow)",
-                      }}
+                      className="mat-opaque p-4"
                       data-testid={`reflection-${r.questionId}`}
                     >
                       {r.questionText ? (

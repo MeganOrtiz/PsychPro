@@ -355,6 +355,53 @@ for (const file of walkSrc(SRC, [])) {
   }
 }
 
+// --- 8b) MATERIAL DISCIPLINE: no hand-rolled material recipes in TSX ---------
+// Tiles/cards/buttons must COMPOSE the shared material classes from index.css
+// (.mat-opaque / .mat-glass / .mat-icon-well / .pp-btn-* / .eppp-launch-btn).
+// Re-declaring the material values inline or in page <style> blocks is banned.
+const MATERIAL_SIGNATURES = [
+  {
+    re: /linear-gradient\(\s*180deg\s*,\s*var\(--pp-surface\)/,
+    name: "OPAQUE gradient (var(--pp-surface) → var(--pp-deep))",
+    fix: "compose .mat-opaque instead of re-declaring the opaque material",
+  },
+  {
+    re: /inset 0 1px 0 var\(--pp-bevel\)\s*,\s*0 22px 48px -32px var\(--pp-shadow\)/,
+    name: "OPAQUE shadow stack (bevel + 22/48 drop)",
+    fix: "compose .mat-opaque instead of re-declaring the opaque material",
+  },
+  {
+    re: /rgba\(var\(--pp-ocean-deep-rgb\),\s*0\.16\)/,
+    name: "GLASS base fill (ocean-deep 0.16)",
+    fix: "compose .mat-glass / .mat-glass-interactive instead of re-declaring the glass material (state modifiers use elevated steps, not the base fill)",
+  },
+  {
+    re: /border:\s*["'`]?1px solid rgba\(var\(--pp-cyan-rgb\),\s*0\.35\)/,
+    name: "ICON-WELL border (cyan 0.35)",
+    fix: "compose .mat-icon-well (+ --round) instead of re-declaring the icon-well material",
+  },
+];
+// sonner.tsx styles third-party toast internals through sonner's classNames
+// API, which needs !important arbitrary values — it cannot compose the
+// shared classes, so its glass-tinted action button is tolerated.
+const MATERIAL_WHITELIST = [path.join("src", "components", "ui", "sonner.tsx")];
+for (const file of walkSrc(SRC, [])) {
+  const rel = path.relative(ROOT, file);
+  if (rel.includes("dev-glass-preview")) continue;
+  if (rel === path.join("src", "index.css")) continue;
+  if (MATERIAL_WHITELIST.some((w) => rel === w)) continue;
+  const text = fs.readFileSync(file, "utf8");
+  const lines = text.split("\n");
+  for (let i = 0; i < lines.length; i++) {
+    if (/^\s*(\/\/|\*|\/\*)/.test(lines[i])) continue;
+    for (const sig of MATERIAL_SIGNATURES) {
+      if (sig.re.test(lines[i])) {
+        fail(`hand-rolled material in ${rel}:${i + 1} — ${sig.name}`, sig.fix);
+      }
+    }
+  }
+}
+
 // --- 9) TOKEN DISCIPLINE: no raw color literals in TS/TSX --------------------
 // Every color in application code must come from the CSS tokens
 // (var(--pp-*), rgba(var(--pp-*-rgb), a)) or from src/lib/palette.ts

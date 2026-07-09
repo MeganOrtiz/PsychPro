@@ -88,9 +88,9 @@ export default function EpppPage() {
 
       <div className="eppp-shell">
         {/* Hero */}
-        <section className="eppp-hero" data-testid="eppp-hero">
+        <section className="mat-opaque eppp-hero" data-testid="eppp-hero">
           <div className="eppp-hero-glow" aria-hidden />
-          <div className="eppp-hero-icon">
+          <div className="mat-icon-well eppp-hero-icon">
             <GraduationCap aria-hidden />
           </div>
           <p className="eppp-eyebrow">FOR THE LICENSING EXAM</p>
@@ -104,10 +104,10 @@ export default function EpppPage() {
             needed for both EPPP success and real-world clinical practice.
           </p>
           <div className="eppp-cta-row">
-            <Link href="/eppp/suite/domains" className="eppp-btn eppp-btn--primary" data-testid="eppp-cta-start">
+            <Link href="/eppp/suite/domains" className="pp-btn-gloss eppp-btn" data-testid="eppp-cta-start">
               Start studying <ArrowRight aria-hidden />
             </Link>
-            <Link href="/eppp/suite/performance-analytics" className="eppp-btn eppp-btn--ghost" data-testid="eppp-cta-progress">
+            <Link href="/eppp/suite/performance-analytics" className="pp-btn-glass eppp-btn" data-testid="eppp-cta-progress">
               View my progress
             </Link>
           </div>
@@ -123,8 +123,8 @@ export default function EpppPage() {
             {PILLARS.map((p) => {
               const Icon = p.icon;
               return (
-                <article key={p.title} className="eppp-card">
-                  <div className="eppp-card-icon">
+                <article key={p.title} className="mat-opaque eppp-card">
+                  <div className="mat-icon-well eppp-card-icon">
                     <Icon aria-hidden />
                   </div>
                   <h3 className="eppp-card-title">{p.title}</h3>
@@ -148,10 +148,10 @@ export default function EpppPage() {
                 <Link
                   key={e.title}
                   href={e.href}
-                  className="eppp-link-card"
+                  className="mat-opaque mat-opaque-interactive eppp-link-card"
                   data-testid={`eppp-entry-${e.cta}`}
                 >
-                  <div className="eppp-card-icon">
+                  <div className="mat-icon-well eppp-card-icon">
                     <Icon aria-hidden />
                   </div>
                   <h3 className="eppp-card-title">{e.title}</h3>
@@ -187,13 +187,7 @@ const styles = `
   position: relative;
   overflow: hidden;
   text-align: center;
-  border-radius: 20px;
   padding: clamp(32px, 5vw, 64px) clamp(22px, 4vw, 56px);
-  background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);
-  border: 1px solid var(--pp-line);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel),
-    0 22px 48px -32px var(--pp-shadow);
 }
 .eppp-hero-glow {
   position: absolute;
@@ -214,9 +208,6 @@ const styles = `
   height: 60px;
   margin-bottom: 18px;
   border-radius: 16px;
-  background: rgba(var(--pp-ocean-deep-rgb), 0.22);
-  border: 1px solid rgba(var(--pp-cyan-rgb), 0.35);
-  box-shadow: inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16);
   color: ${C.cyan};
 }
 .eppp-hero-icon svg { width: 28px; height: 28px; }
@@ -268,26 +259,6 @@ const styles = `
   transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.2s ease;
 }
 .eppp-btn svg { width: 16px; height: 16px; }
-.eppp-btn--primary {
-  color: ${C.ink};
-  border: 1px solid ${alpha(PP.neutral300, 0.65)};
-  background: ${PP.cyan};
-  box-shadow: inset 0 1px 0 rgba(var(--pp-white-rgb), 0.5), 0 0 22px -4px ${C.cyan}b3;
-}
-.eppp-btn--primary:hover {
-  transform: translateY(-1px);
-  box-shadow: inset 0 1px 0 rgba(var(--pp-white-rgb), 0.55), 0 0 32px 0 ${C.cyan}d9;
-}
-.eppp-btn--ghost {
-  color: ${C.mist};
-  border: 1px solid ${C.hairlineStrong};
-  background: hsl(var(--surf-hue) var(--surf-sat) 30% / 0.55);
-}
-.eppp-btn--ghost:hover {
-  transform: translateY(-1px);
-  border-color: ${C.cyan}80;
-  color: ${PP.paperWhite};
-}
 
 /* ---- Sections ---- */
 .eppp-section-eyebrow {
@@ -316,26 +287,11 @@ const styles = `
   display: flex;
   flex-direction: column;
   gap: 10px;
-  border-radius: 20px;
   padding: clamp(20px, 2.4vw, 26px);
-  background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);
-  border: 1px solid var(--pp-line);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel),
-    0 22px 48px -32px var(--pp-shadow);
 }
 .eppp-link-card {
   text-decoration: none;
   cursor: pointer;
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
-}
-.eppp-link-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(var(--pp-bright-rgb), 0.60);
-  box-shadow:
-    inset 0 1px 0 var(--pp-bevel),
-    0 0 22px -4px var(--pp-glow),
-    0 22px 48px -32px var(--pp-shadow);
 }
 .eppp-card-icon {
   display: inline-flex;
@@ -343,10 +299,6 @@ const styles = `
   justify-content: center;
   width: 44px;
   height: 44px;
-  border-radius: 12px;
-  background: rgba(var(--pp-ocean-deep-rgb), 0.22);
-  border: 1px solid rgba(var(--pp-cyan-rgb), 0.35);
-  box-shadow: inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16);
   color: ${C.cyan};
 }
 .eppp-card-icon svg { width: 22px; height: 22px; }

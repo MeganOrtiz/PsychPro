@@ -50,12 +50,7 @@ export default function UpgradePrompt({ onDismiss, reason = "generic" }: Upgrade
   return (
     <div className="p-4 md:p-6 max-w-lg mx-auto flex flex-col items-center justify-center min-h-[60vh] text-center" data-testid="upgrade-prompt">
       <div
-        className="w-16 h-16 rounded-full flex items-center justify-center mb-6"
-        style={{
-          background: "rgba(var(--pp-ocean-deep-rgb), 0.22)",
-          border: "1px solid rgba(var(--pp-cyan-rgb), 0.35)",
-          boxShadow: "inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16)",
-        }}
+        className="mat-icon-well mat-icon-well--round w-16 h-16 flex items-center justify-center mb-6"
       >
         <Lock className="w-8 h-8" style={{ color: P.tealDeep }} />
       </div>
