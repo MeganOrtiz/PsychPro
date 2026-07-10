@@ -7,9 +7,11 @@
 // palette.ts / index.css in the same commit — the guardrail scripts
 // (check-surface-hue.mjs / check-design-drift.mjs) enforce the locked palette.
 //
-// Palette: black floor; tinted navy surfaces; navy structural lines; ocean and
-// cyan accents; icy highlight; locked neutral grays. The KEYS are legacy names
-// kept so every consumer compiles.
+// Palette: black floor; near-black surfaces; gray structural lines; light-gray
+// action accents; white highlight; locked neutral grays. The logged-in app is
+// black/white/gray ONLY — the landing page keeps the blue-window look via the
+// LANDING constants in palette.ts. The KEYS are legacy names kept so every
+// consumer compiles.
 // =============================================================================
 
 import { PP } from "@/lib/palette";
@@ -25,7 +27,7 @@ export const STUDY_PALETTE = {
   // Structural lines — borders, dividers
   steel: PP.navyBright,
 
-  // Accent ladder (legacy key names, blue values)
+  // Accent ladder (legacy key names, grayscale values — landing keeps blue via LANDING)
   tealDeep: PP.ocean,     // mid ocean
   teal: PP.cyan,          // primary action cyan
   surf: PP.bright,        // luminous cyan accent

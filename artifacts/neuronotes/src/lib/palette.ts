@@ -18,19 +18,19 @@
 
 export const PP = {
   floor: "#000000",
-  deep: "#04101f",
-  surface: "#071c33",
-  raised: "#092642",
-  navy: "#052a58",
-  navyBright: "#0e4e71",
-  ocean: "#0b669a",
-  oceanDeep: "#0d58a2",
-  cyan: "#08a5d1",
-  bright: "#0bd4df",
-  icy: "#aaedf0",
+  deep: "#0a0a0a",
+  surface: "#141414",
+  raised: "#1a1a1a",
+  navy: "#181818",
+  navyBright: "#2e2e2e",
+  ocean: "#3c3c3c",
+  oceanDeep: "#4a4a4a",
+  cyan: "#d6d6d6",
+  bright: "#f0f0f0",
+  icy: "#fafafa",
   text: "#e5e5e5",
   textDim: "#a3a3a3",
-  ink: "#03131f",
+  ink: "#111111",
   white: "#ffffff",
   black: "#000000",
   /* Semantic status (match the guardrail's semantic hue windows). */
@@ -55,7 +55,7 @@ export const PP = {
   docCode: "#f1f3f4",
   docBorder: "#c8d2d6",
   docQuote: "#4c636b",
-  deepSoft: "#05172b",
+  deepSoft: "#0d0d0d",
   textSoft: "#cfcfcf",
   neutral100: "#f5f5f5",
   neutral300: "#d4d4d4",
@@ -98,3 +98,17 @@ export function alpha(hex: string, a: number): string {
   const b = parseInt(x.slice(4, 6), 16);
   return `rgba(${r}, ${g}, ${b}, ${a})`;
 }
+
+/* LANDING EXCEPTION — the marketing landing page keeps the blue-window look
+   while the logged-in app runs black/white/gray. These are the retained blue
+   values, consumed ONLY by src/pages/landing.tsx (plus the scoped
+   .landing-root --surf-hue/--surf-sat override in index.css). */
+export const LANDING = {
+  deep: "#04101f",
+  surface: "#071c33",
+  ocean: "#0b669a",
+  cyan: "#08a5d1",
+  bright: "#0bd4df",
+  icy: "#aaedf0",
+  ink: "#03131f",
+} as const;

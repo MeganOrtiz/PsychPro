@@ -5,11 +5,12 @@
 // Companion to check-surface-hue.mjs. The palette guardrail pins COLOR; this
 // one pins STRUCTURE. The app runs on the owner-approved three-material system:
 //
-//   OPAQUE — structural panels: solid navy-tint gradient, lit top bevel,
+//   OPAQUE — structural panels: solid near-black gradient, lit top bevel,
 //            neutral black shadow. Never glows.
 //   GLASS  — nested tiles: tinted transparency (NO backdrop-filter/blur),
 //            brighter bevel; interactive glass glows + lifts on hover only.
-//   GLOSS  — buttons: saturated cyan gradient + glossy highlight; hover corona.
+//   GLOSS  — buttons: light-gray gradient + glossy highlight; hover corona.
+//   (Grayscale foundation 2026-07-10 — the landing page alone keeps blue.)
 //
 // Structural invariants enforced here:
 //   1. Pure-black page floors (body + .study-page-bg::before), no wallpaper,
@@ -70,19 +71,19 @@ function ruleBlock(source, selectorNeedle) {
 const rootBlock = ruleBlock(css, ":root");
 const TOKENS = [
   { name: "global corner radius", re: /--radius:\s*\.625rem;/, expected: "--radius: .625rem;" },
-  { name: "surface hue knob", re: /--surf-hue:\s*211;/, expected: "--surf-hue: 211;  (locked blue surface hue)" },
-  { name: "surface saturation knob", re: /--surf-sat:\s*62%;/, expected: "--surf-sat: 62%;" },
+  { name: "surface hue knob", re: /--surf-hue:\s*0;/, expected: "--surf-hue: 0;  (locked neutral surface hue — landing overrides to 211 in its scoped block)" },
+  { name: "surface saturation knob", re: /--surf-sat:\s*0%;/, expected: "--surf-sat: 0%;" },
   // The locked --pp-* palette primitives.
   { name: "pp floor token", re: /--pp-floor:\s*#000000;/, expected: "--pp-floor: #000000;" },
-  { name: "pp deep surface token", re: /--pp-deep:\s*#04101f;/, expected: "--pp-deep: #04101f;" },
-  { name: "pp surface token", re: /--pp-surface:\s*#071c33;/, expected: "--pp-surface: #071c33;" },
-  { name: "pp navy token", re: /--pp-navy:\s*#052a58;/, expected: "--pp-navy: #052a58;" },
-  { name: "pp navy-bright token", re: /--pp-navy-bright:\s*#0e4e71;/, expected: "--pp-navy-bright: #0e4e71;" },
-  { name: "pp ocean token", re: /--pp-ocean:\s*#0b669a;/, expected: "--pp-ocean: #0b669a;" },
-  { name: "pp ocean-deep token", re: /--pp-ocean-deep:\s*#0d58a2;/, expected: "--pp-ocean-deep: #0d58a2;" },
-  { name: "pp cyan token", re: /--pp-cyan:\s*#08a5d1;/, expected: "--pp-cyan: #08a5d1;" },
-  { name: "pp bright token", re: /--pp-bright:\s*#0bd4df;/, expected: "--pp-bright: #0bd4df;" },
-  { name: "pp icy token", re: /--pp-icy:\s*#aaedf0;/, expected: "--pp-icy: #aaedf0;" },
+  { name: "pp deep surface token", re: /--pp-deep:\s*#0a0a0a;/, expected: "--pp-deep: #0a0a0a;" },
+  { name: "pp surface token", re: /--pp-surface:\s*#141414;/, expected: "--pp-surface: #141414;" },
+  { name: "pp navy token", re: /--pp-navy:\s*#181818;/, expected: "--pp-navy: #181818;" },
+  { name: "pp navy-bright token", re: /--pp-navy-bright:\s*#2e2e2e;/, expected: "--pp-navy-bright: #2e2e2e;" },
+  { name: "pp ocean token", re: /--pp-ocean:\s*#3c3c3c;/, expected: "--pp-ocean: #3c3c3c;" },
+  { name: "pp ocean-deep token", re: /--pp-ocean-deep:\s*#4a4a4a;/, expected: "--pp-ocean-deep: #4a4a4a;" },
+  { name: "pp cyan token", re: /--pp-cyan:\s*#d6d6d6;/, expected: "--pp-cyan: #d6d6d6;" },
+  { name: "pp bright token", re: /--pp-bright:\s*#f0f0f0;/, expected: "--pp-bright: #f0f0f0;" },
+  { name: "pp icy token", re: /--pp-icy:\s*#fafafa;/, expected: "--pp-icy: #fafafa;" },
   { name: "pp text token", re: /--pp-text:\s*#e5e5e5;/, expected: "--pp-text: #e5e5e5;" },
   { name: "pp text-dim token", re: /--pp-text-dim:\s*#a3a3a3;/, expected: "--pp-text-dim: #a3a3a3;" },
 ];
@@ -206,7 +207,7 @@ if (!/backdrop-filter:\s*none\s*!important;/.test(css)) {
       if (depth === 0) { spans.push({ sel, body: css.slice(bodyStart, i), at: bodyStart }); selStart = i + 1; }
     }
   }
-  const GLOW = /var\(--pp-glow(?:-strong)?\)|rgba\(\s*11\s*,\s*212\s*,\s*223/;
+  const GLOW = /var\(--pp-glow(?:-strong)?\)|rgba\(\s*240\s*,\s*240\s*,\s*240/;
   for (const s of spans) {
     if (!GLOW.test(s.body)) continue;
     if (/@keyframes/.test(s.sel)) continue;
@@ -580,4 +581,4 @@ if (violations.length) {
   console.error(`If the change is intentional, update the matching lock entry in the same commit.\n`);
   process.exit(1);
 }
-console.log("✓ Design system lock passed — blue three-material system, typography, and shared component contracts are intact.");
+console.log("✓ Design system lock passed — grayscale three-material system (landing blue exception), typography, and shared component contracts are intact.");

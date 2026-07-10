@@ -11,7 +11,9 @@
 //
 // This check fails when a color OUTSIDE the system drifts into the UI. Allowed:
 //   - Neutrals (saturation <= 25%).
-//   - The blue family (hue 180-220) — the locked palette lives here.
+//   - The blue family (hue 180-220) — retained ONLY for the landing page
+//     (LANDING consts in palette.ts + .landing-root scope) and brain-structure
+//     teaching colors; the logged-in app itself is black/white/gray.
 //   - Semantic status colors: red/amber (hue 0-70) and green (hue 90-160)
 //     for destructive/warning/success states.
 //   - src/data/brain-structures.ts — functional anatomy colors used by the
@@ -33,7 +35,7 @@ const MAX_NEUTRAL_S = 0.25; // anything at/below this saturation is fine
 const ALLOWED_HUES = [
   [0, 70],     // red … amber (destructive, warnings)
   [90, 160],   // green (success)
-  [178, 220],  // THE LOCKED BLUE FAMILY (icy 183 … navy 213)
+  [178, 220],  // BLUE FAMILY — landing page + brain-structures only (app is gray)
   [345, 360],  // wrap-around reds
 ];
 // Files exempt from the palette ban.
@@ -132,7 +134,7 @@ for (const file of walk(SRC, [])) {
 if (violations.length) {
   console.error(`\n✗ Palette guardrail FAILED — ${violations.length} off-palette color(s) crept in:\n`);
   for (const v of violations) console.error("  " + v);
-  console.error("\nFix: use the --pp-* tokens (blue family, hue 180-220), neutral grays, or a semantic red/amber/green status color.\n");
+  console.error("\nFix: use the neutral gray --pp-* tokens (app), LANDING consts (landing page only), or a semantic red/amber/green status color.\n");
   process.exit(1);
 }
-console.log("✓ Palette guardrail passed — all colors within the locked blue three-material system.");
+console.log("✓ Palette guardrail passed — all colors within the locked palette (gray app, blue landing, semantic status).");

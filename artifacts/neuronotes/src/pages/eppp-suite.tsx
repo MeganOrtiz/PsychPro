@@ -2125,7 +2125,7 @@ const styles = `
 .eps-mq-select {
   appearance: none; cursor: pointer; padding: 9px 30px 9px 14px; border-radius: 10px;
   font-size: 13px; font-weight: 600; color: ${C.cloud};
-  background: hsl(var(--surf-hue) var(--surf-sat) 30% / 0.7) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2308a5d1' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;
+  background: hsl(var(--surf-hue) var(--surf-sat) 30% / 0.7) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23d6d6d6' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;
   border: 1px solid ${C.hairlineStrong}; max-width: 280px;
 }
 .eps-mq-select:focus { outline: none; border-color: ${C.cyan}80; }

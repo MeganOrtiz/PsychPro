@@ -31,7 +31,7 @@ import brainLateral from "@/assets/brain-views/lateral.webp";
 import heroBrain from "@/assets/bg/landing-hero-brain.jpeg";
 import founderMegan from "@/assets/founder/megan.webp";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
-import { PP, alpha } from "@/lib/palette";
+import { PP, LANDING, alpha } from "@/lib/palette";
 import { isEpppTopic } from "@/lib/eppp-content";
 
 // =============================================================================
@@ -72,35 +72,35 @@ const STUDY_TOOLS = [
     title: "Review in Minutes",
     body:
       "Review key concepts quickly with detailed flashcards designed to strengthen long-term retention.",
-    accent: PP.cyan,
+    accent: LANDING.cyan,
   },
   {
     icon: ClipboardList,
     title: "Knowledge Checks",
     body:
       "Identify what you know, strengthen areas of growth, and deepen understanding with detailed explanations for every question.",
-    accent: PP.bright,
+    accent: LANDING.bright,
   },
   {
     icon: BookOpen,
     title: "Key Concepts. Organized.",
     body:
       "Study guides with consolidated need-to-know concepts designed to help you spend less time searching across resources and more time actively learning.",
-    accent: PP.icy,
+    accent: LANDING.icy,
   },
   {
     icon: GraduationCap,
     title: "Test Yourself to Build Competence and Confidence",
     body:
       "Practice with exam-style questions that help you assess readiness, identify gaps, and strengthen clinical reasoning.",
-    accent: PP.cyan,
+    accent: LANDING.cyan,
   },
   {
     icon: Award,
     title: "Measure Your Mastery",
     body:
       "Bring everything together with cumulative exams designed to help you evaluate your understanding before moving forward.",
-    accent: PP.bright,
+    accent: LANDING.bright,
   },
 ] as const;
 
@@ -718,19 +718,19 @@ export default function LandingPage() {
 // pulled from STUDY_PALETTE via the JS `P` import; the rest are stable CSS
 // tokens used only on this page.
 const C = {
-  cyan: P.surf,        // primary glow
-  cyanSoft: P.mist,    // icy text
+  cyan: LANDING.bright,        // primary glow
+  cyanSoft: LANDING.icy,    // icy text
   mistSoft: P.mistSoft,// muted icy text (chart ticks)
-  cyanMid: P.teal,
-  cyanDeep: P.tealDeep,
+  cyanMid: LANDING.cyan,
+  cyanDeep: LANDING.ocean,
   ink: PP.inkOnGreen,              // deep cerulean ink — text on the white preview card
   inkSoft: alpha(PP.inkOnGreen, 0.58),  // muted ink — chart ticks on white
   grid: alpha(PP.inkOnGreen, 0.1),     // chart grid lines on white
-  bg: PP.surface,
+  bg: LANDING.surface,
   bgPanel: "hsl(var(--surf-hue) var(--surf-sat) 10% / 0.82)",
   bgPanelStrong: "hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90)",
-  hairline: alpha(PP.cyan, 0.36),
-  hairlineStrong: alpha(PP.cyan, 0.58),
+  hairline: alpha(LANDING.cyan, 0.36),
+  hairlineStrong: alpha(LANDING.cyan, 0.58),
 };
 
 const styles = `

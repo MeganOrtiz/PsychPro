@@ -1,4 +1,5 @@
-- [PsychPro blue three-material system](psychpro-blue-material-system.md) — CURRENT (2026-07-09, supersedes the black foundation): Opaque/Glass/Gloss on --pp-* blue tokens; glow hover-only; no backdrop-filter; guardrails repointed.
+- [PsychPro gray foundation v2](psychpro-gray-foundation-v2.md) — CURRENT (2026-07-10): logged-in app is black/white/gray on grayed --pp-* tokens; LANDING page alone keeps the blue-window look (scoped .landing-root override + LANDING consts in palette.ts).
+- [PsychPro blue three-material system](psychpro-blue-material-system.md) — historical for the app (2026-07-10: app retoned gray); structure (Opaque/Glass/Gloss, glow hover-only, no backdrop-filter) still current; blues live on only in the landing page.
 - [PsychPro black foundation](psychpro-black-foundation.md) — historical (same-day 2026-07-09); replaced hours later by the blue three-material system above.
 - [PsychPro token lock](psychpro-token-lock.md) — no raw color literals in TS/TSX outside palette.ts (+2 whitelisted files); use PP/alpha() or var(--pp-*); broad recipes banned, primitives emit scoped pp-* classes; drift guardrail enforces.
 - [Claims discipline](claims-discipline.md) — never report a fix as "done" until it's been verified end-to-end; user has called this out repeatedly.
