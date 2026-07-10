@@ -11,9 +11,7 @@ import {
   Repeat,
   Shuffle,
   Upload,
-  Sparkles,
   Activity,
-  Compass,
   ArrowRight,
   Check,
   Award,
@@ -322,17 +320,17 @@ export default function LandingPage() {
               className="landing-cta landing-cta-primary"
               data-testid="cta-join-now"
             >
-              <BookOpen className="landing-cta-icon" aria-hidden />
-              <span>Start Learning Smarter</span>
+              <span>START LEARNING SMARTER</span>
+              <ArrowRight className="landing-cta-icon" aria-hidden />
             </button>
             <button
               type="button"
               onClick={goToPlans}
-              className="landing-cta landing-cta-ghost"
+              className="landing-cta landing-cta-primary"
               data-testid="cta-explore-topics"
             >
-              <Compass className="landing-cta-icon" aria-hidden />
-              <span>Explore the Platform</span>
+              <span>EXPLORE THE PLATFORM</span>
+              <ArrowRight className="landing-cta-icon" aria-hidden />
             </button>
           </div>
 
@@ -453,11 +451,11 @@ export default function LandingPage() {
             <button
               type="button"
               onClick={() => navTo("/brain-lab")}
-              className="landing-cta landing-cta-ghost"
+              className="landing-cta landing-cta-primary"
               data-testid="cta-brain-lab"
             >
-              <Brain className="landing-cta-icon" aria-hidden />
               <span>OPEN THE BRAIN LAB</span>
+              <ArrowRight className="landing-cta-icon" aria-hidden />
             </button>
           </div>
         </section>
@@ -567,11 +565,11 @@ export default function LandingPage() {
             <button
               type="button"
               onClick={() => navTo("/subscription")}
-              className="landing-cta landing-cta-ghost"
+              className="landing-cta landing-cta-primary"
               data-testid="cta-scholar"
             >
-              <Sparkles className="landing-cta-icon" aria-hidden />
               <span>SEE SCHOLAR PLANS</span>
+              <ArrowRight className="landing-cta-icon" aria-hidden />
             </button>
           </div>
         </section>
@@ -966,41 +964,6 @@ const styles = `
   width: 16px;
   height: 16px;
   flex-shrink: 0;
-}
-.landing-cta-ghost {
-  background: ${C.cyan}12;
-  border: 1.5px solid ${C.cyan}cc;
-  color: ${C.cyan};
-  box-shadow:
-    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12),
-    0 0 0 1px ${C.cyan}22 inset,
-    0 0 18px ${C.cyan}45,
-    0 0 38px -6px ${C.cyan}33;
-}
-.landing-cta-ghost:hover {
-  background: ${C.cyan}1f;
-  color: ${PP.white};
-  border-color: ${C.cyan};
-  transform: translateY(-1px);
-  box-shadow:
-    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.20),
-    0 0 0 1px ${C.cyan}3a inset,
-    0 0 30px ${C.cyan}80,
-    0 0 62px -6px ${C.cyan}55;
-}
-.landing-cta-ghost:active {
-  transform: translateY(0);
-  color: ${PP.white};
-  border-color: ${C.cyan};
-  background: ${C.cyan}30;
-  box-shadow:
-    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.26),
-    0 0 0 1px ${C.cyan}55 inset,
-    0 0 44px 2px ${C.cyan}b0,
-    0 0 84px -2px ${C.cyan}66;
-}
-.landing-cta-ghost .landing-cta-icon {
-  filter: drop-shadow(0 0 5px ${C.cyan}99);
 }
 /* Primary CTA — glowing cerulean OUTLINE (lit edge, translucent dark fill,
    soft halo) so the main action reads "lit from within" and dominates via a
