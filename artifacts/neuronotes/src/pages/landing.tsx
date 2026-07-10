@@ -1126,23 +1126,21 @@ const styles = `
   align-items: center;
   text-align: center;
   padding: 26px 22px 24px;
-  background: ${C.bgPanelStrong};
-  border: 1px solid ${C.hairline};
+  background: hsl(var(--surf-hue) var(--surf-sat) 6% / 0.88);
+  border: 1px solid ${C.hairlineStrong};
   border-radius: 16px;
   box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--accent) 14%, transparent) inset,
-    0 18px 36px -22px rgba(var(--pp-black-rgb), 0.6),
-    0 0 26px color-mix(in srgb, var(--accent) 24%, transparent);
+    0 30px 80px -40px rgba(var(--pp-black-rgb), 0.72),
+    0 0 0 1px ${C.cyan}1f inset;
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
   min-height: 230px;
 }
 .landing-feature-card:hover {
   transform: translateY(-3px);
-  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
   box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent) inset,
-    0 26px 48px -22px rgba(var(--pp-black-rgb), 0.7),
-    0 0 32px color-mix(in srgb, var(--accent) 40%, transparent);
+    0 34px 84px -40px rgba(var(--pp-black-rgb), 0.78),
+    0 0 0 1px ${C.cyan}2a inset;
 }
 .landing-feature-icon-wrap {
   display: inline-flex;
@@ -1155,9 +1153,7 @@ const styles = `
   border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
   color: var(--accent);
   margin-bottom: 18px;
-  box-shadow:
-    0 0 18px color-mix(in srgb, var(--accent) 35%, transparent),
-    inset 0 0 0 1px color-mix(in srgb, var(--accent) 14%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 14%, transparent);
 }
 .landing-feature-icon-wrap svg { width: 21px; height: 21px; }
 .landing-feature-title {
@@ -1190,14 +1186,14 @@ const styles = `
   gap: 16px;
   padding: 22px 20px;
   border-radius: 16px;
-  border: 1px solid ${C.hairline};
-  background: hsl(var(--surf-hue) var(--surf-sat) 6% / 0.90);
-  box-shadow: 0 0 22px ${C.cyan}1f, 0 0 0 1px ${C.cyan}14 inset;
+  border: 1px solid ${C.hairlineStrong};
+  background: hsl(var(--surf-hue) var(--surf-sat) 6% / 0.88);
+  box-shadow: 0 30px 80px -40px rgba(var(--pp-black-rgb), 0.72), 0 0 0 1px ${C.cyan}1f inset;
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .landing-science-item:hover {
-  border-color: ${C.hairlineStrong};
-  box-shadow: 0 0 34px ${C.cyan}33, 0 0 0 1px ${C.cyan}2a inset;
+  border-color: ${C.cyan}55;
+  box-shadow: 0 34px 84px -40px rgba(var(--pp-black-rgb), 0.78), 0 0 0 1px ${C.cyan}2a inset;
 }
 .landing-science-icon {
   display: inline-flex;
@@ -1210,7 +1206,6 @@ const styles = `
   background: ${C.cyan}14;
   border: 1px solid ${C.cyan}3a;
   color: ${C.cyan};
-  box-shadow: 0 0 16px ${C.cyan}33;
 }
 .landing-science-icon svg { width: 20px; height: 20px; }
 .landing-science-title {
