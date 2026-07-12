@@ -6,17 +6,17 @@ description: Current rule — the owner's cyan liquid-swirl artwork is the canon
 # Site-wide backdrop: owner's liquid-swirl artwork
 
 **Current durable rule (owner-directed, 2026-07-12):**
-- The owner WANTS the cyan liquid-swirl artwork as the canonical page
-  background on all three surfaces (landing, main app, EPPP suite), but it is
-  TEMPORARILY REMOVED: the 1672×941 source looked soft and the owner is
-  resizing it ("remove this ill resize now"). Floors are pure black again
-  until the resized asset arrives.
-- When it returns, place it on the single shared `.study-page-bg::before`
-  fixed layer: cover/center/no-repeat, `background-attachment: scroll`
-  (fixed-on-fixed draws a HiDPI seam — see the seam memory), pure `#000` base
-  underneath — and repoint the drift-guardrail backdrop locks + the
-  "no images in index.css" whitelist in the same commit (currently locked back
-  to no-wallpaper).
+- The cyan liquid-swirl artwork is THE canonical page background on all three
+  surfaces (landing, main app, EPPP suite). Owner supplied a resized
+  3135×1764 source (first 1672×941 cut looked soft — resolution matters, see
+  the smoke-bg memory); stored as an ~88-quality JPEG (solid black base, no
+  transparency needed, ~700KB vs 4.5MB PNG).
+- It lives on the single shared `.study-page-bg::before` fixed layer:
+  cover/center/no-repeat, `background-attachment: scroll` (fixed-on-fixed
+  draws a HiDPI seam — see the seam memory), pure `#000` base underneath.
+- The drift guardrail REQUIRES this url on both backdrop rules (app + landing
+  override) and whitelists it as the ONE image allowed in index.css. Any
+  future backdrop change must update the guardrail locks in the same commit.
 - The former hero brain was removed the same day; the guardrail FAILS if
   `landing-hero-brain` reappears in landing.tsx. The wordmark/text stack leads
   the landing hero.

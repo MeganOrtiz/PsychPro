@@ -13,9 +13,9 @@
 //   (Grayscale foundation 2026-07-10 — the landing page alone keeps blue.)
 //
 // Structural invariants enforced here:
-//   1. Pure-black page floors (body + .study-page-bg::before), no wallpaper,
-//      no filters, no vignette — the ONLY page artwork is the landing page's
-//      hero brain <img> at the top of the hero.
+//   1. Black body floor + the owner's liquid-swirl wallpaper on .study-page-bg::before,
+//      no filters, no vignette — the wallpaper is the ONLY page artwork
+//      (the former landing hero brain is banned; see the lock below).
 //   2. A global reset that bans backdrop-filter (frosted glass) app-wide —
 //      GLASS is tinted transparency, never blur.
 //   3. Glow discipline: the glow tokens (--pp-glow*) may only be consumed
@@ -117,30 +117,34 @@ if (!bodyBlock || !/background-color:\s*#000000;/.test(bodyBlock)) {
 const appBackdrop = ruleBlock(css, ".study-page-bg::before");
 const landingBackdrop = ruleBlock(css, ".landing-root.study-page-bg::before");
 const overlayBackdrop = ruleBlock(css, ".study-page-bg::after");
-// Backdrop lock: pure-black floors (owner's liquid-swirl wallpaper was
-// temporarily removed 2026-07-12 while the owner resizes the asset; when it
-// returns, repoint these locks in the same commit).
+// Owner wallpaper lock (2026-07-12, resized 3135x1764 asset): the liquid-swirl
+// artwork is the ONE canonical backdrop on landing, main app, and EPPP suite,
+// painted over a pure-black base. background-attachment must stay `scroll`
+// (fixed on the already position:fixed ::before draws a HiDPI seam line).
 if (!appBackdrop) {
   fail("canonical app backdrop rule missing", "restore the .study-page-bg::before backdrop rule");
 } else {
-  if (!/background-image:\s*none;/.test(appBackdrop) || /url\(/.test(appBackdrop)) {
-    fail("canonical backdrop drifted", "the app backdrop is pure black — keep background-image: none (no wallpaper)");
+  if (!/background-image:\s*url\("\.\/assets\/bg\/liquid-swirl\.jpeg"\);/.test(appBackdrop)) {
+    fail("canonical backdrop drifted", "keep the owner's liquid-swirl wallpaper (url(\"./assets/bg/liquid-swirl.jpeg\")) on the app backdrop");
+  }
+  if (!/background-attachment:\s*scroll;/.test(appBackdrop)) {
+    fail("canonical backdrop attachment drifted", "keep background-attachment: scroll (fixed draws a HiDPI seam on the position:fixed ::before)");
   }
   if (!/background-color:\s*#000000;/.test(appBackdrop)) {
-    fail("canonical backdrop floor color drifted", "keep the pure-black floor #000000 (must match the body floor)");
+    fail("canonical backdrop floor color drifted", "keep the pure-black base #000000 under the wallpaper (must match the body floor)");
   }
   if (/\bfilter\s*:|radial-gradient\(|linear-gradient\(|background-blend-mode\s*:/.test(appBackdrop)) {
     fail("canonical backdrop film reintroduced", "keep the backdrop free of filters, blend modes, and vignette gradients");
   }
 }
 if (!landingBackdrop) {
-  fail("landing backdrop rule missing", "restore the .landing-root.study-page-bg::before rule (pure-black floor, no wallpaper)");
+  fail("landing backdrop rule missing", "restore the .landing-root.study-page-bg::before rule (liquid-swirl wallpaper over a pure-black base)");
 } else {
-  if (!/background-image:\s*none;/.test(landingBackdrop) || /url\(/.test(landingBackdrop)) {
-    fail("landing backdrop wallpaper reintroduced", "the landing floor is pure black — no wallpaper until the owner's resized swirl asset lands");
+  if (!/background-image:\s*url\("\.\/assets\/bg\/liquid-swirl\.jpeg"\);/.test(landingBackdrop)) {
+    fail("landing backdrop drifted", "the landing floor uses the SAME liquid-swirl wallpaper as the app (owner, 2026-07-12)");
   }
   if (!/background-color:\s*#000;/.test(landingBackdrop)) {
-    fail("landing backdrop floor drifted", "keep the landing floor pure black (#000)");
+    fail("landing backdrop floor drifted", "keep the pure-black base (#000) under the landing wallpaper");
   }
   if (/\bfilter\s*:|radial-gradient\(|linear-gradient\(|background-blend-mode\s*:/.test(landingBackdrop)) {
     fail("landing backdrop film reintroduced", "keep the landing floor free of filters, blend modes, and vignette gradients");
@@ -234,9 +238,12 @@ const urls = /url\(\s*["']?([^"')]+)["']?\s*\)/g;
 while ((m = urls.exec(css))) {
   const target = m[1];
   if (target.includes("fonts.googleapis.com")) continue;
+  // Owner wallpaper exception (2026-07-12): the liquid-swirl backdrop is the
+  // one sanctioned image in index.css (canonical .study-page-bg::before rule).
+  if (target === "./assets/bg/liquid-swirl.jpeg") continue;
   fail(
     `unexpected image url(${target}) at ${REL}:${lineOf(m.index)}`,
-    "no images in index.css (the swirl wallpaper is temporarily removed while the owner resizes it)",
+    "no images in index.css except the liquid-swirl backdrop wallpaper",
   );
 }
 
