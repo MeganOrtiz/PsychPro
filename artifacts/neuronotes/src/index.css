@@ -679,14 +679,15 @@ body {
 /* ============================================================
    CANONICAL APP SURFACE — DO NOT OVERRIDE PER-PAGE
    ============================================================
-   .study-page-bg paints the shared liquid-swirl wallpaper (owner artwork,
-   resized 3135x1764 source, 2026-07-12) over a pure-black base via ::before.
-   The SAME wallpaper is canonical on landing, main app, and EPPP suite.
+   .study-page-bg paints the full-bleed PURE BLACK floor via ::before.
+   The LANDING PAGE ALONE carries the owner's liquid-brain artwork (see the
+   .landing-root override below); the logged-in app and EPPP suite stay pure
+   black (owner, 2026-07-12).
    DO NOT override the ::before background per-page. DO NOT add filters,
    vignette gradients, blend modes, or glow layers on top.
    The layer is position:absolute (anchored to the page, one viewport tall)
-   so the artwork SCROLLS AWAY with the content (owner, 2026-07-12) — do not
-   switch it back to position:fixed. background-attachment stays `scroll`
+   so landing artwork SCROLLS AWAY with the content (owner, 2026-07-12) — do
+   not switch it back to position:fixed. background-attachment stays `scroll`
    (`fixed` also re-pins the artwork and draws a HiDPI seam — see memory). */
 .study-page-bg::before,
 .study-page-aurora::before {
@@ -697,7 +698,7 @@ body {
   right: 0;
   height: 100vh;
   z-index: -2;
-  background-image: url("./assets/bg/liquid-swirl.jpeg");
+  background-image: none;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -706,9 +707,10 @@ body {
   pointer-events: none;
 }
 
-/* Landing-page backdrop: same liquid-swirl wallpaper as the app floor. */
+/* Landing-page backdrop: the owner's liquid-brain artwork (brain hovering
+   over chrome waves) over the same pure-black base. LANDING ONLY. */
 .landing-root.study-page-bg::before {
-  background-image: url("./assets/bg/liquid-swirl.jpeg");
+  background-image: url("./assets/bg/landing-liquid-brain.jpeg");
   background-color: #000;
 }
 
