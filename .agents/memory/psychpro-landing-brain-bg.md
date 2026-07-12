@@ -11,9 +11,16 @@ description: Current rule — the owner's cyan liquid-swirl artwork is the canon
   3135×1764 source (first 1672×941 cut looked soft — resolution matters, see
   the smoke-bg memory); stored as an ~88-quality JPEG (solid black base, no
   transparency needed, ~700KB vs 4.5MB PNG).
-- It lives on the single shared `.study-page-bg::before` fixed layer:
-  cover/center/no-repeat, `background-attachment: scroll` (fixed-on-fixed
-  draws a HiDPI seam — see the seam memory), pure `#000` base underneath.
+- It lives on the single shared `.study-page-bg::before` layer, which is
+  `position: absolute` anchored to the page top and one viewport tall
+  (`height: 100vh`) — the owner explicitly wants the artwork to SCROLL AWAY
+  with the content, never stay pinned to the viewport. cover/center/no-repeat,
+  `background-attachment: scroll` (`fixed` re-pins it AND draws a HiDPI seam —
+  see the seam memory), pure `#000` base underneath.
+- Note: in the logged-in app layout the shell doesn't body-scroll (inner
+  `main` has overflow-y-auto), so the artwork effectively fills the shell
+  there; the scroll-away behavior applies where the document scrolls
+  (landing/marketing pages).
 - The drift guardrail REQUIRES this url on both backdrop rules (app + landing
   override) and whitelists it as the ONE image allowed in index.css. Any
   future backdrop change must update the guardrail locks in the same commit.

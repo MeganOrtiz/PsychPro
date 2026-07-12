@@ -684,13 +684,18 @@ body {
    The SAME wallpaper is canonical on landing, main app, and EPPP suite.
    DO NOT override the ::before background per-page. DO NOT add filters,
    vignette gradients, blend modes, or glow layers on top.
-   NOTE: background-attachment stays `scroll` — `fixed` on an already
-   position:fixed ::before draws a HiDPI seam line (see memory). */
+   The layer is position:absolute (anchored to the page, one viewport tall)
+   so the artwork SCROLLS AWAY with the content (owner, 2026-07-12) — do not
+   switch it back to position:fixed. background-attachment stays `scroll`
+   (`fixed` also re-pins the artwork and draws a HiDPI seam — see memory). */
 .study-page-bg::before,
 .study-page-aurora::before {
   content: "";
-  position: fixed;
-  inset: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
   z-index: -2;
   background-image: url("./assets/bg/liquid-swirl.jpeg");
   background-size: cover;

@@ -119,8 +119,11 @@ const landingBackdrop = ruleBlock(css, ".landing-root.study-page-bg::before");
 const overlayBackdrop = ruleBlock(css, ".study-page-bg::after");
 // Owner wallpaper lock (2026-07-12, resized 3135x1764 asset): the liquid-swirl
 // artwork is the ONE canonical backdrop on landing, main app, and EPPP suite,
-// painted over a pure-black base. background-attachment must stay `scroll`
-// (fixed on the already position:fixed ::before draws a HiDPI seam line).
+// painted over a pure-black base.
+// The ::before layer is position:absolute (one viewport tall, anchored to the
+// page top) so the artwork scrolls away with the content (owner, 2026-07-12).
+// background-attachment must stay `scroll` (`fixed` re-pins the artwork to the
+// viewport and draws a HiDPI seam line).
 if (!appBackdrop) {
   fail("canonical app backdrop rule missing", "restore the .study-page-bg::before backdrop rule");
 } else {
@@ -128,7 +131,7 @@ if (!appBackdrop) {
     fail("canonical backdrop drifted", "keep the owner's liquid-swirl wallpaper (url(\"./assets/bg/liquid-swirl.jpeg\")) on the app backdrop");
   }
   if (!/background-attachment:\s*scroll;/.test(appBackdrop)) {
-    fail("canonical backdrop attachment drifted", "keep background-attachment: scroll (fixed draws a HiDPI seam on the position:fixed ::before)");
+    fail("canonical backdrop attachment drifted", "keep background-attachment: scroll (fixed re-pins the artwork to the viewport and draws a HiDPI seam)");
   }
   if (!/background-color:\s*#000000;/.test(appBackdrop)) {
     fail("canonical backdrop floor color drifted", "keep the pure-black base #000000 under the wallpaper (must match the body floor)");
