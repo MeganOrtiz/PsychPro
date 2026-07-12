@@ -121,10 +121,13 @@ const overlayBackdrop = ruleBlock(css, ".study-page-bg::after");
 // owner's liquid-waves artwork (waves only, no brain); the LANDING PAGE
 // carries the owner's liquid-brain artwork — both over the same pure-black
 // base.
-// The ::before layer is position:absolute (one viewport tall, anchored to the
-// page top) so the landing artwork scrolls away with the content.
-// background-attachment must stay `scroll` (`fixed` re-pins the artwork to the
-// viewport and draws a HiDPI seam line).
+// The ::before layer is position:fixed with inset:0 — pinned to the viewport
+// so the artwork backs the page all the way to the bottom at every scroll
+// depth, at native crispness. Never stretch it over the document height
+// (cover-scaling a landscape asset over a multi-screen page magnifies and
+// blurs it).
+// background-attachment must stay `scroll` (`fixed` on a fixed layer draws a
+// HiDPI seam line).
 if (!appBackdrop) {
   fail("canonical app backdrop rule missing", "restore the .study-page-bg::before backdrop rule");
 } else {
@@ -134,8 +137,8 @@ if (!appBackdrop) {
   if (!/background-attachment:\s*scroll;/.test(appBackdrop)) {
     fail("canonical backdrop attachment drifted", "keep background-attachment: scroll (fixed re-pins the artwork to the viewport and draws a HiDPI seam)");
   }
-  if (!/position:\s*absolute;/.test(appBackdrop) || !/top:\s*0;/.test(appBackdrop) || !/height:\s*100vh;/.test(appBackdrop)) {
-    fail("canonical backdrop geometry drifted", "keep the ::before layer position: absolute, top: 0, height: 100vh (anchored to the page top, one viewport tall) so landing artwork scrolls away — never position: fixed or full-page height");
+  if (!/position:\s*fixed;/.test(appBackdrop) || !/inset:\s*0;/.test(appBackdrop)) {
+    fail("canonical backdrop geometry drifted", "keep the ::before layer position: fixed with inset: 0 (viewport-pinned so the artwork backs the page to the bottom at every scroll depth, owner 2026-07-12) — never absolute/100vh (stops after one screen) and never document-height stretch (blurs)");
   }
   if (!/background-color:\s*#000000;/.test(appBackdrop)) {
     fail("canonical backdrop floor color drifted", "keep the pure-black floor #000000 (must match the body floor)");

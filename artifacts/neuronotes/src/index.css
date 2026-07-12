@@ -687,18 +687,17 @@ body {
    2026-07-12).
    DO NOT override the ::before background per-page. DO NOT add filters,
    vignette gradients, blend modes, or glow layers on top.
-   The layer is position:absolute (anchored to the page, one viewport tall)
-   so landing artwork SCROLLS AWAY with the content (owner, 2026-07-12) — do
-   not switch it back to position:fixed. background-attachment stays `scroll`
-   (`fixed` also re-pins the artwork and draws a HiDPI seam — see memory). */
+   The layer is position:fixed with inset:0 — pinned to the viewport so the
+   artwork covers the page ALL THE WAY DOWN at every scroll depth, at native
+   crispness (owner, 2026-07-12). Do NOT stretch it over the document height
+   (cover-scaling a landscape asset over a multi-screen page magnifies and
+   blurs it). background-attachment stays `scroll` (`fixed` on a fixed layer
+   draws a HiDPI seam — see memory). */
 .study-page-bg::before,
 .study-page-aurora::before {
   content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100vh;
+  position: fixed;
+  inset: 0;
   z-index: -2;
   background-image: url("./assets/bg/app-liquid-waves.jpeg");
   background-size: cover;

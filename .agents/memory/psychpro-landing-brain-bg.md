@@ -15,13 +15,15 @@ description: Current rule — owner's liquid-brain artwork is the landing backdr
 - Earlier the same day: a site-wide liquid-swirl wallpaper was tried, then
   landing-only brain + pure-black app, then the owner added the waves-only
   image for app/EPPP. Owner iterates fast on backdrops.
-- The shared `.study-page-bg::before` layer is `position: absolute` anchored
-  to the page top and one viewport tall (`height: 100vh`) — the owner
-  explicitly wants landing artwork to SCROLL AWAY with the content, never
-  pinned to the viewport. cover/center/no-repeat,
-  `background-attachment: scroll` (`fixed` re-pins it AND draws a HiDPI seam —
-  see the seam memory). In the app shell the document doesn't body-scroll
-  (inner main scrolls), so the artwork just fills the shell there.
+- The shared `.study-page-bg::before` layer is `position: fixed; inset: 0` —
+  PINNED to the viewport so the artwork backs the page all the way to the
+  bottom at every scroll depth (owner, 2026-07-12: "the background image
+  needs to go down to the bottom of the page across the entire site"; this
+  SUPERSEDES the earlier same-day scroll-away order). Never stretch the
+  layer over the document height instead — cover-scaling a landscape asset
+  over a multi-screen page magnifies and blurs it (verified visually).
+  cover/center/no-repeat, `background-attachment: scroll` (`fixed` on the
+  fixed layer draws a HiDPI seam — see the seam memory).
 - The drift guardrail REQUIRES the waves url on the canonical backdrop and
   the brain url on the landing override, and whitelists exactly these two
   images in index.css. Any future backdrop change must update the guardrail
