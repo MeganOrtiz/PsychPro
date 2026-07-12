@@ -20,7 +20,8 @@
      - Palette: ONLY the --pp-* tokens below. Do not invent new colors in
        pages; consume tokens or the material classes.
      - Body floor stays #000; .study-page-bg::before carries the owner's
-       liquid-swirl wallpaper (2026-07-12) over that black base.
+       liquid-waves wallpaper (app/EPPP) or liquid-brain artwork (landing
+       override) over that black base (2026-07-12).
 
    DO NOT:
      - Re-declare a wallpaper or per-page backdrop.
@@ -679,10 +680,11 @@ body {
 /* ============================================================
    CANONICAL APP SURFACE — DO NOT OVERRIDE PER-PAGE
    ============================================================
-   .study-page-bg paints the full-bleed PURE BLACK floor via ::before.
-   The LANDING PAGE ALONE carries the owner's liquid-brain artwork (see the
-   .landing-root override below); the logged-in app and EPPP suite stay pure
-   black (owner, 2026-07-12).
+   .study-page-bg paints the full-bleed backdrop via ::before over a pure
+   black base. The logged-in app and EPPP suite carry the owner's
+   liquid-waves artwork (waves only, no brain); the LANDING PAGE carries the
+   liquid-brain artwork via the .landing-root override below (owner,
+   2026-07-12).
    DO NOT override the ::before background per-page. DO NOT add filters,
    vignette gradients, blend modes, or glow layers on top.
    The layer is position:absolute (anchored to the page, one viewport tall)
@@ -698,7 +700,7 @@ body {
   right: 0;
   height: 100vh;
   z-index: -2;
-  background-image: none;
+  background-image: url("./assets/bg/app-liquid-waves.jpeg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

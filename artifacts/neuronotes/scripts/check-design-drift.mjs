@@ -117,9 +117,10 @@ if (!bodyBlock || !/background-color:\s*#000000;/.test(bodyBlock)) {
 const appBackdrop = ruleBlock(css, ".study-page-bg::before");
 const landingBackdrop = ruleBlock(css, ".landing-root.study-page-bg::before");
 const overlayBackdrop = ruleBlock(css, ".study-page-bg::after");
-// Owner backdrop lock (2026-07-12): the logged-in app + EPPP floors are PURE
-// BLACK (no wallpaper); the LANDING PAGE ALONE carries the owner's
-// liquid-brain artwork over the same black base.
+// Owner backdrop lock (2026-07-12): the logged-in app + EPPP floors carry the
+// owner's liquid-waves artwork (waves only, no brain); the LANDING PAGE
+// carries the owner's liquid-brain artwork — both over the same pure-black
+// base.
 // The ::before layer is position:absolute (one viewport tall, anchored to the
 // page top) so the landing artwork scrolls away with the content.
 // background-attachment must stay `scroll` (`fixed` re-pins the artwork to the
@@ -127,11 +128,14 @@ const overlayBackdrop = ruleBlock(css, ".study-page-bg::after");
 if (!appBackdrop) {
   fail("canonical app backdrop rule missing", "restore the .study-page-bg::before backdrop rule");
 } else {
-  if (!/background-image:\s*none;/.test(appBackdrop) || /url\(/.test(appBackdrop)) {
-    fail("canonical backdrop drifted", "the app backdrop is pure black — keep background-image: none (only the landing override carries artwork)");
+  if (!/background-image:\s*url\("\.\/assets\/bg\/app-liquid-waves\.jpeg"\);/.test(appBackdrop)) {
+    fail("canonical backdrop drifted", "the app/EPPP backdrop uses the owner's liquid-waves artwork (url(\"./assets/bg/app-liquid-waves.jpeg\"), owner 2026-07-12)");
   }
   if (!/background-attachment:\s*scroll;/.test(appBackdrop)) {
     fail("canonical backdrop attachment drifted", "keep background-attachment: scroll (fixed re-pins the artwork to the viewport and draws a HiDPI seam)");
+  }
+  if (!/position:\s*absolute;/.test(appBackdrop) || !/top:\s*0;/.test(appBackdrop) || !/height:\s*100vh;/.test(appBackdrop)) {
+    fail("canonical backdrop geometry drifted", "keep the ::before layer position: absolute, top: 0, height: 100vh (anchored to the page top, one viewport tall) so landing artwork scrolls away — never position: fixed or full-page height");
   }
   if (!/background-color:\s*#000000;/.test(appBackdrop)) {
     fail("canonical backdrop floor color drifted", "keep the pure-black floor #000000 (must match the body floor)");
@@ -241,12 +245,14 @@ const urls = /url\(\s*["']?([^"')]+)["']?\s*\)/g;
 while ((m = urls.exec(css))) {
   const target = m[1];
   if (target.includes("fonts.googleapis.com")) continue;
-  // Owner artwork exception (2026-07-12): the landing liquid-brain backdrop is
-  // the one sanctioned image in index.css (.landing-root override only).
+  // Owner artwork exception (2026-07-12): the app/EPPP liquid-waves backdrop
+  // and the landing liquid-brain backdrop are the two sanctioned images in
+  // index.css (canonical ::before + .landing-root override only).
+  if (target === "./assets/bg/app-liquid-waves.jpeg") continue;
   if (target === "./assets/bg/landing-liquid-brain.jpeg") continue;
   fail(
     `unexpected image url(${target}) at ${REL}:${lineOf(m.index)}`,
-    "no images in index.css except the landing liquid-brain backdrop",
+    "no images in index.css except the app liquid-waves and landing liquid-brain backdrops",
   );
 }
 
