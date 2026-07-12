@@ -882,6 +882,13 @@ body {
   transition: background 200ms ease, border-color 200ms ease,
     box-shadow 240ms ease, transform 140ms ease;
 }
+/* Main-app sidebar: wouter <Link> renders inline <a> elements, and vertical
+   space-y margins are IGNORED on inline elements — the rows visually touch.
+   Force the nav anchors block-level so the 4px rhythm (space-y-1) matches the
+   EPPP suite sidebar exactly (owner, 2026-07-12). */
+.app-sidebar-nav a {
+  display: block;
+}
 .nav-glass-idle {
   background: rgba(var(--pp-ocean-deep-rgb), 0.14);
   border: 1px solid rgba(var(--pp-ocean-rgb), 0.35);
