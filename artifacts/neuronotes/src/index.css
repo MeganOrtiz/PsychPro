@@ -693,10 +693,7 @@ body {
   pointer-events: none;
 }
 
-/* Landing-page backdrop: pure black, same as the app floor. The hero brain
-   (assets/bg/landing-hero-brain.jpeg) is an inline <img> at the very top of
-   the landing page (see landing.tsx, .landing-hero-brain) — never a page
-   background. */
+/* Landing-page backdrop: pure black, same as the app floor. */
 .landing-root.study-page-bg::before {
   background-image: none;
   background-color: #000;

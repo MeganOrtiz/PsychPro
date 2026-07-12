@@ -143,25 +143,13 @@ if (!landingBackdrop) {
     fail("landing backdrop film reintroduced", "keep the landing floor free of filters, blend modes, and vignette gradients");
   }
 }
-// Owner artwork lock (2026-07-09): the hero brain image sits at the very top
-// of the landing page with the text stack beginning right below it.
-const LANDING = path.join(ROOT, "src", "pages", "landing.tsx");
-const landingSource = fs.readFileSync(LANDING, "utf8");
-if (!/landing-hero-brain\.jpeg/.test(landingSource) || !/className="landing-hero-brain"/.test(landingSource)) {
+// Owner artwork lock removed 2026-07-12: the owner asked to remove the hero
+// brain image from the landing page (the wordmark/text stack now leads).
+if (/landing-hero-brain/.test(fs.readFileSync(path.join(ROOT, "src", "pages", "landing.tsx"), "utf8"))) {
   fail(
-    "landing hero brain artwork missing",
-    "keep the owner's hero brain <img> (assets/bg/landing-hero-brain.jpeg, .landing-hero-brain) at the top of the landing hero",
+    "landing hero brain reintroduced",
+    "owner removed the hero brain from the landing page (2026-07-12) — do not re-add it",
   );
-}
-{
-  const heroImgIdx = landingSource.indexOf('className="landing-hero-brain"');
-  const wordmarkIdx = landingSource.indexOf('className="landing-wordmark"');
-  if (heroImgIdx !== -1 && wordmarkIdx !== -1 && heroImgIdx > wordmarkIdx) {
-    fail(
-      "landing hero brain not at the top",
-      "owner: the hero brain image comes FIRST, with the wordmark/text beginning right below it",
-    );
-  }
 }
 if (!overlayBackdrop) {
   fail("reserved backdrop overlay rule missing", "restore the empty .study-page-bg::after overlay rule");

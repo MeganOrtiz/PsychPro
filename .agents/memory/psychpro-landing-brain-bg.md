@@ -37,3 +37,7 @@ then used for a day before this inline-hero arrangement superseded it.
 
 **Gotcha:** AI-generated JPEGs can carry a bright 1px baked-in border that
 renders as a seam against black — check edge rows/columns and crop if needed.
+
+
+# UPDATE 2026-07-12 — brain REMOVED
+Owner asked to remove the hero brain from the landing page entirely. The <img>, its CSS, and the old artwork lock are gone; the drift guardrail now FAILS if `landing-hero-brain` reappears in landing.tsx. The wordmark/text stack leads the hero. A new liquid-swirl cyan asset (attached_assets/ChatGPT_Image_Jul_11..._1783836088326.jpeg) was provided and saved but has NO placement yet — wait for owner direction before using it.
