@@ -830,10 +830,11 @@ const styles = `
   position: relative;
   max-width: 1320px;
   margin: 0 auto;
-  /* Top padding clears the fixed header; the glowing hero brain image now
-     occupies the space above the wordmark, so the padding is modest and the
-     brain + wordmark stack sits comfortably in the first viewport. */
-  padding: clamp(96px, 14vh, 170px) 24px clamp(40px, 6vh, 90px);
+  /* Top padding pushes the hero text below the brain in the viewport-pinned
+     backdrop artwork (brain occupies roughly the top 40% of the screen), so
+     the wordmark begins just under it instead of overlapping (owner,
+     2026-07-14). */
+  padding: clamp(250px, 38vh, 420px) 24px clamp(40px, 6vh, 90px);
   display: flex;
   flex-direction: column;
   align-items: center;
