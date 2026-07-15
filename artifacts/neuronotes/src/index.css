@@ -709,7 +709,8 @@ body {
 }
 
 /* Landing-page backdrop: the owner's liquid-brain artwork (brain hovering
-   over chrome waves) over the same pure-black base. LANDING ONLY. */
+   over liquid waves, owner-supplied at 3840x2161, 2026-07-15) over the same
+   pure-black base. LANDING ONLY. */
 .landing-root.study-page-bg::before {
   background-image: url("./assets/bg/landing-liquid-brain.jpeg");
   background-color: #000;

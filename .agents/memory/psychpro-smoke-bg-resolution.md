@@ -40,3 +40,5 @@ both. The upscale recipe below stays useful only if smoke-style artwork returns.
 - ~3.6GB free RAM (app workflows eat ~4.8GB of 8GB); large float output tensors OOM-kill.
 - Working recipe: write output into an on-disk `np.memmap` (uint8), tile=128 (low peak mem),
   track done rows in a json, stop at a time budget, re-run until ALLDONE. tile=256 OOM'd.
+- ALWAYS delete stale `out.dat`/`state.json` before a run on a NEW image: a leftover
+  buffer+done-list from a previous image silently produces scrambled output (2026-07-15).
