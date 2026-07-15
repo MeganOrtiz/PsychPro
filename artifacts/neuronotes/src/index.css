@@ -20,8 +20,8 @@
      - Palette: ONLY the --pp-* tokens below. Do not invent new colors in
        pages; consume tokens or the material classes.
      - Body floor stays #000; .study-page-bg::before carries the owner's
-       liquid-waves wallpaper (app/EPPP) or liquid-brain artwork (landing
-       override) over that black base (2026-07-12).
+       liquid-flare artwork SITE-WIDE (one image: landing, app, and EPPP)
+       over that black base (2026-07-15).
 
    DO NOT:
      - Re-declare a wallpaper or per-page backdrop.
@@ -681,10 +681,9 @@ body {
    CANONICAL APP SURFACE — DO NOT OVERRIDE PER-PAGE
    ============================================================
    .study-page-bg paints the full-bleed backdrop via ::before over a pure
-   black base. The logged-in app and EPPP suite carry the owner's
-   liquid-waves artwork (waves only, no brain); the LANDING PAGE carries the
-   liquid-brain artwork via the .landing-root override below (owner,
-   2026-07-12).
+   black base. ONE image site-wide: the owner's liquid-flare artwork (teal
+   liquid on both edges, dark center) on landing, app, and EPPP alike
+   (owner, 2026-07-15 — supersedes the earlier brain/waves pair).
    DO NOT override the ::before background per-page. DO NOT add filters,
    vignette gradients, blend modes, or glow layers on top.
    The layer is position:fixed with inset:0 — pinned to the viewport so the
@@ -699,21 +698,13 @@ body {
   position: fixed;
   inset: 0;
   z-index: -2;
-  background-image: url("./assets/bg/app-liquid-waves.jpeg");
+  background-image: url("./assets/bg/site-liquid-flare.jpeg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: scroll;
   background-color: #000000;
   pointer-events: none;
-}
-
-/* Landing-page backdrop: the owner's liquid-brain artwork (brain hovering
-   over liquid waves, owner-supplied at 3840x2161, 2026-07-15) over the same
-   pure-black base. LANDING ONLY. */
-.landing-root.study-page-bg::before {
-  background-image: url("./assets/bg/landing-liquid-brain.jpeg");
-  background-color: #000;
 }
 
 /* Reserved overlay layer. Keep visually empty so the black floor stays

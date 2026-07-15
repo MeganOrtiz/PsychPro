@@ -1,47 +1,41 @@
 ---
-name: PsychPro backdrop artwork (landing + app/EPPP)
-description: Current rule — owner's liquid-brain artwork is the landing backdrop; owner's liquid-waves artwork (waves only, no brain) is the app/EPPP backdrop; both live on the shared .study-page-bg::before layer over a pure-black base.
+name: PsychPro backdrop artwork (site-wide)
+description: Current rule — ONE owner-supplied liquid-flare artwork backs the ENTIRE site (landing + app + EPPP) on the shared .study-page-bg::before layer over a pure-black base; the earlier brain/waves two-image pair is superseded.
 ---
 
-# Backdrop artwork: liquid-brain (landing) + liquid-waves (app/EPPP)
+# Backdrop artwork: single site-wide liquid-flare image
 
-**Current durable rule (owner-directed, 2026-07-12, latest same-day iteration):**
-- LANDING carries the owner's liquid-brain artwork (chrome brain hovering
-  over cyan liquid waves) via the `.landing-root.study-page-bg::before`
-  override. The logged-in app + EPPP suite carry a companion liquid-waves
-  artwork (same chrome-wave style, NO brain) on the canonical
-  `.study-page-bg::before` rule. Both are owner-supplied high-res
-  (3841×2144) JPEGs over a pure `#000` base.
-- Earlier the same day: a site-wide liquid-swirl wallpaper was tried, then
-  landing-only brain + pure-black app, then the owner added the waves-only
-  image for app/EPPP. Owner iterates fast on backdrops.
-- The shared `.study-page-bg::before` layer is `position: fixed; inset: 0` —
-  PINNED to the viewport so the artwork backs the page all the way to the
-  bottom at every scroll depth (owner, 2026-07-12: "the background image
-  needs to go down to the bottom of the page across the entire site"; this
-  SUPERSEDES the earlier same-day scroll-away order). Never stretch the
-  layer over the document height instead — cover-scaling a landscape asset
-  over a multi-screen page magnifies and blurs it (verified visually).
+**Current durable rule (owner-directed, 2026-07-15):**
+- ONE image site-wide: the owner's liquid-flare artwork (teal liquid flames
+  on both edges, dark center) backs landing, app, and EPPP alike on the
+  canonical `.study-page-bg::before` rule. NO per-page override exists —
+  the guardrail now FAILS if a `.landing-root.study-page-bg::before`
+  override reappears.
+- This supersedes the 2026-07-12 two-image pair (landing liquid-brain +
+  app/EPPP liquid-waves). Owner iterates fast on backdrops; expect churn.
+- The layer recipe is unchanged: `position: fixed; inset: 0; z-index: -2`,
   cover/center/no-repeat, `background-attachment: scroll` (`fixed` on the
-  fixed layer draws a HiDPI seam — see the seam memory).
-- The drift guardrail REQUIRES the waves url on the canonical backdrop and
-  the brain url on the landing override, and whitelists exactly these two
-  images in index.css. Any future backdrop change must update the guardrail
-  locks in the same commit.
+  fixed layer draws a HiDPI seam), `background-color: #000000`. Viewport-
+  pinned so artwork backs the page to the bottom at every scroll depth;
+  never stretch over document height (magnifies and blurs).
+- The drift guardrail REQUIRES the site-liquid-flare url on the canonical
+  backdrop and whitelists exactly that one image in index.css. Any future
+  backdrop change must update the guardrail locks in the same commit.
 - Owner supplies backdrop assets themselves; resolution matters (a 1672×941
-  cut looked soft) — always ask for / use their highest-res source.
-- The former hero brain <img> was removed; the guardrail FAILS if
-  `landing-hero-brain` reappears in landing.tsx. The wordmark/text stack leads
-  the landing hero.
+  cut looked soft) — always use their highest-res source. Convert owner
+  PNGs → JPEG q90 via PIL (~3800×2160 class assets land ~700KB).
+- The former hero brain <img> stays removed; the guardrail FAILS if
+  `landing-hero-brain` reappears in landing.tsx. The wordmark/text stack
+  leads the landing hero, with large top padding so the headline sits in
+  the artwork's dark center.
 
-**Why:** the owner supplied both artworks with explicit placement
-instructions ("use this for the main and eppp sites"). Cyan artwork on the
-gray app is intentional owner art — the hue guardrail only scans code
-literals, not image files.
+**Why:** owner order 2026-07-15: "use this as the background across the
+entire site" with a single attached artwork. Cyan artwork on the gray app
+is intentional owner art — the hue guardrail only scans code literals, not
+image files.
 
 **How to apply:**
-- Never re-add a per-page backdrop override beyond the landing one; the
-  canonical rule is shared.
+- Never add a per-page backdrop override; the canonical rule is shared.
 - Owner-supplied AI art gotchas still apply: check for baked-in 1px bright
   borders against black; never cover-crop portrait art with a focal subject.
 - Screenshot desktop and a narrow mobile viewport before calling backdrop

@@ -14,8 +14,8 @@
 //
 // Structural invariants enforced here:
 //   1. Pure-black page floors (body + .study-page-bg::before), no filters,
-//      no vignette — the ONLY page artwork is the landing page's liquid-brain
-//      backdrop on the .landing-root override (hero brain <img> stays banned).
+//      no vignette — the ONLY page artwork is the owner's liquid-flare
+//      backdrop, ONE image site-wide (hero brain <img> stays banned).
 //   2. A global reset that bans backdrop-filter (frosted glass) app-wide —
 //      GLASS is tinted transparency, never blur.
 //   3. Glow discipline: the glow tokens (--pp-glow*) may only be consumed
@@ -117,10 +117,9 @@ if (!bodyBlock || !/background-color:\s*#000000;/.test(bodyBlock)) {
 const appBackdrop = ruleBlock(css, ".study-page-bg::before");
 const landingBackdrop = ruleBlock(css, ".landing-root.study-page-bg::before");
 const overlayBackdrop = ruleBlock(css, ".study-page-bg::after");
-// Owner backdrop lock (2026-07-12): the logged-in app + EPPP floors carry the
-// owner's liquid-waves artwork (waves only, no brain); the LANDING PAGE
-// carries the owner's liquid-brain artwork — both over the same pure-black
-// base.
+// Owner backdrop lock (2026-07-15): ONE image site-wide — the owner's
+// liquid-flare artwork backs landing, app, and EPPP alike over the pure-black
+// base (supersedes the earlier brain/waves two-image pair).
 // The ::before layer is position:fixed with inset:0 — pinned to the viewport
 // so the artwork backs the page all the way to the bottom at every scroll
 // depth, at native crispness. Never stretch it over the document height
@@ -131,8 +130,8 @@ const overlayBackdrop = ruleBlock(css, ".study-page-bg::after");
 if (!appBackdrop) {
   fail("canonical app backdrop rule missing", "restore the .study-page-bg::before backdrop rule");
 } else {
-  if (!/background-image:\s*url\("\.\/assets\/bg\/app-liquid-waves\.jpeg"\);/.test(appBackdrop)) {
-    fail("canonical backdrop drifted", "the app/EPPP backdrop uses the owner's liquid-waves artwork (url(\"./assets/bg/app-liquid-waves.jpeg\"), owner 2026-07-12)");
+  if (!/background-image:\s*url\("\.\/assets\/bg\/site-liquid-flare\.jpeg"\);/.test(appBackdrop)) {
+    fail("canonical backdrop drifted", "the site-wide backdrop uses the owner's liquid-flare artwork (url(\"./assets/bg/site-liquid-flare.jpeg\"), owner 2026-07-15)");
   }
   if (!/background-attachment:\s*scroll;/.test(appBackdrop)) {
     fail("canonical backdrop attachment drifted", "keep background-attachment: scroll (fixed re-pins the artwork to the viewport and draws a HiDPI seam)");
@@ -147,18 +146,8 @@ if (!appBackdrop) {
     fail("canonical backdrop film reintroduced", "keep the backdrop free of filters, blend modes, and vignette gradients");
   }
 }
-if (!landingBackdrop) {
-  fail("landing backdrop rule missing", "restore the .landing-root.study-page-bg::before rule (liquid-brain artwork over a pure-black base)");
-} else {
-  if (!/background-image:\s*url\("\.\/assets\/bg\/landing-liquid-brain\.jpeg"\);/.test(landingBackdrop)) {
-    fail("landing backdrop drifted", "the landing floor uses the owner's liquid-brain artwork (url(\"./assets/bg/landing-liquid-brain.jpeg\"), owner 2026-07-12)");
-  }
-  if (!/background-color:\s*#000;/.test(landingBackdrop)) {
-    fail("landing backdrop floor drifted", "keep the pure-black base (#000) under the landing wallpaper");
-  }
-  if (/\bfilter\s*:|radial-gradient\(|linear-gradient\(|background-blend-mode\s*:/.test(landingBackdrop)) {
-    fail("landing backdrop film reintroduced", "keep the landing floor free of filters, blend modes, and vignette gradients");
-  }
+if (landingBackdrop) {
+  fail("landing backdrop override reintroduced", "the site uses ONE backdrop image site-wide (owner 2026-07-15) — remove the .landing-root.study-page-bg::before override");
 }
 // Owner artwork lock removed 2026-07-12: the owner asked to remove the hero
 // brain image from the landing page (the wordmark/text stack now leads).
@@ -248,14 +237,12 @@ const urls = /url\(\s*["']?([^"')]+)["']?\s*\)/g;
 while ((m = urls.exec(css))) {
   const target = m[1];
   if (target.includes("fonts.googleapis.com")) continue;
-  // Owner artwork exception (2026-07-12): the app/EPPP liquid-waves backdrop
-  // and the landing liquid-brain backdrop are the two sanctioned images in
-  // index.css (canonical ::before + .landing-root override only).
-  if (target === "./assets/bg/app-liquid-waves.jpeg") continue;
-  if (target === "./assets/bg/landing-liquid-brain.jpeg") continue;
+  // Owner artwork exception (2026-07-15): the site-wide liquid-flare backdrop
+  // is the ONLY sanctioned image in index.css (canonical ::before only).
+  if (target === "./assets/bg/site-liquid-flare.jpeg") continue;
   fail(
     `unexpected image url(${target}) at ${REL}:${lineOf(m.index)}`,
-    "no images in index.css except the app liquid-waves and landing liquid-brain backdrops",
+    "no images in index.css except the site-wide liquid-flare backdrop",
   );
 }
 
