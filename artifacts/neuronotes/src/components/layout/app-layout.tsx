@@ -194,7 +194,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
             PSYCHPRO
           </p>
           <button
-            className="md:hidden absolute top-3 right-3 text-white/80"
+            className="md:hidden absolute top-3 right-3 text-pp-text-dim"
             onClick={() => setSidebarOpen(false)}
             aria-label="Close menu"
           >
@@ -563,10 +563,10 @@ function SidebarProfileLink({ onNavigate }: { onNavigate: () => void }) {
             </div>
           )}
           <div className="min-w-0 flex-1">
-            <p className="text-white text-sm font-medium truncate" data-testid="text-sidebar-display-name">
+            <p className="text-sm font-medium truncate" style={{ color: PP.text }} data-testid="text-sidebar-display-name">
               {name}
             </p>
-            <p className="text-white/55 text-xs truncate">View profile</p>
+            <p className="text-xs truncate" style={{ color: PP.textDim }}>View profile</p>
           </div>
         </div>
       </Link>

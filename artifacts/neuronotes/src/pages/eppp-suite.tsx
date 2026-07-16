@@ -305,12 +305,8 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
         )}
         style={{
           ["--nav-glow" as never]: STUDY_PALETTE.surf,
-          background: `hsl(var(--surf-hue) var(--surf-sat) 6% / 0.66)`,
-          backgroundSize: "cover, cover",
-          backgroundPosition: "center, center",
-          backgroundRepeat: "no-repeat, no-repeat",
-          border: `1px solid ${STUDY_PALETTE.surf}55`,
-          boxShadow: `0 20px 60px -20px ${STUDY_PALETTE.teal}77`,
+          background: "var(--pp-surface)",
+          border: "1px solid var(--pp-line)",
         }}
         data-testid="eppp-suite-sidebar"
       >
@@ -344,7 +340,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
             EPPP SUITE
           </p>
           <button
-            className="md:hidden absolute top-3 right-3 text-white/80"
+            className="md:hidden absolute top-3 right-3 text-pp-text-dim"
             onClick={() => setSidebarOpen(false)}
             aria-label="Close menu"
           >
