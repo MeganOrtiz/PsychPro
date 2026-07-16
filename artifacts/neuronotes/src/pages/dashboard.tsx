@@ -904,9 +904,9 @@ function CourseMasterySection({
                 className="w-10 h-10 rounded-lg flex items-center justify-center"
                 style={
                   mastered
-                    ? { background: "rgba(var(--pp-white-rgb), 0.16)" }
+                    ? { background: "var(--pp-ocean)" }
                     : {
-                        background: "rgba(var(--pp-white-rgb), 0.04)",
+                        background: "var(--pp-tile-strong)",
                         border: "1px solid rgba(var(--pp-white-rgb), 0.08)",
                       }
                 }

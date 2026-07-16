@@ -410,7 +410,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
                     !isAnswered
                       ? { background: "var(--pp-tile)", color: P.surf, borderColor: `${P.surf}88` }
                       : isSelected
-                        ? { background: "rgba(var(--pp-cyan-rgb), 0.30)", color: PP.white, borderColor: "rgba(var(--pp-cyan-rgb), 0.55)" }
+                        ? { background: "var(--pp-ocean-deep)", color: PP.white, borderColor: "rgba(var(--pp-cyan-rgb), 0.55)" }
                         : { background: "var(--pp-tile)", color: P.surf, borderColor: `${P.surf}55` }
                   }
                 >{key}</span>

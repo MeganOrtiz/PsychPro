@@ -1,4 +1,5 @@
 - [PsychPro gray foundation v2](psychpro-gray-foundation-v2.md) — CURRENT (2026-07-10): logged-in app is black/white/gray on grayed --pp-* tokens; LANDING page alone keeps the blue-window look (scoped .landing-root override + LANDING consts in palette.ts).
+- [PsychPro solid tile fills](psychpro-solid-tile-fills.md) — CURRENT (2026-07-15): all logged-in box/button fills are OPAQUE (--pp-tile ladder); scrims, ghost-rest, and landing stay translucent; guardrail-locked.
 - [wouter Link inline spacing](wouter-link-inline-spacing.md) — wouter <Link> is an inline <a>; space-y-* is silently ignored between bare Links; wrap in block divs or force `a { display:block }` scoped.
 - [PsychPro blue three-material system](psychpro-blue-material-system.md) — historical for the app (2026-07-10: app retoned gray); structure (Opaque/Glass/Gloss, glow hover-only, no backdrop-filter) still current; blues live on only in the landing page.
 - [PsychPro black foundation](psychpro-black-foundation.md) — historical (same-day 2026-07-09); replaced hours later by the blue three-material system above.

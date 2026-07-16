@@ -277,7 +277,7 @@ export default function QuizPage({ params }: Props) {
                       !selected
                         ? { background: "var(--pp-tile)", color: P.surf, borderColor: `${P.surf}88` }
                         : isSelected || isCorrect
-                          ? { background: "rgba(var(--pp-white-rgb), 0.22)", color: PP.white }
+                          ? { background: "var(--pp-ocean)", color: PP.white }
                           : { background: "var(--pp-tile)", color: P.surf, borderColor: `${P.surf}55` }
                     }
                   >

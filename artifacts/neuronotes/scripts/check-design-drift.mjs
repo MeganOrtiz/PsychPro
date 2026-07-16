@@ -122,6 +122,12 @@ if (/\.mat-opaque:hover/.test(css)) {
   if (btnGlassBlock && !/background:\s*var\(--pp-tile\);/.test(btnGlassBlock)) {
     fail(".btn-glass fill drifted", "keep the SOLID tile fill background: var(--pp-tile) (owner 2026-07-15 — no translucent button fills)");
   }
+  // No box/button class in index.css may re-introduce a translucent
+  // ocean-deep fill (the old GLASS alpha family). Scrims/overlays use
+  // deep/black alphas, which are unaffected.
+  if (/background:\s*rgba\(var\(--pp-ocean-deep-rgb\)/.test(css)) {
+    fail("translucent ocean-deep box fill re-introduced in index.css", "box/button fills are SOLID — use the var(--pp-tile) ladder (owner 2026-07-15)");
+  }
 }
 
 // --- 2) Pure-black page floors ----------------------------------------------
