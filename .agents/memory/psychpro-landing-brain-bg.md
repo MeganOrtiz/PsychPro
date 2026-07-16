@@ -24,10 +24,12 @@ description: Current rule — ONE owner-supplied liquid-flare artwork backs the 
 - Owner supplies backdrop assets themselves; resolution matters (a 1672×941
   cut looked soft) — always use their highest-res source. Convert owner
   PNGs → JPEG q90 via PIL (~3800×2160 class assets land ~700KB).
-- The former hero brain <img> stays removed; the guardrail FAILS if
-  `landing-hero-brain` reappears in landing.tsx. The wordmark/text stack
-  leads the landing hero, with large top padding so the headline sits in
-  the artwork's dark center.
+- The hero brain <img> is BACK (owner, 2026-07-15, later the same day): an
+  owner-supplied glass-brain cutout (background removed → transparent PNG,
+  `.landing-hero-brain`) leads the hero stack above the wordmark, sized
+  min(400px, 62vw), sharing the hero entrance animation. The guardrail now
+  FAILS if it goes missing (flip of the earlier removal lock). Hero top
+  padding shrank back to header-clearing size.
 
 **Why:** owner order 2026-07-15: "use this as the background across the
 entire site" with a single attached artwork. Cyan artwork on the gray app
