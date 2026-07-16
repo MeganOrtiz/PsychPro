@@ -19,7 +19,7 @@ import { PP, alpha } from "@/lib/palette";
 
 const C = {
   cyan: PP.cyan,
-  mist: PP.neutral300,
+  mist: PP.textDim,
   ink: PP.deep,
   hairline: alpha(PP.ocean, 0.16),
   hairlineStrong: alpha(PP.cyan, 0.32),

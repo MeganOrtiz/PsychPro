@@ -1,19 +1,19 @@
 #!/usr/bin/env node
 // =============================================================================
-// PALETTE GUARDRAIL  (blue three-material system, locked 2026-07-09)
+// PALETTE GUARDRAIL  (white/luminous system, locked 2026-07-16)
 //
-// The app runs on the owner-approved BLUE system: pure-black page floors,
-// navy-tint opaque panels, blue glass tiles, cyan gloss buttons, icy/gray text.
-// Palette (the --pp-* tokens in src/index.css):
-//   floor #000000 · surfaces #04101f/#071c33 · navy #052a58/#0e4e71
-//   ocean #0b669a/#0d58a2 · cyan #08a5d1/#0bd4df · icy #aaedf0
-//   grays #e5e5e5/#a3a3a3
+// The app runs on the owner-approved WHITE system: light silver page floor,
+// pure-white opaque panels, pale-gray tiles, near-black action buttons, dark
+// ink text. Palette (the --pp-* tokens in src/index.css):
+//   floor #eef0f2 · surface #ffffff · tiles #f4f5f6/#eaecee/#dfe2e5
+//   action #3f4449/#24282c · text #24282c/#6b7278 · ink-on-dark #ffffff
+// The landing page shares the same silver/white system (the old blue-window
+// landing exception was retired 2026-07-16).
 //
 // This check fails when a color OUTSIDE the system drifts into the UI. Allowed:
-//   - Neutrals (saturation <= 25%).
-//   - The blue family (hue 180-220) — retained ONLY for the landing page
-//     (LANDING consts in palette.ts + .landing-root scope) and brain-structure
-//     teaching colors; the logged-in app itself is black/white/gray.
+//   - Neutrals (saturation <= 25%) — the entire white system lives here.
+//   - The blue family (hue 178-220) — retained ONLY for brain-structure
+//     teaching colors and legacy chart hues; UI chrome is white/gray/ink.
 //   - Semantic status colors: red/amber (hue 0-70) and green (hue 90-160)
 //     for destructive/warning/success states.
 //   - src/data/brain-structures.ts — functional anatomy colors used by the
@@ -35,7 +35,7 @@ const MAX_NEUTRAL_S = 0.25; // anything at/below this saturation is fine
 const ALLOWED_HUES = [
   [0, 70],     // red … amber (destructive, warnings)
   [90, 160],   // green (success)
-  [178, 220],  // BLUE FAMILY — landing page + brain-structures only (app is gray)
+  [178, 220],  // BLUE FAMILY — brain-structures + legacy chart hues only
   [345, 360],  // wrap-around reds
 ];
 // Files exempt from the palette ban.
@@ -137,4 +137,4 @@ if (violations.length) {
   console.error("\nFix: use the neutral gray --pp-* tokens (app), LANDING consts (landing page only), or a semantic red/amber/green status color.\n");
   process.exit(1);
 }
-console.log("✓ Palette guardrail passed — all colors within the locked palette (gray app, blue landing, semantic status).");
+console.log("✓ Palette guardrail passed — all colors within the locked palette (white/luminous system, semantic status).");

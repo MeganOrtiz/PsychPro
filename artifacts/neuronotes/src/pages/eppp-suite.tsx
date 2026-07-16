@@ -92,8 +92,8 @@ import { ResourcesContent } from "@/pages/resources";
 
 const C = {
   cyan: PP.cyan,
-  mist: PP.neutral300,
-  cloud: PP.neutral100,
+  mist: PP.textDim,
+  cloud: PP.text,
   ink: PP.deep,
   hairline: alpha(PP.ocean, 0.16),
   hairlineStrong: alpha(PP.cyan, 0.32),
@@ -1721,11 +1721,11 @@ const styles = `
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: ${alpha(PP.neutral300, 0.58)};
+  color: ${alpha(PP.textDim, 0.85)};
 }
 .eps-nav-section:first-child { margin-top: 4px; }
 .eps-nav-item-idle { color: var(--pp-text-dim); }
-.eps-nav-item-idle:hover { color: ${C.mist}; }
+.eps-nav-item-idle:hover { color: ${C.cloud}; }
 .eps-nav-item-active { color: ${C.mist}; }
 .eps-avatar-ring { --tw-ring-color: ${alpha(PP.textDim, 0.4)}; }
 

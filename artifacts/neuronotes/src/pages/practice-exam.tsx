@@ -216,7 +216,7 @@ export default function PracticeExamPage({ params }: Props) {
               boxShadow: passed ? `0 18px 40px -18px ${P.tealDeep}cc` : "none",
             }}
           >
-            <span className="text-3xl font-bold" style={{ color: passed ? PP.white : PP.brick }}>{score}%</span>
+            <span className="text-3xl font-bold" style={{ color: passed ? PP.text : PP.brick }}>{score}%</span>
           </div>
           <h2 className="text-2xl font-bold text-foreground mb-2">Exam Complete</h2>
           <p className="text-muted-foreground">{correct}/{total} correct</p>
@@ -653,7 +653,7 @@ export default function PracticeExamPage({ params }: Props) {
                   !isAnswered
                     ? { background: "var(--pp-tile)", color: P.surf, borderColor: `${P.surf}88` }
                     : isSelected
-                      ? { background: "var(--pp-ocean-deep)", color: PP.white, borderColor: "rgba(var(--pp-cyan-rgb), 0.55)" }
+                      ? { background: "var(--pp-ocean-deep)", color: PP.text, borderColor: "rgba(var(--pp-cyan-rgb), 0.55)" }
                       : { background: "var(--pp-tile)", color: P.surf, borderColor: `${P.surf}55` }
                 }
               >{key}</span>

@@ -481,7 +481,7 @@ function Section({
     <section id={id} className="scroll-mt-24 space-y-3">
       <h2
         className="text-xs flex items-baseline gap-3"
-        style={{ ...TRACK_NAV, color: PP.white, fontWeight: 400 }}
+        style={{ ...TRACK_NAV, color: PP.text, fontWeight: 400 }}
       >
         <span style={{ color: P.surf }}>{n}.</span>
         <span>{title.toUpperCase()}</span>

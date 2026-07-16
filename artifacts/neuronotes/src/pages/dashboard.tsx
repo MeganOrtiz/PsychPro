@@ -58,6 +58,7 @@ import { StudySurface } from "@/components/study/study-surface";
 import TodayReviews from "@/components/learning/today-reviews";
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
 import { PP, alpha } from "@/lib/palette";
+import whiteBrainCutout from "@/assets/white-brain-cutout.png";
 import { isEpppTopic } from "@/lib/eppp-content";
 import {
   ResponsiveContainer,
@@ -243,6 +244,13 @@ export default function DashboardPage() {
       data-testid="dashboard-page"
     >
       <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 lg:pt-8 pb-4 md:pb-6 lg:pb-8">
+        <img
+          src={whiteBrainCutout}
+          alt=""
+          aria-hidden
+          className="pp-dash-brain"
+          data-testid="img-dashboard-brain"
+        />
         {isOverLimit && (
           <div
             className="mat-opaque p-4 mb-6 flex items-start gap-3"
@@ -896,7 +904,8 @@ function CourseMasterySection({
             >
               {mastered && (
                 <CheckCircle2
-                  className="absolute top-2 right-2 w-4 h-4 text-white"
+                  className="absolute top-2 right-2 w-4 h-4"
+                  style={{ color: PP.text }}
                   aria-hidden
                 />
               )}
@@ -912,14 +921,14 @@ function CourseMasterySection({
                 }
               >
                 {mastered ? (
-                  <GraduationCap className="w-5 h-5 text-white" />
+                  <GraduationCap className="w-5 h-5" style={{ color: PP.text }} />
                 ) : (
                   <Lock className="w-5 h-5" style={{ color: PALETTE.mistSoft }} />
                 )}
               </div>
               <span
                 className="text-sm font-semibold leading-tight line-clamp-2"
-                style={{ color: mastered ? PP.white : PALETTE.mist }}
+                style={{ color: mastered ? PP.text : PALETTE.mist }}
               >
                 {category}
               </span>

@@ -1,17 +1,16 @@
 // =============================================================================
 // SINGLE SOURCE OF TRUTH for the PsychPro color palette (TS mirror).
 //
-// BLUE THREE-MATERIAL SYSTEM (owner-approved 2026-07-09): every value here is
+// WHITE/LUMINOUS SYSTEM (owner-approved 2026-07-16): every value here is
 // consumed from the PP constants in src/lib/palette.ts, which themselves mirror
 // the --pp-* token block in src/index.css. If you change a value, change it in
 // palette.ts / index.css in the same commit — the guardrail scripts
 // (check-surface-hue.mjs / check-design-drift.mjs) enforce the locked palette.
 //
-// Palette: black floor; near-black surfaces; gray structural lines; light-gray
-// action accents; white highlight; locked neutral grays. The logged-in app is
-// black/white/gray ONLY — the landing page keeps the blue-window look via the
-// LANDING constants in palette.ts. The KEYS are legacy names kept so every
-// consumer compiles.
+// Palette: light silver floor; white surfaces; pale-gray tiles; near-black
+// action accents; dark ink text; locked neutral grays. The landing page shares
+// the same silver/white system (blue-window exception retired). The KEYS are
+// legacy names kept so every consumer compiles.
 // =============================================================================
 
 import { PP } from "@/lib/palette";

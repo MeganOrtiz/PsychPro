@@ -297,7 +297,7 @@ function CourseRailButton({
       <div className="flex-1 min-w-0">
         <div
           className="font-medium text-sm leading-snug line-clamp-2"
-          style={{ color: active ? STUDY_PALETTE.cloud : alpha(PP.cloudBright, 0.92) }}
+          style={{ color: active ? STUDY_PALETTE.cloud : alpha(PP.text, 0.72) }}
         >
           {name}
         </div>
@@ -414,7 +414,7 @@ function CourseMasteryButton({ group }: { group: { name: string; items: Topic[] 
       <div className="flex-1 min-w-0">
         <div
           className="font-semibold text-sm md:text-base leading-snug"
-          style={{ color: unlocked ? STUDY_PALETTE.cloud : alpha(PP.cloudBright, 0.9) }}
+          style={{ color: unlocked ? STUDY_PALETTE.cloud : alpha(PP.text, 0.7) }}
         >
           Course Mastery Exam
         </div>

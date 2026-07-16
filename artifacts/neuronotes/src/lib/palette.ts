@@ -17,20 +17,20 @@
  */
 
 export const PP = {
-  floor: "#000000",
-  deep: "#0a0a0a",
-  surface: "#141414",
-  raised: "#1a1a1a",
-  navy: "#181818",
-  navyBright: "#2e2e2e",
-  ocean: "#3c3c3c",
-  oceanDeep: "#4a4a4a",
-  cyan: "#d6d6d6",
-  bright: "#f0f0f0",
-  icy: "#fafafa",
-  text: "#e5e5e5",
-  textDim: "#a3a3a3",
-  ink: "#111111",
+  floor: "#eef0f2",
+  deep: "#e2e5e8",
+  surface: "#ffffff",
+  raised: "#f8f9fa",
+  navy: "#f6f7f8",
+  navyBright: "#d9dcdf",
+  ocean: "#b9bec3",
+  oceanDeep: "#a2a8ae",
+  cyan: "#3f4449",
+  bright: "#24282c",
+  icy: "#14171a",
+  text: "#24282c",
+  textDim: "#6b7278",
+  ink: "#ffffff",
   white: "#ffffff",
   black: "#000000",
   /* Semantic status (match the guardrail's semantic hue windows). */
@@ -55,8 +55,8 @@ export const PP = {
   docCode: "#f1f3f4",
   docBorder: "#c8d2d6",
   docQuote: "#4c636b",
-  deepSoft: "#0d0d0d",
-  textSoft: "#cfcfcf",
+  deepSoft: "#e8eaec",
+  textSoft: "#4b5157",
   neutral100: "#f5f5f5",
   neutral300: "#d4d4d4",
   neutral400: "#999999",
@@ -99,16 +99,16 @@ export function alpha(hex: string, a: number): string {
   return `rgba(${r}, ${g}, ${b}, ${a})`;
 }
 
-/* LANDING EXCEPTION — the marketing landing page keeps the blue-window look
-   while the logged-in app runs black/white/gray. These are the retained blue
-   values, consumed ONLY by src/pages/landing.tsx (plus the scoped
-   .landing-root --surf-hue/--surf-sat override in index.css). */
+/* LANDING — the landing page now shares the white/luminous system (owner,
+   2026-07-16 — blue-window look retired). Silver/white values, consumed ONLY
+   by src/pages/landing.tsx (plus the scoped .landing-root knob override in
+   index.css, held at the neutral 0/0%). */
 export const LANDING = {
-  deep: "#04101f",
-  surface: "#071c33",
-  ocean: "#0b669a",
-  cyan: "#08a5d1",
-  bright: "#0bd4df",
-  icy: "#aaedf0",
-  ink: "#03131f",
+  deep: "#d9dde0",
+  surface: "#ffffff",
+  ocean: "#9aa1a7",
+  cyan: "#4b5157",
+  bright: "#24282c",
+  icy: "#14171a",
+  ink: "#ffffff",
 } as const;

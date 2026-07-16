@@ -141,7 +141,7 @@ export default function TopicDetailPage({ params }: Props) {
                   data-testid={mode.testId}
                   aria-label={mode.locked ? `${mode.title} — locked, requires PsychPro Master` : mode.title}
                   className="recommended-tile group relative flex items-center gap-4 p-5 rounded-md text-left border hover:-translate-y-0.5 active:translate-y-0 overflow-hidden"
-                  style={{ color: PP.white }}
+                  style={{ color: PP.text }}
                 >
                   {/* Animated sheen — a faint diagonal highlight that drifts
                       across on hover, the way a glossy button catches light. */}
@@ -169,11 +169,11 @@ export default function TopicDetailPage({ params }: Props) {
                   </div>
                   <div className="relative flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <p className="font-semibold text-white text-base">{mode.title}</p>
+                      <p className="font-semibold text-base" style={{ color: PP.text }}>{mode.title}</p>
                       {mode.locked && (
                         <span
                           className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded"
-                          style={{ background: "rgba(var(--pp-white-rgb), 0.18)", color: PP.white }}
+                          style={{ background: "rgba(var(--pp-black-rgb), 0.10)", color: PP.text }}
                           data-testid={`badge-locked-${mode.testId}`}
                         >
                           <Lock className="w-2.5 h-2.5" /> Master

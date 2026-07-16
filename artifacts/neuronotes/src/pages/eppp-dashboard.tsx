@@ -22,6 +22,7 @@ import { groupEpppTopicsByCategory, isEpppKnowledgeTopic } from "@/lib/eppp-cont
 import { epppDomainAnchor, epppTopicPath } from "@/lib/eppp-routes";
 import { knowledgeDomainIcon } from "@/lib/eppp-icons";
 import { PP, alpha } from "@/lib/palette";
+import whiteBrainCutout from "@/assets/white-brain-cutout.png";
 
 // ---------------------------------------------------------------------------
 // EPPP Mastery Suite dashboard — the working "how ready am I" home for the
@@ -41,8 +42,8 @@ import { PP, alpha } from "@/lib/palette";
 
 const C = {
   cyan: PP.cyan,
-  mist: PP.neutral300,
-  cloud: PP.neutral100,
+  mist: PP.textDim,
+  cloud: PP.text,
   ink: PP.deep,
   hairline: alpha(PP.ocean, 0.16),
   hairlineStrong: alpha(PP.cyan, 0.32),
@@ -188,6 +189,13 @@ export function EpppDashboardView({
       <style>{styles}</style>
 
       <div className="epd-shell">
+        <img
+          src={whiteBrainCutout}
+          alt=""
+          aria-hidden
+          className="pp-dash-brain"
+          data-testid="img-dashboard-brain"
+        />
         {/* Stat row: readiness · streak · exam countdown */}
         <section className="epd-stat-row">
           {/* Readiness */}
@@ -697,7 +705,7 @@ const styles = `
   color: ${C.cloud};
   background: var(--pp-tile);
   border: 1px solid ${C.hairlineStrong};
-  color-scheme: dark;
+  color-scheme: light;
 }
 .epd-date-input:focus { outline: none; border-color: ${C.cyan}80; }
 .epd-exam-save {

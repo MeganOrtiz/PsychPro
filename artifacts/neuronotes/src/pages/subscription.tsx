@@ -157,7 +157,7 @@ export default function SubscriptionPage() {
       {(isPro || isScholar) && (
         <div
           className="mat-opaque rounded-xl p-4 mb-6 flex flex-col sm:flex-row sm:items-center gap-3"
-          style={{ color: PP.white }}
+          style={{ color: PP.text }}
           data-testid="active-subscription-banner"
         >
           <div className="flex items-center gap-3 flex-1">
@@ -371,7 +371,7 @@ export default function SubscriptionPage() {
           {epppActive && (
             <div
               className="rounded-xl p-3 mb-4 text-sm"
-              style={{ background: `${P.surf}1a`, border: `1px solid ${P.surf}55`, color: PP.white }}
+              style={{ background: `${P.surf}1a`, border: `1px solid ${P.surf}55`, color: PP.text }}
               data-testid="eppp-active-banner"
             >
               <span className="font-semibold">You have EPPP access.</span>

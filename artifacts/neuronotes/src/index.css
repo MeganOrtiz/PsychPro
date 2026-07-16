@@ -119,50 +119,49 @@
      (The landing page keeps the blue-window look via the scoped
      .landing-root override + the LANDING constants in palette.ts.)
      ========================================================================== */
-  --pp-floor: #000000;        /* page floor — always pure black */
-  --pp-deep: #0a0a0a;         /* deepest tinted surface */
-  --pp-surface: #141414;      /* standard tinted surface */
-  --pp-navy: #181818;         /* structural gray */
-  --pp-navy-bright: #2e2e2e;  /* lifted gray / borders */
-  --pp-ocean: #3c3c3c;        /* mid gray */
-  --pp-ocean-deep: #4a4a4a;   /* strong gray (tile tint source) */
-  --pp-cyan: #d6d6d6;         /* primary action light gray */
-  --pp-bright: #f0f0f0;       /* near-white (accents, glow source) */
-  --pp-icy: #fafafa;          /* white highlight / bevel source */
-  --pp-text: #e5e5e5;         /* primary text */
-  --pp-text-dim: #a3a3a3;     /* muted text */
-  --pp-ink: #111111;          /* dark ink text on GLOSS light fills */
+  --pp-floor: #eef0f2;        /* page floor — luminous silver */
+  --pp-deep: #e2e5e8;         /* deepest tinted surface */
+  --pp-surface: #ffffff;      /* standard surface (white panel) */
+  --pp-navy: #f6f7f8;         /* structural light gray */
+  --pp-navy-bright: #d9dcdf;  /* lifted gray / borders */
+  --pp-ocean: #b9bec3;        /* mid gray */
+  --pp-ocean-deep: #a2a8ae;   /* strong gray (tile tint source) */
+  --pp-cyan: #3f4449;         /* primary action dark gray */
+  --pp-bright: #24282c;       /* near-black accent (glow/contrast source) */
+  --pp-icy: #14171a;          /* darkest highlight / strong text source */
+  --pp-text: #24282c;         /* primary text */
+  --pp-text-dim: #6b7278;     /* muted text */
+  --pp-ink: #ffffff;          /* light ink text on GLOSS dark fills */
 
   /* RGB channel triplets — for alpha mixes: rgba(var(--pp-cyan-rgb), 0.45).
      MUST stay numerically in sync with the hex tokens above. */
-  --pp-deep-rgb: 10, 10, 10;
-  --pp-surface-rgb: 20, 20, 20;
-  --pp-navy-rgb: 24, 24, 24;
-  --pp-navy-bright-rgb: 46, 46, 46;
-  --pp-ocean-rgb: 60, 60, 60;
-  --pp-ocean-deep-rgb: 74, 74, 74;
-  --pp-cyan-rgb: 214, 214, 214;
-  --pp-bright-rgb: 240, 240, 240;
-  --pp-icy-rgb: 250, 250, 250;
+  --pp-deep-rgb: 226, 229, 232;
+  --pp-surface-rgb: 255, 255, 255;
+  --pp-navy-rgb: 246, 247, 248;
+  --pp-navy-bright-rgb: 217, 220, 223;
+  --pp-ocean-rgb: 185, 190, 195;
+  --pp-ocean-deep-rgb: 162, 168, 174;
+  --pp-cyan-rgb: 63, 68, 73;
+  --pp-bright-rgb: 36, 40, 44;
+  --pp-icy-rgb: 20, 23, 26;
   --pp-white-rgb: 255, 255, 255;
   --pp-black-rgb: 0, 0, 0;
 
   /* Derived material ingredients — consume these, never re-mix raw values. */
-  --pp-bevel: rgba(var(--pp-icy-rgb), 0.14);        /* opaque-panel lit top edge */
-  --pp-bevel-bright: rgba(var(--pp-icy-rgb), 0.26); /* glass-tile lit top edge */
-  --pp-line: rgba(var(--pp-ocean-rgb), 0.50);          /* hairline border (panels) */
-  --pp-line-bright: rgba(var(--pp-cyan-rgb), 0.55);    /* hairline border (glass) */
-  --pp-glow: rgba(var(--pp-bright-rgb), 0.30);          /* hover corona (soft) */
-  --pp-glow-strong: rgba(var(--pp-bright-rgb), 0.48);   /* active corona */
-  --pp-shadow: rgba(var(--pp-black-rgb), 0.65);             /* neutral drop shadow */
+  --pp-bevel: rgba(var(--pp-white-rgb), 0.85);        /* opaque-panel lit top edge */
+  --pp-bevel-bright: rgba(var(--pp-white-rgb), 0.95); /* glass-tile lit top edge */
+  --pp-line: rgba(var(--pp-ocean-rgb), 0.60);          /* hairline border (panels) */
+  --pp-line-bright: rgba(var(--pp-ocean-deep-rgb), 0.55); /* hairline border (glass) */
+  --pp-glow: rgba(var(--pp-icy-rgb), 0.10);          /* hover halo (soft) */
+  --pp-glow-strong: rgba(var(--pp-icy-rgb), 0.16);   /* active halo */
+  --pp-shadow: rgba(var(--pp-black-rgb), 0.16);             /* neutral drop shadow */
 
   /* SOLID TILE LADDER (owner, 2026-07-15): every box/button fill must be
-     fully opaque so surfaces read against the site backdrop artwork. These
-     replace the old translucent GLASS alpha fills (values are the old
-     alpha mixes composited over --pp-surface, now baked solid). */
-  --pp-tile: #1f1f1f;          /* nested tile / secondary button rest fill */
-  --pp-tile-strong: #262626;   /* hover / icon-well step */
-  --pp-tile-stronger: #2e2e2e; /* active step (== navy-bright) */
+     fully opaque so surfaces read against the site backdrop. Light-system
+     values (owner white/luminous system, 2026-07-16). */
+  --pp-tile: #f4f5f6;          /* nested tile / secondary button rest fill */
+  --pp-tile-strong: #eaecee;   /* hover / icon-well step */
+  --pp-tile-stronger: #dfe2e5; /* active step */
 
   /* SINGLE HUE/SAT KNOB for the tokenized shadcn surface system below. */
   --surf-hue: 0;
@@ -184,14 +183,14 @@
   --card-foreground: 0 0% 12%;
   --card-border: 208 20% 86%;
 
-  --sidebar: 0 0% 7%;
-  --sidebar-foreground: 0 0% 90%;
-  --sidebar-border: 0 0% 22%;
-  --sidebar-primary: 0 0% 43%;
-  --sidebar-primary-foreground: 0 0% 7%;
-  --sidebar-accent: 0 0% 18%;
-  --sidebar-accent-foreground: 0 0% 90%;
-  --sidebar-ring: 0 0% 43%;
+  --sidebar: 0 0% 98%;
+  --sidebar-foreground: 0 0% 14%;
+  --sidebar-border: 0 0% 84%;
+  --sidebar-primary: 0 0% 27%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 0 0% 91%;
+  --sidebar-accent-foreground: 0 0% 14%;
+  --sidebar-ring: 0 0% 45%;
 
   --popover: 0 0% 100%;
   --popover-foreground: 0 0% 12%;
@@ -261,46 +260,46 @@
   --elevate-1: rgba(var(--pp-icy-rgb), .05);
   --elevate-2: rgba(var(--pp-icy-rgb), .10);
 
-  /* Deep blue dark theme — driven by the --surf-hue/--surf-sat knobs. */
-  --background: var(--surf-hue) var(--surf-sat) 6%;
-  --foreground: 195 25% 92%;
+  /* Luminous light theme — driven by the --surf-hue/--surf-sat knobs. */
+  --background: var(--surf-hue) var(--surf-sat) 94%;
+  --foreground: 210 8% 16%;
 
-  --border: 0 0% 28%;
+  --border: 0 0% 82%;
 
-  --card: var(--surf-hue) var(--surf-sat) 10%;
-  --card-foreground: 195 25% 92%;
-  --card-border: 0 0% 28%;
+  --card: var(--surf-hue) var(--surf-sat) 100%;
+  --card-foreground: 210 8% 16%;
+  --card-border: 0 0% 82%;
 
-  --sidebar: 0 0% 6%;
-  --sidebar-foreground: 195 25% 88%;
-  --sidebar-border: 0 0% 20%;
-  --sidebar-primary: 0 0% 43%;
-  --sidebar-primary-foreground: 0 0% 7%;
-  --sidebar-accent: var(--surf-hue) var(--surf-sat) 16%;
-  --sidebar-accent-foreground: 195 25% 88%;
-  --sidebar-ring: 0 0% 43%;
+  --sidebar: 0 0% 98%;
+  --sidebar-foreground: 210 8% 16%;
+  --sidebar-border: 0 0% 84%;
+  --sidebar-primary: 0 0% 27%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: var(--surf-hue) var(--surf-sat) 91%;
+  --sidebar-accent-foreground: 210 8% 16%;
+  --sidebar-ring: 0 0% 45%;
 
-  --popover: var(--surf-hue) var(--surf-sat) 10%;
-  --popover-foreground: 195 25% 92%;
-  --popover-border: 0 0% 26%;
+  --popover: var(--surf-hue) var(--surf-sat) 100%;
+  --popover-foreground: 210 8% 16%;
+  --popover-border: 0 0% 80%;
 
-  --primary: 0 0% 43%;
-  --primary-foreground: 0 0% 7%;
+  --primary: 0 0% 27%;
+  --primary-foreground: 0 0% 100%;
 
-  --secondary: var(--surf-hue) var(--surf-sat) 18%;
-  --secondary-foreground: 195 25% 88%;
+  --secondary: var(--surf-hue) var(--surf-sat) 89%;
+  --secondary-foreground: 210 8% 16%;
 
-  --muted: var(--surf-hue) var(--surf-sat) 13%;
-  --muted-foreground: 200 20% 65%;
+  --muted: var(--surf-hue) var(--surf-sat) 92%;
+  --muted-foreground: 210 6% 44%;
 
-  --accent: 0 0% 46%;
-  --accent-foreground: 0 0% 7%;
+  --accent: 0 0% 20%;
+  --accent-foreground: 0 0% 100%;
 
   --destructive: 0 72% 51%;
   --destructive-foreground: 0 0% 100%;
 
-  --input: var(--surf-hue) var(--surf-sat) 16%;
-  --ring: 0 0% 50%;
+  --input: var(--surf-hue) var(--surf-sat) 90%;
+  --ring: 0 0% 45%;
 
   --chart-1: 0 0% 43%;
   --chart-2: 0 0% 46%;
@@ -308,14 +307,14 @@
   --chart-4: 0 0% 44%;
   --chart-5: 0 0% 30%;
 
-  --shadow-2xs: 0px 1px 2px 0px rgba(var(--pp-black-rgb),0.3);
-  --shadow-xs: 0px 2px 4px 0px rgba(var(--pp-black-rgb),0.35);
-  --shadow-sm: 0px 2px 4px 0px rgba(var(--pp-black-rgb),0.35), 0px 1px 2px -1px rgba(var(--pp-black-rgb),0.3);
-  --shadow: 0px 4px 6px -1px rgba(var(--pp-black-rgb),0.4), 0px 2px 4px -2px rgba(var(--pp-black-rgb),0.3);
-  --shadow-md: 0px 6px 12px -2px rgba(var(--pp-black-rgb),0.45), 0px 3px 6px -3px rgba(var(--pp-black-rgb),0.3);
-  --shadow-lg: 0px 10px 20px -4px rgba(var(--pp-black-rgb),0.50), 0px 4px 8px -4px rgba(var(--pp-black-rgb),0.35);
-  --shadow-xl: 0px 20px 40px -8px rgba(var(--pp-black-rgb),0.55), 0px 8px 16px -6px rgba(var(--pp-black-rgb),0.40);
-  --shadow-2xl: 0px 32px 60px -12px rgba(var(--pp-black-rgb),0.60);
+  --shadow-2xs: 0px 1px 2px 0px rgba(var(--pp-black-rgb),0.06);
+  --shadow-xs: 0px 2px 4px 0px rgba(var(--pp-black-rgb),0.07);
+  --shadow-sm: 0px 2px 4px 0px rgba(var(--pp-black-rgb),0.07), 0px 1px 2px -1px rgba(var(--pp-black-rgb),0.06);
+  --shadow: 0px 4px 6px -1px rgba(var(--pp-black-rgb),0.08), 0px 2px 4px -2px rgba(var(--pp-black-rgb),0.06);
+  --shadow-md: 0px 6px 12px -2px rgba(var(--pp-black-rgb),0.10), 0px 3px 6px -3px rgba(var(--pp-black-rgb),0.06);
+  --shadow-lg: 0px 10px 20px -4px rgba(var(--pp-black-rgb),0.12), 0px 4px 8px -4px rgba(var(--pp-black-rgb),0.08);
+  --shadow-xl: 0px 20px 40px -8px rgba(var(--pp-black-rgb),0.14), 0px 8px 16px -6px rgba(var(--pp-black-rgb),0.10);
+  --shadow-2xl: 0px 32px 60px -12px rgba(var(--pp-black-rgb),0.16);
 }
 
 @layer base {
@@ -334,33 +333,33 @@
 .study-page-bg,
 .study-page-aurora {
   /* Mirrors STUDY_PALETTE in src/lib/study-theme.ts. */
-  --background: var(--surf-hue) var(--surf-sat) 7%;   /* deep tinted floor */
-  --foreground: 195 25% 88%;                          /* icy-tinted text */
-  --card: var(--surf-hue) var(--surf-sat) 11%;        /* tinted surface */
-  --card-foreground: 195 25% 88%;
-  --popover: var(--surf-hue) var(--surf-sat) 10%;
-  --popover-foreground: 195 25% 88%;
-  --muted: var(--surf-hue) var(--surf-sat) 14%;
-  --muted-foreground: 200 22% 68%;
-  --border: 0 0% 30%;
-  --input: var(--surf-hue) var(--surf-sat) 12%;
-  --primary: 0 0% 43%;             /* --pp-cyan */
-  --primary-foreground: 0 0% 7%;
-  --secondary: var(--surf-hue) var(--surf-sat) 22%;
-  --secondary-foreground: 195 25% 88%;
-  --accent: 0 0% 46%;              /* --pp-bright */
-  --accent-foreground: 0 0% 7%;
-  --ring: 0 0% 55%;
+  --background: var(--surf-hue) var(--surf-sat) 94%;  /* luminous silver floor */
+  --foreground: 210 8% 16%;                           /* near-black text */
+  --card: var(--surf-hue) var(--surf-sat) 100%;       /* white surface */
+  --card-foreground: 210 8% 16%;
+  --popover: var(--surf-hue) var(--surf-sat) 100%;
+  --popover-foreground: 210 8% 16%;
+  --muted: var(--surf-hue) var(--surf-sat) 92%;
+  --muted-foreground: 210 6% 44%;
+  --border: 210 8% 82%;
+  --input: var(--surf-hue) var(--surf-sat) 90%;
+  --primary: 210 7% 27%;           /* --pp-cyan */
+  --primary-foreground: 0 0% 100%;
+  --secondary: var(--surf-hue) var(--surf-sat) 89%;
+  --secondary-foreground: 210 8% 16%;
+  --accent: 210 10% 20%;           /* --pp-bright */
+  --accent-foreground: 0 0% 100%;
+  --ring: 210 7% 45%;
   /* Shared glow source for gloss buttons + interactive glass. */
-  --btn-glow: 0 0% 85%;
+  --btn-glow: 210 8% 30%;
 }
 
-/* LANDING EXCEPTION — the marketing landing page keeps the blue-window look.
-   Scoped knob override only; the logged-in app stays black/white/gray. The
-   landing's own colors come from the LANDING constants in src/lib/palette.ts. */
+/* LANDING — the landing page now runs on the SAME white/luminous system as
+   the app (owner, 2026-07-16 — blue-window exception retired). The knob stays
+   neutral; landing-specific values come from LANDING in src/lib/palette.ts. */
 .landing-root.study-page-bg {
-  --surf-hue: 211;
-  --surf-sat: 62%;
+  --surf-hue: 0;
+  --surf-sat: 0%;
 }
 
 /* ============================================================
@@ -457,27 +456,27 @@
    static surfaces (pigment + bevel, neutral shadow).
    ============================================================ */
 .mat-glass-success {
-  background: #162d1e; /* solid: old green 0.14 mix over --pp-surface */
-  border: 1px solid rgba(74, 222, 128, 0.45);
+  background: #e6f4ea; /* solid: light green tint over white */
+  border: 1px solid rgba(21, 128, 61, 0.40);
   border-radius: 16px;
   box-shadow:
-    inset 0 1px 0 rgba(187, 247, 208, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
     0 12px 28px -22px var(--pp-shadow);
 }
 .mat-glass-error {
-  background: #321b1b; /* solid: old red 0.14 mix over --pp-surface */
-  border: 1px solid rgba(248, 113, 113, 0.45);
+  background: #fbe9e9; /* solid: light red tint over white */
+  border: 1px solid rgba(185, 28, 28, 0.40);
   border-radius: 16px;
   box-shadow:
-    inset 0 1px 0 rgba(254, 202, 202, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
     0 12px 28px -22px var(--pp-shadow);
 }
 .mat-glass-warning {
-  background: #342713; /* solid: old amber 0.14 mix over --pp-surface */
-  border: 1px solid rgba(251, 191, 36, 0.45);
+  background: #faf1de; /* solid: light amber tint over white */
+  border: 1px solid rgba(180, 120, 10, 0.40);
   border-radius: 16px;
   box-shadow:
-    inset 0 1px 0 rgba(253, 230, 138, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
     0 12px 28px -22px var(--pp-shadow);
 }
 /* ============================================================
@@ -684,7 +683,7 @@
    ::before, and the browser only propagates body's background to the canvas
    when <html> has NO background of its own. */
 body {
-  background-color: #000000;
+  background-color: #eef0f2;
 }
 
 /* ============================================================
@@ -708,12 +707,13 @@ body {
   position: fixed;
   inset: 0;
   z-index: -2;
-  background-image: url("./assets/bg/site-liquid-flare.jpeg");
+  background-image: radial-gradient(120% 90% at 50% 0%,
+    #ffffff 0%, #f2f4f5 45%, #e4e7ea 78%, #d9dde0 100%);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: scroll;
-  background-color: #000000;
+  background-color: #eef0f2;
   pointer-events: none;
 }
 
@@ -729,6 +729,17 @@ body {
   background-image: none;
   background-repeat: no-repeat;
   opacity: 0;
+}
+
+/* Dashboard brain emblem — the owner's luminous white brain cutout, centered
+   at the top of the main + EPPP dashboards (white system, 2026-07-16). */
+.pp-dash-brain {
+  display: block;
+  margin: 0 auto clamp(8px, 1.4vh, 18px);
+  width: min(240px, 44vw);
+  height: auto;
+  pointer-events: none;
+  user-select: none;
 }
 
 /* Lesson detail header — OPAQUE material (structural panel). */

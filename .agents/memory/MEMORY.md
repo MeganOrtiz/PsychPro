@@ -1,7 +1,8 @@
-- [PsychPro gray foundation v2](psychpro-gray-foundation-v2.md) — CURRENT (2026-07-10): logged-in app is black/white/gray on grayed --pp-* tokens; LANDING page alone keeps the blue-window look (scoped .landing-root override + LANDING consts in palette.ts).
-- [PsychPro solid tile fills](psychpro-solid-tile-fills.md) — CURRENT (2026-07-15): all logged-in box/button fills are OPAQUE (--pp-tile ladder); scrims, ghost-rest, and landing stay translucent; guardrail-locked.
+- [PsychPro white/luminous system](psychpro-white-luminous-system.md) — CURRENT (2026-07-16): entire site (landing included) on light silver/white tokens with white-brain hero + dashboard cutout; blue landing exception retired.
+- [PsychPro gray foundation v2](psychpro-gray-foundation-v2.md) — historical (superseded 2026-07-16 by the white/luminous system).
+- [PsychPro solid tile fills](psychpro-solid-tile-fills.md) — still current structurally (opaque --pp-tile ladder), values now the LIGHT ladder (2026-07-16 white system).
 - [wouter Link inline spacing](wouter-link-inline-spacing.md) — wouter <Link> is an inline <a>; space-y-* is silently ignored between bare Links; wrap in block divs or force `a { display:block }` scoped.
-- [PsychPro blue three-material system](psychpro-blue-material-system.md) — historical for the app (2026-07-10: app retoned gray); structure (Opaque/Glass/Gloss, glow hover-only, no backdrop-filter) still current; blues live on only in the landing page.
+- [PsychPro blue three-material system](psychpro-blue-material-system.md) — historical (2026-07-16: blues fully retired, landing included); structure (Opaque/Glass/Gloss, glow hover-only, no backdrop-filter) still current.
 - [PsychPro black foundation](psychpro-black-foundation.md) — historical (same-day 2026-07-09); replaced hours later by the blue three-material system above.
 - [PsychPro token lock](psychpro-token-lock.md) — no raw color literals in TS/TSX outside palette.ts (+2 whitelisted files); use PP/alpha() or var(--pp-*); broad recipes banned, primitives emit scoped pp-* classes; drift guardrail enforces.
 - [Claims discipline](claims-discipline.md) — never report a fix as "done" until it's been verified end-to-end; user has called this out repeatedly.
@@ -59,7 +60,7 @@
 - [Design system lock](psychpro-design-lock.md) — two guardrails still enforce the system, now locked to the BLUE three-material system (blue-window palette ban + structure); update locks in same commit as intentional changes.
 - [study-page-bg horizontal seam](brain-clouds-bg-seam.md) — faint dead-straight full-width line over the bg = background-attachment:fixed on the already position:fixed ::before; set attachment:scroll (HiDPI-only, not a border/image defect).
 - [Dashboard tile hierarchy](psychpro-dashboard-tile-hierarchy.md) — "unify all tiles to one recipe" ≠ identical fill; a panel and the tiles nested inside it must keep a one-step elevation gap or hierarchy collapses; inventory every tile/state variant upfront.
-- [Route white-flash floor](psychpro-route-white-flash.md) — body resolves the LIGHT shadcn --background; keep a global dark floor + shared FullScreenLoader so route/auth swaps never flash white.
+- [Route white-flash floor](psychpro-route-white-flash.md) — mostly moot since the 2026-07-16 white flip (floor is light); keep the shared FullScreenLoader pattern for route/auth swaps.
 - [Foundations course](psychpro-foundations-course.md) — main-site Foundations = psych history/social/community/org placeholders; new courses seed via startup backfill + category promotion; STALE add-foundation-topics.ts (neuroanatomy) must not be run.
 - [DB pool/startup resilience](psychpro-db-pool-resilience.md) — DB cold-start timeouts + idle-socket drops are TRANSIENT; keep pool keepAlive+error handler and retry idempotent startup backfills with jittered backoff.
 - [Pigment over glow SUPERSEDED](psychpro-pigment-over-glow.md) — historical; no pigment or glow remains (black foundation).
@@ -72,4 +73,4 @@
 - [Auth provider choice](psychpro-auth-provider-choice.md) — PsychPro uses external Clerk on purpose; Replit Auth forces end users to have Replit accounts (consumer audience killer); a RA migration was built+reverted; RA→Clerk migration is unsupported — keep Clerk.
 - [Smoke bg resolution](psychpro-smoke-bg-resolution.md) — the shared smoke backdrop source is only 941px; "looks cheap/blurry" = a resolution problem fixed by super-resolution of the exact asset, not CSS; includes CPU-upscale sandbox recipe.
 - [Landing Brain Lab brain](psychpro-landing-brain-cutout.md) — owner REJECTED the glowing brain in the Brain Lab promo; keep grayscale lateral.webp there; ready-made cutout lateral-glow.png exists unused for future placement.
-- [Site-wide backdrop artwork](psychpro-landing-brain-bg.md) — CURRENT (2026-07-15): ONE liquid-flare image backs the ENTIRE site on the viewport-PINNED fixed ::before; per-page overrides now guardrail-BANNED; never document-height stretch (blurs).
+- [Site-wide backdrop artwork](psychpro-landing-brain-bg.md) — historical (2026-07-16: liquid-flare image removed; backdrop is now a pure-CSS silver radial gradient); viewport-pinned-::before + no-per-page-override rules still current.

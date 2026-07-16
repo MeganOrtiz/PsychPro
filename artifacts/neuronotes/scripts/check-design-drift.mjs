@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // =============================================================================
-// DESIGN SYSTEM LOCK  (blue three-material system, locked 2026-07-09)
+// DESIGN SYSTEM LOCK  (white/luminous three-material system, locked 2026-07-16)
 //
 // Companion to check-surface-hue.mjs. The palette guardrail pins COLOR; this
 // one pins STRUCTURE. The app runs on the owner-approved three-material system:
@@ -77,18 +77,18 @@ const TOKENS = [
   { name: "surface hue knob", re: /--surf-hue:\s*0;/, expected: "--surf-hue: 0;  (locked neutral surface hue — landing overrides to 211 in its scoped block)" },
   { name: "surface saturation knob", re: /--surf-sat:\s*0%;/, expected: "--surf-sat: 0%;" },
   // The locked --pp-* palette primitives.
-  { name: "pp floor token", re: /--pp-floor:\s*#000000;/, expected: "--pp-floor: #000000;" },
-  { name: "pp deep surface token", re: /--pp-deep:\s*#0a0a0a;/, expected: "--pp-deep: #0a0a0a;" },
-  { name: "pp surface token", re: /--pp-surface:\s*#141414;/, expected: "--pp-surface: #141414;" },
-  { name: "pp navy token", re: /--pp-navy:\s*#181818;/, expected: "--pp-navy: #181818;" },
-  { name: "pp navy-bright token", re: /--pp-navy-bright:\s*#2e2e2e;/, expected: "--pp-navy-bright: #2e2e2e;" },
-  { name: "pp ocean token", re: /--pp-ocean:\s*#3c3c3c;/, expected: "--pp-ocean: #3c3c3c;" },
-  { name: "pp ocean-deep token", re: /--pp-ocean-deep:\s*#4a4a4a;/, expected: "--pp-ocean-deep: #4a4a4a;" },
-  { name: "pp cyan token", re: /--pp-cyan:\s*#d6d6d6;/, expected: "--pp-cyan: #d6d6d6;" },
-  { name: "pp bright token", re: /--pp-bright:\s*#f0f0f0;/, expected: "--pp-bright: #f0f0f0;" },
-  { name: "pp icy token", re: /--pp-icy:\s*#fafafa;/, expected: "--pp-icy: #fafafa;" },
-  { name: "pp text token", re: /--pp-text:\s*#e5e5e5;/, expected: "--pp-text: #e5e5e5;" },
-  { name: "pp text-dim token", re: /--pp-text-dim:\s*#a3a3a3;/, expected: "--pp-text-dim: #a3a3a3;" },
+  { name: "pp floor token", re: /--pp-floor:\s*#eef0f2;/, expected: "--pp-floor: #eef0f2;" },
+  { name: "pp deep surface token", re: /--pp-deep:\s*#e2e5e8;/, expected: "--pp-deep: #e2e5e8;" },
+  { name: "pp surface token", re: /--pp-surface:\s*#ffffff;/, expected: "--pp-surface: #ffffff;" },
+  { name: "pp navy token", re: /--pp-navy:\s*#f6f7f8;/, expected: "--pp-navy: #f6f7f8;" },
+  { name: "pp navy-bright token", re: /--pp-navy-bright:\s*#d9dcdf;/, expected: "--pp-navy-bright: #d9dcdf;" },
+  { name: "pp ocean token", re: /--pp-ocean:\s*#b9bec3;/, expected: "--pp-ocean: #b9bec3;" },
+  { name: "pp ocean-deep token", re: /--pp-ocean-deep:\s*#a2a8ae;/, expected: "--pp-ocean-deep: #a2a8ae;" },
+  { name: "pp cyan token", re: /--pp-cyan:\s*#3f4449;/, expected: "--pp-cyan: #3f4449;" },
+  { name: "pp bright token", re: /--pp-bright:\s*#24282c;/, expected: "--pp-bright: #24282c;" },
+  { name: "pp icy token", re: /--pp-icy:\s*#14171a;/, expected: "--pp-icy: #14171a;" },
+  { name: "pp text token", re: /--pp-text:\s*#24282c;/, expected: "--pp-text: #24282c;" },
+  { name: "pp text-dim token", re: /--pp-text-dim:\s*#6b7278;/, expected: "--pp-text-dim: #6b7278;" },
 ];
 if (!rootBlock) {
   fail(":root block not found in index.css", "restore the :root design-token block");
@@ -132,8 +132,8 @@ if (/\.mat-opaque:hover/.test(css)) {
 
 // --- 2) Pure-black page floors ----------------------------------------------
 const bodyBlock = ruleBlock(css, "\nbody {");
-if (!bodyBlock || !/background-color:\s*#000000;/.test(bodyBlock)) {
-  fail("body floor drifted", "keep `background-color: #000000;` on body (prevents white route-transition flashes)");
+if (!bodyBlock || !/background-color:\s*#eef0f2;/.test(bodyBlock)) {
+  fail("body floor drifted", "keep `background-color: #eef0f2;` on body (luminous silver floor — prevents mismatched route-transition flashes)");
 }
 
 const appBackdrop = ruleBlock(css, ".study-page-bg::before");
@@ -152,8 +152,8 @@ const overlayBackdrop = ruleBlock(css, ".study-page-bg::after");
 if (!appBackdrop) {
   fail("canonical app backdrop rule missing", "restore the .study-page-bg::before backdrop rule");
 } else {
-  if (!/background-image:\s*url\("\.\/assets\/bg\/site-liquid-flare\.jpeg"\);/.test(appBackdrop)) {
-    fail("canonical backdrop drifted", "the site-wide backdrop uses the owner's liquid-flare artwork (url(\"./assets/bg/site-liquid-flare.jpeg\"), owner 2026-07-15)");
+  if (!/background-image:\s*radial-gradient\(120% 90% at 50% 0%/.test(appBackdrop)) {
+    fail("canonical backdrop drifted", "the site-wide backdrop is the luminous silver radial gradient (white system, owner 2026-07-16) — no artwork image");
   }
   if (!/background-attachment:\s*scroll;/.test(appBackdrop)) {
     fail("canonical backdrop attachment drifted", "keep background-attachment: scroll (fixed re-pins the artwork to the viewport and draws a HiDPI seam)");
@@ -161,11 +161,11 @@ if (!appBackdrop) {
   if (!/position:\s*fixed;/.test(appBackdrop) || !/inset:\s*0;/.test(appBackdrop)) {
     fail("canonical backdrop geometry drifted", "keep the ::before layer position: fixed with inset: 0 (viewport-pinned so the artwork backs the page to the bottom at every scroll depth, owner 2026-07-12) — never absolute/100vh (stops after one screen) and never document-height stretch (blurs)");
   }
-  if (!/background-color:\s*#000000;/.test(appBackdrop)) {
-    fail("canonical backdrop floor color drifted", "keep the pure-black floor #000000 (must match the body floor)");
+  if (!/background-color:\s*#eef0f2;/.test(appBackdrop)) {
+    fail("canonical backdrop floor color drifted", "keep the silver floor #eef0f2 (must match the body floor)");
   }
-  if (/\bfilter\s*:|radial-gradient\(|linear-gradient\(|background-blend-mode\s*:/.test(appBackdrop)) {
-    fail("canonical backdrop film reintroduced", "keep the backdrop free of filters, blend modes, and vignette gradients");
+  if (/\bfilter\s*:|linear-gradient\(|background-blend-mode\s*:/.test(appBackdrop)) {
+    fail("canonical backdrop film reintroduced", "keep the backdrop free of filters, blend modes, and linear films (only the sanctioned silver radial gradient)");
   }
 }
 if (landingBackdrop) {
@@ -273,12 +273,9 @@ const urls = /url\(\s*["']?([^"')]+)["']?\s*\)/g;
 while ((m = urls.exec(css))) {
   const target = m[1];
   if (target.includes("fonts.googleapis.com")) continue;
-  // Owner artwork exception (2026-07-15): the site-wide liquid-flare backdrop
-  // is the ONLY sanctioned image in index.css (canonical ::before only).
-  if (target === "./assets/bg/site-liquid-flare.jpeg") continue;
   fail(
     `unexpected image url(${target}) at ${REL}:${lineOf(m.index)}`,
-    "no images in index.css except the site-wide liquid-flare backdrop",
+    "no images in index.css — the white-system backdrop is a pure CSS radial gradient (owner 2026-07-16)",
   );
 }
 
@@ -614,4 +611,4 @@ if (violations.length) {
   console.error(`If the change is intentional, update the matching lock entry in the same commit.\n`);
   process.exit(1);
 }
-console.log("✓ Design system lock passed — grayscale three-material system (landing blue exception), typography, and shared component contracts are intact.");
+console.log("✓ Design system lock passed — white/luminous three-material system (site-wide, landing included), typography, and shared component contracts are intact.");

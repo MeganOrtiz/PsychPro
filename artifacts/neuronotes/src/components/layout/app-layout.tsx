@@ -178,7 +178,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
         style={{
           background: "var(--pp-surface)",
           border: "1px solid var(--pp-line)",
-          ["--nav-hover" as any]: PP.neutral300,
+          ["--nav-hover" as any]: PP.text,
           ["--nav-label" as any]: PP.neutral500,
         }}
         data-testid="sidebar"
@@ -188,7 +188,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
         <div className="relative px-3 pt-5 pb-3">
           <p
             className="text-center font-light"
-            style={{ letterSpacing: "0.4em", textIndent: "0.4em", fontSize: "18px", color: PP.neutral100 }}
+            style={{ letterSpacing: "0.4em", textIndent: "0.4em", fontSize: "18px", color: PP.text }}
             data-testid="sidebar-wordmark"
           >
             PSYCHPRO
@@ -421,7 +421,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   fontSize: "clamp(34px, 3.6vw, 50px)",
                   letterSpacing: "0.42em",
                   textIndent: "0.42em",
-                  color: PP.neutral100,
+                  color: PP.text,
                 }}
                 data-testid="topbar-wordmark"
               >

@@ -277,7 +277,7 @@ export default function QuizPage({ params }: Props) {
                       !selected
                         ? { background: "var(--pp-tile)", color: P.surf, borderColor: `${P.surf}88` }
                         : isSelected || isCorrect
-                          ? { background: "var(--pp-ocean)", color: PP.white }
+                          ? { background: "var(--pp-ocean)", color: PP.text }
                           : { background: "var(--pp-tile)", color: P.surf, borderColor: `${P.surf}55` }
                     }
                   >
@@ -298,7 +298,7 @@ export default function QuizPage({ params }: Props) {
               innerClassName="p-4 md:p-5 mb-4"
               testId="explanation-box"
             >
-              <p className="text-sm leading-relaxed pr-16 font-medium" style={{ color: PP.white }}>{current.explanation}</p>
+              <p className="text-sm leading-relaxed pr-16 font-medium" style={{ color: PP.text }}>{current.explanation}</p>
             </StudySurface>
           )}
 
