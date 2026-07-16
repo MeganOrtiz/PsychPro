@@ -275,10 +275,10 @@ export default function QuizPage({ params }: Props) {
                     )}
                     style={
                       !selected
-                        ? { background: "rgba(var(--pp-ocean-deep-rgb), 0.20)", color: P.surf, borderColor: `${P.surf}88` }
+                        ? { background: "var(--pp-tile)", color: P.surf, borderColor: `${P.surf}88` }
                         : isSelected || isCorrect
                           ? { background: "rgba(var(--pp-white-rgb), 0.22)", color: PP.white }
-                          : { background: "rgba(var(--pp-ocean-deep-rgb), 0.14)", color: P.surf, borderColor: `${P.surf}55` }
+                          : { background: "var(--pp-tile)", color: P.surf, borderColor: `${P.surf}55` }
                     }
                   >
                     {key}

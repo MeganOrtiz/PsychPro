@@ -68,7 +68,7 @@ function pillStyles(tone: StudyTone, brand?: boolean): CSSProperties {
   }
   if (tone === "accent" || tone === "card-front") {
     return {
-      background: "rgba(var(--pp-ocean-deep-rgb), 0.30)",
+      background: "var(--pp-tile-strong)",
       color: "rgba(var(--pp-white-rgb), 1)",
       borderColor: "rgba(var(--pp-cyan-rgb), 0.55)",
     };
@@ -76,7 +76,7 @@ function pillStyles(tone: StudyTone, brand?: boolean): CSSProperties {
   return brand
     ? { background: P.teal, color: "rgba(var(--pp-white-rgb), 1)", borderColor: P.tealDeep }
     : {
-        background: "rgba(var(--pp-ocean-deep-rgb), 0.18)",
+        background: "var(--pp-tile)",
         color: P.surf,
         borderColor: "rgba(var(--pp-cyan-rgb), 0.40)",
       };

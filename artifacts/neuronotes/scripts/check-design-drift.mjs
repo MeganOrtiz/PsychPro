@@ -7,8 +7,10 @@
 //
 //   OPAQUE — structural panels: solid near-black gradient, lit top bevel,
 //            neutral black shadow. Never glows.
-//   GLASS  — nested tiles: tinted transparency (NO backdrop-filter/blur),
+//   GLASS  — nested tiles: SOLID tile fills since 2026-07-15 (owner: every
+//            box/button must be opaque to read against the site backdrop);
 //            brighter bevel; interactive glass glows + lifts on hover only.
+//            (NO backdrop-filter/blur, ever.)
 //   GLOSS  — buttons: light-gray gradient + glossy highlight; hover corona.
 //   (Grayscale foundation 2026-07-10 — the landing page alone keeps blue.)
 //
@@ -18,7 +20,7 @@
 //      backdrop, ONE image site-wide (plus the required landing hero brain
 //      <img>, re-added by the owner 2026-07-15).
 //   2. A global reset that bans backdrop-filter (frosted glass) app-wide —
-//      GLASS is tinted transparency, never blur.
+//      GLASS is a solid tile fill, never blur.
 //   3. Glow discipline: the glow tokens (--pp-glow*) may only be consumed
 //      inside :hover / :active / :focus-visible states (or @keyframes).
 //   4. The --pp-* palette tokens and material classes exist in index.css.
@@ -107,6 +109,19 @@ for (const mat of [".mat-opaque", ".mat-glass", ".mat-glass-interactive", ".mat-
 // The OPAQUE material never glows: it must not define a :hover state.
 if (/\.mat-opaque:hover/.test(css)) {
   fail(".mat-opaque:hover introduced", "OPAQUE structural panels never glow or react — remove the hover state");
+}
+// Solid-fill lock (owner 2026-07-15): every box/button fill must be fully
+// opaque so surfaces read against the site backdrop artwork. The GLASS-family
+// recipes must consume the solid tile ladder, not translucent alpha fills.
+{
+  const glassBlock = ruleBlock(css, "\n.mat-glass {");
+  if (glassBlock && !/background:\s*var\(--pp-tile\);/.test(glassBlock)) {
+    fail(".mat-glass fill drifted", "keep the SOLID tile fill background: var(--pp-tile) (owner 2026-07-15 — no translucent box fills)");
+  }
+  const btnGlassBlock = ruleBlock(css, "\n.btn-glass {");
+  if (btnGlassBlock && !/background:\s*var\(--pp-tile\);/.test(btnGlassBlock)) {
+    fail(".btn-glass fill drifted", "keep the SOLID tile fill background: var(--pp-tile) (owner 2026-07-15 — no translucent button fills)");
+  }
 }
 
 // --- 2) Pure-black page floors ----------------------------------------------
@@ -385,8 +400,8 @@ const MATERIAL_SIGNATURES = [
   },
   {
     re: /rgba\(var\(--pp-ocean-deep-rgb\),\s*0\.16\)/,
-    name: "GLASS base fill (ocean-deep 0.16)",
-    fix: "compose .mat-glass / .mat-glass-interactive instead of re-declaring the glass material (state modifiers use elevated steps, not the base fill)",
+    name: "legacy translucent GLASS fill (ocean-deep 0.16)",
+    fix: "compose .mat-glass / .mat-glass-interactive — box fills are SOLID now (var(--pp-tile) ladder, owner 2026-07-15)",
   },
   {
     re: /border:\s*["'`]?1px solid rgba\(var\(--pp-cyan-rgb\),\s*0\.35\)/,

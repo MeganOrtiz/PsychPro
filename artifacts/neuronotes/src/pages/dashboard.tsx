@@ -398,7 +398,7 @@ export default function DashboardPage() {
                         <div
                           className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 border transition-transform group-hover:scale-105"
                           style={{
-                            background: "rgba(var(--pp-ocean-deep-rgb), 0.1)",
+                            background: "var(--pp-tile)",
                             borderColor: "rgba(var(--pp-cyan-rgb), 0.28)",
                           }}
                         >
@@ -560,7 +560,7 @@ export default function DashboardPage() {
                     <Tooltip
                       cursor={{ stroke: PALETTE.teal, strokeOpacity: 0.25 }}
                       contentStyle={{
-                        background: "hsl(var(--surf-hue) var(--surf-sat) 24% / 0.92)",
+                        background: "hsl(var(--surf-hue) var(--surf-sat) 24%)",
                         border: "1px solid rgba(var(--pp-cyan-rgb), 0.25)",
                         borderRadius: 10,
                         color: PALETTE.mist,

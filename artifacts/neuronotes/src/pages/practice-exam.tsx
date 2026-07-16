@@ -651,10 +651,10 @@ export default function PracticeExamPage({ params }: Props) {
                 className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 border"
                 style={
                   !isAnswered
-                    ? { background: "rgba(var(--pp-ocean-deep-rgb), 0.20)", color: P.surf, borderColor: `${P.surf}88` }
+                    ? { background: "var(--pp-tile)", color: P.surf, borderColor: `${P.surf}88` }
                     : isSelected
                       ? { background: "rgba(var(--pp-cyan-rgb), 0.30)", color: PP.white, borderColor: "rgba(var(--pp-cyan-rgb), 0.55)" }
-                      : { background: "rgba(var(--pp-ocean-deep-rgb), 0.14)", color: P.surf, borderColor: `${P.surf}55` }
+                      : { background: "var(--pp-tile)", color: P.surf, borderColor: `${P.surf}55` }
                 }
               >{key}</span>
               {text}

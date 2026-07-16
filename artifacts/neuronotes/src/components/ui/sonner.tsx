@@ -26,9 +26,9 @@ const Toaster = ({ ...props }: ToasterProps) => {
           error:
             "!bg-[var(--pp-toast-error-bg)] !border-[var(--pp-toast-error-border)] !shadow-none",
           actionButton:
-            "group-[.toast]:!bg-[rgba(var(--pp-ocean-deep-rgb),0.16)] group-[.toast]:!text-[var(--pp-text)]",
+            "group-[.toast]:!bg-[var(--pp-tile)] group-[.toast]:!text-[var(--pp-text)]",
           cancelButton:
-            "group-[.toast]:!bg-[rgba(var(--pp-ocean-deep-rgb),0.10)] group-[.toast]:!text-[var(--pp-toast-desc)]",
+            "group-[.toast]:!bg-[var(--pp-tile)] group-[.toast]:!text-[var(--pp-toast-desc)]",
           icon: "!text-[var(--pp-text-dim)]",
         },
       }}

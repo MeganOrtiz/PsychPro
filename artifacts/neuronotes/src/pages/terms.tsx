@@ -226,7 +226,7 @@ export default function TermsPage() {
             >
               <table className="w-full text-sm">
                 <thead>
-                  <tr style={{ background: "rgba(var(--pp-ocean-deep-rgb), 0.06)" }}>
+                  <tr style={{ background: "var(--pp-navy)" }}>
                     <th
                       className="text-left px-4 py-3 font-light"
                       style={{ ...TRACK_NAV, color: P.cloud, fontSize: 10 }}

@@ -156,6 +156,14 @@
   --pp-glow-strong: rgba(var(--pp-bright-rgb), 0.48);   /* active corona */
   --pp-shadow: rgba(var(--pp-black-rgb), 0.65);             /* neutral drop shadow */
 
+  /* SOLID TILE LADDER (owner, 2026-07-15): every box/button fill must be
+     fully opaque so surfaces read against the site backdrop artwork. These
+     replace the old translucent GLASS alpha fills (values are the old
+     alpha mixes composited over --pp-surface, now baked solid). */
+  --pp-tile: #1f1f1f;          /* nested tile / secondary button rest fill */
+  --pp-tile-strong: #262626;   /* hover / icon-well step */
+  --pp-tile-stronger: #2e2e2e; /* active step (== navy-bright) */
+
   /* SINGLE HUE/SAT KNOB for the tokenized shadcn surface system below. */
   --surf-hue: 0;
   --surf-sat: 0%;
@@ -371,10 +379,12 @@
     0 22px 48px -32px var(--pp-shadow);
 }
 
-/* GLASS — tiles nested inside opaque panels. Tinted transparency (the parent
-   panel reads through), brighter bevel. Static by default. */
+/* GLASS — tiles nested inside opaque panels. NOW SOLID (owner 2026-07-15):
+   every box fill must be fully opaque so tiles read against the site
+   backdrop artwork. Class names keep the legacy "glass" naming; brighter
+   bevel. Static by default. */
 .mat-glass {
-  background: rgba(var(--pp-ocean-deep-rgb), 0.16);
+  background: var(--pp-tile);
   border: 1px solid var(--pp-line-bright);
   border-radius: 16px;
   box-shadow:
@@ -402,7 +412,7 @@
     box-shadow 240ms ease, transform 160ms ease;
 }
 .mat-glass-interactive:hover:not(:disabled):not(.is-disabled) {
-  background: rgba(var(--pp-ocean-deep-rgb), 0.26);
+  background: var(--pp-tile-strong);
   border-color: rgba(var(--pp-bright-rgb), 0.60);
   box-shadow:
     inset 0 1px 0 var(--pp-bevel-bright),
@@ -420,7 +430,7 @@
 
 /* Mini-glass — chips, badges, tabs. Same recipe, tighter geometry. */
 .mat-chip {
-  background: rgba(var(--pp-ocean-deep-rgb), 0.18);
+  background: var(--pp-tile);
   border: 1px solid rgba(var(--pp-cyan-rgb), 0.40);
   border-radius: 999px;
   box-shadow: inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.18);
@@ -430,7 +440,7 @@
 /* Icon well — the small square/round icon plate that repeats on rail rows,
    recommended tiles, upgrade banners. GLASS family, tighter geometry. */
 .mat-icon-well {
-  background: rgba(var(--pp-ocean-deep-rgb), 0.22);
+  background: var(--pp-tile-strong);
   border: 1px solid rgba(var(--pp-cyan-rgb), 0.35);
   border-radius: 12px;
   box-shadow: inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.16);
@@ -447,7 +457,7 @@
    static surfaces (pigment + bevel, neutral shadow).
    ============================================================ */
 .mat-glass-success {
-  background: rgba(34, 197, 94, 0.14);
+  background: #162d1e; /* solid: old green 0.14 mix over --pp-surface */
   border: 1px solid rgba(74, 222, 128, 0.45);
   border-radius: 16px;
   box-shadow:
@@ -455,7 +465,7 @@
     0 12px 28px -22px var(--pp-shadow);
 }
 .mat-glass-error {
-  background: rgba(239, 68, 68, 0.14);
+  background: #321b1b; /* solid: old red 0.14 mix over --pp-surface */
   border: 1px solid rgba(248, 113, 113, 0.45);
   border-radius: 16px;
   box-shadow:
@@ -463,7 +473,7 @@
     0 12px 28px -22px var(--pp-shadow);
 }
 .mat-glass-warning {
-  background: rgba(245, 158, 11, 0.14);
+  background: #342713; /* solid: old amber 0.14 mix over --pp-surface */
   border: 1px solid rgba(251, 191, 36, 0.45);
   border-radius: 16px;
   box-shadow:
@@ -476,7 +486,7 @@
    width via utilities; radius and color come from here.
    ============================================================ */
 .pp-progress-track {
-  background: rgba(var(--pp-ocean-deep-rgb), 0.18);
+  background: var(--pp-tile);
   border: 1px solid rgba(var(--pp-ocean-rgb), 0.30);
   border-radius: 999px;
   overflow: hidden;
@@ -504,10 +514,10 @@
     border-color 160ms ease, box-shadow 200ms ease, transform 120ms ease;
 }
 
-/* GLASS secondary/outline button — tinted transparency + bevel; glow only
-   on hover/active. */
+/* GLASS secondary/outline button — SOLID fill (owner 2026-07-15) + bevel;
+   glow only on hover/active. */
 .btn-glass {
-  background: rgba(var(--pp-ocean-deep-rgb), 0.20);
+  background: var(--pp-tile);
   border: 1.5px solid rgba(var(--pp-cyan-rgb), 0.45);
   color: var(--pp-text);
   box-shadow:
@@ -515,7 +525,7 @@
     0 8px 18px -14px var(--pp-shadow);
 }
 .btn-glass:hover {
-  background: rgba(var(--pp-ocean-deep-rgb), 0.30);
+  background: var(--pp-tile-strong);
   border-color: rgba(var(--pp-bright-rgb), 0.65);
   box-shadow:
     inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.26),
@@ -524,7 +534,7 @@
   transform: translateY(-1px);
 }
 .btn-glass:active {
-  background: rgba(var(--pp-ocean-deep-rgb), 0.42);
+  background: var(--pp-tile-stronger);
   border-color: rgba(var(--pp-bright-rgb), 0.85);
   box-shadow:
     inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.28),
@@ -581,14 +591,14 @@
     box-shadow 200ms ease, transform 120ms ease;
 }
 .btn-glass-ghost:hover {
-  background: rgba(var(--pp-ocean-deep-rgb), 0.16);
+  background: var(--pp-tile);
   border-color: rgba(var(--pp-cyan-rgb), 0.45);
   box-shadow:
     inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.14),
     0 0 14px -2px var(--pp-glow);
 }
 .btn-glass-ghost:active {
-  background: rgba(var(--pp-ocean-deep-rgb), 0.26);
+  background: var(--pp-tile-strong);
   border-color: rgba(var(--pp-bright-rgb), 0.60);
   box-shadow:
     inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.18),
@@ -763,7 +773,7 @@ body {
   transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .course-mastery-tile--locked {
-  background: rgba(var(--pp-deep-rgb), 0.55);
+  background: var(--pp-deep);
   border-color: rgba(var(--pp-ocean-rgb), 0.18);
   opacity: 0.5;
   filter: grayscale(0.6);
@@ -1041,7 +1051,7 @@ body {
    class emitted by the shared Input/Textarea primitives (and any raw
    text-entry element that opts in). NEVER a descendant element rule. */
 .pp-input-well {
-  background: rgba(var(--pp-deep-rgb), 0.78);
+  background: var(--pp-deep);
   border: 1px solid rgba(var(--pp-ocean-rgb), 0.40);
   color: var(--pp-text);
   border-radius: 14px;
