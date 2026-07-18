@@ -451,7 +451,7 @@ export default function LandingPage() {
             <button
               type="button"
               onClick={() => navTo("/brain-lab")}
-              className="landing-cta landing-cta-primary"
+              className="landing-cta landing-cta-primary landing-cta--center"
               data-testid="cta-brain-lab"
             >
               <span>OPEN THE BRAIN LAB</span>
@@ -565,7 +565,7 @@ export default function LandingPage() {
             <button
               type="button"
               onClick={() => navTo("/subscription")}
-              className="landing-cta landing-cta-primary"
+              className="landing-cta landing-cta-primary landing-cta--center"
               data-testid="cta-scholar"
             >
               <span>SEE SCHOLAR PLANS</span>
@@ -960,6 +960,11 @@ const styles = `
   border-radius: 14px;
   cursor: pointer;
   transition: all 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.landing-cta--center {
+  display: flex;
+  width: fit-content;
+  margin-inline: auto;
 }
 .landing-cta-icon {
   width: 16px;
