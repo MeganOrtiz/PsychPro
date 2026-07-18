@@ -20,6 +20,16 @@ available width, spill the most off-centre label (max `|ax - cx0|`) into its adj
 side column. Only then lay out columns (vertical de-overlap + clamp) and rows
 (horizontal de-overlap + clamp).
 
+**Corner rule (2026-07-18):** rows and columns must not share the corners. Clamp
+row bounds to the IMAGE span (`box.l+8 .. box.l+box.w-8`), and when a top/bottom
+row has chips, offset the column bounds past that row's tallest chip
+(`colTop = 16 + topRowH + 10`, `colBottom = wrapH - (40 + bottomRowH + 10)`).
+Without this, the leftmost row chip and the topmost column chip both clamp into
+the same corner and stack on each other.
+
+A DEV-only `?view=<key>` query param on the page deep-links any Sections view
+for screenshot verification (gated on `import.meta.env.DEV`).
+
 **Why:** dense views (e.g. lateral ~30 hotspots) put 5+ near-vertical anchors into
 the top wedge, but the row only fits ~3 wide chips. Without spilling, the pull-back
 compresses them to the left bound and they overlap or clip off the `overflow-hidden`
