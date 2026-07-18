@@ -119,7 +119,7 @@ export function NotificationsBell() {
           className="mat-opaque absolute right-0 top-12 w-80 max-h-[70vh] overflow-y-auto z-[60]"
           data-testid="notifications-dropdown"
         >
-          <div className="p-3 border-b border-white/10 flex items-center justify-between">
+          <div className="p-3 border-b border-black/10 flex items-center justify-between">
             <p className="text-sm font-semibold" style={{ color: PALETTE.mist }}>
               Notifications
             </p>
@@ -138,10 +138,10 @@ export function NotificationsBell() {
               You're all caught up.
             </p>
           ) : (
-            <ul className="divide-y divide-white/5">
+            <ul className="divide-y divide-black/5">
               {items.map((n) => {
                 const inner = (
-                  <div className={`p-3 hover:bg-white/[0.06] transition-all ${!n.readAt ? "bg-white/[0.04]" : ""}`}>
+                  <div className={`p-3 hover:bg-black/[0.04] transition-all ${!n.readAt ? "bg-black/[0.03]" : ""}`}>
                     <div className="flex items-start gap-2">
                       {!n.readAt && (
                         <span

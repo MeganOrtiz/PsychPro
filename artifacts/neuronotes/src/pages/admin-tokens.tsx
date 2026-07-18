@@ -235,7 +235,7 @@ export default function AdminTokensPage() {
         {justCreated && (
           <div className="rounded-xl border border-neutral-300/40 bg-neutral-300/5 p-5 space-y-3">
             <div className="flex items-center justify-between">
-              <div className="font-medium text-neutral-100">New token: {justCreated.label}</div>
+              <div className="font-medium text-foreground">New token: {justCreated.label}</div>
               <button onClick={() => setJustCreated(null)} className="text-xs text-muted-foreground hover:text-foreground">
                 Dismiss
               </button>

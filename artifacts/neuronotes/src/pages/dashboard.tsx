@@ -484,12 +484,12 @@ export default function DashboardPage() {
                           className={cn(
                             "w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 border ",
                             e.rank === 1
-                              ? "bg-yellow-400/20 text-yellow-200 border-yellow-300/40"
+                              ? "bg-yellow-400/20 text-yellow-700 border-yellow-500/40"
                               : e.rank === 2
-                              ? "bg-slate-200/15 text-slate-100 border-slate-200/30"
+                              ? "bg-slate-400/15 text-slate-600 border-slate-400/30"
                               : e.rank === 3
-                              ? "bg-amber-500/20 text-amber-200 border-amber-300/35"
-                              : "bg-neutral-400/10 text-neutral-100 border-neutral-300/25"
+                              ? "bg-amber-500/20 text-amber-700 border-amber-500/35"
+                              : "bg-neutral-400/10 text-neutral-600 border-neutral-400/25"
                           )}
                         >
                           {e.rank}

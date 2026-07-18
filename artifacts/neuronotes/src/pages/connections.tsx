@@ -186,7 +186,7 @@ export default function ConnectionsPage() {
                 <button
                   key={req.id}
                   onClick={() => setActive(req)}
-                  className="w-full text-left rounded-md p-3 bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 transition-all"
+                  className="w-full text-left rounded-md p-3 bg-black/[0.03] hover:bg-black/[0.06] border border-black/10 transition-all"
                   data-testid={`incoming-${req.id}`}
                 >
                   <div className="flex items-center justify-between gap-3">

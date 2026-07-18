@@ -570,7 +570,7 @@ function StudyGuideView({ content, title }: { content: string; title: string }) 
       <div className="bg-card border border-border rounded-xl p-6 md:p-8">
         <div
           ref={ref}
-          className="prose prose-sm prose-invert max-w-none [--tw-prose-invert-body:rgb(var(--pp-white-rgb))] [--tw-prose-invert-headings:rgb(var(--pp-white-rgb))] [--tw-prose-invert-lead:rgb(var(--pp-white-rgb))] [--tw-prose-invert-bold:rgb(var(--pp-white-rgb))] [--tw-prose-invert-counters:rgb(var(--pp-white-rgb))] [--tw-prose-invert-bullets:rgb(var(--pp-white-rgb))] [--tw-prose-invert-links:rgb(var(--pp-white-rgb))] [--tw-prose-invert-quotes:rgb(var(--pp-white-rgb))] [--tw-prose-invert-captions:rgb(var(--pp-white-rgb))] [--tw-prose-invert-code:rgb(var(--pp-white-rgb))] [--tw-prose-invert-hr:rgba(var(--pp-white-rgb),0.22)] [--tw-prose-invert-quote-borders:rgba(var(--pp-white-rgb),0.3)] [--tw-prose-invert-th-borders:rgba(var(--pp-white-rgb),0.3)] [--tw-prose-invert-td-borders:rgba(var(--pp-white-rgb),0.2)]"
+          className="prose prose-sm max-w-none"
         >
           <ReactMarkdown>{content}</ReactMarkdown>
         </div>

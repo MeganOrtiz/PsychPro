@@ -277,7 +277,7 @@ export default function ProfilePage() {
                     <img
                       src={photoUrl}
                       alt="Profile"
-                      className="w-20 h-20 rounded-full object-cover border border-white/15"
+                      className="w-20 h-20 rounded-full object-cover border border-black/15"
                     />
                   ) : (
                     <div className="w-20 h-20 rounded-full bg-primary/15 border border-black/15 flex items-center justify-center text-2xl font-semibold text-foreground">
@@ -447,7 +447,7 @@ export default function ProfilePage() {
                   className={`text-xs font-medium px-2.5 py-1 rounded-full border ${
                     atCap
                       ? "border-primary/50 bg-primary/10 text-primary"
-                      : "border-white/15 bg-white/[0.05] text-muted-foreground"
+                      : "border-black/15 bg-black/[0.04] text-muted-foreground"
                   }`}
                   data-testid="text-interests-count"
                 >
@@ -551,7 +551,7 @@ function PreferenceToggle({
   onCheckedChange: (v: boolean) => void;
 }) {
   return (
-    <div className="flex items-start justify-between gap-4 rounded-lg border border-white/10 bg-white/[0.03] p-3">
+    <div className="flex items-start justify-between gap-4 rounded-lg border border-black/10 bg-black/[0.03] p-3">
       <div className="min-w-0">
         <label htmlFor={id} className="block text-sm font-medium text-foreground cursor-pointer">{title}</label>
         <p className="text-xs text-muted-foreground mt-0.5">{description}</p>
@@ -700,7 +700,7 @@ function DangerZone() {
       </div>
 
       {isAdmin && (
-        <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4 space-y-3">
+        <div className="rounded-lg border border-black/10 bg-black/[0.03] p-4 space-y-3">
           <div>
             <h3 className="text-sm font-medium text-foreground">Duplicate accounts</h3>
             <p className="text-xs text-muted-foreground mt-0.5">
@@ -727,7 +727,7 @@ function DangerZone() {
               {duplicates.map((u) => (
                 <li
                   key={u.id}
-                  className="flex items-center justify-between gap-3 rounded-lg border border-white/10 bg-white/[0.02] p-3"
+                  className="flex items-center justify-between gap-3 rounded-lg border border-black/10 bg-black/[0.02] p-3"
                   data-testid={`duplicate-${u.id}`}
                 >
                   <div className="min-w-0 text-xs">
@@ -757,7 +757,7 @@ function DangerZone() {
         </div>
       )}
 
-      <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4 space-y-3">
+      <div className="rounded-lg border border-black/10 bg-black/[0.03] p-4 space-y-3">
         <div>
           <h3 className="text-sm font-medium text-foreground">Delete my account</h3>
           <p className="text-xs text-muted-foreground mt-0.5">

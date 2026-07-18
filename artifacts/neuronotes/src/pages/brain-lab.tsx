@@ -215,7 +215,7 @@ function StructureSearch({
           />
           <button
             onClick={onClose}
-            className="p-1 rounded-md hover:bg-white/5"
+            className="p-1 rounded-md hover:bg-black/5"
             style={{ color: PALETTE.mist }}
             aria-label="Close search"
           >
@@ -229,7 +229,7 @@ function StructureSearch({
               <li key={s.id}>
                 <button
                   onClick={() => onSelect(s.id)}
-                  className="w-full text-left px-4 py-2.5 flex items-center gap-3 hover:bg-white/5 transition-colors"
+                  className="w-full text-left px-4 py-2.5 flex items-center gap-3 hover:bg-black/5 transition-colors"
                   data-testid={`search-result-${s.id}`}
                 >
                   <span
@@ -486,7 +486,7 @@ function StructureDetail({
         <button
           onClick={onClose}
           aria-label="Close detail"
-          className="p-1.5 rounded-md transition-colors hover:bg-white/5"
+          className="p-1.5 rounded-md transition-colors hover:bg-black/5"
           style={{ color: PALETTE.mist }}
           data-testid="button-close-detail"
         >
@@ -973,7 +973,7 @@ function NumberedKey({
                 </span>
                 <span
                   className="text-[13px] leading-tight"
-                  style={{ color: emphasized ? "rgba(var(--pp-white-rgb), 1)" : PALETTE.mist }}
+                  style={{ color: emphasized ? PALETTE.cloud : PALETTE.mist }}
                 >
                   {s.name}
                 </span>
@@ -1085,7 +1085,7 @@ function BrainDiagram({
                         : { bottom: "calc(100% + 6px)" }),
                       transform: "translateX(-50%)",
                       background: `${PALETTE.surfaceElev}f2`,
-                      color: "rgba(var(--pp-white-rgb), 1)",
+                      color: PALETTE.cloud,
                       border: `1px solid ${GLOW}cc`,
                       boxShadow: `0 6px 18px -6px ${PALETTE.bg}`,
                       zIndex: 40,
@@ -1547,7 +1547,7 @@ function LabeledBrainDiagram({
                   onMouseLeave={() => onHover(null)}
                   onFocus={() => onHover(it.id)}
                   onBlur={() => onHover(null)}
-                  className="absolute px-0.5 text-[11px] font-semibold leading-tight outline-none transition-all hover:brightness-125 focus-visible:rounded focus-visible:ring-2 focus-visible:ring-white/80"
+                  className="absolute px-0.5 text-[11px] font-semibold leading-tight outline-none transition-all hover:brightness-125 focus-visible:rounded focus-visible:ring-2 focus-visible:ring-black/50"
                   style={{
                     left: it.lx,
                     top: it.ly,
@@ -1559,7 +1559,7 @@ function LabeledBrainDiagram({
                     opacity: dim ? 0.4 : 1,
                     background: "transparent",
                     border: "none",
-                    color: emphasized ? "rgba(var(--pp-white-rgb), 1)" : PALETTE.mist,
+                    color: emphasized ? PALETTE.cloud : PALETTE.mist,
                     textShadow: emphasized
                       ? `0 0 9px ${GLOW}, 0 0 16px ${GLOW}, 0 1px 2px ${PALETTE.bg}, 0 0 4px ${PALETTE.bg}`
                       : `0 0 4px ${PALETTE.bg}, 0 1px 3px ${PALETTE.bg}, 0 0 9px ${PALETTE.bg}, 0 0 9px ${PALETTE.bg}`,

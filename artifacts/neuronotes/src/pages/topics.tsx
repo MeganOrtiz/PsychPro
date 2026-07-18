@@ -205,8 +205,8 @@ function CourseRail({
       <aside
         className="hidden lg:flex flex-col gap-2 p-2.5 rounded-xl border h-fit lg:sticky lg:top-4"
         style={{
-          background: "rgba(var(--pp-white-rgb), 0.03)",
-          borderColor: "rgba(var(--pp-white-rgb), 0.08)",
+          background: "rgba(var(--pp-black-rgb), 0.03)",
+          borderColor: "rgba(var(--pp-black-rgb), 0.08)",
           ["--nav-glow" as never]: STUDY_PALETTE.surf,
         }}
         aria-label="Courses"
