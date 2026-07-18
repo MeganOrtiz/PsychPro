@@ -731,17 +731,6 @@ body {
   opacity: 0;
 }
 
-/* Dashboard brain emblem — the owner's luminous white brain cutout, centered
-   at the top of the main + EPPP dashboards (white system, 2026-07-16). */
-.pp-dash-brain {
-  display: block;
-  margin: 0 auto clamp(8px, 1.4vh, 18px);
-  width: min(240px, 44vw);
-  height: auto;
-  pointer-events: none;
-  user-select: none;
-}
-
 /* Lesson detail header — OPAQUE material (structural panel). */
 .lesson-header-box {
   background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);

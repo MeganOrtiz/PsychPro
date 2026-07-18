@@ -17,8 +17,8 @@
 // Structural invariants enforced here:
 //   1. Pure-black page floors (body + .study-page-bg::before), no filters,
 //      no vignette — the ONLY page artwork is the owner's liquid-flare
-//      backdrop, ONE image site-wide (plus the required landing hero brain
-//      <img>, re-added by the owner 2026-07-15).
+//      backdrop, ONE image site-wide (hero brain <img> removed by the owner
+//      2026-07-18; do not re-add).
 //   2. A global reset that bans backdrop-filter (frosted glass) app-wide —
 //      GLASS is a solid tile fill, never blur.
 //   3. Glow discipline: the glow tokens (--pp-glow*) may only be consumed
@@ -171,26 +171,17 @@ if (!appBackdrop) {
 if (landingBackdrop) {
   fail("landing backdrop override reintroduced", "the site uses ONE backdrop image site-wide (owner 2026-07-15) — remove the .landing-root.study-page-bg::before override");
 }
-// Owner hero-brain lock (2026-07-15): the owner RE-ADDED a glass-brain cutout
-// <img> (transparent PNG) leading the landing hero stack, above the wordmark.
-// This supersedes the 2026-07-12 removal. Keep it present.
+// Owner hero-brain lock REMOVED (2026-07-18): the owner ordered the brain
+// imagery removed from the landing hero and both dashboards. The hero stack
+// now leads with the PSYCHPRO wordmark; do not re-add the brain <img> without
+// an explicit owner request.
 {
   const landingSrc = fs.readFileSync(path.join(ROOT, "src", "pages", "landing.tsx"), "utf8");
-  const brainImg = /<img[^>]*className="landing-hero-brain"/.test(landingSrc);
-  if (!brainImg) {
+  if (/landing-hero-brain/.test(landingSrc)) {
     fail(
-      "landing hero brain missing",
-      'owner re-added the glass-brain cutout to the landing hero (2026-07-15) — restore the <img className="landing-hero-brain"> element',
+      "landing hero brain reintroduced",
+      "owner removed the hero brain image (2026-07-18) — keep the hero stack leading with the wordmark",
     );
-  } else {
-    const imgIdx = landingSrc.search(/<img[^>]*className="landing-hero-brain"/);
-    const wordmarkIdx = landingSrc.indexOf('className="landing-wordmark"');
-    if (wordmarkIdx !== -1 && imgIdx > wordmarkIdx) {
-      fail(
-        "landing hero brain misplaced",
-        "the glass-brain cutout must LEAD the hero stack (render before the PSYCHPRO wordmark)",
-      );
-    }
   }
 }
 if (!overlayBackdrop) {

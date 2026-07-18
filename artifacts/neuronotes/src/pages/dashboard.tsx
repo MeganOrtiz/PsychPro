@@ -58,7 +58,6 @@ import { StudySurface } from "@/components/study/study-surface";
 import TodayReviews from "@/components/learning/today-reviews";
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
 import { PP, alpha } from "@/lib/palette";
-import whiteBrainCutout from "@/assets/white-brain-cutout.png";
 import { isEpppTopic } from "@/lib/eppp-content";
 import {
   ResponsiveContainer,
@@ -244,13 +243,6 @@ export default function DashboardPage() {
       data-testid="dashboard-page"
     >
       <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 lg:pt-8 pb-4 md:pb-6 lg:pb-8">
-        <img
-          src={whiteBrainCutout}
-          alt=""
-          aria-hidden
-          className="pp-dash-brain"
-          data-testid="img-dashboard-brain"
-        />
         {isOverLimit && (
           <div
             className="mat-opaque p-4 mb-6 flex items-start gap-3"

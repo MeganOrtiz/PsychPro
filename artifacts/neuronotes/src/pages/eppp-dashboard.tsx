@@ -22,7 +22,6 @@ import { groupEpppTopicsByCategory, isEpppKnowledgeTopic } from "@/lib/eppp-cont
 import { epppDomainAnchor, epppTopicPath } from "@/lib/eppp-routes";
 import { knowledgeDomainIcon } from "@/lib/eppp-icons";
 import { PP, alpha } from "@/lib/palette";
-import whiteBrainCutout from "@/assets/white-brain-cutout.png";
 
 // ---------------------------------------------------------------------------
 // EPPP Mastery Suite dashboard — the working "how ready am I" home for the
@@ -189,13 +188,6 @@ export function EpppDashboardView({
       <style>{styles}</style>
 
       <div className="epd-shell">
-        <img
-          src={whiteBrainCutout}
-          alt=""
-          aria-hidden
-          className="pp-dash-brain"
-          data-testid="img-dashboard-brain"
-        />
         {/* Stat row: readiness · streak · exam countdown */}
         <section className="epd-stat-row">
           {/* Readiness */}
