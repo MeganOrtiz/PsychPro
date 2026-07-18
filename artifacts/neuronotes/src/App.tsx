@@ -103,6 +103,7 @@ function AppRouter() {
       <Route path="/sign-in/*?" component={SignInPage} />
       <Route path="/sign-up/*?" component={SignUpPage} />
       {import.meta.env.DEV ? <Route path="/__crash-test" component={CrashTestPage} /> : null}
+      {import.meta.env.DEV ? <Route path="/__brainlab">{() => <div className="h-screen overflow-hidden"><BrainLabPage /></div>}</Route> : null}
       {import.meta.env.DEV ? <Route path="/__glass-preview" component={DevGlassPreview} /> : null}
       <Route path="/eppp">
         {() => (

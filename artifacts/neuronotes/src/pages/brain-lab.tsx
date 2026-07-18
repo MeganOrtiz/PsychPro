@@ -1305,8 +1305,11 @@ function LabeledBrainDiagram({
     // Top/bottom are slim rows with limited width — keep only the labels that
     // fit (preferring those sitting most directly above/below the brain) and
     // spill the rest into the roomier side columns.
-    const rowLeft = 24;
-    const rowRight = box.wrapW - 24;
+    // Rows live in the slim strips directly above/below the IMAGE (not the
+    // full wrapper width) so row chips can never collide with the side-column
+    // chips that own the corners.
+    const rowLeft = Math.max(24, box.l + 8);
+    const rowRight = Math.min(box.wrapW - 24, box.l + box.w - 8);
     const rowAvail = Math.max(0, rowRight - rowLeft);
     const rowGap = 14;
     for (const edge of ["top", "bottom"] as const) {
@@ -1368,9 +1371,13 @@ function LabeledBrainDiagram({
     // Vertical columns (left / right): x pinned to the gutter centre, y =
     // clamped anchor y, then nudged apart top→bottom (pulled back up on
     // overflow).
-    const colTop = 14;
+    // Columns must not reach into the slim top/bottom rows when those rows
+    // hold chips, or corner labels stack on top of each other.
+    const topRowH = items.reduce((m, i) => (i.edge === "top" ? Math.max(m, i.h) : m), 0);
+    const bottomRowH = items.reduce((m, i) => (i.edge === "bottom" ? Math.max(m, i.h) : m), 0);
+    const colTop = topRowH > 0 ? 16 + topRowH + 10 : 14;
     // Reserve the bottom strip for the view caption so columns never collide with it.
-    const colBottom = box.wrapH - 46;
+    const colBottom = box.wrapH - (bottomRowH > 0 ? 40 + bottomRowH + 10 : 46);
     for (const edge of ["left", "right"] as const) {
       const arr = items.filter((i) => i.edge === edge).sort((a, b) => a.ay - b.ay);
       const colX = edge === "left" ? box.l - SIDE_GUTTER / 2 + 2 : box.l + box.w + SIDE_GUTTER / 2 - 2;
@@ -1625,7 +1632,15 @@ function writeFocusToHash(id: string | null) {
 
 export default function BrainLabPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [activeView, setActiveView] = useState<ViewKey>("lateral");
+  const [activeView, setActiveView] = useState<ViewKey>(() => {
+    // DEV-only deep link (?view=dorsal) so each Sections view can be
+    // screenshot-verified without clicking tabs.
+    if (import.meta.env.DEV) {
+      const v = new URLSearchParams(window.location.search).get("view");
+      if (v && v in VIEWS) return v as ViewKey;
+    }
+    return "lateral";
+  });
   const [viewMode, setViewMode] = useState<ViewMode>("sections");
   const [searchOpen, setSearchOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
