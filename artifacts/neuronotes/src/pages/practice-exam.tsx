@@ -470,8 +470,8 @@ export default function PracticeExamPage({ params }: Props) {
                 <Brain className="w-5 h-5" style={{ color: P.surf }} />
               </div>
               <div className="flex-1 min-w-0">
-                <h2 className="text-lg font-semibold text-white">Warm up your recall</h2>
-                <p className="text-xs text-white/80 italic">
+                <h2 className="text-lg font-semibold text-foreground">Warm up your recall</h2>
+                <p className="text-xs text-muted-foreground italic">
                   A 60-second brain-dump before a test reliably raises your score — even when you don't peek at notes.
                 </p>
               </div>
@@ -484,7 +484,7 @@ export default function PracticeExamPage({ params }: Props) {
                 </span>
               </Link>
             </header>
-            <p className="text-base font-medium mb-4 leading-relaxed text-white">
+            <p className="text-base font-medium mb-4 leading-relaxed text-foreground">
               List everything you remember about <span className="font-semibold">{topic?.name ?? "this topic"}</span> — key terms, definitions, mechanisms, examples. Don't worry about being neat.
             </p>
             <Textarea
@@ -492,7 +492,7 @@ export default function PracticeExamPage({ params }: Props) {
               onChange={(e) => setWarmupText(e.target.value)}
               placeholder="Start typing whatever comes to mind…"
               rows={8}
-              className="mb-3 resize-y text-white placeholder:text-white/40"
+              className="mb-3 resize-y text-foreground placeholder:text-muted-foreground"
               style={{
                 background: `${P.bg}cc`,
                 borderColor: `${P.surf}55`,
@@ -503,7 +503,7 @@ export default function PracticeExamPage({ params }: Props) {
               autoFocus
             />
             <div className="flex flex-wrap items-center gap-3 justify-between">
-              <span className="text-xs text-white/70">
+              <span className="text-xs text-muted-foreground">
                 {wordCount === 0
                   ? "Aim for at least 10 words to prime your memory."
                   : `${wordCount} word${wordCount === 1 ? "" : "s"} ${ready ? "— nice." : "— keep going."}`}
@@ -514,7 +514,7 @@ export default function PracticeExamPage({ params }: Props) {
                   size="sm"
                   onClick={() => { setWarmupActive(false); setWarmupText(""); }}
                   data-testid="button-skip-warmup"
-                  className="text-white/80 hover:text-white hover:bg-white/10"
+                  className="text-muted-foreground hover:text-foreground hover:bg-black/5"
                 >
                   Skip
                 </Button>
@@ -609,7 +609,7 @@ export default function PracticeExamPage({ params }: Props) {
       </div>
 
       <StudySurface tone="light" glow innerClassName="p-6 md:p-7 mb-6">
-        <p className="text-base md:text-lg font-medium leading-relaxed text-white" data-testid="text-exam-question">{q.question}</p>
+        <p className="text-base md:text-lg font-medium leading-relaxed text-foreground" data-testid="text-exam-question">{q.question}</p>
       </StudySurface>
 
       <div className="space-y-2.5 mb-6">
@@ -628,7 +628,7 @@ export default function PracticeExamPage({ params }: Props) {
             cls += " hover:-translate-y-0.5 quiz-option-hover mat-glass";
             style = { color: P.cloud };
           } else if (isSelected) {
-            cls += " text-white font-medium";
+            cls += " text-foreground font-medium";
             style = {
               background: `${P.tealDeep}`,
               borderColor: P.tealDeep,

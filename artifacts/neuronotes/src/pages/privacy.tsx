@@ -27,9 +27,9 @@ const SECTIONS: { id: string; n: string; title: string }[] = [
 export default function PrivacyPage() {
   return (
     <div
-      className="min-h-screen text-white"
+      className="min-h-screen"
       style={{
-        background: PP.nearBlack,
+        background: "var(--pp-floor)", color: PP.text,
         fontFamily: '"Montserrat", sans-serif',
       }}
     >

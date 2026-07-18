@@ -36,13 +36,13 @@ function baseSurfaceStyles(tone: StudyTone): CSSProperties {
       return {
         background: P.surfaceElev,
         borderColor: "var(--pp-navy-bright)",
-        color: "rgba(var(--pp-white-rgb), 1)",
+        color: P.cloud,
       };
     case "card-front":
       return {
         background: P.surfaceElev,
         borderColor: "var(--pp-navy-bright)",
-        color: "rgba(var(--pp-white-rgb), 1)",
+        color: P.cloud,
       };
     case "light":
     default:

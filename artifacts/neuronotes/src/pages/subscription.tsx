@@ -165,14 +165,14 @@ export default function SubscriptionPage() {
               ? <Sparkles className="w-5 h-5 flex-shrink-0" style={{ color: P.surf }} />
               : <Crown className="w-5 h-5 flex-shrink-0" style={{ color: P.surf }} />}
             <div>
-              <p className="font-semibold text-white">
+              <p className="font-semibold text-foreground">
                 {isScholar ? "You're on Scholar!" : `You're on ${PRO_DISPLAY_NAME}!`}
               </p>
-              <p className="text-sm text-white/80">
+              <p className="text-sm text-muted-foreground">
                 {isScholar ? "You have full access including custom study decks." : "Enjoy unlimited access to all built-in content."}
               </p>
               {currentPeriodEnd && (
-                <p className="text-xs mt-0.5 text-white/60">
+                <p className="text-xs mt-0.5 text-muted-foreground">
                   Renews: {new Date(currentPeriodEnd).toLocaleDateString()}
                 </p>
               )}
@@ -315,7 +315,7 @@ export default function SubscriptionPage() {
                   </div>
                   <Button
                     className="w-full text-white"
-                    style={{ background: P.tealDeep }}
+                    style={{ background: P.teal }}
                     disabled={isScholar || createCheckout.isPending}
                     onClick={() => handleSubscribe(plan.priceId)}
                     data-testid={`button-subscribe-${plan.priceId}`}
@@ -376,7 +376,7 @@ export default function SubscriptionPage() {
             >
               <span className="font-semibold">You have EPPP access.</span>
               {epppUntil && (
-                <span className="text-white/80">
+                <span className="text-muted-foreground">
                   {" "}Active until {new Date(epppUntil).toLocaleDateString()}.
                 </span>
               )}

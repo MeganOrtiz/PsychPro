@@ -65,7 +65,7 @@ class Brain3DErrorBoundary extends Component<
           className="h-full w-full flex flex-col items-center justify-center text-center gap-3 px-6"
           data-testid="brain-3d-error"
         >
-          <p className="text-sm font-semibold text-white">3D view couldn't load</p>
+          <p className="text-sm font-semibold text-foreground">3D view couldn't load</p>
           <p className="text-xs max-w-xs" style={{ color: `${PALETTE.mist}99` }}>
             The interactive 3D brain failed to start on this device. You can keep
             exploring every structure in the Sections view.
@@ -476,7 +476,7 @@ function StructureDetail({
           >
             {meta.label}
           </div>
-          <h3 className="text-xl font-bold text-white leading-tight">{struct.name}</h3>
+          <h3 className="text-xl font-bold text-foreground leading-tight">{struct.name}</h3>
           {struct.paired && (
             <div className="text-[11px] mt-0.5" style={{ color: `${PALETTE.mist}99` }}>
               Bilateral · paired structure
@@ -870,7 +870,7 @@ function EmptyDetail() {
       >
         <Target className="w-7 h-7" style={{ color: PALETTE.surf }} />
       </div>
-      <h3 className="text-base font-semibold text-white mb-1.5">Pick a structure</h3>
+      <h3 className="text-base font-semibold text-foreground mb-1.5">Pick a structure</h3>
       <p className="text-sm leading-relaxed max-w-xs" style={{ color: `${PALETTE.mist}99` }}>
         Click any label around the brain to open its full detail here. Switch
         views above, or search by name or symptom.
@@ -919,7 +919,7 @@ function NumberedKey({
       {/* Header — view name, count, and inline type legend */}
       <div className="px-4 pt-3 pb-2 border-b" style={{ borderColor: `${PALETTE.steel}66` }}>
         <div className="flex items-baseline justify-between gap-2">
-          <h3 className="text-sm font-semibold text-white">{view.viewName} — Key</h3>
+          <h3 className="text-sm font-semibold text-foreground">{view.viewName} — Key</h3>
           <span className="text-[11px]" style={{ color: `${PALETTE.mist}99` }}>
             {hotspots.length} structures
           </span>
@@ -1113,7 +1113,7 @@ function BrainDiagram({
           >
             <Brain className="w-7 h-7" style={{ color: PALETTE.surf }} />
           </div>
-          <p className="text-sm font-semibold text-white">{view.viewName} coming soon</p>
+          <p className="text-sm font-semibold text-foreground">{view.viewName} coming soon</p>
           <p className="text-xs max-w-xs" style={{ color: `${PALETTE.mist}99` }}>
             This view will show the {view.caption.toLowerCase()}. For now, pick a
             structure from the key to open its detail.
@@ -1588,7 +1588,7 @@ function LabeledBrainDiagram({
           >
             <Brain className="w-7 h-7" style={{ color: PALETTE.surf }} />
           </div>
-          <p className="text-sm font-semibold text-white">{view.viewName} coming soon</p>
+          <p className="text-sm font-semibold text-foreground">{view.viewName} coming soon</p>
           <p className="text-xs max-w-xs" style={{ color: `${PALETTE.mist}99` }}>
             This view will show the {view.caption.toLowerCase()}. For now, search by
             name or symptom to open any structure's detail.

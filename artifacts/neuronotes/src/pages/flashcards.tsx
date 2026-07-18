@@ -200,13 +200,13 @@ export default function FlashcardsPage({ params }: Props) {
                   >
                     <div className="flex-1 flex items-center justify-center w-full">
                       <p
-                        className="text-center text-lg md:text-xl font-medium leading-relaxed text-white"
+                        className="text-center text-lg md:text-xl font-medium leading-relaxed text-foreground"
                         data-testid="text-flashcard-question"
                       >
                         {current?.question}
                       </p>
                     </div>
-                    <p className="text-[11px] mt-4 tracking-wide uppercase text-white/70">
+                    <p className="text-[11px] mt-4 tracking-wide uppercase text-muted-foreground">
                       Tap to reveal answer
                     </p>
                   </StudySurface>
@@ -219,7 +219,7 @@ export default function FlashcardsPage({ params }: Props) {
                     innerClassName="p-8 md:p-10 min-h-64 md:min-h-80 flex flex-col items-center justify-center"
                   >
                     <p
-                      className="text-center text-base md:text-lg leading-relaxed text-white font-medium"
+                      className="text-center text-base md:text-lg leading-relaxed text-foreground font-medium"
                       data-testid="text-flashcard-answer"
                     >
                       {current?.answer}
@@ -249,12 +249,12 @@ export default function FlashcardsPage({ params }: Props) {
               data-testid="flashcards-upgrade-cta"
             >
               <div className="mat-icon-well mat-icon-well--round w-12 h-12 flex items-center justify-center mx-auto mb-3">
-                <Lock className="w-5 h-5 text-white" />
+                <Lock className="w-5 h-5 text-foreground" />
               </div>
-              <p className="font-semibold text-white mb-1">
+              <p className="font-semibold text-foreground mb-1">
                 {totalAvailable - total} more {totalAvailable - total === 1 ? "card" : "cards"} waiting
               </p>
-              <p className="text-sm text-white/75 mb-4">
+              <p className="text-sm text-muted-foreground mb-4">
                 Upgrade to PsychPro Master to study every card in this deck.
               </p>
               <Button onClick={() => navigate("/subscription")} data-testid="button-upgrade-from-flashcards">

@@ -180,7 +180,7 @@ export default function TopicDetailPage({ params }: Props) {
                         </span>
                       )}
                     </div>
-                    <p className="text-sm text-white/75">{mode.description}</p>
+                    <p className="text-sm text-muted-foreground">{mode.description}</p>
                   </div>
                   <ArrowRight
                     className="relative w-4 h-4 transition-transform duration-300 group-hover:translate-x-1.5"

@@ -226,8 +226,7 @@ const styles = `
   font-size: clamp(26px, 4.2vw, 44px);
   font-weight: 800;
   line-height: 1.12;
-  color: ${PP.offWhite248};
-  text-shadow: 0 2px 24px hsl(var(--surf-hue) var(--surf-sat) 5% / 0.5);
+  color: ${PP.text};
 }
 .eppp-lede {
   position: relative;
@@ -235,7 +234,7 @@ const styles = `
   max-width: 760px;
   font-size: clamp(14px, 1.1vw, 16.5px);
   line-height: 1.78;
-  color: ${PP.mistWhite242};
+  color: ${PP.textSoft};
 }
 .eppp-cta-row {
   position: relative;

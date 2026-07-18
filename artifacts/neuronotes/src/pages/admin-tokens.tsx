@@ -154,11 +154,11 @@ export default function AdminTokensPage() {
       <div className="min-h-full study-page-bg">
         <div className="max-w-2xl mx-auto p-8">
           <div className="rounded-xl border border-amber-300/40 bg-amber-300/5 p-6 space-y-3">
-            <div className="flex items-center gap-2 text-amber-100 font-medium">
+            <div className="flex items-center gap-2 text-amber-700 font-medium">
               <AlertTriangle className="w-4 h-4" /> Server not configured
             </div>
-            <p className="text-sm text-white/80">
-              Set the <code className="px-1 py-0.5 rounded bg-black/40 text-amber-200 text-xs">MCP_ADMIN_SECRET</code> environment variable on the API server (at least 16 characters) and restart it. Then refresh this page.
+            <p className="text-sm text-foreground/85">
+              Set the <code className="px-1 py-0.5 rounded bg-black/10 text-amber-800 text-xs">MCP_ADMIN_SECRET</code> environment variable on the API server (at least 16 characters) and restart it. Then refresh this page.
             </p>
           </div>
         </div>
@@ -171,11 +171,11 @@ export default function AdminTokensPage() {
       <div className="min-h-full study-page-bg">
         <div className="max-w-md mx-auto p-8 space-y-6">
           <div className="flex items-center gap-3">
-            <Lock className="w-6 h-6 text-neutral-300" />
+            <Lock className="w-6 h-6 text-muted-foreground" />
             <h1 className="text-2xl font-semibold">Unlock Admin</h1>
           </div>
-          <p className="text-sm text-white/70">
-            Enter your <code className="px-1 rounded bg-black/40 text-neutral-200 text-xs">MCP_ADMIN_SECRET</code> to manage Claude tokens. It's kept only in this browser tab's session storage.
+          <p className="text-sm text-muted-foreground">
+            Enter your <code className="px-1 rounded bg-black/10 text-foreground text-xs">MCP_ADMIN_SECRET</code> to manage Claude tokens. It's kept only in this browser tab's session storage.
           </p>
           <div className="space-y-2">
             <Input
@@ -184,7 +184,7 @@ export default function AdminTokensPage() {
               onChange={(e) => setSecretInput(e.target.value)}
               onKeyDown={(e) => { if (e.key === "Enter") unlock(); }}
               placeholder="Admin secret"
-              className="bg-white/5 border-white/10"
+              className="bg-black/5 border-black/10"
               autoFocus
             />
             <Button onClick={unlock} className="w-full">Unlock</Button>
@@ -199,7 +199,7 @@ export default function AdminTokensPage() {
       <div className="max-w-3xl mx-auto p-4 md:p-6 lg:p-8 space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <KeyRound className="w-6 h-6 text-neutral-300" />
+            <KeyRound className="w-6 h-6 text-muted-foreground" />
             <h1 className="text-2xl md:text-3xl font-semibold">Claude MCP Tokens</h1>
           </div>
           <Button variant="ghost" size="sm" onClick={lock}>
@@ -208,26 +208,26 @@ export default function AdminTokensPage() {
         </div>
 
         {unauthorized && (
-          <div className="rounded-xl border border-red-300/40 bg-red-300/5 p-5 space-y-2">
-            <div className="flex items-center gap-2 text-red-100 font-medium">
+          <div className="rounded-xl border border-red-600/40 bg-red-600/5 p-5 space-y-2">
+            <div className="flex items-center gap-2 text-red-700 font-medium">
               <AlertTriangle className="w-4 h-4" /> Invalid admin secret
             </div>
-            <p className="text-sm text-white/80">
+            <p className="text-sm text-foreground/85">
               The secret you entered doesn't match what the server expects. Click <b>Lock</b> above and try again.
             </p>
           </div>
         )}
 
-        <div className="rounded-xl border border-white/10 bg-white/[0.04] p-5 space-y-3">
-          <h2 className="font-medium text-white/90">How to connect Claude Desktop</h2>
-          <ol className="text-sm text-white/75 list-decimal pl-5 space-y-2">
+        <div className="rounded-xl border border-black/10 bg-black/[0.03] p-5 space-y-3">
+          <h2 className="font-medium text-foreground">How to connect Claude Desktop</h2>
+          <ol className="text-sm text-muted-foreground list-decimal pl-5 space-y-2">
             <li>Create a token below and copy it (you'll only see it once).</li>
-            <li>In Claude Desktop: <span className="text-white/90">Settings → Connectors → Add custom connector</span>.</li>
+            <li>In Claude Desktop: <span className="text-foreground">Settings → Connectors → Add custom connector</span>.</li>
             <li>
               Server URL:
-              <code className="ml-2 px-2 py-0.5 rounded bg-black/40 text-neutral-200 text-xs">{mcpUrl || ".../api/mcp"}</code>
+              <code className="ml-2 px-2 py-0.5 rounded bg-black/10 text-foreground text-xs">{mcpUrl || ".../api/mcp"}</code>
             </li>
-            <li>Auth: <span className="text-white/90">Bearer Token</span>, paste the token (the long string starting with <code className="text-neutral-200">ppmcp_</code>).</li>
+            <li>Auth: <span className="text-foreground">Bearer Token</span>, paste the token (the long string starting with <code className="text-foreground">ppmcp_</code>).</li>
             <li>Save and restart Claude Desktop. PsychPro tools will appear in any chat.</li>
           </ol>
         </div>
@@ -236,13 +236,13 @@ export default function AdminTokensPage() {
           <div className="rounded-xl border border-neutral-300/40 bg-neutral-300/5 p-5 space-y-3">
             <div className="flex items-center justify-between">
               <div className="font-medium text-neutral-100">New token: {justCreated.label}</div>
-              <button onClick={() => setJustCreated(null)} className="text-xs text-white/60 hover:text-white">
+              <button onClick={() => setJustCreated(null)} className="text-xs text-muted-foreground hover:text-foreground">
                 Dismiss
               </button>
             </div>
-            <p className="text-xs text-white/70">Copy this now — for security, the full token will never be shown again.</p>
+            <p className="text-xs text-muted-foreground">Copy this now — for security, the full token will never be shown again.</p>
             <div className="flex items-center gap-2">
-              <code className="flex-1 break-all px-3 py-2 rounded bg-black/40 text-neutral-200 text-xs">
+              <code className="flex-1 break-all px-3 py-2 rounded bg-black/10 text-foreground text-xs">
                 {justCreated.token}
               </code>
               <Button size="sm" variant="secondary" onClick={() => copyText(justCreated.token)}>
@@ -252,14 +252,14 @@ export default function AdminTokensPage() {
           </div>
         )}
 
-        <div className="rounded-xl border border-white/10 bg-white/[0.04] p-5 space-y-3">
-          <h2 className="font-medium text-white/90">Create a new token</h2>
+        <div className="rounded-xl border border-black/10 bg-black/[0.03] p-5 space-y-3">
+          <h2 className="font-medium text-foreground">Create a new token</h2>
           <div className="flex gap-2">
             <Input
               value={label}
               onChange={(e) => setLabel(e.target.value)}
               placeholder="Label (e.g. Claude Desktop)"
-              className="bg-white/5 border-white/10"
+              className="bg-black/5 border-black/10"
               maxLength={80}
             />
             <Button onClick={createOne} disabled={creating || unauthorized}>
@@ -269,26 +269,26 @@ export default function AdminTokensPage() {
           </div>
         </div>
 
-        <div className="rounded-xl border border-white/10 bg-white/[0.04] p-5">
-          <h2 className="font-medium text-white/90 mb-3">Your tokens</h2>
+        <div className="rounded-xl border border-black/10 bg-black/[0.03] p-5">
+          <h2 className="font-medium text-foreground mb-3">Your tokens</h2>
           {loading ? (
-            <p className="text-sm text-white/60">Loading…</p>
+            <p className="text-sm text-muted-foreground">Loading…</p>
           ) : tokens.length === 0 ? (
-            <p className="text-sm text-white/60">No tokens yet.</p>
+            <p className="text-sm text-muted-foreground">No tokens yet.</p>
           ) : (
-            <ul className="divide-y divide-white/10">
+            <ul className="divide-y divide-black/10">
               {tokens.map((t) => (
                 <li key={t.id} className="py-3 flex items-center justify-between gap-3">
                   <div className="min-w-0">
-                    <div className="text-sm text-white/90 truncate">{t.label}</div>
-                    <div className="text-xs text-white/50">
+                    <div className="text-sm text-foreground truncate">{t.label}</div>
+                    <div className="text-xs text-muted-foreground">
                       Created {new Date(t.createdAt).toLocaleString()} ·{" "}
                       {t.lastUsedAt
                         ? `Last used ${new Date(t.lastUsedAt).toLocaleString()}`
                         : "Never used"}
                     </div>
                   </div>
-                  <Button size="sm" variant="ghost" onClick={() => revoke(t.id)} className="text-red-300 hover:text-red-200 hover:bg-red-500/10">
+                  <Button size="sm" variant="ghost" onClick={() => revoke(t.id)} className="text-red-600 hover:text-red-700 hover:bg-red-500/10">
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </li>

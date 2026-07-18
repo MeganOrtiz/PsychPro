@@ -122,12 +122,12 @@ export default function TopicsPage() {
 
         {/* Search */}
         <div className="relative mb-6">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/70" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
             placeholder="Search lessons..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="pl-9 bg-card border-border text-foreground placeholder:text-white/70 focus-visible:ring-primary/40"
+            className="pl-9 bg-card border-border text-foreground placeholder:text-muted-foreground focus-visible:ring-primary/40"
             data-testid="input-search-topics"
           />
         </div>
@@ -145,8 +145,8 @@ export default function TopicsPage() {
         ) : showSearchResults ? (
           visibleTopics.length === 0 ? (
             <div className="text-center py-16">
-              <Brain className="w-10 h-10 text-white/70 mx-auto mb-3" />
-              <p className="text-white/70">No lessons found</p>
+              <Brain className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+              <p className="text-muted-foreground">No lessons found</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -240,7 +240,7 @@ function CourseRail({
               className={`shrink-0 px-3 py-2 rounded-md border flex items-center gap-2 text-sm transition-colors ${
                 isActive
                   ? "bg-primary/15 border-primary/50 text-foreground"
-                  : "bg-card border-border text-white/70 hover:text-foreground hover:border-primary/30"
+                  : "bg-card border-border text-muted-foreground hover:text-foreground hover:border-primary/30"
               }`}
               data-testid={`course-pill-${c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
             >

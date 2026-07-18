@@ -151,7 +151,7 @@ export default function QuizPage({ params }: Props) {
               boxShadow: passed ? `0 18px 40px -18px ${P.tealDeep}cc` : "none",
             }}
           >
-            <span className={cn("text-3xl font-bold", passed ? "text-white" : "text-amber-700")}>{percent}%</span>
+            <span className={cn("text-3xl font-bold", passed ? "text-foreground" : "text-amber-700")}>{percent}%</span>
           </div>
           <h2 className="text-2xl font-bold text-foreground mb-2">Quiz Complete!</h2>
           <p className="text-muted-foreground mb-8">You scored {score} out of {total} questions.</p>
@@ -216,7 +216,7 @@ export default function QuizPage({ params }: Props) {
             testId="quiz-question-card"
           >
             <p
-              className="text-base md:text-lg font-medium leading-relaxed text-white"
+              className="text-base md:text-lg font-medium leading-relaxed text-foreground"
               data-testid="text-question"
             >
               {current.question}
@@ -337,7 +337,7 @@ export default function QuizPage({ params }: Props) {
                   Saved to this device. Review anytime in{" "}
                   <Link href={inEppp ? "/eppp/suite/missed-questions" : "/reflections"}>
                     <span
-                      className="underline cursor-pointer hover:text-white"
+                      className="underline cursor-pointer hover:text-foreground"
                       style={{ color: `${P.mist}cc` }}
                       data-testid="link-my-tools-reflections"
                     >

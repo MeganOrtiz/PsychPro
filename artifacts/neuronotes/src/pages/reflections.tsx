@@ -99,7 +99,7 @@ export default function ReflectionsPage() {
             />
           </div>
         ) : records.length === 0 ? (
-          <StudySurface tone="dark" innerClassName="p-8 text-center">
+          <StudySurface tone="light" innerClassName="p-8 text-center">
             <Lightbulb
               className="w-10 h-10 mx-auto mb-3 opacity-60"
               style={{ color: P.surf }}

@@ -297,7 +297,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
               </div>
               <span className="text-xl font-bold text-foreground">{total} Questions</span>
             </div>
-            <ul className="space-y-1.5 text-sm text-white/70">
+            <ul className="space-y-1.5 text-sm text-muted-foreground">
               <li>Drawn from every lesson in this course</li>
               <li>{passingScore}% required to pass</li>
               <li>{examIsTimeable ? `~${estMinutes} minutes when timed` : "Untimed"}</li>
@@ -366,7 +366,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
         </div>
 
         <StudySurface tone="light" glow innerClassName="p-6 md:p-7 mb-6">
-          <p className="text-base md:text-lg font-medium leading-relaxed text-white" data-testid="text-mastery-question">{q.question}</p>
+          <p className="text-base md:text-lg font-medium leading-relaxed text-foreground" data-testid="text-mastery-question">{q.question}</p>
         </StudySurface>
 
         <div className="space-y-2.5 mb-6">
@@ -385,7 +385,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
               cls += " hover:-translate-y-0.5 quiz-option-hover mat-glass";
               style = { color: P.cloud };
             } else if (isSelected) {
-              cls += " text-white font-medium";
+              cls += " text-foreground font-medium";
               style = {
                 background: `${P.tealDeep}`,
                 borderColor: P.tealDeep,

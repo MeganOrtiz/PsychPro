@@ -517,7 +517,7 @@ export default function DashboardPage() {
                               "w-3 h-3",
                               e.streak > 0
                                 ? "text-orange-500 fill-orange-500"
-                                : "text-white/25"
+                                : "text-black/25"
                             )}
                           />
                           <span className="text-xs font-semibold tabular-nums" style={{ color: PALETTE.mist }}>
@@ -568,7 +568,7 @@ export default function DashboardPage() {
                     <Tooltip
                       cursor={{ stroke: PALETTE.teal, strokeOpacity: 0.25 }}
                       contentStyle={{
-                        background: "hsl(var(--surf-hue) var(--surf-sat) 24%)",
+                        background: "var(--pp-surface)",
                         border: "1px solid rgba(var(--pp-cyan-rgb), 0.25)",
                         borderRadius: 10,
                         color: PALETTE.mist,

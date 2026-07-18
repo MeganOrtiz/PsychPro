@@ -280,7 +280,7 @@ export default function ProfilePage() {
                       className="w-20 h-20 rounded-full object-cover border border-white/15"
                     />
                   ) : (
-                    <div className="w-20 h-20 rounded-full bg-primary/15 border border-white/15 flex items-center justify-center text-2xl font-semibold text-foreground">
+                    <div className="w-20 h-20 rounded-full bg-primary/15 border border-black/15 flex items-center justify-center text-2xl font-semibold text-foreground">
                       {initialsFor(displayName)}
                     </div>
                   )}
@@ -462,7 +462,7 @@ export default function ProfilePage() {
               <div className="space-y-4">
                 {INTERESTS_TAXONOMY.map((group) => (
                   <div key={group.category}>
-                    <p className="text-xs font-semibold text-white/55 uppercase tracking-wider mb-2">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
                       {group.category}
                     </p>
                     <div className="flex flex-wrap gap-2">
@@ -479,8 +479,8 @@ export default function ProfilePage() {
                               selected
                                 ? "border-primary bg-primary/15 text-primary"
                                 : disabled
-                                  ? "border-white/8 bg-white/[0.02] text-white/30 cursor-not-allowed"
-                                  : "border-white/15 bg-white/[0.04] text-foreground hover:bg-white/[0.08]"
+                                  ? "border-black/10 bg-black/[0.02] text-foreground/30 cursor-not-allowed"
+                                  : "border-black/15 bg-black/[0.04] text-foreground hover:bg-black/[0.08]"
                             }`}
                             data-testid={`tag-${tag}`}
                           >

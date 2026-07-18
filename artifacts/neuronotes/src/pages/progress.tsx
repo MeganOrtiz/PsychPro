@@ -181,7 +181,7 @@ export default function ProgressPage() {
             style={{ color: STUDY_PALETTE.inkSoft }}
           />
           <h2 className="text-lg font-semibold text-foreground mb-2">No progress yet</h2>
-          <p className="text-sm text-white/70 mb-4 max-w-sm mx-auto">
+          <p className="text-sm text-muted-foreground mb-4 max-w-sm mx-auto">
             Start a topic and your scores, streaks, and strengths will track here.
           </p>
           <Button
@@ -198,7 +198,7 @@ export default function ProgressPage() {
         <div className="grid grid-cols-3 gap-4 mb-6">
           <div className="mat-opaque p-4 text-center">
             <div className="text-2xl font-bold text-foreground">{studied.length}</div>
-            <div className="text-xs text-white/70 mt-0.5">Topics Studied</div>
+            <div className="text-xs text-muted-foreground mt-0.5">Topics Studied</div>
           </div>
           <div className="mat-opaque p-4 text-center">
             <div
@@ -213,11 +213,11 @@ export default function ProgressPage() {
             >
               {`${avgScore}%`}
             </div>
-            <div className="text-xs text-white/70 mt-0.5">Average Score</div>
+            <div className="text-xs text-muted-foreground mt-0.5">Average Score</div>
           </div>
           <div className="mat-opaque p-4 text-center">
-            <div className="text-2xl font-bold text-white/70">{notStarted.length}</div>
-            <div className="text-xs text-white/70 mt-0.5">Not Started</div>
+            <div className="text-2xl font-bold text-muted-foreground">{notStarted.length}</div>
+            <div className="text-xs text-muted-foreground mt-0.5">Not Started</div>
           </div>
         </div>
       )}
@@ -256,7 +256,7 @@ export default function ProgressPage() {
             <div className="mat-opaque p-4">
               <div className="flex items-center gap-2 mb-3">
                 <AlertCircle className="w-4 h-4" style={{ color: P.surf }} />
-                <h2 className="font-semibold text-sm text-white">Needs Work</h2>
+                <h2 className="font-semibold text-sm text-foreground">Needs Work</h2>
               </div>
               <div className="space-y-2">
                 {weak.slice(0, 3).map(t => (
@@ -265,7 +265,7 @@ export default function ProgressPage() {
                     className="flex items-center justify-between cursor-pointer hover:opacity-80 transition-opacity"
                     onClick={() => navigate(`/topics/${t.id}`)}
                   >
-                    <span className="text-sm truncate mr-2 text-white/90">{t.name}</span>
+                    <span className="text-sm truncate mr-2 text-foreground">{t.name}</span>
                     <ScoreBadge score={t.progress?.score ?? 0} />
                   </div>
                 ))}
@@ -276,7 +276,7 @@ export default function ProgressPage() {
             <div className="mat-opaque p-4">
               <div className="flex items-center gap-2 mb-3">
                 <CheckCircle2 className="w-4 h-4" style={{ color: P.surf }} />
-                <h2 className="font-semibold text-sm text-white">Strong Areas</h2>
+                <h2 className="font-semibold text-sm text-foreground">Strong Areas</h2>
               </div>
               <div className="space-y-2">
                 {strong.slice(0, 3).map(t => (
@@ -285,7 +285,7 @@ export default function ProgressPage() {
                     className="flex items-center justify-between cursor-pointer hover:opacity-80 transition-opacity"
                     onClick={() => navigate(`/topics/${t.id}`)}
                   >
-                    <span className="text-sm truncate mr-2 text-white/90">{t.name}</span>
+                    <span className="text-sm truncate mr-2 text-foreground">{t.name}</span>
                     <ScoreBadge score={t.progress?.score ?? 0} />
                   </div>
                 ))}
@@ -307,7 +307,7 @@ export default function ProgressPage() {
               className={`text-xs font-medium px-3 py-1.5 rounded-md border transition-colors ${
                 active
                   ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-card text-white/70 border-border hover:text-foreground"
+                  : "bg-card text-muted-foreground border-border hover:text-foreground"
               }`}
             >
               {p.label}
@@ -328,7 +328,7 @@ export default function ProgressPage() {
             <div key={category} className="mat-opaque overflow-hidden">
               <div className="px-4 py-3 border-b border-border bg-muted/30 flex items-center justify-between">
                 <h2 className="font-semibold text-sm text-foreground">{category}</h2>
-                <span className="text-xs text-white/70">{catStudied}/{catTopics.length} studied</span>
+                <span className="text-xs text-muted-foreground">{catStudied}/{catTopics.length} studied</span>
               </div>
               <div className="divide-y divide-border">
                 {catTopics.map(t => (
@@ -348,9 +348,9 @@ export default function ProgressPage() {
                           <AlertCircle className="w-4 h-4 flex-shrink-0" style={{ color: P.surf }} />
                         )
                       ) : (
-                        <Circle className="w-4 h-4 text-white/70/40 flex-shrink-0" />
+                        <Circle className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                       )}
-                      <span className={`text-sm truncate ${t.progress ? "text-foreground" : "text-white/70"}`}>
+                      <span className={`text-sm truncate ${t.progress ? "text-foreground" : "text-muted-foreground"}`}>
                         {t.name}
                       </span>
                     </div>
@@ -359,15 +359,15 @@ export default function ProgressPage() {
                         <>
                           <ScoreBadge score={t.progress.score ?? 0} />
                           {t.progress.lastAccessed && (
-                            <span className="text-[11px] text-white/70 hidden sm:inline">
+                            <span className="text-[11px] text-muted-foreground hidden sm:inline">
                               {timeAgo(t.progress.lastAccessed)}
                             </span>
                           )}
                         </>
                       ) : (
-                        <span className="text-xs text-white/70">Not started</span>
+                        <span className="text-xs text-muted-foreground">Not started</span>
                       )}
-                      <ChevronRight className="w-3.5 h-3.5 text-white/70" />
+                      <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />
                     </div>
                   </div>
                 ))}
