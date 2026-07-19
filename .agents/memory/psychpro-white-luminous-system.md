@@ -25,3 +25,5 @@ Any retone: index.css + palette.ts + both guardrail scripts in one commit; then 
 2026-07-19 (later still): Hero now uses a background-removed transparent cutout (brain-splash-hero-cutout-q.png, PNG8-quantized ~370KB); ALL radial masks removed — owner did not want the visible image box. Original JPEG kept as brain-splash-hero.jpg; floor reflection is gone with the background (accepted).
 
 2026-07-19: Both dashboards (main + EPPP) now open with a shared .pp-dash-hero banner — wide crop of the transparent splash cutout with BrandBanner (showIcon=false, empty tagline) overlaid top-center; image anchored at top:74% so the wordmark clears the brain. Old .pp-dash-brain emblem + mask retired.
+
+2026-07-19 (final): Owner trashed the dashboard splash banner same-day — dashboards now show only BrandBanner wordmark (.pp-page-brand, tight to top). Cutout asset kept: still the landing hero. Site-wide: PageTitle got -mt (raise titles), eps-panel top padding halved. Owner iterates fast on this artwork — keep changes cheap to revert.

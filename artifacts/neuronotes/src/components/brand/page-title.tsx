@@ -24,7 +24,11 @@ interface PageTitleProps {
 export function PageTitle({ title, subtitle, icon: Icon, className }: PageTitleProps) {
   return (
     <div
-      className={cn("relative flex flex-col items-center text-center mb-6 text-scrim", className)}
+      className={cn(
+        // -mt pulls titles higher toward the top of every page (owner, 2026-07-19).
+        "relative flex flex-col items-center text-center -mt-1 md:-mt-2 lg:-mt-3 mb-6 text-scrim",
+        className,
+      )}
       data-testid="page-title"
     >
       {Icon ? (

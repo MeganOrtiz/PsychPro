@@ -2174,7 +2174,7 @@ const styles = `
 .eps-back-app:hover { transform: translateY(-1px); border-color: ${C.cyan}80; color: ${C.cloud}; }
 
 /* ---- panel scaffold ---- */
-.eps-panel { min-height: 100%; padding: clamp(20px, 3.5vw, 44px) clamp(16px, 4vw, 48px) clamp(48px, 6vw, 88px); }
+.eps-panel { min-height: 100%; padding: clamp(10px, 1.8vw, 20px) clamp(16px, 4vw, 48px) clamp(48px, 6vw, 88px); }
 .eps-shell { max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: clamp(20px, 2.6vw, 30px); }
 .eps-head { display: flex; flex-direction: column; align-items: center; text-align: center; }
 .eps-eyebrow {

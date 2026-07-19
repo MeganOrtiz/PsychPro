@@ -1,4 +1,3 @@
-import splashBrain from "@/assets/brain-splash-hero-cutout-q.png";
 import { BrandBanner } from "@/components/brand/brand-banner";
 // =============================================================================
 // Dashboard — PROTECTED.
@@ -245,15 +244,7 @@ export default function DashboardPage() {
       data-testid="dashboard-page"
     >
       <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 lg:pt-8 pb-4 md:pb-6 lg:pb-8">
-        <div className="pp-dash-hero" data-testid="img-dashboard-brain">
-          <img
-            src={splashBrain}
-            alt=""
-            aria-hidden
-            className="pp-dash-hero-img"
-          />
-          <BrandBanner showIcon={false} tagline="" className="pp-dash-hero-brand" />
-        </div>
+        <BrandBanner showIcon={false} tagline="" className="pp-page-brand" />
         {isOverLimit && (
           <div
             className="mat-opaque p-4 mb-6 flex items-start gap-3"

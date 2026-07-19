@@ -731,32 +731,10 @@ body {
   opacity: 0;
 }
 
-/* Dashboard brand banner — wide crop of the owner's liquid-chrome splash
-   cutout with the PSYCHPRO wordmark overlaid (2026-07-19 mockup). Shared by
-   the main + EPPP dashboards. */
-.pp-dash-hero {
-  position: relative;
-  height: clamp(150px, 21vw, 225px);
-  margin: 0 auto 10px;
-  overflow: hidden;
-  pointer-events: none;
-  user-select: none;
-}
-
-.pp-dash-hero-img {
-  position: absolute;
-  left: 50%;
-  top: 74%;
-  transform: translate(-50%, -50%);
-  width: min(920px, 115%);
-  max-width: none;
-  height: auto;
-}
-
-.pp-dash-hero-brand {
-  position: relative;
-  z-index: 1;
-  padding-top: clamp(8px, 1.6vw, 16px);
+/* Dashboard wordmark header — image-free (owner trashed the splash banner,
+   2026-07-19). Sits tight to the top of both dashboards. */
+.pp-page-brand {
+  margin: -4px auto 18px;
 }
 
 /* Lesson detail header — OPAQUE material (structural panel). */
