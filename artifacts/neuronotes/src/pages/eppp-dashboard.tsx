@@ -401,7 +401,7 @@ export function EpppDashboardView({
 
         {/* What to study next */}
         <section className="epd-section" data-testid="eppp-study-next">
-          <div className="epd-section-head text-scrim text-scrim-start">
+          <div className="epd-section-head epd-section-head--hero text-scrim">
             <div>
               <p className="epd-section-eyebrow">KEEP MOVING</p>
               <h2 className="epd-section-title">What to study next</h2>
