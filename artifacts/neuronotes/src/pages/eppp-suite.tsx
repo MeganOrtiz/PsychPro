@@ -30,15 +30,21 @@ import {
   Lightbulb,
   Trash2,
   Save,
+  CalendarDays,
+  RotateCcw,
 } from "lucide-react";
-import { useQueries } from "@tanstack/react-query";
+import { useQueries, useQueryClient } from "@tanstack/react-query";
 import {
   useGetTopics,
   useGetEpppMissedQuestions,
+  useGetEpppStudyPlan,
+  usePutEpppStudyPlan,
+  getGetEpppStudyPlanQueryKey,
   getCourseMasteryStatus,
   getGetCourseMasteryStatusQueryKey,
   type Topic,
   type CourseMasteryStatus,
+  type EpppStudyPlan,
   type EpppMissedQuestion,
 } from "@workspace/api-client-react";
 import { STUDY_PALETTE } from "@/lib/study-theme";
@@ -519,14 +525,7 @@ function SuiteContent({
     case "my-notes":
       return <MyNotesPanel />;
     case "study-plan":
-      return (
-        <ComingSoonPanel
-          eyebrow="PLAN"
-          title="Study Plan"
-          icon={ClipboardList}
-          description="A personalized, date-aware study schedule that sequences domains and lessons toward your exam date — so you always know what to study next."
-        />
-      );
+      return <StudyPlanPanel onNavigate={onNavigate} />;
     case "full-length-exams":
       return <FullLengthExamsPanel onNavigate={onNavigate} />;
     case "missed-questions":
@@ -1082,6 +1081,441 @@ function ComingSoonPanel({
           <h2 className="eps-soon-title">{title} is on the way</h2>
           <p className="eps-soon-text">{description}</p>
         </div>
+      </div>
+    </div>
+  );
+}
+
+
+// ---- Study Plan ------------------------------------------------------------
+// A personalized, date-aware study plan. The user picks their exam date, how
+// many days a week they study, and checks the lessons they want in the plan.
+// Everything else is DERIVED live: lessons already passed (practice exam
+// >= 90%) count as done, and the remaining lessons are spread evenly across
+// the study days left before the exam.
+const SP_DAY_OPTIONS = [1, 2, 3, 4, 5, 6, 7];
+
+function spDaysUntil(examDate: string): number | null {
+  if (!examDate) return null;
+  const target = new Date(examDate + "T00:00:00");
+  if (Number.isNaN(target.getTime())) return null;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return Math.round((target.getTime() - today.getTime()) / 86_400_000);
+}
+
+function spFormatDate(iso: string): string {
+  const d = new Date(iso + "T00:00:00");
+  if (Number.isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
+}
+
+function StudyPlanPanel({ onNavigate }: { onNavigate: (to: string) => void }) {
+  const queryClient = useQueryClient();
+  const { data: allTopics, isLoading: topicsLoading } = useGetTopics();
+  const { data: plan } = useGetEpppStudyPlan();
+  const savePlan = usePutEpppStudyPlan({
+    mutation: {
+      onSuccess: (saved) => {
+        queryClient.setQueryData(getGetEpppStudyPlanQueryKey(), saved);
+        setDirty(false);
+        setJustSaved(true);
+      },
+    },
+  });
+
+  // All EPPP knowledge lessons (Part 1 + Part 2), grouped by content domain.
+  const groups = useMemo(() => {
+    const knowledge = ((allTopics ?? []) as Topic[]).filter((t) =>
+      isEpppKnowledgeTopic(t),
+    );
+    return groupEpppTopicsByCategory(knowledge);
+  }, [allTopics]);
+
+  // Lesson-level mastery (passed practice exams) per domain.
+  const masteryQueries = useQueries({
+    queries: groups.map((g) => ({
+      queryKey: getGetCourseMasteryStatusQueryKey(g.name),
+      queryFn: () => getCourseMasteryStatus(g.name),
+      staleTime: 60_000,
+    })),
+  });
+  const masteryKey = masteryQueries.map((q) => q.dataUpdatedAt).join(",");
+  const passedIds = useMemo(() => {
+    const set = new Set<number>();
+    for (const q of masteryQueries) {
+      const s = q.data as CourseMasteryStatus | undefined;
+      for (const lesson of s?.lessons ?? []) {
+        if (lesson.passed) set.add(lesson.topicId);
+      }
+    }
+    return set;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [masteryKey]);
+
+  // ---- draft state (synced from the saved plan once it loads) --------------
+  const [examDate, setExamDate] = useState("");
+  const [daysPerWeek, setDaysPerWeek] = useState(5);
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+  const [dirty, setDirty] = useState(false);
+  const [justSaved, setJustSaved] = useState(false);
+  const hydrated = useRef(false);
+
+  useEffect(() => {
+    if (!plan || hydrated.current || dirty) return;
+    hydrated.current = true;
+    setExamDate(plan.examDate ?? "");
+    setDaysPerWeek(plan.daysPerWeek ?? 5);
+    setSelectedIds(new Set(plan.selectedTopicIds ?? []));
+  }, [plan]);
+
+  const markDirty = () => {
+    setDirty(true);
+    setJustSaved(false);
+  };
+
+  const toggleLesson = (id: number) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+    markDirty();
+  };
+
+  const toggleDomain = (ids: number[], allOn: boolean) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      for (const id of ids) {
+        if (allOn) next.delete(id);
+        else next.add(id);
+      }
+      return next;
+    });
+    markDirty();
+  };
+
+  const handleSave = () => {
+    savePlan.mutate({
+      data: {
+        examDate,
+        selectedTopicIds: Array.from(selectedIds),
+        daysPerWeek,
+      },
+    });
+  };
+
+  // ---- derived schedule -----------------------------------------------------
+  const selectedTopics = useMemo(() => {
+    const out: { topic: Topic; domain: string; passed: boolean }[] = [];
+    for (const g of groups) {
+      for (const t of g.items as Topic[]) {
+        if (selectedIds.has(t.id)) {
+          out.push({ topic: t, domain: g.name, passed: passedIds.has(t.id) });
+        }
+      }
+    }
+    return out;
+  }, [groups, selectedIds, passedIds]);
+
+  const doneCount = selectedTopics.filter((s) => s.passed).length;
+  const remaining = selectedTopics.filter((s) => !s.passed);
+  const daysLeft = spDaysUntil(examDate);
+  const studyDaysLeft =
+    daysLeft !== null && daysLeft > 0
+      ? Math.max(1, Math.floor((daysLeft * daysPerWeek) / 7))
+      : null;
+  const perDay =
+    studyDaysLeft !== null && remaining.length > 0
+      ? Math.ceil(remaining.length / studyDaysLeft)
+      : 0;
+
+  // Chunk remaining lessons into study-day sessions, then into weeks.
+  const weeks = useMemo(() => {
+    if (studyDaysLeft === null || remaining.length === 0 || perDay === 0) return [];
+    const sessions: { topic: Topic; domain: string }[][] = [];
+    for (let i = 0; i < remaining.length; i += perDay) {
+      sessions.push(remaining.slice(i, i + perDay));
+    }
+    const out: { topic: Topic; domain: string }[][][] = [];
+    for (let i = 0; i < sessions.length; i += daysPerWeek) {
+      out.push(sessions.slice(i, i + daysPerWeek));
+    }
+    return out;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [studyDaysLeft, perDay, daysPerWeek, selectedIds, passedIds, groups]);
+
+  const paceLabel =
+    perDay === 0
+      ? null
+      : perDay <= 2
+        ? "Comfortable pace"
+        : perDay <= 4
+          ? "Solid pace"
+          : "Heavy pace — consider more study days";
+
+  const loading = topicsLoading;
+
+  return (
+    <div className="study-page-bg eps-panel" data-testid="eppp-panel-study-plan">
+      <div className="eps-shell">
+        <PanelHead
+          eyebrow="PLAN"
+          title="Study Plan"
+          subtitle="Pick your exam date and the lessons you want in your plan — we'll pace the remaining lessons across the study days you have left."
+        />
+
+        {loading ? (
+          <div className="mat-glass eps-empty">Loading your study plan…</div>
+        ) : (
+          <>
+            {/* ---- exam date + pace --------------------------------------- */}
+            <section className="mat-opaque eps-sp-card" data-testid="sp-exam-card">
+              <div className="eps-sp-card-head">
+                <span className="mat-icon-well eps-sp-icon"><CalendarDays aria-hidden /></span>
+                <div>
+                  <h2 className="eps-sp-card-title">Exam date &amp; pace</h2>
+                  <p className="eps-sp-card-sub">When are you sitting for the EPPP, and how many days a week can you study?</p>
+                </div>
+              </div>
+              <div className="eps-sp-controls">
+                <label className="eps-sp-field">
+                  <span className="eps-sp-field-label">Exam date</span>
+                  <input
+                    type="date"
+                    className="eps-sp-input"
+                    value={examDate}
+                    onChange={(e) => { setExamDate(e.target.value); markDirty(); }}
+                    data-testid="sp-exam-date"
+                  />
+                </label>
+                <label className="eps-sp-field">
+                  <span className="eps-sp-field-label">Study days per week</span>
+                  <select
+                    className="eps-sp-input"
+                    value={daysPerWeek}
+                    onChange={(e) => { setDaysPerWeek(Number(e.target.value)); markDirty(); }}
+                    data-testid="sp-days-per-week"
+                  >
+                    {SP_DAY_OPTIONS.map((n) => (
+                      <option key={n} value={n}>{n} days / week</option>
+                    ))}
+                  </select>
+                </label>
+                <div className="eps-sp-chips">
+                  {daysLeft !== null && (
+                    <span className={cn("eps-sp-chip", daysLeft < 0 && "is-past")} data-testid="sp-days-left">
+                      {daysLeft < 0
+                        ? "Exam date has passed"
+                        : daysLeft === 0
+                          ? "Exam day is today"
+                          : daysLeft + " days to exam"}
+                    </span>
+                  )}
+                  {studyDaysLeft !== null && daysLeft !== null && daysLeft > 0 && (
+                    <span className="eps-sp-chip">{studyDaysLeft} study days left</span>
+                  )}
+                  {paceLabel && daysLeft !== null && daysLeft > 0 && (
+                    <span className="eps-sp-chip is-pace">{perDay} lesson{perDay === 1 ? "" : "s"} / study day · {paceLabel}</span>
+                  )}
+                </div>
+              </div>
+            </section>
+
+            {/* ---- lesson picker ------------------------------------------ */}
+            <section className="mat-opaque eps-sp-card" data-testid="sp-picker-card">
+              <div className="eps-sp-card-head">
+                <span className="mat-icon-well eps-sp-icon"><ClipboardList aria-hidden /></span>
+                <div>
+                  <h2 className="eps-sp-card-title">Choose your lessons</h2>
+                  <p className="eps-sp-card-sub">
+                    Check the lessons and domains you want in this plan. Lessons you've already passed at 90%+ are counted as done automatically.
+                  </p>
+                </div>
+                <div className="eps-sp-head-actions">
+                  <button
+                    type="button"
+                    className="eps-sp-mini-btn"
+                    onClick={() => { setSelectedIds(new Set(groups.flatMap((g) => (g.items as Topic[]).map((t) => t.id)))); markDirty(); }}
+                    data-testid="sp-select-all"
+                  >
+                    Select all
+                  </button>
+                  <button
+                    type="button"
+                    className="eps-sp-mini-btn"
+                    onClick={() => { setSelectedIds(new Set()); markDirty(); }}
+                    data-testid="sp-clear-all"
+                  >
+                    <RotateCcw aria-hidden /> Clear
+                  </button>
+                </div>
+              </div>
+
+              <div className="eps-sp-domains">
+                {groups.map((g) => {
+                  const ids = (g.items as Topic[]).map((t) => t.id);
+                  const onCount = ids.filter((id) => selectedIds.has(id)).length;
+                  const allOn = onCount === ids.length && ids.length > 0;
+                  const Icon = knowledgeDomainIcon(g.name);
+                  return (
+                    <div key={g.name} className="eps-sp-domain" data-testid={`sp-domain-${slugify(g.name)}`}>
+                      <div className="eps-sp-domain-head">
+                        <label className="eps-sp-check eps-sp-domain-label">
+                          <input
+                            type="checkbox"
+                            checked={allOn}
+                            ref={(el) => { if (el) el.indeterminate = onCount > 0 && !allOn; }}
+                            onChange={() => toggleDomain(ids, allOn)}
+                            data-testid={`sp-domain-toggle-${slugify(g.name)}`}
+                          />
+                          <span className="mat-icon-well eps-sp-domain-icon"><Icon aria-hidden /></span>
+                          <span className="eps-sp-domain-name">{g.name}</span>
+                        </label>
+                        <span className="eps-sp-domain-meta">{onCount}/{ids.length} selected</span>
+                      </div>
+                      <div className="eps-sp-lessons">
+                        {(g.items as Topic[]).map((t) => {
+                          const passed = passedIds.has(t.id);
+                          return (
+                            <label key={t.id} className={cn("eps-sp-check eps-sp-lesson", passed && "is-passed")}>
+                              <input
+                                type="checkbox"
+                                checked={selectedIds.has(t.id)}
+                                onChange={() => toggleLesson(t.id)}
+                                data-testid={`sp-lesson-${t.id}`}
+                              />
+                              <span className="eps-sp-lesson-name">{t.name}</span>
+                              {passed && <CheckCircle2 className="eps-sp-lesson-check" aria-label="Passed" />}
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="eps-sp-save-row">
+                <span className="eps-sp-save-meta" data-testid="sp-selection-summary">
+                  {selectedIds.size} lesson{selectedIds.size === 1 ? "" : "s"} in plan
+                  {doneCount > 0 ? " · " + doneCount + " already done" : ""}
+                </span>
+                {justSaved && !dirty && <span className="eps-sp-saved-note">Plan saved</span>}
+                <button
+                  type="button"
+                  className={cn("eps-sp-save-btn", (!dirty || savePlan.isPending) && "is-disabled")}
+                  disabled={!dirty || savePlan.isPending}
+                  onClick={handleSave}
+                  data-testid="sp-save"
+                >
+                  <Save aria-hidden /> {savePlan.isPending ? "Saving…" : "Save plan"}
+                </button>
+              </div>
+              {savePlan.isError && (
+                <p className="eps-sp-error" role="alert">Couldn't save your plan. Please try again.</p>
+              )}
+            </section>
+
+            {/* ---- progress + schedule ------------------------------------ */}
+            {selectedTopics.length > 0 && (
+              <section className="mat-opaque eps-sp-card" data-testid="sp-schedule-card">
+                <div className="eps-sp-card-head">
+                  <span className="mat-icon-well eps-sp-icon"><BarChart3 aria-hidden /></span>
+                  <div>
+                    <h2 className="eps-sp-card-title">Your schedule</h2>
+                    <p className="eps-sp-card-sub">
+                      {doneCount}/{selectedTopics.length} plan lessons passed. A lesson counts as done when its practice exam is passed at 90%+.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="eps-sp-progress">
+                  <div className="eps-sp-progress-bar">
+                    <div
+                      className="eps-sp-progress-fill"
+                      style={{ width: (selectedTopics.length ? Math.round((doneCount / selectedTopics.length) * 100) : 0) + "%" }}
+                    />
+                  </div>
+                  <span className="eps-sp-progress-pct">
+                    {selectedTopics.length ? Math.round((doneCount / selectedTopics.length) * 100) : 0}%
+                  </span>
+                </div>
+
+                {remaining.length === 0 ? (
+                  <div className="eps-sp-done" data-testid="sp-all-done">
+                    <CheckCircle2 aria-hidden /> Every lesson in your plan is passed. You're ready — consider a full-length exam.
+                  </div>
+                ) : !examDate ? (
+                  <p className="eps-sp-hint">Set your exam date above to see a day-by-day schedule for the {remaining.length} remaining lesson{remaining.length === 1 ? "" : "s"}.</p>
+                ) : daysLeft !== null && daysLeft <= 0 ? (
+                  <p className="eps-sp-hint">Your exam date is {daysLeft === 0 ? "today" : "in the past"} — update it above to rebuild the schedule.</p>
+                ) : (
+                  <>
+                    {/* Today's session */}
+                    <div className="eps-sp-today" data-testid="sp-today">
+                      <h3 className="eps-sp-today-title">Next session — {perDay} lesson{perDay === 1 ? "" : "s"}</h3>
+                      <div className="eps-sp-today-list">
+                        {remaining.slice(0, perDay).map(({ topic, domain }) => (
+                          <button
+                            key={topic.id}
+                            type="button"
+                            className="mat-glass mat-glass-interactive eps-sp-today-item"
+                            onClick={() => onNavigate(epppTopicPath(topic.id))}
+                            data-testid={`sp-today-${topic.id}`}
+                          >
+                            <span className="eps-sp-today-name">{topic.name}</span>
+                            <span className="eps-sp-today-domain">{domain}</span>
+                            <ChevronRight aria-hidden />
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Week-by-week outline */}
+                    <div className="eps-sp-weeks">
+                      {weeks.slice(0, 6).map((week, wi) => (
+                        <div key={wi} className="eps-sp-week" data-testid={`sp-week-${wi + 1}`}>
+                          <h4 className="eps-sp-week-title">Week {wi + 1}</h4>
+                          <div className="eps-sp-week-days">
+                            {week.map((session, di) => (
+                              <div key={di} className="eps-sp-day">
+                                <span className="eps-sp-day-label">Day {di + 1}</span>
+                                <ul className="eps-sp-day-list">
+                                  {session.map(({ topic }) => (
+                                    <li key={topic.id}>
+                                      <button
+                                        type="button"
+                                        className="eps-sp-day-lesson"
+                                        onClick={() => onNavigate(epppTopicPath(topic.id))}
+                                      >
+                                        {topic.name}
+                                      </button>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                      {weeks.length > 6 && (
+                        <p className="eps-sp-hint">+ {weeks.length - 6} more week{weeks.length - 6 === 1 ? "" : "s"} to reach your exam date.</p>
+                      )}
+                      {studyDaysLeft !== null && weeks.length > 0 && (
+                        <p className="eps-sp-hint">
+                          {weeks.reduce((n, w) => n + w.length, 0)} sessions planned across your remaining {studyDaysLeft} study days
+                          {spFormatDate(examDate) ? " — exam on " + spFormatDate(examDate) + "." : "."}
+                        </p>
+                      )}
+                    </div>
+                  </>
+                )}
+              </section>
+            )}
+          </>
+        )}
       </div>
     </div>
   );
@@ -2176,5 +2610,102 @@ const styles = `
   .eps-mq-domain { justify-content: space-between; }
   .eps-mq-select { max-width: none; flex: 1; }
   .eps-mq-study { margin-left: 0; }
+}
+
+/* ---- Study Plan ---- */
+.eps-sp-card { padding: clamp(18px, 2.4vw, 28px); display: flex; flex-direction: column; gap: 18px; }
+.eps-sp-card-head { display: flex; align-items: flex-start; gap: 14px; }
+.eps-sp-icon { flex-shrink: 0; }
+.eps-sp-card-title { margin: 0 0 4px; font-size: 17px; font-weight: 700; color: ${C.cloud}; }
+.eps-sp-card-sub { margin: 0; font-size: 13.5px; line-height: 1.55; color: var(--pp-text-dim); }
+.eps-sp-head-actions { margin-left: auto; display: flex; gap: 8px; flex-shrink: 0; }
+.eps-sp-mini-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 12px; border-radius: 8px; cursor: pointer;
+  font-size: 12px; font-weight: 600; color: ${C.mist};
+  border: 1px solid ${C.hairlineStrong}; background: var(--pp-tile-stronger);
+  transition: transform 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.eps-sp-mini-btn svg { width: 13px; height: 13px; }
+.eps-sp-mini-btn:hover { transform: translateY(-1px); color: ${C.cloud}; }
+.eps-sp-controls { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; }
+.eps-sp-field { display: flex; flex-direction: column; gap: 6px; }
+.eps-sp-field-label { font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pp-text-dim); }
+.eps-sp-input {
+  padding: 9px 12px; border-radius: 9px; font-size: 14px; color: ${C.cloud};
+  border: 1px solid ${C.hairlineStrong}; background: var(--pp-tile-stronger);
+  min-width: 180px;
+}
+.eps-sp-input:focus { outline: 2px solid ${C.cyan}55; outline-offset: 1px; }
+.eps-sp-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.eps-sp-chip {
+  display: inline-flex; align-items: center; padding: 7px 12px; border-radius: 999px;
+  font-size: 12.5px; font-weight: 600; color: ${C.mist};
+  border: 1px solid ${C.hairlineStrong}; background: var(--pp-tile);
+}
+.eps-sp-chip.is-pace { color: ${C.cloud}; }
+.eps-sp-chip.is-past { color: ${PP.redDeep}; border-color: ${alpha(PP.red, 0.4)}; }
+.eps-sp-domains { display: flex; flex-direction: column; gap: 14px; }
+.eps-sp-domain { border: 1px solid ${C.hairline}; border-radius: 12px; padding: 12px 14px; background: var(--pp-tile); }
+.eps-sp-domain-head { display: flex; align-items: center; gap: 10px; }
+.eps-sp-domain-label { font-weight: 700; color: ${C.cloud}; }
+.eps-sp-domain-icon { width: 30px; height: 30px; }
+.eps-sp-domain-icon svg { width: 15px; height: 15px; }
+.eps-sp-domain-name { font-size: 14.5px; }
+.eps-sp-domain-meta { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--pp-text-dim); white-space: nowrap; }
+.eps-sp-check { display: inline-flex; align-items: center; gap: 9px; cursor: pointer; }
+.eps-sp-check input[type="checkbox"] { width: 16px; height: 16px; accent-color: ${C.cyan}; cursor: pointer; flex-shrink: 0; }
+.eps-sp-lessons { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 6px 16px; margin-top: 10px; padding-left: 4px; }
+.eps-sp-lesson { padding: 5px 6px; border-radius: 8px; font-size: 13.5px; color: ${C.mist}; }
+.eps-sp-lesson:hover { background: var(--pp-tile-stronger); color: ${C.cloud}; }
+.eps-sp-lesson.is-passed .eps-sp-lesson-name { color: var(--pp-text-dim); }
+.eps-sp-lesson-name { min-width: 0; }
+.eps-sp-lesson-check { width: 14px; height: 14px; color: ${PP.greenDeep}; flex-shrink: 0; }
+.eps-sp-save-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.eps-sp-save-meta { font-size: 13px; font-weight: 600; color: var(--pp-text-dim); }
+.eps-sp-saved-note { font-size: 12.5px; font-weight: 700; color: ${PP.greenDeep}; }
+.eps-sp-save-btn {
+  margin-left: auto; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+  padding: 10px 18px; border-radius: 10px; font-size: 13.5px; font-weight: 700;
+  color: ${PP.ink}; background: ${C.cyan}; border: 1px solid ${C.cyan};
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+.eps-sp-save-btn svg { width: 15px; height: 15px; }
+.eps-sp-save-btn:hover { transform: translateY(-1px); }
+.eps-sp-save-btn.is-disabled { opacity: 0.45; cursor: default; transform: none; }
+.eps-sp-error { margin: 0; font-size: 13px; font-weight: 600; color: ${PP.redDeep}; }
+.eps-sp-progress { display: flex; align-items: center; gap: 12px; }
+.eps-sp-progress-bar { flex: 1; height: 9px; border-radius: 999px; background: var(--pp-tile-stronger); overflow: hidden; }
+.eps-sp-progress-fill { height: 100%; border-radius: 999px; background: ${C.cyan}; transition: width 0.4s ease; }
+.eps-sp-progress-pct { font-size: 13px; font-weight: 700; color: ${C.cloud}; min-width: 40px; text-align: right; }
+.eps-sp-done { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; color: ${PP.greenDeep}; }
+.eps-sp-done svg { width: 18px; height: 18px; flex-shrink: 0; }
+.eps-sp-hint { margin: 0; font-size: 13px; line-height: 1.55; color: var(--pp-text-dim); }
+.eps-sp-today { display: flex; flex-direction: column; gap: 10px; }
+.eps-sp-today-title { margin: 0; font-size: 14px; font-weight: 700; letter-spacing: 0.04em; color: ${C.cloud}; }
+.eps-sp-today-list { display: flex; flex-direction: column; gap: 8px; }
+.eps-sp-today-item {
+  display: flex; align-items: center; gap: 12px; text-align: left; cursor: pointer;
+  padding: 12px 14px; border-radius: 11px;
+}
+.eps-sp-today-item svg { width: 16px; height: 16px; margin-left: auto; flex-shrink: 0; color: var(--pp-text-dim); }
+.eps-sp-today-name { font-size: 14px; font-weight: 600; color: ${C.cloud}; }
+.eps-sp-today-domain { font-size: 12px; font-weight: 600; color: var(--pp-text-dim); white-space: nowrap; }
+.eps-sp-weeks { display: flex; flex-direction: column; gap: 14px; }
+.eps-sp-week { border: 1px solid ${C.hairline}; border-radius: 12px; padding: 12px 14px; background: var(--pp-tile); }
+.eps-sp-week-title { margin: 0 0 10px; font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--pp-text-dim); }
+.eps-sp-week-days { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+.eps-sp-day { border-left: 2px solid ${C.hairlineStrong}; padding-left: 10px; }
+.eps-sp-day-label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--pp-text-dim); margin-bottom: 4px; }
+.eps-sp-day-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 3px; }
+.eps-sp-day-lesson {
+  background: none; border: none; padding: 0; cursor: pointer; text-align: left;
+  font-size: 13px; line-height: 1.45; color: ${C.mist};
+}
+.eps-sp-day-lesson:hover { color: ${C.cloud}; text-decoration: underline; }
+@media (max-width: 640px) {
+  .eps-sp-card-head { flex-wrap: wrap; }
+  .eps-sp-head-actions { margin-left: 0; width: 100%; }
+  .eps-sp-save-btn { margin-left: 0; width: 100%; justify-content: center; }
 }
 `;

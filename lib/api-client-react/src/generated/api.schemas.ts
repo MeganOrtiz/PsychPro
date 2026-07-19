@@ -6,6 +6,27 @@
  * OpenAPI spec version: 0.1.0
  */
 /**
+ * A user's saved EPPP study plan. examDate is an ISO yyyy-mm-dd string ("" when unset). selectedTopicIds are topics.id values the user checked into the plan. saved is false when the user has never saved a plan (the server returns defaults).
+ */
+export interface EpppStudyPlan {
+  examDate: string;
+  selectedTopicIds: number[];
+  daysPerWeek: number;
+  saved: boolean;
+  updatedAt?: string;
+}
+
+export interface EpppStudyPlanInput {
+  examDate: string;
+  selectedTopicIds: number[];
+  /**
+   * @minimum 1
+   * @maximum 7
+   */
+  daysPerWeek: number;
+}
+
+/**
  * Per-IP throttle applied to POST /api/client-errors. Defaults to a 60 000 ms window with 30 requests; overridable via CLIENT_ERRORS_RATE_LIMIT_WINDOW_MS and CLIENT_ERRORS_RATE_LIMIT_MAX.
  */
 export interface ClientErrorsRateLimitConfig {

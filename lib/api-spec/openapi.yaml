@@ -434,6 +434,38 @@ paths:
               schema:
                 $ref: "#/components/schemas/EpppMissedQuestionsResponse"
 
+  /eppp/study-plan:
+    get:
+      operationId: getEpppStudyPlan
+      tags: [progress]
+      summary: Get the current user's EPPP study plan
+      responses:
+        "200":
+          description: The user's study plan (defaults if none saved yet)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EpppStudyPlan"
+    put:
+      operationId: putEpppStudyPlan
+      tags: [progress]
+      summary: Create or replace the current user's EPPP study plan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EpppStudyPlanInput"
+      responses:
+        "200":
+          description: The saved study plan
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EpppStudyPlan"
+        "400":
+          description: Invalid plan payload
+
   /subscription/plans:
     get:
       operationId: getSubscriptionPlans
@@ -496,6 +528,49 @@ paths:
 
 components:
   schemas:
+    EpppStudyPlan:
+      type: object
+      description: A user's saved EPPP study plan. examDate is an ISO yyyy-mm-dd
+        string ("" when unset). selectedTopicIds are topics.id values the user
+        checked into the plan. saved is false when the user has never saved a
+        plan (the server returns defaults).
+      properties:
+        examDate:
+          type: string
+        selectedTopicIds:
+          type: array
+          items:
+            type: integer
+        daysPerWeek:
+          type: integer
+        saved:
+          type: boolean
+        updatedAt:
+          type: string
+      required:
+        - examDate
+        - selectedTopicIds
+        - daysPerWeek
+        - saved
+
+    EpppStudyPlanInput:
+      type: object
+      properties:
+        examDate:
+          type: string
+        selectedTopicIds:
+          type: array
+          items:
+            type: integer
+        daysPerWeek:
+          type: integer
+          minimum: 1
+          maximum: 7
+      required:
+        - examDate
+        - selectedTopicIds
+        - daysPerWeek
+
     HealthStatus:
       type: object
       properties:

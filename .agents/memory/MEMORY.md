@@ -74,3 +74,4 @@
 - [Smoke bg resolution](psychpro-smoke-bg-resolution.md) — the shared smoke backdrop source is only 941px; "looks cheap/blurry" = a resolution problem fixed by super-resolution of the exact asset, not CSS; includes CPU-upscale sandbox recipe.
 - [Landing Brain Lab brain](psychpro-landing-brain-cutout.md) — owner REJECTED the glowing brain in the Brain Lab promo; keep grayscale lateral.webp there; ready-made cutout lateral-glow.png exists unused for future placement.
 - [Site-wide backdrop artwork](psychpro-landing-brain-bg.md) — historical (2026-07-16: liquid-flare image removed; backdrop is now a pure-CSS silver radial gradient); viewport-pinned-::before + no-per-page-override rules still current.
+- [Panel loading gates](psychpro-panel-loading-gates.md) — never gate panel render on an auth-protected query (401 retry loops look like a stuck spinner); render defaults + hydrate-once with dirty guard.

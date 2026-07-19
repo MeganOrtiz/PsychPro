@@ -19,6 +19,8 @@ export * from "./dashboardSummary";
 export * from "./dashboardSummaryWeeklyActivityItem";
 export * from "./epppMissedQuestion";
 export * from "./epppMissedQuestionsResponse";
+export * from "./epppStudyPlan";
+export * from "./epppStudyPlanInput";
 export * from "./flashcard";
 export * from "./flashcardDifficulty";
 export * from "./getPracticeExamByTopicParams";

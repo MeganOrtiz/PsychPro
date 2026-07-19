@@ -566,6 +566,44 @@ export const GetEpppMissedQuestionsResponse = zod.object({
 });
 
 /**
+ * @summary Get the current user's EPPP study plan
+ */
+export const GetEpppStudyPlanResponse = zod
+  .object({
+    examDate: zod.string(),
+    selectedTopicIds: zod.array(zod.number()),
+    daysPerWeek: zod.number(),
+    saved: zod.boolean(),
+    updatedAt: zod.string().optional(),
+  })
+  .describe(
+    'A user\'s saved EPPP study plan. examDate is an ISO yyyy-mm-dd string (\"\" when unset). selectedTopicIds are topics.id values the user checked into the plan. saved is false when the user has never saved a plan (the server returns defaults).',
+  );
+
+/**
+ * @summary Create or replace the current user's EPPP study plan
+ */
+export const putEpppStudyPlanBodyDaysPerWeekMax = 7;
+
+export const PutEpppStudyPlanBody = zod.object({
+  examDate: zod.string(),
+  selectedTopicIds: zod.array(zod.number()),
+  daysPerWeek: zod.number().min(1).max(putEpppStudyPlanBodyDaysPerWeekMax),
+});
+
+export const PutEpppStudyPlanResponse = zod
+  .object({
+    examDate: zod.string(),
+    selectedTopicIds: zod.array(zod.number()),
+    daysPerWeek: zod.number(),
+    saved: zod.boolean(),
+    updatedAt: zod.string().optional(),
+  })
+  .describe(
+    'A user\'s saved EPPP study plan. examDate is an ISO yyyy-mm-dd string (\"\" when unset). selectedTopicIds are topics.id values the user checked into the plan. saved is false when the user has never saved a plan (the server returns defaults).',
+  );
+
+/**
  * @summary Get available subscription plans from Stripe
  */
 export const GetSubscriptionPlansResponseItem = zod.object({

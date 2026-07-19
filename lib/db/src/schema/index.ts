@@ -291,6 +291,27 @@ export const insertCourseMasteryAttemptSchema = createInsertSchema(courseMastery
 export type InsertCourseMasteryAttempt = z.infer<typeof insertCourseMasteryAttemptSchema>;
 export type CourseMasteryAttempt = typeof courseMasteryAttemptsTable.$inferSelect;
 
+// EPPP Study Plan — one row per user. Stores the user's exam date, which
+// lessons (topic IDs) they've chosen to include in their plan, and how many
+// days per week they intend to study. The schedule itself is derived
+// client-side from this row plus live mastery data (exam_attempts >= 90%),
+// so completed lessons never need to be written back here.
+export const epppStudyPlansTable = pgTable("eppp_study_plans", {
+  userId: text("user_id")
+    .primaryKey()
+    .references(() => usersTable.id, { onDelete: "cascade" }),
+  // ISO date string (yyyy-mm-dd); empty string means "not set yet".
+  examDate: text("exam_date").notNull().default(""),
+  // topics.id values the user checked into their plan.
+  selectedTopicIds: integer("selected_topic_ids").array().notNull().default(sql`'{}'::integer[]`),
+  // 1–7 study days per week; drives the derived schedule's pacing.
+  daysPerWeek: integer("days_per_week").notNull().default(5),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export type EpppStudyPlan = typeof epppStudyPlansTable.$inferSelect;
+
 export const clientErrorRateHitsTable = pgTable(
   "client_error_rate_hits",
   {

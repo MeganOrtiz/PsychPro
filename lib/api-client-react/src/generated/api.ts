@@ -25,6 +25,8 @@ import type {
   CreateCheckoutSessionBody,
   DashboardSummary,
   EpppMissedQuestionsResponse,
+  EpppStudyPlan,
+  EpppStudyPlanInput,
   Flashcard,
   GetPracticeExamByTopicParams,
   HealthStatus,
@@ -1907,6 +1909,167 @@ export function useGetEpppMissedQuestions<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+/**
+ * @summary Get the current user's EPPP study plan
+ */
+export const getGetEpppStudyPlanUrl = () => {
+  return `/api/eppp/study-plan`;
+};
+
+export const getEpppStudyPlan = async (
+  options?: RequestInit,
+): Promise<EpppStudyPlan> => {
+  return customFetch<EpppStudyPlan>(getGetEpppStudyPlanUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetEpppStudyPlanQueryKey = () => {
+  return [`/api/eppp/study-plan`] as const;
+};
+
+export const getGetEpppStudyPlanQueryOptions = <
+  TData = Awaited<ReturnType<typeof getEpppStudyPlan>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getEpppStudyPlan>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetEpppStudyPlanQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getEpppStudyPlan>>
+  > = ({ signal }) => getEpppStudyPlan({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getEpppStudyPlan>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetEpppStudyPlanQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getEpppStudyPlan>>
+>;
+export type GetEpppStudyPlanQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Get the current user's EPPP study plan
+ */
+
+export function useGetEpppStudyPlan<
+  TData = Awaited<ReturnType<typeof getEpppStudyPlan>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getEpppStudyPlan>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetEpppStudyPlanQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Create or replace the current user's EPPP study plan
+ */
+export const getPutEpppStudyPlanUrl = () => {
+  return `/api/eppp/study-plan`;
+};
+
+export const putEpppStudyPlan = async (
+  epppStudyPlanInput: EpppStudyPlanInput,
+  options?: RequestInit,
+): Promise<EpppStudyPlan> => {
+  return customFetch<EpppStudyPlan>(getPutEpppStudyPlanUrl(), {
+    ...options,
+    method: "PUT",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(epppStudyPlanInput),
+  });
+};
+
+export const getPutEpppStudyPlanMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof putEpppStudyPlan>>,
+    TError,
+    { data: BodyType<EpppStudyPlanInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof putEpppStudyPlan>>,
+  TError,
+  { data: BodyType<EpppStudyPlanInput> },
+  TContext
+> => {
+  const mutationKey = ["putEpppStudyPlan"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof putEpppStudyPlan>>,
+    { data: BodyType<EpppStudyPlanInput> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return putEpppStudyPlan(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PutEpppStudyPlanMutationResult = NonNullable<
+  Awaited<ReturnType<typeof putEpppStudyPlan>>
+>;
+export type PutEpppStudyPlanMutationBody = BodyType<EpppStudyPlanInput>;
+export type PutEpppStudyPlanMutationError = ErrorType<void>;
+
+/**
+ * @summary Create or replace the current user's EPPP study plan
+ */
+export const usePutEpppStudyPlan = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof putEpppStudyPlan>>,
+    TError,
+    { data: BodyType<EpppStudyPlanInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof putEpppStudyPlan>>,
+  TError,
+  { data: BodyType<EpppStudyPlanInput> },
+  TContext
+> => {
+  return useMutation(getPutEpppStudyPlanMutationOptions(options));
+};
 
 /**
  * @summary Get available subscription plans from Stripe
