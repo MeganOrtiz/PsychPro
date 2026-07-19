@@ -1,3 +1,4 @@
+import splashBrain from "@/assets/brain-splash-hero.jpg";
 import { useMemo, useState, useEffect, useCallback } from "react";
 import { Link, useLocation } from "wouter";
 import { useUser } from "@clerk/clerk-react";
@@ -188,6 +189,13 @@ export function EpppDashboardView({
       <style>{styles}</style>
 
       <div className="epd-shell">
+        <img
+          src={splashBrain}
+          alt=""
+          aria-hidden
+          className="pp-dash-brain"
+          data-testid="img-dashboard-brain"
+        />
         {/* Stat row: readiness · streak · exam countdown */}
         <section className="epd-stat-row">
           {/* Readiness */}

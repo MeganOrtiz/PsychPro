@@ -1,3 +1,4 @@
+import splashBrain from "@/assets/brain-splash-hero.jpg";
 // =============================================================================
 // Dashboard — PROTECTED.
 // ---------------------------------------------------------------------------
@@ -243,6 +244,13 @@ export default function DashboardPage() {
       data-testid="dashboard-page"
     >
       <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 lg:pt-8 pb-4 md:pb-6 lg:pb-8">
+        <img
+          src={splashBrain}
+          alt=""
+          aria-hidden
+          className="pp-dash-brain"
+          data-testid="img-dashboard-brain"
+        />
         {isOverLimit && (
           <div
             className="mat-opaque p-4 mb-6 flex items-start gap-3"

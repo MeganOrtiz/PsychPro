@@ -731,6 +731,22 @@ body {
   opacity: 0;
 }
 
+/* Dashboard brain emblem — the owner's liquid-chrome splash brain, centered
+   at the top of the main + EPPP dashboards (2026-07-18). The JPEG bakes in
+   generous whitespace, so negative margins keep the boxes tight beneath it. */
+.pp-dash-brain {
+  display: block;
+  margin: clamp(-20px, -2vh, -8px) auto clamp(-44px, -4.5vh, -28px);
+  width: min(340px, 56vw);
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+  -webkit-mask-image: radial-gradient(60% 56% at 50% 48%,
+    rgba(var(--pp-black-rgb), 1) 40%, rgba(var(--pp-black-rgb), 0) 74%);
+  mask-image: radial-gradient(60% 56% at 50% 48%,
+    rgba(var(--pp-black-rgb), 1) 40%, rgba(var(--pp-black-rgb), 0) 74%);
+}
+
 /* Lesson detail header — OPAQUE material (structural panel). */
 .lesson-header-box {
   background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);

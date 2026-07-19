@@ -839,9 +839,9 @@ const styles = `
   position: relative;
   max-width: 1320px;
   margin: 0 auto;
-  /* The hero brain <img> now leads the stack (owner re-added it,
-     2026-07-15), so the top padding only clears the fixed header. */
-  padding: clamp(96px, 12vh, 150px) 24px clamp(40px, 6vh, 90px);
+  /* The splash brain <img> leads the stack and must sit RIGHT under the
+     fixed header (owner, 2026-07-18) — top padding just clears the bar. */
+  padding: clamp(64px, 7vh, 76px) 24px clamp(40px, 6vh, 90px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -869,7 +869,9 @@ const styles = `
 .landing-hero-brain {
   width: min(640px, 86vw);
   height: auto;
-  margin: 0 0 clamp(4px, 1vh, 16px);
+  /* The JPEG bakes in generous whitespace around the splash; negative
+     margins pull the wordmark up tight beneath the artwork. */
+  margin: clamp(-28px, -3vh, -12px) 0 clamp(-72px, -7vh, -48px);
   pointer-events: none;
   user-select: none;
   -webkit-mask-image: radial-gradient(60% 56% at 50% 48%,

@@ -173,7 +173,7 @@ if (landingBackdrop) {
 }
 // Owner hero-brain lock (2026-07-18): the owner supplied a liquid-chrome
 // splash brain <img> leading the landing hero stack, above the wordmark.
-// (Dashboards stay brain-free.) Keep it present.
+// The same splash brain also tops both dashboards. Keep it present.
 {
   const landingSrc = fs.readFileSync(path.join(ROOT, "src", "pages", "landing.tsx"), "utf8");
   const brainImg = /<img[^>]*className="landing-hero-brain"/.test(landingSrc);
