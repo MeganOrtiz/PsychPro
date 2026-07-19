@@ -28,6 +28,7 @@ import {
 } from "recharts";
 import { useGetTopics } from "@workspace/api-client-react";
 import brainLateral from "@/assets/brain-views/lateral.webp";
+import heroBrain from "@/assets/brain-splash-hero.jpg";
 import founderMegan from "@/assets/founder/megan.webp";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PP, LANDING, alpha } from "@/lib/palette";
@@ -284,6 +285,14 @@ export default function LandingPage() {
           id="home"
           className={`landing-hero${mounted ? " is-mounted" : ""}`}
         >
+          <img
+            src={heroBrain}
+            alt=""
+            aria-hidden
+            className="landing-hero-brain"
+            style={{ ["--delay" as any]: "40ms" }}
+            fetchPriority="high"
+          />
           <h1 className="landing-wordmark" style={{ ["--delay" as any]: "120ms" }}>
             PSYCHPRO
           </h1>
@@ -854,6 +863,22 @@ const styles = `
   pointer-events: none;
 }
 
+/* Owner-supplied liquid-chrome splash brain leading the hero stack
+   (2026-07-18 — white/luminous system). The JPEG's own silver backdrop is
+   feathered into the page with a radial mask so it reads as one surface. */
+.landing-hero-brain {
+  width: min(640px, 86vw);
+  height: auto;
+  margin: 0 0 clamp(4px, 1vh, 16px);
+  pointer-events: none;
+  user-select: none;
+  -webkit-mask-image: radial-gradient(60% 56% at 50% 48%,
+    rgba(var(--pp-black-rgb), 1) 40%, rgba(var(--pp-black-rgb), 0) 74%);
+  mask-image: radial-gradient(60% 56% at 50% 48%,
+    rgba(var(--pp-black-rgb), 1) 40%, rgba(var(--pp-black-rgb), 0) 74%);
+}
+
+.landing-hero-brain,
 .landing-wordmark,
 .landing-tagline,
 .landing-headline,
@@ -868,6 +893,7 @@ const styles = `
     opacity 900ms cubic-bezier(0.16, 1, 0.3, 1) var(--delay, 0ms),
     transform 900ms cubic-bezier(0.16, 1, 0.3, 1) var(--delay, 0ms);
 }
+.landing-hero.is-mounted .landing-hero-brain,
 .landing-hero.is-mounted .landing-wordmark,
 .landing-hero.is-mounted .landing-tagline,
 .landing-hero.is-mounted .landing-headline,
