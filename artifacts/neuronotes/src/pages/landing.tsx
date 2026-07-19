@@ -867,17 +867,19 @@ const styles = `
    (2026-07-18 — white/luminous system). The JPEG's own silver backdrop is
    feathered into the page with a radial mask so it reads as one surface. */
 .landing-hero-brain {
-  width: min(640px, 86vw);
+  width: min(880px, 94vw);
   height: auto;
-  /* The JPEG bakes in generous whitespace around the splash; negative
+  /* The JPEG bakes in a little whitespace around the splash; negative
      margins pull the wordmark up tight beneath the artwork. */
-  margin: clamp(-28px, -3vh, -12px) 0 clamp(-72px, -7vh, -48px);
+  margin: clamp(-24px, -2.5vh, -10px) 0 clamp(-56px, -5vh, -32px);
   pointer-events: none;
   user-select: none;
-  -webkit-mask-image: radial-gradient(60% 56% at 50% 48%,
-    rgba(var(--pp-black-rgb), 1) 40%, rgba(var(--pp-black-rgb), 0) 74%);
-  mask-image: radial-gradient(60% 56% at 50% 48%,
-    rgba(var(--pp-black-rgb), 1) 40%, rgba(var(--pp-black-rgb), 0) 74%);
+  /* Feather ONLY the outer edges so the JPEG's silver backdrop melts into
+     the page — the full splash + floor reflection must stay visible. */
+  -webkit-mask-image: radial-gradient(70% 66% at 50% 50%,
+    rgba(var(--pp-black-rgb), 1) 52%, rgba(var(--pp-black-rgb), 0) 93%);
+  mask-image: radial-gradient(70% 66% at 50% 50%,
+    rgba(var(--pp-black-rgb), 1) 52%, rgba(var(--pp-black-rgb), 0) 93%);
 }
 
 .landing-hero-brain,
