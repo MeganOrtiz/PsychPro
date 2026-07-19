@@ -262,25 +262,11 @@ export default function SubscriptionPage() {
         {/* Scholar tier — recolored from purple to the cerulean/teal study
             palette so it sits in the same brand family as the rest of the app. */}
         <div className="mat-opaque mat-opaque-interactive sub-plan relative">
-          <div className="absolute -top-3 left-5 z-10">
-            <span
-              className="text-xs font-bold px-3 py-1 rounded-full"
-              style={{ background: P.surf, color: PP.chipInk, boxShadow: `0 0 18px -4px ${P.surf}` }}
-            >
-              NEW
-            </span>
-          </div>
           <div className="flex items-center gap-3 mb-5">
             <span className="mat-icon-well sub-icon-chip">
               <BookMarked className="w-[18px] h-[18px]" style={{ color: P.surf }} />
             </span>
             <span className="font-semibold text-foreground text-lg">PsychPro Scholar</span>
-            <Badge
-              className="ml-auto border-0 font-semibold"
-              style={{ background: P.teal, color: PP.chipInk, boxShadow: `0 0 18px -4px ${P.teal}` }}
-            >
-              Best Value
-            </Badge>
           </div>
 
           <div className="space-y-2 mb-5">
