@@ -185,10 +185,10 @@ if (landingBackdrop) {
   } else {
     const imgIdx = landingSrc.search(/<img[^>]*className="landing-hero-brain"/);
     const wordmarkIdx = landingSrc.indexOf('className="landing-wordmark"');
-    if (wordmarkIdx !== -1 && imgIdx > wordmarkIdx) {
+    if (wordmarkIdx !== -1 && imgIdx < wordmarkIdx) {
       fail(
         "landing hero brain misplaced",
-        "the splash brain must LEAD the hero stack (render before the PSYCHPRO wordmark)",
+        "owner reordered the hero (2026-07-19): wordmark + tagline lead, splash brain renders AFTER them",
       );
     }
   }

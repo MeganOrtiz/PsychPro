@@ -19,3 +19,5 @@ The ENTIRE site — landing page AND logged-in app — runs on the white/luminou
 Any retone: index.css + palette.ts + both guardrail scripts in one commit; then grep pages/components for light-text-on-light patterns; verify landing by screenshot (auth-gated pages via tsc/guardrails or mockup-sandbox copy).
 
 2026-07-19: Owner flagged the hero brain looked "nothing like" the source JPEG — the radial mask was cropping the whole splash + floor reflection to a small center blob. Rule: the hero must show the FULL brain-splash artwork (width min(880px,94vw)); the mask (70% 66% at 50/50, opaque 52% → 0 at 93%) only feathers outer edges into the page. Never tighten it back to a center-crop.
+
+2026-07-19 (later): Owner reordered the hero per mockup — PSYCHPRO wordmark + tagline lead (z-index 1, they overlap the splash top), brain artwork after, headline below; drift-guard lock updated to enforce this order. Mobile (≤640px) uses a softer mask + smaller negative margins. Caution: inserting a media query mid-rule once split .landing-hero-brain and silently dropped the desktop mask — keep base props in one block.

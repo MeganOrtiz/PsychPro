@@ -285,20 +285,20 @@ export default function LandingPage() {
           id="home"
           className={`landing-hero${mounted ? " is-mounted" : ""}`}
         >
+          <h1 className="landing-wordmark" style={{ ["--delay" as any]: "40ms" }}>
+            PSYCHPRO
+          </h1>
+          <p className="landing-tagline" style={{ ["--delay" as any]: "140ms" }}>
+            learn. expand. connect.
+          </p>
           <img
             src={heroBrain}
             alt=""
             aria-hidden
             className="landing-hero-brain"
-            style={{ ["--delay" as any]: "40ms" }}
+            style={{ ["--delay" as any]: "240ms" }}
             fetchPriority="high"
           />
-          <h1 className="landing-wordmark" style={{ ["--delay" as any]: "120ms" }}>
-            PSYCHPRO
-          </h1>
-          <p className="landing-tagline" style={{ ["--delay" as any]: "220ms" }}>
-            learn. expand. connect.
-          </p>
           <p className="landing-headline" style={{ ["--delay" as any]: "320ms" }}>
             Learn Smarter. Not Harder.
           </p>
@@ -870,8 +870,8 @@ const styles = `
   width: min(880px, 94vw);
   height: auto;
   /* The JPEG bakes in a little whitespace around the splash; negative
-     margins pull the wordmark up tight beneath the artwork. */
-  margin: clamp(-24px, -2.5vh, -10px) 0 clamp(-56px, -5vh, -32px);
+     margins tuck it under the tagline and tight above the headline. */
+  margin: clamp(-56px, -5.5vh, -32px) 0 clamp(-96px, -9vh, -64px);
   pointer-events: none;
   user-select: none;
   /* Feather ONLY the outer edges so the JPEG's silver backdrop melts into
@@ -880,6 +880,16 @@ const styles = `
     rgba(var(--pp-black-rgb), 1) 52%, rgba(var(--pp-black-rgb), 0) 93%);
   mask-image: radial-gradient(70% 66% at 50% 50%,
     rgba(var(--pp-black-rgb), 1) 52%, rgba(var(--pp-black-rgb), 0) 93%);
+}
+
+@media (max-width: 640px) {
+  .landing-hero-brain {
+    margin: -18px 0 -28px;
+    -webkit-mask-image: radial-gradient(64% 60% at 50% 50%,
+      rgba(var(--pp-black-rgb), 1) 42%, rgba(var(--pp-black-rgb), 0) 88%);
+    mask-image: radial-gradient(64% 60% at 50% 50%,
+      rgba(var(--pp-black-rgb), 1) 42%, rgba(var(--pp-black-rgb), 0) 88%);
+  }
 }
 
 .landing-hero-brain,
@@ -906,6 +916,12 @@ const styles = `
 .landing-hero.is-mounted .landing-stat-strip {
   opacity: 1;
   transform: translateY(0);
+}
+
+.landing-wordmark,
+.landing-tagline {
+  position: relative;
+  z-index: 1;
 }
 
 .landing-wordmark {
