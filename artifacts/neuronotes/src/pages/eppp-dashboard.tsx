@@ -710,12 +710,12 @@ const styles = `
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
-  color: ${C.ink};
-  border: 1px solid ${alpha(PP.neutral300, 0.6)};
-  background: ${C.cyan};
-  transition: transform 0.2s ease;
+  color: var(--pp-text);
+  background: linear-gradient(180deg, var(--pp-chrome-hi) 0%, var(--pp-chrome-mid) 55%, var(--pp-chrome-lo) 100%); border: 1px solid var(--pp-chrome-border);
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
 }
-.epd-exam-save:hover:not(:disabled) { transform: translateY(-1px); }
+.epd-exam-save:hover:not(:disabled) { transform: translateY(-1px); background: linear-gradient(180deg, var(--pp-chrome-hover-hi) 0%, var(--pp-chrome-hover-mid) 55%, var(--pp-chrome-hover-lo) 100%); border-color: var(--pp-chrome-border-hover); }
+.epd-exam-save:active:not(:disabled) { transform: translateY(0); background: linear-gradient(180deg, var(--pp-chrome-press-hi) 0%, var(--pp-chrome-press-lo) 100%); border-color: var(--pp-chrome-border-press); }
 .epd-exam-save:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* ---- Sections ---- */

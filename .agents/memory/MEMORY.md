@@ -6,7 +6,8 @@
 - [PsychPro black foundation](psychpro-black-foundation.md) — historical (same-day 2026-07-09); replaced hours later by the blue three-material system above.
 - [PsychPro token lock](psychpro-token-lock.md) — no raw color literals in TS/TSX outside palette.ts (+2 whitelisted files); use PP/alpha() or var(--pp-*); broad recipes banned, primitives emit scoped pp-* classes; drift guardrail enforces.
 - [Claims discipline](claims-discipline.md) — never report a fix as "done" until it's been verified end-to-end; user has called this out repeatedly.
-- [PsychPro glass buttons](psychpro-glass-buttons.md) — landing/marketing button styling convention.
+- [PsychPro silver-chrome buttons](psychpro-chrome-buttons.md) — CURRENT (2026-07-19): primaries = chrome gradient + dark ink + 10px radius site-wide (EPPP incl.); never white labels on light fills.
+- [PsychPro glass buttons](psychpro-glass-buttons.md) — historical (superseded 2026-07-19 by silver-chrome buttons).
 - [PsychPro custom-deck subscription gate](psychpro-custom-decks-subscription-gate.md) — "upload broken" reports are usually the paid-tier 403 gate firing, not the upload itself.
 - [OAuth/MCP state persistence](oauth-mcp-persistence.md) — dynamic-client-registration + auth codes + tokens must be in Postgres; in-memory Maps break across Autoscale instances and restarts.
 - [Clerk account deletion](psychpro-clerk-account-deletion.md) — Clerk browser flows are broken on this instance; deletion is app-owned server-side; never report removed unless clerkDeleted is true.

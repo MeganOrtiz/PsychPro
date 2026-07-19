@@ -159,6 +159,19 @@
   /* SOLID TILE LADDER (owner, 2026-07-15): every box/button fill must be
      fully opaque so surfaces read against the site backdrop. Light-system
      values (owner white/luminous system, 2026-07-16). */
+  /* SILVER CHROME primary-button ramp (owner picked 2026-07-19) */
+  --pp-chrome-hi: #f2f4f6;
+  --pp-chrome-mid: #c9ced3;
+  --pp-chrome-lo: #b4bac0;
+  --pp-chrome-hover-hi: #ffffff;
+  --pp-chrome-hover-mid: #d5dade;
+  --pp-chrome-hover-lo: #c0c6cc;
+  --pp-chrome-press-hi: #c9ced3;
+  --pp-chrome-press-lo: #aab1b7;
+  --pp-chrome-border: #9aa2a9;
+  --pp-chrome-border-hover: #868f97;
+  --pp-chrome-border-press: #7d868e;
+
   --pp-tile: #f4f5f6;          /* nested tile / secondary button rest fill */
   --pp-tile-strong: #eaecee;   /* hover / icon-well step */
   --pp-tile-stronger: #dfe2e5; /* active step */
@@ -508,7 +521,7 @@
 .btn-glass,
 .btn-glass-strong {
   position: relative;
-  border-radius: 14px;
+  border-radius: 10px;
   transition: background-color 160ms ease, background-image 160ms ease,
     border-color 160ms ease, box-shadow 200ms ease, transform 120ms ease;
 }
@@ -542,34 +555,35 @@
   transform: translateY(0);
 }
 
-/* GLOSS primary CTA — saturated cyan gradient + glossy top highlight. Reads
-   pressable at rest through pigment alone; hover ignites the corona. */
+/* GLOSS primary CTA — SILVER CHROME gradient (owner picked from canvas
+   options, 2026-07-19). Light metallic fill + dark ink label; hover brightens
+   toward white, active presses darker. */
 .btn-glass-strong {
-  background: linear-gradient(180deg, var(--pp-icy) 0%, var(--pp-bright) 52%, var(--pp-cyan) 100%);
-  border: 1px solid rgba(var(--pp-icy-rgb), 0.55);
-  color: var(--pp-ink);
+  background: linear-gradient(180deg, var(--pp-chrome-hi) 0%, var(--pp-chrome-mid) 55%, var(--pp-chrome-lo) 100%);
+  border: 1px solid var(--pp-chrome-border);
+  color: var(--pp-text);
   font-weight: 600;
   box-shadow:
-    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.45),
-    inset 0 -8px 14px -10px rgba(var(--pp-deep-rgb), 0.55),
+    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.65),
+    inset 0 -8px 14px -10px rgba(var(--pp-icy-rgb), 0.18),
     0 10px 22px -14px var(--pp-shadow);
 }
 .btn-glass-strong:hover {
-  background: linear-gradient(180deg, var(--pp-icy) 0%, var(--pp-bright) 42%, var(--pp-cyan) 100%);
-  border-color: rgba(var(--pp-icy-rgb), 0.85);
+  background: linear-gradient(180deg, var(--pp-chrome-hover-hi) 0%, var(--pp-chrome-hover-mid) 55%, var(--pp-chrome-hover-lo) 100%);
+  border-color: var(--pp-chrome-border-hover);
   box-shadow:
-    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.55),
-    inset 0 -8px 14px -10px rgba(var(--pp-deep-rgb), 0.45),
-    0 0 24px -2px var(--pp-glow),
+    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.85),
+    inset 0 -8px 14px -10px rgba(var(--pp-icy-rgb), 0.14),
+    0 0 18px -2px var(--pp-glow),
     0 12px 24px -14px var(--pp-shadow);
   transform: translateY(-1px);
 }
 .btn-glass-strong:active {
-  background: linear-gradient(180deg, var(--pp-cyan) 0%, var(--pp-text-dim) 100%);
-  border-color: var(--pp-icy);
+  background: linear-gradient(180deg, var(--pp-chrome-press-hi) 0%, var(--pp-chrome-press-lo) 100%);
+  border-color: var(--pp-chrome-border-press);
   box-shadow:
-    inset 0 2px 6px rgba(var(--pp-deep-rgb), 0.40),
-    0 0 28px -2px var(--pp-glow-strong),
+    inset 0 2px 6px rgba(var(--pp-icy-rgb), 0.22),
+    0 0 20px -2px var(--pp-glow-strong),
     0 6px 14px -12px var(--pp-shadow);
   transform: translateY(0);
 }
@@ -583,7 +597,7 @@
    same cyan system. */
 .btn-glass-ghost {
   position: relative;
-  border-radius: 14px;
+  border-radius: 10px;
   background: transparent;
   border: 1.5px solid transparent;
   transition: background-color 160ms ease, border-color 160ms ease,
@@ -612,7 +626,7 @@
    near-solid so white label text stays legible everywhere. */
 .btn-glass-destructive {
   position: relative;
-  border-radius: 14px;
+  border-radius: 10px;
   background: linear-gradient(180deg, rgba(239, 68, 68, 0.98) 0%, rgba(185, 28, 28, 0.98) 100%);
   border: 1px solid rgba(248, 113, 113, 0.55);
   box-shadow:
@@ -814,7 +828,7 @@ body {
   align-items: center;
   justify-content: center;
   height: 40px;
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 0 18px;
   font-weight: 600;
   font-size: 13px;
@@ -832,7 +846,7 @@ body {
 }
 .eppp-launch-btn:hover {
   transform: translateY(-1px);
-  color: #ffffff;
+  color: var(--pp-text);
   border-color: rgba(var(--pp-bright-rgb), 0.75);
   background: var(--pp-tile-stronger);
   box-shadow:
@@ -841,7 +855,7 @@ body {
 }
 .eppp-launch-btn:active {
   transform: translateY(0);
-  color: #ffffff;
+  color: var(--pp-text);
   border-color: rgba(var(--pp-bright-rgb), 0.95);
   background: var(--pp-tile-stronger);
   box-shadow:
@@ -856,7 +870,7 @@ body {
 /* Persistent selected state (tabs / filters). Same pigment step as :active
    but WITHOUT the glow — glow is hover/pressed-only app-wide. */
 .eppp-launch-btn.is-active {
-  color: #ffffff;
+  color: var(--pp-text);
   border-color: rgba(var(--pp-bright-rgb), 0.95);
   background: var(--pp-tile-stronger);
   box-shadow: inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.28);
@@ -869,7 +883,7 @@ body {
 .eppp-launch-btn__inner svg {
   width: 16px;
   height: 16px;
-  color: var(--pp-bright);
+  color: currentColor;
 }
 .eppp-launch-btn--sidebar {
   width: 100%;
@@ -964,33 +978,34 @@ body {
    material as .btn-glass-strong; NEVER re-widen to a descendant
    button.bg-primary rule (edit-safety lock). */
 .pp-btn-gloss {
-  background-image: linear-gradient(180deg, var(--pp-icy) 0%, var(--pp-bright) 52%, var(--pp-cyan) 100%);
-  background-color: var(--pp-cyan);
-  color: var(--pp-ink);
-  border: 1px solid rgba(var(--pp-icy-rgb), 0.55);
-  border-radius: 14px;
+  background-image: linear-gradient(180deg, var(--pp-chrome-hi) 0%, var(--pp-chrome-mid) 55%, var(--pp-chrome-lo) 100%);
+  background-color: var(--pp-chrome-mid);
+  color: var(--pp-text);
+  border: 1px solid var(--pp-chrome-border);
+  border-radius: 10px;
   transition: all 0.2s ease;
   box-shadow:
-    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.45),
-    inset 0 -8px 14px -10px rgba(var(--pp-deep-rgb), 0.55),
+    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.65),
+    inset 0 -8px 14px -10px rgba(var(--pp-icy-rgb), 0.18),
     0 10px 22px -14px var(--pp-shadow);
 }
 
 .pp-btn-gloss:hover {
-  border-color: rgba(var(--pp-icy-rgb), 0.85);
+  background-image: linear-gradient(180deg, var(--pp-chrome-hover-hi) 0%, var(--pp-chrome-hover-mid) 55%, var(--pp-chrome-hover-lo) 100%);
+  border-color: var(--pp-chrome-border-hover);
   box-shadow:
-    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.55),
-    inset 0 -8px 14px -10px rgba(var(--pp-deep-rgb), 0.45),
-    0 0 24px -2px var(--pp-glow),
+    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.85),
+    inset 0 -8px 14px -10px rgba(var(--pp-icy-rgb), 0.14),
+    0 0 18px -2px var(--pp-glow),
     0 12px 24px -14px var(--pp-shadow);
 }
 
 .pp-btn-gloss:active {
-  background-image: linear-gradient(180deg, var(--pp-cyan) 0%, var(--pp-text-dim) 100%);
-  border-color: var(--pp-icy);
+  background-image: linear-gradient(180deg, var(--pp-chrome-press-hi) 0%, var(--pp-chrome-press-lo) 100%);
+  border-color: var(--pp-chrome-border-press);
   box-shadow:
-    inset 0 2px 6px rgba(var(--pp-deep-rgb), 0.40),
-    0 0 28px -2px var(--pp-glow-strong);
+    inset 0 2px 6px rgba(var(--pp-icy-rgb), 0.22),
+    0 0 20px -2px var(--pp-glow-strong);
 }
 
 /* Secondary buttons — GLASS material, scoped class. */
@@ -998,7 +1013,7 @@ body {
   background: var(--pp-tile);
   color: var(--pp-text);
   border: 1.5px solid rgba(var(--pp-cyan-rgb), 0.45);
-  border-radius: 14px;
+  border-radius: 10px;
   transition: all 0.2s ease;
   box-shadow:
     inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.22),
@@ -1030,7 +1045,7 @@ body {
   border-width: 1.5px;
   border-color: rgba(var(--pp-cyan-rgb), 0.45) !important;
   color: var(--pp-text);
-  border-radius: 14px;
+  border-radius: 10px;
   transition: all 0.2s ease;
   box-shadow:
     inset 0 1px 0 rgba(var(--pp-icy-rgb), 0.20),

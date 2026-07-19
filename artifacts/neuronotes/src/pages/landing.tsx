@@ -966,7 +966,7 @@ const styles = `
   font-weight: 600;
   letter-spacing: 0.22em;
   padding: 15px 30px;
-  border-radius: 14px;
+  border-radius: 10px;
   cursor: pointer;
   transition: all 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -980,30 +980,30 @@ const styles = `
   height: 16px;
   flex-shrink: 0;
 }
-/* Primary CTA — solid near-black pill on the luminous silver page so the
-   main action dominates through contrast (white/luminous system). */
+/* Primary CTA — SILVER CHROME gradient (owner picked from canvas options,
+   2026-07-19); dark ink label, consistent with the app-wide chrome buttons. */
 .landing-cta-primary {
-  background: ${LANDING.icy};
-  border: 1.5px solid ${LANDING.icy};
-  color: ${PP.white};
+  background: linear-gradient(180deg, var(--pp-chrome-hi) 0%, var(--pp-chrome-mid) 55%, var(--pp-chrome-lo) 100%);
+  border: 1.5px solid var(--pp-chrome-border);
+  color: ${PP.text};
   box-shadow:
-    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.12),
+    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.65),
     0 16px 44px -18px rgba(var(--pp-black-rgb), 0.35);
 }
 .landing-cta-primary:hover {
   transform: translateY(-1px);
-  color: ${PP.white};
-  border-color: ${LANDING.bright};
-  background: ${LANDING.bright};
+  color: ${PP.text};
+  border-color: var(--pp-chrome-border-hover);
+  background: linear-gradient(180deg, var(--pp-chrome-hover-hi) 0%, var(--pp-chrome-hover-mid) 55%, var(--pp-chrome-hover-lo) 100%);
   box-shadow:
-    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.16),
+    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.85),
     0 20px 50px -18px rgba(var(--pp-black-rgb), 0.40);
 }
 .landing-cta-primary:active {
   transform: translateY(0);
-  color: ${PP.white};
-  border-color: ${LANDING.cyan};
-  background: ${LANDING.cyan};
+  color: ${PP.text};
+  border-color: var(--pp-chrome-border-press);
+  background: linear-gradient(180deg, var(--pp-chrome-press-hi) 0%, var(--pp-chrome-press-lo) 100%);
   box-shadow:
     inset 0 1px 0 rgba(var(--pp-white-rgb), 0.20),
     0 10px 30px -16px rgba(var(--pp-black-rgb), 0.45);

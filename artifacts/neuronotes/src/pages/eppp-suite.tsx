@@ -2531,13 +2531,14 @@ const styles = `
 .eps-notes-actions { display: flex; justify-content: flex-end; margin-top: 12px; }
 .eps-save-btn {
   display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
-  border-radius: 8px; padding: 9px 18px; font-size: 13px; font-weight: 700;
-  color: ${C.ink}; background: ${C.cyan}; border: 1px solid ${C.cyan};
-  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+  border-radius: 10px; padding: 9px 18px; font-size: 13px; font-weight: 700;
+  color: var(--pp-text); background: linear-gradient(180deg, var(--pp-chrome-hi) 0%, var(--pp-chrome-mid) 55%, var(--pp-chrome-lo) 100%); border: 1px solid var(--pp-chrome-border);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease,
+    background 0.15s ease, border-color 0.15s ease;
 }
 .eps-save-btn svg { width: 15px; height: 15px; }
-.eps-save-btn:hover { transform: translateY(-1px); }
-.eps-save-btn:active { transform: translateY(0); }
+.eps-save-btn:hover { transform: translateY(-1px); background: linear-gradient(180deg, var(--pp-chrome-hover-hi) 0%, var(--pp-chrome-hover-mid) 55%, var(--pp-chrome-hover-lo) 100%); border-color: var(--pp-chrome-border-hover); }
+.eps-save-btn:active { transform: translateY(0); background: linear-gradient(180deg, var(--pp-chrome-press-hi) 0%, var(--pp-chrome-press-lo) 100%); border-color: var(--pp-chrome-border-press); }
 .eps-save-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
 .eps-notes-saved { display: flex; flex-direction: column; gap: 12px; margin-top: 18px; }
 .eps-note-card {
