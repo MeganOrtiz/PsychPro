@@ -90,7 +90,7 @@ export default function MyDecksPage() {
             </Button>
           </Link>
           <Link href="/my-decks/new?tier=pro">
-            <Button className="w-full gap-2 justify-center">
+            <Button variant="outline" className="w-full gap-2 justify-center">
               <Sparkles className="w-4 h-4" /> Pro Tools
             </Button>
           </Link>
