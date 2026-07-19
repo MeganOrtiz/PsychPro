@@ -23,3 +23,5 @@ Any retone: index.css + palette.ts + both guardrail scripts in one commit; then 
 2026-07-19 (later): Owner reordered the hero per mockup — PSYCHPRO wordmark + tagline lead (z-index 1, they overlap the splash top), brain artwork after, headline below; drift-guard lock updated to enforce this order. Mobile (≤640px) uses a softer mask + smaller negative margins. Caution: inserting a media query mid-rule once split .landing-hero-brain and silently dropped the desktop mask — keep base props in one block.
 
 2026-07-19 (later still): Hero now uses a background-removed transparent cutout (brain-splash-hero-cutout-q.png, PNG8-quantized ~370KB); ALL radial masks removed — owner did not want the visible image box. Original JPEG kept as brain-splash-hero.jpg; floor reflection is gone with the background (accepted).
+
+2026-07-19: Both dashboards (main + EPPP) now open with a shared .pp-dash-hero banner — wide crop of the transparent splash cutout with BrandBanner (showIcon=false, empty tagline) overlaid top-center; image anchored at top:74% so the wordmark clears the brain. Old .pp-dash-brain emblem + mask retired.
