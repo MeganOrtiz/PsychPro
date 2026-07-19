@@ -6,7 +6,6 @@ import { useEpppPlans, useEpppCheckout } from "@/lib/use-eppp-purchase";
 import { useEntitlements } from "@/lib/use-entitlements";
 import { Button } from "@/components/ui/button";
 import { PageTitle } from "@/components/brand/page-title";
-import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -202,12 +201,6 @@ export default function SubscriptionPage() {
               <Crown className="w-[18px] h-[18px]" style={{ color: P.surf }} />
             </span>
             <span className="font-semibold text-foreground text-lg">PsychPro {PRO_DISPLAY_NAME}</span>
-            <Badge
-              className="ml-auto border-0 font-semibold"
-              style={{ background: P.surf, color: PP.chipInk, boxShadow: `0 0 18px -4px ${P.surf}` }}
-            >
-              Most Popular
-            </Badge>
           </div>
 
           <div className="space-y-2 mb-5">
@@ -340,12 +333,6 @@ export default function SubscriptionPage() {
               <GraduationCap className="w-[18px] h-[18px]" style={{ color: P.surf }} />
             </span>
             <span className="font-semibold text-foreground text-lg">EPPP Mastery Suite</span>
-            <Badge
-              className="ml-auto border-0 font-semibold"
-              style={{ background: P.surf, color: PP.chipInk, boxShadow: `0 0 18px -4px ${P.surf}` }}
-            >
-              Separate access
-            </Badge>
           </div>
 
           <p className="text-sm text-muted-foreground mb-4">
