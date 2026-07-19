@@ -744,10 +744,10 @@ const styles = `
 }
 .epd-section-head--hero .epd-section-title {
   font-size: clamp(24px, 3vw, 34px);
-  color: rgba(var(--pp-white-rgb), 1);
+  color: var(--pp-text);
 }
 .epd-section-head--hero .epd-section-meta {
-  color: ${PP.neutralHi223};
+  color: var(--pp-text-dim);
 }
 .epd-section-eyebrow {
   margin: 0 0 6px;
