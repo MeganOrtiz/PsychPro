@@ -28,7 +28,7 @@ import {
 } from "recharts";
 import { useGetTopics } from "@workspace/api-client-react";
 import brainLateral from "@/assets/brain-views/lateral.webp";
-import heroBrain from "@/assets/brain-splash-hero.jpg";
+import heroBrain from "@/assets/brain-splash-hero-cutout-q.png";
 import founderMegan from "@/assets/founder/megan.webp";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PP, LANDING, alpha } from "@/lib/palette";
@@ -863,32 +863,21 @@ const styles = `
   pointer-events: none;
 }
 
-/* Owner-supplied liquid-chrome splash brain leading the hero stack
-   (2026-07-18 — white/luminous system). The JPEG's own silver backdrop is
-   feathered into the page with a radial mask so it reads as one surface. */
+/* Owner-supplied liquid-chrome splash brain (2026-07-18 — white/luminous
+   system). Background-removed transparent cutout, so no mask is needed. */
 .landing-hero-brain {
   width: min(880px, 94vw);
   height: auto;
-  /* The JPEG bakes in a little whitespace around the splash; negative
-     margins tuck it under the tagline and tight above the headline. */
+  /* Negative margins tuck the cutout under the tagline and tight above
+     the headline. */
   margin: clamp(-56px, -5.5vh, -32px) 0 clamp(-96px, -9vh, -64px);
   pointer-events: none;
   user-select: none;
-  /* Feather ONLY the outer edges so the JPEG's silver backdrop melts into
-     the page — the full splash + floor reflection must stay visible. */
-  -webkit-mask-image: radial-gradient(70% 66% at 50% 50%,
-    rgba(var(--pp-black-rgb), 1) 52%, rgba(var(--pp-black-rgb), 0) 93%);
-  mask-image: radial-gradient(70% 66% at 50% 50%,
-    rgba(var(--pp-black-rgb), 1) 52%, rgba(var(--pp-black-rgb), 0) 93%);
 }
 
 @media (max-width: 640px) {
   .landing-hero-brain {
     margin: -18px 0 -28px;
-    -webkit-mask-image: radial-gradient(64% 60% at 50% 50%,
-      rgba(var(--pp-black-rgb), 1) 42%, rgba(var(--pp-black-rgb), 0) 88%);
-    mask-image: radial-gradient(64% 60% at 50% 50%,
-      rgba(var(--pp-black-rgb), 1) 42%, rgba(var(--pp-black-rgb), 0) 88%);
   }
 }
 
