@@ -27,8 +27,8 @@ import {
   CartesianGrid,
 } from "recharts";
 import { useGetTopics } from "@workspace/api-client-react";
-import brainLateral from "@/assets/brain-views/lateral.webp";
-import heroBrain from "@/assets/brain-splash-hero-cutout-q.png";
+import inkCloudBand from "@/assets/ink-cloud-band.webp";
+import chromeBrain from "@/assets/chrome-brain-cutout.webp";
 import founderMegan from "@/assets/founder/megan.webp";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PP, LANDING, alpha } from "@/lib/palette";
@@ -291,14 +291,26 @@ export default function LandingPage() {
           <p className="landing-tagline" style={{ ["--delay" as any]: "140ms" }}>
             learn. expand. connect.
           </p>
-          <img
-            src={heroBrain}
-            alt=""
-            aria-hidden
-            className="landing-hero-brain"
+          <div
+            className="landing-hero-art"
             style={{ ["--delay" as any]: "240ms" }}
-            fetchPriority="high"
-          />
+            aria-hidden
+          >
+            <img
+              src={inkCloudBand}
+              alt=""
+              className="landing-hero-ink"
+              fetchPriority="high"
+              loading="eager"
+            />
+            <img
+              src={chromeBrain}
+              alt=""
+              className="landing-hero-chrome"
+              fetchPriority="high"
+              loading="eager"
+            />
+          </div>
           <p className="landing-headline" style={{ ["--delay" as any]: "320ms" }}>
             Learn Smarter. Not Harder.
           </p>
@@ -452,17 +464,9 @@ export default function LandingPage() {
         </section>
 
         {/* ============== BRAIN LAB (split) ============== */}
-        <section id="brain-lab" className="landing-section landing-split" data-reveal>
-          <div className="landing-split-media landing-split-media--brain">
-            <div className="landing-split-glow" aria-hidden />
-            <img
-              src={brainLateral}
-              alt="Interactive 3D brain anatomy view"
-              className="landing-split-img"
-            />
-          </div>
+        <section id="brain-lab" className="landing-section landing-split landing-split--solo" data-reveal>
           <div className="landing-split-body landing-split-body--boxed">
-            <p className="landing-eyebrow landing-eyebrow--left">INTERACTIVE 3D</p>
+            <p className="landing-eyebrow">INTERACTIVE 3D</p>
             <h2 className="landing-split-title">
               Connect Structure to Function
             </h2>
@@ -885,25 +889,35 @@ const styles = `
   pointer-events: none;
 }
 
-/* Owner-supplied liquid-chrome splash brain (2026-07-18 — white/luminous
-   system). Background-removed transparent cutout, so no mask is needed. */
-.landing-hero-brain {
-  width: min(880px, 94vw);
-  height: auto;
-  /* Negative margins tuck the cutout under the tagline and tight above
-     the headline. */
-  margin: clamp(-56px, -5.5vh, -32px) 0 clamp(-96px, -9vh, -64px);
+/* Owner-supplied hero composition (2026-07-22): full-bleed blue ink-cloud
+   band with the silver chrome brain cutout centered on its bottom edge,
+   overlapping down onto the white page below (matches owner mockup). */
+.landing-hero-art {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-top: clamp(-24px, -2vh, -10px);
+  /* Reserve room for the brain's overhang below the band. */
+  margin-bottom: clamp(70px, 9vw, 130px);
   pointer-events: none;
   user-select: none;
 }
-
-@media (max-width: 640px) {
-  .landing-hero-brain {
-    margin: -18px 0 -28px;
-  }
+.landing-hero-ink {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.landing-hero-chrome {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%, 48%);
+  width: clamp(180px, 22vw, 320px);
+  height: auto;
+  filter: drop-shadow(0 18px 34px rgba(var(--pp-black-rgb), 0.25));
 }
 
-.landing-hero-brain,
+.landing-hero-art,
 .landing-wordmark,
 .landing-tagline,
 .landing-headline,
@@ -918,7 +932,7 @@ const styles = `
     opacity 900ms cubic-bezier(0.16, 1, 0.3, 1) var(--delay, 0ms),
     transform 900ms cubic-bezier(0.16, 1, 0.3, 1) var(--delay, 0ms);
 }
-.landing-hero.is-mounted .landing-hero-brain,
+.landing-hero.is-mounted .landing-hero-art,
 .landing-hero.is-mounted .landing-wordmark,
 .landing-hero.is-mounted .landing-tagline,
 .landing-hero.is-mounted .landing-headline,
@@ -1255,7 +1269,10 @@ const styles = `
 @media (min-width: 900px) {
   .landing-split { grid-template-columns: 1fr 1fr; }
   .landing-split--reverse .landing-split-media { order: 2; }
+  .landing-split--solo { grid-template-columns: 1fr; }
 }
+.landing-split--solo { justify-items: center; text-align: center; }
+.landing-split--solo .landing-split-body { max-width: 640px; }
 .landing-split-media {
   position: relative;
   display: flex;

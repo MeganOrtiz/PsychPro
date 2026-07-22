@@ -176,19 +176,20 @@ if (landingBackdrop) {
 // The same splash brain also tops both dashboards. Keep it present.
 {
   const landingSrc = fs.readFileSync(path.join(ROOT, "src", "pages", "landing.tsx"), "utf8");
-  const brainImg = /<img[^>]*className="landing-hero-brain"/.test(landingSrc);
-  if (!brainImg) {
+  const inkImg = /<img[^>]*className="landing-hero-ink"/.test(landingSrc);
+  const chromeImg = /<img[^>]*className="landing-hero-chrome"/.test(landingSrc);
+  if (!inkImg || !chromeImg) {
     fail(
-      "landing hero brain missing",
-      'owner added the liquid-chrome splash brain to the landing hero (2026-07-18) — restore the <img className="landing-hero-brain"> element',
+      "landing hero art missing",
+      'owner replaced the splash brain with the blue ink-cloud band + chrome brain cutout (2026-07-22) — restore the .landing-hero-ink and .landing-hero-chrome <img> elements',
     );
   } else {
-    const imgIdx = landingSrc.search(/<img[^>]*className="landing-hero-brain"/);
+    const imgIdx = landingSrc.search(/className="landing-hero-art"/);
     const wordmarkIdx = landingSrc.indexOf('className="landing-wordmark"');
     if (wordmarkIdx !== -1 && imgIdx < wordmarkIdx) {
       fail(
-        "landing hero brain misplaced",
-        "owner reordered the hero (2026-07-19): wordmark + tagline lead, splash brain renders AFTER them",
+        "landing hero art misplaced",
+        "owner ordered the hero (2026-07-19): wordmark + tagline lead, hero artwork renders AFTER them",
       );
     }
   }
