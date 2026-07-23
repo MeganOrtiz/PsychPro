@@ -176,26 +176,18 @@ if (landingBackdrop) {
 // The same splash brain also tops both dashboards. Keep it present.
 {
   const landingSrc = fs.readFileSync(path.join(ROOT, "src", "pages", "landing.tsx"), "utf8");
-  const inkImg = /<img[^>]*className="landing-hero-ink"/.test(landingSrc);
-  const chromeImg = /<img[^>]*className="landing-hero-chrome"/.test(landingSrc);
-  if (inkImg) {
+  const bgImg = /<img[^>]*className="landing-hero-bg"/.test(landingSrc);
+  if (!bgImg) {
     fail(
-      "landing hero blue ink-cloud present",
-      'owner removed the blue ink-cloud design from the landing hero (2026-07-23) — the .landing-hero-ink <img> must NOT return',
-    );
-  }
-  if (!chromeImg) {
-    fail(
-      "landing hero art missing",
-      "owner kept the silver chrome brain cutout in the hero (2026-07-23) — restore the .landing-hero-chrome <img> element",
+      "landing hero background missing",
+      "owner ordered a full-bleed hero background image (2026-07-23) — restore the .landing-hero-bg <img> (edge-to-edge, object-fit: cover, no card/max-width/padding around it)",
     );
   } else {
-    const imgIdx = landingSrc.search(/className="landing-hero-art"/);
-    const wordmarkIdx = landingSrc.indexOf('className="landing-wordmark"');
-    if (wordmarkIdx !== -1 && imgIdx < wordmarkIdx) {
+    const bgCss = /\.landing-hero-bg\s*\{[^}]*object-fit:\s*cover/.test(landingSrc);
+    if (!bgCss) {
       fail(
-        "landing hero art misplaced",
-        "owner ordered the hero (2026-07-19): wordmark + tagline lead, hero artwork renders AFTER them",
+        "landing hero background not cover",
+        "owner ordered object-fit: cover on .landing-hero-bg (2026-07-23) — never contain, never boxed",
       );
     }
   }

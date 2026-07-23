@@ -28,7 +28,7 @@ import {
 } from "recharts";
 import { useGetTopics } from "@workspace/api-client-react";
 import brainLateral from "@/assets/brain-views/lateral.webp";
-import chromeBrain from "@/assets/chrome-brain-cutout.webp";
+import heroInkSplash from "@/assets/hero-ink-splash.png";
 import founderMegan from "@/assets/founder/megan.webp";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PP, LANDING, alpha } from "@/lib/palette";
@@ -285,25 +285,21 @@ export default function LandingPage() {
           id="home"
           className={`landing-hero${mounted ? " is-mounted" : ""}`}
         >
+          <img
+            src={heroInkSplash}
+            alt=""
+            className="landing-hero-bg"
+            fetchPriority="high"
+            loading="eager"
+            aria-hidden
+          />
           <h1 className="landing-wordmark" style={{ ["--delay" as any]: "40ms" }}>
             PSYCHPRO
           </h1>
           <p className="landing-tagline" style={{ ["--delay" as any]: "140ms" }}>
             learn. expand. connect.
           </p>
-          <div
-            className="landing-hero-art"
-            style={{ ["--delay" as any]: "240ms" }}
-            aria-hidden
-          >
-            <img
-              src={chromeBrain}
-              alt=""
-              className="landing-hero-chrome"
-              fetchPriority="high"
-              loading="eager"
-            />
-          </div>
+          <div className="landing-hero-spacer" aria-hidden />
           <p className="landing-headline" style={{ ["--delay" as any]: "320ms" }}>
             Learn Smarter. Not Harder.
           </p>
@@ -866,17 +862,55 @@ const styles = `
 }
 
 /* ============== HERO ============== */
+/* Hero (2026-07-23, owner order): full-bleed background artwork edge-to-edge
+   directly beneath the nav — NO card, NO max-width, NO padding/margins,
+   NO border-radius/border/shadow, NO gray fallback around the image. Text
+   overlays the artwork; an inner max-width applies to TEXT only, never the
+   image or its parents. */
 .landing-hero {
   position: relative;
-  max-width: 1320px;
-  margin: 0 auto;
-  /* The splash brain <img> leads the stack and must sit RIGHT under the
-     fixed header (owner, 2026-07-18) — top padding just clears the bar. */
-  padding: clamp(20px, 2.5vh, 32px) 24px 0;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: clamp(20px, 2.5vh, 32px) 0 0;
+  min-height: calc(100vh - 58px);
+  min-height: calc(100svh - 58px);
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+}
+.landing-hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: none;
+  pointer-events: none;
+  user-select: none;
+}
+.landing-hero-spacer {
+  /* Pushes the headline/blurb/CTAs to the lower part of the artwork so the
+     silver brain in the image stays clear of text. */
+  flex: 1 1 auto;
+  min-height: clamp(320px, 60vh, 660px);
+}
+.landing-hero > :not(.landing-hero-bg) {
+  position: relative;
+  z-index: 1;
+}
+.landing-headline,
+.landing-blurb {
+  padding-left: 24px;
+  padding-right: 24px;
 }
 /* Localized legibility scrim — a soft pool of deep teal behind the hero text
    only, so the wordmark, tagline and blurb read cleanly over the glowing brain
@@ -894,34 +928,6 @@ const styles = `
   pointer-events: none;
 }
 
-/* Hero composition (2026-07-23): the blue ink-cloud band was removed on
-   owner order ("remove the blue design"). The silver chrome brain cutout
-   now renders alone, centered in normal flow between the tagline and the
-   headline. */
-.landing-hero-art {
-  position: relative;
-  margin-top: clamp(16px, 2.5vh, 36px);
-  margin-bottom: clamp(10px, 1.5vh, 20px);
-  pointer-events: none;
-  user-select: none;
-}
-.landing-hero-chrome {
-  display: block;
-  width: clamp(180px, 24vw, 340px);
-  height: auto;
-  /* The drop-shadow is held OFF during the hero entrance animation: while
-     the ancestor's opacity transition composites, browsers rasterize the
-     filtered image on its own layer and its rectangular bounds flash as a
-     faint box around the brain. The shadow fades in after the entrance
-     (art delay 240ms + 900ms slide ≈ 1.15s). */
-  filter: none;
-  transition: filter 500ms ease 1150ms;
-}
-.landing-hero.is-mounted .landing-hero-chrome {
-  filter: drop-shadow(0 14px 28px rgba(var(--pp-black-rgb), 0.25));
-}
-
-.landing-hero-art,
 .landing-wordmark,
 .landing-tagline,
 .landing-headline,
@@ -936,7 +942,6 @@ const styles = `
     opacity 900ms cubic-bezier(0.16, 1, 0.3, 1) var(--delay, 0ms),
     transform 900ms cubic-bezier(0.16, 1, 0.3, 1) var(--delay, 0ms);
 }
-.landing-hero.is-mounted .landing-hero-art,
 .landing-hero.is-mounted .landing-wordmark,
 .landing-hero.is-mounted .landing-tagline,
 .landing-hero.is-mounted .landing-headline,
