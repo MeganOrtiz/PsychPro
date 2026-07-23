@@ -903,21 +903,20 @@ const styles = `
   pointer-events: none;
   user-select: none;
 }
-.landing-hero > :not(.landing-hero-bg):not(.psychpro-hero__brain) {
+.landing-hero > :not(.landing-hero-bg) {
   position: relative;
   z-index: 1;
 }
-/* Owner-supplied chrome brain (2026-07-23): centered over the artwork,
-   above the water, below the wordmark/tagline. Exact spec — no container,
-   no effects, transparent PNG preserved as provided. */
+/* Owner-supplied chrome brain (2026-07-23): centered, below the
+   wordmark/tagline and above the water artwork. Sits IN FLOW between the
+   tagline and headline so it never covers text. No container, no effects,
+   transparent PNG preserved as provided. */
 .psychpro-hero__brain {
-  position: absolute;
-  left: 50%;
-  top: 47%;
+  display: block;
   z-index: 3;
-  width: clamp(360px, 34vw, 700px);
+  width: clamp(300px, 30vw, 620px);
   height: auto;
-  transform: translate(-50%, -50%);
+  margin: clamp(-24px, -1.5vw, -8px) auto;
   object-fit: contain;
   background: transparent;
   border: 0;
