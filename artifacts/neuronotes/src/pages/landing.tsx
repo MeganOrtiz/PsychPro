@@ -773,6 +773,10 @@ const styles = `
   position: relative;
   min-height: 100vh;
   min-height: 100dvh;
+  /* The full-bleed hero band spans 100vw, which includes the vertical
+     scrollbar — without clipping, that sliver of horizontal overflow lets
+     the page shift sideways and the hero reads as off-center. */
+  overflow-x: clip;
   color: ${C.cyanSoft};
   font-family: var(--app-font-sans);
   font-feature-settings: "ss01", "cv11";
@@ -905,6 +909,7 @@ const styles = `
   position: relative;
   width: 100vw;
   margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
   margin-top: clamp(-24px, -2vh, -10px);
   /* Small reserve for the brain's slight overhang below the cloud. */
   margin-bottom: clamp(28px, 3.5vw, 56px);
