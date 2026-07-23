@@ -299,7 +299,6 @@ export default function LandingPage() {
           <p className="landing-tagline" style={{ ["--delay" as any]: "140ms" }}>
             learn. expand. connect.
           </p>
-          <div className="landing-hero-spacer" aria-hidden />
           <p className="landing-headline" style={{ ["--delay" as any]: "320ms" }}>
             Learn Smarter. Not Harder.
           </p>
@@ -896,12 +895,6 @@ const styles = `
   background: none;
   pointer-events: none;
   user-select: none;
-}
-.landing-hero-spacer {
-  /* Pushes the headline/blurb/CTAs to the lower part of the artwork so the
-     silver brain in the image stays clear of text. */
-  flex: 1 1 auto;
-  min-height: clamp(320px, 60vh, 660px);
 }
 .landing-hero > :not(.landing-hero-bg) {
   position: relative;
