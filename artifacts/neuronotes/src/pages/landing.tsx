@@ -932,6 +932,15 @@ const styles = `
   width: clamp(170px, 20vw, 300px);
   height: auto;
   z-index: 1;
+  /* The drop-shadow is held OFF during the hero entrance animation: while
+     the ancestor's opacity transition composites, browsers rasterize the
+     filtered image on its own layer and its rectangular bounds flash as a
+     faint box around the brain. The shadow fades in after the entrance
+     (art delay 240ms + 900ms slide ≈ 1.15s). */
+  filter: none;
+  transition: filter 500ms ease 1150ms;
+}
+.landing-hero.is-mounted .landing-hero-chrome {
   filter: drop-shadow(0 14px 28px rgba(var(--pp-black-rgb), 0.25));
 }
 
