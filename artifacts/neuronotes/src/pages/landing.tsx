@@ -27,6 +27,7 @@ import {
   CartesianGrid,
 } from "recharts";
 import { useGetTopics } from "@workspace/api-client-react";
+import brainLateral from "@/assets/brain-views/lateral.webp";
 import inkCloudBand from "@/assets/ink-cloud-band-cutout.webp";
 import chromeBrain from "@/assets/chrome-brain-cutout.webp";
 import founderMegan from "@/assets/founder/megan.webp";
@@ -464,9 +465,17 @@ export default function LandingPage() {
         </section>
 
         {/* ============== BRAIN LAB (split) ============== */}
-        <section id="brain-lab" className="landing-section landing-split landing-split--solo" data-reveal>
+        <section id="brain-lab" className="landing-section landing-split" data-reveal>
+          <div className="landing-split-media landing-split-media--brain">
+            <div className="landing-split-glow" aria-hidden />
+            <img
+              src={brainLateral}
+              alt="Interactive 3D brain anatomy view"
+              className="landing-split-img"
+            />
+          </div>
           <div className="landing-split-body landing-split-body--boxed">
-            <p className="landing-eyebrow">INTERACTIVE 3D</p>
+            <p className="landing-eyebrow landing-eyebrow--left">INTERACTIVE 3D</p>
             <h2 className="landing-split-title">
               Connect Structure to Function
             </h2>
@@ -1269,10 +1278,7 @@ const styles = `
 @media (min-width: 900px) {
   .landing-split { grid-template-columns: 1fr 1fr; }
   .landing-split--reverse .landing-split-media { order: 2; }
-  .landing-split--solo { grid-template-columns: 1fr; }
 }
-.landing-split--solo { justify-items: center; text-align: center; }
-.landing-split--solo .landing-split-body { max-width: 640px; }
 .landing-split-media {
   position: relative;
   display: flex;
