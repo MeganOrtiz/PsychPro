@@ -926,6 +926,12 @@ const styles = `
   max-height: 56vh;
   object-fit: cover;
   object-position: center;
+  /* When the cap crops into the opaque cloud (short/wide viewports), fade
+     the cropped top/bottom edges so the cloud dissolves into the page
+     instead of showing a hard horizontal cut line. No-op on tall
+     viewports where the image's own transparent taper is preserved. */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, var(--pp-ink) 16%, var(--pp-ink) 84%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, var(--pp-ink) 16%, var(--pp-ink) 84%, transparent 100%);
 }
 .landing-hero-chrome {
   position: absolute;
