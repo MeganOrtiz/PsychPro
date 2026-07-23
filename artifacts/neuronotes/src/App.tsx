@@ -215,17 +215,6 @@ function AppRouter() {
           </RequireSignedIn>
         )}
       </Route>
-      {/* DEV-ONLY: temporary unauthenticated Brain Lab route for visual audit.
-          Remove after audit. */}
-      {import.meta.env.DEV && (
-        <Route path="/__brainlab-audit">
-          {() => (
-            <AppLayout>
-              <BrainLabPage />
-            </AppLayout>
-          )}
-        </Route>
-      )}
       <Route>
         <RequireOnboarded>
           <AppLayout>

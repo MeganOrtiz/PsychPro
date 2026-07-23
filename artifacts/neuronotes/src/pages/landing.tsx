@@ -880,7 +880,7 @@ const styles = `
   margin: 0 auto;
   /* The splash brain <img> leads the stack and must sit RIGHT under the
      fixed header (owner, 2026-07-18) — top padding just clears the bar. */
-  padding: clamp(56px, 6vh, 64px) 24px clamp(40px, 6vh, 90px);
+  padding: clamp(20px, 2.5vh, 32px) 24px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -910,9 +910,9 @@ const styles = `
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
-  margin-top: clamp(-14px, -1vh, -6px);
-  /* Tiny reserve for the brain's slight overhang below the cloud. */
-  margin-bottom: clamp(12px, 1.5vw, 24px);
+  margin-top: 0;
+  /* Reserve for the brain's slight overhang below the cloud. */
+  margin-bottom: clamp(8px, 1vh, 14px);
   pointer-events: none;
   user-select: none;
 }
@@ -920,6 +920,17 @@ const styles = `
   display: block;
   width: 100%;
   height: auto;
+  /* Responsive cap so the whole hero composition (title + cloud + brain +
+     headline) fits on one viewport at 1440×900, 1366×768, and similar
+     laptop sizes.  object-position: top means any cap crops from the
+     BOTTOM — the bottom taper is 23.9% transparent (171px at 1440px), so
+     the crop stays entirely in see-through pixels on all standard sizes.
+     No mask or fade is applied; the cloud's natural edges are preserved. */
+  max-height: calc(100vh - 220px);
+  max-height: calc(100svh - 220px);
+  min-height: 280px;
+  object-fit: cover;
+  object-position: top center;
 }
 .landing-hero-chrome {
   position: absolute;
@@ -929,7 +940,7 @@ const styles = `
      INTO the cloud's bottom edge — the cloud reads as a brilliant thought
      rising from the brain. Brain renders in front (later in DOM). */
   transform: translate(-50%, 10%);
-  width: clamp(150px, 17vw, 250px);
+  width: clamp(130px, 15vw, 210px);
   height: auto;
   z-index: 1;
   /* The drop-shadow is held OFF during the hero entrance animation: while
@@ -980,14 +991,14 @@ const styles = `
   margin: 0;
   font-family: var(--app-font-sans);
   font-weight: 200;
-  font-size: clamp(34px, 5vw, 62px);
+  font-size: clamp(28px, 3.8vw, 52px);
   letter-spacing: 0.22em;
   line-height: 1;
   color: ${LANDING.icy};
   padding-left: 0.22em;
 }
 .landing-tagline {
-  margin: clamp(6px, 1vh, 12px) 0 0;
+  margin: clamp(4px, 0.5vh, 8px) 0 0;
   font-weight: 500;
   font-size: clamp(11px, 1.1vw, 14px);
   letter-spacing: 0.42em;
@@ -995,7 +1006,7 @@ const styles = `
   padding-left: 0.42em;
 }
 .landing-headline {
-  margin: clamp(12px, 1.6vh, 20px) auto 0;
+  margin: clamp(8px, 1vh, 14px) auto 0;
   max-width: 720px;
   font-family: var(--app-font-sans);
   font-weight: 300;
