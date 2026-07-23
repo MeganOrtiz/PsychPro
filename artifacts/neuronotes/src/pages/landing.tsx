@@ -305,15 +305,14 @@ export default function LandingPage() {
             alt="Chrome anatomical brain"
             loading="eager"
             fetchPriority="high"
+            style={{ ["--delay" as any]: "220ms" }}
           />
           <p className="landing-headline" style={{ ["--delay" as any]: "320ms" }}>
             Learn Smarter. Not Harder.
           </p>
           <p className="landing-blurb" style={{ ["--delay" as any]: "420ms" }}>
-            Evidence-based study tools designed to help you learn efficiently,
-            retain more, and spend less time searching for the right resources.
-            PsychPro brings psychology, neuroscience, assessment, and clinical
-            learning into one organized space, so students can study with more
+            Evidence-based study tools that bring psychology, neuroscience, and
+            clinical learning into one organized space — so you can study with
             clarity and confidence.
           </p>
 
@@ -913,10 +912,11 @@ const styles = `
    transparent PNG preserved as provided. */
 .psychpro-hero__brain {
   display: block;
+  position: relative;
   z-index: 3;
-  width: clamp(300px, 30vw, 620px);
+  width: clamp(260px, 25vw, 500px);
   height: auto;
-  margin: clamp(-24px, -1.5vw, -8px) auto;
+  margin: clamp(-20px, -1.2vw, -6px) auto;
   object-fit: contain;
   background: transparent;
   border: 0;
@@ -924,25 +924,43 @@ const styles = `
   box-shadow: none;
   pointer-events: none;
   user-select: none;
+  opacity: 0;
+  transition: opacity 1100ms cubic-bezier(0.16, 1, 0.3, 1) var(--delay, 0ms);
+}
+.landing-hero.is-mounted .psychpro-hero__brain {
+  opacity: 1;
+  animation: psychproBrainFloat 8s ease-in-out 1.6s infinite;
+}
+@keyframes psychproBrainFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing-hero.is-mounted .psychpro-hero__brain { animation: none; }
 }
 .landing-headline,
 .landing-blurb {
   padding-left: 24px;
   padding-right: 24px;
 }
-/* Localized legibility scrim — a soft pool of deep teal behind the hero text
-   only, so the wordmark, tagline and blurb read cleanly over the glowing brain
-   without dimming the rest of the full-intensity backdrop. */
+/* Localized legibility glow — a soft white radial pool behind the headline,
+   blurb and CTAs so the text reads cleanly where the waves converge, while
+   the artwork stays at full intensity at the edges. Not a box or card. */
 .landing-hero::before {
   content: "";
   position: absolute;
-  z-index: -1;
+  z-index: 1;
   left: 50%;
-  top: 50%;
+  top: 71%;
   transform: translate(-50%, -50%);
-  width: min(880px, 92%);
-  height: 78%;
-  background: hsl(var(--surf-hue) var(--surf-sat) 7% / 0.00);
+  width: min(980px, 96%);
+  height: 56%;
+  background: radial-gradient(
+    ellipse 50% 50% at 50% 50%,
+    ${alpha(PP.white, 0.82)} 0%,
+    ${alpha(PP.white, 0.5)} 42%,
+    ${alpha(PP.white, 0)} 72%
+  );
   pointer-events: none;
 }
 
