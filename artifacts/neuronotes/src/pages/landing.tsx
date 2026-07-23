@@ -906,8 +906,8 @@ const styles = `
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-top: clamp(-24px, -2vh, -10px);
-  /* Reserve room for the brain's overhang below the band. */
-  margin-bottom: clamp(70px, 9vw, 130px);
+  /* Small reserve for the brain's slight overhang below the cloud. */
+  margin-bottom: clamp(28px, 3.5vw, 56px);
   pointer-events: none;
   user-select: none;
 }
@@ -920,10 +920,14 @@ const styles = `
   position: absolute;
   left: 50%;
   bottom: 0;
-  transform: translate(-50%, 48%);
-  width: clamp(180px, 22vw, 320px);
+  /* Thought-cloud layering (owner 2026-07-22): the brain's top tucks up
+     INTO the cloud's bottom edge — the cloud reads as a brilliant thought
+     rising from the brain. Brain renders in front (later in DOM). */
+  transform: translate(-50%, 22%);
+  width: clamp(170px, 20vw, 300px);
   height: auto;
-  filter: drop-shadow(0 18px 34px rgba(var(--pp-black-rgb), 0.25));
+  z-index: 1;
+  filter: drop-shadow(0 14px 28px rgba(var(--pp-black-rgb), 0.25));
 }
 
 .landing-hero-art,
