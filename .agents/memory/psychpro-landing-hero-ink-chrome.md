@@ -3,7 +3,7 @@ name: PsychPro landing hero — ink cloud + chrome brain
 description: Current landing hero composition (2026-07-22) and its guardrail lock; old splash-brain assets deleted.
 ---
 
-- CURRENT hero (2026-07-22, owner mockup): full-bleed blue ink-cloud band (`ink-cloud-band.webp`, 100vw via `margin-left: calc(50% - 50vw)`) + silver chrome brain cutout (`chrome-brain-cutout.webp`) absolutely centered on the band's bottom edge, overhanging 48% below (`translate(-50%, 48%)`); `.landing-hero-art` reserves overhang room via margin-bottom.
+- CURRENT hero (2026-07-22, owner mockup): full-bleed blue ink-cloud band (`ink-cloud-band-cutout.webp` — background REMOVED per owner, transparent alpha so it blends with the silver page; 100vw via `margin-left: calc(50% - 50vw)`) + silver chrome brain cutout (`chrome-brain-cutout.webp`) absolutely centered on the band's bottom edge, overhanging 48% below (`translate(-50%, 48%)`); `.landing-hero-art` reserves overhang room via margin-bottom.
 - Entrance animation lists use `.landing-hero-art` (both the opacity-0 list and the `.is-mounted` list — always update BOTH when renaming hero classes).
 - Grayscale lateral brain removed from Brain Lab promo; section is `landing-split--solo` (centered single-column boxed body). `brain-views/lateral.webp` still used elsewhere — don't delete.
 - Design-drift guardrail pins `.landing-hero-ink` + `.landing-hero-chrome` presence and hero art ordering (after wordmark). Old splash/white-brain hero assets deleted from src/assets.

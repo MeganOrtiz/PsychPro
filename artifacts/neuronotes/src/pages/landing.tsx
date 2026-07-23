@@ -27,7 +27,7 @@ import {
   CartesianGrid,
 } from "recharts";
 import { useGetTopics } from "@workspace/api-client-react";
-import inkCloudBand from "@/assets/ink-cloud-band.webp";
+import inkCloudBand from "@/assets/ink-cloud-band-cutout.webp";
 import chromeBrain from "@/assets/chrome-brain-cutout.webp";
 import founderMegan from "@/assets/founder/megan.webp";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
