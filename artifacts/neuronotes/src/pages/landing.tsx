@@ -299,6 +299,13 @@ export default function LandingPage() {
           <p className="landing-tagline" style={{ ["--delay" as any]: "140ms" }}>
             learn. expand. connect.
           </p>
+          <img
+            className="psychpro-hero__brain"
+            src="/assets/psychpro/psychpro-chrome-brain.png"
+            alt="Chrome anatomical brain"
+            loading="eager"
+            fetchPriority="high"
+          />
           <p className="landing-headline" style={{ ["--delay" as any]: "320ms" }}>
             Learn Smarter. Not Harder.
           </p>
@@ -896,9 +903,28 @@ const styles = `
   pointer-events: none;
   user-select: none;
 }
-.landing-hero > :not(.landing-hero-bg) {
+.landing-hero > :not(.landing-hero-bg):not(.psychpro-hero__brain) {
   position: relative;
   z-index: 1;
+}
+/* Owner-supplied chrome brain (2026-07-23): centered over the artwork,
+   above the water, below the wordmark/tagline. Exact spec — no container,
+   no effects, transparent PNG preserved as provided. */
+.psychpro-hero__brain {
+  position: absolute;
+  left: 50%;
+  top: 47%;
+  z-index: 3;
+  width: clamp(360px, 34vw, 700px);
+  height: auto;
+  transform: translate(-50%, -50%);
+  object-fit: contain;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  pointer-events: none;
+  user-select: none;
 }
 .landing-headline,
 .landing-blurb {
