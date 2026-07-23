@@ -28,7 +28,6 @@ import {
 } from "recharts";
 import { useGetTopics } from "@workspace/api-client-react";
 import brainLateral from "@/assets/brain-views/lateral.webp";
-import inkCloudBand from "@/assets/ink-cloud-band-cutout.webp";
 import chromeBrain from "@/assets/chrome-brain-cutout.webp";
 import founderMegan from "@/assets/founder/megan.webp";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -297,13 +296,6 @@ export default function LandingPage() {
             style={{ ["--delay" as any]: "240ms" }}
             aria-hidden
           >
-            <img
-              src={inkCloudBand}
-              alt=""
-              className="landing-hero-ink"
-              fetchPriority="high"
-              loading="eager"
-            />
             <img
               src={chromeBrain}
               alt=""
@@ -902,47 +894,21 @@ const styles = `
   pointer-events: none;
 }
 
-/* Owner-supplied hero composition (2026-07-22): full-bleed blue ink-cloud
-   band with the silver chrome brain cutout centered on its bottom edge,
-   overlapping down onto the white page below (matches owner mockup). */
+/* Hero composition (2026-07-23): the blue ink-cloud band was removed on
+   owner order ("remove the blue design"). The silver chrome brain cutout
+   now renders alone, centered in normal flow between the tagline and the
+   headline. */
 .landing-hero-art {
   position: relative;
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
-  margin-top: 0;
-  /* Reserve for the brain's slight overhang below the cloud. */
-  margin-bottom: clamp(8px, 1vh, 14px);
+  margin-top: clamp(16px, 2.5vh, 36px);
+  margin-bottom: clamp(10px, 1.5vh, 20px);
   pointer-events: none;
   user-select: none;
 }
-.landing-hero-ink {
-  display: block;
-  width: 100%;
-  height: auto;
-  /* Responsive cap so the whole hero composition (title + cloud + brain +
-     headline) fits on one viewport at 1440×900, 1366×768, and similar
-     laptop sizes.  object-position: top means any cap crops from the
-     BOTTOM — the bottom taper is 23.9% transparent (171px at 1440px), so
-     the crop stays entirely in see-through pixels on all standard sizes.
-     No mask or fade is applied; the cloud's natural edges are preserved. */
-  max-height: calc(100vh - 220px);
-  max-height: calc(100svh - 220px);
-  min-height: 280px;
-  object-fit: cover;
-  object-position: top center;
-}
 .landing-hero-chrome {
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  /* Thought-cloud layering (owner 2026-07-22): the brain's top tucks up
-     INTO the cloud's bottom edge — the cloud reads as a brilliant thought
-     rising from the brain. Brain renders in front (later in DOM). */
-  transform: translate(-50%, 10%);
-  width: clamp(130px, 15vw, 210px);
+  display: block;
+  width: clamp(180px, 24vw, 340px);
   height: auto;
-  z-index: 1;
   /* The drop-shadow is held OFF during the hero entrance animation: while
      the ancestor's opacity transition composites, browsers rasterize the
      filtered image on its own layer and its rectangular bounds flash as a

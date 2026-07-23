@@ -178,10 +178,16 @@ if (landingBackdrop) {
   const landingSrc = fs.readFileSync(path.join(ROOT, "src", "pages", "landing.tsx"), "utf8");
   const inkImg = /<img[^>]*className="landing-hero-ink"/.test(landingSrc);
   const chromeImg = /<img[^>]*className="landing-hero-chrome"/.test(landingSrc);
-  if (!inkImg || !chromeImg) {
+  if (inkImg) {
+    fail(
+      "landing hero blue ink-cloud present",
+      'owner removed the blue ink-cloud design from the landing hero (2026-07-23) — the .landing-hero-ink <img> must NOT return',
+    );
+  }
+  if (!chromeImg) {
     fail(
       "landing hero art missing",
-      'owner replaced the splash brain with the blue ink-cloud band + chrome brain cutout (2026-07-22) — restore the .landing-hero-ink and .landing-hero-chrome <img> elements',
+      "owner kept the silver chrome brain cutout in the hero (2026-07-23) — restore the .landing-hero-chrome <img> element",
     );
   } else {
     const imgIdx = landingSrc.search(/className="landing-hero-art"/);
