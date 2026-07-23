@@ -1,4 +1,3 @@
-import { BrandBanner } from "@/components/brand/brand-banner";
 import { useMemo, useState, useEffect, useCallback } from "react";
 import { Link, useLocation } from "wouter";
 import { useUser } from "@clerk/clerk-react";
@@ -189,7 +188,6 @@ export function EpppDashboardView({
       <style>{styles}</style>
 
       <div className="epd-shell">
-        <BrandBanner showIcon={false} tagline="" className="pp-page-brand" />
         {/* Stat row: readiness · streak · exam countdown */}
         <section className="epd-stat-row">
           {/* Readiness */}

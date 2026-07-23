@@ -419,9 +419,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 style={{
                   fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
                   fontSize: "clamp(34px, 3.6vw, 50px)",
-                  letterSpacing: "0.42em",
-                  textIndent: "0.42em",
+                  letterSpacing: "0.24em",
+                  textIndent: "0.24em",
                   color: PP.text,
+                  textShadow: "0 1px 14px rgba(var(--pp-black-rgb),0.5)",
                 }}
                 data-testid="topbar-wordmark"
               >

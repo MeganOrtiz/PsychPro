@@ -1,4 +1,3 @@
-import { BrandBanner } from "@/components/brand/brand-banner";
 // =============================================================================
 // Dashboard — PROTECTED.
 // ---------------------------------------------------------------------------
@@ -10,7 +9,9 @@ import { BrandBanner } from "@/components/brand/brand-banner";
 //
 // DO NOT:
 //   - Add a competing wallpaper (no per-page bg image, no extra ::before).
-//   - Re-render an inline <h1>PSYCHPRO</h1> wordmark — use <BrandBanner/>.
+//   - Re-render an in-page PSYCHPRO wordmark — the topbar title in
+//     app-layout is the only dashboard wordmark (owner removed the
+//     in-page BrandBanner 2026-07-22).
 //   - Resurrect "Hello, there" / "Welcome back, there" — greeting is
 //     personalized or omitted (never a placeholder name).
 //   - Hardcode brand hex codes — use STUDY_PALETTE tokens.
@@ -244,7 +245,6 @@ export default function DashboardPage() {
       data-testid="dashboard-page"
     >
       <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 lg:pt-8 pb-4 md:pb-6 lg:pb-8">
-        <BrandBanner showIcon={false} tagline="" className="pp-page-brand" />
         {isOverLimit && (
           <div
             className="mat-opaque p-4 mb-6 flex items-start gap-3"
