@@ -920,34 +920,6 @@ const styles = `
   display: block;
   width: 100%;
   height: auto;
-  /* Cap the band so the whole hero (wordmark + cloud + brain) fits above
-     the fold on shorter viewports; cover-cropping only trims the cloud's
-     transparent taper at top/bottom, never its sides. */
-  max-height: 56vh;
-  object-fit: cover;
-  object-position: center;
-  /* When the cap crops into the opaque cloud (short/wide viewports), fade
-     the cropped top/bottom edges so the cloud dissolves into the page
-     instead of showing a hard horizontal cut line. No-op on tall
-     viewports where the image's own transparent taper is preserved. */
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, var(--pp-ink) 16%, var(--pp-ink) 84%, transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0, var(--pp-ink) 16%, var(--pp-ink) 84%, transparent 100%);
-}
-/* Very short viewports crop deep into the dense navy — a 16% fade still
-   reads as a smeared straight band, and the negative pull-up shoves ink
-   under the tagline. Deepen the dissolve and drop the pull-up. */
-@media (max-height: 640px) {
-  .landing-hero-art {
-    margin-top: 0;
-  }
-  .landing-hero-ink {
-    /* Keep the image's natural transparent TOP taper (crop from the bottom
-       instead — the brain covers the bottom center anyway) and fade only
-       the cropped bottom edge. */
-    object-position: center top;
-    -webkit-mask-image: linear-gradient(to bottom, var(--pp-ink) 0, var(--pp-ink) 62%, transparent 98%);
-    mask-image: linear-gradient(to bottom, var(--pp-ink) 0, var(--pp-ink) 62%, transparent 98%);
-  }
 }
 .landing-hero-chrome {
   position: absolute;
