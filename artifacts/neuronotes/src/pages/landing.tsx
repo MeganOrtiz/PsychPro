@@ -880,7 +880,7 @@ const styles = `
   margin: 0 auto;
   /* The splash brain <img> leads the stack and must sit RIGHT under the
      fixed header (owner, 2026-07-18) — top padding just clears the bar. */
-  padding: clamp(64px, 7vh, 76px) 24px clamp(40px, 6vh, 90px);
+  padding: clamp(56px, 6vh, 64px) 24px clamp(40px, 6vh, 90px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -910,9 +910,9 @@ const styles = `
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
-  margin-top: clamp(-24px, -2vh, -10px);
-  /* Small reserve for the brain's slight overhang below the cloud. */
-  margin-bottom: clamp(28px, 3.5vw, 56px);
+  margin-top: clamp(-14px, -1vh, -6px);
+  /* Tiny reserve for the brain's slight overhang below the cloud. */
+  margin-bottom: clamp(12px, 1.5vw, 24px);
   pointer-events: none;
   user-select: none;
 }
@@ -920,6 +920,12 @@ const styles = `
   display: block;
   width: 100%;
   height: auto;
+  /* Cap the band so the whole hero (wordmark + cloud + brain) fits above
+     the fold on shorter viewports; cover-cropping only trims the cloud's
+     transparent taper at top/bottom, never its sides. */
+  max-height: 56vh;
+  object-fit: cover;
+  object-position: center;
 }
 .landing-hero-chrome {
   position: absolute;
@@ -928,8 +934,8 @@ const styles = `
   /* Thought-cloud layering (owner 2026-07-22): the brain's top tucks up
      INTO the cloud's bottom edge — the cloud reads as a brilliant thought
      rising from the brain. Brain renders in front (later in DOM). */
-  transform: translate(-50%, 22%);
-  width: clamp(170px, 20vw, 300px);
+  transform: translate(-50%, 10%);
+  width: clamp(150px, 17vw, 250px);
   height: auto;
   z-index: 1;
   /* The drop-shadow is held OFF during the hero entrance animation: while
@@ -980,7 +986,7 @@ const styles = `
   margin: 0;
   font-family: var(--app-font-sans);
   font-weight: 200;
-  font-size: clamp(40px, 7.5vw, 92px);
+  font-size: clamp(34px, 5vw, 62px);
   letter-spacing: 0.22em;
   line-height: 1;
   color: ${LANDING.icy};
