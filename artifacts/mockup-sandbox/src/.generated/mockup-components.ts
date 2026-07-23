@@ -32,9 +32,9 @@ export const modules: ModuleMap = {
   "./components/mockups/header-variants/FlankingAccents.tsx": () => import("../components/mockups/header-variants/FlankingAccents.tsx"),
   "./components/mockups/header-variants/SoftHalo.tsx": () => import("../components/mockups/header-variants/SoftHalo.tsx"),
   "./components/mockups/header-variants/UnderglowPool.tsx": () => import("../components/mockups/header-variants/UnderglowPool.tsx"),
-  "./components/mockups/landing-redesign/Cinematic.tsx": () => import("../components/mockups/landing-redesign/Cinematic.tsx"),
-  "./components/mockups/landing-redesign/TighterBolder.tsx": () => import("../components/mockups/landing-redesign/TighterBolder.tsx"),
   "./components/mockups/psychpro-aesthetic/Landing.tsx": () => import("../components/mockups/psychpro-aesthetic/Landing.tsx"),
   "./components/mockups/psychpro-polished/Dashboard.tsx": () => import("../components/mockups/psychpro-polished/Dashboard.tsx"),
-  "./components/mockups/psychpro-polished/Landing.tsx": () => import("../components/mockups/psychpro-polished/Landing.tsx")
+  "./components/mockups/psychpro-polished/Landing.tsx": () => import("../components/mockups/psychpro-polished/Landing.tsx"),
+  "./components/mockups/landing-redesign/Cinematic.tsx": () => import("../components/mockups/landing-redesign/Cinematic.tsx"),
+  "./components/mockups/landing-redesign/TighterBolder.tsx": () => import("../components/mockups/landing-redesign/TighterBolder.tsx")
 };
