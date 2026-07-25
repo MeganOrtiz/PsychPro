@@ -938,6 +938,25 @@ const styles = `
 @media (prefers-reduced-motion: reduce) {
   .landing-hero.is-mounted .psychpro-hero__brain { animation: none; }
 }
+/* SHORT-VIEWPORT COMPRESSION — on laptop screens (~700-800px tall) the hero
+   content stack can overflow the fold and clip the stat strip. Shrink the
+   brain and tighten vertical spacing so wordmark → stats always fit. */
+@media (max-height: 860px) {
+  .landing-hero { padding-top: 14px; }
+  .psychpro-hero__brain {
+    width: clamp(200px, 19vw, 380px);
+    margin: clamp(-16px, -1vw, -4px) auto;
+  }
+  .landing-headline { margin-top: 6px; font-size: clamp(20px, 2.4vw, 30px); }
+  .landing-blurb { margin-top: 8px; line-height: 1.55; }
+  .landing-cta-row { margin-top: 12px; }
+  .landing-stat-strip { margin-top: 14px; }
+}
+@media (max-height: 700px) {
+  .psychpro-hero__brain { width: clamp(170px, 16vw, 300px); }
+  .landing-blurb { max-width: 560px; font-size: 14.5px; }
+  .landing-stat-strip { margin-top: 10px; }
+}
 .landing-headline,
 .landing-blurb {
   padding-left: 24px;
