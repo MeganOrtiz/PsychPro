@@ -355,21 +355,9 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ============== ARTWORK CONTINUATION BAND ==============
-            The hero splash continues below the fold as a vertical mirror of
-            itself — the mirrored image's top edge matches the hero image's
-            bottom edge exactly, so the artwork reads as one continuous piece
-            (per the owner's mockup). White cards float over it; the band
-            dissolves to white at its bottom. */}
+        {/* The artwork backdrop is viewport-fixed (.landing-hero-bg); all
+            content below simply scrolls over it. */}
         <div className="landing-artwork-band">
-          <img
-            src={heroInkSplash}
-            alt=""
-            className="landing-artwork-band-bg"
-            loading="lazy"
-            aria-hidden
-          />
-
           {/* ============== EPPP MASTERY SUITE ============== */}
           <section id="mastery" className="landing-section landing-mastery" data-reveal>
             <div className="landing-mastery-card">
@@ -784,6 +772,10 @@ const C = {
 const styles = `
 .landing-root {
   position: relative;
+  /* Own stacking context: the viewport-fixed artwork (.landing-hero-bg,
+     z-index -1) must paint ABOVE this white ground but below all content.
+     Without this, the root's own background covers the negative-z layer. */
+  isolation: isolate;
   min-height: 100vh;
   min-height: 100dvh;
   /* The full-bleed hero band spans 100vw, which includes the vertical
@@ -910,13 +902,17 @@ const styles = `
   text-align: center;
 }
 .landing-hero-bg {
-  position: absolute;
+  /* FIXED to the viewport (owner 2026-07-25): the artwork stays in place
+     while the page content scrolls over it — same pattern as the dashboard
+     backdrop. z-index -1 keeps it above the root's white ground but below
+     every in-flow section (no per-section z-index needed). */
+  position: fixed;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center;
-  z-index: 0;
+  z-index: -1;
   margin: 0;
   padding: 0;
   border: 0;
@@ -987,73 +983,12 @@ const styles = `
   );
   pointer-events: none;
 }
-/* NO bottom dissolve (owner 2026-07-25): the artwork continues below the
-   hero via the mirrored .landing-artwork-band. The new artwork's center is
-   white with edge-only ink, so mobile cover-crop needs no special top-crop
-   treatment anymore. */
-
-/* ============== ARTWORK CONTINUATION BAND ============== */
+/* (2026-07-25, fixed-backdrop rework) The old mirrored "artwork continuation
+   band" image + seam/wash overlays are GONE: the artwork is now a single
+   viewport-fixed layer and the content simply scrolls over it. */
 .landing-artwork-band {
   position: relative;
   width: 100%;
-  overflow: hidden;
-}
-.landing-artwork-band-bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  /* Flipped on BOTH axes (owner 2026-07-25: the pure vertical mirror read
-     as a visible butterfly "fold" at the hero junction). Flipping X too
-     breaks the reflection symmetry; the deepened white seam blend below
-     absorbs the junction so the artwork still reads as continuous. */
-  transform: scale(-1, -1);
-  z-index: 0;
-  pointer-events: none;
-  user-select: none;
-}
-/* Seam blend: the hero and mirrored band cover-crop differently at real
-   viewport sizes, so the mirror can't align pixel-perfect. A soft white
-   breath at the band's top absorbs the mismatch (matches the mockup's white
-   spacing between artwork blocks). Painted overlays instead of mask-image:
-   a mask on the flipped <img> gets flipped WITH it (hard bottom edge bug). */
-.landing-artwork-band::before {
-  content: "";
-  position: absolute;
-  /* Must sit ABOVE the band <img> (equal z-index loses on tree order —
-     pseudo-elements paint before child elements). */
-  z-index: 1;
-  inset: 0;
-  background:
-    /* Top seam blend — deep white breath that hides the mirror junction
-       (owner 2026-07-25: the shallow 8% blend left a visible fold). */
-    linear-gradient(180deg, ${PP.white} 0%, ${PP.white} 6%, ${alpha(PP.white, 0.85)} 12%, ${alpha(PP.white, 0)} 26%) no-repeat,
-    /* Center white wash — keeps the cards on a clean WHITE ground; the ink
-       artwork stays visible only at the left/right flanks, per the mockup.
-       (2026-07-25: the current hero asset has NO baked-in brain — this wash
-       is purely the card ground now, kept opaque for text legibility.) */
-    linear-gradient(90deg, ${alpha(PP.white, 0)} 0%, ${alpha(PP.white, 0.92)} 20%, ${PP.white} 30%, ${PP.white} 70%, ${alpha(PP.white, 0.92)} 80%, ${alpha(PP.white, 0)} 100%) no-repeat;
-  pointer-events: none;
-}
-/* Dissolve to the white page ground at the band's bottom. */
-.landing-artwork-band::after {
-  content: "";
-  position: absolute;
-  z-index: 1;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: clamp(160px, 22vw, 320px);
-  background: linear-gradient(180deg, ${alpha(PP.white, 0)} 0%, ${alpha(PP.white, 0.8)} 60%, ${PP.white} 100%);
-  pointer-events: none;
-}
-.landing-artwork-band > .landing-section {
-  position: relative;
-  /* Above the band's ::before/::after overlays (z-index 1) — the ::after
-     bottom dissolve otherwise washes out card text. */
-  z-index: 2;
 }
 
 .landing-wordmark,
