@@ -963,6 +963,27 @@ const styles = `
   );
   pointer-events: none;
 }
+/* Bottom dissolve — the hero artwork fades into the page floor instead of
+   ending on a hard horizontal cut, so the scroll into "The System" section
+   feels continuous rather than choppy. */
+.landing-hero::after {
+  content: "";
+  position: absolute;
+  /* Above the bg artwork (z0, earlier in tree) but below all hero content (z1+). */
+  z-index: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: clamp(120px, 22vh, 240px);
+  background: linear-gradient(
+    180deg,
+    ${alpha(PP.floor, 0)} 0%,
+    ${alpha(PP.floor, 0.45)} 55%,
+    ${alpha(PP.floor, 0.9)} 85%,
+    ${PP.floor} 100%
+  );
+  pointer-events: none;
+}
 
 .landing-wordmark,
 .landing-tagline,
