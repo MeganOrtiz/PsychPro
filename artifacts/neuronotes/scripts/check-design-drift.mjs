@@ -200,6 +200,25 @@ if (!overlayBackdrop) {
   }
 }
 
+// Dashboard backdrop artwork (owner, 2026-07-25): the ONLY sanctioned page
+// backdrop image besides the landing hero splash. Scoped to .dashboard-artwork
+// (main + EPPP dashboards only), viewport-pinned fixed layer at z -1 over the
+// pure-white floor. Do not extend to other pages or move onto .study-page-bg.
+const dashboardArtwork = ruleBlock(css, ".dashboard-artwork::before");
+if (!dashboardArtwork) {
+  fail("dashboard backdrop artwork missing", "restore the .dashboard-artwork::before liquid-frame backdrop (owner 2026-07-25)");
+} else {
+  if (!/position:\s*fixed;/.test(dashboardArtwork) || !/inset:\s*0;/.test(dashboardArtwork)) {
+    fail("dashboard backdrop geometry drifted", "keep .dashboard-artwork::before position: fixed with inset: 0 (viewport-pinned so it backs the page at every scroll depth)");
+  }
+  if (!/dashboard-liquid-frame/.test(dashboardArtwork) || !/background-size:\s*cover;/.test(dashboardArtwork)) {
+    fail("dashboard backdrop image drifted", "keep the owner's dashboard-liquid-frame artwork with background-size: cover");
+  }
+  if (!/background-attachment:\s*scroll;/.test(dashboardArtwork)) {
+    fail("dashboard backdrop attachment drifted", "keep background-attachment: scroll (fixed on a fixed layer draws a HiDPI seam)");
+  }
+}
+
 // --- 3) Backdrop-filter ban (GLASS = tinted transparency, never blur) --------
 if (!/backdrop-filter:\s*none\s*!important;/.test(css)) {
   fail(
@@ -272,6 +291,8 @@ const urls = /url\(\s*["']?([^"')]+)["']?\s*\)/g;
 while ((m = urls.exec(css))) {
   const target = m[1];
   if (target.includes("fonts.googleapis.com")) continue;
+  // Owner-sanctioned dashboard backdrop artwork (2026-07-25) — locked above.
+  if (target.includes("dashboard-liquid-frame")) continue;
   fail(
     `unexpected image url(${target}) at ${REL}:${lineOf(m.index)}`,
     "no images in index.css — the white-system backdrop is a pure CSS radial gradient (owner 2026-07-16)",

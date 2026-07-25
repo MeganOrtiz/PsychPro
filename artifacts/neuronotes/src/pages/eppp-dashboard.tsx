@@ -184,8 +184,12 @@ export function EpppDashboardView({
   void greetingName;
 
   return (
-    <div className="study-page-bg epd-page" data-testid="eppp-dashboard-page">
+    <div className="study-page-bg epd-page dashboard-artwork" data-testid="eppp-dashboard-page">
       <style>{styles}</style>
+
+      <div className="dashboard-brand">
+        <h1 data-testid="text-eppp-brand">EPPP Mastery Suite</h1>
+      </div>
 
       <div className="epd-shell">
         {/* Stat row: readiness · streak · exam countdown */}

@@ -753,6 +753,68 @@ body {
   margin: -4px auto 18px;
 }
 
+/* ============================================================
+   DASHBOARD BACKDROP ARTWORK — owner-supplied liquid frame
+   (2026-07-25). Applies ONLY to the two dashboards (main + EPPP)
+   via .dashboard-artwork on the page root. The image is a white
+   ground with teal liquid edges + a chrome brain at top-center —
+   it sits over the pure-white site floor (z -2) on its own fixed
+   layer (z -1), viewport-pinned so it backs the page at every
+   scroll depth. Do NOT edit/regenerate the image (owner asset)
+   and do NOT extend this class to other pages.
+   ============================================================ */
+.dashboard-artwork::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: url("./assets/dashboard-liquid-frame.png");
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  pointer-events: none;
+}
+
+/* Brand wordmark placed right under the baked-in chrome brain of the
+   dashboard artwork (replaces the old top-bar wordmark banners).
+   - Vertical: the brain's bottom edge under viewport-cover scaling is
+     ~23% of the displayed image height = max(23vh, 12.95vw); subtract the
+     header height above the scroll area (--dash-y-offset).
+   - Horizontal: the brain is centered on the VIEWPORT while the content
+     column sits right of the sidebar; --dash-x-offset pulls the band back
+     to full viewport width so the wordmark centers under the brain. */
+.dashboard-brand {
+  --dash-x-offset: 0px;
+  --dash-y-offset: 52px; /* mobile top bar */
+  margin-left: calc(-1 * var(--dash-x-offset));
+  width: calc(100% + var(--dash-x-offset));
+  padding-top: calc(max(23vh, 12.95vw) - var(--dash-y-offset) + 6px);
+  text-align: center;
+}
+@media (min-width: 768px) {
+  .dashboard-brand {
+    --dash-y-offset: 64px; /* desktop top bar */
+  }
+  .dashboard-page .dashboard-brand {
+    --dash-x-offset: 288px; /* sidebar w-64 + m-4 */
+  }
+  .epd-page .dashboard-brand {
+    --dash-x-offset: calc(288px + clamp(16px, 4vw, 48px)); /* + page padding */
+  }
+}
+.dashboard-brand h1 {
+  margin: 0;
+  font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+  font-weight: 300;
+  font-size: clamp(20px, 3.6vw, 50px);
+  line-height: 1.1;
+  letter-spacing: 0.24em;
+  text-indent: 0.24em;
+  color: hsl(var(--foreground));
+  white-space: nowrap;
+}
+
 /* Lesson detail header — OPAQUE material (structural panel). */
 .lesson-header-box {
   background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);

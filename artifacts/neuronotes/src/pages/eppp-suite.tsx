@@ -291,7 +291,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
     : DEFAULT_TAB;
   // The big centered "EPPP Mastery Suite" wordmark + laser beam is shown only on
   // the suite's Dashboard tab, mirroring the main-site dashboard hero.
-  const isEpppDash = activeSlug === "performance-analytics";
+
 
   return (
     <div className="study-page-bg flex min-h-screen" data-testid="eppp-suite">
@@ -414,66 +414,10 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
           </div>
         </header>
 
-        {/* Desktop top bar */}
-        <header
-          className={cn(
-            "relative hidden md:flex justify-end gap-3 px-6",
-            isEpppDash ? "items-start pt-3 pb-3 min-h-[116px]" : "items-center py-3",
-          )}
-        >
-          {/* Dashboard-only hero wordmark — a large centered "EPPP MASTERY
-              SUITE" title wrapped in a soft cyan halo glow-bloom (no underline),
-              filling the open space between the sidebar and the right-side
-              control cluster. pointer-events-none so it never blocks the
-              controls. Other suite tabs keep a clean top bar. */}
-          {isEpppDash && (
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center pr-[clamp(96px,9vw,140px)]"
-            >
-              <span
-                className="relative font-light whitespace-nowrap"
-                style={{
-                  fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
-                  fontSize: "clamp(34px, 3.6vw, 50px)",
-                  letterSpacing: "0.24em",
-                  textIndent: "0.24em",
-                  color: C.cloud,
-                  textShadow: "0 1px 14px rgba(var(--pp-black-rgb),0.5)",
-                }}
-                data-testid="eppp-topbar-wordmark"
-              >
-                EPPP MASTERY SUITE
-              </span>
-              {/* Signal-beam underline — a crisp tapered beam with a soft
-                  underglow pool and a luminous center node. Impactful but
-                  restrained. */}
-              <span
-                aria-hidden
-                className="relative flex items-center justify-center"
-                style={{ marginTop: "16px", width: "min(540px, 66%)", height: "16px" }}
-              >
-                <span
-                  style={{
-                    position: "absolute",
-                    width: "100%",
-                    height: "100%",
-                    background: "rgba(var(--pp-bright-rgb),0)",
-                    filter: "blur(4px)",
-                  }}
-                />
-                <span
-                  style={{
-                    position: "relative",
-                    width: "100%",
-                    height: "1.5px",
-                    borderRadius: "9999px",
-                    background: "rgba(var(--pp-bright-rgb),0)",
-                  }}
-                />
-              </span>
-            </div>
-          )}
+        {/* Desktop top bar — the EPPP dashboard wordmark moved into the page
+            body (under the backdrop artwork's chrome brain, owner 2026-07-25);
+            every suite tab keeps a clean top bar. */}
+        <header className="relative hidden md:flex items-center justify-end gap-3 px-6 py-3">
           <div className="flex items-center gap-3">
             {!isMobile && <NotificationsBell />}
             <UserButton

@@ -57,6 +57,11 @@ const EpppSuitePage = lazy(() => import("@/pages/eppp-suite"));
 const NotFound = lazy(() => import("@/pages/not-found"));
 const CrashTestPage = lazy(() => import("@/pages/crash-test"));
 const DevGlassPreview = lazy(() => import("@/pages/dev-glass-preview"));
+// DEV-conditional at the import itself so Rollup drops the chunk from
+// production bundles (the route below is DEV-gated too).
+const DevDashboardPreview = import.meta.env.DEV
+  ? lazy(() => import("@/pages/dev-dashboard-preview"))
+  : () => null;
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -104,6 +109,7 @@ function AppRouter() {
       <Route path="/sign-up/*?" component={SignUpPage} />
       {import.meta.env.DEV ? <Route path="/__crash-test" component={CrashTestPage} /> : null}
       {import.meta.env.DEV ? <Route path="/__glass-preview" component={DevGlassPreview} /> : null}
+      {import.meta.env.DEV ? <Route path="/__dashboard-preview" component={DevDashboardPreview} /> : null}
       <Route path="/eppp">
         {() => (
           <RequireOnboarded>

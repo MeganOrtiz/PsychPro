@@ -139,7 +139,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [location] = useLocation();
   // The big centered PSYCHPRO wordmark + laser beam is a dashboard-only flourish.
-  const isDashboard = location === "/dashboard";
+
   // One NotificationsBell at a time: the mobile and desktop headers both live
   // in the DOM (toggled by CSS), so gate the bell by breakpoint to avoid two
   // instances mounting and double-polling /api/notifications.
@@ -398,38 +398,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
         {/* Desktop top bar: unified right-side cluster — the notifications
             bell sits next to the Clerk UserButton so account + alerts read as
             one consistent control group on every page. */}
-        <header
-          className={cn(
-            "relative hidden md:flex justify-end gap-3 px-6",
-            isDashboard ? "items-start pt-3 pb-3 min-h-[116px]" : "items-center py-3",
-          )}
-        >
-          {/* Dashboard-only hero wordmark — a large centered PSYCHPRO wrapped in
-              a soft cyan halo glow-bloom (no underline), filling the open space
-              between the sidebar and the right-side control cluster.
-              pointer-events-none so it never blocks the controls layered beside
-              it. Other pages keep a clean top bar (no wordmark). */}
-          {isDashboard && (
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center pr-[clamp(96px,9vw,140px)]"
-            >
-              <span
-                className="relative font-light whitespace-nowrap"
-                style={{
-                  fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
-                  fontSize: "clamp(34px, 3.6vw, 50px)",
-                  letterSpacing: "0.24em",
-                  textIndent: "0.24em",
-                  color: PP.text,
-                  textShadow: "0 1px 14px rgba(var(--pp-black-rgb),0.5)",
-                }}
-                data-testid="topbar-wordmark"
-              >
-                PSYCHPRO
-              </span>
-            </div>
-          )}
+        {/* The dashboard wordmark moved into the page body (under the backdrop
+            artwork's chrome brain, owner 2026-07-25); every page keeps a clean
+            top bar. */}
+        <header className="relative hidden md:flex items-center justify-end gap-3 px-6 py-3">
           {!isMobile && <NotificationsBell />}
           <UserButton
             afterSignOutUrl={import.meta.env.BASE_URL.replace(/\/$/, "") || "/"}

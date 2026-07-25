@@ -1,4 +1,5 @@
 - [PsychPro white/luminous system](psychpro-white-luminous-system.md) — CURRENT, amended 2026-07-25: ground is PURE WHITE site-wide (body, backdrop ::before, --background 100%); silver radial + #eef0f2 floors retired ("no gray backgrounds" — owner); drift lock updated.
+- [Dashboard backdrop artwork](psychpro-dashboard-artwork.md) — liquid-frame image scoped to the two dashboards only; wordmarks moved under the baked-in brain (header banners removed); offset math + dev preview route documented.
 - [Mask flips with transform](css-mask-flips-with-transform.md) — mask-image on a scaleY(-1) element gets flipped WITH it (fade lands on the wrong edge); use overlay gradient pseudo-elements for edge dissolves on mirrored images.
 - [PsychPro gray foundation v2](psychpro-gray-foundation-v2.md) — historical (superseded 2026-07-16 by the white/luminous system).
 - [PsychPro solid tile fills](psychpro-solid-tile-fills.md) — still current structurally (opaque --pp-tile ladder), values now the LIGHT ladder (2026-07-16 white system).
