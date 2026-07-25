@@ -5,6 +5,7 @@
 - [PsychPro blue three-material system](psychpro-blue-material-system.md) — historical (2026-07-16: blues fully retired, landing included); structure (Opaque/Glass/Gloss, glow hover-only, no backdrop-filter) still current.
 - [PsychPro black foundation](psychpro-black-foundation.md) — historical (same-day 2026-07-09); replaced hours later by the blue three-material system above.
 - [PsychPro token lock](psychpro-token-lock.md) — no raw color literals in TS/TSX outside palette.ts (+2 whitelisted files); use PP/alpha() or var(--pp-*); broad recipes banned, primitives emit scoped pp-* classes; drift guardrail enforces.
+- [Owner mode/consent preference](psychpro-owner-mode-consent.md) — confirm before executing when plan-vs-build intent is ambiguous; run a full pre-publish verification pass when asked.
 - [Claims discipline](claims-discipline.md) — never report a fix as "done" until it's been verified end-to-end; user has called this out repeatedly.
 - [PsychPro silver-chrome buttons](psychpro-chrome-buttons.md) — CURRENT (2026-07-19): primaries = chrome gradient + dark ink + 10px radius site-wide (EPPP incl.); never white labels on light fills.
 - [PsychPro glass buttons](psychpro-glass-buttons.md) — historical (superseded 2026-07-19 by silver-chrome buttons).
