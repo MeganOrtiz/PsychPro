@@ -251,7 +251,7 @@ export default function LandingPage() {
   return (
     <>
       <style>{styles}</style>
-      <div className="landing-root study-page-bg" data-testid="landing-page">
+      <div className="landing-root" data-testid="landing-page">
         {/* ============== NAVBAR ============== */}
         <header className="landing-nav">
           <div className="landing-nav-inner">
@@ -351,42 +351,58 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ============== EPPP MASTERY SUITE ============== */}
-        <section id="mastery" className="landing-section landing-mastery" data-reveal>
-          <div className="landing-mastery-card">
-            <p className="landing-eyebrow">THE SYSTEM</p>
-            <h2 className="landing-section-title">
-              Built to Help You Learn Faster
-            </h2>
-            <p className="landing-mastery-text">
-              Flashcards, quizzes, study guides, practice exams, and interactive
-              learning spaces all in one place, designed to help students study
-              with clarity, structure, and confidence.
-            </p>
-          </div>
-        </section>
+        {/* ============== ARTWORK CONTINUATION BAND ==============
+            The hero splash continues below the fold as a vertical mirror of
+            itself — the mirrored image's top edge matches the hero image's
+            bottom edge exactly, so the artwork reads as one continuous piece
+            (per the owner's mockup). White cards float over it; the band
+            dissolves to white at its bottom. */}
+        <div className="landing-artwork-band">
+          <img
+            src={heroInkSplash}
+            alt=""
+            className="landing-artwork-band-bg"
+            loading="lazy"
+            aria-hidden
+          />
 
-        {/* ============== EPPP MASTERY SYSTEM ============== */}
-        <section id="eppp" className="landing-section landing-mastery" data-reveal>
-          <div className="landing-mastery-card">
-            <div className="landing-mastery-icon">
-              <GraduationCap aria-hidden />
+          {/* ============== EPPP MASTERY SUITE ============== */}
+          <section id="mastery" className="landing-section landing-mastery" data-reveal>
+            <div className="landing-mastery-card">
+              <p className="landing-eyebrow">THE SYSTEM</p>
+              <h2 className="landing-section-title">
+                Built to Help You Learn Faster
+              </h2>
+              <p className="landing-mastery-text">
+                Flashcards, quizzes, study guides, practice exams, and interactive
+                learning spaces all in one place, designed to help students study
+                with clarity, structure, and confidence.
+              </p>
             </div>
-            <p className="landing-eyebrow">EPPP PREP</p>
-            <h2 className="landing-section-title">
-              The PsychPro EPPP Mastery System&trade;
-            </h2>
-            <p className="landing-mastery-text">
-              The PsychPro EPPP Mastery System&trade; is a system of learning
-              resources designed to promote mastery of EPPP content through
-              conceptual understanding, critical thinking, and active
-              application. Featuring structured lessons in each domain, clinical
-              integration case examples, and full-length practice exams, the
-              system equips learners with the knowledge and confidence needed
-              for both EPPP success and real-world clinical practice.
-            </p>
-          </div>
-        </section>
+          </section>
+
+          {/* ============== EPPP MASTERY SYSTEM ============== */}
+          <section id="eppp" className="landing-section landing-mastery" data-reveal>
+            <div className="landing-mastery-card">
+              <div className="landing-mastery-icon">
+                <GraduationCap aria-hidden />
+              </div>
+              <p className="landing-eyebrow">EPPP PREP</p>
+              <h2 className="landing-section-title">
+                The PsychPro EPPP Mastery System&trade;
+              </h2>
+              <p className="landing-mastery-text">
+                The PsychPro EPPP Mastery System&trade; is a system of learning
+                resources designed to promote mastery of EPPP content through
+                conceptual understanding, critical thinking, and active
+                application. Featuring structured lessons in each domain, clinical
+                integration case examples, and full-length practice exams, the
+                system equips learners with the knowledge and confidence needed
+                for both EPPP success and real-world clinical practice.
+              </p>
+            </div>
+          </section>
+        </div>
 
         {/* ============== STUDY TOOLS ============== */}
         <section id="tools" className="landing-section landing-tools">
@@ -770,6 +786,10 @@ const styles = `
      scrollbar — without clipping, that sliver of horizontal overflow lets
      the page shift sideways and the hero reads as off-center. */
   overflow-x: clip;
+  /* Pure-white ground (owner 2026-07-25): the landing page opts out of the
+     site-wide silver radial backdrop — the ink/water artwork sits on clean
+     white, per the owner's mockup. */
+  background: ${PP.white};
   color: ${C.cyanSoft};
   font-family: var(--app-font-sans);
   font-feature-settings: "ss01", "cv11";
@@ -943,9 +963,11 @@ const styles = `
   padding-left: 24px;
   padding-right: 24px;
 }
-/* Localized legibility glow — a soft white radial pool behind the headline,
+/* Localized legibility pool — a dense white radial behind the headline,
    blurb and CTAs so the text reads cleanly where the waves converge, while
-   the artwork stays at full intensity at the edges. Not a box or card. */
+   the artwork stays at full intensity at the edges. Not a box or card.
+   Strengthened 2026-07-25 (owner: text under the brain must be clearly
+   readable) — near-solid white core, soft feathered edge. */
 .landing-hero::before {
   content: "";
   position: absolute;
@@ -953,36 +975,48 @@ const styles = `
   left: 50%;
   top: 71%;
   transform: translate(-50%, -50%);
-  width: min(980px, 96%);
-  height: 56%;
+  width: min(1040px, 98%);
+  height: 60%;
   background: radial-gradient(
     ellipse 50% 50% at 50% 50%,
-    ${alpha(PP.white, 0.82)} 0%,
-    ${alpha(PP.white, 0.5)} 42%,
-    ${alpha(PP.white, 0)} 72%
+    ${alpha(PP.white, 0.96)} 0%,
+    ${alpha(PP.white, 0.88)} 30%,
+    ${alpha(PP.white, 0.55)} 52%,
+    ${alpha(PP.white, 0)} 74%
   );
   pointer-events: none;
 }
-/* Bottom dissolve — the hero artwork fades into the page floor instead of
-   ending on a hard horizontal cut, so the scroll into "The System" section
-   feels continuous rather than choppy. */
-.landing-hero::after {
-  content: "";
+/* NO bottom dissolve (owner 2026-07-25): the artwork continues below the
+   hero via the mirrored .landing-artwork-band, whose top edge matches the
+   hero image's bottom edge exactly — the transition is continuous artwork,
+   not a fade-to-gray. */
+
+/* ============== ARTWORK CONTINUATION BAND ============== */
+.landing-artwork-band {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+.landing-artwork-band-bg {
   position: absolute;
-  /* Above the bg artwork (z0, earlier in tree) but below all hero content (z1+). */
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  /* Vertical mirror of the hero splash — its top edge equals the hero
+     image's bottom edge, so the two read as one continuous artwork. */
+  transform: scaleY(-1);
   z-index: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: clamp(120px, 22vh, 240px);
-  background: linear-gradient(
-    180deg,
-    ${alpha(PP.floor, 0)} 0%,
-    ${alpha(PP.floor, 0.45)} 55%,
-    ${alpha(PP.floor, 0.9)} 85%,
-    ${PP.floor} 100%
-  );
   pointer-events: none;
+  user-select: none;
+  /* Dissolve to the white page ground at the band's bottom. */
+  -webkit-mask-image: linear-gradient(180deg, ${PP.black} 0%, ${PP.black} 62%, transparent 100%);
+  mask-image: linear-gradient(180deg, ${PP.black} 0%, ${PP.black} 62%, transparent 100%);
+}
+.landing-artwork-band > .landing-section {
+  position: relative;
+  z-index: 1;
 }
 
 .landing-wordmark,
