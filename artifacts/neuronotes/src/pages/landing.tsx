@@ -299,14 +299,9 @@ export default function LandingPage() {
           <p className="landing-tagline" style={{ ["--delay" as any]: "140ms" }}>
             learn. expand. connect.
           </p>
-          <img
-            className="psychpro-hero__brain"
-            src="/assets/psychpro/psychpro-chrome-brain.png"
-            alt="Chrome anatomical brain"
-            loading="eager"
-            fetchPriority="high"
-            style={{ ["--delay" as any]: "220ms" }}
-          />
+          {/* Chrome brain is baked into the owner-supplied hero artwork
+              (2026-07-25); a spacer keeps the text stack below it. */}
+          <div className="psychpro-hero__brain-spacer" aria-hidden />
           <p className="landing-headline" style={{ ["--delay" as any]: "320ms" }}>
             Learn Smarter. Not Harder.
           </p>
@@ -922,6 +917,17 @@ const styles = `
   pointer-events: none;
   user-select: none;
 }
+/* Mobile: the tall hero makes object-fit:cover zoom the artwork until the
+   baked-in brain fills the screen and text lands on top of it. Pin the
+   artwork to the top at a fixed height instead; the rest of the hero is
+   pure white ground (owner's white system), and the spacer keeps the text
+   stack below the brain. */
+@media (max-width: 768px) {
+  .landing-hero-bg {
+    height: 128vw;
+    bottom: auto;
+  }
+}
 .landing-hero > :not(.landing-hero-bg) {
   position: relative;
   z-index: 1;
@@ -930,33 +936,17 @@ const styles = `
    wordmark/tagline and above the water artwork. Sits IN FLOW between the
    tagline and headline so it never covers text. No container, no effects,
    transparent PNG preserved as provided. */
-.psychpro-hero__brain {
+.psychpro-hero__brain-spacer {
   display: block;
-  position: relative;
-  z-index: 3;
-  width: clamp(260px, 25vw, 500px);
-  height: auto;
-  margin: clamp(-20px, -1.2vw, -6px) auto;
-  object-fit: contain;
-  background: transparent;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
+  width: 100%;
+  height: clamp(300px, 36vw, 660px);
   pointer-events: none;
-  user-select: none;
-  opacity: 0;
-  transition: opacity 1100ms cubic-bezier(0.16, 1, 0.3, 1) var(--delay, 0ms);
 }
-.landing-hero.is-mounted .psychpro-hero__brain {
-  opacity: 1;
-  animation: psychproBrainFloat 8s ease-in-out 1.6s infinite;
-}
-@keyframes psychproBrainFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .landing-hero.is-mounted .psychpro-hero__brain { animation: none; }
+/* AFTER the base rule so it actually wins (same specificity). */
+@media (max-width: 768px) {
+  .psychpro-hero__brain-spacer {
+    height: 100vw;
+  }
 }
 .landing-headline,
 .landing-blurb {
@@ -986,10 +976,23 @@ const styles = `
   );
   pointer-events: none;
 }
-/* NO bottom dissolve (owner 2026-07-25): the artwork continues below the
-   hero via the mirrored .landing-artwork-band, whose top edge matches the
-   hero image's bottom edge exactly — the transition is continuous artwork,
-   not a fade-to-gray. */
+/* NO bottom dissolve on desktop (owner 2026-07-25): the artwork continues
+   below the hero via the mirrored .landing-artwork-band. On MOBILE the
+   artwork is a fixed-height top crop, so a short white dissolve at its
+   bottom edge hides the hard cut. */
+@media (max-width: 768px) {
+  .landing-hero::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    right: 0;
+    top: calc(128vw - 90px);
+    height: 90px;
+    background: linear-gradient(180deg, ${alpha(PP.white, 0)} 0%, ${alpha(PP.white, 0.85)} 65%, ${PP.white} 100%);
+    pointer-events: none;
+  }
+}
 
 /* ============== ARTWORK CONTINUATION BAND ============== */
 .landing-artwork-band {
@@ -1004,9 +1007,11 @@ const styles = `
   height: 100%;
   object-fit: cover;
   object-position: center;
-  /* Vertical mirror of the hero splash — its top edge equals the hero
-     image's bottom edge, so the two read as one continuous artwork. */
-  transform: scaleY(-1);
+  /* Flipped on BOTH axes (owner 2026-07-25: the pure vertical mirror read
+     as a visible butterfly "fold" at the hero junction). Flipping X too
+     breaks the reflection symmetry; the deepened white seam blend below
+     absorbs the junction so the artwork still reads as continuous. */
+  transform: scale(-1, -1);
   z-index: 0;
   pointer-events: none;
   user-select: none;
@@ -1019,22 +1024,28 @@ const styles = `
 .landing-artwork-band::before {
   content: "";
   position: absolute;
-  z-index: 0;
+  /* Must sit ABOVE the band <img> (equal z-index loses on tree order —
+     pseudo-elements paint before child elements). */
+  z-index: 1;
   inset: 0;
   background:
-    /* Top seam blend. */
-    linear-gradient(180deg, ${PP.white} 0%, ${alpha(PP.white, 0.75)} 3%, ${alpha(PP.white, 0)} 8%) no-repeat,
+    /* Top seam blend — deep white breath that hides the mirror junction
+       (owner 2026-07-25: the shallow 8% blend left a visible fold). */
+    linear-gradient(180deg, ${PP.white} 0%, ${PP.white} 6%, ${alpha(PP.white, 0.85)} 12%, ${alpha(PP.white, 0)} 26%) no-repeat,
     /* Center white wash — kills the splash asset's baked-in gray ground so
        the cards sit on WHITE (owner: "remove the gray background"); the ink
        artwork stays visible only at the left/right flanks, per the mockup. */
-    linear-gradient(90deg, ${alpha(PP.white, 0)} 0%, ${alpha(PP.white, 0.9)} 24%, ${PP.white} 38%, ${PP.white} 62%, ${alpha(PP.white, 0.9)} 76%, ${alpha(PP.white, 0)} 100%) no-repeat;
+    /* Widened + fully opaque center (2026-07-25: new owner artwork bakes the
+       chrome brain into the splash; the flipped copy showed an upside-down
+       brain between the cards). */
+    linear-gradient(90deg, ${alpha(PP.white, 0)} 0%, ${alpha(PP.white, 0.92)} 20%, ${PP.white} 30%, ${PP.white} 70%, ${alpha(PP.white, 0.92)} 80%, ${alpha(PP.white, 0)} 100%) no-repeat;
   pointer-events: none;
 }
 /* Dissolve to the white page ground at the band's bottom. */
 .landing-artwork-band::after {
   content: "";
   position: absolute;
-  z-index: 0;
+  z-index: 1;
   left: 0;
   right: 0;
   bottom: 0;
@@ -1044,7 +1055,9 @@ const styles = `
 }
 .landing-artwork-band > .landing-section {
   position: relative;
-  z-index: 1;
+  /* Above the band's ::before/::after overlays (z-index 1) — the ::after
+     bottom dissolve otherwise washes out card text. */
+  z-index: 2;
 }
 
 .landing-wordmark,
