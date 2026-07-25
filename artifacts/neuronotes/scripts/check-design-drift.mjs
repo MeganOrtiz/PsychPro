@@ -132,8 +132,8 @@ if (/\.mat-opaque:hover/.test(css)) {
 
 // --- 2) Pure-black page floors ----------------------------------------------
 const bodyBlock = ruleBlock(css, "\nbody {");
-if (!bodyBlock || !/background-color:\s*#eef0f2;/.test(bodyBlock)) {
-  fail("body floor drifted", "keep `background-color: #eef0f2;` on body (luminous silver floor — prevents mismatched route-transition flashes)");
+if (!bodyBlock || !/background-color:\s*#ffffff;/.test(bodyBlock)) {
+  fail("body floor drifted", "keep `background-color: #ffffff;` on body (PURE WHITE floor, owner 2026-07-25 — prevents mismatched route-transition flashes)");
 }
 
 const appBackdrop = ruleBlock(css, ".study-page-bg::before");
@@ -152,8 +152,8 @@ const overlayBackdrop = ruleBlock(css, ".study-page-bg::after");
 if (!appBackdrop) {
   fail("canonical app backdrop rule missing", "restore the .study-page-bg::before backdrop rule");
 } else {
-  if (!/background-image:\s*radial-gradient\(120% 90% at 50% 0%/.test(appBackdrop)) {
-    fail("canonical backdrop drifted", "the site-wide backdrop is the luminous silver radial gradient (white system, owner 2026-07-16) — no artwork image");
+  if (!/background-image:\s*none;/.test(appBackdrop)) {
+    fail("canonical backdrop drifted", "the site-wide backdrop is PURE WHITE — background-image: none (owner 2026-07-25; silver radial retired) — no artwork image, no gradients");
   }
   if (!/background-attachment:\s*scroll;/.test(appBackdrop)) {
     fail("canonical backdrop attachment drifted", "keep background-attachment: scroll (fixed re-pins the artwork to the viewport and draws a HiDPI seam)");
@@ -161,8 +161,8 @@ if (!appBackdrop) {
   if (!/position:\s*fixed;/.test(appBackdrop) || !/inset:\s*0;/.test(appBackdrop)) {
     fail("canonical backdrop geometry drifted", "keep the ::before layer position: fixed with inset: 0 (viewport-pinned so the artwork backs the page to the bottom at every scroll depth, owner 2026-07-12) — never absolute/100vh (stops after one screen) and never document-height stretch (blurs)");
   }
-  if (!/background-color:\s*#eef0f2;/.test(appBackdrop)) {
-    fail("canonical backdrop floor color drifted", "keep the silver floor #eef0f2 (must match the body floor)");
+  if (!/background-color:\s*#ffffff;/.test(appBackdrop)) {
+    fail("canonical backdrop floor color drifted", "keep the pure-white floor #ffffff (must match the body floor, owner 2026-07-25)");
   }
   if (/\bfilter\s*:|linear-gradient\(|background-blend-mode\s*:/.test(appBackdrop)) {
     fail("canonical backdrop film reintroduced", "keep the backdrop free of filters, blend modes, and linear films (only the sanctioned silver radial gradient)");

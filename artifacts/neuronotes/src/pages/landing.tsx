@@ -1010,9 +1010,37 @@ const styles = `
   z-index: 0;
   pointer-events: none;
   user-select: none;
-  /* Dissolve to the white page ground at the band's bottom. */
-  -webkit-mask-image: linear-gradient(180deg, ${PP.black} 0%, ${PP.black} 62%, transparent 100%);
-  mask-image: linear-gradient(180deg, ${PP.black} 0%, ${PP.black} 62%, transparent 100%);
+}
+/* Seam blend: the hero and mirrored band cover-crop differently at real
+   viewport sizes, so the mirror can't align pixel-perfect. A soft white
+   breath at the band's top absorbs the mismatch (matches the mockup's white
+   spacing between artwork blocks). Painted overlays instead of mask-image:
+   a mask on the flipped <img> gets flipped WITH it (hard bottom edge bug). */
+.landing-artwork-band::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background:
+    /* Top seam blend. */
+    linear-gradient(180deg, ${PP.white} 0%, ${alpha(PP.white, 0.75)} 3%, ${alpha(PP.white, 0)} 8%) no-repeat,
+    /* Center white wash — kills the splash asset's baked-in gray ground so
+       the cards sit on WHITE (owner: "remove the gray background"); the ink
+       artwork stays visible only at the left/right flanks, per the mockup. */
+    linear-gradient(90deg, ${alpha(PP.white, 0)} 0%, ${alpha(PP.white, 0.9)} 24%, ${PP.white} 38%, ${PP.white} 62%, ${alpha(PP.white, 0.9)} 76%, ${alpha(PP.white, 0)} 100%) no-repeat;
+  pointer-events: none;
+}
+/* Dissolve to the white page ground at the band's bottom. */
+.landing-artwork-band::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: clamp(160px, 22vw, 320px);
+  background: linear-gradient(180deg, ${alpha(PP.white, 0)} 0%, ${alpha(PP.white, 0.8)} 60%, ${PP.white} 100%);
+  pointer-events: none;
 }
 .landing-artwork-band > .landing-section {
   position: relative;
@@ -1153,6 +1181,28 @@ const styles = `
   flex-wrap: wrap;
   gap: 0;
   margin-top: clamp(20px, 2.6vh, 32px);
+  position: relative;
+  z-index: 1;
+}
+/* Feathered legibility pool behind the stats — same treatment as the
+   headline pool, NOT a card. The strip sits low in the hero where the waves
+   converge and was unreadable over the artwork. */
+.landing-stat-strip::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(760px, 130%);
+  height: 220%;
+  background: radial-gradient(
+    ellipse 50% 50% at 50% 50%,
+    ${alpha(PP.white, 0.92)} 0%,
+    ${alpha(PP.white, 0.7)} 45%,
+    ${alpha(PP.white, 0)} 78%
+  );
+  pointer-events: none;
 }
 .landing-stat-item {
   display: inline-flex;

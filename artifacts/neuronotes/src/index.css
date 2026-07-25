@@ -187,7 +187,7 @@
   --elevate-2: rgba(var(--pp-icy-rgb), .10);
 
   /* Light theme (rarely seen — the app runs on the dark blue surface). */
-  --background: 0 0% 97%;
+  --background: 0 0% 100%;
   --foreground: 0 0% 12%;
 
   --border: 208 20% 86%;
@@ -273,8 +273,9 @@
   --elevate-1: rgba(var(--pp-icy-rgb), .05);
   --elevate-2: rgba(var(--pp-icy-rgb), .10);
 
-  /* Luminous light theme — driven by the --surf-hue/--surf-sat knobs. */
-  --background: var(--surf-hue) var(--surf-sat) 94%;
+  /* Luminous light theme — driven by the --surf-hue/--surf-sat knobs.
+     Ground is PURE WHITE (owner, 2026-07-25 — no gray backgrounds). */
+  --background: var(--surf-hue) var(--surf-sat) 100%;
   --foreground: 210 8% 16%;
 
   --border: 0 0% 82%;
@@ -346,7 +347,7 @@
 .study-page-bg,
 .study-page-aurora {
   /* Mirrors STUDY_PALETTE in src/lib/study-theme.ts. */
-  --background: var(--surf-hue) var(--surf-sat) 94%;  /* luminous silver floor */
+  --background: var(--surf-hue) var(--surf-sat) 100%; /* pure white floor (owner 2026-07-25) */
   --foreground: 210 8% 16%;                           /* near-black text */
   --card: var(--surf-hue) var(--surf-sat) 100%;       /* white surface */
   --card-foreground: 210 8% 16%;
@@ -697,7 +698,7 @@
    ::before, and the browser only propagates body's background to the canvas
    when <html> has NO background of its own. */
 body {
-  background-color: #eef0f2;
+  background-color: #ffffff;
 }
 
 /* ============================================================
@@ -721,13 +722,14 @@ body {
   position: fixed;
   inset: 0;
   z-index: -2;
-  background-image: radial-gradient(120% 90% at 50% 0%,
-    #ffffff 0%, #f2f4f5 45%, #e4e7ea 78%, #d9dde0 100%);
+  /* PURE WHITE ground site-wide (owner, 2026-07-25) — the silver radial is
+     retired; no gray backgrounds on landing, main app, or EPPP. */
+  background-image: none;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: scroll;
-  background-color: #eef0f2;
+  background-color: #ffffff;
   pointer-events: none;
 }
 

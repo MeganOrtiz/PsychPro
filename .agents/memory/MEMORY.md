@@ -1,4 +1,5 @@
-- [PsychPro white/luminous system](psychpro-white-luminous-system.md) — CURRENT (2026-07-16): entire site (landing included) on light silver/white tokens with white-brain hero + dashboard cutout; blue landing exception retired.
+- [PsychPro white/luminous system](psychpro-white-luminous-system.md) — CURRENT, amended 2026-07-25: ground is PURE WHITE site-wide (body, backdrop ::before, --background 100%); silver radial + #eef0f2 floors retired ("no gray backgrounds" — owner); drift lock updated.
+- [Mask flips with transform](css-mask-flips-with-transform.md) — mask-image on a scaleY(-1) element gets flipped WITH it (fade lands on the wrong edge); use overlay gradient pseudo-elements for edge dissolves on mirrored images.
 - [PsychPro gray foundation v2](psychpro-gray-foundation-v2.md) — historical (superseded 2026-07-16 by the white/luminous system).
 - [PsychPro solid tile fills](psychpro-solid-tile-fills.md) — still current structurally (opaque --pp-tile ladder), values now the LIGHT ladder (2026-07-16 white system).
 - [wouter Link inline spacing](wouter-link-inline-spacing.md) — wouter <Link> is an inline <a>; space-y-* is silently ignored between bare Links; wrap in block divs or force `a { display:block }` scoped.
