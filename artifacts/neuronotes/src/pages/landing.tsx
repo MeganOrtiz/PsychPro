@@ -293,15 +293,24 @@ export default function LandingPage() {
             loading="eager"
             aria-hidden
           />
+          {/* Chrome brain re-added as its own layer (owner 2026-07-25: the new
+              hero artwork has NO baked-in brain) — positioned at the artwork's
+              top-center like the owner's mockup, with a slow breathing /
+              pulsating motion. Transparent PNG preserved as provided. */}
+          <img
+            src={`${import.meta.env.BASE_URL}assets/psychpro/psychpro-chrome-brain.png`}
+            alt=""
+            className="psychpro-hero__brain"
+            fetchPriority="high"
+            loading="eager"
+            aria-hidden
+          />
           <h1 className="landing-wordmark" style={{ ["--delay" as any]: "40ms" }}>
             PSYCHPRO
           </h1>
           <p className="landing-tagline" style={{ ["--delay" as any]: "140ms" }}>
             learn. expand. connect.
           </p>
-          {/* Chrome brain is baked into the owner-supplied hero artwork
-              (2026-07-25); a spacer keeps the text stack below it. */}
-          <div className="psychpro-hero__brain-spacer" aria-hidden />
           <p className="landing-headline" style={{ ["--delay" as any]: "320ms" }}>
             Learn Smarter. Not Harder.
           </p>
@@ -917,36 +926,38 @@ const styles = `
   pointer-events: none;
   user-select: none;
 }
-/* Mobile: the tall hero makes object-fit:cover zoom the artwork until the
-   baked-in brain fills the screen and text lands on top of it. Pin the
-   artwork to the top at a fixed height instead; the rest of the hero is
-   pure white ground (owner's white system), and the spacer keeps the text
-   stack below the brain. */
-@media (max-width: 768px) {
-  .landing-hero-bg {
-    height: 128vw;
-    bottom: auto;
-  }
-}
 .landing-hero > :not(.landing-hero-bg) {
   position: relative;
   z-index: 1;
 }
-/* Owner-supplied chrome brain (2026-07-23): centered, below the
-   wordmark/tagline and above the water artwork. Sits IN FLOW between the
-   tagline and headline so it never covers text. No container, no effects,
-   transparent PNG preserved as provided. */
-.psychpro-hero__brain-spacer {
+/* Owner-supplied chrome brain (re-added 2026-07-25 — the new hero artwork has
+   no baked-in brain). Sits IN FLOW at the top of the hero, centered like the
+   owner's mockup, with the PSYCHPRO title directly under it. Breathing /
+   pulsating motion: a slow, organic scale swell with a soft shadow that
+   deepens on the inhale. No container, transparent PNG as provided. */
+.psychpro-hero__brain {
   display: block;
-  width: 100%;
-  height: clamp(300px, 36vw, 660px);
+  width: clamp(240px, 26vw, 470px);
+  height: auto;
+  margin: 0 auto clamp(6px, 1.2vh, 16px);
   pointer-events: none;
+  user-select: none;
+  transform-origin: 50% 62%;
+  /* Static shadow — animating filter on a surface this large is
+     repaint-heavy; motion stays on compositor-friendly transform only. */
+  filter: drop-shadow(0 18px 30px rgba(var(--pp-black-rgb), 0.18));
+  animation: psychpro-brain-breathe 4.8s ease-in-out infinite;
+  will-change: transform;
 }
-/* AFTER the base rule so it actually wins (same specificity). */
+@keyframes psychpro-brain-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .psychpro-hero__brain { animation: none; }
+}
 @media (max-width: 768px) {
-  .psychpro-hero__brain-spacer {
-    height: 100vw;
-  }
+  .psychpro-hero__brain { width: clamp(200px, 58vw, 300px); }
 }
 .landing-headline,
 .landing-blurb {
@@ -976,23 +987,10 @@ const styles = `
   );
   pointer-events: none;
 }
-/* NO bottom dissolve on desktop (owner 2026-07-25): the artwork continues
-   below the hero via the mirrored .landing-artwork-band. On MOBILE the
-   artwork is a fixed-height top crop, so a short white dissolve at its
-   bottom edge hides the hard cut. */
-@media (max-width: 768px) {
-  .landing-hero::after {
-    content: "";
-    position: absolute;
-    z-index: 1;
-    left: 0;
-    right: 0;
-    top: calc(128vw - 90px);
-    height: 90px;
-    background: linear-gradient(180deg, ${alpha(PP.white, 0)} 0%, ${alpha(PP.white, 0.85)} 65%, ${PP.white} 100%);
-    pointer-events: none;
-  }
-}
+/* NO bottom dissolve (owner 2026-07-25): the artwork continues below the
+   hero via the mirrored .landing-artwork-band. The new artwork's center is
+   white with edge-only ink, so mobile cover-crop needs no special top-crop
+   treatment anymore. */
 
 /* ============== ARTWORK CONTINUATION BAND ============== */
 .landing-artwork-band {
@@ -1032,12 +1030,10 @@ const styles = `
     /* Top seam blend — deep white breath that hides the mirror junction
        (owner 2026-07-25: the shallow 8% blend left a visible fold). */
     linear-gradient(180deg, ${PP.white} 0%, ${PP.white} 6%, ${alpha(PP.white, 0.85)} 12%, ${alpha(PP.white, 0)} 26%) no-repeat,
-    /* Center white wash — kills the splash asset's baked-in gray ground so
-       the cards sit on WHITE (owner: "remove the gray background"); the ink
-       artwork stays visible only at the left/right flanks, per the mockup. */
-    /* Widened + fully opaque center (2026-07-25: new owner artwork bakes the
-       chrome brain into the splash; the flipped copy showed an upside-down
-       brain between the cards). */
+    /* Center white wash — keeps the cards on a clean WHITE ground; the ink
+       artwork stays visible only at the left/right flanks, per the mockup.
+       (2026-07-25: the current hero asset has NO baked-in brain — this wash
+       is purely the card ground now, kept opaque for text legibility.) */
     linear-gradient(90deg, ${alpha(PP.white, 0)} 0%, ${alpha(PP.white, 0.92)} 20%, ${PP.white} 30%, ${PP.white} 70%, ${alpha(PP.white, 0.92)} 80%, ${alpha(PP.white, 0)} 100%) no-repeat;
   pointer-events: none;
 }
