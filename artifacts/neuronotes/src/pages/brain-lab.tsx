@@ -1394,7 +1394,28 @@ function LabeledBrainDiagram({
         last.ly = colBottom - last.h / 2;
         for (let i = arr.length - 2; i >= 0; i--) {
           const maxY = arr[i + 1].ly - arr[i + 1].h / 2 - gap - arr[i].h / 2;
-          if (arr[i].ly > maxY) arr[i].ly = Math.max(maxY, colTop + arr[i].h / 2);
+          // No colTop clamp here — clamping individual chips during the
+          // pull-back collapsed several chips onto the SAME y at the top of
+          // the column (unreadable stacked labels). Let them go high for now;
+          // the even re-pack below restores the top bound for the whole
+          // column at once.
+          if (arr[i].ly > maxY) arr[i].ly = maxY;
+        }
+        // If the pull-back pushed the first chip above the top bound, the
+        // column is too full for the normal gap. Re-pack top→bottom with an
+        // evenly reduced gap (mildly negative when truly over-full) so every
+        // chip shares the squeeze instead of a few stacking at colTop.
+        const first = arr[0];
+        if (first && first.ly - first.h / 2 < colTop) {
+          const sumH = arr.reduce((s, i) => s + i.h, 0);
+          const avail = colBottom - colTop;
+          const g =
+            arr.length > 1 ? Math.min(gap, (avail - sumH) / (arr.length - 1)) : 0;
+          let y = colTop;
+          for (const it of arr) {
+            it.ly = y + it.h / 2;
+            y += it.h + g;
+          }
         }
       }
     }
