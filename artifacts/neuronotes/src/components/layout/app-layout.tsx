@@ -357,10 +357,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
           )}
         </nav>
 
-        {/* EPPP Mastery Suite launcher — moved out of the top bar (owner,
-            2026-07-09: the header button was throwing off the page-title
-            spacing) into a fixed slot at the bottom of the sidebar. */}
-        <div className="relative px-3 pb-2">
+        {/* Mobile-only EPPP launcher — on desktop the button lives in the top
+            bar next to the bell (owner, 2026-07-30); the sidebar drawer is the
+            only nav surface on mobile so it keeps a copy. */}
+        <div className="relative px-3 pb-2 md:hidden">
           <Link
             href="/eppp/suite"
             className="eppp-launch-btn eppp-launch-btn--sidebar"
@@ -402,6 +402,19 @@ export default function AppLayout({ children }: AppLayoutProps) {
             artwork's chrome brain, owner 2026-07-25); every page keeps a clean
             top bar. */}
         <header className="relative hidden md:flex items-center justify-end gap-3 px-6 py-3">
+          {/* EPPP Mastery Suite launcher — back in the top bar next to the
+              bell (owner, 2026-07-30; the old page-title spacing concern is
+              moot now that wordmarks live under the brain artwork). */}
+          <Link
+            href="/eppp/suite"
+            className="eppp-launch-btn"
+            data-testid="eppp-launch-header"
+          >
+            <span className="eppp-launch-btn__inner">
+              <GraduationCap aria-hidden />
+              <span>EPPP Mastery Suite</span>
+            </span>
+          </Link>
           {!isMobile && <NotificationsBell />}
           <UserButton
             afterSignOutUrl={import.meta.env.BASE_URL.replace(/\/$/, "") || "/"}

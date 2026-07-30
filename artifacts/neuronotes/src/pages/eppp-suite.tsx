@@ -377,10 +377,10 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
           })}
         </nav>
 
-        {/* Back to PsychPro — moved out of the top bar (owner, 2026-07-09:
-            the header button was throwing off the page-title spacing) into a
-            fixed slot at the bottom of the suite sidebar. */}
-        <div className="relative px-3 pb-3">
+        {/* Mobile-only Back to PsychPro — on desktop the button lives in the
+            top bar next to the bell (owner, 2026-07-30); the sidebar drawer is
+            the only nav surface on mobile so it keeps a copy. */}
+        <div className="relative px-3 pb-3 md:hidden">
           <Link
             href="/dashboard"
             className="eppp-launch-btn eppp-launch-btn--sidebar"
@@ -419,6 +419,19 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
             every suite tab keeps a clean top bar. */}
         <header className="relative hidden md:flex items-center justify-end gap-3 px-6 py-3">
           <div className="flex items-center gap-3">
+            {/* Back to PsychPro — back in the top bar next to the bell
+                (owner, 2026-07-30; the old page-title spacing concern is moot
+                now that wordmarks live under the brain artwork). */}
+            <Link
+              href="/dashboard"
+              className="eppp-launch-btn"
+              data-testid="eppp-suite-back-header"
+            >
+              <span className="eppp-launch-btn__inner">
+                <ArrowLeft aria-hidden />
+                <span>Back to PsychPro</span>
+              </span>
+            </Link>
             {!isMobile && <NotificationsBell />}
             <UserButton
               afterSignOutUrl={import.meta.env.BASE_URL.replace(/\/$/, "") || "/"}
