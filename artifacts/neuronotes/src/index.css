@@ -786,9 +786,11 @@ body {
      to full viewport width so the wordmark centers under the brain. */
 .dashboard-brand {
   --dash-x-offset: 0px;
+  --dash-r-offset: 0px;
   --dash-y-offset: 52px; /* mobile top bar */
   margin-left: calc(-1 * var(--dash-x-offset));
-  width: calc(100% + var(--dash-x-offset));
+  margin-right: calc(-1 * var(--dash-r-offset));
+  width: calc(100% + var(--dash-x-offset) + var(--dash-r-offset));
   padding-top: calc(max(23vh, 12.95vw) - var(--dash-y-offset) + 6px);
   text-align: center;
 }
@@ -800,17 +802,24 @@ body {
     --dash-x-offset: 288px; /* sidebar w-64 + m-4 */
   }
   .epd-page .dashboard-brand {
-    --dash-x-offset: calc(288px + clamp(16px, 4vw, 48px)); /* + page padding */
+    /* Pull back past the sidebar + LEFT page padding, and also cancel the
+       RIGHT page padding — otherwise the band's center sits left of the
+       viewport-centered brain by half the right padding. */
+    --dash-x-offset: calc(288px + clamp(16px, 4vw, 48px));
+    --dash-r-offset: clamp(16px, 4vw, 48px);
   }
 }
+/* Matches the landing-page wordmark exactly (Montserrat 200, 0.22em
+   tracking, uppercase) so the brand reads the same everywhere. */
 .dashboard-brand h1 {
   margin: 0;
-  font-family: 'Outfit', 'Inter', system-ui, sans-serif;
-  font-weight: 300;
-  font-size: clamp(20px, 3.6vw, 50px);
+  font-family: var(--app-font-sans);
+  font-weight: 200;
+  font-size: clamp(22px, 3.4vw, 46px);
   line-height: 1.1;
-  letter-spacing: 0.24em;
-  text-indent: 0.24em;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
+  text-transform: uppercase;
   color: hsl(var(--foreground));
   white-space: nowrap;
 }
