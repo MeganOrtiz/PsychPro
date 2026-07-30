@@ -110,16 +110,6 @@ function AppRouter() {
       {import.meta.env.DEV ? <Route path="/__crash-test" component={CrashTestPage} /> : null}
       {import.meta.env.DEV ? <Route path="/__glass-preview" component={DevGlassPreview} /> : null}
       {import.meta.env.DEV ? <Route path="/__dashboard-preview" component={DevDashboardPreview} /> : null}
-      {/* TEMP-VERIFY: DEV-only unauthenticated Brain Lab route for screenshot checks. */}
-      {import.meta.env.DEV ? (
-        <Route path="/__brainlab">
-          {() => (
-            <div className="h-screen overflow-hidden">
-              <BrainLabPage />
-            </div>
-          )}
-        </Route>
-      ) : null}
       <Route path="/eppp">
         {() => (
           <RequireOnboarded>

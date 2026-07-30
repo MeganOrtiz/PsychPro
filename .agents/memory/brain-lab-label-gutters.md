@@ -30,6 +30,17 @@ the same corner and stack on each other.
 A DEV-only `?view=<key>` query param on the page deep-links any Sections view
 for screenshot verification (gated on `import.meta.env.DEV`).
 
+**Column over-full de-overlap (2026-07-30, supersedes the old row-only advice below):**
+the tall side columns need the SAME anti-collapse logic the rows have. The old
+backward pull-back pass clamped each chip individually to `Math.max(maxY, colTop + h/2)`,
+which collapsed several chips onto the SAME top y when a column was over-full →
+stacked unreadable labels (this was the "labels stacking at the top edges" bug).
+Fix: drop the per-chip colTop clamp in the pull-back pass; if the pull-back pushes
+the first chip above `colTop`, RE-LAY the whole sorted column top→bottom from
+`colTop` with a shared reduced gap `g = min(gap, (avail - sumH)/(n-1))` (mildly
+negative when truly over-full, so the squeeze is shared evenly instead of stacking).
+This keeps every chip mapped to its own anchor and terminates exactly at colBottom.
+
 **Why:** dense views (e.g. lateral ~30 hotspots) put 5+ near-vertical anchors into
 the top wedge, but the row only fits ~3 wide chips. Without spilling, the pull-back
 compresses them to the left bound and they overlap or clip off the `overflow-hidden`
