@@ -807,6 +807,9 @@ body {
        viewport-centered brain by half the right padding. */
     --dash-x-offset: calc(288px + clamp(16px, 4vw, 48px));
     --dash-r-offset: clamp(16px, 4vw, 48px);
+    /* Cancel the epd-page TOP padding too, so the title sits at the same
+       distance under the brain as the main dashboard's. */
+    margin-top: calc(-1 * clamp(14px, 2.4vw, 28px));
   }
 }
 /* Matches the landing-page wordmark exactly (Montserrat 200, 0.22em
