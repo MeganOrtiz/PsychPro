@@ -1783,7 +1783,7 @@ export default function BrainLabPage() {
   return (
     <div className="flex h-[calc(100vh-57px)] min-h-0 flex-col overflow-hidden study-page-bg">
       {/* Header — centered title block to match the rest of the app's pages */}
-      <div className="flex-shrink-0 px-4 md:px-6 pt-5 pb-3">
+      <div className="flex-shrink-0 px-4 md:px-6 pt-4 md:pt-5 pb-2">
         <PageTitle
           title="Brain Lab"
           subtitle="Explore the brain. Understand the mind."

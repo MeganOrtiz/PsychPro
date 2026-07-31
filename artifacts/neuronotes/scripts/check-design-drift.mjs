@@ -314,8 +314,8 @@ while ((m = LEGACY.exec(css))) {
 const TYPE_CONTRACT = [
   {
     name: "Montserrat webfont load",
-    re: /family=Montserrat:wght@300;400;500;600;700/,
-    expected: "load Montserrat weights 300–700 in the Google Fonts import",
+    re: /family=Montserrat:wght@200;300;400;500;600;700/,
+    expected: "load Montserrat weights 200–700 in the Google Fonts import (200 is the wordmark/page-title weight)",
   },
   {
     name: "Outfit webfont load",

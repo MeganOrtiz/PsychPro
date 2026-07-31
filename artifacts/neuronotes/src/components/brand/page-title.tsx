@@ -2,9 +2,10 @@
 // PageTitle — the canonical header for every main-tab page (Courses, Study
 // Lab, Brain Lab, Progress, Resources, Reflections, My Tools, etc.).
 //
-// Mirrors the dashboard wordmark voice (BrandBanner):
-//   - Outfit, font-light (300), wide tracking (0.32em), cyan textShadow glow
-//   - Centered on the page
+// Mirrors the dashboard wordmark voice (.dashboard-brand h1) — unified
+// site-wide with the EPPP suite headers (owner, 2026-07-30):
+//   - Montserrat (var(--app-font-sans)), weight 200, 0.22em tracking, uppercase
+//   - Centered on the page, tight top spacing so content starts higher
 //   - Optional small icon above, optional subtitle below
 //
 // DO NOT re-add `text-2xl md:text-3xl font-bold text-foreground` page titles
@@ -25,8 +26,9 @@ export function PageTitle({ title, subtitle, icon: Icon, className }: PageTitleP
   return (
     <div
       className={cn(
-        // -mt pulls titles higher toward the top of every page (owner, 2026-07-19).
-        "relative flex flex-col items-center text-center -mt-1 md:-mt-2 lg:-mt-3 mb-6 text-scrim",
+        // -mt pulls titles higher toward the top of every page (owner, 2026-07-19;
+        // tightened 2026-07-30 to free vertical room for content).
+        "relative flex flex-col items-center text-center -mt-2 md:-mt-4 lg:-mt-5 mb-4 text-scrim",
         className,
       )}
       data-testid="page-title"
@@ -41,11 +43,13 @@ export function PageTitle({ title, subtitle, icon: Icon, className }: PageTitleP
         />
       ) : null}
       <h1
-        className="font-light leading-none uppercase"
+        className="leading-none uppercase"
         style={{
-          fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
+          fontFamily: "var(--app-font-sans)",
+          fontWeight: 200,
           fontSize: "clamp(22px, 3.2vw, 36px)",
-          letterSpacing: "0.32em",
+          letterSpacing: "0.22em",
+          textIndent: "0.22em",
           color: P.cloud,
         }}
         data-testid="page-title-text"
@@ -54,7 +58,7 @@ export function PageTitle({ title, subtitle, icon: Icon, className }: PageTitleP
       </h1>
       {subtitle ? (
         <p
-          className="mt-3 text-sm font-light"
+          className="mt-2 text-sm font-light"
           style={{
             color: "rgb(var(--pp-white-rgb))",
             letterSpacing: "0.04em",
