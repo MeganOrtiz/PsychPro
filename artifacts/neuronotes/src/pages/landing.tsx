@@ -28,7 +28,8 @@ import {
 } from "recharts";
 import { useGetTopics } from "@workspace/api-client-react";
 import brainLateral from "@/assets/brain-views/lateral.webp";
-import heroInkSplash from "@/assets/hero-ink-splash.png";
+import heroInkSplash from "@/assets/hero-ink-splash.webp";
+import heroChromeBrain from "@/assets/psychpro-chrome-brain.webp";
 import founderMegan from "@/assets/founder/megan.webp";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PP, LANDING, alpha } from "@/lib/palette";
@@ -298,7 +299,7 @@ export default function LandingPage() {
               top-center like the owner's mockup, with a slow breathing /
               pulsating motion. Transparent PNG preserved as provided. */}
           <img
-            src={`${import.meta.env.BASE_URL}assets/psychpro/psychpro-chrome-brain.png`}
+            src={heroChromeBrain}
             alt=""
             className="psychpro-hero__brain"
             fetchPriority="high"
