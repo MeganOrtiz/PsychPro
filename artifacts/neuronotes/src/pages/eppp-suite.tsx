@@ -2576,7 +2576,11 @@ const styles = `
 /* ---- Study Plan ---- */
 .eps-sp-card { padding: clamp(18px, 2.4vw, 28px); display: flex; flex-direction: column; gap: 18px; }
 .eps-sp-card-head { display: flex; align-items: flex-start; gap: 14px; }
-.eps-sp-icon { flex-shrink: 0; }
+.eps-sp-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; flex-shrink: 0; color: ${C.cyan};
+}
+.eps-sp-icon svg { width: 20px; height: 20px; }
 .eps-sp-card-title { margin: 0 0 4px; font-size: 17px; font-weight: 700; color: ${C.cloud}; }
 .eps-sp-card-sub { margin: 0; font-size: 13.5px; line-height: 1.55; color: var(--pp-text-dim); }
 .eps-sp-head-actions { margin-left: auto; display: flex; gap: 8px; flex-shrink: 0; }
@@ -2610,7 +2614,10 @@ const styles = `
 .eps-sp-domain { border: 1px solid ${C.hairline}; border-radius: 12px; padding: 12px 14px; background: var(--pp-tile); }
 .eps-sp-domain-head { display: flex; align-items: center; gap: 10px; }
 .eps-sp-domain-label { font-weight: 700; color: ${C.cloud}; }
-.eps-sp-domain-icon { width: 30px; height: 30px; }
+.eps-sp-domain-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; flex-shrink: 0; color: ${C.cyan};
+}
 .eps-sp-domain-icon svg { width: 15px; height: 15px; }
 .eps-sp-domain-name { font-size: 14.5px; }
 .eps-sp-domain-meta { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--pp-text-dim); white-space: nowrap; }
