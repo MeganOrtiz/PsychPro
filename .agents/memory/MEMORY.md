@@ -1,4 +1,6 @@
 - [PsychPro white/luminous system](psychpro-white-luminous-system.md) — CURRENT, amended 2026-07-25: ground is PURE WHITE site-wide (body, backdrop ::before, --background 100%); silver radial + #eef0f2 floors retired ("no gray backgrounds" — owner); drift lock updated.
+- [PsychPro mobile app](psychpro-mobile-app.md) — Expo full mirror at /mobile; Clerk key blob normalized in code; web score conventions mirrored; paywall 402 UX; expo-auth-session required by clerk-expo.
+- [TS project-reference stale dist](ts-project-refs-stale-dist.md) — "no exported member" from a workspace lib after regenerating its src = tsc resolved stale dist .d.ts via project references; run `tsc -b` in the lib.
 - [Dashboard backdrop artwork](psychpro-dashboard-artwork.md) — liquid-frame image scoped to the two dashboards only; wordmarks moved under the baked-in brain (header banners removed); offset math + dev preview route documented.
 - [Mask flips with transform](css-mask-flips-with-transform.md) — mask-image on a scaleY(-1) element gets flipped WITH it (fade lands on the wrong edge); use overlay gradient pseudo-elements for edge dissolves on mirrored images.
 - [PsychPro gray foundation v2](psychpro-gray-foundation-v2.md) — historical (superseded 2026-07-16 by the white/luminous system).

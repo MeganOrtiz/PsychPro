@@ -1,0 +1,24 @@
+kind = "mobile"
+previewPath = "/mobile/"
+title = "PsychPro Mobile"
+description = "The native mobile companion to PsychPro — the psychology study platform. Mirrors the full web experience: courses, flashcards, practice exams, progress tracking, the EPPP Mastery Suite, and the Brain Lab, using the same accounts (Clerk) and the existing shared API server."
+version = "1.0.0"
+id = "artifacts/psychpro-mobile"
+router = "expo-domain"
+
+[[services]]
+name = "expo"
+ensurePreviewReachable = "/status"
+paths = [ "/mobile/" ]
+localPort = 23765
+
+[services.development]
+run = "pnpm --filter @workspace/psychpro-mobile run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/psychpro-mobile", "run", "build" ]
+run = [ "pnpm", "--filter", "@workspace/psychpro-mobile", "run", "serve" ]
+
+[services.env]
+PORT = "23765"
+BASE_PATH = "/mobile/"

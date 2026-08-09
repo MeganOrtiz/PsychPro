@@ -1,0 +1,160 @@
+// Extracted from the web Brain Lab (pages/brain-lab.tsx) — keep coordinates in sync.
+export type ViewKey = "lateral" | "medial" | "midsagittal" | "coronal" | "dorsal" | "ventral" | "ventralNerves";
+
+export type Hotspot = {
+  id: string;
+  x: number;
+  y: number;
+  lx?: number;
+  ly?: number;
+  side?: "left" | "right";
+};
+
+export const HOTSPOTS: Record<ViewKey, Hotspot[]> = {
+  // Lateral view (brain faces left) — cortical surface.
+  lateral: [
+    { id: "precentral-gyrus", x: 43.8, y: 18.2 },
+    { id: "central-sulcus", x: 45.9, y: 16.4 },
+    { id: "postcentral-gyrus", x: 49.9, y: 18.2 },
+    { id: "superior-frontal-gyrus", x: 33.8, y: 18.2 },
+    { id: "middle-frontal-gyrus", x: 28.8, y: 27.3 },
+    { id: "inferior-frontal-gyrus", x: 24.8, y: 39.1 },
+    { id: "pars-opercularis", x: 31.8, y: 44.5 },
+    { id: "pars-triangularis", x: 26.8, y: 46.4 },
+    { id: "pars-orbitalis", x: 20.8, y: 48.2 },
+    { id: "broca-area", x: 29.8, y: 50.9 },
+    { id: "lateral-sulcus", x: 39.8, y: 50.9 },
+    { id: "temporal-pole", x: 16.7, y: 60.0 },
+    { id: "superior-temporal-gyrus", x: 40.8, y: 59.1 },
+    { id: "superior-temporal-sulcus", x: 43.8, y: 61.8 },
+    { id: "middle-temporal-gyrus", x: 44.8, y: 64.5 },
+    { id: "inferior-temporal-gyrus", x: 47.9, y: 69.1 },
+    { id: "intraparietal-sulcus", x: 58.9, y: 26.4 },
+    { id: "superior-parietal-lobule", x: 59.9, y: 22.7 },
+    { id: "supramarginal-gyrus", x: 62.9, y: 37.3 },
+    { id: "angular-gyrus", x: 67.9, y: 44.5 },
+    { id: "inferior-parietal-lobule", x: 65.9, y: 40.9 },
+    { id: "wernicke-area", x: 60.9, y: 51.8 },
+    { id: "occipital-pole", x: 86.0, y: 46.4 },
+    { id: "lateral-occipital-cortex", x: 80.0, y: 52.7 },
+    { id: "cerebellar-hemisphere", x: 79.0, y: 70.9 },
+    { id: "auditory-cortex", x: 49.9, y: 56.4 },
+  ],
+  // "Midsagittal" tab (internal key "medial") — medial-surface render.
+  // Labels & numbering follow the MEDIAL VIEW atlas plate (28).
+  medial: [
+    { id: "paracentral-lobule", x: 49.9, y: 21.9 },
+    { id: "cingulate-sulcus", x: 37.9, y: 29.8 },
+    { id: "cingulate-gyrus", x: 39.9, y: 35.1 },
+    { id: "corpus-callosum", x: 42.9, y: 40.4 },
+    { id: "septum-pellucidum", x: 40, y: 43 },
+    { id: "fornix", x: 39.9, y: 46.5 },
+    { id: "thalamus", x: 47.9, y: 47.4 },
+    { id: "interthalamic-adhesion", x: 46, y: 47 },
+    { id: "hypothalamus", x: 41.9, y: 51.8 },
+    { id: "optic-chiasm", x: 33.9, y: 54.4 },
+    { id: "pituitary", x: 36, y: 60 },
+    { id: "mammillary-bodies", x: 43.9, y: 53.5 },
+    { id: "pons", x: 48.9, y: 61.4 },
+    { id: "medulla", x: 47.9, y: 69.3 },
+    { id: "fourth-ventricle", x: 55, y: 61 },
+    { id: "cerebellum", x: 65, y: 62 },
+    { id: "cerebellar-hemisphere", x: 73, y: 60 },
+    { id: "calcarine-sulcus", x: 73.9, y: 46.5 },
+    { id: "cuneus", x: 75.9, y: 39.5 },
+    { id: "lingual-gyrus", x: 71.9, y: 51.8 },
+    { id: "parieto-occipital-sulcus", x: 69.9, y: 32.5 },
+    { id: "precuneus", x: 63.9, y: 30.7 },
+    { id: "superior-frontal-gyrus", x: 22, y: 17 },
+    { id: "medial-frontal-gyrus", x: 32, y: 16 },
+    { id: "sulcus-rostralis", x: 24, y: 42 },
+    { id: "genu-corpus-callosum", x: 33, y: 42 },
+    { id: "rostrum-corpus-callosum", x: 33, y: 47 },
+    { id: "anterior-commissure", x: 37, y: 48 },
+  ],
+  // "Sagittal" tab (internal key "midsagittal") — deep midline-cut render.
+  // Labels & numbering follow the sagittal atlas plate (21).
+  midsagittal: [
+    { id: "frontal-lobe", x: 20, y: 25 },
+    { id: "parietal-lobe", x: 60, y: 22 },
+    { id: "occipital-lobe", x: 80, y: 40 },
+    { id: "corpus-callosum", x: 42, y: 39 },
+    { id: "cingulate-gyrus", x: 40, y: 33.6 },
+    { id: "septum-pellucidum", x: 38, y: 42 },
+    { id: "thalamus", x: 47, y: 46.2 },
+    { id: "hypothalamus", x: 41, y: 51.7 },
+    { id: "optic-chiasm", x: 34, y: 54.4 },
+    { id: "pituitary", x: 33, y: 60 },
+    { id: "mammillary-bodies", x: 42, y: 54.4 },
+    { id: "pons", x: 49, y: 61.6 },
+    { id: "medulla", x: 48, y: 70.7 },
+    { id: "cerebellum", x: 66, y: 59.8 },
+    { id: "fourth-ventricle", x: 55, y: 62 },
+    { id: "cerebral-aqueduct", x: 51, y: 55 },
+    { id: "pineal-gland", x: 56, y: 48 },
+    { id: "fornix", x: 40, y: 45.3 },
+    { id: "anterior-commissure", x: 37, y: 47 },
+    { id: "lateral-ventricles", x: 44, y: 36 },
+    { id: "subcallosal-area", x: 33, y: 48 },
+  ],
+  // Coronal section — subcortical nuclei, capsules & ventricles.
+  coronal: [
+    { id: "corpus-callosum", x: 50.0, y: 27.8 },
+    { id: "caudate", x: 45.2, y: 35.9 },
+    { id: "putamen", x: 38.4, y: 45.0 },
+    { id: "external-capsule", x: 35.5, y: 46.0 },
+    { id: "claustrum", x: 34.6, y: 48.0 },
+    { id: "insular-cortex", x: 33.6, y: 50.0 },
+    { id: "lateral-ventricles", x: 51.9, y: 32.9 },
+    { id: "internal-capsule", x: 46.1, y: 45.0 },
+    { id: "globus-pallidus", x: 43.2, y: 47.0 },
+    { id: "thalamus", x: 48.1, y: 52.0 },
+    { id: "third-ventricle", x: 50.0, y: 50.0 },
+  ],
+  // Dorsal (superior) view — front at top. Labels follow the dorsal plate (11).
+  dorsal: [
+    { id: "frontal-pole", x: 46, y: 8 },
+    { id: "superior-frontal-gyrus", x: 40, y: 20 },
+    { id: "middle-frontal-gyrus", x: 30, y: 25 },
+    { id: "precentral-gyrus", x: 42, y: 42 },
+    { id: "central-sulcus", x: 45, y: 46 },
+    { id: "postcentral-gyrus", x: 44, y: 50 },
+    { id: "superior-parietal-lobule", x: 56, y: 62 },
+    { id: "intraparietal-sulcus", x: 60, y: 34 },
+    { id: "parieto-occipital-sulcus", x: 57, y: 76 },
+    { id: "occipital-lobe", x: 44, y: 86 },
+    { id: "longitudinal-fissure", x: 50, y: 30 },
+  ],
+  // Ventral (inferior) view — front at top. Labels follow the ventral plate (13).
+  ventral: [
+    { id: "olfactory-bulb", x: 47, y: 18 },
+    { id: "olfactory-tract", x: 47, y: 24 },
+    { id: "optic-nerve", x: 45, y: 30 },
+    { id: "optic-chiasm", x: 49, y: 33 },
+    { id: "optic-tract", x: 55, y: 36 },
+    { id: "pituitary", x: 50, y: 39 },
+    { id: "mammillary-bodies", x: 49, y: 44 },
+    { id: "pons", x: 49, y: 52 },
+    { id: "medulla", x: 49, y: 62 },
+    { id: "cerebellum", x: 47, y: 80 },
+    { id: "temporal-lobe", x: 30, y: 42 },
+    { id: "frontal-lobe", x: 66, y: 20 },
+    { id: "orbital-gyri", x: 30, y: 24 },
+  ],
+  // Cranial Nerves view (internal key "ventralNerves") — brainstem roots.
+  // Labels & numbering follow the cranial-nerve plate (I–XII).
+  ventralNerves: [
+    { id: "olfactory-nerve", x: 46, y: 22 },
+    { id: "optic-nerve", x: 45, y: 35 },
+    { id: "oculomotor-nerve", x: 46, y: 47 },
+    { id: "trochlear-nerve", x: 40, y: 51 },
+    { id: "trigeminal-nerve", x: 35, y: 56 },
+    { id: "abducens-nerve", x: 48, y: 59 },
+    { id: "facial-nerve", x: 39, y: 60 },
+    { id: "vestibulocochlear-nerve", x: 32, y: 62 },
+    { id: "glossopharyngeal-nerve", x: 40, y: 65 },
+    { id: "vagus-nerve", x: 35, y: 69 },
+    { id: "accessory-nerve", x: 39, y: 73 },
+    { id: "hypoglossal-nerve", x: 48, y: 67 },
+  ],
+};
