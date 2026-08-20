@@ -36,6 +36,9 @@ type Question = {
 };
 
 const ROUND_SIZE = 8;
+// Brain Lab is a light-surface experience. Keep every text label in the quiz
+// at true black so anatomy prompts and choices remain readable at a glance.
+const QUIZ_TEXT = PP.black;
 
 // Same grayscale normalization the Sections diagram uses, so quiz diagrams look
 // congruent with the rest of Brain Lab regardless of source image.
@@ -227,7 +230,7 @@ function QuizMarker({
           style={{
             [x > 58 ? "right" : "left"]: "calc(100% + 8px)",
             background: `${PALETTE.surfaceElev}f2`,
-            color: PP.white,
+            color: QUIZ_TEXT,
             border: `1px solid ${variant === "correct" ? PP.green400 : PP.red400}cc`,
           }}
         >
@@ -264,8 +267,8 @@ export function BrainQuizDiagram({
         >
           <Trophy className="w-7 h-7" style={{ color: PALETTE.bg }} />
         </div>
-        <p className="text-sm font-semibold text-white">Round complete</p>
-        <p className="text-xs" style={{ color: `${PALETTE.mist}99` }}>
+        <p className="text-sm font-semibold" style={{ color: QUIZ_TEXT }}>Round complete</p>
+        <p className="text-xs" style={{ color: QUIZ_TEXT }}>
           Your score is in the panel.
         </p>
       </div>
@@ -276,8 +279,8 @@ export function BrainQuizDiagram({
     return (
       <div className="h-full w-full flex flex-col items-center justify-center gap-3 p-6 text-center">
         <HelpCircle className="w-8 h-8" style={{ color: PALETTE.surf }} />
-        <p className="text-sm font-semibold text-white">Quiz unavailable</p>
-        <p className="text-xs" style={{ color: `${PALETTE.mist}99` }}>
+        <p className="text-sm font-semibold" style={{ color: QUIZ_TEXT }}>Quiz unavailable</p>
+        <p className="text-xs" style={{ color: QUIZ_TEXT }}>
           No quizzable regions are loaded yet.
         </p>
       </div>
@@ -373,8 +376,8 @@ export function BrainQuizPanel({
       <PanelSurface>
         <div className="flex-1 flex flex-col items-center justify-center gap-3 p-6 text-center">
           <HelpCircle className="w-8 h-8" style={{ color: PALETTE.surf }} />
-          <p className="text-sm font-semibold text-white">Quiz unavailable</p>
-          <p className="text-xs" style={{ color: `${PALETTE.mist}99` }}>
+          <p className="text-sm font-semibold" style={{ color: QUIZ_TEXT }}>Quiz unavailable</p>
+          <p className="text-xs" style={{ color: QUIZ_TEXT }}>
             No quizzable regions are loaded yet.
           </p>
         </div>
@@ -405,14 +408,14 @@ export function BrainQuizPanel({
             <Trophy className="w-9 h-9" style={{ color: PALETTE.bg }} />
           </div>
           <div>
-            <p className="text-3xl font-light text-white" data-testid="quiz-score">
+            <p className="text-3xl font-light" style={{ color: QUIZ_TEXT }} data-testid="quiz-score">
               {score}
-              <span style={{ color: `${PALETTE.mist}99` }}> / {round.length}</span>
+              <span style={{ color: QUIZ_TEXT }}> / {round.length}</span>
             </p>
-            <p className="text-sm mt-1" style={{ color: PALETTE.surf }}>
+            <p className="text-sm mt-1" style={{ color: QUIZ_TEXT }}>
               {pct}% correct
             </p>
-            <p className="text-xs mt-2 max-w-xs" style={{ color: `${PALETTE.mist}aa` }}>
+            <p className="text-xs mt-2 max-w-xs" style={{ color: QUIZ_TEXT }}>
               {msg}
             </p>
           </div>
@@ -420,7 +423,7 @@ export function BrainQuizPanel({
             <button
               onClick={restart}
               className="px-4 py-2 rounded-md text-sm font-semibold flex items-center gap-2"
-              style={{ background: `${PALETTE.surf}`, color: PALETTE.bg }}
+              style={{ background: `${PALETTE.surf}`, color: QUIZ_TEXT }}
               data-testid="button-quiz-restart"
             >
               <RotateCcw className="w-4 h-4" />
@@ -430,7 +433,7 @@ export function BrainQuizPanel({
               <button
                 onClick={onExit}
                 className="px-4 py-2 rounded-md text-sm font-medium border flex items-center gap-2"
-                style={{ background: `${PALETTE.surface}cc`, borderColor: `${PALETTE.steel}99`, color: PALETTE.mist }}
+              style={{ background: `${PALETTE.surface}cc`, borderColor: `${PALETTE.steel}99`, color: QUIZ_TEXT }}
                 data-testid="button-quiz-exit"
               >
                 <Compass className="w-4 h-4" />
@@ -452,12 +455,12 @@ export function BrainQuizPanel({
         <div className="flex items-center justify-between mb-1.5">
           <span
             className="text-[11px] font-semibold uppercase tracking-wider flex items-center gap-1.5"
-            style={{ color: PALETTE.surf }}
+            style={{ color: QUIZ_TEXT }}
           >
             {q.type === "identify" ? <HelpCircle className="w-3.5 h-3.5" /> : <MousePointerClick className="w-3.5 h-3.5" />}
             {q.type === "identify" ? "Name the part" : "Find the part"}
           </span>
-          <span className="text-[11px] font-medium" style={{ color: `${PALETTE.mist}aa` }}>
+          <span className="text-[11px] font-medium" style={{ color: QUIZ_TEXT }}>
             {idx + 1} / {round.length} · Score {score}
           </span>
         </div>
@@ -474,16 +477,16 @@ export function BrainQuizPanel({
 
       {/* Prompt */}
       <div className="flex-shrink-0 px-4 md:px-5 pb-1">
-        <p className="text-base font-semibold text-white" data-testid="quiz-prompt">
+        <p className="text-base font-semibold" style={{ color: QUIZ_TEXT }} data-testid="quiz-prompt">
           {q.type === "identify" ? (
             <>What is the highlighted region?</>
           ) : (
             <>
-              Click the <span style={{ color: PALETTE.surf, fontWeight: 700 }}>{q.item.name}</span> on the brain
+              Click the <span style={{ color: QUIZ_TEXT, fontWeight: 700 }}>{q.item.name}</span> on the brain
             </>
           )}
         </p>
-        <p className="text-[11px] mt-0.5" style={{ color: `${PALETTE.mist}88` }}>
+        <p className="text-[11px] mt-0.5" style={{ color: QUIZ_TEXT }}>
           {q.item.viewName}
         </p>
       </div>
@@ -497,17 +500,17 @@ export function BrainQuizPanel({
               const isPicked = opt.id === picked;
               let bg = `${PALETTE.surface}cc`;
               let border = `${PALETTE.steel}99`;
-              let color: string = PP.white;
+              let color: string = QUIZ_TEXT;
               if (answered) {
                 if (isCorrect) {
                   bg = `${PP.green400}22`;
                   border = PP.green400;
-                  color = PP.white;
+                  color = QUIZ_TEXT;
                 } else if (isPicked) {
                   bg = `${PP.red400}22`;
                   border = PP.red400;
                 } else {
-                  color = `${PALETTE.mist}88`;
+                  color = QUIZ_TEXT;
                 }
               }
               return (
@@ -532,7 +535,7 @@ export function BrainQuizPanel({
             style={{ background: `${PALETTE.surf}10`, border: `1px solid ${PALETTE.surf}33` }}
           >
             <MousePointerClick className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: PALETTE.surf }} />
-            <p className="text-xs leading-snug" style={{ color: PALETTE.mist }}>
+            <p className="text-xs leading-snug" style={{ color: QUIZ_TEXT }}>
               Click the marker on the brain to answer.
             </p>
           </div>
@@ -549,8 +552,8 @@ export function BrainQuizPanel({
             data-testid="quiz-teach"
           >
             <HelpCircle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: PALETTE.surf }} />
-            <p className="text-xs leading-snug" style={{ color: PALETTE.mist }}>
-              <span className="font-semibold" style={{ color: PP.white }}>{q.item.name}:</span>{" "}
+            <p className="text-xs leading-snug" style={{ color: QUIZ_TEXT }}>
+              <span className="font-semibold" style={{ color: QUIZ_TEXT }}>{q.item.name}:</span>{" "}
               {q.item.blurb}
             </p>
           </div>
@@ -564,7 +567,7 @@ export function BrainQuizPanel({
       >
         <span
           className="text-sm font-semibold flex items-center gap-1.5"
-          style={{ color: answered ? (correctChosen ? PP.green400 : PP.red400) : "transparent" }}
+          style={{ color: answered ? QUIZ_TEXT : "transparent" }}
           data-testid="quiz-feedback"
         >
           {answered &&
@@ -584,7 +587,7 @@ export function BrainQuizPanel({
           className="px-4 py-2 rounded-md text-sm font-semibold flex items-center gap-2 transition-all"
           style={{
             background: answered ? `${PALETTE.surf}` : `${PALETTE.steel}66`,
-            color: answered ? PALETTE.bg : `${PALETTE.mist}66`,
+            color: QUIZ_TEXT,
             cursor: answered ? "pointer" : "not-allowed",
           }}
           data-testid="button-quiz-next"
