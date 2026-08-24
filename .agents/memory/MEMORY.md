@@ -82,4 +82,6 @@
 - [Landing hero full-bleed splash](psychpro-landing-hero-ink-chrome.md) — CURRENT (2026-07-25): edge-to-edge splash hero on PURE WHITE landing ground (landing opts out of study-page-bg); artwork continues below hero via scaleY(-1) mirrored band with cards over it; no fade-to-gray dissolve.
 - [Site-wide backdrop artwork](psychpro-landing-brain-bg.md) — historical (2026-07-16: liquid-flare image removed; backdrop is now a pure-CSS silver radial gradient); viewport-pinned-::before + no-per-page-override rules still current.
 - [Stale task queue](psychpro-stale-task-queue.md) — old PENDING tasks may describe already-fixed problems; verify against code/Stripe before citing them as gaps (two false alarms 2026-07-31).
+- [Deploy healthcheck 500s](deploy-healthcheck-500-boot-window.md) — startup healthcheck 500s in deployment logs are pre-boot proxy noise (before "Server listening"); only post-listen 500s are real.
+- [pnpm stale variants after partial install](pnpm-partial-install-stale-variants.md) — expo/pnpm install in one package can break sibling typecheck (R3F JSX errors); root `pnpm install` re-links.
 - [Panel loading gates](psychpro-panel-loading-gates.md) — never gate panel render on an auth-protected query (401 retry loops look like a stuck spinner); render defaults + hydrate-once with dirty guard.

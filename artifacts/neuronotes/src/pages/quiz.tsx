@@ -368,11 +368,13 @@ export default function QuizPage({ params }: Props) {
                     setReflectionSaved(true);
                   }}
                   disabled={reflection.trim().length === 0 || reflectionSaved}
-                  className="text-xs font-medium px-2.5 py-1 rounded-md text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  className="text-xs font-medium px-2.5 py-1 rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                   style={{
-                    background: reflectionSaved
-                      ? `${P.surf}33`
-                      : `${P.teal}`,
+                    // Saved state sits on a pale surf tint — white text would be
+                    // unreadable there, so switch to dark ink (same bug class as
+                    // the Brain Lab quiz contrast fix).
+                    background: reflectionSaved ? `${P.surf}33` : `${P.teal}`,
+                    color: reflectionSaved ? PP.text : PP.white,
                   }}
                   data-testid="button-save-reflection"
                 >

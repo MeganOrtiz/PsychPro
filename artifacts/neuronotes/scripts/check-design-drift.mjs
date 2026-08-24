@@ -623,6 +623,46 @@ for (const [fileName, cls] of PRIMITIVE_CLASSES) {
   }
 }
 
+// --- 12) CONTRAST DISCIPLINE: white text is baseline-locked ------------------
+// White text (`text-white`) is only legible on genuinely dark fills (teal /
+// green / red buttons, the dark dashboard artwork, scrims). The Brain Lab quiz
+// bug (2026-08) came from legacy dark-theme white text landing on light
+// surfaces. Every audited occurrence is baselined per file below; a NEW
+// occurrence anywhere fails until a human verifies the background is dark and
+// bumps the baseline in the same commit.
+{
+  const WHITE_TEXT_BASELINE = {
+    [path.join("src", "components", "brain", "brain-3d-view.tsx")]: 1, // error text on dark 3D canvas
+    [path.join("src", "components", "layout", "app-layout.tsx")]: 1,   // initials on teal avatar
+    [path.join("src", "pages", "course-mastery-exam.tsx")]: 1,          // icon on teal well
+    [path.join("src", "pages", "dashboard.tsx")]: 4,                    // Spotlight rail on dark artwork
+    [path.join("src", "pages", "practice-exam.tsx")]: 2,                // icon + Begin button on teal
+    [path.join("src", "pages", "profile.tsx")]: 1,                      // spinner on black/60 scrim
+    [path.join("src", "pages", "quiz.tsx")]: 4,                         // labels/icons on green/red fills
+    [path.join("src", "pages", "subscription.tsx")]: 1,                 // Subscribe button on teal
+    [path.join("src", "pages", "topic-detail.tsx")]: 1,                 // icon on accentDeep tile
+  };
+  const counts = {};
+  for (const file of walkSrc(SRC, [])) {
+    const rel = path.relative(ROOT, file);
+    if (rel.includes("dev-glass-preview")) continue; // dev-only specimen page
+    const text = fs.readFileSync(file, "utf8");
+    const n = (text.match(/text-white\b/g) || []).length;
+    if (n > 0) counts[rel] = n;
+  }
+  const allFiles = new Set([...Object.keys(WHITE_TEXT_BASELINE), ...Object.keys(counts)]);
+  for (const rel of allFiles) {
+    const have = counts[rel] || 0;
+    const allowed = WHITE_TEXT_BASELINE[rel] || 0;
+    if (have > allowed) {
+      fail(
+        `new white text in ${rel} — ${have} \`text-white\` occurrence(s), baseline allows ${allowed}`,
+        "white text is only legible on dark fills; verify the background is genuinely dark, then bump WHITE_TEXT_BASELINE in the same commit (or use dark ink PP.text on light surfaces)",
+      );
+    }
+  }
+}
+
 // --- Report ----------------------------------------------------------------
 if (violations.length) {
   console.error(`\n✗ Design system lock FAILED — ${violations.length} drift(s) from the locked blue three-material system:\n`);
