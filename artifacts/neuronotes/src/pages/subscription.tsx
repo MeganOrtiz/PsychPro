@@ -293,8 +293,7 @@ export default function SubscriptionPage() {
                     </div>
                   </div>
                   <Button
-                    className="w-full text-white"
-                    style={{ background: P.teal }}
+                    className="w-full"
                     disabled={isScholar || createCheckout.isPending}
                     onClick={() => handleSubscribe(plan.priceId)}
                     data-testid={`button-subscribe-${plan.priceId}`}
