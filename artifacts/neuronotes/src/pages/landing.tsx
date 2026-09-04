@@ -28,7 +28,6 @@ import {
 } from "recharts";
 import { useGetTopics } from "@workspace/api-client-react";
 import brainLateral from "@/assets/brain-views/lateral.webp";
-import heroInkSplash from "@/assets/hero-ink-splash.webp";
 import heroChromeBrain from "@/assets/psychpro-chrome-brain.webp";
 import founderMegan from "@/assets/founder/megan.webp";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -286,18 +285,8 @@ export default function LandingPage() {
           id="home"
           className={`landing-hero${mounted ? " is-mounted" : ""}`}
         >
-          <img
-            src={heroInkSplash}
-            alt=""
-            className="landing-hero-bg"
-            fetchPriority="high"
-            loading="eager"
-            aria-hidden
-          />
-          {/* Chrome brain re-added as its own layer (owner 2026-07-25: the new
-              hero artwork has NO baked-in brain) — positioned at the artwork's
-              top-center like the owner's mockup, with a slow breathing /
-              pulsating motion. Transparent PNG preserved as provided. */}
+          {/* Standalone chrome brain on the clean white page. Keep the slow
+              breathing / pulsating motion the owner explicitly retained. */}
           <img
             src={heroChromeBrain}
             alt=""
@@ -356,8 +345,6 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* The artwork backdrop is viewport-fixed (.landing-hero-bg); all
-            content below simply scrolls over it. */}
         <div className="landing-artwork-band">
           {/* ============== EPPP MASTERY SUITE ============== */}
           <section id="mastery" className="landing-section landing-mastery" data-reveal>
@@ -773,9 +760,6 @@ const C = {
 const styles = `
 .landing-root {
   position: relative;
-  /* Own stacking context: the viewport-fixed artwork (.landing-hero-bg,
-     z-index -1) must paint ABOVE this white ground but below all content.
-     Without this, the root's own background covers the negative-z layer. */
   isolation: isolate;
   min-height: 100vh;
   min-height: 100dvh;
@@ -884,11 +868,7 @@ const styles = `
 }
 
 /* ============== HERO ============== */
-/* Hero (2026-07-23, owner order): full-bleed background artwork edge-to-edge
-   directly beneath the nav — NO card, NO max-width, NO padding/margins,
-   NO border-radius/border/shadow, NO gray fallback around the image. Text
-   overlays the artwork; an inner max-width applies to TEXT only, never the
-   image or its parents. */
+/* Clean, full-width white hero with the standalone chrome brain. */
 .landing-hero {
   position: relative;
   width: 100%;
@@ -902,28 +882,7 @@ const styles = `
   align-items: center;
   text-align: center;
 }
-.landing-hero-bg {
-  /* FIXED to the viewport (owner 2026-07-25): the artwork stays in place
-     while the page content scrolls over it — same pattern as the dashboard
-     backdrop. z-index -1 keeps it above the root's white ground but below
-     every in-flow section (no per-section z-index needed). */
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  z-index: -1;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-  background: none;
-  pointer-events: none;
-  user-select: none;
-}
-.landing-hero > :not(.landing-hero-bg) {
+.landing-hero > * {
   position: relative;
   z-index: 1;
 }
@@ -961,32 +920,6 @@ const styles = `
   padding-left: 24px;
   padding-right: 24px;
 }
-/* Localized legibility pool — a dense white radial behind the headline,
-   blurb and CTAs so the text reads cleanly where the waves converge, while
-   the artwork stays at full intensity at the edges. Not a box or card.
-   Strengthened 2026-07-25 (owner: text under the brain must be clearly
-   readable) — near-solid white core, soft feathered edge. */
-.landing-hero::before {
-  content: "";
-  position: absolute;
-  z-index: 1;
-  left: 50%;
-  top: 71%;
-  transform: translate(-50%, -50%);
-  width: min(1040px, 98%);
-  height: 60%;
-  background: radial-gradient(
-    ellipse 50% 50% at 50% 50%,
-    ${alpha(PP.white, 0.96)} 0%,
-    ${alpha(PP.white, 0.88)} 30%,
-    ${alpha(PP.white, 0.55)} 52%,
-    ${alpha(PP.white, 0)} 74%
-  );
-  pointer-events: none;
-}
-/* (2026-07-25, fixed-backdrop rework) The old mirrored "artwork continuation
-   band" image + seam/wash overlays are GONE: the artwork is now a single
-   viewport-fixed layer and the content simply scrolls over it. */
 .landing-artwork-band {
   position: relative;
   width: 100%;

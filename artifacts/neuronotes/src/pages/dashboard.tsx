@@ -26,6 +26,7 @@
 // =============================================================================
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "wouter";
+import dashboardBrain from "@/assets/psychpro-chrome-brain.webp";
 import {
   BookOpen,
   Brain,
@@ -241,10 +242,11 @@ export default function DashboardPage() {
 
   return (
     <div
-      className="min-h-full dashboard-page dashboard-artwork"
+      className="min-h-full dashboard-page"
       data-testid="dashboard-page"
     >
       <div className="dashboard-brand">
+        <img src={dashboardBrain} alt="" className="dashboard-brain" aria-hidden />
         <h1 data-testid="text-dashboard-brand">PsychPro</h1>
       </div>
       <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 lg:pt-8 pb-4 md:pb-6 lg:pb-8">

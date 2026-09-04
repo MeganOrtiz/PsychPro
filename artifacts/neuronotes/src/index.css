@@ -753,50 +753,19 @@ body {
   margin: -4px auto 18px;
 }
 
-/* ============================================================
-   DASHBOARD BACKDROP ARTWORK — owner-supplied liquid frame
-   (2026-07-25). Applies ONLY to the two dashboards (main + EPPP)
-   via .dashboard-artwork on the page root. The image is a white
-   ground with teal liquid edges + a chrome brain at top-center —
-   it sits over the pure-white site floor (z -2) on its own fixed
-   layer (z -1), viewport-pinned so it backs the page at every
-   scroll depth. Do NOT edit/regenerate the image (owner asset)
-   and do NOT extend this class to other pages.
-   ============================================================ */
-.dashboard-artwork::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background-image: url("./assets/dashboard-liquid-frame.png");
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
-  background-attachment: scroll;
-  pointer-events: none;
-}
-
-/* Brand wordmark placed right under the baked-in chrome brain of the
-   dashboard artwork (replaces the old top-bar wordmark banners).
-   - Vertical: the brain's bottom edge under viewport-cover scaling is
-     ~23% of the displayed image height = max(23vh, 12.95vw); subtract the
-     header height above the scroll area (--dash-y-offset).
-   - Horizontal: the brain is centered on the VIEWPORT while the content
-     column sits right of the sidebar; --dash-x-offset pulls the band back
-     to full viewport width so the wordmark centers under the brain. */
+/* Standalone dashboard brain + wordmark, centered to the full viewport even
+   though the content column sits to the right of the sidebar. */
 .dashboard-brand {
   --dash-x-offset: 0px;
   --dash-r-offset: 0px;
-  --dash-y-offset: 52px; /* mobile top bar */
   margin-left: calc(-1 * var(--dash-x-offset));
   margin-right: calc(-1 * var(--dash-r-offset));
   width: calc(100% + var(--dash-x-offset) + var(--dash-r-offset));
-  padding-top: calc(max(23vh, 12.95vw) - var(--dash-y-offset) + 6px);
+  padding-top: clamp(18px, 3vw, 38px);
   text-align: center;
 }
 @media (min-width: 768px) {
   .dashboard-brand {
-    --dash-y-offset: 64px; /* desktop top bar */
   }
   .dashboard-page .dashboard-brand {
     --dash-x-offset: 288px; /* sidebar w-64 + m-4 */
@@ -807,10 +776,16 @@ body {
        viewport-centered brain by half the right padding. */
     --dash-x-offset: calc(288px + clamp(16px, 4vw, 48px));
     --dash-r-offset: clamp(16px, 4vw, 48px);
-    /* Cancel the epd-page TOP padding too, so the title sits at the same
-       distance under the brain as the main dashboard's. */
-    margin-top: calc(-1 * clamp(14px, 2.4vw, 28px));
   }
+}
+.dashboard-brain {
+  display: block;
+  width: clamp(170px, 20vw, 330px);
+  height: auto;
+  margin: 0 auto 8px;
+  filter: drop-shadow(0 14px 24px rgba(var(--pp-black-rgb), 0.14));
+  pointer-events: none;
+  user-select: none;
 }
 /* Matches the landing-page wordmark exactly (Montserrat 200, 0.22em
    tracking, uppercase) so the brand reads the same everywhere. */

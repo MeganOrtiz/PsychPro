@@ -1,7 +1,7 @@
 - [PsychPro white/luminous system](psychpro-white-luminous-system.md) — CURRENT, amended 2026-07-25: ground is PURE WHITE site-wide (body, backdrop ::before, --background 100%); silver radial + #eef0f2 floors retired ("no gray backgrounds" — owner); drift lock updated.
 - [PsychPro mobile app](psychpro-mobile-app.md) — Expo full mirror at /mobile; Clerk key blob normalized in code; web score conventions mirrored; paywall 402 UX; expo-auth-session required by clerk-expo.
 - [TS project-reference stale dist](ts-project-refs-stale-dist.md) — "no exported member" from a workspace lib after regenerating its src = tsc resolved stale dist .d.ts via project references; run `tsc -b` in the lib.
-- [Dashboard backdrop artwork](psychpro-dashboard-artwork.md) — liquid-frame image scoped to the two dashboards only; wordmarks moved under the baked-in brain (header banners removed); offset math + dev preview route documented.
+- [Dashboard chrome brains](psychpro-dashboard-artwork.md) — CURRENT: main + EPPP dashboards use standalone chrome brains on pure white; liquid-frame background artwork is retired.
 - [Mask flips with transform](css-mask-flips-with-transform.md) — mask-image on a scaleY(-1) element gets flipped WITH it (fade lands on the wrong edge); use overlay gradient pseudo-elements for edge dissolves on mirrored images.
 - [PsychPro gray foundation v2](psychpro-gray-foundation-v2.md) — historical (superseded 2026-07-16 by the white/luminous system).
 - [PsychPro solid tile fills](psychpro-solid-tile-fills.md) — still current structurally (opaque --pp-tile ladder), values now the LIGHT ladder (2026-07-16 white system).
@@ -79,7 +79,7 @@
 - [Auth provider choice](psychpro-auth-provider-choice.md) — PsychPro uses external Clerk on purpose; Replit Auth forces end users to have Replit accounts (consumer audience killer); a RA migration was built+reverted; RA→Clerk migration is unsupported — keep Clerk.
 - [Smoke bg resolution](psychpro-smoke-bg-resolution.md) — the shared smoke backdrop source is only 941px; "looks cheap/blurry" = a resolution problem fixed by super-resolution of the exact asset, not CSS; includes CPU-upscale sandbox recipe.
 - [Landing Brain Lab brain](psychpro-landing-brain-cutout.md) — CURRENT again (2026-07-22: owner had it removed then RESTORED same day — "remove brain images" meant hero designs only); keep grayscale lateral.webp in the promo; glowing-brain rejection stands.
-- [Landing hero full-bleed splash](psychpro-landing-hero-ink-chrome.md) — CURRENT (2026-07-25): edge-to-edge splash hero on PURE WHITE landing ground (landing opts out of study-page-bg); artwork continues below hero via scaleY(-1) mirrored band with cards over it; no fade-to-gray dissolve.
+- [Landing chrome brain on white](psychpro-landing-hero-ink-chrome.md) — CURRENT: decorative background retired; keep the standalone chrome brain and its slow breathing animation on pure white.
 - [Site-wide backdrop artwork](psychpro-landing-brain-bg.md) — historical (2026-07-16: liquid-flare image removed; backdrop is now a pure-CSS silver radial gradient); viewport-pinned-::before + no-per-page-override rules still current.
 - [Stale task queue](psychpro-stale-task-queue.md) — old PENDING tasks may describe already-fixed problems; verify against code/Stripe before citing them as gaps (two false alarms 2026-07-31).
 - [Deploy healthcheck 500s](deploy-healthcheck-500-boot-window.md) — startup healthcheck 500s in deployment logs are pre-boot proxy noise (before "Server listening"); only post-listen 500s are real.

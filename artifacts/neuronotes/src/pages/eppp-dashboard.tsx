@@ -22,6 +22,7 @@ import { groupEpppTopicsByCategory, isEpppKnowledgeTopic } from "@/lib/eppp-cont
 import { epppDomainAnchor, epppTopicPath } from "@/lib/eppp-routes";
 import { knowledgeDomainIcon } from "@/lib/eppp-icons";
 import { PP, alpha } from "@/lib/palette";
+import dashboardBrain from "@/assets/psychpro-chrome-brain.webp";
 
 // ---------------------------------------------------------------------------
 // EPPP Mastery Suite dashboard — the working "how ready am I" home for the
@@ -184,10 +185,11 @@ export function EpppDashboardView({
   void greetingName;
 
   return (
-    <div className="study-page-bg epd-page dashboard-artwork" data-testid="eppp-dashboard-page">
+    <div className="study-page-bg epd-page" data-testid="eppp-dashboard-page">
       <style>{styles}</style>
 
       <div className="dashboard-brand">
+        <img src={dashboardBrain} alt="" className="dashboard-brain" aria-hidden />
         <h1 data-testid="text-eppp-brand">EPPP Mastery Suite</h1>
       </div>
 

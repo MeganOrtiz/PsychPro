@@ -1,7 +1,13 @@
 ---
-name: PsychPro landing hero — full-bleed splash artwork
-description: Current landing hero (2026-07-23 PM): owner-supplied full-bleed blue-splash image as hero background (chrome brain removed from the asset per follow-up order); earlier ink-cloud and chrome-only compositions retired.
+name: PsychPro landing hero — chrome brain on white
+description: Current landing hero uses a standalone pulsating chrome brain on pure white; all decorative background artwork is retired
 ---
+
+**2026-09-04 current rule:** the landing-page background artwork was explicitly removed. Keep the pure-white ground and the standalone chrome brain. The owner specifically loves and wants to retain the brain's slow breathing/pulsating animation. Do not restore the ink-splash backdrop or remove/stop the brain unless explicitly directed.
+
+**Why:** the owner requested background removal across landing, main dashboard, and EPPP dashboard while preserving the brains, with an explicit callout to keep the landing pulse.
+
+**How to apply:** treat the historical notes below as provenance only. The current design lock rejects the old landing backdrop and requires the standalone brain plus its reduced-motion-aware breathing keyframes.
 
 - CURRENT hero (2026-07-23, owner-supplied image + explicit spec, then amended): one full-bleed background image (`hero-ink-splash.png` — blue ink splashes; the silver chrome brain that was baked into the owner's original was REMOVED per follow-up order "remove the chrome brain only" via CV mask + diffusion fill on the actual asset) rendered edge-to-edge directly beneath the sticky nav. Owner's exact constraints: NO card/box/framed container, NO padding/margins/border-radius/borders/shadows around the image, NO max-width on the image or any parent, `object-fit: cover` (never contain), NO gray fallback background. Owner ALSO rejected pushing the text down with a spacer ("no dont push the text") — text keeps its natural top stacking (wordmark → tagline → headline → blurb → CTAs) overlaying the artwork with z-index:1. `.landing-hero` is full-width (max-width:none) with `min-height: calc(100svh - 58px)`; `.landing-hero-bg` is absolute inset:0 cover.
 - Guardrail (check-design-drift.mjs) now pins: `.landing-hero-bg` <img> must exist AND its CSS must contain `object-fit: cover`.

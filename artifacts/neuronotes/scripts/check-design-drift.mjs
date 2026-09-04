@@ -171,25 +171,22 @@ if (!appBackdrop) {
 if (landingBackdrop) {
   fail("landing backdrop override reintroduced", "the site uses ONE backdrop image site-wide (owner 2026-07-15) — remove the .landing-root.study-page-bg::before override");
 }
-// Owner hero-brain lock (2026-07-18): the owner supplied a liquid-chrome
-// splash brain <img> leading the landing hero stack, above the wordmark.
-// The same splash brain also tops both dashboards. Keep it present.
+// Owner brain lock: the decorative background artwork was removed on
+// 2026-09-04, but the standalone chrome brain remains on the landing hero and
+// both dashboards. The landing brain keeps its breathing animation.
 {
   const landingSrc = fs.readFileSync(path.join(ROOT, "src", "pages", "landing.tsx"), "utf8");
-  const bgImg = /<img[^>]*className="landing-hero-bg"/.test(landingSrc);
-  if (!bgImg) {
+  if (/landing-hero-bg|heroInkSplash/.test(landingSrc)) {
     fail(
-      "landing hero background missing",
-      "owner ordered a full-bleed hero background image (2026-07-23) — restore the .landing-hero-bg <img> (edge-to-edge, object-fit: cover, no card/max-width/padding around it)",
+      "landing background artwork reintroduced",
+      "keep the landing page on its clean white ground; retain only the standalone pulsating chrome brain",
     );
-  } else {
-    const bgCss = /\.landing-hero-bg\s*\{[^}]*object-fit:\s*cover/.test(landingSrc);
-    if (!bgCss) {
-      fail(
-        "landing hero background not cover",
-        "owner ordered object-fit: cover on .landing-hero-bg (2026-07-23) — never contain, never boxed",
-      );
-    }
+  }
+  if (!/className="psychpro-hero__brain"/.test(landingSrc) || !/@keyframes psychpro-brain-breathe/.test(landingSrc)) {
+    fail(
+      "landing pulsating brain missing",
+      "keep the standalone psychpro-hero__brain and its psychpro-brain-breathe animation",
+    );
   }
 }
 if (!overlayBackdrop) {
@@ -200,22 +197,13 @@ if (!overlayBackdrop) {
   }
 }
 
-// Dashboard backdrop artwork (owner, 2026-07-25): the ONLY sanctioned page
-// backdrop image besides the landing hero splash. Scoped to .dashboard-artwork
-// (main + EPPP dashboards only), viewport-pinned fixed layer at z -1 over the
-// pure-white floor. Do not extend to other pages or move onto .study-page-bg.
-const dashboardArtwork = ruleBlock(css, ".dashboard-artwork::before");
-if (!dashboardArtwork) {
-  fail("dashboard backdrop artwork missing", "restore the .dashboard-artwork::before liquid-frame backdrop (owner 2026-07-25)");
-} else {
-  if (!/position:\s*fixed;/.test(dashboardArtwork) || !/inset:\s*0;/.test(dashboardArtwork)) {
-    fail("dashboard backdrop geometry drifted", "keep .dashboard-artwork::before position: fixed with inset: 0 (viewport-pinned so it backs the page at every scroll depth)");
-  }
-  if (!/dashboard-liquid-frame/.test(dashboardArtwork) || !/background-size:\s*cover;/.test(dashboardArtwork)) {
-    fail("dashboard backdrop image drifted", "keep the owner's dashboard-liquid-frame artwork with background-size: cover");
-  }
-  if (!/background-attachment:\s*scroll;/.test(dashboardArtwork)) {
-    fail("dashboard backdrop attachment drifted", "keep background-attachment: scroll (fixed on a fixed layer draws a HiDPI seam)");
+if (/\.dashboard-artwork::before/.test(css) || /dashboard-liquid-frame/.test(css)) {
+  fail("dashboard background artwork reintroduced", "keep both dashboards on the clean white ground");
+}
+for (const page of ["dashboard.tsx", "eppp-dashboard.tsx"]) {
+  const src = fs.readFileSync(path.join(ROOT, "src", "pages", page), "utf8");
+  if (!/className="dashboard-brain"/.test(src)) {
+    fail(`dashboard brain missing from ${page}`, "keep the standalone chrome brain above the dashboard wordmark");
   }
 }
 
