@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PP } from "@/lib/palette";
+import { trackEvent } from "@/lib/analytics";
 import { FREE_FLASHCARD_PREVIEW, FREE_QUIZ_LIMIT, FREE_EXAM_LIMIT } from "@/lib/limits";
 
 // B-1: display name is "Master" (the internal subscriptionStatus / Stripe
@@ -60,21 +61,42 @@ export default function SubscriptionPage() {
   const { data: entitlements } = useEntitlements();
   const epppCheckout = useEpppCheckout();
 
-  useEffect(() => {
-    const params = new URLSearchParams(search);
-    if (params.get("success") === "true") {
-      toast.success("Subscription activated! Welcome to PsychPro.");
-    }
-    if (params.get("canceled") === "true") {
-      toast("Checkout canceled. Your plan has not changed.");
-    }
-  }, [search]);
-
   const isActive = status?.status === "active";
   const tier = status?.tier ?? null;
   const isScholar = isActive && tier === "scholar";
   const isPro = isActive && !isScholar;
   const currentPeriodEnd = status?.currentPeriodEnd ?? null;
+
+  useEffect(() => {
+    if (statusLoading) return;
+    const params = new URLSearchParams(search);
+    const successReturn = params.get("success") === "true";
+    const canceledReturn = params.get("canceled") === "true";
+    if (!successReturn && !canceledReturn) return;
+
+    if (successReturn) {
+      toast.success("Checkout complete. Your subscription status is updated.");
+      trackEvent("checkout_returned", {
+        surface: "subscription",
+        outcome: "success_redirect",
+        subscription_active: isActive,
+      });
+    } else {
+      toast("Checkout canceled. Your plan has not changed.");
+      trackEvent("checkout_returned", { surface: "subscription", outcome: "canceled" });
+    }
+
+    // Consume the return marker so refresh/back navigation cannot count it
+    // again. Preserve unrelated query parameters and the hash.
+    params.delete("success");
+    params.delete("canceled");
+    const remaining = params.toString();
+    window.history.replaceState(
+      window.history.state,
+      "",
+      `${window.location.pathname}${remaining ? `?${remaining}` : ""}${window.location.hash}`,
+    );
+  }, [isActive, search, statusLoading]);
 
   // Bucket by the server's canonical tier metadata, never the display name.
   const proPlans = (plans as Plan[] | undefined)?.filter((p) => p.tier !== "scholar") ?? [];
@@ -82,8 +104,16 @@ export default function SubscriptionPage() {
 
   async function handleSubscribe(priceId: string) {
     try {
+      const selectedPlan = (plans as Plan[] | undefined)?.find((plan) => plan.priceId === priceId);
       const result = await createCheckout.mutateAsync({ data: { priceId } });
-      if (result.url) window.location.href = result.url;
+      if (result.url) {
+        trackEvent("checkout_started", {
+          surface: "subscription",
+          product_tier: selectedPlan?.tier === "scholar" ? "scholar" : "master",
+          billing_interval: selectedPlan?.interval ?? "unknown",
+        });
+        window.location.href = result.url;
+      }
     } catch {
       toast.error("Could not start checkout. Please try again.");
     }
@@ -92,7 +122,10 @@ export default function SubscriptionPage() {
   async function handleManageSubscription() {
     try {
       const result = await createPortal.mutateAsync();
-      if (result.url) window.location.href = result.url;
+      if (result.url) {
+        trackEvent("billing_portal_opened", { surface: "subscription" });
+        window.location.href = result.url;
+      }
     } catch {
       toast.error("Could not open the billing portal. Please try again.");
     }
@@ -101,7 +134,10 @@ export default function SubscriptionPage() {
   async function handleEpppCheckout(priceId: string) {
     try {
       const result = await epppCheckout.mutateAsync({ priceId });
-      if (result.url) window.location.href = result.url;
+      if (result.url) {
+        trackEvent("checkout_started", { surface: "subscription", product_tier: "eppp" });
+        window.location.href = result.url;
+      }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not start checkout. Please try again.");
     }

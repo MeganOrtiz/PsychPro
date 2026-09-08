@@ -11,6 +11,7 @@ import UpgradePrompt from "@/components/upgrade-prompt";
 import { StudySurface } from "@/components/study/study-surface";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PP, alpha } from "@/lib/palette";
+import { trackEvent } from "@/lib/analytics";
 import { PageTitle } from "@/components/brand/page-title";
 import { loadReflectionText, saveReflection } from "@/lib/reflections";
 import { epppTopicPath, isEpppRoute } from "@/lib/eppp-routes";
@@ -81,6 +82,13 @@ export default function QuizPage({ params }: Props) {
   // Inside an allowed topic, answering is unmetered.
   const handleSelect = (key: string) => {
     if (selected) return;
+    if (index === 0) {
+      trackEvent("learning_started", {
+        mode: "quiz",
+        topic_id: topicId,
+        question_count: total,
+      });
+    }
     setSelected(key);
     setShowExplanation(true);
     if (key === current?.correctAnswer) {
@@ -95,6 +103,13 @@ export default function QuizPage({ params }: Props) {
     if (index + 1 >= total) {
       setCompleted(true);
       const percent = total > 0 ? Math.round((score / total) * 100) : 0;
+      trackEvent("learning_completed", {
+        mode: "quiz",
+        topic_id: topicId,
+        question_count: total,
+        score_percent: percent,
+        passed: percent >= 70,
+      });
       try {
         await updateProgress.mutateAsync({ topicId, data: { score: percent } });
       } catch {
@@ -123,6 +138,7 @@ export default function QuizPage({ params }: Props) {
   };
 
   const handleRestart = () => {
+    trackEvent("learning_restarted", { mode: "quiz", topic_id: topicId });
     setIndex(0);
     setSelected(null);
     setShowExplanation(false);

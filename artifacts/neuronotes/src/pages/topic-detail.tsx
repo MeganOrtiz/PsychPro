@@ -11,6 +11,7 @@ import { PP } from "@/lib/palette";
 import { useEntitlements } from "@/lib/use-entitlements";
 import { isEpppTopic } from "@/lib/eppp-content";
 import { epppDomainAnchor, epppTopicModePath, epppTopicPath, isEpppRoute } from "@/lib/eppp-routes";
+import { trackEvent } from "@/lib/analytics";
 
 interface Props {
   params: { id: string };
@@ -31,6 +32,15 @@ export default function TopicDetailPage({ params }: Props) {
     }
   }, [inEppp, navigate, topic, topicId]);
 
+  const openStudyMode = (mode: string, destination: string) => {
+    trackEvent("feature_opened", {
+      surface: inEppp ? "eppp_topic" : "topic",
+      mode,
+      topic_id: topicId,
+    });
+    navigate(destination);
+  };
+
   // Per-mode accent palette. Each card gets its own glow color so the
   // four study modes read as distinct destinations instead of a flat
   // stack of identical tiles. Hues stay inside the cerulean / teal /
@@ -43,7 +53,7 @@ export default function TopicDetailPage({ params }: Props) {
       description: ent?.flashcardsCapped
         ? `Preview the first ${ent.flashcardPreviewLimit} cards`
         : "Tap to flip and test your recall",
-      onClick: () => navigate(inEppp ? epppTopicModePath(topicId, "flashcards") : `/topics/${topicId}/flashcards`),
+      onClick: () => openStudyMode("flashcards", inEppp ? epppTopicModePath(topicId, "flashcards") : `/topics/${topicId}/flashcards`),
       testId: "button-flashcards",
       accent: PP.neutral400,
       accentDeep: PP.neutral600,
@@ -55,7 +65,7 @@ export default function TopicDetailPage({ params }: Props) {
       description: ent?.quizLocked
         ? "Upgrade to Master for unlimited quizzes"
         : "Multiple-choice with explanations",
-      onClick: () => navigate(inEppp ? epppTopicModePath(topicId, "quiz") : `/topics/${topicId}/quiz`),
+      onClick: () => openStudyMode("quiz", inEppp ? epppTopicModePath(topicId, "quiz") : `/topics/${topicId}/quiz`),
       testId: "button-quiz",
       accent: PP.neutral400,
       accentDeep: PP.neutral600,
@@ -67,7 +77,7 @@ export default function TopicDetailPage({ params }: Props) {
       description: ent?.studyGuideLocked
         ? "Master feature — comprehensive notes"
         : "Comprehensive scrollable notes",
-      onClick: () => navigate(inEppp ? epppTopicModePath(topicId, "study-guide") : `/topics/${topicId}/study-guide`),
+      onClick: () => openStudyMode("study_guide", inEppp ? epppTopicModePath(topicId, "study-guide") : `/topics/${topicId}/study-guide`),
       testId: "button-study-guide",
       accent: PP.neutral400,
       accentDeep: PP.neutral600,
@@ -79,7 +89,7 @@ export default function TopicDetailPage({ params }: Props) {
       description: ent?.examLocked
         ? "Upgrade to Master for unlimited exams"
         : "Timed or untimed full exam",
-      onClick: () => navigate(inEppp ? epppTopicModePath(topicId, "exam") : `/topics/${topicId}/exam`),
+      onClick: () => openStudyMode("practice_exam", inEppp ? epppTopicModePath(topicId, "exam") : `/topics/${topicId}/exam`),
       testId: "button-practice-exam",
       accent: PP.neutral400,
       accentDeep: PP.neutral600,

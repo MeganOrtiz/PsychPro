@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { authHeaders } from "@/lib/auth-headers";
 import { PageTitle } from "@/components/brand/page-title";
+import { trackEvent } from "@/lib/analytics";
 
 type InputMode = "text" | "file";
 type AiMode = "strict" | "enhance";
@@ -164,6 +165,13 @@ export default function NewDeckPage() {
         throw new Error(data.error || "Failed to create deck");
       }
       const deck = await res.json();
+      trackEvent("custom_material_created", {
+        input_mode: mode,
+        file_extension:
+          mode === "file" && file ? (file.name.split(".").pop()?.toLowerCase() ?? "unknown") : "none",
+        tool_type: active,
+        ai_mode: aiMode,
+      });
       toast.success("Study materials generated successfully!");
       navigate(`/my-decks/${deck.id}`);
     } catch (err: unknown) {

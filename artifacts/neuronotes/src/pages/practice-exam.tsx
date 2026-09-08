@@ -17,6 +17,7 @@ import ElaborationPanel from "@/components/learning/elaboration-panel";
 import { StudySurface } from "@/components/study/study-surface";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PP, alpha } from "@/lib/palette";
+import { trackEvent } from "@/lib/analytics";
 import { PageTitle } from "@/components/brand/page-title";
 import { epppTopicPath, isEpppRoute } from "@/lib/eppp-routes";
 import { isEpppTopic } from "@/lib/eppp-content";
@@ -90,6 +91,18 @@ export default function PracticeExamPage({ params }: Props) {
   // timing keep working.
   const examTimeLimitSec = exam?.timeLimit && exam.timeLimit > 0 ? exam.timeLimit : 0;
   const examIsTimeable = examTimeLimitSec > 0;
+  const effectiveTimed = timed && examIsTimeable;
+  const examStartTrackedRef = useRef(false);
+  const trackExamStart = () => {
+    if (examStartTrackedRef.current) return;
+    examStartTrackedRef.current = true;
+    trackEvent("learning_started", {
+      mode: fullMode ? "full_length_exam" : "practice_exam",
+      topic_id: topicId,
+      question_count: total,
+      timed: effectiveTimed,
+    });
+  };
 
   const answersRef = useRef<Record<number, string>>({});
   const questionsRef = useRef(questions);
@@ -97,8 +110,8 @@ export default function PracticeExamPage({ params }: Props) {
   questionsRef.current = questions;
 
   const submittedRef = useRef(false);
-  const submitRef = useRef<() => void>(() => {});
-  submitRef.current = () => {
+  const submitRef = useRef<(autoSubmitted?: boolean) => void>(() => {});
+  submitRef.current = (autoSubmitted = false) => {
     if (submittedRef.current) return;
     submittedRef.current = true;
     if (timerRef.current) clearInterval(timerRef.current);
@@ -107,6 +120,15 @@ export default function PracticeExamPage({ params }: Props) {
     const correct = qs.filter(q => ans[q.id] === q.correctAnswer).length;
     const missedQuestionIds = qs.filter(q => ans[q.id] !== q.correctAnswer).map(q => q.id);
     const score = qs.length > 0 ? Math.round((correct / qs.length) * 100) : 0;
+    trackEvent("learning_completed", {
+      mode: fullMode ? "full_length_exam" : "practice_exam",
+      topic_id: topicId,
+      question_count: qs.length,
+      score_percent: score,
+      passed: score >= 70,
+      timed: effectiveTimed,
+      auto_submitted: autoSubmitted,
+    });
     updateProgress.mutate({ topicId, data: { score } });
     if (qs.length > 0) {
       recordAttempt.mutate(
@@ -131,7 +153,7 @@ export default function PracticeExamPage({ params }: Props) {
         setTimeLeft(t => {
           if (t <= 1) {
             clearInterval(timerRef.current!);
-            submitRef.current();
+            submitRef.current(true);
             return 0;
           }
           return t - 1;
@@ -255,7 +277,7 @@ export default function PracticeExamPage({ params }: Props) {
         </div>
         <div className="flex gap-3">
           <Button variant="outline" onClick={() => navigate(backToTopic)} data-testid="button-back-to-topic">Back to Topic</Button>
-          <Button onClick={() => { submittedRef.current = false; setSubmitted(false); setStarted(false); setAnswers({}); setIndex(0); setQuestionCount(null); setWarmupActive(false); setWarmupText(""); setTimeLeft(0); }} data-testid="button-retake">Retake</Button>
+          <Button onClick={() => { submittedRef.current = false; examStartTrackedRef.current = false; setSubmitted(false); setStarted(false); setAnswers({}); setIndex(0); setQuestionCount(null); setWarmupActive(false); setWarmupText(""); setTimeLeft(0); }} data-testid="button-retake">Retake</Button>
         </div>
         </div>
       </div>
@@ -301,7 +323,10 @@ export default function PracticeExamPage({ params }: Props) {
               size="lg"
               className="w-full"
               disabled={isLoading || fullCount === 0}
-              onClick={() => setStarted(true)}
+              onClick={() => {
+                trackExamStart();
+                setStarted(true);
+              }}
               data-testid="button-start-full-exam"
             >
               {examIsTimeable
@@ -432,6 +457,7 @@ export default function PracticeExamPage({ params }: Props) {
               disabled={questionCount === null}
               onClick={() => {
                 if (warmupEnabled) setWarmupActive(true);
+                else trackExamStart();
                 setStarted(true);
               }}
               data-testid="button-start-exam"
@@ -512,14 +538,14 @@ export default function PracticeExamPage({ params }: Props) {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => { setWarmupActive(false); setWarmupText(""); }}
+                  onClick={() => { trackExamStart(); setWarmupActive(false); setWarmupText(""); }}
                   data-testid="button-skip-warmup"
                   className="text-muted-foreground hover:text-foreground hover:bg-black/5"
                 >
                   Skip
                 </Button>
                 <Button
-                  onClick={() => { setWarmupActive(false); setWarmupText(""); }}
+                  onClick={() => { trackExamStart(); setWarmupActive(false); setWarmupText(""); }}
                   disabled={!ready}
                   className="text-white"
                   style={{

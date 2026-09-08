@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { STUDY_PALETTE } from "@/lib/study-theme";
 import { PP } from "@/lib/palette";
+import { trackEvent } from "@/lib/analytics";
 type NavItem = { href: string; label: string; icon: React.ComponentType<{ className?: string }> };
 
 // Sidebar nav tile — plain neutral row (black-foundation reset, 2026-07-09).
@@ -212,7 +213,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setSidebarOpen(false)}
+                onClick={() => {
+                  trackEvent("navigation_clicked", { surface: "sidebar", destination: item.href });
+                  setSidebarOpen(false);
+                }}
                 data-testid={`nav-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
               >
                 <div className={navItemClass(isActive)}>
@@ -233,7 +237,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setSidebarOpen(false)}
+                onClick={() => {
+                  trackEvent("navigation_clicked", { surface: "sidebar", destination: item.href });
+                  setSidebarOpen(false);
+                }}
                 data-testid={`nav-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
               >
                 <div className={navItemClass(isActive)}>
@@ -261,7 +268,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setSidebarOpen(false)}
+                onClick={() => {
+                  trackEvent("navigation_clicked", { surface: "sidebar", destination: item.href });
+                  setSidebarOpen(false);
+                }}
                 data-testid={`nav-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
               >
                 <div className={navItemClass(isActive)}>
@@ -278,7 +288,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setSidebarOpen(false)}
+                onClick={() => {
+                  trackEvent("navigation_clicked", { surface: "sidebar", destination: item.href });
+                  setSidebarOpen(false);
+                }}
                 data-testid={`nav-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
               >
                 <div className={navItemClass(isActive)}>
@@ -301,7 +314,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   <Link
                     key={item.href}
                     href={item.href}
-                    onClick={() => setSidebarOpen(false)}
+                    onClick={() => {
+                      trackEvent("navigation_clicked", { surface: "sidebar", destination: item.href });
+                      setSidebarOpen(false);
+                    }}
                     data-testid={`nav-${item.label.toLowerCase()}`}
                   >
                     <div className={navItemClass(isActive)}>
@@ -322,7 +338,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
               </div>
               <Link
                 href="/admin/feedback"
-                onClick={() => setSidebarOpen(false)}
+                onClick={() => {
+                  trackEvent("navigation_clicked", { surface: "sidebar", destination: "/admin/feedback" });
+                  setSidebarOpen(false);
+                }}
                 data-testid="nav-admin-feedback"
               >
                 <div className={navItemClass(location === "/admin/feedback")}>
@@ -333,7 +352,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
               </Link>
               <Link
                 href="/admin/featured-work"
-                onClick={() => setSidebarOpen(false)}
+                onClick={() => {
+                  trackEvent("navigation_clicked", { surface: "sidebar", destination: "/admin/featured-work" });
+                  setSidebarOpen(false);
+                }}
                 data-testid="nav-admin-featured-work"
               >
                 <div className={navItemClass(location === "/admin/featured-work")}>
@@ -344,7 +366,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
               </Link>
               <Link
                 href="/admin/connections"
-                onClick={() => setSidebarOpen(false)}
+                onClick={() => {
+                  trackEvent("navigation_clicked", { surface: "sidebar", destination: "/admin/connections" });
+                  setSidebarOpen(false);
+                }}
                 data-testid="nav-admin-connections"
               >
                 <div className={navItemClass(location === "/admin/connections")}>
@@ -365,7 +390,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
             href="/eppp/suite"
             className="eppp-launch-btn eppp-launch-btn--sidebar"
             data-testid="eppp-launch-sidebar"
-            onClick={() => setSidebarOpen(false)}
+            onClick={() => {
+              trackEvent("navigation_clicked", { surface: "sidebar", destination: "/eppp/suite" });
+              setSidebarOpen(false);
+            }}
           >
             <span className="eppp-launch-btn__inner">
               <GraduationCap aria-hidden />
@@ -409,6 +437,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
             href="/eppp/suite"
             className="eppp-launch-btn"
             data-testid="eppp-launch-header"
+            onClick={() => trackEvent("navigation_clicked", { surface: "header", destination: "/eppp/suite" })}
           >
             <span className="eppp-launch-btn__inner">
               <GraduationCap aria-hidden />
@@ -498,7 +527,10 @@ function ToolsStudio({
             <Link
               key={t.href}
               href={t.href}
-              onClick={onNavigate}
+              onClick={() => {
+                trackEvent("navigation_clicked", { surface: "sidebar", destination: t.href });
+                onNavigate();
+              }}
               data-testid={t.testId}
             >
               <div className={navItemClass(t.isActive)}>
@@ -528,7 +560,14 @@ function SidebarProfileLink({ onNavigate }: { onNavigate: () => void }) {
 
   return (
     <div className="relative p-4 border-t border-[rgba(var(--pp-ocean-rgb),0.35)] z-10">
-      <Link href="/profile" onClick={onNavigate} data-testid="nav-profile">
+      <Link
+        href="/profile"
+        onClick={() => {
+          trackEvent("navigation_clicked", { surface: "sidebar", destination: "/profile" });
+          onNavigate();
+        }}
+        data-testid="nav-profile"
+      >
         <div className={navItemClass(isActive)}>
           {photoUrl ? (
             <img

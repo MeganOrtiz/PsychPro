@@ -58,6 +58,7 @@ import { useEntitlements } from "@/lib/use-entitlements";
 import { useToast } from "@/hooks/use-toast";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PP } from "@/lib/palette";
+import { trackEvent } from "@/lib/analytics";
 
 // ---------------------------------------------------------------------------
 // Option sets
@@ -425,6 +426,10 @@ export default function OnboardingPage() {
     try {
       const ok = await finalize();
       if (!ok) return;
+      trackEvent("onboarding_completed", {
+        selected_tier: tier,
+        has_existing_access: alreadyHasAccess,
+      });
 
       // When resuming a saved flow, selectedPriceId isn't persisted server-side,
       // so recover it from the live catalog by matching the chosen tier.
@@ -437,6 +442,10 @@ export default function OnboardingPage() {
             tier === "eppp"
               ? await epppCheckout.mutateAsync({ priceId })
               : await checkout.mutateAsync({ data: { priceId, successPath: "/dashboard" } });
+          trackEvent("checkout_started", {
+            surface: "onboarding",
+            product_tier: tier,
+          });
           window.location.href = url;
           return;
         } catch (err) {
@@ -461,7 +470,13 @@ export default function OnboardingPage() {
     setSubmitting(true);
     try {
       const ok = await finalize();
-      if (ok) navigate("/dashboard");
+      if (ok) {
+        trackEvent("onboarding_completed", {
+          selected_tier: "free",
+          has_existing_access: false,
+        });
+        navigate("/dashboard");
+      }
     } finally {
       setSubmitting(false);
     }

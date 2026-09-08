@@ -32,6 +32,7 @@ import heroChromeBrain from "@/assets/psychpro-chrome-brain.webp";
 import founderMegan from "@/assets/founder/megan.webp";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PP, LANDING, alpha } from "@/lib/palette";
+import { trackEvent } from "@/lib/analytics";
 import { isEpppTopic } from "@/lib/eppp-content";
 
 // =============================================================================
@@ -217,7 +218,14 @@ export default function LandingPage() {
   useScrollReveal();
 
   // Gated app routes fall back to sign-in when the visitor isn't signed in.
-  const navTo = (path: string) => navigate(isSignedIn ? path : "/sign-in");
+  const navTo = (path: string) => {
+    trackEvent("navigation_clicked", {
+      surface: "landing",
+      destination: path,
+      signed_in: Boolean(isSignedIn),
+    });
+    navigate(isSignedIn ? path : "/sign-in");
+  };
   const goToApp = () => navTo("/dashboard");
   const goToTopics = () => navTo("/topics");
   const goToPlans = () => navTo("/subscription");
@@ -255,16 +263,32 @@ export default function LandingPage() {
         {/* ============== NAVBAR ============== */}
         <header className="landing-nav">
           <div className="landing-nav-inner">
-            <a href="#home" className="landing-brand" aria-label="PsychPro home">
+            <a
+              href="#home"
+              className="landing-brand"
+              aria-label="PsychPro home"
+              onClick={() => trackEvent("navigation_clicked", { surface: "landing_header", destination: "#home" })}
+            >
               <Brain className="landing-brand-icon" aria-hidden />
               <span className="landing-brand-mark">PSYCHPRO</span>
             </a>
 
             <nav className="landing-nav-links" aria-label="Sections">
-              <a href="#mastery" className="landing-nav-link">Features</a>
-              <a href="#tools" className="landing-nav-link">Study Tools</a>
-              <a href="#brain-lab" className="landing-nav-link">Brain Lab</a>
-              <a href="#scholar" className="landing-nav-link">Scholar</a>
+              {[
+                ["#mastery", "Features"],
+                ["#tools", "Study Tools"],
+                ["#brain-lab", "Brain Lab"],
+                ["#scholar", "Scholar"],
+              ].map(([destination, label]) => (
+                <a
+                  key={destination}
+                  href={destination}
+                  className="landing-nav-link"
+                  onClick={() => trackEvent("navigation_clicked", { surface: "landing_header", destination })}
+                >
+                  {label}
+                </a>
+              ))}
             </nav>
 
             <div className="landing-nav-actions">

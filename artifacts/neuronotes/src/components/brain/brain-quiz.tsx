@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { STUDY_PALETTE as PALETTE } from "@/lib/study-theme";
 import { PP } from "@/lib/palette";
+import { trackEvent } from "@/lib/analytics";
 import {
   Check,
   X,
@@ -122,6 +123,7 @@ export function useBrainQuiz(items: QuizItem[]): BrainQuizController {
   const correctChosen = answered && q != null && picked === q.item.id;
 
   const restart = useCallback(() => {
+    trackEvent("learning_restarted", { mode: "brain_lab_quiz" });
     setRoundKey((k) => k + 1);
     setIdx(0);
     setScore(0);
@@ -132,20 +134,32 @@ export function useBrainQuiz(items: QuizItem[]): BrainQuizController {
   const answer = useCallback(
     (chosenId: string) => {
       if (picked !== null || !q) return;
+      if (idx === 0) {
+        trackEvent("learning_started", {
+          mode: "brain_lab_quiz",
+          question_count: round.length,
+        });
+      }
       setPicked(chosenId);
       if (chosenId === q.item.id) setScore((s) => s + 1);
     },
-    [picked, q],
+    [idx, picked, q, round.length],
   );
 
   const next = useCallback(() => {
     if (isLast) {
+      trackEvent("learning_completed", {
+        mode: "brain_lab_quiz",
+        question_count: round.length,
+        correct_count: score,
+        score_percent: round.length > 0 ? Math.round((score / round.length) * 100) : 0,
+      });
       setDone(true);
       return;
     }
     setIdx((i) => i + 1);
     setPicked(null);
-  }, [isLast]);
+  }, [isLast, round.length, score]);
 
   return { round, q, idx, score, picked, done, answered, isLast, correctChosen, answer, next, restart };
 }
