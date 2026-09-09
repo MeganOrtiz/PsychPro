@@ -189,8 +189,8 @@ export function EpppDashboardView({
       <style>{styles}</style>
 
       <div className="dashboard-brand">
-        <img src={dashboardBrain} alt="" className="dashboard-brain" aria-hidden />
         <h1 data-testid="text-eppp-brand">EPPP Mastery Suite</h1>
+        <img src={dashboardBrain} alt="" className="dashboard-brain" aria-hidden />
       </div>
 
       <div className="epd-shell">
@@ -571,7 +571,7 @@ export default function EpppDashboardPage() {
 const styles = `
 .epd-page {
   min-height: 100%;
-  padding: clamp(14px, 2.4vw, 28px) clamp(16px, 4vw, 48px) clamp(48px, 6vw, 88px);
+  padding: clamp(4px, 0.8vw, 10px) clamp(16px, 4vw, 48px) clamp(48px, 6vw, 88px);
 }
 .epd-shell {
   max-width: 1120px;

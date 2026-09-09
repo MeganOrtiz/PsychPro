@@ -32,10 +32,10 @@ export default function DevDashboardPreview() {
           <div className="flex-1 overflow-y-auto">
         <div className="min-h-full dashboard-page">
           <div className="dashboard-brand">
-            <img src={dashboardBrain} alt="" className="dashboard-brain" aria-hidden />
             <h1>PsychPro</h1>
+            <img src={dashboardBrain} alt="" className="dashboard-brain" aria-hidden />
           </div>
-          <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 pt-4 md:pt-6 lg:pt-8 pb-8">
+          <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 pt-2 md:pt-3 lg:pt-4 pb-8">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <div key={i} className="mat-opaque p-6" style={{ minHeight: 180 }}>
