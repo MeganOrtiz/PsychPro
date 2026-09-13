@@ -309,6 +309,12 @@ export default function LandingPage() {
           id="home"
           className={`landing-hero${mounted ? " is-mounted" : ""}`}
         >
+          <h1 className="landing-wordmark" style={{ ["--delay" as any]: "40ms" }}>
+            PSYCHPRO
+          </h1>
+          <p className="landing-tagline" style={{ ["--delay" as any]: "140ms" }}>
+            learn. expand. connect.
+          </p>
           {/* Standalone chrome brain on the clean white page. Keep the slow
               breathing / pulsating motion the owner explicitly retained. */}
           <img
@@ -319,19 +325,13 @@ export default function LandingPage() {
             loading="eager"
             aria-hidden
           />
-          <h1 className="landing-wordmark" style={{ ["--delay" as any]: "40ms" }}>
-            PSYCHPRO
-          </h1>
-          <p className="landing-tagline" style={{ ["--delay" as any]: "140ms" }}>
-            learn. expand. connect.
-          </p>
           <p className="landing-headline" style={{ ["--delay" as any]: "320ms" }}>
             Learn Smarter. Not Harder.
           </p>
           <p className="landing-blurb" style={{ ["--delay" as any]: "420ms" }}>
-            Evidence-based study tools that bring psychology, neuroscience, and
-            clinical learning into one organized space — so you can study with
-            clarity and confidence.
+            Evidence-based study tools for psych students. Concepts in psychology,
+            neuroscience, assessment and intervention for classroom and clinical
+            learning all in one space.
           </p>
 
           <div
@@ -911,15 +911,15 @@ const styles = `
   z-index: 1;
 }
 /* Owner-supplied chrome brain (re-added 2026-07-25 — the new hero artwork has
-   no baked-in brain). Sits IN FLOW at the top of the hero, centered like the
-   owner's mockup, with the PSYCHPRO title directly under it. Breathing /
+   no baked-in brain). Sits IN FLOW below the wordmark and tagline, centered
+   like the owner's mockup. Breathing /
    pulsating motion: a slow, organic scale swell with a soft shadow that
    deepens on the inhale. No container, transparent PNG as provided. */
 .psychpro-hero__brain {
   display: block;
   width: clamp(240px, 26vw, 470px);
   height: auto;
-  margin: 0 auto clamp(6px, 1.2vh, 16px);
+  margin: clamp(12px, 2vh, 20px) auto clamp(6px, 1.2vh, 16px);
   pointer-events: none;
   user-select: none;
   transform-origin: 50% 62%;

@@ -7,6 +7,10 @@ description: Current landing hero uses a standalone pulsating chrome brain on pu
 
 **Why:** the owner requested background removal across landing, main dashboard, and EPPP dashboard while preserving the brains, with an explicit callout to keep the landing pulse.
 
+**2026-09-13 owner refinement:** the landing wordmark and “learn. expand. connect.” tagline belong above the brain, per the supplied reference. Keep the headline below the brain. This supersedes historical under-brain wordmark instructions.
+
+**Why:** the owner explicitly requested this hero-only rearrangement and supplied replacement paragraph copy, while forbidding unrelated landing-page changes.
+
 **How to apply:** treat the historical notes below as provenance only. The current design lock rejects the old landing backdrop and requires the standalone brain plus its reduced-motion-aware breathing keyframes.
 
 - CURRENT hero (2026-07-23, owner-supplied image + explicit spec, then amended): one full-bleed background image (`hero-ink-splash.png` — blue ink splashes; the silver chrome brain that was baked into the owner's original was REMOVED per follow-up order "remove the chrome brain only" via CV mask + diffusion fill on the actual asset) rendered edge-to-edge directly beneath the sticky nav. Owner's exact constraints: NO card/box/framed container, NO padding/margins/border-radius/borders/shadows around the image, NO max-width on the image or any parent, `object-fit: cover` (never contain), NO gray fallback background. Owner ALSO rejected pushing the text down with a spacer ("no dont push the text") — text keeps its natural top stacking (wordmark → tagline → headline → blurb → CTAs) overlaying the artwork with z-index:1. `.landing-hero` is full-width (max-width:none) with `min-height: calc(100svh - 58px)`; `.landing-hero-bg` is absolute inset:0 cover.
