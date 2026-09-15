@@ -171,15 +171,14 @@ if (!appBackdrop) {
 if (landingBackdrop) {
   fail("landing backdrop override reintroduced", "the site uses ONE backdrop image site-wide (owner 2026-07-15) — remove the .landing-root.study-page-bg::before override");
 }
-// Owner brain lock: the decorative background artwork was removed on
-// 2026-09-04, but the standalone chrome brain remains on the landing hero and
-// both dashboards. The landing brain keeps its breathing animation.
+// The old full-page backdrop stays retired. The owner-approved transparent
+// teal glass is hero-only; the standalone brain keeps its breathing animation.
 {
   const landingSrc = fs.readFileSync(path.join(ROOT, "src", "pages", "landing.tsx"), "utf8");
   if (/landing-hero-bg|heroInkSplash/.test(landingSrc)) {
     fail(
       "landing background artwork reintroduced",
-      "keep the landing page on its clean white ground; retain only the standalone pulsating chrome brain",
+      "keep the white ground and hero-only transparent glass; do not restore the old full-page backdrop",
     );
   }
   if (!/className="psychpro-hero__brain"/.test(landingSrc) || !/@keyframes psychpro-brain-breathe/.test(landingSrc)) {

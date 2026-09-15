@@ -29,6 +29,7 @@ import {
 import { useGetTopics } from "@workspace/api-client-react";
 import brainLateral from "@/assets/brain-views/lateral.webp";
 import heroChromeBrain from "@/assets/psychpro-chrome-brain.webp";
+import heroTealGlass from "@/assets/psychpro-teal-glass.webp";
 import founderMegan from "@/assets/founder/megan.webp";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PP, LANDING, alpha } from "@/lib/palette";
@@ -317,6 +318,13 @@ export default function LandingPage() {
           </p>
           {/* Standalone chrome brain on the clean white page. Keep the slow
               breathing / pulsating motion the owner explicitly retained. */}
+          <div className="psychpro-hero__art">
+          <img
+            src={heroTealGlass}
+            alt=""
+            className="psychpro-hero__glass"
+            aria-hidden
+          />
           <img
             src={heroChromeBrain}
             alt=""
@@ -325,6 +333,7 @@ export default function LandingPage() {
             loading="eager"
             aria-hidden
           />
+          </div>
           <p className="landing-headline" style={{ ["--delay" as any]: "320ms" }}>
             Learn Smarter. Not Harder.
           </p>
@@ -915,11 +924,26 @@ const styles = `
    like the owner's mockup. Breathing /
    pulsating motion: a slow, organic scale swell with a soft shadow that
    deepens on the inhale. No container, transparent PNG as provided. */
-.psychpro-hero__brain {
-  display: block;
+.psychpro-hero__art {
   width: clamp(240px, 26vw, 470px);
-  height: auto;
   margin: clamp(12px, 2vh, 20px) auto clamp(6px, 1.2vh, 16px);
+}
+.psychpro-hero__glass {
+  position: absolute;
+  width: 318.5%;
+  max-width: none;
+  height: auto;
+  left: -63.7%;
+  top: -55.6%;
+  pointer-events: none;
+  user-select: none;
+}
+.psychpro-hero__brain {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
   pointer-events: none;
   user-select: none;
   transform-origin: 50% 62%;
@@ -937,7 +961,7 @@ const styles = `
   .psychpro-hero__brain { animation: none; }
 }
 @media (max-width: 768px) {
-  .psychpro-hero__brain { width: clamp(200px, 58vw, 300px); }
+  .psychpro-hero__art { width: clamp(200px, 58vw, 300px); }
 }
 .landing-headline,
 .landing-blurb {

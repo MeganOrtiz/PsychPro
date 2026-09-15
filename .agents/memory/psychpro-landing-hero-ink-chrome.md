@@ -3,7 +3,9 @@ name: PsychPro landing hero — chrome brain on white
 description: Current landing hero uses a standalone pulsating chrome brain on pure white; all decorative background artwork is retired
 ---
 
-**2026-09-04 current rule:** the landing-page background artwork was explicitly removed. Keep the pure-white ground and the standalone chrome brain. The owner specifically loves and wants to retain the brain's slow breathing/pulsating animation. Do not restore the ink-splash backdrop or remove/stop the brain unless explicitly directed.
+**Current rule (2026-09-15):** keep the pure-white ground and standalone pulsating chrome brain. The owner approved the transparent teal-and-glass cutout behind the brain after comparing it against the original image faded into white. This is a hero-only decorative layer, not a return to the old full-page ink-splash backdrop. Dashboards stay unchanged.
+
+**Why:** the transparent option preserved the clean white page better than the pale blue-gray haze of the original image. Keep the artwork stationary while the existing brain breathes; preserve all copy and controls.
 
 **Why:** the owner requested background removal across landing, main dashboard, and EPPP dashboard while preserving the brains, with an explicit callout to keep the landing pulse.
 
