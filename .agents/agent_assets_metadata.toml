@@ -233,3 +233,31 @@ mtime_ms = 1789502881896
 storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/02616d8d-a5fe-4337-857e-98f7dbf8a495/ef253315-2ea7-4200-9c9f-561d6c0de8b7"
 storage_version_token = "1789502906264840"
 content_type = "image/png"
+
+[[outputs]]
+id = "gfw9iQkiSwnJsS86Z6kTK"
+uri = "file://attached_assets/dashboard-spacing-main.png"
+type = "image"
+title = "Main dashboard — tighter spacing mockup"
+description = "Proposed compact header with matched title/brain sizing and first-card alignment. Screenshot composite; earlier dashboard cards provide context. No live changes."
+logical_id = "bcb55252-8f68-4225-9416-8fb3fe3e76e3"
+content_hash = "sha256:d4bfac31ecd06985d725cbd144f8752e824492d5f8a0bea76d4cabb125013db7"
+size = 110879
+mtime_ms = 1789509422409
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/bcb55252-8f68-4225-9416-8fb3fe3e76e3/1af433ea-b258-4f6a-a4dc-25d815717ded"
+storage_version_token = "1789509440871078"
+content_type = "image/png"
+
+[[outputs]]
+id = "UOwYSgWrzwqheGKfHHud1"
+uri = "file://attached_assets/dashboard-spacing-eppp.png"
+type = "image"
+title = "EPPP dashboard — matching spacing mockup"
+description = "Same title height, brain size and vertical spacing as the main dashboard. Screenshot composite, not a live-page implementation."
+logical_id = "c0b7ba03-2a08-4107-8a12-0298460fb4e5"
+content_hash = "sha256:1914bb0dfda6bb1c314670c913a1a2972f9555886cb7e0f49ae055c653b83099"
+size = 159200
+mtime_ms = 1789509422673
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/c0b7ba03-2a08-4107-8a12-0298460fb4e5/3f46a403-c9fb-4c9f-ad97-691075f46856"
+storage_version_token = "1789509441548626"
+content_type = "image/png"
