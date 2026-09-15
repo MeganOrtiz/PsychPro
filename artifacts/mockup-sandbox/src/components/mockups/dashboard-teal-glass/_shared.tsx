@@ -1,0 +1,11 @@
+import type { ReactNode } from "react";
+import { BookOpen, Brain, ChevronRight, Flame, GraduationCap, LayoutDashboard, Library, Play, Sparkles, Trophy, TrendingUp } from "lucide-react";
+
+const nav = [{label:"Dashboard",icon:LayoutDashboard},{label:"Courses",icon:BookOpen},{label:"Study Lab",icon:Brain},{label:"Brain Lab",icon:Sparkles},{label:"Progress",icon:TrendingUp},{label:"Resources",icon:Library}];
+
+export function Shell({children, eppp = false}:{children:ReactNode;eppp?:boolean}) {
+  return <div className="pp-mockup"><div className="pp-shell"><aside className="pp-sidebar"><div className="pp-wordmark">PSYCHPRO</div><p className="pp-nav-label">LEARN</p>{nav.map(({label,icon:Icon},i)=><button key={label} className={`pp-nav ${i===0&&!eppp?"active":""}`}><Icon/><span>{label}</span></button>)}<p className="pp-nav-label">TOOLKIT</p><button className={`pp-nav ${eppp?"active":""}`}><GraduationCap/><span>EPPP Suite</span></button><button className="pp-nav"><Library/><span>My Tools</span></button><p className="pp-nav-label">CONNECT</p><button className="pp-nav"><Sparkles/><span>Featured Work</span></button><div className="pp-side-bottom"><span className="pp-demo">DEMO CONTENT</span><br/>Static mockup preview</div></aside><div className="pp-content"><header className="pp-topbar"><span>Guest</span><div className="pp-avatar">G</div></header><div className="dashboard-brand"><h1>{eppp ? "EPPP Mastery Suite" : "PsychPro"}</h1><div className="dashboard-brain-art"><img className="art" src="/__mockup/images/psychpro-teal-glass.webp" alt=""/><img className="brain" src="/__mockup/images/psychpro-chrome-brain.webp" alt=""/></div></div>{children}</div></div></div>
+}
+export function Card({children,className=""}:{children:ReactNode;className?:string}){return <article className={`pp-card ${className}`}>{children}</article>}
+export function Days(){return <div className="pp-days">{["S","M","T","W","T","F","S"].map((d,i)=><div className="pp-day" key={`${d}-${i}`}><div className={`pp-dot ${i>0&&i<6?"on":""}`}/>{d}</div>)}</div>}
+export {BookOpen, Brain, ChevronRight, Flame, Play, Sparkles, Trophy, TrendingUp};

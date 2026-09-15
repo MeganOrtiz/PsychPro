@@ -1,3 +1,4 @@
+- [Dashboard mockup fidelity](dashboard-mockup-fidelity.md) — artwork-only previews must preserve actual dashboard structure; generic source-inspired rebuilds are not faithful extractions.
 - [PsychPro white/luminous system](psychpro-white-luminous-system.md) — CURRENT, amended 2026-07-25: ground is PURE WHITE site-wide (body, backdrop ::before, --background 100%); silver radial + #eef0f2 floors retired ("no gray backgrounds" — owner); drift lock updated.
 - [PsychPro mobile app](psychpro-mobile-app.md) — Expo full mirror at /mobile; Clerk key blob normalized in code; web score conventions mirrored; paywall 402 UX; expo-auth-session required by clerk-expo.
 - [TS project-reference stale dist](ts-project-refs-stale-dist.md) — "no exported member" from a workspace lib after regenerating its src = tsc resolved stale dist .d.ts via project references; run `tsc -b` in the lib.

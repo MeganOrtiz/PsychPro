@@ -205,3 +205,31 @@ mtime_ms = 1789501896773
 storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/388abe6c-0d22-4b55-be2c-d79427898465/d090b245-0541-43a4-a0c8-448e3c5ad4a2"
 storage_version_token = "1789501910094333"
 content_type = "image/jpeg"
+
+[[outputs]]
+id = "pEmt5aRrPfLo-SvORarjD"
+uri = "file://attached_assets/dashboard-teal-glass-main-final.png"
+type = "image"
+title = "Main dashboard — teal-glass mockup"
+description = "Image mockup based on your uploaded dashboard screenshot, with title above the brain, compact spacing, and transparent teal-glass artwork. Not applied to the live site."
+logical_id = "a4158e45-667f-4f48-afb5-4b585726fef7"
+content_hash = "sha256:f792b9cb3b62c9241dbbc74be1ef1cc57edf9c950f612aede8e4003fa4bca886"
+size = 272138
+mtime_ms = 1789502881672
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/a4158e45-667f-4f48-afb5-4b585726fef7/e428ed70-73e9-475d-959a-4f7a00b257ea"
+storage_version_token = "1789502905252440"
+content_type = "image/png"
+
+[[outputs]]
+id = "Nxu6ceZLmrtkY8yZkynBG"
+uri = "file://attached_assets/dashboard-teal-glass-eppp-final.png"
+type = "image"
+title = "EPPP dashboard — teal-glass mockup"
+description = "Image mockup based on your uploaded EPPP screenshot with its own sidebar and cards retained. New artwork added behind the brain. Not applied to the live site."
+logical_id = "02616d8d-a5fe-4337-857e-98f7dbf8a495"
+content_hash = "sha256:6a35f2816cd7ee853efc3dbcb3c5aeb5a548e724159184b30910c468f0057385"
+size = 321792
+mtime_ms = 1789502881896
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/02616d8d-a5fe-4337-857e-98f7dbf8a495/ef253315-2ea7-4200-9c9f-561d6c0de8b7"
+storage_version_token = "1789502906264840"
+content_type = "image/png"
