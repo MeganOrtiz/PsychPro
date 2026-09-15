@@ -131,68 +131,60 @@
   will-change: transform;
 }
 
-.drift-layer--mist {
-  opacity: 0.30;
-  transform:
-    translate3d(
-      calc(var(--hero-scroll) * -22px),
-      calc(var(--hero-scroll) * 16px),
-      0
-    )
-    scale(calc(1 + var(--hero-scroll) * 0.025));
-}
-
-.drift-layer--mist img {
-  animation: drift-mist 14s ease-in-out infinite alternate;
-  filter: saturate(0.8);
-}
-
-.drift-layer--left {
-  clip-path: polygon(0 4%, 53% 0, 60% 100%, 0 96%);
+.drift-layer--base {
   opacity: 0.88;
+}
+
+.drift-layer--base img {
+  animation: drift-base 16s ease-in-out infinite alternate;
+}
+
+.drift-layer--clouds {
+  opacity: 0.55;
   transform:
     translate3d(
-      calc(var(--hero-scroll) * -34px),
-      calc(var(--hero-scroll) * -12px),
+      calc(var(--hero-scroll) * -9px),
+      calc(var(--hero-scroll) * -5px),
       0
     )
-    rotate(calc(var(--hero-scroll) * -1.25deg));
+    scale(calc(1 + var(--hero-scroll) * 0.012));
 }
 
-.drift-layer--left img {
-  animation: drift-left 10s ease-in-out infinite alternate;
+.drift-layer--clouds img {
+  animation: drift-clouds 13s ease-in-out infinite alternate;
+  filter: saturate(0.88) contrast(0.96);
 }
 
-.drift-layer--ribbon {
-  clip-path: polygon(38% 0, 76% 0, 68% 100%, 31% 100%);
-  opacity: 0.96;
+.drift-layer--glass {
+  opacity: 0.76;
   transform:
     translate3d(
-      calc(var(--hero-scroll) * 10px),
-      calc(var(--hero-scroll) * -24px),
+      calc(var(--hero-scroll) * 13px),
+      calc(var(--hero-scroll) * 6px),
       0
     )
-    scale(calc(1 + var(--hero-scroll) * 0.04));
+    rotate(calc(var(--hero-scroll) * 0.65deg));
 }
 
-.drift-layer--ribbon img {
-  animation: drift-ribbon 8.5s ease-in-out infinite alternate;
+.drift-layer--glass img {
+  animation: drift-glass 9s ease-in-out infinite alternate;
+  filter: saturate(1.08) contrast(1.03);
 }
 
-.drift-layer--right {
-  clip-path: polygon(62% 0, 100% 4%, 100% 97%, 54% 100%);
-  opacity: 0.90;
+.drift-layer--filaments {
+  opacity: 0.74;
   transform:
     translate3d(
-      calc(var(--hero-scroll) * 37px),
-      calc(var(--hero-scroll) * 9px),
+      calc(var(--hero-scroll) * -6px),
+      calc(var(--hero-scroll) * 2px),
       0
     )
-    rotate(calc(var(--hero-scroll) * 1.35deg));
+    scale(calc(1 + var(--hero-scroll) * 0.018));
 }
 
-.drift-layer--right img {
-  animation: drift-right 11s ease-in-out infinite alternate;
+.drift-layer--filaments img {
+  animation: drift-filaments 7.5s ease-in-out infinite alternate;
+  filter: saturate(0.92) brightness(1.06);
 }
 
 .drift-brain {
@@ -327,24 +319,24 @@
   50% { transform: scale(1.05); }
 }
 
-@keyframes drift-mist {
-  from { transform: translate3d(-7px, 2px, 0) scale(1.01); }
-  to { transform: translate3d(9px, -4px, 0) scale(1.025); }
+@keyframes drift-base {
+  from { transform: translate3d(-3px, 1px, 0) scale(1.005); }
+  to { transform: translate3d(4px, -2px, 0) scale(1.012); }
 }
 
-@keyframes drift-left {
-  from { transform: translate3d(-5px, 1px, 0) rotate(-0.35deg); }
-  to { transform: translate3d(7px, -5px, 0) rotate(0.35deg); }
+@keyframes drift-clouds {
+  from { transform: translate3d(-5px, 1px, 0) scale(1.005); }
+  to { transform: translate3d(8px, -5px, 0) scale(1.02); }
 }
 
-@keyframes drift-ribbon {
-  from { transform: translate3d(1px, 5px, 0) scale(0.995); }
-  to { transform: translate3d(-3px, -7px, 0) scale(1.015); }
+@keyframes drift-glass {
+  from { transform: translate3d(5px, -2px, 0) skewX(-0.35deg); }
+  to { transform: translate3d(-7px, 5px, 0) skewX(0.35deg); }
 }
 
-@keyframes drift-right {
-  from { transform: translate3d(6px, -3px, 0) rotate(0.4deg); }
-  to { transform: translate3d(-6px, 4px, 0) rotate(-0.3deg); }
+@keyframes drift-filaments {
+  from { transform: translate3d(6px, -3px, 0) scale(0.995); }
+  to { transform: translate3d(-5px, 4px, 0) scale(1.018); }
 }
 
 @media (max-width: 760px) {
@@ -374,16 +366,16 @@
     grid-template-columns: 1fr;
   }
 
-  .drift-layer--left {
-    transform: translate3d(calc(var(--hero-scroll) * -17px), calc(var(--hero-scroll) * -6px), 0);
+  .drift-layer--clouds {
+    transform: translate3d(calc(var(--hero-scroll) * -8px), calc(var(--hero-scroll) * -4px), 0);
   }
 
-  .drift-layer--ribbon {
-    transform: translate3d(calc(var(--hero-scroll) * 5px), calc(var(--hero-scroll) * -12px), 0);
+  .drift-layer--glass {
+    transform: translate3d(calc(var(--hero-scroll) * 10px), calc(var(--hero-scroll) * 5px), 0);
   }
 
-  .drift-layer--right {
-    transform: translate3d(calc(var(--hero-scroll) * 18px), calc(var(--hero-scroll) * 5px), 0);
+  .drift-layer--filaments {
+    transform: translate3d(calc(var(--hero-scroll) * -5px), calc(var(--hero-scroll) * 2px), 0);
   }
 }
 

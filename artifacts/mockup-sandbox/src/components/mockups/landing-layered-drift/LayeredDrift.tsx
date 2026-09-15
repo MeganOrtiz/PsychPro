@@ -3,6 +3,9 @@ import { ArrowRight, Brain } from "lucide-react";
 import "./_group.css";
 
 const GLASS = "/__mockup/images/psychpro-teal-glass.webp";
+const CLOUDS = "/__mockup/images/landing-layered-drift-clouds.png";
+const GLASS_DETAIL = "/__mockup/images/landing-layered-drift-glass.png";
+const FILAMENTS = "/__mockup/images/landing-layered-drift-filaments.png";
 const CHROME_BRAIN = "/__mockup/images/psychpro-chrome-brain.webp";
 
 export function LayeredDrift() {
@@ -56,17 +59,17 @@ export function LayeredDrift() {
           <p className="drift-tagline">learn. expand. connect.</p>
 
           <div className="drift-art" aria-hidden>
-            <div className="drift-layer drift-layer--mist">
+            <div className="drift-layer drift-layer--base">
               <img src={GLASS} alt="" />
             </div>
-            <div className="drift-layer drift-layer--left">
-              <img src={GLASS} alt="" />
+            <div className="drift-layer drift-layer--clouds">
+              <img src={CLOUDS} alt="" />
             </div>
-            <div className="drift-layer drift-layer--ribbon">
-              <img src={GLASS} alt="" />
+            <div className="drift-layer drift-layer--glass">
+              <img src={GLASS_DETAIL} alt="" />
             </div>
-            <div className="drift-layer drift-layer--right">
-              <img src={GLASS} alt="" />
+            <div className="drift-layer drift-layer--filaments">
+              <img src={FILAMENTS} alt="" />
             </div>
             <img className="drift-brain" src={CHROME_BRAIN} alt="" />
           </div>
