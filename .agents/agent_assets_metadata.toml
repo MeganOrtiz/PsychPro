@@ -71,93 +71,123 @@ id = "aKKI8N7WseM8lzrKZFEEq"
 uri = "file://.local/exports/brain-lab-code.tar.gz"
 type = "unspecified"
 title = "Brain Lab code (page + data + theme)"
+logical_id = "8e987524-1350-4ed8-9124-f6e0d85e3534"
 
 [[outputs]]
 id = "tqOL_ZVSGI9BkOoUQ9kmW"
 uri = "file://attached_assets/topics_9_53_export.txt"
 type = "text"
 title = "Topics 9 & 53 — Full Content Export"
+logical_id = "3ec91dd4-abaf-4eb5-a508-3f14a7992875"
 
 [[outputs]]
 id = "q-qarQCZWmBkHPpftfRAj"
 uri = "file://attached_assets/generated_images/brain_anterior.png"
 type = "image"
 title = "Anterior (Front)"
+logical_id = "3091352f-1416-4ba3-b130-9a4929362988"
 
 [[outputs]]
 id = "6azMCTFgs3PoWP18XcmOf"
 uri = "file://attached_assets/generated_images/brain_superior.png"
 type = "image"
 title = "Superior (Top)"
+logical_id = "394c8ddf-42df-4785-8170-78b3fb7900c6"
 
 [[outputs]]
 id = "6vTV6GsNFngnpixJbz-GB"
 uri = "file://attached_assets/generated_images/brain_sagittal.png"
 type = "image"
 title = "Sagittal (Lateral)"
+logical_id = "6c282f2f-1f67-4ca5-85c4-d47cc2f109b3"
 
 [[outputs]]
 id = "_KCXUXlM4BIoYNl1ZjlJt"
 uri = "file://attached_assets/generated_images/brain_posterior.png"
 type = "image"
 title = "Posterior (Back)"
+logical_id = "16e07ca0-71de-4781-ac45-a504852a8d5b"
 
 [[outputs]]
 id = "OpE1KUJvvszTOEasUDN8Z"
 uri = "file://attached_assets/generated_images/brain_inferior.png"
 type = "image"
 title = "Inferior (Base)"
+logical_id = "948bc3d0-4443-4838-b750-889959e4e1a5"
 
 [[outputs]]
 id = "rFDk_EDPTrI1RPMLUSNu_"
 uri = "file://attached_assets/generated_images/brain_cranial_nerves.png"
 type = "image"
 title = "Cranial Nerves Diagram"
+logical_id = "7d3368e6-34d7-456f-b958-2358c08f8bc8"
 
 [[outputs]]
 id = "Z_dhYrhJ66oR4-aXEUFVx"
 uri = "file://screenshots/header-refined.jpg"
 type = "image"
 title = "Refined headers — top bar + dashboard banner (landing-matched title)"
+logical_id = "67fa3904-24bb-4d9e-8e10-df0e3abcc1fd"
 
 [[outputs]]
 id = "2Q5QoV4bxfl0nWZSypq-6"
 uri = "file://screenshots/header-preview-both.jpg"
 type = "image"
 title = "Dashboard wordmarks — PSYCHPRO + EPPP MASTERY SUITE"
+logical_id = "1a42d139-8182-4d56-a657-0bbde7c68a30"
 
 [[outputs]]
 id = "XBK90gFyKP4304vI9Oj9o"
 uri = "file://screenshots/header-preview-flanking.jpg"
 type = "image"
 title = "Dashboard wordmarks — flanking hairlines (no glow, no diamonds)"
+logical_id = "11e169f4-9b1d-4ee5-be6f-410a5cd6669b"
 
 [[outputs]]
 id = "9THIkJlN7zDsm6_IVbv0y"
 uri = "file://screenshots/header-preview-laser.jpg"
 type = "image"
 title = "Dashboard wordmarks — laser underline (no glow, no side details)"
+logical_id = "422b77cf-33d7-472e-947c-ebc91b2800cb"
 
 [[outputs]]
 id = "VLGTzeLCjS2a7sDbOR4Nn"
 uri = "file://screenshots/header-preview-beam.jpg"
 type = "image"
 title = "Dashboard wordmarks — upgraded signal-beam underline"
+logical_id = "f80bce2e-1b8c-426e-b9f3-a7d74bc4db22"
 
 [[outputs]]
 id = "u4F67mqv3r1Iqlce--13c"
 uri = "file://.local/checkpoint-shots/20b04a2.jpg"
 type = "image"
 title = "Checkpoint 20b04a2 — June 27, 11:08 (de-fog pass)"
+logical_id = "d9030a6a-3157-419d-bb81-14e274c4271b"
 
 [[outputs]]
 id = "T3Jwrq6qgd7Fplr4F1pFI"
 uri = "file://attached_assets/previews/desktop-centered-crop.jpg"
 type = "image"
 title = "Desktop view — centered crop (brain gets cut off)"
+logical_id = "75acec6e-867c-4e2a-bf5f-42f4f830cd83"
 
 [[outputs]]
 id = "Daq3QRpG-XmO0QVMGQu8g"
 uri = "file://attached_assets/previews/desktop-top-anchored-crop.jpg"
 type = "image"
 title = "Desktop view — top-anchored crop (brain visible)"
+logical_id = "c910e109-6ce8-4c96-8d1b-2b8c9418d200"
+
+[[outputs]]
+id = "i6U5gKJ6E559aJSQ882mV"
+uri = "file://attached_assets/psychpro-teal-glass-transparent.png"
+type = "image"
+title = "Transparent teal-and-glass design"
+description = "Background-removed PNG for the landing-page artwork. Some pale edges remain around the translucent glass; best used on white."
+logical_id = "31426964-91ba-4aa6-ade3-02415f3f48e9"
+content_hash = "sha256:71cdf642dc8332316bd8b88bf1c9b030117c47731a54bc81dbdd68b99979a236"
+size = 1476745
+mtime_ms = 1789501156720
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/31426964-91ba-4aa6-ade3-02415f3f48e9/b55ca230-1fba-4593-9298-74eb205afde3"
+storage_version_token = "1789501167362181"
+content_type = "image/png"
