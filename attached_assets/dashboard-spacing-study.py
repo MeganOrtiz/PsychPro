@@ -32,11 +32,26 @@ for name, current_file, context_file, box, content_y in rows:
     b = brain.copy()
     b.thumbnail((144, 116), Image.Resampling.LANCZOS)
     out.alpha_composite(b, ((1024-b.width)//2, 80))
+    # Align the top of the right-hand panel with the wordmark.
+    if name == "main":
+        panel = out.crop((740, 198, 1002, 410))
+        out.paste("white", (736, 194, 1024, 410))
+        # Spotlight remains a full-height rail; retain its original header
+        # and copy, extending its existing neutral surface beneath them.
+        rail = Image.new("RGBA", (262, 366), "white")
+        rd = ImageDraw.Draw(rail)
+        rd.rounded_rectangle((3, 0, 259, 365), radius=14, fill=(94, 95, 97, 255))
+        rail.paste(panel.crop((0, 0, 262, 180)), (0, 0))
+        out.alpha_composite(rail, (740, 44))
+    else:
+        panel = out.crop((774, 198, 994, 380))
+        out.paste("white", (770, 194, 1002, 386))
+        out.paste(panel, (774, 44))
     # A small footer distinguishes the screenshot composition from a live page.
     result = Image.new("RGB", (1024, 452), "white")
     result.paste(out.convert("RGB"), (0, 0))
     draw = ImageDraw.Draw(result)
     f = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 12)
     draw.line((0, 415, 1024, 415), fill="#dddddd")
-    draw.text((18, 426), "SPACING MOCKUP • Same 24px title height, 144px brain width and first-card alignment on both dashboards", font=f, fill="#555555")
-    result.save(ROOT + f"dashboard-spacing-{name}.png")
+    draw.text((18, 426), "LAYOUT MOCKUP • Right-hand panel aligned with the dashboard title • No live-page changes", font=f, fill="#555555")
+    result.save(ROOT + f"dashboard-right-panel-{name}.png")

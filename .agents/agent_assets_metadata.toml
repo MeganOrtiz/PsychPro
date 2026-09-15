@@ -261,3 +261,31 @@ mtime_ms = 1789509422673
 storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/c0b7ba03-2a08-4107-8a12-0298460fb4e5/3f46a403-c9fb-4c9f-ad97-691075f46856"
 storage_version_token = "1789509441548626"
 content_type = "image/png"
+
+[[outputs]]
+id = "eYy_8DJPiiH41GiWvyjiF"
+uri = "file://attached_assets/dashboard-right-panel-main.png"
+type = "image"
+title = "Main dashboard — Spotlight moved up"
+description = "Updated layout mockup with Spotlight starting level with the PsychPro title. Not applied to the live site."
+logical_id = "3ef0db64-1af1-4ef5-ac67-beae25f07cbf"
+content_hash = "sha256:2aa2304a0acb83ebcf5f667d8c3da2892d33587cc17d23116091f46e4bcbbd13"
+size = 109000
+mtime_ms = 1789509663337
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/3ef0db64-1af1-4ef5-ac67-beae25f07cbf/f884b4d2-c230-4d29-bf14-3e462f3a7f58"
+storage_version_token = "1789509673650700"
+content_type = "image/png"
+
+[[outputs]]
+id = "xxZmANAGyanXjqyBGQJu-"
+uri = "file://attached_assets/dashboard-right-panel-eppp.png"
+type = "image"
+title = "EPPP dashboard — Exam Countdown moved up"
+description = "Updated layout mockup with Exam Countdown starting level with the EPPP Mastery Suite title. Not applied to the live site."
+logical_id = "2a576c53-e9ba-4393-bfd9-ba654e4cdc6d"
+content_hash = "sha256:65ef74eefb0cd6504fa24aa7eb94a0e06508eb8e4156d553911cc8806d187f02"
+size = 161005
+mtime_ms = 1789509663601
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/2a576c53-e9ba-4393-bfd9-ba654e4cdc6d/0a78b6f0-261b-479f-9c89-8fc33337ab3a"
+storage_version_token = "1789509674540380"
+content_type = "image/png"
