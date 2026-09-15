@@ -191,3 +191,17 @@ mtime_ms = 1789501156720
 storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/31426964-91ba-4aa6-ade3-02415f3f48e9/b55ca230-1fba-4593-9298-74eb205afde3"
 storage_version_token = "1789501167362181"
 content_type = "image/png"
+
+[[outputs]]
+id = "QFYfWB0M7mHL96Obd0GUw"
+uri = "file://attached_assets/psychpro-art-comparison.jpg"
+type = "image"
+title = "Compare the two artwork treatments"
+description = "Static composition study, not a live-page screenshot. Left: transparent cutout on white. Right: original image with its outer edges faded into white. Identical brain and artwork placement in both."
+logical_id = "388abe6c-0d22-4b55-be2c-d79427898465"
+content_hash = "sha256:159b789a929a3a13e55692c3650db781c839237c5e0c2018f8043bb2d0a4e251"
+size = 289633
+mtime_ms = 1789501896773
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/388abe6c-0d22-4b55-be2c-d79427898465/d090b245-0541-43a4-a0c8-448e3c5ad4a2"
+storage_version_token = "1789501910094333"
+content_type = "image/jpeg"
