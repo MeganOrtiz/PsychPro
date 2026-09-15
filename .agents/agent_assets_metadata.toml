@@ -289,3 +289,45 @@ mtime_ms = 1789509663601
 storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/2a576c53-e9ba-4393-bfd9-ba654e4cdc6d/0a78b6f0-261b-479f-9c89-8fc33337ab3a"
 storage_version_token = "1789509674540380"
 content_type = "image/png"
+
+[[outputs]]
+id = "ydo757zL5fwlRe5BF-iwP"
+uri = "file://attached_assets/dashboard-direction-1.jpg"
+type = "image"
+title = "1. Compact header — study content first"
+description = "Main dashboard on the left, EPPP on the right. Prominent study action, compact progress information, and lower-priority community content. Concept mockup with illustrative data."
+logical_id = "04ac82b8-af6e-4f1a-83a0-daf490f54aa2"
+content_hash = "sha256:26b1adf3015e6b0c96a50dbaa6432a2c02e94ce8e33dadca3e007c9ac41cdec4"
+size = 112420
+mtime_ms = 1789510230285
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/04ac82b8-af6e-4f1a-83a0-daf490f54aa2/9d61e5bd-c936-463e-b1ac-a706107ba94b"
+storage_version_token = "1789510259115373"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "yF5KNtAw3IyG_PlsIbuT0"
+uri = "file://attached_assets/dashboard-direction-2.jpg"
+type = "image"
+title = "2. Today focus — one clear next action"
+description = "Both dashboards organized around what to study next, with supporting tasks and progress beneath. Concept mockup with illustrative data, not implemented functionality."
+logical_id = "aed6ce56-9d98-4e3c-9666-2b36d20fefc0"
+content_hash = "sha256:6a68bcb331f6c11a19237e577109adf73f39e8e2bb19ba40c6a1eef338cd5f94"
+size = 102532
+mtime_ms = 1789510232441
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/aed6ce56-9d98-4e3c-9666-2b36d20fefc0/12b80544-7a13-4600-9feb-cd5cdfb108ea"
+storage_version_token = "1789510259812909"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "xagugUuCDv2GjWFv3hesx"
+uri = "file://attached_assets/dashboard-direction-3.jpg"
+type = "image"
+title = "3. Visual header — consistent card grid"
+description = "Both dashboards with shallow branded headers, restrained teal-glass artwork, and aligned card grids. Concept mockup with illustrative data."
+logical_id = "2bdc6dd8-0711-4b2b-999d-b6b9128d81ef"
+content_hash = "sha256:9fc2ac52ca37e361e4d3ef5c70e487531c8a0a7f9e3c288aa81e10f82c24d5fc"
+size = 109497
+mtime_ms = 1789510234857
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/2bdc6dd8-0711-4b2b-999d-b6b9128d81ef/bfe8efd2-31d5-4a9d-a879-9870912d9d3c"
+storage_version_token = "1789510260566918"
+content_type = "image/jpeg"
