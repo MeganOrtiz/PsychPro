@@ -760,8 +760,10 @@ body {
   --dash-r-offset: 0px;
   margin-left: calc(-1 * var(--dash-x-offset));
   margin-right: calc(-1 * var(--dash-r-offset));
+  margin-top: -8px;
+  margin-bottom: -8px;
   width: calc(100% + var(--dash-x-offset) + var(--dash-r-offset));
-  padding-top: clamp(4px, 0.8vw, 10px);
+  padding-top: 0;
   text-align: center;
 }
 @media (min-width: 768px) {

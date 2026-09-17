@@ -342,7 +342,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
         <div className="relative px-3 pt-5 pb-3">
           <p
             className="text-center font-light"
-            style={{ letterSpacing: "0.32em", textIndent: "0.32em", fontSize: "15px", color: C.cloud }}
+            style={{ letterSpacing: "0.4em", textIndent: "0.4em", fontSize: "18px", color: C.cloud }}
             data-testid="eppp-sidebar-wordmark"
           >
             EPPP SUITE

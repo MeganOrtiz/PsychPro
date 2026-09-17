@@ -571,7 +571,7 @@ export default function EpppDashboardPage() {
 const styles = `
 .epd-page {
   min-height: 100%;
-  padding: clamp(4px, 0.8vw, 10px) clamp(16px, 4vw, 48px) clamp(48px, 6vw, 88px);
+  padding: 0 clamp(16px, 4vw, 48px) clamp(48px, 6vw, 88px);
 }
 .epd-shell {
   max-width: 1120px;
