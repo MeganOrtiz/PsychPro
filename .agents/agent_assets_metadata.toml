@@ -331,3 +331,31 @@ mtime_ms = 1789510234857
 storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/2bdc6dd8-0711-4b2b-999d-b6b9128d81ef/bfe8efd2-31d5-4a9d-a879-9870912d9d3c"
 storage_version_token = "1789510260566918"
 content_type = "image/jpeg"
+
+[[outputs]]
+id = "ABjDEbDwLM5Nd_R_6nLHi"
+uri = "file://attached_assets/dashboard-header-congruent-main.png"
+type = "image"
+title = "Main dashboard — congruent header mockup"
+description = "Uses the shared title height, brain width, title-to-brain gap, and higher top position. Screenshot composite only; the live dashboard is unchanged."
+logical_id = "32d1d98d-f833-42b1-98a2-52c7175cc1f5"
+content_hash = "sha256:696259ed5191531b8701ac12c7c0a783226a8babb38d8d8c6f5acce6704a486d"
+size = 73591
+mtime_ms = 1789685725717
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/32d1d98d-f833-42b1-98a2-52c7175cc1f5/c98df8ae-cde6-4cfe-baf3-659f1df3e12e"
+storage_version_token = "1789685738715620"
+content_type = "image/png"
+
+[[outputs]]
+id = "degB9X6Wc2jHaUriF9UWF"
+uri = "file://attached_assets/dashboard-header-congruent-eppp.png"
+type = "image"
+title = "EPPP dashboard — congruent header mockup"
+description = "Uses the exact same title height, brain width, title-to-brain gap, and higher top position as the main dashboard. Screenshot composite only; the live dashboard is unchanged."
+logical_id = "1c477682-3c34-46bc-9658-3c11a6b5877c"
+content_hash = "sha256:428fafc220e114ee8e5f7dea3c186b6b2384eeb3e3b05edadd3044a9024c5a50"
+size = 81006
+mtime_ms = 1789685725773
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/1c477682-3c34-46bc-9658-3c11a6b5877c/15e81891-838e-4365-9d1d-09f8c08b8c51"
+storage_version_token = "1789685739390047"
+content_type = "image/png"
