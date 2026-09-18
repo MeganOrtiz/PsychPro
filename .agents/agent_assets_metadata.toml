@@ -359,3 +359,31 @@ mtime_ms = 1789685725773
 storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/1c477682-3c34-46bc-9658-3c11a6b5877c/15e81891-838e-4365-9d1d-09f8c08b8c51"
 storage_version_token = "1789685739390047"
 content_type = "image/png"
+
+[[outputs]]
+id = "EscjIRVCkzCQKkRDox8An"
+uri = "file://attached_assets/dashboard-with-landing-glass-main.png"
+type = "image"
+title = "Main dashboard with landing-page glass design"
+description = "Faithful screenshot composite using the actual teal-and-glass landing asset behind the chrome brain. The asset is reduced to fit the compact dashboard header without covering controls."
+logical_id = "74efcf36-b9e7-4a02-8f1b-952bccf982f4"
+content_hash = "sha256:c341d3e0278e1ef74044645a5c65946b6f8d41ce6a5c68220d8af4fb923f821d"
+size = 95279
+mtime_ms = 1789753177110
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/74efcf36-b9e7-4a02-8f1b-952bccf982f4/82cbd4e4-a4a5-4043-be1f-ac83125b03bc"
+storage_version_token = "1789753191989980"
+content_type = "image/png"
+
+[[outputs]]
+id = "W017N7yRjJkd3bvMCF3Mv"
+uri = "file://attached_assets/dashboard-with-landing-glass-eppp.png"
+type = "image"
+title = "EPPP dashboard with landing-page glass design"
+description = "Faithful screenshot composite using the same teal-and-glass treatment, scale, and placement as the main dashboard mockup."
+logical_id = "04bc8c0b-1304-42fa-9f49-fcf407cc3a5f"
+content_hash = "sha256:fea1d3b3e497448dc21402904bee964948aaffe1599fda6e8d06b3066739c5f9"
+size = 102312
+mtime_ms = 1789753177182
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/04bc8c0b-1304-42fa-9f49-fcf407cc3a5f/db994316-80f5-4608-b8ba-eeaa2d0ffa1a"
+storage_version_token = "1789753192664503"
+content_type = "image/png"
