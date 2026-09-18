@@ -387,3 +387,17 @@ mtime_ms = 1789753983378
 storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/04bc8c0b-1304-42fa-9f49-fcf407cc3a5f/c418a18c-8034-471f-885d-88e7045df21b"
 storage_version_token = "1789753995077307"
 content_type = "image/png"
+
+[[outputs]]
+id = "9P2-foOoxRhyCCboR-kEu"
+uri = "file://attached_assets/dashboard-creative-exploration/comparison_sheet.png"
+type = "image"
+title = "Creative dashboard glass explorations"
+description = "Three distinct concepts shown on both the main and EPPP dashboards: Neural Current, Cerebral Horizon, and Synaptic Bloom. All use the existing PsychPro teal-glass and chrome-brain assets."
+logical_id = "67c39038-d9c1-412b-b368-dc12e927bce5"
+content_hash = "sha256:0ad94c5981a800ffc11f2e1e956666b7e1519e47b90f0c72bceeab40ac43f10c"
+size = 509949
+mtime_ms = 1789754277562
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/67c39038-d9c1-412b-b368-dc12e927bce5/db2689b0-7508-4d08-8a4d-6cf175ccb96d"
+storage_version_token = "1789754313039292"
+content_type = "image/png"
