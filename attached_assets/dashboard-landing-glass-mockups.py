@@ -43,11 +43,14 @@ brain = Image.open(CHROME_BRAIN).convert("RGBA")
 brain_height = round(brain.height * BRAIN_WIDTH / brain.width)
 brain = brain.resize((BRAIN_WIDTH, brain_height), Image.Resampling.LANCZOS)
 
-# Use the exact landing-page asset, adapted to the dashboard's compact header.
-# The landing hero's 318.5% scale reaches into dashboard controls, so this
-# preview contains it at 200% while preserving its asymmetric composition.
-glass_width = round(BRAIN_WIDTH * 2)
+# Use the exact landing-page asset as a continuous right-edge composition.
+# At this width, the artwork starts behind the brain and reaches the dashboard
+# viewport edge without tiling or inventing a second texture.
+glass_width = 600
 glass_source = Image.open(TEAL_GLASS).convert("RGBA")
+alpha_bounds = glass_source.getchannel("A").getbbox()
+if alpha_bounds:
+    glass_source = glass_source.crop(alpha_bounds)
 glass_height = round(glass_source.height * glass_width / glass_source.width)
 glass = glass_source.resize((glass_width, glass_height), Image.Resampling.LANCZOS)
 
@@ -72,8 +75,8 @@ for mockup in MOCKUPS:
 
     brain_x = CONTENT_LEFT + ((TARGET_WIDTH - CONTENT_LEFT - brain.width) // 2)
     title_x = CONTENT_LEFT + ((TARGET_WIDTH - CONTENT_LEFT - title.width) // 2)
-    glass_x = round(brain_x - (BRAIN_WIDTH * 0.55))
-    glass_y = 78
+    glass_x = brain_x - 78
+    glass_y = 80
 
     composed.alpha_composite(glass, (glass_x, glass_y))
     composed.alpha_composite(title, (title_x, TITLE_TOP))
@@ -89,7 +92,7 @@ for mockup in MOCKUPS:
     )
     draw.text(
         (18, canvas_height + 16),
-        "MOCKUP • Landing-page teal glass cutout adapted to the compact dashboard header",
+        "MOCKUP • Existing landing-page glass extended from the brain to the right edge",
         font=font,
         fill="#555555",
     )
