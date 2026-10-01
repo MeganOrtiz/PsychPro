@@ -1,0 +1,130 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700&display=swap");
+
+.suite-current {
+  box-sizing: border-box;
+  min-height: 100vh;
+  overflow-x: clip;
+  background: #ffffff;
+  color: #14171a;
+  font-family: "Montserrat", "Inter", "SF Pro Display", sans-serif;
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.suite-current *,
+.suite-current *::before,
+.suite-current *::after {
+  box-sizing: border-box;
+}
+
+/* The source landing page reveals this section via IntersectionObserver.
+   Keep the extracted baseline visible without carrying over that page behavior. */
+.suite-current [data-reveal] {
+  opacity: 1;
+  transform: none;
+}
+
+.suite-current .landing-section {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: clamp(22px, 3.4vh, 42px) 32px;
+}
+
+.suite-current .landing-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  padding-left: 0.4em;
+  color: #14171a;
+}
+
+.suite-current .landing-eyebrow::before,
+.suite-current .landing-eyebrow::after {
+  content: "";
+  width: clamp(20px, 4vw, 40px);
+  height: 1px;
+}
+
+.suite-current .landing-eyebrow::before,
+.suite-current .landing-eyebrow::after {
+  background: transparent;
+}
+
+.suite-current .landing-section-title {
+  margin: 0;
+  font-family: "Montserrat", "Inter", "SF Pro Display", sans-serif;
+  font-weight: 300;
+  font-size: clamp(26px, 3.4vw, 44px);
+  letter-spacing: 0.01em;
+  line-height: 1.14;
+  color: #14171a;
+}
+
+.suite-current .landing-mastery {
+  max-width: 1020px;
+}
+
+.suite-current .landing-mastery-card {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  border-radius: 22px;
+  padding: clamp(30px, 4.4vw, 52px);
+  background: hsl(0 0% 100% / 0.92);
+  border: 1px solid rgba(75, 81, 87, 0.58);
+  box-shadow:
+    0 36px 90px -40px rgba(0, 0, 0, 0.15),
+    0 0 48px #24282c33,
+    0 0 0 1px #24282c22 inset;
+}
+
+.suite-current .landing-mastery-card::before {
+  content: "";
+  position: absolute;
+  top: -45%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  height: 120%;
+  background: transparent;
+  pointer-events: none;
+}
+
+.suite-current .landing-mastery-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 18px;
+  border-radius: 15px;
+  background: #24282c18;
+  border: 1px solid #24282c55;
+  color: #24282c;
+  box-shadow: 0 0 22px #24282c44;
+}
+
+.suite-current .landing-mastery-icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.suite-current .landing-mastery .landing-eyebrow,
+.suite-current .landing-mastery .landing-section-title {
+  position: relative;
+}
+
+.suite-current .landing-mastery-text {
+  position: relative;
+  margin: clamp(16px, 2vh, 22px) auto 0;
+  max-width: 760px;
+  font-size: clamp(14px, 1.1vw, 16.5px);
+  line-height: 1.78;
+  color: rgba(36, 40, 44, 0.84);
+}

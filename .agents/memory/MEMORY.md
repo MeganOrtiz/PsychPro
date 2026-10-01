@@ -1,3 +1,4 @@
+- [Suite identities](psychpro-suite-identities.md) — brain vs crown identify the two suites; “PsychPro design” means the glass/cloud artwork behind the hero brain, adapted to cards.
 - [GitHub/Git auth separation](github-git-auth-separation.md) — an active connector can have push permission while Git CLI credentials fail; don't delete working connectors.
 - [Dashboard mockup fidelity](dashboard-mockup-fidelity.md) — artwork-only previews must preserve actual dashboard structure; generic source-inspired rebuilds are not faithful extractions.
 - [PsychPro white/luminous system](psychpro-white-luminous-system.md) — CURRENT, amended 2026-07-25: ground is PURE WHITE site-wide (body, backdrop ::before, --background 100%); silver radial + #eef0f2 floors retired ("no gray backgrounds" — owner); drift lock updated.

@@ -1,0 +1,277 @@
+.artwork-led {
+  --al-ink: #183b40;
+  --al-muted: #587276;
+  --al-teal: #20aeb1;
+  --al-line: #d9e8e7;
+  min-height: 100dvh;
+  padding: clamp(32px, 5.5vw, 76px) clamp(20px, 5vw, 72px) 30px;
+  color: var(--al-ink);
+  background: #fff;
+  font-family: "Montserrat", "Avenir Next", sans-serif;
+}
+
+.al-intro {
+  max-width: 880px;
+  margin: 0 auto clamp(32px, 4.2vw, 58px);
+  text-align: center;
+  animation: al-enter .7s ease-out both;
+}
+
+.al-overline, .al-label, .al-art-caption {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .2em;
+}
+
+.al-overline {
+  margin: 0 0 15px;
+  color: #218d91;
+}
+
+.al-intro h1 {
+  margin: 0;
+  font-size: clamp(32px, 4.4vw, 54px);
+  line-height: 1.08;
+  letter-spacing: -.045em;
+  font-weight: 500;
+}
+
+.al-deck {
+  margin: 17px 0 0;
+  color: var(--al-muted);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.al-suites {
+  width: min(1160px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(18px, 2.6vw, 34px);
+  align-items: stretch;
+}
+
+.al-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #dce9e8;
+  border-radius: 23px;
+  background: #fff;
+  box-shadow: 0 24px 56px -42px rgba(24, 73, 77, .42), 0 2px 8px rgba(29, 94, 97, .035);
+  animation: al-enter .7s ease-out both;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.al-card:nth-child(2) { animation-delay: .12s; }
+.al-card:hover { transform: translateY(-4px); box-shadow: 0 30px 64px -40px rgba(24, 73, 77, .38); }
+
+.al-art {
+  position: relative;
+  height: clamp(178px, 23vw, 262px);
+  overflow: hidden;
+  isolation: isolate;
+  background: #e9f7f5;
+}
+
+.al-art::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+}
+
+.al-art--psychpro::after {
+  background: linear-gradient(108deg, rgba(238, 250, 248, .96) 0%, rgba(226, 247, 244, .58) 38%, rgba(229, 247, 245, .06) 100%);
+}
+
+.al-art--eppp::after {
+  background: linear-gradient(90deg, rgba(228, 247, 244, .1) 0%, rgba(235, 249, 247, .22) 56%, rgba(230, 247, 244, .76) 100%);
+}
+
+.al-art-wash {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(ellipse at 76% 20%, #b6ebe4 0%, transparent 55%), linear-gradient(135deg, #effaf8, #ddf4f1);
+}
+
+.al-art img {
+  position: absolute;
+  z-index: 0;
+  width: 125%;
+  height: 178%;
+  max-width: none;
+  object-fit: contain;
+  opacity: .88;
+  filter: saturate(.92);
+  pointer-events: none;
+}
+
+.al-art--psychpro img {
+  right: -13%;
+  top: -36%;
+  object-position: 72% 50%;
+  transform: rotate(-7deg) scale(1.08);
+}
+
+.al-art--eppp img {
+  width: 142%;
+  height: 195%;
+  right: -33%;
+  top: -43%;
+  object-position: 86% 50%;
+  transform: rotate(9deg) scale(1.05);
+  opacity: .74;
+}
+
+.al-art-caption {
+  position: absolute;
+  z-index: 2;
+  bottom: 20px;
+  left: 23px;
+  color: #43898a;
+  font-size: 8px;
+  letter-spacing: .16em;
+}
+
+.al-mark {
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 43px;
+  height: 43px;
+  border: 1px solid rgba(73, 197, 190, .56);
+  border-radius: 14px;
+  color: #0b9fa4;
+  background: rgba(255, 255, 255, .78);
+  box-shadow: 0 0 22px rgba(45, 203, 194, .35), 0 6px 18px rgba(32, 100, 103, .08);
+  backdrop-filter: blur(8px);
+}
+
+.al-mark svg { width: 22px; height: 22px; stroke-width: 1.7; }
+.al-mark--brain { left: 27px; top: 27px; }
+.al-mark--crown { right: 29px; top: 27px; }
+
+.al-orbit {
+  position: absolute;
+  z-index: 2;
+  right: 8%;
+  top: 18%;
+  width: 158px;
+  height: 92px;
+  border: 1px solid rgba(35, 162, 164, .3);
+  border-radius: 50%;
+  transform: rotate(-24deg);
+}
+.al-orbit--two { right: 14%; top: 27%; width: 122px; height: 70px; transform: rotate(29deg); border-color: rgba(255, 255, 255, .72); }
+
+.al-content { padding: 27px clamp(23px, 3vw, 37px) 26px; }
+.al-label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #158e92;
+  letter-spacing: .16em;
+}
+.al-label svg { width: 15px; height: 15px; stroke-width: 2; }
+
+.al-content h2 {
+  margin: 14px 0 11px;
+  color: #19383d;
+  font-size: clamp(23px, 2.4vw, 31px);
+  line-height: 1.16;
+  letter-spacing: -.035em;
+  font-weight: 500;
+}
+
+.al-description {
+  min-height: 78px;
+  max-width: 490px;
+  margin: 0;
+  color: #526c70;
+  font-size: 14px;
+  line-height: 1.72;
+}
+
+.al-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 25px;
+  padding-top: 19px;
+  border-top: 1px solid #e7efee;
+}
+.al-note { color: #6f8587; font-size: 11px; letter-spacing: .01em; }
+.al-button {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 17px;
+  border: 1px solid #168f93;
+  border-radius: 999px;
+  color: #fff;
+  background: #168f93;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s ease, transform .2s ease;
+}
+.al-button:hover { background: #107b80; transform: translateY(-1px); }
+.al-button:focus-visible { outline: 3px solid rgba(28, 169, 171, .35); outline-offset: 3px; }
+.al-button svg { width: 15px; height: 15px; }
+.al-preview {
+  margin: 16px 0 0;
+  padding: 12px 14px;
+  border-left: 2px solid #48c1bb;
+  color: #3d6669;
+  background: #f1faf8;
+  font-size: 12px;
+  line-height: 1.55;
+  animation: al-enter .25s ease-out both;
+}
+.al-footer {
+  margin: 33px auto 0;
+  color: #789092;
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: .04em;
+}
+
+@keyframes al-enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 700px) {
+  .artwork-led { padding: 36px 18px 26px; }
+  .al-intro { margin-bottom: 27px; text-align: left; }
+  .al-intro h1 { max-width: 520px; font-size: clamp(32px, 9vw, 43px); }
+  .al-deck { max-width: 390px; font-size: 14px; }
+  .al-suites { grid-template-columns: 1fr; gap: 19px; max-width: 520px; }
+  .al-art { height: 190px; }
+  .al-content { padding: 24px 23px 23px; }
+  .al-description { min-height: 0; }
+  .al-bottom { margin-top: 21px; }
+  .al-card:hover { transform: none; }
+}
+
+@media (max-width: 380px) {
+  .al-bottom { align-items: flex-start; flex-direction: column; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .artwork-led *, .artwork-led *::before, .artwork-led *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+}
