@@ -44,6 +44,7 @@ export const modules: ModuleMap = {
   "./components/mockups/psychpro-aesthetic/Landing.tsx": () => import("../components/mockups/psychpro-aesthetic/Landing.tsx"),
   "./components/mockups/psychpro-polished/Dashboard.tsx": () => import("../components/mockups/psychpro-polished/Dashboard.tsx"),
   "./components/mockups/psychpro-polished/Landing.tsx": () => import("../components/mockups/psychpro-polished/Landing.tsx"),
+  "./components/mockups/psychpro-textbook/LandingBook.tsx": () => import("../components/mockups/psychpro-textbook/LandingBook.tsx"),
   "./components/mockups/suite-entrances/ArtworkLed.tsx": () => import("../components/mockups/suite-entrances/ArtworkLed.tsx"),
   "./components/mockups/suite-entrances/Blended.tsx": () => import("../components/mockups/suite-entrances/Blended.tsx"),
   "./components/mockups/suite-entrances/Current.tsx": () => import("../components/mockups/suite-entrances/Current.tsx"),

@@ -90,3 +90,4 @@
 - [Panel loading gates](psychpro-panel-loading-gates.md) — never gate panel render on an auth-protected query (401 retry loops look like a stuck spinner); render defaults + hydrate-once with dirty guard.
 - [Clerk verification diagnosis](clerk-verification-diagnosis.md) — one submission can trigger automatic double preparation; trace verification state and loaded browser SDK before changing auth.
 - [Public browser verification fallback](public-browser-verification-fallback.md) — if the managed tester fails, installed Chromium/CDP can verify public UI without auth changes or extra packages.
+- [Textbook feedback promotion](psychpro-book-feedback-promotion.md) — approved reward is a digital book for honest website feedback, not a public book review; printed copies remain separate.
