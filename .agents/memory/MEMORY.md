@@ -86,3 +86,4 @@
 - [Deploy healthcheck 500s](deploy-healthcheck-500-boot-window.md) — startup healthcheck 500s in deployment logs are pre-boot proxy noise (before "Server listening"); only post-listen 500s are real.
 - [pnpm stale variants after partial install](pnpm-partial-install-stale-variants.md) — expo/pnpm install in one package can break sibling typecheck (R3F JSX errors); root `pnpm install` re-links.
 - [Panel loading gates](psychpro-panel-loading-gates.md) — never gate panel render on an auth-protected query (401 retry loops look like a stuck spinner); render defaults + hydrate-once with dirty guard.
+- [Clerk verification diagnosis](clerk-verification-diagnosis.md) — one submission can trigger automatic double preparation; trace verification state and loaded browser SDK before changing auth.
