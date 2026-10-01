@@ -14,6 +14,7 @@ import { ErrorBoundary } from "@/components/error-boundary";
 import { FullScreenLoader } from "@/components/full-screen-loader";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PP } from "@/lib/palette";
+import { createClerkNavigation } from "@/lib/clerk-navigation";
 
 // Route-level splitting keeps the public landing and onboarding entry paths
 // from downloading the entire signed-in application (including Brain Lab's 3D
@@ -98,6 +99,8 @@ const clerkPublishableKey: string | undefined = import.meta.env.DEV
 if (!clerkPublishableKey) {
   throw new Error("Missing VITE_CLERK_PUBLISHABLE_KEY environment variable");
 }
+
+const clerkNavigation = createClerkNavigation(import.meta.env.BASE_URL);
 
 function AppRouter() {
   return (
@@ -267,6 +270,8 @@ function App() {
     <ErrorBoundary>
       <ClerkProvider
         publishableKey={clerkPublishableKey!}
+        routerPush={clerkNavigation.routerPush}
+        routerReplace={clerkNavigation.routerReplace}
         signInUrl={`${basePath}/sign-in`}
         signUpUrl={`${basePath}/sign-up`}
         signInFallbackRedirectUrl={`${basePath}/dashboard`}
