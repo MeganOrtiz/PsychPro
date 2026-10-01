@@ -639,9 +639,11 @@ export default function LandingPage() {
             ))}
           </div>
           <article className="landing-tier landing-tier--eppp" data-testid="tier-card-eppp">
-            <Crown className="landing-suite-icon" aria-hidden />
             <div>
-              <h3 className="landing-tier-name">EPPP Mastery Suite</h3>
+              <h3 className="landing-tier-name">
+                <Crown className="landing-suite-icon" aria-hidden />
+                <span>EPPP Mastery Suite</span>
+              </h3>
               <p className="landing-tier-tag">Purchased separately</p>
               <p className="landing-tier-note">
                 Master and Scholar do not include EPPP access.
@@ -1609,9 +1611,9 @@ const styles = `
 .landing-tier-grid { display: grid; grid-template-columns: 1fr; gap: 18px; }
 @media (min-width: 900px) { .landing-tier-grid { grid-template-columns: repeat(3, 1fr); gap: 22px; } }
 .landing-tier { padding: clamp(22px, 2.6vw, 32px); }
-.landing-tier-name { margin: 0; font-size: 24px; font-weight: 400; color: ${LANDING.icy}; }
+.landing-tier-name { margin: 0; font-size: 24px; font-weight: 400; text-align: center; color: ${LANDING.icy}; }
 .landing-tier-tag { margin: 4px 0 18px; font-size: 13px; letter-spacing: 0.04em; color: ${alpha(PP.text, 0.72)}; }
-.landing-tier--eppp { display: flex; gap: 16px; align-items: flex-start; }
+.landing-tier--eppp .landing-tier-name { display: flex; justify-content: center; align-items: center; gap: 12px; }
 .landing-tier--eppp .landing-tier-tag { margin-bottom: 8px; }
 .landing-tier-note { margin: 0; max-width: 62ch; font-size: 15px; line-height: 1.6; color: ${alpha(PP.text, 0.88)}; }
 .landing-cta:focus-visible, .landing-nav-link:focus-visible { outline: 2px solid ${PP.text}; outline-offset: 3px; }
