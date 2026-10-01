@@ -13,6 +13,8 @@ import {
   Upload,
   Activity,
   ArrowRight,
+  ArrowDown,
+  Crown,
   Check,
   Award,
   CheckCircle2,
@@ -34,6 +36,7 @@ import founderMegan from "@/assets/founder/megan.webp";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PP, LANDING, alpha } from "@/lib/palette";
 import { trackEvent } from "@/lib/analytics";
+import { FREE_FLASHCARD_PREVIEW, FREE_QUIZ_LIMIT, FREE_EXAM_LIMIT } from "@/lib/limits";
 import { isEpppTopic } from "@/lib/eppp-content";
 
 // =============================================================================
@@ -144,9 +147,40 @@ const DASH_ACTIVITY = [
 // What the Scholar tier adds — mirrors src/pages/subscription.tsx SCHOLAR_FEATURES.
 const SCHOLAR_POINTS = [
   "Upload your own PDFs, DOCX, TXT, or pasted notes",
-  "AI builds flashcards, quizzes, and study guides from your content only",
+  "AI builds flashcards, quizzes, and study guides from your own notes and material",
   "Generate practice exams from your own material",
   "Unlimited custom study decks",
+] as const;
+
+const TIERS = [
+  {
+    id: "free",
+    name: "Free",
+    tag: "Preview every topic",
+    points: [
+      `${FREE_FLASHCARD_PREVIEW} flashcards per topic`,
+      `${FREE_QUIZ_LIMIT} quiz total`,
+      `${FREE_EXAM_LIMIT} practice exam total`,
+      "No credit card required",
+    ],
+  },
+  {
+    id: "master",
+    name: "Master",
+    tag: "Built-in PsychPro content",
+    points: [
+      "Unlimited built-in flashcards, quizzes, and practice exams",
+      "Study guides for every built-in topic",
+      "EPPP content not included",
+      "Progress tracking",
+    ],
+  },
+  {
+    id: "scholar",
+    name: "Scholar",
+    tag: "Everything in Master, plus your own material",
+    points: SCHOLAR_POINTS,
+  },
 ] as const;
 
 // What the personalized dashboard surfaces — all real app features.
@@ -230,6 +264,17 @@ export default function LandingPage() {
   const goToApp = () => navTo("/dashboard");
   const goToTopics = () => navTo("/topics");
   const goToPlans = () => navTo("/subscription");
+  const checkItOut = () => {
+    trackEvent("navigation_clicked", { surface: "landing", destination: "/sign-in" });
+    navigate("/sign-in");
+  };
+  const scrollToOverview = () => {
+    trackEvent("navigation_clicked", { surface: "landing", destination: "#overview" });
+    const el = document.getElementById("overview");
+    if (!el) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  };
 
   // Full topic list for the "All topics" section at the bottom. Pulled live
   // from the topics hook so it stays in sync with the database, sorted by the
@@ -279,7 +324,7 @@ export default function LandingPage() {
                 ["#tools", "Features"],
                 ["#tools", "Study Tools"],
                 ["#brain-lab", "Brain Lab"],
-                ["#scholar", "Scholar"],
+                ["#scholar", "Plans"],
               ].map(([destination, label]) => (
                 <a
                   key={label}
@@ -313,68 +358,66 @@ export default function LandingPage() {
           <h1 className="landing-wordmark" style={{ ["--delay" as any]: "40ms" }}>
             PSYCHPRO
           </h1>
+          <div className="psychpro-hero__art">
+            <img src={heroTealGlass} alt="" className="psychpro-hero__glass" aria-hidden />
+            <img
+              src={heroChromeBrain}
+              alt=""
+              className="psychpro-hero__brain"
+              fetchPriority="high"
+              loading="eager"
+              aria-hidden
+            />
+          </div>
           <p className="landing-tagline" style={{ ["--delay" as any]: "140ms" }}>
             learn. expand. connect.
           </p>
-          {/* Standalone chrome brain on the clean white page. Keep the slow
-              breathing / pulsating motion the owner explicitly retained. */}
-          <div className="psychpro-hero__art">
-          <img
-            src={heroTealGlass}
-            alt=""
-            className="psychpro-hero__glass"
-            aria-hidden
-          />
-          <img
-            src={heroChromeBrain}
-            alt=""
-            className="psychpro-hero__brain"
-            fetchPriority="high"
-            loading="eager"
-            aria-hidden
-          />
-          </div>
-          <p className="landing-headline" style={{ ["--delay" as any]: "320ms" }}>
-            Learn Smarter. Not Harder.
-          </p>
-          <p className="landing-blurb" style={{ ["--delay" as any]: "420ms" }}>
-            Evidence-based study tools for psych students. Concepts in psychology,
-            neuroscience, assessment and intervention for classroom and clinical
-            learning all in one space.
-          </p>
-
-          <div
-            className="landing-cta-row"
-            style={{ ["--delay" as any]: "520ms" }}
-          >
+          <div className="landing-cta-row" style={{ ["--delay" as any]: "260ms" }}>
             <button
               type="button"
-              onClick={goToApp}
+              onClick={scrollToOverview}
               className="landing-cta landing-cta-primary"
-              data-testid="cta-join-now"
+              data-testid="cta-explore-inside"
             >
-              <span>START LEARNING SMARTER</span>
-              <ArrowRight className="landing-cta-icon" aria-hidden />
+              <span>EXPLORE WHAT’S INSIDE</span>
+              <ArrowDown className="landing-cta-icon" aria-hidden />
             </button>
             <button
               type="button"
-              onClick={goToPlans}
+              onClick={checkItOut}
               className="landing-cta landing-cta-primary"
-              data-testid="cta-explore-topics"
+              data-testid="cta-check-it-out"
             >
-              <span>EXPLORE THE PLATFORM</span>
+              <span>CHECK IT OUT</span>
               <ArrowRight className="landing-cta-icon" aria-hidden />
             </button>
           </div>
-
-          <div className="landing-stat-strip" style={{ ["--delay" as any]: "620ms" }}>
-            {STAT_STRIP.map((s, i) => (
-              <div key={s.label} className="landing-stat-item">
-                {i > 0 && <span className="landing-stat-sep" aria-hidden />}
-                <span className="landing-stat-num">{s.value}</span>
-                <span className="landing-stat-label">{s.label}</span>
-              </div>
-            ))}
+          <div id="overview" className="landing-overview">
+            <p className="landing-system-eyebrow" style={{ ["--delay" as any]: "320ms" }}>
+              THE SYSTEM
+            </p>
+            <h2 className="landing-headline" style={{ ["--delay" as any]: "380ms" }}>
+              Learn Smarter. Not Harder.
+            </h2>
+            <p className="landing-blurb" style={{ ["--delay" as any]: "440ms" }}>
+              Evidence-based study tools for psych students. Concepts in psychology,
+              neuroscience, assessment and intervention for classroom and clinical
+              learning all in one space.
+            </p>
+          </div>
+          <div className="landing-suites">
+            <article className="landing-suite" data-testid="suite-card-psychpro">
+              <h2 className="landing-suite-title">PsychPro Suite</h2>
+              <Brain className="landing-suite-icon" aria-hidden />
+              <p>The PsychPro Suite is here to help you learn FASTER and reclaim your time.</p>
+              <p>Flashcards, quizzes, study guides, practice exams, and interactive learning spaces - all in one convenient place.</p>
+            </article>
+            <article className="landing-suite" data-testid="suite-card-eppp">
+              <h2 className="landing-suite-title">EPPP Mastery Suite</h2>
+              <Crown className="landing-suite-icon" aria-hidden />
+              <p>The EPPP Mastery Suite is designed to help you study effectively and pass the licensing exam on the FIRST try.</p>
+              <p>Prepare confidently for a fraction of the cost.</p>
+            </article>
           </div>
         </section>
 
@@ -385,6 +428,15 @@ export default function LandingPage() {
             <h2 className="landing-section-title">
               Everything You Need to Learn More and Reclaim Your Time
             </h2>
+          </div>
+          <div className="landing-stat-strip landing-stat-strip--quiet">
+            {STAT_STRIP.map((st, i) => (
+              <div key={st.label} className="landing-stat-item">
+                {i > 0 && <span className="landing-stat-sep" aria-hidden />}
+                <span className="landing-stat-num">{st.value}</span>
+                <span className="landing-stat-label">{st.label}</span>
+              </div>
+            ))}
           </div>
           <div className="landing-tools-grid">
             {STUDY_TOOLS.map((f, i) => {
@@ -556,40 +608,69 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ============== SCHOLAR TIER ============== */}
-        <section id="scholar" className="landing-section landing-scholar" data-reveal>
-          <div className="landing-scholar-card">
-            <div className="landing-scholar-head">
-              <div>
-                <p className="landing-eyebrow">SCHOLAR TIER</p>
-                <h2 className="landing-split-title landing-scholar-title">
-                  Upload. Learn. Master.
-                </h2>
-              </div>
-            </div>
-            <p className="landing-split-text">
-              Upload lecture notes, PDFs, and course materials to generate
-              personalized flashcards, quizzes, study guides, and practice
-              exams.
+        {/* ============== PLAN COMPARISON ============== */}
+        <section id="scholar" className="landing-section landing-tiers" data-reveal>
+          <div className="landing-section-head">
+            <p className="landing-eyebrow">PLANS</p>
+            <h2 className="landing-section-title">Find Your Study Plan</h2>
+            <p className="landing-section-sub">
+              Start with Free previews, unlock built-in learning tools with
+              Master, or create custom study materials with Scholar.
             </p>
-            <ul className="landing-checklist landing-checklist--grid">
-              {SCHOLAR_POINTS.map((point) => (
-                <li key={point} className="landing-checklist-item">
-                  <Upload className="landing-checklist-check" aria-hidden />
-                  <span>{point}</span>
-                </li>
-              ))}
-            </ul>
-            <button
-              type="button"
-              onClick={() => navTo("/subscription")}
-              className="landing-cta landing-cta-primary landing-cta--center"
-              data-testid="cta-scholar"
-            >
-              <span>SEE SCHOLAR PLANS</span>
-              <ArrowRight className="landing-cta-icon" aria-hidden />
-            </button>
           </div>
+          <div className="landing-tier-grid">
+            {TIERS.map((t) => (
+              <article key={t.id} className="landing-tier" data-testid={`tier-card-${t.id}`}>
+                <h3 className="landing-tier-name">{t.name}</h3>
+                <p className="landing-tier-tag">{t.tag}</p>
+                <ul className="landing-checklist">
+                  {t.points.map((point) => (
+                    <li key={point} className="landing-checklist-item">
+                      {t.id === "scholar" ? (
+                        <Upload className="landing-checklist-check" aria-hidden />
+                      ) : (
+                        <Check className="landing-checklist-check" aria-hidden />
+                      )}
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+          <article className="landing-tier landing-tier--eppp" data-testid="tier-card-eppp">
+            <Crown className="landing-suite-icon" aria-hidden />
+            <div>
+              <h3 className="landing-tier-name">EPPP Mastery Suite</h3>
+              <p className="landing-tier-tag">Purchased separately</p>
+              <p className="landing-tier-note">
+                Master and Scholar do not include EPPP access.
+              </p>
+              <ul className="landing-checklist landing-checklist--grid">
+                {[
+                  "Knowledge-domain lessons and study guides",
+                  "Flashcards and question bank",
+                  "Clinical integration cases and rapid review",
+                  "Domain and full-length practice exams",
+                  "Missed-question review",
+                ].map((point) => (
+                  <li key={point} className="landing-checklist-item">
+                    <Check className="landing-checklist-check" aria-hidden />
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </article>
+          <button
+            type="button"
+            onClick={() => navTo("/subscription")}
+            className="landing-cta landing-cta-primary landing-cta--center"
+            data-testid="cta-scholar"
+          >
+            <span>SEE PLANS</span>
+            <ArrowRight className="landing-cta-icon" aria-hidden />
+          </button>
         </section>
 
         {/* ============== FINAL CTA ============== */}
@@ -869,8 +950,7 @@ const styles = `
   max-width: none;
   margin: 0;
   padding: clamp(20px, 2.5vh, 32px) 0 0;
-  min-height: calc(100vh - 58px);
-  min-height: calc(100svh - 58px);
+  padding-bottom: clamp(32px, 5vh, 56px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -941,6 +1021,7 @@ const styles = `
 /* Hero-scoped: .landing-cta-row is reused by the FINAL CTA section, so this
    pre-animation opacity:0 must NOT apply globally or that button stays hidden. */
 .landing-hero .landing-cta-row,
+.landing-system-eyebrow,
 .landing-stat-strip {
   opacity: 0;
   transform: translateY(18px);
@@ -953,6 +1034,7 @@ const styles = `
 .landing-hero.is-mounted .landing-headline,
 .landing-hero.is-mounted .landing-blurb,
 .landing-hero.is-mounted .landing-cta-row,
+.landing-hero.is-mounted .landing-system-eyebrow,
 .landing-hero.is-mounted .landing-stat-strip {
   opacity: 1;
   transform: translateY(0);
@@ -968,11 +1050,12 @@ const styles = `
   margin: 0;
   font-family: var(--app-font-sans);
   font-weight: 200;
-  font-size: clamp(28px, 3.8vw, 52px);
-  letter-spacing: 0.22em;
+  font-size: clamp(40px, 9.2vw, 132px);
+  letter-spacing: 0.16em;
   line-height: 1;
   color: ${LANDING.icy};
-  padding-left: 0.22em;
+  padding-left: 0.16em;
+  max-width: 100%;
 }
 .landing-tagline {
   margin: clamp(4px, 0.5vh, 8px) 0 0;
@@ -1484,7 +1567,55 @@ const styles = `
   filter: drop-shadow(0 0 6px ${C.cyan}66);
 }
 
-/* ============== SCHOLAR TIER ============== */
+/* ============== PLAN COMPARISON ============== */
+.landing-overview { display: flex; flex-direction: column; align-items: center; margin-top: clamp(40px, 6vh, 72px); }
+.landing-system-eyebrow {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.34em;
+  padding-left: 0.34em;
+  color: ${PP.text};
+}
+.landing-cta-row { padding: 0 20px; }
+.landing-hero .landing-cta-row { width: min(100%, 740px); box-sizing: border-box; }
+.landing-hero .landing-cta { flex: 1; min-width: 0; }
+@media (max-width: 600px) {
+  .landing-hero .landing-cta-row { width: min(100%, 380px); flex-direction: column; }
+}
+.landing-suites {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  width: 100%;
+  max-width: 940px;
+  margin: clamp(28px, 4vh, 44px) auto 0;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+@media (min-width: 760px) { .landing-suites { grid-template-columns: 1fr 1fr; gap: 28px; } }
+.landing-suite, .landing-tier {
+  background: hsl(var(--surf-hue) var(--surf-sat) 100% / 0.96);
+  border: 1px solid ${C.hairlineStrong};
+  border-radius: 20px;
+  box-sizing: border-box;
+}
+.landing-suite { padding: clamp(24px, 3vw, 36px); display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.landing-suite p { margin: 0; max-width: 34ch; font-size: 15px; line-height: 1.65; color: ${alpha(PP.text, 0.88)}; }
+.landing-suite-title { margin: 0; font-weight: 300; font-size: clamp(24px, 2.6vw, 32px); color: ${LANDING.icy}; }
+.landing-suite-icon { width: 28px; height: 28px; flex-shrink: 0; color: ${PP.text}; }
+.landing-stat-strip--quiet { margin: 18px auto 34px; opacity: 1; transform: none; }
+.landing-tiers { max-width: 1100px; display: flex; flex-direction: column; gap: 22px; }
+.landing-tier-grid { display: grid; grid-template-columns: 1fr; gap: 18px; }
+@media (min-width: 900px) { .landing-tier-grid { grid-template-columns: repeat(3, 1fr); gap: 22px; } }
+.landing-tier { padding: clamp(22px, 2.6vw, 32px); }
+.landing-tier-name { margin: 0; font-size: 24px; font-weight: 400; color: ${LANDING.icy}; }
+.landing-tier-tag { margin: 4px 0 18px; font-size: 13px; letter-spacing: 0.04em; color: ${alpha(PP.text, 0.72)}; }
+.landing-tier--eppp { display: flex; gap: 16px; align-items: flex-start; }
+.landing-tier--eppp .landing-tier-tag { margin-bottom: 8px; }
+.landing-tier-note { margin: 0; max-width: 62ch; font-size: 15px; line-height: 1.6; color: ${alpha(PP.text, 0.88)}; }
+.landing-cta:focus-visible, .landing-nav-link:focus-visible { outline: 2px solid ${PP.text}; outline-offset: 3px; }
+/* ============== SCHOLAR TIER (legacy) ============== */
 .landing-scholar { max-width: 1020px; }
 .landing-scholar-card {
   position: relative;
@@ -1734,7 +1865,7 @@ const styles = `
 /* In-page anchor nav: smooth scroll + offset so the sticky navbar doesn't
    overlap the target section heading. */
 html { scroll-behavior: smooth; }
-#home, #mastery, #eppp, #tools, #science, #features, #brain-lab, #scholar {
+#home, #overview, #mastery, #eppp, #tools, #science, #features, #brain-lab, #scholar {
   scroll-margin-top: 84px;
 }
 
@@ -1754,6 +1885,8 @@ html { scroll-behavior: smooth; }
 
 /* ============== KEYFRAMES ============== */
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .landing-system-eyebrow,
   .landing-wordmark,
   .landing-tagline,
   .landing-headline,

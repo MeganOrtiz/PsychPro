@@ -19,7 +19,3 @@ supersedes the agent's default caution.
 
 **How to apply:** When editing landing copy, take the owner's wording as the
 source of truth. Keep the conservative rule only for invented social proof.
-Page sections are now: Hero → positioning band → Study Tools (5 formats) →
-Learning Science → Features (#features, formerly Curriculum) → Brain Lab →
-Dashboard → Scholar → final CTA. Fonts (Outfit/Inter) and the dark cyan
-"neuroscience portal" theme are hard constraints — never change them.
