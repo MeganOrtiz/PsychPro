@@ -276,13 +276,13 @@ export default function LandingPage() {
 
             <nav className="landing-nav-links" aria-label="Sections">
               {[
-                ["#mastery", "Features"],
+                ["#tools", "Features"],
                 ["#tools", "Study Tools"],
                 ["#brain-lab", "Brain Lab"],
                 ["#scholar", "Scholar"],
               ].map(([destination, label]) => (
                 <a
-                  key={destination}
+                  key={label}
                   href={destination}
                   className="landing-nav-link"
                   onClick={() => trackEvent("navigation_clicked", { surface: "landing_header", destination })}
@@ -377,45 +377,6 @@ export default function LandingPage() {
             ))}
           </div>
         </section>
-
-        <div className="landing-artwork-band">
-          {/* ============== EPPP MASTERY SUITE ============== */}
-          <section id="mastery" className="landing-section landing-mastery" data-reveal>
-            <div className="landing-mastery-card">
-              <p className="landing-eyebrow">THE SYSTEM</p>
-              <h2 className="landing-section-title">
-                Built to Help You Learn Faster
-              </h2>
-              <p className="landing-mastery-text">
-                Flashcards, quizzes, study guides, practice exams, and interactive
-                learning spaces all in one place, designed to help students study
-                with clarity, structure, and confidence.
-              </p>
-            </div>
-          </section>
-
-          {/* ============== EPPP MASTERY SYSTEM ============== */}
-          <section id="eppp" className="landing-section landing-mastery" data-reveal>
-            <div className="landing-mastery-card">
-              <div className="landing-mastery-icon">
-                <GraduationCap aria-hidden />
-              </div>
-              <p className="landing-eyebrow">EPPP PREP</p>
-              <h2 className="landing-section-title">
-                The PsychPro EPPP Mastery System&trade;
-              </h2>
-              <p className="landing-mastery-text">
-                The PsychPro EPPP Mastery System&trade; is a system of learning
-                resources designed to promote mastery of EPPP content through
-                conceptual understanding, critical thinking, and active
-                application. Featuring structured lessons in each domain, clinical
-                integration case examples, and full-length practice exams, the
-                system equips learners with the knowledge and confidence needed
-                for both EPPP success and real-world clinical practice.
-              </p>
-            </div>
-          </section>
-        </div>
 
         {/* ============== STUDY TOOLS ============== */}
         <section id="tools" className="landing-section landing-tools">
