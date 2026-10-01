@@ -97,3 +97,6 @@ channel = "stable-25_05"
 [userenv]
 
 [userenv.shared]
+
+[objectStorage]
+defaultBucketID = "replit-objstore-a76a8aab-a988-4b6d-b88b-eba196e7baf3"
