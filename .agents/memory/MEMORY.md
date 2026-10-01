@@ -1,3 +1,4 @@
+- [GitHub/Git auth separation](github-git-auth-separation.md) — an active connector can have push permission while Git CLI credentials fail; don't delete working connectors.
 - [Dashboard mockup fidelity](dashboard-mockup-fidelity.md) — artwork-only previews must preserve actual dashboard structure; generic source-inspired rebuilds are not faithful extractions.
 - [PsychPro white/luminous system](psychpro-white-luminous-system.md) — CURRENT, amended 2026-07-25: ground is PURE WHITE site-wide (body, backdrop ::before, --background 100%); silver radial + #eef0f2 floors retired ("no gray backgrounds" — owner); drift lock updated.
 - [PsychPro mobile app](psychpro-mobile-app.md) — Expo full mirror at /mobile; Clerk key blob normalized in code; web score conventions mirrored; paywall 402 UX; expo-auth-session required by clerk-expo.
