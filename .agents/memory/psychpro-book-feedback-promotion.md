@@ -20,3 +20,9 @@ The owner chose a pop-up feedback form on both dashboards rather than separate f
 **Why:** The selected option keeps people on their dashboard, including within EPPP, while using the same feedback destination as the main Feedback tab.
 
 **How to apply:** Keep the main Feedback tab available; the dashboard offers should not navigate EPPP users into the main site's shell.
+
+The owner has both a PDF and an EPUB edition of the textbook.
+
+**Why:** The owner stated that both editions are available.
+
+**How to apply:** Request the owner's existing source files when connecting digital-book delivery.
