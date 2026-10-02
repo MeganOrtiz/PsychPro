@@ -64,12 +64,6 @@ import { isEpppTopic } from "@/lib/eppp-content";
 // the learning-science methods, the Brain Lab, the dashboard, Scholar AI).
 // =============================================================================
 
-const STAT_STRIP = [
-  { value: "46", label: "Topics" },
-  { value: "8", label: "Domains" },
-  { value: "5", label: "Study formats" },
-] as const;
-
 // The five built-in study formats. Each gets a brand-family accent so the row
 // reads as a cool cyan spectrum rather than identical tiles.
 const STUDY_TOOLS = [
@@ -429,15 +423,6 @@ export default function LandingPage() {
             <h2 className="landing-section-title">
               Everything You Need to Learn More and Reclaim Your Time
             </h2>
-          </div>
-          <div className="landing-stat-strip landing-stat-strip--quiet">
-            {STAT_STRIP.map((st, i) => (
-              <div key={st.label} className="landing-stat-item">
-                {i > 0 && <span className="landing-stat-sep" aria-hidden />}
-                <span className="landing-stat-num">{st.value}</span>
-                <span className="landing-stat-label">{st.label}</span>
-              </div>
-            ))}
           </div>
           <div className="landing-tools-grid">
             {STUDY_TOOLS.map((f, i) => {
