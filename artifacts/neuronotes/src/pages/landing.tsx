@@ -638,7 +638,7 @@ export default function LandingPage() {
               companion to your PsychPro learning experience.
             </p>
             <p className="landing-textbook-editions">
-              Print and digital editions planned.
+              Print and digital versions available.
             </p>
             <a
               href="https://www.amazon.com/dp/B0HDSMRDTL"
