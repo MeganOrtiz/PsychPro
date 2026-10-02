@@ -31,6 +31,7 @@ import {
 import { useGetTopics } from "@workspace/api-client-react";
 import brainLateral from "@/assets/brain-views/lateral.webp";
 import heroChromeBrain from "@/assets/psychpro-chrome-brain.webp";
+import chromeCrown from "@/assets/eppp-chrome-crown.webp";
 import heroTealGlass from "@/assets/psychpro-teal-glass.webp";
 import foundationsBook from "@/assets/psychpro-foundations-book.webp";
 import founderMegan from "@/assets/founder/megan.webp";
@@ -403,13 +404,13 @@ export default function LandingPage() {
           <div className="landing-suites">
             <article className="landing-suite" data-testid="suite-card-psychpro">
               <h2 className="landing-suite-title">PsychPro Suite</h2>
-              <Brain className="landing-suite-icon" aria-hidden />
+              <img src={heroChromeBrain} alt="" className="landing-suite-artwork" aria-hidden width={1200} height={951} />
               <p>The PsychPro Suite is here to help you learn FASTER and reclaim your time.</p>
               <p>Flashcards, quizzes, study guides, practice exams, and interactive learning spaces - all in one convenient place.</p>
             </article>
             <article className="landing-suite" data-testid="suite-card-eppp">
               <h2 className="landing-suite-title">EPPP Mastery Suite</h2>
-              <Crown className="landing-suite-icon" aria-hidden />
+              <img src={chromeCrown} alt="" className="landing-suite-artwork" aria-hidden width={1200} height={951} />
               <p>The EPPP Mastery Suite is designed to help you study effectively and pass the licensing exam on the FIRST try.</p>
               <p>Prepare confidently for a fraction of the cost.</p>
             </article>
@@ -1625,21 +1626,23 @@ const styles = `
   grid-template-columns: 1fr;
   gap: 18px;
   width: 100%;
-  max-width: 940px;
+  max-width: 808px;
   margin: clamp(28px, 4vh, 44px) auto 0;
   padding: 0 20px;
   box-sizing: border-box;
 }
-@media (min-width: 760px) { .landing-suites { grid-template-columns: 1fr 1fr; gap: 28px; } }
+@media (min-width: 760px) { .landing-suites { grid-template-columns: 1fr 1fr; gap: 24px; } }
 .landing-suite, .landing-tier {
   background: hsl(var(--surf-hue) var(--surf-sat) 100% / 0.96);
   border: 1px solid ${C.hairlineStrong};
   border-radius: 20px;
   box-sizing: border-box;
 }
-.landing-suite { padding: clamp(24px, 3vw, 36px); display: flex; flex-direction: column; align-items: center; gap: 14px; }
-.landing-suite p { margin: 0; max-width: 34ch; font-size: 15px; line-height: 1.65; color: ${alpha(PP.text, 0.88)}; }
-.landing-suite-title { margin: 0; font-weight: 300; font-size: clamp(24px, 2.6vw, 32px); color: ${LANDING.icy}; }
+.landing-suite { padding: 8px clamp(24px, 3vw, 36px) 32px; border-radius: 18px; display: flex; flex-direction: column; align-items: center; }
+.landing-suite p { margin: 0; max-width: 100%; font-size: 13px; line-height: 1.65; color: ${alpha(PP.text, 0.88)}; }
+.landing-suite p + p { margin-top: 14px; }
+.landing-suite-title { margin: 0; font-weight: 300; font-size: clamp(24px, 2.6vw, 32px); line-height: 1.2; color: ${LANDING.icy}; }
+.landing-suite-artwork { display: block; width: 108px; height: 80px; object-fit: contain; flex-shrink: 0; }
 .landing-suite-icon { width: 28px; height: 28px; flex-shrink: 0; color: ${PP.text}; }
 .landing-stat-strip--quiet { margin: 18px auto 34px; opacity: 1; transform: none; }
 .landing-tiers { max-width: 1100px; display: flex; flex-direction: column; gap: 22px; }

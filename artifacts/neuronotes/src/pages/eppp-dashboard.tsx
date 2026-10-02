@@ -22,7 +22,7 @@ import { groupEpppTopicsByCategory, isEpppKnowledgeTopic } from "@/lib/eppp-cont
 import { epppDomainAnchor, epppTopicPath } from "@/lib/eppp-routes";
 import { knowledgeDomainIcon } from "@/lib/eppp-icons";
 import { PP, alpha } from "@/lib/palette";
-import dashboardBrain from "@/assets/psychpro-chrome-brain.webp";
+import dashboardCrown from "@/assets/eppp-chrome-crown.webp";
 import { DashboardFeedbackOffer } from "@/components/feedback/dashboard-feedback-offer";
 
 // ---------------------------------------------------------------------------
@@ -192,7 +192,7 @@ export function EpppDashboardView({
       <div className="dashboard-hero">
         <div className="dashboard-brand">
           <h1 data-testid="text-eppp-brand">EPPP Mastery Suite</h1>
-          <img src={dashboardBrain} alt="" className="dashboard-brain" aria-hidden />
+          <img src={dashboardCrown} alt="" className="dashboard-brain" aria-hidden width={1200} height={951} />
         </div>
         <DashboardFeedbackOffer suite="eppp" />
       </div>
