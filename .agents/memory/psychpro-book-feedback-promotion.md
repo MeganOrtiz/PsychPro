@@ -21,8 +21,8 @@ The owner chose a pop-up feedback form on both dashboards rather than separate f
 
 **How to apply:** Keep the main Feedback tab available; the dashboard offers should not navigate EPPP users into the main site's shell.
 
-The owner has both a PDF and an EPUB edition of the textbook.
+The owner has both a PDF and an EPUB edition of the textbook, but chose PDF only for this promotion.
 
-**Why:** The owner stated that both editions are available.
+**Why:** The owner said, “we should just do a pdf bc that option works on most devices”.
 
-**How to apply:** Request the owner's existing source files when connecting digital-book delivery.
+**How to apply:** Use the owner's PDF for digital-book delivery in My Library; do not add EPUB delivery to this promotion.
