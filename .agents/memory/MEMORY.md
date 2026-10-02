@@ -91,3 +91,4 @@
 - [Clerk verification diagnosis](clerk-verification-diagnosis.md) — one submission can trigger automatic double preparation; trace verification state and loaded browser SDK before changing auth.
 - [Public browser verification fallback](public-browser-verification-fallback.md) — if the managed tester fails, installed Chromium/CDP can verify public UI without auth changes or extra packages.
 - [Textbook feedback promotion](psychpro-book-feedback-promotion.md) — approved reward is a digital book for honest website feedback, not a public book review; printed copies remain separate.
+- [Flashcard difficulty tags](psychpro-flashcard-tags.md) — owner wants no Easy/Medium/Hard tags on any flashcards; study-rating controls remain separate.

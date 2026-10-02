@@ -11,7 +11,6 @@ import UpgradePrompt from "@/components/upgrade-prompt";
 import ElaborationPanel from "@/components/learning/elaboration-panel";
 import { StudySurface } from "@/components/study/study-surface";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
-import { PP, alpha } from "@/lib/palette";
 import { useEntitlements } from "@/lib/use-entitlements";
 import { PageTitle } from "@/components/brand/page-title";
 import { epppTopicPath, isEpppRoute } from "@/lib/eppp-routes";
@@ -20,12 +19,6 @@ import { isEpppTopic } from "@/lib/eppp-content";
 interface Props {
   params: { id: string };
 }
-
-const difficultyStyles: Record<string, { bg: string; color: string; border: string; label: string }> = {
-  easy:   { bg: alpha(PP.chipLight, 0.55), color: P.tealDeep, border: `${P.surf}66`, label: "Easy" },
-  medium: { bg: alpha(PP.chipGray, 0.20),  color: P.tealDeep, border: `${P.teal}55`, label: "Medium" },
-  hard:   { bg: alpha(PP.redCoral, 0.16),  color: PP.brick,  border: alpha(PP.redCoral, 0.45), label: "Hard" },
-};
 
 export default function FlashcardsPage({ params }: Props) {
   const [location, navigate] = useLocation();
@@ -194,7 +187,6 @@ export default function FlashcardsPage({ params }: Props) {
                   <StudySurface
                     tone="card-front"
                     glow
-                    pill={current ? { text: difficultyStyles[current.difficulty]?.label ?? current.difficulty } : undefined}
                     fillHeight
                     innerClassName="p-8 md:p-10 min-h-64 md:min-h-80 flex flex-col justify-center items-center"
                   >

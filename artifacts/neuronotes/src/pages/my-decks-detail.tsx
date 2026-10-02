@@ -31,15 +31,6 @@ const PRO_TABS: { id: Tab; label: string; icon: React.ComponentType<{ className?
   { id: "review", label: "Spaced Review", icon: Repeat, toolId: "review" },
 ];
 
-function DifficultyBadge({ difficulty }: { difficulty: string }) {
-  const map: Record<string, string> = {
-    easy: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-    medium: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
-    hard: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
-  };
-  return <span className={`text-xs px-2 py-0.5 rounded-full font-medium capitalize ${map[difficulty] || map.medium}`}>{difficulty}</span>;
-}
-
 function FlashcardsView({ cards }: { cards: Flashcard[] }) {
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
@@ -62,9 +53,6 @@ function FlashcardsView({ cards }: { cards: Flashcard[] }) {
       >
         <div className={`w-full rounded-2xl border-2 p-6 text-center transition-all duration-300 ${flipped ? "border-primary bg-primary/5" : "border-border bg-card"}`} style={{ minHeight: 200 }}>
           <div className="flex flex-col items-center h-full gap-3" style={{ minHeight: 164 }}>
-            <div className="w-full flex justify-start">
-              <DifficultyBadge difficulty={card.difficulty} />
-            </div>
             <div className="flex-1 flex items-center justify-center">
               <p className="text-foreground font-medium text-base leading-relaxed">{flipped ? card.back : card.front}</p>
             </div>
