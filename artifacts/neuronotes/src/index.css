@@ -157,6 +157,12 @@
   /* Owner-approved turquoise accent ONLY for the two suite-switch actions. */
   --pp-suite-switch-turquoise: #159da4;
   --pp-suite-switch-turquoise-rgb: 21, 157, 164;
+  /* Owner-approved vivid teal, scoped to the public EPPP promo CTA only. */
+  --pp-promo-teal-hi: #66eeeb;
+  --pp-promo-teal-mid: #22d3d9;
+  --pp-promo-teal-mid-rgb: 34, 211, 217;
+  --pp-promo-teal-lo: #0ea8b0;
+  --pp-promo-teal-border: #0b9da6;
   --pp-shadow: rgba(var(--pp-black-rgb), 0.16);             /* neutral drop shadow */
 
   /* SOLID TILE LADDER (owner, 2026-07-15): every box/button fill must be
@@ -591,6 +597,46 @@
     0 6px 14px -12px var(--pp-shadow);
   transform: translateY(0);
 }
+/* This promotional CTA is intentionally distinct from silver-chrome buttons. */
+.landing-root .landing-eppp-promo {
+  min-height: 48px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--pp-promo-teal-border);
+  background: linear-gradient(180deg, var(--pp-promo-teal-hi) 0%, var(--pp-promo-teal-mid) 55%, var(--pp-promo-teal-lo) 100%);
+  color: var(--pp-text);
+  font-size: clamp(14px, 1.25vw, 17px);
+  font-weight: 700;
+  box-shadow: inset 0 1px 0 var(--pp-bevel-bright), 0 8px 20px -12px var(--pp-shadow);
+  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+}
+.landing-root .landing-eppp-promo:hover {
+  background: linear-gradient(180deg, var(--pp-promo-teal-hi) 0%, var(--pp-promo-teal-mid) 70%, var(--pp-promo-teal-lo) 100%);
+  border-color: var(--pp-promo-teal-border);
+  color: var(--pp-text);
+  filter: brightness(1.06);
+  transform: translateY(-2px);
+  box-shadow: inset 0 1px 0 var(--pp-bevel-bright), 0 0 24px -5px rgba(var(--pp-promo-teal-mid-rgb), 0.55), 0 10px 24px -12px var(--pp-shadow);
+}
+.landing-root .landing-eppp-promo:active {
+  background: linear-gradient(180deg, var(--pp-promo-teal-lo) 0%, var(--pp-promo-teal-mid) 100%);
+  filter: none;
+  transform: translateY(0);
+  box-shadow: inset 0 2px 6px var(--pp-shadow);
+}
+.landing-root .landing-eppp-promo:focus-visible {
+  outline: 2px solid var(--pp-promo-teal-border);
+  outline-offset: 4px;
+}
+.landing-root .landing-eppp-promo svg { transition: transform 180ms ease; }
+.landing-root .landing-eppp-promo:hover svg { transform: translateX(3px); }
+@media (prefers-reduced-motion: reduce) {
+  .landing-root .landing-eppp-promo,
+  .landing-root .landing-eppp-promo svg { transition: none; }
+  .landing-root .landing-eppp-promo:hover,
+  .landing-root .landing-eppp-promo:hover svg { transform: none; }
+}
+
 .btn-glass:disabled,
 .btn-glass-strong:disabled {
   opacity: 0.55;

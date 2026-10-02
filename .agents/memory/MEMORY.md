@@ -16,7 +16,7 @@
 - [PsychPro token lock](psychpro-token-lock.md) — no raw color literals in TS/TSX outside palette.ts (+2 whitelisted files); use PP/alpha() or var(--pp-*); broad recipes banned, primitives emit scoped pp-* classes; drift guardrail enforces.
 - [Owner mode/consent preference](psychpro-owner-mode-consent.md) — confirm before executing when plan-vs-build intent is ambiguous; run a full pre-publish verification pass when asked.
 - [Claims discipline](claims-discipline.md) — never report a fix as "done" until it's been verified end-to-end; user has called this out repeatedly.
-- [PsychPro silver-chrome buttons](psychpro-chrome-buttons.md) — CURRENT (2026-07-19): primaries = chrome gradient + dark ink + 10px radius site-wide (EPPP incl.); never white labels on light fills.
+- [PsychPro silver-chrome buttons](psychpro-chrome-buttons.md) — chrome + dark ink by default; homepage EPPP promo is vivid teal; suite-switch halo stays scoped.
 - [PsychPro glass buttons](psychpro-glass-buttons.md) — historical (superseded 2026-07-19 by silver-chrome buttons).
 - [PsychPro custom-deck subscription gate](psychpro-custom-decks-subscription-gate.md) — "upload broken" reports are usually the paid-tier 403 gate firing, not the upload itself.
 - [OAuth/MCP state persistence](oauth-mcp-persistence.md) — dynamic-client-registration + auth codes + tokens must be in Postgres; in-memory Maps break across Autoscale instances and restarts.

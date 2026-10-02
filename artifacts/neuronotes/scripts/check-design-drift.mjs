@@ -246,6 +246,10 @@ if (!/backdrop-filter:\s*none\s*!important;/.test(css)) {
   const GLOW = /var\(--pp-glow(?:-strong)?\)|rgba\(\s*240\s*,\s*240\s*,\s*240/;
   // The only owner-approved resting accent halo belongs to suite switching.
   for (const s of spans) {
+    if (/var\(--pp-promo-teal-[a-z-]+\)/.test(s.body) &&
+        !/^\.landing-root \.landing-eppp-promo(?::hover|:active|:focus-visible)?$/.test(s.sel)) {
+      fail("promo teal used outside its scoped CTA", "keep this vivid accent exclusive to the landing EPPP promo button");
+    }
     if (/var\(--pp-suite-switch-turquoise(?:-rgb)?\)/.test(s.body) &&
         !/^\.suite-switch-btn(?::hover|:active|:focus-visible)?$/.test(s.sel)) {
       fail("suite-switch turquoise used outside its scoped buttons", "keep this accent exclusive to .suite-switch-btn and its hover/active/focus-visible states");
@@ -611,6 +615,8 @@ for (const [fileName, cls] of PRIMITIVE_CLASSES) {
     oceanDeep: "--pp-ocean-deep", cyan: "--pp-cyan", bright: "--pp-bright",
     icy: "--pp-icy", text: "--pp-text", textDim: "--pp-text-dim", ink: "--pp-ink",
     suiteSwitchTurquoise: "--pp-suite-switch-turquoise",
+    promoTealHi: "--pp-promo-teal-hi", promoTealMid: "--pp-promo-teal-mid",
+    promoTealLo: "--pp-promo-teal-lo", promoTealBorder: "--pp-promo-teal-border",
   };
   for (const [key, cssVar] of Object.entries(CORE)) {
     const tsHex = paletteSrc.match(new RegExp(`\\b${key}:\\s*"(#[0-9a-fA-F]{6})"`))?.[1]?.toLowerCase();

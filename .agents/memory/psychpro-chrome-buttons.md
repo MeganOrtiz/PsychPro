@@ -20,3 +20,13 @@ Suite-switch labels must be just “PsychPro Suite” and “EPPP Mastery Suite,
 **Why:** The owner explicitly requested those two names only.
 
 **How to apply:** Use these exact labels for desktop and mobile suite-switch actions; keep their existing navigation destinations.
+
+The public EPPP free-week button in the landing suite card is a separate
+exception: use a brilliant turquoise-teal fill rather than silver chrome.
+
+**Why:** The owner asked to “make this stand out like a brilliant turquoise teal
+color and make people want to click on it.”
+
+**How to apply:** Keep this treatment scoped to that promo button, with readable
+dark lettering and a brighter hover treatment. Other primary buttons remain
+silver chrome; this does not widen the suite-switch halo exception.

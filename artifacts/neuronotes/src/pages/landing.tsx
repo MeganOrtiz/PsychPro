@@ -415,7 +415,7 @@ export default function LandingPage() {
               <p>The EPPP Mastery Suite is designed to help you study effectively and pass the licensing exam on the FIRST try.</p>
               <p>Prepare confidently for a fraction of the cost.</p>
               <div className="mt-auto pt-6 w-full">
-                <Button asChild className="w-full gap-2">
+                <Button asChild className="landing-eppp-promo w-full gap-2">
                   <Link href="/eppp/promo?code=EPPP7" data-testid="button-landing-eppp-promo">
                     Try EPPP free for 7 days
                     <ArrowRight className="w-4 h-4" aria-hidden />
