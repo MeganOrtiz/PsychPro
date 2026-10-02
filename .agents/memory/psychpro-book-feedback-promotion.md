@@ -17,7 +17,7 @@ Use the owner's own book-offer design on both PsychPro and EPPP dashboards: book
 
 The owner intends to publicly share the PsychPro link with a promo code that grants one free week because the free tier is now very limited. The dashboards then prompt users to leave website feedback in exchange for the book.
 
-**Why:** The owner said the purpose is primarily to get people to the site and get information about PsychPro out there.
+**Why:** The owner said the purpose is primarily to get people to the site and get information about PsychPro out there. The intended posting audience is an EPPP study page.
 
 **How to apply:** Treat the free-week acquisition offer and the book-for-feedback reward as separate steps. Do not assume which suite or paid tier the week includes, or whether it requires payment details; those choices still need agreement.
 
