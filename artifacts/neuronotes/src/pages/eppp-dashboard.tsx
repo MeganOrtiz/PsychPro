@@ -24,6 +24,7 @@ import { knowledgeDomainIcon } from "@/lib/eppp-icons";
 import { PP, alpha } from "@/lib/palette";
 import dashboardCrown from "@/assets/eppp-chrome-crown.webp";
 import { DashboardFeedbackOffer } from "@/components/feedback/dashboard-feedback-offer";
+import { DashboardBrandArtwork } from "@/components/dashboard-brand-artwork";
 
 // ---------------------------------------------------------------------------
 // EPPP Mastery Suite dashboard — the working "how ready am I" home for the
@@ -192,7 +193,9 @@ export function EpppDashboardView({
       <div className="dashboard-hero">
         <div className="dashboard-brand">
           <h1 data-testid="text-eppp-brand">EPPP Mastery Suite</h1>
-          <img src={dashboardCrown} alt="" className="dashboard-brain" aria-hidden width={1200} height={951} />
+          <DashboardBrandArtwork>
+            <img src={dashboardCrown} alt="" className="dashboard-brain" aria-hidden width={1200} height={951} />
+          </DashboardBrandArtwork>
         </div>
         <DashboardFeedbackOffer suite="eppp" />
       </div>

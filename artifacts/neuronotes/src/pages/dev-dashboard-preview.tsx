@@ -5,6 +5,7 @@
 import { EpppDashboardView } from "@/pages/eppp-dashboard";
 import type { DomainStat, RecTopic } from "@/pages/eppp-dashboard";
 import dashboardBrain from "@/assets/psychpro-chrome-brain.webp";
+import { DashboardBrandArtwork } from "@/components/dashboard-brand-artwork";
 import { DashboardFeedbackOffer } from "@/components/feedback/dashboard-feedback-offer";
 import FeedbackPage from "@/pages/feedback";
 import AppLayout from "@/components/layout/app-layout";
@@ -47,7 +48,9 @@ export default function DevDashboardPreview() {
           <div className="dashboard-hero">
             <div className="dashboard-brand">
               <h1>PsychPro</h1>
-              <img src={dashboardBrain} alt="" className="dashboard-brain" aria-hidden />
+              <DashboardBrandArtwork>
+                <img src={dashboardBrain} alt="" className="dashboard-brain" aria-hidden />
+              </DashboardBrandArtwork>
             </div>
             <DashboardFeedbackOffer />
           </div>

@@ -3,11 +3,11 @@ name: PsychPro landing hero — chrome brain on white
 description: Landing hero uses the owner's symmetrical teal ink splash behind the standalone pulsating chrome brain; dashboards are unchanged.
 ---
 
-**Current rule (2026-10-02):** keep the pure-white ground and standalone pulsating chrome brain, with the owner's symmetrical teal ink splash behind it. The owner approved replacing the earlier transparent teal-and-glass cutout with this supplied image, preserving its proportions and avoiding unnecessary enlargement. This is a hero-only decorative layer, not a return to the old full-page ink-splash backdrop. Dashboards stay unchanged.
+**Current rule (2026-10-02):** keep the pure-white ground and standalone pulsating chrome brain, with the owner's symmetrical teal ink splash behind it. The owner approved replacing the earlier transparent teal-and-glass cutout with this supplied image, preserving its proportions and avoiding unnecessary enlargement. This is a local decorative layer, not a return to the old full-page ink-splash backdrop. The owner subsequently requested the same splash behind both dashboard symbols; see psychpro-dashboard-artwork.md.
 
 **Why:** the owner asked to use the supplied symmetrical splash as the new design behind the landing brain and explicitly approved the replacement after checking its resolution.
 
-**How to apply:** keep the artwork stationary while the existing brain breathes; preserve all copy and controls. The earlier transparent-cutout preference is superseded for this layer only.
+**How to apply:** keep the artwork stationary while the existing brain breathes; preserve all copy and controls. The earlier transparent-cutout preference is superseded for this supplied splash.
 
 **2026-09-13 owner refinement:** the landing wordmark and “learn. expand. connect.” tagline belong above the brain, per the supplied reference. Keep the headline below the brain. This supersedes historical under-brain wordmark instructions.
 

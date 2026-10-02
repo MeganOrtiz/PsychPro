@@ -829,7 +829,29 @@ body {
     --dash-r-offset: clamp(16px, 4vw, 48px);
   }
 }
+.dashboard-brand-artwork {
+  position: relative;
+  isolation: isolate;
+  width: min(100%, clamp(420px, 48vw, 750px));
+  margin: 4px auto 0;
+  overflow: hidden;
+}
+.dashboard-brand-splash {
+  position: absolute;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  object-fit: cover;
+  mask-image: radial-gradient(ellipse 70% 80% at 50% 50%, rgba(var(--pp-black-rgb), 1) 40%, transparent 72%);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  user-select: none;
+}
 .dashboard-brain {
+  position: relative;
   display: block;
   width: clamp(140px, 16vw, 250px);
   height: auto;
@@ -841,6 +863,8 @@ body {
 /* Matches the landing-page wordmark exactly (Montserrat 200, 0.22em
    tracking, uppercase) so the brand reads the same everywhere. */
 .dashboard-brand h1 {
+  position: relative;
+  z-index: 1;
   margin: 0 0 2px;
   font-family: var(--app-font-sans);
   font-weight: 200;
