@@ -401,3 +401,17 @@ mtime_ms = 1789754277562
 storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/67c39038-d9c1-412b-b368-dc12e927bce5/db2689b0-7508-4d08-8a4d-6cf175ccb96d"
 storage_version_token = "1789754313039292"
 content_type = "image/png"
+
+[[outputs]]
+id = "vepZNQ7YI4f0eJI-74bIM"
+uri = "file://deliverables/PsychPro_Foundations_in_Clinical_Psychology_Volume_1_Corrected.pdf"
+type = "pdf"
+title = "PsychPro textbook — corrected PDF"
+description = "Clean contents pages without dotted leaders, completed linked index, corrected DSM-5-TR attribution, removed editorial note, and repaired bookmarks. Original preserved; 775 pages."
+logical_id = "8cb0812a-3950-4761-a341-4bb350ab4454"
+content_hash = "sha256:8a1c61614981290d07862ece0e472a3a51435af7d6c6077b20168a5b8b6dbfa7"
+size = 7439413
+mtime_ms = 1790925282024
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/8cb0812a-3950-4761-a341-4bb350ab4454/8d778179-14ad-442f-92c7-1e1b5d5301aa"
+storage_version_token = "1790925340151777"
+content_type = "application/pdf"

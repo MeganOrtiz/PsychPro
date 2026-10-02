@@ -1,0 +1,5724 @@
+[
+  {
+    "term": "ABC model",
+    "targets": [
+      193,
+      389
+    ]
+  },
+  {
+    "term": "academic achievement",
+    "targets": [
+      157,
+      179
+    ]
+  },
+  {
+    "term": "Acceptance and commitment therapy",
+    "targets": [
+      289,
+      584,
+      585
+    ]
+  },
+  {
+    "term": "accessibility",
+    "targets": [
+      109,
+      226,
+      371
+    ]
+  },
+  {
+    "term": "accommodation",
+    "targets": [
+      80,
+      96
+    ]
+  },
+  {
+    "term": "acculturation",
+    "targets": [
+      412,
+      417,
+      422
+    ]
+  },
+  {
+    "term": "Acculturative stress",
+    "targets": [
+      174,
+      422,
+      423
+    ]
+  },
+  {
+    "term": "Acetylcholine",
+    "targets": [
+      38,
+      48
+    ]
+  },
+  {
+    "term": "Achievement Motivation",
+    "targets": [
+      250
+    ]
+  },
+  {
+    "term": "Achievement tests",
+    "targets": [
+      516
+    ]
+  },
+  {
+    "term": "acquisition",
+    "targets": [
+      114,
+      191,
+      205
+    ]
+  },
+  {
+    "term": "Active gene\u2013environment correlation",
+    "targets": [
+      91
+    ]
+  },
+  {
+    "term": "actor-observer asymmetry",
+    "targets": [
+      365,
+      370,
+      371
+    ]
+  },
+  {
+    "term": "adaptive functioning",
+    "targets": [
+      112,
+      179,
+      180
+    ]
+  },
+  {
+    "term": "adherence",
+    "targets": [
+      35,
+      74,
+      78
+    ]
+  },
+  {
+    "term": "adolescence-limited antisocial behavior",
+    "targets": [
+      482,
+      486
+    ]
+  },
+  {
+    "term": "adverse childhood experiences",
+    "targets": [
+      483,
+      486
+    ]
+  },
+  {
+    "term": "affect",
+    "targets": [
+      11,
+      298,
+      300
+    ]
+  },
+  {
+    "term": "agonists",
+    "targets": [
+      36,
+      48
+    ]
+  },
+  {
+    "term": "akathisia",
+    "targets": [
+      33,
+      48,
+      53
+    ]
+  },
+  {
+    "term": "Alcohol",
+    "targets": [
+      42,
+      48
+    ]
+  },
+  {
+    "term": "alexithymia",
+    "targets": [
+      292,
+      295
+    ]
+  },
+  {
+    "term": "Alpha waves",
+    "targets": [
+      128,
+      150
+    ]
+  },
+  {
+    "term": "ambivalence",
+    "targets": [
+      262,
+      389
+    ]
+  },
+  {
+    "term": "amygdala",
+    "targets": [
+      15,
+      26,
+      31
+    ]
+  },
+  {
+    "term": "analysis of variance",
+    "targets": [
+      639,
+      642
+    ]
+  },
+  {
+    "term": "anchoring heuristic",
+    "targets": [
+      315,
+      326
+    ]
+  },
+  {
+    "term": "anhedonia",
+    "targets": [
+      260,
+      264
+    ]
+  },
+  {
+    "term": "antagonists",
+    "targets": [
+      36,
+      48
+    ]
+  },
+  {
+    "term": "antecedent-behavior-consequence",
+    "targets": [
+      540,
+      544
+    ]
+  },
+  {
+    "term": "antecedent-focused",
+    "targets": [
+      295
+    ]
+  },
+  {
+    "term": "anterior cingulate cortex",
+    "targets": [
+      278,
+      294,
+      295
+    ]
+  },
+  {
+    "term": "Antidepressant Medications",
+    "targets": [
+      39
+    ]
+  },
+  {
+    "term": "Antipsychotic Medications",
+    "targets": [
+      40
+    ]
+  },
+  {
+    "term": "Anxiety Disorders and Obsessive-Compulsive Disorder",
+    "targets": [
+      68
+    ]
+  },
+  {
+    "term": "Anxiolytic and Sedative-Hypnotic Medications",
+    "targets": [
+      40
+    ]
+  },
+  {
+    "term": "APA Ethics Code",
+    "targets": [
+      658,
+      668
+    ]
+  },
+  {
+    "term": "Arousal Theory",
+    "targets": [
+      245,
+      264
+    ]
+  },
+  {
+    "term": "assent",
+    "targets": [
+      436,
+      668
+    ]
+  },
+  {
+    "term": "assimilation",
+    "targets": [
+      417,
+      439,
+      440
+    ]
+  },
+  {
+    "term": "attachment",
+    "targets": [
+      28,
+      349,
+      470
+    ]
+  },
+  {
+    "term": "attention",
+    "targets": [
+      11,
+      74,
+      154
+    ]
+  },
+  {
+    "term": "Attention-Deficit/Hyperactivity Disorder",
+    "targets": [
+      70
+    ]
+  },
+  {
+    "term": "Attention: The Gateway to Cognition",
+    "targets": [
+      306
+    ]
+  },
+  {
+    "term": "Attitude strength",
+    "targets": [
+      380,
+      389
+    ]
+  },
+  {
+    "term": "Attitudes",
+    "targets": [
+      259,
+      389
+    ]
+  },
+  {
+    "term": "attractiveness halo",
+    "targets": [
+      401,
+      406,
+      410
+    ]
+  },
+  {
+    "term": "attribution",
+    "targets": [
+      253,
+      268,
+      297
+    ]
+  },
+  {
+    "term": "attribution theory",
+    "targets": [
+      253,
+      264,
+      269
+    ]
+  },
+  {
+    "term": "Attribution Theory and Motivation",
+    "targets": [
+      253
+    ]
+  },
+  {
+    "term": "Autism spectrum disorder",
+    "targets": [
+      64,
+      481
+    ]
+  },
+  {
+    "term": "Automatic processing",
+    "targets": [
+      361,
+      371
+    ]
+  },
+  {
+    "term": "autonomic nervous system",
+    "targets": [
+      14,
+      15,
+      26
+    ]
+  },
+  {
+    "term": "autonomous morality",
+    "targets": [
+      465,
+      470
+    ]
+  },
+  {
+    "term": "autonomy",
+    "targets": [
+      203,
+      264,
+      424
+    ]
+  },
+  {
+    "term": "availability heuristic",
+    "targets": [
+      315,
+      326,
+      330
+    ]
+  },
+  {
+    "term": "babbling",
+    "targets": [
+      449,
+      454,
+      457
+    ]
+  },
+  {
+    "term": "basal ganglia",
+    "targets": [
+      12,
+      20,
+      26
+    ]
+  },
+  {
+    "term": "base rate fallacy",
+    "targets": [
+      651,
+      655
+    ]
+  },
+  {
+    "term": "base rates",
+    "targets": [
+      330,
+      655
+    ]
+  },
+  {
+    "term": "Behavior rating scales",
+    "targets": [
+      527,
+      532
+    ]
+  },
+  {
+    "term": "behavioral activation",
+    "targets": [
+      60,
+      265,
+      588
+    ]
+  },
+  {
+    "term": "behavioral assessment",
+    "targets": [
+      110,
+      535,
+      546
+    ]
+  },
+  {
+    "term": "behavioral experiments",
+    "targets": [
+      63,
+      199,
+      253
+    ]
+  },
+  {
+    "term": "Behavioral Genetic Research Designs",
+    "targets": [
+      89
+    ]
+  },
+  {
+    "term": "Behavioral genetics",
+    "targets": [
+      82,
+      98
+    ]
+  },
+  {
+    "term": "Behavioral Genetics and Psychopathology",
+    "targets": [
+      94
+    ]
+  },
+  {
+    "term": "Behavioral inhibition",
+    "targets": [
+      42,
+      349,
+      354
+    ]
+  },
+  {
+    "term": "behavioral therapy",
+    "targets": [
+      275,
+      581,
+      588
+    ]
+  },
+  {
+    "term": "Beneficence and nonmaleficence",
+    "targets": [
+      662,
+      667,
+      668
+    ]
+  },
+  {
+    "term": "Beta waves",
+    "targets": [
+      128,
+      150
+    ]
+  },
+  {
+    "term": "between-subjects designs",
+    "targets": [
+      624,
+      629
+    ]
+  },
+  {
+    "term": "Biological and Developmental Influences on Intelligence",
+    "targets": [
+      173
+    ]
+  },
+  {
+    "term": "Biological Constraints on Learning",
+    "targets": [
+      200
+    ]
+  },
+  {
+    "term": "Biological Foundations of Emotion",
+    "targets": [
+      277
+    ]
+  },
+  {
+    "term": "Biological Foundations of Motivation",
+    "targets": [
+      244
+    ]
+  },
+  {
+    "term": "biological preparedness",
+    "targets": [
+      200,
+      205,
+      295
+    ]
+  },
+  {
+    "term": "Bipolar Disorder",
+    "targets": [
+      38,
+      69,
+      74
+    ]
+  },
+  {
+    "term": "boundaries",
+    "targets": [
+      46,
+      572,
+      601
+    ]
+  },
+  {
+    "term": "Brain Organization and Integrated Functioning",
+    "targets": [
+      15
+    ]
+  },
+  {
+    "term": "Brain Wave Frequencies",
+    "targets": [
+      128,
+      150
+    ]
+  },
+  {
+    "term": "brainstem",
+    "targets": [
+      12,
+      21,
+      26
+    ]
+  },
+  {
+    "term": "burnout",
+    "targets": [
+      254,
+      695
+    ]
+  },
+  {
+    "term": "bystander effect",
+    "targets": [
+      402,
+      406
+    ]
+  },
+  {
+    "term": "Cannabis",
+    "targets": [
+      35,
+      42,
+      49
+    ]
+  },
+  {
+    "term": "Cannon-Bard theory",
+    "targets": [
+      280,
+      295
+    ]
+  },
+  {
+    "term": "Cannon-Bard Theory of Emotion",
+    "targets": [
+      280
+    ]
+  },
+  {
+    "term": "Carroll\u2019s Three-Stratum Theory",
+    "targets": [
+      164
+    ]
+  },
+  {
+    "term": "case formulation",
+    "targets": [
+      46,
+      266,
+      546
+    ]
+  },
+  {
+    "term": "Cattell-Horn-Carroll model",
+    "targets": [
+      510,
+      515,
+      516
+    ]
+  },
+  {
+    "term": "Cattell-Horn-Carroll Theory",
+    "targets": [
+      165
+    ]
+  },
+  {
+    "term": "Cattell-Horn Theory: Fluid and Crystallized Intelligence",
+    "targets": [
+      163
+    ]
+  },
+  {
+    "term": "central executive",
+    "targets": [
+      218,
+      233
+    ]
+  },
+  {
+    "term": "central limit theorem",
+    "targets": [
+      635,
+      642
+    ]
+  },
+  {
+    "term": "central nervous system",
+    "targets": [
+      14,
+      26
+    ]
+  },
+  {
+    "term": "central route",
+    "targets": [
+      383,
+      389,
+      390
+    ]
+  },
+  {
+    "term": "cephalocaudal trend",
+    "targets": [
+      449,
+      454
+    ]
+  },
+  {
+    "term": "cerebellum",
+    "targets": [
+      12,
+      21,
+      27
+    ]
+  },
+  {
+    "term": "cerebral cortex",
+    "targets": [
+      16,
+      27
+    ]
+  },
+  {
+    "term": "chaining",
+    "targets": [
+      188,
+      205
+    ]
+  },
+  {
+    "term": "CHC theory",
+    "targets": [
+      165,
+      180
+    ]
+  },
+  {
+    "term": "child-directed speech",
+    "targets": [
+      450,
+      454
+    ]
+  },
+  {
+    "term": "chromosomes",
+    "targets": [
+      83,
+      99
+    ]
+  },
+  {
+    "term": "circular causality",
+    "targets": [
+      595,
+      601
+    ]
+  },
+  {
+    "term": "Classical conditioning",
+    "targets": [
+      187,
+      190,
+      205
+    ]
+  },
+  {
+    "term": "classical test theory",
+    "targets": [
+      491,
+      502
+    ]
+  },
+  {
+    "term": "Clinical and Assessment Applications",
+    "targets": [
+      24,
+      95
+    ]
+  },
+  {
+    "term": "Clinical and Professional Application",
+    "targets": [
+      46
+    ]
+  },
+  {
+    "term": "clinical interview",
+    "targets": [
+      532,
+      546
+    ]
+  },
+  {
+    "term": "clinical supervision",
+    "targets": [
+      605,
+      610,
+      614
+    ]
+  },
+  {
+    "term": "clinical trials",
+    "targets": [
+      58,
+      74
+    ]
+  },
+  {
+    "term": "clinical utility",
+    "targets": [
+      93,
+      150
+    ]
+  },
+  {
+    "term": "Cognition",
+    "targets": [
+      11,
+      298,
+      326
+    ]
+  },
+  {
+    "term": "Cognition, Affect, and Emotional Regulation",
+    "targets": [
+      342
+    ]
+  },
+  {
+    "term": "Cognition, Affect, Temperament, and Psychopathology",
+    "targets": [
+      345
+    ]
+  },
+  {
+    "term": "Cognition and Emotion",
+    "targets": [
+      204,
+      322,
+      326
+    ]
+  },
+  {
+    "term": "cognitive-affective styles",
+    "targets": [
+      333,
+      340
+    ]
+  },
+  {
+    "term": "Cognitive Appraisal Theory",
+    "targets": [
+      274,
+      282,
+      295
+    ]
+  },
+  {
+    "term": "Cognitive-behavioral therapy",
+    "targets": [
+      275,
+      583
+    ]
+  },
+  {
+    "term": "Cognitive Biases",
+    "targets": [
+      304,
+      315,
+      326
+    ]
+  },
+  {
+    "term": "cognitive dissonance",
+    "targets": [
+      377,
+      389
+    ]
+  },
+  {
+    "term": "cognitive distortions",
+    "targets": [
+      308,
+      588
+    ]
+  },
+  {
+    "term": "cognitive flexibility",
+    "targets": [
+      17,
+      326
+    ]
+  },
+  {
+    "term": "Cognitive Flexibility and Set-Shifting",
+    "targets": [
+      320
+    ]
+  },
+  {
+    "term": "Cognitive Influences on Learning",
+    "targets": [
+      198
+    ]
+  },
+  {
+    "term": "cognitive profile",
+    "targets": [
+      159,
+      180
+    ]
+  },
+  {
+    "term": "cognitive reappraisal",
+    "targets": [
+      277,
+      295,
+      349
+    ]
+  },
+  {
+    "term": "cognitive reserve",
+    "targets": [
+      145,
+      150,
+      446
+    ]
+  },
+  {
+    "term": "cognitive therapy",
+    "targets": [
+      293,
+      582,
+      588
+    ]
+  },
+  {
+    "term": "Collaborative and Ethical Practice",
+    "targets": [
+      71
+    ]
+  },
+  {
+    "term": "collectivism",
+    "targets": [
+      413,
+      422,
+      424
+    ]
+  },
+  {
+    "term": "Combined Treatment",
+    "targets": [
+      58,
+      65,
+      74
+    ]
+  },
+  {
+    "term": "combined treatments",
+    "targets": [
+      58,
+      74
+    ]
+  },
+  {
+    "term": "common factors",
+    "targets": [
+      551,
+      560
+    ]
+  },
+  {
+    "term": "Commonly Confused Concepts",
+    "targets": [
+      25
+    ]
+  },
+  {
+    "term": "comorbidity",
+    "targets": [
+      60,
+      546,
+      549
+    ]
+  },
+  {
+    "term": "Comparing Structural and Functional Imaging",
+    "targets": [
+      123
+    ]
+  },
+  {
+    "term": "competence",
+    "targets": [
+      34,
+      265,
+      267
+    ]
+  },
+  {
+    "term": "Complementary and Alternative Agents",
+    "targets": [
+      33,
+      44
+    ]
+  },
+  {
+    "term": "complementary or alternative agents",
+    "targets": [
+      33,
+      34,
+      49
+    ]
+  },
+  {
+    "term": "compliance",
+    "targets": [
+      203,
+      406
+    ]
+  },
+  {
+    "term": "Computed Tomography (CT)",
+    "targets": [
+      109
+    ]
+  },
+  {
+    "term": "Concept Formation and Categorization",
+    "targets": [
+      308
+    ]
+  },
+  {
+    "term": "concepts",
+    "targets": [
+      25,
+      27,
+      326
+    ]
+  },
+  {
+    "term": "conditioned response",
+    "targets": [
+      190,
+      206
+    ]
+  },
+  {
+    "term": "conditioned stimulus",
+    "targets": [
+      190,
+      206
+    ]
+  },
+  {
+    "term": "confidence intervals",
+    "targets": [
+      161,
+      642
+    ]
+  },
+  {
+    "term": "confidentiality",
+    "targets": [
+      72,
+      668,
+      670
+    ]
+  },
+  {
+    "term": "confirmation bias",
+    "targets": [
+      308,
+      326,
+      330
+    ]
+  },
+  {
+    "term": "conformity",
+    "targets": [
+      394,
+      406,
+      408
+    ]
+  },
+  {
+    "term": "confounds",
+    "targets": [
+      428,
+      443,
+      629
+    ]
+  },
+  {
+    "term": "congruence",
+    "targets": [
+      336,
+      560,
+      562
+    ]
+  },
+  {
+    "term": "conservation",
+    "targets": [
+      15,
+      439,
+      442
+    ]
+  },
+  {
+    "term": "consolidation",
+    "targets": [
+      28,
+      233,
+      235
+    ]
+  },
+  {
+    "term": "Consolidation and the Neurobiology of Memory",
+    "targets": [
+      223
+    ]
+  },
+  {
+    "term": "construct-irrelevant variance",
+    "targets": [
+      497,
+      500,
+      502
+    ]
+  },
+  {
+    "term": "construct validity",
+    "targets": [
+      492,
+      496,
+      502
+    ]
+  },
+  {
+    "term": "consultation",
+    "targets": [
+      23,
+      610,
+      614
+    ]
+  },
+  {
+    "term": "contact hypothesis",
+    "targets": [
+      395,
+      406,
+      407
+    ]
+  },
+  {
+    "term": "Contemporary Models of Temperament",
+    "targets": [
+      338
+    ]
+  },
+  {
+    "term": "Contemporary Understanding of Cognitive Abilities",
+    "targets": [
+      168
+    ]
+  },
+  {
+    "term": "Content validity",
+    "targets": [
+      496,
+      502
+    ]
+  },
+  {
+    "term": "Context-dependent memory",
+    "targets": [
+      225,
+      233
+    ]
+  },
+  {
+    "term": "contingency management",
+    "targets": [
+      64,
+      188,
+      266
+    ]
+  },
+  {
+    "term": "continuing education",
+    "targets": [
+      612,
+      695
+    ]
+  },
+  {
+    "term": "continuity-discontinuity issue",
+    "targets": [
+      430,
+      439
+    ]
+  },
+  {
+    "term": "controllability",
+    "targets": [
+      253,
+      265
+    ]
+  },
+  {
+    "term": "controlled processing",
+    "targets": [
+      357,
+      371
+    ]
+  },
+  {
+    "term": "convergent validity",
+    "targets": [
+      496,
+      502
+    ]
+  },
+  {
+    "term": "Core Components of Executive Functioning",
+    "targets": [
+      318
+    ]
+  },
+  {
+    "term": "corrective emotional experience",
+    "targets": [
+      555,
+      560
+    ]
+  },
+  {
+    "term": "Correlational research",
+    "targets": [
+      624,
+      629
+    ]
+  },
+  {
+    "term": "correspondent inference",
+    "targets": [
+      357,
+      362,
+      371
+    ]
+  },
+  {
+    "term": "counterbalancing",
+    "targets": [
+      624,
+      629
+    ]
+  },
+  {
+    "term": "countertransference",
+    "targets": [
+      567,
+      574,
+      575
+    ]
+  },
+  {
+    "term": "covariation model",
+    "targets": [
+      357,
+      371
+    ]
+  },
+  {
+    "term": "Criterion-related validity",
+    "targets": [
+      496,
+      502
+    ]
+  },
+  {
+    "term": "Cross-sectional designs",
+    "targets": [
+      435,
+      439
+    ]
+  },
+  {
+    "term": "crystallized abilities",
+    "targets": [
+      163,
+      454
+    ]
+  },
+  {
+    "term": "crystallized intelligence",
+    "targets": [
+      158,
+      163,
+      164
+    ]
+  },
+  {
+    "term": "cultural competence",
+    "targets": [
+      420,
+      695
+    ]
+  },
+  {
+    "term": "Cultural Formulation Interview",
+    "targets": [
+      419,
+      421,
+      422
+    ]
+  },
+  {
+    "term": "cultural humility",
+    "targets": [
+      147,
+      422,
+      695
+    ]
+  },
+  {
+    "term": "Culture",
+    "targets": [
+      25,
+      182,
+      422
+    ]
+  },
+  {
+    "term": "cumulative risk",
+    "targets": [
+      480,
+      486
+    ]
+  },
+  {
+    "term": "Decay theory",
+    "targets": [
+      226,
+      233
+    ]
+  },
+  {
+    "term": "declarative",
+    "targets": [
+      18,
+      233,
+      236
+    ]
+  },
+  {
+    "term": "Declarative and Nondeclarative Memory",
+    "targets": [
+      213,
+      220
+    ]
+  },
+  {
+    "term": "Declarative memory",
+    "targets": [
+      18,
+      233
+    ]
+  },
+  {
+    "term": "deductive reasoning",
+    "targets": [
+      185,
+      310,
+      326
+    ]
+  },
+  {
+    "term": "defense mechanisms",
+    "targets": [
+      567,
+      574,
+      575
+    ]
+  },
+  {
+    "term": "deindividuation",
+    "targets": [
+      395,
+      399,
+      406
+    ]
+  },
+  {
+    "term": "Delta waves",
+    "targets": [
+      128,
+      150
+    ]
+  },
+  {
+    "term": "dependence",
+    "targets": [
+      40,
+      49,
+      52
+    ]
+  },
+  {
+    "term": "Depressive Disorders",
+    "targets": [
+      39,
+      68,
+      74
+    ]
+  },
+  {
+    "term": "Development",
+    "targets": [
+      28,
+      339,
+      350
+    ]
+  },
+  {
+    "term": "developmental cascades",
+    "targets": [
+      479,
+      483,
+      484
+    ]
+  },
+  {
+    "term": "Developmental psychopathology",
+    "targets": [
+      475,
+      476,
+      477
+    ]
+  },
+  {
+    "term": "Dialectical behavior therapy",
+    "targets": [
+      276,
+      289,
+      584
+    ]
+  },
+  {
+    "term": "differential diagnosis",
+    "targets": [
+      12,
+      452,
+      546
+    ]
+  },
+  {
+    "term": "differential item functioning",
+    "targets": [
+      498,
+      502
+    ]
+  },
+  {
+    "term": "differentiation of self",
+    "targets": [
+      595,
+      601,
+      602
+    ]
+  },
+  {
+    "term": "Difficult temperament",
+    "targets": [
+      337,
+      349
+    ]
+  },
+  {
+    "term": "diffusion of responsibility",
+    "targets": [
+      398,
+      402,
+      406
+    ]
+  },
+  {
+    "term": "Diffusion Tensor Imaging (DTI)",
+    "targets": [
+      112
+    ]
+  },
+  {
+    "term": "discounting principle",
+    "targets": [
+      363,
+      371
+    ]
+  },
+  {
+    "term": "discriminant validity",
+    "targets": [
+      497,
+      502
+    ]
+  },
+  {
+    "term": "Disorder-Specific Treatment Considerations",
+    "targets": [
+      68
+    ]
+  },
+  {
+    "term": "Disorganized attachment",
+    "targets": [
+      463,
+      470
+    ]
+  },
+  {
+    "term": "Divided attention",
+    "targets": [
+      306,
+      326
+    ]
+  },
+  {
+    "term": "documentation",
+    "targets": [
+      73,
+      681
+    ]
+  },
+  {
+    "term": "dodo bird effect",
+    "targets": [
+      554,
+      560
+    ]
+  },
+  {
+    "term": "Domain I: Biological Bases of Behavior",
+    "targets": [
+      73,
+      74
+    ]
+  },
+  {
+    "term": "door-in-the-face technique",
+    "targets": [
+      406
+    ]
+  },
+  {
+    "term": "Dopamine",
+    "targets": [
+      37,
+      49
+    ]
+  },
+  {
+    "term": "Drive reduction theory",
+    "targets": [
+      243,
+      245,
+      265
+    ]
+  },
+  {
+    "term": "drug interactions",
+    "targets": [
+      39,
+      49
+    ]
+  },
+  {
+    "term": "Drugs of Abuse and Substance Effects",
+    "targets": [
+      42
+    ]
+  },
+  {
+    "term": "DSM-5-TR",
+    "targets": [
+      543,
+      546
+    ]
+  },
+  {
+    "term": "Dual Coding Theory",
+    "targets": [
+      223,
+      233
+    ]
+  },
+  {
+    "term": "duty to protect",
+    "targets": [
+      543,
+      676,
+      681
+    ]
+  },
+  {
+    "term": "duty to warn",
+    "targets": [
+      676,
+      681,
+      682
+    ]
+  },
+  {
+    "term": "dynamic unconscious",
+    "targets": [
+      567,
+      574
+    ]
+  },
+  {
+    "term": "Easy temperament",
+    "targets": [
+      337,
+      349
+    ]
+  },
+  {
+    "term": "echoic memory",
+    "targets": [
+      217,
+      233
+    ]
+  },
+  {
+    "term": "effect size",
+    "targets": [
+      634,
+      642
+    ]
+  },
+  {
+    "term": "effectiveness research",
+    "targets": [
+      117,
+      614
+    ]
+  },
+  {
+    "term": "Efficacy research",
+    "targets": [
+      608,
+      614,
+      615
+    ]
+  },
+  {
+    "term": "effort justification",
+    "targets": [
+      385,
+      389
+    ]
+  },
+  {
+    "term": "effortful control",
+    "targets": [
+      338,
+      350,
+      352
+    ]
+  },
+  {
+    "term": "ego-defensive function",
+    "targets": [
+      380,
+      389
+    ]
+  },
+  {
+    "term": "egocentrism",
+    "targets": [
+      432,
+      439
+    ]
+  },
+  {
+    "term": "elaboration likelihood model",
+    "targets": [
+      378,
+      383,
+      388
+    ]
+  },
+  {
+    "term": "Electroencephalography (EEG)",
+    "targets": [
+      125
+    ]
+  },
+  {
+    "term": "Electrophysiological Methods",
+    "targets": [
+      105,
+      125
+    ]
+  },
+  {
+    "term": "embryonic period",
+    "targets": [
+      448,
+      454
+    ]
+  },
+  {
+    "term": "Emotion",
+    "targets": [
+      11,
+      237,
+      272
+    ]
+  },
+  {
+    "term": "Emotion and Cognition",
+    "targets": [
+      284,
+      295
+    ]
+  },
+  {
+    "term": "Emotion and Psychopathology",
+    "targets": [
+      201,
+      291
+    ]
+  },
+  {
+    "term": "Emotion and Stress",
+    "targets": [
+      289,
+      296
+    ]
+  },
+  {
+    "term": "emotion-focused coping",
+    "targets": [
+      341,
+      350
+    ]
+  },
+  {
+    "term": "Emotion-focused therapy",
+    "targets": [
+      293,
+      569,
+      570
+    ]
+  },
+  {
+    "term": "emotion regulation",
+    "targets": [
+      68,
+      470
+    ]
+  },
+  {
+    "term": "Emotional Development Across the Lifespan",
+    "targets": [
+      274,
+      286
+    ]
+  },
+  {
+    "term": "emotional regulation",
+    "targets": [
+      13,
+      288,
+      296
+    ]
+  },
+  {
+    "term": "Emotions",
+    "targets": [
+      63,
+      350,
+      471
+    ]
+  },
+  {
+    "term": "empathy",
+    "targets": [
+      276,
+      560,
+      562
+    ]
+  },
+  {
+    "term": "empathy-altruism hypothesis",
+    "targets": [
+      402,
+      406
+    ]
+  },
+  {
+    "term": "empirically supported treatments",
+    "targets": [
+      605,
+      608
+    ]
+  },
+  {
+    "term": "encoding",
+    "targets": [
+      24,
+      233,
+      237
+    ]
+  },
+  {
+    "term": "Encoding Specificity Principle",
+    "targets": [
+      225,
+      233
+    ]
+  },
+  {
+    "term": "Encoding: The Formation of Memory",
+    "targets": [
+      222
+    ]
+  },
+  {
+    "term": "Environmental, Cultural, and Educational Influences",
+    "targets": [
+      174
+    ]
+  },
+  {
+    "term": "Epigenetic Processes",
+    "targets": [
+      84,
+      92,
+      99
+    ]
+  },
+  {
+    "term": "Epigenetics",
+    "targets": [
+      92,
+      99,
+      101
+    ]
+  },
+  {
+    "term": "episodic buffer",
+    "targets": [
+      219,
+      233,
+      234
+    ]
+  },
+  {
+    "term": "episodic memory",
+    "targets": [
+      145,
+      233,
+      454
+    ]
+  },
+  {
+    "term": "equifinality",
+    "targets": [
+      476,
+      486
+    ]
+  },
+  {
+    "term": "equilibration",
+    "targets": [
+      432,
+      439,
+      440
+    ]
+  },
+  {
+    "term": "Equity theory",
+    "targets": [
+      401,
+      406,
+      410
+    ]
+  },
+  {
+    "term": "esteem needs",
+    "targets": [
+      249,
+      265
+    ]
+  },
+  {
+    "term": "ethic of care",
+    "targets": [
+      466,
+      470
+    ]
+  },
+  {
+    "term": "Ethical and Cultural Considerations",
+    "targets": [
+      188,
+      203,
+      293
+    ]
+  },
+  {
+    "term": "Ethical and Professional Considerations",
+    "targets": [
+      146,
+      177
+    ]
+  },
+  {
+    "term": "Ethical, Cultural, and Professional Considerations",
+    "targets": [
+      96
+    ]
+  },
+  {
+    "term": "ethical standards",
+    "targets": [
+      97,
+      668,
+      669
+    ]
+  },
+  {
+    "term": "ethnicity",
+    "targets": [
+      412,
+      422,
+      424
+    ]
+  },
+  {
+    "term": "Event-Related Potentials (ERPs)",
+    "targets": [
+      129
+    ]
+  },
+  {
+    "term": "evidence-based practice",
+    "targets": [
+      58,
+      61
+    ]
+  },
+  {
+    "term": "Evidence for Effectiveness and Clinical Utility",
+    "targets": [
+      142
+    ]
+  },
+  {
+    "term": "Evocative gene\u2013environment correlation",
+    "targets": [
+      91
+    ]
+  },
+  {
+    "term": "Evolutionary Theory of Emotion",
+    "targets": [
+      283
+    ]
+  },
+  {
+    "term": "executive functioning",
+    "targets": [
+      12,
+      180
+    ]
+  },
+  {
+    "term": "existential therapy",
+    "targets": [
+      565,
+      574,
+      577
+    ]
+  },
+  {
+    "term": "Expectancy Learning",
+    "targets": [
+      199,
+      206
+    ]
+  },
+  {
+    "term": "experiential avoidance",
+    "targets": [
+      293,
+      588
+    ]
+  },
+  {
+    "term": "explanatory styles",
+    "targets": [
+      254,
+      350
+    ]
+  },
+  {
+    "term": "exposure",
+    "targets": [
+      24,
+      94,
+      588
+    ]
+  },
+  {
+    "term": "expressive suppression",
+    "targets": [
+      288,
+      296
+    ]
+  },
+  {
+    "term": "External validity",
+    "targets": [
+      608,
+      615,
+      629
+    ]
+  },
+  {
+    "term": "extinction",
+    "targets": [
+      188,
+      191,
+      206
+    ]
+  },
+  {
+    "term": "extinction burst",
+    "targets": [
+      195,
+      206
+    ]
+  },
+  {
+    "term": "Extinction in Operant Conditioning",
+    "targets": [
+      195
+    ]
+  },
+  {
+    "term": "extratherapeutic factors",
+    "targets": [
+      556,
+      560,
+      562
+    ]
+  },
+  {
+    "term": "Extraversion or surgency",
+    "targets": [
+      338,
+      350
+    ]
+  },
+  {
+    "term": "extrinsic motivation",
+    "targets": [
+      241,
+      265
+    ]
+  },
+  {
+    "term": "Facial Feedback Hypothesis",
+    "targets": [
+      283
+    ]
+  },
+  {
+    "term": "Factorial designs",
+    "targets": [
+      624,
+      629
+    ]
+  },
+  {
+    "term": "Factors That Influence Cognitive Test Performance",
+    "targets": [
+      175
+    ]
+  },
+  {
+    "term": "false negatives",
+    "targets": [
+      650,
+      655
+    ]
+  },
+  {
+    "term": "false positives",
+    "targets": [
+      650,
+      655
+    ]
+  },
+  {
+    "term": "familial aggregation",
+    "targets": [
+      93,
+      99
+    ]
+  },
+  {
+    "term": "fear appeals",
+    "targets": [
+      384,
+      389
+    ]
+  },
+  {
+    "term": "fetal alcohol spectrum disorders",
+    "targets": [
+      448,
+      454
+    ]
+  },
+  {
+    "term": "Fidelity and responsibility",
+    "targets": [
+      662,
+      667,
+      668
+    ]
+  },
+  {
+    "term": "five-factor model",
+    "targets": [
+      530,
+      532
+    ]
+  },
+  {
+    "term": "fixed mindset",
+    "targets": [
+      251,
+      265
+    ]
+  },
+  {
+    "term": "flooding",
+    "targets": [
+      582,
+      588
+    ]
+  },
+  {
+    "term": "Fluid abilities",
+    "targets": [
+      163,
+      454
+    ]
+  },
+  {
+    "term": "fluid intelligence",
+    "targets": [
+      163,
+      180
+    ]
+  },
+  {
+    "term": "fluid reasoning",
+    "targets": [
+      157,
+      168,
+      180
+    ]
+  },
+  {
+    "term": "Flynn effect",
+    "targets": [
+      497,
+      502
+    ]
+  },
+  {
+    "term": "foot-in-the-door technique",
+    "targets": [
+      382,
+      389,
+      398
+    ]
+  },
+  {
+    "term": "forensic evaluation",
+    "targets": [
+      23,
+      681
+    ]
+  },
+  {
+    "term": "forethought phase",
+    "targets": [
+      256,
+      265
+    ]
+  },
+  {
+    "term": "Forgetting",
+    "targets": [
+      213,
+      225,
+      233
+    ]
+  },
+  {
+    "term": "formal operations",
+    "targets": [
+      450,
+      454
+    ]
+  },
+  {
+    "term": "Formative evaluation",
+    "targets": [
+      652,
+      655
+    ]
+  },
+  {
+    "term": "Foundations of Genetic Transmission",
+    "targets": [
+      86
+    ]
+  },
+  {
+    "term": "Foundations of Psychopharmacology",
+    "targets": [
+      36
+    ]
+  },
+  {
+    "term": "free association",
+    "targets": [
+      568,
+      574
+    ]
+  },
+  {
+    "term": "frontal lobes",
+    "targets": [
+      15,
+      16,
+      27
+    ]
+  },
+  {
+    "term": "frustration-aggression hypothesis",
+    "targets": [
+      402,
+      406
+    ]
+  },
+  {
+    "term": "full-scale score",
+    "targets": [
+      511,
+      516
+    ]
+  },
+  {
+    "term": "functional analysis",
+    "targets": [
+      148,
+      546
+    ]
+  },
+  {
+    "term": "Functional Brain Imaging",
+    "targets": [
+      115
+    ]
+  },
+  {
+    "term": "functional imaging",
+    "targets": [
+      104,
+      150,
+      151
+    ]
+  },
+  {
+    "term": "Functional Magnetic Resonance Imaging (fMRI)",
+    "targets": [
+      116
+    ]
+  },
+  {
+    "term": "fundamental attribution error",
+    "targets": [
+      316,
+      326,
+      357
+    ]
+  },
+  {
+    "term": "g",
+    "targets": [
+      10,
+      180
+    ]
+  },
+  {
+    "term": "Gamma-aminobutyric acid",
+    "targets": [
+      38,
+      49,
+      278
+    ]
+  },
+  {
+    "term": "Gamma oscillations",
+    "targets": [
+      129,
+      150
+    ]
+  },
+  {
+    "term": "Gardner\u2019s Theory of Multiple Intelligences",
+    "targets": [
+      166
+    ]
+  },
+  {
+    "term": "gatekeeping",
+    "targets": [
+      606,
+      614,
+      695
+    ]
+  },
+  {
+    "term": "gene-environment correlation",
+    "targets": [
+      83,
+      91
+    ]
+  },
+  {
+    "term": "gene\u2013environment correlation",
+    "targets": [
+      83,
+      91
+    ]
+  },
+  {
+    "term": "gene-environment interaction",
+    "targets": [
+      83,
+      90
+    ]
+  },
+  {
+    "term": "gene\u2013environment interaction",
+    "targets": [
+      83,
+      90
+    ]
+  },
+  {
+    "term": "gene expression",
+    "targets": [
+      83,
+      99
+    ]
+  },
+  {
+    "term": "Gene Expression and Regulation",
+    "targets": [
+      87
+    ]
+  },
+  {
+    "term": "general intelligence",
+    "targets": [
+      158,
+      180
+    ]
+  },
+  {
+    "term": "general principles",
+    "targets": [
+      310,
+      668,
+      669
+    ]
+  },
+  {
+    "term": "generativity",
+    "targets": [
+      259,
+      470
+    ]
+  },
+  {
+    "term": "genes",
+    "targets": [
+      83,
+      99
+    ]
+  },
+  {
+    "term": "genetic determinism",
+    "targets": [
+      84,
+      99
+    ]
+  },
+  {
+    "term": "Genetic Screening and Pharmacogenetic Testing",
+    "targets": [
+      140
+    ]
+  },
+  {
+    "term": "genetic vulnerability",
+    "targets": [
+      84,
+      99
+    ]
+  },
+  {
+    "term": "Genotype",
+    "targets": [
+      86,
+      99,
+      101
+    ]
+  },
+  {
+    "term": "germinal period",
+    "targets": [
+      448,
+      455
+    ]
+  },
+  {
+    "term": "Gestalt therapy",
+    "targets": [
+      569,
+      574,
+      577
+    ]
+  },
+  {
+    "term": "Glutamate",
+    "targets": [
+      38,
+      49
+    ]
+  },
+  {
+    "term": "Goal-Setting Theory",
+    "targets": [
+      254,
+      265
+    ]
+  },
+  {
+    "term": "goodness of fit",
+    "targets": [
+      338,
+      350,
+      470
+    ]
+  },
+  {
+    "term": "group cohesiveness",
+    "targets": [
+      597,
+      601
+    ]
+  },
+  {
+    "term": "group polarization",
+    "targets": [
+      395,
+      407
+    ]
+  },
+  {
+    "term": "group psychotherapy",
+    "targets": [
+      403,
+      596,
+      601
+    ]
+  },
+  {
+    "term": "groupthink",
+    "targets": [
+      394,
+      407
+    ]
+  },
+  {
+    "term": "growth mindset",
+    "targets": [
+      251,
+      265
+    ]
+  },
+  {
+    "term": "Habituation",
+    "targets": [
+      221,
+      236,
+      439
+    ]
+  },
+  {
+    "term": "Hallucinogens and Dissociative Substances",
+    "targets": [
+      44
+    ]
+  },
+  {
+    "term": "health promotion",
+    "targets": [
+      605,
+      614
+    ]
+  },
+  {
+    "term": "Hemispheric Specialization and Lateralization",
+    "targets": [
+      22
+    ]
+  },
+  {
+    "term": "heritability",
+    "targets": [
+      83,
+      88,
+      99
+    ]
+  },
+  {
+    "term": "heteronomous morality",
+    "targets": [
+      465,
+      470
+    ]
+  },
+  {
+    "term": "heuristics",
+    "targets": [
+      304,
+      314,
+      326
+    ]
+  },
+  {
+    "term": "hierarchical models",
+    "targets": [
+      157,
+      180
+    ]
+  },
+  {
+    "term": "Hindsight bias",
+    "targets": [
+      316,
+      326,
+      330
+    ]
+  },
+  {
+    "term": "hippocampus",
+    "targets": [
+      16,
+      27,
+      31
+    ]
+  },
+  {
+    "term": "Historical Development of Intelligence Theory",
+    "targets": [
+      160
+    ]
+  },
+  {
+    "term": "Historical Perspectives on Motivation",
+    "targets": [
+      243
+    ]
+  },
+  {
+    "term": "homeostasis",
+    "targets": [
+      20,
+      265,
+      297
+    ]
+  },
+  {
+    "term": "homework",
+    "targets": [
+      159,
+      588
+    ]
+  },
+  {
+    "term": "hypothalamus",
+    "targets": [
+      20,
+      27,
+      296
+    ]
+  },
+  {
+    "term": "hypothesis",
+    "targets": [
+      145,
+      296,
+      406
+    ]
+  },
+  {
+    "term": "iconic memory",
+    "targets": [
+      217,
+      233
+    ]
+  },
+  {
+    "term": "identified patient",
+    "targets": [
+      595,
+      601
+    ]
+  },
+  {
+    "term": "identity statuses",
+    "targets": [
+      461,
+      470
+    ]
+  },
+  {
+    "term": "impairment",
+    "targets": [
+      14,
+      55,
+      455
+    ]
+  },
+  {
+    "term": "Incentive and Expectancy Theories",
+    "targets": [
+      246
+    ]
+  },
+  {
+    "term": "incentive theory",
+    "targets": [
+      263,
+      265,
+      266
+    ]
+  },
+  {
+    "term": "independent self-construals",
+    "targets": [
+      416,
+      422
+    ]
+  },
+  {
+    "term": "index scores",
+    "targets": [
+      510,
+      516
+    ]
+  },
+  {
+    "term": "indicated prevention",
+    "targets": [
+      609,
+      614
+    ]
+  },
+  {
+    "term": "individualism",
+    "targets": [
+      413,
+      422,
+      424
+    ]
+  },
+  {
+    "term": "inductive reasoning",
+    "targets": [
+      181,
+      311,
+      326
+    ]
+  },
+  {
+    "term": "Informational social influence",
+    "targets": [
+      397,
+      407
+    ]
+  },
+  {
+    "term": "informed consent",
+    "targets": [
+      63,
+      663,
+      668
+    ]
+  },
+  {
+    "term": "inhibitory control",
+    "targets": [
+      117,
+      326
+    ]
+  },
+  {
+    "term": "inoculation",
+    "targets": [
+      378,
+      389,
+      392
+    ]
+  },
+  {
+    "term": "insight",
+    "targets": [
+      17,
+      326
+    ]
+  },
+  {
+    "term": "Insight and Creativity",
+    "targets": [
+      313,
+      326
+    ]
+  },
+  {
+    "term": "Insight Learning",
+    "targets": [
+      199,
+      206
+    ]
+  },
+  {
+    "term": "instillation of hope",
+    "targets": [
+      555,
+      560,
+      561
+    ]
+  },
+  {
+    "term": "insufficient justification",
+    "targets": [
+      388,
+      390,
+      392
+    ]
+  },
+  {
+    "term": "insula",
+    "targets": [
+      278,
+      296
+    ]
+  },
+  {
+    "term": "Integrating Neurobiological Findings into Psychological Assessment",
+    "targets": [
+      144
+    ]
+  },
+  {
+    "term": "integrative behavioral couples therapy",
+    "targets": [
+      596,
+      601,
+      603
+    ]
+  },
+  {
+    "term": "Integrity",
+    "targets": [
+      108,
+      153,
+      668
+    ]
+  },
+  {
+    "term": "integrity versus despair",
+    "targets": [
+      431,
+      467,
+      470
+    ]
+  },
+  {
+    "term": "Intellectual developmental disorder",
+    "targets": [
+      481
+    ]
+  },
+  {
+    "term": "intellectual disability",
+    "targets": [
+      141,
+      180
+    ]
+  },
+  {
+    "term": "Intelligence",
+    "targets": [
+      83,
+      173,
+      179
+    ]
+  },
+  {
+    "term": "Intelligence, Achievement, and Adaptive Functioning",
+    "targets": [
+      171
+    ]
+  },
+  {
+    "term": "Intelligence and Executive Functioning",
+    "targets": [
+      172
+    ]
+  },
+  {
+    "term": "Inter-rater reliability",
+    "targets": [
+      495,
+      502
+    ]
+  },
+  {
+    "term": "interactions",
+    "targets": [
+      15,
+      52,
+      286
+    ]
+  },
+  {
+    "term": "interdependent self-construals",
+    "targets": [
+      416
+    ]
+  },
+  {
+    "term": "Internal consistency",
+    "targets": [
+      495,
+      502,
+      503
+    ]
+  },
+  {
+    "term": "internal validity",
+    "targets": [
+      63,
+      629,
+      630
+    ]
+  },
+  {
+    "term": "internal working models",
+    "targets": [
+      463,
+      469,
+      470
+    ]
+  },
+  {
+    "term": "interpersonal learning",
+    "targets": [
+      403,
+      601
+    ]
+  },
+  {
+    "term": "interpretation",
+    "targets": [
+      12,
+      33,
+      47
+    ]
+  },
+  {
+    "term": "intersectionality",
+    "targets": [
+      413,
+      417,
+      423
+    ]
+  },
+  {
+    "term": "intoxication",
+    "targets": [
+      23,
+      49
+    ]
+  },
+  {
+    "term": "Intrinsic and Extrinsic Motivation",
+    "targets": [
+      241,
+      257
+    ]
+  },
+  {
+    "term": "intrinsic motivation",
+    "targets": [
+      241,
+      265,
+      270
+    ]
+  },
+  {
+    "term": "item discrimination",
+    "targets": [
+      498,
+      502
+    ]
+  },
+  {
+    "term": "item response theory",
+    "targets": [
+      491,
+      502
+    ]
+  },
+  {
+    "term": "James-Lange Theory",
+    "targets": [
+      279,
+      296
+    ]
+  },
+  {
+    "term": "James-Lange Theory of Emotion",
+    "targets": [
+      279
+    ]
+  },
+  {
+    "term": "Judgment and Decision-Making",
+    "targets": [
+      304,
+      314
+    ]
+  },
+  {
+    "term": "justice",
+    "targets": [
+      414,
+      668,
+      670
+    ]
+  },
+  {
+    "term": "latent learning",
+    "targets": [
+      188,
+      199,
+      206
+    ]
+  },
+  {
+    "term": "Lateralization",
+    "targets": [
+      22,
+      27
+    ]
+  },
+  {
+    "term": "Lazarus\u2019s Cognitive Appraisal Theory",
+    "targets": [
+      274,
+      282
+    ]
+  },
+  {
+    "term": "learned helplessness",
+    "targets": [
+      188,
+      200,
+      206
+    ]
+  },
+  {
+    "term": "Learning",
+    "targets": [
+      11,
+      31,
+      185
+    ]
+  },
+  {
+    "term": "Learning, Emotion, and Psychopathology",
+    "targets": [
+      201
+    ]
+  },
+  {
+    "term": "Levels of Processing Theory",
+    "targets": [
+      222,
+      233
+    ]
+  },
+  {
+    "term": "licensing boards",
+    "targets": [
+      673,
+      681
+    ]
+  },
+  {
+    "term": "Licensure",
+    "targets": [
+      673,
+      676,
+      681
+    ]
+  },
+  {
+    "term": "life-course-persistent antisocial behavior",
+    "targets": [
+      482,
+      486
+    ]
+  },
+  {
+    "term": "lifelong learning",
+    "targets": [
+      250,
+      695
+    ]
+  },
+  {
+    "term": "Limbic System",
+    "targets": [
+      19,
+      27
+    ]
+  },
+  {
+    "term": "locus of control",
+    "targets": [
+      253,
+      265
+    ]
+  },
+  {
+    "term": "Logic models",
+    "targets": [
+      652,
+      655
+    ]
+  },
+  {
+    "term": "logotherapy",
+    "targets": [
+      569,
+      574,
+      577
+    ]
+  },
+  {
+    "term": "long-term memory",
+    "targets": [
+      170,
+      219
+    ]
+  },
+  {
+    "term": "long-term retrieval",
+    "targets": [
+      157,
+      170,
+      180
+    ]
+  },
+  {
+    "term": "Longitudinal designs",
+    "targets": [
+      435,
+      439
+    ]
+  },
+  {
+    "term": "love and belongingness needs",
+    "targets": [
+      249,
+      265
+    ]
+  },
+  {
+    "term": "low-ball technique",
+    "targets": [
+      398,
+      407
+    ]
+  },
+  {
+    "term": "Magnetic Resonance Imaging (MRI)",
+    "targets": [
+      111
+    ]
+  },
+  {
+    "term": "Magnetoencephalography (MEG)",
+    "targets": [
+      131
+    ]
+  },
+  {
+    "term": "Major Classes of Therapeutic Agents",
+    "targets": [
+      38
+    ]
+  },
+  {
+    "term": "major neurocognitive disorder",
+    "targets": [
+      446,
+      452,
+      455
+    ]
+  },
+  {
+    "term": "Major Theories of Emotion",
+    "targets": [
+      274,
+      278
+    ]
+  },
+  {
+    "term": "Major Theories of Intelligence",
+    "targets": [
+      157,
+      162
+    ]
+  },
+  {
+    "term": "malpractice",
+    "targets": [
+      673,
+      681
+    ]
+  },
+  {
+    "term": "mandated reporters",
+    "targets": [
+      677,
+      681
+    ]
+  },
+  {
+    "term": "Maslow\u2019s Hierarchy of Needs",
+    "targets": [
+      249,
+      267
+    ]
+  },
+  {
+    "term": "Mastery experiences",
+    "targets": [
+      198,
+      265
+    ]
+  },
+  {
+    "term": "mean",
+    "targets": [
+      60,
+      631,
+      642
+    ]
+  },
+  {
+    "term": "measurement-based care",
+    "targets": [
+      524,
+      530,
+      531
+    ]
+  },
+  {
+    "term": "median",
+    "targets": [
+      636,
+      642,
+      644
+    ]
+  },
+  {
+    "term": "Medication and Substance Effects in Assessment",
+    "targets": [
+      45
+    ]
+  },
+  {
+    "term": "Memory as an Information Processing System",
+    "targets": [
+      216
+    ]
+  },
+  {
+    "term": "mental health consultation",
+    "targets": [
+      610,
+      614,
+      616
+    ]
+  },
+  {
+    "term": "mental status examination",
+    "targets": [
+      536,
+      539,
+      543
+    ]
+  },
+  {
+    "term": "mere exposure effect",
+    "targets": [
+      400,
+      407
+    ]
+  },
+  {
+    "term": "metacognition",
+    "targets": [
+      304,
+      321,
+      326
+    ]
+  },
+  {
+    "term": "Metacognitive regulation",
+    "targets": [
+      321,
+      326
+    ]
+  },
+  {
+    "term": "microaggressions",
+    "targets": [
+      413,
+      423
+    ]
+  },
+  {
+    "term": "mild cognitive impairment",
+    "targets": [
+      446,
+      451,
+      452
+    ]
+  },
+  {
+    "term": "Mindfulness-based cognitive therapy",
+    "targets": [
+      584,
+      587,
+      588
+    ]
+  },
+  {
+    "term": "minority stress",
+    "targets": [
+      412,
+      423
+    ]
+  },
+  {
+    "term": "Mismatch Negativity (MMN)",
+    "targets": [
+      130,
+      150
+    ]
+  },
+  {
+    "term": "MMPI",
+    "targets": [
+      525,
+      532
+    ]
+  },
+  {
+    "term": "mode",
+    "targets": [
+      117,
+      642,
+      644
+    ]
+  },
+  {
+    "term": "modeling",
+    "targets": [
+      187,
+      206
+    ]
+  },
+  {
+    "term": "mood",
+    "targets": [
+      12,
+      53,
+      55
+    ]
+  },
+  {
+    "term": "Mood Stabilizers",
+    "targets": [
+      41,
+      49
+    ]
+  },
+  {
+    "term": "Motivation",
+    "targets": [
+      15,
+      182,
+      228
+    ]
+  },
+  {
+    "term": "Motivation Across the Lifespan",
+    "targets": [
+      258
+    ]
+  },
+  {
+    "term": "Motivation and Psychopathology",
+    "targets": [
+      260
+    ]
+  },
+  {
+    "term": "Motivational interviewing",
+    "targets": [
+      71,
+      266
+    ]
+  },
+  {
+    "term": "multi-informant assessment",
+    "targets": [
+      482,
+      530,
+      532
+    ]
+  },
+  {
+    "term": "multicultural competence",
+    "targets": [
+      413,
+      419,
+      422
+    ]
+  },
+  {
+    "term": "multifinality",
+    "targets": [
+      476,
+      486
+    ]
+  },
+  {
+    "term": "multimethod assessment",
+    "targets": [
+      527,
+      532
+    ]
+  },
+  {
+    "term": "multiple relationships",
+    "targets": [
+      558,
+      660,
+      668
+    ]
+  },
+  {
+    "term": "myelination",
+    "targets": [
+      173,
+      455
+    ]
+  },
+  {
+    "term": "N400",
+    "targets": [
+      130,
+      150
+    ]
+  },
+  {
+    "term": "narrative therapy",
+    "targets": [
+      595,
+      601
+    ]
+  },
+  {
+    "term": "nature-nurture issue",
+    "targets": [
+      430,
+      439
+    ]
+  },
+  {
+    "term": "need for achievement",
+    "targets": [
+      250,
+      265
+    ]
+  },
+  {
+    "term": "need for affiliation",
+    "targets": [
+      250,
+      265
+    ]
+  },
+  {
+    "term": "need for cognitive closure",
+    "targets": [
+      341,
+      350
+    ]
+  },
+  {
+    "term": "need for power",
+    "targets": [
+      250,
+      265
+    ]
+  },
+  {
+    "term": "Needs assessment",
+    "targets": [
+      652,
+      655,
+      657
+    ]
+  },
+  {
+    "term": "negative affectivity",
+    "targets": [
+      338,
+      350
+    ]
+  },
+  {
+    "term": "negative cognitive triad",
+    "targets": [
+      582,
+      588
+    ]
+  },
+  {
+    "term": "negative predictive value",
+    "targets": [
+      144,
+      651,
+      655
+    ]
+  },
+  {
+    "term": "negative punishment",
+    "targets": [
+      188,
+      206
+    ]
+  },
+  {
+    "term": "negative reinforcement",
+    "targets": [
+      187,
+      206
+    ]
+  },
+  {
+    "term": "negligence",
+    "targets": [
+      677,
+      681
+    ]
+  },
+  {
+    "term": "Neurobehavioral Disease Processes",
+    "targets": [
+      12,
+      23
+    ]
+  },
+  {
+    "term": "neurodevelopmental disorders",
+    "targets": [
+      23,
+      481
+    ]
+  },
+  {
+    "term": "neuropsychological assessment",
+    "targets": [
+      45,
+      112,
+      115
+    ]
+  },
+  {
+    "term": "Neurotransmitters and Behavioral Functioning",
+    "targets": [
+      37
+    ]
+  },
+  {
+    "term": "nondeclarative",
+    "targets": [
+      213,
+      233
+    ]
+  },
+  {
+    "term": "nondeclarative memory",
+    "targets": [
+      213,
+      220,
+      221
+    ]
+  },
+  {
+    "term": "Norepinephrine",
+    "targets": [
+      37,
+      49,
+      52
+    ]
+  },
+  {
+    "term": "norm-referenced",
+    "targets": [
+      497,
+      502
+    ]
+  },
+  {
+    "term": "normal distribution",
+    "targets": [
+      503,
+      642
+    ]
+  },
+  {
+    "term": "normative social influence",
+    "targets": [
+      395,
+      397,
+      407
+    ]
+  },
+  {
+    "term": "norms",
+    "targets": [
+      293,
+      408,
+      502
+    ]
+  },
+  {
+    "term": "null hypothesis",
+    "targets": [
+      622,
+      629,
+      642
+    ]
+  },
+  {
+    "term": "null hypothesis significance testing",
+    "targets": [
+      635,
+      638
+    ]
+  },
+  {
+    "term": "obedience",
+    "targets": [
+      203,
+      407,
+      408
+    ]
+  },
+  {
+    "term": "object permanence",
+    "targets": [
+      432,
+      439
+    ]
+  },
+  {
+    "term": "object relations theory",
+    "targets": [
+      567,
+      574
+    ]
+  },
+  {
+    "term": "Objective personality assessment",
+    "targets": [
+      525
+    ]
+  },
+  {
+    "term": "observational learning",
+    "targets": [
+      187,
+      206
+    ]
+  },
+  {
+    "term": "Observational Learning and Social Learning Theory",
+    "targets": [
+      197
+    ]
+  },
+  {
+    "term": "Occipital Lobes",
+    "targets": [
+      19,
+      27
+    ]
+  },
+  {
+    "term": "Open-ended questions",
+    "targets": [
+      539,
+      546
+    ]
+  },
+  {
+    "term": "Operant conditioning",
+    "targets": [
+      187,
+      193,
+      206
+    ]
+  },
+  {
+    "term": "Opioids",
+    "targets": [
+      43,
+      49
+    ]
+  },
+  {
+    "term": "optimistic explanatory style",
+    "targets": [
+      340,
+      350,
+      353
+    ]
+  },
+  {
+    "term": "outcome monitoring",
+    "targets": [
+      61,
+      74,
+      655
+    ]
+  },
+  {
+    "term": "Overconfidence bias",
+    "targets": [
+      316,
+      326
+    ]
+  },
+  {
+    "term": "overjustification effect",
+    "targets": [
+      248,
+      265
+    ]
+  },
+  {
+    "term": "p-value",
+    "targets": [
+      634,
+      642,
+      643
+    ]
+  },
+  {
+    "term": "P300",
+    "targets": [
+      130,
+      150
+    ]
+  },
+  {
+    "term": "Parietal Lobes",
+    "targets": [
+      17,
+      27
+    ]
+  },
+  {
+    "term": "PASS Theory",
+    "targets": [
+      167,
+      180
+    ]
+  },
+  {
+    "term": "Passive gene\u2013environment correlation",
+    "targets": [
+      91
+    ]
+  },
+  {
+    "term": "perceived behavioral control",
+    "targets": [
+      381,
+      386,
+      390
+    ]
+  },
+  {
+    "term": "percentile ranks",
+    "targets": [
+      497,
+      634,
+      643
+    ]
+  },
+  {
+    "term": "perception",
+    "targets": [
+      11,
+      55,
+      56
+    ]
+  },
+  {
+    "term": "Perception and Cognitive Organization",
+    "targets": [
+      307
+    ]
+  },
+  {
+    "term": "perceptual narrowing",
+    "targets": [
+      449,
+      455
+    ]
+  },
+  {
+    "term": "performance-based measures",
+    "targets": [
+      526,
+      528,
+      532
+    ]
+  },
+  {
+    "term": "performance phase",
+    "targets": [
+      256,
+      265
+    ]
+  },
+  {
+    "term": "peripheral nervous system",
+    "targets": [
+      14,
+      27
+    ]
+  },
+  {
+    "term": "peripheral routes",
+    "targets": [
+      378,
+      390
+    ]
+  },
+  {
+    "term": "person-centered therapy",
+    "targets": [
+      565
+    ]
+  },
+  {
+    "term": "Personality Assessment Inventory",
+    "targets": [
+      525,
+      529,
+      532
+    ]
+  },
+  {
+    "term": "personality development",
+    "targets": [
+      264,
+      459
+    ]
+  },
+  {
+    "term": "pessimistic explanatory style",
+    "targets": [
+      341,
+      350,
+      353
+    ]
+  },
+  {
+    "term": "pharmacodynamics",
+    "targets": [
+      36,
+      49
+    ]
+  },
+  {
+    "term": "pharmacokinetics",
+    "targets": [
+      36,
+      49
+    ]
+  },
+  {
+    "term": "Pharmacological Treatment",
+    "targets": [
+      64
+    ]
+  },
+  {
+    "term": "pharmacotherapy",
+    "targets": [
+      59,
+      74,
+      78
+    ]
+  },
+  {
+    "term": "Phenotype",
+    "targets": [
+      86,
+      99,
+      101
+    ]
+  },
+  {
+    "term": "phonological loop",
+    "targets": [
+      218,
+      233
+    ]
+  },
+  {
+    "term": "physiological and emotional states",
+    "targets": [
+      252,
+      265
+    ]
+  },
+  {
+    "term": "physiological needs",
+    "targets": [
+      240,
+      265
+    ]
+  },
+  {
+    "term": "Planning and Organization",
+    "targets": [
+      305,
+      319
+    ]
+  },
+  {
+    "term": "polygenic influence",
+    "targets": [
+      84,
+      99
+    ]
+  },
+  {
+    "term": "polygenic risk",
+    "targets": [
+      83,
+      99
+    ]
+  },
+  {
+    "term": "Polygenic Risk and Psychological Disorders",
+    "targets": [
+      93
+    ]
+  },
+  {
+    "term": "positive ethics",
+    "targets": [
+      660,
+      668,
+      695
+    ]
+  },
+  {
+    "term": "positive predictive value",
+    "targets": [
+      144,
+      651,
+      655
+    ]
+  },
+  {
+    "term": "positive punishment",
+    "targets": [
+      188,
+      206
+    ]
+  },
+  {
+    "term": "positive reinforcement",
+    "targets": [
+      188,
+      206
+    ]
+  },
+  {
+    "term": "positivity effect",
+    "targets": [
+      287,
+      296
+    ]
+  },
+  {
+    "term": "Positron Emission Tomography (PET)",
+    "targets": [
+      118
+    ]
+  },
+  {
+    "term": "postdecisional dissonance",
+    "targets": [
+      385,
+      390
+    ]
+  },
+  {
+    "term": "postformal thought",
+    "targets": [
+      450,
+      455
+    ]
+  },
+  {
+    "term": "power distance",
+    "targets": [
+      416,
+      423,
+      425
+    ]
+  },
+  {
+    "term": "practice guidelines",
+    "targets": [
+      61,
+      614
+    ]
+  },
+  {
+    "term": "prevention",
+    "targets": [
+      59,
+      76,
+      80
+    ]
+  },
+  {
+    "term": "primary appraisal",
+    "targets": [
+      282,
+      296
+    ]
+  },
+  {
+    "term": "primary prevention",
+    "targets": [
+      609,
+      614
+    ]
+  },
+  {
+    "term": "priming",
+    "targets": [
+      221,
+      235,
+      236
+    ]
+  },
+  {
+    "term": "principle of compatibility",
+    "targets": [
+      381,
+      390
+    ]
+  },
+  {
+    "term": "privilege",
+    "targets": [
+      417,
+      673,
+      681
+    ]
+  },
+  {
+    "term": "Proactive interference",
+    "targets": [
+      226,
+      233
+    ]
+  },
+  {
+    "term": "Probability sampling",
+    "targets": [
+      625,
+      629
+    ]
+  },
+  {
+    "term": "problem-focused coping",
+    "targets": [
+      341,
+      350
+    ]
+  },
+  {
+    "term": "problem-solving",
+    "targets": [
+      16,
+      312,
+      327
+    ]
+  },
+  {
+    "term": "procedural memory",
+    "targets": [
+      221,
+      233
+    ]
+  },
+  {
+    "term": "processing speed",
+    "targets": [
+      13,
+      170,
+      180
+    ]
+  },
+  {
+    "term": "Professional competence",
+    "targets": [
+      316,
+      689
+    ]
+  },
+  {
+    "term": "professional responsibility",
+    "targets": [
+      379,
+      688,
+      695
+    ]
+  },
+  {
+    "term": "profile interpretation",
+    "targets": [
+      163,
+      516
+    ]
+  },
+  {
+    "term": "program evaluation",
+    "targets": [
+      646,
+      651,
+      655
+    ]
+  },
+  {
+    "term": "projective techniques",
+    "targets": [
+      522,
+      532
+    ]
+  },
+  {
+    "term": "protective factors",
+    "targets": [
+      85,
+      99,
+      350
+    ]
+  },
+  {
+    "term": "prototype theory",
+    "targets": [
+      308,
+      327
+    ]
+  },
+  {
+    "term": "proximodistal trend",
+    "targets": [
+      449,
+      455
+    ]
+  },
+  {
+    "term": "psychodynamic therapy",
+    "targets": [
+      564
+    ]
+  },
+  {
+    "term": "psychological flexibility",
+    "targets": [
+      584,
+      590
+    ]
+  },
+  {
+    "term": "Psychometrics",
+    "targets": [
+      163,
+      502,
+      533
+    ]
+  },
+  {
+    "term": "Psychopharmacology",
+    "targets": [
+      32,
+      49
+    ]
+  },
+  {
+    "term": "psychosexual stages",
+    "targets": [
+      431,
+      439
+    ]
+  },
+  {
+    "term": "psychosocial stages",
+    "targets": [
+      431,
+      439
+    ]
+  },
+  {
+    "term": "Psychotherapeutic Treatment",
+    "targets": [
+      63
+    ]
+  },
+  {
+    "term": "psychotherapy",
+    "targets": [
+      23,
+      74,
+      78
+    ]
+  },
+  {
+    "term": "Psychotropic drugs",
+    "targets": [
+      36,
+      49
+    ]
+  },
+  {
+    "term": "Punishment",
+    "targets": [
+      188,
+      194
+    ]
+  },
+  {
+    "term": "Quantitative Electroencephalography (qEEG)",
+    "targets": [
+      134
+    ]
+  },
+  {
+    "term": "quantitative reasoning",
+    "targets": [
+      157,
+      171,
+      181
+    ]
+  },
+  {
+    "term": "quasi-experimental designs",
+    "targets": [
+      624,
+      629,
+      652
+    ]
+  },
+  {
+    "term": "race",
+    "targets": [
+      412,
+      423,
+      424
+    ]
+  },
+  {
+    "term": "random assignment",
+    "targets": [
+      619,
+      629
+    ]
+  },
+  {
+    "term": "randomized controlled trial",
+    "targets": [
+      624,
+      629
+    ]
+  },
+  {
+    "term": "randomized controlled trials",
+    "targets": [
+      61,
+      74,
+      608
+    ]
+  },
+  {
+    "term": "rapport",
+    "targets": [
+      160,
+      546,
+      547
+    ]
+  },
+  {
+    "term": "rational emotive behavior therapy",
+    "targets": [
+      583,
+      588
+    ]
+  },
+  {
+    "term": "reactance",
+    "targets": [
+      378,
+      390,
+      392
+    ]
+  },
+  {
+    "term": "Realistic conflict theory",
+    "targets": [
+      403,
+      407
+    ]
+  },
+  {
+    "term": "Reasoning",
+    "targets": [
+      11,
+      163,
+      181
+    ]
+  },
+  {
+    "term": "reciprocal determinism",
+    "targets": [
+      188,
+      198
+    ]
+  },
+  {
+    "term": "reconsolidation",
+    "targets": [
+      216,
+      233
+    ]
+  },
+  {
+    "term": "reconstructive memory",
+    "targets": [
+      213,
+      226,
+      234
+    ]
+  },
+  {
+    "term": "Reconstructive Memory and Memory Distortion",
+    "targets": [
+      226
+    ]
+  },
+  {
+    "term": "reflective listening",
+    "targets": [
+      539,
+      546
+    ]
+  },
+  {
+    "term": "regression",
+    "targets": [
+      623,
+      643,
+      645
+    ]
+  },
+  {
+    "term": "Reinforcement",
+    "targets": [
+      20,
+      193,
+      206
+    ]
+  },
+  {
+    "term": "Reinforcement schedules",
+    "targets": [
+      196,
+      206
+    ]
+  },
+  {
+    "term": "relapse prevention",
+    "targets": [
+      59,
+      74
+    ]
+  },
+  {
+    "term": "relatedness",
+    "targets": [
+      247,
+      265,
+      267
+    ]
+  },
+  {
+    "term": "reliability",
+    "targets": [
+      166,
+      495,
+      502
+    ]
+  },
+  {
+    "term": "remission",
+    "targets": [
+      67,
+      74
+    ]
+  },
+  {
+    "term": "replication",
+    "targets": [
+      102,
+      629
+    ]
+  },
+  {
+    "term": "representativeness heuristic",
+    "targets": [
+      315,
+      327,
+      330
+    ]
+  },
+  {
+    "term": "Resilience",
+    "targets": [
+      85,
+      296,
+      350
+    ]
+  },
+  {
+    "term": "Resilience and Protective Factors",
+    "targets": [
+      343
+    ]
+  },
+  {
+    "term": "Resistance",
+    "targets": [
+      167,
+      574,
+      575
+    ]
+  },
+  {
+    "term": "respect for rights and dignity",
+    "targets": [
+      667,
+      668
+    ]
+  },
+  {
+    "term": "response-focused",
+    "targets": [
+      288,
+      296
+    ]
+  },
+  {
+    "term": "response styles",
+    "targets": [
+      522,
+      532
+    ]
+  },
+  {
+    "term": "responsiveness",
+    "targets": [
+      61,
+      560,
+      695
+    ]
+  },
+  {
+    "term": "retrieval",
+    "targets": [
+      157,
+      185,
+      234
+    ]
+  },
+  {
+    "term": "Retrieval and Retrieval Cues",
+    "targets": [
+      224
+    ]
+  },
+  {
+    "term": "retrieval practice",
+    "targets": [
+      213,
+      234
+    ]
+  },
+  {
+    "term": "retroactive interference",
+    "targets": [
+      226,
+      234
+    ]
+  },
+  {
+    "term": "risk assessment",
+    "targets": [
+      34,
+      540,
+      546
+    ]
+  },
+  {
+    "term": "risk factor",
+    "targets": [
+      463,
+      486
+    ]
+  },
+  {
+    "term": "role schemas",
+    "targets": [
+      357,
+      372
+    ]
+  },
+  {
+    "term": "Rorschach Inkblot Method",
+    "targets": [
+      526,
+      532
+    ]
+  },
+  {
+    "term": "routine outcome monitoring",
+    "targets": [
+      529,
+      556,
+      560
+    ]
+  },
+  {
+    "term": "safety needs",
+    "targets": [
+      249,
+      265
+    ]
+  },
+  {
+    "term": "safety planning",
+    "targets": [
+      64,
+      546
+    ]
+  },
+  {
+    "term": "sampling distribution",
+    "targets": [
+      635,
+      643
+    ]
+  },
+  {
+    "term": "scaffolding",
+    "targets": [
+      433,
+      439
+    ]
+  },
+  {
+    "term": "scales of measurement",
+    "targets": [
+      491,
+      502
+    ]
+  },
+  {
+    "term": "Schachter-Singer Two-Factor Theory",
+    "targets": [
+      281
+    ]
+  },
+  {
+    "term": "Schedules of Reinforcement",
+    "targets": [
+      188,
+      196
+    ]
+  },
+  {
+    "term": "schemas",
+    "targets": [
+      28,
+      234,
+      357
+    ]
+  },
+  {
+    "term": "Schizophrenia Spectrum and Other Psychotic Disorders",
+    "targets": [
+      70
+    ]
+  },
+  {
+    "term": "scope of competence",
+    "targets": [
+      34,
+      74
+    ]
+  },
+  {
+    "term": "scope of practice",
+    "targets": [
+      33,
+      681
+    ]
+  },
+  {
+    "term": "scripts",
+    "targets": [
+      357,
+      372
+    ]
+  },
+  {
+    "term": "secondary appraisal",
+    "targets": [
+      282,
+      296
+    ]
+  },
+  {
+    "term": "secure base",
+    "targets": [
+      463,
+      471
+    ]
+  },
+  {
+    "term": "Selective attention",
+    "targets": [
+      217,
+      327
+    ]
+  },
+  {
+    "term": "selective prevention",
+    "targets": [
+      609,
+      614
+    ]
+  },
+  {
+    "term": "self-actualization",
+    "targets": [
+      266
+    ]
+  },
+  {
+    "term": "self-care",
+    "targets": [
+      171,
+      695,
+      697
+    ]
+  },
+  {
+    "term": "self-concept",
+    "targets": [
+      92,
+      372
+    ]
+  },
+  {
+    "term": "self-conscious emotions",
+    "targets": [
+      469,
+      471
+    ]
+  },
+  {
+    "term": "Self-Determination Theory",
+    "targets": [
+      247,
+      249
+    ]
+  },
+  {
+    "term": "Self-discrepancy theory",
+    "targets": [
+      372
+    ]
+  },
+  {
+    "term": "self-efficacy",
+    "targets": [
+      187,
+      198,
+      206
+    ]
+  },
+  {
+    "term": "Self-Efficacy and Motivated Behavior",
+    "targets": [
+      252
+    ]
+  },
+  {
+    "term": "Self-handicapping",
+    "targets": [
+      367,
+      372
+    ]
+  },
+  {
+    "term": "self-monitoring",
+    "targets": [
+      17,
+      268,
+      304
+    ]
+  },
+  {
+    "term": "self-perception theory",
+    "targets": [
+      382,
+      390
+    ]
+  },
+  {
+    "term": "self psychology",
+    "targets": [
+      567,
+      574
+    ]
+  },
+  {
+    "term": "self-reference effect",
+    "targets": [
+      223,
+      234
+    ]
+  },
+  {
+    "term": "self-reflection phase",
+    "targets": [
+      256,
+      266
+    ]
+  },
+  {
+    "term": "self-regulation",
+    "targets": [
+      169,
+      266
+    ]
+  },
+  {
+    "term": "Self-Regulation and Self-Control",
+    "targets": [
+      256
+    ]
+  },
+  {
+    "term": "Self-schemas",
+    "targets": [
+      366,
+      372
+    ]
+  },
+  {
+    "term": "self-serving bias",
+    "targets": [
+      365,
+      372
+    ]
+  },
+  {
+    "term": "self-transcendence",
+    "targets": [
+      250,
+      266
+    ]
+  },
+  {
+    "term": "semantic memory",
+    "targets": [
+      130,
+      234
+    ]
+  },
+  {
+    "term": "Semistructured interviews",
+    "targets": [
+      539,
+      546
+    ]
+  },
+  {
+    "term": "Sensitive periods",
+    "targets": [
+      28,
+      439
+    ]
+  },
+  {
+    "term": "sensitivity",
+    "targets": [
+      37,
+      150
+    ]
+  },
+  {
+    "term": "sensory memory",
+    "targets": [
+      213,
+      217,
+      234
+    ]
+  },
+  {
+    "term": "Sequential designs",
+    "targets": [
+      435,
+      439
+    ]
+  },
+  {
+    "term": "Serotonin",
+    "targets": [
+      37,
+      49,
+      53
+    ]
+  },
+  {
+    "term": "set-shifting",
+    "targets": [
+      318,
+      327
+    ]
+  },
+  {
+    "term": "shaping",
+    "targets": [
+      64,
+      206
+    ]
+  },
+  {
+    "term": "Shaping and Chaining",
+    "targets": [
+      195,
+      206
+    ]
+  },
+  {
+    "term": "shared decision-making",
+    "targets": [
+      72,
+      73
+    ]
+  },
+  {
+    "term": "side effect",
+    "targets": [
+      33,
+      49
+    ]
+  },
+  {
+    "term": "Single-Photon Emission Computed Tomography (SPECT)",
+    "targets": [
+      121
+    ]
+  },
+  {
+    "term": "skewness",
+    "targets": [
+      637,
+      643
+    ]
+  },
+  {
+    "term": "Slow-to-warm-up temperament",
+    "targets": [
+      337,
+      350
+    ]
+  },
+  {
+    "term": "Social cognition",
+    "targets": [
+      16,
+      372
+    ]
+  },
+  {
+    "term": "social comparison",
+    "targets": [
+      259,
+      372
+    ]
+  },
+  {
+    "term": "social determinants of mental health",
+    "targets": [
+      418,
+      423,
+      609
+    ]
+  },
+  {
+    "term": "Social exchange theory",
+    "targets": [
+      401,
+      407
+    ]
+  },
+  {
+    "term": "social facilitation",
+    "targets": [
+      394,
+      407
+    ]
+  },
+  {
+    "term": "Social identity theory",
+    "targets": [
+      403,
+      407
+    ]
+  },
+  {
+    "term": "social loafing",
+    "targets": [
+      395,
+      407
+    ]
+  },
+  {
+    "term": "Social perception",
+    "targets": [
+      22,
+      355,
+      372
+    ]
+  },
+  {
+    "term": "socially desirable responding",
+    "targets": [
+      526,
+      532
+    ]
+  },
+  {
+    "term": "Socioemotional Selectivity Theory",
+    "targets": [
+      259,
+      266,
+      287
+    ]
+  },
+  {
+    "term": "Socratic questioning",
+    "targets": [
+      583,
+      588
+    ]
+  },
+  {
+    "term": "solution-focused therapy",
+    "targets": [
+      595,
+      601
+    ]
+  },
+  {
+    "term": "somatic nervous system",
+    "targets": [
+      14,
+      27
+    ]
+  },
+  {
+    "term": "source monitoring errors",
+    "targets": [
+      227,
+      234
+    ]
+  },
+  {
+    "term": "Spearman\u2019s General Intelligence Theory",
+    "targets": [
+      162
+    ]
+  },
+  {
+    "term": "specific and challenging goals",
+    "targets": [
+      254,
+      266
+    ]
+  },
+  {
+    "term": "Specific learning disorder",
+    "targets": [
+      482,
+      485,
+      486
+    ]
+  },
+  {
+    "term": "specific learning disorders",
+    "targets": [
+      452,
+      511,
+      512
+    ]
+  },
+  {
+    "term": "specificity",
+    "targets": [
+      118,
+      151,
+      655
+    ]
+  },
+  {
+    "term": "spontaneous recovery",
+    "targets": [
+      188,
+      206
+    ]
+  },
+  {
+    "term": "Spontaneous Recovery, Renewal, and Reinstatement",
+    "targets": [
+      192
+    ]
+  },
+  {
+    "term": "stability",
+    "targets": [
+      14,
+      266,
+      443
+    ]
+  },
+  {
+    "term": "stability-change issue",
+    "targets": [
+      439
+    ]
+  },
+  {
+    "term": "standard deviation",
+    "targets": [
+      511,
+      643
+    ]
+  },
+  {
+    "term": "standard error of measurement",
+    "targets": [
+      492,
+      494,
+      495
+    ]
+  },
+  {
+    "term": "standard of care",
+    "targets": [
+      673,
+      681
+    ]
+  },
+  {
+    "term": "standard scores",
+    "targets": [
+      175,
+      502
+    ]
+  },
+  {
+    "term": "standardization",
+    "targets": [
+      166,
+      502
+    ]
+  },
+  {
+    "term": "state-dependent memory",
+    "targets": [
+      225,
+      234
+    ]
+  },
+  {
+    "term": "Statistical conclusion validity",
+    "targets": [
+      623,
+      629,
+      630
+    ]
+  },
+  {
+    "term": "statistical power",
+    "targets": [
+      623,
+      629,
+      643
+    ]
+  },
+  {
+    "term": "statistical significance",
+    "targets": [
+      635,
+      643
+    ]
+  },
+  {
+    "term": "stereotype threat",
+    "targets": [
+      174,
+      516,
+      520
+    ]
+  },
+  {
+    "term": "stereotypes",
+    "targets": [
+      315,
+      372
+    ]
+  },
+  {
+    "term": "Sternberg\u2019s Triarchic Theory",
+    "targets": [
+      166
+    ]
+  },
+  {
+    "term": "Stimulant and Non-Stimulant ADHD Medications",
+    "targets": [
+      41
+    ]
+  },
+  {
+    "term": "Stimulants",
+    "targets": [
+      41,
+      43,
+      49
+    ]
+  },
+  {
+    "term": "stimulus control",
+    "targets": [
+      64,
+      196,
+      206
+    ]
+  },
+  {
+    "term": "stimulus discrimination",
+    "targets": [
+      188,
+      192,
+      206
+    ]
+  },
+  {
+    "term": "stimulus generalization",
+    "targets": [
+      188,
+      192,
+      206
+    ]
+  },
+  {
+    "term": "Stimulus Generalization and Discrimination",
+    "targets": [
+      192
+    ]
+  },
+  {
+    "term": "Strange Situation",
+    "targets": [
+      463,
+      471
+    ]
+  },
+  {
+    "term": "Strengths and Limitations of Electrophysiological Methods",
+    "targets": [
+      136
+    ]
+  },
+  {
+    "term": "Structural Brain Imaging",
+    "targets": [
+      108
+    ]
+  },
+  {
+    "term": "Structural family therapy",
+    "targets": [
+      595,
+      601
+    ]
+  },
+  {
+    "term": "Structural imaging",
+    "targets": [
+      104,
+      151
+    ]
+  },
+  {
+    "term": "Structured interviews",
+    "targets": [
+      539,
+      546
+    ]
+  },
+  {
+    "term": "Subcortical Structures and Systems",
+    "targets": [
+      19
+    ]
+  },
+  {
+    "term": "subjective norms",
+    "targets": [
+      381,
+      390
+    ]
+  },
+  {
+    "term": "substance-induced symptoms",
+    "targets": [
+      44,
+      49
+    ]
+  },
+  {
+    "term": "Substance Use Disorders",
+    "targets": [
+      21,
+      71
+    ]
+  },
+  {
+    "term": "Summative evaluation",
+    "targets": [
+      652,
+      655
+    ]
+  },
+  {
+    "term": "superordinate goals",
+    "targets": [
+      403,
+      407
+    ]
+  },
+  {
+    "term": "Sustained attention",
+    "targets": [
+      41,
+      327
+    ]
+  },
+  {
+    "term": "Symptom rating scales",
+    "targets": [
+      527,
+      532
+    ]
+  },
+  {
+    "term": "synaptic pruning",
+    "targets": [
+      173,
+      455
+    ]
+  },
+  {
+    "term": "systematic desensitization",
+    "targets": [
+      582,
+      588,
+      589
+    ]
+  },
+  {
+    "term": "systems theory",
+    "targets": [
+      434,
+      601
+    ]
+  },
+  {
+    "term": "telepsychology",
+    "targets": [
+      676,
+      681
+    ]
+  },
+  {
+    "term": "temperament",
+    "targets": [
+      83,
+      332,
+      350
+    ]
+  },
+  {
+    "term": "Temperament and Personality Development",
+    "targets": [
+      341
+    ]
+  },
+  {
+    "term": "Temperament: The Biological Foundation of Individual Differences",
+    "targets": [
+      337
+    ]
+  },
+  {
+    "term": "Temporal Lobes",
+    "targets": [
+      18,
+      27
+    ]
+  },
+  {
+    "term": "teratogens",
+    "targets": [
+      445,
+      455
+    ]
+  },
+  {
+    "term": "termination",
+    "targets": [
+      328,
+      560
+    ]
+  },
+  {
+    "term": "Test bias",
+    "targets": [
+      499,
+      502
+    ]
+  },
+  {
+    "term": "Test-retest reliability",
+    "targets": [
+      495,
+      502
+    ]
+  },
+  {
+    "term": "The Cerebral Cortex",
+    "targets": [
+      16,
+      27
+    ]
+  },
+  {
+    "term": "The Interaction Between Cognition and Affect",
+    "targets": [
+      339
+    ]
+  },
+  {
+    "term": "The Nature and Functions of Emotion",
+    "targets": [
+      276
+    ]
+  },
+  {
+    "term": "The Nervous System: A Functional Overview",
+    "targets": [
+      14
+    ]
+  },
+  {
+    "term": "Thematic Apperception Test",
+    "targets": [
+      526,
+      530,
+      532
+    ]
+  },
+  {
+    "term": "theory of mind",
+    "targets": [
+      465,
+      471
+    ]
+  },
+  {
+    "term": "theory of planned behavior",
+    "targets": [
+      378,
+      381,
+      386
+    ]
+  },
+  {
+    "term": "therapeutic drug monitoring",
+    "targets": [
+      104,
+      138
+    ]
+  },
+  {
+    "term": "therapeutic effects",
+    "targets": [
+      33,
+      50
+    ]
+  },
+  {
+    "term": "therapeutic factors",
+    "targets": [
+      63,
+      597,
+      601
+    ]
+  },
+  {
+    "term": "therapeutic index",
+    "targets": [
+      41,
+      50
+    ]
+  },
+  {
+    "term": "therapeutic relationship",
+    "targets": [
+      61,
+      550,
+      552
+    ]
+  },
+  {
+    "term": "Theta waves",
+    "targets": [
+      128,
+      151
+    ]
+  },
+  {
+    "term": "Thurstone\u2019s Primary Mental Abilities",
+    "targets": [
+      163
+    ]
+  },
+  {
+    "term": "tolerance",
+    "targets": [
+      40,
+      50,
+      52
+    ]
+  },
+  {
+    "term": "tolerance of ambiguity",
+    "targets": [
+      341,
+      350
+    ]
+  },
+  {
+    "term": "transference",
+    "targets": [
+      566,
+      574,
+      575
+    ]
+  },
+  {
+    "term": "Trauma-Related Disorders",
+    "targets": [
+      69
+    ]
+  },
+  {
+    "term": "treatment guidelines",
+    "targets": [
+      58,
+      74,
+      75
+    ]
+  },
+  {
+    "term": "Treatment Guidelines and Clinical Trials",
+    "targets": [
+      62
+    ]
+  },
+  {
+    "term": "treatment response",
+    "targets": [
+      58,
+      75
+    ]
+  },
+  {
+    "term": "Treatment Response and Outcome Monitoring",
+    "targets": [
+      67
+    ]
+  },
+  {
+    "term": "triangular theory of love",
+    "targets": [
+      401,
+      407,
+      410
+    ]
+  },
+  {
+    "term": "true positives",
+    "targets": [
+      650,
+      655
+    ]
+  },
+  {
+    "term": "Two-Factor Theory of Emotion",
+    "targets": [
+      281,
+      296
+    ]
+  },
+  {
+    "term": "Type I error",
+    "targets": [
+      638,
+      643
+    ]
+  },
+  {
+    "term": "Type II error",
+    "targets": [
+      643
+    ]
+  },
+  {
+    "term": "unconditional positive regard",
+    "targets": [
+      555,
+      560,
+      562
+    ]
+  },
+  {
+    "term": "unconditioned response",
+    "targets": [
+      190,
+      207
+    ]
+  },
+  {
+    "term": "unconditioned stimulus",
+    "targets": [
+      190,
+      191,
+      192
+    ]
+  },
+  {
+    "term": "Understanding Affect",
+    "targets": [
+      336,
+      350
+    ]
+  },
+  {
+    "term": "universal prevention",
+    "targets": [
+      609,
+      614
+    ]
+  },
+  {
+    "term": "universality",
+    "targets": [
+      403,
+      601,
+      603
+    ]
+  },
+  {
+    "term": "validity",
+    "targets": [
+      35,
+      496,
+      502
+    ]
+  },
+  {
+    "term": "validity scales",
+    "targets": [
+      522,
+      532,
+      533
+    ]
+  },
+  {
+    "term": "value-expressive function",
+    "targets": [
+      380,
+      390
+    ]
+  },
+  {
+    "term": "verbal comprehension",
+    "targets": [
+      157,
+      168,
+      181
+    ]
+  },
+  {
+    "term": "Verbal persuasion",
+    "targets": [
+      252,
+      266
+    ]
+  },
+  {
+    "term": "Vicarious experiences",
+    "targets": [
+      252,
+      266
+    ]
+  },
+  {
+    "term": "vicarious reinforcement",
+    "targets": [
+      188,
+      197,
+      204
+    ]
+  },
+  {
+    "term": "Vicarious Reinforcement and Punishment",
+    "targets": [
+      197
+    ]
+  },
+  {
+    "term": "visual cliff",
+    "targets": [
+      449,
+      455
+    ]
+  },
+  {
+    "term": "Visual-Spatial Processing",
+    "targets": [
+      22,
+      169
+    ]
+  },
+  {
+    "term": "visuospatial sketchpad",
+    "targets": [
+      218,
+      234
+    ]
+  },
+  {
+    "term": "Wechsler scales",
+    "targets": [
+      510,
+      516
+    ]
+  },
+  {
+    "term": "WEIRD populations",
+    "targets": [
+      415,
+      423
+    ]
+  },
+  {
+    "term": "withdrawal",
+    "targets": [
+      23,
+      50,
+      55
+    ]
+  },
+  {
+    "term": "Woodcock-Johnson battery",
+    "targets": [
+      510,
+      515,
+      517
+    ]
+  },
+  {
+    "term": "working alliance",
+    "targets": [
+      63,
+      560,
+      562
+    ]
+  },
+  {
+    "term": "working memory",
+    "targets": [
+      17,
+      169,
+      181
+    ]
+  },
+  {
+    "term": "working through",
+    "targets": [
+      568,
+      574
+    ]
+  },
+  {
+    "term": "Yerkes-Dodson Law",
+    "targets": [
+      246,
+      266
+    ]
+  },
+  {
+    "term": "z-score",
+    "targets": [
+      503,
+      643
+    ]
+  },
+  {
+    "term": "zone of proximal development",
+    "targets": [
+      433,
+      439,
+      440
+    ]
+  }
+]
