@@ -109,7 +109,7 @@ function BookRow({ book }: { book: LibraryBook }) {
           <Button size="sm" className="gap-2" onClick={read} disabled={!!busy} data-testid={`button-read-${book.id}`}>
             <BookOpen className="w-4 h-4" />{busy === "read" ? "Opening..." : "Read PDF"}
           </Button>
-          <Button size="sm" variant="outline" className="gap-2" onClick={download} disabled={!!busy} data-testid={`button-download-${book.id}`}>
+          <Button size="sm" className="gap-2" onClick={download} disabled={!!busy} data-testid={`button-download-${book.id}`}>
             <Download className="w-4 h-4" />{busy === "download" ? "Preparing..." : "Download"}
           </Button>
         </div>
