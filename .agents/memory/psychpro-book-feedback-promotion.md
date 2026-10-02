@@ -9,8 +9,8 @@ The textbook promotion rewards honest feedback about the PsychPro website, not a
 
 **How to apply:** The sidebar Feedback entry and a future dashboard promotion button should use the same feedback form. Digital book access belongs in My Library. Do not implement a book-review requirement, a positive-rating requirement, or printed-copy fulfillment as part of this promotion. Publishing submitted comments as testimonials requires separate permission and disclosure of the incentive.
 
-The dashboard book offer should be casual but still visible, not look like an advertisement.
+Use the owner's own book-offer design on both PsychPro and EPPP dashboards: book on the left, centered feedback invitation on the right, and a “FEEDBACK” button below.
 
-**Why:** The owner rejected the boxed promotion previews as looking too much like an ad.
+**Why:** The owner rejected both agent-created treatments and explicitly chose their own screenshot design for both dashboards.
 
-**How to apply:** Keep this tone when revising the main and EPPP dashboard offers; preview changes on the canvas before changing the live app.
+**How to apply:** Preserve the owner's composition and copy rather than redesigning the offer. Resolve the shared feedback destination before implementing the dashboard buttons.
