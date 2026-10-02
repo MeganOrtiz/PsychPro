@@ -35,6 +35,15 @@ brain/crown artwork, and readable body text, rather than compact teaser cards.
 **How to apply:** Do not shrink the cards or their contents during later landing
 layout adjustments; retain both suites' original wording.
 
+The owner plans to share the regular main-site link and have visitors find the
+EPPP promo through a button at the bottom of the landing page's EPPP suite card.
+
+**Why:** The owner explicitly chose this entry path rather than sharing a separate
+promo-page link.
+
+**How to apply:** Preserve this homepage route into the promotion when adjusting
+the landing page or suggesting links for the owner to share.
+
 **Removed closing promotion:** The owner wants the “Explore topics designed for
 real-world clinical application” card and its “Get Started Free” button removed.
 

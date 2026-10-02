@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "wouter";
+import { Link, useLocation } from "wouter";
 import { useAuth } from "@clerk/clerk-react";
 import {
   Brain,
@@ -40,6 +40,7 @@ import { PP, LANDING, alpha } from "@/lib/palette";
 import { trackEvent } from "@/lib/analytics";
 import { FREE_FLASHCARD_PREVIEW, FREE_QUIZ_LIMIT, FREE_EXAM_LIMIT } from "@/lib/limits";
 import { isEpppTopic } from "@/lib/eppp-content";
+import { Button } from "@/components/ui/button";
 
 // =============================================================================
 // Landing — restructured 2026-05-30.
@@ -413,6 +414,14 @@ export default function LandingPage() {
               <img src={chromeCrown} alt="" className="landing-suite-artwork" aria-hidden width={1200} height={951} />
               <p>The EPPP Mastery Suite is designed to help you study effectively and pass the licensing exam on the FIRST try.</p>
               <p>Prepare confidently for a fraction of the cost.</p>
+              <div className="mt-auto pt-6 w-full">
+                <Button asChild className="w-full gap-2">
+                  <Link href="/eppp/promo?code=EPPP7" data-testid="button-landing-eppp-promo">
+                    Try EPPP free for 7 days
+                    <ArrowRight className="w-4 h-4" aria-hidden />
+                  </Link>
+                </Button>
+              </div>
             </article>
           </div>
         </section>
