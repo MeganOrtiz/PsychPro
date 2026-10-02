@@ -3,9 +3,9 @@ name: PsychPro suite identities
 description: Owner direction for distinguishing the two suites and interpreting the PsychPro artwork reference.
 ---
 
-Present PsychPro Suite and EPPP Mastery Suite as distinct learning offerings, not as one EPPP-only product. The landing suite comparison uses a chrome brain for PsychPro and the owner's supplied chrome crown for EPPP, rather than outline icons.
+Present PsychPro Suite and EPPP Mastery Suite as distinct learning offerings, not as one EPPP-only product. The landing suite comparison uses a chrome brain for PsychPro and the owner's supplied liquid chrome crown for EPPP, rather than outline icons. The later crown upload on 2026-10-02 replaces the earlier crown choice on both the landing page and EPPP dashboard.
 
-**Why:** The owner wants visitors to distinguish the offerings and supplied the chrome-artwork comparison reference on 2026-10-02.
+**Why:** The owner wants visitors to distinguish the offerings, supplied the chrome-artwork comparison reference, and explicitly requested the replacement crown match the brain's size in each location.
 
 **How to apply:** Keep suite names visible alongside identifiers and give both offerings comparable prominence. The EPPP dashboard uses the same supplied crown in the former brain's size and position; leave the PsychPro dashboard brain unchanged. Do not infer feature membership without checking.
 
