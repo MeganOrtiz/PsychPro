@@ -60,7 +60,9 @@
   }
 
   .epd-page .dashboard-feedback-offer {
-    right: 0;
+    /* Center over the last card in the 1.4fr / 1fr / 1fr stat row. */
+    right: calc((100% - 2 * clamp(14px, 1.6vw, 20px)) / 6.8);
+    transform: translateX(50%);
   }
 
   .dashboard-feedback-offer__invitation {

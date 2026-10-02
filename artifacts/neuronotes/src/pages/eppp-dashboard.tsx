@@ -584,6 +584,10 @@ const styles = `
   flex-direction: column;
   gap: clamp(18px, 2.4vw, 28px);
 }
+.epd-page .dashboard-hero {
+  max-width: 1120px;
+  margin-inline: auto;
+}
 
 /* ---- Header ---- */
 .epd-title {
