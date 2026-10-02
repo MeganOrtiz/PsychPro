@@ -26,3 +26,9 @@ The owner has both a PDF and an EPUB edition of the textbook, but chose PDF only
 **Why:** The owner said, “we should just do a pdf bc that option works on most devices”.
 
 **How to apply:** Use the owner's PDF for digital-book delivery in My Library; do not add EPUB delivery to this promotion.
+
+The owner intends to add other books to My Library as they create them.
+
+**Why:** The owner said, “then i can add other books there once i make them”.
+
+**How to apply:** Treat the textbook reward as the first book in an expandable catalog, not a library hardcoded to one PDF.
