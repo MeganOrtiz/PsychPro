@@ -22,26 +22,12 @@ export function Eppp() {
           loading="eager"
         />
         <div className="october-book-preview__copy">
-          <h2 className="october-book-preview__heading">Get a Free Digital Textbook</h2>
+          <h2 className="october-book-preview__heading">How’s PsychPro working for you?</h2>
           <p className="october-book-preview__description">
-            Share honest feedback about PsychPro and receive a free digital copy.
+            Share honest feedback and we’ll send you a free digital textbook as a thank-you.
           </p>
           <button className="october-book-preview__button" type="button">
-            <svg
-              className="october-book-preview__button-mark"
-              viewBox="0 0 16 16"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="M3 3.5h10v7H8l-3.5 2v-2H3v-7Z"
-                stroke="currentColor"
-                strokeWidth="1.25"
-                strokeLinejoin="round"
-              />
-              <path d="M5.5 6h5M5.5 8h3.75" stroke="currentColor" strokeWidth="1.1" />
-            </svg>
-            Share Feedback
+            Share a thought <span aria-hidden="true">→</span>
           </button>
         </div>
       </aside>

@@ -1,7 +1,6 @@
 .october-book-preview {
   --offer-ink: #30363a;
   --offer-muted: #667078;
-  --offer-edge: #d7dce0;
   position: relative;
   width: 100%;
   overflow: hidden;
@@ -35,16 +34,14 @@
   right: 2.5%;
   display: flex;
   align-items: center;
-  gap: 2.8%;
+  gap: 5%;
   width: 23.7%;
   height: 27%;
   box-sizing: border-box;
   padding: 0.65% 0.8%;
   overflow: hidden;
-  border: 1px solid var(--offer-edge);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.99);
-  box-shadow: 0 3px 12px rgba(34, 43, 50, 0.09);
+  border: 0;
+  background: transparent;
   color: var(--offer-ink);
 }
 
@@ -54,9 +51,9 @@
 
 .october-book-preview__book {
   display: block;
-  flex: 0 0 25%;
-  width: 25%;
-  height: 100%;
+  flex: 0 0 20%;
+  width: 20%;
+  height: 65%;
   object-fit: contain;
   filter: drop-shadow(0 2px 3px rgba(28, 39, 47, 0.14));
 }
@@ -74,10 +71,10 @@
 .october-book-preview__heading {
   margin: 0;
   color: #292e32;
-  font-size: clamp(12px, 1.15vw, 18px);
-  font-weight: 650;
-  letter-spacing: -0.025em;
-  line-height: 1.2;
+  font-size: clamp(12px, 1.08vw, 17px);
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  line-height: 1.4;
 }
 
 .october-book-preview__description {
@@ -86,41 +83,42 @@
   color: var(--offer-muted);
   font-size: clamp(10px, 0.94vw, 14px);
   font-weight: 400;
-  line-height: 1.34;
+  line-height: 1.5;
 }
 
 .october-book-preview__button {
   display: inline-flex;
-  min-height: 29px;
+  min-height: 24px;
   align-items: center;
-  justify-content: center;
-  gap: 7px;
+  justify-content: flex-start;
+  gap: 6px;
   margin-top: 2px;
-  padding: 0 12px;
-  border: 1px solid #c4cbd0;
-  border-radius: 8px;
-  background: linear-gradient(180deg, #fafbfc 0%, #e5e8eb 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.94), 0 1px 2px rgba(39, 47, 52, 0.08);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
   color: #353b3f;
   font: inherit;
-  font-size: clamp(10px, 0.7vw, 12px);
-  font-weight: 600;
-  letter-spacing: 0.005em;
+  font-size: clamp(10px, 0.94vw, 14px);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: #a8afb4;
+  text-underline-offset: 4px;
   white-space: nowrap;
 }
 
-.october-book-preview__button-mark {
-  width: 13px;
-  height: 13px;
-  flex: none;
-  color: #626d74;
+.october-book-preview__button:hover {
+  text-decoration-color: currentColor;
+}
+.october-book-preview__button:focus-visible {
+  outline: 2px solid var(--offer-ink);
+  outline-offset: 4px;
 }
 
 @media (max-width: 760px) {
   .october-book-preview__offer {
     gap: 1.5%;
     padding: 0.4% 0.65%;
-    border-radius: 7px;
   }
 
   .october-book-preview__copy {
@@ -139,13 +137,7 @@
     min-height: 0;
     gap: 3px;
     margin-top: 1px;
-    padding: 2px 5px;
-    border-radius: 4px;
+    padding: 0;
     font-size: clamp(5px, 1.1vw, 9px);
-  }
-
-  .october-book-preview__button-mark {
-    width: 8px;
-    height: 8px;
   }
 }
