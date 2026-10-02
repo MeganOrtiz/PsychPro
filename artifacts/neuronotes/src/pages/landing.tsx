@@ -32,6 +32,7 @@ import { useGetTopics } from "@workspace/api-client-react";
 import brainLateral from "@/assets/brain-views/lateral.webp";
 import heroChromeBrain from "@/assets/psychpro-chrome-brain.webp";
 import heroTealGlass from "@/assets/psychpro-teal-glass.webp";
+import foundationsBook from "@/assets/psychpro-foundations-book.webp";
 import founderMegan from "@/assets/founder/megan.webp";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PP, LANDING, alpha } from "@/lib/palette";
@@ -608,6 +609,40 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* ============== TEXTBOOK (split) ============== */}
+        <section
+          id="textbook"
+          className="landing-section landing-split"
+          aria-labelledby="landing-textbook-title"
+          data-testid="landing-textbook"
+          data-reveal
+        >
+          <div className="landing-split-media landing-textbook-media">
+            <img
+              src={foundationsBook}
+              alt="PsychPro Guided Learning Series, Volume 1: Foundations in Clinical Psychology, showing the book cover and spine."
+              className="landing-textbook-img"
+              width={785}
+              height={1181}
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <div className="landing-split-body landing-split-body--boxed">
+            <p className="landing-eyebrow landing-eyebrow--left">GUIDED LEARNING SERIES</p>
+            <h2 id="landing-textbook-title" className="landing-split-title">
+              Foundations in Clinical Psychology
+            </h2>
+            <p className="landing-split-text">
+              Meet Volume 1 of the PsychPro Guided Learning Series: a textbook
+              companion to your PsychPro learning experience.
+            </p>
+            <p className="landing-textbook-editions">
+              Print and digital editions planned.
+            </p>
+          </div>
+        </section>
+
         {/* ============== PLAN COMPARISON ============== */}
         <section id="scholar" className="landing-section landing-tiers" data-reveal>
           <div className="landing-section-head">
@@ -673,26 +708,6 @@ export default function LandingPage() {
             <span>SEE PLANS</span>
             <ArrowRight className="landing-cta-icon" aria-hidden />
           </button>
-        </section>
-
-        {/* ============== FINAL CTA ============== */}
-        <section className="landing-section landing-final" data-reveal>
-          <div className="landing-final-card">
-            <h2 className="landing-final-title">
-              Explore topics designed for real-world clinical application
-            </h2>
-            <div className="landing-cta-row landing-cta-row--center">
-              <button
-                type="button"
-                onClick={goToApp}
-                className="landing-cta landing-cta-primary"
-                data-testid="cta-final-join"
-              >
-                <span>GET STARTED FREE</span>
-                <ArrowRight className="landing-cta-icon" aria-hidden />
-              </button>
-            </div>
-          </div>
         </section>
 
         {/* ============== ALL TOPICS ============== */}
@@ -1440,6 +1455,21 @@ const styles = `
   box-shadow: 0 30px 80px -40px rgba(var(--pp-black-rgb), 0.14), 0 0 40px ${C.cyan}2a, 0 0 0 1px ${C.cyan}1f inset;
 }
 
+/* The cutout has no image frame; its alpha channel shapes the depth shadow. */
+.landing-textbook-media { padding: 20px 24px 32px; }
+.landing-textbook-img {
+  display: block;
+  width: min(100%, 292px);
+  height: auto;
+  filter: drop-shadow(12px 18px 16px rgba(var(--pp-black-rgb), 0.22));
+}
+.landing-textbook-editions {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.65;
+  color: ${alpha(PP.text, 0.7)};
+}
+
 /* ============== MEET THE FOUNDER ============== */
 .landing-founder-card {
   display: grid;
@@ -1699,8 +1729,6 @@ const styles = `
   color: ${alpha(PP.text, 0.84)};
 }
 
-/* ============== FINAL CTA ============== */
-.landing-final { text-align: center; max-width: 880px; padding-bottom: clamp(6px, 0.8vh, 10px); }
 .landing-topics { padding-top: clamp(6px, 0.8vh, 10px); }
 /* Glass panel around the closing CTA for readability over the nebula,
    matching the mastery/system card recipe. */
