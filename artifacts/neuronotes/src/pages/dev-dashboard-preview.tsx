@@ -5,6 +5,8 @@
 import { EpppDashboardView } from "@/pages/eppp-dashboard";
 import type { DomainStat, RecTopic } from "@/pages/eppp-dashboard";
 import dashboardBrain from "@/assets/psychpro-chrome-brain.webp";
+import { DashboardFeedbackOffer } from "@/components/feedback/dashboard-feedback-offer";
+import FeedbackPage from "@/pages/feedback";
 
 const domains: DomainStat[] = [
   { category: "Biological Bases", total: 8, passed: 6, pct: 75, mastered: false, unlocked: true },
@@ -22,6 +24,8 @@ const recommended: RecTopic[] = [
 export default function DevDashboardPreview() {
   const mode = new URLSearchParams(window.location.search).get("view") ?? "eppp";
 
+  if (mode === "feedback") return <FeedbackPage />;
+
   if (mode === "main") {
     // Mimic app-layout: 288px sidebar column + 64px top bar, scrollable main.
     return (
@@ -31,9 +35,12 @@ export default function DevDashboardPreview() {
           <div style={{ height: 64 }} />
           <div className="flex-1 overflow-y-auto">
         <div className="min-h-full dashboard-page">
-          <div className="dashboard-brand">
-            <h1>PsychPro</h1>
-            <img src={dashboardBrain} alt="" className="dashboard-brain" aria-hidden />
+          <div className="dashboard-hero">
+            <div className="dashboard-brand">
+              <h1>PsychPro</h1>
+              <img src={dashboardBrain} alt="" className="dashboard-brain" aria-hidden />
+            </div>
+            <DashboardFeedbackOffer />
           </div>
           <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 pt-2 md:pt-3 lg:pt-4 pb-8">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

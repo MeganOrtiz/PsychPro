@@ -55,6 +55,7 @@ import {
   getGetCourseMasteryStatusQueryKey,
 } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
+import { DashboardFeedbackOffer } from "@/components/feedback/dashboard-feedback-offer";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { StudySurface } from "@/components/study/study-surface";
@@ -245,9 +246,12 @@ export default function DashboardPage() {
       className="min-h-full dashboard-page"
       data-testid="dashboard-page"
     >
-      <div className="dashboard-brand">
-        <h1 data-testid="text-dashboard-brand">PsychPro</h1>
-        <img src={dashboardBrain} alt="" className="dashboard-brain" aria-hidden />
+      <div className="dashboard-hero">
+        <div className="dashboard-brand">
+          <h1 data-testid="text-dashboard-brand">PsychPro</h1>
+          <img src={dashboardBrain} alt="" className="dashboard-brain" aria-hidden />
+        </div>
+        <DashboardFeedbackOffer />
       </div>
       <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 pt-2 md:pt-3 lg:pt-4 pb-4 md:pb-6 lg:pb-8">
         {isOverLimit && (

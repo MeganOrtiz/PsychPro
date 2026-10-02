@@ -13,4 +13,10 @@ Use the owner's own book-offer design on both PsychPro and EPPP dashboards: book
 
 **Why:** The owner rejected both agent-created treatments and explicitly chose their own screenshot design for both dashboards.
 
-**How to apply:** Preserve the owner's composition and copy rather than redesigning the offer. Resolve the shared feedback destination before implementing the dashboard buttons.
+**How to apply:** Preserve the owner's composition and copy rather than redesigning the offer.
+
+The owner chose a pop-up feedback form on both dashboards rather than separate feedback pages for each suite.
+
+**Why:** The selected option keeps people on their dashboard, including within EPPP, while using the same feedback destination as the main Feedback tab.
+
+**How to apply:** Keep the main Feedback tab available; the dashboard offers should not navigate EPPP users into the main site's shell.
