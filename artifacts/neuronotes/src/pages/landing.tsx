@@ -354,6 +354,14 @@ export default function LandingPage() {
           <h1 className="landing-wordmark" style={{ ["--delay" as any]: "40ms" }}>
             PSYCHPRO
           </h1>
+          <p className="landing-tagline" style={{ ["--delay" as any]: "140ms" }}>
+            learn. expand. connect.
+          </p>
+          <p className="landing-blurb" style={{ ["--delay" as any]: "180ms" }}>
+            Evidence-based study tools for psych students. Concepts in psychology,
+            neuroscience, assessment and intervention for classroom and clinical
+            learning all in one space.
+          </p>
           <div className="psychpro-hero__art">
             <img src={heroTealGlass} alt="" className="psychpro-hero__glass" aria-hidden />
             <img
@@ -365,9 +373,6 @@ export default function LandingPage() {
               aria-hidden
             />
           </div>
-          <p className="landing-tagline" style={{ ["--delay" as any]: "140ms" }}>
-            learn. expand. connect.
-          </p>
           <div className="landing-cta-row" style={{ ["--delay" as any]: "260ms" }}>
             <button
               type="button"
@@ -395,11 +400,6 @@ export default function LandingPage() {
             <h2 className="landing-headline" style={{ ["--delay" as any]: "380ms" }}>
               Learn Smarter. Not Harder.
             </h2>
-            <p className="landing-blurb" style={{ ["--delay" as any]: "440ms" }}>
-              Evidence-based study tools for psych students. Concepts in psychology,
-              neuroscience, assessment and intervention for classroom and clinical
-              learning all in one space.
-            </p>
           </div>
           <div className="landing-suites">
             <article className="landing-suite" data-testid="suite-card-psychpro">
