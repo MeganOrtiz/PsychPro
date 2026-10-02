@@ -32,7 +32,7 @@ import { useGetTopics } from "@workspace/api-client-react";
 import brainLateral from "@/assets/brain-views/lateral.webp";
 import heroChromeBrain from "@/assets/psychpro-chrome-brain.webp";
 import chromeCrown from "@/assets/eppp-chrome-crown.webp";
-import heroTealGlass from "@/assets/psychpro-teal-glass.webp";
+import heroTealInkSplash from "@/assets/psychpro-teal-ink-splash.jpg";
 import foundationsBook from "@/assets/psychpro-foundations-book.webp";
 import founderMegan from "@/assets/founder/megan.webp";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -359,7 +359,7 @@ export default function LandingPage() {
             learn. expand. connect.
           </p>
           <div className="psychpro-hero__art">
-            <img src={heroTealGlass} alt="" className="psychpro-hero__glass" aria-hidden />
+            <img src={heroTealInkSplash} alt="" className="psychpro-hero__glass" width={1672} height={941} loading="eager" aria-hidden />
             <img
               src={heroChromeBrain}
               alt=""
@@ -987,6 +987,10 @@ const styles = `
   position: relative;
   z-index: 1;
 }
+.landing-hero .landing-wordmark,
+.landing-hero .landing-tagline {
+  z-index: 2;
+}
 /* Owner-supplied chrome brain (re-added 2026-07-25 — the new hero artwork has
    no baked-in brain). Sits IN FLOW below the wordmark and tagline, centered
    like the owner's mockup. Breathing /
@@ -1001,8 +1005,10 @@ const styles = `
   width: 318.5%;
   max-width: none;
   height: auto;
-  left: -63.7%;
+  left: 50%;
+  transform: translateX(-50%);
   top: -55.6%;
+  mix-blend-mode: multiply;
   pointer-events: none;
   user-select: none;
 }

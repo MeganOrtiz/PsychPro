@@ -1,13 +1,13 @@
 ---
 name: PsychPro landing hero — chrome brain on white
-description: Current landing hero uses a standalone pulsating chrome brain on pure white; all decorative background artwork is retired
+description: Landing hero uses the owner's symmetrical teal ink splash behind the standalone pulsating chrome brain; dashboards are unchanged.
 ---
 
-**Current rule (2026-09-15):** keep the pure-white ground and standalone pulsating chrome brain. The owner approved the transparent teal-and-glass cutout behind the brain after comparing it against the original image faded into white. This is a hero-only decorative layer, not a return to the old full-page ink-splash backdrop. Dashboards stay unchanged.
+**Current rule (2026-10-02):** keep the pure-white ground and standalone pulsating chrome brain, with the owner's symmetrical teal ink splash behind it. The owner approved replacing the earlier transparent teal-and-glass cutout with this supplied image, preserving its proportions and avoiding unnecessary enlargement. This is a hero-only decorative layer, not a return to the old full-page ink-splash backdrop. Dashboards stay unchanged.
 
-**Why:** the transparent option preserved the clean white page better than the pale blue-gray haze of the original image. Keep the artwork stationary while the existing brain breathes; preserve all copy and controls.
+**Why:** the owner asked to use the supplied symmetrical splash as the new design behind the landing brain and explicitly approved the replacement after checking its resolution.
 
-**Why:** the owner requested background removal across landing, main dashboard, and EPPP dashboard while preserving the brains, with an explicit callout to keep the landing pulse.
+**How to apply:** keep the artwork stationary while the existing brain breathes; preserve all copy and controls. The earlier transparent-cutout preference is superseded for this layer only.
 
 **2026-09-13 owner refinement:** the landing wordmark and “learn. expand. connect.” tagline belong above the brain, per the supplied reference. Keep the headline below the brain. This supersedes historical under-brain wordmark instructions.
 

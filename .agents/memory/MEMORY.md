@@ -84,7 +84,7 @@
 - [Auth provider choice](psychpro-auth-provider-choice.md) — PsychPro uses external Clerk on purpose; Replit Auth forces end users to have Replit accounts (consumer audience killer); a RA migration was built+reverted; RA→Clerk migration is unsupported — keep Clerk.
 - [Smoke bg resolution](psychpro-smoke-bg-resolution.md) — the shared smoke backdrop source is only 941px; "looks cheap/blurry" = a resolution problem fixed by super-resolution of the exact asset, not CSS; includes CPU-upscale sandbox recipe.
 - [Landing Brain Lab brain](psychpro-landing-brain-cutout.md) — CURRENT again (2026-07-22: owner had it removed then RESTORED same day — "remove brain images" meant hero designs only); keep grayscale lateral.webp in the promo; glowing-brain rejection stands.
-- [Landing chrome brain on white](psychpro-landing-hero-ink-chrome.md) — CURRENT: decorative background retired; keep the standalone chrome brain and its slow breathing animation on pure white.
+- [Landing chrome brain on white](psychpro-landing-hero-ink-chrome.md) — owner's symmetrical teal ink splash behind the breathing chrome brain; hero-only, with dashboards unchanged.
 - [Site-wide backdrop artwork](psychpro-landing-brain-bg.md) — historical (2026-07-16: liquid-flare image removed; backdrop is now a pure-CSS silver radial gradient); viewport-pinned-::before + no-per-page-override rules still current.
 - [Stale task queue](psychpro-stale-task-queue.md) — old PENDING tasks may describe already-fixed problems; verify against code/Stripe before citing them as gaps (two false alarms 2026-07-31).
 - [Deploy healthcheck 500s](deploy-healthcheck-500-boot-window.md) — startup healthcheck 500s in deployment logs are pre-boot proxy noise (before "Server listening"); only post-listen 500s are real.
