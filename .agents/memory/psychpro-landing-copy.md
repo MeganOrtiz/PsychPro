@@ -19,3 +19,11 @@ supersedes the agent's default caution.
 
 **How to apply:** When editing landing copy, take the owner's wording as the
 source of truth. Keep the conservative rule only for invented social proof.
+
+**Removed closing promotion:** The owner wants the “Explore topics designed for
+real-world clinical application” card and its “Get Started Free” button removed.
+
+**Why:** The owner explicitly repeated this removal request.
+
+**How to apply:** Do not restore this card during future landing-page changes
+unless the owner requests it.
