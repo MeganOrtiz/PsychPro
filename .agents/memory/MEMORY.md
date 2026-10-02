@@ -23,7 +23,7 @@
 - [Clerk account deletion](psychpro-clerk-account-deletion.md) — Clerk browser flows are broken on this instance; deletion is app-owned server-side; never report removed unless clerkDeleted is true.
 - [Image hotspot overlays](image-hotspot-overlays.md) — to keep clickable markers aligned on an object-contain <img>, wrap img+overlay in a shrink-to-fit div and position by %.
 - [Responsive header double-mount](psychpro-responsive-header-double-mount.md) — mobile+desktop headers are both in the DOM (CSS-toggled); a polling/listener component in both mounts twice — gate by useIsMobile.
-- [PsychPro Spotlight rail](psychpro-spotlight-rail.md) — right rail must be full column height (items-stretch + StudySurface fillHeight); never sticky/self-start.
+- [PsychPro Spotlight rail](psychpro-spotlight-rail.md) — keep light/white with dark readable text, all information intact, and full column height; never sticky/self-start.
 - [PsychPro landing copy](psychpro-landing-copy.md) — owner authors landing copy; the "only true facts" rule targets fake social proof, NOT owner-stated feature names.
 - [PsychPro signed-in verification](psychpro-signed-in-verification.md) — external Clerk blocks the test browser; verify auth-gated pages via an isolated mockup-sandbox copy; suspect stale build on "nothing changed".
 - [GLB asset corruption](glb-asset-corruption.md) — 3D brain "couldn't load" = brain.glb mangled by text-encoding (EF BF BD bytes) + three r184 dropping KHR spec-gloss; recover from git, strip required ext.

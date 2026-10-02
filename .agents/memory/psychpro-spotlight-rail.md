@@ -5,6 +5,12 @@ description: The signed-in dashboard's right Spotlight rail must be a full-heigh
 
 # PsychPro dashboard Spotlight rail
 
+Keep Spotlight light/white with readable dark text, while preserving all its information, coming-soon message, and footer actions.
+
+**Why:** On 2026-10-02 the owner asked to “ungray this but keep the information in it” because the dark panel was an eyesore.
+
+**How to apply:** Do not restore a dark background overlay or white, shadowed lettering on this card. This is a Spotlight-only change, not permission to restyle other dashboard panels.
+
 The right "Spotlight" rail on the signed-in dashboard (`artifacts/neuronotes/src/pages/dashboard.tsx`) is intended to be **full column height**: its top edge aligns with the left column's "Begin Your Journey" card and its footer aligns with the bottom of the Streak/Leaderboard row.
 
 **Why:** This matches the approved design comp. A previous pass marked the alignment "done" but the rail was still only content-height — the recurring complaint. The fix that actually works:

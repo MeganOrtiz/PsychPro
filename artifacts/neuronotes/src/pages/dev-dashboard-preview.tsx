@@ -8,6 +8,7 @@ import dashboardBrain from "@/assets/psychpro-chrome-brain.webp";
 import { DashboardFeedbackOffer } from "@/components/feedback/dashboard-feedback-offer";
 import FeedbackPage from "@/pages/feedback";
 import AppLayout from "@/components/layout/app-layout";
+import { SpotlightCard } from "@/pages/dashboard";
 
 const domains: DomainStat[] = [
   { category: "Biological Bases", total: 8, passed: 6, pct: 75, mastered: false, unlocked: true },
@@ -26,6 +27,17 @@ export default function DevDashboardPreview() {
   const mode = new URLSearchParams(window.location.search).get("view") ?? "eppp";
 
   if (mode === "feedback") return <FeedbackPage />;
+
+  if (mode === "spotlight") {
+    // Render the actual card for visual checks, without changing auth gates.
+    return (
+      <div className="study-page-bg min-h-screen p-6">
+        <div className="mx-auto max-w-sm h-[800px]">
+          <SpotlightCard onCta={() => undefined} />
+        </div>
+      </div>
+    );
+  }
 
   if (mode === "main") {
     // Render the real sidebar/layout, without changing production auth gates.

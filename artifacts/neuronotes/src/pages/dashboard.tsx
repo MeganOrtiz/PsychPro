@@ -692,31 +692,15 @@ export default function DashboardPage() {
 }
 
 // ---------------------------------------------------------------------------
-// SpotlightCard — tall right-rail card matching the reference comp.
-// Smoky brain backdrop bleeds into the card top, centered star + "Spotlight"
-// wordmark, a glowing "Coming Soon" disc, a community-submission call to
+// SpotlightCard — light, full-height right-rail card.
+// Centered star + "Spotlight" wordmark, a "Coming Soon" disc, a community-submission call to
 // action, and a quiet FEATURED WORK / share-icon footer that links into
 // /featured-work.
 // ---------------------------------------------------------------------------
 
-function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
+export function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
   return (
-    <StudySurface tone="dark" noGlow fillHeight className="w-full" innerClassName="relative overflow-hidden p-7 text-white flex flex-col">
-      {/* Smoky brain backdrop bleeds through the entire card — same atmosphere
-          as the page background so the spotlight reads as cut from the
-          surrounding smoke continuum. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background: `hsl(var(--surf-hue) var(--surf-sat) 6% / 0.66)`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          opacity: 0.95,
-        }}
-      />
-
+    <StudySurface tone="light" noGlow fillHeight className="w-full" innerClassName="relative overflow-hidden p-7 text-foreground flex flex-col">
       <div className="relative flex flex-1 flex-col">
         {/* Spotlight header — a single star above the wordmark, matching the
             reference comp (no surrounding pill). */}
@@ -727,8 +711,7 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
             style={{ color: PALETTE.surf }}
           />
           <span
-            className="mt-2 text-lg font-semibold text-white tracking-wide"
-            style={{ textShadow: "0 2px 10px rgba(var(--pp-black-rgb), 0.5)" }}
+            className="mt-2 text-lg font-semibold text-foreground tracking-wide"
           >
             Spotlight
           </span>
@@ -736,14 +719,13 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
         <p
           className="text-xs text-center mt-2 leading-relaxed px-2"
           style={{
-            color: `${PALETTE.mist}cc`,
-            textShadow: "0 1px 6px rgba(var(--pp-black-rgb), 0.5)",
+            color: PALETTE.mist,
           }}
         >
           Showcase of work created by members of the PsychPro community.
         </p>
 
-        {/* Featured person — circular avatar with cyan spotlight glow.
+        {/* Coming-soon disc with a soft neutral outline.
             flex-1 + justify-center vertically centers this block so the
             portrait sits at the optical center of the full-height card. */}
         <div className="flex flex-1 flex-col items-center justify-center">
@@ -751,15 +733,14 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
             <div
               className="relative w-32 h-32 rounded-full flex items-center justify-center text-center px-3"
               style={{
-                background: `transparent`,
-                boxShadow: `0 0 0 3px ${PALETTE.surf}cc, inset 0 0 0 1px rgba(var(--pp-white-rgb), 0.18)`,
+                background: PALETTE.surface,
+                boxShadow: `0 0 0 2px ${PALETTE.steel}`,
                 zIndex: 1,
               }}
               data-testid="spotlight-avatar"
             >
               <span
-                className="text-lg font-semibold leading-tight tracking-wide text-white"
-                style={{ textShadow: `0 2px 8px rgba(var(--pp-black-rgb), 0.55)` }}
+                className="text-lg font-semibold leading-tight tracking-wide text-foreground"
               >
                 Coming
                 <br />
@@ -770,7 +751,7 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
           <p
             className="text-sm text-center px-3 leading-relaxed"
             data-testid="spotlight-cta-text"
-            style={{ color: `${PALETTE.mist}d9`, textShadow: "0 1px 6px rgba(var(--pp-black-rgb), 0.5)" }}
+            style={{ color: PALETTE.mist }}
           >
             Submit your dissertation, research, or presentation for an
             opportunity to be featured!
@@ -779,12 +760,12 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
 
         {/* Footer — muted FEATURED WORK label on the left, share icon right.
             Both targets link into /featured-work. */}
-        <div className="mt-8 pt-5 flex items-center justify-between border-t border-white/10">
+        <div className="mt-8 pt-5 flex items-center justify-between border-t border-border">
           <button
             type="button"
             onClick={() => onCta()}
-            className="text-[10px] font-semibold tracking-[0.32em] uppercase transition-colors hover:text-white"
-            style={{ color: `${PALETTE.mistSoft}cc` }}
+            className="text-[10px] font-semibold tracking-[0.32em] uppercase transition-colors hover:underline"
+            style={{ color: PALETTE.mistSoft }}
             data-testid="spotlight-footer-label"
           >
             Featured Work
@@ -794,8 +775,8 @@ function SpotlightCard({ onCta }: { onCta: (submissionId?: number) => void }) {
             onClick={() => onCta()}
             className="w-8 h-8 rounded-md flex items-center justify-center transition-all border"
             style={{
-              background: `${PALETTE.surf}14`,
-              borderColor: `${PALETTE.surf}38`,
+              background: PALETTE.surface,
+              borderColor: PALETTE.steel,
               color: PALETTE.mist,
             }}
             aria-label="View featured work"

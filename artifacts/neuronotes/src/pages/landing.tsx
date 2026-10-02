@@ -357,11 +357,6 @@ export default function LandingPage() {
           <p className="landing-tagline" style={{ ["--delay" as any]: "140ms" }}>
             learn. expand. connect.
           </p>
-          <p className="landing-blurb" style={{ ["--delay" as any]: "180ms" }}>
-            Evidence-based study tools for psych students. Concepts in psychology,
-            neuroscience, assessment and intervention for classroom and clinical
-            learning all in one space.
-          </p>
           <div className="psychpro-hero__art">
             <img src={heroTealGlass} alt="" className="psychpro-hero__glass" aria-hidden />
             <img
@@ -373,6 +368,11 @@ export default function LandingPage() {
               aria-hidden
             />
           </div>
+          <p className="landing-blurb" style={{ ["--delay" as any]: "180ms" }}>
+            Evidence-based study tools for psych students. Concepts in psychology,
+            neuroscience, assessment and intervention for classroom and clinical
+            learning all in one space.
+          </p>
           <div className="landing-cta-row" style={{ ["--delay" as any]: "260ms" }}>
             <button
               type="button"
@@ -1626,23 +1626,23 @@ const styles = `
   grid-template-columns: 1fr;
   gap: 18px;
   width: 100%;
-  max-width: 808px;
+  max-width: 1200px;
   margin: clamp(28px, 4vh, 44px) auto 0;
   padding: 0 20px;
   box-sizing: border-box;
 }
-@media (min-width: 760px) { .landing-suites { grid-template-columns: 1fr 1fr; gap: 24px; } }
+@media (min-width: 760px) { .landing-suites { grid-template-columns: 1fr 1fr; gap: 28px; } }
 .landing-suite, .landing-tier {
   background: hsl(var(--surf-hue) var(--surf-sat) 100% / 0.96);
   border: 1px solid ${C.hairlineStrong};
   border-radius: 20px;
   box-sizing: border-box;
 }
-.landing-suite { padding: 8px clamp(24px, 3vw, 36px) 32px; border-radius: 18px; display: flex; flex-direction: column; align-items: center; container-type: inline-size; }
-.landing-suite p { margin: 0; max-width: 100%; font-size: 13px; line-height: 1.65; color: ${alpha(PP.text, 0.88)}; }
-.landing-suite p + p { margin-top: 14px; }
-.landing-suite-title { margin: 0; font-weight: 300; font-size: clamp(16px, 8cqi, 26px); line-height: 1.2; white-space: nowrap; color: ${LANDING.icy}; }
-.landing-suite-artwork { display: block; width: 108px; height: 80px; object-fit: contain; flex-shrink: 0; }
+.landing-suite { padding: 24px clamp(24px, 3vw, 40px) 36px; border-radius: 18px; display: flex; flex-direction: column; align-items: center; container-type: inline-size; }
+.landing-suite p { margin: 0; max-width: 100%; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.65; color: ${PP.text}; }
+.landing-suite p + p { margin-top: 20px; }
+.landing-suite-title { margin: 0; font-weight: 300; font-size: clamp(24px, 7cqi, 34px); line-height: 1.25; text-align: center; color: ${LANDING.icy}; }
+.landing-suite-artwork { display: block; width: 180px; height: 140px; margin: 12px 0 16px; object-fit: contain; flex-shrink: 0; }
 .landing-suite-icon { width: 28px; height: 28px; flex-shrink: 0; color: ${PP.text}; }
 .landing-stat-strip--quiet { margin: 18px auto 34px; opacity: 1; transform: none; }
 .landing-tiers { max-width: 1100px; display: flex; flex-direction: column; gap: 22px; }

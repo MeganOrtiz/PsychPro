@@ -20,6 +20,21 @@ supersedes the agent's default caution.
 **How to apply:** When editing landing copy, take the owner's wording as the
 source of truth. Keep the conservative rule only for invented social proof.
 
+Keep the “Evidence-based study tools for psych students…” paragraph below the
+hero brain, with the owner's wording unchanged.
+
+**Why:** On 2026-10-02 the owner explicitly said, “this needs to go below the brain”.
+
+**How to apply:** Preserve that order when adjusting the landing hero.
+
+Keep both landing suite cards prominently sized, with large suite titles,
+brain/crown artwork, and readable body text, rather than compact teaser cards.
+
+**Why:** On 2026-10-02 the owner showed the two suite cards and said, “these are way too small”.
+
+**How to apply:** Do not shrink the cards or their contents during later landing
+layout adjustments; retain both suites' original wording.
+
 **Removed closing promotion:** The owner wants the “Explore topics designed for
 real-world clinical application” card and its “Get Started Free” button removed.
 

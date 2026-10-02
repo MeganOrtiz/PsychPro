@@ -644,7 +644,6 @@ for (const [fileName, cls] of PRIMITIVE_CLASSES) {
     [path.join("src", "components", "brain", "brain-3d-view.tsx")]: 1, // error text on dark 3D canvas
     [path.join("src", "components", "layout", "app-layout.tsx")]: 1,   // initials on teal avatar
     [path.join("src", "pages", "course-mastery-exam.tsx")]: 1,          // icon on teal well
-    [path.join("src", "pages", "dashboard.tsx")]: 4,                    // Spotlight rail on dark artwork
     [path.join("src", "pages", "practice-exam.tsx")]: 2,                // icon + Begin button on teal
     [path.join("src", "pages", "profile.tsx")]: 1,                      // spinner on black/60 scrim
     [path.join("src", "pages", "quiz.tsx")]: 4,                         // labels/icons on green/red fills
