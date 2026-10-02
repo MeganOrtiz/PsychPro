@@ -10,6 +10,7 @@ import { shuffle } from "@/lib/shuffle";
 import { authHeaders } from "@/lib/auth-headers";
 import { PageTitle } from "@/components/brand/page-title";
 import { PP } from "@/lib/palette";
+import { CustomFlashcard } from "@/components/study/flashcard-motion";
 
 type Deck = { id: number; title: string; studyGuide: string | null; status: string; tier?: "standard" | "pro"; tools?: string[]; examQuestionCount?: number; examTimed?: boolean };
 type Flashcard = { id: number; front: string; back: string; difficulty: string; cardOrder: number };
@@ -34,10 +35,11 @@ const PRO_TABS: { id: Tab; label: string; icon: React.ComponentType<{ className?
 function FlashcardsView({ cards }: { cards: Flashcard[] }) {
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
+  const [direction, setDirection] = useState(1);
   const card = cards[index];
 
-  function next() { setIndex((i) => (i + 1) % cards.length); setFlipped(false); }
-  function prev() { setIndex((i) => (i - 1 + cards.length) % cards.length); setFlipped(false); }
+  function next() { setDirection(1); setIndex((i) => (i + 1) % cards.length); setFlipped(false); }
+  function prev() { setDirection(-1); setIndex((i) => (i - 1 + cards.length) % cards.length); setFlipped(false); }
 
   if (!card) return <p className="text-muted-foreground text-center py-8">No flashcards generated.</p>;
 
@@ -46,22 +48,11 @@ function FlashcardsView({ cards }: { cards: Flashcard[] }) {
       <div className="flex items-center justify-between text-sm text-muted-foreground">
         <span>{index + 1} / {cards.length}</span>
       </div>
-      <div
-        className="relative w-full cursor-pointer select-none"
-        style={{ minHeight: 200 }}
-        onClick={() => setFlipped(!flipped)}
-      >
-        <div className={`w-full rounded-2xl border-2 p-6 text-center transition-all duration-300 ${flipped ? "border-primary bg-primary/5" : "border-border bg-card"}`} style={{ minHeight: 200 }}>
-          <div className="flex flex-col items-center h-full gap-3" style={{ minHeight: 164 }}>
-            <div className="flex-1 flex items-center justify-center">
-              <p className="text-foreground font-medium text-base leading-relaxed">{flipped ? card.back : card.front}</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <CustomFlashcard cardKey={card.id} direction={direction} front={card.front} back={card.back}
+        flipped={flipped} onFlip={() => setFlipped(f => !f)} />
       <div className="flex gap-3">
         <Button variant="outline" className="flex-1 gap-2" onClick={prev}><ChevronLeft className="w-4 h-4" />Prev</Button>
-        <Button variant="outline" className="flex-1 gap-2" onClick={() => setFlipped(false)}><RotateCcw className="w-4 h-4" />Flip</Button>
+        <Button variant="outline" className="flex-1 gap-2" onClick={() => setFlipped(f => !f)}><RotateCcw className="w-4 h-4" />Flip</Button>
         <Button className="flex-1 gap-2" onClick={next}>Next<ChevronRight className="w-4 h-4" /></Button>
       </div>
     </div>
@@ -74,7 +65,8 @@ function QuizView({ questions, isExam, examLength, timed }: { questions: QuizQue
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [submitted, setSubmitted] = useState(false);
   const [index, setIndex] = useState(0);
-  const totalSeconds = (isExam && timed) ? examQuestions.length * 90 : 0;
+  // Custom practice exams use the same 15-minute whole-exam budget as topics.
+  const totalSeconds = (isExam && timed) ? 15 * 60 : 0;
   const [secondsLeft, setSecondsLeft] = useState<number>(totalSeconds);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -477,15 +469,8 @@ function ReviewView({ deckId, cards }: { deckId: number; cards: Flashcard[] }) {
         <span className="text-xs">Rep {(progress[card.id]?.reps ?? 0) + 1}</span>
       </div>
 
-      <div
-        className="cursor-pointer select-none rounded-2xl border-2 border-border bg-card p-6 text-center"
-        style={{ minHeight: 200 }}
-        onClick={() => setFlipped(!flipped)}
-      >
-        <div className="flex items-center justify-center" style={{ minHeight: 164 }}>
-          <p className="text-foreground font-medium leading-relaxed">{flipped ? card.back : card.front}</p>
-        </div>
-      </div>
+      <CustomFlashcard cardKey={card.id} front={card.front} back={card.back}
+        flipped={flipped} onFlip={() => setFlipped(f => !f)} />
 
       {!flipped ? (
         <Button className="w-full gap-2" onClick={() => setFlipped(true)}>

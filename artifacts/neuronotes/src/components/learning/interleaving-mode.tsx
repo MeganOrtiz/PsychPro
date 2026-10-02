@@ -3,6 +3,7 @@ import { Shuffle, Layers, ChevronLeft, ChevronRight, Trophy } from "lucide-react
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
+import { CustomFlashcard } from "@/components/study/flashcard-motion";
 
 export interface InterleaveCard {
   topic: string;
@@ -48,6 +49,7 @@ export default function InterleavingMode({ cards }: InterleavingModeProps) {
   const [seed, setSeed] = useState(() => Math.floor(Math.random() * 10000));
   const [index, setIndex] = useState(0);
   const [revealed, setRevealed] = useState(false);
+  const [direction, setDirection] = useState(1);
   const [shuffleAnimKey, setShuffleAnimKey] = useState(0);
 
   const topics = useMemo(() => Array.from(new Set(cards.map((c) => c.topic))), [cards]);
@@ -96,11 +98,13 @@ export default function InterleavingMode({ cards }: InterleavingModeProps) {
   }
 
   function next() {
+    setDirection(1);
     setRevealed(false);
     setIndex((i) => Math.min(i + 1, total));
   }
 
   function prev() {
+    setDirection(-1);
     setRevealed(false);
     setIndex((i) => Math.max(i - 1, 0));
   }
@@ -209,18 +213,12 @@ export default function InterleavingMode({ cards }: InterleavingModeProps) {
           >
             {current.topic}
           </span>
-          <p className="text-base font-medium text-foreground leading-relaxed mb-3" data-testid="interleaving-card-question">
-            {current.question}
-          </p>
-          {revealed ? (
-            <div className="text-sm text-muted-foreground leading-relaxed border-t border-border pt-3 animate-fade-in" data-testid="interleaving-card-answer">
-              {current.answer}
-            </div>
-          ) : (
-            <Button variant="outline" size="sm" className="self-start mt-auto" onClick={() => setRevealed(true)} data-testid="interleaving-reveal">
-              Show answer
-            </Button>
-          )}
+          <CustomFlashcard cardKey={`${mode}-${seed}-${index}`} direction={direction}
+            front={current.question} back={current.answer} flipped={revealed}
+            onFlip={() => setRevealed(r => !r)} />
+          <Button variant="outline" size="sm" className="self-start mt-3" onClick={() => setRevealed(r => !r)} data-testid="interleaving-reveal">
+            {revealed ? "Show question" : "Show answer"}
+          </Button>
         </div>
       ) : null}
 

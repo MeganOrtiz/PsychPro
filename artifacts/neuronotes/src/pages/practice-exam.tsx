@@ -85,10 +85,8 @@ export default function PracticeExamPage({ params }: Props) {
 
   const questions = exam?.questions ?? [];
   const total = questions.length;
-  // Total exam time budget in seconds (the `practice_exams.time_limit` column
-  // is the whole-exam budget, not per-question — DB default is 600s = 10
-  // minutes). Treat 0 or null as untimed so future seeds that opt out of
-  // timing keep working.
+  // Whole-exam budget in seconds. The API standardizes topic practice exams
+  // to 900 seconds (15 minutes), preserving full-length sitting budgets.
   const examTimeLimitSec = exam?.timeLimit && exam.timeLimit > 0 ? exam.timeLimit : 0;
   const examIsTimeable = examTimeLimitSec > 0;
   const effectiveTimed = timed && examIsTimeable;

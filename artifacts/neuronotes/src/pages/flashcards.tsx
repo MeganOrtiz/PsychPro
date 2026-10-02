@@ -10,6 +10,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import UpgradePrompt from "@/components/upgrade-prompt";
 import ElaborationPanel from "@/components/learning/elaboration-panel";
 import { StudySurface } from "@/components/study/study-surface";
+import { FlashcardMotion } from "@/components/study/flashcard-motion";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { useEntitlements } from "@/lib/use-entitlements";
 import { PageTitle } from "@/components/brand/page-title";
@@ -27,6 +28,7 @@ export default function FlashcardsPage({ params }: Props) {
   const backToTopic = inEppp ? epppTopicPath(topicId) : `/topics/${topicId}`;
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
+  const [direction, setDirection] = useState(1);
   const [showUpgrade, setShowUpgrade] = useState(false);
 
   const { data: flashcards, isLoading, error } = useGetFlashcardsByTopic(topicId);
@@ -61,16 +63,19 @@ export default function FlashcardsPage({ params }: Props) {
   };
 
   const handleNext = () => {
+    setDirection(1);
     setFlipped(false);
-    setTimeout(() => setIndex(i => Math.min(i + 1, total - 1)), 150);
+    setIndex(i => Math.min(i + 1, total - 1));
   };
 
   const handlePrev = () => {
+    setDirection(-1);
     setFlipped(false);
-    setTimeout(() => setIndex(i => Math.max(i - 1, 0)), 150);
+    setIndex(i => Math.max(i - 1, 0));
   };
 
   const handleRestart = () => {
+    setDirection(-1);
     setFlipped(false);
     setIndex(0);
   };
@@ -177,9 +182,20 @@ export default function FlashcardsPage({ params }: Props) {
               />
             </div>
 
+            <FlashcardMotion cardKey={`${topicId}-${current?.id ?? index}`} direction={direction}>
             <div
               className="flashcard-container cursor-pointer select-none"
               onClick={handleFlip}
+              role="button"
+              tabIndex={0}
+              aria-label={flipped ? "Show question" : "Reveal answer"}
+              aria-pressed={flipped}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  handleFlip();
+                }
+              }}
               data-testid="flashcard"
             >
               <div className={`flashcard-inner min-h-64 md:min-h-80 ${flipped ? "flipped" : ""}`}>
@@ -220,6 +236,7 @@ export default function FlashcardsPage({ params }: Props) {
                 </div>
               </div>
             </div>
+            </FlashcardMotion>
           </div>
 
           <div className="flex items-center justify-between mt-4">

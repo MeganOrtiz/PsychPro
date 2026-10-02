@@ -6,6 +6,7 @@ import { requireUserId } from "../lib/userId";
 import { shuffle } from "../lib/shuffle";
 import { getEntitlements, FREE_FLASHCARD_PREVIEW } from "../lib/entitlements";
 import { isEpppTopicId } from "../lib/eppp";
+import { practiceExamTimeLimit } from "../lib/practice-exam-timing";
 
 const router = Router();
 
@@ -224,11 +225,16 @@ router.get("/topics/:topicId/practice-exam", async (req: Request, res: Response)
     const finalCount = Math.min(count, availableCount);
     const shuffled = shuffle(linkedQuestions).slice(0, finalCount);
 
+    const [examTopic] = await db.select({
+      name: topicsTable.name,
+      category: topicsTable.category,
+    }).from(topicsTable).where(eq(topicsTable.id, topicId));
+
     res.json({
       id: exam.id,
       topicId: exam.topicId,
       title: exam.title,
-      timeLimit: exam.timeLimit,
+      timeLimit: practiceExamTimeLimit(exam, examTopic),
       passingScore: exam.passingScore,
       availableCount,
       questions: shuffled.map(({ questionOrder: _order, ...q }) => q),
