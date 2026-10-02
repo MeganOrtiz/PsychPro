@@ -640,6 +640,21 @@ export default function LandingPage() {
             <p className="landing-textbook-editions">
               Print and digital editions planned.
             </p>
+            <a
+              href="https://www.amazon.com/dp/B0HDSMRDTL"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="landing-cta landing-cta-primary landing-cta--center landing-textbook-link"
+              data-testid="cta-textbook-amazon"
+              aria-label="Get the Textbook on Amazon (opens in a new tab)"
+              onClick={() => trackEvent("navigation_clicked", {
+                surface: "landing_textbook",
+                destination: "https://www.amazon.com/dp/B0HDSMRDTL",
+              })}
+            >
+              <span>Get the Textbook on Amazon</span>
+              <ArrowRight className="landing-cta-icon" aria-hidden />
+            </a>
           </div>
         </section>
 
@@ -1468,6 +1483,11 @@ const styles = `
   font-size: 13px;
   line-height: 1.65;
   color: ${alpha(PP.text, 0.7)};
+}
+.landing-textbook-link {
+  max-width: 100%;
+  margin-top: 24px;
+  text-align: center;
 }
 
 /* ============== MEET THE FOUNDER ============== */
