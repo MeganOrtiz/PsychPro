@@ -32,3 +32,9 @@ The owner intends to add other books to My Library as they create them.
 **Why:** The owner said, “then i can add other books there once i make them”.
 
 **How to apply:** Treat the textbook reward as the first book in an expandable catalog, not a library hardcoded to one PDF.
+
+The owner chose the same book collection in both sites and requires no duplicate books or paying twice for the same book when an account has both main-site and EPPP subscriptions.
+
+**Why:** The owner approved the shared-collection option and explicitly raised duplicate copies and double payment as concerns.
+
+**How to apply:** Keep ownership account-wide and independent of suite subscriptions. Show the same earned or owned book in both libraries, and prevent duplicate ownership in persistent storage.
