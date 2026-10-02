@@ -1455,13 +1455,13 @@ const styles = `
   box-shadow: 0 30px 80px -40px rgba(var(--pp-black-rgb), 0.14), 0 0 40px ${C.cyan}2a, 0 0 0 1px ${C.cyan}1f inset;
 }
 
-/* Keep the transparent book cutout clean, without a frame or added shadow. */
+/* The transparent cutout keeps the soft depth shadow free of a rectangular frame. */
 .landing-textbook-media { padding: 20px 24px 32px; }
 .landing-textbook-img {
   display: block;
   width: min(100%, 292px);
   height: auto;
-  filter: none;
+  filter: drop-shadow(12px 18px 16px rgba(var(--pp-black-rgb), 0.22));
 }
 .landing-textbook-editions {
   margin: 0;

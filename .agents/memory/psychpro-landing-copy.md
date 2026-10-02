@@ -27,3 +27,12 @@ real-world clinical application” card and its “Get Started Free” button re
 
 **How to apply:** Do not restore this card during future landing-page changes
 unless the owner requests it.
+
+**Textbook artwork:** Keep the transparent book cutout with its soft surrounding
+shadow, not the original photograph's rectangular gray band.
+
+**Why:** The owner approved the clean cutout with the soft shadow and explicitly
+chose “Keep the soft shadow” after considering its removal.
+
+**How to apply:** Preserve that depth effect when editing the textbook section;
+do not confuse the soft shadow with a baked-in rectangular image background.
