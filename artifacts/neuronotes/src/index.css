@@ -130,7 +130,7 @@
   --pp-bright: #24282c;       /* near-black accent (glow/contrast source) */
   --pp-icy: #14171a;          /* darkest highlight / strong text source */
   --pp-text: #24282c;         /* primary text */
-  --pp-text-dim: #6b7278;     /* muted text */
+  --pp-text-dim: #4b5157;     /* readable secondary text */
   --pp-ink: #ffffff;          /* light ink text on GLOSS dark fills */
 
   /* RGB channel triplets — for alpha mixes: rgba(var(--pp-cyan-rgb), 0.45).
@@ -216,7 +216,7 @@
   --secondary-foreground: 0 0% 18%;
 
   --muted: 208 25% 94%;
-  --muted-foreground: 210 20% 40%;
+  --muted-foreground: 210 7% 32%;
 
   --accent: 0 0% 43%;
   --accent-foreground: 0 0% 100%;
@@ -304,7 +304,7 @@
   --secondary-foreground: 210 8% 16%;
 
   --muted: var(--surf-hue) var(--surf-sat) 92%;
-  --muted-foreground: 210 6% 44%;
+  --muted-foreground: 210 7% 32%;
 
   --accent: 0 0% 20%;
   --accent-foreground: 0 0% 100%;
@@ -354,7 +354,7 @@
   --popover: var(--surf-hue) var(--surf-sat) 100%;
   --popover-foreground: 210 8% 16%;
   --muted: var(--surf-hue) var(--surf-sat) 92%;
-  --muted-foreground: 210 6% 44%;
+  --muted-foreground: 210 7% 32%;
   --border: 210 8% 82%;
   --input: var(--surf-hue) var(--surf-sat) 90%;
   --primary: 210 7% 27%;           /* --pp-cyan */

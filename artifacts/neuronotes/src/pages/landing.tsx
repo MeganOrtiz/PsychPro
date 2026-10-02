@@ -1871,14 +1871,14 @@ const styles = `
 .landing-footer-sep {
   display: inline-block;
   padding: 0 18px;
-  color: ${alpha(PP.textDim, 0.5)};
+  color: ${PP.textDim};
   font-weight: 300;
   user-select: none;
 }
 .landing-footer-link {
   font-size: 11px;
   letter-spacing: 0.24em;
-  color: ${alpha(PP.textDim, 0.9)};
+  color: ${PP.textDim};
   text-decoration: none;
   transition: color 180ms ease;
 }
@@ -1889,7 +1889,7 @@ const styles = `
   text-align: center;
   font-size: 11px;
   letter-spacing: 0.16em;
-  color: ${alpha(PP.textDim, 0.75)};
+  color: ${PP.textDim};
 }
 
 @media (min-width: 720px) {

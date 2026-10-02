@@ -121,9 +121,9 @@ export default function MyDecksPage() {
                   <div className="flex items-center gap-2 flex-wrap">
                     <p className="font-medium text-foreground truncate">{deck.title}</p>
                     {deck.tier === "pro" ? (
-                      <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-neutral-100 text-neutral-700 dark:bg-neutral-900/30 dark:text-neutral-300 inline-flex items-center gap-1"><Sparkles className="w-2.5 h-2.5" />Pro</span>
+                      <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-neutral-100 text-muted-foreground dark:bg-neutral-900/30 inline-flex items-center gap-1"><Sparkles className="w-2.5 h-2.5" />Pro</span>
                     ) : (
-                      <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-neutral-100 text-neutral-700 dark:bg-neutral-900/30 dark:text-neutral-300 inline-flex items-center gap-1"><Wrench className="w-2.5 h-2.5" />Standard</span>
+                      <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-neutral-100 text-muted-foreground dark:bg-neutral-900/30 inline-flex items-center gap-1"><Wrench className="w-2.5 h-2.5" />Standard</span>
                     )}
                   </div>
                   <div className="flex items-center gap-3 mt-1">

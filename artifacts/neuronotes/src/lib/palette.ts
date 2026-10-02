@@ -29,7 +29,7 @@ export const PP = {
   bright: "#24282c",
   icy: "#14171a",
   text: "#24282c",
-  textDim: "#6b7278",
+  textDim: "#4b5157",
   ink: "#ffffff",
   white: "#ffffff",
   black: "#000000",

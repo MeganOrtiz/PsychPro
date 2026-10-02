@@ -6,7 +6,7 @@
 // pure-white opaque panels, pale-gray tiles, near-black action buttons, dark
 // ink text. Palette (the --pp-* tokens in src/index.css):
 //   floor #eef0f2 · surface #ffffff · tiles #f4f5f6/#eaecee/#dfe2e5
-//   action #3f4449/#24282c · text #24282c/#6b7278 · ink-on-dark #ffffff
+//   action #3f4449/#24282c · text #24282c/#4b5157 · ink-on-dark #ffffff
 // The landing page shares the same silver/white system (the old blue-window
 // landing exception was retired 2026-07-16).
 //

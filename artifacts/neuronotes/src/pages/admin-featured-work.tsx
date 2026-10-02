@@ -39,7 +39,7 @@ const STATUS_LABEL: Record<Status, string> = {
 };
 
 const STATUS_PILL: Record<Status, string> = {
-  pending: "bg-neutral-100 text-neutral-700 dark:bg-neutral-900/30 dark:text-neutral-400",
+  pending: "bg-neutral-100 text-muted-foreground dark:bg-neutral-900/30",
   approved: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
   revision_requested: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
   rejected: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",

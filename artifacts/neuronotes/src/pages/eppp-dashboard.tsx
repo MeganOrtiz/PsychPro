@@ -49,7 +49,7 @@ const C = {
   hairline: alpha(PP.ocean, 0.16),
   hairlineStrong: alpha(PP.cyan, 0.32),
   body: alpha(PP.text, 0.84),
-  muted: alpha(PP.gray178, 0.66),
+  muted: PP.textDim,
 };
 
 const DAY_LABELS = ["S", "M", "T", "W", "T", "F", "S"];

@@ -88,7 +88,8 @@ const TOKENS = [
   { name: "pp bright token", re: /--pp-bright:\s*#24282c;/, expected: "--pp-bright: #24282c;" },
   { name: "pp icy token", re: /--pp-icy:\s*#14171a;/, expected: "--pp-icy: #14171a;" },
   { name: "pp text token", re: /--pp-text:\s*#24282c;/, expected: "--pp-text: #24282c;" },
-  { name: "pp text-dim token", re: /--pp-text-dim:\s*#6b7278;/, expected: "--pp-text-dim: #6b7278;" },
+  { name: "pp text-dim token", re: /--pp-text-dim:\s*#4b5157;/, expected: "--pp-text-dim: #4b5157;" },
+  { name: "readable secondary text", re: /--muted-foreground:\s*210 7% 32%;/, expected: "--muted-foreground: 210 7% 32%;" },
 ];
 if (!rootBlock) {
   fail(":root block not found in index.css", "restore the :root design-token block");

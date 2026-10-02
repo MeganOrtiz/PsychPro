@@ -171,8 +171,8 @@ function QuizView({ questions, isExam, examLength, timed }: { questions: QuizQue
 
       {submitted && q.explanation && (
         <div className="bg-neutral-50 dark:bg-neutral-900/20 border border-neutral-200 dark:border-neutral-800 rounded-xl p-3">
-          <p className="text-xs font-semibold text-neutral-800 dark:text-neutral-300 mb-1">Explanation</p>
-          <p className="text-sm text-neutral-700 dark:text-neutral-400">{q.explanation}</p>
+          <p className="text-xs font-semibold text-foreground mb-1">Explanation</p>
+          <p className="text-sm text-muted-foreground">{q.explanation}</p>
         </div>
       )}
 
@@ -638,7 +638,7 @@ export default function MyDeckDetailPage() {
         <PageTitle title={deck.title} className="mb-3" />
         {deck.tier === "pro" && (
           <div className="flex items-center gap-2 flex-wrap justify-center">
-            <Badge className="bg-neutral-100 text-neutral-700 dark:bg-neutral-900/30 dark:text-neutral-300 border-neutral-200">Pro Tools</Badge>
+            <Badge className="bg-neutral-100 text-muted-foreground dark:bg-neutral-900/30 border-neutral-200">Pro Tools</Badge>
           </div>
         )}
       </div>

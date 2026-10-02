@@ -338,7 +338,7 @@ export default function QuizPage({ params }: Props) {
                 }}
                 placeholder="In your own words…"
                 rows={2}
-                className="w-full text-sm rounded-lg border px-3 py-2 placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 resize-none"
+                className="w-full text-sm rounded-lg border px-3 py-2 placeholder:text-muted-foreground focus:outline-none focus:ring-2 resize-none"
                 style={{
                   background: `${P.bg}cc`,
                   borderColor: `${P.surf}33`,
