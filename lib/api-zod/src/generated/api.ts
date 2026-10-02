@@ -629,6 +629,33 @@ export const GetEpppMissedQuestionsResponse = zod.object({
 });
 
 /**
+ * @summary Get the authenticated account's EPPP7 promotion state
+ */
+export const GetEpppPromoResponse = zod.object({
+  code: zod.enum(["EPPP7"]),
+  redeemedAt: zod.coerce.date().nullable(),
+  expiresAt: zod.coerce.date().nullable(),
+  canRedeem: zod.boolean(),
+  epppAccessUntil: zod.coerce.date().nullable(),
+});
+
+/**
+ * @summary Redeem the one-time EPPP7 promotion for the authenticated account
+ */
+
+export const RedeemEpppPromoBody = zod.object({
+  code: zod.string().min(1),
+});
+
+export const RedeemEpppPromoResponse = zod.object({
+  code: zod.enum(["EPPP7"]),
+  redeemedAt: zod.coerce.date().nullable(),
+  expiresAt: zod.coerce.date().nullable(),
+  canRedeem: zod.boolean(),
+  epppAccessUntil: zod.coerce.date().nullable(),
+});
+
+/**
  * @summary Get the current user's EPPP study plan
  */
 export const GetEpppStudyPlanResponse = zod

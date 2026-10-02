@@ -47,6 +47,7 @@ const PublicProfilePage = lazy(() => import("@/pages/public-profile"));
 const ResourcesPage = lazy(() => import("@/pages/resources"));
 const StudyLabPage = lazy(() => import("@/pages/study-lab"));
 const BrainLabPage = lazy(() => import("@/pages/brain-lab"));
+const EpppPromoPage = lazy(() => import("@/pages/eppp-promo"));
 const EpppPage = lazy(() => import("@/pages/eppp"));
 const AdminFeedbackPage = lazy(() => import("@/pages/admin-feedback"));
 const AdminTokensPage = lazy(() => import("@/pages/admin-tokens"));
@@ -118,6 +119,7 @@ function AppRouter() {
       {import.meta.env.DEV ? <Route path="/__glass-preview" component={DevGlassPreview} /> : null}
       {import.meta.env.DEV ? <Route path="/__library-preview" component={DevLibraryPreview} /> : null}
       {import.meta.env.DEV ? <Route path="/__dashboard-preview" component={DevDashboardPreview} /> : null}
+      <Route path="/eppp/promo" component={EpppPromoPage} />
       <Route path="/eppp">
         {() => (
           <RequireOnboarded>

@@ -2,6 +2,7 @@ import { db } from "@workspace/db";
 import { usersTable, quizAttemptsTable, examAttemptsTable } from "@workspace/db";
 import { eq, sql } from "drizzle-orm";
 import { type Tier, tierFromStatus } from "./tierMapping";
+import { effectiveEpppAccessUntil } from "./epppPromo";
 
 // Authoritative free-tier caps. Mirrored on the client in
 // artifacts/neuronotes/src/lib/limits.ts — keep in sync.
@@ -36,6 +37,7 @@ export type Entitlements = {
 
 type EpppUserFields = {
   epppAccessUntil: Date | null;
+  epppPromoRedeemedAt: Date | null;
   isAdmin: boolean | null;
 };
 
@@ -69,7 +71,8 @@ export function computeEntitlementFlags(args: {
 /** True when the user currently has EPPP Mastery Suite access. */
 export function computeEpppAccess(user: EpppUserFields): boolean {
   if (user.isAdmin) return true;
-  return !!user.epppAccessUntil && user.epppAccessUntil.getTime() > Date.now();
+  const accessUntil = effectiveEpppAccessUntil(user.epppAccessUntil, user.epppPromoRedeemedAt);
+  return !!accessUntil && accessUntil.getTime() > Date.now();
 }
 
 /**
@@ -79,7 +82,11 @@ export function computeEpppAccess(user: EpppUserFields): boolean {
 export async function hasEpppAccess(userId: string | null | undefined): Promise<boolean> {
   if (!userId) return false;
   const [user] = await db
-    .select({ epppAccessUntil: usersTable.epppAccessUntil, isAdmin: usersTable.isAdmin })
+    .select({
+      epppAccessUntil: usersTable.epppAccessUntil,
+      epppPromoRedeemedAt: usersTable.epppPromoRedeemedAt,
+      isAdmin: usersTable.isAdmin,
+    })
     .from(usersTable)
     .where(eq(usersTable.id, userId));
   if (!user) return false;
@@ -112,6 +119,10 @@ export async function getEntitlements(
   const isAdmin = !!user.isAdmin;
   const isSubscribed = tier !== "free";
   const epppAccess = computeEpppAccess(user);
+  const effectiveEpppUntil = effectiveEpppAccessUntil(
+    user.epppAccessUntil,
+    user.epppPromoRedeemedAt,
+  );
 
   // When evaluating EPPP content, the Master/Scholar subscription does NOT
   // unlock it — only EPPP access (or admin) does. Conversely, EPPP access does
@@ -135,7 +146,7 @@ export async function getEntitlements(
     isAdmin,
     isSubscribed,
     epppAccess,
-    epppAccessUntil: user.epppAccessUntil ? user.epppAccessUntil.toISOString() : null,
+    epppAccessUntil: effectiveEpppUntil ? effectiveEpppUntil.toISOString() : null,
     flashcardPreviewLimit: FREE_FLASHCARD_PREVIEW,
     quizLimit: FREE_QUIZ_LIMIT,
     examLimit: FREE_EXAM_LIMIT,

@@ -53,6 +53,8 @@ const PROTECTED = new Set<string>([
   "POST /api/quiz-attempts",
   "POST /api/exam-attempts",
   "GET /api/eppp/missed-questions",
+  "GET /api/eppp/promo",
+  "POST /api/eppp/promo/redeem",
   "GET /api/eppp/study-plan",
   "PUT /api/eppp/study-plan",
   // course mastery exam

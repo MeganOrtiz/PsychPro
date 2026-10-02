@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useLocation, useSearch } from "wouter";
 import { Check, Zap, Crown, Loader2, BookMarked, Sparkles, Settings, GraduationCap } from "lucide-react";
 import { useGetSubscriptionPlans, useGetSubscriptionStatus, useCreateCheckoutSession, useCreatePortalSession } from "@workspace/api-client-react";
+import { EpppPromoLink } from "@/components/eppp-promo-link";
 import { useEpppPlans, useEpppCheckout } from "@/lib/use-eppp-purchase";
 import { useEntitlements } from "@/lib/use-entitlements";
 import { Button } from "@/components/ui/button";
@@ -390,6 +391,8 @@ export default function SubscriptionPage() {
               )}
             </div>
           )}
+
+          <div className="mb-4"><EpppPromoLink /></div>
 
           {epppPlansLoading ? (
             <Skeleton className="h-12 rounded-xl" />

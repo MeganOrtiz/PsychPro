@@ -18,7 +18,7 @@
 // doesn't bounce the user back here (the route guard reads that flag).
 // =============================================================================
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useLocation } from "wouter";
+import { useLocation, useSearch } from "wouter";
 import { useUser } from "@clerk/clerk-react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -59,6 +59,7 @@ import { useToast } from "@/hooks/use-toast";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PP } from "@/lib/palette";
 import { trackEvent } from "@/lib/analytics";
+import { getPromoReturn } from "@/lib/eppp-promo-return";
 
 // ---------------------------------------------------------------------------
 // Option sets
@@ -190,6 +191,7 @@ type TierCard = {
 
 export default function OnboardingPage() {
   const [, navigate] = useLocation();
+  const promoReturn = getPromoReturn(useSearch());
   const { user } = useUser();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -234,9 +236,10 @@ export default function OnboardingPage() {
   const order = useMemo<StepId[]>(() => {
     const ids: StepId[] = ["role", "goals", "focus"];
     if (showEppp) ids.push("eppp");
-    ids.push("tier", "summary");
+    if (!promoReturn) ids.push("tier");
+    ids.push("summary");
     return ids;
-  }, [showEppp]);
+  }, [showEppp, promoReturn]);
 
   const rawIdx = order.indexOf(stepId);
   const idx = rawIdx === -1 ? order.indexOf("focus") : rawIdx;
@@ -399,10 +402,11 @@ export default function OnboardingPage() {
     tier === "eppp" ? !!entitlements?.epppAccess : tier !== "free" ? !!entitlements?.isSubscribed : true;
 
   const ctaLabel = useMemo(() => {
+    if (promoReturn) return "Continue to Free EPPP Week";
     if (tier === "eppp") return alreadyHasAccess ? "Enter EPPP Mastery Suite" : "Continue to EPPP Checkout";
     if (isPaid) return alreadyHasAccess ? "Enter PsychPro" : "Continue to Checkout";
     return "Enter PsychPro";
-  }, [tier, isPaid, alreadyHasAccess]);
+  }, [tier, isPaid, alreadyHasAccess, promoReturn]);
 
   async function finalize(): Promise<boolean> {
     try {
@@ -430,6 +434,11 @@ export default function OnboardingPage() {
         selected_tier: tier,
         has_existing_access: alreadyHasAccess,
       });
+      // Promo entrants finish setup without entering a paid checkout flow.
+      if (promoReturn) {
+        navigate(promoReturn);
+        return;
+      }
 
       // When resuming a saved flow, selectedPriceId isn't persisted server-side,
       // so recover it from the live catalog by matching the chosen tier.
@@ -475,7 +484,7 @@ export default function OnboardingPage() {
           selected_tier: "free",
           has_existing_access: false,
         });
-        navigate("/dashboard");
+        navigate(promoReturn ?? "/dashboard");
       }
     } finally {
       setSubmitting(false);
@@ -703,6 +712,7 @@ export default function OnboardingPage() {
                   showEppp={showEppp}
                   tierCards={tierCards}
                   epppOneTime={epppOneTime}
+                  promoReturn={promoReturn}
                 />
               )}
             </div>
@@ -726,7 +736,7 @@ export default function OnboardingPage() {
 
               {stepId === "summary" ? (
                 <div className="flex items-center gap-2">
-                  {isPaid && !alreadyHasAccess && (
+                  {!promoReturn && isPaid && !alreadyHasAccess && (
                     <Button
                       variant="outline"
                       onClick={handleEnterFree}
@@ -886,16 +896,20 @@ function SummaryBody({
   showEppp,
   tierCards,
   epppOneTime,
+  promoReturn,
 }: {
   firstName: string;
   answers: Answers;
   showEppp: boolean;
   tierCards: TierCard[];
   epppOneTime: EpppOneTimePlan[];
+  promoReturn: string | null;
 }) {
   const planCard = tierCards.find((c) => c.tier === answers.selectedTier);
   const oneTimeSel = epppOneTime.find((p) => p.priceId === answers.selectedPriceId);
-  const planLabel = oneTimeSel
+  const planLabel = promoReturn
+    ? "EPPP7 free week — redeem after setup, no card required"
+    : oneTimeSel
     ? `${answers.selectedProduct || "EPPP Mastery Suite"} · ${fmtMoney(oneTimeSel.unitAmount, oneTimeSel.currency)} one-time`
     : planCard?.tier === "free"
       ? "Free"

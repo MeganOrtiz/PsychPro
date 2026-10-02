@@ -528,6 +528,45 @@ paths:
               schema:
                 $ref: "#/components/schemas/EpppMissedQuestionsResponse"
 
+  /eppp/promo:
+    get:
+      operationId: getEpppPromo
+      tags: [progress]
+      summary: Get the authenticated account's EPPP7 promotion state
+      responses:
+        "200":
+          description: Current promotion and effective EPPP access expiry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PromoState"
+        "401":
+          description: Authentication required
+  /eppp/promo/redeem:
+    post:
+      operationId: redeemEpppPromo
+      tags: [progress]
+      summary: Redeem the one-time EPPP7 promotion for the authenticated account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EpppPromoInput"
+      responses:
+        "200":
+          description: Promotion redeemed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PromoState"
+        "400":
+          description: Invalid promotion code
+        "401":
+          description: Authentication required
+        "409":
+          description: Promotion already redeemed by this account
+
   /eppp/study-plan:
     get:
       operationId: getEpppStudyPlan
@@ -743,6 +782,33 @@ components:
         - selectedTopicIds
         - daysPerWeek
         - saved
+
+    PromoState:
+      type: object
+      properties:
+        code:
+          type: string
+          enum: [EPPP7]
+        redeemedAt:
+          type: [string, "null"]
+          format: date-time
+        expiresAt:
+          type: [string, "null"]
+          format: date-time
+        canRedeem:
+          type: boolean
+        epppAccessUntil:
+          type: [string, "null"]
+          format: date-time
+      required: [code, redeemedAt, expiresAt, canRedeem, epppAccessUntil]
+
+    EpppPromoInput:
+      type: object
+      properties:
+        code:
+          type: string
+          minLength: 1
+      required: [code]
 
     EpppStudyPlanInput:
       type: object

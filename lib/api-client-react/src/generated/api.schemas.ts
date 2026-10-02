@@ -69,6 +69,29 @@ export interface EpppStudyPlan {
   updatedAt?: string;
 }
 
+export type PromoStateCode =
+  (typeof PromoStateCode)[keyof typeof PromoStateCode];
+
+export const PromoStateCode = {
+  EPPP7: "EPPP7",
+} as const;
+
+export interface PromoState {
+  code: PromoStateCode;
+  /** @nullable */
+  redeemedAt: string | null;
+  /** @nullable */
+  expiresAt: string | null;
+  canRedeem: boolean;
+  /** @nullable */
+  epppAccessUntil: string | null;
+}
+
+export interface EpppPromoInput {
+  /** @minLength 1 */
+  code: string;
+}
+
 export interface EpppStudyPlanInput {
   examDate: string;
   selectedTopicIds: number[];

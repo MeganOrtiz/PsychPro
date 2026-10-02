@@ -19,7 +19,13 @@ The owner intends to publicly share the PsychPro link with a promo code that gra
 
 **Why:** The owner said the purpose is primarily to get people to the site and get information about PsychPro out there. The intended posting audience is an EPPP study page.
 
-**How to apply:** Treat the free-week acquisition offer and the book-for-feedback reward as separate steps. The current agreed direction is an EPPP-only seven-day promo without a credit card: access expires after seven days, with no automatic charge. Keep PsychPro's existing trial separate. The owner explicitly selected the no-card, automatic-expiry option; do not convert it into an auto-renewing subscription trial.
+**How to apply:** Treat the free-week acquisition offer and the book-for-feedback reward as separate steps. The owner approved an EPPP-only seven-day promo without a credit card: access expires after seven days, with no automatic charge. Keep PsychPro's existing trial separate. Do not convert the promo into an auto-renewing subscription trial.
+
+The free week starts immediately on redemption, not after any existing paid access. Purchased access and promotional access remain independent; neither a claim nor a later billing update should shorten access already earned through the other.
+
+**Why:** The approved offer promises a week from redemption while protecting existing paid EPPP access. Keeping the two grants separate avoids both stacking free days onto a future paid expiry and letting a Stripe update erase a live promotional week.
+
+**How to apply:** Future billing and access changes must respect whichever legitimate access grant expires later. Redeeming does not alter existing subscriptions or billing terms.
 
 The owner chose a pop-up feedback form on both dashboards rather than separate feedback pages for each suite.
 

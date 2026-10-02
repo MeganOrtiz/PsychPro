@@ -27,6 +27,7 @@ import type {
   CreateCheckoutSessionBody,
   DashboardSummary,
   EpppMissedQuestionsResponse,
+  EpppPromoInput,
   EpppStudyPlan,
   EpppStudyPlanInput,
   Flashcard,
@@ -36,6 +37,7 @@ import type {
   Leaderboard,
   PortalSessionResponse,
   PracticeExam,
+  PromoState,
   QuizQuestion,
   RecordAttemptBody,
   RecordCourseMasteryAttemptBody,
@@ -2274,6 +2276,167 @@ export function useGetEpppMissedQuestions<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+/**
+ * @summary Get the authenticated account's EPPP7 promotion state
+ */
+export const getGetEpppPromoUrl = () => {
+  return `/api/eppp/promo`;
+};
+
+export const getEpppPromo = async (
+  options?: RequestInit,
+): Promise<PromoState> => {
+  return customFetch<PromoState>(getGetEpppPromoUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetEpppPromoQueryKey = () => {
+  return [`/api/eppp/promo`] as const;
+};
+
+export const getGetEpppPromoQueryOptions = <
+  TData = Awaited<ReturnType<typeof getEpppPromo>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getEpppPromo>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetEpppPromoQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getEpppPromo>>> = ({
+    signal,
+  }) => getEpppPromo({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getEpppPromo>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetEpppPromoQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getEpppPromo>>
+>;
+export type GetEpppPromoQueryError = ErrorType<void>;
+
+/**
+ * @summary Get the authenticated account's EPPP7 promotion state
+ */
+
+export function useGetEpppPromo<
+  TData = Awaited<ReturnType<typeof getEpppPromo>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getEpppPromo>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetEpppPromoQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Redeem the one-time EPPP7 promotion for the authenticated account
+ */
+export const getRedeemEpppPromoUrl = () => {
+  return `/api/eppp/promo/redeem`;
+};
+
+export const redeemEpppPromo = async (
+  epppPromoInput: EpppPromoInput,
+  options?: RequestInit,
+): Promise<PromoState> => {
+  return customFetch<PromoState>(getRedeemEpppPromoUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(epppPromoInput),
+  });
+};
+
+export const getRedeemEpppPromoMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof redeemEpppPromo>>,
+    TError,
+    { data: BodyType<EpppPromoInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof redeemEpppPromo>>,
+  TError,
+  { data: BodyType<EpppPromoInput> },
+  TContext
+> => {
+  const mutationKey = ["redeemEpppPromo"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof redeemEpppPromo>>,
+    { data: BodyType<EpppPromoInput> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return redeemEpppPromo(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type RedeemEpppPromoMutationResult = NonNullable<
+  Awaited<ReturnType<typeof redeemEpppPromo>>
+>;
+export type RedeemEpppPromoMutationBody = BodyType<EpppPromoInput>;
+export type RedeemEpppPromoMutationError = ErrorType<void>;
+
+/**
+ * @summary Redeem the one-time EPPP7 promotion for the authenticated account
+ */
+export const useRedeemEpppPromo = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof redeemEpppPromo>>,
+    TError,
+    { data: BodyType<EpppPromoInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof redeemEpppPromo>>,
+  TError,
+  { data: BodyType<EpppPromoInput> },
+  TContext
+> => {
+  return useMutation(getRedeemEpppPromoMutationOptions(options));
+};
 
 /**
  * @summary Get the current user's EPPP study plan

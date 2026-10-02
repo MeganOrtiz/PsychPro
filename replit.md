@@ -95,6 +95,7 @@ The app runs on the blue three-material system (OPAQUE panels / GLASS tiles / GL
 - **Anonymous-tolerant / public routes (complete whitelist):** these intentionally accept callers without a Clerk session — every other `/api/**` route rejects with `401`. Some read no caller identity at all; others use `getOptionalUserId(req)` to enrich the response when a verified Clerk session happens to be present:
   - `GET /api/healthz`, `GET /api/admin/status` (no user needed)
   - `GET /api/topics`, `GET /api/topics/:id` (read-only catalog; no user needed). NOTE: `/api/topics/:id/flashcards`, `/api/topics/:id/quizzes`, `/api/topics/:id/practice-exam`, and `/api/topics/:id/study-guide` are **protected** (auth-gated behind free-tier entitlements) — they are NOT in this whitelist.
+  - EPPP promo status and redemption (`GET /api/eppp/promo`, `POST /api/eppp/promo/redeem`) are protected and are always scoped to the verified Clerk account.
   - `POST /api/stripe/webhook` (Stripe signature verified)
   - `GET /api/subscription/plans`
   - `GET /api/leaderboard` (`currentUser` marker uses the verified Clerk id when present)

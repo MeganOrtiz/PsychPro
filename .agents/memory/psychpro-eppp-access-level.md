@@ -6,9 +6,9 @@ description: EPPP Mastery Suite is sold as its own access tier, independent of M
 The EPPP Mastery Suite is a SEPARATE paid access level, NOT part of the
 Master/Scholar subscription ladder.
 
-- Access is expiry-date driven: `isAdmin || (epppAccessUntil > now)`. It is stored
-  on its own user columns (`epppAccessUntil`, `epppSubscriptionId`) and never
-  touches `subscriptionStatus`.
+- Access is expiry-driven and separate from PsychPro's tier. Honor both purchased
+  access and an explicitly approved promotional grant; admin bypass remains
+  separate. Never change PsychPro subscription status to grant EPPP access.
 - EPPP and Master/Scholar do NOT unlock each other in either direction. Gate EPPP
   content with EPPP-specific helpers (computeEpppAccess / getEntitlements({eppp}) /
   the lib/eppp.ts classifier), never with the generic `isSubscribed`.

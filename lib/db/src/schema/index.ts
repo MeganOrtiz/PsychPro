@@ -18,6 +18,9 @@ export const usersTable = pgTable("users", {
   // period end, bumped on renewal), $499 one-time (now + 6 months), and $799
   // one-time (now + 12 months). Access = isAdmin || (epppAccessUntil > now).
   epppAccessUntil: timestamp("eppp_access_until"),
+  // One-time EPPP-only promotion. Expiry is derived from this timestamp + 7d;
+  // it is kept separate from paid access so Stripe renewals cannot extend it.
+  epppPromoRedeemedAt: timestamp("eppp_promo_redeemed_at"),
   // The $99/mo EPPP subscription id (distinct from stripeSubscriptionId, which
   // tracks the Master/Scholar sub). Null for one-time buyers / non-EPPP users.
   epppSubscriptionId: text("eppp_subscription_id"),
