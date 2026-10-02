@@ -18,7 +18,9 @@ import type {
 
 import type {
   AttemptRecord,
+  BookLibraryResponse,
   CheckoutSessionResponse,
+  ClaimFeedbackBookResponse,
   CourseMasteryAttemptRecord,
   CourseMasteryExam,
   CourseMasteryStatus,
@@ -28,6 +30,7 @@ import type {
   EpppStudyPlan,
   EpppStudyPlanInput,
   Flashcard,
+  GetLibraryBookPdfParams,
   GetPracticeExamByTopicParams,
   HealthStatus,
   Leaderboard,
@@ -37,6 +40,8 @@ import type {
   RecordAttemptBody,
   RecordCourseMasteryAttemptBody,
   StudyGuide,
+  SubmitFeedback201,
+  SubmitFeedbackBody,
   SubscriptionPlan,
   SubscriptionStatus,
   Topic,
@@ -55,6 +60,366 @@ type AwaitedInput<T> = PromiseLike<T> | T;
 type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+/**
+ * @summary List owned books and feedback reward eligibility
+ */
+export const getGetBookLibraryUrl = () => {
+  return `/api/library`;
+};
+
+export const getBookLibrary = async (
+  options?: RequestInit,
+): Promise<BookLibraryResponse> => {
+  return customFetch<BookLibraryResponse>(getGetBookLibraryUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetBookLibraryQueryKey = () => {
+  return [`/api/library`] as const;
+};
+
+export const getGetBookLibraryQueryOptions = <
+  TData = Awaited<ReturnType<typeof getBookLibrary>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getBookLibrary>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetBookLibraryQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getBookLibrary>>> = ({
+    signal,
+  }) => getBookLibrary({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getBookLibrary>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetBookLibraryQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getBookLibrary>>
+>;
+export type GetBookLibraryQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List owned books and feedback reward eligibility
+ */
+
+export function useGetBookLibrary<
+  TData = Awaited<ReturnType<typeof getBookLibrary>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getBookLibrary>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetBookLibraryQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * The server verifies saved feedback and chooses the eligible book.
+ * @summary Claim the feedback reward for the authenticated account
+ */
+export const getClaimFeedbackBookUrl = () => {
+  return `/api/library/claim`;
+};
+
+export const claimFeedbackBook = async (
+  options?: RequestInit,
+): Promise<ClaimFeedbackBookResponse> => {
+  return customFetch<ClaimFeedbackBookResponse>(getClaimFeedbackBookUrl(), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getClaimFeedbackBookMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof claimFeedbackBook>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof claimFeedbackBook>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationKey = ["claimFeedbackBook"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof claimFeedbackBook>>,
+    void
+  > = () => {
+    return claimFeedbackBook(requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ClaimFeedbackBookMutationResult = NonNullable<
+  Awaited<ReturnType<typeof claimFeedbackBook>>
+>;
+
+export type ClaimFeedbackBookMutationError = ErrorType<void>;
+
+/**
+ * @summary Claim the feedback reward for the authenticated account
+ */
+export const useClaimFeedbackBook = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof claimFeedbackBook>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof claimFeedbackBook>>,
+  TError,
+  void,
+  TContext
+> => {
+  return useMutation(getClaimFeedbackBookMutationOptions(options));
+};
+
+/**
+ * @summary Stream an owned book PDF
+ */
+export const getGetLibraryBookPdfUrl = (
+  bookId: string,
+  params?: GetLibraryBookPdfParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/library/books/${bookId}/pdf?${stringifiedParams}`
+    : `/api/library/books/${bookId}/pdf`;
+};
+
+export const getLibraryBookPdf = async (
+  bookId: string,
+  params?: GetLibraryBookPdfParams,
+  options?: RequestInit,
+): Promise<Blob> => {
+  return customFetch<Blob>(getGetLibraryBookPdfUrl(bookId, params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetLibraryBookPdfQueryKey = (
+  bookId: string,
+  params?: GetLibraryBookPdfParams,
+) => {
+  return [
+    `/api/library/books/${bookId}/pdf`,
+    ...(params ? [params] : []),
+  ] as const;
+};
+
+export const getGetLibraryBookPdfQueryOptions = <
+  TData = Awaited<ReturnType<typeof getLibraryBookPdf>>,
+  TError = ErrorType<void>,
+>(
+  bookId: string,
+  params?: GetLibraryBookPdfParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getLibraryBookPdf>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetLibraryBookPdfQueryKey(bookId, params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getLibraryBookPdf>>
+  > = ({ signal }) =>
+    getLibraryBookPdf(bookId, params, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!bookId,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getLibraryBookPdf>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetLibraryBookPdfQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getLibraryBookPdf>>
+>;
+export type GetLibraryBookPdfQueryError = ErrorType<void>;
+
+/**
+ * @summary Stream an owned book PDF
+ */
+
+export function useGetLibraryBookPdf<
+  TData = Awaited<ReturnType<typeof getLibraryBookPdf>>,
+  TError = ErrorType<void>,
+>(
+  bookId: string,
+  params?: GetLibraryBookPdfParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getLibraryBookPdf>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetLibraryBookPdfQueryOptions(
+    bookId,
+    params,
+    options,
+  );
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Save website feedback and grant the feedback reward atomically
+ */
+export const getSubmitFeedbackUrl = () => {
+  return `/api/feedback`;
+};
+
+export const submitFeedback = async (
+  submitFeedbackBody: SubmitFeedbackBody,
+  options?: RequestInit,
+): Promise<SubmitFeedback201> => {
+  return customFetch<SubmitFeedback201>(getSubmitFeedbackUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(submitFeedbackBody),
+  });
+};
+
+export const getSubmitFeedbackMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof submitFeedback>>,
+    TError,
+    { data: BodyType<SubmitFeedbackBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof submitFeedback>>,
+  TError,
+  { data: BodyType<SubmitFeedbackBody> },
+  TContext
+> => {
+  const mutationKey = ["submitFeedback"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof submitFeedback>>,
+    { data: BodyType<SubmitFeedbackBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return submitFeedback(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SubmitFeedbackMutationResult = NonNullable<
+  Awaited<ReturnType<typeof submitFeedback>>
+>;
+export type SubmitFeedbackMutationBody = BodyType<SubmitFeedbackBody>;
+export type SubmitFeedbackMutationError = ErrorType<void>;
+
+/**
+ * @summary Save website feedback and grant the feedback reward atomically
+ */
+export const useSubmitFeedback = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof submitFeedback>>,
+    TError,
+    { data: BodyType<SubmitFeedbackBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof submitFeedback>>,
+  TError,
+  { data: BodyType<SubmitFeedbackBody> },
+  TContext
+> => {
+  return useMutation(getSubmitFeedbackMutationOptions(options));
+};
 
 /**
  * Returns server health status

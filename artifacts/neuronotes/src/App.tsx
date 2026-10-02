@@ -25,6 +25,7 @@ const LandingPage = lazy(() => import("@/pages/landing"));
 const PrivacyPage = lazy(() => import("@/pages/privacy"));
 const TermsPage = lazy(() => import("@/pages/terms"));
 const OnboardingPage = lazy(() => import("@/pages/onboarding"));
+const MyLibraryPage = lazy(() => import("@/pages/my-library"));
 const DashboardPage = lazy(() => import("@/pages/dashboard"));
 const TopicsPage = lazy(() => import("@/pages/topics"));
 const TopicDetailPage = lazy(() => import("@/pages/topic-detail"));
@@ -60,6 +61,9 @@ const CrashTestPage = lazy(() => import("@/pages/crash-test"));
 const DevGlassPreview = lazy(() => import("@/pages/dev-glass-preview"));
 // DEV-conditional at the import itself so Rollup drops the chunk from
 // production bundles (the route below is DEV-gated too).
+const DevLibraryPreview = import.meta.env.DEV
+  ? lazy(() => import("@/pages/dev-library-preview"))
+  : (null as never);
 const DevDashboardPreview = import.meta.env.DEV
   ? lazy(() => import("@/pages/dev-dashboard-preview"))
   : () => null;
@@ -112,6 +116,7 @@ function AppRouter() {
       <Route path="/sign-up/*?" component={SignUpPage} />
       {import.meta.env.DEV ? <Route path="/__crash-test" component={CrashTestPage} /> : null}
       {import.meta.env.DEV ? <Route path="/__glass-preview" component={DevGlassPreview} /> : null}
+      {import.meta.env.DEV ? <Route path="/__library-preview" component={DevLibraryPreview} /> : null}
       {import.meta.env.DEV ? <Route path="/__dashboard-preview" component={DevDashboardPreview} /> : null}
       <Route path="/eppp">
         {() => (
@@ -253,6 +258,7 @@ function AppRouter() {
             <Route path="/my-decks" component={MyDecksPage} />
             <Route path="/my-decks/new" component={NewDeckPage} />
             <Route path="/my-decks/:id" component={MyDeckDetailPage} />
+            <Route path="/my-library" component={MyLibraryPage} />
             <Route path="/reflections" component={ReflectionsPage} />
             <Route path="/profile" component={ProfilePage} />
             <Route component={NotFound} />

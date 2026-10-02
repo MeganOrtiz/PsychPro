@@ -38,3 +38,9 @@ The owner chose the same book collection in both sites and requires no duplicate
 **Why:** The owner approved the shared-collection option and explicitly raised duplicate copies and double payment as concerns.
 
 **How to apply:** Keep ownership account-wide and independent of suite subscriptions. Show the same earned or owned book in both libraries, and prevent duplicate ownership in persistent storage.
+
+Owned books remain accessible after either or both suite subscriptions expire.
+
+**Why:** The approved shared-library design keeps book access independent of subscription status and expiry.
+
+**How to apply:** Keep study-content subscription gates separate from My Library access in both suites. Do not charge again or remove book ownership when a subscription changes.

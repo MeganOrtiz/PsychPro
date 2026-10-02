@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, timestamp, boolean, bigserial, index, primaryKey } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, timestamp, boolean, bigserial, index, primaryKey, unique } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
@@ -167,6 +167,45 @@ export const feedbackTable = pgTable("feedback", {
 export const insertFeedbackSchema = createInsertSchema(feedbackTable).omit({ id: true, createdAt: true });
 export type InsertFeedback = z.infer<typeof insertFeedbackSchema>;
 export type Feedback = typeof feedbackTable.$inferSelect;
+
+// Shared digital book catalog and account-owned library. PDF paths remain
+// private storage metadata and are never included in library API responses.
+export const libraryBooksTable = pgTable("library_books", {
+  id: text("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  coverUrl: text("cover_url"),
+  pageCount: integer("page_count"),
+  pdfObjectPath: text("pdf_object_path").notNull(),
+  contentHash: text("content_hash").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const userLibraryBooksTable = pgTable(
+  "user_library_books",
+  {
+    id: serial("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => usersTable.id, { onDelete: "cascade" }),
+    bookId: text("book_id")
+      .notNull()
+      .references(() => libraryBooksTable.id, { onDelete: "cascade" }),
+    source: text("source").notNull(),
+    grantedAt: timestamp("granted_at").notNull().defaultNow(),
+  },
+  (table) => [
+    unique("user_library_books_user_book_unique").on(table.userId, table.bookId),
+    index("user_library_books_user_idx").on(table.userId),
+  ],
+);
+
+export const insertLibraryBookSchema = createInsertSchema(libraryBooksTable).omit({ createdAt: true });
+export type InsertLibraryBook = z.infer<typeof insertLibraryBookSchema>;
+export const insertUserLibraryBookSchema = createInsertSchema(userLibraryBooksTable).omit({ id: true, grantedAt: true });
+export type InsertUserLibraryBook = z.infer<typeof insertUserLibraryBookSchema>;
+export type LibraryBook = typeof libraryBooksTable.$inferSelect;
+export type UserLibraryBook = typeof userLibraryBooksTable.$inferSelect;
 
 export const customDecksTable = pgTable("custom_decks", {
   id: serial("id").primaryKey(),

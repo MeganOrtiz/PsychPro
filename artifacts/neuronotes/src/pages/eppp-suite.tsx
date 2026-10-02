@@ -77,6 +77,7 @@ import {
   deleteReflection,
   type ReflectionRecord,
 } from "@/lib/reflections";
+import { BookLibrary } from "@/components/library/book-library";
 import EpppDashboardPage from "@/pages/eppp-dashboard";
 import { ResourcesContent } from "@/pages/resources";
 
@@ -120,6 +121,7 @@ type TabSlug =
   | "rapid-review"
   | "reflections"
   | "my-notes"
+  | "my-library"
   | "performance-analytics"
   | "resources";
 
@@ -143,6 +145,7 @@ const TABS: TabDef[] = [
   { slug: "rapid-review", label: "Quick Reference Guide", icon: Zap, section: "Review" },
   { slug: "reflections", label: "Reflections", icon: Lightbulb, section: "Journal" },
   { slug: "my-notes", label: "My Notes", icon: NotebookPen, section: "Journal" },
+  { slug: "my-library", label: "My Library", icon: BookOpen, section: "Journal" },
   { slug: "resources", label: "Resources", icon: Library, section: "Reference" },
   { slug: "study-plan", label: "Study Plan", icon: ClipboardList, section: "Plan" },
 ];
@@ -258,12 +261,15 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
   const isMobile = useIsMobile();
   const { data: entitlements, isLoading: entLoading } = useEntitlements();
   const epppUnlocked = !!entitlements?.epppAccess;
+  // Owned books belong to the account, not an active EPPP subscription.
+  // Only the library bypasses the study-content access gate.
+  const isBookLibrary = tab === "my-library";
 
   // EPPP Mastery Suite is a SEPARATE access level. Gate the whole suite behind
   // EPPP access (admins are included via computeEpppAccess on the server). Show
   // a neutral loader while entitlements resolve so non-buyers never glimpse the
   // suite content before the lock screen renders.
-  if (entLoading) {
+  if (entLoading && !isBookLibrary) {
     return (
       <div
         className="study-page-bg flex min-h-screen items-center justify-center"
@@ -273,7 +279,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
       </div>
     );
   }
-  if (!epppUnlocked) {
+  if (!epppUnlocked && !isBookLibrary) {
     return (
       <div
         className="study-page-bg flex min-h-screen items-center justify-center"
@@ -483,6 +489,8 @@ function SuiteContent({
       return <ReflectionsPanel />;
     case "my-notes":
       return <MyNotesPanel />;
+    case "my-library":
+      return <BookLibrary suite="eppp" />;
     case "study-plan":
       return <StudyPlanPanel onNavigate={onNavigate} />;
     case "full-length-exams":

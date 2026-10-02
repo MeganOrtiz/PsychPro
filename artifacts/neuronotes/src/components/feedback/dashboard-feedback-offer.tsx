@@ -9,9 +9,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { FeedbackForm } from "./feedback-form";
+import type { Suite } from "@/lib/library-routes";
 import "./dashboard-feedback-offer.css";
 
-export function DashboardFeedbackOffer() {
+export function DashboardFeedbackOffer({ suite = "psychpro" }: { suite?: Suite }) {
   const [open, setOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
@@ -56,7 +57,8 @@ export function DashboardFeedbackOffer() {
           </DialogHeader>
           <FeedbackForm
             onSubmittingChange={setSubmitting}
-            onSuccess={() => setOpen(false)}
+            suite={suite}
+            onClose={() => setOpen(false)}
           />
         </DialogContent>
       </Dialog>

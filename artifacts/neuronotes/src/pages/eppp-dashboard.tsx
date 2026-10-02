@@ -194,7 +194,7 @@ export function EpppDashboardView({
           <h1 data-testid="text-eppp-brand">EPPP Mastery Suite</h1>
           <img src={dashboardBrain} alt="" className="dashboard-brain" aria-hidden />
         </div>
-        <DashboardFeedbackOffer />
+        <DashboardFeedbackOffer suite="eppp" />
       </div>
 
       <div className="epd-shell">

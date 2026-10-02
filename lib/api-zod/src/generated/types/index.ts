@@ -7,7 +7,9 @@
  */
 
 export * from "./attemptRecord";
+export * from "./bookLibraryResponse";
 export * from "./checkoutSessionResponse";
+export * from "./claimFeedbackBookResponse";
 export * from "./clientErrorsRateLimitCleanupConfig";
 export * from "./clientErrorsRateLimitConfig";
 export * from "./courseMasteryAttemptRecord";
@@ -21,13 +23,18 @@ export * from "./epppMissedQuestion";
 export * from "./epppMissedQuestionsResponse";
 export * from "./epppStudyPlan";
 export * from "./epppStudyPlanInput";
+export * from "./feedbackEntry";
+export * from "./feedbackRewardResult";
+export * from "./feedbackRewardStatus";
 export * from "./flashcard";
 export * from "./flashcardDifficulty";
+export * from "./getLibraryBookPdfParams";
 export * from "./getPracticeExamByTopicParams";
 export * from "./healthConfig";
 export * from "./healthStatus";
 export * from "./leaderboard";
 export * from "./leaderboardEntry";
+export * from "./libraryBook";
 export * from "./portalSessionResponse";
 export * from "./practiceExam";
 export * from "./quizQuestion";
@@ -35,6 +42,8 @@ export * from "./quizQuestionCorrectAnswer";
 export * from "./recordAttemptBody";
 export * from "./recordCourseMasteryAttemptBody";
 export * from "./studyGuide";
+export * from "./submitFeedback201";
+export * from "./submitFeedbackBody";
 export * from "./subscriptionPlan";
 export * from "./subscriptionStatus";
 export * from "./topic";

@@ -84,6 +84,10 @@ const PROTECTED = new Set<string>([
   "POST /api/feedback",
   "GET /api/feedback",
   "PATCH /api/feedback/:id/status",
+  // shared library (account ownership applies regardless of subscription)
+  "GET /api/library",
+  "POST /api/library/claim",
+  "GET /api/library/books/:bookId/pdf",
   // custom decks
   "GET /api/custom-decks",
   "POST /api/custom-decks",

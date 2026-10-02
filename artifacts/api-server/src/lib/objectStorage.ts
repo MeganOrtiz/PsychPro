@@ -11,6 +11,23 @@ import {
 
 const REPLIT_SIDECAR_ENDPOINT = "http://127.0.0.1:1106";
 
+/**
+ * True for the server-owned PDF namespace, whether called with an
+ * /objects/<relative path>, a private object suffix, or a full GCS object path.
+ * Keep the check independent of ACL metadata: public storage roots can overlap
+ * a private bucket root, so the protected namespace must never be searched as
+ * a public asset in the first place.
+ */
+export function isReservedLibraryPdfPath(path: string): boolean {
+  const normalized = path.replace(/^\/+/, "");
+  const librarySuffix = "library/";
+  if (normalized.startsWith(librarySuffix) || normalized.startsWith(`objects/${librarySuffix}`)) {
+    return true;
+  }
+  const privateDir = (process.env.PRIVATE_OBJECT_DIR || "").replace(/^\/+|\/+$/g, "");
+  return privateDir.length > 0 && normalized.startsWith(`${privateDir}/${librarySuffix}`);
+}
+
 export const objectStorageClient = new Storage({
   credentials: {
     audience: "replit",
@@ -73,6 +90,9 @@ export class ObjectStorageService {
   async searchPublicObject(filePath: string): Promise<File | null> {
     for (const searchPath of this.getPublicObjectSearchPaths()) {
       const fullPath = `${searchPath}/${filePath}`;
+      if (isReservedLibraryPdfPath(fullPath)) {
+        continue;
+      }
 
       const { bucketName, objectName } = parseObjectPath(fullPath);
       const bucket = objectStorageClient.bucket(bucketName);

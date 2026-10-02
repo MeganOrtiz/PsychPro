@@ -30,8 +30,102 @@ tags:
     description: Dashboard summary data
   - name: leaderboard
     description: Leaderboard rankings
+  - name: library
+    description: Shared account-owned book library
+  - name: feedback
+    description: Website feedback
 
 paths:
+  /library:
+    get:
+      operationId: getBookLibrary
+      tags: [library]
+      summary: List owned books and feedback reward eligibility
+      responses:
+        "200":
+          description: Shared library and feedback reward status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookLibraryResponse"
+
+  /library/claim:
+    post:
+      operationId: claimFeedbackBook
+      tags: [library]
+      summary: Claim the feedback reward for the authenticated account
+      description: The server verifies saved feedback and chooses the eligible book.
+      responses:
+        "200":
+          description: Feedback reward claimed or already owned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClaimFeedbackBookResponse"
+        "403":
+          description: No saved feedback makes this account eligible
+        "503":
+          description: Feedback reward catalog or private PDF storage is unavailable
+
+  /library/books/{bookId}/pdf:
+    get:
+      operationId: getLibraryBookPdf
+      tags: [library]
+      summary: Stream an owned book PDF
+      parameters:
+        - name: bookId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: download
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        "200":
+          description: Private PDF bytes
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        "401":
+          description: Authentication required
+        "403":
+          description: The account does not own this book
+        "404":
+          description: Book or PDF not found
+
+  /feedback:
+    post:
+      operationId: submitFeedback
+      tags: [feedback]
+      summary: Save website feedback and grant the feedback reward atomically
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubmitFeedbackBody"
+      responses:
+        "201":
+          description: Saved feedback with reward status; reward.available is false if catalog bootstrap failed
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/FeedbackEntry"
+                  - type: object
+                    properties:
+                      reward:
+                        $ref: "#/components/schemas/FeedbackRewardResult"
+                    required: [reward]
+        "400":
+          description: Feedback validation failed
+
   /healthz:
     get:
       operationId: healthCheck
@@ -528,6 +622,103 @@ paths:
 
 components:
   schemas:
+    LibraryBook:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        coverUrl:
+          type: [string, "null"]
+        pageCount:
+          type: [integer, "null"]
+        grantedAt:
+          type: string
+          format: date-time
+        source:
+          type: string
+      required: [id, title, description, coverUrl, pageCount, grantedAt, source]
+
+    FeedbackRewardStatus:
+      type: object
+      properties:
+        bookId:
+          type: string
+        title:
+          type: string
+        owned:
+          type: boolean
+        eligible:
+          type: boolean
+        available:
+          type: boolean
+      required: [bookId, title, owned, eligible, available]
+
+    BookLibraryResponse:
+      type: object
+      properties:
+        books:
+          type: array
+          items:
+            $ref: "#/components/schemas/LibraryBook"
+        reward:
+          $ref: "#/components/schemas/FeedbackRewardStatus"
+      required: [books, reward]
+
+    ClaimFeedbackBookResponse:
+      type: object
+      properties:
+        book:
+          $ref: "#/components/schemas/LibraryBook"
+        alreadyOwned:
+          type: boolean
+      required: [book, alreadyOwned]
+
+    FeedbackRewardResult:
+      type: object
+      properties:
+        available:
+          type: boolean
+        alreadyOwned:
+          type: boolean
+        bookId:
+          type: string
+      required: [available, alreadyOwned, bookId]
+
+    SubmitFeedbackBody:
+      type: object
+      properties:
+        type:
+          type: string
+        message:
+          type: string
+        submitterEmail:
+          type: string
+      required: [message]
+
+    FeedbackEntry:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: string
+        submitterEmail:
+          type: [string, "null"]
+        type:
+          type: string
+        message:
+          type: string
+        status:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, userId, submitterEmail, type, message, status, createdAt]
+
     EpppStudyPlan:
       type: object
       description: A user's saved EPPP study plan. examDate is an ISO yyyy-mm-dd

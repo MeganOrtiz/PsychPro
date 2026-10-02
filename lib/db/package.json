@@ -9,7 +9,7 @@
   },
   "scripts": {
     "push": "tsx scripts/push.ts",
-    "push-force": "tsx scripts/push.ts",
+    "push-force": "tsx scripts/push.ts --force",
     "seed": "tsx src/seed.ts",
     "seed:eppp": "tsx src/seed-eppp-master-content.ts",
     "test:seed-idempotency": "tsx test/seed-idempotency.test.ts",

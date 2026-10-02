@@ -38,6 +38,7 @@ const workshopNav: NavItem[] = [
 ];
 
 const labNav: NavItem[] = [
+  { href: "/my-library", label: "My Library", icon: BookOpen },
   { href: "/reflections", label: "Reflections", icon: Lightbulb },
 ];
 

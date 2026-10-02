@@ -1,4 +1,7 @@
 import { useId, useState } from "react";
+import { Link } from "wouter";
+import { useQueryClient } from "@tanstack/react-query";
+import { LIBRARY_PATH, type Suite } from "@/lib/library-routes";
 import { Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -35,10 +38,14 @@ function extractFieldErrors(body: unknown): FieldErrors | null {
 
 type FeedbackFormProps = {
   onSuccess?: () => void;
+  onClose?: () => void;
+  suite?: Suite;
   onSubmittingChange?: (submitting: boolean) => void;
 };
 
-export function FeedbackForm({ onSuccess, onSubmittingChange }: FeedbackFormProps) {
+export function FeedbackForm({ onSuccess, onClose, suite = "psychpro", onSubmittingChange }: FeedbackFormProps) {
+  const qc = useQueryClient();
+  const [reward, setReward] = useState<{ available: boolean; alreadyOwned: boolean } | null>(null);
   const formId = useId();
   const messageId = `${formId}-message`;
   const emailId = `${formId}-email`;
@@ -110,6 +117,9 @@ export function FeedbackForm({ onSuccess, onSubmittingChange }: FeedbackFormProp
         duration: 4000,
         position: "bottom-right",
       });
+      const r = (body as { reward?: { available?: boolean; alreadyOwned?: boolean } } | null)?.reward;
+      setReward({ available: !!r?.available, alreadyOwned: !!r?.alreadyOwned });
+      qc.invalidateQueries({ queryKey: ["/api/library"] });
       updateSubmitting(false);
       onSuccess?.();
       return;
@@ -131,6 +141,26 @@ export function FeedbackForm({ onSuccess, onSubmittingChange }: FeedbackFormProp
       toast.error(`Couldn't send feedback (error ${res.status}). Please try again.`);
     }
     updateSubmitting(false);
+  }
+
+  if (reward) {
+    return (
+      <div className="space-y-4 text-center" data-testid="feedback-success">
+        <p className="text-sm text-foreground">
+          {reward.available
+            ? reward.alreadyOwned
+              ? "Thanks for the feedback. The textbook is already in your library."
+              : "Thanks for the feedback. Your textbook is now in My Library."
+            : "Your feedback was saved. Your book isn't ready yet; open My Library and claim it from there."}
+        </p>
+        <Link href={LIBRARY_PATH[suite]} onClick={() => onClose?.()} className="inline-flex items-center justify-center rounded-md border border-border px-4 py-2 text-sm font-medium text-foreground" data-testid="link-open-library">
+          Open My Library
+        </Link>
+        {onClose && (
+          <div><button type="button" className="text-xs text-muted-foreground underline" onClick={onClose} data-testid="feedback-close">Close</button></div>
+        )}
+      </div>
+    );
   }
 
   return (

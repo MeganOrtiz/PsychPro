@@ -8,6 +8,69 @@
 import * as zod from "zod";
 
 /**
+ * @summary List owned books and feedback reward eligibility
+ */
+export const GetBookLibraryResponse = zod.object({
+  books: zod.array(
+    zod.object({
+      id: zod.string(),
+      title: zod.string(),
+      description: zod.string(),
+      coverUrl: zod.string().nullable(),
+      pageCount: zod.number().nullable(),
+      grantedAt: zod.coerce.date(),
+      source: zod.string(),
+    }),
+  ),
+  reward: zod.object({
+    bookId: zod.string(),
+    title: zod.string(),
+    owned: zod.boolean(),
+    eligible: zod.boolean(),
+    available: zod.boolean(),
+  }),
+});
+
+/**
+ * The server verifies saved feedback and chooses the eligible book.
+ * @summary Claim the feedback reward for the authenticated account
+ */
+export const ClaimFeedbackBookResponse = zod.object({
+  book: zod.object({
+    id: zod.string(),
+    title: zod.string(),
+    description: zod.string(),
+    coverUrl: zod.string().nullable(),
+    pageCount: zod.number().nullable(),
+    grantedAt: zod.coerce.date(),
+    source: zod.string(),
+  }),
+  alreadyOwned: zod.boolean(),
+});
+
+/**
+ * @summary Stream an owned book PDF
+ */
+export const GetLibraryBookPdfParams = zod.object({
+  bookId: zod.coerce.string(),
+});
+
+export const getLibraryBookPdfQueryDownloadDefault = false;
+
+export const GetLibraryBookPdfQueryParams = zod.object({
+  download: zod.coerce.boolean().default(getLibraryBookPdfQueryDownloadDefault),
+});
+
+/**
+ * @summary Save website feedback and grant the feedback reward atomically
+ */
+export const SubmitFeedbackBody = zod.object({
+  type: zod.string().optional(),
+  message: zod.string(),
+  submitterEmail: zod.string().optional(),
+});
+
+/**
  * Returns server health status
  * @summary Health check
  */

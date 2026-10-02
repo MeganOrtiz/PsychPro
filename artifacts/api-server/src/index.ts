@@ -11,6 +11,7 @@ import {
 import { logger } from "./lib/logger";
 import { logResolvedClientErrorsRateLimit } from "./startup";
 import { startClientErrorsRateLimitCleanup } from "./middlewares/clientErrorsRateLimit";
+import { ensureFeedbackBookCatalog, logCatalogBootstrapFailure } from "./lib/bookLibrary";
 
 logResolvedClientErrorsRateLimit(logger);
 
@@ -67,6 +68,14 @@ const server = app.listen(port, "0.0.0.0", (err) => {
   }
 
   logger.info({ port }, "Server listening");
+
+  // Seed the immutable shared-library PDF/catalog from the protected
+  // deployment asset. Storage and metadata are idempotent across instances;
+  // failure is explicit in feedback reward responses and retried on later
+  // requests rather than fabricating a successful grant.
+  void runStartupTaskWithRetry("Feedback book catalog bootstrap", ensureFeedbackBookCatalog)
+    .then(() => logger.info({ bookId: "psychpro-foundations-v1" }, "Feedback book catalog ready"))
+    .catch((err) => logCatalogBootstrapFailure(err));
 
   // After the server is accepting connections, ensure the `courses` lookup
   // table is populated from existing topic categories. This is DATA seeding —

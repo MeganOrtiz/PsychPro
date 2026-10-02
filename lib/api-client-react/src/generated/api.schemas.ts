@@ -5,6 +5,59 @@
  * NeuroNotes API specification
  * OpenAPI spec version: 0.1.0
  */
+export interface LibraryBook {
+  id: string;
+  title: string;
+  description: string;
+  /** @nullable */
+  coverUrl: string | null;
+  /** @nullable */
+  pageCount: number | null;
+  grantedAt: string;
+  source: string;
+}
+
+export interface FeedbackRewardStatus {
+  bookId: string;
+  title: string;
+  owned: boolean;
+  eligible: boolean;
+  available: boolean;
+}
+
+export interface BookLibraryResponse {
+  books: LibraryBook[];
+  reward: FeedbackRewardStatus;
+}
+
+export interface ClaimFeedbackBookResponse {
+  book: LibraryBook;
+  alreadyOwned: boolean;
+}
+
+export interface FeedbackRewardResult {
+  available: boolean;
+  alreadyOwned: boolean;
+  bookId: string;
+}
+
+export interface SubmitFeedbackBody {
+  type?: string;
+  message: string;
+  submitterEmail?: string;
+}
+
+export interface FeedbackEntry {
+  id: number;
+  userId: string;
+  /** @nullable */
+  submitterEmail: string | null;
+  type: string;
+  message: string;
+  status: string;
+  createdAt: string;
+}
+
 /**
  * A user's saved EPPP study plan. examDate is an ISO yyyy-mm-dd string ("" when unset). selectedTopicIds are topics.id values the user checked into the plan. saved is false when the user has never saved a plan (the server returns defaults).
  */
@@ -372,6 +425,14 @@ export interface SubscriptionStatus {
   /** @nullable */
   currentPeriodEnd?: string | null;
 }
+
+export type GetLibraryBookPdfParams = {
+  download?: boolean;
+};
+
+export type SubmitFeedback201 = FeedbackEntry & {
+  reward: FeedbackRewardResult;
+};
 
 export type GetPracticeExamByTopicParams = {
   /**

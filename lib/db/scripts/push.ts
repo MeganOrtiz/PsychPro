@@ -67,11 +67,14 @@ async function ensureTopicsNameUnique(): Promise<void> {
   }
 }
 
-function runDrizzleKitPush(): Promise<number> {
+function runDrizzleKitPush(force = false): Promise<number> {
   return new Promise((resolve, reject) => {
+    const args = ["push"];
+    if (force) args.push("--force");
+    args.push("--config", "./drizzle.config.ts");
     const child = spawn(
       "drizzle-kit",
-      ["push", "--force", "--config", "./drizzle.config.ts"],
+      args,
       {
         cwd: PKG_DIR,
         stdio: "inherit",
@@ -112,7 +115,7 @@ async function ensureConnectionRequestsPendingUnique(): Promise<void> {
 
 async function main(): Promise<void> {
   await ensureTopicsNameUnique();
-  const code = await runDrizzleKitPush();
+  const code = await runDrizzleKitPush(process.argv.includes("--force"));
   if (code === 0) {
     await ensureConnectionRequestsPendingUnique();
   }

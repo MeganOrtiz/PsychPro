@@ -1,7 +1,11 @@
 import { Router, type IRouter, type Request, type Response } from "express";
 import { Readable } from "stream";
 import { z } from "zod";
-import { ObjectStorageService, ObjectNotFoundError } from "../lib/objectStorage";
+import {
+  ObjectStorageService,
+  ObjectNotFoundError,
+  isReservedLibraryPdfPath,
+} from "../lib/objectStorage";
 import { ObjectPermission } from "../lib/objectAcl";
 import { getOptionalUserId, requireUserId } from "../lib/userId";
 
@@ -94,6 +98,13 @@ router.get("/storage/public-objects/*filePath", async (req: Request, res: Respon
   try {
     const raw = req.params.filePath;
     const filePath = Array.isArray(raw) ? raw.join("/") : raw;
+    const reservedPath = objectStorageService
+      .getPublicObjectSearchPaths()
+      .some((searchPath) => isReservedLibraryPdfPath(`${searchPath}/${filePath}`));
+    if (reservedPath) {
+      res.status(404).json({ error: "File not found" });
+      return;
+    }
     const file = await objectStorageService.searchPublicObject(filePath);
     if (!file) {
       res.status(404).json({ error: "File not found" });
@@ -118,6 +129,12 @@ router.get("/storage/objects/*path", async (req: Request, res: Response): Promis
   try {
     const raw = req.params.path;
     const wildcardPath = Array.isArray(raw) ? raw.join("/") : raw;
+    if (isReservedLibraryPdfPath(wildcardPath)) {
+      // The catalog PDF has its own ownership-checked route. Do not let
+      // /storage/objects become an alternate delivery surface.
+      res.status(404).json({ error: "Object not found" });
+      return;
+    }
     const objectPath = `/objects/${wildcardPath}`;
     const objectFile = await objectStorageService.getObjectEntityFile(objectPath);
     const userId = getOptionalUserId(req) ?? undefined;

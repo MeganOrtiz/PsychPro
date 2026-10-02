@@ -1,11 +1,22 @@
 import { Router, type Request, type Response } from "express";
 import { db } from "@workspace/db";
-import { feedbackTable, usersTable } from "@workspace/db";
-import { eq, desc } from "drizzle-orm";
+import {
+  feedbackTable,
+  libraryBooksTable,
+  userLibraryBooksTable,
+  usersTable,
+} from "@workspace/db";
+import { and, eq, desc } from "drizzle-orm";
 import { requireUserId } from "../lib/userId";
 import { isCallerAdmin } from "../lib/isAdmin";
 import { parseIntParam } from "../lib/params";
 import { feedbackRateLimit } from "../middlewares/feedbackRateLimit";
+import {
+  ensureFeedbackBookCatalog,
+  FEEDBACK_REWARD_BOOK_ID,
+  grantFeedbackBookOwnership,
+  logCatalogBootstrapFailure,
+} from "../lib/bookLibrary";
 
 const router = Router();
 
@@ -80,14 +91,52 @@ router.post("/feedback", feedbackRateLimit, async (req: Request, res: Response):
       await db.update(usersTable).set({ email: cleanEmail }).where(eq(usersTable.id, userId));
     }
 
-    const [entry] = await db.insert(feedbackTable).values({
-      userId,
-      submitterEmail: cleanEmail,
-      type: typeof type === "string" && type ? type : "general",
-      message: trimmedMessage,
-      status: "unread",
-    }).returning();
-    res.status(201).json(entry);
+    let catalogReady = true;
+    try {
+      // Ensure the actual PDF is safely in private storage and the catalog row
+      // exists before opening the feedback+grant transaction.
+      await ensureFeedbackBookCatalog();
+    } catch (err) {
+      catalogReady = false;
+      logCatalogBootstrapFailure(err);
+    }
+
+    const result = await db.transaction(async (tx) => {
+      const [entry] = await tx.insert(feedbackTable).values({
+        userId,
+        submitterEmail: cleanEmail,
+        type: typeof type === "string" && type ? type : "general",
+        message: trimmedMessage,
+        status: "unread",
+      }).returning();
+
+      let available = false;
+      const [existingOwnership] = await tx
+        .select({ id: userLibraryBooksTable.id })
+        .from(userLibraryBooksTable)
+        .where(
+          and(
+            eq(userLibraryBooksTable.userId, userId),
+            eq(userLibraryBooksTable.bookId, FEEDBACK_REWARD_BOOK_ID),
+          ),
+        )
+        .limit(1);
+      let alreadyOwned = Boolean(existingOwnership);
+      if (catalogReady) {
+        const [book] = await tx
+          .select({ id: libraryBooksTable.id })
+          .from(libraryBooksTable)
+          .where(eq(libraryBooksTable.id, FEEDBACK_REWARD_BOOK_ID))
+          .limit(1);
+        if (book) {
+          const inserted = await grantFeedbackBookOwnership(tx, userId);
+          available = true;
+          alreadyOwned = !inserted;
+        }
+      }
+      return { entry, reward: { available, alreadyOwned, bookId: FEEDBACK_REWARD_BOOK_ID } };
+    });
+    res.status(201).json({ ...result.entry, reward: result.reward });
   } catch (err) {
     req.log.error({ err }, "Error submitting feedback");
     res.status(500).json({ error: "Internal server error" });

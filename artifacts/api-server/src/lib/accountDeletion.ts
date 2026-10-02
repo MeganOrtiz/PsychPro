@@ -33,8 +33,9 @@ export type AccountDeletionResult = {
  * (progress, quiz_attempts, exam_attempts, feedback, admin_tokens,
  * custom_decks) so those rows are removed explicitly first. Cascade-backed
  * tables (user_profiles, featured_work, community_notifications,
- * connection_requests, user_blocks) are cleaned up automatically when the
- * users row goes. custom_decks children cascade off custom_decks.
+ * connection_requests, user_blocks, user_library_books) are cleaned up
+ * automatically when the users row goes. custom_decks children cascade off
+ * custom_decks. The shared library catalog and its private PDF remain intact.
  */
 export async function deleteUserAccount(userId: string): Promise<AccountDeletionResult> {
   const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
