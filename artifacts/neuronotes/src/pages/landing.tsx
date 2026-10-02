@@ -1638,10 +1638,10 @@ const styles = `
   border-radius: 20px;
   box-sizing: border-box;
 }
-.landing-suite { padding: 8px clamp(24px, 3vw, 36px) 32px; border-radius: 18px; display: flex; flex-direction: column; align-items: center; }
+.landing-suite { padding: 8px clamp(24px, 3vw, 36px) 32px; border-radius: 18px; display: flex; flex-direction: column; align-items: center; container-type: inline-size; }
 .landing-suite p { margin: 0; max-width: 100%; font-size: 13px; line-height: 1.65; color: ${alpha(PP.text, 0.88)}; }
 .landing-suite p + p { margin-top: 14px; }
-.landing-suite-title { margin: 0; font-weight: 300; font-size: clamp(24px, 2.6vw, 32px); line-height: 1.2; color: ${LANDING.icy}; }
+.landing-suite-title { margin: 0; font-weight: 300; font-size: clamp(16px, 8cqi, 26px); line-height: 1.2; white-space: nowrap; color: ${LANDING.icy}; }
 .landing-suite-artwork { display: block; width: 108px; height: 80px; object-fit: contain; flex-shrink: 0; }
 .landing-suite-icon { width: 28px; height: 28px; flex-shrink: 0; color: ${PP.text}; }
 .landing-stat-strip--quiet { margin: 18px auto 34px; opacity: 1; transform: none; }
