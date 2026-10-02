@@ -154,6 +154,9 @@
   --pp-line-bright: rgba(var(--pp-ocean-deep-rgb), 0.55); /* hairline border (glass) */
   --pp-glow: rgba(var(--pp-icy-rgb), 0.10);          /* hover halo (soft) */
   --pp-glow-strong: rgba(var(--pp-icy-rgb), 0.16);   /* active halo */
+  /* Owner-approved turquoise accent ONLY for the two suite-switch actions. */
+  --pp-suite-switch-turquoise: #159da4;
+  --pp-suite-switch-turquoise-rgb: 21, 157, 164;
   --pp-shadow: rgba(var(--pp-black-rgb), 0.16);             /* neutral drop shadow */
 
   /* SOLID TILE LADDER (owner, 2026-07-15): every box/button fill must be
@@ -940,6 +943,57 @@ body {
 }
 .eppp-launch-btn--sidebar {
   width: 100%;
+}
+
+/* Suite switching only: solid chrome, glossy highlight, graduated turquoise halo.
+   Other eppp-launch-btn consumers (filters/exams/print) keep their existing style. */
+.suite-switch-btn {
+  border-color: var(--pp-chrome-border);
+  background: linear-gradient(180deg, var(--pp-chrome-hi) 0%, var(--pp-chrome-mid) 55%, var(--pp-chrome-lo) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.95),
+    inset 0 -1px 1px rgba(var(--pp-black-rgb), 0.12),
+    0 0 14px -4px rgba(var(--pp-suite-switch-turquoise-rgb), 0.28),
+    0 6px 14px -12px var(--pp-shadow);
+}
+.suite-switch-btn::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(175deg, rgba(var(--pp-white-rgb), 0.7) 0%, rgba(var(--pp-white-rgb), 0.12) 45%, transparent 52%);
+}
+.suite-switch-btn .eppp-launch-btn__inner {
+  position: relative;
+}
+.suite-switch-btn:hover {
+  color: var(--pp-text);
+  border-color: rgba(var(--pp-suite-switch-turquoise-rgb), 0.7);
+  background: linear-gradient(180deg, var(--pp-chrome-hover-hi) 0%, var(--pp-chrome-hover-mid) 55%, var(--pp-chrome-hover-lo) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.95),
+    inset 0 -1px 1px rgba(var(--pp-black-rgb), 0.12),
+    0 0 24px -4px rgba(var(--pp-suite-switch-turquoise-rgb), 0.48),
+    0 8px 18px -12px var(--pp-shadow);
+}
+.suite-switch-btn:active {
+  transform: translateY(0) scale(0.98);
+  color: var(--pp-text);
+  border-color: var(--pp-suite-switch-turquoise);
+  background: linear-gradient(180deg, var(--pp-chrome-press-hi) 0%, var(--pp-chrome-press-lo) 100%);
+  box-shadow:
+    inset 0 2px 4px rgba(var(--pp-black-rgb), 0.16),
+    0 0 30px -2px rgba(var(--pp-suite-switch-turquoise-rgb), 0.66);
+}
+.suite-switch-btn:focus-visible {
+  outline: 2px solid var(--pp-suite-switch-turquoise);
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .suite-switch-btn { transition: none; }
+  .suite-switch-btn:hover,
+  .suite-switch-btn:active { transform: none; }
 }
 
 /* Canonical shadcn Card treatment — OPAQUE material. The class is emitted

@@ -384,7 +384,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
         <div className="relative px-3 pb-3 md:hidden">
           <Link
             href="/dashboard"
-            className="eppp-launch-btn eppp-launch-btn--sidebar"
+            className="eppp-launch-btn suite-switch-btn eppp-launch-btn--sidebar"
             data-testid="eppp-suite-back-sidebar"
             onClick={() => setSidebarOpen(false)}
           >
@@ -425,7 +425,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
                 now that wordmarks live under the brain artwork). */}
             <Link
               href="/dashboard"
-              className="eppp-launch-btn"
+              className="eppp-launch-btn suite-switch-btn"
               data-testid="eppp-suite-back-header"
             >
               <span className="eppp-launch-btn__inner">

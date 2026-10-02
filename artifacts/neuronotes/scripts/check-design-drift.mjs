@@ -244,6 +244,13 @@ if (!/backdrop-filter:\s*none\s*!important;/.test(css)) {
     }
   }
   const GLOW = /var\(--pp-glow(?:-strong)?\)|rgba\(\s*240\s*,\s*240\s*,\s*240/;
+  // The only owner-approved resting accent halo belongs to suite switching.
+  for (const s of spans) {
+    if (/var\(--pp-suite-switch-turquoise(?:-rgb)?\)/.test(s.body) &&
+        !/^\.suite-switch-btn(?::hover|:active|:focus-visible)?$/.test(s.sel)) {
+      fail("suite-switch turquoise used outside its scoped buttons", "keep this accent exclusive to .suite-switch-btn and its hover/active/focus-visible states");
+    }
+  }
   for (const s of spans) {
     if (!GLOW.test(s.body)) continue;
     if (/@keyframes/.test(s.sel)) continue;
@@ -274,6 +281,19 @@ if (!/backdrop-filter:\s*none\s*!important;/.test(css)) {
 }
 
 // --- 4) No wallpaper images in index.css -------------------------------------
+// Owner-approved suite-switch exception: opaque chrome and increasing halo.
+for (const [selector, opacity] of [
+  [".suite-switch-btn {", "0.28"],
+  [".suite-switch-btn:hover {", "0.48"],
+  [".suite-switch-btn:active {", "0.66"],
+]) {
+  const block = ruleBlock(css, selector);
+  if (!block?.includes("background: linear-gradient(180deg, var(--pp-chrome-") ||
+      !block.includes(`rgba(var(--pp-suite-switch-turquoise-rgb), ${opacity})`)) {
+    fail(`suite-switch finish drifted in ${selector}`, "keep opaque chrome with a faint resting turquoise halo, brighter hover, and strongest press");
+  }
+}
+
 let m;
 const urls = /url\(\s*["']?([^"')]+)["']?\s*\)/g;
 while ((m = urls.exec(css))) {
@@ -590,6 +610,7 @@ for (const [fileName, cls] of PRIMITIVE_CLASSES) {
     navy: "--pp-navy", navyBright: "--pp-navy-bright", ocean: "--pp-ocean",
     oceanDeep: "--pp-ocean-deep", cyan: "--pp-cyan", bright: "--pp-bright",
     icy: "--pp-icy", text: "--pp-text", textDim: "--pp-text-dim", ink: "--pp-ink",
+    suiteSwitchTurquoise: "--pp-suite-switch-turquoise",
   };
   for (const [key, cssVar] of Object.entries(CORE)) {
     const tsHex = paletteSrc.match(new RegExp(`\\b${key}:\\s*"(#[0-9a-fA-F]{6})"`))?.[1]?.toLowerCase();

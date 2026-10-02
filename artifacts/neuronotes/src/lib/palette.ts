@@ -30,6 +30,7 @@ export const PP = {
   icy: "#14171a",
   text: "#24282c",
   textDim: "#4b5157",
+  suiteSwitchTurquoise: "#159da4",
   ink: "#ffffff",
   white: "#ffffff",
   black: "#000000",

@@ -378,7 +378,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
         <div className="relative px-3 pb-2 md:hidden">
           <Link
             href="/eppp/suite"
-            className="eppp-launch-btn eppp-launch-btn--sidebar"
+            className="eppp-launch-btn suite-switch-btn eppp-launch-btn--sidebar"
             data-testid="eppp-launch-sidebar"
             onClick={() => {
               trackEvent("navigation_clicked", { surface: "sidebar", destination: "/eppp/suite" });
@@ -425,7 +425,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
               moot now that wordmarks live under the brain artwork). */}
           <Link
             href="/eppp/suite"
-            className="eppp-launch-btn"
+            className="eppp-launch-btn suite-switch-btn"
             data-testid="eppp-launch-header"
             onClick={() => trackEvent("navigation_clicked", { surface: "header", destination: "/eppp/suite" })}
           >
