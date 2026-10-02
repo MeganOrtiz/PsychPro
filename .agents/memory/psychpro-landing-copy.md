@@ -44,6 +44,15 @@ promo-page link.
 **How to apply:** Preserve this homepage route into the promotion when adjusting
 the landing page or suggesting links for the owner to share.
 
+The EPPP free-week promotion is available to everyone, not only people given a
+code. Keep the promo code autofilled from the public homepage button.
+
+**Why:** When asked whether the free week was for everyone or only code recipients,
+the owner chose “we'll just make it everyone”.
+
+**How to apply:** Do not turn this offer into an invitation-only promotion or add
+a requirement to obtain the code elsewhere.
+
 **Removed closing promotion:** The owner wants the “Explore topics designed for
 real-world clinical application” card and its “Get Started Free” button removed.
 
