@@ -980,6 +980,19 @@ body {
 .app-sidebar-nav a {
   display: block;
 }
+/* EPPP-approved sidebar typography and states, shared by both suites. */
+.suite-sidebar-section {
+  margin: 14px 8px 6px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--pp-text-dim);
+}
+.suite-sidebar-section:first-child { margin-top: 4px; }
+.suite-nav-item-idle { color: var(--pp-text-dim); }
+.suite-nav-item-idle:hover { color: var(--pp-text); }
+.suite-nav-item-active { color: var(--pp-text-dim); }
 .nav-glass-idle {
   background: var(--pp-tile);
   border: 1px solid rgba(var(--pp-ocean-rgb), 0.35);

@@ -1,12 +1,13 @@
 // DEV-ONLY throwaway preview route (/__dashboard-preview) — verifies the
 // standalone dashboard brain + brand wordmark placement without Clerk auth.
-// Renders the real EpppDashboardView with mock props, and a main-dashboard
-// mimic (same .dashboard-brand classes). Safe to delete.
+// Renders the real EpppDashboardView with mock props, and the real main
+// AppLayout with placeholder dashboard content. Safe to delete.
 import { EpppDashboardView } from "@/pages/eppp-dashboard";
 import type { DomainStat, RecTopic } from "@/pages/eppp-dashboard";
 import dashboardBrain from "@/assets/psychpro-chrome-brain.webp";
 import { DashboardFeedbackOffer } from "@/components/feedback/dashboard-feedback-offer";
 import FeedbackPage from "@/pages/feedback";
+import AppLayout from "@/components/layout/app-layout";
 
 const domains: DomainStat[] = [
   { category: "Biological Bases", total: 8, passed: 6, pct: 75, mastered: false, unlocked: true },
@@ -27,13 +28,9 @@ export default function DevDashboardPreview() {
   if (mode === "feedback") return <FeedbackPage />;
 
   if (mode === "main") {
-    // Mimic app-layout: 288px sidebar column + 64px top bar, scrollable main.
+    // Render the real sidebar/layout, without changing production auth gates.
     return (
-      <div className="study-page-bg flex min-h-screen">
-        <aside className="hidden md:block w-64 m-4 rounded-2xl" style={{ background: "var(--pp-surface)", border: "1px solid var(--pp-line)" }} />
-        <div className="flex-1 flex flex-col min-h-screen max-h-screen">
-          <div style={{ height: 64 }} />
-          <div className="flex-1 overflow-y-auto">
+      <AppLayout>
         <div className="min-h-full dashboard-page">
           <div className="dashboard-hero">
             <div className="dashboard-brand">
@@ -53,9 +50,7 @@ export default function DevDashboardPreview() {
             </div>
           </div>
         </div>
-          </div>
-        </div>
-      </div>
+      </AppLayout>
     );
   }
 

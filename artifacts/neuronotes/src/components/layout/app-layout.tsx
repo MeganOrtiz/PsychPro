@@ -10,18 +10,8 @@ import { cn } from "@/lib/utils";
 import { STUDY_PALETTE } from "@/lib/study-theme";
 import { PP } from "@/lib/palette";
 import { trackEvent } from "@/lib/analytics";
+import { navItemClass } from "./sidebar-style";
 type NavItem = { href: string; label: string; icon: React.ComponentType<{ className?: string }> };
-
-// Sidebar nav tile — plain neutral row (black-foundation reset, 2026-07-09).
-// Surface color and borders live in the .nav-glass-* rules in index.css.
-const NAV_ITEM_BASE =
-  "nav-glass group relative flex items-center gap-2.5 px-3 py-2 rounded-md cursor-pointer transition-all duration-200 ease-in-out border";
-const NAV_ITEM_IDLE = "nav-glass-idle text-pp-text-dim hover:text-[var(--nav-hover)]";
-const NAV_ITEM_ACTIVE = "nav-glass-active text-[var(--nav-hover)]";
-
-function navItemClass(isActive: boolean) {
-  return cn(NAV_ITEM_BASE, isActive ? NAV_ITEM_ACTIVE : NAV_ITEM_IDLE);
-}
 
 // Sidebar IA (updated 2026-05-25 per new landing/dashboard spec):
 // STUDY / TOOLKIT / COMMUNITY / ADMIN.
@@ -181,7 +171,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
           background: "var(--pp-surface)",
           border: "1px solid var(--pp-line)",
           ["--nav-hover" as any]: PP.text,
-          ["--nav-label" as any]: PP.neutral500,
         }}
         data-testid="sidebar"
       >
@@ -205,8 +194,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
         </div>
 
         <nav className="app-sidebar-nav relative flex-1 p-3 space-y-1 overflow-y-auto">
-          <div className="px-3 pt-1 pb-1">
-            <p className="text-[11px] font-semibold text-[var(--nav-label)]/60 uppercase tracking-[1.2px]">Learn</p>
+          <div>
+            <p className="suite-sidebar-section">Learn</p>
           </div>
           {workshopNav.map((item) => {
             const isActive = location === item.href || location.startsWith(item.href + "/");
@@ -229,8 +218,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
             );
           })}
 
-          <div className="px-3 pt-4 pb-1">
-            <p className="text-[11px] font-semibold text-[var(--nav-label)]/60 uppercase tracking-[1.2px]">Expand</p>
+          <div>
+            <p className="suite-sidebar-section">Expand</p>
           </div>
           {labNav.map((item) => {
             const isActive = location === item.href || location.startsWith(item.href + "/");
@@ -260,8 +249,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
             onNavigate={() => setSidebarOpen(false)}
           />
 
-          <div className="px-3 pt-4 pb-1">
-            <p className="text-[11px] font-semibold text-[var(--nav-label)]/60 uppercase tracking-[1.2px]">Connect</p>
+          <div>
+            <p className="suite-sidebar-section">Connect</p>
           </div>
           {studioNav.map((item) => {
             const isActive = location === item.href || location.startsWith(item.href + "/");
@@ -306,8 +295,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
           {!isScholar && (
             <>
-              <div className="px-3 pt-4 pb-1">
-                <p className="text-[11px] font-semibold text-[var(--nav-label)]/60 uppercase tracking-[1.2px]">Account</p>
+              <div>
+                <p className="suite-sidebar-section">Account</p>
               </div>
               {accountNav.map((item) => {
                 const isActive = location === item.href || location.startsWith(item.href + "/");
@@ -334,8 +323,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
           {isAdmin && (
             <>
-              <div className="px-3 pt-4 pb-1">
-                <p className="text-[11px] font-semibold text-[var(--nav-label)]/60 uppercase tracking-[1.2px]">Admin</p>
+              <div>
+                <p className="suite-sidebar-section">Admin</p>
               </div>
               <Link
                 href="/admin/feedback"
@@ -516,8 +505,8 @@ function ToolsStudio({
 
   return (
     <div className="relative mt-1">
-      <div className="px-3 pt-4 pb-1">
-        <p className="text-[11px] font-semibold tracking-[1.2px] uppercase text-[var(--nav-label)]/60">
+      <div>
+        <p className="suite-sidebar-section">
           Tools Studio
         </p>
       </div>

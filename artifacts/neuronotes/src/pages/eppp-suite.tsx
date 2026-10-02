@@ -53,6 +53,7 @@ import { useEntitlements } from "@/lib/use-entitlements";
 import UpgradePrompt from "@/components/upgrade-prompt";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { cn } from "@/lib/utils";
+import { navItemClass } from "@/components/layout/sidebar-style";
 import { PP, alpha } from "@/lib/palette";
 import {
   groupEpppClinicalCases,
@@ -169,15 +170,7 @@ const LEGACY_TAB_ALIASES: Record<string, TabSlug> = {
   "reflections-notes": "reflections",
 };
 
-// Reuse the main-app sidebar pill recipe (classes defined in index.css).
-const NAV_ITEM_BASE =
-  "nav-glass group relative flex items-center gap-2.5 px-3 py-2 rounded-[8px] cursor-pointer transition-all duration-200 ease-in-out border ";
-const NAV_ITEM_IDLE = "nav-glass-idle eps-nav-item-idle";
-const NAV_ITEM_ACTIVE = "nav-glass-active eps-nav-item-active";
-
-function navItemClass(isActive: boolean) {
-  return cn(NAV_ITEM_BASE, isActive ? NAV_ITEM_ACTIVE : NAV_ITEM_IDLE);
-}
+// Shared treatment keeps the PsychPro and EPPP sidebars visually congruent.
 
 function slugify(category: string): string {
   return category.toLowerCase().replace(/[^a-z0-9]+/g, "-");
@@ -368,7 +361,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
             const showSection = t.section && t.section !== TABS[index - 1]?.section;
             return (
               <div key={t.slug}>
-                {showSection && <p className="eps-nav-section">{t.section}</p>}
+                {showSection && <p className="suite-sidebar-section">{t.section}</p>}
                 <Link
                   href={`/eppp/suite/${t.slug}`}
                   onClick={() => setSidebarOpen(false)}
@@ -2112,18 +2105,6 @@ function MissedQuestionsPanel({ onNavigate }: { onNavigate: (to: string) => void
 }
 
 const styles = `
-.eps-nav-section {
-  margin: 14px 8px 6px;
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: ${alpha(PP.textDim, 0.85)};
-}
-.eps-nav-section:first-child { margin-top: 4px; }
-.eps-nav-item-idle { color: var(--pp-text-dim); }
-.eps-nav-item-idle:hover { color: ${C.cloud}; }
-.eps-nav-item-active { color: ${C.mist}; }
 .eps-avatar-ring { --tw-ring-color: ${alpha(PP.textDim, 0.4)}; }
 
 /* ---- desktop crumb bar ---- */
