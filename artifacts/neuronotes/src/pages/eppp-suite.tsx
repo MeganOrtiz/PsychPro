@@ -390,7 +390,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
           >
             <span className="eppp-launch-btn__inner">
               <ArrowLeft aria-hidden />
-              <span>Back to PsychPro</span>
+              <span>PsychPro Suite</span>
             </span>
           </Link>
         </div>
@@ -430,7 +430,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
             >
               <span className="eppp-launch-btn__inner">
                 <ArrowLeft aria-hidden />
-                <span>Back to PsychPro</span>
+                <span>PsychPro Suite</span>
               </span>
             </Link>
             {!isMobile && <NotificationsBell />}

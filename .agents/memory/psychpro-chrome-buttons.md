@@ -9,8 +9,14 @@ The rule: primary/gloss buttons use the `--pp-chrome-*` token ramp in `:root` of
 **Why:** consistency mandate — one button system across main site + EPPP; dark ink on chrome, never white.
 **How to apply:** any new primary button references `var(--pp-chrome-*)` (never re-declared hexes; token lock forbids raw literals in TSX). Guardrail locks in check-design-drift.mjs cover button classes — update locks in the same commit for intentional changes.
 
-The “EPPP Mastery Suite” and “Back to PsychPro” navigation buttons are an explicit exception to the no-resting-glow rule: opaque glossy chrome with a faint teal/turquoise halo, brighter on hover and strongest while pressed. This applies to their desktop and mobile versions, not other buttons.
+The “EPPP Mastery Suite” and “PsychPro Suite” navigation buttons are an explicit exception to the no-resting-glow rule: opaque glossy chrome with a faint teal/turquoise halo, brighter on hover and strongest while pressed. This applies to their desktop and mobile versions, not other buttons.
 
 **Why:** On 2026-10-02 the owner requested both suite-switch buttons be “glossy and opaque and have a faint teal/turqoise glow” that gets brighter on hover and click.
 
 **How to apply:** Keep the accent scoped to suite switching; preserve dark text, existing destinations and unrelated filter/exam/print button treatments. Do not expand this exception site-wide.
+
+Suite-switch labels must be just “PsychPro Suite” and “EPPP Mastery Suite,” without “Back to.”
+
+**Why:** The owner explicitly requested those two names only.
+
+**How to apply:** Use these exact labels for desktop and mobile suite-switch actions; keep their existing navigation destinations.
