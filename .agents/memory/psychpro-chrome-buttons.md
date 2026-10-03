@@ -23,9 +23,12 @@ Suite-switch labels must be just “PsychPro Suite” and “EPPP Mastery Suite,
 
 The public EPPP free-week button in the landing suite card is a separate
 exception: use a brilliant turquoise-teal fill rather than silver chrome.
+The owner refined this to match the hero artwork's cyan-teal and deep blue-teal
+color scheme, rather than the earlier pale aqua ramp.
 
 **Why:** The owner asked to “make this stand out like a brilliant turquoise teal
-color and make people want to click on it.”
+color and make people want to click on it,” then asked to make it the same color
+scheme as the hero design.
 
 **How to apply:** Keep this treatment scoped to that promo button, with readable
 dark lettering and a brighter hover treatment. Other primary buttons remain
