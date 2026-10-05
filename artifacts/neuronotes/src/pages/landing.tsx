@@ -811,6 +811,47 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* ============== DISCLAIMERS ============== */}
+        <section
+          id="disclaimers"
+          className="landing-section landing-disclaimers"
+          aria-labelledby="landing-disclaimers-title"
+          data-testid="landing-disclaimers"
+        >
+          <h2 id="landing-disclaimers-title" className="landing-disclaimers-title">
+            Important Disclaimers
+          </h2>
+          <div className="landing-disclaimer-block">
+            <h3>Educational Disclaimer</h3>
+            <p>
+              PsychPro provides educational and study resources for psychology
+              students and trainees. PsychPro does not provide psychological
+              services, clinical supervision, assessment, diagnosis, treatment,
+              licensure, or professional certification.
+            </p>
+          </div>
+          <div className="landing-disclaimer-block">
+            <h3>EPPP Disclaimer</h3>
+            <p>
+              PsychPro is not affiliated with, endorsed by, or sponsored by the
+              Association of State and Provincial Psychology Boards (ASPPB).
+              EPPP® is a registered trademark of ASPPB. PsychPro materials are
+              independently developed using established psychological literature
+              and publicly available examination content specifications and do
+              not contain or reproduce confidential EPPP examination items.
+            </p>
+          </div>
+          <div className="landing-disclaimer-block">
+            <h3>Examination and Licensure</h3>
+            <p>
+              No study resource can guarantee examination performance or
+              licensure eligibility. Candidates should consult ASPPB and their
+              applicable licensing board for current examination and licensure
+              requirements.
+            </p>
+          </div>
+        </section>
+
         {/* ============== FOOTER ============== */}
         <footer className="landing-footer">
           <div className="landing-footer-inner">
@@ -1858,6 +1899,35 @@ const styles = `
 }
 
 /* ============== FOOTER ============== */
+.landing-disclaimers {
+  max-width: 980px;
+  text-align: left;
+  background: ${PP.white};
+  color: ${PP.text};
+  scroll-margin-top: 84px;
+}
+.landing-disclaimers-title {
+  margin: 0 0 28px;
+  font-family: var(--app-font-sans);
+  font-size: clamp(24px, 3vw, 28px);
+  font-weight: 400;
+  line-height: 1.3;
+}
+.landing-disclaimer-block + .landing-disclaimer-block {
+  margin-top: 24px;
+}
+.landing-disclaimer-block h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.landing-disclaimer-block p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
 .landing-footer {
   border-top: 1px solid ${C.hairline};
   margin-top: clamp(28px, 4vh, 48px);
