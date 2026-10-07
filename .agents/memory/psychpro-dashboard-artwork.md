@@ -17,3 +17,9 @@ The dashboards use a clean pure-white ground with the page title centered above 
 **Why:** the owner wanted the backgrounds removed while keeping each brain, then explicitly moved both dashboard titles above their brains to eliminate excess top-half whitespace.
 
 **How to apply:** retain the viewport-centering offsets because dashboard content still sits beside the desktop sidebar. Preserve the crown's proportions inside the same frame rather than stretching it. Verify both dashboard variants with the dev preview route when changing artwork/wordmark spacing.
+
+The owner likes the current artwork placement behind both dashboard symbols but rejects the oval fading. Keep the center clear and let the outer artwork edges dissolve naturally into white.
+
+**Why:** the owner explicitly distinguished placement they liked from fading they disliked, and approved reusing the existing design rather than supplying new artwork.
+
+**How to apply:** do not relocate or resize the brain/crown when refining edge diffusion, and do not restore a center-dimming oval vignette.

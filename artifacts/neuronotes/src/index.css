@@ -842,7 +842,15 @@ body {
   max-width: none;
   height: 100%;
   object-fit: cover;
-  mask-image: radial-gradient(ellipse 70% 80% at 50% 50%, rgba(var(--pp-black-rgb), 1) 40%, transparent 72%);
+  /* Preserve the clear center; dissolve only the outer edges with a
+     softly irregular cloud mask rather than fading the entire oval. */
+  -webkit-mask-image: var(--dashboard-artwork-mask);
+  mask-image: var(--dashboard-artwork-mask);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  mask-mode: alpha;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);

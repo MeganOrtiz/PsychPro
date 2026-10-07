@@ -1038,14 +1038,24 @@ const styles = `
    pulsating motion: a slow, organic scale swell with a soft shadow that
    deepens on the inhale. No container, transparent PNG as provided. */
 .psychpro-hero__art {
-  width: clamp(240px, 26vw, 470px);
+  --hero-brain-width: clamp(240px, 26vw, 470px);
+  width: var(--hero-brain-width);
   margin: clamp(12px, 2vh, 20px) auto clamp(6px, 1.2vh, 16px);
 }
 .psychpro-hero__glass {
   position: absolute;
-  width: 318.5%;
+  /* Reach the viewport edges independently of the brain's capped width.
+     Keep the original artwork band height so wider screens do not push the
+     splash into the wordmark, introductory copy, or suite cards. */
+  width: max(100vw, calc(var(--hero-brain-width) * 3.185));
   max-width: none;
-  height: auto;
+  height: calc(var(--hero-brain-width) * 1.793);
+  object-fit: cover;
+  object-position: center;
+  /* End the artwork behind the brain, before the introductory text.
+     Only the lower edge dissolves; the sides remain full bleed. */
+  -webkit-mask-image: linear-gradient(to bottom, rgba(var(--pp-black-rgb), 1) 56%, transparent 69%);
+  mask-image: linear-gradient(to bottom, rgba(var(--pp-black-rgb), 1) 56%, transparent 69%);
   left: 50%;
   transform: translateX(-50%);
   top: -55.6%;
@@ -1076,7 +1086,7 @@ const styles = `
   .psychpro-hero__brain { animation: none; }
 }
 @media (max-width: 768px) {
-  .psychpro-hero__art { width: clamp(200px, 58vw, 300px); }
+  .psychpro-hero__art { --hero-brain-width: clamp(200px, 58vw, 300px); }
 }
 .landing-headline,
 .landing-blurb {
