@@ -17,7 +17,7 @@ description: Landing hero uses the owner's symmetrical teal ink splash behind th
 
 The owner also wants the two small teal splash tips above the landing brain hidden behind it, using a slight downward positioning adjustment rather than showing them in the gap under the tagline.
 
-**Why:** the owner supplied a cropped screenshot of those tips and requested “down just a touch more bc i dont want this showing on the landing page.”
+**Why:** the owner supplied a cropped screenshot of those tips and requested “down just a touch more bc i dont want this showing on the landing page.” They confirmed the resulting placement with “perfect”; preserve this approved composition.
 
 **How to apply:** keep those details behind the brain while preserving the unfaded, edge-to-edge artwork and readable copy below.
 
