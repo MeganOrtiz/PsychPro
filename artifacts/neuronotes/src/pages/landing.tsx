@@ -1052,13 +1052,11 @@ const styles = `
   height: calc(var(--hero-brain-width) * 1.793);
   object-fit: cover;
   object-position: center;
-  /* End the artwork behind the brain, before the introductory text.
-     Only the lower edge dissolves; the sides remain full bleed. */
-  -webkit-mask-image: linear-gradient(to bottom, rgba(var(--pp-black-rgb), 1) 56%, transparent 69%);
-  mask-image: linear-gradient(to bottom, rgba(var(--pp-black-rgb), 1) 56%, transparent 69%);
+  /* Keep the artwork unfaded, with its main detail behind the brain rather
+     than the wordmark. The image's white lower margin keeps the copy clear. */
   left: 50%;
   transform: translateX(-50%);
-  top: -55.6%;
+  bottom: calc(var(--hero-brain-width) * -0.3);
   mix-blend-mode: multiply;
   pointer-events: none;
   user-select: none;

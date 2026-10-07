@@ -9,6 +9,12 @@ description: Landing hero uses the owner's symmetrical teal ink splash behind th
 
 **How to apply:** keep the artwork stationary while the existing brain breathes; preserve all copy and controls. The earlier transparent-cutout preference is superseded for this supplied splash.
 
+**Landing edge treatment:** the owner wants the design to reach both page edges without a bottom fade. Keep the design behind the brain, not raised into the wordmark/tagline. Only a modest upward adjustment is acceptable for introductory-text readability; dashboard diffusion is a separate preference.
+
+**Why:** the owner rejected the added lower-edge fade and permitted moving the design upward, but then rejected the resulting placement as “too high.”
+
+**How to apply:** preserve the artwork's lower edge rather than washing it out, keep the text readable without rewriting it, and do not propagate this landing-only change to dashboard headers.
+
 **2026-09-13 owner refinement:** the landing wordmark and “learn. expand. connect.” tagline belong above the brain, per the supplied reference. Keep the headline below the brain. This supersedes historical under-brain wordmark instructions.
 
 **Why:** the owner explicitly requested this hero-only rearrangement and supplied replacement paragraph copy, while forbidding unrelated landing-page changes.
