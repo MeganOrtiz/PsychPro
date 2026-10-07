@@ -8,7 +8,7 @@ The dashboards use a clean pure-white ground with the page title centered above 
 
 **Why:** the owner explicitly extended the new landing artwork to the main and EPPP dashboards.
 
-**How to apply:** keep dashboard artwork compact and away from titles, feedback, and data cards. An unconstrained JPEG layer obscures neighboring content even where the source appears white; soften the local backdrop edges rather than expanding the dashboard header.
+**How to apply:** keep dashboard artwork compact and away from titles, feedback, and data cards. Contain the local backdrop rather than expanding the dashboard header; do not fade its edges.
 
 **Wordmark placement:** the old top-bar hero wordmark banners remain retired. In page content, PSYCHPRO and EPPP MASTERY SUITE must sit above their respective artwork, with a compact block that lets the dashboard cards begin high on the page.
 
@@ -18,8 +18,8 @@ The dashboards use a clean pure-white ground with the page title centered above 
 
 **How to apply:** retain the viewport-centering offsets because dashboard content still sits beside the desktop sidebar. Preserve the crown's proportions inside the same frame rather than stretching it. Verify both dashboard variants with the dev preview route when changing artwork/wordmark spacing.
 
-The owner likes the current artwork placement behind both dashboard symbols but rejects the oval fading. Keep the center clear and let the outer artwork edges dissolve naturally into white.
+The owner likes the artwork placement behind both dashboard symbols but wants no fade at all on either dashboard. This supersedes the earlier interpretation that an irregular edge-fade mask would satisfy their request for diffusion.
 
-**Why:** the owner explicitly distinguished placement they liked from fading they disliked, and approved reusing the existing design rather than supplying new artwork.
+**Why:** the owner explicitly said “i dont want the fade at all on the dashboards.” They distinguish actual diffusion in the design from transparency fading; do not describe a fade mask as diffusion.
 
-**How to apply:** do not relocate or resize the brain/crown when refining edge diffusion, and do not restore a center-dimming oval vignette.
+**How to apply:** preserve brain/crown placement and use the supplied artwork without edge masks, opacity washes, or vignettes. Any future natural diffusion must come from the artwork itself, not a transparency fade.
