@@ -15,6 +15,12 @@ description: Landing hero uses the owner's symmetrical teal ink splash behind th
 
 **How to apply:** preserve the artwork's lower edge rather than washing it out, keep the text readable without rewriting it, and do not propagate this landing-only change to dashboard headers.
 
+The owner also wants the two small teal splash tips above the landing brain hidden behind it, using a slight downward positioning adjustment rather than showing them in the gap under the tagline.
+
+**Why:** the owner supplied a cropped screenshot of those tips and requested “down just a touch more bc i dont want this showing on the landing page.”
+
+**How to apply:** keep those details behind the brain while preserving the unfaded, edge-to-edge artwork and readable copy below.
+
 **2026-09-13 owner refinement:** the landing wordmark and “learn. expand. connect.” tagline belong above the brain, per the supplied reference. Keep the headline below the brain. This supersedes historical under-brain wordmark instructions.
 
 **Why:** the owner explicitly requested this hero-only rearrangement and supplied replacement paragraph copy, while forbidding unrelated landing-page changes.

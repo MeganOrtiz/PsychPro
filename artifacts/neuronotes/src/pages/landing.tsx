@@ -1013,6 +1013,7 @@ const styles = `
 /* ============== HERO ============== */
 /* Clean, full-width white hero with the standalone chrome brain. */
 .landing-hero {
+  --hero-brain-width: clamp(240px, 26vw, 470px);
   position: relative;
   width: 100%;
   max-width: none;
@@ -1038,7 +1039,6 @@ const styles = `
    pulsating motion: a slow, organic scale swell with a soft shadow that
    deepens on the inhale. No container, transparent PNG as provided. */
 .psychpro-hero__art {
-  --hero-brain-width: clamp(240px, 26vw, 470px);
   width: var(--hero-brain-width);
   margin: clamp(12px, 2vh, 20px) auto clamp(6px, 1.2vh, 16px);
 }
@@ -1056,7 +1056,7 @@ const styles = `
      than the wordmark. The image's white lower margin keeps the copy clear. */
   left: 50%;
   transform: translateX(-50%);
-  bottom: calc(var(--hero-brain-width) * -0.3);
+  bottom: calc(var(--hero-brain-width) * -0.52 - max(0px, 100vw - var(--hero-brain-width) * 3.185) * 0.13);
   mix-blend-mode: multiply;
   pointer-events: none;
   user-select: none;
@@ -1084,7 +1084,7 @@ const styles = `
   .psychpro-hero__brain { animation: none; }
 }
 @media (max-width: 768px) {
-  .psychpro-hero__art { --hero-brain-width: clamp(200px, 58vw, 300px); }
+  .landing-hero { --hero-brain-width: clamp(200px, 58vw, 300px); }
 }
 .landing-headline,
 .landing-blurb {
@@ -1163,6 +1163,10 @@ const styles = `
   line-height: 1.7;
   font-weight: 400;
   color: ${alpha(PP.text, 0.88)};
+}
+.landing-hero > .landing-blurb {
+  /* Leave room for the unfaded artwork, including its wider-screen crop. */
+  margin-top: max(clamp(10px, 1.4vh, 18px), calc(var(--hero-brain-width) * 0.11 + max(0px, 100vw - var(--hero-brain-width) * 3.185) * 0.25));
 }
 .landing-cta-row {
   display: flex;
