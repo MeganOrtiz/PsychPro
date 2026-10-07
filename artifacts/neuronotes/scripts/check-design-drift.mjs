@@ -244,11 +244,21 @@ if (!/backdrop-filter:\s*none\s*!important;/.test(css)) {
     }
   }
   const GLOW = /var\(--pp-glow(?:-strong)?\)|rgba\(\s*240\s*,\s*240\s*,\s*240/;
-  // The only owner-approved resting accent halo belongs to suite switching.
+  // Owner-approved rich turquoise glass is scoped to four navigation actions.
+  const turquoiseScopes = [
+    ".landing-root .landing-eppp-promo",
+    ".landing-root .landing-textbook-link",
+    ".eppp-launch-btn.suite-switch-btn",
+  ];
+  const isTurquoiseScope = (selector) => selector.split(",").every((part) =>
+    turquoiseScopes.some((scope) => new RegExp(
+      `^${scope.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?::hover|:active|:focus-visible)?$`
+    ).test(part.trim()))
+  );
   for (const s of spans) {
     if (/var\(--pp-promo-teal-[a-z-]+\)/.test(s.body) &&
-        !/^\.landing-root \.landing-eppp-promo(?::hover|:active|:focus-visible)?$/.test(s.sel)) {
-      fail("promo teal used outside its scoped CTA", "keep this vivid accent exclusive to the landing EPPP promo button");
+        !isTurquoiseScope(s.sel)) {
+      fail("turquoise glass used outside its scoped actions", "keep it exclusive to the landing promo, textbook, and two suite-switch buttons");
     }
     if (/var\(--pp-suite-switch-turquoise(?:-rgb)?\)/.test(s.body) &&
         !/^\.suite-switch-btn(?::hover|:active|:focus-visible)?$/.test(s.sel)) {
@@ -285,16 +295,25 @@ if (!/backdrop-filter:\s*none\s*!important;/.test(css)) {
 }
 
 // --- 4) No wallpaper images in index.css -------------------------------------
-// Owner-approved suite-switch exception: opaque chrome and increasing halo.
-for (const [selector, opacity] of [
-  [".suite-switch-btn {", "0.28"],
-  [".suite-switch-btn:hover {", "0.48"],
-  [".suite-switch-btn:active {", "0.66"],
-]) {
+// Shared turquoise glass finish: saturated fill, readable ink, stationary hover.
+const turquoiseActions = [
+  ".landing-root .landing-eppp-promo",
+  ".landing-root .landing-textbook-link",
+  ".eppp-launch-btn.suite-switch-btn",
+];
+const finish = ruleBlock(css, `${turquoiseActions.join(",\n")} {`);
+if (!finish?.includes("var(--pp-promo-teal-hi)") ||
+    !finish.includes("var(--pp-promo-teal-mid)") ||
+    !finish.includes("color: var(--pp-text)") ||
+    !finish.includes("transform: none;")) {
+  fail("turquoise glass finish drifted", "preserve the rich teal gradient, dark ink, and stationary hit targets");
+}
+for (const [state, opacity] of [["hover", "0.48"], ["active", "0.66"]]) {
+  const selector = `${turquoiseActions.map((action) => `${action}:${state}`).join(",\n")} {`;
   const block = ruleBlock(css, selector);
-  if (!block?.includes("background: linear-gradient(180deg, var(--pp-chrome-") ||
-      !block.includes(`rgba(var(--pp-suite-switch-turquoise-rgb), ${opacity})`)) {
-    fail(`suite-switch finish drifted in ${selector}`, "keep opaque chrome with a faint resting turquoise halo, brighter hover, and strongest press");
+  if (!block?.includes(`rgba(var(--pp-promo-teal-mid-rgb), ${opacity})`) ||
+      !block.includes("transform: none;")) {
+    fail(`turquoise glass interaction drifted in ${state}`, "keep the graduated turquoise glow without hover/press movement");
   }
 }
 

@@ -9,7 +9,7 @@ The rule: primary/gloss buttons use the `--pp-chrome-*` token ramp in `:root` of
 **Why:** consistency mandate — one button system across main site + EPPP; dark ink on chrome, never white.
 **How to apply:** any new primary button references `var(--pp-chrome-*)` (never re-declared hexes; token lock forbids raw literals in TSX). Guardrail locks in check-design-drift.mjs cover button classes — update locks in the same commit for intentional changes.
 
-The “EPPP Mastery Suite” and “PsychPro Suite” navigation buttons are an explicit exception to the no-resting-glow rule: opaque glossy chrome with a faint teal/turquoise halo, brighter on hover and strongest while pressed. This applies to their desktop and mobile versions, not other buttons.
+The “EPPP Mastery Suite” and “PsychPro Suite” navigation buttons are a scoped visual exception. Their former opaque silver-chrome treatment has been superseded by the richer turquoise glass finish described below. This applies to desktop and mobile versions, not unrelated buttons.
 
 **Why:** On 2026-10-02 the owner requested both suite-switch buttons be “glossy and opaque and have a faint teal/turqoise glow” that gets brighter on hover and click.
 
@@ -21,16 +21,19 @@ Suite-switch labels must be just “PsychPro Suite” and “EPPP Mastery Suite,
 
 **How to apply:** Use these exact labels for desktop and mobile suite-switch actions; keep their existing navigation destinations.
 
-The public EPPP free-week button in the landing suite card is a separate
-exception: use a luminous glassmorphic finish with readable dark lettering
-and a turquoise border glow on hover. This supersedes the earlier vivid
-solid turquoise/deep-teal fill.
+The landing EPPP free-week button, landing Amazon textbook button, and both
+dashboard suite-switch buttons share a rounded glass finish with a rich
+turquoise hue inspired by the hero artwork, dark readable lettering, and a
+turquoise border glow on hover. Preserve the rounded bevel of the owner's
+silver-button references rather than returning to the heavy dark-bottom stripe
+or the washed-out pale glass fill.
 
-**Why:** The owner reported that the button “tweaks out” on hover, disliked the
-previous style, and explicitly requested “more glassmorphic with a turquoise
-glow around the border when hovering.”
+**Why:** The owner reported that the free-trial button “tweaks out” on hover,
+requested a more glassmorphic finish with turquoise border glow, then supplied
+the hero artwork as a richer hue reference and the textbook/suite buttons as
+shape references. They explicitly expanded the scope to those four actions.
 
-**How to apply:** Keep this treatment scoped to that promo button. Keep its hit
-target stationary while the border/glow changes; do not reintroduce hover lift
-or label movement. Other primary buttons remain silver chrome; this does not
-widen the suite-switch halo exception.
+**How to apply:** Keep this treatment scoped to these four actions. Keep their
+hit targets stationary while the border/glow changes; do not reintroduce hover
+lift or label movement. Preserve links, labels, icons, and desktop/mobile
+placements. Other primary buttons remain silver chrome.
