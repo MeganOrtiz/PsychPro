@@ -597,44 +597,54 @@
     0 6px 14px -12px var(--pp-shadow);
   transform: translateY(0);
 }
-/* This promotional CTA is intentionally distinct from silver-chrome buttons. */
+/* Scoped glass promo link: stable hit target, turquoise glow on interaction. */
 .landing-root .landing-eppp-promo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
   min-height: 48px;
   padding: 12px 16px;
   border-radius: 10px;
-  border: 1px solid var(--pp-promo-teal-border);
-  background: linear-gradient(180deg, var(--pp-promo-teal-hi) 0%, var(--pp-promo-teal-mid) 55%, var(--pp-promo-teal-mid) 70%, var(--pp-promo-teal-lo) 100%);
+  border: 1px solid rgba(var(--pp-promo-teal-mid-rgb), 0.45);
+  background:
+    linear-gradient(135deg, rgba(var(--pp-white-rgb), 0.92) 0%, rgba(var(--pp-white-rgb), 0.5) 46%, rgba(var(--pp-white-rgb), 0.76) 100%),
+    linear-gradient(180deg, rgba(var(--pp-promo-teal-mid-rgb), 0.32), rgba(var(--pp-promo-teal-mid-rgb), 0.12));
   color: var(--pp-text);
   font-size: clamp(14px, 1.25vw, 17px);
   font-weight: 700;
-  box-shadow: inset 0 1px 0 var(--pp-bevel-bright), 0 8px 20px -12px var(--pp-shadow);
-  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: none;
+  box-shadow:
+    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.95),
+    inset 0 -1px 0 rgba(var(--pp-white-rgb), 0.65),
+    0 8px 20px -14px var(--pp-shadow);
+  transition: border-color 200ms ease, box-shadow 200ms ease;
 }
 .landing-root .landing-eppp-promo:hover {
-  background: linear-gradient(180deg, var(--pp-promo-teal-hi) 0%, var(--pp-promo-teal-mid) 70%, var(--pp-promo-teal-lo) 100%);
-  border-color: var(--pp-promo-teal-border);
-  color: var(--pp-text);
-  filter: brightness(1.06);
-  transform: translateY(-2px);
-  box-shadow: inset 0 1px 0 var(--pp-bevel-bright), 0 0 24px -5px rgba(var(--pp-promo-teal-mid-rgb), 0.55), 0 10px 24px -12px var(--pp-shadow);
+  border-color: rgba(var(--pp-promo-teal-mid-rgb), 0.95);
+  box-shadow:
+    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.95),
+    inset 0 -1px 0 rgba(var(--pp-white-rgb), 0.65),
+    0 0 0 1px rgba(var(--pp-promo-teal-mid-rgb), 0.2),
+    0 0 22px 2px rgba(var(--pp-promo-teal-mid-rgb), 0.35),
+    0 8px 20px -14px var(--pp-shadow);
 }
 .landing-root .landing-eppp-promo:active {
-  background: linear-gradient(180deg, var(--pp-promo-teal-mid) 0%, var(--pp-promo-teal-mid) 70%, var(--pp-promo-teal-lo) 100%);
-  filter: none;
-  transform: translateY(0);
-  box-shadow: inset 0 2px 6px var(--pp-shadow);
+  border-color: rgba(var(--pp-promo-teal-mid-rgb), 0.95);
+  box-shadow:
+    inset 0 2px 5px rgba(var(--pp-promo-teal-mid-rgb), 0.16),
+    0 0 18px 1px rgba(var(--pp-promo-teal-mid-rgb), 0.32);
 }
 .landing-root .landing-eppp-promo:focus-visible {
-  outline: 2px solid var(--pp-promo-teal-border);
+  outline: 2px solid var(--pp-promo-teal-mid);
   outline-offset: 4px;
+  box-shadow: 0 0 22px 2px rgba(var(--pp-promo-teal-mid-rgb), 0.35);
 }
-.landing-root .landing-eppp-promo svg { transition: transform 180ms ease; }
-.landing-root .landing-eppp-promo:hover svg { transform: translateX(3px); }
+.landing-root .landing-eppp-promo svg { flex-shrink: 0; }
 @media (prefers-reduced-motion: reduce) {
-  .landing-root .landing-eppp-promo,
-  .landing-root .landing-eppp-promo svg { transition: none; }
-  .landing-root .landing-eppp-promo:hover,
-  .landing-root .landing-eppp-promo:hover svg { transform: none; }
+  .landing-root .landing-eppp-promo { transition: none; }
 }
 
 .btn-glass:disabled,
