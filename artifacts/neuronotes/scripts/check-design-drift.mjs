@@ -302,7 +302,8 @@ const turquoiseActions = [
   ".eppp-launch-btn.suite-switch-btn",
 ];
 const finish = ruleBlock(css, `${turquoiseActions.join(",\n")} {`);
-if (!finish?.includes("rgba(var(--pp-promo-teal-mid-rgb), 0.06)") ||
+if (!finish?.includes("rgba(var(--pp-promo-teal-mid-rgb), 0.22)") ||
+    !finish.includes("var(--pp-promo-teal-lo)") ||
     !finish.includes("var(--pp-promo-teal-mid-rgb)") ||
     !finish.includes("color: var(--pp-text)") ||
     !finish.includes("transform: none;") ||
@@ -317,7 +318,7 @@ for (const pseudo of ["before", "after"]) {
     fail(`aqua glass ${pseudo} layer drifted`, "keep decorative reflections behind text and out of the button's hit target");
   }
 }
-for (const [state, opacity] of [["hover", "0.48"], ["active", "0.66"]]) {
+for (const [state, opacity] of [["hover", "0.28"], ["active", "0.38"]]) {
   const selector = `${turquoiseActions.map((action) => `${action}:${state}`).join(",\n")} {`;
   const block = ruleBlock(css, selector);
   if (!block?.includes(`rgba(var(--pp-promo-teal-mid-rgb), ${opacity})`) ||
