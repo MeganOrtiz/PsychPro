@@ -40,9 +40,13 @@ The owner further clarified: “more glossy and transparent.” Use a translucen
 face rather than an opaque aqua fill, with brighter, sharper reflections.
 Keep the turquoise as rich as the top artwork, not washed-out pale glass.
 Hover and click should have only a slight glow, with click a little stronger.
+The latest supplied reference supersedes the dark faceted rim: use a smooth
+aqua gradient, thin luminous edge, and broad curved glass reflections.
 
 **Why:** The owner requested “the same richness at the design at the top,
 glassy and glassmorphic and with a slight glow when hovering and clicking.”
+They then rejected that rendition and supplied a smoother aqua-glass reference,
+saying “ok no try something like this.”
 
 **How to apply:** Keep this treatment scoped to these four actions. Keep their
 hit targets stationary while the border/glow changes; do not reintroduce hover

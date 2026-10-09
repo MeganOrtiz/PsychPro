@@ -993,32 +993,30 @@ body {
   width: 100%;
 }
 
-/* Aqua glass reference: refractive rim, clear center, and fixed edge glints.
+/* Aqua glass reference: smooth luminous rim, curved reflections, clear aqua face.
    Scoped to four actions; typography, dimensions, and hit targets stay intact. */
 .landing-root .landing-eppp-promo,
 .landing-root .landing-textbook-link,
 .eppp-launch-btn.suite-switch-btn {
   --pp-cta-glass-face:
-    radial-gradient(ellipse 32% 120% at 42% 0%, rgba(var(--pp-white-rgb), 0.78), transparent 78%),
-    radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(var(--pp-promo-teal-mid-rgb), 0.42) 100%),
-    radial-gradient(ellipse 28% 100% at 0% 68%, color-mix(in srgb, var(--pp-promo-teal-lo) 28%, transparent), transparent 100%),
-    radial-gradient(ellipse 28% 100% at 100% 68%, color-mix(in srgb, var(--pp-promo-teal-lo) 28%, transparent), transparent 100%),
-    linear-gradient(180deg,
-      rgba(var(--pp-promo-teal-mid-rgb), 0.42) 0%,
-      rgba(var(--pp-promo-teal-mid-rgb), 0.18) 28%,
-      rgba(var(--pp-promo-teal-mid-rgb), 0.22) 55%,
-      rgba(var(--pp-promo-teal-mid-rgb), 0.5) 100%);
+    radial-gradient(ellipse 48% 130% at 4% 0%, rgba(var(--pp-white-rgb), 0.66), transparent 78%),
+    radial-gradient(ellipse 32% 90% at 94% 0%, rgba(var(--pp-white-rgb), 0.58), transparent 76%),
+    linear-gradient(120deg,
+      rgba(var(--pp-promo-teal-mid-rgb), 0.28) 0%,
+      rgba(var(--pp-promo-teal-mid-rgb), 0.42) 40%,
+      rgba(var(--pp-promo-teal-mid-rgb), 0.65) 75%,
+      rgba(var(--pp-promo-teal-mid-rgb), 0.82) 100%);
   position: relative;
   isolation: isolate;
-  border: 1.5px solid color-mix(in srgb, var(--pp-promo-teal-border) 72%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--pp-promo-teal-mid) 82%, transparent);
   border-radius: 16px;
   background: var(--pp-cta-glass-face);
   background-clip: padding-box;
   color: var(--pp-text);
   box-shadow:
     inset 0 2px 2px rgba(var(--pp-white-rgb), 0.95),
-    inset 0 0 14px 2px rgba(var(--pp-promo-teal-mid-rgb), 0.18),
-    inset 0 -6px 9px -4px rgba(var(--pp-promo-teal-mid-rgb), 0.48),
+    inset 0 0 10px 1px rgba(var(--pp-white-rgb), 0.36),
+    inset 0 -2px 4px rgba(var(--pp-white-rgb), 0.7),
     0 7px 14px -8px rgba(var(--pp-promo-teal-mid-rgb), 0.22),
     0 3px 7px -4px var(--pp-shadow);
   transform: none;
@@ -1031,28 +1029,22 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  padding: 3px;
+  padding: 1.5px;
   border-radius: inherit;
   pointer-events: none;
   z-index: -1;
-  /* Soften the reflective rim into the face instead of a hard inner cutout. */
-  filter: blur(0.45px);
+  /* Continuous light rim rather than the earlier dark faceted reflections. */
+  filter: blur(0.3px);
   opacity: 1;
   background:
     radial-gradient(ellipse 12% 80% at 3% 10%, rgb(var(--pp-white-rgb)) 0%, transparent 75%),
     radial-gradient(ellipse 10% 85% at 98% 90%, rgb(var(--pp-white-rgb)) 0%, transparent 75%),
-    conic-gradient(from 90deg,
-      var(--pp-promo-teal-border),
-      var(--pp-promo-teal-hi) 9%,
-      rgb(var(--pp-white-rgb)) 18%,
-      var(--pp-promo-teal-mid) 28%,
-      var(--pp-promo-teal-border) 36%,
-      rgb(var(--pp-white-rgb)) 47%,
-      var(--pp-promo-teal-mid) 58%,
-      var(--pp-promo-teal-border) 68%,
-      rgb(var(--pp-white-rgb)) 80%,
-      var(--pp-promo-teal-hi) 92%,
-      var(--pp-promo-teal-border));
+    linear-gradient(120deg,
+      rgb(var(--pp-white-rgb)),
+      var(--pp-promo-teal-hi) 35%,
+      rgba(var(--pp-white-rgb), 0.85) 65%,
+      var(--pp-promo-teal-hi) 82%,
+      rgb(var(--pp-white-rgb)));
   -webkit-mask: linear-gradient(rgb(var(--pp-white-rgb)) 0 0) content-box, linear-gradient(rgb(var(--pp-white-rgb)) 0 0);
   -webkit-mask-composite: xor;
   mask: linear-gradient(rgb(var(--pp-white-rgb)) 0 0) content-box, linear-gradient(rgb(var(--pp-white-rgb)) 0 0);
@@ -1068,16 +1060,13 @@ body {
   pointer-events: none;
   z-index: -1;
   background:
-    linear-gradient(112deg, transparent 7%, rgba(var(--pp-white-rgb), 0.5) 18%, transparent 31%, transparent 66%, rgba(var(--pp-white-rgb), 0.4) 78%, transparent 89%),
-    radial-gradient(ellipse 8% 18% at 16% 0%, rgb(var(--pp-white-rgb)) 0%, transparent 100%),
-    radial-gradient(ellipse 9% 18% at 86% 0%, rgb(var(--pp-white-rgb)) 0%, transparent 100%),
-    radial-gradient(ellipse 7% 18% at 28% 100%, rgb(var(--pp-white-rgb)) 0%, transparent 100%),
-    radial-gradient(ellipse 9% 18% at 75% 100%, rgb(var(--pp-white-rgb)) 0%, transparent 100%);
+    radial-gradient(ellipse 55% 125% at 7% -48%, rgba(var(--pp-white-rgb), 0.48) 60%, transparent 62%),
+    radial-gradient(ellipse 90% 130% at 78% -50%, transparent 77%, rgba(var(--pp-white-rgb), 0.12) 79%, transparent 95%),
+    radial-gradient(ellipse 12% 70% at 0% 12%, rgba(var(--pp-white-rgb), 0.85), transparent 100%),
+    radial-gradient(ellipse 9% 35% at 99% 95%, rgba(var(--pp-white-rgb), 0.85), transparent 100%);
   box-shadow:
-    inset 7px 0 10px -5px rgba(var(--pp-promo-teal-mid-rgb), 0.5),
-    inset -7px 0 10px -5px rgba(var(--pp-promo-teal-mid-rgb), 0.5),
-    inset 0 2px 3px rgba(var(--pp-white-rgb), 0.95),
-    inset 0 -2px 3px rgba(var(--pp-white-rgb), 0.85);
+    inset 2px 0 4px rgba(var(--pp-white-rgb), 0.65),
+    inset -2px 0 4px rgba(var(--pp-white-rgb), 0.65);
 }
 .landing-root .landing-eppp-promo:hover,
 .landing-root .landing-textbook-link:hover,
@@ -1088,9 +1077,8 @@ body {
   border-color: var(--pp-promo-teal-mid);
   box-shadow:
     inset 0 2px 2px rgba(var(--pp-white-rgb), 0.95),
-    inset 0 0 14px 2px rgba(var(--pp-promo-teal-mid-rgb), 0.22),
-    inset 0 -6px 9px -4px rgba(var(--pp-promo-teal-mid-rgb), 0.48),
-    0 0 0 1px rgba(var(--pp-promo-teal-mid-rgb), 0.2),
+    inset 0 0 10px 1px rgba(var(--pp-white-rgb), 0.36),
+    inset 0 -2px 4px rgba(var(--pp-white-rgb), 0.7),
     0 0 16px 0 rgba(var(--pp-promo-teal-mid-rgb), 0.28),
     0 7px 14px -8px rgba(var(--pp-promo-teal-mid-rgb), 0.22);
 }
@@ -1100,10 +1088,10 @@ body {
   transform: none;
   filter: none;
   color: var(--pp-text);
-  border-color: var(--pp-promo-teal-border);
+  border-color: var(--pp-promo-teal-mid);
   box-shadow:
-    inset 0 0 12px 2px rgba(var(--pp-promo-teal-mid-rgb), 0.3),
-    inset 0 2px 5px rgba(var(--pp-promo-teal-mid-rgb), 0.16),
+    inset 0 1px 3px rgba(var(--pp-white-rgb), 0.8),
+    inset 0 0 10px 1px rgba(var(--pp-promo-teal-mid-rgb), 0.2),
     0 0 20px 0 rgba(var(--pp-promo-teal-mid-rgb), 0.38);
 }
 .landing-root .landing-eppp-promo:focus-visible,

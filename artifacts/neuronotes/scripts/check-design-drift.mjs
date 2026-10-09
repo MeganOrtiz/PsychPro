@@ -302,8 +302,8 @@ const turquoiseActions = [
   ".eppp-launch-btn.suite-switch-btn",
 ];
 const finish = ruleBlock(css, `${turquoiseActions.join(",\n")} {`);
-if (!finish?.includes("rgba(var(--pp-promo-teal-mid-rgb), 0.22)") ||
-    !finish.includes("var(--pp-promo-teal-lo)") ||
+if (!finish?.includes("linear-gradient(120deg,") ||
+    !finish.includes("rgba(var(--pp-promo-teal-mid-rgb), 0.82)") ||
     !finish.includes("var(--pp-promo-teal-mid-rgb)") ||
     !finish.includes("color: var(--pp-text)") ||
     !finish.includes("transform: none;") ||
