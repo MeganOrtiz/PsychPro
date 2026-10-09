@@ -22,16 +22,17 @@ Suite-switch labels must be just “PsychPro Suite” and “EPPP Mastery Suite,
 **How to apply:** Use these exact labels for desktop and mobile suite-switch actions; keep their existing navigation destinations.
 
 The landing EPPP free-week button, landing Amazon textbook button, and both
-dashboard suite-switch buttons share a rounded glass finish with a rich
-turquoise hue inspired by the hero artwork, dark readable lettering, and a
-turquoise border glow on hover. Preserve the rounded bevel of the owner's
-silver-button references rather than returning to the heavy dark-bottom stripe
-or the washed-out pale glass fill.
+dashboard suite-switch buttons share the owner's glossy aqua-glass reference:
+a clear/light aqua center, thick reflective turquoise rim, bright edge glints,
+and a turquoise glow that strengthens on hover. The reference replaces the
+earlier simple saturated gradient. Preserve each button's existing site font,
+font size, weight, and letter spacing; the reference image's typography is not
+part of the requested change.
 
-**Why:** The owner reported that the free-trial button “tweaks out” on hover,
-requested a more glassmorphic finish with turquoise border glow, then supplied
-the hero artwork as a richer hue reference and the textbook/suite buttons as
-shape references. They explicitly expanded the scope to those four actions.
+**Why:** The owner supplied a glossy aqua-glass button image and said “just make
+them like this,” explicitly asking to “keep the font the same as how it is in
+the sight just changing the design of the buttons.” The scope remains those
+four actions. Earlier hover flickering was also explicitly rejected.
 
 **How to apply:** Keep this treatment scoped to these four actions. Keep their
 hit targets stationary while the border/glow changes; do not reintroduce hover

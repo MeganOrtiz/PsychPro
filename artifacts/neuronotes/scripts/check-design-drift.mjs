@@ -252,7 +252,7 @@ if (!/backdrop-filter:\s*none\s*!important;/.test(css)) {
   ];
   const isTurquoiseScope = (selector) => selector.split(",").every((part) =>
     turquoiseScopes.some((scope) => new RegExp(
-      `^${scope.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?::hover|:active|:focus-visible)?$`
+      `^${scope.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?::hover|:active|:focus-visible|::before|::after)?$`
     ).test(part.trim()))
   );
   for (const s of spans) {
@@ -305,8 +305,16 @@ const finish = ruleBlock(css, `${turquoiseActions.join(",\n")} {`);
 if (!finish?.includes("var(--pp-promo-teal-hi)") ||
     !finish.includes("var(--pp-promo-teal-mid)") ||
     !finish.includes("color: var(--pp-text)") ||
-    !finish.includes("transform: none;")) {
-  fail("turquoise glass finish drifted", "preserve the rich teal gradient, dark ink, and stationary hit targets");
+    !finish.includes("transform: none;") ||
+    !finish.includes("--pp-cta-glass-face:") ||
+    !finish.includes("border-radius: 16px;")) {
+  fail("turquoise glass finish drifted", "preserve the clear aqua face, rounded refractive rim, dark ink, and stationary hit targets");
+}
+for (const pseudo of ["before", "after"]) {
+  const layer = ruleBlock(css, `${turquoiseActions.map((action) => `${action}::${pseudo}`).join(",\n")} {`);
+  if (!layer?.includes("pointer-events: none;") || !layer.includes("z-index: -1;")) {
+    fail(`aqua glass ${pseudo} layer drifted`, "keep decorative reflections behind text and out of the button's hit target");
+  }
 }
 for (const [state, opacity] of [["hover", "0.48"], ["active", "0.66"]]) {
   const selector = `${turquoiseActions.map((action) => `${action}:${state}`).join(",\n")} {`;

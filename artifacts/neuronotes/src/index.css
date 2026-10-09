@@ -993,27 +993,85 @@ body {
   width: 100%;
 }
 
-/* Owner-requested richer turquoise glass, limited to these four actions.
-   Keep the chrome button's rounded bevel, but never move its hit target. */
+/* Aqua glass reference: refractive rim, clear center, and fixed edge glints.
+   Scoped to four actions; typography, dimensions, and hit targets stay intact. */
 .landing-root .landing-eppp-promo,
 .landing-root .landing-textbook-link,
 .eppp-launch-btn.suite-switch-btn {
-  border: 1.5px solid color-mix(in srgb, var(--pp-promo-teal-border) 42%, transparent);
-  border-radius: 10px;
-  background:
-    linear-gradient(135deg, rgba(var(--pp-white-rgb), 0.38) 0%, rgba(var(--pp-white-rgb), 0.05) 48%, transparent 70%),
-    linear-gradient(180deg, color-mix(in srgb, var(--pp-promo-teal-hi) 70%, rgb(var(--pp-white-rgb))) 0%, var(--pp-promo-teal-hi) 55%, var(--pp-promo-teal-mid) 100%);
+  --pp-cta-glass-face:
+    radial-gradient(ellipse at 46% 6%, rgba(var(--pp-white-rgb), 0.94), transparent 65%),
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--pp-promo-teal-hi) 18%, rgb(var(--pp-white-rgb))) 0%,
+      color-mix(in srgb, var(--pp-promo-teal-hi) 32%, rgb(var(--pp-white-rgb))) 56%,
+      color-mix(in srgb, var(--pp-promo-teal-mid) 38%, rgb(var(--pp-white-rgb))) 100%);
+  position: relative;
+  isolation: isolate;
+  border: 1.5px solid color-mix(in srgb, var(--pp-promo-teal-border) 72%, transparent);
+  border-radius: 16px;
+  background: var(--pp-cta-glass-face);
+  background-clip: padding-box;
   color: var(--pp-text);
   box-shadow:
-    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.95),
-    inset 0 -1px 1px rgba(var(--pp-black-rgb), 0.1),
-    0 6px 14px -12px var(--pp-shadow);
+    inset 0 0 0 1px rgba(var(--pp-white-rgb), 0.95),
+    inset 0 0 0 3px rgba(var(--pp-promo-teal-mid-rgb), 0.52),
+    inset 0 0 0 4px rgba(var(--pp-white-rgb), 0.85),
+    inset 0 7px 10px -6px rgba(var(--pp-white-rgb), 0.95),
+    inset 0 -7px 10px -6px rgba(var(--pp-promo-teal-mid-rgb), 0.6),
+    0 9px 18px -8px rgba(var(--pp-promo-teal-mid-rgb), 0.38),
+    0 3px 7px -4px var(--pp-shadow);
   transform: none;
   filter: none;
   transition: border-color 200ms ease, box-shadow 200ms ease;
 }
-.suite-switch-btn::before {
-  content: none;
+.landing-root .landing-eppp-promo::before,
+.landing-root .landing-textbook-link::before,
+.eppp-launch-btn.suite-switch-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 4px;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  /* Reflective glass frame only: the center is excluded from this layer. */
+  background:
+    radial-gradient(ellipse 12% 80% at 3% 10%, rgb(var(--pp-white-rgb)) 0%, transparent 75%),
+    radial-gradient(ellipse 10% 85% at 98% 90%, rgb(var(--pp-white-rgb)) 0%, transparent 75%),
+    conic-gradient(from 90deg,
+      var(--pp-promo-teal-border),
+      var(--pp-promo-teal-hi) 9%,
+      rgb(var(--pp-white-rgb)) 18%,
+      var(--pp-promo-teal-mid) 28%,
+      var(--pp-promo-teal-border) 36%,
+      rgb(var(--pp-white-rgb)) 47%,
+      var(--pp-promo-teal-mid) 58%,
+      var(--pp-promo-teal-border) 68%,
+      rgb(var(--pp-white-rgb)) 80%,
+      var(--pp-promo-teal-hi) 92%,
+      var(--pp-promo-teal-border));
+  -webkit-mask: linear-gradient(rgb(var(--pp-white-rgb)) 0 0) content-box, linear-gradient(rgb(var(--pp-white-rgb)) 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(rgb(var(--pp-white-rgb)) 0 0) content-box, linear-gradient(rgb(var(--pp-white-rgb)) 0 0);
+  mask-composite: exclude;
+}
+.landing-root .landing-eppp-promo::after,
+.landing-root .landing-textbook-link::after,
+.eppp-launch-btn.suite-switch-btn::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border-radius: 11px;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 8% 18% at 16% 0%, rgb(var(--pp-white-rgb)) 0%, transparent 100%),
+    radial-gradient(ellipse 9% 18% at 86% 0%, rgb(var(--pp-white-rgb)) 0%, transparent 100%),
+    radial-gradient(ellipse 7% 18% at 28% 100%, rgb(var(--pp-white-rgb)) 0%, transparent 100%),
+    radial-gradient(ellipse 9% 18% at 75% 100%, rgb(var(--pp-white-rgb)) 0%, transparent 100%);
+  box-shadow:
+    inset 4px 0 7px -3px rgba(var(--pp-promo-teal-mid-rgb), 0.7),
+    inset -4px 0 7px -3px rgba(var(--pp-promo-teal-mid-rgb), 0.7),
+    inset 0 2px 4px rgba(var(--pp-white-rgb), 0.85);
 }
 .landing-root .landing-eppp-promo:hover,
 .landing-root .landing-textbook-link:hover,
@@ -1023,11 +1081,14 @@ body {
   color: var(--pp-text);
   border-color: var(--pp-promo-teal-mid);
   box-shadow:
-    inset 0 1px 0 rgba(var(--pp-white-rgb), 0.95),
-    inset 0 -1px 1px rgba(var(--pp-black-rgb), 0.1),
+    inset 0 0 0 1px rgba(var(--pp-white-rgb), 0.95),
+    inset 0 0 0 3px rgba(var(--pp-promo-teal-mid-rgb), 0.62),
+    inset 0 0 0 4px rgba(var(--pp-white-rgb), 0.85),
+    inset 0 7px 10px -6px rgba(var(--pp-white-rgb), 0.95),
+    inset 0 -7px 10px -6px rgba(var(--pp-promo-teal-mid-rgb), 0.6),
     0 0 0 1px rgba(var(--pp-promo-teal-mid-rgb), 0.2),
     0 0 24px 1px rgba(var(--pp-promo-teal-mid-rgb), 0.48),
-    0 8px 18px -12px var(--pp-shadow);
+    0 9px 18px -8px rgba(var(--pp-promo-teal-mid-rgb), 0.38);
 }
 .landing-root .landing-eppp-promo:active,
 .landing-root .landing-textbook-link:active,
@@ -1037,7 +1098,10 @@ body {
   color: var(--pp-text);
   border-color: var(--pp-promo-teal-border);
   box-shadow:
-    inset 0 2px 4px rgba(var(--pp-black-rgb), 0.16),
+    inset 0 0 0 1px rgba(var(--pp-white-rgb), 0.95),
+    inset 0 0 0 3px rgba(var(--pp-promo-teal-mid-rgb), 0.62),
+    inset 0 0 0 4px rgba(var(--pp-white-rgb), 0.85),
+    inset 0 2px 5px rgba(var(--pp-promo-teal-mid-rgb), 0.16),
     0 0 30px 1px rgba(var(--pp-promo-teal-mid-rgb), 0.66);
 }
 .landing-root .landing-eppp-promo:focus-visible,
@@ -1047,18 +1111,11 @@ body {
   outline-offset: 4px;
 }
 .landing-root .landing-textbook-link:hover,
-.landing-root .landing-textbook-link:active {
-  /* Override the generic landing CTA's brighter hover ramp. */
-  background:
-    linear-gradient(135deg, rgba(var(--pp-white-rgb), 0.38) 0%, rgba(var(--pp-white-rgb), 0.05) 48%, transparent 70%),
-    linear-gradient(180deg, color-mix(in srgb, var(--pp-promo-teal-hi) 70%, rgb(var(--pp-white-rgb))) 0%, var(--pp-promo-teal-hi) 55%, var(--pp-promo-teal-mid) 100%);
-}
+.landing-root .landing-textbook-link:active,
 .eppp-launch-btn.suite-switch-btn:hover,
 .eppp-launch-btn.suite-switch-btn:active {
-  /* Override generic launcher fills without affecting its other consumers. */
-  background:
-    linear-gradient(135deg, rgba(var(--pp-white-rgb), 0.38) 0%, rgba(var(--pp-white-rgb), 0.05) 48%, transparent 70%),
-    linear-gradient(180deg, color-mix(in srgb, var(--pp-promo-teal-hi) 70%, rgb(var(--pp-white-rgb))) 0%, var(--pp-promo-teal-hi) 55%, var(--pp-promo-teal-mid) 100%);
+  /* Override generic CTA/launcher fills without changing the glass face. */
+  background: var(--pp-cta-glass-face);
 }
 @media (prefers-reduced-motion: reduce) {
   .landing-root .landing-eppp-promo,
