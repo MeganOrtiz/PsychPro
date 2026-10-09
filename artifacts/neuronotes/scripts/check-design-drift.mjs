@@ -303,7 +303,7 @@ const turquoiseActions = [
 ];
 const finish = ruleBlock(css, `${turquoiseActions.join(",\n")} {`);
 if (!finish?.includes("linear-gradient(120deg,") ||
-    !finish.includes("rgba(var(--pp-promo-teal-mid-rgb), 0.82)") ||
+    !finish.includes("rgba(var(--pp-promo-teal-mid-rgb), 0.9)") ||
     !finish.includes("var(--pp-promo-teal-mid-rgb)") ||
     !finish.includes("color: var(--pp-text)") ||
     !finish.includes("transform: none;") ||
