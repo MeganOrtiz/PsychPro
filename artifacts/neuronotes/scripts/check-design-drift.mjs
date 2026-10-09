@@ -295,21 +295,21 @@ if (!/backdrop-filter:\s*none\s*!important;/.test(css)) {
 }
 
 // --- 4) No wallpaper images in index.css -------------------------------------
-// Shared turquoise glass finish: saturated fill, readable ink, stationary hover.
+// Shared turquoise glass finish: translucent gradient, readable ink, stationary hover.
 const turquoiseActions = [
   ".landing-root .landing-eppp-promo",
   ".landing-root .landing-textbook-link",
   ".eppp-launch-btn.suite-switch-btn",
 ];
 const finish = ruleBlock(css, `${turquoiseActions.join(",\n")} {`);
-if (!finish?.includes("var(--pp-promo-teal-hi)") ||
-    !finish.includes("var(--pp-promo-teal-mid)") ||
+if (!finish?.includes("rgba(var(--pp-promo-teal-mid-rgb), 0.06)") ||
+    !finish.includes("var(--pp-promo-teal-mid-rgb)") ||
     !finish.includes("color: var(--pp-text)") ||
     !finish.includes("transform: none;") ||
     !finish.includes("--pp-cta-glass-face:") ||
     !finish.includes("border-radius: 16px;") ||
     finish.includes("inset 0 0 0 ")) {
-  fail("turquoise glass finish drifted", "preserve the gradient-blended aqua face without hard inner rings, rounded rim, dark ink, and stationary hit targets");
+  fail("turquoise glass finish drifted", "preserve the translucent gradient aqua face without hard inner rings, rounded rim, dark ink, and stationary hit targets");
 }
 for (const pseudo of ["before", "after"]) {
   const layer = ruleBlock(css, `${turquoiseActions.map((action) => `${action}::${pseudo}`).join(",\n")} {`);

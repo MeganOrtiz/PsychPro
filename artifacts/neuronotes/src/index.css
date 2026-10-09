@@ -999,12 +999,13 @@ body {
 .landing-root .landing-textbook-link,
 .eppp-launch-btn.suite-switch-btn {
   --pp-cta-glass-face:
-    radial-gradient(ellipse at 46% 6%, rgba(var(--pp-white-rgb), 0.72), transparent 70%),
-    radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(var(--pp-promo-teal-mid-rgb), 0.22) 100%),
+    radial-gradient(ellipse 32% 120% at 42% 0%, rgba(var(--pp-white-rgb), 0.92), transparent 78%),
+    radial-gradient(ellipse at 50% 50%, transparent 48%, rgba(var(--pp-promo-teal-mid-rgb), 0.16) 100%),
     linear-gradient(180deg,
-      color-mix(in srgb, var(--pp-promo-teal-hi) 18%, rgb(var(--pp-white-rgb))) 0%,
-      color-mix(in srgb, var(--pp-promo-teal-hi) 32%, rgb(var(--pp-white-rgb))) 56%,
-      color-mix(in srgb, var(--pp-promo-teal-mid) 38%, rgb(var(--pp-white-rgb))) 100%);
+      rgba(var(--pp-promo-teal-mid-rgb), 0.18) 0%,
+      rgba(var(--pp-white-rgb), 0.3) 28%,
+      rgba(var(--pp-promo-teal-mid-rgb), 0.06) 55%,
+      rgba(var(--pp-promo-teal-mid-rgb), 0.2) 100%);
   position: relative;
   isolation: isolate;
   border: 1.5px solid color-mix(in srgb, var(--pp-promo-teal-border) 72%, transparent);
@@ -1013,9 +1014,9 @@ body {
   background-clip: padding-box;
   color: var(--pp-text);
   box-shadow:
-    inset 0 1px 4px rgba(var(--pp-white-rgb), 0.85),
-    inset 0 0 12px 2px rgba(var(--pp-promo-teal-mid-rgb), 0.25),
-    inset 0 -9px 14px -5px rgba(var(--pp-promo-teal-mid-rgb), 0.32),
+    inset 0 2px 2px rgba(var(--pp-white-rgb), 0.95),
+    inset 0 0 14px 2px rgba(var(--pp-promo-teal-mid-rgb), 0.18),
+    inset 0 -6px 9px -4px rgba(var(--pp-promo-teal-mid-rgb), 0.48),
     0 9px 18px -8px rgba(var(--pp-promo-teal-mid-rgb), 0.38),
     0 3px 7px -4px var(--pp-shadow);
   transform: none;
@@ -1033,8 +1034,8 @@ body {
   pointer-events: none;
   z-index: -1;
   /* Soften the reflective rim into the face instead of a hard inner cutout. */
-  filter: blur(1.25px);
-  opacity: 0.82;
+  filter: blur(0.45px);
+  opacity: 1;
   background:
     radial-gradient(ellipse 12% 80% at 3% 10%, rgb(var(--pp-white-rgb)) 0%, transparent 75%),
     radial-gradient(ellipse 10% 85% at 98% 90%, rgb(var(--pp-white-rgb)) 0%, transparent 75%),
@@ -1065,14 +1066,16 @@ body {
   pointer-events: none;
   z-index: -1;
   background:
+    linear-gradient(112deg, transparent 7%, rgba(var(--pp-white-rgb), 0.7) 18%, transparent 31%, transparent 66%, rgba(var(--pp-white-rgb), 0.55) 78%, transparent 89%),
     radial-gradient(ellipse 8% 18% at 16% 0%, rgb(var(--pp-white-rgb)) 0%, transparent 100%),
     radial-gradient(ellipse 9% 18% at 86% 0%, rgb(var(--pp-white-rgb)) 0%, transparent 100%),
     radial-gradient(ellipse 7% 18% at 28% 100%, rgb(var(--pp-white-rgb)) 0%, transparent 100%),
     radial-gradient(ellipse 9% 18% at 75% 100%, rgb(var(--pp-white-rgb)) 0%, transparent 100%);
   box-shadow:
-    inset 7px 0 14px -5px rgba(var(--pp-promo-teal-mid-rgb), 0.3),
-    inset -7px 0 14px -5px rgba(var(--pp-promo-teal-mid-rgb), 0.3),
-    inset 0 2px 8px rgba(var(--pp-white-rgb), 0.65);
+    inset 7px 0 10px -5px rgba(var(--pp-promo-teal-mid-rgb), 0.5),
+    inset -7px 0 10px -5px rgba(var(--pp-promo-teal-mid-rgb), 0.5),
+    inset 0 2px 3px rgba(var(--pp-white-rgb), 0.95),
+    inset 0 -2px 3px rgba(var(--pp-white-rgb), 0.85);
 }
 .landing-root .landing-eppp-promo:hover,
 .landing-root .landing-textbook-link:hover,
@@ -1082,9 +1085,9 @@ body {
   color: var(--pp-text);
   border-color: var(--pp-promo-teal-mid);
   box-shadow:
-    inset 0 1px 4px rgba(var(--pp-white-rgb), 0.85),
-    inset 0 0 12px 2px rgba(var(--pp-promo-teal-mid-rgb), 0.3),
-    inset 0 -9px 14px -5px rgba(var(--pp-promo-teal-mid-rgb), 0.32),
+    inset 0 2px 2px rgba(var(--pp-white-rgb), 0.95),
+    inset 0 0 14px 2px rgba(var(--pp-promo-teal-mid-rgb), 0.22),
+    inset 0 -6px 9px -4px rgba(var(--pp-promo-teal-mid-rgb), 0.48),
     0 0 0 1px rgba(var(--pp-promo-teal-mid-rgb), 0.2),
     0 0 24px 1px rgba(var(--pp-promo-teal-mid-rgb), 0.48),
     0 9px 18px -8px rgba(var(--pp-promo-teal-mid-rgb), 0.38);

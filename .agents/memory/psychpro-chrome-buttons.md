@@ -36,6 +36,8 @@ four actions. Earlier hover flickering was also explicitly rejected.
 The owner then refined the inside: “more of a gradient rather than having the
 hard border.” Avoid sharp concentric inner rings; retain glass reflections
 with a gradual transition into the center.
+The owner further clarified: “more glossy and transparent.” Use a translucent
+face rather than an opaque aqua fill, with brighter, sharper reflections.
 
 **How to apply:** Keep this treatment scoped to these four actions. Keep their
 hit targets stationary while the border/glow changes; do not reintroduce hover
