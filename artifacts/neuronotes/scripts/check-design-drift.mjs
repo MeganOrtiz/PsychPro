@@ -307,8 +307,9 @@ if (!finish?.includes("var(--pp-promo-teal-hi)") ||
     !finish.includes("color: var(--pp-text)") ||
     !finish.includes("transform: none;") ||
     !finish.includes("--pp-cta-glass-face:") ||
-    !finish.includes("border-radius: 16px;")) {
-  fail("turquoise glass finish drifted", "preserve the clear aqua face, rounded refractive rim, dark ink, and stationary hit targets");
+    !finish.includes("border-radius: 16px;") ||
+    finish.includes("inset 0 0 0 ")) {
+  fail("turquoise glass finish drifted", "preserve the gradient-blended aqua face without hard inner rings, rounded rim, dark ink, and stationary hit targets");
 }
 for (const pseudo of ["before", "after"]) {
   const layer = ruleBlock(css, `${turquoiseActions.map((action) => `${action}::${pseudo}`).join(",\n")} {`);

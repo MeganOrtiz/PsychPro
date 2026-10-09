@@ -23,7 +23,7 @@ Suite-switch labels must be just “PsychPro Suite” and “EPPP Mastery Suite,
 
 The landing EPPP free-week button, landing Amazon textbook button, and both
 dashboard suite-switch buttons share the owner's glossy aqua-glass reference:
-a clear/light aqua center, thick reflective turquoise rim, bright edge glints,
+a gradient aqua center that blends softly into the reflective turquoise rim, bright edge glints,
 and a turquoise glow that strengthens on hover. The reference replaces the
 earlier simple saturated gradient. Preserve each button's existing site font,
 font size, weight, and letter spacing; the reference image's typography is not
@@ -33,6 +33,9 @@ part of the requested change.
 them like this,” explicitly asking to “keep the font the same as how it is in
 the sight just changing the design of the buttons.” The scope remains those
 four actions. Earlier hover flickering was also explicitly rejected.
+The owner then refined the inside: “more of a gradient rather than having the
+hard border.” Avoid sharp concentric inner rings; retain glass reflections
+with a gradual transition into the center.
 
 **How to apply:** Keep this treatment scoped to these four actions. Keep their
 hit targets stationary while the border/glow changes; do not reintroduce hover
