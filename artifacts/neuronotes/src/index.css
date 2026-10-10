@@ -993,32 +993,20 @@ body {
   width: 100%;
 }
 
-/* Aqua glass reference: smooth luminous rim, curved reflections, clear aqua face.
+/* Owner-provided blank glass artwork, nine-sliced to preserve rounded ends.
    Scoped to four actions; typography, dimensions, and hit targets stay intact. */
 .landing-root .landing-eppp-promo,
 .landing-root .landing-textbook-link,
 .eppp-launch-btn.suite-switch-btn {
-  --pp-cta-glass-face:
-    radial-gradient(ellipse 28% 110% at 2% 0%, rgba(var(--pp-white-rgb), 0.82), transparent 76%),
-    radial-gradient(ellipse 18% 80% at 98% 0%, rgba(var(--pp-white-rgb), 0.78), transparent 74%),
-    linear-gradient(120deg,
-      rgba(var(--pp-promo-teal-mid-rgb), 0.45) 0%,
-      rgba(var(--pp-promo-teal-mid-rgb), 0.62) 40%,
-      rgba(var(--pp-promo-teal-mid-rgb), 0.78) 75%,
-      rgba(var(--pp-promo-teal-mid-rgb), 0.9) 100%);
+  --pp-cta-glass-face: transparent;
   position: relative;
   isolation: isolate;
-  border: 1.5px solid color-mix(in srgb, var(--pp-promo-teal-mid) 82%, transparent);
+  border: 1.5px solid transparent;
   border-radius: 16px;
   background: var(--pp-cta-glass-face);
   background-clip: padding-box;
   color: var(--pp-text);
-  box-shadow:
-    inset 0 2px 1px rgba(var(--pp-white-rgb), 0.95),
-    inset 0 0 8px 1px rgba(var(--pp-white-rgb), 0.25),
-    inset 0 -2px 2px rgba(var(--pp-white-rgb), 0.9),
-    0 7px 14px -8px rgba(var(--pp-promo-teal-mid-rgb), 0.22),
-    0 3px 7px -4px var(--pp-shadow);
+  box-shadow: none;
   transform: none;
   filter: none;
   transition: border-color 200ms ease, box-shadow 200ms ease;
@@ -1028,46 +1016,25 @@ body {
 .eppp-launch-btn.suite-switch-btn::before {
   content: "";
   position: absolute;
-  inset: 0;
-  padding: 1.5px;
-  border-radius: inherit;
+  inset: -6px -7px;
+  border: 15px solid transparent;
+  border-image-source: url("/api/storage/public-objects/brand/aqua-glass-button.png");
+  border-image-slice: 55 100 55 100 fill;
+  border-image-width: 15px 30px;
+  border-image-repeat: stretch;
   pointer-events: none;
   z-index: -1;
-  /* Continuous light rim rather than the earlier dark faceted reflections. */
-  filter: blur(0.3px);
-  opacity: 1;
-  background:
-    radial-gradient(ellipse 12% 80% at 3% 10%, rgb(var(--pp-white-rgb)) 0%, transparent 75%),
-    radial-gradient(ellipse 10% 85% at 98% 90%, rgb(var(--pp-white-rgb)) 0%, transparent 75%),
-    linear-gradient(120deg,
-      rgb(var(--pp-white-rgb)),
-      var(--pp-promo-teal-hi) 35%,
-      rgba(var(--pp-white-rgb), 0.85) 65%,
-      var(--pp-promo-teal-hi) 82%,
-      rgb(var(--pp-white-rgb)));
-  -webkit-mask: linear-gradient(rgb(var(--pp-white-rgb)) 0 0) content-box, linear-gradient(rgb(var(--pp-white-rgb)) 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(rgb(var(--pp-white-rgb)) 0 0) content-box, linear-gradient(rgb(var(--pp-white-rgb)) 0 0);
-  mask-composite: exclude;
+  /* Real translucent artwork owns the rim, reflections, center, and idle glow. */
+  filter: none;
+  background: none;
+  box-shadow: none;
+  -webkit-mask: none;
+  mask: none;
 }
 .landing-root .landing-eppp-promo::after,
 .landing-root .landing-textbook-link::after,
 .eppp-launch-btn.suite-switch-btn::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  z-index: -1;
-  background:
-    radial-gradient(ellipse 55% 125% at 7% -48%, rgba(var(--pp-white-rgb), 0.52) 58%, rgba(var(--pp-white-rgb), 0.22) 60%, transparent 63%),
-    radial-gradient(ellipse 90% 130% at 78% -50%, transparent 77%, rgba(var(--pp-white-rgb), 0.25) 79%, transparent 92%),
-    radial-gradient(ellipse 18% 12% at 78% 2%, rgb(var(--pp-white-rgb)), transparent 100%),
-    radial-gradient(ellipse 12% 70% at 0% 12%, rgba(var(--pp-white-rgb), 0.85), transparent 100%),
-    radial-gradient(ellipse 9% 35% at 99% 95%, rgba(var(--pp-white-rgb), 0.85), transparent 100%);
-  box-shadow:
-    inset 2px 0 4px rgba(var(--pp-white-rgb), 0.65),
-    inset -2px 0 4px rgba(var(--pp-white-rgb), 0.65);
+  content: none;
 }
 .landing-root .landing-eppp-promo:hover,
 .landing-root .landing-textbook-link:hover,
@@ -1075,13 +1042,9 @@ body {
   transform: none;
   filter: none;
   color: var(--pp-text);
-  border-color: var(--pp-promo-teal-mid);
+  border-color: transparent;
   box-shadow:
-    inset 0 2px 1px rgba(var(--pp-white-rgb), 0.95),
-    inset 0 0 8px 1px rgba(var(--pp-white-rgb), 0.25),
-    inset 0 -2px 2px rgba(var(--pp-white-rgb), 0.9),
-    0 0 16px 0 rgba(var(--pp-promo-teal-mid-rgb), 0.28),
-    0 7px 14px -8px rgba(var(--pp-promo-teal-mid-rgb), 0.22);
+    0 0 16px 0 rgba(var(--pp-promo-teal-mid-rgb), 0.28);
 }
 .landing-root .landing-eppp-promo:active,
 .landing-root .landing-textbook-link:active,
@@ -1089,10 +1052,8 @@ body {
   transform: none;
   filter: none;
   color: var(--pp-text);
-  border-color: var(--pp-promo-teal-mid);
+  border-color: transparent;
   box-shadow:
-    inset 0 1px 3px rgba(var(--pp-white-rgb), 0.8),
-    inset 0 0 10px 1px rgba(var(--pp-promo-teal-mid-rgb), 0.2),
     0 0 20px 0 rgba(var(--pp-promo-teal-mid-rgb), 0.38);
 }
 .landing-root .landing-eppp-promo:focus-visible,

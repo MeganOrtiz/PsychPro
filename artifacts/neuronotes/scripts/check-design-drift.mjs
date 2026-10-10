@@ -295,28 +295,33 @@ if (!/backdrop-filter:\s*none\s*!important;/.test(css)) {
 }
 
 // --- 4) No wallpaper images in index.css -------------------------------------
-// Shared turquoise glass finish: translucent gradient, readable ink, stationary hover.
+// Owner-supplied glass artwork: readable live ink and stationary interactions.
 const turquoiseActions = [
   ".landing-root .landing-eppp-promo",
   ".landing-root .landing-textbook-link",
   ".eppp-launch-btn.suite-switch-btn",
 ];
 const finish = ruleBlock(css, `${turquoiseActions.join(",\n")} {`);
-if (!finish?.includes("linear-gradient(120deg,") ||
-    !finish.includes("rgba(var(--pp-promo-teal-mid-rgb), 0.9)") ||
-    !finish.includes("var(--pp-promo-teal-mid-rgb)") ||
+if (!finish?.includes("--pp-cta-glass-face: transparent;") ||
     !finish.includes("color: var(--pp-text)") ||
     !finish.includes("transform: none;") ||
     !finish.includes("--pp-cta-glass-face:") ||
     !finish.includes("border-radius: 16px;") ||
     finish.includes("inset 0 0 0 ")) {
-  fail("turquoise glass finish drifted", "preserve the translucent gradient aqua face without hard inner rings, rounded rim, dark ink, and stationary hit targets");
+  fail("turquoise glass finish drifted", "let the supplied artwork own the glass face; preserve dark live text and stationary hit targets");
 }
-for (const pseudo of ["before", "after"]) {
-  const layer = ruleBlock(css, `${turquoiseActions.map((action) => `${action}::${pseudo}`).join(",\n")} {`);
-  if (!layer?.includes("pointer-events: none;") || !layer.includes("z-index: -1;")) {
-    fail(`aqua glass ${pseudo} layer drifted`, "keep decorative reflections behind text and out of the button's hit target");
-  }
+const artworkSelector = `${turquoiseActions.map((action) => `${action}::before`).join(",\n")} {`;
+const artworkLayer = ruleBlock(css, artworkSelector);
+if (!artworkLayer?.includes("pointer-events: none;") ||
+    !artworkLayer.includes("z-index: -1;") ||
+    !artworkLayer.includes('url("/api/storage/public-objects/brand/aqua-glass-button.png")') ||
+    !artworkLayer.includes("border-image-slice: 55 100 55 100 fill;") ||
+    !artworkLayer.includes("border-image-width: 15px 30px;")) {
+  fail("aqua artwork layer drifted", "preserve nine-sliced glass ends and keep artwork behind live text, outside the hit target");
+}
+const retiredLayer = ruleBlock(css, `${turquoiseActions.map((action) => `${action}::after`).join(",\n")} {`);
+if (!retiredLayer?.includes("content: none;")) {
+  fail("aqua overlay returned", "do not paint CSS reflections over the supplied artwork");
 }
 for (const [state, opacity] of [["hover", "0.28"], ["active", "0.38"]]) {
   const selector = `${turquoiseActions.map((action) => `${action}:${state}`).join(",\n")} {`;
@@ -334,6 +339,9 @@ while ((m = urls.exec(css))) {
   if (target.includes("fonts.googleapis.com")) continue;
   // Owner-sanctioned dashboard backdrop artwork (2026-07-25) — locked above.
   if (target.includes("dashboard-liquid-frame")) continue;
+  // Exact owner-supplied button asset, permitted only in its scoped artwork layer.
+  if (target === "/api/storage/public-objects/brand/aqua-glass-button.png" &&
+      artworkLayer?.includes(`url("${target}")`)) continue;
   fail(
     `unexpected image url(${target}) at ${REL}:${lineOf(m.index)}`,
     "no images in index.css — the white-system backdrop is a pure CSS radial gradient (owner 2026-07-16)",
