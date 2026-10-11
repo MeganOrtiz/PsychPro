@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
-import tealSplash from "@/assets/psychpro-teal-ink-splash.jpg";
+
+// Dashboard-only owner artwork; landing keeps its independent splash asset.
+const tealSplash = `${import.meta.env.BASE_URL}api/storage/public-objects/brand/dashboard-teal-splash.webp`;
 
 export function DashboardBrandArtwork({ children }: { children: ReactNode }) {
   return (

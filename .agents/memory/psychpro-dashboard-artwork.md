@@ -23,3 +23,11 @@ The owner likes the artwork placement behind both dashboard symbols but wants no
 **Why:** the owner explicitly said “i dont want the fade at all on the dashboards.” They distinguish actual diffusion in the design from transparency fading; do not describe a fade mask as diffusion.
 
 **How to apply:** preserve brain/crown placement and use the supplied artwork without edge masks, opacity washes, or vignettes. Any future natural diffusion must come from the artwork itself, not a transparency fade.
+
+The owner supplied replacement teal splash artwork specifically for behind the
+brain and crown on both dashboards. This dashboard-only replacement does not
+authorize changing the landing artwork.
+
+**Why:** The owner said “use this behind the brain and crown on the dashboards please.”
+**How to apply:** Use their supplied composition, preserve the existing symbols
+and header placement, and retain the no-fade rule above.
