@@ -75,10 +75,15 @@ dimensions, shape, layout, typography, content, and non-button behavior; do not
 extend this aqua exception to other cards.
 
 The separate EPPP Mastery Suite landing plan box uses the same glossy-glass
-appearance in yellow. Yellow applies only to that box; Free/Master/Scholar
+appearance in bright, clear yellow, never olive/green or muted mustard.
+Yellow applies only to that box; Free/Master/Scholar
 remain aqua and the buttons retain their existing finish.
 
 **Why:** The owner requested “the same look and feel of the other tiers just in
 yellow. only the yellow for the EPPP mastery suite box.”
 **How to apply:** Tint only the decorative glass layer of that plan card, leaving
 its layout, text, icons, typography, and behavior unchanged.
+
+**Why bright yellow:** The owner rejected the first yellow treatment as “puke
+green” and explicitly requested bright yellow. Keep the clear-yellow color
+intent in future revisions rather than preserving dark teal shades as olive.

@@ -346,8 +346,8 @@ if (!planGlass?.includes("background: transparent;") ||
 const epppPlanGlass = ruleBlock(css, ".landing-root .landing-tier--eppp {");
 const epppPlanArtwork = ruleBlock(css, ".landing-root .landing-tier--eppp::before {");
 if (!epppPlanGlass?.includes("background: transparent;") ||
-    !epppPlanArtwork?.includes('url("/api/storage/public-objects/brand/aqua-glass-button.png")') ||
-    !epppPlanArtwork.includes("filter: hue-rotate(-120deg) saturate(1.1);") ||
+    !epppPlanArtwork?.includes('url("/api/storage/public-objects/brand/bright-yellow-glass.png")') ||
+    /filter\s*:/.test(epppPlanArtwork ?? "") ||
     !epppPlanArtwork.includes("pointer-events: none;") ||
     !epppPlanArtwork.includes("z-index: -1;") ||
     !epppPlanArtwork.includes("border-image-width: 20px 24px;") ||
@@ -366,6 +366,8 @@ while ((m = urls.exec(css))) {
   if (target === "/api/storage/public-objects/brand/aqua-glass-button.png" &&
       (artworkLayer?.includes(`url("${target}")`) ||
        planArtwork?.includes(`url("${target}")`))) continue;
+  if (target === "/api/storage/public-objects/brand/bright-yellow-glass.png" &&
+      epppPlanArtwork?.includes(`url("${target}")`)) continue;
   fail(
     `unexpected image url(${target}) at ${REL}:${lineOf(m.index)}`,
     "no images in index.css — the white-system backdrop is a pure CSS radial gradient (owner 2026-07-16)",
