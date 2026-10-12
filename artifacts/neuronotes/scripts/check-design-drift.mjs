@@ -320,6 +320,13 @@ if (!artworkLayer?.includes("pointer-events: none;") ||
   fail("aqua artwork layer drifted", "preserve nine-sliced glass ends and keep artwork behind live text, outside the hit target");
 }
 const retiredLayer = ruleBlock(css, `${turquoiseActions.map((action) => `${action}::after`).join(",\n")} {`);
+const suiteCornerRule = ruleBlock(css, "\n.eppp-launch-btn.suite-switch-btn {\n  border-radius:");
+const suiteArtworkRule = ruleBlock(css, "\n.eppp-launch-btn.suite-switch-btn::before {\n  inset:");
+if (!suiteCornerRule?.includes("border-radius: 10px;") ||
+    !suiteArtworkRule?.includes("border-image-width: 10px 12px;") ||
+    !suiteArtworkRule.includes("inset: -4px;")) {
+  fail("suite-switch corners drifted", "keep compact rectangular glass corners on both dashboard suite switches");
+}
 if (!retiredLayer?.includes("content: none;")) {
   fail("aqua overlay returned", "do not paint CSS reflections over the supplied artwork");
 }

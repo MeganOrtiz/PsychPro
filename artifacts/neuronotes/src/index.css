@@ -1036,6 +1036,14 @@ body {
 .eppp-launch-btn.suite-switch-btn::after {
   content: none;
 }
+/* Compact suite switches use tighter corners, not the long CTA's rounded ends. */
+.eppp-launch-btn.suite-switch-btn {
+  border-radius: 10px;
+}
+.eppp-launch-btn.suite-switch-btn::before {
+  inset: -4px;
+  border-image-width: 10px 12px;
+}
 .landing-root .landing-eppp-promo:hover,
 .landing-root .landing-textbook-link:hover,
 .eppp-launch-btn.suite-switch-btn:hover {

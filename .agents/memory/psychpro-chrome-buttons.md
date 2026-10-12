@@ -56,3 +56,11 @@ the text-free artwork after repeated CSS approximations failed to match.
 hit targets stationary while the border/glow changes; do not reintroduce hover
 lift or label movement. Preserve links, labels, icons, and desktop/mobile
 placements. Other primary buttons remain silver chrome.
+
+Dashboard suite-switch buttons should be more square like the other buttons,
+not capsule-shaped, while retaining the supplied glass finish.
+
+**Why:** The owner requested smaller corners on the EPPP Mastery Suite and
+PsychPro Suite buttons; the landing CTAs were not part of that request.
+**How to apply:** Keep compact rectangular corners on both dashboard switches
+and preserve their existing typography, artwork, links, and stationary glow.
