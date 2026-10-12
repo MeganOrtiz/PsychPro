@@ -346,7 +346,7 @@ if (!planGlass?.includes("background: transparent;") ||
 const epppPlanGlass = ruleBlock(css, ".landing-root .landing-tier--eppp {");
 const epppPlanArtwork = ruleBlock(css, ".landing-root .landing-tier--eppp::before {");
 if (!epppPlanGlass?.includes("background: transparent;") ||
-    !epppPlanArtwork?.includes('url("/api/storage/public-objects/brand/bright-yellow-glass.png")') ||
+    !epppPlanArtwork?.includes('url("/api/storage/public-objects/brand/pale-yellow-glass.png")') ||
     /filter\s*:/.test(epppPlanArtwork ?? "") ||
     !epppPlanArtwork.includes("pointer-events: none;") ||
     !epppPlanArtwork.includes("z-index: -1;") ||
@@ -366,7 +366,7 @@ while ((m = urls.exec(css))) {
   if (target === "/api/storage/public-objects/brand/aqua-glass-button.png" &&
       (artworkLayer?.includes(`url("${target}")`) ||
        planArtwork?.includes(`url("${target}")`))) continue;
-  if (target === "/api/storage/public-objects/brand/bright-yellow-glass.png" &&
+  if (target === "/api/storage/public-objects/brand/pale-yellow-glass.png" &&
       epppPlanArtwork?.includes(`url("${target}")`)) continue;
   fail(
     `unexpected image url(${target}) at ${REL}:${lineOf(m.index)}`,

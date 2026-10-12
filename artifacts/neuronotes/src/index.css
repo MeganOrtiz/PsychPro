@@ -1183,7 +1183,7 @@ body {
   position: absolute;
   inset: -4px;
   border: 20px solid transparent;
-  border-image-source: url("/api/storage/public-objects/brand/bright-yellow-glass.png");
+  border-image-source: url("/api/storage/public-objects/brand/pale-yellow-glass.png");
   border-image-slice: 55 100 55 100 fill;
   border-image-width: 20px 24px;
   border-image-repeat: stretch;
