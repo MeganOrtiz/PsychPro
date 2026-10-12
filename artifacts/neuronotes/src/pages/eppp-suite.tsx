@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
+import { DashboardHeaderBackdrop } from "@/components/dashboard-brand-artwork";
 import { UserButton } from "@clerk/clerk-react";
 import {
   GraduationCap,
@@ -295,8 +296,9 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
 
 
   return (
-    <div className="study-page-bg flex min-h-screen" data-testid="eppp-suite">
+    <div className={cn("study-page-bg flex min-h-screen", activeSlug === "performance-analytics" && "dashboard-shell-artwork")} data-testid="eppp-suite">
       <style>{styles}</style>
+      {activeSlug === "performance-analytics" && <DashboardHeaderBackdrop />}
 
       {sidebarOpen && (
         <div
@@ -312,7 +314,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
         )}
         style={{
           ["--nav-glow" as never]: STUDY_PALETTE.surf,
-          background: "var(--pp-surface)",
+          background: "var(--dashboard-sidebar-surface, var(--pp-surface))",
           border: "1px solid var(--pp-line)",
         }}
         data-testid="eppp-suite-sidebar"
@@ -396,7 +398,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
         </div>
       </aside>
 
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="dashboard-shell-content flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Mobile top bar */}
         <header className="flex items-center gap-3 px-4 py-3 border-b border-border bg-card md:hidden">
           <button

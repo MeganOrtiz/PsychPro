@@ -187,7 +187,7 @@ export function EpppDashboardView({
   void greetingName;
 
   return (
-    <div className="study-page-bg epd-page" data-testid="eppp-dashboard-page">
+    <div className="epd-page" data-testid="eppp-dashboard-page">
       <style>{styles}</style>
 
       <div className="dashboard-hero">

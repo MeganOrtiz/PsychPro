@@ -2,7 +2,10 @@
 name: PsychPro dashboard brand artwork
 description: PsychPro uses a chrome brain and EPPP uses the owner's chrome crown; owner requested the landing teal splash behind both symbols.
 ---
-The dashboards use a clean pure-white ground with the page title centered above compact standalone chrome artwork: a brain for PsychPro, the owner's supplied crown for EPPP. The owner requested the EPPP crown replacement on 2026-10-02, keeping the brain's size and location. The old liquid-frame background artwork and `.dashboard-artwork` treatment were explicitly retired by the owner on 2026-09-04. The design lock prevents that backdrop from returning.
+The dashboards use a clean pure-white ground with a chrome brain for PsychPro
+and the owner's supplied chrome crown for EPPP. The old liquid-frame artwork
+was retired; the latest approved desktop composition uses the supplied teal
+splash behind the header and navigation (details below).
 
 **Teal splash scope (2026-10-02):** the owner asked to try the landing page's symmetrical teal splash behind both dashboard symbols and report whether it looks weird. This is permission for local header decoration, not a full-page wallpaper or a replacement of either suite's symbol.
 
@@ -36,13 +39,25 @@ The owner requires the entire dashboard splash to be visible, not cut off on
 either dashboard. Use the latest supplied naturally diffused composition.
 
 **Why:** The owner rejected the cropped top and bottom edges in dashboard screenshots.
-**How to apply:** Size the header to the artwork's natural aspect ratio and center
-the suite symbol over it; never use cover-cropping to force it into the symbol's height.
+**How to apply:** Preserve the artwork's natural aspect ratio and center the suite
+symbol over it; never use cover-cropping to force it into the symbol's height.
+The header's layout height may be compact independently of its decorative layer.
 
 On desktop, the splash should span the dashboard header behind the title and
 nearby elements, rather than sit in a separate compact image block.
 
 **Why:** The owner supplied a wider composition reference and requested it for
 both main and EPPP dashboards, with the design going behind other page elements.
-**How to apply:** Keep the full splash visible, symbols proportional, and title
+**How to apply:** Keep the full splash intact, symbols proportional, and title
 and feedback text readable above the artwork. Preserve a stacked mobile layout.
+
+The desktop splash must extend behind the left navigation column, not stop at
+the content column's edge. Treat it as one shared top layer beneath the sidebar,
+brain/crown, title, and nearby controls.
+
+**Why:** The owner clarified this with a reference showing artwork behind the
+left column and confirmed “be mindful of the spacing at the top i do NOT want
+large gaps and the rest of the elements of the page need to be moved up accordingly.”
+**How to apply:** Keep titles and symbols near the top, remove excess reserved
+header height, and move the first row of cards up on both dashboards. Navigation
+and controls remain readable and interactive above the artwork; no artwork fades.

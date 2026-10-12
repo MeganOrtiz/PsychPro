@@ -855,31 +855,73 @@ body {
   white-space: nowrap;
 }
 
-/* Wide dashboard header artwork sits behind the wordmark and feedback offer.
-   Preserve its natural proportions and all edges; mobile stays stacked. */
+.dashboard-header-backdrop {
+  display: none;
+}
+
+/* One compact desktop composition spans the shell, behind sidebar + controls.
+   Artwork retains its natural ratio; no cover crop, edge mask, or fade. */
 @media (min-width: 1024px) {
-  .dashboard-page .dashboard-brand,
-  .epd-page .dashboard-brand {
-    --dash-x-offset: 0px;
-    --dash-r-offset: 0px;
-    position: relative;
-    margin: 0 auto 8px;
+  .dashboard-shell-artwork {
+    --dashboard-sidebar-surface: hsl(var(--background) / 0.9);
+    --dashboard-header-height: clamp(210px, calc(26.7vw - 64px), 298px);
+    isolation: isolate;
   }
-  .dashboard-brand-artwork {
-    width: min(100%, 1200px);
-    margin: 0 auto;
-  }
-  .dashboard-brand h1 {
+  .dashboard-shell-artwork > .dashboard-header-backdrop {
+    display: block;
     position: absolute;
-    top: 12px;
+    z-index: 0;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(100%, clamp(760px, 74vw, 1000px));
+    height: auto;
+    pointer-events: none;
+    user-select: none;
+  }
+  .dashboard-shell-artwork > .dashboard-shell-content {
+    position: relative;
+    z-index: 1;
+  }
+  .dashboard-shell-artwork .dashboard-shell-content > header {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 3;
+  }
+  .dashboard-shell-artwork .dashboard-hero {
+    margin-top: 0;
+    padding-top: 24px;
+  }
+  .dashboard-shell-artwork .dashboard-brand {
+    position: relative;
+    height: var(--dashboard-header-height);
+    margin: 0 auto 8px;
+    margin-left: calc(-1 * var(--dash-x-offset));
+    margin-right: calc(-1 * var(--dash-r-offset));
+  }
+  .dashboard-shell-artwork .dashboard-brand-artwork {
+    position: absolute;
+    top: 38px;
+    left: 0;
+    width: 100%;
+    height: clamp(140px, 15vw, 210px);
+    margin: 0;
+  }
+  .dashboard-shell-artwork .dashboard-brand-splash {
+    display: none;
+  }
+  .dashboard-shell-artwork .dashboard-brand h1 {
+    position: absolute;
+    top: 0;
     left: 0;
     right: 0;
-    font-size: clamp(22px, 2.8vw, 40px);
+    font-size: clamp(22px, 2.5vw, 36px);
   }
-  .dashboard-brain {
-    height: clamp(140px, 16vw, 250px);
-    max-height: 70%;
-    top: 58%;
+  .dashboard-shell-artwork .dashboard-brain {
+    width: clamp(140px, 15vw, 210px);
+    height: 100%;
+    top: 50%;
   }
 }
 

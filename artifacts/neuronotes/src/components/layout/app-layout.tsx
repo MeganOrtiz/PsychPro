@@ -11,6 +11,7 @@ import { STUDY_PALETTE } from "@/lib/study-theme";
 import { PP } from "@/lib/palette";
 import { trackEvent } from "@/lib/analytics";
 import { navItemClass } from "./sidebar-style";
+import { DashboardHeaderBackdrop } from "@/components/dashboard-brand-artwork";
 type NavItem = { href: string; label: string; icon: React.ComponentType<{ className?: string }> };
 
 // Sidebar IA (updated 2026-05-25 per new landing/dashboard spec):
@@ -142,6 +143,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
   // update the active highlight until a hard reload. `useSearch` re-renders
   // on every URL change.
   const search = useSearch();
+  const hasDashboardArtwork = location === "/dashboard" ||
+    (import.meta.env.DEV && location === "/__dashboard-preview" &&
+      new URLSearchParams(search).get("view") === "main");
   const currentTier = new URLSearchParams(search).get("tier");
   const { isAdmin, isScholar } = useUserMeta();
 
@@ -154,7 +158,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const isOnProTools = location === "/my-decks/new" && currentTier === "pro";
 
   return (
-    <div className="study-page-bg flex min-h-screen">
+    <div className={cn("study-page-bg flex min-h-screen", hasDashboardArtwork && "dashboard-shell-artwork")}>
+      {hasDashboardArtwork && <DashboardHeaderBackdrop />}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-30 md:hidden"
@@ -168,7 +173,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
         style={{
-          background: "var(--pp-surface)",
+          background: "var(--dashboard-sidebar-surface, var(--pp-surface))",
           border: "1px solid var(--pp-line)",
           ["--nav-hover" as any]: PP.text,
         }}
@@ -395,7 +400,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
         <SidebarProfileLink onNavigate={() => setSidebarOpen(false)} />
       </aside>
 
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="dashboard-shell-content flex-1 flex flex-col min-w-0 overflow-hidden">
         <header className="flex items-center gap-3 px-4 py-3 md:hidden">
           <Button
             variant="ghost"

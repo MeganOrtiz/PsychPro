@@ -5,7 +5,7 @@
 import { EpppDashboardView } from "@/pages/eppp-dashboard";
 import type { DomainStat, RecTopic } from "@/pages/eppp-dashboard";
 import dashboardBrain from "@/assets/psychpro-chrome-brain.webp";
-import { DashboardBrandArtwork } from "@/components/dashboard-brand-artwork";
+import { DashboardBrandArtwork, DashboardHeaderBackdrop } from "@/components/dashboard-brand-artwork";
 import { DashboardFeedbackOffer } from "@/components/feedback/dashboard-feedback-offer";
 import FeedbackPage from "@/pages/feedback";
 import AppLayout from "@/components/layout/app-layout";
@@ -71,10 +71,11 @@ export default function DevDashboardPreview() {
 
   // Mimic the EPPP suite layout: 288px sidebar column + 64px top bar.
   return (
-    <div className="study-page-bg flex min-h-screen">
-      <aside className="hidden md:block w-64 m-4 rounded-2xl flex-shrink-0" style={{ background: "var(--pp-surface)", border: "1px solid var(--pp-line)" }} />
-      <div className="flex-1 flex flex-col min-h-screen max-h-screen min-w-0">
-        <div style={{ height: 64 }} />
+    <div className="study-page-bg dashboard-shell-artwork flex min-h-screen">
+      <DashboardHeaderBackdrop />
+      <aside className="relative z-40 hidden md:block w-64 m-4 rounded-2xl flex-shrink-0" style={{ background: "var(--dashboard-sidebar-surface, var(--pp-surface))", border: "1px solid var(--pp-line)" }} />
+      <div className="dashboard-shell-content flex-1 flex flex-col min-h-screen max-h-screen min-w-0">
+        <div className="h-16 shrink-0 lg:hidden" />
         <div className="flex-1 overflow-y-auto">
           <EppView />
         </div>
