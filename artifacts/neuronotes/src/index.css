@@ -1170,6 +1170,28 @@ body {
   z-index: -1;
 }
 
+/* The separate EPPP plan alone uses a yellow version of the same glass.
+   Tint only the decorative layer, never its text, icons, or neighboring tiers. */
+.landing-root .landing-tier--eppp {
+  position: relative;
+  isolation: isolate;
+  background: transparent;
+  border-color: transparent;
+}
+.landing-root .landing-tier--eppp::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: 20px solid transparent;
+  border-image-source: url("/api/storage/public-objects/brand/aqua-glass-button.png");
+  border-image-slice: 55 100 55 100 fill;
+  border-image-width: 20px 24px;
+  border-image-repeat: stretch;
+  filter: hue-rotate(-120deg) saturate(1.1);
+  pointer-events: none;
+  z-index: -1;
+}
+
 .pp-card-opaque {
   background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);
   border: 1px solid var(--pp-line);

@@ -72,4 +72,13 @@ appearance, but the boxes and their content must remain as they are.
 aethetic like the buttons. keep the boxes and content in them as they are.”
 **How to apply:** Change only these three cards' visual surface. Preserve their
 dimensions, shape, layout, typography, content, and non-button behavior; do not
-extend the exception to the separate EPPP plan card or other cards.
+extend this aqua exception to other cards.
+
+The separate EPPP Mastery Suite landing plan box uses the same glossy-glass
+appearance in yellow. Yellow applies only to that box; Free/Master/Scholar
+remain aqua and the buttons retain their existing finish.
+
+**Why:** The owner requested “the same look and feel of the other tiers just in
+yellow. only the yellow for the EPPP mastery suite box.”
+**How to apply:** Tint only the decorative glass layer of that plan card, leaving
+its layout, text, icons, typography, and behavior unchanged.

@@ -343,6 +343,18 @@ if (!planGlass?.includes("background: transparent;") ||
   fail("landing plan glass drifted", "preserve the three plan boxes and live content; apply only the owner-approved glass artwork");
 }
 
+const epppPlanGlass = ruleBlock(css, ".landing-root .landing-tier--eppp {");
+const epppPlanArtwork = ruleBlock(css, ".landing-root .landing-tier--eppp::before {");
+if (!epppPlanGlass?.includes("background: transparent;") ||
+    !epppPlanArtwork?.includes('url("/api/storage/public-objects/brand/aqua-glass-button.png")') ||
+    !epppPlanArtwork.includes("filter: hue-rotate(-120deg) saturate(1.1);") ||
+    !epppPlanArtwork.includes("pointer-events: none;") ||
+    !epppPlanArtwork.includes("z-index: -1;") ||
+    !epppPlanArtwork.includes("border-image-width: 20px 24px;") ||
+    /filter\s*:/.test(planArtwork ?? "")) {
+  fail("EPPP yellow plan glass drifted", "yellow belongs only to the EPPP plan artwork; retain aqua on the other tiers and preserve all live content");
+}
+
 let m;
 const urls = /url\(\s*["']?([^"')]+)["']?\s*\)/g;
 while ((m = urls.exec(css))) {
