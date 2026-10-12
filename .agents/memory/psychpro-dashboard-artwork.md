@@ -31,3 +31,10 @@ authorize changing the landing artwork.
 **Why:** The owner said “use this behind the brain and crown on the dashboards please.”
 **How to apply:** Use their supplied composition, preserve the existing symbols
 and header placement, and retain the no-fade rule above.
+
+The owner requires the entire dashboard splash to be visible, not cut off on
+either dashboard. Use the latest supplied naturally diffused composition.
+
+**Why:** The owner rejected the cropped top and bottom edges in dashboard screenshots.
+**How to apply:** Size the header to the artwork's natural aspect ratio and center
+the suite symbol over it; never use cover-cropping to force it into the symbol's height.

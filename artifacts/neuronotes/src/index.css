@@ -812,28 +812,28 @@ body {
   isolation: isolate;
   width: min(100%, clamp(420px, 48vw, 750px));
   margin: 4px auto 0;
-  overflow: hidden;
 }
 .dashboard-brand-splash {
-  position: absolute;
+  display: block;
   width: 100%;
   max-width: none;
-  height: 100%;
-  object-fit: cover;
-  /* Owner wants the supplied artwork at full strength, without edge fading. */
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  height: auto;
+  /* Let the full image determine the frame: no crop or edge fading. */
   mix-blend-mode: multiply;
   pointer-events: none;
   user-select: none;
 }
 .dashboard-brain {
-  position: relative;
+  position: absolute;
   display: block;
   width: clamp(140px, 16vw, 250px);
-  height: auto;
-  margin: 4px auto 0;
+  max-width: 35%;
+  height: 100%;
+  object-fit: contain;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
   filter: drop-shadow(0 14px 24px rgba(var(--pp-black-rgb), 0.14));
   pointer-events: none;
   user-select: none;

@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 // Dashboard-only owner artwork; landing keeps its independent splash asset.
-const tealSplash = `${import.meta.env.BASE_URL}api/storage/public-objects/brand/dashboard-teal-splash.webp`;
+const tealSplash = `${import.meta.env.BASE_URL}api/storage/public-objects/brand/dashboard-teal-splash-complete.webp`;
 
 export function DashboardBrandArtwork({ children }: { children: ReactNode }) {
   return (
@@ -12,7 +12,7 @@ export function DashboardBrandArtwork({ children }: { children: ReactNode }) {
         aria-hidden
         className="dashboard-brand-splash"
         width={1672}
-        height={941}
+        height={603}
       />
       {children}
     </div>
