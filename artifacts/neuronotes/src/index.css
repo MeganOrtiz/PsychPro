@@ -1107,6 +1107,27 @@ body {
    by the shared Card primitive (ui/card.tsx), so every generic Card reads
    as a structural panel; nested tiles opt into GLASS via .mat-glass /
    .mat-glass-interactive. Scoped class — never a descendant .bg-card rule. */
+/* Only the three landing plan boxes adopt the supplied aqua-glass artwork.
+   Existing padding, radius, grid sizing, typography, and behavior stay intact. */
+.landing-root .landing-tier-grid > .landing-tier {
+  position: relative;
+  isolation: isolate;
+  background: transparent;
+  border-color: transparent;
+}
+.landing-root .landing-tier-grid > .landing-tier::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: 20px solid transparent;
+  border-image-source: url("/api/storage/public-objects/brand/aqua-glass-button.png");
+  border-image-slice: 55 100 55 100 fill;
+  border-image-width: 20px 24px;
+  border-image-repeat: stretch;
+  pointer-events: none;
+  z-index: -1;
+}
+
 .pp-card-opaque {
   background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);
   border: 1px solid var(--pp-line);

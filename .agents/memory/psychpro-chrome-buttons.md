@@ -64,3 +64,12 @@ not capsule-shaped, while retaining the supplied glass finish.
 PsychPro Suite buttons, then extended the same treatment to both landing CTAs.
 **How to apply:** Keep compact rectangular corners on all four actions
 and preserve their existing typography, artwork, links, and stationary glow.
+
+The Free, Master, and Scholar landing cards may share the buttons' aqua-glass
+appearance, but the boxes and their content must remain as they are.
+
+**Why:** The owner clarified “by treatment i mean just allowing the design and
+aethetic like the buttons. keep the boxes and content in them as they are.”
+**How to apply:** Change only these three cards' visual surface. Preserve their
+dimensions, shape, layout, typography, content, and non-button behavior; do not
+extend the exception to the separate EPPP plan card or other cards.

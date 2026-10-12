@@ -333,6 +333,16 @@ for (const [state, opacity] of [["hover", "0.28"], ["active", "0.38"]]) {
   }
 }
 
+const planGlass = ruleBlock(css, ".landing-root .landing-tier-grid > .landing-tier {");
+const planArtwork = ruleBlock(css, ".landing-root .landing-tier-grid > .landing-tier::before {");
+if (!planGlass?.includes("background: transparent;") ||
+    !planArtwork?.includes('url("/api/storage/public-objects/brand/aqua-glass-button.png")') ||
+    !planArtwork.includes("pointer-events: none;") ||
+    !planArtwork.includes("z-index: -1;") ||
+    !planArtwork.includes("border-image-width: 20px 24px;")) {
+  fail("landing plan glass drifted", "preserve the three plan boxes and live content; apply only the owner-approved glass artwork");
+}
+
 let m;
 const urls = /url\(\s*["']?([^"')]+)["']?\s*\)/g;
 while ((m = urls.exec(css))) {
@@ -342,7 +352,8 @@ while ((m = urls.exec(css))) {
   if (target.includes("dashboard-liquid-frame")) continue;
   // Exact owner-supplied button asset, permitted only in its scoped artwork layer.
   if (target === "/api/storage/public-objects/brand/aqua-glass-button.png" &&
-      artworkLayer?.includes(`url("${target}")`)) continue;
+      (artworkLayer?.includes(`url("${target}")`) ||
+       planArtwork?.includes(`url("${target}")`))) continue;
   fail(
     `unexpected image url(${target}) at ${REL}:${lineOf(m.index)}`,
     "no images in index.css — the white-system backdrop is a pure CSS radial gradient (owner 2026-07-16)",
