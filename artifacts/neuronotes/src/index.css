@@ -855,6 +855,34 @@ body {
   white-space: nowrap;
 }
 
+/* Wide dashboard header artwork sits behind the wordmark and feedback offer.
+   Preserve its natural proportions and all edges; mobile stays stacked. */
+@media (min-width: 1024px) {
+  .dashboard-page .dashboard-brand,
+  .epd-page .dashboard-brand {
+    --dash-x-offset: 0px;
+    --dash-r-offset: 0px;
+    position: relative;
+    margin: 0 auto 8px;
+  }
+  .dashboard-brand-artwork {
+    width: min(100%, 1200px);
+    margin: 0 auto;
+  }
+  .dashboard-brand h1 {
+    position: absolute;
+    top: 12px;
+    left: 0;
+    right: 0;
+    font-size: clamp(22px, 2.8vw, 40px);
+  }
+  .dashboard-brain {
+    height: clamp(140px, 16vw, 250px);
+    max-height: 70%;
+    top: 58%;
+  }
+}
+
 /* Lesson detail header — OPAQUE material (structural panel). */
 .lesson-header-box {
   background: linear-gradient(180deg, var(--pp-surface) 0%, var(--pp-deep) 100%);

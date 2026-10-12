@@ -1,5 +1,6 @@
 .dashboard-hero {
   position: relative;
+  isolation: isolate;
 }
 
 .dashboard-feedback-offer {
@@ -51,7 +52,8 @@
 @media (min-width: 1024px) {
   .dashboard-feedback-offer {
     position: absolute;
-    top: 16px;
+    top: 64px;
+    z-index: 2;
     right: clamp(16px, 2.3vw, 36px);
     grid-template-columns: clamp(62px, 7.2vw, 108px) minmax(0, 1fr);
     gap: 8px;
@@ -67,6 +69,13 @@
 
   .dashboard-feedback-offer__invitation {
     font-size: clamp(12px, 1.05vw, 15px);
+  }
+
+  .dashboard-feedback-offer__copy {
+    /* A readable foreground panel over the full-strength splash, not a fade. */
+    background: hsl(var(--background));
+    border-radius: 12px;
+    padding: 8px;
   }
 
   .dashboard-feedback-offer__details {
