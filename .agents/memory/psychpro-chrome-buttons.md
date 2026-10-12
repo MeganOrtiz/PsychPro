@@ -57,10 +57,10 @@ hit targets stationary while the border/glow changes; do not reintroduce hover
 lift or label movement. Preserve links, labels, icons, and desktop/mobile
 placements. Other primary buttons remain silver chrome.
 
-Dashboard suite-switch buttons should be more square like the other buttons,
+All four aqua-glass buttons should be more square like the other buttons,
 not capsule-shaped, while retaining the supplied glass finish.
 
 **Why:** The owner requested smaller corners on the EPPP Mastery Suite and
-PsychPro Suite buttons; the landing CTAs were not part of that request.
-**How to apply:** Keep compact rectangular corners on both dashboard switches
+PsychPro Suite buttons, then extended the same treatment to both landing CTAs.
+**How to apply:** Keep compact rectangular corners on all four actions
 and preserve their existing typography, artwork, links, and stationary glow.

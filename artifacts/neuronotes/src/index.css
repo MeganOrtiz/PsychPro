@@ -1002,7 +1002,7 @@ body {
   position: relative;
   isolation: isolate;
   border: 1.5px solid transparent;
-  border-radius: 16px;
+  border-radius: 10px;
   background: var(--pp-cta-glass-face);
   background-clip: padding-box;
   color: var(--pp-text);
@@ -1016,11 +1016,11 @@ body {
 .eppp-launch-btn.suite-switch-btn::before {
   content: "";
   position: absolute;
-  inset: -6px -7px;
+  inset: -4px;
   border: 15px solid transparent;
   border-image-source: url("/api/storage/public-objects/brand/aqua-glass-button.png");
   border-image-slice: 55 100 55 100 fill;
-  border-image-width: 15px 30px;
+  border-image-width: 10px 12px;
   border-image-repeat: stretch;
   pointer-events: none;
   z-index: -1;
@@ -1035,14 +1035,6 @@ body {
 .landing-root .landing-textbook-link::after,
 .eppp-launch-btn.suite-switch-btn::after {
   content: none;
-}
-/* Compact suite switches use tighter corners, not the long CTA's rounded ends. */
-.eppp-launch-btn.suite-switch-btn {
-  border-radius: 10px;
-}
-.eppp-launch-btn.suite-switch-btn::before {
-  inset: -4px;
-  border-image-width: 10px 12px;
 }
 .landing-root .landing-eppp-promo:hover,
 .landing-root .landing-textbook-link:hover,

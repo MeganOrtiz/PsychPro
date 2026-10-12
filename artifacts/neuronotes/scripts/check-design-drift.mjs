@@ -306,7 +306,7 @@ if (!finish?.includes("--pp-cta-glass-face: transparent;") ||
     !finish.includes("color: var(--pp-text)") ||
     !finish.includes("transform: none;") ||
     !finish.includes("--pp-cta-glass-face:") ||
-    !finish.includes("border-radius: 16px;") ||
+    !finish.includes("border-radius: 10px;") ||
     finish.includes("inset 0 0 0 ")) {
   fail("turquoise glass finish drifted", "let the supplied artwork own the glass face; preserve dark live text and stationary hit targets");
 }
@@ -316,17 +316,11 @@ if (!artworkLayer?.includes("pointer-events: none;") ||
     !artworkLayer.includes("z-index: -1;") ||
     !artworkLayer.includes('url("/api/storage/public-objects/brand/aqua-glass-button.png")') ||
     !artworkLayer.includes("border-image-slice: 55 100 55 100 fill;") ||
-    !artworkLayer.includes("border-image-width: 15px 30px;")) {
+    !artworkLayer.includes("border-image-width: 10px 12px;") ||
+    !artworkLayer.includes("inset: -4px;")) {
   fail("aqua artwork layer drifted", "preserve nine-sliced glass ends and keep artwork behind live text, outside the hit target");
 }
 const retiredLayer = ruleBlock(css, `${turquoiseActions.map((action) => `${action}::after`).join(",\n")} {`);
-const suiteCornerRule = ruleBlock(css, "\n.eppp-launch-btn.suite-switch-btn {\n  border-radius:");
-const suiteArtworkRule = ruleBlock(css, "\n.eppp-launch-btn.suite-switch-btn::before {\n  inset:");
-if (!suiteCornerRule?.includes("border-radius: 10px;") ||
-    !suiteArtworkRule?.includes("border-image-width: 10px 12px;") ||
-    !suiteArtworkRule.includes("inset: -4px;")) {
-  fail("suite-switch corners drifted", "keep compact rectangular glass corners on both dashboard suite switches");
-}
 if (!retiredLayer?.includes("content: none;")) {
   fail("aqua overlay returned", "do not paint CSS reflections over the supplied artwork");
 }
