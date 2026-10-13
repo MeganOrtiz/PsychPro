@@ -52,7 +52,9 @@
 @media (min-width: 1024px) {
   .dashboard-feedback-offer {
     position: absolute;
-    top: 64px;
+    /* Match the symbol's center: 24px hero padding + 38px artwork offset. */
+    top: calc(62px + clamp(140px, 15vw, 210px) / 2);
+    transform: translateY(-50%);
     z-index: 2;
     right: clamp(16px, 2.3vw, 36px);
     grid-template-columns: clamp(62px, 7.2vw, 108px) minmax(0, 1fr);
@@ -62,9 +64,9 @@
   }
 
   .epd-page .dashboard-feedback-offer {
-    /* Center over the last card in the 1.4fr / 1fr / 1fr stat row. */
-    right: calc((100% - 2 * clamp(14px, 1.6vw, 20px)) / 6.8);
-    transform: translateX(50%);
+    /* Cancel only this offer's inset from the padded/max-width EPPP hero.
+       Both suites then share the same distance from the page's right edge. */
+    right: calc(clamp(16px, 2.3vw, 36px) - (100vw - 288px - 100%) / 2);
   }
 
   .dashboard-feedback-offer__invitation {

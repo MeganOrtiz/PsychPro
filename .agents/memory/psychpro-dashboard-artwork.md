@@ -61,3 +61,11 @@ large gaps and the rest of the elements of the page need to be moved up accordin
 **How to apply:** Keep titles and symbols near the top, remove excess reserved
 header height, and move the first row of cards up on both dashboards. Navigation
 and controls remain readable and interactive above the artwork; no artwork fades.
+
+The right-side textbook, feedback copy, and Feedback button must occupy the same
+position on both desktop dashboards, vertically centered with the brain/crown.
+
+**Why:** The owner requested this alignment and explicitly said “DO NOT CHANGE
+THE SPACING OF ANYTHING ELSE EXCEPT FOR THESE.”
+**How to apply:** Adjust only the feedback offer's positioning. Do not move the
+artwork, titles, sidebar, top controls, or dashboard cards to align this group.
