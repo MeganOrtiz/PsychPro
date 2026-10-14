@@ -24,7 +24,7 @@
 }
 .promo-splash { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
 .promo-crown {
-  position: absolute; left: 50%; top: 40%; transform: translate(-50%, -50%);
+  position: absolute; left: 50%; top: 48%; transform: translate(-50%, -50%);
   width: 21%; height: auto; z-index: 2;
 }
 .promo-copy { margin: 4px auto 0; max-width: 720px; font-size: clamp(16px, 1.6vw, 19px); line-height: 1.75; color: var(--pp-text); }

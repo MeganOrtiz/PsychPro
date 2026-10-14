@@ -74,8 +74,8 @@
   }
 
   .dashboard-feedback-offer__copy {
-    /* A readable foreground panel over the full-strength splash, not a fade. */
-    background: hsl(var(--background));
+    /* Let the dashboard artwork remain visible without moving the copy. */
+    background: transparent;
     border-radius: 12px;
     padding: 8px;
   }

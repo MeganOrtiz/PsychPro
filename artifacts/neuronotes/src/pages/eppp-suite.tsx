@@ -14,7 +14,6 @@ import {
   BarChart3,
   Library,
   ChevronRight,
-  ArrowLeft,
   ArrowRight,
   Menu,
   X,
@@ -392,7 +391,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
             onClick={() => setSidebarOpen(false)}
           >
             <span className="eppp-launch-btn__inner">
-              <ArrowLeft aria-hidden />
+              <Brain aria-hidden />
               <span>PsychPro Suite</span>
             </span>
           </Link>
@@ -432,7 +431,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
               data-testid="eppp-suite-back-header"
             >
               <span className="eppp-launch-btn__inner">
-                <ArrowLeft aria-hidden />
+                <Brain aria-hidden />
                 <span>PsychPro Suite</span>
               </span>
             </Link>

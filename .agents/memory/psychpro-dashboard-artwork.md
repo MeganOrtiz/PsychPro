@@ -69,3 +69,8 @@ position on both desktop dashboards, vertically centered with the brain/crown.
 THE SPACING OF ANYTHING ELSE EXCEPT FOR THESE.”
 **How to apply:** Adjust only the feedback offer's positioning. Do not move the
 artwork, titles, sidebar, top controls, or dashboard cards to align this group.
+
+The textbook feedback copy must have no opaque white backdrop on either dashboard.
+**Why:** the owner wants the artwork visible behind the words, not covered by a white box.
+**How to apply:** keep the offer's existing placement and spacing; remove the copy
+background without changing its padding, text, book, or Feedback button.
