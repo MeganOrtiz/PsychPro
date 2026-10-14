@@ -57,20 +57,7 @@
   border: 1.5px solid transparent; border-radius: 10px;
   background: transparent; color: var(--pp-text);
   font-size: 16px; font-weight: 500; text-decoration: none; cursor: pointer;
-  transition: box-shadow 200ms ease;
 }
-.promo-glass::before {
-  content: ""; position: absolute; inset: -4px;
-  border: 15px solid transparent;
-  border-image-source: url("/api/storage/public-objects/brand/aqua-glass-button.png");
-  border-image-slice: 55 100 55 100 fill;
-  border-image-width: 10px 12px;
-  border-image-repeat: stretch;
-  pointer-events: none; z-index: -1;
-}
-.promo-glass:hover { box-shadow: 0 0 16px 0 rgba(var(--pp-promo-teal-mid-rgb), 0.28); }
-.promo-glass:active { box-shadow: 0 0 20px 0 rgba(var(--pp-promo-teal-mid-rgb), 0.38); }
-.promo-glass:focus-visible { outline: 2px solid var(--pp-promo-teal-border); outline-offset: 4px; }
 .promo-glass:disabled { opacity: 0.7; cursor: progress; }
 .promo-glass--auto { width: auto; }
 

@@ -244,15 +244,16 @@ if (!/backdrop-filter:\s*none\s*!important;/.test(css)) {
     }
   }
   const GLOW = /var\(--pp-glow(?:-strong)?\)|rgba\(\s*240\s*,\s*240\s*,\s*240/;
-  // Owner-approved rich turquoise glass is scoped to four navigation actions.
+  // Owner-approved rich turquoise glass: suite/landing actions and promo actions.
   const turquoiseScopes = [
     ".landing-root .landing-eppp-promo",
     ".landing-root .landing-textbook-link",
     ".eppp-launch-btn.suite-switch-btn",
+    ".promo-root .promo-glass",
   ];
   const isTurquoiseScope = (selector) => selector.split(",").every((part) =>
     turquoiseScopes.some((scope) => new RegExp(
-      `^${scope.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?::hover|:active|:focus-visible|::before|::after)?$`
+      `^${scope.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?:(?::hover|:active)(?::not\\(:disabled\\))?|:focus-visible|::before|::after)?$`
     ).test(part.trim()))
   );
   for (const s of spans) {
@@ -295,11 +296,12 @@ if (!/backdrop-filter:\s*none\s*!important;/.test(css)) {
 }
 
 // --- 4) No wallpaper images in index.css -------------------------------------
-// Owner-supplied glass artwork: readable live ink and stationary interactions.
+// Owner-supplied glass artwork: clean idle rim, lift and glow on interaction.
 const turquoiseActions = [
   ".landing-root .landing-eppp-promo",
   ".landing-root .landing-textbook-link",
   ".eppp-launch-btn.suite-switch-btn",
+  ".promo-root .promo-glass",
 ];
 const finish = ruleBlock(css, `${turquoiseActions.join(",\n")} {`);
 if (!finish?.includes("--pp-cta-glass-face: transparent;") ||
@@ -317,19 +319,22 @@ if (!artworkLayer?.includes("pointer-events: none;") ||
     !artworkLayer.includes('url("/api/storage/public-objects/brand/aqua-glass-button.png")') ||
     !artworkLayer.includes("border-image-slice: 55 100 55 100 fill;") ||
     !artworkLayer.includes("border-image-width: 10px 12px;") ||
-    !artworkLayer.includes("inset: -4px;")) {
+    !artworkLayer.includes("inset: -4px;") ||
+    !artworkLayer.includes("clip-path: inset(5px 3px 6px round 7px);")) {
   fail("aqua artwork layer drifted", "preserve nine-sliced glass ends and keep artwork behind live text, outside the hit target");
 }
 const retiredLayer = ruleBlock(css, `${turquoiseActions.map((action) => `${action}::after`).join(",\n")} {`);
-if (!retiredLayer?.includes("content: none;")) {
-  fail("aqua overlay returned", "do not paint CSS reflections over the supplied artwork");
+if (!retiredLayer?.includes('content: "";') ||
+    !retiredLayer.includes("background: transparent;") ||
+    !retiredLayer.includes("inset: -6px;")) {
+  fail("aqua hit buffer drifted", "keep a transparent hit-area buffer so lift does not cause hover flicker");
 }
-for (const [state, opacity] of [["hover", "0.28"], ["active", "0.38"]]) {
-  const selector = `${turquoiseActions.map((action) => `${action}:${state}`).join(",\n")} {`;
+for (const [state, opacity, lift] of [["hover", "0.50", "-3px"], ["active", "0.65", "-1px"]]) {
+  const selector = `${turquoiseActions.map((action) => `${action}:${state}${action === ".promo-root .promo-glass" ? ":not(:disabled)" : ""}`).join(",\n")} {`;
   const block = ruleBlock(css, selector);
   if (!block?.includes(`rgba(var(--pp-promo-teal-mid-rgb), ${opacity})`) ||
-      !block.includes("transform: none;")) {
-    fail(`turquoise glass interaction drifted in ${state}`, "keep the graduated turquoise glow without hover/press movement");
+      !block.includes(`transform: translateY(${lift});`)) {
+    fail(`turquoise glass interaction drifted in ${state}`, "keep the stronger graduated glow and controlled hover/press lift");
   }
 }
 

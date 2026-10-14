@@ -1067,7 +1067,8 @@ body {
    Scoped to four actions; typography, dimensions, and hit targets stay intact. */
 .landing-root .landing-eppp-promo,
 .landing-root .landing-textbook-link,
-.eppp-launch-btn.suite-switch-btn {
+.eppp-launch-btn.suite-switch-btn,
+.promo-root .promo-glass {
   --pp-cta-glass-face: transparent;
   position: relative;
   isolation: isolate;
@@ -1079,11 +1080,12 @@ body {
   box-shadow: none;
   transform: none;
   filter: none;
-  transition: border-color 200ms ease, box-shadow 200ms ease;
+  transition: transform 180ms ease, border-color 200ms ease, box-shadow 200ms ease;
 }
 .landing-root .landing-eppp-promo::before,
 .landing-root .landing-textbook-link::before,
-.eppp-launch-btn.suite-switch-btn::before {
+.eppp-launch-btn.suite-switch-btn::before,
+.promo-root .promo-glass::before {
   content: "";
   position: absolute;
   inset: -4px;
@@ -1092,9 +1094,11 @@ body {
   border-image-slice: 55 100 55 100 fill;
   border-image-width: 10px 12px;
   border-image-repeat: stretch;
+  /* Trim the image's baked-in outer haze, keeping its refractive glass rim. */
+  clip-path: inset(5px 3px 6px round 7px);
   pointer-events: none;
   z-index: -1;
-  /* Real translucent artwork owns the rim, reflections, center, and idle glow. */
+  /* Real translucent artwork owns the rim, reflections, and center. */
   filter: none;
   background: none;
   box-shadow: none;
@@ -1103,32 +1107,41 @@ body {
 }
 .landing-root .landing-eppp-promo::after,
 .landing-root .landing-textbook-link::after,
-.eppp-launch-btn.suite-switch-btn::after {
-  content: none;
+.eppp-launch-btn.suite-switch-btn::after,
+.promo-root .promo-glass::after {
+  /* A transparent hit-area buffer prevents pointer-edge hover oscillation. */
+  content: "";
+  position: absolute;
+  inset: -6px;
+  background: transparent;
+  z-index: -2;
 }
 .landing-root .landing-eppp-promo:hover,
 .landing-root .landing-textbook-link:hover,
-.eppp-launch-btn.suite-switch-btn:hover {
-  transform: none;
+.eppp-launch-btn.suite-switch-btn:hover,
+.promo-root .promo-glass:hover:not(:disabled) {
+  transform: translateY(-3px);
   filter: none;
   color: var(--pp-text);
   border-color: transparent;
   box-shadow:
-    0 0 16px 0 rgba(var(--pp-promo-teal-mid-rgb), 0.28);
+    0 0 20px 1px rgba(var(--pp-promo-teal-mid-rgb), 0.50);
 }
 .landing-root .landing-eppp-promo:active,
 .landing-root .landing-textbook-link:active,
-.eppp-launch-btn.suite-switch-btn:active {
-  transform: none;
+.eppp-launch-btn.suite-switch-btn:active,
+.promo-root .promo-glass:active:not(:disabled) {
+  transform: translateY(-1px);
   filter: none;
   color: var(--pp-text);
   border-color: transparent;
   box-shadow:
-    0 0 20px 0 rgba(var(--pp-promo-teal-mid-rgb), 0.38);
+    0 0 24px 2px rgba(var(--pp-promo-teal-mid-rgb), 0.65);
 }
 .landing-root .landing-eppp-promo:focus-visible,
 .landing-root .landing-textbook-link:focus-visible,
-.eppp-launch-btn.suite-switch-btn:focus-visible {
+.eppp-launch-btn.suite-switch-btn:focus-visible,
+.promo-root .promo-glass:focus-visible {
   outline: 2px solid var(--pp-promo-teal-border);
   outline-offset: 4px;
 }
@@ -1142,7 +1155,12 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .landing-root .landing-eppp-promo,
   .landing-root .landing-textbook-link,
-  .eppp-launch-btn.suite-switch-btn { transition: none; }
+  .eppp-launch-btn.suite-switch-btn,
+  .promo-root .promo-glass { transition: none; }
+  .landing-root .landing-eppp-promo:is(:hover, :active),
+  .landing-root .landing-textbook-link:is(:hover, :active),
+  .eppp-launch-btn.suite-switch-btn:is(:hover, :active),
+  .promo-root .promo-glass:is(:hover, :active):not(:disabled) { transform: none; }
 }
 
 /* Canonical shadcn Card treatment — OPAQUE material. The class is emitted

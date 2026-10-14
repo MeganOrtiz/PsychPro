@@ -39,11 +39,11 @@ with a gradual transition into the center.
 The owner further clarified: “more glossy and transparent.” Use a translucent
 face rather than an opaque aqua fill, with brighter, sharper reflections.
 Keep the turquoise as rich as the top artwork, not washed-out pale glass.
-Hover and click should have only a slight glow, with click a little stronger.
+Hover and click should have a clear turquoise glow, with click stronger.
 Use the owner's supplied blank aqua-glass artwork rather than a CSS-only
 approximation. Preserve its rounded refractive edges when resizing, and put
 existing live site text and icons over it. Keep the translucent center and
-included glow, with only a slight additional glow on hover/click.
+glass reflections without a residual blue strip below the resting button.
 
 **Why:** The owner requested “the same richness at the design at the top,
 glassy and glassmorphic and with a slight glow when hovering and clicking.”
@@ -52,10 +52,18 @@ saying “ok no try something like this.”
 The owner reinforced the desired finish: “shiny, vibrant, glassy,” then supplied
 the text-free artwork after repeated CSS approximations failed to match.
 
-**How to apply:** Keep this treatment scoped to these four actions. Keep their
-hit targets stationary while the border/glow changes; do not reintroduce hover
-lift or label movement. Preserve links, labels, icons, and desktop/mobile
-placements. Other primary buttons remain silver chrome.
+**Current interaction rule:** The owner now requests visible lift and stronger
+glow on hover and click for all matching aqua-glass buttons, including the promo
+page actions. Remove the residual blue haze below the resting glass rim.
+
+**Why:** The owner said the residual blue “needs to go for all buttons like that”
+and the buttons “need to raise and glow better when hovering and clicking.”
+This supersedes the earlier stationary-only interaction preference.
+
+**How to apply:** Preserve the artwork, live typography, links, placement, and
+compact corners. Keep a stable hit-area buffer to avoid hover flicker and
+disable movement for reduced-motion users. Other primary buttons remain silver
+chrome; do not apply interactive effects to the plan cards.
 
 All four aqua-glass buttons should be more square like the other buttons,
 not capsule-shaped, while retaining the supplied glass finish.
@@ -63,7 +71,7 @@ not capsule-shaped, while retaining the supplied glass finish.
 **Why:** The owner requested smaller corners on the EPPP Mastery Suite and
 PsychPro Suite buttons, then extended the same treatment to both landing CTAs.
 **How to apply:** Keep compact rectangular corners on all four actions
-and preserve their existing typography, artwork, links, and stationary glow.
+and preserve their existing typography, artwork, links, and interactive glow.
 
 The Free, Master, and Scholar landing cards may share the buttons' aqua-glass
 appearance, but the boxes and their content must remain as they are.
