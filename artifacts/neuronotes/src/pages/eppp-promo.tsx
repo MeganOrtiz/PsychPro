@@ -6,6 +6,7 @@ import { getGetEpppPromoQueryKey, useGetEpppPromo, useRedeemEpppPromo } from "@w
 import { Check, Loader2, TriangleAlert } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import crownSrc from "@/assets/eppp-chrome-crown.webp";
+import bookSrc from "@/assets/psychpro-foundations-book.webp";
 import "./eppp-promo.css";
 
 const splashSrc = `${import.meta.env.BASE_URL}api/storage/public-objects/brand/dashboard-teal-splash-complete.webp`;
@@ -187,7 +188,7 @@ export default function EpppPromoPage() {
       <main className="promo-main">
         <header className="promo-hero">
           <p className="promo-eyebrow">PsychPro EPPP promo</p>
-          <h1 className="promo-title"><span className="promo-wordmark">EPPP Mastery Suite</span><span>7 days FREE</span></h1>
+          <h1 className="promo-title"><span className="promo-wordmark">EPPP Mastery Suite</span><span>7 Days FREE</span></h1>
           <div className="promo-art" aria-hidden>
             <img className="promo-splash" src={splashSrc} alt="" width={1672} height={603} />
             <img className="promo-crown" src={crownSrc} alt="" />
@@ -204,24 +205,21 @@ export default function EpppPromoPage() {
           {body}
         </section>
 
-        <p className="promo-scope">Covers EPPP study materials only. It does not unlock other PsychPro plans.</p>
+        <section className="promo-offer" aria-labelledby="promo-offer-title" data-testid="promo-book-offer">
+          <img className="promo-book" src={bookSrc} alt="Foundations in Clinical Psychology textbook cover" loading="lazy" />
+          <div className="promo-offer-copy">
+            <h2 id="promo-offer-title">For a Limited Time</h2>
+            <p>Leave us an honest review and receive a FREE copy of the Foundations in Clinical Psychology textbook!</p>
+          </div>
+        </section>
 
-        <aside className="promo-notes">
-          <div>
-            <h2>One week, one claim per account</h2>
-            <ul>
-              <li>You will see the exact expiry date and time as soon as you redeem.</li>
-              <li>Access ends automatically, with no automatic renewal. Refreshing will not add time.</li>
-              <li>Existing paid EPPP access and billing terms stay unchanged.</li>
-            </ul>
-          </div>
-          <div>
-            <h2>Optional: feedback for a book</h2>
-            <p>
-              If you choose, send honest feedback about the PsychPro website to earn a free textbook PDF, which stays yours after the
-              promo ends. Books are not awarded for redeeming the promo alone.
-            </p>
-          </div>
+        <aside className="promo-notes" data-testid="promo-terms">
+          <h2>One week, one claim per account</h2>
+          <ul>
+            <li>You will see the exact expiry date and time as soon as you redeem.</li>
+            <li>Access ends automatically, with no automatic renewal. Refreshing will not add time.</li>
+            <li>Existing paid EPPP access and billing terms stay unchanged.</li>
+          </ul>
         </aside>
       </main>
     </div>
