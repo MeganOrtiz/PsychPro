@@ -35,3 +35,10 @@ A product whose `neuronotes_tier` is missing/unrecognized (and not EPPP) is flag
 trials are separate from payment. Always use shared effective-access logic for study gates.
 **Why:** starting a free week must not create a subscription, and expiry must never erase the
 account's saved materials or accidentally revoke legacy paid access.
+
+**Billing portal policy:** allow payment-method updates, invoice history, and cancellation at
+the end of the paid period. Keep self-service plan switching disabled.
+**Why:** the owner approved the portal configuration while preserving existing subscribers'
+prices and access; unrestricted switching could move grandfathered customers onto new terms.
+**How to apply:** keep this policy when updating Stripe portal settings. Add required subscription
+lifecycle webhook events without removing existing events or rotating the signing secret.
