@@ -17,6 +17,14 @@
   font-size: clamp(30px, 5vw, 46px); line-height: 1.15; font-weight: 700; color: var(--pp-text);
 }
 .promo-title span { display: block; }
+.promo-wordmark {
+  font-family: var(--app-font-sans);
+  font-weight: 200;
+  font-size: clamp(20px, 4.8vw, 46px);
+  letter-spacing: 0.16em;
+  padding-left: 0.16em;
+  text-transform: uppercase;
+}
 .promo-art {
   position: relative; z-index: 1;
   width: min(100%, 900px); margin: -28px auto 0;
@@ -29,7 +37,7 @@
 }
 .promo-copy { margin: 4px auto 0; max-width: 720px; font-size: clamp(16px, 1.6vw, 19px); line-height: 1.75; color: var(--pp-text); }
 .promo-copy p { margin: 0; }
-.promo-scope { margin-top: 6px !important; font-size: 13px; line-height: 1.5; }
+.promo-scope { margin: 14px auto 0; max-width: 910px; font-size: 13px; line-height: 1.5; }
 .promo-panel {
   margin: 28px auto 0; max-width: 910px; text-align: left;
   padding: 22px 26px 26px; border-radius: 16px;

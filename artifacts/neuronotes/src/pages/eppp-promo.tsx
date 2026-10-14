@@ -187,7 +187,7 @@ export default function EpppPromoPage() {
       <main className="promo-main">
         <header className="promo-hero">
           <p className="promo-eyebrow">PsychPro EPPP promo</p>
-          <h1 className="promo-title"><span>EPPP Mastery Suite</span><span>7 days FREE</span></h1>
+          <h1 className="promo-title"><span className="promo-wordmark">EPPP Mastery Suite</span><span>7 days FREE</span></h1>
           <div className="promo-art" aria-hidden>
             <img className="promo-splash" src={splashSrc} alt="" width={1672} height={603} />
             <img className="promo-crown" src={crownSrc} alt="" />
@@ -197,13 +197,14 @@ export default function EpppPromoPage() {
             <p>No credit card</p>
             <p>No automatic charge</p>
             <p>Unlimited access to help you master the concepts with confidence</p>
-            <p className="promo-scope">Covers EPPP study materials only. It does not unlock other PsychPro plans.</p>
           </div>
         </header>
 
         <section className="promo-panel" aria-live="polite" data-testid="promo-card">
           {body}
         </section>
+
+        <p className="promo-scope">Covers EPPP study materials only. It does not unlock other PsychPro plans.</p>
 
         <aside className="promo-notes">
           <div>
