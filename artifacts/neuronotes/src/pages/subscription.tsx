@@ -1,10 +1,12 @@
 import { useEffect } from "react";
-import { useLocation, useSearch } from "wouter";
-import { Check, Zap, Crown, Loader2, BookMarked, Sparkles, Settings, GraduationCap } from "lucide-react";
+import { useSearch } from "wouter";
+import { Check, Zap, Crown, Loader2, Sparkles, Settings, GraduationCap } from "lucide-react";
 import { useGetSubscriptionPlans, useGetSubscriptionStatus, useCreateCheckoutSession, useCreatePortalSession } from "@workspace/api-client-react";
 import { EpppPromoLink } from "@/components/eppp-promo-link";
+import { StudyTrialPanel } from "@/components/study-trial-panel";
 import { useEpppPlans, useEpppCheckout } from "@/lib/use-eppp-purchase";
 import { useEntitlements } from "@/lib/use-entitlements";
+import { useStudyAccess, isTrialSuite, PSYCHPRO_MONTHLY_AI_LIMIT } from "@/lib/use-study-access";
 import { Button } from "@/components/ui/button";
 import { PageTitle } from "@/components/brand/page-title";
 import { toast } from "sonner";
@@ -12,34 +14,20 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PP } from "@/lib/palette";
 import { trackEvent } from "@/lib/analytics";
-import { FREE_FLASHCARD_PREVIEW, FREE_QUIZ_LIMIT, FREE_EXAM_LIMIT } from "@/lib/limits";
 
-// B-1: display name is "Master" (the internal subscriptionStatus / Stripe
-// metadata stays "pro" — see api-server/routes/subscription.ts).
-const PRO_DISPLAY_NAME = "Master";
-
-const PRO_FEATURES = [
-  "Unlimited topics, flashcards, quizzes, and exams",
-  "Study guides for every topic",
-  "Practice exams",
-  "Progress tracking",
-];
-
-const SCHOLAR_FEATURES = [
-  `Everything in ${PRO_DISPLAY_NAME}`,
-  "Upload PDF, DOCX, or TXT notes",
-  "Paste text directly",
-  "AI generates flashcards from your content only",
-  "AI generates quiz questions from your content only",
-  "AI generates a study guide from your content only",
-  "Practice exams from your uploaded material",
-  "Unlimited custom study decks",
+const PSYCHPRO_FEATURES = [
+  "Every built-in topic: flashcards, quizzes, study guides, and practice exams",
+  "Course mastery exams and progress tracking",
+  "Upload PDF, DOCX, or TXT notes, or paste text",
+  "AI builds flashcards, quizzes, study guides, and exams from your own material",
+  `${PSYCHPRO_MONTHLY_AI_LIMIT} AI generation requests per month (each selected tool counts as one)`,
+  "EPPP Mastery Suite not included",
 ];
 
 type Plan = {
   id: string;
   name: string;
-  description: string | null;
+  description?: string | null;
   priceId: string;
   unitAmount: number;
   currency: string;
@@ -52,10 +40,12 @@ function formatPrice(amount: number, currency: string) {
 }
 
 export default function SubscriptionPage() {
-  const [, navigate] = useLocation();
   const search = useSearch();
+  const trialParam = new URLSearchParams(search).get("trial");
+  const focusSuite = isTrialSuite(trialParam) ? trialParam : null;
   const { data: plans, isLoading: plansLoading } = useGetSubscriptionPlans();
   const { data: status, isLoading: statusLoading } = useGetSubscriptionStatus();
+  const { data: access } = useStudyAccess();
   const createCheckout = useCreateCheckoutSession();
   const createPortal = useCreatePortalSession();
   const { data: epppPlans, isLoading: epppPlansLoading } = useEpppPlans();
@@ -63,10 +53,16 @@ export default function SubscriptionPage() {
   const epppCheckout = useEpppCheckout();
 
   const isActive = status?.status === "active";
-  const tier = status?.tier ?? null;
-  const isScholar = isActive && tier === "scholar";
-  const isPro = isActive && !isScholar;
+  const psychproPaid = !!access?.psychpro.paid || !!access?.psychpro.legacy;
+  const grandfathered = !!access?.psychpro.legacy || (psychproPaid && status?.tier === "pro");
+  const epppPaid = !!access?.eppp.paid || !!access?.eppp.legacy;
   const currentPeriodEnd = status?.currentPeriodEnd ?? null;
+
+  useEffect(() => {
+    if (!focusSuite) return;
+    const el = document.getElementById(`plan-${focusSuite}`);
+    el?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [focusSuite]);
 
   useEffect(() => {
     if (statusLoading) return;
@@ -77,18 +73,11 @@ export default function SubscriptionPage() {
 
     if (successReturn) {
       toast.success("Checkout complete. Your subscription status is updated.");
-      trackEvent("checkout_returned", {
-        surface: "subscription",
-        outcome: "success_redirect",
-        subscription_active: isActive,
-      });
+      trackEvent("checkout_returned", { surface: "subscription", outcome: "success_redirect", subscription_active: isActive });
     } else {
       toast("Checkout canceled. Your plan has not changed.");
       trackEvent("checkout_returned", { surface: "subscription", outcome: "canceled" });
     }
-
-    // Consume the return marker so refresh/back navigation cannot count it
-    // again. Preserve unrelated query parameters and the hash.
     params.delete("success");
     params.delete("canceled");
     const remaining = params.toString();
@@ -99,20 +88,14 @@ export default function SubscriptionPage() {
     );
   }, [isActive, search, statusLoading]);
 
-  // Bucket by the server's canonical tier metadata, never the display name.
-  const proPlans = (plans as Plan[] | undefined)?.filter((p) => p.tier !== "scholar") ?? [];
-  const scholarPlans = (plans as Plan[] | undefined)?.filter((p) => p.tier === "scholar") ?? [];
+  const psychproPlans = ((plans as Plan[] | undefined) ?? []).slice().sort((a, b) => a.unitAmount - b.unitAmount);
 
   async function handleSubscribe(priceId: string) {
     try {
-      const selectedPlan = (plans as Plan[] | undefined)?.find((plan) => plan.priceId === priceId);
+      const selectedPlan = psychproPlans.find((plan) => plan.priceId === priceId);
       const result = await createCheckout.mutateAsync({ data: { priceId } });
       if (result.url) {
-        trackEvent("checkout_started", {
-          surface: "subscription",
-          product_tier: selectedPlan?.tier === "scholar" ? "scholar" : "master",
-          billing_interval: selectedPlan?.interval ?? "unknown",
-        });
+        trackEvent("checkout_started", { surface: "subscription", product_tier: "psychpro", billing_interval: selectedPlan?.interval ?? "unknown" });
         window.location.href = result.url;
       }
     } catch {
@@ -144,37 +127,17 @@ export default function SubscriptionPage() {
     }
   }
 
+  const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   const loading = plansLoading || statusLoading;
-  const epppActive = !!entitlements?.epppAccess;
   const epppUntil = entitlements?.epppAccessUntil ?? null;
 
   return (
     <div className="min-h-full study-page-bg" data-testid="subscription-page">
       <style>{`
-        .sub-plan {
-          position: relative;
-          padding: 24px;
-        }
-        .sub-plan::before {
-          content: "";
-          position: absolute;
-          inset: 0 22px auto 22px;
-          height: 2px;
-          border-radius: 0 0 3px 3px;
-          background: transparent;
-          opacity: 0.8;
-        }
-        .sub-plan--featured {
-          border-color: rgba(var(--pp-bright-rgb), 0.60);
-        }
-        .sub-icon-chip {
-          display: inline-flex; align-items: center; justify-content: center;
-          width: 36px; height: 36px; border-radius: 11px; flex-shrink: 0;
-        }
-        .sub-bill {
-          position: relative;
-          padding: 16px;
-        }
+        .sub-plan { position: relative; padding: 24px; scroll-margin-top: 24px; }
+        .sub-plan--featured { border-color: rgba(var(--pp-bright-rgb), 0.60); }
+        .sub-icon-chip { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 11px; flex-shrink: 0; }
+        .sub-bill { position: relative; padding: 16px; }
         .sub-price {
           background: ${P.surf};
           -webkit-background-clip: text; background-clip: text;
@@ -183,292 +146,150 @@ export default function SubscriptionPage() {
         }
       `}</style>
       <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
-      <PageTitle
-        title="Upgrade"
-        icon={Crown}
-        subtitle="Choose the plan that fits your study goals"
-        className="mb-6"
-      />
+        <PageTitle title="Plans" icon={Crown} subtitle="PsychPro for coursework and your own material. EPPP Mastery Suite for licensure prep." className="mb-6" />
 
-      {(isPro || isScholar) && (
-        <div
-          className="mat-opaque rounded-xl p-4 mb-6 flex flex-col sm:flex-row sm:items-center gap-3"
-          style={{ color: PP.text }}
-          data-testid="active-subscription-banner"
-        >
-          <div className="flex items-center gap-3 flex-1">
-            {isScholar
-              ? <Sparkles className="w-5 h-5 flex-shrink-0" style={{ color: P.surf }} />
-              : <Crown className="w-5 h-5 flex-shrink-0" style={{ color: P.surf }} />}
-            <div>
-              <p className="font-semibold text-foreground">
-                {isScholar ? "You're on Scholar!" : `You're on ${PRO_DISPLAY_NAME}!`}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                {isScholar ? "You have full access including custom study decks." : "Enjoy unlimited access to all built-in content."}
-              </p>
-              {currentPeriodEnd && (
-                <p className="text-xs mt-0.5 text-muted-foreground">
-                  Renews: {new Date(currentPeriodEnd).toLocaleDateString()}
+        {psychproPaid && (
+          <div className="mat-opaque rounded-xl p-4 mb-6 flex flex-col sm:flex-row sm:items-center gap-3" style={{ color: PP.text }} data-testid="active-subscription-banner">
+            <div className="flex items-center gap-3 flex-1">
+              <Sparkles className="w-5 h-5 flex-shrink-0" style={{ color: P.surf }} />
+              <div>
+                <p className="font-semibold text-foreground">You're subscribed to PsychPro</p>
+                <p className="text-sm text-muted-foreground">
+                  {grandfathered
+                    ? "You're on an earlier plan. Your price and access stay exactly as they are; manage billing below."
+                    : "Full built-in content plus uploads and AI tools."}
                 </p>
+                {currentPeriodEnd && <p className="text-xs mt-0.5 text-muted-foreground">Renews: {new Date(currentPeriodEnd).toLocaleDateString()}</p>}
+              </div>
+            </div>
+            <Button variant="outline" size="sm" className="sm:flex-shrink-0" onClick={handleManageSubscription} disabled={createPortal.isPending} data-testid="button-manage-subscription">
+              {createPortal.isPending ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Opening...</> : <><Settings className="w-4 h-4 mr-2" />Manage subscription</>}
+            </Button>
+          </div>
+        )}
+
+        <div className="space-y-5">
+          <div id="plan-psychpro" className="mat-opaque mat-opaque-interactive sub-plan sub-plan--featured" data-testid="psychpro-plan">
+            <div className="flex items-center gap-3 mb-5">
+              <span className="mat-icon-well sub-icon-chip"><Sparkles className="w-[18px] h-[18px]" style={{ color: P.surf }} /></span>
+              <span className="font-semibold text-foreground text-lg">PsychPro</span>
+            </div>
+            <div className="space-y-2 mb-5">
+              {PSYCHPRO_FEATURES.map((f) => (
+                <div key={f} className="flex items-start gap-2 text-sm text-foreground">
+                  <Check className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                  {f}
+                </div>
+              ))}
+            </div>
+
+            <div className="mb-4"><StudyTrialPanel suite="psychpro" highlight={focusSuite === "psychpro"} onSubscribe={() => scrollTo("psychpro-billing")} /></div>
+
+            <div id="psychpro-billing">
+              {loading ? (
+                <Skeleton className="h-12 rounded-xl" />
+              ) : psychproPlans.length > 0 ? (
+                <div className="space-y-3">
+                  {psychproPlans.map((plan) => (
+                    <div key={plan.priceId} className="mat-glass mat-glass-interactive sub-bill">
+                      <div className="flex items-center justify-between mb-3">
+                        <div>
+                          <p className="font-semibold text-foreground capitalize">Billed {plan.interval}ly</p>
+                          {plan.interval === "year" && <p className="text-xs font-semibold" style={{ color: P.surf }}>Save ~33%</p>}
+                        </div>
+                        <div className="text-right">
+                          <p className="sub-price text-3xl font-extrabold">{formatPrice(plan.unitAmount, plan.currency)}</p>
+                          <p className="text-xs text-muted-foreground">/{plan.interval}</p>
+                        </div>
+                      </div>
+                      <Button className="w-full" disabled={psychproPaid || createCheckout.isPending} onClick={() => handleSubscribe(plan.priceId)} data-testid={`button-subscribe-${plan.priceId}`}>
+                        {createCheckout.isPending ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Processing...</> : psychproPaid ? "Current plan" : <><Zap className="w-4 h-4 mr-2" />Subscribe to PsychPro</>}
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-6 text-muted-foreground"><p className="text-sm">Pricing coming soon</p></div>
               )}
             </div>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            className="sm:flex-shrink-0"
-            onClick={handleManageSubscription}
-            disabled={createPortal.isPending}
-            data-testid="button-manage-subscription"
-          >
-            {createPortal.isPending ? (
-              <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Opening...</>
-            ) : (
-              <><Settings className="w-4 h-4 mr-2" />Manage subscription</>
+
+          <div id="plan-eppp" className="mat-opaque mat-opaque-interactive sub-plan relative" data-testid="eppp-plan">
+            <div className="absolute -top-3 left-5 z-10">
+              <span className="text-xs font-bold px-3 py-1 rounded-full" style={{ background: P.surf, color: PP.chipInk, boxShadow: `0 0 18px -4px ${P.surf}` }}>EPPP</span>
+            </div>
+            <div className="flex items-center gap-3 mb-3">
+              <span className="mat-icon-well sub-icon-chip"><GraduationCap className="w-[18px] h-[18px]" style={{ color: P.surf }} /></span>
+              <span className="font-semibold text-foreground text-lg">EPPP Mastery Suite</span>
+            </div>
+            <p className="text-sm text-muted-foreground mb-4">
+              Full access to the EPPP Mastery Suite: knowledge domains, question bank, domain and full-length exams,
+              missed-question review, and more. Sold separately; PsychPro does not include EPPP, and EPPP does not include PsychPro.
+            </p>
+
+            {epppPaid && (
+              <div className="rounded-xl p-3 mb-4 text-sm" style={{ background: `${P.surf}1a`, border: `1px solid ${P.surf}55`, color: PP.text }} data-testid="eppp-active-banner">
+                <span className="font-semibold">You have paid EPPP access.</span>
+                {epppUntil && <span className="text-muted-foreground"> Active until {new Date(epppUntil).toLocaleDateString()}.</span>}
+              </div>
             )}
-          </Button>
-        </div>
-      )}
 
-      <div className="space-y-5">
-        <div className="mat-opaque mat-opaque-interactive sub-plan sub-plan--featured">
-          <div className="flex items-center gap-3 mb-5">
-            <span className="mat-icon-well sub-icon-chip">
-              <Crown className="w-[18px] h-[18px]" style={{ color: P.surf }} />
-            </span>
-            <span className="font-semibold text-foreground text-lg">PsychPro {PRO_DISPLAY_NAME}</span>
-          </div>
+            <div className="mb-4"><StudyTrialPanel suite="eppp" highlight={focusSuite === "eppp"} onSubscribe={() => scrollTo("eppp-billing")} /></div>
+            {!epppPaid && <div className="mb-4"><EpppPromoLink /></div>}
 
-          <div className="space-y-2 mb-5">
-            {PRO_FEATURES.map((f) => (
-              <div key={f} className="flex items-center gap-2 text-sm text-foreground">
-                <Check className="w-4 h-4 text-primary flex-shrink-0" />
-                {f}
-              </div>
-            ))}
-          </div>
-
-          {loading ? (
-            <Skeleton className="h-12 rounded-xl" />
-          ) : proPlans.length > 0 ? (
-            <div className="space-y-3">
-              {proPlans.map((plan) => (
-                <div key={plan.priceId} className="mat-glass mat-glass-interactive sub-bill">
-                  <div className="flex items-center justify-between mb-3">
-                    <div>
-                      <p className="font-semibold text-foreground capitalize">Billed {plan.interval}ly</p>
-                      {plan.interval === "year" && <p className="text-xs font-semibold" style={{ color: P.surf }}>Save ~33%</p>}
+            <div id="eppp-billing">
+              {epppPlansLoading ? (
+                <Skeleton className="h-12 rounded-xl" />
+              ) : (epppPlans?.monthly || (epppPlans?.oneTime?.length ?? 0) > 0) ? (
+                <div className="space-y-3">
+                  {epppPlans?.monthly && (
+                    <div className="mat-glass mat-glass-interactive sub-bill" data-testid="eppp-bill-monthly">
+                      <div className="flex items-center justify-between mb-3">
+                        <div>
+                          <p className="font-semibold text-foreground">Monthly subscription</p>
+                          <p className="text-xs text-muted-foreground">Cancel anytime</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="sub-price text-3xl font-extrabold">{formatPrice(epppPlans.monthly.unitAmount, epppPlans.monthly.currency)}</p>
+                          <p className="text-xs text-muted-foreground">/month</p>
+                        </div>
+                      </div>
+                      <Button className="w-full" disabled={epppPaid || epppCheckout.isPending} onClick={() => handleEpppCheckout(epppPlans.monthly!.priceId)} data-testid="button-eppp-monthly">
+                        {epppCheckout.isPending ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Processing...</> : epppPaid ? "Current access" : <><Zap className="w-4 h-4 mr-2" />Subscribe monthly</>}
+                      </Button>
                     </div>
-                    <div className="text-right">
-                      <p className="sub-price text-3xl font-extrabold">{formatPrice(plan.unitAmount, plan.currency)}</p>
-                      <p className="text-xs text-muted-foreground">/{plan.interval}</p>
+                  )}
+                  {epppPlans?.oneTime?.map((pack) => (
+                    <div key={pack.priceId} className="mat-glass mat-glass-interactive sub-bill" data-testid={`eppp-bill-${pack.months}mo`}>
+                      <div className="flex items-center justify-between mb-3">
+                        <div>
+                          <p className="font-semibold text-foreground">{pack.months} months access</p>
+                          <p className="text-xs text-muted-foreground">One-time payment</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="sub-price text-3xl font-extrabold">{formatPrice(pack.unitAmount, pack.currency)}</p>
+                          <p className="text-xs text-muted-foreground">one-time</p>
+                        </div>
+                      </div>
+                      <Button className="w-full" disabled={epppPaid || epppCheckout.isPending} onClick={() => handleEpppCheckout(pack.priceId)} data-testid={`button-eppp-${pack.months}mo`}>
+                        {epppCheckout.isPending ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Processing...</> : epppPaid ? "Current access" : <><GraduationCap className="w-4 h-4 mr-2" />Get {pack.months} months</>}
+                      </Button>
                     </div>
-                  </div>
-                  <Button
-                    className="w-full"
-                    disabled={isPro || isScholar || createCheckout.isPending}
-                    onClick={() => handleSubscribe(plan.priceId)}
-                    data-testid={`button-subscribe-${plan.priceId}`}
-                  >
-                    {createCheckout.isPending ? (
-                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Processing...</>
-                    ) : isPro || isScholar ? (
-                      isScholar ? "Included in Scholar" : "Current Plan"
-                    ) : (
-                      <><Zap className="w-4 h-4 mr-2" />Subscribe to {PRO_DISPLAY_NAME}</>
-                    )}
-                  </Button>
+                  ))}
                 </div>
-              ))}
+              ) : (
+                <div className="text-center py-6 text-muted-foreground"><p className="text-sm">Pricing coming soon</p></div>
+              )}
             </div>
-          ) : (
-            <div className="text-center py-6 text-muted-foreground">
-              <p className="text-sm">Pricing coming soon</p>
-            </div>
-          )}
+          </div>
         </div>
 
-        {/* Scholar tier — recolored from purple to the cerulean/teal study
-            palette so it sits in the same brand family as the rest of the app. */}
-        <div className="mat-opaque mat-opaque-interactive sub-plan relative">
-          <div className="flex items-center gap-3 mb-5">
-            <span className="mat-icon-well sub-icon-chip">
-              <BookMarked className="w-[18px] h-[18px]" style={{ color: P.surf }} />
-            </span>
-            <span className="font-semibold text-foreground text-lg">PsychPro Scholar</span>
-          </div>
-
-          <div className="space-y-2 mb-5">
-            {SCHOLAR_FEATURES.map((f) => (
-              <div key={f} className="flex items-center gap-2 text-sm text-foreground">
-                <Check
-                  className="w-4 h-4 flex-shrink-0"
-                  style={{ color: f.startsWith("Everything") ? undefined : P.tealDeep }}
-                />
-                {f}
-              </div>
-            ))}
-          </div>
-
-          {loading ? (
-            <Skeleton className="h-12 rounded-xl" />
-          ) : scholarPlans.length > 0 ? (
-            <div className="space-y-3">
-              {scholarPlans.map((plan) => (
-                <div key={plan.priceId} className="mat-glass mat-glass-interactive sub-bill">
-                  <div className="flex items-center justify-between mb-3">
-                    <div>
-                      <p className="font-semibold text-foreground capitalize">Billed {plan.interval}ly</p>
-                      {plan.interval === "year" && (
-                        <p className="text-xs font-medium" style={{ color: P.tealDeep }}>Save ~33%</p>
-                      )}
-                    </div>
-                    <div className="text-right">
-                      <p className="sub-price text-3xl font-extrabold">{formatPrice(plan.unitAmount, plan.currency)}</p>
-                      <p className="text-xs text-muted-foreground">/{plan.interval}</p>
-                    </div>
-                  </div>
-                  <Button
-                    className="w-full"
-                    disabled={isScholar || createCheckout.isPending}
-                    onClick={() => handleSubscribe(plan.priceId)}
-                    data-testid={`button-subscribe-${plan.priceId}`}
-                  >
-                    {createCheckout.isPending ? (
-                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Processing...</>
-                    ) : isScholar ? (
-                      "Current Plan"
-                    ) : (
-                      <><Sparkles className="w-4 h-4 mr-2" />Subscribe to Scholar</>
-                    )}
-                  </Button>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-6 text-muted-foreground">
-              <p className="text-sm">Pricing coming soon</p>
-            </div>
-          )}
-        </div>
-
-        {/* EPPP Mastery Suite — a SEPARATE access level, sold independently of
-            Master & Scholar. Three options: $99/mo, or one-time 6mo / 12mo. */}
-        <div className="mat-opaque mat-opaque-interactive sub-plan relative" data-testid="eppp-plan">
-          <div className="absolute -top-3 left-5 z-10">
-            <span
-              className="text-xs font-bold px-3 py-1 rounded-full"
-              style={{ background: P.surf, color: PP.chipInk, boxShadow: `0 0 18px -4px ${P.surf}` }}
-            >
-              EPPP
-            </span>
-          </div>
-          <div className="flex items-center gap-3 mb-3">
-            <span className="mat-icon-well sub-icon-chip">
-              <GraduationCap className="w-[18px] h-[18px]" style={{ color: P.surf }} />
-            </span>
-            <span className="font-semibold text-foreground text-lg">EPPP Mastery Suite</span>
-          </div>
-
-          <p className="text-sm text-muted-foreground mb-4">
-            Full access to the EPPP Mastery Suite — knowledge domains, question
-            bank, domain &amp; full-length exams, missed-question review, and more.
-            Sold separately from Master &amp; Scholar.
+        <div className="bg-card border border-border rounded-xl p-4 text-center mt-5">
+          <p className="text-sm text-muted-foreground">
+            Each suite has one free 7-day trial, started only when you choose. No card required and no automatic charge.
+            Books you own stay in your library permanently, whatever your plan.
           </p>
-
-          {epppActive && (
-            <div
-              className="rounded-xl p-3 mb-4 text-sm"
-              style={{ background: `${P.surf}1a`, border: `1px solid ${P.surf}55`, color: PP.text }}
-              data-testid="eppp-active-banner"
-            >
-              <span className="font-semibold">You have EPPP access.</span>
-              {epppUntil && (
-                <span className="text-muted-foreground">
-                  {" "}Active until {new Date(epppUntil).toLocaleDateString()}.
-                </span>
-              )}
-            </div>
-          )}
-
-          <div className="mb-4"><EpppPromoLink /></div>
-
-          {epppPlansLoading ? (
-            <Skeleton className="h-12 rounded-xl" />
-          ) : (epppPlans?.monthly || (epppPlans?.oneTime?.length ?? 0) > 0) ? (
-            <div className="space-y-3">
-              {epppPlans?.monthly && (
-                <div className="mat-glass mat-glass-interactive sub-bill" data-testid="eppp-bill-monthly">
-                  <div className="flex items-center justify-between mb-3">
-                    <div>
-                      <p className="font-semibold text-foreground">Monthly subscription</p>
-                      <p className="text-xs text-muted-foreground">Cancel anytime</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="sub-price text-3xl font-extrabold">{formatPrice(epppPlans.monthly.unitAmount, epppPlans.monthly.currency)}</p>
-                      <p className="text-xs text-muted-foreground">/month</p>
-                    </div>
-                  </div>
-                  <Button
-                    className="w-full"
-                    disabled={epppCheckout.isPending}
-                    onClick={() => handleEpppCheckout(epppPlans.monthly!.priceId)}
-                    data-testid="button-eppp-monthly"
-                  >
-                    {epppCheckout.isPending ? (
-                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Processing...</>
-                    ) : (
-                      <><Zap className="w-4 h-4 mr-2" />Subscribe monthly</>
-                    )}
-                  </Button>
-                </div>
-              )}
-
-              {epppPlans?.oneTime?.map((pack) => (
-                <div key={pack.priceId} className="mat-glass mat-glass-interactive sub-bill" data-testid={`eppp-bill-${pack.months}mo`}>
-                  <div className="flex items-center justify-between mb-3">
-                    <div>
-                      <p className="font-semibold text-foreground">{pack.months} months access</p>
-                      <p className="text-xs text-muted-foreground">One-time payment</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="sub-price text-3xl font-extrabold">{formatPrice(pack.unitAmount, pack.currency)}</p>
-                      <p className="text-xs text-muted-foreground">one-time</p>
-                    </div>
-                  </div>
-                  <Button
-                    className="w-full"
-                    disabled={epppCheckout.isPending}
-                    onClick={() => handleEpppCheckout(pack.priceId)}
-                    data-testid={`button-eppp-${pack.months}mo`}
-                  >
-                    {epppCheckout.isPending ? (
-                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Processing...</>
-                    ) : (
-                      <><GraduationCap className="w-4 h-4 mr-2" />Get {pack.months} months</>
-                    )}
-                  </Button>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-6 text-muted-foreground">
-              <p className="text-sm">Pricing coming soon</p>
-            </div>
-          )}
         </div>
-      </div>
-
-      {/* B-14: the free tier is no longer "N topics fully unlocked" — it's
-          a permanent preview across every topic. Copy reflects that. */}
-      <div className="bg-card border border-border rounded-xl p-4 text-center mt-5">
-        <p className="text-sm text-muted-foreground">
-          Free includes <strong className="text-foreground">{FREE_FLASHCARD_PREVIEW} flashcards per topic</strong>,{" "}
-          <strong className="text-foreground">{FREE_QUIZ_LIMIT} quiz</strong>, and{" "}
-          <strong className="text-foreground">{FREE_EXAM_LIMIT} practice exam</strong> — no credit card required.
-        </p>
-      </div>
       </div>
     </div>
   );

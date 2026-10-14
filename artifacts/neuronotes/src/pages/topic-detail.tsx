@@ -63,7 +63,7 @@ export default function TopicDetailPage({ params }: Props) {
       icon: BookOpen,
       title: "Quiz",
       description: ent?.quizLocked
-        ? "Upgrade to Master for unlimited quizzes"
+        ? "Included in PsychPro"
         : "Multiple-choice with explanations",
       onClick: () => openStudyMode("quiz", inEppp ? epppTopicModePath(topicId, "quiz") : `/topics/${topicId}/quiz`),
       testId: "button-quiz",
@@ -75,7 +75,7 @@ export default function TopicDetailPage({ params }: Props) {
       icon: FileText,
       title: "Study Guide",
       description: ent?.studyGuideLocked
-        ? "Master feature — comprehensive notes"
+        ? "Included in PsychPro"
         : "Comprehensive scrollable notes",
       onClick: () => openStudyMode("study_guide", inEppp ? epppTopicModePath(topicId, "study-guide") : `/topics/${topicId}/study-guide`),
       testId: "button-study-guide",
@@ -87,7 +87,7 @@ export default function TopicDetailPage({ params }: Props) {
       icon: GraduationCap,
       title: "Practice Exam",
       description: ent?.examLocked
-        ? "Upgrade to Master for unlimited exams"
+        ? "Included in PsychPro"
         : "Timed or untimed full exam",
       onClick: () => openStudyMode("practice_exam", inEppp ? epppTopicModePath(topicId, "exam") : `/topics/${topicId}/exam`),
       testId: "button-practice-exam",
@@ -149,7 +149,7 @@ export default function TopicDetailPage({ params }: Props) {
                   key={mode.title}
                   onClick={mode.onClick}
                   data-testid={mode.testId}
-                  aria-label={mode.locked ? `${mode.title} — locked, requires PsychPro Master` : mode.title}
+                  aria-label={mode.locked ? `${mode.title} — locked, requires PsychPro` : mode.title}
                   className="recommended-tile group relative flex items-center gap-4 p-5 rounded-md text-left border hover:-translate-y-0.5 active:translate-y-0 overflow-hidden"
                   style={{ color: PP.text }}
                 >
@@ -186,7 +186,7 @@ export default function TopicDetailPage({ params }: Props) {
                           style={{ background: "rgba(var(--pp-black-rgb), 0.10)", color: PP.text }}
                           data-testid={`badge-locked-${mode.testId}`}
                         >
-                          <Lock className="w-2.5 h-2.5" /> Master
+                          <Lock className="w-2.5 h-2.5" /> PsychPro
                         </span>
                       )}
                     </div>

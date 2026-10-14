@@ -13,6 +13,7 @@ import {
 import { eq, and, desc, inArray } from "drizzle-orm";
 import { requireUserId } from "../lib/userId";
 import { getEntitlements } from "../lib/entitlements";
+import { effectivePsychproTier } from "../lib/studyAccessModel";
 
 const router = Router();
 
@@ -218,7 +219,7 @@ router.get("/dashboard/summary", async (req: Request, res: Response): Promise<vo
       recentTopics,
       weakAreas,
       weeklyActivity,
-      subscriptionStatus: user?.subscriptionStatus ?? "free",
+      subscriptionStatus: user ? effectivePsychproTier(user) === "scholar" && user.subscriptionStatus === "free" ? "scholar" : user.subscriptionStatus : "free",
       usageCount: user?.usageCount ?? 0,
       freeLimit: FREE_LIMIT,
     });

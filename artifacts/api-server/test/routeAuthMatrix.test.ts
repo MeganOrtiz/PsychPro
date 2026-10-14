@@ -55,6 +55,8 @@ const PROTECTED = new Set<string>([
   "GET /api/eppp/missed-questions",
   "GET /api/eppp/promo",
   "POST /api/eppp/promo/redeem",
+  "GET /api/subscription/access",
+  "POST /api/subscription/trials/:suite",
   "GET /api/eppp/study-plan",
   "PUT /api/eppp/study-plan",
   // course mastery exam
@@ -94,6 +96,7 @@ const PROTECTED = new Set<string>([
   "GET /api/custom-decks",
   "POST /api/custom-decks",
   "GET /api/custom-decks/:id",
+  "GET /api/custom-decks/:id/source",
   "GET /api/custom-decks/:id/flashcards",
   "GET /api/custom-decks/:id/quiz",
   "GET /api/custom-decks/:id/cloze",

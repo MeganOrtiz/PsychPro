@@ -83,11 +83,10 @@ async function makeUser(overrides: Partial<typeof usersTable.$inferInsert> = {})
 // ---------------------------------------------------------------------
 // Scenario 1 — free-cap exhaustion → lock + upgrade signal
 // ---------------------------------------------------------------------
-test("free user: fresh account has first quiz/exam available, then LOCKS at the cap", async () => {
+test("inactive account: study is locked until trial opt-in or payment; history remains", async () => {
   const userId = await makeUser();
 
-  // Fresh free user: capped flashcards + study guide, but the first quiz and
-  // exam are still available (no attempts yet).
+  // An account without an explicit trial or payment has no study access.
   const fresh = await getEntitlements(userId);
   eq_(fresh.tier, "free", "fresh tier");
   eq_(fresh.isSubscribed, false, "fresh isSubscribed");
@@ -98,11 +97,11 @@ test("free user: fresh account has first quiz/exam available, then LOCKS at the 
       examLocked: fresh.examLocked,
       studyGuideLocked: fresh.studyGuideLocked,
     },
-    { flashcardsCapped: true, quizLocked: false, examLocked: false, studyGuideLocked: true },
+    { flashcardsCapped: true, quizLocked: true, examLocked: true, studyGuideLocked: true },
     "fresh free flags",
   );
 
-  // Use the one free quiz and the one free exam (lifetime caps are 1 / 1).
+  // Existing study history remains readable, but never unlocks another session.
   await db.insert(quizAttemptsTable).values({ userId, topicId, score: 5, total: 10 });
   await db.insert(examAttemptsTable).values({ userId, topicId, score: 6, total: 10 });
 

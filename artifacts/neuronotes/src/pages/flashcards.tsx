@@ -264,11 +264,11 @@ export default function FlashcardsPage({ params }: Props) {
                 {totalAvailable - total} more {totalAvailable - total === 1 ? "card" : "cards"} waiting
               </p>
               <p className="text-sm text-muted-foreground mb-4">
-                Upgrade to PsychPro Master to study every card in this deck.
+                Subscribe to PsychPro, or start your free week, to study every card in this deck.
               </p>
               <Button onClick={() => navigate("/subscription")} data-testid="button-upgrade-from-flashcards">
                 <Zap className="w-4 h-4 mr-2" />
-                Upgrade to Master
+                See PsychPro plans
               </Button>
             </div>
           )}

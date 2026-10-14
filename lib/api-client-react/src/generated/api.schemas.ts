@@ -5,6 +5,35 @@
  * NeuroNotes API specification
  * OpenAPI spec version: 0.1.0
  */
+export interface SuiteStudyAccess {
+  /** @nullable */
+  startedAt: string | null;
+  /** @nullable */
+  expiresAt: string | null;
+  canStart: boolean;
+  active: boolean;
+  hasAccess: boolean;
+  paid: boolean;
+  legacy: boolean;
+}
+
+export interface StudyAiUsage {
+  /** @nullable */
+  limit: number | null;
+  used: number;
+  /** @nullable */
+  remaining: number | null;
+  /** @nullable */
+  resetsAt: string | null;
+  unlimited: boolean;
+}
+
+export interface StudyAccess {
+  psychpro: SuiteStudyAccess;
+  eppp: SuiteStudyAccess;
+  aiUsage: StudyAiUsage;
+}
+
 export interface LibraryBook {
   id: string;
   title: string;

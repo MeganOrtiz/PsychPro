@@ -14,6 +14,7 @@ import { shuffle } from "../lib/shuffle";
 import { hasEpppAccess } from "../lib/entitlements";
 import { isEpppTopic } from "../lib/eppp";
 import { tierFromStatus, type Tier } from "../lib/tierMapping";
+import { effectivePsychproTier } from "../lib/studyAccessModel";
 
 const router = Router();
 
@@ -36,10 +37,10 @@ const PAID_MASTERY_TIERS = new Set<Tier>(["pro", "scholar"]);
 
 async function getUserTier(userId: string): Promise<Tier> {
   const [u] = await db
-    .select({ status: usersTable.subscriptionStatus })
+    .select()
     .from(usersTable)
     .where(eq(usersTable.id, userId));
-  return tierFromStatus(u?.status);
+  return u ? effectivePsychproTier(u) : "free";
 }
 
 // Decides whether a user may open/record a course mastery exam.

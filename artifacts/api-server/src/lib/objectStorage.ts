@@ -20,12 +20,12 @@ const REPLIT_SIDECAR_ENDPOINT = "http://127.0.0.1:1106";
  */
 export function isReservedLibraryPdfPath(path: string): boolean {
   const normalized = path.replace(/^\/+/, "");
-  const librarySuffix = "library/";
-  if (normalized.startsWith(librarySuffix) || normalized.startsWith(`objects/${librarySuffix}`)) {
+  const privateNamespaces = ["library/", "study-sources/"];
+  if (privateNamespaces.some(prefix => normalized.startsWith(prefix) || normalized.startsWith(`objects/${prefix}`))) {
     return true;
   }
   const privateDir = (process.env.PRIVATE_OBJECT_DIR || "").replace(/^\/+|\/+$/g, "");
-  return privateDir.length > 0 && normalized.startsWith(`${privateDir}/${librarySuffix}`);
+  return privateDir.length > 0 && privateNamespaces.some(prefix => normalized.startsWith(`${privateDir}/${prefix}`));
 }
 
 export const objectStorageClient = new Storage({

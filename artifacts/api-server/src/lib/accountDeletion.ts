@@ -3,6 +3,7 @@ import {
   db,
   usersTable,
   customDecksTable,
+  aiGenerationUsageTable,
   progressTable,
   quizAttemptsTable,
   examAttemptsTable,
@@ -12,6 +13,7 @@ import {
 import { eq } from "drizzle-orm";
 import { getUncachableStripeClient } from "../stripeClient";
 import { logger } from "./logger";
+import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 
 export type AccountDeletionResult = {
   deleted: boolean;
@@ -59,6 +61,20 @@ export async function deleteUserAccount(userId: string): Promise<AccountDeletion
     }
   }
 
+  // Uploaded originals are private account data, not subscription-dependent.
+  // They survive expiry, but not an explicit account deletion.
+  const uploads = await db.select({ path: customDecksTable.sourceFilePath })
+    .from(customDecksTable).where(eq(customDecksTable.userId, userId));
+  for (const { path } of uploads) {
+    if (!path) continue;
+    try {
+      const file = await new ObjectStorageService().getObjectEntityFile(path);
+      await file.delete({ ignoreNotFound: true });
+    } catch (err) {
+      if (!(err instanceof ObjectNotFoundError)) logger.warn({ err, userId }, "Unable to remove private uploaded source during account deletion");
+    }
+  }
+
   // 2. Remove all application data, then the users row, in one transaction.
   await db.transaction(async (tx) => {
     await tx.delete(customDecksTable).where(eq(customDecksTable.userId, userId));
@@ -67,6 +83,7 @@ export async function deleteUserAccount(userId: string): Promise<AccountDeletion
     await tx.delete(examAttemptsTable).where(eq(examAttemptsTable.userId, userId));
     await tx.delete(feedbackTable).where(eq(feedbackTable.userId, userId));
     await tx.delete(adminTokensTable).where(eq(adminTokensTable.userId, userId));
+    await tx.delete(aiGenerationUsageTable).where(eq(aiGenerationUsageTable.userId, userId));
     await tx.delete(usersTable).where(eq(usersTable.id, userId));
   });
 

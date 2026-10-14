@@ -215,29 +215,27 @@ test("isUnclassifiedPlanMetadata flags missing AND unrecognized tiers (not EPPP/
 });
 
 // ---------------------------------------------------------------------
-// 4c. Free-tier caps — a free user lands on the permanent capped tier and is
-//     locked at exactly the documented caps, while any unrestricted user
-//     (paid for the relevant dimension, or admin) is never capped.
+// 4c. Inactive accounts cannot study. Explicit active trial access or payment
+//     for the relevant suite (or admin) unlocks the study features.
 // ---------------------------------------------------------------------
 
-test("computeEntitlementFlags: free user is capped and locks at the caps", () => {
-  // Fresh free user: capped previews + study guides, but the first quiz/exam
-  // are still available (counts are below the lifetime caps).
+test("computeEntitlementFlags: inactive account is locked before any study attempt", () => {
+  // No trial has started; no study session is available.
   eq(
     computeEntitlementFlags({ unrestricted: false, quizzesCompleted: 0, examsCompleted: 0 }),
-    { flashcardsCapped: true, quizLocked: false, examLocked: false, studyGuideLocked: true },
+    { flashcardsCapped: true, quizLocked: true, examLocked: true, studyGuideLocked: true },
     "fresh free user",
   );
-  // After using the one free quiz, the quiz locks (exam still available).
+  // Saved quiz history does not unlock exams.
   eq(
     computeEntitlementFlags({ unrestricted: false, quizzesCompleted: FREE_QUIZ_LIMIT, examsCompleted: 0 }),
-    { flashcardsCapped: true, quizLocked: true, examLocked: false, studyGuideLocked: true },
+    { flashcardsCapped: true, quizLocked: true, examLocked: true, studyGuideLocked: true },
     "quiz exhausted",
   );
-  // After using the one free exam, the exam locks (quiz still available).
+  // Saved exam history does not unlock quizzes.
   eq(
     computeEntitlementFlags({ unrestricted: false, quizzesCompleted: 0, examsCompleted: FREE_EXAM_LIMIT }),
-    { flashcardsCapped: true, quizLocked: false, examLocked: true, studyGuideLocked: true },
+    { flashcardsCapped: true, quizLocked: true, examLocked: true, studyGuideLocked: true },
     "exam exhausted",
   );
 });

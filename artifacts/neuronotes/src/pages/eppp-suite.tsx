@@ -257,7 +257,8 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
   const epppUnlocked = !!entitlements?.epppAccess;
   // Owned books belong to the account, not an active EPPP subscription.
   // Only the library bypasses the study-content access gate.
-  const isBookLibrary = tab === "my-library";
+  const isBookLibrary = tab === "my-library" || !tab ||
+    ["performance-analytics", "reflections", "my-notes", "feedback"].includes(tab);
 
   // EPPP Mastery Suite is a SEPARATE access level. Gate the whole suite behind
   // EPPP access (admins are included via computeEpppAccess on the server). Show

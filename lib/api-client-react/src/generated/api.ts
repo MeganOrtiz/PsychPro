@@ -41,6 +41,7 @@ import type {
   QuizQuestion,
   RecordAttemptBody,
   RecordCourseMasteryAttemptBody,
+  StudyAccess,
   StudyGuide,
   SubmitFeedback201,
   SubmitFeedbackBody,
@@ -2759,6 +2760,165 @@ export const useCreateCheckoutSession = <
   TContext
 > => {
   return useMutation(getCreateCheckoutSessionMutationOptions(options));
+};
+
+/**
+ * @summary Get independent suite trials, access, and AI allowance
+ */
+export const getGetStudyAccessUrl = () => {
+  return `/api/subscription/access`;
+};
+
+export const getStudyAccess = async (
+  options?: RequestInit,
+): Promise<StudyAccess> => {
+  return customFetch<StudyAccess>(getGetStudyAccessUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetStudyAccessQueryKey = () => {
+  return [`/api/subscription/access`] as const;
+};
+
+export const getGetStudyAccessQueryOptions = <
+  TData = Awaited<ReturnType<typeof getStudyAccess>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getStudyAccess>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetStudyAccessQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getStudyAccess>>> = ({
+    signal,
+  }) => getStudyAccess({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getStudyAccess>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetStudyAccessQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getStudyAccess>>
+>;
+export type GetStudyAccessQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Get independent suite trials, access, and AI allowance
+ */
+
+export function useGetStudyAccess<
+  TData = Awaited<ReturnType<typeof getStudyAccess>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getStudyAccess>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetStudyAccessQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Explicitly start one seven-day suite trial without a card
+ */
+export const getStartStudyTrialUrl = (suite: "psychpro" | "eppp") => {
+  return `/api/subscription/trials/${suite}`;
+};
+
+export const startStudyTrial = async (
+  suite: "psychpro" | "eppp",
+  options?: RequestInit,
+): Promise<StudyAccess> => {
+  return customFetch<StudyAccess>(getStartStudyTrialUrl(suite), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getStartStudyTrialMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof startStudyTrial>>,
+    TError,
+    { suite: "psychpro" | "eppp" },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof startStudyTrial>>,
+  TError,
+  { suite: "psychpro" | "eppp" },
+  TContext
+> => {
+  const mutationKey = ["startStudyTrial"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof startStudyTrial>>,
+    { suite: "psychpro" | "eppp" }
+  > = (props) => {
+    const { suite } = props ?? {};
+
+    return startStudyTrial(suite, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type StartStudyTrialMutationResult = NonNullable<
+  Awaited<ReturnType<typeof startStudyTrial>>
+>;
+
+export type StartStudyTrialMutationError = ErrorType<void>;
+
+/**
+ * @summary Explicitly start one seven-day suite trial without a card
+ */
+export const useStartStudyTrial = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof startStudyTrial>>,
+    TError,
+    { suite: "psychpro" | "eppp" },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof startStudyTrial>>,
+  TError,
+  { suite: "psychpro" | "eppp" },
+  TContext
+> => {
+  return useMutation(getStartStudyTrialMutationOptions(options));
 };
 
 /**

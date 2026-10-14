@@ -12,6 +12,7 @@ import { PP } from "@/lib/palette";
 import { trackEvent } from "@/lib/analytics";
 import { navItemClass } from "./sidebar-style";
 import { DashboardHeaderBackdrop } from "@/components/dashboard-brand-artwork";
+import { StudyAccessGate } from "@/components/study-access-gate";
 type NavItem = { href: string; label: string; icon: React.ComponentType<{ className?: string }> };
 
 // Sidebar IA (updated 2026-05-25 per new landing/dashboard spec):
@@ -451,7 +452,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
         </header>
 
         <main className="flex-1 overflow-y-auto" data-testid="main-content">
-          {children}
+          <StudyAccessGate>{children}</StudyAccessGate>
         </main>
       </div>
     </div>

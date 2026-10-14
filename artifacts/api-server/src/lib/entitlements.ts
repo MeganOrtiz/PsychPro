@@ -1,14 +1,15 @@
 import { db } from "@workspace/db";
 import { usersTable, quizAttemptsTable, examAttemptsTable } from "@workspace/db";
 import { eq, sql } from "drizzle-orm";
-import { type Tier, tierFromStatus } from "./tierMapping";
+import { type Tier } from "./tierMapping";
+import { effectivePsychproTier } from "./studyAccessModel";
 import { effectiveEpppAccessUntil } from "./epppPromo";
 
 // Authoritative free-tier caps. Mirrored on the client in
 // artifacts/neuronotes/src/lib/limits.ts — keep in sync.
-export const FREE_FLASHCARD_PREVIEW = 10;
-export const FREE_QUIZ_LIMIT = 1;
-export const FREE_EXAM_LIMIT = 1;
+export const FREE_FLASHCARD_PREVIEW = 0;
+export const FREE_QUIZ_LIMIT = 0;
+export const FREE_EXAM_LIMIT = 0;
 
 // Re-exported so existing consumers can keep importing `Tier` from here. The
 // canonical definition (and the status→tier mapping) lives in ./tierMapping.
@@ -115,7 +116,7 @@ export async function getEntitlements(
       .returning();
   }
 
-  const tier = tierFromStatus(user.subscriptionStatus);
+  const tier = effectivePsychproTier(user);
   const isAdmin = !!user.isAdmin;
   const isSubscribed = tier !== "free";
   const epppAccess = computeEpppAccess(user);

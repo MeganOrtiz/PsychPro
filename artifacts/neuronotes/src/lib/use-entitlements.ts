@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { authHeaders } from "./auth-headers";
+import { useAuth } from "@clerk/clerk-react";
 
 export type Entitlements = {
   tier: "free" | "pro" | "scholar";
@@ -28,13 +29,17 @@ export type Entitlements = {
  * the sub-pages, and the upgrade overlays all see consistent state.
  */
 export function useEntitlements() {
+  const { userId, isLoaded, isSignedIn } = useAuth();
   return useQuery<Entitlements>({
-    queryKey: ["entitlements"],
+    queryKey: ["entitlements", userId],
+    enabled: isLoaded && !!isSignedIn,
     queryFn: async () => {
       const res = await fetch("/api/users/entitlements", { headers: await authHeaders() });
       if (!res.ok) throw new Error(`entitlements fetch failed: ${res.status}`);
       return res.json();
     },
     staleTime: 30_000,
+    refetchInterval: 30_000,
+    refetchOnWindowFocus: "always",
   });
 }

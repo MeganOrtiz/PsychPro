@@ -5,6 +5,8 @@ description: The decision that all tier/EPPP mapping has ONE home, why, and the 
 
 # Canonical billing / entitlement model
 
+New-customer offerings now follow the [two-plan pricing and trial decision](psychpro-two-plan-trials.md). Master/Scholar mappings below remain compatibility rules for existing subscribers, not public plan choices.
+
 **Rule:** all "is this a paid tier / which tier / is this EPPP" logic has exactly one home —
 a single tier-mapping module in api-server, locked by a regression suite that also fails if
 any billing file re-declares the allowlist/status sets inline. New code imports from it; never
@@ -29,6 +31,7 @@ Stripe product DISPLAY NAME. Renaming a product in the Stripe dashboard must not
 A product whose `neuronotes_tier` is missing/unrecognized (and not EPPP) is flagged via
 `isUnclassifiedPlanMetadata` and dropped from the pricing page instead of silently mis-listed.
 
-**Divergence is RESOLVED (was: mastery-exams treated only literal `pro`/`scholar` as paid):** both
-mastery-exam systems now route through canonical `tierFromStatus` + the {pro,scholar} sets, so a
-Master subscriber stored as `active` correctly reads as paid everywhere. No remaining known divergence.
+**Trial-aware gating:** a raw legacy billing status alone cannot describe study access now that
+trials are separate from payment. Always use shared effective-access logic for study gates.
+**Why:** starting a free week must not create a subscription, and expiry must never erase the
+account's saved materials or accidentally revoke legacy paid access.

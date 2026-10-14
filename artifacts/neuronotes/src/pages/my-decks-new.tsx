@@ -11,6 +11,10 @@ import { toast } from "sonner";
 import { authHeaders } from "@/lib/auth-headers";
 import { PageTitle } from "@/components/brand/page-title";
 import { trackEvent } from "@/lib/analytics";
+import { AiUsagePanel } from "@/components/ai-usage-panel";
+import { useStudyAccess, trialPhase } from "@/lib/use-study-access";
+import { useQueryClient } from "@tanstack/react-query";
+import { getGetStudyAccessQueryKey } from "@workspace/api-client-react";
 
 type InputMode = "text" | "file";
 type AiMode = "strict" | "enhance";
@@ -107,6 +111,14 @@ export default function NewDeckPage() {
   const [clozeCount, setClozeCount] = useState<number>(10);
   const [generating, setGenerating] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const queryClient = useQueryClient();
+  const { data: access, isLoading: accessLoading } = useStudyAccess();
+  const ai = access?.aiUsage;
+  const hasPsychPro = !!access?.psychpro.hasAccess;
+  // One generation request per distinct selected output tool.
+  const selectedUnits = active ? 1 : 0;
+  const overLimit = !!ai && !ai.unlimited && (ai.remaining ?? 0) < selectedUnits;
+  const blocked = !accessLoading && (!hasPsychPro || overLimit);
 
   const ACCEPTED = ".pdf,.docx,.doc,.txt";
 
@@ -125,7 +137,7 @@ export default function NewDeckPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!active) return;
+    if (!active || blocked) return;
     if (mode === "text" && text.trim().length < 50) {
       toast.error("Please paste at least a few paragraphs of study material.");
       return;
@@ -156,15 +168,21 @@ export default function NewDeckPage() {
 
       const res = await fetch("/api/custom-decks", { method: "POST", body: formData, headers: await authHeaders() });
       if (res.status === 403) {
-        toast.error("Scholar subscription required to create custom decks.");
-        navigate("/subscription");
+        toast.error("A PsychPro plan or active free week is required to generate new tools.");
+        navigate("/subscription?trial=psychpro");
         return;
+      }
+      if (res.status === 429) {
+        const data = await res.json().catch(() => ({}));
+        void queryClient.invalidateQueries({ queryKey: getGetStudyAccessQueryKey() });
+        throw new Error(data.error || "AI allowance exceeded. No requests remain for this period.");
       }
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.error || "Failed to create deck");
       }
       const deck = await res.json();
+      void queryClient.invalidateQueries({ queryKey: getGetStudyAccessQueryKey() });
       trackEvent("custom_material_created", {
         input_mode: mode,
         file_extension:
@@ -475,11 +493,21 @@ export default function NewDeckPage() {
                 </div>
               )}
 
+              <AiUsagePanel
+                selectedUnits={selectedUnits}
+                selectedLabels={[tool.label]}
+                hasAccess={hasPsychPro}
+                expired={trialPhase(access?.psychpro) === "expired"}
+                loading={accessLoading}
+                usage={ai}
+                onRenew={() => navigate("/subscription?trial=psychpro")}
+              />
+
               <div className="flex gap-3">
                 <Button type="button" variant="outline" className="flex-1" onClick={() => setActive(null)}>
                   Back
                 </Button>
-                <Button type="submit" className="flex-1 gap-2" data-testid="generate-tool">
+                <Button type="submit" className="flex-1 gap-2" disabled={blocked || accessLoading} data-testid="generate-tool">
                   <Sparkles className="w-4 h-4" />
                   Generate
                 </Button>

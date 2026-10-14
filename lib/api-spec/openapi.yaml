@@ -633,6 +633,40 @@ paths:
               schema:
                 $ref: "#/components/schemas/CheckoutSessionResponse"
 
+  /subscription/access:
+    get:
+      operationId: getStudyAccess
+      tags: [subscription]
+      summary: Get independent suite trials, access, and AI allowance
+      responses:
+        "200":
+          description: Current access
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudyAccess"
+  /subscription/trials/{suite}:
+    post:
+      operationId: startStudyTrial
+      tags: [subscription]
+      summary: Explicitly start one seven-day suite trial without a card
+      parameters:
+        - name: suite
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [psychpro, eppp]
+      responses:
+        "200":
+          description: Updated access
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudyAccess"
+        "409":
+          description: Trial already claimed or suite already paid
+
   /subscription/status:
     get:
       operationId: getSubscriptionStatus
@@ -661,6 +695,36 @@ paths:
 
 components:
   schemas:
+    SuiteStudyAccess:
+      type: object
+      required: [startedAt, expiresAt, canStart, active, hasAccess, paid, legacy]
+      properties:
+        startedAt: { type: [string, "null"] }
+        expiresAt: { type: [string, "null"] }
+        canStart: { type: boolean }
+        active: { type: boolean }
+        hasAccess: { type: boolean }
+        paid: { type: boolean }
+        legacy: { type: boolean }
+    StudyAiUsage:
+      type: object
+      required: [limit, used, remaining, resetsAt, unlimited]
+      properties:
+        limit: { type: [integer, "null"] }
+        used: { type: integer }
+        remaining: { type: [integer, "null"] }
+        resetsAt: { type: [string, "null"] }
+        unlimited: { type: boolean }
+    StudyAccess:
+      type: object
+      required: [psychpro, eppp, aiUsage]
+      properties:
+        psychpro:
+          $ref: "#/components/schemas/SuiteStudyAccess"
+        eppp:
+          $ref: "#/components/schemas/SuiteStudyAccess"
+        aiUsage:
+          $ref: "#/components/schemas/StudyAiUsage"
     LibraryBook:
       type: object
       properties:

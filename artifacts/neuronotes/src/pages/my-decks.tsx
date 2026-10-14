@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { BookMarked, Trash2, Clock, CheckCircle, AlertCircle, Loader2, Wrench, Sparkles } from "lucide-react";
+import { BookMarked, Download, Trash2, Clock, CheckCircle, AlertCircle, Loader2, Wrench, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { authHeaders } from "@/lib/auth-headers";
 import { PageTitle } from "@/components/brand/page-title";
+import { useStudyAccess, trialPhase, formatTrialDate } from "@/lib/use-study-access";
 
 type DeckSummary = {
   id: number;
@@ -38,12 +39,16 @@ export default function MyDecksPage() {
   const [decks, setDecks] = useState<DeckSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<number | null>(null);
+  const { data: access, isLoading: accessLoading } = useStudyAccess();
+  const phase = trialPhase(access?.psychpro);
+  // Without access, decks and sources stay visible but study + generation pause.
+  const locked = !accessLoading && !!access && !access.psychpro.hasAccess;
 
   async function loadDecks() {
     try {
       const res = await fetch("/api/custom-decks", { headers: await authHeaders() });
       if (res.status === 403) {
-        navigate("/subscription");
+        navigate("/subscription?trial=psychpro");
         return;
       }
       if (!res.ok) throw new Error("Failed");
@@ -56,6 +61,38 @@ export default function MyDecksPage() {
   }
 
   useEffect(() => { loadDecks(); }, []);
+
+  const [downloading, setDownloading] = useState<number | null>(null);
+
+  // Saved sources stay downloadable regardless of plan or trial state.
+  async function downloadSource(deck: DeckSummary, e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    setDownloading(deck.id);
+    try {
+      const res = await fetch(`/api/custom-decks/${deck.id}/source`, { headers: await authHeaders() });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Could not download the source.");
+      }
+      const blob = await res.blob();
+      const cd = res.headers.get("Content-Disposition") ?? "";
+      const match = /filename\*?=(?:UTF-8'')?"?([^";]+)"?/i.exec(cd);
+      const name = match ? decodeURIComponent(match[1]) : `${deck.title.replace(/[^a-z0-9-_ ]/gi, "").trim() || "source"}.txt`;
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not download the source.");
+    } finally {
+      setDownloading(null);
+    }
+  }
 
   async function deleteDeck(id: number, e: React.MouseEvent) {
     e.preventDefault();
@@ -82,18 +119,38 @@ export default function MyDecksPage() {
         icon={BookMarked}
         subtitle="Tools generated from your own materials"
       />
+      {locked && (
+        <div className="mat-glass rounded-xl p-4 mb-5 flex flex-col sm:flex-row sm:items-center gap-3" data-testid="banner-decks-locked">
+          <div className="flex-1 text-sm">
+            <p className="font-semibold text-foreground">
+              {phase === "expired" ? `Your PsychPro free week ended ${formatTrialDate(access?.psychpro.expiresAt)}` : "PsychPro access is not active"}
+            </p>
+            <p className="text-muted-foreground">
+              Your decks and uploaded sources are saved. Studying them and generating new tools resume when you subscribe.
+            </p>
+          </div>
+          <Button onClick={() => navigate("/subscription?trial=psychpro")} data-testid="button-renew-psychpro">
+            {phase === "available" ? "Start my free week" : "Subscribe to PsychPro"}
+          </Button>
+        </div>
+      )}
       <div className="mb-6">
         <div className="grid grid-cols-2 gap-2">
-          <Link href="/my-decks/new?tier=standard">
-            <Button variant="outline" className="w-full gap-2 justify-center">
-              <Wrench className="w-4 h-4" /> Standard Tools
-            </Button>
-          </Link>
-          <Link href="/my-decks/new?tier=pro">
-            <Button variant="outline" className="w-full gap-2 justify-center">
-              <Sparkles className="w-4 h-4" /> Pro Tools
-            </Button>
-          </Link>
+          {locked ? (
+            <>
+              <Button variant="outline" className="w-full gap-2 justify-center" disabled data-testid="link-standard-tools"><Wrench className="w-4 h-4" /> Standard Tools</Button>
+              <Button variant="outline" className="w-full gap-2 justify-center" disabled data-testid="link-pro-tools"><Sparkles className="w-4 h-4" /> Pro Tools</Button>
+            </>
+          ) : (
+            <>
+              <Link href="/my-decks/new?tier=standard" className="w-full gap-2 justify-center inline-flex items-center h-9 rounded-md border border-border text-sm font-medium bg-card" data-testid="link-standard-tools">
+                <Wrench className="w-4 h-4" /> Standard Tools
+              </Link>
+              <Link href="/my-decks/new?tier=pro" className="w-full gap-2 justify-center inline-flex items-center h-9 rounded-md border border-border text-sm font-medium bg-card" data-testid="link-pro-tools">
+                <Sparkles className="w-4 h-4" /> Pro Tools
+              </Link>
+            </>
+          )}
         </div>
       </div>
 
@@ -116,7 +173,7 @@ export default function MyDecksPage() {
             // Render as a non-interactive div in those states so the delete
             // button stays clickable but the card itself doesn't navigate.
             const cardBody = (
-              <div className={`bg-card border border-border rounded-xl p-5 flex items-center justify-between gap-3 transition-all ${deck.status === "ready" ? "hover:border-primary/40 hover:shadow-sm cursor-pointer" : "opacity-70 cursor-default"}`}>
+              <div className={`bg-card border border-border rounded-xl p-5 flex items-center justify-between gap-3 transition-all ${deck.status === "ready" && !locked ? "hover:border-primary/40 hover:shadow-sm cursor-pointer" : "opacity-70 cursor-default"}`}>
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <p className="font-medium text-foreground truncate">{deck.title}</p>
@@ -134,6 +191,17 @@ export default function MyDecksPage() {
                     </span>
                   </div>
                 </div>
+                <div className="flex items-center gap-1 flex-shrink-0">
+                <button
+                  onClick={(e) => downloadSource(deck, e)}
+                  disabled={downloading === deck.id}
+                  aria-label="Download source"
+                  title="Download source"
+                  className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  data-testid={`button-download-source-${deck.id}`}
+                >
+                  {downloading === deck.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                </button>
                 <button
                   onClick={(e) => deleteDeck(deck.id, e)}
                   disabled={deleting === deck.id}
@@ -141,9 +209,10 @@ export default function MyDecksPage() {
                 >
                   {deleting === deck.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
                 </button>
+                </div>
               </div>
             );
-            return deck.status === "ready" ? (
+            return deck.status === "ready" && !locked ? (
               <Link key={deck.id} href={`/my-decks/${deck.id}`}>{cardBody}</Link>
             ) : (
               <div key={deck.id}>{cardBody}</div>

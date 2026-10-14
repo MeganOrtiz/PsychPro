@@ -4,12 +4,14 @@ import { usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { getUncachableStripeClient } from "../stripeClient";
 import { requireUserId } from "../lib/userId";
+import { effectivePsychproTier, trialEnds } from "../lib/studyAccessModel";
 import {
   ACTIVE_SUBSCRIPTION_STATUSES,
   isApprovedSubscriptionTier,
   isUnclassifiedPlanMetadata,
   subscriptionStatusApiShape,
   tierFromTierMetadata,
+  isNewPsychproPrice,
 } from "../lib/tierMapping";
 
 const router = Router();
@@ -45,6 +47,9 @@ router.get("/subscription/plans", async (req: Request, res: Response): Promise<v
 
       // Categorize by the canonical metadata mapping, NOT the display name.
       const tier = tierFromTierMetadata(meta);
+      // Keep legacy Master prices/subscriptions intact, but no longer sell
+      // them to new customers. Sell only the distinct, versioned PsychPro product.
+      if (tier !== "scholar") continue;
 
       const prices = await stripe.prices.list({ product: product.id, active: true, limit: 10 });
       for (const price of prices.data) {
@@ -53,10 +58,11 @@ router.get("/subscription/plans", async (req: Request, res: Response): Promise<v
         // leak into the pricing page.
         const interval = price.recurring?.interval;
         if (interval !== "month" && interval !== "year") continue;
+        if (!isNewPsychproPrice(meta, price.currency, price.unit_amount, interval, price.recurring?.interval_count, product.metadata?.psychpro_plan_version ?? "")) continue;
 
         plans.push({
           id: product.id,
-          name: product.name,
+          name: "PsychPro",
           description: product.description ?? null,
           priceId: price.id,
           unitAmount: price.unit_amount ?? 0,
@@ -121,7 +127,8 @@ router.post("/subscription/checkout", async (req: Request, res: Response): Promi
       const interval = price.recurring?.interval;
       const isApprovedTier = isApprovedSubscriptionTier(product?.metadata?.neuronotes_tier);
       const isApprovedInterval = interval === "month" || interval === "year";
-      if (!isApprovedTier || !isApprovedInterval || !price.active || product.deleted) {
+      if (!isApprovedTier || !isApprovedInterval || !price.active || product.deleted ||
+          !isNewPsychproPrice(product.metadata?.neuronotes_tier, price.currency, price.unit_amount, interval, price.recurring?.interval_count, product.metadata?.psychpro_plan_version ?? "")) {
         res.status(400).json({ error: "Invalid plan selected" });
         return;
       }
@@ -162,10 +169,12 @@ router.post("/subscription/checkout", async (req: Request, res: Response): Promi
         payment_method_types: ["card"],
         line_items: [{ price: priceId, quantity: 1 }],
         mode: "subscription",
+        metadata: { psychpro_plan_version: "2" },
+        subscription_data: { metadata: { psychpro_plan_version: "2" } },
         success_url: `${baseUrl}${safeReturnPath}`,
         cancel_url: `${baseUrl}/subscription?canceled=true`,
       },
-      { idempotencyKey: `checkout:${userId}:${priceId}` },
+      { idempotencyKey: `checkout:v2:${userId}:${priceId}` },
     );
 
     res.json({ url: session.url });
@@ -219,13 +228,15 @@ router.get("/subscription/status", async (req: Request, res: Response): Promise<
 
     // Map DB subscriptionStatus to the {status, tier} shape the frontend
     // expects via the canonical mapping (see lib/tierMapping.ts).
-    const { status, tier } = subscriptionStatusApiShape(user.subscriptionStatus);
+    const paidShape = subscriptionStatusApiShape(user.subscriptionStatus);
+    const tier = effectivePsychproTier(user);
+    const status = tier !== "free" ? "active" : paidShape.status;
 
     res.json({
       status,
       tier,
       subscriptionId: user.stripeSubscriptionId ?? null,
-      currentPeriodEnd: null,
+      currentPeriodEnd: paidShape.status === "free" ? trialEnds(user.psychproTrialStartedAt)?.toISOString() ?? null : null,
     });
   } catch (err) {
     req.log.error({ err }, "Error getting subscription status");

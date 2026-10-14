@@ -268,11 +268,11 @@ export default function DashboardPage() {
             />
             <div className="flex-1 min-w-0">
               <p className="font-semibold text-sm" style={{ color: PALETTE.mist }}>
-                Free limit reached
+                Study access paused
               </p>
               <p className="text-sm mt-1" style={{ color: `${PALETTE.mist}cc` }}>
-                You've used all {summary?.freeLimit ?? 10} free interactions.
-                Upgrade to continue studying.
+                Your progress is saved. Subscribe to PsychPro, or start your
+                free week, to continue studying.
               </p>
             </div>
             <Button

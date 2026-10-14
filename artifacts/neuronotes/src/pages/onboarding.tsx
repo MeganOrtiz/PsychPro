@@ -9,8 +9,10 @@
 //   4. Study Focus        (studyFocus, single-select)
 //   5. EPPP Eligibility   (epppInterest — CONDITIONAL: only when an EPPP/exam
 //                          goal or the EPPP study focus was chosen)
-//   6. Tier Selection     (real Stripe products/prices; EPPP visually distinct)
-//   7. Personalization Summary + CTA into PsychPro or the EPPP Mastery Suite
+//   6. Suite Selection    (PsychPro or EPPP Mastery Suite; no Free tier)
+//   7. Summary: continue to an EXPLICIT 7-day trial start, a paid plan, or
+//      finish setup without starting anything. Choosing a suite never starts
+//      a trial by itself.
 //
 // Answers are persisted progressively (onboardingComplete stays false) so a
 // detour to Stripe checkout never loses input. The final CTA flips
@@ -35,9 +37,7 @@ import {
   Microscope,
   FlaskConical,
   Compass,
-  Crown,
   Star,
-  Clock,
   Layers,
   Repeat,
   Loader2,
@@ -46,15 +46,12 @@ import { Button } from "@/components/ui/button";
 import {
   useUpsertUserProfile,
   useGetUserProfile,
-  useGetSubscriptionPlans,
-  useCreateCheckoutSession,
   getGetUserProfileQueryKey,
   type UpsertUserProfileBody,
   type UserProfile,
-  type SubscriptionPlan,
 } from "@workspace/api-client-react";
-import { useEpppPlans, useEpppCheckout, type EpppOneTimePlan } from "@/lib/use-eppp-purchase";
-import { useEntitlements } from "@/lib/use-entitlements";
+import { useStudyAccess, trialPhase, PSYCHPRO_MONTHLY_AI_LIMIT, PSYCHPRO_TRIAL_AI_LIMIT } from "@/lib/use-study-access";
+import { readPendingTrial, clearPendingTrial } from "@/lib/pending-trial";
 import { useToast } from "@/hooks/use-toast";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PP } from "@/lib/palette";
@@ -113,9 +110,8 @@ type Answers = {
   learningGoals: string[];
   studyFocus: string;
   epppInterest: string;
-  selectedTier: string; // free | pro | scholar | eppp
+  selectedTier: string; // psychpro | eppp
   selectedProduct: string; // human-readable label
-  selectedPriceId: string | null;
 };
 
 const EMPTY: Answers = {
@@ -125,7 +121,6 @@ const EMPTY: Answers = {
   epppInterest: "",
   selectedTier: "",
   selectedProduct: "",
-  selectedPriceId: null,
 };
 
 type StepId = "account" | "role" | "goals" | "focus" | "eppp" | "tier" | "summary";
@@ -148,8 +143,8 @@ const STEP_META: Record<Exclude<StepId, "account">, { title: string; subtitle: s
     subtitle: "The EPPP Mastery Suite is a dedicated licensure-prep workspace.",
   },
   tier: {
-    title: "Choose your plan",
-    subtitle: "Start free, or unlock the full PsychPro experience.",
+    title: "Choose your suite",
+    subtitle: "Pick where you want to start. Choosing does not start a trial or a charge.",
   },
   summary: {
     title: "You're all set",
@@ -157,32 +152,10 @@ const STEP_META: Record<Exclude<StepId, "account">, { title: string; subtitle: s
   },
 };
 
-function fmtMoney(cents: number, currency: string) {
-  try {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: currency.toUpperCase(),
-      minimumFractionDigits: 0,
-    }).format(cents / 100);
-  } catch {
-    return `$${Math.round(cents / 100)}`;
-  }
-}
-
-// Categorize a plan card STRICTLY by the server's canonical tier metadata
-// (derived from the Stripe product's neuronotes_tier), never by the display
-// name — a product rename in Stripe must not silently re-bucket the card.
-function cardTier(plan: SubscriptionPlan): "scholar" | "pro" {
-  return plan.tier === "scholar" ? "scholar" : "pro";
-}
-
 type TierCard = {
-  tier: string; // free | pro | scholar | eppp
+  tier: string; // psychpro | eppp
   name: string;
-  priceId: string | null;
-  amount: number;
-  currency: string;
-  interval: string; // "month" | "one-time" | "free"
+  price: string;
   blurb: string;
   features: string[];
   icon: Icon;
@@ -200,12 +173,8 @@ export default function OnboardingPage() {
   const firstName = user?.firstName ?? user?.fullName?.split(" ")[0] ?? "";
 
   const upsert = useUpsertUserProfile();
-  const checkout = useCreateCheckoutSession();
-  const epppCheckout = useEpppCheckout();
   const { data: existingProfile } = useGetUserProfile();
-  const { data: entitlements } = useEntitlements();
-  const { data: subPlans } = useGetSubscriptionPlans();
-  const { data: epppPlans } = useEpppPlans();
+  const { data: access } = useStudyAccess();
 
   const [answers, setAnswers] = useState<Answers>(EMPTY);
   const [stepId, setStepId] = useState<StepId>("role");
@@ -223,7 +192,10 @@ export default function OnboardingPage() {
       learningGoals: Array.isArray(p.learningGoals) ? p.learningGoals : [],
       studyFocus: p.studyFocus ?? "",
       epppInterest: p.epppInterest ?? "",
-      selectedTier: p.selectedTier ?? "",
+      // Legacy tier values (free/pro/scholar) map onto the single PsychPro offering.
+      selectedTier:
+        readPendingTrial() ??
+        (p.selectedTier === "eppp" ? "eppp" : p.selectedTier ? "psychpro" : ""),
       selectedProduct: p.selectedProduct ?? "",
     }));
   }, [existingProfile]);
@@ -244,97 +216,35 @@ export default function OnboardingPage() {
   const rawIdx = order.indexOf(stepId);
   const idx = rawIdx === -1 ? order.indexOf("focus") : rawIdx;
 
-  // -------------------------------------------------------------------------
-  // Tier cards from live Stripe catalog
-  // -------------------------------------------------------------------------
-  const paidTiers = useMemo<TierCard[]>(() => {
-    const byProduct = new Map<string, SubscriptionPlan>();
-    for (const plan of subPlans ?? []) {
-      const existing = byProduct.get(plan.id);
-      // Prefer the monthly price when a product has several.
-      if (!existing || (existing.interval !== "month" && plan.interval === "month")) {
-        byProduct.set(plan.id, plan);
-      }
-    }
-    return Array.from(byProduct.values())
-      .map((plan) => {
-        const tier = cardTier(plan);
-        return {
-          tier,
-          name: plan.name,
-          priceId: plan.priceId,
-          amount: plan.unitAmount,
-          currency: plan.currency,
-          interval: plan.interval,
-          blurb:
-            plan.description ??
-            (tier === "scholar"
-              ? "Everything in Master plus AI-powered study tools."
-              : "Unlimited studying across the full PsychPro catalog."),
-          features:
-            tier === "scholar"
-              ? ["Unlimited quizzes & exams", "AI study guides & PDF tools", "Priority new content"]
-              : ["Unlimited quizzes & exams", "Full topic catalog", "Progress analytics"],
-          icon: tier === "scholar" ? Crown : Star,
-        } as TierCard;
-      })
-      .sort((a, b) => a.amount - b.amount);
-  }, [subPlans]);
-
-  const epppTier = useMemo<TierCard | null>(() => {
-    if (!epppPlans?.productId) return null;
-    const monthly = epppPlans.monthly;
-    const fallback = epppPlans.oneTime[0];
-    const priceId = monthly?.priceId ?? fallback?.priceId ?? null;
-    if (!priceId) return null;
-    const amount = monthly?.unitAmount ?? fallback?.unitAmount ?? 0;
-    const currency = monthly?.currency ?? fallback?.currency ?? "usd";
-    return {
-      tier: "eppp",
-      name: epppPlans.name ?? "EPPP Mastery Suite",
-      priceId,
-      amount,
-      currency,
-      interval: monthly ? "month" : "one-time",
-      blurb: "A dedicated, EPPP-only workspace for full licensure-exam mastery.",
+  const tierCards: TierCard[] = [
+    {
+      tier: "psychpro",
+      name: "PsychPro",
+      price: "$19.99/mo or $159.99/yr",
+      blurb: "Coursework and personal-material study: every built-in topic plus your own uploads.",
       features: [
-        "Domain knowledge + mastery exams",
+        "Built-in flashcards, quizzes, guides, and exams",
+        "Upload notes and generate study tools with AI",
+        `${PSYCHPRO_MONTHLY_AI_LIMIT} AI generation requests per month`,
+        `Free week: ${PSYCHPRO_TRIAL_AI_LIMIT} AI requests, no card`,
+      ],
+      icon: Brain,
+    },
+    {
+      tier: "eppp",
+      name: "EPPP Mastery Suite",
+      price: "$99/mo, or $499 for 6 mo, $799 for 12 mo",
+      blurb: "A dedicated licensure-prep workspace, sold separately from PsychPro.",
+      features: [
+        "Domain knowledge and mastery exams",
         "Full-length practice exams",
-        "Clinical integration cases & rapid review",
+        "Clinical integration cases and rapid review",
+        "Free week, no card",
       ],
       icon: GraduationCap,
       eppp: true,
-    };
-  }, [epppPlans]);
-
-  // One-time EPPP access packs ($499 → 6mo, $799 → 12mo) — bought once for a
-  // fixed window instead of the monthly subscription.
-  const epppOneTime = useMemo(
-    () =>
-      (epppPlans?.oneTime ?? [])
-        .filter((p) => p.priceId)
-        .sort((a, b) => a.unitAmount - b.unitAmount),
-    [epppPlans],
-  );
-
-  const freeTier: TierCard = {
-    tier: "free",
-    name: "Free",
-    priceId: null,
-    amount: 0,
-    currency: "usd",
-    interval: "free",
-    blurb: "Get started with core PsychPro learning at no cost.",
-    features: ["Browse the topic catalog", "Starter flashcards & quizzes", "Track your progress"],
-    icon: Sparkles,
-  };
-
-  const tierCards = useMemo<TierCard[]>(() => {
-    const cards = [freeTier, ...paidTiers];
-    if (epppTier) cards.push(epppTier);
-    return cards;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paidTiers, epppTier]);
+    },
+  ];
 
   // -------------------------------------------------------------------------
   // Persistence
@@ -396,17 +306,16 @@ export default function OnboardingPage() {
   // -------------------------------------------------------------------------
   // Final CTA
   // -------------------------------------------------------------------------
-  const tier = answers.selectedTier;
-  const isPaid = tier === "pro" || tier === "scholar" || tier === "eppp";
-  const alreadyHasAccess =
-    tier === "eppp" ? !!entitlements?.epppAccess : tier !== "free" ? !!entitlements?.isSubscribed : true;
+  const tier = answers.selectedTier === "eppp" ? "eppp" : "psychpro";
+  const phase = trialPhase(access?.[tier]);
+  const alreadyHasAccess = phase === "paid" || phase === "active";
 
   const ctaLabel = useMemo(() => {
     if (promoReturn) return "Continue to Free EPPP Week";
-    if (tier === "eppp") return alreadyHasAccess ? "Enter EPPP Mastery Suite" : "Continue to EPPP Checkout";
-    if (isPaid) return alreadyHasAccess ? "Enter PsychPro" : "Continue to Checkout";
-    return "Enter PsychPro";
-  }, [tier, isPaid, alreadyHasAccess, promoReturn]);
+    if (alreadyHasAccess) return tier === "eppp" ? "Enter EPPP Mastery Suite" : "Enter PsychPro";
+    if (phase === "available") return "Continue to start my free week";
+    return "Continue to plans";
+  }, [tier, phase, alreadyHasAccess, promoReturn]);
 
   async function finalize(): Promise<boolean> {
     try {
@@ -430,60 +339,31 @@ export default function OnboardingPage() {
     try {
       const ok = await finalize();
       if (!ok) return;
-      trackEvent("onboarding_completed", {
-        selected_tier: tier,
-        has_existing_access: alreadyHasAccess,
-      });
-      // Promo entrants finish setup without entering a paid checkout flow.
+      clearPendingTrial();
+      trackEvent("onboarding_completed", { selected_tier: tier, has_existing_access: alreadyHasAccess });
       if (promoReturn) {
         navigate(promoReturn);
         return;
       }
-
-      // When resuming a saved flow, selectedPriceId isn't persisted server-side,
-      // so recover it from the live catalog by matching the chosen tier.
-      const priceId =
-        answers.selectedPriceId ?? tierCards.find((c) => c.tier === tier)?.priceId ?? null;
-
-      if (isPaid && !alreadyHasAccess && priceId) {
-        try {
-          const { url } =
-            tier === "eppp"
-              ? await epppCheckout.mutateAsync({ priceId })
-              : await checkout.mutateAsync({ data: { priceId, successPath: "/dashboard" } });
-          trackEvent("checkout_started", {
-            surface: "onboarding",
-            product_tier: tier,
-          });
-          window.location.href = url;
-          return;
-        } catch (err) {
-          toast({
-            title: "Checkout couldn't start",
-            description:
-              err instanceof Error ? err.message : "You can upgrade any time from your account.",
-            variant: "destructive",
-          });
-          // Onboarding is already complete — let them into the app instead of
-          // trapping them on this screen.
-        }
+      if (alreadyHasAccess) {
+        navigate(tier === "eppp" ? "/eppp/suite" : "/dashboard");
+        return;
       }
-      navigate(tier === "eppp" && alreadyHasAccess ? "/eppp/suite" : "/dashboard");
+      // Never auto-start: the plans page shows the explicit start button.
+      navigate(`/subscription?trial=${tier}`);
     } finally {
       setSubmitting(false);
     }
   }
 
   async function handleEnterFree() {
-    // Secondary action on the summary for paid selections: skip checkout for now.
+    // Finish setup without starting a trial or a checkout.
     setSubmitting(true);
     try {
       const ok = await finalize();
       if (ok) {
-        trackEvent("onboarding_completed", {
-          selected_tier: "free",
-          has_existing_access: false,
-        });
+        clearPendingTrial();
+        trackEvent("onboarding_completed", { selected_tier: tier, has_existing_access: false, skipped_trial: true });
         navigate(promoReturn ?? "/dashboard");
       }
     } finally {
@@ -629,78 +509,19 @@ export default function OnboardingPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {tierCards.map((card) => (
                       <TierOption
-                        key={`${card.tier}-${card.priceId ?? "free"}`}
+                        key={card.tier}
                         card={card}
-                        selected={
-                          card.tier === "eppp"
-                            ? answers.selectedTier === "eppp" &&
-                              !epppOneTime.some((p) => p.priceId === answers.selectedPriceId)
-                            : answers.selectedTier === card.tier
-                        }
+                        selected={answers.selectedTier === card.tier}
                         onSelect={() =>
-                          setAnswers((p) => ({
-                            ...p,
-                            selectedTier: card.tier,
-                            selectedProduct: card.name,
-                            selectedPriceId: card.priceId,
-                          }))
+                          setAnswers((p) => ({ ...p, selectedTier: card.tier, selectedProduct: card.name }))
                         }
                       />
                     ))}
                   </div>
-
-                  {epppOneTime.length > 0 && (
-                    <div className="mat-glass ob-onetime">
-                      <span className="ob-plan-badge ob-onetime-badge">EPPP</span>
-                      <div className="ob-onetime-head">
-                        <span className="ob-onetime-icon">
-                          <Clock className="w-4 h-4" />
-                        </span>
-                        <span className="min-w-0">
-                          <span className="ob-onetime-title">Prefer one-time access?</span>
-                          <span className="ob-onetime-sub">
-                            Pay once for a fixed window of full EPPP Mastery Suite access — no
-                            subscription.
-                          </span>
-                        </span>
-                      </div>
-                      <div className="ob-onetime-grid">
-                        {epppOneTime.map((p) => {
-                          const sel = answers.selectedPriceId === p.priceId;
-                          return (
-                            <button
-                              key={p.priceId}
-                              type="button"
-                              onClick={() =>
-                                setAnswers((prev) => ({
-                                  ...prev,
-                                  selectedTier: "eppp",
-                                  selectedProduct: `${epppPlans?.name ?? "EPPP Mastery Suite"} · ${p.months}-month access`,
-                                  selectedPriceId: p.priceId,
-                                }))
-                              }
-                              aria-pressed={sel}
-                              data-testid={slug(`eppp-onetime-${p.months}`)}
-                              className={`mat-glass mat-glass-interactive ob-onetime-opt ${sel ? "ob-onetime-opt--on" : ""}`}
-                            >
-                              <span className="ob-onetime-opt-top">
-                                <span className="ob-onetime-price">
-                                  {fmtMoney(p.unitAmount, p.currency)}
-                                </span>
-                                <span className="ob-check">
-                                  {sel && <Check className="w-3.5 h-3.5" />}
-                                </span>
-                              </span>
-                              <span className="ob-onetime-window">
-                                {p.months} months of full access
-                              </span>
-                              <span className="ob-onetime-note">One-time payment</span>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
+                  <p className="ob-sub mt-4">
+                    Each suite is separate: PsychPro does not include EPPP, and EPPP does not include PsychPro.
+                    You can finish setup without starting a trial or paying.
+                  </p>
                 </>
               )}
 
@@ -711,7 +532,6 @@ export default function OnboardingPage() {
                   answers={answers}
                   showEppp={showEppp}
                   tierCards={tierCards}
-                  epppOneTime={epppOneTime}
                   promoReturn={promoReturn}
                 />
               )}
@@ -736,7 +556,7 @@ export default function OnboardingPage() {
 
               {stepId === "summary" ? (
                 <div className="flex items-center gap-2">
-                  {!promoReturn && isPaid && !alreadyHasAccess && (
+                  {!promoReturn && !alreadyHasAccess && (
                     <Button
                       variant="outline"
                       onClick={handleEnterFree}
@@ -744,7 +564,7 @@ export default function OnboardingPage() {
                       className="rounded-md px-4"
                       data-testid="button-skip-checkout"
                     >
-                      Enter PsychPro for now
+                      Finish setup without a trial
                     </Button>
                   )}
                   <Button
@@ -856,10 +676,7 @@ function TierOption({
   onSelect: () => void;
 }) {
   const I = card.icon;
-  const price =
-    card.tier === "free"
-      ? "Free"
-      : `${fmtMoney(card.amount, card.currency)}${card.interval === "month" ? "/mo" : ""}`;
+  const price = card.price;
   return (
     <button
       type="button"
@@ -895,27 +712,20 @@ function SummaryBody({
   answers,
   showEppp,
   tierCards,
-  epppOneTime,
   promoReturn,
 }: {
   firstName: string;
   answers: Answers;
   showEppp: boolean;
   tierCards: TierCard[];
-  epppOneTime: EpppOneTimePlan[];
   promoReturn: string | null;
 }) {
   const planCard = tierCards.find((c) => c.tier === answers.selectedTier);
-  const oneTimeSel = epppOneTime.find((p) => p.priceId === answers.selectedPriceId);
   const planLabel = promoReturn
-    ? "EPPP7 free week — redeem after setup, no card required"
-    : oneTimeSel
-    ? `${answers.selectedProduct || "EPPP Mastery Suite"} · ${fmtMoney(oneTimeSel.unitAmount, oneTimeSel.currency)} one-time`
-    : planCard?.tier === "free"
-      ? "Free"
-      : planCard
-        ? `${planCard.name}${planCard.interval === "month" ? ` · ${fmtMoney(planCard.amount, planCard.currency)}/mo` : ""}`
-        : answers.selectedProduct || "Free";
+    ? "EPPP7 free week: redeem after setup, no card required"
+    : planCard
+      ? `${planCard.name} (nothing starts until you choose)`
+      : answers.selectedProduct || "Not chosen yet";
 
   return (
     <div className="space-y-4" data-testid="onboarding-summary">

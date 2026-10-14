@@ -62,7 +62,8 @@
 - [Glass sweep REVERTED](psychpro-glass-sweep-reverted.md) — owner rejected unifying EVERY tile+button onto one glass recipe (logged-in dashboards went flat/muddy, hierarchy collapsed); don't re-attempt, and verify auth-gated screens not proxies.
 - [drizzle-orm + otel peer dup](drizzle-otel-peer-dup.md) — a dep pulling @opentelemetry/api splits drizzle into 2 pnpm variants; api-server typecheck breaks; align by adding otel api to lib/db.
 - [EPPP separate access level](psychpro-eppp-access-level.md) — EPPP is its own expiry-driven tier (epppAccessUntil), never unlocked by Master/Scholar; gate with EPPP helpers + Stripe metadata conventions.
-- [Canonical billing model](psychpro-billing-canonical-model.md) — one tier/EPPP mapping module is the single source of truth; never re-declare it inline; mastery-exams.getUserTier is a known divergence.
+- [Canonical billing model](psychpro-billing-canonical-model.md) — one billing mapping source; preserve legacy aliases, use trial-aware study access, and never duplicate tier allowlists.
+- [Two-plan pricing and trials](psychpro-two-plan-trials.md) — combined PsychPro + separate EPPP; explicit separate free weeks, 5/50 AI units, protected legacy terms and saved materials.
 - [Stripe MCP metadata bracket](stripe-mcp-metadata-bracket.md) — set metadata via flat `metadata[key]` params in stripeApiExecute; nested object & dot notation both fail.
 - [Leaderboard perf aggregation](leaderboard-perf-aggregation.md) — avoid ARRAY_AGG via db.execute (returns non-array); date_trunc on without-tz col == JS startOfDay; cache/pool are per-instance under autoscale.
 - [Mockup preview heavy images](mockup-preview-heavy-images.md) — large PNGs lose the load race and render blank (looks like a "crash"); quantize to PNG8 with magick + eager/fetchPriority; true white = server mid-restart.

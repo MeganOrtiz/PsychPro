@@ -732,6 +732,72 @@ export const CreateCheckoutSessionResponse = zod.object({
 });
 
 /**
+ * @summary Get independent suite trials, access, and AI allowance
+ */
+export const GetStudyAccessResponse = zod.object({
+  psychpro: zod.object({
+    startedAt: zod.string().nullable(),
+    expiresAt: zod.string().nullable(),
+    canStart: zod.boolean(),
+    active: zod.boolean(),
+    hasAccess: zod.boolean(),
+    paid: zod.boolean(),
+    legacy: zod.boolean(),
+  }),
+  eppp: zod.object({
+    startedAt: zod.string().nullable(),
+    expiresAt: zod.string().nullable(),
+    canStart: zod.boolean(),
+    active: zod.boolean(),
+    hasAccess: zod.boolean(),
+    paid: zod.boolean(),
+    legacy: zod.boolean(),
+  }),
+  aiUsage: zod.object({
+    limit: zod.number().nullable(),
+    used: zod.number(),
+    remaining: zod.number().nullable(),
+    resetsAt: zod.string().nullable(),
+    unlimited: zod.boolean(),
+  }),
+});
+
+/**
+ * @summary Explicitly start one seven-day suite trial without a card
+ */
+export const StartStudyTrialParams = zod.object({
+  suite: zod.enum(["psychpro", "eppp"]),
+});
+
+export const StartStudyTrialResponse = zod.object({
+  psychpro: zod.object({
+    startedAt: zod.string().nullable(),
+    expiresAt: zod.string().nullable(),
+    canStart: zod.boolean(),
+    active: zod.boolean(),
+    hasAccess: zod.boolean(),
+    paid: zod.boolean(),
+    legacy: zod.boolean(),
+  }),
+  eppp: zod.object({
+    startedAt: zod.string().nullable(),
+    expiresAt: zod.string().nullable(),
+    canStart: zod.boolean(),
+    active: zod.boolean(),
+    hasAccess: zod.boolean(),
+    paid: zod.boolean(),
+    legacy: zod.boolean(),
+  }),
+  aiUsage: zod.object({
+    limit: zod.number().nullable(),
+    used: zod.number(),
+    remaining: zod.number().nullable(),
+    resetsAt: zod.string().nullable(),
+    unlimited: zod.boolean(),
+  }),
+});
+
+/**
  * @summary Get current user subscription status
  */
 export const GetSubscriptionStatusResponse = zod.object({

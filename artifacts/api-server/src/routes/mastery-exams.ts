@@ -35,6 +35,7 @@ import { isCallerAdmin } from "../lib/isAdmin";
 import { hasEpppAccess } from "../lib/entitlements";
 import { isEpppCourse } from "../lib/eppp";
 import { tierFromStatus, type Tier } from "../lib/tierMapping";
+import { effectivePsychproTier } from "../lib/studyAccessModel";
 
 const router = Router();
 
@@ -52,10 +53,10 @@ const PRO_TIERS = new Set<Tier>(["pro", "scholar"]);
 async function getUserTier(userId: string | null): Promise<Tier> {
   if (!userId) return "free";
   const [u] = await db
-    .select({ status: usersTable.subscriptionStatus })
+    .select()
     .from(usersTable)
     .where(eq(usersTable.id, userId));
-  return tierFromStatus(u?.status);
+  return u ? effectivePsychproTier(u) : "free";
 }
 
 /**

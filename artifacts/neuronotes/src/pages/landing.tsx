@@ -38,7 +38,7 @@ import founderMegan from "@/assets/founder/megan.webp";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PP, LANDING, alpha } from "@/lib/palette";
 import { trackEvent } from "@/lib/analytics";
-import { FREE_FLASHCARD_PREVIEW, FREE_QUIZ_LIMIT, FREE_EXAM_LIMIT } from "@/lib/limits";
+import { rememberPendingTrial } from "@/lib/pending-trial";
 import { isEpppTopic } from "@/lib/eppp-content";
 import { Button } from "@/components/ui/button";
 
@@ -56,14 +56,14 @@ import { Button } from "@/components/ui/button";
 //   6. Features (custom study tools, beyond traditional learning, reflections)
 //   7. Brain Lab (interactive 3D neuroanatomy)
 //   8. Dashboard (personalized progress, what to study next)
-//   9. Scholar tier (turn your own notes/PDFs into study material with AI)
+//   9. Plans (PsychPro + EPPP Mastery Suite, 7-day trials)
 //  10. Final CTA
 //  11. Footer
 //
 // COPY RULES (from the user): only true facts. No "expert-made" / "built by
 // clinicians" claims, no fabricated testimonials, logos, ratings, or user
 // counts. Verified facts only (46 topics, 8 domains, the five study formats,
-// the learning-science methods, the Brain Lab, the dashboard, Scholar AI).
+// the learning-science methods, the Brain Lab, the dashboard, PsychPro AI).
 // =============================================================================
 
 // The five built-in study formats. Each gets a brand-family accent so the row
@@ -141,43 +141,21 @@ const DASH_ACTIVITY = [
   { day: "Sun", score: 86 },
 ];
 
-// What the Scholar tier adds — mirrors src/pages/subscription.tsx SCHOLAR_FEATURES.
-const SCHOLAR_POINTS = [
+// The two offerings. PsychPro (aqua) folds the former Master/Scholar plans
+// into one; EPPP (pale yellow) is sold separately with no cross-unlock.
+const PSYCHPRO_POINTS = [
+  "All built-in flashcards, quizzes, study guides, and practice exams",
   "Upload your own PDFs, DOCX, TXT, or pasted notes",
-  "AI builds flashcards, quizzes, and study guides from your own notes and material",
-  "Generate practice exams from your own material",
-  "Unlimited custom study decks",
+  "AI builds study tools from your material: 50 generation requests per month",
+  "$19.99/month or $159.99/year",
 ] as const;
 
-const TIERS = [
-  {
-    id: "free",
-    name: "Free",
-    tag: "Preview every topic",
-    points: [
-      `${FREE_FLASHCARD_PREVIEW} flashcards per topic`,
-      `${FREE_QUIZ_LIMIT} quiz total`,
-      `${FREE_EXAM_LIMIT} practice exam total`,
-      "No credit card required",
-    ],
-  },
-  {
-    id: "master",
-    name: "Master",
-    tag: "Built-in PsychPro content",
-    points: [
-      "Unlimited built-in flashcards, quizzes, and practice exams",
-      "Study guides for every built-in topic",
-      "EPPP content not included",
-      "Progress tracking",
-    ],
-  },
-  {
-    id: "scholar",
-    name: "Scholar",
-    tag: "Everything in Master, plus your own material",
-    points: SCHOLAR_POINTS,
-  },
+const EPPP_POINTS = [
+  "Knowledge-domain lessons and study guides",
+  "Flashcards and question bank",
+  "Clinical integration cases and rapid review",
+  "Domain and full-length practice exams",
+  "Missed-question review",
 ] as const;
 
 // What the personalized dashboard surfaces — all real app features.
@@ -260,7 +238,13 @@ export default function LandingPage() {
   };
   const goToApp = () => navTo("/dashboard");
   const goToTopics = () => navTo("/topics");
-  const goToPlans = () => navTo("/subscription");
+  // "Start my free week": only records intent. The trial itself starts from
+  // an explicit button on /subscription?trial=<suite> after sign-in/onboarding.
+  const startFreeWeek = (suite: "psychpro" | "eppp") => {
+    trackEvent("trial_cta_clicked", { surface: "landing", suite, signed_in: Boolean(isSignedIn) });
+    rememberPendingTrial(suite);
+    navigate(isSignedIn ? `/subscription?trial=${suite}` : "/sign-up");
+  };
   const checkItOut = () => {
     trackEvent("navigation_clicked", { surface: "landing", destination: "/sign-in" });
     navigate("/sign-in");
@@ -657,56 +641,73 @@ export default function LandingPage() {
             <p className="landing-eyebrow">PLANS</p>
             <h2 className="landing-section-title">Find Your Study Plan</h2>
             <p className="landing-section-sub">
-              Start with Free previews, unlock built-in learning tools with
-              Master, or create custom study materials with Scholar.
+              Two separate offerings. PsychPro covers coursework and your own
+              material; the EPPP Mastery Suite covers licensure prep. Each has
+              one free week, started only when you choose.
             </p>
           </div>
-          <div className="landing-tier-grid">
-            {TIERS.map((t) => (
-              <article key={t.id} className="landing-tier" data-testid={`tier-card-${t.id}`}>
-                <h3 className="landing-tier-name">{t.name}</h3>
-                <p className="landing-tier-tag">{t.tag}</p>
-                <ul className="landing-checklist">
-                  {t.points.map((point) => (
-                    <li key={point} className="landing-checklist-item">
-                      {t.id === "scholar" ? (
-                        <Upload className="landing-checklist-check" aria-hidden />
-                      ) : (
-                        <Check className="landing-checklist-check" aria-hidden />
-                      )}
-                      <span>{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              </article>
-            ))}
-          </div>
-          <article className="landing-tier landing-tier--eppp" data-testid="tier-card-eppp">
-            <div>
+          <div className="landing-plan-pair">
+            <div className="landing-tier-grid landing-tier-grid--one">
+            <article className="landing-tier landing-tier--psychpro" data-testid="tier-card-psychpro">
+              <h3 className="landing-tier-name">
+                <Brain className="landing-suite-icon" aria-hidden />
+                <span>PsychPro</span>
+              </h3>
+              <p className="landing-tier-tag">Coursework, built-in content, and your own material</p>
+              <ul className="landing-checklist">
+                {PSYCHPRO_POINTS.map((point) => (
+                  <li key={point} className="landing-checklist-item">
+                    {point.startsWith("Upload") ? (
+                      <Upload className="landing-checklist-check" aria-hidden />
+                    ) : (
+                      <Check className="landing-checklist-check" aria-hidden />
+                    )}
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="landing-tier-note">
+                7 days free from the moment you press start, with 5 AI generation requests. No card, no automatic charge.
+              </p>
+              <button
+                type="button"
+                onClick={() => startFreeWeek("psychpro")}
+                className="landing-cta landing-cta-primary landing-cta--center landing-tier-cta"
+                data-testid="cta-trial-psychpro"
+              >
+                <span>Start my free week</span>
+                <ArrowRight className="landing-cta-icon" aria-hidden />
+              </button>
+            </article>
+            </div>
+            <article className="landing-tier landing-tier--eppp" data-testid="tier-card-eppp">
               <h3 className="landing-tier-name">
                 <Crown className="landing-suite-icon" aria-hidden />
                 <span>EPPP Mastery Suite</span>
               </h3>
               <p className="landing-tier-tag">Purchased separately</p>
-              <p className="landing-tier-note">
-                Master and Scholar do not include EPPP access.
-              </p>
-              <ul className="landing-checklist landing-checklist--grid">
-                {[
-                  "Knowledge-domain lessons and study guides",
-                  "Flashcards and question bank",
-                  "Clinical integration cases and rapid review",
-                  "Domain and full-length practice exams",
-                  "Missed-question review",
-                ].map((point) => (
+              <ul className="landing-checklist">
+                {EPPP_POINTS.map((point) => (
                   <li key={point} className="landing-checklist-item">
                     <Check className="landing-checklist-check" aria-hidden />
                     <span>{point}</span>
                   </li>
                 ))}
               </ul>
-            </div>
-          </article>
+              <p className="landing-tier-note">
+                $99/month, or one-time $499 for 6 months or $799 for 12 months. PsychPro does not include EPPP access, and EPPP does not include PsychPro.
+              </p>
+              <button
+                type="button"
+                onClick={() => startFreeWeek("eppp")}
+                className="landing-cta landing-cta-primary landing-cta--center landing-tier-cta"
+                data-testid="cta-trial-eppp"
+              >
+                <span>Start my free week</span>
+                <ArrowRight className="landing-cta-icon" aria-hidden />
+              </button>
+            </article>
+          </div>
           <button
             type="button"
             onClick={() => navTo("/subscription")}
@@ -1713,11 +1714,17 @@ const styles = `
 .landing-stat-strip--quiet { margin: 18px auto 34px; opacity: 1; transform: none; }
 .landing-tiers { max-width: 1100px; display: flex; flex-direction: column; gap: 22px; }
 .landing-tier-grid { display: grid; grid-template-columns: 1fr; gap: 18px; }
-@media (min-width: 900px) { .landing-tier-grid { grid-template-columns: repeat(3, 1fr); gap: 22px; } }
+.landing-plan-pair { display: grid; grid-template-columns: 1fr; gap: 18px; }
+@media (min-width: 900px) { .landing-tier-grid { grid-template-columns: repeat(3, 1fr); gap: 22px; } .landing-tier-grid--one { grid-template-columns: 1fr; } .landing-plan-pair { grid-template-columns: 1fr 1fr; gap: 22px; } }
+.landing-tier-grid--one, .landing-tier-grid--one > .landing-tier { height: 100%; }
+.landing-tier { display: flex; flex-direction: column; }
+.landing-tier .landing-tier-note { margin-top: 14px; }
+.landing-tier-cta { margin-top: auto; padding-top: 0; align-self: center; }
+.landing-tier-note + .landing-tier-cta { margin-top: 20px; }
 .landing-tier { padding: clamp(22px, 2.6vw, 32px); }
 .landing-tier-name { margin: 0; font-size: 24px; font-weight: 400; text-align: center; color: ${LANDING.icy}; }
 .landing-tier-tag { margin: 4px 0 18px; font-size: 13px; letter-spacing: 0.04em; color: ${alpha(PP.text, 0.72)}; }
-.landing-tier--eppp .landing-tier-name { display: flex; justify-content: center; align-items: center; gap: 12px; }
+.landing-tier--psychpro .landing-tier-name, .landing-tier--eppp .landing-tier-name { display: flex; justify-content: center; align-items: center; gap: 12px; }
 .landing-tier--eppp .landing-tier-tag { margin-bottom: 8px; }
 .landing-tier-note { margin: 0; max-width: 62ch; font-size: 15px; line-height: 1.6; color: ${alpha(PP.text, 0.88)}; }
 .landing-cta:focus-visible, .landing-nav-link:focus-visible { outline: 2px solid ${PP.text}; outline-offset: 3px; }

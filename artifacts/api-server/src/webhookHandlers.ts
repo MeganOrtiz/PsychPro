@@ -116,6 +116,11 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, log: Logger)
         await db.update(usersTable).set({
           stripeSubscriptionId: sub.id,
           subscriptionStatus: newStatus,
+          ...(sub.metadata?.psychpro_plan_version === "2" ? {
+            psychproPlanVersion: 2,
+            psychproBillingPeriodStartedAt: sub.items.data[0]?.current_period_start
+              ? new Date(sub.items.data[0].current_period_start * 1000) : new Date(sub.created * 1000),
+          } : {}),
         }).where(eq(usersTable.id, user.id));
         log.info({ userId: user.id, status: sub.status, newStatus }, "Updated user subscription");
       }
@@ -208,6 +213,11 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, log: Logger)
           await db.update(usersTable).set({
             stripeSubscriptionId: subscriptionId,
             subscriptionStatus: resolved ?? "free",
+            ...(sub.metadata?.psychpro_plan_version === "2" ? {
+              psychproPlanVersion: 2,
+              psychproBillingPeriodStartedAt: sub.items.data[0]?.current_period_start
+                ? new Date(sub.items.data[0].current_period_start * 1000) : new Date(sub.created * 1000),
+            } : {}),
           }).where(eq(usersTable.id, user.id));
         }
       }

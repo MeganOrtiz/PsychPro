@@ -14,6 +14,12 @@ import { requireUserId } from "../lib/userId";
 import { isCallerAdmin } from "../lib/isAdmin";
 import { parseIntParam } from "../lib/params";
 import { ACTIVE_SUBSCRIPTION_STATUSES } from "../lib/tierMapping";
+import { effectivePsychproTier } from "../lib/studyAccessModel";
+import { reserveAiGeneration, refundAiGeneration, StudyAccessError } from "../lib/studyAccess";
+import { randomUUID } from "node:crypto";
+import { pipeline } from "node:stream/promises";
+import { objectStorageClient, ObjectStorageService, ObjectNotFoundError } from "../lib/objectStorage";
+import { setObjectAclPolicy } from "../lib/objectAcl";
 
 const router = Router();
 const upload = multer({
@@ -35,7 +41,7 @@ async function requireScholar(req: Request, res: Response, next: NextFunction): 
   if (!userId) return;
   let user = await getUser(userId);
   const isAdmin = await isCallerAdmin(req);
-  if (!isAdmin && (!user || !ACTIVE_SUBSCRIPTION_STATUSES.has(user.subscriptionStatus))) {
+  if (!isAdmin && (!user || effectivePsychproTier(user) === "free")) {
     res.status(403).json({ error: "An active subscription is required to generate study materials." });
     return;
   }
@@ -200,6 +206,8 @@ router.post(
   upload.single("file"),
   async (req: Request, res: Response): Promise<void> => {
     const userId = (req as Request & { scholarUser: { id: string } }).scholarUser.id;
+    let reservationId: number | null = null;
+    let generationSucceeded = false;
 
     try {
       const [concurrencyRow] = await db
@@ -241,7 +249,7 @@ router.post(
           try {
             const parsed = JSON.parse(rawTools);
             if (Array.isArray(parsed)) {
-              tools = parsed.filter((t): t is string => typeof t === "string" && validToolIds.includes(t));
+            tools = [...new Set(parsed.filter((t): t is string => typeof t === "string" && validToolIds.includes(t)))];
             }
           } catch {
             tools = [];
@@ -288,9 +296,23 @@ router.post(
           return;
         }
 
+        reservationId = await reserveAiGeneration(userId, tools.length);
+        let sourceFilePath: string | null = null;
+        let sourceFileName: string | null = null;
+        if (req.file) {
+          const storage = new ObjectStorageService();
+          const parts = storage.getPrivateObjectDir().replace(/^\/+/, "").split("/");
+          const bucket = parts.shift()!;
+          const name = `study-sources/${randomUUID()}`;
+          const file = objectStorageClient.bucket(bucket).file([...parts, name].join("/"));
+          await file.save(req.file.buffer, { resumable: false, metadata: { contentType: req.file.mimetype } });
+          await setObjectAclPolicy(file, { owner: userId, visibility: "private" });
+          sourceFilePath = `/objects/${name}`;
+          sourceFileName = req.file.originalname;
+        }
         const [deck] = await db
           .insert(customDecksTable)
-          .values({ userId, title, sourceText, status: "processing", tier, tools, examQuestionCount, examTimed })
+          .values({ userId, title, sourceText, sourceFilePath, sourceFileName, status: "processing", tier, tools, examQuestionCount, examTimed })
           .returning();
 
         try {
@@ -357,6 +379,7 @@ router.post(
             .where(eq(customDecksTable.id, deck.id))
             .returning();
 
+          generationSucceeded = true;
           res.status(201).json(updated);
         } catch (genErr) {
           await db
@@ -366,6 +389,10 @@ router.post(
           throw genErr;
         }
       } catch (err) {
+        if (err instanceof StudyAccessError) {
+          res.status(err.status).json({ error: err.message, code: err.code });
+          return;
+        }
         req.log.error({ err }, "Error creating custom deck");
         const raw = err instanceof Error ? err.message : String(err);
         const friendly =
@@ -383,6 +410,8 @@ router.post(
     } catch (err) {
       req.log.error({ err }, "Error checking quota");
       res.status(500).json({ error: "Failed to generate study materials. Please try again." });
+    } finally {
+      if (!generationSucceeded) await refundAiGeneration(reservationId);
     }
   }
 );
@@ -405,7 +434,35 @@ router.get("/custom-decks", async (req: Request, res: Response): Promise<void> =
   }
 });
 
-router.get("/custom-decks/:id", async (req: Request, res: Response): Promise<void> => {
+router.get("/custom-decks/:id/source", async (req: Request, res: Response): Promise<void> => {
+  const userId = requireUserId(req, res);
+  if (!userId) return;
+  try {
+    const id = parseIntParam(req, res, "id");
+    if (id === null) return;
+    const [deck] = await db.select().from(customDecksTable).where(and(eq(customDecksTable.id, id), eq(customDecksTable.userId, userId)));
+    if (!deck) { res.status(404).json({ error: "Not found" }); return; }
+    res.set("Cache-Control", "private, no-store");
+    if (deck.sourceFilePath) {
+      const storage = new ObjectStorageService();
+      const file = await storage.getObjectEntityFile(deck.sourceFilePath);
+      res.attachment(deck.sourceFileName || "source");
+      const [metadata] = await file.getMetadata();
+      res.type(metadata.contentType || "application/octet-stream");
+      await pipeline(file.createReadStream(), res);
+    } else {
+      // Older uploads stored extracted text only. Never pretend those bytes
+      // are an original PDF/DOCX; return an explicitly named text export.
+      res.attachment(`${deck.title.replace(/[^a-z0-9 _-]/gi, "").slice(0, 80) || "study"}-source.txt`);
+      res.type("text/plain").send(deck.sourceText);
+    }
+  } catch (err) {
+    req.log.error({ err }, "Unable to download saved source");
+    if (!res.headersSent) res.status(500).json({ error: "Unable to download source." });
+  }
+});
+
+router.get("/custom-decks/:id", requireScholar, async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = requireUserId(req, res);
     if (!userId) return;
@@ -422,7 +479,7 @@ router.get("/custom-decks/:id", async (req: Request, res: Response): Promise<voi
   }
 });
 
-router.get("/custom-decks/:id/flashcards", async (req: Request, res: Response): Promise<void> => {
+router.get("/custom-decks/:id/flashcards", requireScholar, async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = requireUserId(req, res);
     if (!userId) return;
@@ -440,7 +497,7 @@ router.get("/custom-decks/:id/flashcards", async (req: Request, res: Response): 
   }
 });
 
-router.get("/custom-decks/:id/quiz", async (req: Request, res: Response): Promise<void> => {
+router.get("/custom-decks/:id/quiz", requireScholar, async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = requireUserId(req, res);
     if (!userId) return;
@@ -458,7 +515,7 @@ router.get("/custom-decks/:id/quiz", async (req: Request, res: Response): Promis
   }
 });
 
-router.get("/custom-decks/:id/cloze", async (req: Request, res: Response): Promise<void> => {
+router.get("/custom-decks/:id/cloze", requireScholar, async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = requireUserId(req, res);
     if (!userId) return;
@@ -483,9 +540,17 @@ router.delete("/custom-decks/:id", async (req: Request, res: Response): Promise<
 
     const deckId = parseIntParam(req, res, "id");
     if (deckId === null) return;
-    const [deck] = await db.select({ userId: customDecksTable.userId }).from(customDecksTable).where(eq(customDecksTable.id, deckId));
+    const [deck] = await db.select({ userId: customDecksTable.userId, sourceFilePath: customDecksTable.sourceFilePath }).from(customDecksTable).where(eq(customDecksTable.id, deckId));
     if (!deck || deck.userId !== userId) { res.status(404).json({ error: "Not found" }); return; }
 
+    if (deck.sourceFilePath) {
+      try {
+        const file = await new ObjectStorageService().getObjectEntityFile(deck.sourceFilePath);
+        await file.delete({ ignoreNotFound: true });
+      } catch (err) {
+        if (!(err instanceof ObjectNotFoundError)) throw err;
+      }
+    }
     await db.delete(customDecksTable).where(eq(customDecksTable.id, deckId));
     res.status(204).send();
   } catch (err) {

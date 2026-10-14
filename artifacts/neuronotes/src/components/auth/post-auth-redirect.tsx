@@ -4,6 +4,7 @@ import { useGetUserProfile } from "@workspace/api-client-react";
 import { useEntitlements } from "@/lib/use-entitlements";
 import { FullScreenLoader } from "@/components/full-screen-loader";
 import { getPromoReturn } from "@/lib/eppp-promo-return";
+import { readPendingTrial, clearPendingTrial } from "@/lib/pending-trial";
 
 /**
  * Post-authentication landing resolver. Clerk redirects here after sign-in /
@@ -43,6 +44,14 @@ export function PostAuthRedirect() {
 
     // Wait for entitlements so EPPP buyers aren't sent to the main dashboard by
     // mistake. If entitlements fail to load they stay undefined -> dashboard.
+    // A landing "Start my free week" intent sends onboarded users to the
+    // plans page, where the trial only starts from an explicit button.
+    const pendingTrial = promoReturn ? null : readPendingTrial();
+    if (pendingTrial) {
+      clearPendingTrial();
+      navigate(`/subscription?trial=${pendingTrial}`, { replace: true });
+      return;
+    }
     if (entLoading) return;
     const goEppp = !!entitlements?.epppAccess && !entitlements?.isAdmin;
     navigate(promoReturn ?? (goEppp ? "/eppp/suite" : "/dashboard"), { replace: true });

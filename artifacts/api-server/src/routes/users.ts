@@ -5,6 +5,7 @@ import { and, eq, ne } from "drizzle-orm";
 import { requireUserId } from "../lib/userId";
 import { requireAdminCaller } from "../lib/isAdmin";
 import { deleteUserAccount } from "../lib/accountDeletion";
+import { effectivePsychproTier } from "../lib/studyAccessModel";
 
 const router = Router();
 // Legacy free-interaction cap. The /users/usage routes are kept as no-ops
@@ -128,7 +129,7 @@ function serializeProfile(user: typeof usersTable.$inferSelect) {
     epppInterest: user.epppInterest,
     selectedTier: user.selectedTier,
     selectedProduct: user.selectedProduct,
-    subscriptionStatus: user.subscriptionStatus,
+    subscriptionStatus: effectivePsychproTier(user) === "scholar" && user.subscriptionStatus === "free" ? "scholar" : user.subscriptionStatus,
     onboardingComplete: user.onboardingComplete,
     onboardingCompletedAt: user.onboardingCompletedAt?.toISOString() ?? null,
     stripeCustomerId: user.stripeCustomerId,

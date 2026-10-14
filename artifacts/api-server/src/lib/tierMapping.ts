@@ -56,13 +56,22 @@ export const ACTIVE_SUBSCRIPTION_STATUSES: ReadonlySet<string> = new Set([
 export function normalizeTierMetadata(
   meta: string | null | undefined,
 ): string | undefined {
-  return meta?.toLowerCase();
+  const normalized = meta?.toLowerCase();
+  // New combined plan uses the existing Scholar storage/access semantics.
+  // Its distinct metadata also keeps pre-launch legacy builds from listing it.
+  return normalized === "psychpro" ? "scholar" : normalized;
 }
 
 /** True when a Stripe product's metadata tags it as an approved Master/Scholar plan. */
 export function isApprovedSubscriptionTier(meta: string | null | undefined): boolean {
   const t = normalizeTierMetadata(meta);
   return !!t && APPROVED_SUBSCRIPTION_TIERS.has(t);
+}
+
+/** New sales only; legacy products stay valid for existing subscriptions. */
+export function isNewPsychproPrice(meta: string | null | undefined, currency: string, amount: number | null, interval: string | undefined, intervalCount = 1, planVersion = "2"): boolean {
+  return planVersion === "2" && normalizeTierMetadata(meta) === "scholar" && currency === "usd" && intervalCount === 1 &&
+    ((interval === "month" && amount === 1999) || (interval === "year" && amount === 15999));
 }
 
 /** True when a Stripe product's metadata tags it as the EPPP Mastery Suite. */

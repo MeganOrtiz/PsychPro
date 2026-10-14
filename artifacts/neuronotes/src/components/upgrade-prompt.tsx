@@ -20,27 +20,27 @@ interface UpgradePromptProps {
 const COPY: Record<UpgradeReason, { title: string; body: string }> = {
   quiz: {
     title: "Quiz limit reached",
-    body: "Free accounts include one quiz. Upgrade to PsychPro Master for unlimited quizzes, exams, and study guides.",
+    body: "Subscribe to PsychPro, or start your free week, for unlimited quizzes, exams, and study guides.",
   },
   exam: {
     title: "Practice exam limit reached",
-    body: "Free accounts include one practice exam. Upgrade to PsychPro Master for unlimited practice exams across every topic.",
+    body: "Subscribe to PsychPro, or start your free week, for unlimited practice exams across every topic.",
   },
   studyGuide: {
-    title: "Study guides are a Master feature",
-    body: "Upgrade to PsychPro Master to unlock comprehensive study guides for every topic.",
+    title: "Study guides are included in PsychPro",
+    body: "Subscribe to PsychPro, or start your free week, to unlock comprehensive study guides for every topic.",
   },
   flashcards: {
     title: "See every flashcard",
-    body: "Free accounts preview the first 10 cards per topic. Upgrade to PsychPro Master to study every card in the deck.",
+    body: "Subscribe to PsychPro, or start your free week, to study every card in the deck.",
   },
   eppp: {
     title: "Unlock the EPPP Mastery Suite",
-    body: "The EPPP Mastery Suite is a separate access level from Master & Scholar. Get full access with a monthly subscription or a one-time 6- or 12-month pass.",
+    body: "The EPPP Mastery Suite is a separate access level from PsychPro, with its own free week. Get full access with a monthly subscription or a one-time 6- or 12-month pass.",
   },
   generic: {
     title: "Upgrade to keep going",
-    body: "Upgrade to PsychPro Master for unlimited flashcards, quizzes, exams, and study guides.",
+    body: "Subscribe to PsychPro, or start your free week, for unlimited flashcards, quizzes, exams, and study guides.",
   },
 };
 
@@ -59,7 +59,7 @@ export default function UpgradePrompt({ onDismiss, reason = "generic" }: Upgrade
       <p className="text-muted-foreground mb-8 leading-relaxed">{body}</p>
       <div className="flex flex-col sm:flex-row gap-3 w-full max-w-xs">
         <Button
-          onClick={() => navigate("/subscription")}
+          onClick={() => navigate(`/subscription?trial=${reason === "eppp" ? "eppp" : "psychpro"}`)}
           className="w-full"
           data-testid="button-upgrade"
         >

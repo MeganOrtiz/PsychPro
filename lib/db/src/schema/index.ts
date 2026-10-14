@@ -21,6 +21,11 @@ export const usersTable = pgTable("users", {
   // One-time EPPP-only promotion. Expiry is derived from this timestamp + 7d;
   // it is kept separate from paid access so Stripe renewals cannot extend it.
   epppPromoRedeemedAt: timestamp("eppp_promo_redeemed_at"),
+  // Explicit opt-in trial; never started by account creation/onboarding.
+  psychproTrialStartedAt: timestamp("psychpro_trial_started_at"),
+  // 0 preserves existing subscribers' terms; 2 is the combined PsychPro plan.
+  psychproPlanVersion: integer("psychpro_plan_version").notNull().default(0),
+  psychproBillingPeriodStartedAt: timestamp("psychpro_billing_period_started_at"),
   // The $99/mo EPPP subscription id (distinct from stripeSubscriptionId, which
   // tracks the Master/Scholar sub). Null for one-time buyers / non-EPPP users.
   epppSubscriptionId: text("eppp_subscription_id"),
@@ -45,6 +50,16 @@ export const usersTable = pgTable("users", {
 export const insertUserSchema = createInsertSchema(usersTable).omit({ createdAt: true });
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof usersTable.$inferSelect;
+
+// Persist reservations, including in-flight generation, across instances.
+// Deleting a deck must never restore its AI allowance.
+export const aiGenerationUsageTable = pgTable("ai_generation_usage", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull().references(() => usersTable.id),
+  windowKey: text("window_key").notNull(),
+  units: integer("units").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+}, (t) => [index("ai_generation_usage_user_window_idx").on(t.userId, t.windowKey)]);
 
 export const topicsTable = pgTable("topics", {
   id: serial("id").primaryKey(),
@@ -215,6 +230,8 @@ export const customDecksTable = pgTable("custom_decks", {
   userId: text("user_id").notNull().references(() => usersTable.id),
   title: text("title").notNull(),
   sourceText: text("source_text").notNull(),
+  sourceFilePath: text("source_file_path"),
+  sourceFileName: text("source_file_name"),
   studyGuide: text("study_guide"),
   status: text("status").notNull().default("processing"),
   tier: text("tier").notNull().default("standard"),
