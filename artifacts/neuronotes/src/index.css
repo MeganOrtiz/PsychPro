@@ -609,6 +609,8 @@
   color: var(--pp-text);
   font-size: clamp(14px, 1.25vw, 17px);
   font-weight: 700;
+  font-family: var(--app-font-sans);
+  letter-spacing: normal;
   line-height: 1.4;
   text-align: center;
   text-decoration: none;

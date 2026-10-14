@@ -65,6 +65,13 @@ the bright reflections within the glass itself may remain.
 **Why:** the owner asked whether the white trim could go, then supplied a close-up
 of the landing EPPP action to identify the edge.
 
+The lower landing-page trial and plan actions should match the top aqua-glass
+CTA's finish and font, rather than retaining a separate silver, tracked type style.
+**Why:** the owner requested the bottom buttons be “the same style and font as
+the ones at the top.”
+**How to apply:** keep the existing labels, destinations and trial handlers.
+This expands the aqua-button scope, not the plan-card palette or content.
+
 **How to apply:** Preserve the artwork, live typography, links, placement, and
 compact corners. Keep a stable hit-area buffer to avoid hover flicker and
 disable movement for reduced-motion users. Other primary buttons remain silver

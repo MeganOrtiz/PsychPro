@@ -672,7 +672,7 @@ export default function LandingPage() {
               <button
                 type="button"
                 onClick={() => startFreeWeek("psychpro")}
-                className="landing-cta landing-cta-primary landing-cta--center landing-tier-cta"
+                className="landing-cta landing-cta-primary landing-cta--center landing-tier-cta landing-eppp-promo"
                 data-testid="cta-trial-psychpro"
               >
                 <span>Start my free week</span>
@@ -700,7 +700,7 @@ export default function LandingPage() {
               <button
                 type="button"
                 onClick={() => startFreeWeek("eppp")}
-                className="landing-cta landing-cta-primary landing-cta--center landing-tier-cta"
+                className="landing-cta landing-cta-primary landing-cta--center landing-tier-cta landing-eppp-promo"
                 data-testid="cta-trial-eppp"
               >
                 <span>Start my free week</span>
@@ -711,7 +711,7 @@ export default function LandingPage() {
           <button
             type="button"
             onClick={() => navTo("/subscription")}
-            className="landing-cta landing-cta-primary landing-cta--center"
+            className="landing-cta landing-cta-primary landing-cta--center landing-eppp-promo"
             data-testid="cta-scholar"
           >
             <span>SEE PLANS</span>
