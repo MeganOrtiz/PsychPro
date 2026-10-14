@@ -13,6 +13,9 @@ The PsychPro free week includes five AI generation units; the new paid PsychPro 
 
 Existing paid subscribers keep their prices, access, and previous generation policy. Do not silently convert legacy plans to the new limits. Keep the new billing catalog invisible to older published pricing code during rollout.
 
+**Initial launch context:** on 2026-10-14, the owner clarified, “there are no current users so we dont have to worry about that.”
+**Why:** protecting existing subscribers is therefore not a blocker for this initial rollout; new-customer trial and payment verification still matters. This is launch context, not a standing claim about future user counts or permission to remove legacy compatibility.
+
 Expiry pauses studying, new uploads, and AI generation without deleting account-owned materials. Progress/history, personal notes, saved source downloads, and earned books remain available. Purchased/earned books belong to the account, not either subscription.
 
 **How to apply:** preserve these independent access dimensions when changing onboarding, paywalls, billing, generation, or account retention. Keep PsychPro's aqua and EPPP's pale-yellow plan styling; leave unrelated dashboard artwork and spacing alone.
