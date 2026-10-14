@@ -400,7 +400,7 @@ export default function LandingPage() {
               <p>Prepare confidently for a fraction of the cost.</p>
               <div className="mt-auto pt-6 w-full">
                 <Link href="/eppp/promo?code=EPPP7" className="landing-eppp-promo w-full gap-2" data-testid="button-landing-eppp-promo">
-                  Try EPPP free for 7 days
+                  Try FREE for 7 days
                   <ArrowRight className="w-4 h-4" aria-hidden />
                 </Link>
               </div>
