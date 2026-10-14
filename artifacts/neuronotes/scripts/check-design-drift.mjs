@@ -319,7 +319,7 @@ if (!artworkLayer?.includes("pointer-events: none;") ||
     !artworkLayer.includes('url("/api/storage/public-objects/brand/aqua-glass-button.png")') ||
     !artworkLayer.includes("border-image-slice: 55 100 55 100 fill;") ||
     !artworkLayer.includes("border-image-width: 10px 12px;") ||
-    !artworkLayer.includes("inset: -4px;") ||
+    !artworkLayer.includes("inset: -6px;") ||
     !artworkLayer.includes("clip-path: inset(5px 3px 6px round 7px);")) {
   fail("aqua artwork layer drifted", "preserve nine-sliced glass ends and keep artwork behind live text, outside the hit target");
 }

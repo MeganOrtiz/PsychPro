@@ -1088,7 +1088,8 @@ body {
 .promo-root .promo-glass::before {
   content: "";
   position: absolute;
-  inset: -4px;
+  /* Fill past the transparent layout border so no white frame peeks through. */
+  inset: -6px;
   border: 15px solid transparent;
   border-image-source: url("/api/storage/public-objects/brand/aqua-glass-button.png");
   border-image-slice: 55 100 55 100 fill;

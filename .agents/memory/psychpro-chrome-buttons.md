@@ -60,6 +60,11 @@ page actions. Remove the residual blue haze below the resting glass rim.
 and the buttons “need to raise and glow better when hovering and clicking.”
 This supersedes the earlier stationary-only interaction preference.
 
+The outer white trim should also be removed from matching aqua-glass buttons;
+the bright reflections within the glass itself may remain.
+**Why:** the owner asked whether the white trim could go, then supplied a close-up
+of the landing EPPP action to identify the edge.
+
 **How to apply:** Preserve the artwork, live typography, links, placement, and
 compact corners. Keep a stable hit-area buffer to avoid hover flicker and
 disable movement for reduced-motion users. Other primary buttons remain silver
