@@ -40,7 +40,7 @@ export function StudyTrialPanel({
   const phase = trialPhase(s);
   const ai = data?.aiUsage;
   const Icon = suite === "eppp" ? GraduationCap : Sparkles;
-  const tint = suite === "eppp" ? alpha(PP.amberSoft, 0.18) : alpha(PP.promoTealHi, 0.12);
+  const tint = alpha(PP.promoTealHi, 0.12);
 
   if (isLoading) return <Skeleton className="h-28 rounded-xl" />;
   if (isError)
