@@ -1,0 +1,84 @@
+/* Scoped EPPP7 promo page styling. Tokens only; no global selectors. */
+.promo-root {
+  min-height: 100dvh;
+  background: rgb(var(--pp-white-rgb));
+  color: var(--pp-text);
+  overflow-x: hidden;
+  padding: 34px 16px 48px;
+}
+.promo-main { max-width: 1100px; margin: 0 auto; text-align: center; }
+.promo-eyebrow {
+  font-size: 13px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--pp-text); margin: 0 0 14px;
+}
+.promo-hero { position: relative; }
+.promo-title {
+  position: relative; z-index: 2; margin: 0;
+  font-size: clamp(30px, 5vw, 46px); line-height: 1.15; font-weight: 700; color: var(--pp-text);
+}
+.promo-title span { display: block; }
+.promo-art {
+  position: relative; z-index: 1;
+  width: min(100%, 900px); margin: -28px auto 0;
+  aspect-ratio: 1672 / 603;
+}
+.promo-splash { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.promo-crown {
+  position: absolute; left: 50%; top: 40%; transform: translate(-50%, -50%);
+  width: 21%; height: auto; z-index: 2;
+}
+.promo-copy { margin: 4px auto 0; max-width: 720px; font-size: clamp(16px, 1.6vw, 19px); line-height: 1.75; color: var(--pp-text); }
+.promo-copy p { margin: 0; }
+.promo-scope { margin-top: 6px !important; font-size: 13px; line-height: 1.5; }
+.promo-panel {
+  margin: 28px auto 0; max-width: 910px; text-align: left;
+  padding: 22px 26px 26px; border-radius: 16px;
+  border: 1px solid var(--pp-navy-bright);
+  background: linear-gradient(180deg, rgba(var(--pp-white-rgb), 0.95), rgba(var(--pp-surface-rgb), 0.7)),
+    linear-gradient(180deg, var(--pp-navy-bright), rgb(var(--pp-white-rgb)));
+  box-shadow: inset 0 1px 0 var(--pp-bevel-bright), 0 10px 28px -18px rgba(var(--pp-promo-teal-mid-rgb), 0.35);
+  color: var(--pp-text);
+}
+.promo-prompt { font-size: clamp(15px, 1.5vw, 18px); margin: 0; }
+.promo-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; max-width: 724px; margin: 24px auto 0; }
+@media (max-width: 640px) { .promo-actions { grid-template-columns: 1fr; } .promo-panel { padding: 18px; } }
+
+.promo-glass {
+  position: relative; isolation: isolate;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 0 22px; width: 100%;
+  border: 1.5px solid transparent; border-radius: 10px;
+  background: transparent; color: var(--pp-text);
+  font-size: 16px; font-weight: 500; text-decoration: none; cursor: pointer;
+  transition: box-shadow 200ms ease;
+}
+.promo-glass::before {
+  content: ""; position: absolute; inset: -4px;
+  border: 15px solid transparent;
+  border-image-source: url("/api/storage/public-objects/brand/aqua-glass-button.png");
+  border-image-slice: 55 100 55 100 fill;
+  border-image-width: 10px 12px;
+  border-image-repeat: stretch;
+  pointer-events: none; z-index: -1;
+}
+.promo-glass:hover { box-shadow: 0 0 16px 0 rgba(var(--pp-promo-teal-mid-rgb), 0.28); }
+.promo-glass:active { box-shadow: 0 0 20px 0 rgba(var(--pp-promo-teal-mid-rgb), 0.38); }
+.promo-glass:focus-visible { outline: 2px solid var(--pp-promo-teal-border); outline-offset: 4px; }
+.promo-glass:disabled { opacity: 0.7; cursor: progress; }
+.promo-glass--auto { width: auto; }
+
+.promo-form-row { display: flex; gap: 12px; margin-top: 8px; }
+.promo-form-row > input { flex: 1; min-height: 44px; }
+@media (max-width: 640px) { .promo-form-row { flex-direction: column; } }
+
+.promo-notes {
+  margin: 22px auto 0; max-width: 910px; text-align: left;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px 28px;
+  font-size: 14px; line-height: 1.55; color: var(--pp-text);
+}
+.promo-notes h2 { font-size: 14px; font-weight: 700; margin: 0 0 2px; }
+.promo-notes ul { margin: 0; padding-left: 18px; list-style: disc; }
+.promo-notes p { margin: 0; }
+@media (max-width: 720px) { .promo-notes { grid-template-columns: 1fr; } }
+
+@media (prefers-reduced-motion: reduce) { .promo-glass { transition: none; } }

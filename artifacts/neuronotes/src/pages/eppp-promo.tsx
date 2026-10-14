@@ -4,8 +4,11 @@ import { useUser } from "@clerk/clerk-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { getGetEpppPromoQueryKey, useGetEpppPromo, useRedeemEpppPromo } from "@workspace/api-client-react";
 import { Check, Loader2, TriangleAlert } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import crownSrc from "@/assets/eppp-chrome-crown.webp";
+import "./eppp-promo.css";
+
+const splashSrc = `${import.meta.env.BASE_URL}api/storage/public-objects/brand/dashboard-teal-splash-complete.webp`;
 import { promoAuthHref } from "@/lib/eppp-promo-return";
 
 const PROMO_CODE = "EPPP7";
@@ -94,14 +97,10 @@ export default function EpppPromoPage() {
   } else if (!isSignedIn) {
     body = (
       <div className="space-y-3">
-        <p className="text-foreground">Create a free account or sign in, then come back here to redeem code {PROMO_CODE}.</p>
-        <div className="flex flex-col sm:flex-row gap-3">
-          <Button asChild className="w-full sm:w-auto" data-testid="button-promo-signup">
-            <a href={promoAuthHref("sign-up", code || PROMO_CODE)}>Create account</a>
-          </Button>
-          <Button asChild variant="outline" className="w-full sm:w-auto" data-testid="button-promo-signin">
-            <a href={promoAuthHref("sign-in", code || PROMO_CODE)}>Sign in</a>
-          </Button>
+        <p className="promo-prompt">Create a free account or sign in, then come back here to redeem code <strong>{PROMO_CODE}</strong>.</p>
+        <div className="promo-actions">
+          <a className="promo-glass" href={promoAuthHref("sign-up", code || PROMO_CODE)} data-testid="button-promo-signup">Create account</a>
+          <a className="promo-glass" href={promoAuthHref("sign-in", code || PROMO_CODE)} data-testid="button-promo-signin">Sign in</a>
         </div>
       </div>
     );
@@ -111,9 +110,9 @@ export default function EpppPromoPage() {
         <p className="flex items-center gap-2 text-foreground">
           <TriangleAlert className="w-4 h-4" /> We could not load your promo status. {errInfo(promo.error).message}
         </p>
-        <Button variant="outline" onClick={() => promo.refetch()} data-testid="button-promo-retry">
+        <button type="button" className="promo-glass promo-glass--auto" onClick={() => promo.refetch()} data-testid="button-promo-retry">
           Try again
-        </Button>
+        </button>
       </div>
     );
   } else if (active) {
@@ -127,9 +126,7 @@ export default function EpppPromoPage() {
           Your EPPP access is active until <strong>{fmt(data?.epppAccessUntil ?? data?.expiresAt)}</strong>.
           Promo window ends {fmt(data?.expiresAt)}. This promo requires no card and does not start a paid subscription.
         </p>
-        <Button asChild data-testid="button-promo-open-suite">
-          <Link href="/eppp/dashboard">Open the EPPP dashboard</Link>
-        </Button>
+        <Link href="/eppp/dashboard" className="promo-glass promo-glass--auto" data-testid="button-promo-open-suite">Open the EPPP dashboard</Link>
       </div>
     );
   } else if (expired) {
@@ -141,14 +138,10 @@ export default function EpppPromoPage() {
         {hasRemainingAccess ? (
           <>
             <p className="text-foreground">Your existing EPPP access remains active until {fmt(data?.epppAccessUntil)}.</p>
-            <Button asChild data-testid="button-promo-open-suite">
-              <Link href="/eppp/dashboard">Open the EPPP dashboard</Link>
-            </Button>
+            <Link href="/eppp/dashboard" className="promo-glass promo-glass--auto" data-testid="button-promo-open-suite">Open the EPPP dashboard</Link>
           </>
         ) : (
-          <Button asChild data-testid="button-promo-subscribe">
-            <Link href="/subscription">See EPPP plans</Link>
-          </Button>
+          <Link href="/subscription" className="promo-glass promo-glass--auto" data-testid="button-promo-subscribe">See EPPP plans</Link>
         )}
       </div>
     );
@@ -162,7 +155,7 @@ export default function EpppPromoPage() {
     body = (
       <form onSubmit={onRedeem} className="space-y-3" data-testid="promo-form">
         <label htmlFor="promo-code" className="text-sm font-medium text-foreground">Promo code</label>
-        <div className="flex flex-col sm:flex-row gap-3">
+        <div className="promo-form-row">
           <Input
             id="promo-code"
             value={code}
@@ -170,15 +163,14 @@ export default function EpppPromoPage() {
             autoComplete="off"
             maxLength={64}
             placeholder={PROMO_CODE}
-            className="sm:max-w-xs"
-            data-testid="input-promo-code"
+                        data-testid="input-promo-code"
           />
-          <Button type="submit" disabled={redeem.isPending || refreshing} data-testid="button-promo-redeem">
+          <button type="submit" className="promo-glass promo-glass--auto" disabled={redeem.isPending || refreshing} data-testid="button-promo-redeem">
             {redeem.isPending || refreshing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
             Redeem 7 days of EPPP
-          </Button>
+          </button>
         </div>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-foreground">
           Redeeming starts your seven days immediately. Promo access ends automatically, with no credit card required.
         </p>
         {formError && (
@@ -191,37 +183,45 @@ export default function EpppPromoPage() {
   }
 
   return (
-    <div className="study-page-bg min-h-[100dvh] px-4 py-10 md:py-16">
-      <main className="max-w-2xl mx-auto space-y-6">
-        <header className="space-y-3">
-          <p className="text-xs font-semibold tracking-widest uppercase text-muted-foreground">PsychPro EPPP promo</p>
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground">Seven days of the EPPP Mastery Suite, free</h1>
-          <p className="text-foreground leading-relaxed">
-            Try the EPPP-only suite for seven days. No credit card, and no automatic charge when it ends. It covers EPPP
-            content only and does not unlock other PsychPro plans.
-          </p>
+    <div className="promo-root">
+      <main className="promo-main">
+        <header className="promo-hero">
+          <p className="promo-eyebrow">PsychPro EPPP promo</p>
+          <h1 className="promo-title"><span>EPPP Mastery Suite</span><span>7 days FREE</span></h1>
+          <div className="promo-art" aria-hidden>
+            <img className="promo-splash" src={splashSrc} alt="" width={1672} height={603} />
+            <img className="promo-crown" src={crownSrc} alt="" />
+          </div>
+          <div className="promo-copy">
+            <p>Try the study materials on the EPPP Mastery Suite free for 7 days.</p>
+            <p>No credit card</p>
+            <p>No automatic charge</p>
+            <p>Unlimited access to help you master the concepts with confidence</p>
+            <p className="promo-scope">Covers EPPP study materials only. It does not unlock other PsychPro plans.</p>
+          </div>
         </header>
 
-        <section className="mat-opaque p-5 md:p-6" aria-live="polite" data-testid="promo-card">
+        <section className="promo-panel" aria-live="polite" data-testid="promo-card">
           {body}
         </section>
 
-        <section className="mat-opaque p-5 md:p-6 space-y-2">
-          <h2 className="text-lg font-semibold text-foreground">One week, one claim per account</h2>
-          <ul className="list-disc pl-5 space-y-1 text-foreground">
-            <li>You will see the exact expiry date and time as soon as you redeem.</li>
-            <li>Refreshing this page will not give you more time.</li>
-            <li>Existing paid EPPP access and billing terms stay unchanged.</li>
-          </ul>
-        </section>
-
-        <section className="mat-opaque p-5 md:p-6 space-y-2">
-          <h2 className="text-lg font-semibold text-foreground">Optional: feedback for a book</h2>
-          <p className="text-foreground leading-relaxed">
-            If you choose, you can send honest feedback about the PsychPro website to earn a free textbook PDF. The PDF stays yours
-            after the promo ends. Books are not awarded for redeeming the promo alone.
-          </p>
-        </section>
+        <aside className="promo-notes">
+          <div>
+            <h2>One week, one claim per account</h2>
+            <ul>
+              <li>You will see the exact expiry date and time as soon as you redeem.</li>
+              <li>Access ends automatically, with no automatic renewal. Refreshing will not add time.</li>
+              <li>Existing paid EPPP access and billing terms stay unchanged.</li>
+            </ul>
+          </div>
+          <div>
+            <h2>Optional: feedback for a book</h2>
+            <p>
+              If you choose, send honest feedback about the PsychPro website to earn a free textbook PDF, which stays yours after the
+              promo ends. Books are not awarded for redeeming the promo alone.
+            </p>
+          </div>
+        </aside>
       </main>
     </div>
   );
