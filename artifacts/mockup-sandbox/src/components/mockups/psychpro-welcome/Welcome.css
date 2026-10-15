@@ -575,3 +575,101 @@
   .ppw-pricing { padding: 22px 22px; }
   .ppw-price-line strong { font-size: 35px; }
 }
+
+/* Match the supplied welcome reference: restrained masthead, compact hero,
+   visible bullets, and no supporting copy outside the plan cards. */
+.ppw-header {
+  height: 58px;
+}
+.ppw-wordmark span {
+  font-size: 11px;
+  letter-spacing: .28em;
+}
+.ppw-hero {
+  padding: 10px 0 15px;
+  border-bottom: 1px solid rgba(129, 145, 148, .26);
+}
+.ppw-splash { top: -100px; }
+.ppw-hero .ppw-hero-title {
+  margin: 0 0 11px;
+  font-size: clamp(40px, 4.2vw, 54px);
+  line-height: 1.12;
+}
+.ppw-hero-layout { min-height: 400px; }
+.ppw-intro-points {
+  max-width: 400px;
+  list-style: disc outside;
+  display: grid;
+  padding-left: 22px;
+}
+.ppw-intro-points li { display: list-item; }
+.ppw-intro-points li::marker { color: #2d383a; }
+.ppw-brain {
+  left: calc(-1 * clamp(160px, 19.5vw, 250px));
+  top: -85px;
+}
+.ppw-hero-action { margin-top: 9px; }
+.ppw-hero-action .ppw-primary {
+  width: min(800px, 100%);
+  min-height: 58px;
+  border-color: #cbd9db;
+  background: linear-gradient(180deg, #fbffff 0%, #f1fafa 55%, #e8f4f5 100%);
+  color: #323d40;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.92), 0 8px 24px -17px rgba(20,70,74,.22);
+}
+.ppw-hero-action .ppw-primary:hover {
+  border-color: #afcdd0;
+  background: linear-gradient(180deg, #fff 0%, #f5ffff 55%, #e9f7f8 100%);
+  box-shadow: inset 0 1px 0 #fff, 0 10px 26px -15px rgba(20,70,74,.26);
+}
+.ppw-hero-action .ppw-primary:active {
+  background: linear-gradient(180deg, #e9f4f5 0%, #f7ffff 100%);
+}
+.ppw-offer { padding-top: 18px; }
+.ppw-offer-heading {
+  align-items: flex-start;
+  text-align: left;
+}
+.ppw-offer-heading h2 {
+  margin: 0 0 15px;
+  font-size: clamp(34px, 4vw, 48px);
+}
+.ppw-pricing-grid {
+  width: 100%;
+  max-width: 980px;
+  margin-top: 0;
+}
+.ppw-card-trial {
+  margin: -4px 0 12px;
+  color: #263f42;
+  font-size: 10px;
+  line-height: 1.45;
+  text-align: center;
+}
+@media (max-width: 900px) {
+  .ppw-hero-layout { min-height: 370px; }
+  .ppw-brain {
+    left: calc(-1 * clamp(90px, 12vw, 150px));
+    top: -42px;
+  }
+}
+@media (max-width: 680px) {
+  .ppw-header { height: 58px; }
+  .ppw-hero { padding: 18px 0 15px; }
+  .ppw-splash { top: 125px; }
+  .ppw-hero .ppw-hero-title {
+    margin: 0 0 5px;
+    font-size: clamp(32px, 8.5vw, 42px);
+  }
+  .ppw-hero-layout { min-height: 0; }
+  .ppw-brain {
+    left: calc(-1 * clamp(16px, 7vw, 32px));
+    top: 0;
+  }
+  .ppw-offer-heading h2 {
+    margin-bottom: 14px;
+    font-size: clamp(30px, 8vw, 38px);
+  }
+  .ppw-pricing-grid { margin-top: 0; }
+  .ppw-card-trial { text-align: center; }
+}

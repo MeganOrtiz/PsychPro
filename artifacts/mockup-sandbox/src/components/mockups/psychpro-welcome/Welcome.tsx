@@ -33,10 +33,8 @@ export function Welcome() {
         <div className="ppw-wordmark" aria-label="PsychPro">
           <Brain aria-hidden="true" />
           <span>PSYCHPRO</span>
-          <i>SUITE</i>
         </div>
         <div className="ppw-header-right">
-          <span className="ppw-preview-tag"><span /> Preview · no account changes</span>
           <button
             className="ppw-back"
             type="button"
@@ -60,20 +58,16 @@ export function Welcome() {
             <div className="ppw-feature-list">
               <article className="ppw-feature">
                 <div className="ppw-feature-icon"><Layers3 aria-hidden="true" /></div>
-                <div><h3>Learn at your own pace.</h3><p>Flashcards, quizzes, practice exams, and study guides are built in.</p></div>
+                <div><h3>Learn at your own pace</h3><p>Flashcards, quizzes, practice exams, and study guides are built in.</p></div>
               </article>
               <article className="ppw-feature">
                 <div className="ppw-feature-icon"><Brain aria-hidden="true" /></div>
-                <div><h3>Explore the Brain Lab.</h3><p>Connect neuroanatomy, systems, and function through interactive learning.</p></div>
+                <div><h3>Explore the Brain Lab</h3><p>Connect neuroanatomy, systems, and function through interactive learning.</p></div>
               </article>
               <article className="ppw-feature">
                 <div className="ppw-feature-icon"><FileUp aria-hidden="true" /></div>
-                <div><h3>Bring your own material.</h3><p>Turn uploaded PDF, DOCX, or TXT files—or pasted notes—into study materials.</p></div>
+                <div><h3>Bring your own material</h3><p>Turn uploaded PDF, DOCX, or TXT files—or pasted notes—into study materials.</p></div>
               </article>
-            </div>
-            <div className="ppw-progress-note">
-              <div className="ppw-progress-mark"><span /><span /><span /><span /><span /></div>
-              <div><strong>See your learning move</strong><span>Progress tracking helps you know what to revisit next.</span></div>
             </div>
           </div>
           <div className="ppw-art" aria-hidden="true">
@@ -84,19 +78,12 @@ export function Welcome() {
           <button type="button" className="ppw-primary" onClick={() => openTrialPreview()}>
             Start My Free Trial <ArrowRight aria-hidden="true" />
           </button>
-          <p>7 days · 5 AI requests total · Starts only when you explicitly choose · No card · No automatic charge</p>
         </div>
       </section>
 
       <section className="ppw-offer" aria-labelledby="ppw-offer-title">
         <div className="ppw-offer-heading">
-          <div className="ppw-eyebrow ppw-eyebrow-muted">ONE COMPLETE SUITE · TWO WAYS TO PAY</div>
           <h2 id="ppw-offer-title">Commit to Learning Today.</h2>
-          <p>Both options include the full PsychPro Suite. Only the billing frequency differs.</p>
-        </div>
-        <div className="ppw-trial-terms">
-          <Sparkles aria-hidden="true" />
-          <span><strong>Try it free for 7 days.</strong> The week starts only when you explicitly choose; includes 5 AI generation requests. No card and no automatic charge.</span>
         </div>
         <div className="ppw-pricing-grid">
           <article className="ppw-pricing">
@@ -106,6 +93,7 @@ export function Welcome() {
             </div>
             <div className="ppw-price-line"><strong>$19.99</strong><span>/ month</span></div>
             <p className="ppw-price-context">If you choose a subscription after your free week.</p>
+            <p className="ppw-card-trial">7 days free · starts only when you choose · 5 AI requests · no card · no automatic charge.</p>
             <ul className="ppw-benefits">
               <li><Check aria-hidden="true" /> All flashcards, quizzes, practice exams, and study guides</li>
               <li><Check aria-hidden="true" /> Brain Lab, progress tracking, and your own uploaded or pasted notes</li>
@@ -121,7 +109,8 @@ export function Welcome() {
               <p>PsychPro Suite · full access</p>
             </div>
             <div className="ppw-price-line"><strong>$159.99</strong><span>/ year</span></div>
-            <p className="ppw-price-context">Save $79.89 vs monthly · equivalent to $13.33/month.</p>
+            <p className="ppw-price-context">If you choose an annual subscription after trial · save $79.89 vs monthly · equivalent to $13.33/month.</p>
+            <p className="ppw-card-trial">7 days free · starts only when you choose · 5 AI requests · no card · no automatic charge.</p>
             <ul className="ppw-benefits">
               <li><Check aria-hidden="true" /> All flashcards, quizzes, practice exams, and study guides</li>
               <li><Check aria-hidden="true" /> Brain Lab, progress tracking, and your own uploaded or pasted notes</li>
@@ -132,15 +121,7 @@ export function Welcome() {
             </button>
           </article>
         </div>
-        <p className="ppw-assurances">Same account, no second login. EPPP remains separate and unchanged.</p>
       </section>
-
-      <footer className="ppw-footer">
-        <p><span className="ppw-footer-dot" /> Your EPPP access stays separate and unchanged.</p>
-        <button type="button" onClick={() => previewAction("Preview only — returning to EPPP would leave your account unchanged.")}>
-          <ArrowLeft aria-hidden="true" /> Return to EPPP
-        </button>
-      </footer>
 
       {notice && <div className="ppw-toast" role="status">{notice}</div>}
       {dialogOpen && (
