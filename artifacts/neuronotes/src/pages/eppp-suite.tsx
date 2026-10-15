@@ -50,6 +50,8 @@ import {
 import { STUDY_PALETTE } from "@/lib/study-theme";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useEntitlements } from "@/lib/use-entitlements";
+import { useStudyAccess } from "@/lib/use-study-access";
+import { psychproSuiteDestination } from "@/lib/psychpro-suite-destination";
 import UpgradePrompt from "@/components/upgrade-prompt";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { cn } from "@/lib/utils";
@@ -253,6 +255,8 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isMobile = useIsMobile();
   const { data: entitlements, isLoading: entLoading } = useEntitlements();
+  const { data: studyAccess } = useStudyAccess();
+  const psychproDestination = psychproSuiteDestination(studyAccess?.psychpro.hasAccess, entitlements?.isAdmin);
   const epppUnlocked = !!entitlements?.epppAccess;
   // Owned books belong to the account, not an active EPPP subscription.
   // Only the library bypasses the study-content access gate.
@@ -385,7 +389,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
             the only nav surface on mobile so it keeps a copy. */}
         <div className="relative px-3 pb-3 md:hidden">
           <Link
-            href="/dashboard"
+            href={psychproDestination}
             className="eppp-launch-btn suite-switch-btn eppp-launch-btn--sidebar"
             data-testid="eppp-suite-back-sidebar"
             onClick={() => setSidebarOpen(false)}
@@ -426,7 +430,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
                 (owner, 2026-07-30; the old page-title spacing concern is moot
                 now that wordmarks live under the brain artwork). */}
             <Link
-              href="/dashboard"
+              href={psychproDestination}
               className="eppp-launch-btn suite-switch-btn"
               data-testid="eppp-suite-back-header"
             >

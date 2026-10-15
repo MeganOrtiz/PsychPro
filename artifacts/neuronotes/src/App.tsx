@@ -37,6 +37,7 @@ const CourseMasteryExamPage = lazy(() => import("@/pages/course-mastery-exam"));
 const ProgressPage = lazy(() => import("@/pages/progress"));
 const LeaderboardPage = lazy(() => import("@/pages/leaderboard"));
 const SubscriptionPage = lazy(() => import("@/pages/subscription"));
+const PsychproWelcomePage = lazy(() => import("@/pages/psychpro-welcome"));
 const FeedbackPage = lazy(() => import("@/pages/feedback"));
 const FeatureRequestPage = lazy(() => import("@/pages/feature-request"));
 const FeaturedWorkPage = lazy(() => import("@/pages/featured-work"));
@@ -230,6 +231,11 @@ function AppRouter() {
             </AppLayout>
           </RequireSignedIn>
         )}
+      </Route>
+      <Route path="/psychpro/welcome">
+        <RequireSignedIn>
+          <PsychproWelcomePage />
+        </RequireSignedIn>
       </Route>
       <Route>
         <RequireOnboarded>
