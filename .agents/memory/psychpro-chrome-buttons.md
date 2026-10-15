@@ -65,11 +65,14 @@ the bright reflections within the glass itself may remain.
 **Why:** the owner asked whether the white trim could go, then supplied a close-up
 of the landing EPPP action to identify the edge.
 
-The two trial buttons inside the landing-page PsychPro and EPPP plan boxes
-must match the silver hero buttons, including uppercase tracked typography and arrows.
+The two trial buttons inside the landing-page plan boxes use glass artwork:
+aqua for PsychPro and pale yellow for EPPP, retaining uppercase tracked
+typography and arrows. The separate “SEE PLANS” action remains silver chrome.
 Center only the smaller subtitle directly beneath each plan title, not the bullet lists.
-**Why:** the owner clarified the intended reference with the silver “EXPLORE
-WHAT’S INSIDE” and “CHECK IT OUT” buttons, and explicitly limited this to the landing page.
+**Why:** the owner superseded the earlier silver trial-button request with an
+aqua-glass reference for PsychPro and matching yellow for EPPP, explicitly
+limiting the changes to the landing page. They separately requested silver for
+“SEE PLANS” and removal of the colored haze beneath both plan boxes.
 **How to apply:** preserve labels, trial handlers, card finishes and other content.
 Do not apply this change to dashboards or other pages.
 
@@ -97,8 +100,8 @@ extend this aqua exception to other cards.
 
 The separate EPPP Mastery Suite landing plan box uses the same glossy-glass
 appearance in pale, clear yellow, never olive/green or muted mustard.
-Yellow applies only to that box; Free/Master/Scholar
-remain aqua and the buttons retain their existing finish.
+Yellow applies only to the EPPP plan box and its matching trial button;
+the PsychPro plan and trial action remain aqua.
 
 **Why:** The owner requested “the same look and feel of the other tiers just in
 yellow. only the yellow for the EPPP mastery suite box.”

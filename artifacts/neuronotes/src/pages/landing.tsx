@@ -711,7 +711,7 @@ export default function LandingPage() {
           <button
             type="button"
             onClick={() => navTo("/subscription")}
-            className="landing-cta landing-cta-primary landing-cta--center landing-eppp-promo"
+            className="landing-cta landing-cta-primary landing-cta--center"
             data-testid="cta-scholar"
           >
             <span>SEE PLANS</span>
@@ -903,6 +903,7 @@ const styles = `
 .landing-root {
   position: relative;
   isolation: isolate;
+  padding-top: 64px;
   min-height: 100vh;
   min-height: 100dvh;
   /* The full-bleed hero band spans 100vw, which includes the vertical
@@ -922,15 +923,18 @@ const styles = `
 
 /* ============== NAVBAR ============== */
 .landing-nav {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
   z-index: 40;
   width: 100%;
-  background: hsl(var(--surf-hue) var(--surf-sat) 100% / 0.80);
+  height: 64px;
+  background: ${PP.white};
   border-bottom: 1px solid ${C.hairline};
 }
 .landing-nav-inner {
   position: relative;
+  height: 100%;
   max-width: 1320px;
   margin: 0 auto;
   display: flex;
@@ -1296,6 +1300,7 @@ const styles = `
 
 /* ============== SHARED SECTION SCAFFOLD ============== */
 .landing-section {
+  scroll-margin-top: 84px;
   max-width: 1180px;
   margin: 0 auto;
   padding: clamp(22px, 3.4vh, 42px) 32px;

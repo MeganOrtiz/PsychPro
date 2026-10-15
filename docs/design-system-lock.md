@@ -61,6 +61,19 @@ rejected in `index.css`. The only accent is locked cerulean `#76E4F7` /
 
 ## Enforcement
 
+### Landing-page exceptions approved by the owner
+
+- The landing navigation is fixed at the viewport top, with an equal-height
+  layout offset and anchor spacing so it does not cover page content.
+- The trial action inside the PsychPro plan card uses the existing aqua-glass
+  button artwork. The EPPP plan action uses the matching pale-yellow artwork.
+  Preserve their labels, arrows, typography, dimensions, and trial handlers.
+- Clip only the decorative artwork on both plan cards to remove the baked-in
+  colored haze beneath the rim. Preserve the cards' content and layout.
+- The separate `SEE PLANS` action uses the existing silver-chrome CTA, not
+  the aqua-glass exception.
+- These refinements apply only to the landing page, not dashboards or promos.
+
 - `pnpm test` runs `design:check` before the test suite, so ordinary validation
   cannot skip the visual contract.
 - Any existing CI or deployment pipeline that invokes `pnpm test` now runs the

@@ -1069,6 +1069,7 @@ body {
    Scoped to four actions; typography, dimensions, and hit targets stay intact. */
 .landing-root .landing-eppp-promo,
 .landing-root .landing-textbook-link,
+.landing-root .landing-tier-cta,
 .eppp-launch-btn.suite-switch-btn,
 .promo-root .promo-glass {
   --pp-cta-glass-face: transparent;
@@ -1086,6 +1087,7 @@ body {
 }
 .landing-root .landing-eppp-promo::before,
 .landing-root .landing-textbook-link::before,
+.landing-root .landing-tier-cta::before,
 .eppp-launch-btn.suite-switch-btn::before,
 .promo-root .promo-glass::before {
   content: "";
@@ -1110,6 +1112,7 @@ body {
 }
 .landing-root .landing-eppp-promo::after,
 .landing-root .landing-textbook-link::after,
+.landing-root .landing-tier-cta::after,
 .eppp-launch-btn.suite-switch-btn::after,
 .promo-root .promo-glass::after {
   /* A transparent hit-area buffer prevents pointer-edge hover oscillation. */
@@ -1121,6 +1124,7 @@ body {
 }
 .landing-root .landing-eppp-promo:hover,
 .landing-root .landing-textbook-link:hover,
+.landing-root .landing-tier-cta:hover,
 .eppp-launch-btn.suite-switch-btn:hover,
 .promo-root .promo-glass:hover:not(:disabled) {
   transform: translateY(-3px);
@@ -1132,6 +1136,7 @@ body {
 }
 .landing-root .landing-eppp-promo:active,
 .landing-root .landing-textbook-link:active,
+.landing-root .landing-tier-cta:active,
 .eppp-launch-btn.suite-switch-btn:active,
 .promo-root .promo-glass:active:not(:disabled) {
   transform: translateY(-1px);
@@ -1143,6 +1148,7 @@ body {
 }
 .landing-root .landing-eppp-promo:focus-visible,
 .landing-root .landing-textbook-link:focus-visible,
+.landing-root .landing-tier-cta:focus-visible,
 .eppp-launch-btn.suite-switch-btn:focus-visible,
 .promo-root .promo-glass:focus-visible {
   outline: 2px solid var(--pp-promo-teal-border);
@@ -1150,6 +1156,8 @@ body {
 }
 .landing-root .landing-textbook-link:hover,
 .landing-root .landing-textbook-link:active,
+.landing-root .landing-tier-cta:hover,
+.landing-root .landing-tier-cta:active,
 .eppp-launch-btn.suite-switch-btn:hover,
 .eppp-launch-btn.suite-switch-btn:active {
   /* Override generic CTA/launcher fills without changing the glass face. */
@@ -1158,12 +1166,25 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .landing-root .landing-eppp-promo,
   .landing-root .landing-textbook-link,
+  .landing-root .landing-tier-cta,
   .eppp-launch-btn.suite-switch-btn,
   .promo-root .promo-glass { transition: none; }
   .landing-root .landing-eppp-promo:is(:hover, :active),
   .landing-root .landing-textbook-link:is(:hover, :active),
+  .landing-root .landing-tier-cta:is(:hover, :active),
   .eppp-launch-btn.suite-switch-btn:is(:hover, :active),
   .promo-root .promo-glass:is(:hover, :active):not(:disabled) { transform: none; }
+}
+
+/* Landing plan actions keep their live labels and trial handlers; the EPPP
+   action alone uses the matching pale-yellow artwork, not an aqua filter. */
+.landing-root .landing-tier--eppp .landing-tier-cta::before {
+  border-image-source: url("/api/storage/public-objects/brand/pale-yellow-glass.png");
+}
+.landing-root .landing-tier--eppp .landing-tier-cta:hover,
+.landing-root .landing-tier--eppp .landing-tier-cta:active {
+  /* Keep depth neutral so a turquoise glow cannot tint the yellow glass. */
+  box-shadow: 0 8px 20px -10px var(--pp-shadow);
 }
 
 /* Canonical shadcn Card treatment — OPAQUE material. The class is emitted
@@ -1181,12 +1202,14 @@ body {
 .landing-root .landing-tier-grid > .landing-tier::before {
   content: "";
   position: absolute;
-  inset: -4px;
+  inset: -8px;
   border: 20px solid transparent;
   border-image-source: url("/api/storage/public-objects/brand/aqua-glass-button.png");
   border-image-slice: 55 100 55 100 fill;
   border-image-width: 20px 24px;
   border-image-repeat: stretch;
+  /* Trim the baked-in haze, as on the buttons, without clipping live content. */
+  clip-path: inset(8px 6px 12px round 14px);
   pointer-events: none;
   z-index: -1;
 }
@@ -1202,12 +1225,13 @@ body {
 .landing-root .landing-tier--eppp::before {
   content: "";
   position: absolute;
-  inset: -4px;
+  inset: -8px;
   border: 20px solid transparent;
   border-image-source: url("/api/storage/public-objects/brand/pale-yellow-glass.png");
   border-image-slice: 55 100 55 100 fill;
   border-image-width: 20px 24px;
   border-image-repeat: stretch;
+  clip-path: inset(8px 6px 12px round 14px);
   pointer-events: none;
   z-index: -1;
 }

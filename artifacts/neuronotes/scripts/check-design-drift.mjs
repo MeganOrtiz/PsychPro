@@ -248,6 +248,7 @@ if (!/backdrop-filter:\s*none\s*!important;/.test(css)) {
   const turquoiseScopes = [
     ".landing-root .landing-eppp-promo",
     ".landing-root .landing-textbook-link",
+    ".landing-root .landing-tier-cta",
     ".eppp-launch-btn.suite-switch-btn",
     ".promo-root .promo-glass",
   ];
@@ -300,6 +301,7 @@ if (!/backdrop-filter:\s*none\s*!important;/.test(css)) {
 const turquoiseActions = [
   ".landing-root .landing-eppp-promo",
   ".landing-root .landing-textbook-link",
+  ".landing-root .landing-tier-cta",
   ".eppp-launch-btn.suite-switch-btn",
   ".promo-root .promo-glass",
 ];
@@ -344,6 +346,7 @@ if (!planGlass?.includes("background: transparent;") ||
     !planArtwork?.includes('url("/api/storage/public-objects/brand/aqua-glass-button.png")') ||
     !planArtwork.includes("pointer-events: none;") ||
     !planArtwork.includes("z-index: -1;") ||
+    !planArtwork.includes("clip-path: inset(8px 6px 12px round 14px);") ||
     !planArtwork.includes("border-image-width: 20px 24px;")) {
   fail("landing plan glass drifted", "preserve the three plan boxes and live content; apply only the owner-approved glass artwork");
 }
@@ -355,9 +358,15 @@ if (!epppPlanGlass?.includes("background: transparent;") ||
     /filter\s*:/.test(epppPlanArtwork ?? "") ||
     !epppPlanArtwork.includes("pointer-events: none;") ||
     !epppPlanArtwork.includes("z-index: -1;") ||
+    !epppPlanArtwork.includes("clip-path: inset(8px 6px 12px round 14px);") ||
     !epppPlanArtwork.includes("border-image-width: 20px 24px;") ||
     /filter\s*:/.test(planArtwork ?? "")) {
   fail("EPPP yellow plan glass drifted", "yellow belongs only to the EPPP plan artwork; retain aqua on the other tiers and preserve all live content");
+}
+
+const yellowTrialArtwork = ruleBlock(css, ".landing-root .landing-tier--eppp .landing-tier-cta::before {");
+if (!yellowTrialArtwork?.includes('url("/api/storage/public-objects/brand/pale-yellow-glass.png")')) {
+  fail("landing EPPP trial button drifted", "keep pale-yellow glass on the EPPP plan action and aqua glass on the PsychPro plan action");
 }
 
 let m;
