@@ -4,15 +4,26 @@
   --ppw-teal: #078c94;
   --ppw-aqua: #39c8cf;
   --ppw-line: #dce3e4;
+  --ppw-chrome-hi: #f2f4f6;
+  --ppw-chrome-mid: #c9ced3;
+  --ppw-chrome-lo: #b4bac0;
+  --ppw-chrome-hover-hi: #fff;
+  --ppw-chrome-hover-mid: #d5dade;
+  --ppw-chrome-hover-lo: #c0c6cc;
+  --ppw-chrome-press-hi: #c9ced3;
+  --ppw-chrome-press-lo: #aab1b7;
+  --ppw-chrome-border: #9aa2a9;
+  --ppw-chrome-border-hover: #868f97;
+  --ppw-chrome-border-press: #7d868e;
   min-height: 100vh;
   overflow: hidden;
   position: relative;
   color: var(--ppw-ink);
-  background:
-    radial-gradient(ellipse at 73% 15%, rgba(34, 197, 204, .095), transparent 29rem),
-    radial-gradient(ellipse at 8% 54%, rgba(213, 242, 243, .38), transparent 30rem),
-    #fff;
+  background: #fff;
   font-family: "Montserrat", "Avenir Next", sans-serif;
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 .ppw-page * { box-sizing: border-box; }
 .ppw-header {
@@ -25,7 +36,7 @@
   border-bottom: 1px solid rgba(129, 145, 148, .19);
 }
 .ppw-wordmark { display: flex; gap: 11px; align-items: center; color: #202629; }
-.ppw-wordmark svg { width: 21px; height: 21px; color: var(--ppw-teal); stroke-width: 1.5; }
+.ppw-wordmark svg { width: 21px; height: 21px; color: #24282c; filter: drop-shadow(0 0 8px rgba(21, 157, 164, .45)); stroke-width: 1.5; }
 .ppw-wordmark span { font-size: 13px; font-weight: 400; letter-spacing: .32em; }
 .ppw-wordmark i { font-size: 9px; font-style: normal; font-weight: 600; letter-spacing: .18em; color: #728084; margin-left: -6px; }
 .ppw-header-right { display: flex; align-items: center; gap: 25px; }
@@ -43,29 +54,28 @@
 }
 .ppw-hero-copy { z-index: 2; padding: 31px 0 44px; max-width: 520px; animation: ppw-rise .8s cubic-bezier(.2,.8,.2,1) both; }
 .ppw-eyebrow { display: flex; align-items: center; gap: 10px; color: #398b8f; font-size: 9px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; }
-.ppw-hero h1 { margin: 21px 0 17px; font: 300 clamp(43px, 5.1vw, 68px)/1.04 "Outfit", "Montserrat", sans-serif; letter-spacing: -.045em; color: #202629; }
-.ppw-hero h1 em { color: #168e95; font-style: normal; font-weight: 300; }
+.ppw-hero h1 { margin: 20px 0 17px; max-width: 520px; font: 300 clamp(38px, 4.25vw, 54px)/1.12 "Montserrat", sans-serif; letter-spacing: -.035em; color: #14171a; }
 .ppw-intro { max-width: 470px; margin: 0; color: #5d696c; font-size: 14px; line-height: 1.85; font-weight: 400; }
 .ppw-hero-cta { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; margin-top: 25px; }
 .ppw-primary {
-  min-height: 48px; padding: 0 20px; border-radius: 9px; border: 1px solid #087d84;
+  min-height: 48px; padding: 0 22px; border-radius: 10px; border: 1.5px solid var(--ppw-chrome-border);
   display: inline-flex; align-items: center; justify-content: center; gap: 13px;
-  background: linear-gradient(155deg, #38cbd1 0%, #12aeb6 48%, #07858d 100%);
-  color: white; box-shadow: inset 0 1px 0 rgba(255,255,255,.58), 0 10px 22px -13px rgba(1, 104, 111, .65);
-  font: 600 12px "Montserrat", sans-serif; letter-spacing: .02em; cursor: pointer;
-  transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+  background: linear-gradient(180deg, var(--ppw-chrome-hi) 0%, var(--ppw-chrome-mid) 55%, var(--ppw-chrome-lo) 100%);
+  color: #24282c; box-shadow: inset 0 1px 0 rgba(255,255,255,.68), inset 0 -8px 14px -10px rgba(20,23,26,.18), 0 10px 22px -14px rgba(0,0,0,.22);
+  font: 600 12px "Montserrat", sans-serif; letter-spacing: .11em; cursor: pointer;
+  transition: background-color .16s ease, background-image .16s ease, border-color .16s ease, box-shadow .2s ease, transform .16s ease;
 }
-.ppw-primary:hover { transform: translateY(-2px); filter: saturate(1.08); box-shadow: inset 0 1px 0 rgba(255,255,255,.7), 0 13px 26px -13px rgba(1, 104, 111, .72); }
-.ppw-primary:active { transform: translateY(0); }
+.ppw-primary:hover { transform: translateY(-1px); border-color: var(--ppw-chrome-border-hover); background: linear-gradient(180deg, var(--ppw-chrome-hover-hi) 0%, var(--ppw-chrome-hover-mid) 55%, var(--ppw-chrome-hover-lo) 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,.88), inset 0 -8px 14px -10px rgba(20,23,26,.14), 0 0 18px -2px rgba(20,23,26,.10), 0 12px 24px -14px rgba(0,0,0,.24); }
+.ppw-primary:active { transform: translateY(0); border-color: var(--ppw-chrome-border-press); background: linear-gradient(180deg, var(--ppw-chrome-press-hi) 0%, var(--ppw-chrome-press-lo) 100%); box-shadow: inset 0 2px 6px rgba(20,23,26,.22), 0 6px 14px -12px rgba(0,0,0,.24); }
 .ppw-primary svg { width: 16px; height: 16px; }
 .ppw-hero-cta > span { font-size: 10px; color: #758184; }
 .ppw-trial-note { display: flex; gap: 10px; align-items: flex-start; margin-top: 19px; color: #687376; font-size: 10px; line-height: 1.6; max-width: 400px; }
-.ppw-trial-note svg { width: 15px; height: 15px; flex: 0 0 auto; color: #219ca2; }
+.ppw-trial-note svg { width: 15px; height: 15px; flex: 0 0 auto; color: var(--ppw-teal); }
 .ppw-trial-note strong { color: #354145; font-weight: 600; }
 .ppw-art { height: 445px; position: relative; display: grid; place-items: center; margin-right: -38px; isolation: isolate; }
 .ppw-splash { position: absolute; z-index: -2; width: 122%; height: 100%; object-fit: cover; object-position: center; mix-blend-mode: multiply; opacity: .9; }
-.ppw-art::before { content: ""; position: absolute; z-index: -1; width: 64%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(74, 219, 220, .23), rgba(255,255,255,0) 70%); filter: blur(9px); }
-.ppw-brain { width: min(88%, 475px); height: auto; filter: drop-shadow(0 24px 22px rgba(20, 55, 58, .2)); animation: ppw-float 5s ease-in-out infinite; }
+.ppw-art::before { content: ""; position: absolute; z-index: -1; width: 64%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(57, 217, 229, .18), rgba(255,255,255,0) 70%); filter: blur(9px); }
+.ppw-brain { width: min(88%, 475px); height: auto; filter: drop-shadow(0 18px 30px rgba(0, 0, 0, .18)); animation: ppw-float 4.8s ease-in-out infinite; }
 .ppw-art-orbit { position: absolute; width: 69%; aspect-ratio: 1.5; border: 1px solid rgba(0, 136, 145, .15); border-radius: 50%; transform: rotate(-24deg); }
 .ppw-art-orbit-two { width: 79%; aspect-ratio: 1.28; transform: rotate(28deg); border-color: rgba(190, 200, 201, .48); }
 .ppw-art-caption { position: absolute; right: 3%; bottom: 31px; display: grid; gap: 5px; text-align: right; color: rgba(34, 67, 69, .55); }
@@ -80,7 +90,7 @@
 .ppw-includes { display: flex; flex-direction: column; justify-content: space-between; }
 .ppw-feature-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 .ppw-feature { display: flex; gap: 11px; align-items: flex-start; }
-.ppw-feature-icon { flex: 0 0 33px; height: 33px; display: grid; place-items: center; border-radius: 10px; color: #188d93; background: linear-gradient(150deg, #e7f8f8, #f7fcfc); border: 1px solid #d3eeee; box-shadow: inset 0 1px 0 #fff; }
+.ppw-feature-icon { flex: 0 0 33px; height: 33px; display: grid; place-items: center; border-radius: 10px; color: #087f87; background: linear-gradient(150deg, #e7f8f8, #f7fcfc); border: 1px solid rgba(21, 157, 164, .24); box-shadow: inset 0 1px 0 #fff, 0 8px 18px -14px rgba(21, 157, 164, .35); }
 .ppw-feature-icon svg { width: 16px; height: 16px; stroke-width: 1.7; }
 .ppw-feature h3 { margin: 1px 0 6px; font: 600 11px "Montserrat", sans-serif; color: #303b3e; }
 .ppw-feature p { margin: 0; color: #778285; font-size: 10px; line-height: 1.65; }
@@ -91,13 +101,13 @@
 .ppw-progress-note div:last-child { display: grid; gap: 4px; }
 .ppw-progress-note strong { color: #3a474a; font-size: 10px; font-weight: 600; }
 .ppw-progress-note span { color: #778285; font-size: 9px; }
-.ppw-pricing { padding: 18px 19px 14px; border-radius: 15px; border: 1px solid #cfdcdd; background: linear-gradient(155deg, rgba(255,255,255,.98), rgba(244,250,250,.96)); box-shadow: inset 0 1px 0 white, 0 16px 36px -28px rgba(20,60,62,.28); }
+.ppw-pricing { padding: 18px 19px 14px; border-radius: 15px; border: 1px solid rgba(154, 162, 169, .62); background: linear-gradient(180deg, #fff 0%, #f8fafb 100%); box-shadow: inset 0 1px 0 #fff, 0 16px 36px -28px rgba(0,0,0,.24); }
 .ppw-pricing-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 .ppw-pricing-label { font-size: 9px; font-weight: 700; letter-spacing: .17em; color: #364548; }
 .ppw-same-access { color: #168a91; font-size: 8px; letter-spacing: .035em; }
-.ppw-billing-switch { margin-top: 15px; padding: 3px; display: grid; grid-template-columns: 1fr 1.25fr; background: #edf2f2; border: 1px solid #e1e8e8; border-radius: 8px; }
+.ppw-billing-switch { margin-top: 15px; padding: 3px; display: grid; grid-template-columns: 1fr 1.25fr; background: #eef1f2; border: 1px solid #d9dee1; border-radius: 8px; box-shadow: inset 0 1px 2px rgba(20,23,26,.06); }
 .ppw-billing-switch button { min-height: 30px; border: 1px solid transparent; background: transparent; color: #667376; font: 500 9px "Montserrat", sans-serif; border-radius: 6px; cursor: pointer; transition: background .18s ease, box-shadow .18s ease, color .18s ease; }
-.ppw-billing-switch button.is-selected { color: #314144; background: white; border-color: #dce5e5; box-shadow: 0 2px 5px rgba(32, 61, 63, .08); }
+.ppw-billing-switch button.is-selected { color: #24282c; background: linear-gradient(180deg, #fff 0%, #f2f4f6 100%); border-color: #cbd1d5; box-shadow: inset 0 1px 0 #fff, 0 2px 5px rgba(20,23,26,.09); }
 .ppw-billing-switch button span { margin-left: 3px; color: #168b91; font-size: 7px; }
 .ppw-price-line { display: flex; align-items: baseline; gap: 5px; margin-top: 16px; }
 .ppw-price-line strong { font: 400 34px/1 "Outfit", sans-serif; letter-spacing: -.05em; color: #222b2e; }
@@ -153,7 +163,7 @@
   .ppw-back { font-size: 9px; gap: 4px; }
   .ppw-hero { padding-top: 12px; }
   .ppw-art { height: 245px; margin: -5px -18px 0; }
-  .ppw-hero h1 { font-size: clamp(42px, 13vw, 59px); margin-top: 15px; }
+  .ppw-hero h1 { font-size: clamp(37px, 10.2vw, 48px); margin-top: 15px; }
   .ppw-intro { font-size: 12px; line-height: 1.75; }
   .ppw-hero-cta { align-items: flex-start; flex-direction: column; gap: 9px; }
   .ppw-hero-cta .ppw-primary { width: 100%; }

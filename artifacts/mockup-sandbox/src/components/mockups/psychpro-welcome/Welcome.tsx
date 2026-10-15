@@ -46,7 +46,7 @@ export function Welcome() {
       <section className="ppw-hero">
         <div className="ppw-hero-copy">
           <div className="ppw-eyebrow"><span /> A new space for the rest of your learning</div>
-          <h1>Your learning,<br /><em>in a wider light.</em></h1>
+          <h1>Learn. Connect. Expand.</h1>
           <p className="ppw-intro">
             Meet PsychPro Suite: evidence-based study tools for psychology,
             neuroscience, assessment, and clinical learning—all together, and
