@@ -1,0 +1,199 @@
+.ppw-page {
+  --ppw-ink: #22282b;
+  --ppw-soft-ink: #5e696c;
+  --ppw-teal: #078c94;
+  --ppw-aqua: #39c8cf;
+  --ppw-line: #dce3e4;
+  min-height: 100vh;
+  overflow: hidden;
+  position: relative;
+  color: var(--ppw-ink);
+  background:
+    radial-gradient(ellipse at 73% 15%, rgba(34, 197, 204, .095), transparent 29rem),
+    radial-gradient(ellipse at 8% 54%, rgba(213, 242, 243, .38), transparent 30rem),
+    #fff;
+  font-family: "Montserrat", "Avenir Next", sans-serif;
+}
+.ppw-page * { box-sizing: border-box; }
+.ppw-header {
+  width: min(1200px, calc(100% - 72px));
+  margin: 0 auto;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(129, 145, 148, .19);
+}
+.ppw-wordmark { display: flex; gap: 11px; align-items: center; color: #202629; }
+.ppw-wordmark svg { width: 21px; height: 21px; color: var(--ppw-teal); stroke-width: 1.5; }
+.ppw-wordmark span { font-size: 13px; font-weight: 400; letter-spacing: .32em; }
+.ppw-wordmark i { font-size: 9px; font-style: normal; font-weight: 600; letter-spacing: .18em; color: #728084; margin-left: -6px; }
+.ppw-header-right { display: flex; align-items: center; gap: 25px; }
+.ppw-preview-tag { display: inline-flex; align-items: center; gap: 8px; color: #687578; font-size: 10px; letter-spacing: .08em; }
+.ppw-preview-tag > span, .ppw-eyebrow > span { width: 6px; height: 6px; border-radius: 50%; background: #39aeb4; box-shadow: 0 0 0 3px rgba(57, 174, 180, .12); }
+.ppw-back, .ppw-footer button {
+  border: 0; background: transparent; color: #485457; display: inline-flex; align-items: center; gap: 8px;
+  cursor: pointer; font: 500 11px "Montserrat", sans-serif; letter-spacing: .04em; transition: color .18s ease, transform .18s ease;
+}
+.ppw-back:hover, .ppw-footer button:hover { color: var(--ppw-teal); transform: translateX(-2px); }
+.ppw-back svg, .ppw-footer button svg { width: 15px; height: 15px; }
+.ppw-hero {
+  width: min(1200px, calc(100% - 72px)); min-height: 450px; margin: 0 auto;
+  display: grid; grid-template-columns: .92fr 1.08fr; align-items: center; position: relative;
+}
+.ppw-hero-copy { z-index: 2; padding: 31px 0 44px; max-width: 520px; animation: ppw-rise .8s cubic-bezier(.2,.8,.2,1) both; }
+.ppw-eyebrow { display: flex; align-items: center; gap: 10px; color: #398b8f; font-size: 9px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; }
+.ppw-hero h1 { margin: 21px 0 17px; font: 300 clamp(43px, 5.1vw, 68px)/1.04 "Outfit", "Montserrat", sans-serif; letter-spacing: -.045em; color: #202629; }
+.ppw-hero h1 em { color: #168e95; font-style: normal; font-weight: 300; }
+.ppw-intro { max-width: 470px; margin: 0; color: #5d696c; font-size: 14px; line-height: 1.85; font-weight: 400; }
+.ppw-hero-cta { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; margin-top: 25px; }
+.ppw-primary {
+  min-height: 48px; padding: 0 20px; border-radius: 9px; border: 1px solid #087d84;
+  display: inline-flex; align-items: center; justify-content: center; gap: 13px;
+  background: linear-gradient(155deg, #38cbd1 0%, #12aeb6 48%, #07858d 100%);
+  color: white; box-shadow: inset 0 1px 0 rgba(255,255,255,.58), 0 10px 22px -13px rgba(1, 104, 111, .65);
+  font: 600 12px "Montserrat", sans-serif; letter-spacing: .02em; cursor: pointer;
+  transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+}
+.ppw-primary:hover { transform: translateY(-2px); filter: saturate(1.08); box-shadow: inset 0 1px 0 rgba(255,255,255,.7), 0 13px 26px -13px rgba(1, 104, 111, .72); }
+.ppw-primary:active { transform: translateY(0); }
+.ppw-primary svg { width: 16px; height: 16px; }
+.ppw-hero-cta > span { font-size: 10px; color: #758184; }
+.ppw-trial-note { display: flex; gap: 10px; align-items: flex-start; margin-top: 19px; color: #687376; font-size: 10px; line-height: 1.6; max-width: 400px; }
+.ppw-trial-note svg { width: 15px; height: 15px; flex: 0 0 auto; color: #219ca2; }
+.ppw-trial-note strong { color: #354145; font-weight: 600; }
+.ppw-art { height: 445px; position: relative; display: grid; place-items: center; margin-right: -38px; isolation: isolate; }
+.ppw-splash { position: absolute; z-index: -2; width: 122%; height: 100%; object-fit: cover; object-position: center; mix-blend-mode: multiply; opacity: .9; }
+.ppw-art::before { content: ""; position: absolute; z-index: -1; width: 64%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(74, 219, 220, .23), rgba(255,255,255,0) 70%); filter: blur(9px); }
+.ppw-brain { width: min(88%, 475px); height: auto; filter: drop-shadow(0 24px 22px rgba(20, 55, 58, .2)); animation: ppw-float 5s ease-in-out infinite; }
+.ppw-art-orbit { position: absolute; width: 69%; aspect-ratio: 1.5; border: 1px solid rgba(0, 136, 145, .15); border-radius: 50%; transform: rotate(-24deg); }
+.ppw-art-orbit-two { width: 79%; aspect-ratio: 1.28; transform: rotate(28deg); border-color: rgba(190, 200, 201, .48); }
+.ppw-art-caption { position: absolute; right: 3%; bottom: 31px; display: grid; gap: 5px; text-align: right; color: rgba(34, 67, 69, .55); }
+.ppw-art-caption span { font-size: 9px; letter-spacing: .24em; }
+.ppw-art-caption b { font-size: 7px; letter-spacing: .17em; font-weight: 500; }
+.ppw-offer { width: min(1200px, calc(100% - 72px)); margin: 0 auto; padding: 15px 0 46px; }
+.ppw-offer-heading { display: flex; justify-content: space-between; align-items: end; gap: 30px; padding: 0 0 18px; border-bottom: 1px solid var(--ppw-line); }
+.ppw-eyebrow-muted { color: #8a9597; font-size: 8px; }
+.ppw-offer-heading h2 { margin: 8px 0 0; font: 400 27px/1.1 "Outfit", sans-serif; letter-spacing: -.025em; }
+.ppw-offer-heading > p { max-width: 355px; margin: 0 0 2px; color: #748083; font-size: 11px; line-height: 1.65; }
+.ppw-offer-grid { display: grid; grid-template-columns: 1fr 352px; gap: 44px; align-items: stretch; padding-top: 21px; }
+.ppw-includes { display: flex; flex-direction: column; justify-content: space-between; }
+.ppw-feature-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.ppw-feature { display: flex; gap: 11px; align-items: flex-start; }
+.ppw-feature-icon { flex: 0 0 33px; height: 33px; display: grid; place-items: center; border-radius: 10px; color: #188d93; background: linear-gradient(150deg, #e7f8f8, #f7fcfc); border: 1px solid #d3eeee; box-shadow: inset 0 1px 0 #fff; }
+.ppw-feature-icon svg { width: 16px; height: 16px; stroke-width: 1.7; }
+.ppw-feature h3 { margin: 1px 0 6px; font: 600 11px "Montserrat", sans-serif; color: #303b3e; }
+.ppw-feature p { margin: 0; color: #778285; font-size: 10px; line-height: 1.65; }
+.ppw-progress-note { display: flex; align-items: center; gap: 12px; padding: 14px 17px; border-radius: 12px; background: linear-gradient(120deg, #f4f9f9, #fff); border: 1px solid #e3ebec; margin-top: 22px; }
+.ppw-progress-mark { height: 23px; display: flex; align-items: end; gap: 4px; }
+.ppw-progress-mark span { width: 5px; border-radius: 4px; background: linear-gradient(180deg, #44c8cd, #078c94); }
+.ppw-progress-mark span:nth-child(1) { height: 8px; }.ppw-progress-mark span:nth-child(2) { height: 14px; }.ppw-progress-mark span:nth-child(3) { height: 11px; }.ppw-progress-mark span:nth-child(4) { height: 19px; }.ppw-progress-mark span:nth-child(5) { height: 23px; }
+.ppw-progress-note div:last-child { display: grid; gap: 4px; }
+.ppw-progress-note strong { color: #3a474a; font-size: 10px; font-weight: 600; }
+.ppw-progress-note span { color: #778285; font-size: 9px; }
+.ppw-pricing { padding: 18px 19px 14px; border-radius: 15px; border: 1px solid #cfdcdd; background: linear-gradient(155deg, rgba(255,255,255,.98), rgba(244,250,250,.96)); box-shadow: inset 0 1px 0 white, 0 16px 36px -28px rgba(20,60,62,.28); }
+.ppw-pricing-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.ppw-pricing-label { font-size: 9px; font-weight: 700; letter-spacing: .17em; color: #364548; }
+.ppw-same-access { color: #168a91; font-size: 8px; letter-spacing: .035em; }
+.ppw-billing-switch { margin-top: 15px; padding: 3px; display: grid; grid-template-columns: 1fr 1.25fr; background: #edf2f2; border: 1px solid #e1e8e8; border-radius: 8px; }
+.ppw-billing-switch button { min-height: 30px; border: 1px solid transparent; background: transparent; color: #667376; font: 500 9px "Montserrat", sans-serif; border-radius: 6px; cursor: pointer; transition: background .18s ease, box-shadow .18s ease, color .18s ease; }
+.ppw-billing-switch button.is-selected { color: #314144; background: white; border-color: #dce5e5; box-shadow: 0 2px 5px rgba(32, 61, 63, .08); }
+.ppw-billing-switch button span { margin-left: 3px; color: #168b91; font-size: 7px; }
+.ppw-price-line { display: flex; align-items: baseline; gap: 5px; margin-top: 16px; }
+.ppw-price-line strong { font: 400 34px/1 "Outfit", sans-serif; letter-spacing: -.05em; color: #222b2e; }
+.ppw-price-line span { color: #798487; font-size: 10px; }
+.ppw-price-context { min-height: 13px; margin: 5px 0 12px; color: #879194; font-size: 8px; }
+.ppw-benefits { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.ppw-benefits li { display: flex; align-items: flex-start; gap: 7px; color: #647174; font-size: 9px; line-height: 1.45; }
+.ppw-benefits svg { width: 12px; height: 12px; flex: 0 0 auto; color: #128d93; stroke-width: 2.4; }
+.ppw-pricing-cta { width: 100%; margin-top: 14px; min-height: 40px; font-size: 10px; }
+.ppw-pricing-cta svg { width: 14px; height: 14px; }
+.ppw-no-charge { margin: 8px 0 0; text-align: center; color: #7b8789; font-size: 8px; }
+.ppw-footer { width: min(1200px, calc(100% - 72px)); min-height: 53px; margin: 0 auto; border-top: 1px solid rgba(129, 145, 148, .2); display: flex; justify-content: space-between; align-items: center; }
+.ppw-footer p { display: flex; align-items: center; gap: 9px; margin: 0; color: #7a8588; font-size: 9px; }
+.ppw-footer-dot { width: 5px; height: 5px; border-radius: 50%; background: #37aab0; }
+.ppw-footer button { font-size: 9px; }
+.ppw-toast { position: fixed; z-index: 20; left: 50%; bottom: 22px; transform: translateX(-50%); max-width: calc(100vw - 32px); padding: 13px 18px; border: 1px solid #bfdfe0; border-radius: 10px; background: rgba(255,255,255,.97); color: #3d5558; font-size: 11px; box-shadow: 0 10px 35px rgba(23,75,77,.15); animation: ppw-rise .22s ease both; }
+.ppw-dialog-scrim { position: fixed; z-index: 30; inset: 0; padding: 20px; display: grid; place-items: center; background: rgba(30, 45, 47, .28); backdrop-filter: blur(5px); }
+.ppw-dialog { width: min(440px, 100%); position: relative; padding: 31px; border: 1px solid #d3e0e1; border-radius: 18px; background: linear-gradient(145deg, #fff, #f5fbfb); box-shadow: 0 28px 80px rgba(25, 57, 60, .22), inset 0 1px 0 #fff; animation: ppw-rise .25s ease both; }
+.ppw-dialog-close { position: absolute; top: 14px; right: 14px; border: 0; background: transparent; color: #7b898b; cursor: pointer; padding: 5px; }
+.ppw-dialog-close svg { width: 17px; height: 17px; }
+.ppw-dialog-icon { width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center; background: #e5f7f7; color: #128d94; margin-bottom: 19px; }
+.ppw-dialog-icon svg { width: 19px; height: 19px; }
+.ppw-dialog h2 { margin: 11px 0; font: 400 27px/1.12 "Outfit", sans-serif; letter-spacing: -.03em; }
+.ppw-dialog > p { color: #6d7b7e; font-size: 11px; line-height: 1.75; }
+.ppw-dialog-summary { margin: 17px 0; padding: 12px 14px; display: flex; justify-content: space-between; gap: 10px; border: 1px solid #e0eaea; border-radius: 9px; background: #f7fbfb; color: #526164; font-size: 9px; }
+.ppw-dialog-confirm { width: 100%; }
+.ppw-dialog-cancel { display: block; margin: 12px auto 0; border: 0; background: transparent; color: #687679; cursor: pointer; font: 500 10px "Montserrat", sans-serif; }
+@keyframes ppw-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes ppw-float { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-7px) scale(1.018); } }
+@media (max-width: 820px) {
+  .ppw-header, .ppw-hero, .ppw-offer, .ppw-footer { width: min(100% - 40px, 620px); }
+  .ppw-hero { grid-template-columns: 1fr; min-height: unset; padding-top: 24px; }
+  .ppw-hero-copy { padding: 20px 0 0; max-width: none; }
+  .ppw-art { height: clamp(255px, 55vw, 355px); margin: -8px -20px 0; grid-row: 1; }
+  .ppw-hero-copy { grid-row: 2; }
+  .ppw-splash { width: 112%; }
+  .ppw-brain { width: min(74%, 370px); }
+  .ppw-art-caption { right: 9%; bottom: 18px; }
+  .ppw-offer { padding-top: 31px; }
+  .ppw-offer-grid { grid-template-columns: 1fr; gap: 22px; }
+  .ppw-pricing { max-width: 480px; width: 100%; margin: 0 auto; }
+}
+@media (max-width: 560px) {
+  .ppw-header, .ppw-hero, .ppw-offer, .ppw-footer { width: calc(100% - 34px); }
+  .ppw-header { height: 62px; }
+  .ppw-wordmark { gap: 7px; }
+  .ppw-wordmark svg { width: 18px; }
+  .ppw-wordmark span { font-size: 10px; letter-spacing: .25em; }
+  .ppw-wordmark i { font-size: 7px; }
+  .ppw-header-right { gap: 10px; }
+  .ppw-preview-tag { font-size: 0; gap: 0; }
+  .ppw-preview-tag > span { width: 7px; height: 7px; }
+  .ppw-back { font-size: 9px; gap: 4px; }
+  .ppw-hero { padding-top: 12px; }
+  .ppw-art { height: 245px; margin: -5px -18px 0; }
+  .ppw-hero h1 { font-size: clamp(42px, 13vw, 59px); margin-top: 15px; }
+  .ppw-intro { font-size: 12px; line-height: 1.75; }
+  .ppw-hero-cta { align-items: flex-start; flex-direction: column; gap: 9px; }
+  .ppw-hero-cta .ppw-primary { width: 100%; }
+  .ppw-trial-note { margin-top: 14px; }
+  .ppw-offer { padding-top: 32px; }
+  .ppw-offer-heading { display: block; }
+  .ppw-offer-heading h2 { font-size: 24px; }
+  .ppw-offer-heading > p { margin-top: 9px; font-size: 10px; }
+  .ppw-feature-list { grid-template-columns: 1fr; gap: 17px; }
+  .ppw-feature p { font-size: 10px; max-width: 300px; }
+  .ppw-progress-note { margin-top: 19px; }
+  .ppw-pricing { padding: 16px 15px 13px; }
+  .ppw-pricing-top { align-items: flex-start; flex-direction: column; gap: 6px; }
+  .ppw-footer { min-height: 62px; align-items: flex-start; flex-direction: column; justify-content: center; gap: 8px; padding: 10px 0; }
+  .ppw-dialog { padding: 25px 21px; }
+  .ppw-dialog-summary { flex-direction: column; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ppw-page *, .ppw-page *::before, .ppw-page *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/* Keep supporting copy readable at actual desktop and phone sizes. */
+.ppw-page { background: #fff; }
+.ppw-page :is(.ppw-feature p, .ppw-offer-heading > p, .ppw-price-context,
+  .ppw-no-charge, .ppw-footer p, .ppw-trial-note, .ppw-preview-tag,
+  .ppw-hero-cta > span, .ppw-progress-note span, .ppw-price-line > span) {
+  color: #4c585c;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.ppw-page :is(.ppw-feature h3, .ppw-progress-note strong, .ppw-benefits li,
+  .ppw-billing-switch button, .ppw-pricing-cta, .ppw-footer button) {
+  font-size: 13px;
+}
+.ppw-page :is(.ppw-same-access, .ppw-pricing-label, .ppw-billing-switch button span) {
+  font-size: 10px;
+}
+.ppw-page .ppw-includes { justify-content: flex-start; }
+.ppw-page .ppw-feature-list { grid-template-columns: 1fr; gap: 18px; }
+.ppw-page .ppw-feature p { max-width: 52ch; }
+@media (max-width: 560px) {
+  .ppw-page .ppw-preview-tag { display: none; }
+}

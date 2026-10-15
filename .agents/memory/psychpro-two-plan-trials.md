@@ -9,6 +9,10 @@ Public choices are one combined **PsychPro** subscription ($19.99/month or $159.
 
 Each suite has its own once-per-account, explicit-start, seven-day trial. Signup, onboarding, navigation, or selecting a suite must never start a countdown. Trials require no card and never auto-charge. Starting one suite must not start or unlock the other.
 
+EPPP-only users, whether paid or using a promo, should enter PsychPro through a welcome/activation page explaining its separate free week and paid options, not directly through the PsychPro dashboard.
+**Why:** the owner explicitly requested this distinction for “only eppp access with or without the promo.”
+**How to apply:** retain the same account and independent suite entitlements; do not treat existing EPPP members as needing a second signup or start a trial merely from navigation.
+
 The PsychPro free week includes five AI generation units; the new paid PsychPro plan includes fifty per month, including annual subscriptions. One selected output tool consumes one unit. Failed generation must not consume allowance; deleting a generated deck must not restore it.
 
 Existing paid subscribers keep their prices, access, and previous generation policy. Do not silently convert legacy plans to the new limits. Keep the new billing catalog invisible to older published pricing code during rollout.
