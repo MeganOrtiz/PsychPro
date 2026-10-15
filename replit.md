@@ -1,5 +1,18 @@
 # Workspace
 
+## Design protection
+
+Preserve the current PsychPro design across the main site, EPPP suite, and promo
+pages. Follow `AGENTS.md` for visual-change approval and guardrail protection.
+Non-design work does not authorize changes to appearance or layout. An explicit
+visual request authorizes only its stated scope.
+
+Never weaken, bypass, or rewrite a design check merely to make validation pass.
+For an approved change to a locked design value, update implementation, the
+matching check expectation, and `docs/design-system-lock.md` together, isolated
+from unrelated work. Run `pnpm run design:check` and report the visual files
+changed and the result.
+
 ## Overview
 
 pnpm workspace monorepo using TypeScript. Each package manages its own dependencies.
