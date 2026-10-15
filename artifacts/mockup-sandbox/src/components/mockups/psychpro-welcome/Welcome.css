@@ -255,3 +255,323 @@
 @media (max-width: 560px) {
   .ppw-page .ppw-preview-tag { display: none; }
 }
+
+/* Welcome refresh: landing-page hero rhythm and the actual PsychPro aqua-glass
+   card material, kept entirely inside this isolated mockup. */
+.ppw-hero {
+  display: block;
+  min-height: 0;
+  padding: 22px 0 0;
+}
+.ppw-splash {
+  top: -74px;
+  bottom: auto;
+  width: min(100vw, 1200px);
+  aspect-ratio: 1672 / 941;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 38%, rgba(0, 0, 0, .35) 49%, rgba(0, 0, 0, .82) 58%, #000 68%);
+  mask-image: linear-gradient(90deg, transparent 0%, transparent 38%, rgba(0, 0, 0, .35) 49%, rgba(0, 0, 0, .82) 58%, #000 68%);
+}
+.ppw-hero-title {
+  position: relative;
+  z-index: 2;
+  margin: 0 0 14px;
+  color: #14171a;
+  font: 300 clamp(36px, 4.2vw, 56px)/1.12 "Montserrat", sans-serif;
+  letter-spacing: -.035em;
+  white-space: nowrap;
+}
+.ppw-hero-layout {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(390px, .83fr) minmax(0, 1.17fr);
+  align-items: center;
+  gap: 22px;
+  min-height: 354px;
+}
+.ppw-hero-copy {
+  z-index: 2;
+  max-width: 520px;
+  padding: 0;
+}
+.ppw-intro-points {
+  margin: 0 0 18px;
+  padding-left: 20px;
+  display: grid;
+  gap: 5px;
+  color: #4c585c;
+  font-size: 13px;
+  line-height: 1.55;
+}
+.ppw-intro-points li { padding-left: 2px; }
+.ppw-feature-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 11px;
+}
+.ppw-feature {
+  gap: 10px;
+}
+.ppw-feature-icon {
+  flex-basis: 30px;
+  height: 30px;
+  border-radius: 9px;
+}
+.ppw-feature-icon svg { width: 15px; height: 15px; }
+.ppw-feature h3 {
+  margin: 0 0 3px;
+  color: #303b3e;
+  font-size: 12px;
+  font-weight: 600;
+}
+.ppw-feature p {
+  max-width: 46ch;
+  color: #596568;
+  font-size: 10px;
+  line-height: 1.5;
+}
+.ppw-progress-note {
+  margin-top: 12px;
+  padding: 9px 12px;
+  background: rgba(247, 251, 251, .88);
+  border-color: rgba(21, 157, 164, .18);
+}
+.ppw-progress-note strong { font-size: 10px; }
+.ppw-progress-note span { font-size: 9px; }
+.ppw-art {
+  height: 354px;
+  margin: 0 -36px 0 0;
+}
+.ppw-brain {
+  left: calc(-1 * clamp(48px, 5.5vw, 82px));
+  top: 34px;
+  width: clamp(290px, 27vw, 390px);
+}
+.ppw-art-caption {
+  right: 4%;
+  bottom: 8px;
+  z-index: 2;
+  color: rgba(34, 67, 69, .72);
+  text-shadow: 0 1px 5px rgba(255, 255, 255, .82);
+}
+.ppw-hero-action {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  margin: 10px auto 0;
+  text-align: center;
+}
+.ppw-hero-action .ppw-primary {
+  min-width: min(440px, 100%);
+  min-height: 56px;
+  font-size: 14px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+.ppw-hero-action > p {
+  margin: 0;
+  color: #4c585c;
+  font-size: 10px;
+  line-height: 1.5;
+}
+.ppw-offer {
+  padding: 19px 0 22px;
+}
+.ppw-offer-heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+  border: 0;
+  text-align: center;
+}
+.ppw-eyebrow-muted {
+  justify-content: center;
+  color: #398b8f;
+  font-size: 9px;
+}
+.ppw-offer-heading h2 {
+  margin: 7px 0 5px;
+  color: #14171a;
+  font: 300 clamp(30px, 3.4vw, 42px)/1.1 "Montserrat", sans-serif;
+  letter-spacing: -.03em;
+}
+.ppw-offer-heading > p {
+  max-width: none;
+  margin: 0;
+  color: #4c585c;
+  font-size: 12px;
+}
+.ppw-trial-terms {
+  max-width: 900px;
+  margin: 12px auto 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  color: #435256;
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.55;
+}
+.ppw-trial-terms svg {
+  flex: 0 0 auto;
+  width: 15px;
+  height: 15px;
+  color: #138e95;
+}
+.ppw-trial-terms strong { color: #087f87; font-weight: 700; }
+.ppw-pricing-grid {
+  width: min(980px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 20px;
+}
+.ppw-pricing {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 23px 27px 21px;
+  border: 0;
+  border-radius: 18px;
+  background: transparent;
+  box-shadow: none;
+}
+.ppw-pricing::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -4px;
+  border: 20px solid transparent;
+  border-image-source: url("/__mockup/images/psychpro-welcome-aqua-glass.png");
+  border-image-slice: 55 100 55 100 fill;
+  border-image-width: 20px 24px;
+  border-image-repeat: stretch;
+  pointer-events: none;
+}
+.ppw-plan-heading { text-align: center; }
+.ppw-plan-heading h3 {
+  margin: 0;
+  color: #17272a;
+  font: 400 23px/1.2 "Montserrat", sans-serif;
+}
+.ppw-plan-heading p {
+  margin: 4px 0 0;
+  color: #304b4e;
+  font-size: 11px;
+  letter-spacing: .035em;
+}
+.ppw-price-line {
+  justify-content: center;
+  margin-top: 15px;
+}
+.ppw-price-line strong {
+  color: #17272a;
+  font: 400 38px/1 "Montserrat", sans-serif;
+  letter-spacing: -.04em;
+}
+.ppw-price-line span { color: #334c4f; font-size: 12px; }
+.ppw-price-context {
+  min-height: 31px;
+  margin: 6px 0 12px;
+  color: #304b4e;
+  font-size: 10px;
+  line-height: 1.5;
+  text-align: center;
+}
+.ppw-benefits {
+  gap: 8px;
+  margin: 0 0 15px;
+}
+.ppw-benefits li {
+  color: #23383b;
+  font-size: 11px;
+  line-height: 1.42;
+}
+.ppw-benefits svg {
+  width: 13px;
+  height: 13px;
+  color: #075c63;
+}
+.ppw-pricing-cta {
+  width: 100%;
+  margin-top: auto;
+  min-height: 43px;
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.ppw-pricing-cta svg { width: 14px; height: 14px; }
+.ppw-assurances {
+  margin: 13px 0 0;
+  color: #4c585c;
+  font-size: 10px;
+  text-align: center;
+}
+.ppw-footer { margin-top: 0; }
+@media (max-width: 900px) {
+  .ppw-hero-title { white-space: normal; }
+  .ppw-hero-layout {
+    grid-template-columns: minmax(300px, .92fr) minmax(0, 1.08fr);
+    gap: 12px;
+  }
+  .ppw-art, .ppw-hero-copy { grid-row: auto; }
+  .ppw-brain {
+    left: calc(-1 * clamp(26px, 4vw, 48px));
+    width: min(32vw, 330px);
+  }
+  .ppw-pricing-grid { width: min(760px, 100%); }
+}
+@media (max-width: 680px) {
+  .ppw-hero { padding-top: 18px; }
+  .ppw-splash { top: 125px; }
+  .ppw-hero-title {
+    max-width: 100%;
+    margin-bottom: 5px;
+    font-size: clamp(32px, 8.5vw, 42px);
+    white-space: normal;
+  }
+  .ppw-hero-layout {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    gap: 0;
+  }
+  .ppw-art {
+    grid-row: 1;
+    height: clamp(205px, 58vw, 280px);
+    margin: -4px -18px 0;
+  }
+  .ppw-brain {
+    left: calc(-1 * clamp(16px, 7vw, 32px));
+    top: 0;
+    width: min(72vw, 300px);
+  }
+  .ppw-art-caption { right: 9%; bottom: 3px; }
+  .ppw-hero-copy { grid-row: 2; }
+  .ppw-intro-points { margin-bottom: 16px; font-size: 12px; }
+  .ppw-feature-list { gap: 13px; }
+  .ppw-feature p { max-width: 48ch; }
+  .ppw-progress-note { margin-top: 13px; }
+  .ppw-hero-action { margin-top: 17px; }
+  .ppw-hero-action .ppw-primary { width: min(100%, 440px); min-width: 0; }
+  .ppw-hero-action > p { max-width: 40ch; }
+  .ppw-offer { padding-top: 24px; }
+  .ppw-offer-heading h2 { font-size: clamp(28px, 8vw, 36px); }
+  .ppw-trial-terms { align-items: flex-start; margin: 12px auto 15px; font-size: 10px; }
+  .ppw-pricing-grid { grid-template-columns: 1fr; gap: 16px; max-width: 480px; }
+  .ppw-pricing { min-height: 0; padding: 24px 26px; }
+  .ppw-price-context { min-height: 0; }
+  .ppw-pricing-cta { margin-top: 8px; }
+}
+@media (max-width: 420px) {
+  .ppw-hero-title { font-size: clamp(29px, 8.2vw, 34px); }
+  .ppw-pricing { padding: 22px 22px; }
+  .ppw-price-line strong { font-size: 35px; }
+}
