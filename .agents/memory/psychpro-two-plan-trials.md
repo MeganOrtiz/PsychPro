@@ -13,6 +13,15 @@ EPPP-only users, whether paid or using a promo, should enter PsychPro through a 
 **Why:** the owner explicitly requested this distinction for “only eppp access with or without the promo.”
 **How to apply:** retain the same account and independent suite entitlements; do not treat existing EPPP members as needing a second signup or start a trial merely from navigation.
 
+For returning members with active access to both suites, general sign-in should
+show **Choose your suite**, not automatically select EPPP or the last-used suite.
+Members with only one active suite should enter that suite directly.
+**Why:** the owner explicitly selected “Choose a suite after signing in” when
+planning independent PsychPro and EPPP access.
+**How to apply:** preserve an intentional, permitted suite-specific destination;
+use the chooser for a general sign-in with both active. Admin bypass must be
+tested separately from ordinary-member access.
+
 The PsychPro free week includes five AI generation units; the new paid PsychPro plan includes fifty per month, including annual subscriptions. One selected output tool consumes one unit. Failed generation must not consume allowance; deleting a generated deck must not restore it.
 
 Existing paid subscribers keep their prices, access, and previous generation policy. Do not silently convert legacy plans to the new limits. Keep the new billing catalog invisible to older published pricing code during rollout.
