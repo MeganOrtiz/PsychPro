@@ -880,7 +880,7 @@ const styles = `
   display: flex; align-items: center; gap: 11px;
   width: 100%; padding: 13px 14px; text-align: left;
   border-radius: 12px;
-  color: rgb(var(--pp-white-rgb));
+  color: ${PP.text};
 }
 .ob-tile--on {
   border-color: ${P.surf};
@@ -890,10 +890,10 @@ const styles = `
 .ob-tile-icon {
   display: inline-flex; align-items: center; justify-content: center;
   width: 32px; height: 32px; border-radius: 9px; flex-shrink: 0;
-  background: ${P.teal};
-  color: ${P.cloud};
+  background: transparent;
+  color: ${PP.text};
 }
-.ob-tile-label { flex: 1; min-width: 0; font-size: 0.875rem; font-weight: 600; color: rgb(var(--pp-white-rgb)); }
+.ob-tile-label { flex: 1; min-width: 0; font-size: 0.875rem; font-weight: 600; color: ${PP.text}; }
 
 /* Onboarding footer nav buttons (Back / Continue / Finish) — opaque frosted
    glass so they read clearly over the dark card, matching the sidebar nav

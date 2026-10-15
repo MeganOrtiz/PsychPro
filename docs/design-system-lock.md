@@ -61,6 +61,12 @@ rejected in `index.css`. The only accent is locked cerulean `#76E4F7` /
 
 ## Enforcement
 
+### Onboarding option readability
+
+The owner requested transparent icon wrappers and dark `PP.text` labels/icons
+for onboarding choice tiles. Keep the original icons, wrapper dimensions,
+tile layout, selection indicators, and onboarding behavior unchanged.
+
 ### Landing-page exceptions approved by the owner
 
 - The landing navigation is fixed at the viewport top, with an equal-height
