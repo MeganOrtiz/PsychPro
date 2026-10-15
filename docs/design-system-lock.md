@@ -67,6 +67,12 @@ The owner requested transparent icon wrappers and dark `PP.text` labels/icons
 for onboarding choice tiles. Keep the original icons, wrapper dimensions,
 tile layout, selection indicators, and onboarding behavior unchanged.
 
+The suite-selection step presents each existing billing option on its own
+compact, labeled price row. Its plan icons have no dark background, and the
+redundant EPPP badge is removed so it cannot overlap the selection check.
+Preserve prices, features, suite separation, selection handlers, and the rule
+that choosing a suite does not start a trial or charge.
+
 ### Landing-page exceptions approved by the owner
 
 - The landing navigation is fixed at the viewport top, with an equal-height

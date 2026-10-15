@@ -155,7 +155,7 @@ const STEP_META: Record<Exclude<StepId, "account">, { title: string; subtitle: s
 type TierCard = {
   tier: string; // psychpro | eppp
   name: string;
-  price: string;
+  prices: { label: string; amount: string; period: string }[];
   blurb: string;
   features: string[];
   icon: Icon;
@@ -220,7 +220,10 @@ export default function OnboardingPage() {
     {
       tier: "psychpro",
       name: "PsychPro",
-      price: "$19.99/mo or $159.99/yr",
+      prices: [
+        { label: "Monthly", amount: "$19.99", period: "/ month" },
+        { label: "Annual", amount: "$159.99", period: "/ year" },
+      ],
       blurb: "Coursework and personal-material study: every built-in topic plus your own uploads.",
       features: [
         "Built-in flashcards, quizzes, guides, and exams",
@@ -233,7 +236,11 @@ export default function OnboardingPage() {
     {
       tier: "eppp",
       name: "EPPP Mastery Suite",
-      price: "$99/mo, or $499 for 6 mo, $799 for 12 mo",
+      prices: [
+        { label: "Monthly", amount: "$99", period: "/ month" },
+        { label: "6 months", amount: "$499", period: "one-time" },
+        { label: "12 months", amount: "$799", period: "one-time" },
+      ],
       blurb: "A dedicated licensure-prep workspace, sold separately from PsychPro.",
       features: [
         "Domain knowledge and mastery exams",
@@ -676,7 +683,6 @@ function TierOption({
   onSelect: () => void;
 }) {
   const I = card.icon;
-  const price = card.price;
   return (
     <button
       type="button"
@@ -685,21 +691,30 @@ function TierOption({
       data-testid={slug(`tier-${card.tier}`)}
       className={`mat-glass mat-glass-interactive ob-plan ${selected ? "ob-plan--on" : ""} ${card.eppp ? "ob-plan--eppp" : ""}`}
     >
-      {card.eppp && <span className="ob-plan-badge">EPPP</span>}
       <span className="ob-plan-head">
-        <span className={`ob-plan-icon ${card.eppp ? "ob-plan-icon--eppp" : ""}`}>
+        <span className="ob-plan-icon">
           <I className="w-4 h-4" />
         </span>
         <span className="ob-plan-name">{card.name}</span>
-        <span className="ob-check">{selected && <Check className="w-3.5 h-3.5" />}</span>
+        <span className="ob-check" aria-hidden>{selected && <Check className="w-3.5 h-3.5" />}</span>
       </span>
-      <span className="ob-plan-price">{price}</span>
       <span className="ob-plan-blurb">{card.blurb}</span>
+      <span className="ob-plan-prices">
+        {card.prices.map(({ label, amount, period }) => (
+          <span className="ob-plan-price-row" key={label}>
+            <span className="ob-plan-price-label">{label}</span>
+            <span className="ob-plan-price-amount">
+              <span className="ob-plan-price">{amount}</span>
+              <span className="ob-plan-period">{period}</span>
+            </span>
+          </span>
+        ))}
+      </span>
       <span className="ob-plan-feats">
         {card.features.map((f) => (
           <span key={f} className="ob-plan-feat">
             <Check className="w-3 h-3 flex-shrink-0" />
-            {f}
+            <span>{f}</span>
           </span>
         ))}
       </span>
@@ -947,24 +962,23 @@ const styles = `
 .ob-plan--eppp.ob-plan--on {
   box-shadow: inset 0 0 0 1px rgba(var(--pp-icy-rgb),0.6), inset 0 1px 0 var(--pp-bevel-bright);
 }
-.ob-plan-badge {
-  position: absolute; top: 12px; right: 12px;
-  font-size: 10px; font-weight: 700; letter-spacing: .12em;
-  padding: 3px 8px; border-radius: 6px;
-  background: ${P.surf}; color: ${P.ink};
-}
 .ob-plan-head { display: flex; align-items: center; gap: 10px; }
 .ob-plan-icon {
   display: inline-flex; align-items: center; justify-content: center;
   width: 32px; height: 32px; border-radius: 9px; flex-shrink: 0;
-  background: ${P.teal}; color: ${P.cloud};
+  background: transparent; color: ${PP.text};
 }
-.ob-plan-icon--eppp { background: ${P.mist}; color: ${P.ink}; }
-.ob-plan-name { flex: 1; min-width: 0; font-size: 1rem; font-weight: 700; color: ${P.cloud}; }
-.ob-plan-price { font-size: 1.35rem; font-weight: 800; color: ${P.surf}; }
-.ob-plan-blurb { font-size: 0.82rem; color: ${P.mistSoft}; }
-.ob-plan-feats { display: flex; flex-direction: column; gap: 5px; margin-top: 4px; }
-.ob-plan-feat { display: flex; align-items: center; gap: 7px; font-size: 0.8rem; color: ${P.mist}; }
+.ob-plan-name { flex: 1; min-width: 0; font-size: 1rem; font-weight: 600; line-height: 1.4; color: ${PP.text}; }
+.ob-plan-prices { display: grid; gap: 10px; padding: 12px 0; border-block: 1px solid var(--pp-line); }
+.ob-plan-price-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; }
+.ob-plan-price-label { font-size: 0.8rem; color: ${PP.textDim}; }
+.ob-plan-price-amount { display: inline-flex; flex-wrap: wrap; align-items: baseline; justify-content: flex-end; gap: 5px; }
+.ob-plan-price { font-size: 1.15rem; font-weight: 600; line-height: 1.35; white-space: nowrap; color: ${PP.text}; }
+.ob-plan-period { font-size: 0.75rem; color: ${PP.textDim}; white-space: nowrap; }
+.ob-plan-blurb { font-size: 0.82rem; line-height: 1.6; color: ${PP.textDim}; }
+.ob-plan-feats { display: flex; flex-direction: column; gap: 8px; margin-top: auto; padding-top: 4px; }
+.ob-plan-feat { display: flex; align-items: flex-start; gap: 7px; font-size: 0.8rem; line-height: 1.5; color: ${PP.text}; }
+.ob-plan-feat svg { margin-top: 3px; }
 .ob-plan-feat svg { color: ${P.surf}; }
 
 .ob-onetime {
