@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { authHeaders } from "./auth-headers";
+import { customFetch } from "@workspace/api-client-react";
 import { useAuth } from "@clerk/clerk-react";
 
 export type Entitlements = {
@@ -33,11 +33,7 @@ export function useEntitlements() {
   return useQuery<Entitlements>({
     queryKey: ["entitlements", userId],
     enabled: isLoaded && !!isSignedIn,
-    queryFn: async () => {
-      const res = await fetch("/api/users/entitlements", { headers: await authHeaders() });
-      if (!res.ok) throw new Error(`entitlements fetch failed: ${res.status}`);
-      return res.json();
-    },
+    queryFn: ({ signal }) => customFetch<Entitlements>("/api/users/entitlements", { signal, responseType: "json" }),
     staleTime: 30_000,
     refetchInterval: 30_000,
     refetchOnWindowFocus: "always",

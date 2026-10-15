@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { useUser } from "@clerk/clerk-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { getGetEpppPromoQueryKey, useGetEpppPromo, useRedeemEpppPromo } from "@workspace/api-client-react";
+import { getGetEpppPromoQueryKey, getGetStudyAccessQueryKey, useGetEpppPromo, useRedeemEpppPromo } from "@workspace/api-client-react";
 import { Check, Loader2, TriangleAlert } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import crownSrc from "@/assets/eppp-chrome-crown.webp";
@@ -38,7 +38,7 @@ export default function EpppPromoPage() {
 
   const enabled = isLoaded && !!isSignedIn;
   const promoQueryKey = [...getGetEpppPromoQueryKey(), user?.id];
-  const promo = useGetEpppPromo({ query: { queryKey: promoQueryKey, enabled, retry: false } });
+  const promo = useGetEpppPromo({ query: { queryKey: promoQueryKey, enabled } });
   const redeem = useRedeemEpppPromo();
 
   useEffect(() => {
@@ -66,6 +66,7 @@ export default function EpppPromoPage() {
       setRefreshing(true);
       await Promise.all([
         qc.invalidateQueries({ queryKey: ["entitlements"] }),
+        qc.invalidateQueries({ queryKey: getGetStudyAccessQueryKey() }),
         qc.invalidateQueries({
           predicate: (q) => String(q.queryKey[0] ?? "").includes("subscription"),
         }),

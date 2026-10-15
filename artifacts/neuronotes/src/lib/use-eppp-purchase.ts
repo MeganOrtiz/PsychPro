@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { authHeaders } from "./auth-headers";
+import { customFetch } from "@workspace/api-client-react";
 
 export type EpppMonthlyPlan = {
   priceId: string;
@@ -33,11 +34,7 @@ export type EpppPlans = {
 export function useEpppPlans() {
   return useQuery<EpppPlans>({
     queryKey: ["eppp-plans"],
-    queryFn: async () => {
-      const res = await fetch("/api/eppp/plans");
-      if (!res.ok) throw new Error(`eppp plans fetch failed: ${res.status}`);
-      return res.json();
-    },
+    queryFn: ({ signal }) => customFetch<EpppPlans>("/api/eppp/plans", { signal, responseType: "json" }),
     staleTime: 5 * 60_000,
   });
 }

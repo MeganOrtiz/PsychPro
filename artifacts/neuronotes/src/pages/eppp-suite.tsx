@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
+import { useBillingReturn } from "@/lib/use-billing-return";
+import { QueryError } from "@/components/query-error";
 import { DashboardHeaderBackdrop } from "@/components/dashboard-brand-artwork";
 import { UserButton } from "@clerk/clerk-react";
 import {
@@ -251,10 +253,11 @@ function useEpppDomains(part: "part1" | "part2" = "part1") {
 // Shell
 // ===========================================================================
 export default function EpppSuitePage({ tab }: { tab?: string }) {
+  useBillingReturn();
   const [, navigate] = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isMobile = useIsMobile();
-  const { data: entitlements, isLoading: entLoading } = useEntitlements();
+  const { data: entitlements, isLoading: entLoading, isError: entError, refetch: retryEntitlements } = useEntitlements();
   const { data: studyAccess } = useStudyAccess();
   const psychproDestination = psychproSuiteDestination(studyAccess?.psychpro.hasAccess, entitlements?.isAdmin);
   const epppUnlocked = !!entitlements?.epppAccess;
@@ -276,6 +279,9 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
         <p className="text-sm text-muted-foreground">Loading…</p>
       </div>
     );
+  }
+  if (entError && !isBookLibrary) {
+    return <QueryError message="We couldn't confirm your EPPP access. Your access has not been changed." onRetry={retryEntitlements} />;
   }
   if (!epppUnlocked && !isBookLibrary) {
     return (

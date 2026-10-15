@@ -23,6 +23,7 @@ import { STUDY_PALETTE } from "@/lib/study-theme";
 import { PP, alpha } from "@/lib/palette";
 import { PageTitle } from "@/components/brand/page-title";
 import { isEpppTopic } from "@/lib/eppp-content";
+import { QueryError } from "@/components/query-error";
 
 interface Topic {
   id: number;
@@ -46,7 +47,7 @@ export default function TopicsPage() {
     navigate(qs ? `/topics?${qs}` : "/topics");
   };
 
-  const { data: topics, isLoading } = useGetTopics();
+  const { data: topics, isLoading, isError, refetch } = useGetTopics();
   const allTopics: Topic[] = useMemo(
     () => (topics ?? []).filter((topic) => !isEpppTopic(topic)),
     [topics],
@@ -103,6 +104,8 @@ export default function TopicsPage() {
     () => categoryGroups.find(g => g.name === activeCourse) ?? categoryGroups[0],
     [categoryGroups, activeCourse],
   );
+
+  if (isError) return <QueryError message="Courses could not be loaded." onRetry={refetch} />;
 
   return (
     <div

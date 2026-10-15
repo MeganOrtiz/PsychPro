@@ -34,7 +34,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
   const [timeLeft, setTimeLeft] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const { data: exam, isLoading, error } = useGetCourseMasteryExam(category);
+  const { data: exam, isLoading, error, refetch } = useGetCourseMasteryExam(category);
   const recordAttempt = useRecordCourseMasteryAttempt();
   const fetchError = error as { status?: number } | null;
 
@@ -173,6 +173,15 @@ export default function CourseMasteryExamPage({ params }: Props) {
           <Skeleton className="h-32 rounded-xl" />
           <Skeleton className="h-12 rounded-xl" />
         </div>
+      </div>
+    );
+  }
+
+  if (error && !exam) {
+    return (
+      <div role="alert" className="p-6 text-center space-y-3">
+        <p>The mastery exam could not be loaded.</p>
+        <Button variant="outline" onClick={() => void refetch()}>Try again</Button>
       </div>
     );
   }

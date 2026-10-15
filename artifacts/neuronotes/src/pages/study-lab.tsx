@@ -3,6 +3,7 @@ import { Beaker, Brain, CalendarDays, Shuffle, Lightbulb, ArrowRight, ChevronLef
 import type { LucideIcon } from "lucide-react";
 import { Link } from "wouter";
 import { useQueries } from "@tanstack/react-query";
+import { QueryError } from "@/components/query-error";
 import {
   useGetTopics,
   getFlashcardsByTopic,
@@ -218,7 +219,7 @@ function ActiveRecallView({ topics, howToUse }: { topics: Topic[]; howToUse: str
   const [topicId, setTopicId] = useState<number | null>(null);
   const [recallIndex, setRecallIndex] = useState(0);
 
-  const { data: cards } = useQueries({
+  const { data: cards, isError, retry } = useQueries({
     queries: [
       {
         queryKey: ["flashcardsByTopic", topicId],
@@ -229,6 +230,8 @@ function ActiveRecallView({ topics, howToUse }: { topics: Topic[]; howToUse: str
     combine: (results) => ({
       data: results[0].data,
       isLoading: results[0].isLoading,
+      isError: results[0].isError,
+      retry: () => results[0].refetch(),
     }),
   });
 
@@ -243,6 +246,7 @@ function ActiveRecallView({ topics, howToUse }: { topics: Topic[]; howToUse: str
     );
   }
 
+  if (isError) return <QueryError message="These flashcards could not be loaded." onRetry={retry} />;
   if (!cards) {
     return <Skeleton className="h-64 w-full rounded-2xl" />;
   }
@@ -336,7 +340,7 @@ function MixedView({ topics, howToUse }: { topics: Topic[]; howToUse: string }) 
 
   const selectedIds = useMemo(() => Array.from(selected), [selected]);
 
-  const { data: allCards, isLoading } = useQueries({
+  const { data: allCards, isLoading, isError, retry } = useQueries({
     queries: selectedIds.map((id) => ({
       queryKey: ["flashcardsByTopic", id],
       queryFn: () => getFlashcardsByTopic(id),
@@ -351,6 +355,8 @@ function MixedView({ topics, howToUse }: { topics: Topic[]; howToUse: string }) 
         })),
       ),
       isLoading: results.some((r) => r.isLoading),
+      isError: results.some((r) => r.isError),
+      retry: () => Promise.all(results.map((r) => r.refetch())),
     }),
   });
 
@@ -389,6 +395,7 @@ function MixedView({ topics, howToUse }: { topics: Topic[]; howToUse: string }) 
     );
   }
 
+  if (isError) return <QueryError message="Some topics could not be loaded. Retry to start a complete mixed session." onRetry={retry} />;
   if (isLoading || !allCards) {
     return <Skeleton className="h-64 w-full rounded-2xl" />;
   }
@@ -460,11 +467,13 @@ function ElaborationView({ topics, howToUse }: { topics: Topic[]; howToUse: stri
 
 export default function StudyLabPage() {
   const [active, setActive] = useState<TechId | null>(null);
-  const { data: topics, isLoading } = useGetTopics();
+  const { data: topics, isLoading, isError, refetch } = useGetTopics();
   const mainTopics = useMemo(
     () => (topics ?? []).filter((topic) => !isEpppTopic(topic)),
     [topics],
   );
+
+  if (isError) return <QueryError message="Study topics could not be loaded." onRetry={refetch} />;
 
   if (active) {
     const tech = TECHNIQUES.find((t) => t.id === active)!;

@@ -1,4 +1,5 @@
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
+import { lazyWithRetry as lazy } from "@/lib/lazy-retry";
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ClerkProvider } from "@clerk/clerk-react";
@@ -6,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ClerkTokenBridge } from "@/components/auth/clerk-token-bridge";
+import { retryQuery } from "@/lib/query-reliability";
 import { RequireSignedIn } from "@/components/auth/require-signed-in";
 import { RequireOnboarded } from "@/components/auth/require-onboarded";
 import { PostAuthRedirect } from "@/components/auth/post-auth-redirect";
@@ -73,7 +75,8 @@ const DevDashboardPreview = import.meta.env.DEV
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 1,
+      retry: retryQuery,
+      staleTime: 15_000,
       refetchOnWindowFocus: false,
     },
   },
@@ -288,8 +291,8 @@ function App() {
         routerReplace={clerkNavigation.routerReplace}
         signInUrl={`${basePath}/sign-in`}
         signUpUrl={`${basePath}/sign-up`}
-        signInFallbackRedirectUrl={`${basePath}/dashboard`}
-        signUpFallbackRedirectUrl={`${basePath}/dashboard`}
+        signInFallbackRedirectUrl={`${basePath}/welcome`}
+        signUpFallbackRedirectUrl={`${basePath}/welcome`}
         appearance={{
           // Global dark theming so Clerk popovers rendered outside the
           // sign-in/sign-up pages (UserButton menu, account modals) match
@@ -310,8 +313,8 @@ function App() {
           },
         }}
       >
-        <ClerkTokenBridge />
         <QueryClientProvider client={queryClient}>
+          <ClerkTokenBridge>
           <TooltipProvider>
             <WouterRouter base={basePath}>
               <Suspense fallback={<FullScreenLoader label="Loading PsychPro…" />}>
@@ -321,6 +324,7 @@ function App() {
             <Toaster />
             <SonnerToaster />
           </TooltipProvider>
+          </ClerkTokenBridge>
         </QueryClientProvider>
       </ClerkProvider>
     </ErrorBoundary>

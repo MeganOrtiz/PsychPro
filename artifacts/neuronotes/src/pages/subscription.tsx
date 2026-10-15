@@ -14,6 +14,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PP } from "@/lib/palette";
 import { trackEvent } from "@/lib/analytics";
+import { useBillingReturn } from "@/lib/use-billing-return";
+import { QueryError } from "@/components/query-error";
 
 const PSYCHPRO_FEATURES = [
   "Every built-in topic: flashcards, quizzes, study guides, and practice exams",
@@ -40,19 +42,19 @@ function formatPrice(amount: number, currency: string) {
 }
 
 export default function SubscriptionPage() {
+  useBillingReturn();
   const search = useSearch();
   const trialParam = new URLSearchParams(search).get("trial");
   const focusSuite = isTrialSuite(trialParam) ? trialParam : null;
-  const { data: plans, isLoading: plansLoading } = useGetSubscriptionPlans();
-  const { data: status, isLoading: statusLoading } = useGetSubscriptionStatus();
+  const { data: plans, isLoading: plansLoading, isError: plansError, refetch: retryPlans } = useGetSubscriptionPlans();
+  const { data: status, isLoading: statusLoading, isError: statusError, refetch: retryStatus } = useGetSubscriptionStatus();
   const { data: access } = useStudyAccess();
   const createCheckout = useCreateCheckoutSession();
   const createPortal = useCreatePortalSession();
-  const { data: epppPlans, isLoading: epppPlansLoading } = useEpppPlans();
+  const { data: epppPlans, isLoading: epppPlansLoading, isError: epppPlansError, refetch: retryEpppPlans } = useEpppPlans();
   const { data: entitlements } = useEntitlements();
   const epppCheckout = useEpppCheckout();
 
-  const isActive = status?.status === "active";
   const psychproPaid = !!access?.psychpro.paid || !!access?.psychpro.legacy;
   const grandfathered = !!access?.psychpro.legacy || (psychproPaid && status?.tier === "pro");
   const epppPaid = !!access?.eppp.paid || !!access?.eppp.legacy;
@@ -63,30 +65,6 @@ export default function SubscriptionPage() {
     const el = document.getElementById(`plan-${focusSuite}`);
     el?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [focusSuite]);
-
-  useEffect(() => {
-    if (statusLoading) return;
-    const params = new URLSearchParams(search);
-    const successReturn = params.get("success") === "true";
-    const canceledReturn = params.get("canceled") === "true";
-    if (!successReturn && !canceledReturn) return;
-
-    if (successReturn) {
-      toast.success("Checkout complete. Your subscription status is updated.");
-      trackEvent("checkout_returned", { surface: "subscription", outcome: "success_redirect", subscription_active: isActive });
-    } else {
-      toast("Checkout canceled. Your plan has not changed.");
-      trackEvent("checkout_returned", { surface: "subscription", outcome: "canceled" });
-    }
-    params.delete("success");
-    params.delete("canceled");
-    const remaining = params.toString();
-    window.history.replaceState(
-      window.history.state,
-      "",
-      `${window.location.pathname}${remaining ? `?${remaining}` : ""}${window.location.hash}`,
-    );
-  }, [isActive, search, statusLoading]);
 
   const psychproPlans = ((plans as Plan[] | undefined) ?? []).slice().sort((a, b) => a.unitAmount - b.unitAmount);
 
@@ -147,6 +125,7 @@ export default function SubscriptionPage() {
       `}</style>
       <div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8">
         <PageTitle title="Plans" icon={Crown} subtitle="PsychPro for coursework and your own material. EPPP Mastery Suite for licensure prep." className="mb-6" />
+        {statusError && <QueryError message="We couldn't confirm your billing status." onRetry={retryStatus} />}
 
         {psychproPaid && (
           <div className="mat-opaque rounded-xl p-4 mb-6 flex flex-col sm:flex-row sm:items-center gap-3" style={{ color: PP.text }} data-testid="active-subscription-banner">
@@ -188,6 +167,8 @@ export default function SubscriptionPage() {
             <div id="psychpro-billing">
               {loading ? (
                 <Skeleton className="h-12 rounded-xl" />
+              ) : plansError ? (
+                <QueryError message="PsychPro pricing could not be loaded." onRetry={retryPlans} />
               ) : psychproPlans.length > 0 ? (
                 <div className="space-y-3">
                   {psychproPlans.map((plan) => (
@@ -240,6 +221,8 @@ export default function SubscriptionPage() {
             <div id="eppp-billing">
               {epppPlansLoading ? (
                 <Skeleton className="h-12 rounded-xl" />
+              ) : epppPlansError ? (
+                <QueryError message="EPPP pricing could not be loaded." onRetry={retryEpppPlans} />
               ) : (epppPlans?.monthly || (epppPlans?.oneTime?.length ?? 0) > 0) ? (
                 <div className="space-y-3">
                   {epppPlans?.monthly && (

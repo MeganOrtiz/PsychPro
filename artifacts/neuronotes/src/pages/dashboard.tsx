@@ -26,6 +26,7 @@
 // =============================================================================
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "wouter";
+import { QueryError } from "@/components/query-error";
 import dashboardBrain from "@/assets/psychpro-chrome-brain.webp";
 import { DashboardBrandArtwork } from "@/components/dashboard-brand-artwork";
 import {
@@ -121,7 +122,7 @@ function buildActivitySeries(recent: RecentTopic[]) {
 
 export default function DashboardPage() {
   const [, navigate] = useLocation();
-  const { data: summary, isLoading } = useGetDashboardSummary();
+  const { data: summary, isLoading, isError: summaryError, refetch: retrySummary } = useGetDashboardSummary();
   const { data: allTopics } = useGetTopics();
   const { data: leaderboard } = useGetLeaderboard();
 
@@ -241,6 +242,8 @@ export default function DashboardPage() {
     mainRecent.forEach(push);
     return out;
   }, [mainWeak, mainRecent, mainTopics]);
+
+  if (summaryError) return <QueryError message="Your dashboard could not be loaded. Your progress is unchanged." onRetry={retrySummary} />;
 
   return (
     <div

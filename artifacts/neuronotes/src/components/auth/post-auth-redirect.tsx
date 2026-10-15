@@ -5,6 +5,7 @@ import { useEntitlements } from "@/lib/use-entitlements";
 import { FullScreenLoader } from "@/components/full-screen-loader";
 import { getPromoReturn } from "@/lib/eppp-promo-return";
 import { readPendingTrial, clearPendingTrial } from "@/lib/pending-trial";
+import { QueryError } from "@/components/query-error";
 
 /**
  * Post-authentication landing resolver. Clerk redirects here after sign-in /
@@ -25,14 +26,14 @@ import { readPendingTrial, clearPendingTrial } from "@/lib/pending-trial";
 export function PostAuthRedirect() {
   const [, navigate] = useLocation();
   const promoReturn = getPromoReturn(useSearch());
-  const { data: profile, isLoading: profileLoading, isError: profileError } = useGetUserProfile();
-  const { data: entitlements, isLoading: entLoading } = useEntitlements();
+  const { data: profile, isLoading: profileLoading, isError: profileError, refetch: retryProfile } = useGetUserProfile();
+  const { data: entitlements, isLoading: entLoading, isError: entError, refetch: retryEntitlements } = useEntitlements();
 
   useEffect(() => {
     // On a profile error, preserve the public promo destination when present.
     // Study routes still fail closed through RequireOnboarded.
     if (profileError) {
-      navigate(promoReturn ?? "/dashboard", { replace: true });
+      if (promoReturn) navigate(promoReturn, { replace: true });
       return;
     }
     if (profileLoading || !profile) return;
@@ -52,10 +53,13 @@ export function PostAuthRedirect() {
       navigate(`/subscription?trial=${pendingTrial}`, { replace: true });
       return;
     }
-    if (entLoading) return;
+    if (entLoading || entError) return;
     const goEppp = !!entitlements?.epppAccess && !entitlements?.isAdmin;
     navigate(promoReturn ?? (goEppp ? "/eppp/suite" : "/dashboard"), { replace: true });
-  }, [profile, profileLoading, profileError, entitlements, entLoading, navigate, promoReturn]);
+  }, [profile, profileLoading, profileError, entitlements, entLoading, entError, navigate, promoReturn]);
 
+  if (profileError || entError) {
+    return <QueryError message="We couldn't confirm your account access. Retry to continue to the correct suite." onRetry={() => Promise.all([retryProfile(), retryEntitlements()])} />;
+  }
   return <FullScreenLoader testId="post-auth-redirect" />;
 }

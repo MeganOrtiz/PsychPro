@@ -187,10 +187,13 @@ export default function TermsPage() {
             title="Subscriptions, Plans, and Payment"
           >
             <p>
-              PsychPro offers a free tier and paid subscription tiers (Master
-              and Scholar). Paid plans provide access to additional features and
-              are billed on a recurring monthly or annual basis through our
-              third-party payment processor.
+              PsychPro offers a combined PsychPro subscription and a separately
+              purchased EPPP Mastery Suite. Access to one suite does not include
+              the other. Eligible accounts may explicitly start a separate
+              seven-day free week for each suite, with no payment card and no
+              automatic charge when the free week ends. Creating an account or
+              visiting a page does not start a free week. Paid subscriptions are
+              billed through our third-party payment processor.
             </p>
             <DefList
               items={[
@@ -250,18 +253,7 @@ export default function TermsPage() {
                 <tbody>
                   <tr style={{ borderTop: "1px solid rgba(var(--pp-cyan-rgb), 0.12)" }}>
                     <td className="px-4 py-3" style={{ color: P.cloud }}>
-                      PsychPro Master
-                    </td>
-                    <td className="px-4 py-3" style={{ color: P.mist }}>
-                      $9.99 / month
-                    </td>
-                    <td className="px-4 py-3" style={{ color: P.mist }}>
-                      $79.99 / year
-                    </td>
-                  </tr>
-                  <tr style={{ borderTop: "1px solid rgba(var(--pp-cyan-rgb), 0.12)" }}>
-                    <td className="px-4 py-3" style={{ color: P.cloud }}>
-                      PsychPro Scholar
+                      PsychPro
                     </td>
                     <td className="px-4 py-3" style={{ color: P.mist }}>
                       $19.99 / month
@@ -273,6 +265,12 @@ export default function TermsPage() {
                 </tbody>
               </table>
             </div>
+            <p>
+              EPPP Mastery Suite is purchased separately. Its available monthly
+              subscription and fixed-duration access options, including current
+              prices and duration, are shown on the plans page and at checkout.
+              Existing earlier subscription terms remain unchanged.
+            </p>
             <p className="text-xs" style={{ color: P.inkSoft }}>
               Annual plans are offered at a discount relative to twelve months
               at the monthly rate. We may update these prices as described

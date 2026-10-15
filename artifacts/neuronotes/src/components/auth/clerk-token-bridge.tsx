@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { createContext, useContext, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@clerk/clerk-react";
 import { setAuthTokenGetter } from "@workspace/api-client-react";
 import { setClerkTokenGetter } from "@/lib/auth-headers";
@@ -17,11 +18,26 @@ import { setClerkTokenGetter } from "@/lib/auth-headers";
  *
  * Render this once, near the top of the tree, inside <ClerkProvider>.
  */
-export function ClerkTokenBridge() {
-  const { isLoaded, isSignedIn, getToken } = useAuth();
+const AuthReadyContext = createContext(false);
+export const useAuthReady = () => useContext(AuthReadyContext);
 
-  useEffect(() => {
+export function ClerkTokenBridge({ children }: { children: ReactNode }) {
+  const { isLoaded, isSignedIn, userId, getToken } = useAuth();
+  const queryClient = useQueryClient();
+  const identity = isLoaded ? (isSignedIn ? userId : "signed-out") : undefined;
+  const previousIdentity = useRef<string | null | undefined>(undefined);
+  const [registeredIdentity, setRegisteredIdentity] = useState<string | null>();
+
+  // Layout effects run before query effects. Protected routes also wait for
+  // registration, so a cold load cannot send its first request anonymously.
+  useLayoutEffect(() => {
     if (!isLoaded) return;
+    if (previousIdentity.current !== undefined && previousIdentity.current !== identity) {
+      // Generated query keys aren't all user-scoped. Never reuse another
+      // account's profile, study materials, or billing status in this tab.
+      queryClient.clear();
+    }
+    previousIdentity.current = identity;
     if (isSignedIn) {
       setAuthTokenGetter(() => getToken());
       setClerkTokenGetter(() => getToken());
@@ -29,11 +45,16 @@ export function ClerkTokenBridge() {
       setAuthTokenGetter(null);
       setClerkTokenGetter(null);
     }
+    setRegisteredIdentity(identity);
     return () => {
       setAuthTokenGetter(null);
       setClerkTokenGetter(null);
     };
-  }, [isLoaded, isSignedIn, getToken]);
+  }, [isLoaded, isSignedIn, getToken, identity, queryClient]);
 
-  return null;
+  return (
+    <AuthReadyContext.Provider value={!!isLoaded && registeredIdentity === identity}>
+      {children}
+    </AuthReadyContext.Provider>
+  );
 }

@@ -98,3 +98,4 @@
 - [Practice exam duration](psychpro-practice-exam-duration.md) — standard practice exams have a 15-minute total budget; full-length and mastery sittings stay separate.
 - [Failed package-install cleanup](failed-package-install-cleanup.md) — failed Python installs can still add root scaffolding and Nix packages; inspect and clean up only tool-created changes.
 - [PDF navigation verification](pdf-navigation-verification.md) — valid destination numbers do not prove correct navigation; check actual sections and scope repeated headings to their chapter.
+- [Loading recovery](psychpro-loading-recovery.md) — preserve active study work during recovery; catalog fan-out can delay unrelated account/access requests.

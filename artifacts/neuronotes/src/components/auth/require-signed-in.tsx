@@ -7,6 +7,7 @@ import {
 } from "@clerk/clerk-react";
 import type { ReactNode } from "react";
 import { FullScreenLoader } from "@/components/full-screen-loader";
+import { useAuthReady } from "./clerk-token-bridge";
 
 /**
  * Route guard: renders `children` only when a Clerk session exists,
@@ -18,13 +19,14 @@ import { FullScreenLoader } from "@/components/full-screen-loader";
  * blank (light) screen before the session resolves.
  */
 export function RequireSignedIn({ children }: { children: ReactNode }) {
+  const authReady = useAuthReady();
   return (
     <>
       <ClerkLoading>
         <FullScreenLoader testId="auth-loading" />
       </ClerkLoading>
       <ClerkLoaded>
-        <SignedIn>{children}</SignedIn>
+        <SignedIn>{authReady ? children : <FullScreenLoader testId="auth-token-loading" />}</SignedIn>
         <SignedOut>
           <RedirectToSignIn />
         </SignedOut>

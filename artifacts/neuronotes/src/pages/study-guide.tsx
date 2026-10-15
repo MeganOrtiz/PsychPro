@@ -4,6 +4,7 @@ import { BookOpen, Lock, FileText, Stethoscope } from "lucide-react";
 import { useGetStudyGuideByTopic, useGetTopic } from "@workspace/api-client-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Skeleton } from "@/components/ui/skeleton";
+import { QueryError } from "@/components/query-error";
 import { Button } from "@/components/ui/button";
 import { StudySurface } from "@/components/study/study-surface";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -56,7 +57,7 @@ export default function StudyGuidePage({ params }: Props) {
   // `subscriptionStatus` directly, which paywalled admins. (Bug fix.)
   const { data: ent } = useEntitlements();
 
-  const { data: guide, isLoading, error } = useGetStudyGuideByTopic(topicId);
+  const { data: guide, isLoading, error, refetch } = useGetStudyGuideByTopic(topicId);
   const { data: topic } = useGetTopic(topicId);
 
   useEffect(() => {
@@ -88,7 +89,7 @@ export default function StudyGuidePage({ params }: Props) {
         />
       )}
 
-      {isLoading && ent === undefined ? (
+      {isLoading ? (
         <div className="space-y-4">
           <Skeleton className="h-8 w-1/2" />
           {Array(8).fill(0).map((_, i) => <Skeleton key={i} className="h-4 rounded" />)}
@@ -120,9 +121,11 @@ export default function StudyGuidePage({ params }: Props) {
               Back to Topic
             </Button>
           </div>
-          <p className="text-xs text-muted-foreground mt-4">Starting at $9.99/month · Cancel anytime</p>
+          <p className="text-xs text-muted-foreground mt-4">See current plans and your free-week eligibility on the plans page.</p>
         </StudySurface>
-      ) : error || !guide ? (
+      ) : error && (error as { status?: number }).status !== 404 ? (
+        <QueryError message="This study guide could not be loaded." onRetry={refetch} />
+      ) : !guide ? (
         <StudySurface tone="light" innerClassName="text-center py-16" testId="no-study-guide">
           <p className="text-muted-foreground font-medium">Study guide coming soon</p>
           <p className="text-sm text-muted-foreground mt-1">Check back later for detailed notes on this topic.</p>

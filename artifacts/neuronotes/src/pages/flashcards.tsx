@@ -5,6 +5,7 @@ import { useGetFlashcardsByTopic, useGetTopic } from "@workspace/api-client-reac
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { QueryError } from "@/components/query-error";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import UpgradePrompt from "@/components/upgrade-prompt";
@@ -31,7 +32,7 @@ export default function FlashcardsPage({ params }: Props) {
   const [direction, setDirection] = useState(1);
   const [showUpgrade, setShowUpgrade] = useState(false);
 
-  const { data: flashcards, isLoading, error } = useGetFlashcardsByTopic(topicId);
+  const { data: flashcards, isLoading, error, refetch } = useGetFlashcardsByTopic(topicId);
   const { data: topic } = useGetTopic(topicId);
   const { data: ent } = useEntitlements();
 
@@ -166,6 +167,8 @@ export default function FlashcardsPage({ params }: Props) {
 
       {isLoading ? (
         <Skeleton className="h-72 rounded-2xl" />
+      ) : error && !flashcards ? (
+        <QueryError message="These flashcards could not be loaded." onRetry={refetch} />
       ) : total === 0 ? (
         <div className="text-center py-16 text-muted-foreground">No flashcards for this topic.</div>
       ) : (

@@ -1,3 +1,5 @@
+import { readRequestSignal } from "./read-request-signal";
+
 export type CustomFetchOptions = RequestInit & {
   responseType?: "json" | "text" | "blob" | "auto";
 };
@@ -354,12 +356,21 @@ export async function customFetch<T = unknown>(
 
   const requestInfo = { method, url: resolveUrl(input) };
 
-  const response = await fetch(input, { ...init, method, headers });
+  // Bound read requests so a stalled connection becomes a recoverable query
+  // error instead of an endless skeleton. Preserve caller cancellation.
+  // Writes (uploads, generation, checkout, exam submission) are deliberately
+  // not timed out or replayed: their server-side outcome may be unknown.
+  const read = method === "GET" || method === "HEAD" ? readRequestSignal(init.signal) : null;
+  try {
+    const response = await fetch(input, { ...init, signal: read?.signal ?? init.signal, method, headers });
 
-  if (!response.ok) {
-    const errorData = await parseErrorBody(response, method);
-    throw new ApiError(response, errorData, requestInfo);
+    if (!response.ok) {
+      const errorData = await parseErrorBody(response, method);
+      throw new ApiError(response, errorData, requestInfo);
+    }
+
+    return (await parseSuccessBody(response, responseType, requestInfo)) as T;
+  } finally {
+    read?.cleanup();
   }
-
-  return (await parseSuccessBody(response, responseType, requestInfo)) as T;
 }

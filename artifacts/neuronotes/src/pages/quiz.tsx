@@ -38,7 +38,7 @@ export default function QuizPage({ params }: Props) {
   // the EPPP "Missed Questions" tab can surface them for review.
   const missedIdsRef = useRef<number[]>([]);
 
-  const { data: questions, isLoading, error } = useGetQuizzesByTopic(topicId);
+  const { data: questions, isLoading, error, refetch } = useGetQuizzesByTopic(topicId);
   const { data: topic } = useGetTopic(topicId);
 
   useEffect(() => {
@@ -220,6 +220,11 @@ export default function QuizPage({ params }: Props) {
         <div className="space-y-4">
           <Skeleton className="h-24 rounded-xl" />
           {Array(4).fill(0).map((_, i) => <Skeleton key={i} className="h-14 rounded-xl" />)}
+        </div>
+      ) : error && !questions ? (
+        <div role="alert" className="text-center py-8 space-y-3">
+          <p>These questions could not be loaded.</p>
+          <Button variant="outline" onClick={() => void refetch()}>Try again</Button>
         </div>
       ) : !current ? (
         <div className="text-center py-16 text-muted-foreground">No questions for this topic.</div>

@@ -13,7 +13,7 @@
 // legacy names kept so every consumer compiles.
 // =============================================================================
 
-import { PP } from "@/lib/palette";
+import { PP } from "./palette";
 
 export const STUDY_PALETTE = {
   // Backgrounds — pure-black floor to tinted navy surface ladder.

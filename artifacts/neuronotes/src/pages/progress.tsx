@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { QueryError } from "@/components/query-error";
 import { useLocation } from "wouter";
 import {
   ChevronRight,
@@ -51,8 +52,8 @@ function timeAgo(iso: string): string {
 
 export default function ProgressPage() {
   const [, navigate] = useLocation();
-  const { data: progress, isLoading: progressLoading } = useGetUserProgress();
-  const { data: topics, isLoading: topicsLoading } = useGetTopics();
+  const { data: progress, isLoading: progressLoading, isError: progressError, refetch: retryProgress } = useGetUserProgress();
+  const { data: topics, isLoading: topicsLoading, isError: topicsError, refetch: retryTopics } = useGetTopics();
   const [filter, setFilter] = useState<ProgressFilter>("all");
 
   const isLoading = progressLoading || topicsLoading;
@@ -155,6 +156,8 @@ export default function ProgressPage() {
       </div>
     );
   }
+
+  if (progressError || topicsError) return <QueryError message="Your progress could not be loaded. No study data has been changed." onRetry={() => Promise.all([retryProgress(), retryTopics()])} />;
 
   const isEmpty = studied.length === 0;
 

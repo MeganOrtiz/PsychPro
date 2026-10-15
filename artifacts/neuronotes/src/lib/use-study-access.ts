@@ -90,13 +90,13 @@ export function useStudyAccess() {
 
 export function useStartTrial() {
   const queryClient = useQueryClient();
-  const invalidateAll = () => {
-    void queryClient.invalidateQueries({ queryKey: getGetStudyAccessQueryKey() });
-    void queryClient.invalidateQueries({ queryKey: ["entitlements"] });
-    void queryClient.invalidateQueries({ queryKey: getGetSubscriptionStatusQueryKey() });
-    void queryClient.invalidateQueries({ queryKey: getGetUserProfileQueryKey() });
-    void queryClient.invalidateQueries({ queryKey: getGetDashboardSummaryQueryKey() });
-  };
+  const invalidateAll = () => Promise.all([
+    queryClient.invalidateQueries({ queryKey: getGetStudyAccessQueryKey() }),
+    queryClient.invalidateQueries({ queryKey: ["entitlements"] }),
+    queryClient.invalidateQueries({ queryKey: getGetSubscriptionStatusQueryKey() }),
+    queryClient.invalidateQueries({ queryKey: getGetUserProfileQueryKey() }),
+    queryClient.invalidateQueries({ queryKey: getGetDashboardSummaryQueryKey() }),
+  ]);
   const mutation = useStartStudyTrial({
     mutation: {
       onSuccess: invalidateAll,

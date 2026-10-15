@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { QueryError } from "@/components/query-error";
 import { useLocation } from "wouter";
 import { Layers, BookOpen, FileText, GraduationCap, Beaker, ArrowRight, Lock } from "lucide-react";
 import { useGetTopic } from "@workspace/api-client-react";
@@ -21,7 +22,7 @@ export default function TopicDetailPage({ params }: Props) {
   const [location, navigate] = useLocation();
   const topicId = parseInt(params.id);
   const inEppp = isEpppRoute(location);
-  const { data: topic, isLoading } = useGetTopic(topicId);
+  const { data: topic, isLoading, isError, refetch } = useGetTopic(topicId);
   // Free-tier model is now per-content (not per-topic). The topic page itself
   // is never blocked — locks live on the individual mode cards below.
   const { data: ent } = useEntitlements();
@@ -125,6 +126,8 @@ export default function TopicDetailPage({ params }: Props) {
               {Array(4).fill(0).map((_, i) => <Skeleton key={i} className="h-28 rounded-xl" />)}
             </div>
           </div>
+        ) : isError ? (
+          <QueryError message="This lesson could not be loaded." onRetry={refetch} />
         ) : !topic ? (
           <div className="text-center py-16 text-muted-foreground">Topic not found.</div>
         ) : (

@@ -6,6 +6,7 @@ import { useGetPracticeExamByTopic, useGetTopic, useUpdateTopicProgress, useReco
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { QueryError } from "@/components/query-error";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
@@ -66,7 +67,7 @@ export default function PracticeExamPage({ params }: Props) {
   // linked question (it clamps to the available pool). Otherwise honor the
   // user's 25/50 pick.
   const requestedCount = fullMode ? 250 : (questionCount ?? 25);
-  const { data: exam, isLoading, error } = useGetPracticeExamByTopic(
+  const { data: exam, isLoading, error, refetch } = useGetPracticeExamByTopic(
     topicId,
     { count: requestedCount },
   );
@@ -200,6 +201,9 @@ export default function PracticeExamPage({ params }: Props) {
     }
   }, [questionCount, availableCounts, examAvailable]);
 
+  if (error && !exam && (error as { status?: number }).status !== 402) {
+    return <QueryError message="The practice exam could not be loaded." onRetry={refetch} />;
+  }
   if (started && !isLoading && total === 0) {
     return (
       <div className="min-h-full study-page-bg" data-testid="exam-empty">

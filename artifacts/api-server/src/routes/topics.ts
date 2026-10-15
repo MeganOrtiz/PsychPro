@@ -12,18 +12,23 @@ const router = Router();
 
 router.get("/topics", async (req: Request, res: Response): Promise<void> => {
   try {
-    const topics = await db.select().from(topicsTable);
-    const result = await Promise.all(
-      topics.map(async (topic) => {
-        const [fc] = await db.select({ count: count() }).from(flashcardsTable).where(eq(flashcardsTable.topicId, topic.id));
-        const [qc] = await db.select({ count: count() }).from(quizQuestionsTable).where(eq(quizQuestionsTable.topicId, topic.id));
-        return {
-          ...topic,
-          flashcardCount: Number(fc?.count ?? 0),
-          quizCount: Number(qc?.count ?? 0),
-        };
-      })
-    );
+    // Constant query count instead of two count queries per topic. The old
+    // fan-out exhausted the pool as the EPPP catalog grew, delaying unrelated
+    // profile/access requests during dashboard navigation.
+    const [topics, flashcardCounts, quizCounts] = await Promise.all([
+      db.select().from(topicsTable),
+      db.select({ topicId: flashcardsTable.topicId, count: count() })
+        .from(flashcardsTable).groupBy(flashcardsTable.topicId),
+      db.select({ topicId: quizQuestionsTable.topicId, count: count() })
+        .from(quizQuestionsTable).groupBy(quizQuestionsTable.topicId),
+    ]);
+    const flashcards = new Map(flashcardCounts.map((r) => [r.topicId, Number(r.count)]));
+    const quizzes = new Map(quizCounts.map((r) => [r.topicId, Number(r.count)]));
+    const result = topics.map((topic) => ({
+      ...topic,
+      flashcardCount: flashcards.get(topic.id) ?? 0,
+      quizCount: quizzes.get(topic.id) ?? 0,
+    }));
     res.json(result);
   } catch (err) {
     req.log.error({ err }, "Error getting topics");

@@ -3,6 +3,7 @@ import { AlertTriangle, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { reportClientError } from "@/lib/error-reporter";
 import { Sentry } from "@/lib/sentry";
+import { isChunkLoadError } from "@/lib/lazy-retry";
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -69,10 +70,11 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             <AlertTriangle className="w-7 h-7 text-destructive" />
           </div>
           <div className="space-y-2">
-            <h1 className="text-xl font-semibold text-foreground">Something went wrong</h1>
+            <h1 className="text-xl font-semibold text-foreground">{isChunkLoadError(error) ? "This page needs a refresh" : "Something went wrong"}</h1>
             <p className="text-sm text-muted-foreground">
-              The page hit an unexpected error. Our team has been notified. Try
-              reloading — if it keeps happening, please send us feedback.
+              {isChunkLoadError(error)
+                ? "A page file could not be loaded. This can happen after an update or a connection interruption. Reload to get the current version."
+                : "The page hit an unexpected error. Our team has been notified. Try reloading — if it keeps happening, please send us feedback."}
             </p>
           </div>
           {isDev ? (
