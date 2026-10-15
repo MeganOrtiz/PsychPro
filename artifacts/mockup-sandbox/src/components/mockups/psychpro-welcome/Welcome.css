@@ -606,7 +606,7 @@
 .ppw-intro-points li::marker { color: #2d383a; }
 .ppw-brain {
   left: calc(-1 * clamp(160px, 19.5vw, 250px));
-  top: -85px;
+  top: -65px;
 }
 .ppw-hero-action { margin-top: 9px; }
 .ppw-hero-action .ppw-primary {
