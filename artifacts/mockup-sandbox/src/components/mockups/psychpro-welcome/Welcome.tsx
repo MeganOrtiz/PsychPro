@@ -44,6 +44,7 @@ export function Welcome() {
       </header>
 
       <section className="ppw-hero">
+        <img className="ppw-splash" src="/__mockup/images/psychpro-welcome-dashboard-splash.webp" alt="" aria-hidden="true" />
         <div className="ppw-hero-copy">
           <div className="ppw-eyebrow"><span /> A new space for the rest of your learning</div>
           <h1>Learn. Connect. Expand.</h1>
@@ -65,9 +66,6 @@ export function Welcome() {
           </div>
         </div>
         <div className="ppw-art" aria-hidden="true">
-          <img className="ppw-splash" src="/__mockup/images/psychpro-welcome-teal-splash.jpg" alt="" />
-          <div className="ppw-art-orbit ppw-art-orbit-one" />
-          <div className="ppw-art-orbit ppw-art-orbit-two" />
           <img className="ppw-brain" src="/__mockup/images/psychpro-welcome-chrome-brain.webp" alt="" />
           <div className="ppw-art-caption"><span>PSYCHPRO</span><b>LEARN · EXPAND · CONNECT</b></div>
         </div>
