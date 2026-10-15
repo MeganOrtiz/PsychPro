@@ -672,7 +672,7 @@ export default function LandingPage() {
               <button
                 type="button"
                 onClick={() => startFreeWeek("psychpro")}
-                className="landing-cta landing-cta-primary landing-cta--center landing-tier-cta landing-eppp-promo"
+                className="landing-cta landing-cta-primary landing-cta--center landing-tier-cta"
                 data-testid="cta-trial-psychpro"
               >
                 <span>Start my free week</span>
@@ -700,7 +700,7 @@ export default function LandingPage() {
               <button
                 type="button"
                 onClick={() => startFreeWeek("eppp")}
-                className="landing-cta landing-cta-primary landing-cta--center landing-tier-cta landing-eppp-promo"
+                className="landing-cta landing-cta-primary landing-cta--center landing-tier-cta"
                 data-testid="cta-trial-eppp"
               >
                 <span>Start my free week</span>
@@ -1719,11 +1719,11 @@ const styles = `
 .landing-tier-grid--one, .landing-tier-grid--one > .landing-tier { height: 100%; }
 .landing-tier { display: flex; flex-direction: column; }
 .landing-tier .landing-tier-note { margin-top: 14px; }
-.landing-tier-cta { margin-top: auto; padding-top: 0; align-self: center; }
+.landing-tier-cta { margin-top: auto; align-self: center; text-transform: uppercase; }
 .landing-tier-note + .landing-tier-cta { margin-top: 20px; }
 .landing-tier { padding: clamp(22px, 2.6vw, 32px); }
 .landing-tier-name { margin: 0; font-size: 24px; font-weight: 400; text-align: center; color: ${LANDING.icy}; }
-.landing-tier-tag { margin: 4px 0 18px; font-size: 13px; letter-spacing: 0.04em; color: ${alpha(PP.text, 0.72)}; }
+.landing-tier-tag { margin: 4px 0 18px; font-size: 13px; letter-spacing: 0.04em; text-align: center; color: ${alpha(PP.text, 0.72)}; }
 .landing-tier--psychpro .landing-tier-name, .landing-tier--eppp .landing-tier-name { display: flex; justify-content: center; align-items: center; gap: 12px; }
 .landing-tier--eppp .landing-tier-tag { margin-bottom: 8px; }
 .landing-tier-note { margin: 0; max-width: 62ch; font-size: 15px; line-height: 1.6; color: ${alpha(PP.text, 0.88)}; }
