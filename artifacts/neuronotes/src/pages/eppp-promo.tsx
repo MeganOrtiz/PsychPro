@@ -119,7 +119,7 @@ export default function EpppPromoPage() {
   } else if (active) {
     body = (
       <div className="space-y-4" data-testid="promo-active">
-        <p className="flex items-center gap-2 font-semibold text-foreground">
+        <p className="flex items-center justify-center gap-2 text-center font-semibold text-foreground">
           <Check className="w-5 h-5" />
           {fresh ? "Promo redeemed." : "You already claimed this promo."}
         </p>
@@ -127,7 +127,9 @@ export default function EpppPromoPage() {
           Your EPPP access is active until <strong>{fmt(data?.epppAccessUntil ?? data?.expiresAt)}</strong>.
           Promo window ends {fmt(data?.expiresAt)}. This promo requires no card and does not start a paid subscription.
         </p>
-        <Link href="/eppp/dashboard" className="promo-glass promo-glass--auto" data-testid="button-promo-open-suite">Open the EPPP dashboard</Link>
+        <div className="flex justify-center">
+          <Link href="/eppp/dashboard" className="promo-glass promo-glass--auto" data-testid="button-promo-open-suite">Open the EPPP dashboard</Link>
+        </div>
       </div>
     );
   } else if (expired) {
