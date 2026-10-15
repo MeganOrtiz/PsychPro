@@ -22,12 +22,14 @@ planning independent PsychPro and EPPP access.
 use the chooser for a general sign-in with both active. Admin bypass must be
 tested separately from ordinary-member access.
 
-The owner approved the independent-suite flow preview, with landing-matched
-transparent glass buttons inside the chooser cards: blue for PsychPro and yellow
-for EPPP Mastery Suite, rather than silver chrome.
-**Why:** the owner explicitly requested this correction when reviewing the flow.
-**How to apply:** preserve the approved flow and match each card's action to its
-suite identity; this does not authorize changing unrelated site buttons.
+The owner approved the independent-suite flow preview. Both chooser boxes must
+match the landing page's style, format, and glass design, including transparent
+glass buttons: blue for PsychPro and yellow for EPPP Mastery Suite. Keep the
+existing chooser text.
+**Why:** the owner explicitly corrected the simplified yellow gradient box after
+requesting landing-matched buttons; matching only the buttons is insufficient.
+**How to apply:** reuse the landing artwork and card treatment, not a gradient
+approximation. Preserve the approved flow and text; do not change unrelated UI.
 
 The PsychPro free week includes five AI generation units; the new paid PsychPro plan includes fifty per month, including annual subscriptions. One selected output tool consumes one unit. Failed generation must not consume allowance; deleting a generated deck must not restore it.
 
