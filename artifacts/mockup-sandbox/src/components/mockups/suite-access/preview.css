@@ -60,6 +60,55 @@
 .sap-card-detail svg { width:14px; height:14px; flex:0 0 14px; color:#087f87; }
 .sap-suite-card--eppp .sap-card-detail svg { color:#8d7922; }
 .sap-card-action { width:100%; min-height:42px; margin-top:auto; }
+.sap-suite-card .sap-card-action {
+  position:relative;
+  isolation:isolate;
+  border:1.5px solid transparent;
+  border-radius:10px;
+  background:transparent;
+  box-shadow:none;
+  filter:none;
+  transition:transform 180ms ease,box-shadow 200ms ease;
+}
+.sap-suite-card .sap-card-action::before {
+  content:"";
+  position:absolute;
+  inset:-6px;
+  z-index:-1;
+  border:15px solid transparent;
+  border-image-source:url("/__mockup/images/suite-access-aqua-button.png");
+  border-image-slice:55 100 55 100 fill;
+  border-image-width:10px 12px;
+  border-image-repeat:stretch;
+  clip-path:inset(5px 3px 6px round 7px);
+  pointer-events:none;
+}
+.sap-suite-card .sap-card-action::after {
+  content:"";
+  position:absolute;
+  inset:-6px;
+  z-index:-2;
+  background:transparent;
+}
+.sap-suite-card--eppp .sap-card-action::before {
+  border-image-source:url("/__mockup/images/suite-access-yellow-button.png");
+}
+.sap-suite-card .sap-card-action:hover {
+  transform:translateY(-3px);
+  border-color:transparent;
+  background:transparent;
+  box-shadow:0 0 20px 1px rgba(35,173,188,.5);
+}
+.sap-suite-card .sap-card-action:active {
+  transform:translateY(-1px);
+  box-shadow:0 0 24px 2px rgba(35,173,188,.65);
+}
+.sap-suite-card--eppp .sap-card-action:is(:hover,:active) {
+  box-shadow:0 8px 20px -10px rgba(0,0,0,.35);
+}
+@media (prefers-reduced-motion:reduce) {
+  .sap-suite-card .sap-card-action:is(:hover,:active) { transform:none; }
+}
 .sap-card-foot { display:flex; justify-content:space-between; gap:8px; margin-top:13px; padding-top:10px; border-top:1px solid rgba(47,83,85,.15); color:#425457; font-size:8px; line-height:1.4; }
 .sap-card-foot span:last-child { text-align:right; white-space:nowrap; }
 .sap-both-note { display:flex; align-items:flex-start; gap:8px; margin-top:14px; color:#536265; font-size:10px; line-height:1.55; }

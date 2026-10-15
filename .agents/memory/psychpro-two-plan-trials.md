@@ -22,6 +22,13 @@ planning independent PsychPro and EPPP access.
 use the chooser for a general sign-in with both active. Admin bypass must be
 tested separately from ordinary-member access.
 
+The owner approved the independent-suite flow preview, with landing-matched
+transparent glass buttons inside the chooser cards: blue for PsychPro and yellow
+for EPPP Mastery Suite, rather than silver chrome.
+**Why:** the owner explicitly requested this correction when reviewing the flow.
+**How to apply:** preserve the approved flow and match each card's action to its
+suite identity; this does not authorize changing unrelated site buttons.
+
 The PsychPro free week includes five AI generation units; the new paid PsychPro plan includes fifty per month, including annual subscriptions. One selected output tool consumes one unit. Failed generation must not consume allowance; deleting a generated deck must not restore it.
 
 Existing paid subscribers keep their prices, access, and previous generation policy. Do not silently convert legacy plans to the new limits. Keep the new billing catalog invisible to older published pricing code during rollout.
