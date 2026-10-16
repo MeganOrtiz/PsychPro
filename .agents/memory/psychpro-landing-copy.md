@@ -53,6 +53,13 @@ the owner chose “we'll just make it everyone”.
 **How to apply:** Do not turn this offer into an invitation-only promotion or add
 a requirement to obtain the code elsewhere.
 
+The lower blue/yellow suite comparison boxes should explain features, without
+prices or individual free-week buttons. Keep the shared “See Plans” button below.
+**Why:** the owner said those buttons are redundant with See Plans and prices
+belong on the plans page.
+**How to apply:** preserve the upper suite-introduction trial buttons; this rule
+applies only to the lower glass comparison boxes.
+
 **Removed closing promotion:** The owner wants the “Explore topics designed for
 real-world clinical application” card and its “Get Started Free” button removed.
 
