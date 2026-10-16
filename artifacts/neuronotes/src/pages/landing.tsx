@@ -38,7 +38,7 @@ import founderMegan from "@/assets/founder/megan.webp";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PP, LANDING, alpha } from "@/lib/palette";
 import { trackEvent } from "@/lib/analytics";
-import { rememberPendingTrial } from "@/lib/pending-trial";
+import { rememberPendingTrial, trialEntryHref } from "@/lib/pending-trial";
 import { isEpppTopic } from "@/lib/eppp-content";
 import { Button } from "@/components/ui/button";
 
@@ -237,12 +237,12 @@ export default function LandingPage() {
   };
   const goToApp = () => navTo("/dashboard");
   const goToTopics = () => navTo("/topics");
-  // "Start my free week": only records intent. The trial itself starts from
-  // an explicit button on /subscription?trial=<suite> after sign-in/onboarding.
+  // Preserve the chosen suite through authentication and enter its onboarding.
+  // Clicking a landing button only records intent; it does not grant access.
   const startFreeWeek = (suite: "psychpro" | "eppp") => {
     trackEvent("trial_cta_clicked", { surface: "landing", suite, signed_in: Boolean(isSignedIn) });
     rememberPendingTrial(suite);
-    navigate(isSignedIn ? `/subscription?trial=${suite}` : "/sign-up");
+    navigate(trialEntryHref(suite, !!isSignedIn, window.location.origin, import.meta.env.BASE_URL));
   };
   const checkItOut = () => {
     trackEvent("navigation_clicked", { surface: "landing", destination: "/sign-in" });
@@ -404,10 +404,10 @@ export default function LandingPage() {
               <p>The EPPP Mastery Suite is designed to help you study effectively and pass the licensing exam on the FIRST try.</p>
               <p>Prepare confidently for a fraction of the cost.</p>
               <div className="mt-auto pt-6 w-full">
-                <Link href="/eppp/promo?code=EPPP7" className="landing-eppp-promo w-full gap-2" data-testid="button-landing-eppp-promo">
+                <button type="button" onClick={() => startFreeWeek("eppp")} className="landing-eppp-promo w-full gap-2" data-testid="button-landing-eppp-promo">
                   Try FREE for 7 days
                   <ArrowRight className="w-4 h-4" aria-hidden />
-                </Link>
+                </button>
               </div>
             </article>
           </div>

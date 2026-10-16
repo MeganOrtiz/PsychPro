@@ -1,7 +1,6 @@
 import { useLocation } from "wouter";
 import { Zap, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { EpppPromoLink } from "@/components/eppp-promo-link";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 
 export type UpgradeReason =
@@ -72,7 +71,6 @@ export default function UpgradePrompt({ onDismiss, reason = "generic" }: Upgrade
           </Button>
         )}
       </div>
-      {reason === "eppp" && <EpppPromoLink className="mt-5" />}
     </div>
   );
 }

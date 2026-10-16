@@ -4,8 +4,9 @@ import { useGetUserProfile } from "@workspace/api-client-react";
 import { useEntitlements } from "@/lib/use-entitlements";
 import { FullScreenLoader } from "@/components/full-screen-loader";
 import { getPromoReturn } from "@/lib/eppp-promo-return";
-import { readPendingTrial, clearPendingTrial } from "@/lib/pending-trial";
+import { readPendingTrial } from "@/lib/pending-trial";
 import { QueryError } from "@/components/query-error";
+import { isTrialSuite } from "@/lib/use-study-access";
 
 /**
  * Post-authentication landing resolver. Clerk redirects here after sign-in /
@@ -26,37 +27,34 @@ import { QueryError } from "@/components/query-error";
 export function PostAuthRedirect() {
   const [, navigate] = useLocation();
   const promoReturn = getPromoReturn(useSearch());
+  const requested = new URLSearchParams(useSearch()).get("suite");
+  const requestedSuite = isTrialSuite(requested) ? requested : null;
   const { data: profile, isLoading: profileLoading, isError: profileError, refetch: retryProfile } = useGetUserProfile();
   const { data: entitlements, isLoading: entLoading, isError: entError, refetch: retryEntitlements } = useEntitlements();
 
   useEffect(() => {
-    // On a profile error, preserve the public promo destination when present.
-    // Study routes still fail closed through RequireOnboarded.
-    if (profileError) {
-      if (promoReturn) navigate(promoReturn, { replace: true });
-      return;
-    }
+    if (profileError) return;
     if (profileLoading || !profile) return;
 
+    // A selected suite always re-enters onboarding, including for accounts
+    // that already completed it for the other suite. Old promo auth returns
+    // also resolve here instead of the removed promo page.
+    const pendingTrial = requestedSuite ?? (promoReturn ? "eppp" : readPendingTrial());
+    if (pendingTrial) {
+      navigate(`/onboarding?suite=${pendingTrial}`, { replace: true });
+      return;
+    }
     if (!profile.onboardingComplete) {
-      navigate(promoReturn ? `/onboarding?returnTo=${encodeURIComponent(promoReturn)}` : "/onboarding", { replace: true });
+      navigate("/onboarding", { replace: true });
       return;
     }
 
     // Wait for entitlements so EPPP buyers aren't sent to the main dashboard by
     // mistake. If entitlements fail to load they stay undefined -> dashboard.
-    // A landing "Start my free week" intent sends onboarded users to the
-    // plans page, where the trial only starts from an explicit button.
-    const pendingTrial = promoReturn ? null : readPendingTrial();
-    if (pendingTrial) {
-      clearPendingTrial();
-      navigate(`/subscription?trial=${pendingTrial}`, { replace: true });
-      return;
-    }
     if (entLoading || entError) return;
     const goEppp = !!entitlements?.epppAccess && !entitlements?.isAdmin;
-    navigate(promoReturn ?? (goEppp ? "/eppp/suite" : "/dashboard"), { replace: true });
-  }, [profile, profileLoading, profileError, entitlements, entLoading, entError, navigate, promoReturn]);
+    navigate(goEppp ? "/eppp/suite" : "/dashboard", { replace: true });
+  }, [profile, profileLoading, profileError, entitlements, entLoading, entError, navigate, promoReturn, requestedSuite]);
 
   if (profileError || entError) {
     return <QueryError message="We couldn't confirm your account access. Retry to continue to the correct suite." onRetry={() => Promise.all([retryProfile(), retryEntitlements()])} />;

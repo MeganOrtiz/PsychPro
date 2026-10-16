@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useSearch } from "wouter";
 import { Check, Zap, Crown, Loader2, Sparkles, Settings, GraduationCap } from "lucide-react";
 import { useGetSubscriptionPlans, useGetSubscriptionStatus, useCreateCheckoutSession, useCreatePortalSession } from "@workspace/api-client-react";
-import { EpppPromoLink } from "@/components/eppp-promo-link";
 import { StudyTrialPanel } from "@/components/study-trial-panel";
 import { useEpppPlans, useEpppCheckout } from "@/lib/use-eppp-purchase";
 import { useEntitlements } from "@/lib/use-entitlements";
@@ -216,7 +215,6 @@ export default function SubscriptionPage() {
             )}
 
             <div className="mb-4"><StudyTrialPanel suite="eppp" highlight={focusSuite === "eppp"} onSubscribe={() => scrollTo("eppp-billing")} /></div>
-            {!epppPaid && <div className="mb-4"><EpppPromoLink /></div>}
 
             <div id="eppp-billing">
               {epppPlansLoading ? (

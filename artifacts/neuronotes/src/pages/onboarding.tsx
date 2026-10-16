@@ -50,7 +50,7 @@ import {
   type UpsertUserProfileBody,
   type UserProfile,
 } from "@workspace/api-client-react";
-import { useStudyAccess, trialPhase, PSYCHPRO_MONTHLY_AI_LIMIT } from "@/lib/use-study-access";
+import { useStudyAccess, trialPhase, isTrialSuite, PSYCHPRO_MONTHLY_AI_LIMIT } from "@/lib/use-study-access";
 import { readPendingTrial, clearPendingTrial } from "@/lib/pending-trial";
 import { useToast } from "@/hooks/use-toast";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -161,6 +161,8 @@ type TierCard = {
 export default function OnboardingPage() {
   const [, navigate] = useLocation();
   const promoReturn = getPromoReturn(useSearch());
+  const requested = new URLSearchParams(useSearch()).get("suite");
+  const requestedSuite = isTrialSuite(requested) ? requested : promoReturn ? "eppp" : null;
   const { user } = useUser();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -171,7 +173,11 @@ export default function OnboardingPage() {
   const { data: existingProfile } = useGetUserProfile();
   const { data: access } = useStudyAccess();
 
-  const [answers, setAnswers] = useState<Answers>(EMPTY);
+  const [answers, setAnswers] = useState<Answers>(() => ({
+    ...EMPTY,
+    selectedTier: requestedSuite ?? "",
+    selectedProduct: requestedSuite === "eppp" ? "EPPP Mastery Suite" : requestedSuite === "psychpro" ? "PsychPro" : "",
+  }));
   const [stepId, setStepId] = useState<StepId>("role");
   const [submitting, setSubmitting] = useState(false);
 
@@ -189,11 +195,11 @@ export default function OnboardingPage() {
       epppInterest: p.epppInterest ?? "",
       // Legacy tier values (free/pro/scholar) map onto the single PsychPro offering.
       selectedTier:
-        readPendingTrial() ??
+        requestedSuite ?? readPendingTrial() ??
         (p.selectedTier === "eppp" ? "eppp" : p.selectedTier ? "psychpro" : ""),
-      selectedProduct: p.selectedProduct ?? "",
+      selectedProduct: requestedSuite === "eppp" ? "EPPP Mastery Suite" : requestedSuite === "psychpro" ? "PsychPro" : p.selectedProduct ?? "",
     }));
-  }, [existingProfile]);
+  }, [existingProfile, requestedSuite]);
 
   // The EPPP eligibility step only appears if the user signalled exam/EPPP intent.
   const showEppp = useMemo(() => {
@@ -203,9 +209,9 @@ export default function OnboardingPage() {
   const order = useMemo<StepId[]>(() => {
     const ids: StepId[] = ["role", "goals", "focus"];
     if (showEppp) ids.push("eppp");
-    if (!promoReturn) ids.push("tier");
+    if (!requestedSuite) ids.push("tier");
     return ids;
-  }, [showEppp, promoReturn]);
+  }, [showEppp, requestedSuite]);
 
   const rawIdx = order.indexOf(stepId);
   const idx = rawIdx === -1 ? order.indexOf("focus") : rawIdx;
@@ -316,11 +322,10 @@ export default function OnboardingPage() {
   const alreadyHasAccess = phase === "paid" || phase === "active";
 
   const ctaLabel = useMemo(() => {
-    if (promoReturn) return "Continue to Free EPPP Week";
     if (alreadyHasAccess) return tier === "eppp" ? "Enter EPPP Mastery Suite" : "Enter PsychPro";
     if (phase === "available") return "Continue to start my free week";
     return "Continue to plans";
-  }, [tier, phase, alreadyHasAccess, promoReturn]);
+  }, [tier, phase, alreadyHasAccess]);
 
   async function finalize(choice?: TierCard): Promise<boolean> {
     try {
@@ -355,10 +360,6 @@ export default function OnboardingPage() {
       if (!ok) return;
       clearPendingTrial();
       trackEvent("onboarding_completed", { selected_tier: destinationTier, has_existing_access: hasAccess });
-      if (promoReturn) {
-        navigate(promoReturn);
-        return;
-      }
       if (hasAccess) {
         navigate(destinationTier === "eppp" ? "/eppp/suite" : "/dashboard");
         return;
@@ -378,7 +379,7 @@ export default function OnboardingPage() {
       if (ok) {
         clearPendingTrial();
         trackEvent("onboarding_completed", { selected_tier: tier, has_existing_access: false, skipped_trial: true });
-        navigate(promoReturn ?? `/subscription?trial=${tier}`);
+        navigate(`/subscription?trial=${tier}`);
       }
     } finally {
       setSubmitting(false);
@@ -565,7 +566,7 @@ export default function OnboardingPage() {
 
               {idx === order.length - 1 ? (
                 <div className="flex flex-wrap justify-end items-center gap-2">
-                  {!promoReturn && !alreadyHasAccess && (
+                  {!requestedSuite && !alreadyHasAccess && (
                     <Button
                       variant="outline"
                       onClick={handleEnterFree}
@@ -585,7 +586,7 @@ export default function OnboardingPage() {
                     {submitting ? (
                       <Loader2 className="w-4 h-4 mr-1.5 animate-spin" />
                     ) : null}
-                    {promoReturn ? ctaLabel : "Continue"}
+                    {requestedSuite ? ctaLabel : "Continue"}
                     <ChevronRight className="w-4 h-4 ml-1" />
                   </Button>
                 </div>

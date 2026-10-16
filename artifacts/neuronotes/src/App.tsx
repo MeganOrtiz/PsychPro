@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { lazyWithRetry as lazy } from "@/lib/lazy-retry";
-import { Switch, Route, Router as WouterRouter } from "wouter";
+import { Switch, Route, Redirect, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ClerkProvider } from "@clerk/clerk-react";
 import { Toaster } from "@/components/ui/toaster";
@@ -50,7 +50,6 @@ const PublicProfilePage = lazy(() => import("@/pages/public-profile"));
 const ResourcesPage = lazy(() => import("@/pages/resources"));
 const StudyLabPage = lazy(() => import("@/pages/study-lab"));
 const BrainLabPage = lazy(() => import("@/pages/brain-lab"));
-const EpppPromoPage = lazy(() => import("@/pages/eppp-promo"));
 const EpppPage = lazy(() => import("@/pages/eppp"));
 const AdminFeedbackPage = lazy(() => import("@/pages/admin-feedback"));
 const AdminTokensPage = lazy(() => import("@/pages/admin-tokens"));
@@ -123,7 +122,10 @@ function AppRouter() {
       {import.meta.env.DEV ? <Route path="/__glass-preview" component={DevGlassPreview} /> : null}
       {import.meta.env.DEV ? <Route path="/__library-preview" component={DevLibraryPreview} /> : null}
       {import.meta.env.DEV ? <Route path="/__dashboard-preview" component={DevDashboardPreview} /> : null}
-      <Route path="/eppp/promo" component={EpppPromoPage} />
+      {/* Old shared links no longer render a promo/book page. */}
+      <Route path="/eppp/promo">
+        <Redirect to="/onboarding?suite=eppp" />
+      </Route>
       <Route path="/eppp">
         {() => (
           <RequireOnboarded>

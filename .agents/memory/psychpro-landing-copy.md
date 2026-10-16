@@ -35,23 +35,14 @@ brain/crown artwork, and readable body text, rather than compact teaser cards.
 **How to apply:** Do not shrink the cards or their contents during later landing
 layout adjustments; retain both suites' original wording.
 
-The owner plans to share the regular main-site link and have visitors find the
-EPPP promo through a button at the bottom of the landing page's EPPP suite card.
-
-**Why:** The owner explicitly chose this entry path rather than sharing a separate
-promo-page link.
-
-**How to apply:** Preserve this homepage route into the promotion when adjusting
-the landing page or suggesting links for the owner to share.
-
-The EPPP free-week promotion is available to everyone, not only people given a
-code. Keep the promo code autofilled from the public homepage button.
-
-**Why:** When asked whether the free week was for everyone or only code recipients,
-the owner chose “we'll just make it everyone”.
-
-**How to apply:** Do not turn this offer into an invitation-only promotion or add
-a requirement to obtain the code elsewhere.
+Both upper landing suite trial buttons must enter onboarding for the selected
+suite, preserving that choice through signup/sign-in. Do not route either
+button through a promo page or the trial/plans detour.
+**Why:** the owner explicitly confirmed “Both need to point into suite-specific
+onboarding” and requested removal of the book-only promo page.
+**How to apply:** keep the seven-day offer public, not invitation/code-only.
+The standalone promo/book page must not be restored; this does not remove
+earned books or the separate dashboard feedback reward.
 
 The lower blue/yellow suite comparison boxes should explain features, without
 prices or individual free-week buttons. Keep the shared “See Plans” button below.
