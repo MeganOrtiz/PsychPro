@@ -1723,7 +1723,7 @@ const styles = `
 .landing-tier .landing-checklist-item { align-items: flex-start; }
 .landing-tier .landing-checklist-check { margin-top: 3px; }
 .landing-tier--eppp .landing-tier-tag { margin-bottom: 18px; }
-.landing-tier .landing-tier-note { margin-top: auto; padding-top: 20px; border-top: 1px solid ${alpha(PP.text, 0.16)}; font-size: 14px; }
+.landing-tier .landing-tier-note { margin-top: auto; padding-top: 20px; border-top: 1px solid ${alpha(PP.text, 0.16)}; font-size: 14px; text-align: center; }
 .landing-cta:focus-visible, .landing-nav-link:focus-visible { outline: 2px solid ${PP.text}; outline-offset: 3px; }
 /* ============== SCHOLAR TIER (legacy) ============== */
 .landing-scholar { max-width: 1020px; }
