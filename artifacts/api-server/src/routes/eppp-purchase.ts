@@ -157,8 +157,8 @@ router.post("/eppp/checkout", async (req: Request, res: Response): Promise<void>
         payment_method_types: ["card"],
         line_items: [{ price: priceId, quantity: 1 }],
         mode: isRecurring ? "subscription" : "payment",
-        success_url: `${baseUrl}/eppp/suite?eppp_success=true`,
-        cancel_url: `${baseUrl}/eppp/suite?eppp_canceled=true`,
+        success_url: `${baseUrl}/subscription?eppp_success=true`,
+        cancel_url: `${baseUrl}/subscription?eppp_canceled=true`,
       },
       { idempotencyKey: `eppp-checkout:${userId}:${priceId}` },
     );

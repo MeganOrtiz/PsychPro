@@ -224,19 +224,8 @@ function AppRouter() {
           </RequireSignedIn>
         )}
       </Route>
-      {/* Subscription/plans is reachable without finishing onboarding so the
-          landing "Browse courses" CTA can show plan options instead of forcing
-          the onboarding flow. Auth-gated (RequireSignedIn) but not
-          onboarding-gated. */}
-      <Route path="/subscription">
-        {() => (
-          <RequireSignedIn>
-            <AppLayout>
-              <SubscriptionPage />
-            </AppLayout>
-          </RequireSignedIn>
-        )}
-      </Route>
+      {/* Public paid-plan comparison. Only purchasing requires authentication. */}
+      <Route path="/subscription" component={SubscriptionPage} />
       <Route path="/psychpro/welcome">
         <RequireSignedIn>
           <PsychproWelcomePage />

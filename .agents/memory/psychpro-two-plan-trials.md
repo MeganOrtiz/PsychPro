@@ -57,6 +57,18 @@ trial; the landing page already provides the free-week entry points.
 **How to apply:** keep explicit trial-start flows separate, preserve existing
 access, and do not treat a preview approval as permission to change billing.
 
+Use the owner's “Choose Your Plan” reference for this page, with the whole
+plan tile functioning as the payment button. Keep the actual existing catalog:
+PsychPro monthly/yearly and EPPP monthly/6-month/12-month, not the sample's
+1-/3-/6-month EPPP labels or placeholder savings.
+**Why:** the owner approved implementation of the reference with corrections
+congruent with existing plans. The reference's sample footer prices are not
+new products, and prepaid EPPP passes do not renew automatically.
+**How to apply:** preserve a paid plan selection across authentication without
+starting a free trial; both suites' expired-trial prompts lead to this same
+paid-only comparison. Neutral cards and aqua featured borders on this page
+follow the supplied reference; this does not restyle suite onboarding cards.
+
 Existing paid subscribers keep their prices, access, and previous generation policy. Do not silently convert legacy plans to the new limits. Keep the new billing catalog invisible to older published pricing code during rollout.
 
 **Initial launch context:** on 2026-10-14, the owner clarified, “there are no current users so we dont have to worry about that.”

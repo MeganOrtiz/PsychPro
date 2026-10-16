@@ -2,6 +2,7 @@ import { useLocation } from "wouter";
 import { Zap, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
+import { useStudyAccess, trialPhase } from "@/lib/use-study-access";
 
 export type UpgradeReason =
   | "quiz"          // free user finished their 1 lifetime quiz
@@ -45,7 +46,13 @@ const COPY: Record<UpgradeReason, { title: string; body: string }> = {
 
 export default function UpgradePrompt({ onDismiss, reason = "generic" }: UpgradePromptProps) {
   const [, navigate] = useLocation();
-  const { title, body } = COPY[reason];
+  const { data: access } = useStudyAccess();
+  const suite = reason === "eppp" ? "eppp" : "psychpro";
+  const expired = trialPhase(access?.[suite]) === "expired";
+  const title = expired ? `Your ${suite === "eppp" ? "EPPP Mastery Suite" : "PsychPro"} free week has ended` : COPY[reason].title;
+  const body = expired
+    ? "Your progress and saved materials are still here. Choose a paid plan to continue studying in this suite."
+    : COPY[reason].body;
 
   return (
     <div className="p-4 md:p-6 max-w-lg mx-auto flex flex-col items-center justify-center min-h-[60vh] text-center" data-testid="upgrade-prompt">
@@ -58,12 +65,12 @@ export default function UpgradePrompt({ onDismiss, reason = "generic" }: Upgrade
       <p className="text-muted-foreground mb-8 leading-relaxed">{body}</p>
       <div className="flex flex-col sm:flex-row gap-3 w-full max-w-xs">
         <Button
-          onClick={() => navigate(`/subscription?trial=${reason === "eppp" ? "eppp" : "psychpro"}`)}
+          onClick={() => navigate("/subscription")}
           className="w-full"
           data-testid="button-upgrade"
         >
           <Zap className="w-4 h-4 mr-2" />
-          {reason === "eppp" ? "Unlock Now" : "Upgrade Now"}
+          See plans
         </Button>
         {onDismiss && (
           <Button variant="outline" onClick={onDismiss} className="w-full" data-testid="button-dismiss">

@@ -694,7 +694,7 @@ export default function LandingPage() {
           </div>
           <button
             type="button"
-            onClick={() => navTo("/subscription")}
+            onClick={() => navigate("/subscription")}
             className="landing-cta landing-cta-primary landing-cta--center"
             data-testid="cta-scholar"
           >

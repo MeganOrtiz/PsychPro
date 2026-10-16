@@ -7,6 +7,7 @@ import { getPromoReturn } from "@/lib/eppp-promo-return";
 import { readPendingTrial } from "@/lib/pending-trial";
 import { QueryError } from "@/components/query-error";
 import { isTrialSuite } from "@/lib/use-study-access";
+import { readPendingCheckout, checkoutReturnPath } from "@/lib/pending-checkout";
 
 /**
  * Post-authentication landing resolver. Clerk redirects here after sign-in /
@@ -33,6 +34,11 @@ export function PostAuthRedirect() {
   const { data: entitlements, isLoading: entLoading, isError: entError, refetch: retryEntitlements } = useEntitlements();
 
   useEffect(() => {
+    const pendingCheckout = readPendingCheckout();
+    if (pendingCheckout) {
+      navigate(checkoutReturnPath(pendingCheckout), { replace: true });
+      return;
+    }
     if (profileError) return;
     if (profileLoading || !profile) return;
 

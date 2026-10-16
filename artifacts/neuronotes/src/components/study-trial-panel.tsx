@@ -118,11 +118,9 @@ export function StudyTrialPanel({
                 Nothing was deleted. Your progress{suite === "psychpro" ? ", decks, and uploaded sources are" : " is"} saved
                 and will be waiting when you subscribe.
               </p>
-              {onSubscribe && (
-                <Button className="mt-2" onClick={onSubscribe} data-testid={`button-trial-subscribe-${suite}`}>
-                  Subscribe to continue <ArrowRight className="w-4 h-4 ml-1.5" />
-                </Button>
-              )}
+              <Button className="mt-2" onClick={onSubscribe ?? (() => navigate("/subscription"))} data-testid={`button-trial-subscribe-${suite}`}>
+                See plans <ArrowRight className="w-4 h-4 ml-1.5" />
+              </Button>
             </>
           )}
         </div>
