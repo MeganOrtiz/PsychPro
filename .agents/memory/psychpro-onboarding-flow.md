@@ -5,6 +5,11 @@ description: Route-guard + persistence gotchas for the multi-step onboarding wiz
 
 # PsychPro onboarding flow
 
+Do not reintroduce the “You're all set” onboarding summary page.
+**Why:** the owner called it unnecessary and requested its removal.
+**How to apply:** finish setup from the final meaningful step; keep trial
+activation explicit and separate from selecting a suite or completing setup.
+
 The signed-in-but-not-onboarded gate is `RequireOnboarded` (RequireSignedIn +
 OnboardingGate). `/onboarding` itself must stay OUTSIDE that gate (wrap it in
 plain RequireSignedIn) or you get a redirect loop.

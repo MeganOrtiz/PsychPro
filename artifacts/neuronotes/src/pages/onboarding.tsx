@@ -10,7 +10,7 @@
 //   5. EPPP Eligibility   (epppInterest — CONDITIONAL: only when an EPPP/exam
 //                          goal or the EPPP study focus was chosen)
 //   6. Suite Selection    (PsychPro or EPPP Mastery Suite; no Free tier)
-//   7. Summary: continue to an EXPLICIT 7-day trial start, a paid plan, or
+//      Continue to an EXPLICIT 7-day trial start, a paid plan, or
 //      finish setup without starting anything. Choosing a suite never starts
 //      a trial by itself.
 //
@@ -37,7 +37,6 @@ import {
   Microscope,
   FlaskConical,
   Compass,
-  Star,
   Layers,
   Repeat,
   Loader2,
@@ -124,7 +123,7 @@ const EMPTY: Answers = {
   selectedProduct: "",
 };
 
-type StepId = "account" | "role" | "goals" | "focus" | "eppp" | "tier" | "summary";
+type StepId = "account" | "role" | "goals" | "focus" | "eppp" | "tier";
 
 const STEP_META: Record<Exclude<StepId, "account">, { title: string; subtitle: string }> = {
   role: {
@@ -147,10 +146,6 @@ const STEP_META: Record<Exclude<StepId, "account">, { title: string; subtitle: s
     title: "Choose your suite",
     subtitle: "Pick where you want to start. Choosing does not start a trial or a charge.",
   },
-  summary: {
-    title: "You're all set",
-    subtitle: "Here's your personalized PsychPro setup.",
-  },
 };
 
 type TierCard = {
@@ -171,7 +166,6 @@ export default function OnboardingPage() {
   const queryClient = useQueryClient();
 
   const email = user?.primaryEmailAddress?.emailAddress ?? undefined;
-  const firstName = user?.firstName ?? user?.fullName?.split(" ")[0] ?? "";
 
   const upsert = useUpsertUserProfile();
   const { data: existingProfile } = useGetUserProfile();
@@ -210,7 +204,6 @@ export default function OnboardingPage() {
     const ids: StepId[] = ["role", "goals", "focus"];
     if (showEppp) ids.push("eppp");
     if (!promoReturn) ids.push("tier");
-    ids.push("summary");
     return ids;
   }, [showEppp, promoReturn]);
 
@@ -301,6 +294,10 @@ export default function OnboardingPage() {
 
   async function handleNext() {
     if (!isStepValid(stepId)) return;
+    if (idx === order.length - 1) {
+      await handleFinish();
+      return;
+    }
     await saveProgress();
     const next = order[idx + 1];
     if (next) setStepId(next);
@@ -325,9 +322,14 @@ export default function OnboardingPage() {
     return "Continue to plans";
   }, [tier, phase, alreadyHasAccess, promoReturn]);
 
-  async function finalize(): Promise<boolean> {
+  async function finalize(choice?: TierCard): Promise<boolean> {
     try {
-      const updated = await upsert.mutateAsync({ data: buildBody(true) });
+      const updated = await upsert.mutateAsync({
+        data: {
+          ...buildBody(true),
+          ...(choice ? { selectedTier: choice.tier, selectedProduct: choice.name } : {}),
+        },
+      });
       // Refresh the cached profile so the onboarding route guard immediately
       // sees onboardingComplete=true and lets the user into the app.
       queryClient.setQueryData(getGetUserProfileQueryKey(), updated);
@@ -342,23 +344,27 @@ export default function OnboardingPage() {
     }
   }
 
-  async function handleFinish() {
+  async function handleFinish(choice?: TierCard) {
+    if (submitting) return;
+    const destinationTier = choice?.tier === "eppp" ? "eppp" : choice ? "psychpro" : tier;
+    const destinationPhase = trialPhase(access?.[destinationTier]);
+    const hasAccess = destinationPhase === "paid" || destinationPhase === "active";
     setSubmitting(true);
     try {
-      const ok = await finalize();
+      const ok = await finalize(choice);
       if (!ok) return;
       clearPendingTrial();
-      trackEvent("onboarding_completed", { selected_tier: tier, has_existing_access: alreadyHasAccess });
+      trackEvent("onboarding_completed", { selected_tier: destinationTier, has_existing_access: hasAccess });
       if (promoReturn) {
         navigate(promoReturn);
         return;
       }
-      if (alreadyHasAccess) {
-        navigate(tier === "eppp" ? "/eppp/suite" : "/dashboard");
+      if (hasAccess) {
+        navigate(destinationTier === "eppp" ? "/eppp/suite" : "/dashboard");
         return;
       }
       // Never auto-start: the plans page shows the explicit start button.
-      navigate(`/subscription?trial=${tier}`);
+      navigate(`/subscription?trial=${destinationTier}`);
     } finally {
       setSubmitting(false);
     }
@@ -372,7 +378,7 @@ export default function OnboardingPage() {
       if (ok) {
         clearPendingTrial();
         trackEvent("onboarding_completed", { selected_tier: tier, has_existing_access: false, skipped_trial: true });
-        navigate(promoReturn ?? "/dashboard");
+        navigate(promoReturn ?? `/subscription?trial=${tier}`);
       }
     } finally {
       setSubmitting(false);
@@ -382,7 +388,7 @@ export default function OnboardingPage() {
   // -------------------------------------------------------------------------
   // Render helpers
   // -------------------------------------------------------------------------
-  const wide = stepId === "tier" || stepId === "summary";
+  const wide = stepId === "tier";
   const meta = stepId !== "account" ? STEP_META[stepId] : null;
 
   const toggleGoal = (value: string) =>
@@ -520,12 +526,13 @@ export default function OnboardingPage() {
                         key={card.tier}
                         card={card}
                         selected={answers.selectedTier === card.tier}
+                        disabled={submitting}
                         onSelect={() =>
                           setAnswers((p) => ({ ...p, selectedTier: card.tier, selectedProduct: card.name }))
                         }
                         onTrial={() => {
                           setAnswers((p) => ({ ...p, selectedTier: card.tier, selectedProduct: card.name }));
-                          setStepId("summary");
+                          void handleFinish(card);
                         }}
                       />
                     ))}
@@ -537,16 +544,6 @@ export default function OnboardingPage() {
                 </>
               )}
 
-              {/* ---- Summary ---- */}
-              {stepId === "summary" && (
-                <SummaryBody
-                  firstName={firstName}
-                  answers={answers}
-                  showEppp={showEppp}
-                  tierCards={tierCards}
-                  promoReturn={promoReturn}
-                />
-              )}
             </div>
 
             {/* Footer */}
@@ -566,8 +563,8 @@ export default function OnboardingPage() {
                 <span aria-hidden />
               )}
 
-              {stepId === "summary" ? (
-                <div className="flex items-center gap-2">
+              {idx === order.length - 1 ? (
+                <div className="flex flex-wrap justify-end items-center gap-2">
                   {!promoReturn && !alreadyHasAccess && (
                     <Button
                       variant="outline"
@@ -580,22 +577,22 @@ export default function OnboardingPage() {
                     </Button>
                   )}
                   <Button
-                    onClick={handleFinish}
-                    disabled={submitting}
+                    onClick={() => void handleFinish()}
+                    disabled={submitting || !isStepValid(stepId)}
                     className="rounded-md px-5"
                     data-testid="button-finish"
                   >
                     {submitting ? (
                       <Loader2 className="w-4 h-4 mr-1.5 animate-spin" />
                     ) : null}
-                    {ctaLabel}
+                    {promoReturn ? ctaLabel : "Continue"}
                     <ChevronRight className="w-4 h-4 ml-1" />
                   </Button>
                 </div>
               ) : (
                 <Button
                   onClick={handleNext}
-                  disabled={!isStepValid(stepId) || upsert.isPending}
+                  disabled={!isStepValid(stepId) || upsert.isPending || submitting}
                   className="rounded-md px-5"
                   data-testid="button-next"
                 >
@@ -683,11 +680,13 @@ function TierOption({
   selected,
   onSelect,
   onTrial,
+  disabled,
 }: {
   card: TierCard;
   selected: boolean;
   onSelect: () => void;
   onTrial: () => void;
+  disabled: boolean;
 }) {
   return (
     <div
@@ -698,6 +697,7 @@ function TierOption({
         type="button"
         className="ob-plan-select"
         onClick={onSelect}
+        disabled={disabled}
         aria-pressed={selected}
         aria-label={`Choose ${card.name}`}
       />
@@ -728,73 +728,11 @@ function TierOption({
         type="button"
         className="ob-plan-trial"
         onClick={onTrial}
+        disabled={disabled}
         data-testid={`button-onboarding-trial-${card.tier}`}
       >
         Start my free week <ArrowRight className="w-4 h-4" aria-hidden />
       </button>
-    </div>
-  );
-}
-
-function SummaryBody({
-  firstName,
-  answers,
-  showEppp,
-  tierCards,
-  promoReturn,
-}: {
-  firstName: string;
-  answers: Answers;
-  showEppp: boolean;
-  tierCards: TierCard[];
-  promoReturn: string | null;
-}) {
-  const planCard = tierCards.find((c) => c.tier === answers.selectedTier);
-  const planLabel = promoReturn
-    ? "EPPP7 free week: redeem after setup, no card required"
-    : planCard
-      ? `${planCard.name} (nothing starts until you choose)`
-      : answers.selectedProduct || "Not chosen yet";
-
-  return (
-    <div className="space-y-4" data-testid="onboarding-summary">
-      {firstName && (
-        <p className="ob-greeting">
-          <span className="ob-greeting-spark">
-            <Sparkles className="w-4 h-4" />
-          </span>
-          <span>
-            Welcome aboard, <span style={{ color: P.surf }}>{firstName}</span>.
-          </span>
-        </p>
-      )}
-      <div className="ob-summary-grid">
-        <SummaryItem icon={GraduationCap} label="I am a" value={answers.learnerRole || "—"} />
-        <SummaryItem
-          icon={Target}
-          label="Goals"
-          value={answers.learningGoals.length ? answers.learningGoals.join(", ") : "—"}
-        />
-        <SummaryItem icon={Brain} label="Learning style" value={answers.studyFocus || "—"} />
-        {showEppp && (
-          <SummaryItem icon={ClipboardCheck} label="EPPP" value={answers.epppInterest || "—"} />
-        )}
-        <SummaryItem icon={Star} label="Plan" value={planLabel} />
-      </div>
-    </div>
-  );
-}
-
-function SummaryItem({ icon: I, label, value }: { icon: Icon; label: string; value: string }) {
-  return (
-    <div className="mat-glass ob-summary-item">
-      <span className="ob-summary-icon">
-        <I className="w-4 h-4" />
-      </span>
-      <span className="min-w-0">
-        <span className="ob-summary-label">{label}</span>
-        <span className="ob-summary-value">{value}</span>
-      </span>
     </div>
   );
 }
