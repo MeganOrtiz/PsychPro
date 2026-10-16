@@ -922,6 +922,7 @@ const styles = `
   border-image-slice: 55 100 55 100 fill; border-image-width: 10px 12px;
   border-image-repeat: stretch; clip-path: inset(5px 3px 6px round 7px);
 }
+.ob-plan--eppp .ob-plan-trial { background: rgb(var(--pp-white-rgb)); }
 .ob-plan--eppp .ob-plan-trial::before { border-image-source: url("/api/storage/public-objects/brand/pale-yellow-glass.png"); }
 .ob-plan-trial:hover { transform: translateY(-3px); box-shadow: 0 8px 18px -10px ${PP.textDim}; }
 .ob-plan-trial:active { transform: translateY(-1px); }
