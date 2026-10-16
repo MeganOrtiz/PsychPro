@@ -41,6 +41,7 @@ import {
   Layers,
   Repeat,
   Loader2,
+  ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -50,7 +51,7 @@ import {
   type UpsertUserProfileBody,
   type UserProfile,
 } from "@workspace/api-client-react";
-import { useStudyAccess, trialPhase, PSYCHPRO_MONTHLY_AI_LIMIT, PSYCHPRO_TRIAL_AI_LIMIT } from "@/lib/use-study-access";
+import { useStudyAccess, trialPhase, PSYCHPRO_MONTHLY_AI_LIMIT } from "@/lib/use-study-access";
 import { readPendingTrial, clearPendingTrial } from "@/lib/pending-trial";
 import { useToast } from "@/hooks/use-toast";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -219,7 +220,7 @@ export default function OnboardingPage() {
   const tierCards: TierCard[] = [
     {
       tier: "psychpro",
-      name: "PsychPro",
+      name: "PSYCHPRO",
       prices: [
         { label: "Monthly", amount: "$19.99", period: "/ month" },
         { label: "Annual", amount: "$159.99", period: "/ year" },
@@ -229,7 +230,7 @@ export default function OnboardingPage() {
         "Built-in flashcards, quizzes, guides, and exams",
         "Upload notes and generate study tools with AI",
         `${PSYCHPRO_MONTHLY_AI_LIMIT} AI generation requests per month`,
-        `Free week: ${PSYCHPRO_TRIAL_AI_LIMIT} AI requests, no card`,
+        "Free week, no card",
       ],
       icon: Brain,
     },
@@ -241,7 +242,7 @@ export default function OnboardingPage() {
         { label: "6 months", amount: "$499", period: "one-time" },
         { label: "12 months", amount: "$799", period: "one-time" },
       ],
-      blurb: "A dedicated licensure-prep workspace, sold separately from PsychPro.",
+      blurb: "A dedicated space for licensure prep with study tools and review features.",
       features: [
         "Domain knowledge and mastery exams",
         "Full-length practice exams",
@@ -522,6 +523,10 @@ export default function OnboardingPage() {
                         onSelect={() =>
                           setAnswers((p) => ({ ...p, selectedTier: card.tier, selectedProduct: card.name }))
                         }
+                        onTrial={() => {
+                          setAnswers((p) => ({ ...p, selectedTier: card.tier, selectedProduct: card.name }));
+                          setStepId("summary");
+                        }}
                       />
                     ))}
                   </div>
@@ -677,26 +682,27 @@ function TierOption({
   card,
   selected,
   onSelect,
+  onTrial,
 }: {
   card: TierCard;
   selected: boolean;
   onSelect: () => void;
+  onTrial: () => void;
 }) {
-  const I = card.icon;
   return (
-    <button
-      type="button"
-      onClick={onSelect}
-      aria-pressed={selected}
+    <div
       data-testid={slug(`tier-${card.tier}`)}
       className={`mat-glass mat-glass-interactive ob-plan ${selected ? "ob-plan--on" : ""} ${card.eppp ? "ob-plan--eppp" : ""}`}
     >
+      <button
+        type="button"
+        className="ob-plan-select"
+        onClick={onSelect}
+        aria-pressed={selected}
+        aria-label={`Choose ${card.name}`}
+      />
       <span className="ob-plan-head">
-        <span className="ob-plan-icon">
-          <I className="w-4 h-4" />
-        </span>
         <span className="ob-plan-name">{card.name}</span>
-        <span className="ob-check" aria-hidden>{selected && <Check className="w-3.5 h-3.5" />}</span>
       </span>
       <span className="ob-plan-blurb">{card.blurb}</span>
       <span className="ob-plan-prices">
@@ -718,7 +724,15 @@ function TierOption({
           </span>
         ))}
       </span>
-    </button>
+      <button
+        type="button"
+        className="ob-plan-trial"
+        onClick={onTrial}
+        data-testid={`button-onboarding-trial-${card.tier}`}
+      >
+        Start my free week <ArrowRight className="w-4 h-4" aria-hidden />
+      </button>
+    </div>
   );
 }
 
@@ -948,8 +962,33 @@ const styles = `
 
 .ob-plan {
   position: relative; display: flex; flex-direction: column; gap: 8px;
-  padding: 18px; text-align: left;
+  padding: 18px 22px; text-align: left;
+  border: 1.5px solid ${PP.textDim}; border-radius: 18px;
+  background: var(--pp-tile-strong);
 }
+.ob-plan-select { position: absolute; inset: 0; width: 100%; border-radius: inherit; background: transparent; cursor: pointer; }
+.ob-plan-select:focus-visible { outline: 3px solid ${PP.text}; outline-offset: 4px; }
+.ob-plan > span { position: relative; pointer-events: none; }
+.ob-plan-trial {
+  position: relative; isolation: isolate; align-self: flex-end;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  margin-top: 8px; padding: 12px 20px; min-height: 42px;
+  background: transparent; border: 0; border-radius: 8px; color: ${PP.text};
+  font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+  cursor: pointer; transition: transform .18s ease, box-shadow .18s ease;
+}
+.ob-plan-trial::before {
+  content: ""; position: absolute; inset: -6px; z-index: -1; pointer-events: none;
+  border: 15px solid transparent;
+  border-image-source: url("/api/storage/public-objects/brand/aqua-glass-button.png");
+  border-image-slice: 55 100 55 100 fill; border-image-width: 10px 12px;
+  border-image-repeat: stretch; clip-path: inset(5px 3px 6px round 7px);
+}
+.ob-plan--eppp .ob-plan-trial::before { border-image-source: url("/api/storage/public-objects/brand/pale-yellow-glass.png"); }
+.ob-plan-trial:hover { transform: translateY(-3px); box-shadow: 0 8px 18px -10px ${PP.textDim}; }
+.ob-plan-trial:active { transform: translateY(-1px); }
+.ob-plan-trial:focus-visible { outline: 2px solid ${PP.text}; outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) { .ob-plan-trial { transition: none; } .ob-plan-trial:hover, .ob-plan-trial:active { transform: none; } }
 .ob-plan--on {
   border-color: ${P.surf};
   background: var(--pp-tile-strong);
@@ -962,20 +1001,20 @@ const styles = `
 .ob-plan--eppp.ob-plan--on {
   box-shadow: inset 0 0 0 1px rgba(var(--pp-icy-rgb),0.6), inset 0 1px 0 var(--pp-bevel-bright);
 }
-.ob-plan-head { display: flex; align-items: center; gap: 10px; }
+.ob-plan-head { display: flex; align-items: center; justify-content: center; gap: 10px; }
 .ob-plan-icon {
   display: inline-flex; align-items: center; justify-content: center;
   width: 32px; height: 32px; border-radius: 9px; flex-shrink: 0;
   background: transparent; color: ${PP.text};
 }
-.ob-plan-name { flex: 1; min-width: 0; font-size: 1rem; font-weight: 600; line-height: 1.4; color: ${PP.text}; }
+.ob-plan-name { flex: 1; min-width: 0; text-align: center; font-size: 1.7rem; font-weight: 700; line-height: 1.4; color: ${PP.text}; }
 .ob-plan-prices { display: grid; gap: 10px; padding: 12px 0; border-block: 1px solid var(--pp-line); }
 .ob-plan-price-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; }
 .ob-plan-price-label { font-size: 0.8rem; color: ${PP.textDim}; }
 .ob-plan-price-amount { display: inline-flex; flex-wrap: wrap; align-items: baseline; justify-content: flex-end; gap: 5px; }
 .ob-plan-price { font-size: 1.15rem; font-weight: 600; line-height: 1.35; white-space: nowrap; color: ${PP.text}; }
 .ob-plan-period { font-size: 0.75rem; color: ${PP.textDim}; white-space: nowrap; }
-.ob-plan-blurb { font-size: 0.82rem; line-height: 1.6; color: ${PP.textDim}; }
+.ob-plan-blurb { text-align: center; font-size: 0.82rem; line-height: 1.6; color: ${PP.textDim}; }
 .ob-plan-feats { display: flex; flex-direction: column; gap: 8px; margin-top: auto; padding-top: 4px; }
 .ob-plan-feat { display: flex; align-items: flex-start; gap: 7px; font-size: 0.8rem; line-height: 1.5; color: ${PP.text}; }
 .ob-plan-feat svg { margin-top: 3px; }
