@@ -7,8 +7,10 @@ description: Route-guard + persistence gotchas for the multi-step onboarding wiz
 
 Do not reintroduce the “You're all set” onboarding summary page.
 **Why:** the owner called it unnecessary and requested its removal.
-**How to apply:** finish setup from the final meaningful step; keep trial
-activation explicit and separate from selecting a suite or completing setup.
+**How to apply:** finish from the final meaningful step. In the owner-approved
+trial-entry flow, completing that suite's onboarding starts its unused trial
+and opens its dashboard directly; selecting a card alone does not start it.
+Repeat onboarding for the second suite when its trial is first requested.
 
 The signed-in-but-not-onboarded gate is `RequireOnboarded` (RequireSignedIn +
 OnboardingGate). `/onboarding` itself must stay OUTSIDE that gate (wrap it in

@@ -7,11 +7,26 @@ Public choices are one combined **PsychPro** subscription ($19.99/month or $159.
 
 **Why:** the owner approved fewer tiers and a free week instead of a permanent free study tier, and explicitly selected the existing Scholar price for the combined plan.
 
-Each suite has its own once-per-account, explicit-start, seven-day trial. Signup, onboarding, navigation, or selecting a suite must never start a countdown. Trials require no card and never auto-charge. Starting one suite must not start or unlock the other.
+Each suite has its own once-per-account seven-day trial. The owner now wants
+“Try FREE for 7 days” to lead through that suite's onboarding and then directly
+into that suite with its trial active. Signup or selecting a suite alone must
+not start the clock. Trials require no card and never auto-charge. Starting
+one suite must not start or unlock the other.
+**Why:** the owner explicitly requested more direct paths, with no separate
+activation stop after completing trial onboarding.
+**How to apply:** completing onboarding for the requested suite starts only
+that suite's unused trial and enters its dashboard; expired trials lead to
+See Plans rather than a fresh free week.
 
-EPPP-only users, whether paid or using a promo, should enter PsychPro through a welcome/activation page explaining its separate free week and paid options, not directly through the PsychPro dashboard.
-**Why:** the owner explicitly requested this distinction for “only eppp access with or without the promo.”
-**How to apply:** retain the same account and independent suite entitlements; do not treat existing EPPP members as needing a second signup or start a trial merely from navigation.
+When switching into an unstarted suite, repeat the same onboarding sequence,
+even if the account already completed it for the other suite. Completion
+grants only the target suite's unused seven-day trial. This applies in both
+directions; retain one account, not a second signup.
+**Why:** the owner explicitly said users will do onboarding again for the
+second suite, “yes they will do it again, idc.”
+**How to apply:** distinguish onboarding for a new suite from returning to
+existing access; each trial expires independently with an expired box linking
+to See Plans. Repeating onboarding must not restart an expired trial.
 
 For returning members with active access to both suites, general sign-in should
 show **Choose your suite**, not automatically select EPPP or the last-used suite.
