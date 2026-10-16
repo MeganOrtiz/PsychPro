@@ -89,6 +89,7 @@ export function useStudyAccess() {
 }
 
 export function useStartTrial() {
+  const { userId } = useAuth();
   const queryClient = useQueryClient();
   const invalidateAll = () => Promise.all([
     queryClient.invalidateQueries({ queryKey: getGetStudyAccessQueryKey() }),
@@ -99,7 +100,12 @@ export function useStartTrial() {
   ]);
   const mutation = useStartStudyTrial({
     mutation: {
-      onSuccess: invalidateAll,
+      onSuccess: async (access) => {
+        // Seed the current account's access before entering its dashboard,
+        // instead of briefly rendering an old no-access/trial-available state.
+        if (userId) queryClient.setQueryData([...getGetStudyAccessQueryKey(), userId], access);
+        await invalidateAll();
+      },
       onError: (err) => {
         // 409 = already started or already paid: just refresh, never reset.
         if ((err as { status?: number })?.status === 409) invalidateAll();

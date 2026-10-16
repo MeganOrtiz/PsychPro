@@ -10,9 +10,9 @@
 //   5. EPPP Eligibility   (epppInterest — CONDITIONAL: only when an EPPP/exam
 //                          goal or the EPPP study focus was chosen)
 //   6. Suite Selection    (PsychPro or EPPP Mastery Suite; no Free tier)
-//      Continue to an EXPLICIT 7-day trial start, a paid plan, or
-//      finish setup without starting anything. Choosing a suite never starts
-//      a trial by itself.
+//      The final completion action starts only the chosen suite's unused
+//      seven-day trial and opens its dashboard. Existing/expired access never
+//      resets. Choosing a suite alone does not start anything.
 //
 // Answers are persisted progressively (onboardingComplete stays false) so a
 // detour to Stripe checkout never loses input. The final CTA flips
@@ -50,7 +50,8 @@ import {
   type UpsertUserProfileBody,
   type UserProfile,
 } from "@workspace/api-client-react";
-import { useStudyAccess, trialPhase, isTrialSuite, PSYCHPRO_MONTHLY_AI_LIMIT } from "@/lib/use-study-access";
+import { useStudyAccess, useStartTrial, apiErrorMessage, trialPhase, isTrialSuite, PSYCHPRO_MONTHLY_AI_LIMIT } from "@/lib/use-study-access";
+import { completeSuiteOnboarding } from "@/lib/complete-suite-onboarding";
 import { readPendingTrial, clearPendingTrial } from "@/lib/pending-trial";
 import { useToast } from "@/hooks/use-toast";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -171,7 +172,10 @@ export default function OnboardingPage() {
 
   const upsert = useUpsertUserProfile();
   const { data: existingProfile } = useGetUserProfile();
-  const { data: access } = useStudyAccess();
+  const studyAccess = useStudyAccess();
+  const { data: access } = studyAccess;
+  const startTrial = useStartTrial();
+  const finishing = useRef(false);
 
   const [answers, setAnswers] = useState<Answers>(() => ({
     ...EMPTY,
@@ -323,8 +327,9 @@ export default function OnboardingPage() {
 
   const ctaLabel = useMemo(() => {
     if (alreadyHasAccess) return tier === "eppp" ? "Enter EPPP Mastery Suite" : "Enter PsychPro";
-    if (phase === "available") return "Continue to start my free week";
-    return "Continue to plans";
+    if (phase === "available") return "Finish setup & start my free week";
+    if (phase === "expired") return "Finish setup & see plans";
+    return "Finish setup";
   }, [tier, phase, alreadyHasAccess]);
 
   async function finalize(choice?: TierCard): Promise<boolean> {
@@ -350,38 +355,59 @@ export default function OnboardingPage() {
   }
 
   async function handleFinish(choice?: TierCard) {
-    if (submitting) return;
+    if (finishing.current) return;
+    finishing.current = true;
     const destinationTier = choice?.tier === "eppp" ? "eppp" : choice ? "psychpro" : tier;
-    const destinationPhase = trialPhase(access?.[destinationTier]);
-    const hasAccess = destinationPhase === "paid" || destinationPhase === "active";
     setSubmitting(true);
     try {
-      const ok = await finalize(choice);
-      if (!ok) return;
+      const result = await completeSuiteOnboarding(destinationTier, {
+        saveProfile: () => finalize(choice),
+        loadAccess: async () => {
+          const refreshed = await studyAccess.refetch();
+          if (refreshed.isError || !refreshed.data) {
+            throw new Error("We couldn't confirm study access. Please try again.");
+          }
+          return refreshed.data;
+        },
+        startTrial: (suite) => startTrial.mutateAsync({ suite }),
+      });
+      if (!result) return;
       clearPendingTrial();
-      trackEvent("onboarding_completed", { selected_tier: destinationTier, has_existing_access: hasAccess });
-      if (hasAccess) {
-        navigate(destinationTier === "eppp" ? "/eppp/suite" : "/dashboard");
-        return;
+      trackEvent("onboarding_completed", { selected_tier: destinationTier, has_existing_access: result.hadAccess });
+      if (result.started) {
+        trackEvent("trial_started", { suite: destinationTier });
+        toast({
+          title: `Your ${destinationTier === "eppp" ? "EPPP Mastery Suite" : "PsychPro"} free week has started`,
+          description: "You have 7 days of access to this suite. No card or automatic charge.",
+        });
       }
-      // Never auto-start: the plans page shows the explicit start button.
-      navigate(`/subscription?trial=${destinationTier}`);
+      navigate(result.destination);
+    } catch (error) {
+      toast({
+        title: "Couldn't finish opening your suite",
+        description: apiErrorMessage(error, error instanceof Error ? error.message : "Please try again. Your free week will not be restarted."),
+        variant: "destructive",
+      });
     } finally {
+      finishing.current = false;
       setSubmitting(false);
     }
   }
 
   async function handleEnterFree() {
     // Finish setup without starting a trial or a checkout.
+    if (finishing.current) return;
+    finishing.current = true;
     setSubmitting(true);
     try {
       const ok = await finalize();
       if (ok) {
         clearPendingTrial();
         trackEvent("onboarding_completed", { selected_tier: tier, has_existing_access: false, skipped_trial: true });
-        navigate(`/subscription?trial=${tier}`);
+        navigate("/subscription");
       }
     } finally {
+      finishing.current = false;
       setSubmitting(false);
     }
   }
@@ -540,12 +566,19 @@ export default function OnboardingPage() {
                   </div>
                   <p className="ob-sub mt-4">
                     Each suite is separate: PsychPro does not include EPPP, and EPPP does not include PsychPro.
-                    You can finish setup without starting a trial or paying.
+                    Completing setup starts only your chosen suite's available free week. You can also finish without a trial.
                   </p>
                 </>
               )}
 
             </div>
+
+            {idx === order.length - 1 && requestedSuite && phase === "available" && (
+              <p className="ob-sub mt-4">
+                Completing setup starts your 7-day {requestedSuite === "eppp" ? "EPPP Mastery Suite" : "PsychPro"} free week only.
+                No card and no automatic charge.
+              </p>
+            )}
 
             {/* Footer */}
             <div className="ob-actions mt-8 flex items-center justify-between gap-3">
@@ -586,7 +619,7 @@ export default function OnboardingPage() {
                     {submitting ? (
                       <Loader2 className="w-4 h-4 mr-1.5 animate-spin" />
                     ) : null}
-                    {requestedSuite ? ctaLabel : "Continue"}
+                    {ctaLabel}
                     <ChevronRight className="w-4 h-4 ml-1" />
                   </Button>
                 </div>
