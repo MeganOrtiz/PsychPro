@@ -70,7 +70,7 @@
   display: grid; grid-template-columns: minmax(150px, 230px) 1fr; align-items: center; gap: clamp(20px, 5vw, 56px);
 }
 .promo-book { width: 100%; height: auto; display: block; justify-self: center; }
-.promo-offer-copy h2 { margin: 0 0 8px; font-size: clamp(19px, 2vw, 22px); font-weight: 700; }
+.promo-offer-copy h1 { margin: 0 0 8px; font-size: clamp(19px, 2vw, 22px); font-weight: 700; }
 .promo-offer-copy p { margin: 0 auto; max-width: 400px; font-size: clamp(16px, 1.7vw, 19px); line-height: 1.55; }
 @media (max-width: 640px) {
   .promo-offer { grid-template-columns: 1fr; gap: 16px; margin-top: 28px; }
