@@ -502,15 +502,6 @@ export default function LandingPage() {
               Explore neuroanatomy through interactive visual learning that
               helps connect brain structures, systems, and clinical relevance.
             </p>
-            <button
-              type="button"
-              onClick={() => navTo("/brain-lab")}
-              className="landing-cta landing-cta-primary landing-cta--center"
-              data-testid="cta-brain-lab"
-            >
-              <span>OPEN THE BRAIN LAB</span>
-              <ArrowRight className="landing-cta-icon" aria-hidden />
-            </button>
           </div>
         </section>
 
