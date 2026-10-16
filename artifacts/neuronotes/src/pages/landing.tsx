@@ -392,6 +392,12 @@ export default function LandingPage() {
               <img src={heroChromeBrain} alt="" className="landing-suite-artwork" aria-hidden width={1200} height={951} />
               <p>The PsychPro Suite is here to help you learn FASTER and reclaim your time.</p>
               <p>Flashcards, quizzes, study guides, practice exams, and interactive learning spaces - all in one convenient place.</p>
+              <div className="mt-auto pt-6 w-full">
+                <button type="button" onClick={() => startFreeWeek("psychpro")} className="landing-eppp-promo w-full gap-2" data-testid="button-landing-psychpro-trial">
+                  Try FREE for 7 days
+                  <ArrowRight className="w-4 h-4" aria-hidden />
+                </button>
+              </div>
             </article>
             <article className="landing-suite" data-testid="suite-card-eppp">
               <h2 className="landing-suite-title">EPPP Mastery Suite</h2>
