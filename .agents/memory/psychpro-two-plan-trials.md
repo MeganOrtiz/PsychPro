@@ -33,6 +33,15 @@ approximation. Preserve the approved flow and text; do not change unrelated UI.
 
 The PsychPro free week includes five AI generation units; the new paid PsychPro plan includes fifty per month, including annual subscriptions. One selected output tool consumes one unit. Failed generation must not consume allowance; deleting a generated deck must not restore it.
 
+The landing page's “See Plans” destination should be a standalone paid-plan
+comparison, with PsychPro and EPPP beside each other on desktop and stacked
+on mobile. No dashboard sidebar, suite switch, trial offers, or trial-status
+panels belong on that paid-only page.
+**Why:** the owner wants visitors to subscribe directly without first taking a
+trial; the landing page already provides the free-week entry points.
+**How to apply:** keep explicit trial-start flows separate, preserve existing
+access, and do not treat a preview approval as permission to change billing.
+
 Existing paid subscribers keep their prices, access, and previous generation policy. Do not silently convert legacy plans to the new limits. Keep the new billing catalog invisible to older published pricing code during rollout.
 
 **Initial launch context:** on 2026-10-14, the owner clarified, “there are no current users so we dont have to worry about that.”
