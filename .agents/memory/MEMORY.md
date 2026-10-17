@@ -25,6 +25,7 @@
 - [Responsive header double-mount](psychpro-responsive-header-double-mount.md) — mobile+desktop headers are both in the DOM (CSS-toggled); a polling/listener component in both mounts twice — gate by useIsMobile.
 - [PsychPro Spotlight rail](psychpro-spotlight-rail.md) — keep light/white with dark readable text, all information intact, and full column height; never sticky/self-start.
 - [PsychPro landing copy](psychpro-landing-copy.md) — owner authors landing copy; the "only true facts" rule targets fake social proof, NOT owner-stated feature names.
+- [Public suite tour](psychpro-public-tour.md) — Check it out is an unauthenticated, screen-by-screen tour of both suites, not sign-in or pricing.
 - [PsychPro signed-in verification](psychpro-signed-in-verification.md) — external Clerk blocks the test browser; verify auth-gated pages via an isolated mockup-sandbox copy; suspect stale build on "nothing changed".
 - [GLB asset corruption](glb-asset-corruption.md) — 3D brain "couldn't load" = brain.glb mangled by text-encoding (EF BF BD bytes) + three r184 dropping KHR spec-gloss; recover from git, strip required ext.
 - [Brain Lab 3D crash safety](brain-lab-3d-crash-safety.md) — keep the lazy WebGL view behind an error boundary and avoid remote runtime asset fetches (stale chunks / CDN HDR white-screen the page).

@@ -24,6 +24,7 @@ import { createClerkNavigation } from "@/lib/clerk-navigation";
 const SignInPage = lazy(() => import("@/pages/sign-in"));
 const SignUpPage = lazy(() => import("@/pages/sign-up"));
 const LandingPage = lazy(() => import("@/pages/landing"));
+const ExplorePage = lazy(() => import("@/pages/explore"));
 const PrivacyPage = lazy(() => import("@/pages/privacy"));
 const TermsPage = lazy(() => import("@/pages/terms"));
 const OnboardingPage = lazy(() => import("@/pages/onboarding"));
@@ -113,6 +114,7 @@ function AppRouter() {
   return (
     <Switch>
       <Route path="/" component={LandingPage} />
+      <Route path="/explore" component={ExplorePage} />
       <Route path="/privacy" component={PrivacyPage} />
       <Route path="/terms" component={TermsPage} />
       <Route path="/sign-in/*?" component={SignInPage} />

@@ -245,8 +245,8 @@ export default function LandingPage() {
     navigate(trialEntryHref(suite, !!isSignedIn, window.location.origin, import.meta.env.BASE_URL));
   };
   const checkItOut = () => {
-    trackEvent("navigation_clicked", { surface: "landing", destination: "/sign-in" });
-    navigate("/sign-in");
+    trackEvent("navigation_clicked", { surface: "landing", destination: "/explore" });
+    navigate("/explore");
   };
   const scrollToOverview = () => {
     trackEvent("navigation_clicked", { surface: "landing", destination: "#overview" });
