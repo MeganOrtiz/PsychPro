@@ -7,6 +7,17 @@ const available = () => ({
   eppp: { hasAccess: false, canStart: true },
 });
 
+test("general setup finishes without choosing, loading, or activating either suite", async () => {
+  const calls: string[] = [];
+  const result = await completeSuiteOnboarding(null, {
+    saveProfile: async () => { calls.push("save"); return true; },
+    loadAccess: async () => { assert.fail("General setup must not depend on trial eligibility"); },
+    startTrial: async () => { assert.fail("General setup must not start any trial"); },
+  });
+  assert.deepEqual(calls, ["save"]);
+  assert.deepEqual(result, { started: false, hadAccess: false, destination: "/welcome" });
+});
+
 for (const suite of ["psychpro", "eppp"] as const) {
   const dashboard = suite === "psychpro" ? "/dashboard" : "/eppp/suite";
   test(`${suite}: save onboarding, start only the chosen trial, then open its dashboard`, async () => {

@@ -108,6 +108,15 @@ while offering only paid plans, then explicitly confirmed this replacement.
 **How to apply:** preserve these three distinct states in both directions.
 Approval of the flow is not evidence that signed-in verification passed.
 
+Do not put the old priced “Choose your suite” cards back inside onboarding.
+General profile setup must not silently default to a PsychPro trial when no
+suite was explicitly requested.
+**Why:** the owner identified this extra onboarding pricing step as the unwanted
+page reached after “Check it out” and asked to remove it completely, without
+changing the separate See plans/payment page.
+**How to apply:** keep profile questions separate from paid plan selection and
+preserve explicit target-suite trial intent when finishing setup.
+
 **How to apply:** preserve these independent access dimensions when changing onboarding, paywalls, billing, generation, or account retention. Leave unrelated dashboard artwork and spacing alone.
 
 Landing suite detail boxes use matching neutral white panels, rounded corners,

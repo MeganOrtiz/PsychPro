@@ -12,8 +12,11 @@ type CompletionActions = {
  * Called only from the final onboarding action, never on mount/navigation.
  * The server owns eligibility and the clock; retries cannot renew a trial.
  */
-export async function completeSuiteOnboarding(suite: OnboardingSuite, actions: CompletionActions) {
+export async function completeSuiteOnboarding(suite: OnboardingSuite | null, actions: CompletionActions) {
   if (!await actions.saveProfile()) return null;
+  // General account setup has no trial intent. Do not infer it from old profile
+  // metadata or choose PsychPro by default when there was no suite selection.
+  if (!suite) return { started: false, hadAccess: false, destination: "/welcome" };
 
   let access = await actions.loadAccess();
   const hadAccess = access[suite].hasAccess;

@@ -3,16 +3,14 @@
 //
 // Step 1 (Account Creation) is the existing Clerk sign-up — the user is already
 // signed in by the time they reach this page, so it shows here as a completed
-// first step. This page owns steps 2-7:
+// first step. This page owns the learner-profile questions:
 //   2. Role               (learnerRole, single-select)
 //   3. Learning Goals     (learningGoals[], multi-select)
 //   4. Study Focus        (studyFocus, single-select)
 //   5. EPPP Eligibility   (epppInterest — CONDITIONAL: only when an EPPP/exam
 //                          goal or the EPPP study focus was chosen)
-//   6. Suite Selection    (PsychPro or EPPP Mastery Suite; no Free tier)
-//      The final completion action starts only the chosen suite's unused
-//      seven-day trial and opens its dashboard. Existing/expired access never
-//      resets. Choosing a suite alone does not start anything.
+// The final completion action starts only an explicitly requested suite's
+// unused trial. General setup never chooses or starts a suite automatically.
 //
 // Answers are persisted progressively (onboardingComplete stays false) so a
 // detour to Stripe checkout never loses input. The final CTA flips
@@ -40,7 +38,6 @@ import {
   Layers,
   Repeat,
   Loader2,
-  ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -50,7 +47,7 @@ import {
   type UpsertUserProfileBody,
   type UserProfile,
 } from "@workspace/api-client-react";
-import { useStudyAccess, useStartTrial, apiErrorMessage, trialPhase, isTrialSuite, PSYCHPRO_MONTHLY_AI_LIMIT } from "@/lib/use-study-access";
+import { useStudyAccess, useStartTrial, apiErrorMessage, trialPhase, isTrialSuite } from "@/lib/use-study-access";
 import { completeSuiteOnboarding } from "@/lib/complete-suite-onboarding";
 import { readPendingTrial, clearPendingTrial } from "@/lib/pending-trial";
 import { useToast } from "@/hooks/use-toast";
@@ -124,7 +121,7 @@ const EMPTY: Answers = {
   selectedProduct: "",
 };
 
-type StepId = "account" | "role" | "goals" | "focus" | "eppp" | "tier";
+type StepId = "account" | "role" | "goals" | "focus" | "eppp";
 
 const STEP_META: Record<Exclude<StepId, "account">, { title: string; subtitle: string }> = {
   role: {
@@ -143,20 +140,6 @@ const STEP_META: Record<Exclude<StepId, "account">, { title: string; subtitle: s
     title: "Are you preparing for the EPPP?",
     subtitle: "The EPPP Mastery Suite is a dedicated licensure-prep workspace.",
   },
-  tier: {
-    title: "Choose your suite",
-    subtitle: "Pick where you want to start. Choosing does not start a trial or a charge.",
-  },
-};
-
-type TierCard = {
-  tier: string; // psychpro | eppp
-  name: string;
-  prices: { label: string; amount: string; period: string }[];
-  blurb: string;
-  features: string[];
-  icon: Icon;
-  eppp?: boolean;
 };
 
 export default function OnboardingPage() {
@@ -164,6 +147,7 @@ export default function OnboardingPage() {
   const promoReturn = getPromoReturn(useSearch());
   const requested = new URLSearchParams(useSearch()).get("suite");
   const requestedSuite = isTrialSuite(requested) ? requested : promoReturn ? "eppp" : null;
+  const trialSuite = requestedSuite ?? readPendingTrial();
   const { user } = useUser();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -213,49 +197,11 @@ export default function OnboardingPage() {
   const order = useMemo<StepId[]>(() => {
     const ids: StepId[] = ["role", "goals", "focus"];
     if (showEppp) ids.push("eppp");
-    if (!requestedSuite) ids.push("tier");
     return ids;
-  }, [showEppp, requestedSuite]);
+  }, [showEppp]);
 
   const rawIdx = order.indexOf(stepId);
   const idx = rawIdx === -1 ? order.indexOf("focus") : rawIdx;
-
-  const tierCards: TierCard[] = [
-    {
-      tier: "psychpro",
-      name: "PSYCHPRO",
-      prices: [
-        { label: "Monthly", amount: "$19.99", period: "/ month" },
-        { label: "Annual", amount: "$159.99", period: "/ year" },
-      ],
-      blurb: "Coursework and personal-material study: every built-in topic plus your own uploads.",
-      features: [
-        "Built-in flashcards, quizzes, guides, and exams",
-        "Upload notes and generate study tools with AI",
-        `${PSYCHPRO_MONTHLY_AI_LIMIT} AI generation requests per month`,
-        "Free week, no card",
-      ],
-      icon: Brain,
-    },
-    {
-      tier: "eppp",
-      name: "EPPP Mastery Suite",
-      prices: [
-        { label: "Monthly", amount: "$99", period: "/ month" },
-        { label: "6 months", amount: "$499", period: "one-time" },
-        { label: "12 months", amount: "$799", period: "one-time" },
-      ],
-      blurb: "A dedicated space for licensure prep with study tools and review features.",
-      features: [
-        "Domain knowledge and mastery exams",
-        "Full-length practice exams",
-        "Clinical integration cases and rapid review",
-        "Free week, no card",
-      ],
-      icon: GraduationCap,
-      eppp: true,
-    },
-  ];
 
   // -------------------------------------------------------------------------
   // Persistence
@@ -295,8 +241,6 @@ export default function OnboardingPage() {
         return !!answers.studyFocus;
       case "eppp":
         return !!answers.epppInterest;
-      case "tier":
-        return !!answers.selectedTier;
       default:
         return true;
     }
@@ -321,8 +265,8 @@ export default function OnboardingPage() {
   // -------------------------------------------------------------------------
   // Final CTA
   // -------------------------------------------------------------------------
-  const tier = answers.selectedTier === "eppp" ? "eppp" : "psychpro";
-  const phase = trialPhase(access?.[tier]);
+  const tier = trialSuite;
+  const phase = tier ? trialPhase(access?.[tier]) : "none";
   const alreadyHasAccess = phase === "paid" || phase === "active";
 
   const ctaLabel = useMemo(() => {
@@ -332,12 +276,11 @@ export default function OnboardingPage() {
     return "Finish setup";
   }, [tier, phase, alreadyHasAccess]);
 
-  async function finalize(choice?: TierCard): Promise<boolean> {
+  async function finalize(): Promise<boolean> {
     try {
       const updated = await upsert.mutateAsync({
         data: {
           ...buildBody(true),
-          ...(choice ? { selectedTier: choice.tier, selectedProduct: choice.name } : {}),
         },
       });
       // Refresh the cached profile so the onboarding route guard immediately
@@ -354,14 +297,14 @@ export default function OnboardingPage() {
     }
   }
 
-  async function handleFinish(choice?: TierCard) {
+  async function handleFinish() {
     if (finishing.current) return;
     finishing.current = true;
-    const destinationTier = choice?.tier === "eppp" ? "eppp" : choice ? "psychpro" : tier;
+    const destinationTier = tier;
     setSubmitting(true);
     try {
       const result = await completeSuiteOnboarding(destinationTier, {
-        saveProfile: () => finalize(choice),
+        saveProfile: finalize,
         loadAccess: async () => {
           const refreshed = await studyAccess.refetch();
           if (refreshed.isError || !refreshed.data) {
@@ -373,8 +316,8 @@ export default function OnboardingPage() {
       });
       if (!result) return;
       clearPendingTrial();
-      trackEvent("onboarding_completed", { selected_tier: destinationTier, has_existing_access: result.hadAccess });
-      if (result.started) {
+      trackEvent("onboarding_completed", { selected_tier: destinationTier ?? "none", has_existing_access: result.hadAccess });
+      if (result.started && destinationTier) {
         trackEvent("trial_started", { suite: destinationTier });
         toast({
           title: `Your ${destinationTier === "eppp" ? "EPPP Mastery Suite" : "PsychPro"} free week has started`,
@@ -394,28 +337,9 @@ export default function OnboardingPage() {
     }
   }
 
-  async function handleEnterFree() {
-    // Finish setup without starting a trial or a checkout.
-    if (finishing.current) return;
-    finishing.current = true;
-    setSubmitting(true);
-    try {
-      const ok = await finalize();
-      if (ok) {
-        clearPendingTrial();
-        trackEvent("onboarding_completed", { selected_tier: tier, has_existing_access: false, skipped_trial: true });
-        navigate("/subscription");
-      }
-    } finally {
-      finishing.current = false;
-      setSubmitting(false);
-    }
-  }
-
   // -------------------------------------------------------------------------
   // Render helpers
   // -------------------------------------------------------------------------
-  const wide = stepId === "tier";
   const meta = stepId !== "account" ? STEP_META[stepId] : null;
 
   const toggleGoal = (value: string) =>
@@ -439,7 +363,7 @@ export default function OnboardingPage() {
       </div>
 
       <div className="flex-1 flex items-start md:items-center justify-center p-4 md:p-6 relative z-10">
-        <div className={`w-full ${wide ? "max-w-4xl" : "max-w-xl"} my-6`}>
+        <div className="w-full max-w-xl my-6">
           {/* Brand */}
           <div className="flex items-center gap-2.5 mb-6 justify-center ob-fade-down">
             <span className="ob-brand-icon">
@@ -544,38 +468,11 @@ export default function OnboardingPage() {
                 </div>
               )}
 
-              {/* ---- Tier ---- */}
-              {stepId === "tier" && (
-                <>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {tierCards.map((card) => (
-                      <TierOption
-                        key={card.tier}
-                        card={card}
-                        selected={answers.selectedTier === card.tier}
-                        disabled={submitting}
-                        onSelect={() =>
-                          setAnswers((p) => ({ ...p, selectedTier: card.tier, selectedProduct: card.name }))
-                        }
-                        onTrial={() => {
-                          setAnswers((p) => ({ ...p, selectedTier: card.tier, selectedProduct: card.name }));
-                          void handleFinish(card);
-                        }}
-                      />
-                    ))}
-                  </div>
-                  <p className="ob-sub mt-4">
-                    Each suite is separate: PsychPro does not include EPPP, and EPPP does not include PsychPro.
-                    Completing setup starts only your chosen suite's available free week. You can also finish without a trial.
-                  </p>
-                </>
-              )}
-
             </div>
 
-            {idx === order.length - 1 && requestedSuite && phase === "available" && (
+            {idx === order.length - 1 && trialSuite && phase === "available" && (
               <p className="ob-sub mt-4">
-                Completing setup starts your 7-day {requestedSuite === "eppp" ? "EPPP Mastery Suite" : "PsychPro"} free week only.
+                Completing setup starts your 7-day {trialSuite === "eppp" ? "EPPP Mastery Suite" : "PsychPro"} free week only.
                 No card and no automatic charge.
               </p>
             )}
@@ -599,17 +496,6 @@ export default function OnboardingPage() {
 
               {idx === order.length - 1 ? (
                 <div className="flex flex-wrap justify-end items-center gap-2">
-                  {!requestedSuite && !alreadyHasAccess && (
-                    <Button
-                      variant="outline"
-                      onClick={handleEnterFree}
-                      disabled={submitting}
-                      className="rounded-md px-4"
-                      data-testid="button-skip-checkout"
-                    >
-                      Finish setup without a trial
-                    </Button>
-                  )}
                   <Button
                     onClick={() => void handleFinish()}
                     disabled={submitting || !isStepValid(stepId)}
@@ -706,68 +592,6 @@ function OptionRow({
       </span>
       <span className="ob-check">{selected && <Check className="w-3.5 h-3.5" />}</span>
     </button>
-  );
-}
-
-function TierOption({
-  card,
-  selected,
-  onSelect,
-  onTrial,
-  disabled,
-}: {
-  card: TierCard;
-  selected: boolean;
-  onSelect: () => void;
-  onTrial: () => void;
-  disabled: boolean;
-}) {
-  return (
-    <div
-      data-testid={slug(`tier-${card.tier}`)}
-      className={`mat-glass mat-glass-interactive ob-plan ${selected ? "ob-plan--on" : ""} ${card.eppp ? "ob-plan--eppp" : ""}`}
-    >
-      <button
-        type="button"
-        className="ob-plan-select"
-        onClick={onSelect}
-        disabled={disabled}
-        aria-pressed={selected}
-        aria-label={`Choose ${card.name}`}
-      />
-      <span className="ob-plan-head">
-        <span className="ob-plan-name">{card.name}</span>
-      </span>
-      <span className="ob-plan-blurb">{card.blurb}</span>
-      <span className="ob-plan-prices">
-        {card.prices.map(({ label, amount, period }) => (
-          <span className="ob-plan-price-row" key={label}>
-            <span className="ob-plan-price-label">{label}</span>
-            <span className="ob-plan-price-amount">
-              <span className="ob-plan-price">{amount}</span>
-              <span className="ob-plan-period">{period}</span>
-            </span>
-          </span>
-        ))}
-      </span>
-      <span className="ob-plan-feats">
-        {card.features.map((f) => (
-          <span key={f} className="ob-plan-feat">
-            <Check className="w-3 h-3 flex-shrink-0" />
-            <span>{f}</span>
-          </span>
-        ))}
-      </span>
-      <button
-        type="button"
-        className="ob-plan-trial"
-        onClick={onTrial}
-        disabled={disabled}
-        data-testid={`button-onboarding-trial-${card.tier}`}
-      >
-        Start my free week <ArrowRight className="w-4 h-4" aria-hidden />
-      </button>
-    </div>
   );
 }
 
@@ -931,67 +755,6 @@ const styles = `
 }
 .ob-row-label { display: block; font-size: 0.9rem; font-weight: 600; color: ${P.mist}; }
 .ob-row-hint { display: block; font-size: 0.78rem; margin-top: 2px; color: ${P.mistSoft}; }
-
-.ob-plan {
-  position: relative; display: flex; flex-direction: column; gap: 8px;
-  padding: 18px 22px; text-align: left;
-  border: 1.5px solid ${PP.textDim}; border-radius: 18px;
-  background: var(--pp-tile-strong);
-}
-.ob-plan-select { position: absolute; inset: 0; width: 100%; border-radius: inherit; background: transparent; cursor: pointer; }
-.ob-plan-select:focus-visible { outline: 3px solid ${PP.text}; outline-offset: 4px; }
-.ob-plan > span { position: relative; pointer-events: none; }
-.ob-plan-trial {
-  position: relative; isolation: isolate; align-self: flex-end;
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  margin-top: 8px; padding: 12px 20px; min-height: 42px;
-  background: transparent; border: 0; border-radius: 8px; color: ${PP.text};
-  font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
-  cursor: pointer; transition: transform .18s ease, box-shadow .18s ease;
-}
-.ob-plan-trial::before {
-  content: ""; position: absolute; inset: -6px; z-index: -1; pointer-events: none;
-  border: 15px solid transparent;
-  border-image-source: url("/api/storage/public-objects/brand/aqua-glass-button.png");
-  border-image-slice: 55 100 55 100 fill; border-image-width: 10px 12px;
-  border-image-repeat: stretch; clip-path: inset(5px 3px 6px round 7px);
-}
-.ob-plan--eppp .ob-plan-trial { background: rgb(var(--pp-white-rgb)); }
-.ob-plan--eppp .ob-plan-trial::before { border-image-source: url("/api/storage/public-objects/brand/pale-yellow-glass.png"); }
-.ob-plan-trial:hover { transform: translateY(-3px); box-shadow: 0 8px 18px -10px ${PP.textDim}; }
-.ob-plan-trial:active { transform: translateY(-1px); }
-.ob-plan-trial:focus-visible { outline: 2px solid ${PP.text}; outline-offset: 4px; }
-@media (prefers-reduced-motion: reduce) { .ob-plan-trial { transition: none; } .ob-plan-trial:hover, .ob-plan-trial:active { transform: none; } }
-.ob-plan--on {
-  border-color: ${P.surf};
-  background: var(--pp-tile-strong);
-  box-shadow: inset 0 0 0 1px rgba(var(--pp-cyan-rgb),0.45), inset 0 1px 0 var(--pp-bevel-bright);
-}
-.ob-plan--eppp {
-  border-color: rgba(var(--pp-icy-rgb),0.4);
-  background: var(--pp-tile-strong);
-}
-.ob-plan--eppp.ob-plan--on {
-  box-shadow: inset 0 0 0 1px rgba(var(--pp-icy-rgb),0.6), inset 0 1px 0 var(--pp-bevel-bright);
-}
-.ob-plan-head { display: flex; align-items: center; justify-content: center; gap: 10px; }
-.ob-plan-icon {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 32px; height: 32px; border-radius: 9px; flex-shrink: 0;
-  background: transparent; color: ${PP.text};
-}
-.ob-plan-name { flex: 1; min-width: 0; text-align: center; font-size: 1.7rem; font-weight: 700; line-height: 1.4; color: ${PP.text}; }
-.ob-plan-prices { display: grid; gap: 10px; padding: 12px 0; border-block: 1px solid var(--pp-line); }
-.ob-plan-price-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; }
-.ob-plan-price-label { font-size: 0.8rem; color: ${PP.textDim}; }
-.ob-plan-price-amount { display: inline-flex; flex-wrap: wrap; align-items: baseline; justify-content: flex-end; gap: 5px; }
-.ob-plan-price { font-size: 1.15rem; font-weight: 600; line-height: 1.35; white-space: nowrap; color: ${PP.text}; }
-.ob-plan-period { font-size: 0.75rem; color: ${PP.textDim}; white-space: nowrap; }
-.ob-plan-blurb { text-align: center; font-size: 0.82rem; line-height: 1.6; color: ${PP.textDim}; }
-.ob-plan-feats { display: flex; flex-direction: column; gap: 8px; margin-top: auto; padding-top: 4px; }
-.ob-plan-feat { display: flex; align-items: flex-start; gap: 7px; font-size: 0.8rem; line-height: 1.5; color: ${PP.text}; }
-.ob-plan-feat svg { margin-top: 3px; }
-.ob-plan-feat svg { color: ${P.surf}; }
 
 .ob-onetime {
   position: relative; margin-top: 16px;
