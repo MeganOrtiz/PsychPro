@@ -4,6 +4,7 @@ import topicsRouter from "./topics";
 import courseMasteryRouter from "./course-mastery";
 import masteryExamsRouter from "./mastery-exams";
 import usersRouter from "./users";
+import oldTestCleanupRouter from "./old-test-cleanup";
 import entitlementsRouter from "./entitlements";
 import progressRouter from "./progress";
 import subscriptionRouter from "./subscription";
@@ -40,6 +41,7 @@ router.use(courseMasteryRouter);
 // routes keep precedence over the new `GET /courses/:courseId/...` routes while
 // the frontend still depends on the category-based system.
 router.use(masteryExamsRouter);
+router.use(oldTestCleanupRouter);
 router.use(usersRouter);
 router.use(entitlementsRouter);
 router.use(progressRouter);

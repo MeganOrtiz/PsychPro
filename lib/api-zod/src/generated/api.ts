@@ -8,6 +8,59 @@
 import * as zod from "zod";
 
 /**
+ * @summary Owner-only preview of the fixed historical test-account cleanup
+ */
+export const previewOldTestCleanupResponseEligibleCountMin = 0;
+
+export const previewOldTestCleanupResponseBlockedCountMin = 0;
+
+export const previewOldTestCleanupResponseAlreadyRemovedCountMin = 0;
+
+export const PreviewOldTestCleanupResponse = zod.object({
+  eligibleCount: zod
+    .number()
+    .min(previewOldTestCleanupResponseEligibleCountMin),
+  blockedCount: zod.number().min(previewOldTestCleanupResponseBlockedCountMin),
+  alreadyRemovedCount: zod
+    .number()
+    .min(previewOldTestCleanupResponseAlreadyRemovedCountMin),
+  fingerprint: zod.string(),
+  environment: zod.enum(["production", "development"]),
+  protectedAccountPreserved: zod.boolean(),
+});
+
+/**
+ * @summary Delete only previewed historical test profiles with no surviving sign-in
+ */
+export const executeOldTestCleanupBodyConfirmationMax = 64;
+
+export const executeOldTestCleanupBodyFingerprintMin = 64;
+export const executeOldTestCleanupBodyFingerprintMax = 64;
+
+export const ExecuteOldTestCleanupBody = zod.object({
+  confirmation: zod.string().max(executeOldTestCleanupBodyConfirmationMax),
+  fingerprint: zod
+    .string()
+    .min(executeOldTestCleanupBodyFingerprintMin)
+    .max(executeOldTestCleanupBodyFingerprintMax),
+});
+
+export const executeOldTestCleanupResponseDeletedCountMin = 0;
+
+export const executeOldTestCleanupResponseRemainingCountMin = 0;
+
+export const executeOldTestCleanupResponseBlockedCountMin = 0;
+
+export const ExecuteOldTestCleanupResponse = zod.object({
+  deletedCount: zod.number().min(executeOldTestCleanupResponseDeletedCountMin),
+  remainingCount: zod
+    .number()
+    .min(executeOldTestCleanupResponseRemainingCountMin),
+  blockedCount: zod.number().min(executeOldTestCleanupResponseBlockedCountMin),
+  protectedAccountPreserved: zod.boolean(),
+});
+
+/**
  * @summary List owned books and feedback reward eligibility
  */
 export const GetBookLibraryResponse = zod.object({

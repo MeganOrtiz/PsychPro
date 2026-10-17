@@ -75,6 +75,8 @@ const PROTECTED = new Set<string>([
   "DELETE /api/users/me",
   "DELETE /api/users/:userId",
   "GET /api/users/duplicates",
+  "GET /api/users/test-cleanup/preview",
+  "POST /api/users/test-cleanup",
   "GET /api/users/entitlements",
   // subscription
   "POST /api/subscription/checkout",

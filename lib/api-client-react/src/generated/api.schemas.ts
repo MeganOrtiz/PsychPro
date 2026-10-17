@@ -5,6 +5,46 @@
  * NeuroNotes API specification
  * OpenAPI spec version: 0.1.0
  */
+export type OldTestCleanupPreviewEnvironment =
+  (typeof OldTestCleanupPreviewEnvironment)[keyof typeof OldTestCleanupPreviewEnvironment];
+
+export const OldTestCleanupPreviewEnvironment = {
+  production: "production",
+  development: "development",
+} as const;
+
+export interface OldTestCleanupPreview {
+  /** @minimum 0 */
+  eligibleCount: number;
+  /** @minimum 0 */
+  blockedCount: number;
+  /** @minimum 0 */
+  alreadyRemovedCount: number;
+  fingerprint: string;
+  environment: OldTestCleanupPreviewEnvironment;
+  protectedAccountPreserved: boolean;
+}
+
+export interface OldTestCleanupInput {
+  /** @maxLength 64 */
+  confirmation: string;
+  /**
+   * @minLength 64
+   * @maxLength 64
+   */
+  fingerprint: string;
+}
+
+export interface OldTestCleanupResult {
+  /** @minimum 0 */
+  deletedCount: number;
+  /** @minimum 0 */
+  remainingCount: number;
+  /** @minimum 0 */
+  blockedCount: number;
+  protectedAccountPreserved: boolean;
+}
+
 export interface SuiteStudyAccess {
   /** @nullable */
   startedAt: string | null;

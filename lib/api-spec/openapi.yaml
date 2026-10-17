@@ -36,6 +36,41 @@ tags:
     description: Website feedback
 
 paths:
+  /users/test-cleanup/preview:
+    get:
+      operationId: previewOldTestCleanup
+      tags: [users]
+      summary: Owner-only preview of the fixed historical test-account cleanup
+      responses:
+        "200":
+          description: Fresh cleanup preview
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OldTestCleanupPreview" }
+        "401": { description: Sign-in required }
+        "403": { description: Protected owner account required }
+        "503": { description: Identity verification unavailable }
+  /users/test-cleanup:
+    post:
+      operationId: executeOldTestCleanup
+      tags: [users]
+      summary: Delete only previewed historical test profiles with no surviving sign-in
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/OldTestCleanupInput" }
+      responses:
+        "200":
+          description: Committed and verified cleanup
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/OldTestCleanupResult" }
+        "400": { description: Confirmation required }
+        "401": { description: Sign-in required }
+        "403": { description: Protected owner account required }
+        "409": { description: Preview changed; review it again }
+        "503": { description: Cleanup could not be safely completed }
   /library:
     get:
       operationId: getBookLibrary
@@ -695,6 +730,30 @@ paths:
 
 components:
   schemas:
+    OldTestCleanupPreview:
+      type: object
+      required: [eligibleCount, blockedCount, alreadyRemovedCount, fingerprint, environment, protectedAccountPreserved]
+      properties:
+        eligibleCount: { type: integer, minimum: 0 }
+        blockedCount: { type: integer, minimum: 0 }
+        alreadyRemovedCount: { type: integer, minimum: 0 }
+        fingerprint: { type: string }
+        environment: { type: string, enum: [production, development] }
+        protectedAccountPreserved: { type: boolean }
+    OldTestCleanupInput:
+      type: object
+      required: [confirmation, fingerprint]
+      properties:
+        confirmation: { type: string, maxLength: 64 }
+        fingerprint: { type: string, minLength: 64, maxLength: 64 }
+    OldTestCleanupResult:
+      type: object
+      required: [deletedCount, remainingCount, blockedCount, protectedAccountPreserved]
+      properties:
+        deletedCount: { type: integer, minimum: 0 }
+        remainingCount: { type: integer, minimum: 0 }
+        blockedCount: { type: integer, minimum: 0 }
+        protectedAccountPreserved: { type: boolean }
     SuiteStudyAccess:
       type: object
       required: [startedAt, expiresAt, canStart, active, hasAccess, paid, legacy]

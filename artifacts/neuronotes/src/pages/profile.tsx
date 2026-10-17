@@ -6,6 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { authHeaders, jsonAuthHeaders } from "@/lib/auth-headers";
 import { PageTitle } from "@/components/brand/page-title";
+import { OldTestAccountCleanup } from "@/components/old-test-account-cleanup";
 import {
   INTERESTS_TAXONOMY,
   PROFILE_ROLES,
@@ -698,6 +699,10 @@ function DangerZone() {
         <AlertTriangle className="w-5 h-5 text-red-400" />
         <h2 className="text-lg font-semibold text-foreground">Danger zone</h2>
       </div>
+
+      {isAdmin && (
+        <OldTestAccountCleanup />
+      )}
 
       {isAdmin && (
         <div className="rounded-lg border border-black/10 bg-black/[0.03] p-4 space-y-3">

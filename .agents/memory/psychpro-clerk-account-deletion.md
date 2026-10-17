@@ -36,3 +36,13 @@ admin login even when an admin profile exists.
 **How to apply:** inspect both stores before a reset, verify the surviving admin
 identity afterward, and never describe a sign-in reset as complete production
 data deletion.
+
+Historical reset tools must be bounded to the explicitly approved old-account
+inventory, never all current non-admin users. Recheck missing sign-ins and
+protected-owner identity at execution, preserve new signups, and block accounts
+with billing references or uploaded originals requiring separate review.
+**Why:** the owner is reusing test emails immediately after deleting sign-ins;
+a later production cleanup must not remove their newly created test accounts.
+**How to apply:** require preview plus confirmation and verify committed local
+deletion separately; a production publish makes the tool available but does
+not itself authorize or execute its destructive action.

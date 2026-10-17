@@ -35,6 +35,9 @@ import type {
   GetPracticeExamByTopicParams,
   HealthStatus,
   Leaderboard,
+  OldTestCleanupInput,
+  OldTestCleanupPreview,
+  OldTestCleanupResult,
   PortalSessionResponse,
   PracticeExam,
   PromoState,
@@ -63,6 +66,167 @@ type AwaitedInput<T> = PromiseLike<T> | T;
 type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+/**
+ * @summary Owner-only preview of the fixed historical test-account cleanup
+ */
+export const getPreviewOldTestCleanupUrl = () => {
+  return `/api/users/test-cleanup/preview`;
+};
+
+export const previewOldTestCleanup = async (
+  options?: RequestInit,
+): Promise<OldTestCleanupPreview> => {
+  return customFetch<OldTestCleanupPreview>(getPreviewOldTestCleanupUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getPreviewOldTestCleanupQueryKey = () => {
+  return [`/api/users/test-cleanup/preview`] as const;
+};
+
+export const getPreviewOldTestCleanupQueryOptions = <
+  TData = Awaited<ReturnType<typeof previewOldTestCleanup>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof previewOldTestCleanup>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getPreviewOldTestCleanupQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof previewOldTestCleanup>>
+  > = ({ signal }) => previewOldTestCleanup({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof previewOldTestCleanup>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type PreviewOldTestCleanupQueryResult = NonNullable<
+  Awaited<ReturnType<typeof previewOldTestCleanup>>
+>;
+export type PreviewOldTestCleanupQueryError = ErrorType<void>;
+
+/**
+ * @summary Owner-only preview of the fixed historical test-account cleanup
+ */
+
+export function usePreviewOldTestCleanup<
+  TData = Awaited<ReturnType<typeof previewOldTestCleanup>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof previewOldTestCleanup>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getPreviewOldTestCleanupQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Delete only previewed historical test profiles with no surviving sign-in
+ */
+export const getExecuteOldTestCleanupUrl = () => {
+  return `/api/users/test-cleanup`;
+};
+
+export const executeOldTestCleanup = async (
+  oldTestCleanupInput: OldTestCleanupInput,
+  options?: RequestInit,
+): Promise<OldTestCleanupResult> => {
+  return customFetch<OldTestCleanupResult>(getExecuteOldTestCleanupUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(oldTestCleanupInput),
+  });
+};
+
+export const getExecuteOldTestCleanupMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof executeOldTestCleanup>>,
+    TError,
+    { data: BodyType<OldTestCleanupInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof executeOldTestCleanup>>,
+  TError,
+  { data: BodyType<OldTestCleanupInput> },
+  TContext
+> => {
+  const mutationKey = ["executeOldTestCleanup"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof executeOldTestCleanup>>,
+    { data: BodyType<OldTestCleanupInput> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return executeOldTestCleanup(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ExecuteOldTestCleanupMutationResult = NonNullable<
+  Awaited<ReturnType<typeof executeOldTestCleanup>>
+>;
+export type ExecuteOldTestCleanupMutationBody = BodyType<OldTestCleanupInput>;
+export type ExecuteOldTestCleanupMutationError = ErrorType<void>;
+
+/**
+ * @summary Delete only previewed historical test profiles with no surviving sign-in
+ */
+export const useExecuteOldTestCleanup = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof executeOldTestCleanup>>,
+    TError,
+    { data: BodyType<OldTestCleanupInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof executeOldTestCleanup>>,
+  TError,
+  { data: BodyType<OldTestCleanupInput> },
+  TContext
+> => {
+  return useMutation(getExecuteOldTestCleanupMutationOptions(options));
+};
 
 /**
  * @summary List owned books and feedback reward eligibility

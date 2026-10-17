@@ -101,6 +101,14 @@ The app runs on the blue three-material system (OPAQUE panels / GLASS tiles / GL
 - If a guardrail fails after an intentional design change, update the matching lock entry in `scripts/check-design-drift.mjs` in the same commit.
 
 ### Auth Pattern
+- Historical test-data cleanup lives in Profile → Danger zone. Its preview
+  (`GET /api/users/test-cleanup/preview`) and execution
+  (`POST /api/users/test-cleanup`) require both an authenticated admin and the
+  protected owner email. The fixed historical inventory cannot grow to include
+  new signups. Execution requires a matching fresh preview and typed confirmation,
+  rechecks identity/billing/upload safety under row locks, and deletes only
+  account-owned data in a verified transaction. It never deletes Clerk identities
+  or cancels billing; uncertain or active accounts are blocked.
 - **Clerk is the identity provider, and every protected route verifies the Clerk session server-side.**
   - Frontend: `<ClerkProvider>` wraps the app in `App.tsx`. `ClerkTokenBridge` (`src/components/auth/clerk-token-bridge.tsx`) listens to `useAuth()` and pushes the Clerk session token into the generated API client (`Authorization: Bearer <token>`). The protected pages live under `<RequireSignedIn>` so the token is always present by the time a protected API call is made.
   - Backend: `clerkMiddleware()` is mounted globally in `artifacts/api-server/src/app.ts`. Every protected route calls `requireUserId(req, res)` from `artifacts/api-server/src/lib/userId.ts`, which reads `getAuth(req).userId` and responds `401 Unauthorized` when the Clerk session is missing or invalid. The legacy `X-User-Id` request header is neither sent by the frontend nor consulted by the server.
