@@ -21,5 +21,18 @@ recreate local rows via the profile/feedback auto-upsert paths on next sign-in. 
 unconditionally claiming success.
 
 **How to apply:** never tell the user a duplicate/account was fully removed unless
-`clerkDeleted === true`. Production duplicate cleanup can only be executed by the user in
-the deployed app (build env uses Clerk TEST keys; prod DB is read-only from tooling).
+`clerkDeleted === true`. Production app-data deletion must use the deployed app's
+authenticated admin controls; the production database tool is read-only.
+
+Clerk identity cleanup and app-profile cleanup are separate outcomes. The workspace
+can have both external Clerk live and test credentials, so do not assume every
+available credential points at development. Inventory each configured instance,
+protect the owner's account in both identity and app storage, and report remaining
+app records separately from deleted sign-ins.
+**Why:** the identity stores and app databases can contain different counts and
+stale identities. Deleting a Clerk login frees its email for signup but does not
+automatically remove historical app data, and the preview may have no matching
+admin login even when an admin profile exists.
+**How to apply:** inspect both stores before a reset, verify the surviving admin
+identity afterward, and never describe a sign-in reset as complete production
+data deletion.
