@@ -100,6 +100,14 @@ despite its protected study APIs remaining locked.
 directions; send unused trials to target-suite onboarding. Keep account-owned
 books and notes accessible without granting access to a suite catalog.
 
+The owner approved the symmetric switch flow: unused trial → target-suite
+onboarding → its own seven-day access; active access → dashboard; expired
+trial → expiry notice and See plans, rather than a generic unlock detour.
+**Why:** the owner rejected the old lock screen for mentioning a free week
+while offering only paid plans, then explicitly confirmed this replacement.
+**How to apply:** preserve these three distinct states in both directions.
+Approval of the flow is not evidence that signed-in verification passed.
+
 **How to apply:** preserve these independent access dimensions when changing onboarding, paywalls, billing, generation, or account retention. Leave unrelated dashboard artwork and spacing alone.
 
 Landing suite detail boxes use matching neutral white panels, rounded corners,
