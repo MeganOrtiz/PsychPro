@@ -69,6 +69,13 @@ starting a free trial; both suites' expired-trial prompts lead to this same
 paid-only comparison. Neutral cards and aqua featured borders on this page
 follow the supplied reference; this does not restyle suite onboarding cards.
 
+Paid signup must continue directly toward the chosen payment page, without
+briefly redisplaying the plan comparison after account creation.
+**Why:** the owner found that return flash and delay disruptive for every plan
+and requested flow-only refinement with no content changes.
+**How to apply:** preserve the selected plan through auth, keep one continuous
+transition while preparing checkout, and return to plans only for recovery.
+
 Existing paid subscribers keep their prices, access, and previous generation policy. Do not silently convert legacy plans to the new limits. Keep the new billing catalog invisible to older published pricing code during rollout.
 
 **Initial launch context:** on 2026-10-14, the owner clarified, “there are no current users so we dont have to worry about that.”

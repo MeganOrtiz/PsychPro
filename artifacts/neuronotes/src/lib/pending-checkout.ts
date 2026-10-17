@@ -1,6 +1,26 @@
 export type CheckoutChoice = { suite: "psychpro" | "eppp"; priceId: string };
 const KEY = "psychpro:pending-checkout";
 
+type CheckoutCatalog = {
+  isLoading: boolean;
+  isError: boolean;
+  priceIds: string[];
+  paid: boolean;
+};
+
+/** Only the selected suite may delay or block its checkout handoff. */
+export function checkoutResumeState(
+  choice: CheckoutChoice,
+  catalogs: Record<CheckoutChoice["suite"], CheckoutCatalog>,
+): "loading" | "error" | "unavailable" | "paid" | "ready" {
+  const catalog = catalogs[choice.suite];
+  if (catalog.isLoading) return "loading";
+  if (catalog.isError) return "error";
+  if (!catalog.priceIds.includes(choice.priceId)) return "unavailable";
+  if (catalog.paid) return "paid";
+  return "ready";
+}
+
 export function checkoutChoice(search: string): CheckoutChoice | null {
   const params = new URLSearchParams(search);
   const suite = params.get("checkout");

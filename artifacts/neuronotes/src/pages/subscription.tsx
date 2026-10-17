@@ -8,13 +8,14 @@ import { useAuthReady } from "@/components/auth/clerk-token-bridge";
 import { useEpppPlans, useEpppCheckout } from "@/lib/use-eppp-purchase";
 import { useStudyAccess } from "@/lib/use-study-access";
 import { psychproPlanOptions, epppPlanOptions } from "@/lib/paid-plan-options";
-import { checkoutChoice, checkoutAuthHref, rememberPendingCheckout, readPendingCheckout, clearPendingCheckout, type CheckoutChoice } from "@/lib/pending-checkout";
+import { checkoutChoice, checkoutAuthHref, checkoutResumeState, rememberPendingCheckout, readPendingCheckout, clearPendingCheckout, type CheckoutChoice } from "@/lib/pending-checkout";
 import { clearPendingTrial } from "@/lib/pending-trial";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { trackEvent } from "@/lib/analytics";
 import { useBillingReturn } from "@/lib/use-billing-return";
 import { QueryError } from "@/components/query-error";
+import { FullScreenLoader } from "@/components/full-screen-loader";
 
 export default function SubscriptionPage() {
   useBillingReturn();
@@ -23,11 +24,12 @@ export default function SubscriptionPage() {
   const [, navigate] = useLocation();
   const search = useSearch();
   const authenticated = authReady && !!isSignedIn;
+  const [handoff, setHandoff] = useState(() => !!(checkoutChoice(search) ?? readPendingCheckout()));
   const plans = useGetSubscriptionPlans();
   const epppPlans = useEpppPlans();
   const access = useStudyAccess();
-  const status = useGetSubscriptionStatus({ query: { queryKey: getGetSubscriptionStatusQueryKey(), enabled: authenticated } });
-  const profile = useGetUserProfile({ query: { queryKey: getGetUserProfileQueryKey(), enabled: authenticated } });
+  const status = useGetSubscriptionStatus({ query: { queryKey: getGetSubscriptionStatusQueryKey(), enabled: authenticated && !handoff } });
+  const profile = useGetUserProfile({ query: { queryKey: getGetUserProfileQueryKey(), enabled: authenticated && !handoff } });
   const psychproCheckout = useCreateCheckoutSession();
   const epppCheckout = useEpppCheckout();
   const portal = useCreatePortalSession();
@@ -42,6 +44,19 @@ export default function SubscriptionPage() {
   const accessPending = authenticated && (access.isLoading || !access.data || access.isError);
 
   useEffect(() => { document.title = "Choose your plan | PsychPro"; }, []);
+
+  useEffect(() => {
+    // Back from Stripe can restore this exact document from the browser cache.
+    // Do not leave the restored page trapped in its departing loading state.
+    const restore = (event: PageTransitionEvent) => {
+      if (!event.persisted) return;
+      submitting.current = false;
+      setBusyPriceId(null);
+      setHandoff(false);
+    };
+    window.addEventListener("pageshow", restore);
+    return () => window.removeEventListener("pageshow", restore);
+  }, []);
 
   function clearResumeIntent() {
     clearPendingCheckout();
@@ -67,8 +82,10 @@ export default function SubscriptionPage() {
     }
     if (accessPending || (suite === "psychpro" ? psychproPaid : epppPaid)) return;
     submitting.current = true;
+    setHandoff(true);
     setBusyPriceId(priceId);
     clearResumeIntent();
+    let redirecting = false;
     try {
       const result = suite === "psychpro"
         ? await psychproCheckout.mutateAsync({ data: { priceId, successPath: "/subscription?success=true" } })
@@ -80,32 +97,43 @@ export default function SubscriptionPage() {
       }
       trackEvent("checkout_started", { surface: "subscription", product_tier: suite, price_id: priceId });
       window.location.assign(destination.href);
+      redirecting = true;
     } catch (error) {
+      setHandoff(false);
       toast.error(error instanceof Error ? error.message : "Could not start checkout. Please try again.");
     } finally {
-      submitting.current = false;
-      setBusyPriceId(null);
+      // Keep the transition mounted until the browser actually leaves for
+      // Stripe; clearing it here briefly repaints the entire plans page.
+      if (!redirecting) {
+        submitting.current = false;
+        setBusyPriceId(null);
+      }
     }
   }
 
   // An explicit card choice survives auth without forcing trial onboarding.
   // Validate its ID against the live suite catalog before contacting Stripe.
   useEffect(() => {
-    if (!authenticated || accessPending || plans.isLoading || epppPlans.isLoading) return;
+    if (!authenticated || accessPending) return;
     const choice = checkoutChoice(search) ?? readPendingCheckout();
     if (!choice) return;
-    if (choice.suite === "psychpro" ? plans.isError : epppPlans.isError) return;
+    const preparation = checkoutResumeState(choice, {
+      psychpro: { isLoading: plans.isLoading, isError: plans.isError, priceIds: psychproOptions.map(plan => plan.priceId), paid: psychproPaid },
+      eppp: { isLoading: epppPlans.isLoading, isError: epppPlans.isError, priceIds: epppOptions.map(plan => plan.priceId), paid: epppPaid },
+    });
+    if (preparation === "loading" || preparation === "error") return;
     const key = `${choice.suite}:${choice.priceId}`;
     if (resumed.current === key) return;
     resumed.current = key;
-    const options = choice.suite === "psychpro" ? psychproOptions : epppOptions;
-    if (!options.some(plan => plan.priceId === choice.priceId)) {
+    if (preparation === "unavailable") {
       clearResumeIntent();
+      setHandoff(false);
       toast.error("That plan is no longer available. Please choose a listed plan.");
       return;
     }
-    if (choice.suite === "psychpro" ? psychproPaid : epppPaid) {
+    if (preparation === "paid") {
       clearResumeIntent();
+      setHandoff(false);
       toast("You already have paid access to this suite. You can manage your billing below.");
       return;
     }
@@ -149,6 +177,18 @@ export default function SubscriptionPage() {
       )}
     </div>
   ) : undefined;
+
+  if (handoff && (!isLoaded || !authReady || authenticated)) {
+    const choice = checkoutChoice(search) ?? readPendingCheckout();
+    const catalog = choice?.suite === "eppp" ? epppPlans : plans;
+    if (!busyPriceId && access.isError) {
+      return <QueryError message="We couldn't confirm your current access. Please retry before purchasing." onRetry={() => access.refetch()} />;
+    }
+    if (!busyPriceId && catalog.isError) {
+      return <QueryError message={`We couldn't load all ${choice?.suite === "eppp" ? "EPPP" : "PsychPro"} plans. Please retry.`} onRetry={() => catalog.refetch()} />;
+    }
+    return <FullScreenLoader testId="checkout-handoff" />;
+  }
 
   return <PaidPlansView
     psychproPlans={psychproOptions}

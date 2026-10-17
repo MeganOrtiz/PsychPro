@@ -26,6 +26,21 @@ import { readPendingCheckout, checkoutReturnPath } from "@/lib/pending-checkout"
  * buyers (driven by epppAccessUntil) still go to the suite.
  */
 export function PostAuthRedirect() {
+  const pendingCheckout = readPendingCheckout();
+  return pendingCheckout
+    ? <CheckoutRedirect destination={checkoutReturnPath(pendingCheckout)} />
+    : <SuitePostAuthRedirect />;
+}
+
+function CheckoutRedirect({ destination }: { destination: string }) {
+  const [, navigate] = useLocation();
+  useEffect(() => {
+    navigate(destination, { replace: true });
+  }, [destination, navigate]);
+  return <FullScreenLoader testId="post-auth-redirect" />;
+}
+
+function SuitePostAuthRedirect() {
   const [, navigate] = useLocation();
   const promoReturn = getPromoReturn(useSearch());
   const requested = new URLSearchParams(useSearch()).get("suite");
@@ -34,11 +49,6 @@ export function PostAuthRedirect() {
   const { data: entitlements, isLoading: entLoading, isError: entError, refetch: retryEntitlements } = useEntitlements();
 
   useEffect(() => {
-    const pendingCheckout = readPendingCheckout();
-    if (pendingCheckout) {
-      navigate(checkoutReturnPath(pendingCheckout), { replace: true });
-      return;
-    }
     if (profileError) return;
     if (profileLoading || !profile) return;
 
