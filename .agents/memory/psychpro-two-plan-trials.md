@@ -40,7 +40,8 @@ tested separately from ordinary-member access.
 The landing Log In button keeps its existing appearance and offers PsychPro
 and EPPP Mastery Suite in a hover dropdown.
 **Why:** the owner explicitly requested suite-specific login choices without
-restyling the button.
+restyling the button, and confirmed the returning-user login versus new-user
+trial/onboarding distinction works as intended.
 **How to apply:** preserve the chosen protected destination through sign-in;
 this is login intent, not permission to activate a trial or unlock either suite.
 
