@@ -83,5 +83,11 @@ gray borders, and soft shadows, not aqua/yellow glass. The landing See Plans
 button uses transparent blue glass like the upper free-week buttons.
 **Why:** the owner rejected the colored detail boxes as tacky and explicitly
 limited this revision to the landing page.
-**How to apply:** preserve their content, icons, centered trial notes and links;
+**How to apply:** preserve their feature content, icons and links;
 do not propagate this change to onboarding, paid plans, or suite dashboards.
+
+The lower landing suite detail boxes must not include the free-week footer
+paragraphs or their divider lines.
+**Why:** the owner explicitly requested removing those footer notes from both boxes.
+**How to apply:** retain the suite feature lists and See Plans button; this does
+not change trial terms or the upper trial-entry buttons.

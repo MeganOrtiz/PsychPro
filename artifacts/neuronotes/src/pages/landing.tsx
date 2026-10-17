@@ -665,9 +665,6 @@ export default function LandingPage() {
                   </li>
                 ))}
               </ul>
-              <p className="landing-tier-note">
-                7 days free from the moment you press start, with 5 AI generation requests. No card, no automatic charge.
-              </p>
             </article>
             </div>
             <article className="landing-tier landing-tier--eppp" data-testid="tier-card-eppp">
@@ -687,9 +684,6 @@ export default function LandingPage() {
                   </li>
                 ))}
               </ul>
-              <p className="landing-tier-note">
-                7 days free from the moment you press start. No card, no automatic charge. EPPP access is separate from PsychPro.
-              </p>
             </article>
           </div>
           <button
