@@ -41,6 +41,7 @@ import { trackEvent } from "@/lib/analytics";
 import { rememberPendingTrial, trialEntryHref } from "@/lib/pending-trial";
 import { isEpppTopic } from "@/lib/eppp-content";
 import { Button } from "@/components/ui/button";
+import { LandingLoginMenu } from "@/components/landing-login-menu";
 
 // =============================================================================
 // Landing — restructured 2026-05-30.
@@ -235,7 +236,6 @@ export default function LandingPage() {
     });
     navigate(isSignedIn ? path : "/sign-in");
   };
-  const goToApp = () => navTo("/dashboard");
   const goToTopics = () => navTo("/topics");
   // Preserve the chosen suite through authentication and enter its onboarding.
   // Clicking a landing button only records intent; it does not grant access.
@@ -318,14 +318,7 @@ export default function LandingPage() {
             </nav>
 
             <div className="landing-nav-actions">
-              <button
-                type="button"
-                onClick={goToApp}
-                className="landing-nav-login"
-                data-testid="nav-login"
-              >
-                LOG IN
-              </button>
+              <LandingLoginMenu signedIn={!!isSignedIn} />
             </div>
           </div>
         </header>

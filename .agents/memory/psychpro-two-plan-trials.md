@@ -37,6 +37,13 @@ planning independent PsychPro and EPPP access.
 use the chooser for a general sign-in with both active. Admin bypass must be
 tested separately from ordinary-member access.
 
+The landing Log In button keeps its existing appearance and offers PsychPro
+and EPPP Mastery Suite in a hover dropdown.
+**Why:** the owner explicitly requested suite-specific login choices without
+restyling the button.
+**How to apply:** preserve the chosen protected destination through sign-in;
+this is login intent, not permission to activate a trial or unlock either suite.
+
 The owner approved the independent-suite flow preview. Both chooser boxes must
 match the landing page's style, format, and glass design, including transparent
 glass buttons: blue for PsychPro and yellow for EPPP Mastery Suite. Keep the
