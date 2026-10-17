@@ -259,7 +259,7 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
   const isMobile = useIsMobile();
   const { data: entitlements, isLoading: entLoading, isError: entError, refetch: retryEntitlements } = useEntitlements();
   const { data: studyAccess } = useStudyAccess();
-  const psychproDestination = psychproSuiteDestination(studyAccess?.psychpro.hasAccess, entitlements?.isAdmin);
+  const psychproDestination = psychproSuiteDestination(studyAccess?.psychpro.hasAccess, entitlements?.isAdmin, studyAccess?.psychpro.canStart);
   const epppUnlocked = !!entitlements?.epppAccess;
   // Owned books belong to the account, not an active EPPP subscription.
   // Only the library bypasses the study-content access gate.

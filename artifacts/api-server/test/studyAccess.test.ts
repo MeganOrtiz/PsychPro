@@ -61,6 +61,10 @@ test("persisted trial opt-in, concurrent redemption/quota, expiry and paid prese
     const state = await getStudyAccess(id);
     assert.equal(state.psychpro.hasAccess, true);
     assert.equal(state.eppp.hasAccess, false);
+    const epppBeforeOptIn = await getEntitlements(id, { eppp: true });
+    assert.equal(epppBeforeOptIn.epppAccess, false, "PsychPro trial must never grant EPPP access");
+    assert.equal(epppBeforeOptIn.studyGuideLocked, true, "EPPP study content stays locked before separate opt-in");
+    assert.equal(epppBeforeOptIn.flashcardsCapped, true);
     assert.equal(state.aiUsage.remaining, 5);
     assert.equal((await getEntitlements(id)).quizLocked, false);
     const reservations = await Promise.allSettled(Array.from({ length: 8 }, () => reserveAiGeneration(id, 1)));
@@ -71,6 +75,7 @@ test("persisted trial opt-in, concurrent redemption/quota, expiry and paid prese
     assert.equal((await getStudyAccess(id)).aiUsage.remaining, 1, "failed generation is refunded");
     await startStudyTrial(id, "eppp");
     assert.equal((await getStudyAccess(id)).eppp.hasAccess, true);
+    assert.equal((await getEntitlements(id, { eppp: true })).studyGuideLocked, false);
     await db.update(usersTable).set({ psychproTrialStartedAt: new Date(Date.now() - TRIAL_MS - 1000) }).where(eq(usersTable.id, id));
     assert.equal((await getStudyAccess(id)).psychpro.hasAccess, false);
     assert.equal((await getStudyAccess(id)).eppp.hasAccess, true, "one suite's expiry must not revoke the other");

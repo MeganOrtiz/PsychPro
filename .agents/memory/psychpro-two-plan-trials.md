@@ -91,6 +91,15 @@ Existing paid subscribers keep their prices, access, and previous generation pol
 
 Expiry pauses studying, new uploads, and AI generation without deleting account-owned materials. Progress/history, personal notes, saved source downloads, and earned books remain available. Purchased/earned books belong to the account, not either subscription.
 
+Preserving dashboard history after expiry must not exempt a never-activated
+suite's dashboard from entry checks.
+**Why:** the owner reproduced entering EPPP's dashboard from a PsychPro-only
+test account. The history exemption made the separate suite look unlocked
+despite its protected study APIs remaining locked.
+**How to apply:** verify access before initial dashboard entry in both
+directions; send unused trials to target-suite onboarding. Keep account-owned
+books and notes accessible without granting access to a suite catalog.
+
 **How to apply:** preserve these independent access dimensions when changing onboarding, paywalls, billing, generation, or account retention. Leave unrelated dashboard artwork and spacing alone.
 
 Landing suite detail boxes use matching neutral white panels, rounded corners,

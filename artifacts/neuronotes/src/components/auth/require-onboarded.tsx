@@ -5,6 +5,8 @@ import { useGetUserProfile } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { FullScreenLoader } from "@/components/full-screen-loader";
 import { RequireSignedIn } from "./require-signed-in";
+import { SuiteEntryGate } from "./suite-entry-gate";
+import { studySuiteForPath, suiteOnboardingPath } from "@/lib/suite-entry";
 
 /**
  * Full-screen loader shown while we resolve whether the signed-in user still
@@ -47,16 +49,17 @@ function GateError({ onRetry }: { onRetry: () => void }) {
  * than rendering protected content, so an incomplete user can't bypass the gate.
  */
 function OnboardingGate({ children }: { children: ReactNode }) {
-  const [, navigate] = useLocation();
+  const [path, navigate] = useLocation();
   const { data: profile, isLoading, isError, refetch } = useGetUserProfile();
 
   const needsOnboarding = !!profile && !profile.onboardingComplete;
 
   useEffect(() => {
     if (needsOnboarding) {
-      navigate("/onboarding", { replace: true });
+      const suite = studySuiteForPath(path);
+      navigate(suite ? suiteOnboardingPath(suite) : "/onboarding", { replace: true });
     }
-  }, [needsOnboarding, navigate]);
+  }, [needsOnboarding, path, navigate]);
 
   if (isLoading) return <GateLoader />;
   if (isError) return <GateError onRetry={() => void refetch()} />;
@@ -74,7 +77,7 @@ function OnboardingGate({ children }: { children: ReactNode }) {
 export function RequireOnboarded({ children }: { children: ReactNode }) {
   return (
     <RequireSignedIn>
-      <OnboardingGate>{children}</OnboardingGate>
+      <OnboardingGate><SuiteEntryGate>{children}</SuiteEntryGate></OnboardingGate>
     </RequireSignedIn>
   );
 }

@@ -1,16 +1,13 @@
 import { useLocation } from "wouter";
-import { CalendarClock, Loader2, Sparkles, GraduationCap, ShieldCheck, ArrowRight } from "lucide-react";
-import { toast } from "sonner";
+import { CalendarClock, Sparkles, GraduationCap, ShieldCheck, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PP, alpha } from "@/lib/palette";
 import { trackEvent } from "@/lib/analytics";
 import {
   useStudyAccess,
-  useStartTrial,
   trialPhase,
   formatTrialDate,
-  apiErrorMessage,
   PSYCHPRO_TRIAL_AI_LIMIT,
   type TrialSuite,
 } from "@/lib/use-study-access";
@@ -21,8 +18,8 @@ const SUITE_LABEL: Record<TrialSuite, string> = {
 };
 
 /**
- * Explicit, one-time 7-day trial control for a single suite. Starting only
- * ever happens from the button here; no card, no auto-charge.
+ * A suite's unused trial enters onboarding; only completing that flow starts
+ * the free week. Returning here must never activate or renew a trial.
  */
 export function StudyTrialPanel({
   suite,
@@ -35,7 +32,6 @@ export function StudyTrialPanel({
 }) {
   const [, navigate] = useLocation();
   const { data, isLoading, isError, refetch } = useStudyAccess();
-  const start = useStartTrial();
   const s = data?.[suite];
   const phase = trialPhase(s);
   const ai = data?.aiUsage;
@@ -53,23 +49,8 @@ export function StudyTrialPanel({
   if (phase === "paid" || phase === "none") return null;
 
   function begin() {
-    start.mutate(
-      { suite },
-      {
-        onSuccess: (res) => {
-          trackEvent("trial_started", { suite });
-          toast.success(`Your ${SUITE_LABEL[suite]} week is on. It ends ${formatTrialDate(res[suite].expiresAt)}.`);
-          if (suite === "eppp") navigate("/eppp/suite");
-        },
-        onError: (err) => {
-          if ((err as { status?: number })?.status === 409) {
-            toast("This trial was already started or your plan is already paid. Status refreshed.");
-          } else {
-            toast.error(apiErrorMessage(err, "Couldn't start your trial. Please try again."));
-          }
-        },
-      },
-    );
+    trackEvent("navigation_clicked", { surface: "trial_panel", destination: `/onboarding?suite=${suite}` });
+    navigate(`/onboarding?suite=${suite}`);
   }
 
   return (
@@ -89,8 +70,8 @@ export function StudyTrialPanel({
                 when it ends. One trial per suite.
                 {suite === "psychpro" && ` Includes ${PSYCHPRO_TRIAL_AI_LIMIT} AI generation requests total.`}
               </p>
-              <Button className="mt-2" onClick={begin} disabled={start.isPending} data-testid={`button-start-trial-${suite}`}>
-                {start.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <ShieldCheck className="w-4 h-4 mr-2" />}
+              <Button className="mt-2" onClick={begin} data-testid={`button-start-trial-${suite}`}>
+                <ShieldCheck className="w-4 h-4 mr-2" />
                 Start my free week
               </Button>
             </>
