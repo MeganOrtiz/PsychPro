@@ -344,10 +344,10 @@ export default function OnboardingPage() {
       // sees onboardingComplete=true and lets the user into the app.
       queryClient.setQueryData(getGetUserProfileQueryKey(), updated);
       return true;
-    } catch {
+    } catch (error) {
       toast({
         title: "Couldn't save your setup",
-        description: "Please try again in a moment.",
+        description: apiErrorMessage(error, "Please try again in a moment."),
         variant: "destructive",
       });
       return false;
