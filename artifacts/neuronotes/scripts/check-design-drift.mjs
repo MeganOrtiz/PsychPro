@@ -247,6 +247,7 @@ if (!/backdrop-filter:\s*none\s*!important;/.test(css)) {
   // Owner-approved rich turquoise glass: suite/landing actions and promo actions.
   const turquoiseScopes = [
     ".landing-root .landing-eppp-promo",
+    ".landing-root .landing-plans-link",
     ".landing-root .landing-textbook-link",
     ".landing-root .landing-tier-cta",
     ".eppp-launch-btn.suite-switch-btn",
@@ -300,6 +301,7 @@ if (!/backdrop-filter:\s*none\s*!important;/.test(css)) {
 // Owner-supplied glass artwork: clean idle rim, lift and glow on interaction.
 const turquoiseActions = [
   ".landing-root .landing-eppp-promo",
+  ".landing-root .landing-plans-link",
   ".landing-root .landing-textbook-link",
   ".landing-root .landing-tier-cta",
   ".eppp-launch-btn.suite-switch-btn",
@@ -340,28 +342,21 @@ for (const [state, opacity, lift] of [["hover", "0.50", "-3px"], ["active", "0.6
   }
 }
 
-const planGlass = ruleBlock(css, ".landing-root .landing-tier-grid > .landing-tier {");
-const planArtwork = ruleBlock(css, ".landing-root .landing-tier-grid > .landing-tier::before {");
-if (!planGlass?.includes("background: transparent;") ||
-    !planArtwork?.includes('url("/api/storage/public-objects/brand/aqua-glass-button.png")') ||
-    !planArtwork.includes("pointer-events: none;") ||
-    !planArtwork.includes("z-index: -1;") ||
-    !planArtwork.includes("clip-path: inset(8px 6px 12px round 14px);") ||
-    !planArtwork.includes("border-image-width: 20px 24px;")) {
-  fail("landing plan glass drifted", "preserve the three plan boxes and live content; apply only the owner-approved glass artwork");
+const planPanel = ruleBlock(css, ".landing-root .landing-tier {");
+const planArtwork = ruleBlock(css, ".landing-root .landing-tier::before {");
+if (!planPanel?.includes("background: rgb(var(--pp-white-rgb));") ||
+    !planPanel.includes("border: 1px solid rgba(var(--pp-black-rgb), 0.38);") ||
+    !planPanel.includes("border-radius: 20px;") ||
+    !planPanel.includes("0 22px 44px -26px rgba(var(--pp-black-rgb), 0.22)") ||
+    !planArtwork?.includes("content: none;") ||
+    css.includes(".landing-root .landing-tier--eppp::before {") ||
+    css.includes(".landing-root .landing-tier-grid > .landing-tier::before {")) {
+  fail("landing neutral suite panels drifted", "both suite detail cards must stay white with matching neutral borders and shadows, without colored artwork");
 }
-
-const epppPlanGlass = ruleBlock(css, ".landing-root .landing-tier--eppp {");
-const epppPlanArtwork = ruleBlock(css, ".landing-root .landing-tier--eppp::before {");
-if (!epppPlanGlass?.includes("background: transparent;") ||
-    !epppPlanArtwork?.includes('url("/api/storage/public-objects/brand/pale-yellow-glass.png")') ||
-    /filter\s*:/.test(epppPlanArtwork ?? "") ||
-    !epppPlanArtwork.includes("pointer-events: none;") ||
-    !epppPlanArtwork.includes("z-index: -1;") ||
-    !epppPlanArtwork.includes("clip-path: inset(8px 6px 12px round 14px);") ||
-    !epppPlanArtwork.includes("border-image-width: 20px 24px;") ||
-    /filter\s*:/.test(planArtwork ?? "")) {
-  fail("EPPP yellow plan glass drifted", "yellow belongs only to the EPPP plan artwork; retain aqua on the other tiers and preserve all live content");
+const landingSource = fs.readFileSync(path.join(ROOT, "src/pages/landing.tsx"), "utf8");
+if (!/className="[^"]*\blanding-plans-link\b[^"]*"\s+data-testid="cta-scholar"/.test(landingSource) ||
+    !css.includes(".landing-root .landing-plans-link::before,")) {
+  fail("landing See Plans glass drifted", "keep See Plans on the same aqua artwork recipe as the landing trial buttons");
 }
 
 const yellowTrialArtwork = ruleBlock(css, ".landing-root .landing-tier--eppp .landing-tier-cta::before {");
@@ -378,10 +373,9 @@ while ((m = urls.exec(css))) {
   if (target.includes("dashboard-liquid-frame")) continue;
   // Exact owner-supplied button asset, permitted only in its scoped artwork layer.
   if (target === "/api/storage/public-objects/brand/aqua-glass-button.png" &&
-      (artworkLayer?.includes(`url("${target}")`) ||
-       planArtwork?.includes(`url("${target}")`))) continue;
+      artworkLayer?.includes(`url("${target}")`)) continue;
   if (target === "/api/storage/public-objects/brand/pale-yellow-glass.png" &&
-      epppPlanArtwork?.includes(`url("${target}")`)) continue;
+      yellowTrialArtwork?.includes(`url("${target}")`)) continue;
   fail(
     `unexpected image url(${target}) at ${REL}:${lineOf(m.index)}`,
     "no images in index.css — the white-system backdrop is a pure CSS radial gradient (owner 2026-07-16)",

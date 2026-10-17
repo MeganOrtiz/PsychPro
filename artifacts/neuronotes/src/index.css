@@ -1068,6 +1068,7 @@ body {
 /* Owner-provided blank glass artwork, nine-sliced to preserve rounded ends.
    Scoped to four actions; typography, dimensions, and hit targets stay intact. */
 .landing-root .landing-eppp-promo,
+.landing-root .landing-plans-link,
 .landing-root .landing-textbook-link,
 .landing-root .landing-tier-cta,
 .eppp-launch-btn.suite-switch-btn,
@@ -1086,6 +1087,7 @@ body {
   transition: transform 180ms ease, border-color 200ms ease, box-shadow 200ms ease;
 }
 .landing-root .landing-eppp-promo::before,
+.landing-root .landing-plans-link::before,
 .landing-root .landing-textbook-link::before,
 .landing-root .landing-tier-cta::before,
 .eppp-launch-btn.suite-switch-btn::before,
@@ -1111,6 +1113,7 @@ body {
   mask: none;
 }
 .landing-root .landing-eppp-promo::after,
+.landing-root .landing-plans-link::after,
 .landing-root .landing-textbook-link::after,
 .landing-root .landing-tier-cta::after,
 .eppp-launch-btn.suite-switch-btn::after,
@@ -1123,6 +1126,7 @@ body {
   z-index: -2;
 }
 .landing-root .landing-eppp-promo:hover,
+.landing-root .landing-plans-link:hover,
 .landing-root .landing-textbook-link:hover,
 .landing-root .landing-tier-cta:hover,
 .eppp-launch-btn.suite-switch-btn:hover,
@@ -1135,6 +1139,7 @@ body {
     0 0 20px 1px rgba(var(--pp-promo-teal-mid-rgb), 0.50);
 }
 .landing-root .landing-eppp-promo:active,
+.landing-root .landing-plans-link:active,
 .landing-root .landing-textbook-link:active,
 .landing-root .landing-tier-cta:active,
 .eppp-launch-btn.suite-switch-btn:active,
@@ -1147,6 +1152,7 @@ body {
     0 0 24px 2px rgba(var(--pp-promo-teal-mid-rgb), 0.65);
 }
 .landing-root .landing-eppp-promo:focus-visible,
+.landing-root .landing-plans-link:focus-visible,
 .landing-root .landing-textbook-link:focus-visible,
 .landing-root .landing-tier-cta:focus-visible,
 .eppp-launch-btn.suite-switch-btn:focus-visible,
@@ -1155,6 +1161,8 @@ body {
   outline-offset: 4px;
 }
 .landing-root .landing-textbook-link:hover,
+.landing-root .landing-plans-link:hover,
+.landing-root .landing-plans-link:active,
 .landing-root .landing-textbook-link:active,
 .landing-root .landing-tier-cta:hover,
 .landing-root .landing-tier-cta:active,
@@ -1165,6 +1173,7 @@ body {
 }
 @media (prefers-reduced-motion: reduce) {
   .landing-root .landing-eppp-promo,
+  .landing-root .landing-plans-link,
   .landing-root .landing-textbook-link,
   .landing-root .landing-tier-cta,
   .eppp-launch-btn.suite-switch-btn,
@@ -1191,49 +1200,18 @@ body {
    by the shared Card primitive (ui/card.tsx), so every generic Card reads
    as a structural panel; nested tiles opt into GLASS via .mat-glass /
    .mat-glass-interactive. Scoped class — never a descendant .bg-card rule. */
-/* Only the three landing plan boxes adopt the supplied aqua-glass artwork.
-   Existing padding, radius, grid sizing, typography, and behavior stay intact. */
-.landing-root .landing-tier-grid > .landing-tier {
-  position: relative;
-  isolation: isolate;
-  background: transparent;
-  border-color: transparent;
+/* Landing suite details: neutral white panels, matching the dashboard
+   explainer. Preserve all content and geometry; colored artwork is retired. */
+.landing-root .landing-tier {
+  background: rgb(var(--pp-white-rgb));
+  border: 1px solid rgba(var(--pp-black-rgb), 0.38);
+  border-radius: 20px;
+  box-shadow:
+    inset 0 1px 2px rgba(var(--pp-black-rgb), 0.08),
+    0 22px 44px -26px rgba(var(--pp-black-rgb), 0.22);
 }
-.landing-root .landing-tier-grid > .landing-tier::before {
-  content: "";
-  position: absolute;
-  inset: -8px;
-  border: 20px solid transparent;
-  border-image-source: url("/api/storage/public-objects/brand/aqua-glass-button.png");
-  border-image-slice: 55 100 55 100 fill;
-  border-image-width: 20px 24px;
-  border-image-repeat: stretch;
-  /* Trim the baked-in haze, as on the buttons, without clipping live content. */
-  clip-path: inset(8px 6px 12px round 14px);
-  pointer-events: none;
-  z-index: -1;
-}
-
-/* The separate EPPP plan alone uses a yellow version of the same glass.
-   Tint only the decorative layer, never its text, icons, or neighboring tiers. */
-.landing-root .landing-tier--eppp {
-  position: relative;
-  isolation: isolate;
-  background: transparent;
-  border-color: transparent;
-}
-.landing-root .landing-tier--eppp::before {
-  content: "";
-  position: absolute;
-  inset: -8px;
-  border: 20px solid transparent;
-  border-image-source: url("/api/storage/public-objects/brand/pale-yellow-glass.png");
-  border-image-slice: 55 100 55 100 fill;
-  border-image-width: 20px 24px;
-  border-image-repeat: stretch;
-  clip-path: inset(8px 6px 12px round 14px);
-  pointer-events: none;
-  z-index: -1;
+.landing-root .landing-tier::before {
+  content: none;
 }
 
 .pp-card-opaque {

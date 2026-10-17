@@ -80,10 +80,14 @@ that choosing a suite does not start a trial or charge.
 - The trial action inside the PsychPro plan card uses the existing aqua-glass
   button artwork. The EPPP plan action uses the matching pale-yellow artwork.
   Preserve their labels, arrows, typography, dimensions, and trial handlers.
-- Clip only the decorative artwork on both plan cards to remove the baked-in
+- Landing-page suite detail cards now use matching white panels, 20px rounded
+  corners, neutral-gray borders, and soft neutral shadows. Neither card has
+  aqua/yellow artwork or a colored strip. Preserve all copy and layout.
+- The landing See Plans action uses the same transparent aqua-glass artwork,
+  hover/active treatment, and focus indication as the upper free-week buttons.
+  Its destination remains the paid plans page. Other pages are unchanged.
+- Clip only the decorative artwork on glass buttons to remove the baked-in
   colored haze beneath the rim. Preserve the cards' content and layout.
-- The separate `SEE PLANS` action uses the existing silver-chrome CTA, not
-  the aqua-glass exception.
 - These refinements apply only to the landing page, not dashboards or promos.
 
 - `pnpm test` runs `design:check` before the test suite, so ordinary validation

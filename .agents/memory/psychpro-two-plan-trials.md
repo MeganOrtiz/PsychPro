@@ -76,4 +76,12 @@ Existing paid subscribers keep their prices, access, and previous generation pol
 
 Expiry pauses studying, new uploads, and AI generation without deleting account-owned materials. Progress/history, personal notes, saved source downloads, and earned books remain available. Purchased/earned books belong to the account, not either subscription.
 
-**How to apply:** preserve these independent access dimensions when changing onboarding, paywalls, billing, generation, or account retention. Keep PsychPro's aqua and EPPP's pale-yellow plan styling; leave unrelated dashboard artwork and spacing alone.
+**How to apply:** preserve these independent access dimensions when changing onboarding, paywalls, billing, generation, or account retention. Leave unrelated dashboard artwork and spacing alone.
+
+Landing suite detail boxes use matching neutral white panels, rounded corners,
+gray borders, and soft shadows, not aqua/yellow glass. The landing See Plans
+button uses transparent blue glass like the upper free-week buttons.
+**Why:** the owner rejected the colored detail boxes as tacky and explicitly
+limited this revision to the landing page.
+**How to apply:** preserve their content, icons, centered trial notes and links;
+do not propagate this change to onboarding, paid plans, or suite dashboards.
