@@ -13,6 +13,7 @@ export function LandingLoginMenu({ signedIn }: { signedIn: boolean }) {
   const [open, setOpen] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hoverOpened = useRef(false);
+  const trigger = useRef<HTMLButtonElement>(null);
   const cancelClose = () => {
     if (timer.current) clearTimeout(timer.current);
     timer.current = null;
@@ -28,6 +29,7 @@ export function LandingLoginMenu({ signedIn }: { signedIn: boolean }) {
       <DropdownMenuTrigger asChild>
         <button
           type="button"
+          ref={trigger}
           className="landing-nav-login"
           data-testid="nav-login"
           onPointerEnter={(event) => {
@@ -38,7 +40,17 @@ export function LandingLoginMenu({ signedIn }: { signedIn: boolean }) {
             }
           }}
           onPointerLeave={closeSoon}
-          onPointerDown={() => { hoverOpened.current = false; }}
+          onPointerDown={(event) => {
+            const openedByHover = hoverOpened.current;
+            hoverOpened.current = false;
+            if (event.pointerType === "mouse" && event.button === 0 && !event.ctrlKey && openedByHover) {
+              // Radix normally toggles on pointer-down. The first click after
+              // hover should keep the newly opened choices visible, not close them.
+              event.preventDefault();
+              cancelClose();
+              setOpen(true);
+            }
+          }}
           onKeyDown={() => { hoverOpened.current = false; }}
         >
           LOG IN
@@ -51,6 +63,14 @@ export function LandingLoginMenu({ signedIn }: { signedIn: boolean }) {
         data-testid="landing-login-options"
         onPointerEnter={cancelClose}
         onPointerLeave={closeSoon}
+        onInteractOutside={(event) => {
+          // With a non-modal, hover-open menu, the trigger is also an
+          // "outside" target. Leave its clicks/focus to the trigger itself.
+          const target = event.detail.originalEvent.target;
+          if (target instanceof Node && trigger.current?.contains(target)) {
+            event.preventDefault();
+          }
+        }}
         onCloseAutoFocus={(event) => {
           if (hoverOpened.current) event.preventDefault();
         }}

@@ -7,6 +7,7 @@ import { shuffle } from "../lib/shuffle";
 import { getEntitlements, FREE_FLASHCARD_PREVIEW } from "../lib/entitlements";
 import { isEpppTopicId } from "../lib/eppp";
 import { practiceExamTimeLimit } from "../lib/practice-exam-timing";
+import { parseTopicId } from "../lib/topicId";
 
 const router = Router();
 
@@ -38,7 +39,11 @@ router.get("/topics", async (req: Request, res: Response): Promise<void> => {
 
 router.get("/topics/:topicId", async (req: Request, res: Response): Promise<void> => {
   try {
-    const topicId = parseInt(String(req.params.topicId));
+    const topicId = parseTopicId(req.params.topicId);
+    if (topicId === null) {
+      res.status(400).json({ error: "Invalid topic ID" });
+      return;
+    }
     const [topic] = await db.select().from(topicsTable).where(eq(topicsTable.id, topicId));
     if (!topic) {
       res.status(404).json({ error: "Topic not found" });
@@ -74,7 +79,11 @@ router.get("/topics/:topicId/flashcards", async (req: Request, res: Response): P
   try {
     const userId = requireUserId(req, res);
     if (!userId) return;
-    const topicId = parseInt(String(req.params.topicId));
+    const topicId = parseTopicId(req.params.topicId);
+    if (topicId === null) {
+      res.status(400).json({ error: "Invalid topic ID" });
+      return;
+    }
     const eppp = await isEpppTopicId(topicId);
     const ent = await getEntitlements(userId, { eppp });
     // Free users get only the first N cards (stable id-asc order) — the
@@ -98,7 +107,11 @@ router.get("/topics/:topicId/quizzes", async (req: Request, res: Response): Prom
   try {
     const userId = requireUserId(req, res);
     if (!userId) return;
-    const topicId = parseInt(String(req.params.topicId));
+    const topicId = parseTopicId(req.params.topicId);
+    if (topicId === null) {
+      res.status(400).json({ error: "Invalid topic ID" });
+      return;
+    }
     const eppp = await isEpppTopicId(topicId);
     // Free-tier cap: 1 completed quiz total (lifetime, across all topics).
     // The completion increment happens implicitly via the quiz-attempts
@@ -145,7 +158,11 @@ router.get("/topics/:topicId/study-guide", async (req: Request, res: Response): 
   try {
     const userId = requireUserId(req, res);
     if (!userId) return;
-    const topicId = parseInt(String(req.params.topicId));
+    const topicId = parseTopicId(req.params.topicId);
+    if (topicId === null) {
+      res.status(400).json({ error: "Invalid topic ID" });
+      return;
+    }
     const eppp = await isEpppTopicId(topicId);
     // Study guides are paid-only. General topics require Master/Scholar; EPPP
     // topics require EPPP access. Free users get 402 and the frontend renders a
@@ -177,7 +194,11 @@ router.get("/topics/:topicId/practice-exam", async (req: Request, res: Response)
   try {
     const userId = requireUserId(req, res);
     if (!userId) return;
-    const topicId = parseInt(String(req.params.topicId));
+    const topicId = parseTopicId(req.params.topicId);
+    if (topicId === null) {
+      res.status(400).json({ error: "Invalid topic ID" });
+      return;
+    }
     const eppp = await isEpppTopicId(topicId);
     // Free-tier cap: 1 completed exam total (lifetime). EPPP topics gate on
     // EPPP access (not the Master/Scholar subscription).
