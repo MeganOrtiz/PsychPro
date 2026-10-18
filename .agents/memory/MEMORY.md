@@ -1,3 +1,4 @@
+- [Error monitoring choice](psychpro-error-monitoring-choice.md) — owner requested removing Sentry; do not reintroduce it from older restoration suggestions.
 - [Suite identities](psychpro-suite-identities.md) — brain vs crown identify the two suites; “PsychPro design” means the glass/cloud artwork behind the hero brain, adapted to cards.
 - [Readable site-wide text](psychpro-readable-text.md) — owner rejects faint light-gray fonts anywhere; use readable dark secondary text in both suites and landing.
 - [Suite sidebar congruence](psychpro-sidebar-congruence.md) — EPPP's left column is the visual reference for both sidebars; preserve each suite's navigation content.

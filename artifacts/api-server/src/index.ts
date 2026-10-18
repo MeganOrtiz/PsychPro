@@ -1,6 +1,3 @@
-// Initialize Sentry BEFORE any other module so its error/rejection handlers
-// are installed as early as possible. No-ops when SENTRY_DSN_BACKEND is unset.
-import "./instrument";
 import app from "./app";
 import {
   db,

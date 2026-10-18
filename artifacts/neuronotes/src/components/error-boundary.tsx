@@ -2,7 +2,6 @@ import { Component, type ErrorInfo, type ReactNode } from "react";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { reportClientError } from "@/lib/error-reporter";
-import { Sentry } from "@/lib/sentry";
 import { isChunkLoadError } from "@/lib/lazy-retry";
 
 interface ErrorBoundaryProps {
@@ -21,11 +20,6 @@ function reportBoundaryError(error: Error, info: ErrorInfo): void {
     componentStack: info.componentStack ?? undefined,
     url: typeof window !== "undefined" ? window.location.href : undefined,
     userAgent: typeof navigator !== "undefined" ? navigator.userAgent : undefined,
-  });
-  // Also report to Sentry (no-op when Sentry is not initialized). The
-  // component stack is structural, not user content, so it is safe to send.
-  Sentry.captureException(error, {
-    contexts: { react: { componentStack: info.componentStack ?? undefined } },
   });
 }
 

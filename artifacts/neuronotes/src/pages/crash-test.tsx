@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Sentry } from "@/lib/sentry";
 
 function ExplodingChild(): null {
   throw new Error("Intentional ErrorBoundary test crash");
@@ -35,19 +34,6 @@ export default function CrashTestPage() {
           data-testid="button-trigger-crash"
         >
           Trigger crash
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            const id = Sentry.captureException(
-              new Error("Sentry frontend test event (dev-only)"),
-            );
-            console.info("[sentry] test event captured", id);
-          }}
-          className="inline-flex items-center justify-center gap-2 rounded-md border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
-          data-testid="button-sentry-test"
-        >
-          Send test event to Sentry
         </button>
       </div>
     </div>

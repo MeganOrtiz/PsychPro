@@ -74,11 +74,6 @@ async function buildAll() {
       "googleapis",
       "firebase-admin",
       "@parcel/watcher",
-      "@sentry/profiling-node",
-      // Keep the whole Sentry SDK external. @sentry/node depends on
-      // @opentelemetry/* (already externalized above); bundling Sentry while
-      // its OTEL deps resolve from node_modules at runtime breaks resolution.
-      "@sentry/*",
       "@tree-sitter/*",
       "aws-sdk",
       "classic-level",
