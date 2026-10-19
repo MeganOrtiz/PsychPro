@@ -13,7 +13,7 @@ export function DeviceFrame({
 }: { suite: Suite; active: string; label: string; children: ReactNode; bare?: boolean }) {
   const Icon = suite === "eppp" ? Crown : Brain;
   return (
-    <figure className="xp-device" aria-label={`${label}, ${bare ? "demo data" : "illustrative preview"}`}>
+    <figure className="xp-device" aria-label={label}>
       <div className="xp-screen">
         <div className="xp-bar" aria-hidden>
           <span /><span /><span />
@@ -34,7 +34,6 @@ export function DeviceFrame({
         )}
       </div>
       <div className="xp-base" aria-hidden />
-      <figcaption className="xp-tag">{bare ? "Real dashboard view rendered with demo data" : "Illustrative preview based on the current app, sample content"}</figcaption>
     </figure>
   );
 }

@@ -11,8 +11,11 @@ device/screen previews, short feature explanations, pure white presentation
 and dark readable text. Keep the existing suite-specific free-week signup
 paths and secondary See plans links; browsing must not grant study access.
 
-Identify sample-data or reconstructed previews honestly. Never expose private
-account data or protected paid study content to make the public tour look real.
-**Why:** the tour explains the experience; it is not an unlocked study session.
-**How to apply:** use source-derived previews or safe screenshots, with clear
-illustrative/demo labels, and keep each suite's actual features distinct.
+Show each suite's actual full dashboard layout in its opening preview, not
+just a header crop or generic dashboard approximation. Do not display
+illustrative-preview or demo-data disclaimers, or numbered section prefixes.
+**Why:** the owner approved the tour and requested these refinements on 2026-10-19
+so visitors see the full dashboard experience immediately.
+**How to apply:** use source-derived views or safe screenshots with anonymous
+sample state; never expose private account data or protected study content.
+Keep both tour trial CTAs transparent aqua-blue, not yellow for EPPP.

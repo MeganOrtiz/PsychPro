@@ -5,10 +5,9 @@ import {
   Stethoscope, Zap,
 } from "lucide-react";
 import brainLateral from "@/assets/brain-views/lateral.webp";
-import psychproHeader from "@/assets/explore/psychpro-header.jpg";
-import epppPreview from "@/assets/explore/eppp-preview.jpg";
 import { knowledgeDomainIcon } from "@/lib/eppp-icons";
 import { EPPP_DOMAINS, type PreviewKey } from "./tour-data";
+import { PsychProDashboardLive, EpppDashboardLive } from "./real-dashboards";
 
 function Head({ title, sub }: { title: string; sub?: string }) {
   return (
@@ -21,25 +20,6 @@ function Head({ title, sub }: { title: string; sub?: string }) {
 
 function Bar({ pct }: { pct: number }) {
   return <span className="xp-bar-track"><span style={{ transform: `scaleX(${pct / 100})` }} /></span>;
-}
-
-function PPDashboard() {
-  return (
-    <div className="xp-p">
-      <img src={psychproHeader} alt="PsychPro dashboard header" className="xp-shot xp-shot--head" />
-      <div className="xp-grid2">
-        <div className="xp-card"><p className="xp-k">Recommended for you</p>
-          {["Attachment Theory", "ADHD and Medications", "Objective Measures"].map((t) => (
-            <p key={t} className="xp-row"><BookOpen /> {t}</p>
-          ))}
-        </div>
-        <div className="xp-card"><p className="xp-k">This week</p>
-          <div className="xp-dots">{[1, 1, 0, 1, 1, 0, 0].map((a, i) => <span key={i} className={a ? "on" : ""} />)}</div>
-          <p className="xp-row"><Flame /> Study streak</p>
-        </div>
-      </div>
-    </div>
-  );
 }
 
 function PPCourses() {
@@ -133,10 +113,6 @@ function PPLibrary() {
   );
 }
 
-function EPDashboard() {
-  return <img src={epppPreview} alt="EPPP Mastery Suite dashboard rendered with demo data" className="xp-shot" />;
-}
-
 function EPDomains() {
   return (
     <div className="xp-p">
@@ -201,8 +177,8 @@ function EPMissed() {
 }
 
 const MAP: Record<PreviewKey, () => React.ReactElement> = {
-  "pp-dashboard": PPDashboard, "pp-courses": PPCourses, "pp-brain": PPBrain, "pp-tools": PPTools,
-  "pp-uploads": PPUploads, "pp-library": PPLibrary, "ep-dashboard": EPDashboard, "ep-domains": EPDomains,
+  "pp-dashboard": PsychProDashboardLive, "pp-courses": PPCourses, "pp-brain": PPBrain, "pp-tools": PPTools,
+  "pp-uploads": PPUploads, "pp-library": PPLibrary, "ep-dashboard": EpppDashboardLive, "ep-domains": EPDomains,
   "ep-exams": EPExams, "ep-cases": EPCases, "ep-missed": EPMissed,
 };
 
@@ -212,5 +188,5 @@ export function Preview({ k }: { k: PreviewKey }) {
 }
 
 export function hasShot(k: PreviewKey): boolean {
-  return k === "ep-dashboard";
+  return k === "ep-dashboard" || k === "pp-dashboard";
 }

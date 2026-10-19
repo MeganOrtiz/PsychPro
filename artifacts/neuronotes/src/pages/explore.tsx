@@ -55,7 +55,7 @@ export default function ExplorePage() {
 
   const Ctas = ({ where }: { where: string }) => (
     <div className="xp-ctas">
-      <button type="button" onClick={startTrial} className={`xp-glass${suite === "eppp" ? " xp-glass--eppp" : ""}`} data-testid={`button-explore-trial-${where}`}>
+      <button type="button" onClick={startTrial} className="xp-glass" data-testid={`button-explore-trial-${where}`}>
         Try free for 7 days <ArrowRight aria-hidden />
       </button>
       <Link href="/subscription" className="xp-secondary" data-testid={`link-explore-plans-${where}`}>
@@ -96,7 +96,7 @@ export default function ExplorePage() {
           <nav className="xp-index" aria-label="Tour stops">
             {tour.stops.map((s) => (
               <a key={s.id} href={`#${s.id}`} data-testid={`link-stop-${s.id}`}>
-                <span>{s.eyebrow.slice(0, 2)}</span>{s.label}
+                {s.label}
               </a>
             ))}
           </nav>
