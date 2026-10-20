@@ -68,6 +68,7 @@
 - [Two-plan pricing and trials](psychpro-two-plan-trials.md) — combined PsychPro + separate EPPP; explicit separate free weeks, 5/50 AI units, protected legacy terms and saved materials.
 - [Stripe MCP metadata bracket](stripe-mcp-metadata-bracket.md) — set metadata via flat `metadata[key]` params in stripeApiExecute; nested object & dot notation both fail.
 - [Stripe sandbox access](psychpro-stripe-sandbox-access.md) — dashboard switching, MCP sandbox authorization, and application test credentials are separate; keep live access intact.
+- [Stripe one-time receipts](psychpro-stripe-payment-receipts.md) — credit each completed Checkout Session once, atomically; a repeated notification must not extend access again.
 - [Tool runtime compatibility](ptc-runtime-compatibility.md) — active durable runtime may reject clock/random APIs; use a small impure function for fixture IDs.
 - [Leaderboard perf aggregation](leaderboard-perf-aggregation.md) — avoid ARRAY_AGG via db.execute (returns non-array); date_trunc on without-tz col == JS startOfDay; cache/pool are per-instance under autoscale.
 - [Mockup preview heavy images](mockup-preview-heavy-images.md) — large PNGs lose the load race and render blank (looks like a "crash"); quantize to PNG8 with magick + eager/fetchPriority; true white = server mid-restart.
