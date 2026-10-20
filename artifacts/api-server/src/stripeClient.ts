@@ -1,4 +1,5 @@
 import Stripe from 'stripe';
+import { sandboxStripeCredentials } from './lib/stripeEnvironment';
 
 interface ConnectionSettings {
   settings: {
@@ -66,6 +67,9 @@ async function getCredentialsFromConnector(): Promise<{ publishableKey: string; 
 }
 
 async function getCredentials() {
+  const sandbox = sandboxStripeCredentials();
+  if (sandbox) return sandbox;
+
   // Prefer plain env-var keys when present so the app can run without the
   // Replit Stripe integration / sandbox claim. Fall back to the connector
   // when env vars are missing.

@@ -8,6 +8,7 @@ import { MCP_ENABLED } from "./lib/mcpEnabled";
 import { logger } from "./lib/logger";
 import { getUncachableStripeClient } from "./stripeClient";
 import { handleStripeWebhookEvent } from "./webhookHandlers";
+import { assertStripeWebhookMode, stripeWebhookSecret } from "./lib/stripeEnvironment";
 import type Stripe from "stripe";
 
 const app: Express = express();
@@ -130,10 +131,10 @@ app.post(
   express.raw({ type: "application/json" }),
   async (req: Request, res: Response): Promise<void> => {
     const sig = req.headers["stripe-signature"];
-    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+    const webhookSecret = stripeWebhookSecret();
 
     if (!webhookSecret) {
-      logger.warn("STRIPE_WEBHOOK_SECRET not set; rejecting unsigned webhook");
+      logger.warn("Stripe webhook signing secret not set for this environment; rejecting webhook");
       res.status(400).json({ error: "Webhook secret not configured" });
       return;
     }
@@ -146,6 +147,7 @@ app.post(
     try {
       const stripe = await getUncachableStripeClient();
       const event: Stripe.Event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
+      assertStripeWebhookMode(event.livemode);
       await handleStripeWebhookEvent(event, logger);
       res.json({ received: true });
     } catch (err) {
