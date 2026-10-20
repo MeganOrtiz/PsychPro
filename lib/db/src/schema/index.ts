@@ -51,6 +51,16 @@ export const insertUserSchema = createInsertSchema(usersTable).omit({ createdAt:
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof usersTable.$inferSelect;
 
+// Claim a Checkout Session and update its entitlement in one transaction.
+// A primary key prevents redelivery from crediting the same purchase twice.
+export const stripePurchaseReceiptsTable = pgTable("stripe_purchase_receipts", {
+  checkoutSessionId: text("checkout_session_id").primaryKey(),
+  stripeEventId: text("stripe_event_id").notNull(),
+  userId: text("user_id").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
+  months: integer("months").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+}, (t) => [index("stripe_purchase_receipts_user_idx").on(t.userId)]);
+
 // Persist reservations, including in-flight generation, across instances.
 // Deleting a deck must never restore its AI allowance.
 export const aiGenerationUsageTable = pgTable("ai_generation_usage", {

@@ -9,6 +9,7 @@ import { logger } from "./lib/logger";
 import { getUncachableStripeClient } from "./stripeClient";
 import { handleStripeWebhookEvent } from "./webhookHandlers";
 import { assertStripeWebhookMode, stripeWebhookSecret } from "./lib/stripeEnvironment";
+import { logStripeWebhookError } from "./lib/stripeWebhookLogging";
 import type Stripe from "stripe";
 
 const app: Express = express();
@@ -151,13 +152,8 @@ app.post(
       await handleStripeWebhookEvent(event, logger);
       res.json({ received: true });
     } catch (err) {
-      // Do not echo err.message back to the caller — Stripe's
-      // constructEvent throws SignatureVerificationError messages that can
-      // leak internal config detail (header layout, tolerance window,
-      // expected secret prefix). Log the full error server-side, return a
-      // generic 400 to the caller. Stripe only inspects the status code
-      // for retry purposes; the body is informational.
-      logger.error({ err }, "Stripe webhook error");
+      // Keep both the response AND server logs free of raw payment details.
+      logStripeWebhookError(logger, err);
       res.status(400).json({ error: "Webhook verification failed" });
     }
   }

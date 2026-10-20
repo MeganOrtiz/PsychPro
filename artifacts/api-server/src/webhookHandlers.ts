@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import type { Logger } from "pino";
 import type Stripe from "stripe";
 import { getUncachableStripeClient } from "./stripeClient";
+import { grantEpppPurchaseOnce } from "./lib/epppPurchaseReceipts";
 import {
   isEpppTierMetadata,
   subscriptionStatusFromTierMetadata,
@@ -19,12 +20,6 @@ function epppMonthsFromPrice(price: Stripe.Price | undefined | null): number {
   const raw = price?.metadata?.eppp_months;
   const m = raw ? parseInt(raw, 10) : NaN;
   return Number.isFinite(m) && m > 0 ? m : 0;
-}
-
-function addMonths(date: Date, months: number): Date {
-  const d = new Date(date.getTime());
-  d.setMonth(d.getMonth() + months);
-  return d;
 }
 
 // Stripe moved current_period_end onto subscription items in newer API
@@ -159,6 +154,8 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, log: Logger)
       const stripe = await getUncachableStripeClient();
 
       if (session.mode === "payment") {
+        // An unpaid completion must not consume its purchase receipt.
+        if (session.payment_status !== "paid" && session.payment_status !== "no_payment_required") break;
         // One-time EPPP purchase ($499 → 6 months, $799 → 12 months). Resolve
         // the granted months from the line item's price metadata.
         const lineItems = await stripe.checkout.sessions.listLineItems(session.id, {
@@ -184,12 +181,17 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, log: Logger)
           );
         }
         if (months > 0) {
-          // Stack on top of any remaining access rather than truncating it.
-          const now = new Date();
-          const base = user.epppAccessUntil && user.epppAccessUntil > now ? user.epppAccessUntil : now;
-          const until = addMonths(base, months);
-          await db.update(usersTable).set({ epppAccessUntil: until }).where(eq(usersTable.id, user.id));
-          log.info({ userId: user.id, months, until }, "Granted one-time EPPP access");
+          const result = await grantEpppPurchaseOnce({
+            userId: user.id,
+            checkoutSessionId: session.id,
+            stripeEventId: event.id,
+            months,
+          });
+          if (result.granted) {
+            log.info({ userId: user.id, months, until: result.until }, "Granted one-time EPPP access");
+          } else {
+            log.info({ userId: user.id }, "One-time EPPP purchase already credited");
+          }
         }
       } else if (session.mode === "subscription" && session.subscription) {
         const subscriptionId = typeof session.subscription === "string" ? session.subscription : session.subscription.id;
