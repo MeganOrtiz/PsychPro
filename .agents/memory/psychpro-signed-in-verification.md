@@ -5,13 +5,24 @@ description: How to visually verify auth-gated PsychPro (neuronotes) pages when 
 
 # Verifying signed-in PsychPro (neuronotes) pages
 
-The neuronotes app sits behind **external Clerk** auth. Auth-gated pages cannot be
-exercised in this environment by EITHER path: the preview/manual browser Clerk flow
-fails, AND the testing harness's programmatic helper (`runTest` with
-`testClerkAuth: true`) fails with `Unprocessable Entity` from `signInClerkUser`.
+The neuronotes app uses **external Clerk**. The managed testing helper cannot
+programmatically sign in through its Replit-managed Clerk path, and its browser
+environment may not receive workspace secrets. This does not mean ordinary
+published-site login is broken.
 
-**Consequence:** you cannot screenshot the live signed-in dashboard (or any logged-in
-page) here. Don't keep retrying Clerk login — reach for the surrogate below.
+**Rule:** With explicit permission and a dedicated non-admin test account, normal
+email/password login in isolated local Chromium can verify the published signed-in
+flows. Use credentials directly from the secure environment, never print them, and
+collect any email verification code through the secure secrets form. Never bypass
+authentication or use the owner's admin account.
+
+**Why:** Local Chromium successfully exercised onboarding, separate trials, and
+Stripe checkout handoffs when the managed tester lacked credential access.
+
+**How to apply:** Prefer real authorized login for behavioral verification. If a
+verification challenge cannot be completed, report the blocker; the visual
+surrogates below do not establish signed-in behavior. Sign out and stop the
+isolated browser after testing.
 
 **Fastest surrogate for BACKDROP / global CSS changes (no auth, no mockup):** the
 `/sign-in` and `/sign-up` routes are PUBLIC and render the same `.study-page-bg`
