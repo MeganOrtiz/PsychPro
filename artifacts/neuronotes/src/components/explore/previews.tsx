@@ -182,7 +182,9 @@ const MAP: Record<PreviewKey, () => React.ReactElement> = {
   "ep-exams": EPExams, "ep-cases": EPCases, "ep-missed": EPMissed,
 };
 
-export function Preview({ k }: { k: PreviewKey }) {
+export function Preview({ k, maxVisibleHeight }: { k: PreviewKey; maxVisibleHeight?: number }) {
+  if (k === "pp-dashboard") return <PsychProDashboardLive maxVisibleHeight={maxVisibleHeight} />;
+  if (k === "ep-dashboard") return <EpppDashboardLive maxVisibleHeight={maxVisibleHeight} />;
   const C = MAP[k];
   return <C />;
 }

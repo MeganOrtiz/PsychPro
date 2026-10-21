@@ -415,3 +415,17 @@ mtime_ms = 1790925282024
 storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/8cb0812a-3950-4761-a341-4bb350ab4454/8d778179-14ad-442f-92c7-1e1b5d5301aa"
 storage_version_token = "1790925340151777"
 content_type = "application/pdf"
+
+[[outputs]]
+id = "ao-MyBmxZuAuiTJjARrmj"
+uri = "file://attached_assets/dashboard-crop-comparison.png"
+type = "image"
+title = "Dashboard crop comparison"
+description = "Side-by-side comparison of the full-height and shorter top-anchored dashboard previews for PsychPro and EPPP."
+logical_id = "8c1524b9-647e-4616-a934-b1758c30cdde"
+content_hash = "sha256:cdad22319b0d1ab6aa81db2352172eceb7a1985386e7c60599d4ba3b9248ae99"
+size = 246264
+mtime_ms = 1792612448543
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:d3876158-494b-4e7b-a77f-48830782ce72/8c1524b9-647e-4616-a934-b1758c30cdde/a143d479-3514-4950-963c-1d8bfba7ac4f"
+storage_version_token = "1792612455092020"
+content_type = "image/png"

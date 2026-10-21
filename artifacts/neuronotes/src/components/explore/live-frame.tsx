@@ -7,7 +7,17 @@ import { createPortal } from "react-dom";
  * a 1280px desktop. The result is scaled to fit the tour column. The frame is
  * inert: no pointer, keyboard, or focus interaction reaches the content.
  */
-export function LiveFrame({ children, width = 1280, title }: { children: ReactNode; width?: number; title: string }) {
+export function LiveFrame({
+  children,
+  width = 1280,
+  title,
+  maxVisibleHeight,
+}: {
+  children: ReactNode;
+  width?: number;
+  title: string;
+  maxVisibleHeight?: number;
+}) {
   const frameRef = useRef<HTMLIFrameElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const [mount, setMount] = useState<HTMLElement | null>(null);
@@ -77,8 +87,10 @@ export function LiveFrame({ children, width = 1280, title }: { children: ReactNo
     return () => { cancelAnimationFrame(pending); ro.disconnect(); };
   }, [width]);
 
+  const visibleHeight = maxVisibleHeight == null ? height : Math.min(height, maxVisibleHeight);
+
   return (
-    <div ref={wrapRef} className="xp-live" style={{ height: height * scale }}>
+    <div ref={wrapRef} className="xp-live" style={{ height: visibleHeight * scale }}>
       <iframe
         ref={frameRef}
         title={title}

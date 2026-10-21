@@ -10,6 +10,10 @@ import { DeviceFrame } from "@/components/explore/device-frame";
 import { Preview, hasShot } from "@/components/explore/previews";
 import "@/components/explore/explore.css";
 
+// The approved crop is 390px high at 800px wide; scale that ratio to the
+// live dashboard's 1280px canvas so it remains proportionate on mobile.
+const HERO_DASHBOARD_PREVIEW_HEIGHT = 624;
+
 function parseSuite(search: string): Suite {
   return new URLSearchParams(search).get("suite") === "eppp" ? "eppp" : "psychpro";
 }
@@ -88,7 +92,7 @@ export default function ExplorePage() {
           <p className="xp-lede">{tour.tagline}</p>
           <div className="xp-hero-preview" id="dashboard">
             <DeviceFrame suite={suite} active="Dashboard" label={tour.stops[0].label} bare={hasShot(tour.stops[0].preview)}>
-              <Preview k={tour.stops[0].preview} />
+              <Preview k={tour.stops[0].preview} maxVisibleHeight={HERO_DASHBOARD_PREVIEW_HEIGHT} />
             </DeviceFrame>
           </div>
           <p className="xp-body xp-intro-body">{tour.intro}</p>

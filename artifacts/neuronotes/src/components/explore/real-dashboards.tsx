@@ -180,10 +180,10 @@ const PP_SECTIONS = [
   { title: "Connect", items: [{ label: "Featured Work", icon: Star }, { label: "Connections", icon: Users }, { label: "Feedback", icon: MessageSquare }] },
 ];
 
-export function PsychProDashboardLive() {
+export function PsychProDashboardLive({ maxVisibleHeight }: { maxVisibleHeight?: number } = {}) {
   const client = useMemo(psychproClient, []);
   return (
-    <LiveFrame title="PsychPro dashboard">
+    <LiveFrame title="PsychPro dashboard" maxVisibleHeight={maxVisibleHeight}>
       <Sandbox path="/dashboard" client={client}>
         <Shell wordmark="PSYCHPRO" sections={PP_SECTIONS} switchLabel="EPPP Mastery Suite" SwitchIcon={GraduationCap} profile>
           <DashboardPage />
@@ -207,7 +207,7 @@ const EP_SECTIONS = [
 
 const EP_PROGRESS: [number, number][] = [[6, 6], [4, 7], [3, 6], [5, 8], [2, 7], [3, 9], [1, 6], [4, 8]];
 
-export function EpppDashboardLive() {
+export function EpppDashboardLive({ maxVisibleHeight }: { maxVisibleHeight?: number } = {}) {
   const domainStats: DomainStat[] = EPPP_DOMAINS.map((category, i) => {
     const [passed, total] = EP_PROGRESS[i];
     return { category, passed, total, pct: Math.round((passed / total) * 100), mastered: passed === total, unlocked: passed === total };
@@ -217,7 +217,7 @@ export function EpppDashboardLive() {
   const examDate = `${exam.getFullYear()}-${String(exam.getMonth() + 1).padStart(2, "0")}-${String(exam.getDate()).padStart(2, "0")}`;
   const weekly = week([false, true, true, true, false, true, true]);
   return (
-    <LiveFrame title="EPPP Mastery Suite dashboard">
+    <LiveFrame title="EPPP Mastery Suite dashboard" maxVisibleHeight={maxVisibleHeight}>
       <Sandbox path="/eppp/suite/performance-analytics">
         <Shell wordmark="EPPP SUITE" sections={EP_SECTIONS} switchLabel="PsychPro Suite" SwitchIcon={Brain} profile={false}>
           <EpppDashboardView
