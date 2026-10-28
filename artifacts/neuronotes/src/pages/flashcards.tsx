@@ -225,7 +225,6 @@ export default function FlashcardsPage({ params }: Props) {
                 <div className="flashcard-back">
                   <StudySurface
                     tone="accent"
-                    pill={{ text: "Answer" }}
                     fillHeight
                     innerClassName="p-8 md:p-10 min-h-64 md:min-h-80 flex flex-col items-center justify-center"
                   >
