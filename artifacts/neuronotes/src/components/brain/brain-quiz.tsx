@@ -436,8 +436,7 @@ export function BrainQuizPanel({
           <div className="flex items-center gap-2 flex-wrap justify-center">
             <button
               onClick={restart}
-              className="px-4 py-2 rounded-md text-sm font-semibold flex items-center gap-2"
-              style={{ background: `${PALETTE.surf}`, color: QUIZ_TEXT }}
+              className="btn-glass-strong px-4 py-2 text-sm font-semibold flex items-center gap-2"
               data-testid="button-quiz-restart"
             >
               <RotateCcw className="w-4 h-4" />
@@ -598,12 +597,7 @@ export function BrainQuizPanel({
         <button
           onClick={next}
           disabled={!answered}
-          className="px-4 py-2 rounded-md text-sm font-semibold flex items-center gap-2 transition-all"
-          style={{
-            background: answered ? `${PALETTE.surf}` : `${PALETTE.steel}66`,
-            color: QUIZ_TEXT,
-            cursor: answered ? "pointer" : "not-allowed",
-          }}
+          className="btn-glass-strong px-4 py-2 text-sm font-semibold flex items-center gap-2 disabled:cursor-not-allowed"
           data-testid="button-quiz-next"
         >
           {isLast ? "Finish" : "Next"}
