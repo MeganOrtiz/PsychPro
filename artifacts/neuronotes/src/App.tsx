@@ -13,7 +13,7 @@ import { RequireOnboarded } from "@/components/auth/require-onboarded";
 import { PostAuthRedirect } from "@/components/auth/post-auth-redirect";
 import AppLayout from "@/components/layout/app-layout";
 import { ErrorBoundary } from "@/components/error-boundary";
-import { FullScreenLoader } from "@/components/full-screen-loader";
+import { RouteLoadingSurface } from "@/components/route-loading-surface";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PP } from "@/lib/palette";
 import { createClerkNavigation } from "@/lib/clerk-navigation";
@@ -113,16 +113,16 @@ const clerkNavigation = createClerkNavigation(import.meta.env.BASE_URL);
 function AppRouter() {
   return (
     <Switch>
-      <Route path="/" component={LandingPage} />
-      <Route path="/explore" component={ExplorePage} />
-      <Route path="/privacy" component={PrivacyPage} />
-      <Route path="/terms" component={TermsPage} />
-      <Route path="/sign-in/*?" component={SignInPage} />
-      <Route path="/sign-up/*?" component={SignUpPage} />
-      {import.meta.env.DEV ? <Route path="/__crash-test" component={CrashTestPage} /> : null}
-      {import.meta.env.DEV ? <Route path="/__glass-preview" component={DevGlassPreview} /> : null}
-      {import.meta.env.DEV ? <Route path="/__library-preview" component={DevLibraryPreview} /> : null}
-      {import.meta.env.DEV ? <Route path="/__dashboard-preview" component={DevDashboardPreview} /> : null}
+      <Route path="/">{() => <RouteBoundary><LandingPage /></RouteBoundary>}</Route>
+      <Route path="/explore">{() => <RouteBoundary><ExplorePage /></RouteBoundary>}</Route>
+      <Route path="/privacy">{() => <RouteBoundary><PrivacyPage /></RouteBoundary>}</Route>
+      <Route path="/terms">{() => <RouteBoundary><TermsPage /></RouteBoundary>}</Route>
+      <Route path="/sign-in/*?">{() => <RouteBoundary><SignInPage /></RouteBoundary>}</Route>
+      <Route path="/sign-up/*?">{() => <RouteBoundary><SignUpPage /></RouteBoundary>}</Route>
+      {import.meta.env.DEV ? <Route path="/__crash-test">{() => <RouteBoundary><CrashTestPage /></RouteBoundary>}</Route> : null}
+      {import.meta.env.DEV ? <Route path="/__glass-preview">{() => <RouteBoundary><DevGlassPreview /></RouteBoundary>}</Route> : null}
+      {import.meta.env.DEV ? <Route path="/__library-preview">{() => <RouteBoundary><DevLibraryPreview /></RouteBoundary>}</Route> : null}
+      {import.meta.env.DEV ? <Route path="/__dashboard-preview">{() => <RouteBoundary><DevDashboardPreview /></RouteBoundary>}</Route> : null}
       {/* Old shared links no longer render a promo/book page. */}
       <Route path="/eppp/promo">
         <Redirect to="/onboarding?suite=eppp" />
@@ -221,12 +221,12 @@ function AppRouter() {
       <Route path="/onboarding">
         {() => (
           <RequireSignedIn>
-            <OnboardingPage />
+            <RouteBoundary><OnboardingPage /></RouteBoundary>
           </RequireSignedIn>
         )}
       </Route>
       {/* Public paid-plan comparison. Only purchasing requires authentication. */}
-      <Route path="/subscription" component={SubscriptionPage} />
+      <Route path="/subscription">{() => <RouteBoundary><SubscriptionPage /></RouteBoundary>}</Route>
       <Route path="/psychpro/welcome">
         <RequireSignedIn>
           <Redirect to="/onboarding?suite=psychpro" />
@@ -235,7 +235,8 @@ function AppRouter() {
       <Route>
         <RequireOnboarded>
           <AppLayout>
-            <Switch>
+            <Suspense fallback={<RouteLoadingSurface variant="content" />}>
+              <Switch>
             <Route path="/dashboard" component={DashboardPage} />
             <Route path="/topics" component={TopicsPage} />
             <Route path="/topics/:id" component={TopicDetailPage} />
@@ -264,12 +265,21 @@ function AppRouter() {
             <Route path="/my-library" component={MyLibraryPage} />
             <Route path="/reflections" component={ReflectionsPage} />
             <Route path="/profile" component={ProfilePage} />
-            <Route component={NotFound} />
-          </Switch>
+            <Route>{() => <NotFound />}</Route>
+              </Switch>
+            </Suspense>
         </AppLayout>
         </RequireOnboarded>
       </Route>
     </Switch>
+  );
+}
+
+function RouteBoundary({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense fallback={<RouteLoadingSurface />}>
+      {children}
+    </Suspense>
   );
 }
 
@@ -309,7 +319,7 @@ function App() {
           <ClerkTokenBridge>
           <TooltipProvider>
             <WouterRouter base={basePath}>
-              <Suspense fallback={<FullScreenLoader label="Loading PsychPro…" />}>
+              <Suspense fallback={<RouteLoadingSurface />}>
                 <AppRouter />
               </Suspense>
             </WouterRouter>

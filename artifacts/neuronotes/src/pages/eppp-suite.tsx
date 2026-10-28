@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useBillingReturn } from "@/lib/use-billing-return";
 import { QueryError } from "@/components/query-error";
+import { RouteLoadingSurface } from "@/components/route-loading-surface";
 import { DashboardHeaderBackdrop } from "@/components/dashboard-brand-artwork";
 import { UserButton } from "@clerk/clerk-react";
 import {
@@ -272,12 +273,11 @@ export default function EpppSuitePage({ tab }: { tab?: string }) {
   // suite content before the lock screen renders.
   if (entLoading && !isBookLibrary) {
     return (
-      <div
-        className="study-page-bg flex min-h-screen items-center justify-center"
-        data-testid="eppp-suite-loading"
-      >
-        <p className="text-sm text-muted-foreground">Loading…</p>
-      </div>
+      <RouteLoadingSurface
+        variant="suite"
+        label="Checking EPPP access"
+        testId="eppp-suite-loading"
+      />
     );
   }
   if (entError && !isBookLibrary) {

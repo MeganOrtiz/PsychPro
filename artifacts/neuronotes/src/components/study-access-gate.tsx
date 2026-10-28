@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { useStudyAccess } from "@/lib/use-study-access";
 import { StudyTrialPanel } from "@/components/study-trial-panel";
 import { Button } from "@/components/ui/button";
+import { RouteLoadingSurface } from "@/components/route-loading-surface";
 
 // Only interactive paid study routes. Account, history, source downloads,
 // personal notes, dashboards and owned books remain available after expiry.
@@ -17,7 +18,9 @@ export function StudyAccessGate({ children }: { children: ReactNode }) {
 
 function PaidStudyContent({ children }: { children: ReactNode }) {
   const { data, isLoading, isError, refetch } = useStudyAccess();
-  if (isLoading || !data && !isError) return <p className="p-6 text-muted-foreground">Checking study access…</p>;
+  if (isLoading || !data && !isError) {
+    return <RouteLoadingSurface variant="content" label="Checking study access" />;
+  }
   if (isError) return <div className="p-6"><p>We couldn’t check study access.</p><Button onClick={() => void refetch()}>Try again</Button></div>;
   if (!data?.psychpro.hasAccess) return (
     <div className="max-w-xl mx-auto p-6 space-y-4" data-testid="study-access-paused">

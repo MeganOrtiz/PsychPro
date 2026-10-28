@@ -1,9 +1,10 @@
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import type { ReactNode } from "react";
 import { useLocation } from "wouter";
 import { useGetUserProfile } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { FullScreenLoader } from "@/components/full-screen-loader";
+import { RouteLoadingSurface } from "@/components/route-loading-surface";
 import { RequireSignedIn } from "./require-signed-in";
 import { SuiteEntryGate } from "./suite-entry-gate";
 import { studySuiteForPath, suiteOnboardingPath } from "@/lib/suite-entry";
@@ -77,7 +78,28 @@ function OnboardingGate({ children }: { children: ReactNode }) {
 export function RequireOnboarded({ children }: { children: ReactNode }) {
   return (
     <RequireSignedIn>
-      <OnboardingGate><SuiteEntryGate>{children}</SuiteEntryGate></OnboardingGate>
+      <OnboardingGate>
+        <SuiteEntryGate>
+          <ProtectedRouteSuspense>{children}</ProtectedRouteSuspense>
+        </SuiteEntryGate>
+      </OnboardingGate>
     </RequireSignedIn>
+  );
+}
+
+function ProtectedRouteSuspense({ children }: { children: ReactNode }) {
+  const [path] = useLocation();
+  const suiteShellRoutes = new Set([
+    "/eppp/dashboard",
+    "/eppp/skills",
+    "/eppp/clinical-cases",
+    "/eppp/rapid-review",
+  ]);
+  const variant =
+    path.startsWith("/eppp/suite") || suiteShellRoutes.has(path) ? "suite" : "page";
+  return (
+    <Suspense fallback={<RouteLoadingSurface variant={variant} />}>
+      {children}
+    </Suspense>
   );
 }
