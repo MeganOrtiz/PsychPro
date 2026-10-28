@@ -244,7 +244,7 @@ export default function QuizPage({ params }: Props) {
             </p>
           </StudySurface>
 
-          <div className="space-y-2.5 mb-6">
+          <div key={`${current.id}-${index}`} className="space-y-2.5 mb-6">
             {options.map(({ key, text }) => {
               const isSelected = selected === key;
               const isCorrect = key === current.correctAnswer;

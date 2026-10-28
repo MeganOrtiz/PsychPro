@@ -378,7 +378,7 @@ export default function CourseMasteryExamPage({ params }: Props) {
           <p className="text-base md:text-lg font-medium leading-relaxed text-foreground" data-testid="text-mastery-question">{q.question}</p>
         </StudySurface>
 
-        <div className="space-y-2.5 mb-6">
+        <div key={`${q.id}-${index}`} className="space-y-2.5 mb-6">
           {[
             { key: "A", text: q.optionA },
             { key: "B", text: q.optionB },
