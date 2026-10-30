@@ -31,10 +31,14 @@ account or IP bucket has reached its cap:
 
 | Action | Account cap | IP cap |
 | --- | ---: | ---: |
-| AI custom-deck generation | 10 requests/hour | 30 requests/hour |
-| Upload URL creation | 20 requests/hour | 60 requests/hour |
-| PsychPro or EPPP checkout session creation | 5 requests/hour | 20 requests/hour |
-| Study-trial activation | 5 requests/hour | 20 requests/hour |
+| AI custom-deck generation | 10 requests/hour | 300 requests/hour |
+| Upload URL creation | 20 requests/hour | 600 requests/hour |
+| PsychPro or EPPP checkout session creation | 5 requests/hour | 100 requests/hour |
+| Study-trial activation | 5 requests/hour | 100 requests/hour |
+
+IP ceilings are intentionally generous because students may share a school,
+library, or workplace network. Account limits are the primary per-customer
+guardrail; IP limits are a broad burst-control backstop.
 
 The custom-deck limit is applied after the existing subscription/authorization
 check and before multipart file parsing. Other limits run after authentication

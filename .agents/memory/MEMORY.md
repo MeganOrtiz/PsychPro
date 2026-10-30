@@ -44,6 +44,7 @@
 - [GLB meshopt compression](glb-meshopt-compression.md) — shrink geometry-only GLB ~85% via gltf-transform meshopt; load with useGLTF(URL,false,true) (local decoder, no Draco CDN).
 - [Brain Lab 3D facing-cache](brain-lab-3d-facing-cache.md) — caching per-marker facing must invalidate on parent transform too (brain auto-spins), not just camera movement.
 - [api-server route-auth matrix](api-server-route-auth-matrix.md) — every new Express route must be classified in routeAuthMatrix.test.ts; test stops at first failed check, hiding later drift.
+- [PsychPro bot protection preference](psychpro-bot-protection-preference.md) — use quiet abuse controls, no visible “are you human” challenge, and generous shared-IP limits.
 - [api-server EADDRINUSE on restart](api-server-eaddrinuse-restart.md) — recurring 8080 collision = old node orphaned (SIGTERM didn't reach leaf through pnpm layers); fix = `exec node` in dev script + SIGTERM/SIGINT graceful shutdown.
 - [Brain Lab view-switch on select](brain-lab-view-switch-on-select.md) — clicking a hotspot/chip must keep the current tab; viewForStructure first-match jumps views for structures shown on several views — pass `preferred`.
 - [Brain Lab four-edge labels](brain-lab-label-gutters.md) — desktop labels are leader-line chips on all 4 edges; slim top/bottom rows MUST spill overflow into side columns or dense views overlap/clip.

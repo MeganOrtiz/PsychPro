@@ -4,6 +4,7 @@ import { usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { getUncachableStripeClient } from "../stripeClient";
 import { requireUserId } from "../lib/userId";
+import { apiActionRateLimit } from "../middlewares/apiActionRateLimit";
 import { isEpppTierMetadata } from "../lib/tierMapping";
 
 const router = Router();
@@ -88,7 +89,7 @@ router.get("/eppp/plans", async (req: Request, res: Response): Promise<void> => 
 // mode; one-time → payment mode. The webhook (webhookHandlers.ts) grants EPPP
 // access on completion.
 // -----------------------------------------------------------------------------
-router.post("/eppp/checkout", async (req: Request, res: Response): Promise<void> => {
+router.post("/eppp/checkout", apiActionRateLimit("checkoutSession"), async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = requireUserId(req, res);
     if (!userId) return;

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { requireUserId } from "../lib/userId";
 import { getStudyAccess, startStudyTrial, StudyAccessError } from "../lib/studyAccess";
+import { apiActionRateLimit } from "../middlewares/apiActionRateLimit";
 const router = Router();
 
 router.get("/subscription/access", async (req, res) => {
@@ -10,7 +11,7 @@ router.get("/subscription/access", async (req, res) => {
   catch (err) { req.log.error({ err }, "Unable to load study access"); res.status(500).json({ error: "Unable to load study access." }); }
 });
 
-router.post("/subscription/trials/:suite", async (req, res) => {
+router.post("/subscription/trials/:suite", apiActionRateLimit("studyTrial"), async (req, res) => {
   const userId = requireUserId(req, res);
   if (!userId) return;
   const suite = req.params.suite;

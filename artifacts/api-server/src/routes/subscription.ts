@@ -4,6 +4,7 @@ import { usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { getUncachableStripeClient } from "../stripeClient";
 import { requireUserId } from "../lib/userId";
+import { apiActionRateLimit } from "../middlewares/apiActionRateLimit";
 import { effectivePsychproTier, trialEnds } from "../lib/studyAccessModel";
 import {
   ACTIVE_SUBSCRIPTION_STATUSES,
@@ -83,7 +84,7 @@ router.get("/subscription/plans", async (req: Request, res: Response): Promise<v
   }
 });
 
-router.post("/subscription/checkout", async (req: Request, res: Response): Promise<void> => {
+router.post("/subscription/checkout", apiActionRateLimit("checkoutSession"), async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = requireUserId(req, res);
     if (!userId) return;

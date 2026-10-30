@@ -8,6 +8,7 @@ import {
 import { logger } from "./lib/logger";
 import { logResolvedClientErrorsRateLimit } from "./startup";
 import { startClientErrorsRateLimitCleanup } from "./middlewares/clientErrorsRateLimit";
+import { startApiActionRateLimitCleanup } from "./middlewares/apiActionRateLimit";
 import { ensureFeedbackBookCatalog, logCatalogBootstrapFailure } from "./lib/bookLibrary";
 
 logResolvedClientErrorsRateLimit(logger);
@@ -16,6 +17,7 @@ logResolvedClientErrorsRateLimit(logger);
 // sliding window. The interval is `unref()`ed inside, so it does not keep the
 // process alive on its own.
 startClientErrorsRateLimitCleanup(logger);
+startApiActionRateLimitCleanup(logger);
 
 const port = Number(process.env.PORT) || 8080;
 

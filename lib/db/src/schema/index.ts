@@ -381,6 +381,26 @@ export const epppStudyPlansTable = pgTable("eppp_study_plans", {
 
 export type EpppStudyPlan = typeof epppStudyPlansTable.$inferSelect;
 
+export const apiRateLimitHitsTable = pgTable(
+  "api_rate_limit_hits",
+  {
+    id: bigserial("id", { mode: "number" }).primaryKey(),
+    action: text("action").notNull(),
+    subjectHash: text("subject_hash").notNull(),
+    hitAt: timestamp("hit_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index("api_rate_limit_hits_action_subject_time_idx").on(
+      table.action,
+      table.subjectHash,
+      table.hitAt,
+    ),
+    index("api_rate_limit_hits_hit_at_idx").on(table.hitAt),
+  ],
+);
+
+export type ApiRateLimitHit = typeof apiRateLimitHitsTable.$inferSelect;
+
 export const clientErrorRateHitsTable = pgTable(
   "client_error_rate_hits",
   {

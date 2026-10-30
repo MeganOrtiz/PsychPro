@@ -8,6 +8,7 @@ import {
 } from "../lib/objectStorage";
 import { ObjectPermission } from "../lib/objectAcl";
 import { getOptionalUserId, requireUserId } from "../lib/userId";
+import { apiActionRateLimit } from "../middlewares/apiActionRateLimit";
 
 const router: IRouter = Router();
 const objectStorageService = new ObjectStorageService();
@@ -69,7 +70,7 @@ const RequestUploadUrlBody = z.object({
   contentType: z.string().min(1).max(255),
 });
 
-router.post("/storage/uploads/request-url", async (req: Request, res: Response): Promise<void> => {
+router.post("/storage/uploads/request-url", apiActionRateLimit("uploadUrl"), async (req: Request, res: Response): Promise<void> => {
   const userId = requireUserId(req, res);
   if (!userId) return;
   const parsed = RequestUploadUrlBody.safeParse(req.body);

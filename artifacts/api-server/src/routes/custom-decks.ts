@@ -20,6 +20,7 @@ import { randomUUID } from "node:crypto";
 import { pipeline } from "node:stream/promises";
 import { objectStorageClient, ObjectStorageService, ObjectNotFoundError } from "../lib/objectStorage";
 import { setObjectAclPolicy } from "../lib/objectAcl";
+import { apiActionRateLimit } from "../middlewares/apiActionRateLimit";
 
 const router = Router();
 const upload = multer({
@@ -203,6 +204,7 @@ Respond with a JSON object: { "studyGuide": "markdown formatted study guide here
 router.post(
   "/custom-decks",
   requireScholar,
+  apiActionRateLimit("customDeckGeneration"),
   upload.single("file"),
   async (req: Request, res: Response): Promise<void> => {
     const userId = (req as Request & { scholarUser: { id: string } }).scholarUser.id;
