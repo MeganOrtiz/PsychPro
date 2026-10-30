@@ -1,0 +1,236 @@
+<style>
+  .insights-layouts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(250px, 1fr));
+    gap: 16px;
+    max-width: 1260px;
+    margin: 22px auto 0;
+  }
+  .insights-layout-card {
+    display: block;
+    cursor: pointer;
+    border: 1px solid #cfd4d6;
+    border-radius: 18px;
+    background: #fff;
+    padding: 12px;
+    transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+  }
+  .insights-layout-card:hover {
+    transform: translateY(-3px);
+    border-color: #6d9997;
+    box-shadow: 0 12px 28px rgba(33, 47, 49, 0.10);
+  }
+  .insights-layout-card[aria-pressed="true"] {
+    border: 2px solid #347b78;
+    box-shadow: 0 0 0 3px rgba(52, 123, 120, 0.12);
+  }
+  .insights-screen {
+    min-height: 355px;
+    border: 1px solid #e0e3e4;
+    border-radius: 12px;
+    background: #fbfcfc;
+    padding: 13px;
+    color: #22282a;
+    font-family: Arial, sans-serif;
+  }
+  .insights-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e1e4e5;
+    padding-bottom: 9px;
+    font-size: 11px;
+    letter-spacing: .11em;
+    font-weight: 700;
+  }
+  .insights-filter {
+    border: 1px solid #d7dcde;
+    border-radius: 999px;
+    background: white;
+    padding: 5px 8px;
+    font-size: 9px;
+    letter-spacing: 0;
+    font-weight: 500;
+  }
+  .insights-label {
+    color: #778184;
+    font-size: 8px;
+    letter-spacing: .10em;
+    text-transform: uppercase;
+  }
+  .insights-kpis {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 7px;
+    margin-top: 10px;
+  }
+  .insights-kpi {
+    border: 1px solid #e2e5e6;
+    border-radius: 9px;
+    background: white;
+    padding: 9px;
+  }
+  .insights-number {
+    display: block;
+    margin-top: 4px;
+    font-size: 20px;
+    font-weight: 700;
+  }
+  .insights-change {
+    color: #397c77;
+    font-size: 8px;
+  }
+  .insights-panel {
+    margin-top: 9px;
+    border: 1px solid #e2e5e6;
+    border-radius: 9px;
+    background: white;
+    padding: 9px;
+  }
+  .insights-panel-title {
+    margin-bottom: 7px;
+    font-size: 9px;
+    font-weight: 700;
+  }
+  .insights-bars {
+    display: flex;
+    align-items: end;
+    gap: 7px;
+    height: 51px;
+    border-bottom: 1px solid #e3e6e6;
+    padding: 0 4px;
+  }
+  .insights-bars i {
+    display: block;
+    flex: 1;
+    border-radius: 3px 3px 0 0;
+    background: #9bbab7;
+  }
+  .insights-suite-row,
+  .insights-funnel-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    border-top: 1px solid #edf0f0;
+    padding: 6px 0;
+    font-size: 8px;
+  }
+  .insights-funnel-row:first-of-type { border-top: 0; }
+  .insights-funnel-row strong { font-size: 10px; }
+  .insights-funnel-track {
+    height: 5px;
+    margin-top: 4px;
+    border-radius: 4px;
+    background: #e9eeee;
+    overflow: hidden;
+  }
+  .insights-funnel-track i {
+    display: block;
+    height: 100%;
+    border-radius: 4px;
+    background: #789d9a;
+  }
+  .insights-caption {
+    margin: 10px 3px 2px;
+    color: #657073;
+    font-size: 11px;
+    line-height: 1.45;
+  }
+  @media (max-width: 900px) {
+    .insights-layouts { grid-template-columns: 1fr; max-width: 560px; }
+    .insights-screen { min-height: 0; }
+  }
+</style>
+
+<h2>Which insights layout feels clearest?</h2>
+<p class="subtitle">All three show the same private metrics: anonymous visitors, pageviews, signups, suite trials, and completed payments. The figures below are sample values for layout only.</p>
+
+<div class="insights-layouts">
+  <div class="card insights-layout-card" data-choice="overview" role="button" tabindex="0" aria-pressed="false" onclick="toggleSelect(this)">
+    <div class="insights-screen">
+      <div class="insights-head"><span>PSYCHPRO · INSIGHTS</span><span class="insights-filter">Last 30 days ▾</span></div>
+      <div class="insights-label" style="margin-top:10px">At a glance · sample values</div>
+      <div class="insights-kpis">
+        <div class="insights-kpi"><span class="insights-label">Unique visitors</span><strong class="insights-number">1,284</strong><span class="insights-change">+12% vs prior period</span></div>
+        <div class="insights-kpi"><span class="insights-label">Signups</span><strong class="insights-number">86</strong><span class="insights-change">6.7% of visitors</span></div>
+        <div class="insights-kpi"><span class="insights-label">Trials started</span><strong class="insights-number">31</strong><span class="insights-change">18 PsychPro · 13 EPPP</span></div>
+        <div class="insights-kpi"><span class="insights-label">Paid starts</span><strong class="insights-number">8</strong><span class="insights-change">5 PsychPro · 3 EPPP</span></div>
+      </div>
+      <div class="insights-panel">
+        <div class="insights-panel-title">Activity over time</div>
+        <div class="insights-bars"><i style="height:35%"></i><i style="height:52%"></i><i style="height:43%"></i><i style="height:72%"></i><i style="height:58%"></i><i style="height:88%"></i><i style="height:68%"></i><i style="height:96%"></i></div>
+        <div class="insights-suite-row"><span>Visitors</span><span>Signups</span><span>Trials</span><span>Paid</span></div>
+      </div>
+      <div class="insights-panel">
+        <div class="insights-panel-title">Suite comparison</div>
+        <div class="insights-suite-row"><strong>PsychPro</strong><span>18 trials</span><span>5 paid</span></div>
+        <div class="insights-suite-row"><strong>EPPP</strong><span>13 trials</span><span>3 paid</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Overview first</h3>
+      <p>Four headline numbers, a compact trend, and an immediate PsychPro/EPPP comparison.</p>
+    </div>
+  </div>
+
+  <div class="card insights-layout-card" data-choice="funnel" role="button" tabindex="0" aria-pressed="false" onclick="toggleSelect(this)">
+    <div class="insights-screen">
+      <div class="insights-head"><span>PSYCHPRO · INSIGHTS</span><span class="insights-filter">Last 30 days ▾</span></div>
+      <div class="insights-label" style="margin-top:10px">Conversion funnel · sample values</div>
+      <div class="insights-panel">
+        <div class="insights-funnel-row"><div style="flex:1"><span>Unique visitors</span><div class="insights-funnel-track"><i style="width:100%"></i></div></div><strong>1,284</strong></div>
+        <div class="insights-funnel-row"><div style="flex:1"><span>Signed up · 6.7%</span><div class="insights-funnel-track"><i style="width:67%"></i></div></div><strong>86</strong></div>
+        <div class="insights-funnel-row"><div style="flex:1"><span>Started a trial · 36%</span><div class="insights-funnel-track"><i style="width:42%"></i></div></div><strong>31</strong></div>
+        <div class="insights-funnel-row"><div style="flex:1"><span>Started paid plan · 26%</span><div class="insights-funnel-track"><i style="width:22%"></i></div></div><strong>8</strong></div>
+      </div>
+      <div class="insights-label" style="margin:12px 0 6px">By suite</div>
+      <div class="insights-panel">
+        <div class="insights-suite-row"><strong>PsychPro</strong><span>18 trials</span><span>5 paid</span><span>28%</span></div>
+        <div class="insights-suite-row"><strong>EPPP</strong><span>13 trials</span><span>3 paid</span><span>23%</span></div>
+      </div>
+      <div class="insights-panel">
+        <div class="insights-panel-title">Pageviews</div>
+        <strong style="font-size:21px">3,960</strong><span class="insights-change" style="margin-left:8px">3.1 per visitor</span>
+      </div>
+      <div class="insights-label" style="margin-top:8px">Focuses on where people continue or drop off.</div>
+    </div>
+    <div class="card-body">
+      <h3>Funnel first</h3>
+      <p>Shows the visitor-to-signup-to-trial-to-paid path and conversion at each step.</p>
+    </div>
+  </div>
+
+  <div class="card insights-layout-card" data-choice="trends" role="button" tabindex="0" aria-pressed="false" onclick="toggleSelect(this)">
+    <div class="insights-screen">
+      <div class="insights-head"><span>PSYCHPRO · INSIGHTS</span><span class="insights-filter">Last 30 days ▾</span></div>
+      <div class="insights-label" style="margin-top:10px">Growth over time · sample values</div>
+      <div class="insights-panel">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div><span class="insights-label">Unique visitors</span><strong class="insights-number" style="font-size:24px">1,284</strong></div>
+          <span class="insights-change">+12% vs prior period</span>
+        </div>
+        <svg viewBox="0 0 300 90" width="100%" height="88" role="img" aria-label="Sample visitor trend">
+          <path d="M4 74 L43 68 L82 61 L121 66 L160 44 L199 50 L238 29 L296 14" fill="none" stroke="#638b88" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4 74 L43 68 L82 61 L121 66 L160 44 L199 50 L238 29 L296 14 L296 88 L4 88 Z" fill="#dfe9e8" opacity=".7"/>
+          <path d="M4 74 L43 68 L82 61 L121 66 L160 44 L199 50 L238 29 L296 14" fill="none" stroke="#638b88" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="insights-suite-row"><span>Visitors</span><span>Pageviews</span><span>Signups</span><span>Trials</span><span>Paid</span></div>
+      </div>
+      <div class="insights-kpis">
+        <div class="insights-kpi"><span class="insights-label">Pageviews</span><strong class="insights-number">3,960</strong></div>
+        <div class="insights-kpi"><span class="insights-label">Signups</span><strong class="insights-number">86</strong></div>
+        <div class="insights-kpi"><span class="insights-label">Trials</span><strong class="insights-number">31</strong></div>
+        <div class="insights-kpi"><span class="insights-label">Paid starts</span><strong class="insights-number">8</strong></div>
+      </div>
+      <div class="insights-panel">
+        <div class="insights-panel-title">Suite split</div>
+        <div class="insights-suite-row"><strong>PsychPro</strong><span>18 trials</span><span>5 paid</span></div>
+        <div class="insights-suite-row"><strong>EPPP</strong><span>13 trials</span><span>3 paid</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Trends first</h3>
+      <p>Emphasizes changes over time, with headline counts and suite comparison below.</p>
+    </div>
+  </div>
+</div>
