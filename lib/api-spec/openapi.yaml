@@ -34,6 +34,10 @@ tags:
     description: Shared account-owned book library
   - name: feedback
     description: Website feedback
+  - name: analytics
+    description: Anonymous first-party traffic tracking
+  - name: admin
+    description: Owner-only aggregate insights
 
 paths:
   /users/test-cleanup/preview:
@@ -160,6 +164,52 @@ paths:
                     required: [reward]
         "400":
           description: Feedback validation failed
+
+  /analytics/pageview:
+    post:
+      operationId: recordAnalyticsPageview
+      tags: [analytics]
+      summary: Record an anonymous, broad-category pageview
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnalyticsPageviewInput"
+      responses:
+        "202":
+          description: Event accepted or tracking disabled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalyticsPageviewResponse"
+        "400": { description: Invalid category }
+        "429": { description: Shared rate limit reached }
+        "503": { description: Tracking is temporarily unavailable }
+
+  /admin/insights:
+    get:
+      operationId: getAdminInsights
+      tags: [admin]
+      summary: Get owner-only aggregate PsychPro and EPPP insights
+      parameters:
+        - name: days
+          in: query
+          required: false
+          schema:
+            type: integer
+            enum: [7, 30, 90, 365]
+            default: 30
+      responses:
+        "200":
+          description: Aggregate metrics for the selected period
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminInsightsResponse"
+        "400": { description: Unsupported reporting window }
+        "401": { description: Sign-in required }
+        "403": { description: Owner access required }
 
   /healthz:
     get:
@@ -1642,4 +1692,88 @@ components:
           type: ["string", "null"]
       required:
         - status
+
+    AnalyticsPageviewInput:
+      type: object
+      properties:
+        routeCategory:
+          type: string
+          enum: [landing, plans, authentication, onboarding, psychpro, eppp, other]
+      required: [routeCategory]
+
+    AnalyticsPageviewResponse:
+      type: object
+      properties:
+        accepted:
+          type: boolean
+      required: [accepted]
+
+    AdminInsightsPeriod:
+      type: object
+      properties:
+        days: { type: integer, enum: [7, 30, 90, 365] }
+        start: { type: string, format: date-time }
+        end: { type: string, format: date-time }
+        refreshedAt: { type: string, format: date-time }
+      required: [days, start, end, refreshedAt]
+
+    AdminInsightsTrendBucket:
+      type: object
+      properties:
+        label: { type: string }
+        uniqueBrowsers: { type: ["integer", "null"], minimum: 0 }
+        pageviews: { type: ["integer", "null"], minimum: 0 }
+        newAccounts: { type: ["integer", "null"], minimum: 0 }
+      required: [label, uniqueBrowsers, pageviews, newAccounts]
+
+    AdminInsightsPlanCount:
+      type: object
+      properties:
+        suite: { type: string, enum: [psychpro, eppp] }
+        planCategory: { type: string }
+        count: { type: integer, minimum: 0 }
+      required: [suite, planCategory, count]
+
+    AdminInsightsResponse:
+      type: object
+      properties:
+        period:
+          $ref: "#/components/schemas/AdminInsightsPeriod"
+        traffic:
+          type: object
+          properties:
+            uniqueBrowsers: { type: ["integer", "null"], minimum: 0 }
+            pageviews: { type: ["integer", "null"], minimum: 0 }
+          required: [uniqueBrowsers, pageviews]
+        accounts:
+          type: object
+          properties:
+            newAccounts: { type: ["integer", "null"], minimum: 0 }
+          required: [newAccounts]
+        trials:
+          type: object
+          properties:
+            psychpro: { type: ["integer", "null"], minimum: 0 }
+            eppp: { type: ["integer", "null"], minimum: 0 }
+          required: [psychpro, eppp]
+        paid:
+          type: object
+          properties:
+            psychpro: { type: ["integer", "null"], minimum: 0 }
+            eppp: { type: ["integer", "null"], minimum: 0 }
+            byPlanCategory:
+              type: array
+              items:
+                $ref: "#/components/schemas/AdminInsightsPlanCount"
+          required: [psychpro, eppp, byPlanCategory]
+        trend:
+          type: array
+          items:
+            $ref: "#/components/schemas/AdminInsightsTrendBucket"
+        unavailableSources:
+          type: array
+          items:
+            type: string
+            enum: [traffic, accounts, trials, paid]
+      required: [period, traffic, accounts, trials, paid, trend, unavailableSources]
 

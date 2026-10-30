@@ -24,6 +24,7 @@ import profileRouter from "./profile";
 import featuredWorkRouter from "./featured-work";
 import connectionsRouter from "./connections";
 import libraryRouter from "./library";
+import analyticsRouter from "./analytics";
 import { MCP_ENABLED } from "../lib/mcpEnabled";
 
 const router: IRouter = Router();
@@ -69,5 +70,6 @@ router.use(profileRouter);
 router.use(featuredWorkRouter);
 router.use(connectionsRouter);
 router.use(libraryRouter);
+router.use(analyticsRouter);
 
 export default router;

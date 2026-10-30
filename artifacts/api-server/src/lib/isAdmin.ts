@@ -121,3 +121,23 @@ export async function requireAdminCaller(
   }
   return userId;
 }
+
+/**
+ * Insights is restricted to the owner's verified primary email. This is
+ * deliberately stricter than the general admin gate: another manually
+ * granted administrator must not see acquisition or billing aggregates.
+ */
+export async function requireInsightsOwner(
+  req: Request,
+  res: Response,
+): Promise<string | null> {
+  const userId = requireUserId(req, res);
+  if (!userId) return null;
+
+  const email = await fetchClerkPrimaryEmail(userId);
+  if (email !== "admin@psychprosuite.com") {
+    res.status(403).json({ error: "Owner access required" });
+    return null;
+  }
+  return userId;
+}

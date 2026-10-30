@@ -29,6 +29,11 @@ export const API_ACTION_RATE_LIMIT_RULES = {
     accountLimit: 5,
     ipLimit: 100,
   },
+  analyticsPageview: {
+    windowMs: HOUR_MS,
+    accountLimit: 300,
+    ipLimit: 600,
+  },
 } as const;
 
 export type ApiActionRateLimit = keyof typeof API_ACTION_RATE_LIMIT_RULES;
@@ -183,17 +188,19 @@ export function createApiActionRateLimitMiddleware(
     ),
 ): (action: ApiActionRateLimit) => RequestHandler {
   return (action) => async (req, res, next) => {
-    // Let the existing route-level auth guard return its normal 401 response
-    // for signed-out requests. No anonymous hits are written to the table.
     const userId = getOptionalUserId(req);
-    if (!userId) {
+    const ip = clientIp(req);
+    // Public pageview collection is limited by a keyed IP hash even when
+    // there is no signed-in account. Other actions keep their existing
+    // anonymous behavior and let route-level auth return the normal 401.
+    if (!userId && action !== "analyticsPageview") {
       next();
       return;
     }
 
     let decision: ApiActionRateLimitDecision;
     try {
-      decision = await checker(action, userId, clientIp(req));
+      decision = await checker(action, userId ?? `anonymous:${ip}`, ip);
     } catch (err) {
       req.log.error({ err, action }, "API action rate-limit check failed; blocking request");
       res.status(503).json({

@@ -90,6 +90,8 @@ const PROTECTED = new Set<string>([
   "POST /api/feedback",
   "GET /api/feedback",
   "PATCH /api/feedback/:id/status",
+  // owner-only aggregate analytics
+  "GET /api/admin/insights",
   // shared library (account ownership applies regardless of subscription)
   "GET /api/library",
   "POST /api/library/claim",
@@ -139,6 +141,8 @@ const ANONYMOUS = new Set<string>([
   "GET /api/topics/:topicId",
   // client error reporter (anonymous-tolerant, rate-limited)
   "POST /api/client-errors",
+  // anonymous first-party analytics (rate-limited, production-only)
+  "POST /api/analytics/pageview",
   // leaderboard
   "GET /api/leaderboard",
   // courses (read-only catalog + anonymous-tolerant mastery state)

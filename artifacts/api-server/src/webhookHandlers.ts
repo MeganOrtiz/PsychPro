@@ -1,5 +1,4 @@
-import { db } from "@workspace/db";
-import { usersTable } from "@workspace/db";
+import { db, paidConversionLedgerTable, usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import type { Logger } from "pino";
 import type Stripe from "stripe";
@@ -20,6 +19,32 @@ function epppMonthsFromPrice(price: Stripe.Price | undefined | null): number {
   const raw = price?.metadata?.eppp_months;
   const m = raw ? parseInt(raw, 10) : NaN;
   return Number.isFinite(m) && m > 0 ? m : 0;
+}
+
+function recurringPlanCategory(price: Stripe.Price | null | undefined): string {
+  const recurring = price?.recurring;
+  if (!recurring) return "other";
+  if (recurring.interval === "year" && recurring.interval_count === 1) return "annual";
+  if (recurring.interval === "month" && recurring.interval_count === 1) return "monthly";
+  return `${recurring.interval_count}_${recurring.interval}`;
+}
+
+async function recordPaidConversion(
+  session: Stripe.Checkout.Session,
+  event: Stripe.Event,
+  suite: "psychpro" | "eppp",
+  planCategory: string,
+): Promise<void> {
+  if (session.payment_status !== "paid") return;
+  await db
+    .insert(paidConversionLedgerTable)
+    .values({
+      checkoutSessionId: session.id,
+      suite,
+      planCategory,
+      paidAt: new Date(event.created * 1000),
+    })
+    .onConflictDoNothing();
 }
 
 // Stripe moved current_period_end onto subscription items in newer API
@@ -192,11 +217,14 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, log: Logger)
           } else {
             log.info({ userId: user.id }, "One-time EPPP purchase already credited");
           }
+          const planCategory = `${months}_months`;
+          await recordPaidConversion(session, event, "eppp", planCategory);
         }
       } else if (session.mode === "subscription" && session.subscription) {
         const subscriptionId = typeof session.subscription === "string" ? session.subscription : session.subscription.id;
         const sub = await stripe.subscriptions.retrieve(subscriptionId, { expand: ["items.data.price.product"] });
-        const product = sub.items.data[0]?.price?.product as Stripe.Product | undefined;
+        const price = sub.items.data[0]?.price;
+        const product = price?.product as Stripe.Product | undefined;
         if (isEpppProduct(product)) {
           const active = sub.status === "active" || sub.status === "trialing";
           await db.update(usersTable).set({
@@ -204,6 +232,12 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, log: Logger)
             epppAccessUntil: active ? (getSubscriptionPeriodEnd(sub) ?? user.epppAccessUntil) : user.epppAccessUntil,
           }).where(eq(usersTable.id, user.id));
           log.info({ userId: user.id, eppp: true }, "Activated EPPP subscription at checkout");
+          await recordPaidConversion(
+            session,
+            event,
+            "eppp",
+            recurringPlanCategory(price),
+          );
         } else {
           const resolved = await getSubscriptionTier(stripe, sub);
           if (resolved === null) {
@@ -221,6 +255,14 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, log: Logger)
                 ? new Date(sub.items.data[0].current_period_start * 1000) : new Date(sub.created * 1000),
             } : {}),
           }).where(eq(usersTable.id, user.id));
+          if (resolved !== null) {
+            await recordPaidConversion(
+              session,
+              event,
+              "psychpro",
+              recurringPlanCategory(price),
+            );
+          }
         }
       }
       break;

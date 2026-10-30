@@ -518,6 +518,146 @@ export interface SubscriptionStatus {
   currentPeriodEnd?: string | null;
 }
 
+export type AnalyticsPageviewInputRouteCategory =
+  (typeof AnalyticsPageviewInputRouteCategory)[keyof typeof AnalyticsPageviewInputRouteCategory];
+
+export const AnalyticsPageviewInputRouteCategory = {
+  landing: "landing",
+  plans: "plans",
+  authentication: "authentication",
+  onboarding: "onboarding",
+  psychpro: "psychpro",
+  eppp: "eppp",
+  other: "other",
+} as const;
+
+export interface AnalyticsPageviewInput {
+  routeCategory: AnalyticsPageviewInputRouteCategory;
+}
+
+export interface AnalyticsPageviewResponse {
+  accepted: boolean;
+}
+
+export type AdminInsightsPeriodDays =
+  (typeof AdminInsightsPeriodDays)[keyof typeof AdminInsightsPeriodDays];
+
+export const AdminInsightsPeriodDays = {
+  NUMBER_7: 7,
+  NUMBER_30: 30,
+  NUMBER_90: 90,
+  NUMBER_365: 365,
+} as const;
+
+export interface AdminInsightsPeriod {
+  days: AdminInsightsPeriodDays;
+  start: string;
+  end: string;
+  refreshedAt: string;
+}
+
+export interface AdminInsightsTrendBucket {
+  label: string;
+  /**
+   * @minimum 0
+   * @nullable
+   */
+  uniqueBrowsers: number | null;
+  /**
+   * @minimum 0
+   * @nullable
+   */
+  pageviews: number | null;
+  /**
+   * @minimum 0
+   * @nullable
+   */
+  newAccounts: number | null;
+}
+
+export type AdminInsightsPlanCountSuite =
+  (typeof AdminInsightsPlanCountSuite)[keyof typeof AdminInsightsPlanCountSuite];
+
+export const AdminInsightsPlanCountSuite = {
+  psychpro: "psychpro",
+  eppp: "eppp",
+} as const;
+
+export interface AdminInsightsPlanCount {
+  suite: AdminInsightsPlanCountSuite;
+  planCategory: string;
+  /** @minimum 0 */
+  count: number;
+}
+
+export type AdminInsightsResponseTraffic = {
+  /**
+   * @minimum 0
+   * @nullable
+   */
+  uniqueBrowsers: number | null;
+  /**
+   * @minimum 0
+   * @nullable
+   */
+  pageviews: number | null;
+};
+
+export type AdminInsightsResponseAccounts = {
+  /**
+   * @minimum 0
+   * @nullable
+   */
+  newAccounts: number | null;
+};
+
+export type AdminInsightsResponseTrials = {
+  /**
+   * @minimum 0
+   * @nullable
+   */
+  psychpro: number | null;
+  /**
+   * @minimum 0
+   * @nullable
+   */
+  eppp: number | null;
+};
+
+export type AdminInsightsResponsePaid = {
+  /**
+   * @minimum 0
+   * @nullable
+   */
+  psychpro: number | null;
+  /**
+   * @minimum 0
+   * @nullable
+   */
+  eppp: number | null;
+  byPlanCategory: AdminInsightsPlanCount[];
+};
+
+export type AdminInsightsResponseUnavailableSourcesItem =
+  (typeof AdminInsightsResponseUnavailableSourcesItem)[keyof typeof AdminInsightsResponseUnavailableSourcesItem];
+
+export const AdminInsightsResponseUnavailableSourcesItem = {
+  traffic: "traffic",
+  accounts: "accounts",
+  trials: "trials",
+  paid: "paid",
+} as const;
+
+export interface AdminInsightsResponse {
+  period: AdminInsightsPeriod;
+  traffic: AdminInsightsResponseTraffic;
+  accounts: AdminInsightsResponseAccounts;
+  trials: AdminInsightsResponseTrials;
+  paid: AdminInsightsResponsePaid;
+  trend: AdminInsightsTrendBucket[];
+  unavailableSources: AdminInsightsResponseUnavailableSourcesItem[];
+}
+
 export type GetLibraryBookPdfParams = {
   download?: boolean;
 };
@@ -525,6 +665,20 @@ export type GetLibraryBookPdfParams = {
 export type SubmitFeedback201 = FeedbackEntry & {
   reward: FeedbackRewardResult;
 };
+
+export type GetAdminInsightsParams = {
+  days?: GetAdminInsightsDays;
+};
+
+export type GetAdminInsightsDays =
+  (typeof GetAdminInsightsDays)[keyof typeof GetAdminInsightsDays];
+
+export const GetAdminInsightsDays = {
+  NUMBER_7: 7,
+  NUMBER_30: 30,
+  NUMBER_90: 90,
+  NUMBER_365: 365,
+} as const;
 
 export type GetPracticeExamByTopicParams = {
   /**

@@ -113,6 +113,7 @@ The app runs on the blue three-material system (OPAQUE panels / GLASS tiles / GL
   - Frontend: `<ClerkProvider>` wraps the app in `App.tsx`. `ClerkTokenBridge` (`src/components/auth/clerk-token-bridge.tsx`) listens to `useAuth()` and pushes the Clerk session token into the generated API client (`Authorization: Bearer <token>`). The protected pages live under `<RequireSignedIn>` so the token is always present by the time a protected API call is made.
   - Backend: `clerkMiddleware()` is mounted globally in `artifacts/api-server/src/app.ts`. Every protected route calls `requireUserId(req, res)` from `artifacts/api-server/src/lib/userId.ts`, which reads `getAuth(req).userId` and responds `401 Unauthorized` when the Clerk session is missing or invalid. The legacy `X-User-Id` request header is neither sent by the frontend nor consulted by the server.
 - **Admin gating:** `users.isAdmin` is always re-read from the database keyed on the verified Clerk user id (see `routes/feedback.ts` `requireAdmin`, `routes/featured-work.ts` `requireAdminCaller`, etc.). The admin-token issuer at `/api/admin/tokens` uses a separate `MCP_ADMIN_SECRET` shared secret — see `lib/requireAdmin.ts`.
+  - `GET /api/admin/insights` is stricter than the general admin gate: it requires the verified primary Clerk email `admin@psychprosuite.com`, and returns aggregates only.
 - **Anonymous-tolerant / public routes (complete whitelist):** these intentionally accept callers without a Clerk session — every other `/api/**` route rejects with `401`. Some read no caller identity at all; others use `getOptionalUserId(req)` to enrich the response when a verified Clerk session happens to be present:
   - `GET /api/healthz`, `GET /api/admin/status` (no user needed)
   - `GET /api/topics`, `GET /api/topics/:id` (read-only catalog; no user needed). NOTE: `/api/topics/:id/flashcards`, `/api/topics/:id/quizzes`, `/api/topics/:id/practice-exam`, and `/api/topics/:id/study-guide` are **protected** (auth-gated behind free-tier entitlements) — they are NOT in this whitelist.
@@ -121,6 +122,7 @@ The app runs on the blue three-material system (OPAQUE panels / GLASS tiles / GL
   - `GET /api/subscription/plans`
   - `GET /api/leaderboard` (`currentUser` marker uses the verified Clerk id when present)
   - `POST /api/client-errors` (error reports from anonymous landing-page visitors; logs the verified Clerk id when present)
+  - `POST /api/analytics/pageview` (production-only, broad-category anonymous events; shared-rate-limited)
   - `GET /api/feedback/is-admin` (returns `{isAdmin: false}` when no session)
   - `GET /api/storage/public-objects/*`, `GET /api/storage/objects/*` (the ACL check itself decides whether to allow unauthenticated reads)
   - `GET /api/profile/public/:userId` (only returns rows where `pref_show_on_featured_work = true`; 404 otherwise)

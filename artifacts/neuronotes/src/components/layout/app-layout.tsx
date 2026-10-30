@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useSearch } from "wouter";
-import { Brain, LayoutDashboard, BookOpen, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck, BookMarked, Library, Wrench, Sparkles, Star, Beaker, Lightbulb, Users, GraduationCap } from "lucide-react";
-import { UserButton } from "@clerk/clerk-react";
+import { Brain, LayoutDashboard, BookOpen, Trophy, CreditCard, Menu, X, ChevronRight, MessageSquare, ShieldCheck, BookMarked, Library, Wrench, Sparkles, Star, Beaker, Lightbulb, Users, GraduationCap, BarChart3 } from "lucide-react";
+import { UserButton, useUser } from "@clerk/clerk-react";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { authHeaders } from "@/lib/auth-headers";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -149,6 +149,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
       new URLSearchParams(search).get("view") === "main");
   const currentTier = new URLSearchParams(search).get("tier");
   const { isAdmin, isScholar } = useUserMeta();
+  const { isLoaded: clerkUserLoaded, user } = useUser();
+  const primaryEmail = user?.primaryEmailAddress;
+  const isInsightsOwner = Boolean(
+    clerkUserLoaded &&
+    primaryEmail?.verification.status === "verified" &&
+    primaryEmail.emailAddress.trim().toLowerCase() === "admin@psychprosuite.com",
+  );
 
   // Active flags for the three Tools entries. Computed once so the JSX
   // below stays readable and we don't repeat the path/tier logic inline.
@@ -327,7 +334,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
             </>
           )}
 
-          {isAdmin && (
+          {(isAdmin || isInsightsOwner) && (
             <>
               <div>
                 <p className="suite-sidebar-section">Admin</p>
@@ -374,6 +381,19 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   {location === "/admin/connections" && <ChevronRight className="w-4 h-4 ml-auto" />}
                 </div>
               </Link>
+              {isInsightsOwner && (
+                <Link
+                  href="/admin/insights"
+                  onClick={() => setSidebarOpen(false)}
+                  data-testid="nav-admin-insights"
+                >
+                  <div className={navItemClass(location === "/admin/insights")}>
+                    <BarChart3 className="w-4 h-4 flex-shrink-0" />
+                    <span className="text-sm font-medium">Insights</span>
+                    {location === "/admin/insights" && <ChevronRight className="w-4 h-4 ml-auto" />}
+                  </div>
+                </Link>
+              )}
             </>
           )}
         </nav>

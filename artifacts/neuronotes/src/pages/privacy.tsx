@@ -75,7 +75,7 @@ export default function PrivacyPage() {
           PRIVACY POLICY
         </h1>
         <p className="text-xs mb-1" style={{ color: P.inkSoft }}>
-          Effective date: June 2026 &middot; Last updated: June 2026
+          Effective date: June 2026 &middot; Last updated: October 30, 2026
         </p>
 
         <p
@@ -184,7 +184,11 @@ export default function PrivacyPage() {
                 card details. We retain limited billing-related identifiers
                 (such as a customer identifier, subscription identifier, and
                 your current subscription tier) to manage your access to paid
-                features.
+                features. For aggregate purchase reporting, we also retain a
+                Stripe Checkout Session identifier, suite, plan category, and
+                payment-confirmed timestamp for a successful initial payment.
+                This reporting record does not include your email or account
+                identifier and is retained for 13 months.
               </p>
             </SubSection>
 
@@ -198,10 +202,16 @@ export default function PrivacyPage() {
 
             <SubSection n="1.7" title="Technical and Device Information">
               <p>
-                We may automatically collect technical information such as a
-                browser-scoped identifier stored locally on your device, error
-                and diagnostic logs, and general usage information necessary to
-                operate, secure, and troubleshoot the Service.
+                To understand aggregate site use, we set a random, first-party,
+                HttpOnly browser cookie to estimate unique browsers and
+                pageviews. The identifier is not connected to an account. We
+                store only a broad page category and event timestamp—not the
+                exact URL, page content, account identifier, IP address,
+                user-agent, query string, or referrer—and delete these events
+                after 13 months. Clearing or blocking cookies may reset or
+                reduce the accuracy of unique-browser estimates. Separately,
+                shared abuse-prevention rate limits use keyed hashes of source
+                IP addresses that are removed within 24 hours.
               </p>
             </SubSection>
           </Section>
@@ -301,6 +311,11 @@ export default function PrivacyPage() {
               information as described in Section 8. Note that some technical
               identifiers are tied to your device or browser storage; clearing
               that storage may affect access to data associated with it.
+            </p>
+            <p>
+              Anonymous pageview events and aggregate purchase-reporting records
+              are retained for 13 months. Keyed IP hashes used for shared
+              rate-limiting are retained for no more than 24 hours.
             </p>
           </Section>
 

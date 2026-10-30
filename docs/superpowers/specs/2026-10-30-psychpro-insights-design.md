@@ -1,6 +1,6 @@
 # PsychPro Owner Insights — Design
 
-**Status:** Approved design direction; awaiting owner review of this specification
+**Status:** Implemented
 **Date:** 2026-10-30
 
 ## Summary
@@ -56,7 +56,7 @@ The client-side `trial_started` event is useful for diagnostics, but is not the 
 3. The server accepts only an allowlisted route category: landing, plans, authentication, onboarding, PsychPro, EPPP, or other. It does not store the exact URL.
 4. Store only the anonymous identifier, route category, and event timestamp. Do not store emails, account IDs, IP addresses, user-agent strings, query strings, referrers, or page content.
 5. Apply the existing shared rate-limiting approach to this public endpoint. Ignore obvious automated crawlers where detectable without retaining their identifying headers.
-6. Retain raw anonymous events for 13 months, then remove them. Enable collection only in production; preview and development activity must not pollute published metrics.
+6. Retain anonymous pageview and paid-conversion ledger records for 13 months, then remove them. Enable collection only in production; preview and development activity must not pollute published metrics.
 
 The privacy disclosure should describe this first-party, anonymous measurement before collection is enabled on the published site. No blocking challenge or new consent modal is part of this feature.
 

@@ -51,6 +51,8 @@ export const insertUserSchema = createInsertSchema(usersTable).omit({ createdAt:
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof usersTable.$inferSelect;
 
+export { anonymousPageviewsTable, paidConversionLedgerTable } from "./analytics";
+
 // Claim a Checkout Session and update its entitlement in one transaction.
 // A primary key prevents redelivery from crediting the same purchase twice.
 export const stripePurchaseReceiptsTable = pgTable("stripe_purchase_receipts", {

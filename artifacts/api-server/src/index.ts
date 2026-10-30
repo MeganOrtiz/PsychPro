@@ -9,6 +9,7 @@ import { logger } from "./lib/logger";
 import { logResolvedClientErrorsRateLimit } from "./startup";
 import { startClientErrorsRateLimitCleanup } from "./middlewares/clientErrorsRateLimit";
 import { startApiActionRateLimitCleanup } from "./middlewares/apiActionRateLimit";
+import { startAnalyticsRetentionCleanup } from "./lib/analyticsRetention";
 import { ensureFeedbackBookCatalog, logCatalogBootstrapFailure } from "./lib/bookLibrary";
 
 logResolvedClientErrorsRateLimit(logger);
@@ -18,6 +19,7 @@ logResolvedClientErrorsRateLimit(logger);
 // process alive on its own.
 startClientErrorsRateLimitCleanup(logger);
 startApiActionRateLimitCleanup(logger);
+startAnalyticsRetentionCleanup(logger);
 
 const port = Number(process.env.PORT) || 8080;
 

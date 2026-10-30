@@ -17,6 +17,9 @@ import type {
 } from "@tanstack/react-query";
 
 import type {
+  AdminInsightsResponse,
+  AnalyticsPageviewInput,
+  AnalyticsPageviewResponse,
   AttemptRecord,
   BookLibraryResponse,
   CheckoutSessionResponse,
@@ -31,6 +34,7 @@ import type {
   EpppStudyPlan,
   EpppStudyPlanInput,
   Flashcard,
+  GetAdminInsightsParams,
   GetLibraryBookPdfParams,
   GetPracticeExamByTopicParams,
   HealthStatus,
@@ -587,6 +591,193 @@ export const useSubmitFeedback = <
 > => {
   return useMutation(getSubmitFeedbackMutationOptions(options));
 };
+
+/**
+ * @summary Record an anonymous, broad-category pageview
+ */
+export const getRecordAnalyticsPageviewUrl = () => {
+  return `/api/analytics/pageview`;
+};
+
+export const recordAnalyticsPageview = async (
+  analyticsPageviewInput: AnalyticsPageviewInput,
+  options?: RequestInit,
+): Promise<AnalyticsPageviewResponse> => {
+  return customFetch<AnalyticsPageviewResponse>(
+    getRecordAnalyticsPageviewUrl(),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(analyticsPageviewInput),
+    },
+  );
+};
+
+export const getRecordAnalyticsPageviewMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof recordAnalyticsPageview>>,
+    TError,
+    { data: BodyType<AnalyticsPageviewInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof recordAnalyticsPageview>>,
+  TError,
+  { data: BodyType<AnalyticsPageviewInput> },
+  TContext
+> => {
+  const mutationKey = ["recordAnalyticsPageview"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof recordAnalyticsPageview>>,
+    { data: BodyType<AnalyticsPageviewInput> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return recordAnalyticsPageview(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type RecordAnalyticsPageviewMutationResult = NonNullable<
+  Awaited<ReturnType<typeof recordAnalyticsPageview>>
+>;
+export type RecordAnalyticsPageviewMutationBody =
+  BodyType<AnalyticsPageviewInput>;
+export type RecordAnalyticsPageviewMutationError = ErrorType<void>;
+
+/**
+ * @summary Record an anonymous, broad-category pageview
+ */
+export const useRecordAnalyticsPageview = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof recordAnalyticsPageview>>,
+    TError,
+    { data: BodyType<AnalyticsPageviewInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof recordAnalyticsPageview>>,
+  TError,
+  { data: BodyType<AnalyticsPageviewInput> },
+  TContext
+> => {
+  return useMutation(getRecordAnalyticsPageviewMutationOptions(options));
+};
+
+/**
+ * @summary Get owner-only aggregate PsychPro and EPPP insights
+ */
+export const getGetAdminInsightsUrl = (params?: GetAdminInsightsParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/admin/insights?${stringifiedParams}`
+    : `/api/admin/insights`;
+};
+
+export const getAdminInsights = async (
+  params?: GetAdminInsightsParams,
+  options?: RequestInit,
+): Promise<AdminInsightsResponse> => {
+  return customFetch<AdminInsightsResponse>(getGetAdminInsightsUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetAdminInsightsQueryKey = (
+  params?: GetAdminInsightsParams,
+) => {
+  return [`/api/admin/insights`, ...(params ? [params] : [])] as const;
+};
+
+export const getGetAdminInsightsQueryOptions = <
+  TData = Awaited<ReturnType<typeof getAdminInsights>>,
+  TError = ErrorType<void>,
+>(
+  params?: GetAdminInsightsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getAdminInsights>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetAdminInsightsQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getAdminInsights>>
+  > = ({ signal }) => getAdminInsights(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getAdminInsights>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetAdminInsightsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getAdminInsights>>
+>;
+export type GetAdminInsightsQueryError = ErrorType<void>;
+
+/**
+ * @summary Get owner-only aggregate PsychPro and EPPP insights
+ */
+
+export function useGetAdminInsights<
+  TData = Awaited<ReturnType<typeof getAdminInsights>>,
+  TError = ErrorType<void>,
+>(
+  params?: GetAdminInsightsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getAdminInsights>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetAdminInsightsQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
 
 /**
  * Returns server health status

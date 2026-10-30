@@ -124,6 +124,127 @@ export const SubmitFeedbackBody = zod.object({
 });
 
 /**
+ * @summary Record an anonymous, broad-category pageview
+ */
+export const RecordAnalyticsPageviewBody = zod.object({
+  routeCategory: zod.enum([
+    "landing",
+    "plans",
+    "authentication",
+    "onboarding",
+    "psychpro",
+    "eppp",
+    "other",
+  ]),
+});
+
+/**
+ * @summary Get owner-only aggregate PsychPro and EPPP insights
+ */
+export const getAdminInsightsQueryDaysDefault = 30;
+
+export const GetAdminInsightsQueryParams = zod.object({
+  days: zod
+    .union([zod.literal(7), zod.literal(30), zod.literal(90), zod.literal(365)])
+    .default(getAdminInsightsQueryDaysDefault),
+});
+
+export const getAdminInsightsResponseTrafficUniqueBrowsersMin = 0;
+
+export const getAdminInsightsResponseTrafficPageviewsMin = 0;
+
+export const getAdminInsightsResponseAccountsNewAccountsMin = 0;
+
+export const getAdminInsightsResponseTrialsPsychproMin = 0;
+
+export const getAdminInsightsResponseTrialsEpppMin = 0;
+
+export const getAdminInsightsResponsePaidPsychproMin = 0;
+
+export const getAdminInsightsResponsePaidEpppMin = 0;
+
+export const getAdminInsightsResponsePaidByPlanCategoryItemCountMin = 0;
+
+export const getAdminInsightsResponseTrendItemUniqueBrowsersMin = 0;
+
+export const getAdminInsightsResponseTrendItemPageviewsMin = 0;
+
+export const getAdminInsightsResponseTrendItemNewAccountsMin = 0;
+
+export const GetAdminInsightsResponse = zod.object({
+  period: zod.object({
+    days: zod.union([
+      zod.literal(7),
+      zod.literal(30),
+      zod.literal(90),
+      zod.literal(365),
+    ]),
+    start: zod.coerce.date(),
+    end: zod.coerce.date(),
+    refreshedAt: zod.coerce.date(),
+  }),
+  traffic: zod.object({
+    uniqueBrowsers: zod
+      .number()
+      .min(getAdminInsightsResponseTrafficUniqueBrowsersMin)
+      .nullable(),
+    pageviews: zod
+      .number()
+      .min(getAdminInsightsResponseTrafficPageviewsMin)
+      .nullable(),
+  }),
+  accounts: zod.object({
+    newAccounts: zod
+      .number()
+      .min(getAdminInsightsResponseAccountsNewAccountsMin)
+      .nullable(),
+  }),
+  trials: zod.object({
+    psychpro: zod
+      .number()
+      .min(getAdminInsightsResponseTrialsPsychproMin)
+      .nullable(),
+    eppp: zod.number().min(getAdminInsightsResponseTrialsEpppMin).nullable(),
+  }),
+  paid: zod.object({
+    psychpro: zod
+      .number()
+      .min(getAdminInsightsResponsePaidPsychproMin)
+      .nullable(),
+    eppp: zod.number().min(getAdminInsightsResponsePaidEpppMin).nullable(),
+    byPlanCategory: zod.array(
+      zod.object({
+        suite: zod.enum(["psychpro", "eppp"]),
+        planCategory: zod.string(),
+        count: zod
+          .number()
+          .min(getAdminInsightsResponsePaidByPlanCategoryItemCountMin),
+      }),
+    ),
+  }),
+  trend: zod.array(
+    zod.object({
+      label: zod.string(),
+      uniqueBrowsers: zod
+        .number()
+        .min(getAdminInsightsResponseTrendItemUniqueBrowsersMin)
+        .nullable(),
+      pageviews: zod
+        .number()
+        .min(getAdminInsightsResponseTrendItemPageviewsMin)
+        .nullable(),
+      newAccounts: zod
+        .number()
+        .min(getAdminInsightsResponseTrendItemNewAccountsMin)
+        .nullable(),
+    }),
+  ),
+  unavailableSources: zod.array(
+    zod.enum(["traffic", "accounts", "trials", "paid"]),
+  ),
+});
+
+/**
  * Returns server health status
  * @summary Health check
  */

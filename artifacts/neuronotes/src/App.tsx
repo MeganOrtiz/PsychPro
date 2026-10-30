@@ -17,6 +17,7 @@ import { RouteLoadingSurface } from "@/components/route-loading-surface";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
 import { PP } from "@/lib/palette";
 import { createClerkNavigation } from "@/lib/clerk-navigation";
+import { PageviewTracker } from "@/components/analytics/pageview-tracker";
 
 // Route-level splitting keeps the public landing and onboarding entry paths
 // from downloading the entire signed-in application (including Brain Lab's 3D
@@ -53,6 +54,7 @@ const BrainLabPage = lazy(() => import("@/pages/brain-lab"));
 const EpppPage = lazy(() => import("@/pages/eppp"));
 const AdminFeedbackPage = lazy(() => import("@/pages/admin-feedback"));
 const AdminTokensPage = lazy(() => import("@/pages/admin-tokens"));
+const AdminInsightsPage = lazy(() => import("@/pages/admin-insights"));
 const MyDecksPage = lazy(() => import("@/pages/my-decks"));
 const NewDeckPage = lazy(() => import("@/pages/my-decks-new"));
 const MyDeckDetailPage = lazy(() => import("@/pages/my-decks-detail"));
@@ -227,6 +229,13 @@ function AppRouter() {
       </Route>
       {/* Public paid-plan comparison. Only purchasing requires authentication. */}
       <Route path="/subscription">{() => <RouteBoundary><SubscriptionPage /></RouteBoundary>}</Route>
+      <Route path="/admin/insights">
+        <RequireSignedIn>
+          <AppLayout>
+            <RouteBoundary><AdminInsightsPage /></RouteBoundary>
+          </AppLayout>
+        </RequireSignedIn>
+      </Route>
       <Route path="/psychpro/welcome">
         <RequireSignedIn>
           <Redirect to="/onboarding?suite=psychpro" />
@@ -319,6 +328,7 @@ function App() {
           <ClerkTokenBridge>
           <TooltipProvider>
             <WouterRouter base={basePath}>
+              <PageviewTracker />
               <Suspense fallback={<RouteLoadingSurface />}>
                 <AppRouter />
               </Suspense>
