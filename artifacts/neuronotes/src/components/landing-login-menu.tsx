@@ -39,7 +39,11 @@ export function LandingLoginMenu({ signedIn }: { signedIn: boolean }) {
               setOpen(true);
             }
           }}
-          onPointerLeave={closeSoon}
+          onPointerLeave={(event) => {
+            // Touch pointers emit pointerleave when a tap ends. Keep the
+            // choices open on phones so the user can tap a suite.
+            if (event.pointerType === "mouse") closeSoon();
+          }}
           onPointerDown={(event) => {
             const openedByHover = hoverOpened.current;
             hoverOpened.current = false;
@@ -62,7 +66,9 @@ export function LandingLoginMenu({ signedIn }: { signedIn: boolean }) {
         className="min-w-56"
         data-testid="landing-login-options"
         onPointerEnter={cancelClose}
-        onPointerLeave={closeSoon}
+        onPointerLeave={(event) => {
+          if (event.pointerType === "mouse") closeSoon();
+        }}
         onInteractOutside={(event) => {
           // With a non-modal, hover-open menu, the trigger is also an
           // "outside" target. Leave its clicks/focus to the trigger itself.
