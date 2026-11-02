@@ -263,9 +263,15 @@ if (!/backdrop-filter:\s*none\s*!important;/.test(css)) {
         !isTurquoiseScope(s.sel)) {
       fail("turquoise glass used outside its scoped actions", "keep it exclusive to the landing promo, textbook, and two suite-switch buttons");
     }
+    const approvedSuiteSwitchSelectors = [
+      /^\.suite-switch-btn(?::hover|:active|:focus-visible)?$/,
+      /^\.admin-insights \.insights-accent$/,
+      /^\.admin-insights \.insights-accent-well$/,
+      /^\.admin-insights \.insights-chart-accent$/,
+    ];
     if (/var\(--pp-suite-switch-turquoise(?:-rgb)?\)/.test(s.body) &&
-        !/^\.suite-switch-btn(?::hover|:active|:focus-visible)?$/.test(s.sel)) {
-      fail("suite-switch turquoise used outside its scoped buttons", "keep this accent exclusive to .suite-switch-btn and its hover/active/focus-visible states");
+        !approvedSuiteSwitchSelectors.some((selector) => selector.test(s.sel))) {
+      fail("suite-switch turquoise used outside its approved scopes", "keep this accent on suite-switch buttons or the scoped Insights icon and pageview-chart classes");
     }
   }
   for (const s of spans) {

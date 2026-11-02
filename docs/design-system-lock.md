@@ -120,6 +120,13 @@ Never weaken, bypass, remove, or rewrite a guardrail merely to make validation
 pass. Run `pnpm run design:check` from the repository root and report the visual
 files changed and the actual result.
 
+**Owner Insights accent exception:** the owner-only Insights dashboard uses the
+existing PsychPro turquoise token sparingly on icons, icon wells, and pageview
+chart marks. Keep all surfaces silver/white and all text dark; do not extend
+turquoise to other dashboard copy, cards, buttons, or status colors without a
+separate explicit request. The design-drift guardrail allows only the
+`.admin-insights` accent classes for this exception.
+
 Inspect the current implementation and active checks rather than restoring
 historical branch styles. If an older section of this document conflicts with
 them, report the discrepancy; it is not permission to revert the current design.

@@ -24,6 +24,18 @@ never committed). This is the rebuild; keep it committed.
 **How to apply:** don't ban things used legitimately at scale (e.g. rounded-full,
 111+ uses). Lock the canonical recipe + tokens, not every utility.
 
+## Owner Insights accent exception
+The owner-only Insights dashboard may pair the silver/white system with the
+existing PsychPro turquoise token on icons, icon wells, and pageview chart marks.
+Text remains dark and surfaces remain neutral; do not extend turquoise to other
+dashboard UI without a separate explicit request.
+
+**Why:** the owner explicitly selected a silver-and-turquoise treatment for the
+Insights page while keeping the rest of PsychPro's white/luminous system intact.
+
+**How to apply:** use only the scoped `.admin-insights` accent classes and keep
+the matching design-drift allowlist and project design-lock documentation in sync.
+
 ## Material composition discipline (2026-07-09)
 Pages/components must COMPOSE the shared material classes from index.css (.mat-opaque / .mat-glass(-interactive) / .mat-icon-well(--round) / .mat-chip / .pp-btn-* / .eppp-launch-btn) — never re-declare the material values in page CSS or inline styles. The drift guardrail's material rule bans the signature values (opaque gradient+shadow stack, glass base fill 0.16, icon-well cyan-0.35 border) in TSX. sonner.tsx is the one whitelisted exception (third-party toast internals need !important arbitrary values via its classNames API). State modifiers (is-active elevated fills, elevation steps) and pure geometry overrides remain legitimately local.
 **Why:** Task-176 review rejected value-migration alone; duplicated recipes drift silently.

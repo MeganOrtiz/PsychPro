@@ -154,7 +154,8 @@
   --pp-line-bright: rgba(var(--pp-ocean-deep-rgb), 0.55); /* hairline border (glass) */
   --pp-glow: rgba(var(--pp-icy-rgb), 0.10);          /* hover halo (soft) */
   --pp-glow-strong: rgba(var(--pp-icy-rgb), 0.16);   /* active halo */
-  /* Owner-approved turquoise accent ONLY for the two suite-switch actions. */
+  /* Owner-approved turquoise accent for suite-switch actions and the owner
+     Insights dashboard's small icon and pageview-chart accents. */
   --pp-suite-switch-turquoise: #159da4;
   --pp-suite-switch-turquoise-rgb: 21, 157, 164;
   /* Rich turquoise glass accent: promo, textbook, and suite-switch actions only. */
@@ -375,6 +376,21 @@
   --ring: 210 7% 45%;
   /* Shared glow source for gloss buttons + interactive glass. */
   --btn-glow: 210 8% 30%;
+}
+
+/* The Insights page pairs the standard silver surfaces with restrained
+   turquoise accents. Keep turquoise to icons and pageview data marks only. */
+.admin-insights .insights-accent {
+  color: var(--pp-suite-switch-turquoise);
+}
+
+.admin-insights .insights-accent-well {
+  color: var(--pp-suite-switch-turquoise);
+  background-color: rgba(var(--pp-suite-switch-turquoise-rgb), 0.12);
+}
+
+.admin-insights .insights-chart-accent {
+  background-color: var(--pp-suite-switch-turquoise);
 }
 
 /* LANDING — the landing page now runs on the SAME white/luminous system as

@@ -33,7 +33,7 @@ function MetricCard({
     <article className="rounded-2xl border border-border bg-card p-4 sm:p-5">
       <div className="flex items-center justify-between gap-3">
         <p className="text-sm font-semibold text-foreground">{label}</p>
-        <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary/10 text-primary">
+        <span className="insights-accent-well grid h-9 w-9 place-items-center rounded-xl">
           <Icon aria-hidden="true" className="h-4 w-4" />
         </span>
       </div>
@@ -73,7 +73,7 @@ export default function AdminInsightsPage() {
 
   if (isError && errorStatus === 403) {
     return (
-      <main className="mx-auto max-w-3xl p-6 sm:p-10">
+      <main className="admin-insights mx-auto max-w-3xl p-6 sm:p-10">
         <section className="rounded-2xl border border-border bg-card p-8 text-center">
           <h1 className="text-xl font-semibold text-foreground">Insights are owner-only</h1>
           <p className="mt-2 text-sm text-muted-foreground">
@@ -85,11 +85,11 @@ export default function AdminInsightsPage() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-[1360px] px-4 py-6 text-foreground sm:px-7 sm:py-8 lg:px-10">
+    <main className="admin-insights mx-auto w-full max-w-[1360px] px-4 py-6 text-foreground sm:px-7 sm:py-8 lg:px-10">
       <header className="flex flex-col gap-5 border-b border-border pb-6 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <div className="mb-3 flex items-center gap-2 text-primary">
-            <BarChart3 aria-hidden="true" className="h-5 w-5" />
+          <div className="mb-3 flex items-center gap-2 text-foreground">
+            <BarChart3 aria-hidden="true" className="insights-accent h-5 w-5" />
             <span className="text-xs font-semibold uppercase tracking-[0.15em]">
               PsychPro · Owner insights
             </span>
@@ -104,7 +104,7 @@ export default function AdminInsightsPage() {
         <div className="flex flex-wrap items-center gap-2">
           <label htmlFor="insights-window" className="sr-only">Reporting period</label>
           <span className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-xs font-medium text-muted-foreground">
-            <CalendarDays aria-hidden="true" className="h-4 w-4 text-primary" />
+            <CalendarDays aria-hidden="true" className="insights-accent h-4 w-4" />
             <select
               id="insights-window"
               value={days}
@@ -217,7 +217,7 @@ export default function AdminInsightsPage() {
                 </div>
                 <div className="flex flex-wrap gap-3 text-xs font-medium text-muted-foreground">
                   <span className="inline-flex items-center gap-1.5">
-                    <i aria-hidden="true" className="h-2 w-2 rounded-full bg-primary" /> Pageviews
+                    <i aria-hidden="true" className="insights-chart-accent h-2 w-2 rounded-full" /> Pageviews
                   </span>
                   <span className="inline-flex items-center gap-1.5">
                     <i aria-hidden="true" className="h-2 w-2 rounded-full bg-muted-foreground/40" /> New app accounts
@@ -242,7 +242,7 @@ export default function AdminInsightsPage() {
                       <div className="flex h-full w-full items-end justify-center gap-0.5">
                         <span
                           title={`${formatCount(bucket.pageviews)} pageviews`}
-                          className="w-1/3 max-w-4 rounded-t-sm bg-primary"
+                          className="insights-chart-accent w-1/3 max-w-4 rounded-t-sm"
                           style={{ height: `${pageviewHeight}%` }}
                         />
                         <span
