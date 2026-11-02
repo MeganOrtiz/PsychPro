@@ -8,10 +8,11 @@ import { getEntitlements, FREE_FLASHCARD_PREVIEW } from "../lib/entitlements";
 import { isEpppTopicId } from "../lib/eppp";
 import { practiceExamTimeLimit } from "../lib/practice-exam-timing";
 import { parseTopicId } from "../lib/topicId";
+import compression from "compression";
 
 const router = Router();
 
-router.get("/topics", async (req: Request, res: Response): Promise<void> => {
+router.get("/topics", compression(), async (req: Request, res: Response): Promise<void> => {
   try {
     // Constant query count instead of two count queries per topic. The old
     // fan-out exhausted the pool as the EPPP catalog grew, delaying unrelated
@@ -30,6 +31,10 @@ router.get("/topics", async (req: Request, res: Response): Promise<void> => {
       flashcardCount: flashcards.get(topic.id) ?? 0,
       quizCount: quizzes.get(topic.id) ?? 0,
     }));
+    // This catalog response contains only shared topic metadata and counts,
+    // never user progress. Cache it briefly and compress it for the public
+    // landing-page topic list.
+    res.setHeader("Cache-Control", "public, max-age=300, stale-while-revalidate=600");
     res.json(result);
   } catch (err) {
     req.log.error({ err }, "Error getting topics");

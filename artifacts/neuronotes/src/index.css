@@ -28,7 +28,6 @@
      - Override these CSS variables in another scope.
      - Add a second .bg-card rule or a competing button recipe.
    ============================================================================= */
-@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@200;300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
@@ -1113,7 +1112,7 @@ body {
   /* Fill past the transparent layout border so no white frame peeks through. */
   inset: -6px;
   border: 15px solid transparent;
-  border-image-source: url("/api/storage/public-objects/brand/aqua-glass-button.png");
+  border-image-source: url("./assets/aqua-glass-button.webp");
   border-image-slice: 55 100 55 100 fill;
   border-image-width: 10px 12px;
   border-image-repeat: stretch;
@@ -1204,7 +1203,7 @@ body {
 /* Landing plan actions keep their live labels and trial handlers; the EPPP
    action alone uses the matching pale-yellow artwork, not an aqua filter. */
 .landing-root .landing-tier--eppp .landing-tier-cta::before {
-  border-image-source: url("/api/storage/public-objects/brand/pale-yellow-glass.png");
+  border-image-source: url("./assets/pale-yellow-glass.webp");
 }
 .landing-root .landing-tier--eppp .landing-tier-cta:hover,
 .landing-root .landing-tier--eppp .landing-tier-cta:active {

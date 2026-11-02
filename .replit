@@ -8,6 +8,23 @@ deploymentTarget = "autoscale"
 args = ["pnpm", "store", "prune"]
 env = { "CI" = "true" }
 
+# Vite emits content-hashed assets; keep them cached across visits. Keep every
+# SPA document response revalidatable so a new release can replace its chunks.
+[[deployment.responseHeaders]]
+path = "/assets/*"
+name = "Cache-Control"
+value = "public, max-age=31536000, immutable"
+
+[[deployment.responseHeaders]]
+path = "/"
+name = "Cache-Control"
+value = "no-cache"
+
+[[deployment.responseHeaders]]
+path = "/index.html"
+name = "Cache-Control"
+value = "no-cache"
+
 [workflows]
 runButton = "Project"
 

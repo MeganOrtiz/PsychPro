@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@clerk/clerk-react";
 import {
@@ -19,20 +19,11 @@ import {
   Award,
   CheckCircle2,
 } from "lucide-react";
-import {
-  ResponsiveContainer,
-  ComposedChart,
-  Line,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-} from "recharts";
-import { useGetTopics } from "@workspace/api-client-react";
+import { getGetTopicsQueryKey, useGetTopics } from "@workspace/api-client-react";
 import brainLateral from "@/assets/brain-views/lateral.webp";
 import heroChromeBrain from "@/assets/psychpro-chrome-brain.webp";
 import chromeCrown from "@/assets/eppp-chrome-crown.webp";
-import heroTealInkSplash from "@/assets/psychpro-teal-ink-splash.jpg";
+import heroTealInkSplash from "@/assets/psychpro-teal-ink-splash.webp";
 import foundationsBook from "@/assets/psychpro-foundations-book.webp";
 import founderMegan from "@/assets/founder/megan.webp";
 import { STUDY_PALETTE as P } from "@/lib/study-theme";
@@ -142,6 +133,39 @@ const DASH_ACTIVITY = [
   { day: "Sun", score: 86 },
 ];
 
+// Keep the decorative landing dashboard chart lightweight. Recharts remains
+// available to the signed-in analytics pages, but loading it is unnecessary
+// for this fixed sample preview.
+const DASH_CHART_LAYOUT = {
+  width: 600,
+  height: 150,
+  left: 44,
+  right: 10,
+  top: 8,
+  bottom: 122,
+};
+const DASH_CHART_TICKS = [0, 20, 40, 60, 80, 100];
+const dashChartY = (score: number) =>
+  DASH_CHART_LAYOUT.bottom -
+  (score / 100) * (DASH_CHART_LAYOUT.bottom - DASH_CHART_LAYOUT.top);
+const DASH_CHART_POINTS = DASH_ACTIVITY.map((point, index) => ({
+  ...point,
+  x:
+    DASH_CHART_LAYOUT.left +
+    (index * (DASH_CHART_LAYOUT.width - DASH_CHART_LAYOUT.left - DASH_CHART_LAYOUT.right)) /
+      (DASH_ACTIVITY.length - 1),
+  y: dashChartY(point.score),
+}));
+const DASH_CHART_LINE_PATH = DASH_CHART_POINTS.map((point, index) => {
+  if (index === 0) return `M ${point.x} ${point.y}`;
+  const previous = DASH_CHART_POINTS[index - 1];
+  const handle = (point.x - previous.x) / 3;
+  return `C ${previous.x + handle} ${previous.y}, ${point.x - handle} ${point.y}, ${point.x} ${point.y}`;
+}).join(" ");
+const DASH_CHART_AREA_PATH =
+  `${DASH_CHART_LINE_PATH} L ${DASH_CHART_POINTS[DASH_CHART_POINTS.length - 1].x} ${DASH_CHART_LAYOUT.bottom}` +
+  ` L ${DASH_CHART_POINTS[0].x} ${DASH_CHART_LAYOUT.bottom} Z`;
+
 // The two offerings. PsychPro (aqua) folds the former Master/Scholar plans
 // into one; EPPP (pale yellow) is sold separately with no cross-unlock.
 const PSYCHPRO_POINTS = [
@@ -218,6 +242,8 @@ function useScrollReveal() {
 export default function LandingPage() {
   const [, navigate] = useLocation();
   const { isSignedIn } = useAuth();
+  const topicsSectionRef = useRef<HTMLElement | null>(null);
+  const [shouldLoadTopics, setShouldLoadTopics] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -256,15 +282,46 @@ export default function LandingPage() {
     el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
   };
 
+  // The complete topic list is near the bottom of the landing page. Wait until
+  // it approaches the viewport before requesting the catalog so it cannot
+  // compete with the initial render, fonts, and hero artwork.
+  useEffect(() => {
+    const section = topicsSectionRef.current;
+    if (!section) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setShouldLoadTopics(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setShouldLoadTopics(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "640px 0px" },
+    );
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
   // Full topic list for the "All topics" section at the bottom. Pulled live
   // from the topics hook so it stays in sync with the database, sorted by the
   // Topics-tab category order then alphabetically within each category.
   const { data: topicsData, isLoading: topicsLoading, isError: topicsError } =
-    useGetTopics() as {
+    useGetTopics({
+      query: {
+        queryKey: getGetTopicsQueryKey(),
+        enabled: shouldLoadTopics,
+        staleTime: 5 * 60_000,
+      },
+    }) as {
       data: LandingTopic[] | undefined;
       isLoading: boolean;
       isError: boolean;
     };
+  const showTopicsLoading = !shouldLoadTopics || topicsLoading;
   const sortedTopics: LandingTopic[] = (() => {
     const list = ((topicsData ?? []) as LandingTopic[]).filter(
       (topic) => !isEpppTopic(topic),
@@ -506,52 +563,74 @@ export default function LandingPage() {
                 <span>Study Analytics</span>
               </div>
               <div className="landing-dash-chart">
-                <ResponsiveContainer width="100%" height="100%">
-                  <ComposedChart
-                    data={DASH_ACTIVITY}
-                    margin={{ top: 8, right: 8, bottom: 0, left: -8 }}
-                  >
-                    <defs>
-                      <linearGradient id="dashLineFill" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor={C.cyanDeep} stopOpacity={0.22} />
-                        <stop offset="100%" stopColor={C.cyanDeep} stopOpacity={0} />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid
-                      strokeDasharray="3 3"
-                      stroke={C.grid}
-                      vertical={false}
+                <svg
+                  width="100%"
+                  height="100%"
+                  viewBox={`0 0 ${DASH_CHART_LAYOUT.width} ${DASH_CHART_LAYOUT.height}`}
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                >
+                  <defs>
+                    <linearGradient id="dashLineFill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor={C.cyanDeep} stopOpacity={0.22} />
+                      <stop offset="100%" stopColor={C.cyanDeep} stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  {DASH_CHART_TICKS.map((tick) => {
+                    const y = dashChartY(tick);
+                    return (
+                      <g key={tick}>
+                        <line
+                          x1={DASH_CHART_LAYOUT.left}
+                          x2={DASH_CHART_LAYOUT.width - DASH_CHART_LAYOUT.right}
+                          y1={y}
+                          y2={y}
+                          stroke={C.grid}
+                          strokeDasharray="3 3"
+                        />
+                        <text
+                          x={DASH_CHART_LAYOUT.left - 8}
+                          y={y + 4}
+                          textAnchor="end"
+                          fontSize="11"
+                          fill={C.inkSoft}
+                        >
+                          {tick}
+                        </text>
+                      </g>
+                    );
+                  })}
+                  <path d={DASH_CHART_AREA_PATH} fill="url(#dashLineFill)" />
+                  <path
+                    d={DASH_CHART_LINE_PATH}
+                    fill="none"
+                    stroke={C.cyanDeep}
+                    strokeWidth="2.5"
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                  />
+                  {DASH_CHART_POINTS.map((point) => (
+                    <circle
+                      key={point.day}
+                      cx={point.x}
+                      cy={point.y}
+                      r="2.5"
+                      fill={C.cyanDeep}
                     />
-                    <XAxis
-                      dataKey="day"
-                      tickLine={false}
-                      axisLine={false}
-                      tick={{ fontSize: 11, fill: C.inkSoft }}
-                    />
-                    <YAxis
-                      tickLine={false}
-                      axisLine={false}
-                      tick={{ fontSize: 11, fill: C.inkSoft }}
-                      width={36}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="score"
-                      stroke="none"
-                      fill="url(#dashLineFill)"
-                      isAnimationActive={false}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="score"
-                      stroke={C.cyanDeep}
-                      strokeWidth={2.5}
-                      dot={{ r: 2.5, fill: C.cyanDeep }}
-                      activeDot={{ r: 4 }}
-                      isAnimationActive={false}
-                    />
-                  </ComposedChart>
-                </ResponsiveContainer>
+                  ))}
+                  {DASH_CHART_POINTS.map((point) => (
+                    <text
+                      key={`${point.day}-label`}
+                      x={point.x}
+                      y={DASH_CHART_LAYOUT.height - 5}
+                      textAnchor="middle"
+                      fontSize="11"
+                      fill={C.inkSoft}
+                    >
+                      {point.day}
+                    </text>
+                  ))}
+                </svg>
               </div>
             </div>
           </div>
@@ -691,7 +770,12 @@ export default function LandingPage() {
         </section>
 
         {/* ============== ALL TOPICS ============== */}
-        <section id="topics" className="landing-section landing-topics" data-reveal>
+        <section
+          id="topics"
+          ref={topicsSectionRef}
+          className="landing-section landing-topics"
+          data-reveal
+        >
           <div className="landing-section-head">
             <p className="landing-eyebrow">ALL TOPICS</p>
             <h2 className="landing-section-title">
@@ -703,7 +787,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {topicsLoading ? (
+          {showTopicsLoading ? (
             <div
               className="landing-topics-grid"
               role="status"
@@ -1620,9 +1704,6 @@ const styles = `
 .landing-dash-chart {
   height: 150px;
   margin: 0 -4px;
-}
-.landing-dash-chart .recharts-cartesian-axis-tick text {
-  fill: ${C.inkSoft};
 }
 
 /* Checklists */

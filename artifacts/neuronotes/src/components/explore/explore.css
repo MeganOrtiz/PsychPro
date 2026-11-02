@@ -37,7 +37,7 @@
 /* CTAs — aqua glass for both suites, mirroring landing */
 .xp-ctas { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 22px; margin-top: 8px; }
 .xp-glass { position: relative; isolation: isolate; display: inline-flex; align-items: center; gap: 10px; padding: 14px 30px; border: 1.5px solid transparent; border-radius: 10px; background: transparent; color: var(--pp-text); font-size: 16px; font-weight: 700; cursor: pointer; transition: transform 180ms ease, box-shadow 200ms ease; }
-.xp-glass::before { content: ""; position: absolute; inset: -6px; border: 15px solid transparent; border-image-source: url("/api/storage/public-objects/brand/aqua-glass-button.png"); border-image-slice: 55 100 55 100 fill; border-image-width: 10px 12px; border-image-repeat: stretch; clip-path: inset(5px 3px 6px round 7px); pointer-events: none; z-index: -1; }
+.xp-glass::before { content: ""; position: absolute; inset: -6px; border: 15px solid transparent; border-image-source: url("../../assets/aqua-glass-button.webp"); border-image-slice: 55 100 55 100 fill; border-image-width: 10px 12px; border-image-repeat: stretch; clip-path: inset(5px 3px 6px round 7px); pointer-events: none; z-index: -1; }
 .xp-glass:hover { transform: translateY(-3px); box-shadow: 0 0 20px 1px rgba(var(--pp-promo-teal-mid-rgb), 0.5); }
 .xp-glass:focus-visible, .xp-secondary:focus-visible { outline: 2px solid var(--pp-promo-teal-border); outline-offset: 4px; }
 .xp-secondary { display: inline-flex; align-items: center; padding: 13px 26px; border-radius: 10px; border: 1px solid var(--pp-ocean-deep); color: var(--pp-text); font-weight: 700; font-size: 16px; text-decoration: none; transition: background 180ms ease; }

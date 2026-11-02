@@ -40,11 +40,13 @@ const ROOT = path.join(path.dirname(new URL(import.meta.url).pathname), "..");
 const CSS = path.join(ROOT, "src", "index.css");
 const BUTTON = path.join(ROOT, "src", "components", "ui", "button.tsx");
 const CARD = path.join(ROOT, "src", "components", "ui", "card.tsx");
+const HTML = path.join(ROOT, "index.html");
 const REL = path.relative(ROOT, CSS);
 
 const raw = fs.readFileSync(CSS, "utf8");
 const buttonSource = fs.readFileSync(BUTTON, "utf8");
 const cardSource = fs.readFileSync(CARD, "utf8");
+const html = fs.readFileSync(HTML, "utf8");
 // Blank out CSS comments (keeping newlines, so line numbers stay accurate) so a
 // value mentioned in a comment can never satisfy OR trip a lock.
 const css = raw.replace(/\/\*[\s\S]*?\*\//g, (mm) => mm.replace(/[^\n]/g, " "));
@@ -326,7 +328,7 @@ const artworkSelector = `${turquoiseActions.map((action) => `${action}::before`)
 const artworkLayer = ruleBlock(css, artworkSelector);
 if (!artworkLayer?.includes("pointer-events: none;") ||
     !artworkLayer.includes("z-index: -1;") ||
-    !artworkLayer.includes('url("/api/storage/public-objects/brand/aqua-glass-button.png")') ||
+    !artworkLayer.includes('url("./assets/aqua-glass-button.webp")') ||
     !artworkLayer.includes("border-image-slice: 55 100 55 100 fill;") ||
     !artworkLayer.includes("border-image-width: 10px 12px;") ||
     !artworkLayer.includes("inset: -6px;") ||
@@ -366,7 +368,7 @@ if (!/className="[^"]*\blanding-plans-link\b[^"]*"\s+data-testid="cta-scholar"/.
 }
 
 const yellowTrialArtwork = ruleBlock(css, ".landing-root .landing-tier--eppp .landing-tier-cta::before {");
-if (!yellowTrialArtwork?.includes('url("/api/storage/public-objects/brand/pale-yellow-glass.png")')) {
+if (!yellowTrialArtwork?.includes('url("./assets/pale-yellow-glass.webp")')) {
   fail("landing EPPP trial button drifted", "keep pale-yellow glass on the EPPP plan action and aqua glass on the PsychPro plan action");
 }
 
@@ -377,10 +379,10 @@ while ((m = urls.exec(css))) {
   if (target.includes("fonts.googleapis.com")) continue;
   // Owner-sanctioned dashboard backdrop artwork (2026-07-25) — locked above.
   if (target.includes("dashboard-liquid-frame")) continue;
-  // Exact owner-supplied button asset, permitted only in its scoped artwork layer.
-  if (target === "/api/storage/public-objects/brand/aqua-glass-button.png" &&
+  // Exact bundled glass artwork, permitted only in its scoped artwork layer.
+  if (target === "./assets/aqua-glass-button.webp" &&
       artworkLayer?.includes(`url("${target}")`)) continue;
-  if (target === "/api/storage/public-objects/brand/pale-yellow-glass.png" &&
+  if (target === "./assets/pale-yellow-glass.webp" &&
       yellowTrialArtwork?.includes(`url("${target}")`)) continue;
   fail(
     `unexpected image url(${target}) at ${REL}:${lineOf(m.index)}`,
@@ -402,19 +404,22 @@ while ((m = LEGACY.exec(css))) {
 // --- 6) Typography contract ------------------------------------------------
 const TYPE_CONTRACT = [
   {
+    source: "html",
     name: "Montserrat webfont load",
     re: /family=Montserrat:wght@200;300;400;500;600;700/,
-    expected: "load Montserrat weights 200–700 in the Google Fonts import (200 is the wordmark/page-title weight)",
+    expected: "load Montserrat weights 200–700 in the combined Google Fonts link (200 is the wordmark/page-title weight)",
   },
   {
+    source: "html",
     name: "Outfit webfont load",
     re: /family=Outfit:wght@300;400;500;600;700/,
-    expected: "load Outfit weights 300–700 in the Google Fonts import (display/headings face)",
+    expected: "load Outfit weights 300–700 in the combined Google Fonts link (display/headings face)",
   },
   {
+    source: "html",
     name: "Merriweather webfont load",
     re: /family=Merriweather:ital,wght@0,400;0,700;1,400/,
-    expected: "load the locked Merriweather editorial faces",
+    expected: "load the locked Merriweather editorial faces in the combined Google Fonts link",
   },
   {
     name: "interface font token",
@@ -433,7 +438,8 @@ const TYPE_CONTRACT = [
   },
 ];
 for (const t of TYPE_CONTRACT) {
-  if (!t.re.test(raw)) fail(`${t.name} changed or missing`, t.expected);
+  const source = t.source === "html" ? html : raw;
+  if (!t.re.test(source)) fail(`${t.name} changed or missing`, t.expected);
 }
 
 // --- 7) Shared component contract -----------------------------------------
