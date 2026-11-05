@@ -75,6 +75,41 @@ paths:
         "403": { description: Protected owner account required }
         "409": { description: Preview changed; review it again }
         "503": { description: Cleanup could not be safely completed }
+  /users/targeted-test-cleanup/preview:
+    get:
+      operationId: previewTargetedTestCleanup
+      tags: [users]
+      summary: Owner-only preview of the fixed current tester-account inventory
+      responses:
+        "200":
+          description: Fresh pinned-account cleanup preview
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TargetedTestCleanupPreview" }
+        "401": { description: Sign-in required }
+        "403": { description: Verified owner account required }
+        "503": { description: Identity verification unavailable }
+  /users/targeted-test-cleanup:
+    post:
+      operationId: executeTargetedTestCleanup
+      tags: [users]
+      summary: Delete only the pinned tester accounts confirmed in a fresh preview
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/TargetedTestCleanupInput" }
+      responses:
+        "200":
+          description: Cleanup results, including any safely retained partial records
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TargetedTestCleanupResult" }
+        "400": { description: Exact confirmation required }
+        "401": { description: Sign-in required }
+        "403": { description: Verified owner account required }
+        "409": { description: Preview changed; review it again }
+        "503": { description: Cleanup could not be safely completed }
   /library:
     get:
       operationId: getBookLibrary
@@ -803,6 +838,58 @@ components:
         deletedCount: { type: integer, minimum: 0 }
         remainingCount: { type: integer, minimum: 0 }
         blockedCount: { type: integer, minimum: 0 }
+        protectedAccountPreserved: { type: boolean }
+    TargetedTestCleanupPreviewItem:
+      type: object
+      required: [email, profilePresent, signInPresent, status, reason]
+      properties:
+        email: { type: string }
+        profilePresent: { type: boolean }
+        signInPresent: { type: boolean }
+        status: { type: string, enum: [eligible, blocked, already_absent] }
+        reason:
+          type: ["string", "null"]
+          enum: [protected, billing_reference, uploaded_source, identity_mismatch, verification_unavailable, null]
+    TargetedTestCleanupResultItem:
+      type: object
+      required: [email, identity, appData, reason]
+      properties:
+        email: { type: string }
+        identity: { type: string, enum: [deleted, already_absent, retained, failed] }
+        appData: { type: string, enum: [deleted, already_absent, retained, failed] }
+        reason:
+          type: ["string", "null"]
+          enum: [protected, billing_reference, uploaded_source, identity_mismatch, verification_unavailable, null]
+    TargetedTestCleanupPreview:
+      type: object
+      required: [environment, eligibleCount, blockedCount, alreadyAbsentCount, items, fingerprint, protectedAccountPreserved]
+      properties:
+        environment: { type: string, enum: [production, development] }
+        eligibleCount: { type: integer, minimum: 0 }
+        blockedCount: { type: integer, minimum: 0 }
+        alreadyAbsentCount: { type: integer, minimum: 0 }
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/TargetedTestCleanupPreviewItem" }
+        fingerprint: { type: string, minLength: 64, maxLength: 64 }
+        protectedAccountPreserved: { type: boolean }
+    TargetedTestCleanupInput:
+      type: object
+      required: [confirmation, fingerprint]
+      properties:
+        confirmation: { type: string, maxLength: 64 }
+        fingerprint: { type: string, minLength: 64, maxLength: 64 }
+    TargetedTestCleanupResult:
+      type: object
+      required: [deletedCount, identityOnlyCount, blockedCount, failedCount, items, protectedAccountPreserved]
+      properties:
+        deletedCount: { type: integer, minimum: 0 }
+        identityOnlyCount: { type: integer, minimum: 0 }
+        blockedCount: { type: integer, minimum: 0 }
+        failedCount: { type: integer, minimum: 0 }
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/TargetedTestCleanupResultItem" }
         protectedAccountPreserved: { type: boolean }
     SuiteStudyAccess:
       type: object

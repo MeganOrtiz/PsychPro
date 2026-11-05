@@ -45,6 +45,130 @@ export interface OldTestCleanupResult {
   protectedAccountPreserved: boolean;
 }
 
+export type TargetedTestCleanupPreviewItemStatus =
+  (typeof TargetedTestCleanupPreviewItemStatus)[keyof typeof TargetedTestCleanupPreviewItemStatus];
+
+export const TargetedTestCleanupPreviewItemStatus = {
+  eligible: "eligible",
+  blocked: "blocked",
+  already_absent: "already_absent",
+} as const;
+
+/**
+ * @nullable
+ */
+export type TargetedTestCleanupPreviewItemReason =
+  | (typeof TargetedTestCleanupPreviewItemReason)[keyof typeof TargetedTestCleanupPreviewItemReason]
+  | null;
+
+export const TargetedTestCleanupPreviewItemReason = {
+  protected: "protected",
+  billing_reference: "billing_reference",
+  uploaded_source: "uploaded_source",
+  identity_mismatch: "identity_mismatch",
+  verification_unavailable: "verification_unavailable",
+} as const;
+
+export interface TargetedTestCleanupPreviewItem {
+  email: string;
+  profilePresent: boolean;
+  signInPresent: boolean;
+  status: TargetedTestCleanupPreviewItemStatus;
+  /** @nullable */
+  reason: TargetedTestCleanupPreviewItemReason;
+}
+
+export type TargetedTestCleanupResultItemIdentity =
+  (typeof TargetedTestCleanupResultItemIdentity)[keyof typeof TargetedTestCleanupResultItemIdentity];
+
+export const TargetedTestCleanupResultItemIdentity = {
+  deleted: "deleted",
+  already_absent: "already_absent",
+  retained: "retained",
+  failed: "failed",
+} as const;
+
+export type TargetedTestCleanupResultItemAppData =
+  (typeof TargetedTestCleanupResultItemAppData)[keyof typeof TargetedTestCleanupResultItemAppData];
+
+export const TargetedTestCleanupResultItemAppData = {
+  deleted: "deleted",
+  already_absent: "already_absent",
+  retained: "retained",
+  failed: "failed",
+} as const;
+
+/**
+ * @nullable
+ */
+export type TargetedTestCleanupResultItemReason =
+  | (typeof TargetedTestCleanupResultItemReason)[keyof typeof TargetedTestCleanupResultItemReason]
+  | null;
+
+export const TargetedTestCleanupResultItemReason = {
+  protected: "protected",
+  billing_reference: "billing_reference",
+  uploaded_source: "uploaded_source",
+  identity_mismatch: "identity_mismatch",
+  verification_unavailable: "verification_unavailable",
+} as const;
+
+export interface TargetedTestCleanupResultItem {
+  email: string;
+  identity: TargetedTestCleanupResultItemIdentity;
+  appData: TargetedTestCleanupResultItemAppData;
+  /** @nullable */
+  reason: TargetedTestCleanupResultItemReason;
+}
+
+export type TargetedTestCleanupPreviewEnvironment =
+  (typeof TargetedTestCleanupPreviewEnvironment)[keyof typeof TargetedTestCleanupPreviewEnvironment];
+
+export const TargetedTestCleanupPreviewEnvironment = {
+  production: "production",
+  development: "development",
+} as const;
+
+export interface TargetedTestCleanupPreview {
+  environment: TargetedTestCleanupPreviewEnvironment;
+  /** @minimum 0 */
+  eligibleCount: number;
+  /** @minimum 0 */
+  blockedCount: number;
+  /** @minimum 0 */
+  alreadyAbsentCount: number;
+  items: TargetedTestCleanupPreviewItem[];
+  /**
+   * @minLength 64
+   * @maxLength 64
+   */
+  fingerprint: string;
+  protectedAccountPreserved: boolean;
+}
+
+export interface TargetedTestCleanupInput {
+  /** @maxLength 64 */
+  confirmation: string;
+  /**
+   * @minLength 64
+   * @maxLength 64
+   */
+  fingerprint: string;
+}
+
+export interface TargetedTestCleanupResult {
+  /** @minimum 0 */
+  deletedCount: number;
+  /** @minimum 0 */
+  identityOnlyCount: number;
+  /** @minimum 0 */
+  blockedCount: number;
+  /** @minimum 0 */
+  failedCount: number;
+  items: TargetedTestCleanupResultItem[];
+  protectedAccountPreserved: boolean;
+}
+
 export interface SuiteStudyAccess {
   /** @nullable */
   startedAt: string | null;

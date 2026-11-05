@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { authHeaders, jsonAuthHeaders } from "@/lib/auth-headers";
 import { PageTitle } from "@/components/brand/page-title";
 import { OldTestAccountCleanup } from "@/components/old-test-account-cleanup";
+import { PinnedTestAccountCleanup } from "@/components/pinned-test-account-cleanup";
 import {
   INTERESTS_TAXONOMY,
   PROFILE_ROLES,
@@ -702,6 +703,10 @@ function DangerZone() {
 
       {isAdmin && (
         <OldTestAccountCleanup />
+      )}
+
+      {isAdmin && (
+        <PinnedTestAccountCleanup />
       )}
 
       {isAdmin && (

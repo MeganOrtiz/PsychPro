@@ -54,6 +54,9 @@ import type {
   SubmitFeedbackBody,
   SubscriptionPlan,
   SubscriptionStatus,
+  TargetedTestCleanupInput,
+  TargetedTestCleanupPreview,
+  TargetedTestCleanupResult,
   Topic,
   TopicProgress,
   UpdateTopicProgressBody,
@@ -230,6 +233,175 @@ export const useExecuteOldTestCleanup = <
   TContext
 > => {
   return useMutation(getExecuteOldTestCleanupMutationOptions(options));
+};
+
+/**
+ * @summary Owner-only preview of the fixed current tester-account inventory
+ */
+export const getPreviewTargetedTestCleanupUrl = () => {
+  return `/api/users/targeted-test-cleanup/preview`;
+};
+
+export const previewTargetedTestCleanup = async (
+  options?: RequestInit,
+): Promise<TargetedTestCleanupPreview> => {
+  return customFetch<TargetedTestCleanupPreview>(
+    getPreviewTargetedTestCleanupUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export const getPreviewTargetedTestCleanupQueryKey = () => {
+  return [`/api/users/targeted-test-cleanup/preview`] as const;
+};
+
+export const getPreviewTargetedTestCleanupQueryOptions = <
+  TData = Awaited<ReturnType<typeof previewTargetedTestCleanup>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof previewTargetedTestCleanup>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getPreviewTargetedTestCleanupQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof previewTargetedTestCleanup>>
+  > = ({ signal }) => previewTargetedTestCleanup({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof previewTargetedTestCleanup>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type PreviewTargetedTestCleanupQueryResult = NonNullable<
+  Awaited<ReturnType<typeof previewTargetedTestCleanup>>
+>;
+export type PreviewTargetedTestCleanupQueryError = ErrorType<void>;
+
+/**
+ * @summary Owner-only preview of the fixed current tester-account inventory
+ */
+
+export function usePreviewTargetedTestCleanup<
+  TData = Awaited<ReturnType<typeof previewTargetedTestCleanup>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof previewTargetedTestCleanup>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getPreviewTargetedTestCleanupQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Delete only the pinned tester accounts confirmed in a fresh preview
+ */
+export const getExecuteTargetedTestCleanupUrl = () => {
+  return `/api/users/targeted-test-cleanup`;
+};
+
+export const executeTargetedTestCleanup = async (
+  targetedTestCleanupInput: TargetedTestCleanupInput,
+  options?: RequestInit,
+): Promise<TargetedTestCleanupResult> => {
+  return customFetch<TargetedTestCleanupResult>(
+    getExecuteTargetedTestCleanupUrl(),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(targetedTestCleanupInput),
+    },
+  );
+};
+
+export const getExecuteTargetedTestCleanupMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof executeTargetedTestCleanup>>,
+    TError,
+    { data: BodyType<TargetedTestCleanupInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof executeTargetedTestCleanup>>,
+  TError,
+  { data: BodyType<TargetedTestCleanupInput> },
+  TContext
+> => {
+  const mutationKey = ["executeTargetedTestCleanup"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof executeTargetedTestCleanup>>,
+    { data: BodyType<TargetedTestCleanupInput> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return executeTargetedTestCleanup(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ExecuteTargetedTestCleanupMutationResult = NonNullable<
+  Awaited<ReturnType<typeof executeTargetedTestCleanup>>
+>;
+export type ExecuteTargetedTestCleanupMutationBody =
+  BodyType<TargetedTestCleanupInput>;
+export type ExecuteTargetedTestCleanupMutationError = ErrorType<void>;
+
+/**
+ * @summary Delete only the pinned tester accounts confirmed in a fresh preview
+ */
+export const useExecuteTargetedTestCleanup = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof executeTargetedTestCleanup>>,
+    TError,
+    { data: BodyType<TargetedTestCleanupInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof executeTargetedTestCleanup>>,
+  TError,
+  { data: BodyType<TargetedTestCleanupInput> },
+  TContext
+> => {
+  return useMutation(getExecuteTargetedTestCleanupMutationOptions(options));
 };
 
 /**

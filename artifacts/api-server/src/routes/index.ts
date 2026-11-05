@@ -5,6 +5,7 @@ import courseMasteryRouter from "./course-mastery";
 import masteryExamsRouter from "./mastery-exams";
 import usersRouter from "./users";
 import oldTestCleanupRouter from "./old-test-cleanup";
+import pinnedTestCleanupRouter from "./pinned-test-cleanup";
 import entitlementsRouter from "./entitlements";
 import progressRouter from "./progress";
 import subscriptionRouter from "./subscription";
@@ -43,6 +44,7 @@ router.use(courseMasteryRouter);
 // the frontend still depends on the category-based system.
 router.use(masteryExamsRouter);
 router.use(oldTestCleanupRouter);
+router.use(pinnedTestCleanupRouter);
 router.use(usersRouter);
 router.use(entitlementsRouter);
 router.use(progressRouter);

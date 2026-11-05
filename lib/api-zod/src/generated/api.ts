@@ -61,6 +61,111 @@ export const ExecuteOldTestCleanupResponse = zod.object({
 });
 
 /**
+ * @summary Owner-only preview of the fixed current tester-account inventory
+ */
+export const previewTargetedTestCleanupResponseEligibleCountMin = 0;
+
+export const previewTargetedTestCleanupResponseBlockedCountMin = 0;
+
+export const previewTargetedTestCleanupResponseAlreadyAbsentCountMin = 0;
+
+export const previewTargetedTestCleanupResponseFingerprintMin = 64;
+export const previewTargetedTestCleanupResponseFingerprintMax = 64;
+
+export const PreviewTargetedTestCleanupResponse = zod.object({
+  environment: zod.enum(["production", "development"]),
+  eligibleCount: zod
+    .number()
+    .min(previewTargetedTestCleanupResponseEligibleCountMin),
+  blockedCount: zod
+    .number()
+    .min(previewTargetedTestCleanupResponseBlockedCountMin),
+  alreadyAbsentCount: zod
+    .number()
+    .min(previewTargetedTestCleanupResponseAlreadyAbsentCountMin),
+  items: zod.array(
+    zod.object({
+      email: zod.string(),
+      profilePresent: zod.boolean(),
+      signInPresent: zod.boolean(),
+      status: zod.enum(["eligible", "blocked", "already_absent"]),
+      reason: zod
+        .union([
+          zod.literal("protected"),
+          zod.literal("billing_reference"),
+          zod.literal("uploaded_source"),
+          zod.literal("identity_mismatch"),
+          zod.literal("verification_unavailable"),
+          zod.literal(null),
+        ])
+        .nullable(),
+    }),
+  ),
+  fingerprint: zod
+    .string()
+    .min(previewTargetedTestCleanupResponseFingerprintMin)
+    .max(previewTargetedTestCleanupResponseFingerprintMax),
+  protectedAccountPreserved: zod.boolean(),
+});
+
+/**
+ * @summary Delete only the pinned tester accounts confirmed in a fresh preview
+ */
+export const executeTargetedTestCleanupBodyConfirmationMax = 64;
+
+export const executeTargetedTestCleanupBodyFingerprintMin = 64;
+export const executeTargetedTestCleanupBodyFingerprintMax = 64;
+
+export const ExecuteTargetedTestCleanupBody = zod.object({
+  confirmation: zod.string().max(executeTargetedTestCleanupBodyConfirmationMax),
+  fingerprint: zod
+    .string()
+    .min(executeTargetedTestCleanupBodyFingerprintMin)
+    .max(executeTargetedTestCleanupBodyFingerprintMax),
+});
+
+export const executeTargetedTestCleanupResponseDeletedCountMin = 0;
+
+export const executeTargetedTestCleanupResponseIdentityOnlyCountMin = 0;
+
+export const executeTargetedTestCleanupResponseBlockedCountMin = 0;
+
+export const executeTargetedTestCleanupResponseFailedCountMin = 0;
+
+export const ExecuteTargetedTestCleanupResponse = zod.object({
+  deletedCount: zod
+    .number()
+    .min(executeTargetedTestCleanupResponseDeletedCountMin),
+  identityOnlyCount: zod
+    .number()
+    .min(executeTargetedTestCleanupResponseIdentityOnlyCountMin),
+  blockedCount: zod
+    .number()
+    .min(executeTargetedTestCleanupResponseBlockedCountMin),
+  failedCount: zod
+    .number()
+    .min(executeTargetedTestCleanupResponseFailedCountMin),
+  items: zod.array(
+    zod.object({
+      email: zod.string(),
+      identity: zod.enum(["deleted", "already_absent", "retained", "failed"]),
+      appData: zod.enum(["deleted", "already_absent", "retained", "failed"]),
+      reason: zod
+        .union([
+          zod.literal("protected"),
+          zod.literal("billing_reference"),
+          zod.literal("uploaded_source"),
+          zod.literal("identity_mismatch"),
+          zod.literal("verification_unavailable"),
+          zod.literal(null),
+        ])
+        .nullable(),
+    }),
+  ),
+  protectedAccountPreserved: zod.boolean(),
+});
+
+/**
  * @summary List owned books and feedback reward eligibility
  */
 export const GetBookLibraryResponse = zod.object({

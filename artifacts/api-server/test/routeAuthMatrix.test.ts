@@ -77,6 +77,8 @@ const PROTECTED = new Set<string>([
   "GET /api/users/duplicates",
   "GET /api/users/test-cleanup/preview",
   "POST /api/users/test-cleanup",
+  "GET /api/users/targeted-test-cleanup/preview",
+  "POST /api/users/targeted-test-cleanup",
   "GET /api/users/entitlements",
   // subscription
   "POST /api/subscription/checkout",
