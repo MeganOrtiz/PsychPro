@@ -10,6 +10,15 @@
 
 **Spec:** `docs/superpowers/specs/2026-11-02-targeted-test-account-cleanup-design.md`
 
+## Implementation and verification report
+
+- Implemented the owner-only Profile preview/confirmation panel and protected targeted-cleanup API. Internal files use `pinned-test-cleanup` / `targetedTestCleanup` naming; public endpoint paths match this plan.
+- Read-only inventory found three approved Production profiles; one is blocked by a Stripe customer reference. Development had no matching profiles or Clerk identities, so its pinned inventory is empty. No target set was widened.
+- Automated checks passed for policy, identity verification, identity-before-data ordering, retryable partial completion, route authorization/validation, sanitized errors, and Development-only transactional rollback. Synthetic fixture records were rolled back; no tester accounts were deleted.
+- API/web type checks, production web build, and route-auth matrix passed. Both application workflows restarted successfully.
+- The capture browser reaches the expected sign-in gate at Profile. The signed-in owner panel has not been browser-verified; the owner must preview the current inventory before any destructive confirmation.
+- Tests were added alongside implementation rather than following the original test-first ordering below. The original checklist is retained as the approved implementation specification, not a claim of an authenticated deletion rehearsal.
+
 ## Global Constraints
 
 - Pin the current matching account IDs in separate Development and Production inventories after a read-only inventory check.

@@ -9,7 +9,7 @@ import {
   type PinnedTestAccount,
 } from "../src/lib/targetedTestCleanupPolicy";
 
-const target: PinnedTestAccount = PINNED_TEST_ACCOUNT_INVENTORY.production[0];
+const target: PinnedTestAccount = { id: "synthetic-target", email: "target@example.invalid" };
 const ownerId = "owner-user";
 const cleanState: PinnedCleanupObservedState = {
   profilePresent: true,
@@ -72,7 +72,7 @@ assert.equal(
   "identity_mismatch",
 );
 
-const secondTarget = PINNED_TEST_ACCOUNT_INVENTORY.production[1];
+const secondTarget = { id: "synthetic-second-target", email: "second@example.invalid" };
 const first = { target, state: cleanState, reason: null };
 const second = { target: secondTarget, state: { ...cleanState, profileEmail: secondTarget.email, signInEmail: secondTarget.email }, reason: null };
 const fingerprint = pinnedCleanupFingerprint("production", ownerId, [first, second]);

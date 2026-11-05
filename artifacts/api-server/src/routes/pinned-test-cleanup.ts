@@ -11,8 +11,6 @@ import {
 } from "../lib/targetedTestCleanup";
 import { PinnedCleanupSafetyError } from "../lib/targetedTestCleanupPolicy";
 
-const router = Router();
-
 function fail(req: Request, res: Response, error: unknown): void {
   if (error instanceof PinnedCleanupSafetyError) {
     res.status(error.status).json({ error: error.message });
@@ -26,19 +24,29 @@ function fail(req: Request, res: Response, error: unknown): void {
   });
 }
 
+export function createPinnedTestCleanupRouter(operations: {
+  authorize?: typeof requireInsightsOwner;
+  preview?: typeof previewPinnedTestCleanup;
+  execute?: typeof executePinnedTestCleanup;
+} = {}) {
+const router = Router();
+const authorize = operations.authorize ?? requireInsightsOwner;
+const preview = operations.preview ?? previewPinnedTestCleanup;
+const execute = operations.execute ?? executePinnedTestCleanup;
+
 router.get("/users/targeted-test-cleanup/preview", async (req: Request, res: Response): Promise<void> => {
-  const callerId = await requireInsightsOwner(req, res);
+  const callerId = await authorize(req, res);
   if (!callerId) return;
   try {
     res.set("Cache-Control", "no-store");
-    res.json(PreviewTargetedTestCleanupResponse.parse(await previewPinnedTestCleanup(callerId)));
+    res.json(PreviewTargetedTestCleanupResponse.parse(await preview(callerId)));
   } catch (error) {
     fail(req, res, error);
   }
 });
 
 router.post("/users/targeted-test-cleanup", async (req: Request, res: Response): Promise<void> => {
-  const callerId = await requireInsightsOwner(req, res);
+  const callerId = await authorize(req, res);
   if (!callerId) return;
   const body = ExecuteTargetedTestCleanupBody.safeParse(req.body);
   if (!body.success) {
@@ -47,7 +55,7 @@ router.post("/users/targeted-test-cleanup", async (req: Request, res: Response):
   }
   try {
     res.set("Cache-Control", "no-store");
-    const result = await executePinnedTestCleanup(
+    const result = await execute(
       callerId,
       body.data.confirmation,
       body.data.fingerprint,
@@ -64,4 +72,7 @@ router.post("/users/targeted-test-cleanup", async (req: Request, res: Response):
   }
 });
 
-export default router;
+return router;
+}
+
+export default createPinnedTestCleanupRouter();

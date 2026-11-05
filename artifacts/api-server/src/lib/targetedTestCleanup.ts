@@ -12,6 +12,7 @@ import {
   usersTable,
 } from "@workspace/db";
 import { and, eq, inArray, isNotNull, sql } from "drizzle-orm";
+import { removeVerifiedPinnedTarget } from "./targetedTestCleanupExecution";
 import {
   assertPinnedCleanupConfirmation,
   cleanupEnvironment,
@@ -72,14 +73,18 @@ function clerkApiKey(): string {
   return key;
 }
 
-async function clerkIdentity(id: string): Promise<{
+export async function clerkIdentity(
+  id: string,
+  request: typeof fetch = fetch,
+  key = clerkApiKey(),
+): Promise<{
   present: boolean;
   email: string | null;
   hasProtectedEmail: boolean;
 }> {
   try {
-    const response = await fetch(`https://api.clerk.com/v1/users/${encodeURIComponent(id)}`, {
-      headers: { Authorization: `Bearer ${clerkApiKey()}` },
+    const response = await request(`https://api.clerk.com/v1/users/${encodeURIComponent(id)}`, {
+      headers: { Authorization: `Bearer ${key}` },
       signal: AbortSignal.timeout(6000),
     });
     if (response.status === 404) {
@@ -196,7 +201,7 @@ async function loadObservedState(
   };
 }
 
-function privatePreviewItem(
+export function privatePreviewItem(
   target: PinnedTestAccount,
   state: PinnedCleanupObservedState,
   callerId: string,
@@ -210,7 +215,7 @@ function privatePreviewItem(
   return { target, state, reason, status };
 }
 
-function publicPreviewItem(item: PrivatePreviewItem) {
+export function publicPreviewItem(item: PrivatePreviewItem) {
   return {
     email: item.target.email,
     profilePresent: item.state.profilePresent,
@@ -280,7 +285,7 @@ function hasBillingReference(profile: {
   );
 }
 
-async function deleteAccountRows(
+export async function deleteAccountRows(
   tx: CleanupTransaction,
   callerId: string,
   target: PinnedTestAccount,
@@ -365,12 +370,16 @@ async function deleteAccountRows(
   return true;
 }
 
-async function deleteClerkIdentity(target: PinnedTestAccount): Promise<void> {
-  const response = await fetch(
+export async function deleteClerkIdentity(
+  target: PinnedTestAccount,
+  request: typeof fetch = fetch,
+  key = clerkApiKey(),
+): Promise<void> {
+  const response = await request(
     `https://api.clerk.com/v1/users/${encodeURIComponent(target.id)}`,
     {
       method: "DELETE",
-      headers: { Authorization: `Bearer ${clerkApiKey()}` },
+      headers: { Authorization: `Bearer ${key}` },
       signal: AbortSignal.timeout(6000),
     },
   );
@@ -381,7 +390,7 @@ async function deleteClerkIdentity(target: PinnedTestAccount): Promise<void> {
     );
   }
 
-  const afterDelete = await clerkIdentity(target.id);
+  const afterDelete = await clerkIdentity(target.id, request, key);
   if (afterDelete.present) {
     throw new PinnedCleanupSafetyError(
       "Sign-in removal could not be verified. Its profile data was retained.",
@@ -463,63 +472,26 @@ export async function executePinnedTestCleanup(
       continue;
     }
 
-    const hadIdentity = current.state.signInPresent;
-    let identityRemoved = false;
-    let identityOutcome: PublicExecutionItem["identity"] = hadIdentity ? "failed" : "already_absent";
-    let appDataOutcome: PublicExecutionItem["appData"] = current.state.profilePresent
-      ? "retained"
-      : "already_absent";
-    try {
-      if (hadIdentity) {
-        await deleteClerkIdentity(current.target);
-        identityRemoved = true;
-        identityOutcome = "deleted";
-      }
-      const removedProfile = await db.transaction((tx) =>
-        deleteAccountRows(tx, callerId, current.target),
-      );
-      appDataOutcome = removedProfile ? "deleted" : "already_absent";
-      const fullyAbsent =
-        (identityOutcome === "deleted" || identityOutcome === "already_absent") &&
-        (appDataOutcome === "deleted" || appDataOutcome === "already_absent");
-      if (fullyAbsent) deletedCount += 1;
-      else failedCount += 1;
-      outcomes.push({
-        email: current.target.email,
-        identity: identityOutcome,
-        appData: appDataOutcome,
-        reason: fullyAbsent ? null : "verification_unavailable",
-      });
-    } catch {
-      if (identityRemoved) {
-        // Clerk deletion is not reversible. Keep the app profile if its
-        // transaction failed, and surface this as a retryable partial result.
-        try {
-          const [profile] = await db
-            .select({ id: usersTable.id })
-            .from(usersTable)
-            .where(eq(usersTable.id, current.target.id));
-          if (profile) {
-            identityOnlyCount += 1;
-            appDataOutcome = "failed";
-          } else {
-            deletedCount += 1;
-            appDataOutcome = "already_absent";
-          }
-        } catch {
-          identityOnlyCount += 1;
-          appDataOutcome = "failed";
-        }
-      } else {
-        failedCount += 1;
-      }
-      outcomes.push({
-        email: current.target.email,
-        identity: identityRemoved ? "deleted" : identityOutcome,
-        appData: appDataOutcome,
-        reason: "verification_unavailable",
-      });
-    }
+    const outcome = await removeVerifiedPinnedTarget(current.state, {
+      deleteIdentity: () => deleteClerkIdentity(current.target),
+      deleteAppData: () => db.transaction((tx) => deleteAccountRows(tx, callerId, current.target)),
+      profileExists: async () => {
+        const [profile] = await db.select({ id: usersTable.id }).from(usersTable)
+          .where(eq(usersTable.id, current.target.id));
+        return Boolean(profile);
+      },
+    });
+    const fullyAbsent =
+      (outcome.identity === "deleted" || outcome.identity === "already_absent") &&
+      (outcome.appData === "deleted" || outcome.appData === "already_absent");
+    if (fullyAbsent) deletedCount += 1;
+    else if (outcome.identity === "deleted") identityOnlyCount += 1;
+    else failedCount += 1;
+    outcomes.push({
+      email: current.target.email,
+      ...outcome,
+      reason: fullyAbsent ? null : "verification_unavailable",
+    });
   }
 
   return {
